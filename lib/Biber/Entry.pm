@@ -279,9 +279,10 @@ sub has_keyword {
 sub add_warning {
   my $self = shift;
   my $warning = shift;
-  push @{$self->{derivedfields}{'warnings'}}, $warning;
+  push @{$self->{derivedfields}{warnings}}, $warning;
   return;
 }
+
 
 =head2 set_inherit_from
 

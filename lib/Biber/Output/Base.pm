@@ -52,7 +52,7 @@ sub set_output_target_file {
   if (Biber::Config->getoption('bblencoding')) {
     $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
   }
-  my $TARGET = IO::File->new($file, ">$enc_out") or $logger->logdie("Failed to open $file : $!");
+  my $TARGET = IO::File->new($file, ">$enc_out");
   $self->set_output_target($TARGET);
 }
 
@@ -66,7 +66,6 @@ sub set_output_target_file {
 sub set_output_target {
   my $self = shift;
   my $target = shift;
-  $logger->logdie('Output target must be a IO::Handle object!') unless $target->isa('IO::Handle');
   $self->{output_target} = $target;
   return;
 }
@@ -280,7 +279,7 @@ sub output {
 
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
 
-  print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
+  print $target $data->{HEAD};
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     print $target "SECTION: $secnum\n\n";
@@ -292,20 +291,20 @@ sub output {
       foreach my $k ($list->get_keys) {
         if ($listtype eq 'entry') {
           my $entry_string = $data->{ENTRIES}{$secnum}{index}{$k};
-          print $target $entry_string or $logger->logdie("Failure to write entry '$k' to $target_string: $!");
+          print $target $entry_string;
         }
         elsif ($listtype eq 'shorthand') {
           next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
-          print $target $k or $logger->logdie("Failure to write list element to $target_string: $!");
+          print $target $k;
         }
       }
     }
   }
 
-  print $target $data->{TAIL} or $logger->logdie("Failure to write tail to $target_string: $!");
+  print $target $data->{TAIL};
 
   $logger->info("Output to $target_string");
-  close $target or $logger->logdie("Failure to close $target_string: $!");
+  close $target;
   return;
 }
 

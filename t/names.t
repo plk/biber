@@ -581,6 +581,7 @@ my $l22 = q|  \entry{L22}{book}{}
     \strng{namehash}{940a7383a6d76d516f02cf790a468362}
     \strng{fullhash}{940a7383a6d76d516f02cf790a468362}
     \field{sortinit}{\v{S}}
+    \warn{\item The character 'Š' cannot be encoded in 'latin1'. sortinit will be set to macro '\v{S}' for entry 'L22'}
   \endentry
 
 |;
@@ -686,22 +687,22 @@ my $l31 = q|  \entry{L31}{book}{}
 |;
 
 
-is_deeply(Biber::Input::file::bibtex::parsename('John Doe', 'author'), $name1, 'parsename 1');
-is_deeply(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author'), $name2, 'parsename 2');
-is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 1}), $name3, 'parsename 3') ;
-is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 0}), $name4, 'parsename 4') ;
-is_deeply(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author'), $name5, 'parsename 5') ;
-is_deeply(Biber::Input::file::bibtex::parsename('al-Ṣāliḥ, ʿAbdallāh', 'author'), $name6, 'parsename 6') ;
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1}), $name7, 'parsename 7');
-is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author'), $name8, 'parsename 8');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author'), $name9, 'parsename 9');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author'), $name10, 'parsename 10');
-is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la {Vallée Poussin}', 'author'), $name11, 'parsename 11');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel Poussin', 'author'), $name12, 'parsename 12');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles {Poussin Lecoq}', 'author'), $name13, 'parsename 13');
-is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}), $name14, 'parsename 14');
-is_deeply(Biber::Input::file::bibtex::parsename('E. S. El-{M}allah', 'author'), $name15, 'parsename 15');
-is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author'), $name16, 'parsename 16');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'John Doe', 'author'), $name1, 'parsename 1');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'Doe, Jr, John', 'author'), $name2, 'parsename 2');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 1}), $name3, 'parsename 3') ;
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 0}), $name4, 'parsename 4') ;
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'{Robert and Sons, Inc.}', 'author'), $name5, 'parsename 5') ;
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'al-Ṣāliḥ, ʿAbdallāh', 'author'), $name6, 'parsename 6') ;
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1}), $name7, 'parsename 7');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'{Jean Charles Gabriel} de la Vallée Poussin', 'author'), $name8, 'parsename 8');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'Jean Charles Gabriel {de la} Vallée Poussin', 'author'), $name9, 'parsename 9');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'Jean Charles Gabriel de la {Vallée Poussin}', 'author'), $name10, 'parsename 10');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'{Jean Charles Gabriel} de la {Vallée Poussin}', 'author'), $name11, 'parsename 11');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'Jean Charles Gabriel Poussin', 'author'), $name12, 'parsename 12');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'Jean Charles {Poussin Lecoq}', 'author'), $name13, 'parsename 13');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}), $name14, 'parsename 14');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'E. S. El-{M}allah', 'author'), $name15, 'parsename 15');
+is_deeply(Biber::Input::file::bibtex::parsename($biber,'E. S. {K}ent-{B}oswell', 'author'), $name16, 'parsename 16');
 
 is( $out->get_output_entry($main,'L1'), $l1, 'First Last') ;
 is( $out->get_output_entry($main,'L2'), $l2, 'First Initial. Last') ;
@@ -723,7 +724,7 @@ is( $out->get_output_entry($main,'L17'), $l17, 'Last, First {F.\bibinitdelim F.}
 is( $out->get_output_entry($main,'L18'), $l18, 'Last, First F.{\bibinitdelim }F.');
 is( $out->get_output_entry($main,'L19'), $l19, 'Firstname with hyphen');
 is( $out->get_output_entry($main,'L20'), $l20, 'Protected dual first name');
-is( $out->get_output_entry($main,'L22'), $l22u, 'LaTeX encoded unicode lastname');
+is( $out->get_output_entry($main,'L22'), $l22u, 'LaTeX encoded unicode lastname - 1');
 is( $out->get_output_entry($main,'L23'), $l23, 'Unicode firstname');
 is( $out->get_output_entry($main,'L24'), $l24, 'Unicode lastname');
 is( $out->get_output_entry($main,'L25'), $l25, 'Single string name');
@@ -760,6 +761,6 @@ $bibentries = $section->bibentries;
 is_deeply($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_field('labelnamename'))->nth_name(1)->get_firstname_i, ['{\v S}'], 'Terseinitials 1');
 is( $out->get_output_entry($main,'L12'), $l12, 'First First First First prefix prefix Last Last') ;
 is( $out->get_output_entry($main,'L21'), $l21, 'LaTeX encoded unicode firstname');
-is( $out->get_output_entry($main,'L22'), $l22, 'LaTeX encoded unicode lastname');
+is( $out->get_output_entry($main,'L22'), $l22, 'LaTeX encoded unicode lastname - 2');
 is( $out->get_output_entry($main,'L31'), $l31, 'LaTeX encoded unicode lastname with tie char');
 

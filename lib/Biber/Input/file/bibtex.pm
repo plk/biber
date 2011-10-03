@@ -27,10 +27,13 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
 
+my $libbtp_stderr;
 my $logger = Log::Log4perl::get_logger('main');
 
 state $cache; # state variable so it's persistent across calles to extract_entries()
 use vars qw($cache);
+
+
 
 =head2 init_cache
 
@@ -69,7 +72,7 @@ my $dcfxml = driver_config('bibtex');
 
 sub TBSIG {
   my $sig = shift;
-  $logger->logdie("Caught signal: $sig\nLikely your .bib has a bad entry: $!");
+  $logger->logdie("Caught signal: $sig\nLikely your .bib has a very bad entry which causes libbtparse to crash: $!");
 }
 
 =head2 extract_entries
@@ -99,7 +102,7 @@ sub extract_entries {
                           DIR => $biber->biber_tempdir,
                           SUFFIX => '.bib');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      $logger->logdie ("Could not fetch file '$filename'");
+      $biber->biber_error ("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;
   }
@@ -108,7 +111,7 @@ sub extract_entries {
     # the filename count for preambles at the bottom of this sub
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
-      $logger->logdie("Cannot find file '$trying_filename'!")
+      $biber->biber_error("Cannot find file '$trying_filename'!")
     }
   }
 
@@ -116,10 +119,9 @@ sub extract_entries {
   $logger->info("Found bibtex data file '$filename'");
 
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
-  if (Biber::Config->getoption('quiet')) {
-    open OLDERR, '>&', \*STDERR;
-    open STDERR, '>', '/dev/null';
-  }
+  open OLDERR, '>&', \*STDERR;
+  close STDERR;
+  open STDERR, '>', \$libbtp_stderr;
 
   # Increment the number of times each datafile has been referenced
   # For example, a datafile might be referenced in more than one section.
@@ -165,16 +167,21 @@ sub extract_entries {
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
       elsif  (my $okey = $section->has_badcasekey($wanted_key)) {
-        $logger->warn("Possible typo (case mismatch) between citation and datasource keys: '$wanted_key' and '$okey' in file '$filename'");
-        $biber->{warnings}++;
+        $biber->biber_warn("Possible typo (case mismatch) between citation and datasource keys: '$wanted_key' and '$okey' in file '$filename'");
       }
       $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
     }
   }
 
-  if (Biber::Config->getoption('quiet')) {
-    open STDERR, '>&', \*OLDERR;
-  }
+  $biber->biber_error("bibtex parsing subsystem error: $libbtp_stderr");
+#  open STDERR, '>&', \*OLDERR;
+
+
+
+  # # put any Text::BibTeX errors into the biber error collection
+  # foreach my $e (split(/[\n\r]/, $libbtp_stderr)) {
+  #   $biber->biber_error("libbtparse error: $e");
+  # }
 
   # Only push the preambles from the file if we haven't seen this data file before
   # and there are some preambles to push
@@ -266,10 +273,10 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
           while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
             if ($bibentry->field_exists(lc($from_as))) {
               if ($user_map->{bmap_overwrite}) {
-                $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$key'");
+                $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$key'", $bibentry);
               }
               else {
-                $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$key'");
+                $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$key'", $bibentry);
                 next;
               }
             }
@@ -320,7 +327,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
                 $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
                 # If both a field and its alias is set, warn and delete alias field
                 if ($entry->exists($a)) {
-                  $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$a' but both are defined in entry with key '$key' - skipping alias");
+                  $biber->biber_warn("Field '$f' is aliased to field '$a' but both are defined in entry with key '$key' - skipping alias", $bibentry);
                   next;
                 }
                 $from = $dcfxml->{fields}{field}{$a};
@@ -333,7 +340,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
               $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
               # If both a field and its alias is set, warn and delete alias field
               if ($entry->exists($a)) {
-                $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$a' but both are defined in entry with key '$key' - skipping alias");
+                $biber->biber_warn("Field '$f' is aliased to field '$a' but both are defined in entry with key '$key' - skipping alias", $bibentry);
                 next;
               }
               $from = $dcfxml->{fields}{field}{$a};
@@ -344,7 +351,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
             foreach my $alsoset (@{$alias->{alsoset}}) {
               # If both a field and an alsoset field are set, warn and ignore alsoset
               if ($entry->exists($alsoset->{target})) {
-                $biber->biber_warn($bibentry, "Field '" . $alsoset->{target}. "' is supposed to be additionally set but it already exists - ignoring");
+                $biber->biber_warn("Field '" . $alsoset->{target}. "' is supposed to be additionally set but it already exists - ignoring", $bibentry);
                 next;
               }
               my $val = $alsoset->{value} // $f; # defaults to original field name if no value
@@ -355,7 +362,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         elsif (my $alias = $from->{aliasof}) { # simple alias
           $logger->debug("Found alias '$alias' of field '$f' in entry '$key'");
           if ($entry->exists($alias)) {
-            $biber->biber_warn($bibentry, "Field '$f' is aliased to field '$alias' but both are defined in entry with key '$key' - skipping alias");
+            $biber->biber_warn("Field '$f' is aliased to field '$alias' but both are defined in entry with key '$key' - skipping alias", $bibentry);
             next;
           }
           $from = $dcfxml->{fields}{field}{$alias};
@@ -384,10 +391,10 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         while (my ($from_as, $to_as) = each %{$to->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             if ($user_map->{bmap_overwrite}) {
-              $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->type . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'");
+              $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->type . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
             }
             else {
-              $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->type . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'");
+              $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->type . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
               next;
             }
           }
@@ -407,7 +414,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       foreach my $alsoset (@{$ealias->{alsoset}}) {
         # drivers never overwrite existing fields
         if ($bibentry->field_exists(lc($alsoset->{target}))) {
-          $biber->biber_warn($bibentry, "Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'");
+          $biber->biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
           next;
         }
         $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
@@ -493,7 +500,7 @@ sub _name {
 
     # Consecutive "and" causes Text::BibTeX::Name to segfault
     unless ($name) {
-      $biber->biber_warn($bibentry, "Name in key '$key' is empty (probably consecutive 'and'): skipping name");
+      $biber->biber_warn("Name in key '$key' is empty (probably consecutive 'and'): skipping name", $bibentry);
       $section->del_citekey($key);
       next;
     }
@@ -506,20 +513,20 @@ sub _name {
     unless ($name =~ m/\A{.+}\z/xms) { # Ignore these tests for escaped names
       my @commas = $name =~ m/,/g;
       if ($#commas > 1) {
-        $biber->biber_warn($bibentry, "Name \"$name\" has too many commas: skipping name");
+        $biber->biber_warn("Name \"$name\" has too many commas: skipping name", $bibentry);
         $section->del_citekey($key);
         next;
       }
 
       # Consecutive commas cause Text::BibTeX::Name to segfault
       if ($name =~ /,,/) {
-        $biber->biber_warn($bibentry, "Name \"$name\" is malformed (consecutive commas): skipping name");
+        $biber->biber_warn("Name \"$name\" is malformed (consecutive commas): skipping name", $bibentry);
         $section->del_citekey($key);
         next;
       }
     }
 
-    my $no = parsename($name, $f, {useprefix => $useprefix});
+    my $no = parsename($biber, $name, $f, {useprefix => $useprefix});
 
     # Deal with "and others" in data source
     if (lc($no->get_namestring) eq 'others') {
@@ -555,12 +562,12 @@ sub _date {
     if ($byear and
         ($datetype . 'year' eq 'year') and
         $entry->get('year')) {
-      $biber->biber_warn($bibentry, "Overwriting field 'year' with year value from field 'date' for entry '$key'");
+      $biber->biber_warn("Overwriting field 'year' with year value from field 'date' for entry '$key'", $bibentry);
     }
     if ($bmonth and
         ($datetype . 'month' eq 'month') and
         $entry->get('month')) {
-      $biber->biber_warn($bibentry, "Overwriting field 'month' with month value from field 'date' for entry '$key'");
+      $biber->biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
     }
 
     $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
@@ -576,7 +583,7 @@ sub _date {
     }
   }
   else {
-    $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$key' - ignoring");
+    $biber->biber_warn("Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
   }
   return;
 }
@@ -613,7 +620,7 @@ sub cache_data {
   my $pfilename = preprocess_file($biber, $filename);
 
   my $bib = Text::BibTeX::File->new( $pfilename, '<' )
-    or $logger->logdie("Cannot create Text::BibTeX::File object from $pfilename: $!");
+    or $biber->biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
 
   while ( my $entry = new Text::BibTeX::Entry $bib ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {
@@ -627,7 +634,7 @@ sub cache_data {
 
     # If an entry has no key, ignore it and warn
     unless ($entry->key) {
-      $logger->warn("Invalid or undefined BibTeX entry key in file '$pfilename', skipping ...");
+      $biber->biber_warn("Invalid or undefined BibTeX entry key in file '$pfilename', skipping ...");
       next;
     }
 
@@ -637,14 +644,12 @@ sub cache_data {
     # If we've already seen a case variant, warn
     # This is case mismatch test of datasource entries with other datasource entries
     if  (my $okey = $section->has_badcasekey($key)) {
-      $logger->warn("Possible typo (case mismatch) between datasource keys: '$key' and '$okey' in file '$filename'");
-      $biber->{warnings}++;
+      $biber->biber_warn("Possible typo (case mismatch) between datasource keys: '$key' and '$okey' in file '$filename'");
     }
 
     # If we've already seen this key in a datasource, ignore it and warn
     if  ($section->has_everykey($key)) {
-      $logger->warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
-      $biber->{warnings}++;
+      $biber->biber_warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
       next;
     }
     else {
@@ -653,8 +658,7 @@ sub cache_data {
 
     # Bad entry
     unless ($entry->parse_ok) {
-      $logger->warn("Entry $key does not parse correctly: skipping");
-      $biber->{warnings}++;
+      $biber->biber_warn("Entry $key does not parse correctly: skipping");
       next;
     }
 
@@ -696,26 +700,26 @@ sub preprocess_file {
   if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
     require File::Slurp::Unicode;
     my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
-      or $logger->logdie("Can't read $filename");
+      or $biber->biber_error("Can't read $filename");
 
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-        or $logger->logdie("Can't write $ufilename");
+        or $biber->biber_error("Can't write $ufilename");
 
   }
   else {
     File::Copy::copy($filename, $ufilename)
-        or $logger->logdie("Can't write $ufilename");
+        or $biber->biber_error("Can't write $ufilename");
   }
 
   # Decode LaTeX to UTF8 if output is UTF-8
   if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
     require File::Slurp::Unicode;
     my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
-      or $logger->logdie("Can't read $ufilename");
+      or $biber->biber_error("Can't read $ufilename");
     $logger->info('Decoding LaTeX character macros into UTF-8');
     $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1);
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-        or $logger->logdie("Can't write $ufilename");
+        or $biber->biber_error("Can't write $ufilename");
     $logger->info('Finished Decoding LaTeX character macros into UTF-8');
   }
 
@@ -749,7 +753,7 @@ sub preprocess_file {
 =cut
 
 sub parsename {
-  my ($namestr, $fieldname, $opts) = @_;
+  my ($biber, $namestr, $fieldname, $opts) = @_;
   $logger->debug("   Parsing namestring '$namestr'");
   my $usepre = $opts->{useprefix};
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
@@ -815,7 +819,7 @@ sub parsename {
   $gen_suffix_i      = inits(decode_utf8($nd_name->format($si_f)));
 
   # Only warn about lastnames since there should always be one
-  $logger->warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
+  $biber->biber_warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
 
   my $namestring = '';
   # prefix

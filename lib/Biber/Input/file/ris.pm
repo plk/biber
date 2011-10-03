@@ -70,14 +70,14 @@ sub extract_entries {
                           DIR => $biber->biber_tempdir,
                           SUFFIX => '.ris');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      $logger->logdie ("Could not fetch file '$filename'");
+      $biber->biber_error("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;
   }
   else {
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
-      $logger->logdie("Cannot find file '$trying_filename'!")
+      $biber->biber_error("Cannot find file '$trying_filename'!")
     }
   }
 
@@ -125,20 +125,19 @@ sub extract_entries {
 
       # If an entry has no key, ignore it and warn
       unless ($entry->{ID}) {
-        $logger->warn("RIS entry has no ID key in file '$filename', skipping ...");
-        $biber->{warnings}++;
+        $biber->biber_warn("RIS entry has no ID key in file '$filename', skipping ...");
         next;
       }
 
       my $ek = $entry->{ID};
       # If we've already seen a case variant, warn
       if (my $okey = $section->has_badcasekey($ek)) {
-        $logger->warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+        $biber->biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
       }
 
       # If we've already seen this key, ignore it and warn
       if ($section->has_everykey($ek)) {
-        $logger->warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
+        $biber->biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
       else {
@@ -169,9 +168,8 @@ sub extract_entries {
       $logger->debug("Looking for key '$wanted_key' in RIS file '$filename'");
       if (my @entries = grep { $wanted_key eq $_->{ID} } @ris_entries) {
         if ($#entries > 0) {
-          $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
+          $biber->biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
                        join(',', map {$_->{ID}} @entries) . ' - skipping duplicates ...');
-          $biber->{warnings}++;
         }
         my $entry = $entries[0];
 
@@ -263,10 +261,10 @@ FLOOP:  foreach my $f (keys %$entry) {
         while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             if ($user_map->{bmap_overwrite}) {
-              $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'");
+              $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
             }
             else {
-              $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'");
+              $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
               next;
             }
           }
@@ -359,10 +357,10 @@ FLOOP:  foreach my $f (keys %$entry) {
       while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
         if ($bibentry->field_exists(lc($from_as))) {
           if ($user_map->{bmap_overwrite}) {
-            $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'");
+            $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
           }
           else {
-            $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'");
+            $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
             next;
           }
         }
@@ -382,7 +380,7 @@ FLOOP:  foreach my $f (keys %$entry) {
     foreach my $alsoset (@{$ealias->{alsoset}}) {
       # drivers never overwrite existing fields
       if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        $biber->biber_warn($bibentry, "Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'");
+        $biber->biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
         next;
       }
       $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
@@ -426,7 +424,7 @@ sub _date {
     $bibentry->set_datafield('year', $1);
   }
   else {
-    $logger->warn("Invalid RIS date format: '$date' - ignoring");
+    $biber->biber_warn("Invalid RIS date format: '$date' - ignoring");
   }
   return;
 }
@@ -493,7 +491,7 @@ sub _name {
       }
     }
     else {
-      $logger->warn("Invalid RIS name format: '$name' - ignoring");
+      $biber->biber_warn("Invalid RIS name format: '$name' - ignoring");
     }
   }
   return;

@@ -77,7 +77,7 @@ sub set_output_target_file {
   if (Biber::Config->getoption('bblencoding')) {
     $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
   }
-  my $BBLFILE = IO::File->new($bblfile, ">$enc_out") or $logger->logdie("Failed to open $bblfile : $!");
+  my $BBLFILE = IO::File->new($bblfile, ">$enc_out");
   $self->set_output_target($BBLFILE);
 }
 
@@ -383,7 +383,7 @@ sub output {
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
   $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('bblsafechars');
 
-  print $target $data->{HEAD} or $logger->logdie("Failure to write head to $target_string: $!");
+  print $target $data->{HEAD};
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     $logger->debug("Writing entries for section $secnum");
@@ -419,10 +419,10 @@ sub output {
             $entry_string = latex_recode_output($entry_string);
           }
 
-          print $target $entry_string or $logger->logdie("Failure to write list element to $target_string: $!");
+          print $target $entry_string;
         }
         elsif ($listtype eq 'shorthand') {
-          print $target "    \\key{$k}\n" or $logger->logdie("Failure to write list element to $target_string: $!");
+          print $target "    \\key{$k}\n";
         }
       }
 
@@ -438,10 +438,10 @@ sub output {
     print $target "\\endrefsection\n"
   }
 
-  print $target $data->{TAIL} or $logger->logdie("Failure to write tail to $target_string: $!");
+  print $target $data->{TAIL};
 
   $logger->info("Output to $target_string");
-  close $target or $logger->logdie("Failure to close $target_string: $!");
+  close $target;
   return;
 }
 

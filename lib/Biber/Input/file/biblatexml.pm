@@ -76,7 +76,7 @@ sub extract_entries {
                           DIR => $biber->biber_tempdir,
                           SUFFIX => '.xml');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      $logger->logdie ("Could not fetch file '$filename'");
+      $biber->biber_error("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;
   }
@@ -85,7 +85,7 @@ sub extract_entries {
     # the filename count for preambles at the bottom of this sub
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
-      $logger->logdie("Cannot find file '$trying_filename'!")
+      $biber->biber_error("Cannot find file '$trying_filename'!")
     }
   }
 
@@ -95,7 +95,7 @@ sub extract_entries {
   # Set up XML parser and namespace
   my $parser = XML::LibXML->new();
   my $bltxml = $parser->parse_file($filename)
-    or $logger->logcroak("Can't parse file $filename");
+    or $biber->biber_error("Can't parse file $filename");
   my $xpc = XML::LibXML::XPathContext->new($bltxml);
   $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
 
@@ -109,20 +109,19 @@ sub extract_entries {
 
       # If an entry has no key, ignore it and warn
       unless ($entry->hasAttribute('id')) {
-        $logger->warn("Invalid or undefined BibLaTeXML entry key in file '$filename', skipping ...");
-        $biber->{warnings}++;
+        $biber->biber_warn("Invalid or undefined BibLaTeXML entry key in file '$filename', skipping ...");
         next;
       }
 
       my $ek = $entry->getAttribute('id');
       # If we've already seen a case variant, warn
       if (my $okey = $section->has_badcasekey($ek)) {
-        $logger->warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+        $biber->biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
       }
 
       # If we've already seen this key, ignore it and warn
       if ($section->has_everykey($ek)) {
-        $logger->warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
+        $biber->biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
       else {
@@ -154,9 +153,8 @@ sub extract_entries {
       if (my @entries = $xpc->findnodes("//$NS:entry[\@id='$wanted_key']")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
-          $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
+          $biber->biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
                        join(',', map {$_->getAttribute('id')} @entries) . ' - skipping duplicates ...');
-          $biber->{warnings}++;
         }
         my $entry = $entries[0];
 
@@ -332,7 +330,7 @@ sub _date {
         $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
       }
       else {
-        $biber->biber_warn($bibentry, "Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start in entry '$key' - ignoring");
+        $biber->biber_warn("Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start in entry '$key' - ignoring", $bibentry);
       }
 
       # End of range
@@ -348,7 +346,7 @@ sub _date {
         }
       }
       else {
-        $biber->biber_warn($bibentry, "Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end in entry '$key' - ignoring");
+        $biber->biber_warn("Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end in entry '$key' - ignoring", $bibentry);
       }
     }
     else { # Simple date
@@ -364,7 +362,7 @@ sub _date {
         $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
       }
       else {
-        $biber->biber_warn($bibentry, "Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$key' - ignoring");
+        $biber->biber_warn("Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$key' - ignoring", $bibentry);
       }
     }
   }
@@ -379,7 +377,7 @@ sub _name {
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
   foreach my $name ($node->findnodes("./$NS:person")) {
-    $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
+    $names->add_name(parsename($biber, $name, $f, {useprefix => $useprefix}));
   }
 
   # Deal with explicit "moreenames" in data source
@@ -414,7 +412,7 @@ sub _name {
 =cut
 
 sub parsename {
-  my ($node, $fieldname, $opts) = @_;
+  my ($biber, $node, $fieldname, $opts) = @_;
   $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
   my $usepre = $opts->{useprefix};
 
@@ -461,7 +459,7 @@ sub parsename {
   }
 
   # Only warn about lastnames since there should always be one
-  $logger->warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
+  $biber->biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
 
   my $namestring = '';
 
@@ -617,9 +615,8 @@ sub _resolve_display_mode {
     if (@nodelist = $entry->findnodes("./${fieldname}[$modeattr]")) {
       # Check to see if there is more than one entry with a mode and warn
       if ($#nodelist > 0) {
-        $logger->warn("Found more than one mode '$mode' '$fieldname' field in entry '" .
+        $biber->biber_warn("Found more than one mode '$mode' '$fieldname' field in entry '" .
                       $entry->getAttribute('id') . "' - skipping duplicates ...");
-        $biber->{warnings}++;
       }
       return $nodelist[0];
     }

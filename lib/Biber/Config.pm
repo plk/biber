@@ -358,7 +358,7 @@ sub set_unul_changed {
 
 sub postprocess_biber_opts {
   shift; # class method so don't care about class name
-
+  my $biber = shift;
   # Turn sortcase and sortupper into booleans if they are not already
   # They are not booleans on the command-line/config file so that they
   # mirror biblatex option syntax for users
@@ -370,7 +370,7 @@ sub postprocess_biber_opts {
     }
     unless ($CONFIG->{options}{biber}{sortcase} eq '1' or
             $CONFIG->{options}{biber}{sortcase} eq '0') {
-      $logger->logdie("Invalid value for option 'sortcase'");
+      $biber->biber_error("Invalid value for option 'sortcase'");
     }
   }
 
@@ -382,7 +382,7 @@ sub postprocess_biber_opts {
     }
     unless ($CONFIG->{options}{biber}{sortupper} eq '1' or
             $CONFIG->{options}{biber}{sortupper} eq '0') {
-      $logger->logdie("Invalid value for option 'sortupper'");
+      $biber->biber_error("Invalid value for option 'sortupper'");
     }
   }
 }

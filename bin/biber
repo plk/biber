@@ -124,7 +124,7 @@ if (my $outdir = Biber::Config->getoption('output_directory')) {
 $biber->parse_ctrlfile($bcf);
 
 # Postprocess biber options now that they are all read from the various places
-Biber::Config->postprocess_biber_opts;
+Biber::Config->postprocess_biber_opts($biber);
 
 # Check to see if the .bcf set debug=1. If so, increase logging level
 # We couldn't set this on logger init as the .bcf hadn't been read then
@@ -162,15 +162,7 @@ $bbloutput->set_output_target_file($bblfile);
 # Write the output to the target
 $bbloutput->output;
 
-# Show warning/errors and exit
-if ($biber->{errors}) {
-  $logger->info('ERRORS: ' . $biber->{errors});
-  exit EXIT_ERROR;
-}
-
-if ($biber->{warnings}) {
-  $logger->info('WARNINGS: ' . $biber->{warnings});
-}
+$biber->display_problems;
 
 exit EXIT_OK;
 

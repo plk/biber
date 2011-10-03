@@ -71,11 +71,6 @@ sub driver_config {
                                                             qr/\Aalsoset\z/],
                                           'NsStrip' => 1);
 
-
-  # Check we have the right driver
-  unless ($dcfxml->{driver} eq $driver_name) {
-    $logger->logdie("Expected driver config type '$driver_name', got '" . $dcfxml->{driver} . "'");
-  }
   return $dcfxml;
 }
 

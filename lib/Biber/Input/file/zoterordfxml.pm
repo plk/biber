@@ -86,7 +86,7 @@ sub extract_entries {
                           DIR => $biber->biber_tempdir,
                           SUFFIX => '.rdf');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      $logger->logdie ("Could not fetch file '$filename'");
+      $biber->biber_error("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;
   }
@@ -95,7 +95,7 @@ sub extract_entries {
     # the filename count for preambles at the bottom of this sub
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
-      $logger->logdie("Cannot find file '$trying_filename'!")
+      $biber->biber_error("Cannot find file '$trying_filename'!")
     }
   }
 
@@ -105,7 +105,7 @@ sub extract_entries {
   # Set up XML parser and namespaces
   my $parser = XML::LibXML->new();
   my $rdfxml = $parser->parse_file($filename)
-    or $logger->logcroak("Can't parse file $filename");
+    or $biber->biber_error("Can't parse file $filename");
   my $xpc = XML::LibXML::XPathContext->new($rdfxml);
   foreach my $ns (keys %PREFICES) {
     $xpc->registerNs($ns, $PREFICES{$ns});
@@ -119,8 +119,7 @@ sub extract_entries {
 
       # If an entry has no key, ignore it and warn
       unless ($entry->hasAttribute('rdf:about')) {
-        $logger->warn("Invalid or undefined RDF/XML ID in file '$filename', skipping ...");
-        $biber->{warnings}++;
+        $biber->biber_warn("Invalid or undefined RDF/XML ID in file '$filename', skipping ...");
         next;
       }
 
@@ -131,12 +130,12 @@ sub extract_entries {
 
       # If we've already seen a case variant, warn
       if (my $okey = $section->has_badcasekey($ek)) {
-        $logger->warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+        $biber->biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
       }
 
       # If we've already seen this key, ignore it and warn
       if ($section->has_everykey($ek)) {
-        $logger->warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
+        $biber->biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
       else {
@@ -172,9 +171,8 @@ sub extract_entries {
       if (my @entries = $xpc->findnodes("/rdf:RDF/*[\@rdf:about='$temp_key']")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
-          $logger->warn("Found more than one entry for key '$wanted_key' in '$filename': " .
+          $biber->biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
                        join(',', map {$_->getAttribute('rdf:about')} @entries) . ' - skipping duplicates ...');
-          $biber->{warnings}++;
         }
         my $entry = $entries[0];
 
@@ -273,10 +271,10 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
         while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             if ($user_map->{bmap_overwrite}) {
-              $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'");
+              $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
             }
             else {
-              $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'");
+              $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
               next;
             }
           }
@@ -364,10 +362,10 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
       while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
         if ($bibentry->field_exists(lc($from_as))) {
           if ($user_map->{bmap_overwrite}) {
-            $biber->biber_warn($bibentry, "Overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'");
+            $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
           }
           else {
-            $biber->biber_warn($bibentry, "Not overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'");
+            $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
             next;
           }
         }
@@ -387,7 +385,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
     foreach my $alsoset (@{$ealias->{alsoset}}) {
       # drivers never overwrite existing fields
       if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        $biber->biber_warn($bibentry, "Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '$itype' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'");
+        $biber->biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '$itype' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
         next;
       }
       $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
@@ -471,7 +469,7 @@ sub _date {
     }
   }
   else {
-    $biber->biber_warn($bibentry, "Invalid format '$date' of date field '$f' in entry '$key' - ignoring");
+    $biber->biber_warn("Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
   }
   return;
 }
@@ -481,7 +479,7 @@ sub _name {
   my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
   my $names = new Biber::Entry::Names;
   foreach my $name ($entry->findnodes("./$f/rdf:Seq/rdf:li/foaf:Person")) {
-    $names->add_name(parsename($name, $f));
+    $names->add_name(parsename($biber, $name, $f));
   }
   $bibentry->set_datafield($to, $names);
   return;
@@ -608,7 +606,7 @@ sub _identifier {
 =cut
 
 sub parsename {
-  my ($node, $fieldname, $opts) = @_;
+  my ($biber, $node, $fieldname, $opts) = @_;
   $logger->debug('Parsing Zotero RDF/XML name object ' . $node->nodePath);
 
   my %nmap = ('surname'   => 'last',
@@ -626,7 +624,7 @@ sub parsename {
   }
 
   # Only warn about lastnames since there should always be one
-  $logger->warn("Couldn't determine Lastname for name node: " . $node->nodePath) unless exists($namec{last});
+  $biber->biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
 
   my $namestring = '';
 
