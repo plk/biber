@@ -89,8 +89,7 @@ sub extract_entries {
   my $section = $biber->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
-  my $tf; my $tberr; # Up here so that the temp files have enough scope to survive until we've
-                     # used them
+  my $tf; # Up here so that the temp file has enough scope to survive until we've used it
   $logger->trace("Entering extract_entries()");
 
   # If it's a remote data file, fetch it first
@@ -123,10 +122,11 @@ sub extract_entries {
   # that's standard stdio.
   # THe Log4Perl setup outputs only to STDOUT so redirecting all STDERR like this is
   # ok since only libbtparse will be writing there
-  $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
-                              DIR => $biber->biber_tempdir);
+  my $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
+                               DIR => $biber->biber_tempdir);
+  my $tberr_name = $tberr->filename;
   open OLDERR, '>&', \*STDERR;
-  open STDERR, '>', $tberr;
+  open STDERR, '>', $tberr_name;
 
   # Increment the number of times each datafile has been referenced
   # For example, a datafile might be referenced in more than one section.
@@ -184,14 +184,18 @@ sub extract_entries {
   # Put any Text::BibTeX errors into the biber warnings/errors collections
   # We are parsing the libbtparse library error/warning strings a little here
   # This is not so bad as they have a clean structure (see error.c in libbtparse)
-  while (<$tberr>) {
+  open my $tbe, '<', $tberr_name;
+  while (<$tbe>) {
     if (/error:/) {
+      chomp;
       $biber->biber_error("BibTeX subsystem: $_");
     }
     elsif (/warning:/) {
+      chomp;
       $biber->biber_warn("BibTeX subsystem: $_");
     }
   }
+  close($tbe);
 
   # Only push the preambles from the file if we haven't seen this data file before
   # and there are some preambles to push
@@ -771,25 +775,7 @@ sub parsename {
   $namestr =~ s/\s*\z//xms; # trailing whitespace
   $namestr =~ s/\s+/ /g;    # Collapse internal whitespace
 
-  my $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
-                              DIR => $biber->biber_tempdir);
-  open OLDERR, '>&', \*STDERR;
-  open STDERR, '>', $tberr;
   my $name = new Text::BibTeX::Name($namestr);
-  open STDERR, '>&', \*OLDERR;
-  close OLDERR;
-
-  # Put any Text::BibTeX errors into the biber warnings/errors collections
-  # We are parsing the libbtparse library error/warning strings a little here
-  # This is not so bad as they have a clean structure (see error.c in libbtparse)
-  while (<$tberr>) {
-    if (/error:/) {
-      $biber->biber_error("BibTeX subsystem: $_");
-    }
-    elsif (/warning:/) {
-      $biber->biber_warn("BibTeX subsystem: $_");
-    }
-  }
 
   # Formats so we can get BibTeX compatible nbsp inserted
   my $l_f = new Text::BibTeX::NameFormat('l', 0);

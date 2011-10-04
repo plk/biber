@@ -626,8 +626,10 @@ sub parsename {
 
     my $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
                                 DIR => $biber->biber_tempdir);
+    my $tberr_name = $tberr->filename;
+
     open OLDERR, '>&', \*STDERR;
-    open STDERR, '>', $tberr;
+    open STDERR, '>', $tberr_name;
     my $name = new Text::BibTeX::Name($namestr);
     open STDERR, '>&', \*OLDERR;
     close OLDERR;
@@ -635,14 +637,18 @@ sub parsename {
     # Put any Text::BibTeX errors into the biber warnings/errors collections
     # We are parsing the libbtparse library error/warning strings a little here
     # This is not so bad as they have a clean structure (see error.c in libbtparse)
-    while (<$tberr>) {
+    open my $tbe, '<', $tberr_name;
+    while (<$tbe>) {
       if (/error:/) {
+        chomp;
         $biber->biber_error("BibTeX subsystem: $_");
       }
       elsif (/warning:/) {
+        chomp;
         $biber->biber_warn("BibTeX subsystem: $_");
       }
     }
+    close($tbe);
 
     # Formats so we can get BibTeX compatible nbsp inserted
     my $l_f = new Text::BibTeX::NameFormat('l', 0);
