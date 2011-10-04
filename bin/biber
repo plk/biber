@@ -217,7 +217,7 @@ The set of characters included in the conversion routine for
 larger set or "base" to use a minimal set. Default is "extra" which is
 between "base" and "full". You may need to load more macro packages
 to deal with the results of "full" (Dings, Greek characters, special
-symbols etc.)
+symbols etc.).
 
 =item B<--bibencoding|-e [encoding]>
 
@@ -266,7 +266,7 @@ Turn on debugging for C<biber>.
 =item B<--fastsort|-f>
 
 Use Perl's sort instead of C<Unicode::Collate> for sorting. Also uses
-OS locale definitions (which may be broken for some languages ...)
+OS locale definitions (which may be broken for some languages ...).
 
 =item B<--help|-h>
 
@@ -274,7 +274,7 @@ Show this help message.
 
 =item B<--logfile [file]>
 
-Use F<file.blg> as the name of the logfile
+Use F<file.blg> as the name of the logfile.
 
 =item B<--mincrossrefs|-m [number]>
 
@@ -282,13 +282,13 @@ Set threshold for crossrefs.
 
 =item B<--noconf>
 
-Don't look for a configfile
+Don't look for a configfile.
 
 =item B<--nodieonerror>
 
-Don't exit on errors, just log and continue as far as possible
+Don't exit on errors, just log and continue as far as possible.
 This can be useful if the error is something from, for example, the underlying
-BibTeX parsing C library which can complain about parsing errors which can be ignored
+BibTeX parsing C library which can complain about parsing errors which can be ignored.
 
 =item B<--nolog>
 
@@ -323,7 +323,7 @@ Log only errors. If this option is used more than once, don't even log errors.
 
 =item B<--sortcase=true|false>
 
-Case-sensitive sorting (default is true)
+Case-sensitive sorting (default is true).
 
 =item B<--sortlocale|-l [locale]>
 
@@ -337,7 +337,7 @@ B<--fastsort|-f> this sets the OS locale for sorting.
 Whether to sort uppercase before lowercase when using
 default sorting (B<--collate|-C>). When
 using B<--fastsort|-f>, your OS collation locale determines
-this and this option is ignored. (default is true)
+this and this option is ignored (default is true).
 
 =item B<-u>
 
@@ -353,7 +353,7 @@ Schema validate the F<.bcf> biblatex control file.
 
 =item B<--validate_structure|-V>
 
-Validate the data against a data model
+Validate the data against a data model.
 
 =item B<--version|-v>
 
