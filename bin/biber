@@ -46,7 +46,7 @@ GetOptions(
            'onlylog',
            'outfile|O=s',
            'output_directory=s',
-           'quiet|q',
+           'quiet|q+',
            'sortcase=s',
            'sortlocale|l=s',
            'sortupper=s',
@@ -319,7 +319,7 @@ before current directory.
 
 =item B<--quiet|-q>
 
-Log only errors
+Log only errors. If this option is used more than once, don't even log errors.
 
 =item B<--sortcase=true|false>
 

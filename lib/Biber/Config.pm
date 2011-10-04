@@ -190,8 +190,11 @@ sub _initopts {
   elsif (Biber::Config->getoption('debug')) {
     $LOGLEVEL = 'DEBUG'
   }
-  elsif (Biber::Config->getoption('quiet')) {
+  elsif (Biber::Config->getoption('quiet') == 1) {
     $LOGLEVEL = 'ERROR'
+  }
+  elsif (Biber::Config->getoption('quiet') > 1) {
+    $LOGLEVEL = 'FATAL'
   }
   else {
     $LOGLEVEL = 'INFO'
@@ -214,8 +217,11 @@ sub _initopts {
   }
   else {
     # Max screen loglevel is INFO
-    if (Biber::Config->getoption('quiet')) {
+    if (Biber::Config->getoption('quiet') == 1) {
       $LOGLEVEL_S = 'ERROR';
+    }
+    elsif (Biber::Config->getoption('quiet') > 1) {
+      $LOGLEVEL_S = 'FATAL'
     }
     else {
       $LOGLEVEL_S = 'INFO';
