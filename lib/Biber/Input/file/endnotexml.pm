@@ -26,6 +26,7 @@ use Data::Dump qw(dump);
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
+use File::Temp;
 
 ##### This is based on Endnote X4 #####
 
@@ -623,10 +624,25 @@ sub parsename {
     $namestr =~ s/\s*\z//xms;   # trailing whitespace
     $namestr =~ s/\s+/ /g;      # Collapse internal whitespace
 
+    my $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
+                                DIR => $biber->biber_tempdir);
     open OLDERR, '>&', \*STDERR;
-    open STDERR, '>', '/dev/null';
+    open STDERR, '>', $tberr;
     my $name = new Text::BibTeX::Name($namestr);
     open STDERR, '>&', \*OLDERR;
+    close OLDERR;
+
+    # Put any Text::BibTeX errors into the biber warnings/errors collections
+    # We are parsing the libbtparse library error/warning strings a little here
+    # This is not so bad as they have a clean structure (see error.c in libbtparse)
+    while (<$tberr>) {
+      if (/error:/) {
+        $biber->biber_error("BibTeX subsystem: $_");
+      }
+      elsif (/warning:/) {
+        $biber->biber_warn("BibTeX subsystem: $_");
+      }
+    }
 
     # Formats so we can get BibTeX compatible nbsp inserted
     my $l_f = new Text::BibTeX::NameFormat('l', 0);

@@ -6,8 +6,20 @@ use Test::More tests => 8;
 use Biber;
 use Cwd qw(getcwd);
 use File::Spec;
-use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($ERROR);
+use Log::Log4perl;
+my $LEVEL = 'ERROR';
+my $l4pconf = qq|
+    log4perl.category.main                             = $LEVEL, Screen
+    log4perl.category.screen                           = $LEVEL, Screen
+    log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
+    log4perl.appender.Screen.utf8                      = 1
+    log4perl.appender.Screen.Threshold                 = $LEVEL
+    log4perl.appender.Screen.stderr                    = 0
+    log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
+|;
+
+Log::Log4perl->init(\$l4pconf);
+
 chdir('t/tdata');
 
 my %colloptsA = ( level => 3, table => '/home/user/data/otherkeys.txt' );

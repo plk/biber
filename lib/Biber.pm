@@ -110,8 +110,11 @@ sub biber_error {
   my ($self, $error) = @_;
   $logger->error($error);
   $self->{errors}++;
-  $self->display_problems;
-  exit EXIT_ERROR;
+  # exit unless user requested not to for errors
+  unless (Biber::Config->getoption('nodieonerror')) {
+    $self->display_problems;
+    exit EXIT_ERROR;
+  }
 }
 
 =head2 display_problems
@@ -122,13 +125,12 @@ sub biber_error {
 
 sub display_problems {
   my $self = shift;
+  if ($self->{warnings}) {
+    $logger->info('WARNINGS: ' . $self->{warnings});
+  }
   if ($self->{errors}) {
     $logger->info('ERRORS: ' . $self->{errors});
     exit EXIT_ERROR;
-  }
-
-  if ($self->{warnings}) {
-    $logger->info('WARNINGS: ' . $self->{warnings});
   }
 }
 

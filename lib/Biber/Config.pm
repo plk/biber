@@ -11,7 +11,11 @@ use Data::Compare;
 use Data::Dump;
 use Carp;
 use List::AllUtils qw(first);
-use Log::Log4perl qw( :no_extra_logdie_message );
+use Log::Log4perl qw( :no_extra_logdie_message ); # To keep PAR::Packer happy, explicitly load these
+use Log::Log4perl::Appender::Screen;
+use Log::Log4perl::Appender::File;
+use Log::Log4perl::Layout::SimpleLayout;
+use Log::Log4perl::Layout::PatternLayout;
 
 our $VERSION = '0.9.6';
 our $BETA_VERSION = 0; # Is this a beta version?

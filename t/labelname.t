@@ -8,12 +8,23 @@ use Test::More tests => 3;
 
 use Biber;
 use Biber::Output::BBL;
-use Log::Log4perl qw(:easy);
+use Log::Log4perl;
 chdir("t/tdata");
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
-Log::Log4perl->easy_init($ERROR);
+my $LEVEL = 'ERROR';
+my $l4pconf = qq|
+    log4perl.category.main                             = $LEVEL, Screen
+    log4perl.category.screen                           = $LEVEL, Screen
+    log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
+    log4perl.appender.Screen.utf8                      = 1
+    log4perl.appender.Screen.Threshold                 = $LEVEL
+    log4perl.appender.Screen.stderr                    = 0
+    log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
+|;
+Log::Log4perl->init(\$l4pconf);
+
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 $biber->parse_ctrlfile("general1.bcf");

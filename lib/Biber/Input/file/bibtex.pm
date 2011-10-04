@@ -90,8 +90,8 @@ sub extract_entries {
   my $section = $biber->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
-  my $tf; # Up here so that the temp file has enough scope to survive until we've
-          # used it
+  my $tf; my $tberr; # Up here so that the temp files have enough scope to survive until we've
+                     # used them
   $logger->trace("Entering extract_entries()");
 
   # If it's a remote data file, fetch it first
@@ -102,7 +102,7 @@ sub extract_entries {
                           DIR => $biber->biber_tempdir,
                           SUFFIX => '.bib');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      $biber->biber_error ("Could not fetch file '$filename'");
+      $biber->biber_error("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;
   }
@@ -119,9 +119,15 @@ sub extract_entries {
   $logger->info("Found bibtex data file '$filename'");
 
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
+  # We can't redirect STDERR to a variable as libbtparse doesnt' use PerlIO, just stdio
+  # so it doesn't understand this. It does understand normal file redirection though as
+  # that's standard stdio.
+  # THe Log4Perl setup outputs only to STDOUT so redirecting all STDERR like this is
+  # ok since only libbtparse will be writing there
+  $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
+                              DIR => $biber->biber_tempdir);
   open OLDERR, '>&', \*STDERR;
-  close STDERR;
-  open STDERR, '>', \$libbtp_stderr;
+  open STDERR, '>', $tberr;
 
   # Increment the number of times each datafile has been referenced
   # For example, a datafile might be referenced in more than one section.
@@ -145,7 +151,7 @@ sub extract_entries {
       create_entry($biber, decode_utf8($entry->key), $entry);
     }
 
-    # if allkeys, push all bibdata keys into citekeys (if they are not already there)
+    # If allkeys, push all bibdata keys into citekeys (if they are not already there).
     # We are using the special "orig_key_order" array which is used to deal with the
     # sitiation when sorting=none and allkeys is set. We need an array rather than the
     # keys from the bibentries hash because we need to preserve the original order of
@@ -173,15 +179,20 @@ sub extract_entries {
     }
   }
 
-  $biber->biber_error("bibtex parsing subsystem error: $libbtp_stderr");
-#  open STDERR, '>&', \*OLDERR;
+  open STDERR, '>&', \*OLDERR;
+  close OLDERR;
 
-
-
-  # # put any Text::BibTeX errors into the biber error collection
-  # foreach my $e (split(/[\n\r]/, $libbtp_stderr)) {
-  #   $biber->biber_error("libbtparse error: $e");
-  # }
+  # Put any Text::BibTeX errors into the biber warnings/errors collections
+  # We are parsing the libbtparse library error/warning strings a little here
+  # This is not so bad as they have a clean structure (see error.c in libbtparse)
+  while (<$tberr>) {
+    if (/error:/) {
+      $biber->biber_error("BibTeX subsystem: $_");
+    }
+    elsif (/warning:/) {
+      $biber->biber_warn("BibTeX subsystem: $_");
+    }
+  }
 
   # Only push the preambles from the file if we haven't seen this data file before
   # and there are some preambles to push
@@ -629,8 +640,9 @@ sub cache_data {
     }
 
     # Ignore misc bibtex entry types we don't care about
-    next if ( $entry->metatype == BTE_MACRODEF or $entry->metatype == BTE_UNKNOWN
-              or $entry->metatype == BTE_COMMENT );
+    next if ( $entry->metatype == BTE_MACRODEF or
+              $entry->metatype == BTE_UNKNOWN or
+              $entry->metatype == BTE_COMMENT );
 
     # If an entry has no key, ignore it and warn
     unless ($entry->key) {
@@ -658,7 +670,7 @@ sub cache_data {
 
     # Bad entry
     unless ($entry->parse_ok) {
-      $biber->biber_warn("Entry $key does not parse correctly: skipping");
+      $biber->biber_warn("Entry $key does not parse correctly");
       next;
     }
 
@@ -673,7 +685,6 @@ sub cache_data {
   }
 
   $bib->close; # If we don't do this, we can't unlink the temp file on Windows
-
   return;
 }
 
@@ -761,10 +772,25 @@ sub parsename {
   $namestr =~ s/\s*\z//xms; # trailing whitespace
   $namestr =~ s/\s+/ /g;    # Collapse internal whitespace
 
+  my $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
+                              DIR => $biber->biber_tempdir);
   open OLDERR, '>&', \*STDERR;
-  open STDERR, '>', '/dev/null';
+  open STDERR, '>', $tberr;
   my $name = new Text::BibTeX::Name($namestr);
   open STDERR, '>&', \*OLDERR;
+  close OLDERR;
+
+  # Put any Text::BibTeX errors into the biber warnings/errors collections
+  # We are parsing the libbtparse library error/warning strings a little here
+  # This is not so bad as they have a clean structure (see error.c in libbtparse)
+  while (<$tberr>) {
+    if (/error:/) {
+      $biber->biber_error("BibTeX subsystem: $_");
+    }
+    elsif (/warning:/) {
+      $biber->biber_warn("BibTeX subsystem: $_");
+    }
+  }
 
   # Formats so we can get BibTeX compatible nbsp inserted
   my $l_f = new Text::BibTeX::NameFormat('l', 0);
