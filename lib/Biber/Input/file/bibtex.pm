@@ -27,7 +27,6 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
 
-my $libbtp_stderr;
 my $logger = Log::Log4perl::get_logger('main');
 
 state $cache; # state variable so it's persistent across calles to extract_entries()
