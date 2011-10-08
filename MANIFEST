@@ -37,7 +37,6 @@ lib/Biber/Structure.pm
 lib/Biber/Utils.pm
 doc/biber.tex
 doc/biber.pdf
-doc/biber-auctex.png
 doc/biber-texworks.png
 data/schemata/texmap.rnc
 data/schemata/bcf.rnc
@@ -130,7 +129,7 @@ t/tdata/structure-dateformats.bib
 t/tdata/extrayear.bib
 t/tdata/labelalpha.bib
 t/tdata/names.bib
-t/tdata/biblatexml.xml
+t/tdata/biblatexml.bltxml
 t/tdata/options.bib
 t/tdata/skips.bib
 t/tdata/sort.bib
