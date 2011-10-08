@@ -208,16 +208,15 @@ Try to convert UTF-8 chars into LaTeX macros when writing the .bbl
 This can prevent unknown char errors when using PDFLaTeX and inputenc
 as this doesn't understand all of UTF-8. Note, it is better to switch
 to XeTeX or LuaTeX to avoid this situation. By default uses the
---bblsafecharsset "extra" set of characters.
+--bblsafecharsset "base" set of characters.
 
-=item B<--bblsafecharsset=base|extra|full>
+=item B<--bblsafecharsset=base|full>
 
 The set of characters included in the conversion routine for
 --bblsafechars. Set to "full" to try harder with a much
-larger set or "base" to use a minimal set. Default is "extra" which is
-between "base" and "full". You may need to load more macro packages
-to deal with the results of "full" (Dings, Greek characters, special
-symbols etc.).
+larger set or "base" to use a basic set. Default is "base" which is
+You may need to load more macro packages to deal with the results of
+"full" (Dings, Greek characters, special symbols etc.).
 
 =item B<--bibencoding|-e [encoding]>
 
@@ -250,14 +249,13 @@ Converts the F<.bcf> control file into html using an XSLT transform. Can
 be useful for debugging. File is named by appending C<.html>
 to F<.bcf> file.
 
-=item B<--decodecharsset=base|extra|full>
+=item B<--decodecharsset=base|full>
 
 The set of characters included in the conversion routine when decoding
 LaTeX macros into UTF-8 (which happens when B<--bblencoding|-E> is set to
 UTF-8). Set to "full" to try harder with a much larger set or "base" to
-use a minimal set. Default is "extra" which is between "base" and "full".
-You may want to try "full" if you want, for example, if you have less common
-UTF-8 characters in your data source.
+use a smaller basic set. Default is "base". You may want to try "full"
+if you have less common UTF-8 characters in your data source.
 
 =item B<--debug|-D>
 

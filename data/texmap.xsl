@@ -37,9 +37,6 @@
           .utf8 {
             font-family: Cyberbit;
           }
-          .extra {
-            background-color: #FFFFEE;
-          }
           .full {
             background-color: #E6FFE6;
           }
@@ -85,7 +82,6 @@
         <h2><tt>Biber</tt> UTF-8  <xsl:text disable-output-escaping="yes">&amp;harr;</xsl:text> LaTeX macro decoding/encoding map</h2>
           <div class="key"><u>Key</u>
           <ul>
-            <li><span class="extra">Mapping only in &quot;extra&quot; mapping set</span></li>
             <li><span class="full">Mapping only in &quot;full&quot; mapping set</span></li>
             <li><span class="preferred">In encoding mapping (UTF-8 <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> LaTeX macros), when there are multiple possible mappings, red highlighted macro is the preferred mapping</span></li>
           </ul>
@@ -138,17 +134,6 @@
                 <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
               </tr>
             </xsl:for-each>              
-            <xsl:for-each select="/texmap/wordmacros[@set='extra']/map">
-              <tr class="extra">
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \<xsl:value-of select="./from/text()"/></span></td>
-                <td><span class="utf8"><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
           </tbody>
         </table>
         <hr/>
@@ -169,17 +154,6 @@
                 <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
               </tr>
             </xsl:for-each>              
-            <xsl:for-each select="/texmap/diacritics[@set='extra']/map">
-              <tr class="extra">
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \<xsl:value-of select="./from/text()"/></span></td>
-                <td><span class="utf8"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
           </tbody>
         </table>
         <hr/>
@@ -190,7 +164,7 @@
           </thead>
           <tbody>
             <xsl:for-each select="/texmap/punctuation/map">
-              <tr class="extra">
+              <tr>
                 <td><span class="macro">
                   <xsl:if test="./from/@preferred='1'">
                     <xsl:attribute name="class">preferred</xsl:attribute>
