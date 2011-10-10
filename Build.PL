@@ -57,7 +57,7 @@ my $builder = $class->new(
         'XML::LibXSLT' => 0,
         'Text::BibTeX' => '0.60',
         'LWP::Simple' => 0,
-        'perl' => '5.14.0'
+        'perl' => '5.14.1'
     },
     recommends => {
         'Readonly::XS' => 0
