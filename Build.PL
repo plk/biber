@@ -52,12 +52,12 @@ my $builder = $class->new(
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Readonly' => 0,
-        'Unicode::Collate' => '0.78',
+        'Unicode::Collate' => '0.80',
         'XML::LibXML::Simple' => 0,
         'XML::LibXSLT' => 0,
         'Text::BibTeX' => '0.60',
         'LWP::Simple' => 0,
-        'perl' => '5.10.0'
+        'perl' => '5.14.0'
     },
     recommends => {
         'Readonly::XS' => 0
