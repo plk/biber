@@ -1,7 +1,7 @@
 {
    "abstract" : "Biber is a much-augmented bibtex replacement for biblatex users",
    "author" : [
-      "François Charette <firmicus@gmx.net>"
+      "Philip Kime <Philip@kime.org.uk>"
    ],
    "dynamic_config" : 1,
    "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110930001",
@@ -44,10 +44,10 @@
             "Readonly" : 0,
             "Regexp::Common" : 0,
             "Text::BibTeX" : "0.60",
-            "Unicode::Collate" : "0.78",
+            "Unicode::Collate" : "0.80",
             "XML::LibXML::Simple" : 0,
             "XML::LibXSLT" : 0,
-            "perl" : "v5.10.0"
+            "perl" : "v5.14.1"
          }
       }
    },
@@ -106,10 +106,6 @@
       },
       "Biber::LaTeX::Recode" : {
          "file" : "lib/Biber/LaTeX/Recode.pm",
-         "version" : 0
-      },
-      "Biber::LaTeX::Recode::Data" : {
-         "file" : "lib/Biber/LaTeX/Recode/Data.pm",
          "version" : 0
       },
       "Biber::Output::BBL" : {

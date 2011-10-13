@@ -1,7 +1,7 @@
 ---
 abstract: 'Biber is a much-augmented bibtex replacement for biblatex users'
 author:
-  - 'François Charette <firmicus@gmx.net>'
+  - 'Philip Kime <Philip@kime.org.uk>'
 build_requires:
   Config::AutoConf: 0.15
   ExtUtils::LibBuilder: 0.02
@@ -57,9 +57,6 @@ provides:
   Biber::LaTeX::Recode:
     file: lib/Biber/LaTeX/Recode.pm
     version: 0
-  Biber::LaTeX::Recode::Data:
-    file: lib/Biber/LaTeX/Recode/Data.pm
-    version: 0
   Biber::Output::BBL:
     file: lib/Biber/Output/BBL.pm
     version: 0
@@ -101,10 +98,10 @@ requires:
   Readonly: 0
   Regexp::Common: 0
   Text::BibTeX: 0.60
-  Unicode::Collate: 0.78
+  Unicode::Collate: 0.80
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
-  perl: v5.10.0
+  perl: v5.14.1
 resources:
   license: http://dev.perl.org/licenses/
 version: v0.9.6

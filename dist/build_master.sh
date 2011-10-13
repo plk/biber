@@ -196,9 +196,9 @@ scp $dcf.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi
 done
 
 # Unicode <-> LaTeX macro mapping doc
-$BINDIR/xsl-transform.pl $BASE/lib/Biber/LaTeX/Recode/data.xml $XSLDIR/texmap.xsl
-scp $BASE/lib/Biber/LaTeX/Recode/data.xml.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html
-\rm -f $BASE/lib/Biber/LaTeX/Recode/data.xml.html
+$BINDIR/xsl-transform.pl $BASE/lib/Biber/LaTeX/recode_data.xml $XSLDIR/texmap.xsl
+scp $BASE/lib/Biber/LaTeX/recode_data.xml.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html
+\rm -f $BASE/lib/Biber/LaTeX/recode_data.xml
 
 # source
 cd $BASE
