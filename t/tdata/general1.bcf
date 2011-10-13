@@ -267,6 +267,7 @@
     <bcf:citekey>hasan</bcf:citekey>
     <bcf:citekey>t1</bcf:citekey>
     <bcf:citekey>tvonb</bcf:citekey>
+    <bcf:citekey>lne1</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>

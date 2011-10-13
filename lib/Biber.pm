@@ -1264,17 +1264,30 @@ sub process_labelname {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $lnamespec = Biber::Config->getblxoption('labelnamespec', $be->get_field('entrytype'));
+  my $struc = Biber::Config->get_structure;
 
   # First we set the normal labelname name
   foreach my $ln ( @{$lnamespec} ) {
     my $lnameopt;
     if ( $ln =~ /\Ashort(.+)\z/ ) {
       $lnameopt = $1;
-    } else {
+    }
+    else {
       $lnameopt = $ln;
     }
-    if ($be->get_field($ln) and
-      Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) ) {
+
+    unless (first {$_ eq $ln} @{$struc->get_field_type('name')}) {
+      $self->biber_warn("Labelname candidate '$ln' is not a name field - skipping");
+      next;
+    }
+
+    # If there is a biblatex option which controls the use of this labelnamename, check it
+    if ($CONFIG_SCOPE_BIBLATEX{"use$lnameopt"} and
+       not Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey)) {
+      next;
+    }
+
+    if ($be->get_field($ln)) {
       $be->set_field('labelnamename', $ln);
       last;
     }
@@ -1287,8 +1300,19 @@ sub process_labelname {
     if ( $ln =~ /\Ashort(.+)\z/ ) {
       next;
     }
-    if ($be->get_field($ln) and
-      Biber::Config->getblxoption("use$ln", $be->get_field('entrytype'), $citekey ) ) {
+
+    # We have already warned about this above
+    unless (first {$_ eq $ln} @{$struc->get_field_type('name')}) {
+      next;
+    }
+
+    # If there is a biblatex option which controls the use of this labelnamename, check it
+    if ($CONFIG_SCOPE_BIBLATEX{"use$ln"} and
+       not Biber::Config->getblxoption("use$ln", $be->get_field('entrytype'), $citekey)) {
+      next;
+    }
+
+    if ($be->get_field($ln)) {
       $be->set_field('labelnamenamefullhash', $ln);
       last;
     }

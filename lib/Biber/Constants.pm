@@ -1704,7 +1704,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
 # For per-entry options, what should be set when we find them and
 # what should be output to the .bbl for biblatex.
 # Basically, here we have to emulate relevant parts of biblatex's options processing
-# for local entry-specific options, note therefore  the presence here of some
+# for local entry-specific options, note therefore the presence here of some
 # options like max/mincitenames which are not passed in the .bcf
 our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
   dataonly      => {OUTPUT => 1, INPUT => ['skiplab', 'skiplos']},

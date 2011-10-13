@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 use Biber;
 use Biber::Output::BBL;
@@ -36,16 +36,13 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biblatex options
 Biber::Config->setblxoption('labelnamespec', ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']);
 Biber::Config->setblxoption('labelnamespec', ['editor', 'translator'], 'PER_TYPE', 'book');
+Biber::Config->setblxoption('labelnamespec', ['namea', 'author'], 'PER_TYPE', 'misc');
 
 # Now generate the information
 $biber->prepare;
 my $bibentries = $biber->sections->get_section(0)->bibentries;
 
-my $sa  = 'shortauthor';
-my $a   = 'author';
-my $ted = 'editor';
-
-
-is($bibentries->entry('angenendtsa')->get_field('labelnamename'), $sa, 'global shortauthor' );
-is($bibentries->entry('stdmodel')->get_field('labelnamename'), $a, 'global author' );
-is($bibentries->entry('aristotle:anima')->get_field('labelnamename'), $ted, 'type-specific editor' );
+is($bibentries->entry('angenendtsa')->get_field('labelnamename'), 'shortauthor', 'global shortauthor' );
+is($bibentries->entry('stdmodel')->get_field('labelnamename'), 'author', 'global author' );
+is($bibentries->entry('aristotle:anima')->get_field('labelnamename'), 'editor', 'type-specific editor' );
+is($bibentries->entry('lne1')->get_field('labelnamename'), 'namea', 'type-specific exotic name' );
