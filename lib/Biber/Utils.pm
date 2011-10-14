@@ -627,7 +627,7 @@ sub join_name {
 
 =head2 filter_entry_options
 
-    Remove per_entry option which biblatex doesn't care about
+    Process any per_entry option transformations which are necessary
 
 =cut
 
@@ -639,7 +639,7 @@ sub filter_entry_options {
   foreach (@entryoptions) {
     m/^([^=]+)=?(.+)?$/;
     given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT}) {
-      when (1) {
+      when (not defined($_) or $_ == 1) {
         push @return_options, $1 . ($2 ? "=$2" : '') ;
       }
       when (ref($_) eq 'ARRAY') {

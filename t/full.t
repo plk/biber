@@ -14,7 +14,9 @@ use File::Which;
 my $perl = which('perl');
 
 my $tmpfile = File::Temp->new();
+#my $tmpfile = File::Temp->new(UNLINK => 0);
 my $bbl = $tmpfile->filename;
+#print "File: $bbl\n";
 my $stdout;
 
 run3  [ $perl, 'bin/biber', '--nolog', "--outfile=$bbl", 't/tdata/full.bcf' ], \undef, \$stdout, \undef;
