@@ -198,7 +198,7 @@ done
 # Unicode <-> LaTeX macro mapping doc
 $BINDIR/xsl-transform.pl $BASE/lib/Biber/LaTeX/recode_data.xml $XSLDIR/texmap.xsl
 scp $BASE/lib/Biber/LaTeX/recode_data.xml.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html
-\rm -f $BASE/lib/Biber/LaTeX/recode_data.xml
+\rm -f $BASE/lib/Biber/LaTeX/recode_data.xml.html
 
 # source
 cd $BASE
