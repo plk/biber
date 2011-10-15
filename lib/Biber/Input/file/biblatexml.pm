@@ -1,6 +1,5 @@
 package Biber::Input::file::biblatexml;
-use feature ':5.10';
-#use 5.014001;
+use 5.014000;
 use strict;
 use warnings;
 use base 'Exporter';

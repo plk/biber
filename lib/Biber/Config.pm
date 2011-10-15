@@ -1,6 +1,5 @@
 package Biber::Config;
-use feature ':5.10';
-#use 5.014001;
+use 5.014000;
 
 use Biber::Constants;
 use IPC::Cmd qw( can_run );
@@ -802,7 +801,7 @@ sub get_seen_nameyear {
 sub incr_seen_nameyear {
   shift; # class method so don't care about class name
   my ($ns, $ys) = @_;
-  $tmp = "$ns,$ys";
+  my $tmp = "$ns,$ys";
   # We can always increment this to 1
   unless ($CONFIG->{state}{seen_nameyear}{$tmp}) {
     $CONFIG->{state}{seen_nameyear}{$tmp}++;
@@ -1235,13 +1234,13 @@ sub incr_crossrefkey {
 
 sub set_displaymode {
   shift; # class method so don't care about class name
-  my ($val, $entrytype, $fieldtype, $key) = @_;
+  my ($val, $entrytype, $fieldtype, $citekey) = @_;
   if ($citekey) {
     if ($fieldtype) {
-      $CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype} = $val;
+      $CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype} = $val;
     }
     else {
-      $CONFIG->{displaymodes}{PER_ENTRY}{$key} = $val;
+      $CONFIG->{displaymodes}{PER_ENTRY}{$citekey} = $val;
     }
   }
   elsif ($fieldtype) {
@@ -1271,18 +1270,18 @@ sub set_displaymode {
 
 sub get_displaymode {
   shift; # class method so don't care about class name
-  my ($entrytype, $fieldtype, $key) = @_;
+  my ($entrytype, $fieldtype, $citekey) = @_;
   my $dm;
   if ($citekey) {
     if ($fieldtype and
       defined($CONFIG->{displaymodes}{PER_FIELD}) and
-      defined($CONFIG->{displaymodes}{PER_FIELD}{$key}) and
-      defined($CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype})) {
-      $dm = $CONFIG->{displaymodes}{PER_FIELD}{$key}{$fieldtype};
+      defined($CONFIG->{displaymodes}{PER_FIELD}{$citekey}) and
+      defined($CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype})) {
+      $dm = $CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype};
     }
     elsif (defined($CONFIG->{displaymodes}{PER_ENTRY}) and
-      defined($CONFIG->{displaymodes}{PER_ENTRY}{$key})) {
-      $dm = $CONFIG->{displaymodes}{PER_ENTRY}{$key};
+      defined($CONFIG->{displaymodes}{PER_ENTRY}{$citekey})) {
+      $dm = $CONFIG->{displaymodes}{PER_ENTRY}{$citekey};
     }
   }
   elsif ($fieldtype and
@@ -1295,14 +1294,8 @@ sub get_displaymode {
     defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype})) {
     $dm = $CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype};
   }
-  $dm = $CONFIG->{displaymodes}{GLOBAL} unless $dm; # Global if nothing else;
-  $dm = $DISPLAYMODE_DEFAULT unless $dm; # fall back to this constant
-  if ( ref $dm eq 'ARRAY') {
-    return $dm;
-  }
-  else {
-    return $DISPLAYMODES{$dm};
-  }
+  $dm = $CONFIG->{displaymodes}{'*'} unless $dm; # Global if nothing else;
+  return $dm;
 }
 
 =head2 dump

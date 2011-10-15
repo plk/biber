@@ -1,6 +1,5 @@
 package Biber::Utils;
-use feature ':5.10';
-#use 5.014001;
+use 5.014000;
 use strict;
 use warnings;
 use re 'eval';
