@@ -913,21 +913,24 @@ sub process_crossrefs {
         $section->add_citekeys($inset_key);
       }
       # automatically crossref for the first set member using plain set inheritance
-      $be->set_inherit_from($section->bibentry($inset_keys[0]));
+      $be->set_inherit_from($section->bibentry($inset_keys[0]), $section);
       if ($be->get_field('crossref')) {
         $self->biber_warn("Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry '$citekey'", $be);
         $be->del_field('crossref');
       }
     }
-    # Do crossrefs inheritance
-    if (my $crossrefkey = $be->get_field('crossref')) {
-      my $parent = $section->bibentry($crossrefkey);
-      $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
-      unless ($parent) {
-        $self->biber_warn("Cannot inherit from crossref key '$crossrefkey' - does it exist?", $be);
-      }
-      else {
-        $be->inherit_from($parent);
+    # Do crossref inheritance
+    if (my $crs = $be->get_field('crossref')) {
+      $logger->debug("  CROSSREF: $citekey");
+      foreach my $crossrefkey (split /\s*,\s*/, $crs) {
+        my $parent = $section->bibentry($crossrefkey);
+        $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
+        unless ($parent) {
+          $self->biber_warn("Cannot inherit from crossref key '$crossrefkey' - does it exist?", $be);
+        }
+        else {
+          $be->inherit_from($parent, $section);
+        }
       }
     }
   }
@@ -2784,13 +2787,15 @@ sub fetch_data {
       # This must exist for all but dynamic sets
       my $be = $section->bibentry($citekey);
       # crossrefs/xrefs
-      my $refkey;
-      if ($refkey = $be->get_field('xref') or
-          $refkey = $be->get_field('crossref')) {
-        # skip looking for dependent if it's already been directly cited
-        push @dependent_keys, $refkey unless $section->bibentry($refkey);
-        $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
-        $dep_map->{$citekey} = 1;
+      my $refkeys; # Allow x/crossref to be a list
+      if ($refkeys = $be->get_field('xref') or
+          $refkeys = $be->get_field('crossref')) {
+        foreach my $refkey (split /\s*,\s*/, $refkeys) {
+          # skip looking for dependent if it's already been directly cited
+          push @dependent_keys, $refkey unless $section->bibentry($refkey);
+          $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
+          $dep_map->{$citekey} = 1;
+        }
       }
       # static sets
       if ($be->get_field('entrytype') eq 'set') {

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 20;
+use Test::More tests => 23;
 
 use Biber;
 use Biber::Output::BBL;
@@ -64,7 +64,6 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
     \field{sortinit}{G}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
-    \strng{crossref}{cr_m}
     \field{eprintclass}{SOMECLASS}
     \field{eprinttype}{SomEPrFiX}
     \field{origyear}{1955}
@@ -96,7 +95,6 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     \field{sortinit}{F}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
-    \strng{crossref}{cr_m}
     \field{origyear}{1943}
     \field{title}{Fabulous Fourier Forms}
     \field{year}{1974}
@@ -141,7 +139,6 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
     \field{sortinit}{A}
     \field{labelyear}{1996}
     \field{booktitle}{Beasts of the Burbling Burns}
-    \strng{crossref}{crt}
     \field{eprinttype}{sometype}
     \field{origyear}{1934}
     \field{title}{Arrangements of All Articles}
@@ -416,6 +413,59 @@ my $mcr = q|  \entry{mcr}{inbook}{}
 
 |;
 
+my $ccr1 = q|  \entry{ccr2}{book}{}
+    \name{labelname}{1}{}{%
+      {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
+    }
+    \name{editor}{1}{}{%
+      {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+    }
+    \strng{namehash}{6268941b408d3263bddb208a54899ea9}
+    \strng{fullhash}{6268941b408d3263bddb208a54899ea9}
+    \field{sortinit}{V}
+    \field{labelyear}{1923}
+    \field{title}{Misc etc.}
+    \field{year}{1923}
+  \endentry
+
+|;
+
+my $ccr2 = q|  \entry{ccr3}{inbook}{}
+    \name{bookauthor}{1}{}{%
+      {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
+    }
+    \name{editor}{1}{}{%
+      {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+    }
+    \field{sortinit}{P}
+    \field{labelyear}{1911}
+    \field{booktitle}{Misc etc.}
+    \field{title}{Perhaps, Perchance, Possibilities?}
+    \field{year}{1911}
+  \endentry
+
+|;
+
+# This is strange in what it gets from where but it shows information being inherited from two
+# sources
+my $ccr3 = q|  \entry{ccr4}{inbook}{}
+    \name{bookauthor}{1}{}{%
+      {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
+    }
+    \name{editor}{1}{}{%
+      {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+    }
+    \field{sortinit}{S}
+    \field{labelyear}{1911}
+    \field{booktitle}{Misc etc.}
+    \field{title}{Stuff Concerning Varia}
+    \field{year}{1911}
+  \endentry
+
+|;
 
 is($out->get_output_entry($main0,'cr1'), $cr1, 'crossref test 1');
 is($out->get_output_entry($main0,'cr2'), $cr2, 'crossref test 2');
@@ -437,4 +487,7 @@ is($section0->has_citekey('xrn'), 0,'xref test 7');
 is($out->get_output_entry($main0,'mxr'), $mxr, 'missing xref test');
 is($out->get_output_entry($main0,'mcr'), $mcr, 'missing crossef test');
 is($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections');
+is($out->get_output_entry($main0,'ccr2'), $ccr1, 'cascading crossref test 1');
+is($out->get_output_entry($main0,'ccr3'), $ccr2, 'cascading crossref test 2');
+is($out->get_output_entry($main0,'ccr4'), $ccr3, 'multi crossref test 1');
 

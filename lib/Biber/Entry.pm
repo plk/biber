@@ -287,7 +287,7 @@ sub add_warning {
 
     Inherit fields from parent entry
 
-    $entry->inherit_from($parententry);
+    $entry->set_inherit_from($parententry);
 
     Takes a second Biber::Entry object as argument
     Tailored for set inheritance which is a straight 1:1 inheritance,
@@ -326,6 +326,13 @@ sub set_inherit_from {
 sub inherit_from {
   my $self = shift;
   my $parent = shift;
+  my $section = shift;
+
+  # cascading crossrefs
+  if (my $ppkey = $parent->get_field('crossref')) {
+    $parent->inherit_from($section->bibentry($ppkey), $section);
+  }
+
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
   my $inheritance = Biber::Config->getblxoption('inheritance');
@@ -398,6 +405,10 @@ sub inherit_from {
   if (my $ds = $parent->get_field('datesplit')) {
     $self->set_field('datesplit', $ds);
   }
+
+  # Don't need the crossref field any more, especially since we are doing recursive refs
+  $self->del_field('crossref');
+
   return;
 }
 

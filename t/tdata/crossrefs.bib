@@ -203,3 +203,31 @@
   CROSSREF  = {missing1}
 }
 
+% Testing cascading crossrefs
+@MVBOOK{ccr1,
+  AUTHOR    = {Vince Various},
+  EDITOR    = {Edward Editor},
+  TITLE     = {Stuff Concerning Varia},
+  DATE      = {1934}
+}
+
+@BOOK{ccr2,
+  TITLE     = {Misc etc.},
+  DATE      = {1923},
+  CROSSREF  = {ccr1}
+}
+
+@INBOOK{ccr3,
+  TITLE     = {Perhaps, Perchance, Possibilities?},
+  DATE      = {1911},
+  CROSSREF  = {ccr2}
+}
+
+% Testing multi crossrefs
+
+@INBOOK{ccr4,
+  DATE      = {1911},
+  CROSSREF  = {ccr1,ccr2}
+}
+
+
