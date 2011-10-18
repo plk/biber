@@ -51,6 +51,9 @@ $CONFIG->{state}{seenname} = {};
 # Disambiguation data for labelalpha. Used for labelalphatemplate autoinc method
 $CONFIG->{state}{ladisambiguation} = {};
 
+# Record of what has inherited from what
+$CONFIG->{state}{inheritance} = {};
+
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
 
@@ -98,6 +101,7 @@ sub _init {
   $CONFIG->{state}{seen_extrayearalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{datafiles} = [];
+  $CONFIG->{state}{inheritance} = {};
 
   return;
 }
@@ -599,6 +603,54 @@ sub getblxoption {
     return $CONFIG->{options}{biblatex}{GLOBAL}{$opt};
   }
 }
+
+##############################
+# Inheritance state methods
+##############################
+
+=head2 set_inheritance
+
+    Record that $target inherited information from $source
+
+    Biber::Config->set_inheritance($source, $target)
+
+=cut
+
+sub set_inheritance {
+  shift; # class method so don't care about class name
+  my ($source, $target) = @_;
+  $CONFIG->{state}{inheritance}{$source}{$target} = 1;
+  return;
+}
+
+=head2 check_inheritance
+
+    Check if $source was inherited from any other entry
+
+    Biber::Config->get_inheritance($source)
+
+=cut
+
+sub check_inheritance {
+  shift; # class method so don't care about class name
+  my ($source, $target) = @_;
+  return defined($CONFIG->{state}{inheritance}{$source}) ? 1 : 0;
+}
+
+=head2 get_inheritance
+
+    Check if $target inherited information from $source
+
+    Biber::Config->get_inheritance($source, $target)
+
+=cut
+
+sub get_inheritance {
+  shift; # class method so don't care about class name
+  my ($source, $target) = @_;
+  return $CONFIG->{state}{inheritance}{$source}{$target};
+}
+
 
 
 ##############################

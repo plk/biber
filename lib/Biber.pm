@@ -57,6 +57,8 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =cut
 
+our $MASTER; # reference to biber object. Needed all over the place
+
 =head1 METHODS
 
 =head2 new
@@ -78,6 +80,7 @@ sub new {
   Biber::LaTeX::Recode->init_schemes(Biber::Config->getoption('decodecharsset'),
                                      Biber::Config->getoption('bblsafecharsset'));
 
+  $MASTER = $self;
   return $self;
 }
 
@@ -923,6 +926,8 @@ sub process_crossrefs {
     if (my $crs = $be->get_field('crossref')) {
       $logger->debug("  CROSSREF: $citekey");
       foreach my $crossrefkey (split /\s*,\s*/, $crs) {
+        # Skip inheritance if we've already done it
+        next if Biber::Config->get_inheritance($crossrefkey, $be->get_field('citekey'));
         my $parent = $section->bibentry($crossrefkey);
         $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
         unless ($parent) {

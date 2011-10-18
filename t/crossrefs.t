@@ -64,6 +64,7 @@ my $cr1 = q|  \entry{cr1}{inbook}{}
     \field{sortinit}{G}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
+    \strng{crossref}{cr_m}
     \field{eprintclass}{SOMECLASS}
     \field{eprinttype}{SomEPrFiX}
     \field{origyear}{1955}
@@ -95,6 +96,7 @@ my $cr2 = q|  \entry{cr2}{inbook}{}
     \field{sortinit}{F}
     \field{labelyear}{1974}
     \field{booktitle}{Graphs of the Continent}
+    \strng{crossref}{cr_m}
     \field{origyear}{1943}
     \field{title}{Fabulous Fourier Forms}
     \field{year}{1974}
@@ -139,6 +141,7 @@ my $cr3 = q|  \entry{cr3}{inbook}{}
     \field{sortinit}{A}
     \field{labelyear}{1996}
     \field{booktitle}{Beasts of the Burbling Burns}
+    \strng{crossref}{crt}
     \field{eprinttype}{sometype}
     \field{origyear}{1934}
     \field{title}{Arrangements of All Articles}
@@ -427,6 +430,7 @@ my $ccr1 = q|  \entry{ccr2}{book}{}
     \strng{fullhash}{6268941b408d3263bddb208a54899ea9}
     \field{sortinit}{V}
     \field{labelyear}{1923}
+    \strng{crossref}{ccr1}
     \field{title}{Misc etc.}
     \field{year}{1923}
   \endentry
@@ -443,6 +447,7 @@ my $ccr2 = q|  \entry{ccr3}{inbook}{}
     \field{sortinit}{P}
     \field{labelyear}{1911}
     \field{booktitle}{Misc etc.}
+    \strng{crossref}{ccr2}
     \field{title}{Perhaps, Perchance, Possibilities?}
     \field{year}{1911}
   \endentry

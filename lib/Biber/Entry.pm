@@ -324,14 +324,20 @@ sub set_inherit_from {
 =cut
 
 sub inherit_from {
-  my $self = shift;
-  my $parent = shift;
-  my $section = shift;
+  my ($self, $parent, $section) = @_;
+
+  my $target_key = $self->get_field('citekey'); # target/child key
+  my $source_key = $parent->get_field('citekey'); # source/parent key
 
   # cascading crossrefs
-  if (my $ppkey = $parent->get_field('crossref')) {
-    $parent->inherit_from($section->bibentry($ppkey), $section);
-  }
+#  unless (circular_inheritance($source_key, $target_key)) {
+    if (my $ppkey = $parent->get_field('crossref')) {
+      $parent->inherit_from($section->bibentry($ppkey), $section);
+    }
+#  }
+  # else {
+  #   $Biber::MASTER->biber_error("Circular inheritance between '$source_key'<->'$target_key'");
+  # }
 
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
@@ -369,15 +375,11 @@ sub inherit_from {
           # Set the field if it doesn't exist or override is requested
           elsif (not $self->field_exists($field->{target}) or
                  $field_override_target eq 'true') {
-            $logger->debug("    Entry '" .
-                           $self->get_field('citekey') .
-                           "' is inheriting field '" .
+            $logger->debug("    Entry '$target_key' is inheriting field '" .
                            $field->{source}.
                            "' as '" .
                            $field->{target} .
-                           "' from entry '" .
-                           $parent->get_field('citekey') .
-                           "'");
+                           "' from entry '$source_key'");
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
           }
         }
@@ -391,11 +393,7 @@ sub inherit_from {
       next if $processed{$field}; # Skip if we already dealt with this field above
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
-            $logger->debug("    Entry '" .
-                           $self->get_field('citekey') .
-                           "' is inheriting field '$field' from entry '" .
-                           $parent->get_field('citekey') .
-                           "'");
+            $logger->debug("    Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
         $self->set_datafield($field, $parent->get_field($field));
       }
     }
@@ -406,8 +404,8 @@ sub inherit_from {
     $self->set_field('datesplit', $ds);
   }
 
-  # Don't need the crossref field any more, especially since we are doing recursive refs
-  $self->del_field('crossref');
+  # record that we've done inheritance between these entries to prevent loops and repeats.
+  Biber::Config->set_inheritance($source_key, $target_key);
 
   return;
 }

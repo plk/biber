@@ -101,7 +101,7 @@ requires:
   Unicode::Collate: 0.80
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
-  perl: v5.14.1
+  perl: v5.14.0
 resources:
   license: http://dev.perl.org/licenses/
 version: v0.9.6
