@@ -5,6 +5,11 @@ use warnings;
 use re 'eval';
 use base 'Exporter';
 
+use constant {
+  EXIT_OK => 0,
+  EXIT_ERROR => 2
+};
+
 use Carp;
 use Encode;
 use File::Find;
@@ -38,7 +43,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options circular_inheritance};
+  filter_entry_options circular_inheritance biber_error biber_warn};
 
 =head1 FUNCTIONS
 
@@ -149,6 +154,42 @@ sub locate_biber_file {
   }
   return undef;
 }
+
+=head2 biber_warn
+
+    Wrapper around various warnings bits and pieces
+    Logs a warning, add warning to the list of .bbl warnings and optionally
+    increments warning count in Biber object, if present
+
+=cut
+
+sub biber_warn {
+  my ($warning, $entry) = @_;
+  $logger->warn($warning);
+  $entry->add_warning($warning) if $entry;
+  $Biber::MASTER->{warnings}++;
+  return;
+}
+
+
+=head2 biber_error
+
+    Wrapper around error logging
+    Forces an exit.
+
+=cut
+
+sub biber_error {
+  my $error = shift;
+  $logger->error($error);
+  $Biber::MASTER->{warnings}++;
+  # exit unless user requested not to for errors
+  unless (Biber::Config->getoption('nodieonerror')) {
+    $Biber::MASTER->display_problems;
+    exit EXIT_ERROR;
+  }
+}
+
 
 =head2 circular_inheritance
 

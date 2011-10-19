@@ -66,9 +66,9 @@ my $dcfxml = driver_config('zoterordfxml');
 =cut
 
 sub extract_entries {
-  my ($biber, $filename, $keys) = @_;
-  my $secnum = $biber->get_current_section;
-  my $section = $biber->sections->get_section($secnum);
+  my ($filename, $keys) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've
@@ -81,10 +81,10 @@ sub extract_entries {
     require LWP::Simple;
     require File::Temp;
     $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
-                          DIR => $biber->biber_tempdir,
+                          DIR => $Biber::MASTER->biber_tempdir,
                           SUFFIX => '.rdf');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      $biber->biber_error("Could not fetch file '$filename'");
+      biber_error("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;
   }
@@ -93,7 +93,7 @@ sub extract_entries {
     # the filename count for preambles at the bottom of this sub
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
-      $biber->biber_error("Cannot find file '$trying_filename'!")
+      biber_error("Cannot find file '$trying_filename'!")
     }
   }
 
@@ -103,7 +103,7 @@ sub extract_entries {
   # Set up XML parser and namespaces
   my $parser = XML::LibXML->new();
   my $rdfxml = $parser->parse_file($filename)
-    or $biber->biber_error("Can't parse file $filename");
+    or biber_error("Can't parse file $filename");
   my $xpc = XML::LibXML::XPathContext->new($rdfxml);
   foreach my $ns (keys %PREFICES) {
     $xpc->registerNs($ns, $PREFICES{$ns});
@@ -117,7 +117,7 @@ sub extract_entries {
 
       # If an entry has no key, ignore it and warn
       unless ($entry->hasAttribute('rdf:about')) {
-        $biber->biber_warn("Invalid or undefined RDF/XML ID in file '$filename', skipping ...");
+        biber_warn("Invalid or undefined RDF/XML ID in file '$filename', skipping ...");
         next;
       }
 
@@ -128,12 +128,12 @@ sub extract_entries {
 
       # If we've already seen a case variant, warn
       if (my $okey = $section->has_badcasekey($ek)) {
-        $biber->biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+        biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
       }
 
       # If we've already seen this key, ignore it and warn
       if ($section->has_everykey($ek)) {
-        $biber->biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
+        biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
       else {
@@ -145,7 +145,7 @@ sub extract_entries {
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, $ek;
 
-      create_entry($biber, $ek, $entry);
+      create_entry($ek, $entry);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -169,7 +169,7 @@ sub extract_entries {
       if (my @entries = $xpc->findnodes("/rdf:RDF/*[\@rdf:about='$temp_key']")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
-          $biber->biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
+          biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
                        join(',', map {$_->getAttribute('rdf:about')} @entries) . ' - skipping duplicates ...');
         }
         my $entry = $entries[0];
@@ -181,7 +181,7 @@ sub extract_entries {
         $logger->debug('Parsing Zotero RDF/XML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($biber, $wanted_key, $entry);
+        create_entry($wanted_key, $entry);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -201,9 +201,9 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($biber, $key, $entry) = @_;
-  my $secnum = $biber->get_current_section;
-  my $section = $biber->sections->get_section($secnum);
+  my ($key, $entry) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
@@ -269,10 +269,10 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
         while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             if ($user_map->{bmap_overwrite}) {
-              $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
             }
             else {
-              $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
               next;
             }
           }
@@ -308,7 +308,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
       }
 
       # Now run any defined handler
-      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $key);
+      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
     }
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
     elsif ($from = $dcfxml->{fields}{field}{$f}) { # ignore fields not in .dcf
@@ -344,7 +344,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
         $from = $dcfxml->{fields}{field}{$alias};
         $to = $alias; # Field to set internally is the alias
       }
-      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $key);
+      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
     }
   }
 
@@ -360,10 +360,10 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
       while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
         if ($bibentry->field_exists(lc($from_as))) {
           if ($user_map->{bmap_overwrite}) {
-            $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
+            biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
           }
           else {
-            $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
+            biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
             next;
           }
         }
@@ -383,7 +383,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
     foreach my $alsoset (@{$ealias->{alsoset}}) {
       # drivers never overwrite existing fields
       if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        $biber->biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '$itype' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
+        biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '$itype' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
         next;
       }
       $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
@@ -402,14 +402,14 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
 # List fields
 sub _list {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, [ $entry->findvalue("./$f") ]);
   return;
 }
 
 # literal fields
 sub _literal {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   # Special case - libraryCatalog is used only if hasn't already been set
   # by LCC
   if ($f eq 'z:libraryCatalog') {
@@ -421,7 +421,7 @@ sub _literal {
 
 # Range fields
 sub _range {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $values_ref;
   my @values = split(/\s*,\s*/, $entry->findvalue("./$f"));
   # Here the "-–" contains two different chars even though they might
@@ -445,7 +445,7 @@ sub _range {
 
 # Date fields
 sub _date {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $date = $entry->findvalue("./$f");
   # We are not validating dates here, just syntax parsing
     my $date_re = qr/(\d{4}) # year
@@ -467,17 +467,17 @@ sub _date {
     }
   }
   else {
-    $biber->biber_warn("Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
+    biber_warn("Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
   }
   return;
 }
 
 # Name fields
 sub _name {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $names = new Biber::Entry::Names;
   foreach my $name ($entry->findnodes("./$f/rdf:Seq/rdf:li/foaf:Person")) {
-    $names->add_name(parsename($biber, $name, $f));
+    $names->add_name(parsename($name, $f));
   }
   $bibentry->set_datafield($to, $names);
   return;
@@ -486,7 +486,7 @@ sub _name {
 # partof container
 # This essentially is a bit like biblatex inheritance, but not as fine-grained
 sub _partof {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $partof = $entry->findnodes("./$f")->get_node(1);
   my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
   if ($partof->hasAttribute('rdf:resource')) { # remote ISSN resources aren't much use
@@ -501,7 +501,7 @@ sub _partof {
   # create a dataonly entry for the partOf and add a crossref to it
   my $crkey = $key . '_' . md5_hex($key);
   $logger->debug("Creating a dataonly crossref '$crkey' for key '$key'");
-  my $cref = create_entry($biber, $crkey, $partof->findnodes('*')->get_node(1));
+  my $cref = create_entry($crkey, $partof->findnodes('*')->get_node(1));
   $cref->set_datafield('options', 'dataonly');
   Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $crkey);
   Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $crkey);
@@ -527,7 +527,7 @@ sub _partof {
 }
 
 sub _publisher {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   if (my $org = $entry->findnodes("./$f/foaf:Organization")->get_node(1)) {
     # There is an address, set location.
     # Location is a list field in bibaltex, hence the array ref
@@ -544,7 +544,7 @@ sub _publisher {
 }
 
 sub _presentedat {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   if (my $conf = $entry->findnodes("./$f/bib:Conference")->get_node(1)) {
     $bibentry->set_datafield('eventtitle', $conf->findvalue('./dc:title'));
   }
@@ -552,7 +552,7 @@ sub _presentedat {
 }
 
 sub _subject {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   if (my $lib = $entry->findnodes("./$f/dcterms:LCC/rdf:value")->get_node(1)) {
     # This overrides any z:libraryCatalog node
     $bibentry->set_datafield('library', $lib->textContent());
@@ -568,7 +568,7 @@ sub _subject {
 }
 
 sub _identifier {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   if (my $url = $entry->findnodes("./$f/dcterms:URI/rdf:value")->get_node(1)) {
     $bibentry->set_datafield('url', $url->textContent());
   }
@@ -604,7 +604,7 @@ sub _identifier {
 =cut
 
 sub parsename {
-  my ($biber, $node, $fieldname, $opts) = @_;
+  my ($node, $fieldname, $opts) = @_;
   $logger->debug('Parsing Zotero RDF/XML name object ' . $node->nodePath);
 
   my %nmap = ('surname'   => 'last',
@@ -622,7 +622,7 @@ sub parsename {
   }
 
   # Only warn about lastnames since there should always be one
-  $biber->biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
+  biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
 
   my $namestring = '';
 

@@ -51,9 +51,9 @@ my $dcfxml = driver_config('ris');
 =cut
 
 sub extract_entries {
-  my ($biber, $filename, $keys) = @_;
-  my $secnum = $biber->get_current_section;
-  my $section = $biber->sections->get_section($secnum);
+  my ($filename, $keys) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
   my $tf;
@@ -66,17 +66,17 @@ sub extract_entries {
     require LWP::Simple;
     require File::Temp;
     $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
-                          DIR => $biber->biber_tempdir,
+                          DIR => $Biber::MASTER->biber_tempdir,
                           SUFFIX => '.ris');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      $biber->biber_error("Could not fetch file '$filename'");
+      biber_error("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;
   }
   else {
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
-      $biber->biber_error("Cannot find file '$trying_filename'!")
+      biber_error("Cannot find file '$trying_filename'!")
     }
   }
 
@@ -124,19 +124,19 @@ sub extract_entries {
 
       # If an entry has no key, ignore it and warn
       unless ($entry->{ID}) {
-        $biber->biber_warn("RIS entry has no ID key in file '$filename', skipping ...");
+        biber_warn("RIS entry has no ID key in file '$filename', skipping ...");
         next;
       }
 
       my $ek = $entry->{ID};
       # If we've already seen a case variant, warn
       if (my $okey = $section->has_badcasekey($ek)) {
-        $biber->biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+        biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
       }
 
       # If we've already seen this key, ignore it and warn
       if ($section->has_everykey($ek)) {
-        $biber->biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
+        biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
       else {
@@ -148,7 +148,7 @@ sub extract_entries {
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, $ek;
 
-      create_entry($biber, $ek, $entry);
+      create_entry($ek, $entry);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -167,7 +167,7 @@ sub extract_entries {
       $logger->debug("Looking for key '$wanted_key' in RIS file '$filename'");
       if (my @entries = grep { $wanted_key eq $_->{ID} } @ris_entries) {
         if ($#entries > 0) {
-          $biber->biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
+          biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
                        join(',', map {$_->{ID}} @entries) . ' - skipping duplicates ...');
         }
         my $entry = $entries[0];
@@ -176,7 +176,7 @@ sub extract_entries {
         $logger->debug('Parsing RIS entry object ' . $entry->{ID});
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($biber, $wanted_key, $entry);
+        create_entry($wanted_key, $entry);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -194,9 +194,9 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($biber, $key, $entry) = @_;
-  my $secnum = $biber->get_current_section;
-  my $section = $biber->sections->get_section($secnum);
+  my ($key, $entry) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
@@ -260,10 +260,10 @@ FLOOP:  foreach my $f (keys %$entry) {
         while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             if ($user_map->{bmap_overwrite}) {
-              $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
             }
             else {
-              $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
               next;
             }
           }
@@ -299,7 +299,7 @@ FLOOP:  foreach my $f (keys %$entry) {
       }
 
       # Now run any defined handler
-      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $key);
+      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
     }
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
     elsif ($from = $dcfxml->{fields}{field}{$f}) {
@@ -336,7 +336,7 @@ FLOOP:  foreach my $f (keys %$entry) {
         $from = $dcfxml->{fields}{field}{$alias};
         $to = $alias; # Field to set internally is the alias
       }
-      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $key);
+      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
     }
     # Default if no explicit way to set the field
     else {
@@ -356,10 +356,10 @@ FLOOP:  foreach my $f (keys %$entry) {
       while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
         if ($bibentry->field_exists(lc($from_as))) {
           if ($user_map->{bmap_overwrite}) {
-            $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
+            biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
           }
           else {
-            $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
+            biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
             next;
           }
         }
@@ -379,7 +379,7 @@ FLOOP:  foreach my $f (keys %$entry) {
     foreach my $alsoset (@{$ealias->{alsoset}}) {
       # drivers never overwrite existing fields
       if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        $biber->biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
+        biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
         next;
       }
       $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
@@ -398,21 +398,21 @@ FLOOP:  foreach my $f (keys %$entry) {
 
 # Verbatim fields
 sub _verbatim {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, $entry->{$f});
   return;
 }
 
 # Range fields
 sub _range {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, _parse_range_list($entry->{$f}));
   return;
 }
 
 # Date fields
 sub _date {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $date = $entry->{$f};
   if ($date =~ m|\A([0-9]{4})/([0-9]{2})/([0-9]{2}/([^\n]+))\z|xms) {
     $bibentry->set_datafield('year', $1);
@@ -423,14 +423,14 @@ sub _date {
     $bibentry->set_datafield('year', $1);
   }
   else {
-    $biber->biber_warn("Invalid RIS date format: '$date' - ignoring");
+    biber_warn("Invalid RIS date format: '$date' - ignoring");
   }
   return;
 }
 
 # Name fields
 sub _name {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $names = $entry->{$f};
   my $names_obj = new Biber::Entry::Names;
   foreach my $name (@$names) {
@@ -490,7 +490,7 @@ sub _name {
       }
     }
     else {
-      $biber->biber_warn("Invalid RIS name format: '$name' - ignoring");
+      biber_warn("Invalid RIS name format: '$name' - ignoring");
     }
   }
   return;

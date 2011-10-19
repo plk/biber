@@ -56,9 +56,9 @@ my $dcfxml = driver_config('endnotexml');
 =cut
 
 sub extract_entries {
-  my ($biber, $filename, $keys) = @_;
-  my $secnum = $biber->get_current_section;
-  my $section = $biber->sections->get_section($secnum);
+  my ($filename, $keys) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've
@@ -71,10 +71,10 @@ sub extract_entries {
     require LWP::Simple;
     require File::Temp;
     $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
-                          DIR => $biber->biber_tempdir,
+                          DIR => $Biber::MASTER->biber_tempdir,
                           SUFFIX => '.xml');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      $biber->biber_error("Could not fetch file '$filename'");
+      biber_error("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;
   }
@@ -83,7 +83,7 @@ sub extract_entries {
     # the filename count for preambles at the bottom of this sub
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
-      $biber->biber_error("Cannot find file '$trying_filename'!")
+      biber_error("Cannot find file '$trying_filename'!")
     }
   }
 
@@ -93,7 +93,7 @@ sub extract_entries {
   # Set up XML parser and namespaces
   my $parser = XML::LibXML->new();
   my $enxml = $parser->parse_file($filename)
-    or $biber->biber_error("Can't parse file $filename");
+    or biber_error("Can't parse file $filename");
   my $xpc = XML::LibXML::XPathContext->new($enxml);
 
   if ($section->is_allkeys) {
@@ -104,19 +104,19 @@ sub extract_entries {
 
       # If an entry has no key, ignore it and warn
       unless ($entry->findvalue('./rec-number')) {
-        $biber->biber_warn("Invalid or undefined entry ID in file '$filename', skipping ...");
+        biber_warn("Invalid or undefined entry ID in file '$filename', skipping ...");
         next;
       }
 
       my $ek = $entry->findvalue('./rec-number');
       # If we've already seen a case variant, warn
       if (my $okey = $section->has_badcasekey($ek)) {
-        $biber->biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+        biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
       }
 
       # If we've already seen this key, ignore it and warn
       if ($section->has_everykey($ek)) {
-        $biber->biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
+        biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
       else {
@@ -130,7 +130,7 @@ sub extract_entries {
       # We need this in order to do sorting=none + allkeys because in this case, there is no
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, "$dbdid:$key";
-      create_entry($biber, "$dbdid:$key", $entry);
+      create_entry("$dbdid:$key", $entry);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -153,7 +153,7 @@ sub extract_entries {
       if (my @entries = $xpc->findnodes("/xml/records/record[rec-number[text()='$wnum']][foreign-keys/key[\@db-id='$wdbid']]")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
-          $biber->biber_warn("Found more than one entry for key '$wanted_key' in '$wdbid:$wnum' - Skipping duplicates ...");
+          biber_warn("Found more than one entry for key '$wanted_key' in '$wdbid:$wnum' - Skipping duplicates ...");
         }
         my $entry = $entries[0];
 
@@ -164,7 +164,7 @@ sub extract_entries {
         $logger->debug('Parsing Endnote XML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($biber, $wanted_key, $entry);
+        create_entry($wanted_key, $entry);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -184,9 +184,9 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($biber, $key, $entry) = @_;
-  my $secnum = $biber->get_current_section;
-  my $section = $biber->sections->get_section($secnum);
+  my ($key, $entry) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
@@ -257,10 +257,10 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
         while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             if ($user_map->{bmap_overwrite}) {
-              $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
             }
             else {
-              $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
               next;
             }
           }
@@ -296,7 +296,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
       }
 
       # Now run any defined handler
-      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $key);
+      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
     }
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
     # ignore fields not in .dcf - this means "titles", "contributors" "urls/web-urls" are
@@ -334,7 +334,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
         $from = $dcfxml->{fields}{field}{$a};
         $to = $a;               # Field to set internally is the alias
       }
-      &{$handlers{$from->{handler}}}($biber, $bibentry, $entry, $f, $to, $key);
+      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
     }
   }
 
@@ -350,10 +350,10 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
       while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
         if ($bibentry->field_exists(lc($from_as))) {
           if ($user_map->{bmap_overwrite}) {
-            $biber->biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
+            biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
           }
           else {
-            $biber->biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
+            biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
             next;
           }
         }
@@ -373,7 +373,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
     foreach my $alsoset (@{$ealias->{alsoset}}) {
       # drivers never overwrite existing fields
       if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        $biber->biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '$itype' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
+        biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '$itype' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
         next;
       }
       $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
@@ -392,21 +392,21 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
 
 # List fields
 sub _list {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, [ _norm($entry->findvalue("./$f")) ]);
   return;
 }
 
 # literal fields
 sub _literal {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   $bibentry->set_datafield($to, _norm($entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)")));
   return;
 }
 
 # Range fields
 sub _range {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $values_ref;
   my @values = split(/\s*,\s*/, _norm($entry->findvalue("./$f")));
   # Here the "-–" contains two different chars even though they might
@@ -430,7 +430,7 @@ sub _range {
 
 # Date fields
 sub _date {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $daten = $entry->findnodes("./dates/$f")->get_node(1);
   # Use Endnote explicit date attributes, if present
   # It's not clear if Endnote actually uses these attributes
@@ -469,7 +469,7 @@ sub _date {
       }
     }
     else {
-      $biber->biber_warn("Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
+      biber_warn("Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
     }
     return;
   }
@@ -477,18 +477,18 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $names = new Biber::Entry::Names;
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   foreach my $name ($entry->findnodes("./contributors/$f/*")) {
-    $names->add_name(parsename($biber, $name, $f, {useprefix => $useprefix}));
+    $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
   }
   $bibentry->set_datafield($to, $names);
   return;
 }
 
 sub _keywords {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   if (my @s = $entry->findnodes("./$f/keyword")) {
     my @kws;
     foreach my $s (@s) {
@@ -521,7 +521,7 @@ sub _keywords {
 =cut
 
 sub parsename {
-  my ($biber, $node, $fieldname, $opts) = @_;
+  my ($node, $fieldname, $opts) = @_;
   $logger->debug('Parsing Endnote XML name object ' . $node->nodePath);
   my $usepre = $opts->{useprefix};
 
@@ -567,7 +567,7 @@ sub parsename {
       }
     }
   # Only warn about lastnames since there should always be one
-    $biber->biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
+    biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
 
     my $namestring = '';
 
@@ -624,7 +624,7 @@ sub parsename {
     $namestr =~ s/\s+/ /g;      # Collapse internal whitespace
 
     my $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
-                                DIR => $biber->biber_tempdir);
+                                DIR => $Biber::MASTER->biber_tempdir);
     my $tberr_name = $tberr->filename;
 
     open OLDERR, '>&', \*STDERR;
@@ -640,11 +640,11 @@ sub parsename {
     while (<$tbe>) {
       if (/error:/) {
         chomp;
-        $biber->biber_error("BibTeX subsystem: $_");
+        biber_error("BibTeX subsystem: $_");
       }
       elsif (/warning:/) {
         chomp;
-        $biber->biber_warn("BibTeX subsystem: $_");
+        biber_warn("BibTeX subsystem: $_");
       }
     }
     close($tbe);

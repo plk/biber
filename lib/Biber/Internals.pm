@@ -940,7 +940,7 @@ sub _generatesortinfo {
         # Don't warn if output is ascii as it's fairly pointless since this warning may be
         # true of a lot of data and drawing attention to just sortinit might be confusing
         unless ($bblenc =~ /(?:x-)?ascii/xmsi) {
-          $self->biber_warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'", $be);
+          biber_warn("The character '$init' cannot be encoded in '$bblenc'. sortinit will be set to macro '$initd' for entry '$citekey'", $be);
         }
         $init = $initd;
       }

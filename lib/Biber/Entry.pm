@@ -324,7 +324,10 @@ sub set_inherit_from {
 =cut
 
 sub inherit_from {
-  my ($self, $parent, $section) = @_;
+  my ($self, $parent) = @_;
+
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
 
   my $target_key = $self->get_field('citekey'); # target/child key
   my $source_key = $parent->get_field('citekey'); # source/parent key
@@ -332,11 +335,11 @@ sub inherit_from {
   # cascading crossrefs
 #  unless (circular_inheritance($source_key, $target_key)) {
     if (my $ppkey = $parent->get_field('crossref')) {
-      $parent->inherit_from($section->bibentry($ppkey), $section);
+      $parent->inherit_from($section->bibentry($ppkey));
     }
-#  }
+  # }
   # else {
-  #   $Biber::MASTER->biber_error("Circular inheritance between '$source_key'<->'$target_key'");
+  #   biber_error("Circular inheritance between '$source_key'<->'$target_key'");
   # }
 
   my $type        = $self->get_field('entrytype');

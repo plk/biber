@@ -124,7 +124,7 @@ if (my $outdir = Biber::Config->getoption('output_directory')) {
 $biber->parse_ctrlfile($bcf);
 
 # Postprocess biber options now that they are all read from the various places
-Biber::Config->postprocess_biber_opts($biber);
+Biber::Config->postprocess_biber_opts;
 
 # Check to see if the .bcf set debug=1. If so, increase logging level
 # We couldn't set this on logger init as the .bcf hadn't been read then

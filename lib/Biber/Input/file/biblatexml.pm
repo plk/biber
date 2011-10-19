@@ -57,9 +57,9 @@ my $dcfxml = driver_config('biblatexml');
 =cut
 
 sub extract_entries {
-  my ($biber, $filename, $keys) = @_;
-  my $secnum = $biber->get_current_section;
-  my $section = $biber->sections->get_section($secnum);
+  my ($filename, $keys) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've
@@ -72,10 +72,10 @@ sub extract_entries {
     require LWP::Simple;
     require File::Temp;
     $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
-                          DIR => $biber->biber_tempdir,
+                          DIR => $Biber::MASTER->biber_tempdir,
                           SUFFIX => '.xml');
     unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      $biber->biber_error("Could not fetch file '$filename'");
+      biber_error("Could not fetch file '$filename'");
     }
     $filename = $tf->filename;
   }
@@ -84,7 +84,7 @@ sub extract_entries {
     # the filename count for preambles at the bottom of this sub
     my $trying_filename = $filename;
     unless ($filename = locate_biber_file($filename)) {
-      $biber->biber_error("Cannot find file '$trying_filename'!")
+      biber_error("Cannot find file '$trying_filename'!")
     }
   }
 
@@ -94,7 +94,7 @@ sub extract_entries {
   # Set up XML parser and namespace
   my $parser = XML::LibXML->new();
   my $bltxml = $parser->parse_file($filename)
-    or $biber->biber_error("Can't parse file $filename");
+    or biber_error("Can't parse file $filename");
   my $xpc = XML::LibXML::XPathContext->new($bltxml);
   $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
 
@@ -108,26 +108,26 @@ sub extract_entries {
 
       # If an entry has no key, ignore it and warn
       unless ($entry->hasAttribute('id')) {
-        $biber->biber_warn("Invalid or undefined BibLaTeXML entry key in file '$filename', skipping ...");
+        biber_warn("Invalid or undefined BibLaTeXML entry key in file '$filename', skipping ...");
         next;
       }
 
       my $ek = $entry->getAttribute('id');
       # If we've already seen a case variant, warn
       if (my $okey = $section->has_badcasekey($ek)) {
-        $biber->biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
+        biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
       }
 
       # If we've already seen this key, ignore it and warn
       if ($section->has_everykey($ek)) {
-        $biber->biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
+        biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
         next;
       }
       else {
         $section->add_everykey($ek);
       }
 
-      create_entry($biber, $ek, $entry);
+      create_entry($ek, $entry);
 
       # We do this as otherwise we have no way of determining the origing .bib entry order
       # We need this in order to do sorting=none + allkeys because in this case, there is no
@@ -152,7 +152,7 @@ sub extract_entries {
       if (my @entries = $xpc->findnodes("//$NS:entry[\@id='$wanted_key']")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
-          $biber->biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
+          biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
                        join(',', map {$_->getAttribute('id')} @entries) . ' - skipping duplicates ...');
         }
         my $entry = $entries[0];
@@ -161,7 +161,7 @@ sub extract_entries {
         $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($biber, $wanted_key, $entry);
+        create_entry($wanted_key, $entry);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -182,9 +182,10 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($biber, $key, $entry) = @_;
-  my $secnum = $biber->get_current_section;
-  my $section = $biber->sections->get_section($secnum);
+  my ($key, $entry) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+
   my $struc = Biber::Config->get_structure;
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
@@ -215,19 +216,19 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
     # We have to process local options as early as possible in order
     # to make them available for things that need them like name parsing
     if (_norm($entry->nodeName) eq 'options') {
-      if (my $node = _resolve_display_mode($biber, $entry, 'options')) {
-        $biber->process_entry_options($key, $node->textContent());
+      if (my $node = _resolve_display_mode($entry, 'options')) {
+        $Biber::MASTER->process_entry_options($key, $node->textContent());
       }
     }
 
     if (my $fm = $dcfxml->{fields}{field}{_norm($f)}) {
       # No aliases processed here as this data source is supposed to be a 1:1 mapping
       # of the biblatex data model
-      &{$handlers{$fm->{handler}}}($biber, $bibentry, $entry, $f, $f, $key);
+      &{$handlers{$fm->{handler}}}($bibentry, $entry, $f, $f, $key);
     }
     # Default if no explicit way to set the field
     else {
-      my $node = _resolve_display_mode($biber, $entry, $f);
+      my $node = _resolve_display_mode($entry, $f);
       my $value = $node->textContent();
       $bibentry->set_datafield($f, $value);
     }
@@ -242,9 +243,9 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
 # Related entries
 sub _related {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $key);
+  my $node = _resolve_display_mode($entry, $f, $key);
   # TODO
   # Current biblatex data model doesn't allow for multiple items here
   foreach my $item ($node->findnodes("./$NS:item")) {
@@ -259,9 +260,9 @@ sub _related {
 
 # Verbatim fields
 sub _verbatim {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $key);
+  my $node = _resolve_display_mode($entry, $f, $key);
 
   # eprint is special case
   if ($f eq "$NS:eprint") {
@@ -278,18 +279,18 @@ sub _verbatim {
 
 # List fields
 sub _list {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $key);
+  my $node = _resolve_display_mode($entry, $f, $key);
   $bibentry->set_datafield(_norm($to), _split_list($node));
   return;
 }
 
 # Range fields
 sub _range {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $key);
+  my $node = _resolve_display_mode($entry, $f, $key);
   # List of ranges/values
   if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
     my $rl;
@@ -311,7 +312,7 @@ sub _range {
 
 # Date fields
 sub _date {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
     my $datetype = $node->getAttribute('datetype') // '';
     # We are not validating dates here, just syntax parsing
@@ -329,7 +330,7 @@ sub _date {
         $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
       }
       else {
-        $biber->biber_warn("Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start in entry '$key' - ignoring", $bibentry);
+        biber_warn("Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start in entry '$key' - ignoring", $bibentry);
       }
 
       # End of range
@@ -345,7 +346,7 @@ sub _date {
         }
       }
       else {
-        $biber->biber_warn("Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end in entry '$key' - ignoring", $bibentry);
+        biber_warn("Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end in entry '$key' - ignoring", $bibentry);
       }
     }
     else { # Simple date
@@ -361,7 +362,7 @@ sub _date {
         $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
       }
       else {
-        $biber->biber_warn("Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$key' - ignoring", $bibentry);
+        biber_warn("Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$key' - ignoring", $bibentry);
       }
     }
   }
@@ -370,13 +371,13 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($biber, $bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   # Pick out the node with the right mode
-  my $node = _resolve_display_mode($biber, $entry, $f, $key);
+  my $node = _resolve_display_mode($entry, $f, $key);
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
   foreach my $name ($node->findnodes("./$NS:person")) {
-    $names->add_name(parsename($biber, $name, $f, {useprefix => $useprefix}));
+    $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
   }
 
   # Deal with explicit "moreenames" in data source
@@ -411,7 +412,7 @@ sub _name {
 =cut
 
 sub parsename {
-  my ($biber, $node, $fieldname, $opts) = @_;
+  my ($node, $fieldname, $opts) = @_;
   $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
   my $usepre = $opts->{useprefix};
 
@@ -458,7 +459,7 @@ sub parsename {
   }
 
   # Only warn about lastnames since there should always be one
-  $biber->biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
+  biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
 
   my $namestring = '';
 
@@ -592,7 +593,7 @@ sub _split_list {
 
 # Given an entry and a fieldname, returns the field node with the right language mode
 sub _resolve_display_mode {
-  my ($biber, $entry, $fieldname, $key) = @_;
+  my ($entry, $fieldname, $key) = @_;
   my @nodelist;
   my $dm = Biber::Config->getblxoption('displaymode', $entry->getAttribute('entrytype'), $key);
   $logger->debug("Resolving display mode for '$fieldname' in node " . $entry->nodePath );
@@ -614,8 +615,8 @@ sub _resolve_display_mode {
     if (@nodelist = $entry->findnodes("./${fieldname}[$modeattr]")) {
       # Check to see if there is more than one entry with a mode and warn
       if ($#nodelist > 0) {
-        $biber->biber_warn("Found more than one mode '$mode' '$fieldname' field in entry '" .
-                      $entry->getAttribute('id') . "' - skipping duplicates ...");
+        biber_warn("Found more than one mode '$mode' '$fieldname' field in entry '" .
+                   $entry->getAttribute('id') . "' - skipping duplicates ...");
       }
       return $nodelist[0];
     }

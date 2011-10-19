@@ -84,40 +84,6 @@ sub new {
   return $self;
 }
 
-=head2 biber_warn
-
-    Wrapper around various warnings bits and pieces
-    Logs a warning, add warning to the list of .bbl warnings and optionally
-    increments warning count in Biber object, if present
-
-=cut
-
-sub biber_warn {
-  my ($self, $warning, $entry) = @_;
-  $logger->warn($warning);
-  $entry->add_warning($warning) if $entry;
-  $self->{warnings}++;
-  return;
-}
-
-
-=head2 biber_error
-
-    Wrapper around error logging
-    Forces an exit.
-
-=cut
-
-sub biber_error {
-  my ($self, $error) = @_;
-  $logger->error($error);
-  $self->{errors}++;
-  # exit unless user requested not to for errors
-  unless (Biber::Config->getoption('nodieonerror')) {
-    $self->display_problems;
-    exit EXIT_ERROR;
-  }
-}
 
 =head2 display_problems
 
@@ -241,7 +207,7 @@ sub parse_ctrlfile {
   my $ctrl_file_path = locate_biber_file($ctrl_file);
   Biber::Config->set_ctrlfile_path($ctrl_file_path);
 
-  $self->biber_error("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless ($ctrl_file_path and -e $ctrl_file_path);
+  biber_error("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless ($ctrl_file_path and -e $ctrl_file_path);
 
   # Validate if asked to
   if (Biber::Config->getoption('validate_control')) {
@@ -273,7 +239,7 @@ sub parse_ctrlfile {
       $CFxmlschema = XML::LibXML::RelaxNG->new( location => $bcf_rng )
     }
     else {
-      $self->biber_warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
+      biber_warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
       goto CONVERT;
     }
 
@@ -289,10 +255,10 @@ sub parse_ctrlfile {
       eval { $CFxmlschema->validate($CFxp) };
       if (ref($@)) {
         $logger->debug( $@->dump() );
-        $self->biber_error("BibLaTeX control file '$ctrl_file_path' failed to validate\n$@");
+        biber_error("BibLaTeX control file '$ctrl_file_path' failed to validate\n$@");
       }
       elsif ($@) {
-        $self->biber_error("BibLaTeX control file '$ctrl_file_path' failed to validate\n$@");
+        biber_error("BibLaTeX control file '$ctrl_file_path' failed to validate\n$@");
       }
       else {
         $logger->info("BibLaTeX control file '$ctrl_file_path' validates");
@@ -330,7 +296,7 @@ sub parse_ctrlfile {
       $CFstyle = XML::LibXML->load_xml( location => $bcf_xsl, no_cdata=>1 )
     }
     else {
-      $self->biber_warn("Cannot find XML::LibXSLT stylesheet. Skipping conversion : $!");
+      biber_warn("Cannot find XML::LibXSLT stylesheet. Skipping conversion : $!");
       goto LOADCF;
     }
 
@@ -344,7 +310,7 @@ sub parse_ctrlfile {
   # Open control file
  LOADCF:
   my $ctrl = new IO::File "<$ctrl_file_path"
-    or $self->biber_error("Cannot open $ctrl_file_path: $!");
+    or biber_error("Cannot open $ctrl_file_path: $!");
 
   $logger->info("Reading '$ctrl_file_path'");
 
@@ -395,7 +361,7 @@ sub parse_ctrlfile {
   my $controlversion = $bcfxml->{version};
   Biber::Config->setblxoption('controlversion', $controlversion);
   unless ($controlversion eq $BIBLATEX_VERSION) {
-    $self->biber_warn("Warning: Found biblatex control file version $controlversion, expected version $BIBLATEX_VERSION");
+    biber_warn("Warning: Found biblatex control file version $controlversion, expected version $BIBLATEX_VERSION");
   }
 
   # Look at control file and populate our main data structure with its information
@@ -657,7 +623,7 @@ sub parse_ctrlfile {
   }
 
   unless (%bibdatasources or Biber::Config->getoption('bibdata')) {
-    $self->biber_error("No data files on command line or provided in the file '$ctrl_file_path'! Exiting")
+    biber_error("No data files on command line or provided in the file '$ctrl_file_path'! Exiting")
   }
 
   my $key_flag = 0;
@@ -683,7 +649,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     foreach my $list (@{$section->{sectionlist}}) {
       my $llabel = $list->{label};
       if ($bib_section->get_list($llabel)) {
-        $self->biber_warn("Section list '$llabel' is repeated for section $secnum - ignoring subsequent mentions");
+        biber_warn("Section list '$llabel' is repeated for section $secnum - ignoring subsequent mentions");
         next;
       }
 
@@ -780,7 +746,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
   # Die if there are no citations in any section
   unless ($key_flag) {
-    $self->biber_warn("The file '$ctrl_file_path' does not contain any citations!");
+    biber_warn("The file '$ctrl_file_path' does not contain any citations!");
   }
 
   # Add the Biber::Sections object to the Biber object
@@ -918,7 +884,7 @@ sub process_crossrefs {
       # automatically crossref for the first set member using plain set inheritance
       $be->set_inherit_from($section->bibentry($inset_keys[0]), $section);
       if ($be->get_field('crossref')) {
-        $self->biber_warn("Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry '$citekey'", $be);
+        biber_warn("Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry '$citekey'", $be);
         $be->del_field('crossref');
       }
     }
@@ -931,10 +897,10 @@ sub process_crossrefs {
         my $parent = $section->bibentry($crossrefkey);
         $logger->debug("  Entry $citekey inheriting fields from parent $crossrefkey");
         unless ($parent) {
-          $self->biber_warn("Cannot inherit from crossref key '$crossrefkey' - does it exist?", $be);
+          biber_warn("Cannot inherit from crossref key '$crossrefkey' - does it exist?", $be);
         }
         else {
-          $be->inherit_from($parent, $section);
+          $be->inherit_from($parent);
         }
       }
     }
@@ -967,6 +933,7 @@ sub validate_structure {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
+
   if (Biber::Config->getoption('validate_structure')) {
     foreach my $citekey ($section->get_citekeys) {
       my $be = $section->bibentry($citekey);
@@ -975,7 +942,7 @@ sub validate_structure {
 
       # default entrytype to MISC type if not a known type
       unless ($struc->is_entrytype($et)) {
-        $self->biber_warn("Entry '$citekey' - invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
+        biber_warn("Entry '$citekey' - invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
         $be->set_field('entrytype', 'misc');
         $et = 'misc';           # reset this too
       }
@@ -987,28 +954,28 @@ sub validate_structure {
       # * Valid because entrytype allows "ALL" fields
       foreach my $ef ($be->datafields) {
         unless ($struc->is_field_for_entrytype($et, $ef)) {
-          $self->biber_warn("Entry '$citekey' - invalid field '$ef' for entrytype '$et'", $be);
+          biber_warn("Entry '$citekey' - invalid field '$ef' for entrytype '$et'", $be);
         }
       }
 
       # Mandatory constraints
       foreach my $warning ($struc->check_mandatory_constraints($be)) {
-        $self->biber_warn($warning, $be);
+        biber_warn($warning, $be);
       }
 
       # Conditional constraints
       foreach my $warning ($struc->check_conditional_constraints($be)) {
-        $self->biber_warn($warning, $be);
+        biber_warn($warning, $be);
       }
 
       # Data constraints
       foreach my $warning ($struc->check_data_constraints($be)) {
-        $self->biber_warn($warning, $be);
+        biber_warn($warning, $be);
       }
 
       # Date constraints
       foreach my $warning ($struc->check_date_components($be)) {
-        $self->biber_warn($warning, $be);
+        biber_warn($warning, $be);
       }
     }
   }
@@ -1213,7 +1180,7 @@ sub process_sets {
       Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
       my $me = $section->bibentry($member);
       if ($me->get_field('entryset')) {
-        $self->biber_warn("Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'", $me);
+        biber_warn("Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'", $me);
         $me->del_field('entryset');
       }
       # This ends up setting \inset{} in the bib
@@ -1221,7 +1188,7 @@ sub process_sets {
     }
 
     unless (@entrysetkeys) {
-      $self->biber_warn("No entryset found for entry $citekey of type 'set'", $be);
+      biber_warn("No entryset found for entry $citekey of type 'set'", $be);
     }
   }
   # check if this non-set entry is in a cited set and if so, we
@@ -1284,7 +1251,7 @@ sub process_labelname {
     }
 
     unless (first {$_ eq $ln} @{$struc->get_field_type('name')}) {
-      $self->biber_warn("Labelname candidate '$ln' is not a name field - skipping");
+      biber_warn("Labelname candidate '$ln' is not a name field - skipping");
       next;
     }
 
@@ -1356,7 +1323,7 @@ sub process_labelyear {
       return;
     }
     # make sure we gave the correct data type:
-    $self->biber_error("Invalid value for option labelyear: $lyearspec\n")
+    biber_error("Invalid value for option labelyear: $lyearspec\n")
       unless ref $lyearspec eq 'ARRAY';
     foreach my $ly ( @{$lyearspec} ) {
       if ($be->get_field($ly)) {
@@ -2457,7 +2424,7 @@ sub sort_list {
     $logger->info("Sorting list '$llabel' keys");
     $logger->debug("Sorting with fastsort (locale $thislocale)");
     unless (setlocale(LC_ALL, $thislocale)) {
-      $self->biber_warn("Unavailable locale $thislocale");
+      biber_warn("Unavailable locale $thislocale");
     }
 
     # Construct a multi-field Schwartzian Transform with the right number of
@@ -2759,15 +2726,15 @@ sub fetch_data {
     my $datatype = $datasource->{datatype};
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
     eval "require $package" or
-      $self->biber_error("Error loading data source package '$package': $@");
+      biber_error("Error loading data source package '$package': $@");
     $logger->info("Looking for $datatype format $type '$name' for section $secnum");
-    @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
+    @remaining_keys = &{"${package}::extract_entries"}($name, \@remaining_keys);
   }
 
   # error reporting
   $logger->debug("Directly cited keys not found for section '$secnum': " . join(',', @remaining_keys));
   foreach my $citekey (@remaining_keys) {
-    $self->biber_warn("I didn't find a database entry for '$citekey' (section $secnum)");
+    biber_warn("I didn't find a database entry for '$citekey' (section $secnum)");
     $section->del_citekey($citekey);
     $section->add_undef_citekey($citekey);
   }
@@ -2855,8 +2822,8 @@ sub fetch_data {
         my $datatype = $datasource->{datatype};
         my $package = 'Biber::Input::' . $type . '::' . $datatype;
         eval "require $package" or
-          $self->biber_error("Error loading data source package '$package': $@");
-        @remaining_keys = &{"${package}::extract_entries"}($self, $name, \@remaining_keys);
+          biber_error("Error loading data source package '$package': $@");
+        @remaining_keys = &{"${package}::extract_entries"}($name, \@remaining_keys);
       }
     }
 
@@ -2891,27 +2858,27 @@ sub remove_undef_dependent {
   # remove from any dynamic keys
   if (my @dmems = $section->get_dynamic_set($citekey)) {
     $section->set_dynamic_set($citekey, grep {$_ ne $missing_key} @dmems);
-    $self->biber_warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)") unless first {$_ eq $missing_key} @dmems;
+    biber_warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)") unless first {$_ eq $missing_key} @dmems;
   }
   else {
     my $be = $section->bibentry($citekey);
     # remove any xrefs
     if ($be->get_field('xref') and ($be->get_field('xref') eq $missing_key)) {
       $be->del_field('xref');
-      $self->biber_warn("I didn't find a database entry for xref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
+      biber_warn("I didn't find a database entry for xref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
 
     # remove any crossrefs
     if ($be->get_field('crossref') and ($be->get_field('crossref') eq $missing_key)) {
       $be->del_field('crossref');
-      $self->biber_warn("I didn't find a database entry for crossref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
+      biber_warn("I didn't find a database entry for crossref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
 
     # remove static sets
     if ($be->get_field('entrytype') eq 'set') {
       my @smems = split /\s*,\s*/, $be->get_field('entryset');
       $be->set_datafield('entryset', join(',', grep {$_ ne $missing_key} @smems));
-      $self->biber_warn("I didn't find a database entry for static set member '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
+      biber_warn("I didn't find a database entry for static set member '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
 
     # remove related entries
@@ -2923,7 +2890,7 @@ sub remove_undef_dependent {
         $be->del_field('relatedtype');
         $be->del_field('relatedstring');
       }
-      $self->biber_warn("I didn't find a database entry for related entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
+      biber_warn("I didn't find a database entry for related entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
   }
     return;
@@ -2946,7 +2913,7 @@ sub create_output_section {
   # We rely on the order of this array for the order of the .bbl
   foreach my $k ($section->get_citekeys) {
     # Regular entry
-    my $be = $section->bibentry($k) or $self->biber_error("Cannot find entry with key '$k' to output");
+    my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
     $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
   }
 
