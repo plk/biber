@@ -52,7 +52,7 @@ $CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{ladisambiguation} = {};
 
 # Record of what has inherited from what
-$CONFIG->{state}{inheritance} = {};
+$CONFIG->{state}{inheritance} = [];
 
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
@@ -101,7 +101,7 @@ sub _init {
   $CONFIG->{state}{seen_extrayearalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{datafiles} = [];
-  $CONFIG->{state}{inheritance} = {};
+  $CONFIG->{state}{inheritance} = [];
 
   return;
 }
@@ -618,13 +618,13 @@ sub getblxoption {
 sub set_inheritance {
   shift; # class method so don't care about class name
   my ($source, $target) = @_;
-  $CONFIG->{state}{inheritance}{$source}{$target} = 1;
+  push @{$CONFIG->{state}{inheritance}}, {s => $source, t => $target};
   return;
 }
 
 =head2 check_inheritance
 
-    Check if $source was inherited from any other entry
+    Check if $source was inherited by any other entry
 
     Biber::Config->get_inheritance($source)
 
@@ -632,13 +632,13 @@ sub set_inheritance {
 
 sub check_inheritance {
   shift; # class method so don't care about class name
-  my ($source, $target) = @_;
-  return defined($CONFIG->{state}{inheritance}{$source}) ? 1 : 0;
+  my $source = shift;
+  return first {$_->{s} eq $source} @{$CONFIG->{state}{inheritance}};
 }
 
 =head2 get_inheritance
 
-    Check if $target inherited information from $source
+    Check if $target directly inherited information from $source
 
     Biber::Config->get_inheritance($source, $target)
 
@@ -647,9 +647,34 @@ sub check_inheritance {
 sub get_inheritance {
   shift; # class method so don't care about class name
   my ($source, $target) = @_;
-  return $CONFIG->{state}{inheritance}{$source}{$target};
+  return first {$_->{s} eq $source and $_->{t} eq $target} @{$CONFIG->{state}{inheritance}};
 }
 
+=head2 is_inheritance_path
+
+  Checks for an inheritance path from entry $e1 to $e2
+
+[
+             {s => 'A',
+              t => 'B'},
+             {s => 'A',
+              t => 'E'},
+             {s => 'B',
+              t => 'C'},
+             {s => 'C',
+              t => 'D'}
+];
+
+=cut
+
+sub is_inheritance_path {
+  my ($self, $e1, $e2) = @_;
+  foreach my $dps (grep {$_->{s} eq $e1} @{$CONFIG->{state}{inheritance}}) {
+    return 1 if $dps->{t} eq $e2;
+    return 1 if is_inheritance_path($self, $dps->{t}, $e2);
+  }
+  return 0;
+}
 
 
 ##############################

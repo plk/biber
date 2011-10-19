@@ -4,16 +4,19 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 23;
+use Test::More tests => 24;
 
 use Biber;
 use Biber::Output::BBL;
 use Log::Log4perl;
+use Capture::Tiny qw(capture);
+
 chdir("t/tdata") ;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
 
+# Note stderr is output here so we can capture it and do a cyclic crossref test
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -21,7 +24,7 @@ my $l4pconf = qq|
     log4perl.appender.Screen                           = Log::Log4perl::Appender::Screen
     log4perl.appender.Screen.utf8                      = 1
     log4perl.appender.Screen.Threshold                 = $LEVEL
-    log4perl.appender.Screen.stderr                    = 0
+    log4perl.appender.Screen.stderr                    = 1
     log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
 |;
 
@@ -36,9 +39,10 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('nodieonerror', 1); # because there is a cyclic crossref check
 
 # Now generate the information
-$biber->prepare;
+my (undef, $stderr) = capture { $biber->prepare };
 my $section0 = $biber->sections->get_section(0);
 my $main0 = $section0->get_list('MAIN');
 my $section1 = $biber->sections->get_section(1);
@@ -472,6 +476,7 @@ my $ccr3 = q|  \entry{ccr4}{inbook}{}
 
 |;
 
+
 is($out->get_output_entry($main0,'cr1'), $cr1, 'crossref test 1');
 is($out->get_output_entry($main0,'cr2'), $cr2, 'crossref test 2');
 is($out->get_output_entry($main0,'cr_m'), $cr_m, 'crossref test 3');
@@ -495,4 +500,6 @@ is($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections');
 is($out->get_output_entry($main0,'ccr2'), $ccr1, 'cascading crossref test 1');
 is($out->get_output_entry($main0,'ccr3'), $ccr2, 'cascading crossref test 2');
 is($out->get_output_entry($main0,'ccr4'), $ccr3, 'multi crossref test 1');
+chomp $stderr;
+is($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'", 'Cyclic crossref error check');
 

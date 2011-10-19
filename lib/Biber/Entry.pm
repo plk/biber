@@ -332,15 +332,19 @@ sub inherit_from {
   my $target_key = $self->get_field('citekey'); # target/child key
   my $source_key = $parent->get_field('citekey'); # source/parent key
 
-  # cascading crossrefs
-#  unless (circular_inheritance($source_key, $target_key)) {
+  # record the inheritance between these entries to prevent loops and repeats.
+  Biber::Config->set_inheritance($source_key, $target_key);
+
+  # Detect crossref loops
+  unless (Biber::Config->is_inheritance_path($target_key, $source_key)) {
+    # cascading crossrefs
     if (my $ppkey = $parent->get_field('crossref')) {
       $parent->inherit_from($section->bibentry($ppkey));
     }
-  # }
-  # else {
-  #   biber_error("Circular inheritance between '$source_key'<->'$target_key'");
-  # }
+  }
+  else {
+    biber_error("Circular inheritance between '$source_key'<->'$target_key'");
+  }
 
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
@@ -406,9 +410,6 @@ sub inherit_from {
   if (my $ds = $parent->get_field('datesplit')) {
     $self->set_field('datesplit', $ds);
   }
-
-  # record that we've done inheritance between these entries to prevent loops and repeats.
-  Biber::Config->set_inheritance($source_key, $target_key);
 
   return;
 }

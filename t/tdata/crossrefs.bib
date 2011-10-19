@@ -230,4 +230,19 @@
   CROSSREF  = {ccr1,ccr2}
 }
 
+% Testing circular refs detection
 
+@BOOK{circ1,
+  DATE      = {1911},
+  CROSSREF  = {circ3}
+}
+
+@BOOK{circ2,
+  DATE      = {1911},
+  CROSSREF  = {circ1}
+}
+
+@BOOK{circ3,
+  DATE      = {1911},
+  CROSSREF  = {circ2}
+}

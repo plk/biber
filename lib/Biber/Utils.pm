@@ -43,7 +43,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options circular_inheritance biber_error biber_warn};
+  filter_entry_options biber_error biber_warn};
 
 =head1 FUNCTIONS
 
@@ -190,25 +190,6 @@ sub biber_error {
   }
 }
 
-
-=head2 circular_inheritance
-
-  Checks for circular inheritance paths, given $s -> $t, is
-  there also a path $t -> $s?
-A -> B
-  -> E
-B -> C
-C -> D
-D -> A?
-
-=cut
-
-sub circular_inheritance {
-  my ($s, $t) = @_; # source/target
-  return 0 unless Biber::Config->get_inheritance($t);
-  return 1 if Biber::Config->check_inheritance($t, $s); # loop
-  return circular_inheritance();
-}
 
 =head2 makenamesid
 
