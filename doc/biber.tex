@@ -89,7 +89,7 @@ looks like a case mismatch between citation keys, it will warn you.
 \noindent \textcolor{red}{Summary of warnings/errors is now a new format}.
 When Biber finishes writing the \verb+.bbl+, it gives a summary
 count of errors/warnings. It used to do this in the same format as
-\verb+bibtex+, for compatibility. Now it uses a more consistent and easier
+Bib\TeX, for compatibility. Now it uses a more consistent and easier
 to parse format which matches all other Biber messages. Please note
 if you need to support Biber in an external tool. I have updated the
 notes on AUC\TeX\ support below to reflect this.
@@ -98,13 +98,13 @@ notes on AUC\TeX\ support below to reflect this.
 
 \subsection{About}
 
-Biber is conceptually a \verb+bibtex+ replacement for
+Biber is conceptually a Bib\TeX\ replacement for
 Bib\LaTeX. It is written in \verb+Perl+ with the aim of providing a
 customised and sophisticated data preparation backend for Bib\LaTeX.
 You do \emph{not} need to install \verb+Perl+ use Biber---binaries
 are provided for many operating systems via the main \TeX\
 distributions (\TeX Live, Mac\TeX, MiK\TeX) and also via download from SourceForge.
-Functionally, Biber offers a superset of \verb+bibtex+'s capabilities but is
+Functionally, Biber offers a superset of Bib\TeX's capabilities but is
 tightly coupled with Bib\LaTeX\ and cannot be used as a stand-alone tool
 with standard \verb+.bst+ styles. Biber's role is to support
 Bib\LaTeX\ by performing the following tasks:
@@ -168,7 +168,7 @@ Biber is released under the free software Artistic License 2.0\footnote{\url{htt
 
 \subsection{History}
 
-\verb+bibtex+ has been the default (only \ldots) integrated choice for
+Bib\TeX\ has been the default (only \ldots) integrated choice for
 bibliography processing in \TeX\ for a long time. It has well known
 limitations which stem from its data format, data model and lack of Unicode
 support\footnote{In fact, there is now a Unicode version}. The
@@ -178,9 +178,9 @@ very hard to do sophisticated automated processing of bibliographies.
 
 Bib\LaTeX\ was a major advance for \LaTeX\ users as it moved much
 of the bibliography processing into \LaTeX\ macros. However,
-Bib\LaTeX\ still used \verb+bibtex+ as a sorting engine for the
+Bib\LaTeX\ still used Bib\TeX\ as a sorting engine for the
 bibliography and also to generate various labels for
-entries. \verb+bibtex+'s capabilities even for this reduced set of
+entries. Bib\TeX's capabilities even for this reduced set of
 tasks was still quite restricted due to the lack of Unicode support and
 the more and more complex programming issues involved in label
 preparation and file encoding.
@@ -200,7 +200,7 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 \item Processes all bibliography sections in one pass of the tool
 \item Handles UTF-8 citekeys and filenames (given a suitable fully
   UTF-8 compliant \TeX\ engine)
-\item Creates entry sets dynamically and allow easily defined static entry sets,
+\item Creates entry sets dynamically and allows easily defined static entry sets,
   all processed in one pass
 \item Flexible user-customisable crossreference field inheritance
   model
@@ -267,9 +267,9 @@ such as \verb+Unicode::Collate+, \verb+Text::BibTeX+ and
 
 \subsection{Performance}
 
-Biber can't really be compared with \verb+bibtex+ in any meaningful
+Biber can't really be compared with Bib\TeX\ in any meaningful
 way performance-wise. Biber is written in \verb+Perl+ and does a
-\emph{great} deal more than \verb+bibtex+ which is written in C. One of
+\emph{great} deal more than Bib\TeX\ which is written in C. One of
 Biber's test cases is a 2150 entry, 15,000 line \verb+.bib+ file
 which references a 630 entry macros file with a resulting 160 or so page (A4)
 formatted bibliography. This takes Biber under 3 minutes to process on
@@ -284,12 +284,12 @@ the development in 2009.
 \section{Use}
 
 Firstly, please note that Biber will \emph{not} attempt to sanitise
-the content of \verb+bibtex+ data sources. That is, don't expect it to
+the content of Bib\TeX\ data sources. That is, don't expect it to
 auto-escape any \TeX\ special characters like «\verb+&+» or «\verb+%+» which
 it finds in, for example, your \verb+TITLE+ fields. It used to do this in
 earlier versions in some cases but as of version 0.9, it doesn't because
 it's fraught with problems and leads to inconsistent expectations and
-behaviour between different data source types. In your \verb+bibtex+ data
+behaviour between different data source types. In your Bib\TeX\ data
 sources, please make sure your entries are legal \TeX\ code.
 
 Running \verb+biber --help+ will display all options and a brief
@@ -314,7 +314,7 @@ With the \verb+backend=biber+ option, Bib\LaTeX\ switches its backend
 interface and passes all options and information relevant to Biber's
 operation in a control file with extension \verb+.bcf+\footnote{Bib\LaTeX\ Control
   File}. This is conceptually equivalent to the \verb+.aux+ file which
-\LaTeX\ uses to pass information to \verb+bibtex+. The \verb+.bcf+ file is
+\LaTeX\ uses to pass information to Bib\TeX. The \verb+.bcf+ file is
 XML and contains many options and settings which configure how Biber
 is to process the bibliography and generate the \verb+.bbl+ file.
 
@@ -605,7 +605,7 @@ saying whether it will be overwritten or not. An example:
 \end{lstlisting}
 
 \noindent This would turn a \verb+CONVERSATION+ entrytype in all
-\verb+bibtex+ data sources into a \verb+CUSTOMA+ entrytype
+Bib\TeX\ data sources into a \verb+CUSTOMA+ entrytype
 and would automatically set the \verb+USERA+ field in the entry to
 «conversation» and the \verb+NOTE+ field to «Auto-created this field». The
 \verb+USERB+ field would be deleted. The
@@ -818,7 +818,7 @@ source entrytypes \verb+ARTICLE+ and \verb+BOOK+, the field \verb+NOTE+
 should be ignored and the \verb+ADDENDUM+ field should be set to «A
 string».
 
-For data sources other than \verb+bibtex+, (e.g. \verb+ris+,
+For data sources other than Bib\TeX, (e.g. \verb+ris+,
 \verb+endnotexml+ and \verb+zoterordfxml+), the source entrytypes and
 fields are usually very differently modelled and named. For example, here
 is how to drop the «subject» fields from various entrytypes in Zotero XML
@@ -918,7 +918,7 @@ in names which should not be considered when sorting. Given (the default):
 </nosort>
 \end{verbatim}
 
-\noindent and the \verb+bibtex+ data source entry:
+\noindent and the Bib\TeX\ data source entry:
 
 \begin{verbatim}
 AUTHOR = {{al-Hasan}, ʿAlī},
@@ -1186,7 +1186,7 @@ sorting data which is only available after the \LaTeX\ character macro
 decoding step.
 
 For example, suppose you are using PDF\LaTeX\ with\\
-\verb+\usepackage[latin1]{inputenc}+ and the following \verb+bibtex+
+\verb+\usepackage[latin1]{inputenc}+ and the following Bib\TeX\
 data source entry:
 
 \begin{verbatim}
@@ -1329,11 +1329,11 @@ redefinition warnings from the \verb+btparse+ library. You can turn
 off Biber's macro definitions to avoid this by using the option
 \verb+--nostdmacros+.
 
-Biber will look at any \verb+MONTH+ field in a \verb+bibtex+ data
+Biber will look at any \verb+MONTH+ field in a Bib\TeX\ data
 source and if it's not a number as Bib\LaTeX\ expects (because it
 wasn't one of the macros as mentioned above or these macros were disabled
 by \verb+--nostdmacros+), it will try to turn it into the right number in
-the \verb+.bbl+. If you only use Bib\LaTeX\ with your \verb+bibtex+
+the \verb+.bbl+. If you only use Bib\LaTeX\ with your Bib\TeX\
 data source files, you should probably make any \verb+MONTH+ fields be the
 numbers which Bib\LaTeX\ expects.
 
@@ -1361,7 +1361,7 @@ obtain as much meaningful information from a data source as possible.
 Currently supported data sources drivers are:
 
 \begin{itemize}
-\item \verb+bibtex+ --- Bib\TeX\ data files
+\item Bib\TeX\ --- Bib\TeX\ data files
 \item \verb+endnotexml+ --- Endnote XML export format, version $\geq$ Endnote X1
 \item \verb+ris+ --- Research Information Systems format
 \item \verb+zoterordfxml+ --- Zotero RDF XML format, version 2.0.9
@@ -1622,7 +1622,7 @@ biber --validate_control --convert_control test
 \noindent This will run Biber normally on the test files plus it
 will also perform an XSLT transform on the \verb+.bcf+ and
 leave an HTML representation of it in the same directory thus testing the
-links to the XML and XSLT libraries as well as the \verb+bibtex+ parsing
+links to the XML and XSLT libraries as well as the Bib\TeX\ parsing
 libraries. The output should look something like this (may be differences
 of Biber version and locale of course but there should be no errors
 or warnings).
