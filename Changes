@@ -1,6 +1,7 @@
 Revision history for Biber
 
 0.9.6  (unreleased)
+       * crossrefs can now be cascaded and multi
        * Warnings/error summary is now a more consistent format with all
          other biber messages.
        * Matching of .bcf keys to datasource keys is now CASE_SENSITIVE

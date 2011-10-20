@@ -1,5 +1,3 @@
-* TODO Perl 5.14
-  * strings pragma and array/hash refs
 * TODO When biblatex implements mapping, remove greyed and add line from .bcf to remap in Figure 1 in docs
 * TODO labelalphatemplate implementation
   * Take out labelalphatemplate defaults, optional in rnc/rng and parsing when biblatex implements it
