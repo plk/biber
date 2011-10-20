@@ -182,7 +182,7 @@ sub biber_warn {
 sub biber_error {
   my $error = shift;
   $logger->error($error);
-  $Biber::MASTER->{warnings}++;
+  $Biber::MASTER->{errors}++;
   # exit unless user requested not to for errors
   unless (Biber::Config->getoption('nodieonerror')) {
     $Biber::MASTER->display_problems;
