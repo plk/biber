@@ -262,7 +262,7 @@ sub _initopts {
   my $vn = $VERSION;
   $vn .= ' (beta)' if $BETA_VERSION;
 
-  $logger->info("This is biber $vn") unless Biber::Config->getoption('nolog');
+  $logger->info("This is Biber $vn") unless Biber::Config->getoption('nolog');
 
   $logger->info("Config file is '" . $opts->{configfile} . "'") if $opts->{configfile};
   $logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');

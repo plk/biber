@@ -113,7 +113,7 @@ sub extract_entries {
   }
 
   # Log that we found a data file
-  $logger->info("Found bibtex data file '$filename'");
+  $logger->info("Found BibTeX data file '$filename'");
 
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   # We can't redirect STDERR to a variable as libbtparse doesnt' use PerlIO, just stdio
@@ -135,11 +135,11 @@ sub extract_entries {
 
   # Don't read the file again if it's already cached
   unless ($cache->{data}{$filename}) {
-    $logger->debug("Caching data for bibtex format file '$filename' for section $secnum");
+    $logger->debug("Caching data for BibTeX format file '$filename' for section $secnum");
     cache_data($filename);
   }
   else {
-    $logger->debug("Using cached data for bibtex format file '$filename' for section $secnum");
+    $logger->debug("Using cached data for BibTeX format file '$filename' for section $secnum");
   }
 
   if ($section->is_allkeys) {
@@ -641,7 +641,7 @@ sub cache_data {
       next;
     }
 
-    # Ignore misc bibtex entry types we don't care about
+    # Ignore misc BibTeX entry types we don't care about
     next if ( $entry->metatype == BTE_MACRODEF or
               $entry->metatype == BTE_UNKNOWN or
               $entry->metatype == BTE_COMMENT );
@@ -683,7 +683,7 @@ sub cache_data {
     # We need this in order to do sorting=none + allkeys because in this case, there is no
     # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
     push @{$cache->{orig_key_order}{$filename}}, $key;
-    $logger->debug("Cached Text::BibTeX entry for key '$key' from bibtex file '$filename'");
+    $logger->debug("Cached Text::BibTeX entry for key '$key' from BibTeX file '$filename'");
   }
 
   $bib->close; # If we don't do this, we can't unlink the temp file on Windows
@@ -950,7 +950,7 @@ Biber::Input::file::bibtex - look in a BibTeX file for an entry and create it if
 
 =head1 DESCRIPTION
 
-Provides the extract_entries() method to get entries from a bibtex data source
+Provides the extract_entries() method to get entries from a BibTeX data source
 and instantiate Biber::Entry objects for what it finds
 
 =head1 AUTHOR
