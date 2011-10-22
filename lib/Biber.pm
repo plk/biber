@@ -854,6 +854,10 @@ sub resolve_xdata {
 
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
+    # Don't directly resolve XDATA entrytypes - this is done recursively in the Entry method
+    # Otherwise, we will die on loops etc. for XDATA entries which are never referenced from
+    # any cited entry
+    next if $be->get_field('entrytype') eq 'xdata';
     next unless my $xdata = $be->get_field('xdata');
     $be->resolve_xdata($xdata);
     $be->del_field('xdata'); # clear the xdata field
