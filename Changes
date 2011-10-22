@@ -1,10 +1,13 @@
 Revision history for Biber
 
 0.9.6  (unreleased)
-       * crossrefs can now be cascaded and multi
+       * Now requires perl 5.14 for full Unicode 6.0 support
+       * New XDATA entrytype and field to allow more complex macro-style
+         data inheritance
+       * crossref cascading is in guaranteed resolve order now
        * Warnings/error summary is now a more consistent format with all
          other biber messages.
-       * Matching of .bcf keys to datasource keys is now CASE_SENSITIVE
+       * Matching of .bcf keys to datasource keys is now case-sensitive
        * Fixed biblatex bug tracker ticket #3399744
        * Fixed bug tracker ticket #3402114
        * max/minnames -> max/mincitenames
