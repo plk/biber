@@ -2809,7 +2809,7 @@ sub fetch_data {
         my @smems = split /\s*,\s*/, $be->get_field('entryset');
         # skip looking for dependent if it's already been directly cited
         foreach my $sm (@smems) {
-          unless ($section->bibentry($sm)) {
+          unless ($section->has_citekey($sm)) {
             push @dependent_keys, $sm;
             $dep_map->{$citekey} = 1;
           }
@@ -2822,7 +2822,7 @@ sub fetch_data {
         my @rmems = split /\s*,\s*/, $relkeys;
         # skip looking for dependent if it's already been directly cited
         foreach my $rm (@rmems) {
-          unless ($section->bibentry($rm)) {
+          unless ($section->has_citekey($rm)) {
             push @dependent_keys, $rm;
             $dep_map->{$citekey} = 1;
           }

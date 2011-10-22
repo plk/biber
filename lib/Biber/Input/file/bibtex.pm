@@ -176,12 +176,20 @@ sub extract_entries {
     }
 
     # XDATA are basically semi-semantic macros - we always include them all even without
-    # allkeys - it's not worth working out which ones are actually used
-    # We not only create entries for them but also temporarily add them to the section as
-    # if they were cited so that we can loop over them when we resolve xdata information
-    $logger->debug("Including all XDATA entries for BibTeX file '$filename' in section '$secnum'");
+    # allkeys. They are a special case since:
+    #
+    # * They can cascade (nested XDATA fields)
+    # * They are never cited
+    #
+    # So, we add all of them to the internal data model and pretend temporarily that they were
+    # cited, even without allkeys so that we can extract data from them later. We don't try to
+    # work out which ones are actually used as the combination of them cascading and not being cited
+    # makes this really difficult and it's not worth the complexity as against the minimal memory
+    # requirements of just grabbing them all. We will remove them from the section object citation
+    # list later (see Biber::resolve_xdata()) so that they are not output at all.
     while (my (undef, $entry) = each %{$cache->{data}{$filename}}) {
       next unless lc($entry->type) eq 'xdata';
+      next if $section->has_citekey(decode_utf8($entry->key));
       $section->add_citekeys(decode_utf8($entry->key));
       create_entry(decode_utf8($entry->key), $entry);
     }
