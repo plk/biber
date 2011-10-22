@@ -159,6 +159,7 @@
     <dcf:field name="version" handler="literal"/>
     <dcf:field name="volume" handler="literal"/>
     <dcf:field name="volumes" handler="literal"/>
+    <dcf:field name="xdata" handler="literal"/>
     <dcf:field name="xref" handler="literal"/>
     <dcf:field name="year" handler="literal"/>
     <!-- name fields -->

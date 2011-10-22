@@ -84,6 +84,7 @@ t/related-entries.t
 t/sortlists.t
 t/endnotexml.t
 t/zoterordfxml.t
+t/xdata.t
 t/pod-coverage.t
 t/pod.t
 t/tdata/options.bcf
@@ -147,11 +148,14 @@ t/tdata/uniqueness2.bib
 t/tdata/uniqueness3.bib
 t/tdata/uniqueness4.bib
 t/tdata/uniqueness5.bib
+t/tdata/xdata.bib
+t/tdata/xdata.bltxml
 t/tdata/sort-case.bib
 t/tdata/examples.bib
 t/tdata/biber-test.conf
 t/tdata/sets.bib
 t/tdata/related.bib
+t/tdata/xdata.bcf
 t/tdata/related.bcf
 t/tdata/set-legacy.bcf
 t/tdata/set-static.bcf

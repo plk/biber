@@ -124,6 +124,7 @@
     <dcf:field name="version" handler="verbatim"/>
     <dcf:field name="volume" handler="verbatim"/>
     <dcf:field name="volumes" handler="verbatim"/>
+    <dcf:field name="xdata" handler="verbatim"/>
     <dcf:field name="xref" handler="verbatim"/>
     <dcf:field name="year" handler="verbatim"/>
     <dcf:field name="keywords" handler="verbatim"/>

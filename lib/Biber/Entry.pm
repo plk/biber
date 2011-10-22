@@ -312,6 +312,47 @@ sub set_inherit_from {
   return;
 }
 
+=head2 resolve_xdata
+
+    Recursively resolve XDATA fields in an entry
+
+    $entry->resolve_xdata($xdata_entry);
+
+=cut
+
+sub resolve_xdata {
+  my ($self, $xdata) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $entry_key = $self->get_field('citekey');
+
+  foreach my $xdatum (split /\s*,\s*/, $xdata) {
+    unless (my $xdatum_entry = $section->bibentry($xdatum)) {
+      biber_warn("Entry '$entry_key' references XDATA entry '$xdatum' which does not exist in section $secnum");
+      next;
+    }
+    else {
+      # record the XDATA resolve between these entries to prevent loops
+      Biber::Config->set_inheritance($xdatum, $entry_key, 'xdata');
+
+      # Detect XDATA loops
+      unless (Biber::Config->is_inheritance_path($entry_key, $xdatum, 'xdata')) {
+        if (my $recurse_xdata = $xdatum_entry->get_field('xdata')) { # recurse
+          $xdatum_entry->resolve_xdata($recurse_xdata);
+        }
+        foreach my $field ($xdatum_entry->datafields()) { # set fields
+          $self->set_datafield($field, $xdatum_entry->get_field($field));
+          $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+        }
+      }
+      else {
+        biber_error("Circular XDATA inheritance between '$xdatum'<->'$entry_key'");
+      }
+    }
+  }
+  $self->del_field('xdata');    # clear the xdata field
+}
+
 =head2 inherit_from
 
     Inherit fields from parent entry (as indicated by the crossref field)
@@ -333,10 +374,10 @@ sub inherit_from {
   my $source_key = $parent->get_field('citekey'); # source/parent key
 
   # record the inheritance between these entries to prevent loops and repeats.
-  Biber::Config->set_inheritance($source_key, $target_key);
+  Biber::Config->set_inheritance($source_key, $target_key, 'crossref');
 
   # Detect crossref loops
-  unless (Biber::Config->is_inheritance_path($target_key, $source_key)) {
+  unless (Biber::Config->is_inheritance_path($target_key, $source_key, 'crossref')) {
     # cascading crossrefs
     if (my $ppkey = $parent->get_field('crossref')) {
       $parent->inherit_from($section->bibentry($ppkey));

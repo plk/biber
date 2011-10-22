@@ -252,7 +252,7 @@ sub del_citekey {
 
 =head2 del_citekeys
 
-    Deletes al citekeys from a Biber::Section object
+    Deletes all citekeys from a Biber::Section object
 
 =cut
 

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 24;
+use Test::More tests => 23;
 
 use Biber;
 use Biber::Output::BBL;
@@ -499,7 +499,6 @@ is($out->get_output_entry($main0,'mcr'), $mcr, 'missing crossef test');
 is($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections');
 is($out->get_output_entry($main0,'ccr2'), $ccr1, 'cascading crossref test 1');
 is($out->get_output_entry($main0,'ccr3'), $ccr2, 'cascading crossref test 2');
-is($out->get_output_entry($main0,'ccr4'), $ccr3, 'multi crossref test 1');
 chomp $stderr;
 is($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'", 'Cyclic crossref error check');
 

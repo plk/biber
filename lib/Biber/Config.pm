@@ -52,7 +52,8 @@ $CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{ladisambiguation} = {};
 
 # Record of what has inherited from what
-$CONFIG->{state}{inheritance} = [];
+$CONFIG->{state}{crossref} = [];
+$CONFIG->{state}{xdata} = [];
 
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
@@ -101,7 +102,8 @@ sub _init {
   $CONFIG->{state}{seen_extrayearalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{datafiles} = [];
-  $CONFIG->{state}{inheritance} = [];
+  $CONFIG->{state}{crossref} = [];
+  $CONFIG->{state}{xdata} = [];
 
   return;
 }
@@ -607,9 +609,11 @@ sub getblxoption {
 # Inheritance state methods
 ##############################
 
+
 =head2 set_inheritance
 
     Record that $target inherited information from $source
+    Can be used for crossrefs and xdata
 
     Biber::Config->set_inheritance($source, $target)
 
@@ -617,28 +621,16 @@ sub getblxoption {
 
 sub set_inheritance {
   shift; # class method so don't care about class name
-  my ($source, $target) = @_;
-  push @{$CONFIG->{state}{inheritance}}, {s => $source, t => $target};
+  my ($source, $target, $type) = @_;
+  push @{$CONFIG->{state}{$type}}, {s => $source, t => $target};
   return;
 }
 
-=head2 check_inheritance
-
-    Check if $source was inherited by any other entry
-
-    Biber::Config->get_inheritance($source)
-
-=cut
-
-sub check_inheritance {
-  shift; # class method so don't care about class name
-  my $source = shift;
-  return first {$_->{s} eq $source} @{$CONFIG->{state}{inheritance}};
-}
 
 =head2 get_inheritance
 
     Check if $target directly inherited information from $source
+    Can be used for crossrefs and xdata
 
     Biber::Config->get_inheritance($source, $target)
 
@@ -646,13 +638,14 @@ sub check_inheritance {
 
 sub get_inheritance {
   shift; # class method so don't care about class name
-  my ($source, $target) = @_;
-  return first {$_->{s} eq $source and $_->{t} eq $target} @{$CONFIG->{state}{inheritance}};
+  my ($source, $target, $type) = @_;
+  return first {$_->{s} eq $source and $_->{t} eq $target} @{$CONFIG->{state}{$type}};
 }
 
 =head2 is_inheritance_path
 
   Checks for an inheritance path from entry $e1 to $e2
+  Can be used for crossrefs and xdata
 
 [
              {s => 'A',
@@ -668,10 +661,10 @@ sub get_inheritance {
 =cut
 
 sub is_inheritance_path {
-  my ($self, $e1, $e2) = @_;
-  foreach my $dps (grep {$_->{s} eq $e1} @{$CONFIG->{state}{inheritance}}) {
+  my ($self, $e1, $e2, $type) = @_;
+  foreach my $dps (grep {$_->{s} eq $e1} @{$CONFIG->{state}{$type}}) {
     return 1 if $dps->{t} eq $e2;
-    return 1 if is_inheritance_path($self, $dps->{t}, $e2);
+    return 1 if is_inheritance_path($self, $dps->{t}, $e2, $type);
   }
   return 0;
 }

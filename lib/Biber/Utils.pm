@@ -43,7 +43,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn};
+  filter_entry_options biber_error biber_warn };
 
 =head1 FUNCTIONS
 
@@ -189,7 +189,6 @@ sub biber_error {
     exit EXIT_ERROR;
   }
 }
-
 
 =head2 makenamesid
 

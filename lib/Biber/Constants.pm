@@ -463,6 +463,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "verba" },
                        { content => "verbb" },
                        { content => "verbc" },
+                       { content => "xdata" },
                        { content => "xref" },
                      ],
                    },
@@ -1405,6 +1406,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "thesis" },
                      { content => "unpublished" },
                      { content => "video" },
+                     { content => "xdata" },
                    ],
                  },
   fields      => {
@@ -1633,6 +1635,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "version", datatype => "literal", fieldtype => "field" },
                      { content => "volume", datatype => "literal", fieldtype => "field" },
                      { content => "volumes", datatype => "literal", fieldtype => "field" },
+                     { content => "xdata", datatype => "literal", fieldtype => "field" },
                      { content => "xref", datatype => "literal", fieldtype => "field" },
                      { content => "year", datatype => "literal", fieldtype => "field" },
                    ],

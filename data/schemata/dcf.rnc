@@ -51,7 +51,7 @@ start =
         # 3. A name->aliasof(+aliasfortype), giving multiple field mappings for
         #    "name". You can specifiy a global mapping like type 2 above by leaving out
         #    the "aliasfortype" attribute. You must use this form when you need to
-        #    specifiy more than one alias mapping for the same name, meaning that
+        #    specify more than one alias mapping for the same name, meaning that
         #    you need to specify entrytype specific mappings. For example, if the "isbn"
         #    field in the data source maps to biblatex's "isbn" except when it's in a
         #    journal article entry and then it should map to biblatex's "issn", you need

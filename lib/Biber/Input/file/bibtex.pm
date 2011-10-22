@@ -86,7 +86,6 @@ sub extract_entries {
   my ($filename, $keys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   my @rkeys = @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've used it
   $logger->trace("Entering extract_entries()");
@@ -119,7 +118,7 @@ sub extract_entries {
   # We can't redirect STDERR to a variable as libbtparse doesnt' use PerlIO, just stdio
   # so it doesn't understand this. It does understand normal file redirection though as
   # that's standard stdio.
-  # THe Log4Perl setup outputs only to STDOUT so redirecting all STDERR like this is
+  # The Log4Perl setup outputs only to STDOUT so redirecting all STDERR like this is
   # ok since only libbtparse will be writing there
   my $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
                                DIR => $Biber::MASTER->biber_tempdir);
@@ -170,10 +169,21 @@ sub extract_entries {
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
-      elsif  (my $okey = $section->has_badcasekey($wanted_key)) {
+      elsif (my $okey = $section->has_badcasekey($wanted_key)) {
         biber_warn("Possible typo (case mismatch) between citation and datasource keys: '$wanted_key' and '$okey' in file '$filename'");
       }
       $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
+    }
+
+    # XDATA are basically semi-semantic macros - we always include them all even without
+    # allkeys - it's not worth working out which ones are actually used
+    # We not only create entries for them but also temporarily add them to the section as
+    # if they were cited so that we can loop over them when we resolve xdata information
+    $logger->debug("Including all XDATA entries for BibTeX file '$filename' in section '$secnum'");
+    while (my (undef, $entry) = each %{$cache->{data}{$filename}}) {
+      next unless lc($entry->type) eq 'xdata';
+      $section->add_citekeys(decode_utf8($entry->key));
+      create_entry(decode_utf8($entry->key), $entry);
     }
   }
 

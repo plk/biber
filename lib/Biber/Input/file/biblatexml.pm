@@ -167,6 +167,19 @@ sub extract_entries {
       }
       $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
     }
+
+    # XDATA are basically semi-semantic macros - we always include them all even without
+    # allkeys - it's not worth working out which ones are actually used
+    # We not only create entries for them but also temporarily add them to the section as
+    # if they were cited so that we can loop over them when we resolve xdata information
+    $logger->debug("Including all XDATA entries in BibLaTeXML file '$filename' in section '$secnum'");
+    foreach my $entry ($xpc->findnodes("//$NS:entry")) {
+      next unless lc($entry->getAttribute('entrytype')) eq 'xdata';
+      $section->add_citekeys($entry->getAttribute('id'));
+      create_entry($entry->getAttribute('id'), $entry);
+    }
+
+
   }
 
   return @rkeys;

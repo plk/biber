@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="../../data/schemata/biblatexml.rnc" type="compact"?>
+<bib:entries xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml">
+  <bib:entry id="bltxxd1" entrytype="xdata">
+    <bib:addendum>Москва</bib:addendum>
+    <bib:xdata>bltxxd2</bib:xdata>
+  </bib:entry>
+  <bib:entry id="bltxxd2" entrytype="xdata">
+    <bib:abstract>An abstract</bib:abstract>
+  </bib:entry>
+</bib:entries>
