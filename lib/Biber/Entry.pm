@@ -332,6 +332,12 @@ sub resolve_xdata {
       next;
     }
     else {
+      # Skip xdata inheritance if we've already done it
+      # This will only ever be between two XDATA entrytypes since we
+      # always start at a non-XDATA entrytype, which we'll not look at again
+      # and recursion is always between XDATA entrytypes.
+      next if Biber::Config->get_inheritance($xdatum, $entry_key, 'xdata');
+
       # record the XDATA resolve between these entries to prevent loops
       Biber::Config->set_inheritance($xdatum, $entry_key, 'xdata');
 
