@@ -43,7 +43,7 @@
             "Log::Log4perl" : 0,
             "Readonly" : 0,
             "Regexp::Common" : 0,
-            "Text::BibTeX" : "0.60",
+            "Text::BibTeX" : "0.61",
             "Unicode::Collate" : "0.80",
             "XML::LibXML::Simple" : 0,
             "XML::LibXSLT" : 0,
