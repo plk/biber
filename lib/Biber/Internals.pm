@@ -793,84 +793,117 @@ our $sorting_sep = ',';
 # a pointer to extra arguments to the code. This is to make code re-use possible
 # so the sorting can share code for similar things.
 our $dispatch_sorting = {
-  'address'         =>  [\&_sort_place,         ['place']],
-  'author'          =>  [\&_sort_author,        []],
-  'booksubtitle'    =>  [\&_sort_title,         ['booksubtitle']],
-  'booktitle'       =>  [\&_sort_title,         ['booktitle']],
-  'booktitleaddon'  =>  [\&_sort_title,         ['booktitleaddon']],
+  'addendum'        =>  [\&_sort_literaln,      ['addendum']],
+  'annotator'       =>  [\&_sort_name,          ['annotator']],
+  'author'          =>  [\&_sort_name,          ['author']],
+  'bookauthor'      =>  [\&_sort_name,          ['bookauthor']],
+  'booksubtitle'    =>  [\&_sort_literaln,      ['booksubtitle']],
+  'booktitle'       =>  [\&_sort_literaln,      ['booktitle']],
+  'booktitleaddon'  =>  [\&_sort_literaln,      ['booktitleaddon']],
+  'chapter'         =>  [\&_sort_literal,       ['chapter']],
   'citeorder'       =>  [\&_sort_citeorder,     []],
+  'commentator'     =>  [\&_sort_name,          ['commentator']],
   'day'             =>  [\&_sort_dm,            ['day']],
-  'editor'          =>  [\&_sort_editor,        ['editor']],
-  'editora'         =>  [\&_sort_editor,        ['editora']],
+  'edition'         =>  [\&_sort_literal,       ['edition']],
+  'editor'          =>  [\&_sort_name,          ['editor']],
+  'editora'         =>  [\&_sort_name,          ['editora']],
   'editoratype'     =>  [\&_sort_editortc,      ['editoratype']],
-  'editorb'         =>  [\&_sort_editor,        ['editorb']],
+  'editorb'         =>  [\&_sort_name,          ['editorb']],
   'editorbtype'     =>  [\&_sort_editortc,      ['editorbtype']],
-  'editorc'         =>  [\&_sort_editor,        ['editorc']],
+  'editorc'         =>  [\&_sort_name,          ['editorc']],
   'editorctype'     =>  [\&_sort_editortc,      ['editorctype']],
   'endday'          =>  [\&_sort_dm,            ['endday']],
   'endmonth'        =>  [\&_sort_dm,            ['endmonth']],
-  'endyear'         =>  [\&_sort_year,          ['endyear']],
+  'endyear'         =>  [\&_sort_literal,       ['endyear']],
   'entrykey'        =>  [\&_sort_entrykey,      []],
   'eventday'        =>  [\&_sort_dm,            ['eventday']],
   'eventendday'     =>  [\&_sort_dm,            ['eventendday']],
   'eventendmonth'   =>  [\&_sort_dm,            ['eventendmonth']],
-  'eventendyear'    =>  [\&_sort_year,          ['eventendyear']],
+  'eventendyear'    =>  [\&_sort_literal,       ['eventendyear']],
   'eventmonth'      =>  [\&_sort_dm,            ['eventmonth']],
-  'eventtitle'      =>  [\&_sort_title,         ['eventtitle']],
-  'eventyear'       =>  [\&_sort_year,          ['eventyear']],
-  'issuesubtitle'   =>  [\&_sort_title,         ['issuesubtitle']],
-  'issuetitle'      =>  [\&_sort_title,         ['issuetitle']],
-  'institution'     =>  [\&_sort_place,         ['institution']],
-  'journalsubtitle' =>  [\&_sort_title,         ['journalsubtitle']],
-  'journaltitle'    =>  [\&_sort_title,         ['journaltitle']],
-  'labelalpha'      =>  [\&_sort_labelalpha,    []],
+  'eventtitle'      =>  [\&_sort_literaln,      ['eventtitle']],
+  'eventyear'       =>  [\&_sort_literal,       ['eventyear']],
+  'foreword'        =>  [\&_sort_name,          ['foreword']],
+  'holder'          =>  [\&_sort_name,          ['holder']],
+  'issue'           =>  [\&_sort_literal,       ['issue']],
+  'issuesubtitle'   =>  [\&_sort_literaln,      ['issuesubtitle']],
+  'issuetitle'      =>  [\&_sort_literaln,      ['issuetitle']],
+  'institution'     =>  [\&_sort_list,          ['institution']],
+  'introduction'    =>  [\&_sort_name,          ['introduction']],
+  'journalsubtitle' =>  [\&_sort_literaln,      ['journalsubtitle']],
+  'journaltitle'    =>  [\&_sort_literaln,      ['journaltitle']],
+  'labelalpha'      =>  [\&_sort_literal,       ['sortlabelalpha']],
   'labelname'       =>  [\&_sort_labelname,     []],
   'labelyear'       =>  [\&_sort_labelyear,     []],
+  'language'        =>  [\&_sort_list,          ['language']],
+  'library'         =>  [\&_sort_literal,       ['library']],
   'lista'           =>  [\&_sort_list,          ['lista']],
   'listb'           =>  [\&_sort_list,          ['listb']],
   'listc'           =>  [\&_sort_list,          ['listc']],
   'listd'           =>  [\&_sort_list,          ['listd']],
   'liste'           =>  [\&_sort_list,          ['liste']],
   'listf'           =>  [\&_sort_list,          ['listf']],
-  'location'        =>  [\&_sort_place,         ['location']],
-  'mainsubtitle'    =>  [\&_sort_title,         ['mainsubtitle']],
-  'maintitle'       =>  [\&_sort_title,         ['maintitle']],
-  'maintitleaddon'  =>  [\&_sort_title,         ['maintitleaddon']],
+  'location'        =>  [\&_sort_list,          ['location']],
+  'mainsubtitle'    =>  [\&_sort_literaln,      ['mainsubtitle']],
+  'maintitle'       =>  [\&_sort_literaln,      ['maintitle']],
+  'maintitleaddon'  =>  [\&_sort_literaln,      ['maintitleaddon']],
   'month'           =>  [\&_sort_dm,            ['month']],
   'namea'           =>  [\&_sort_name,          ['namea']],
   'nameb'           =>  [\&_sort_name,          ['nameb']],
   'namec'           =>  [\&_sort_name,          ['namec']],
+  'note'            =>  [\&_sort_literal,       ['note']],
+  'number'          =>  [\&_sort_literal,       ['number']],
   'origday'         =>  [\&_sort_dm,            ['origday']],
   'origendday'      =>  [\&_sort_dm,            ['origendday']],
   'origendmonth'    =>  [\&_sort_dm,            ['origendmonth']],
-  'origendyear'     =>  [\&_sort_year,          ['origendyear']],
+  'origendyear'     =>  [\&_sort_literal,       ['origendyear']],
+  'origlocation'    =>  [\&_sort_list,          ['origlocation']],
   'origmonth'       =>  [\&_sort_dm,            ['origmonth']],
-  'origtitle'       =>  [\&_sort_title,         ['origtitle']],
-  'origyear'        =>  [\&_sort_year,          ['origyear']],
-  'organization'    =>  [\&_sort_place,         ['organization']],
+  'origpublisher'   =>  [\&_sort_list,          ['origpublisher']],
+  'origtitle'       =>  [\&_sort_literaln,      ['origtitle']],
+  'origyear'        =>  [\&_sort_literal,       ['origyear']],
+  'organization'    =>  [\&_sort_list,          ['organization']],
+  'part'            =>  [\&_sort_literal,       ['part']],
   'presort'         =>  [\&_sort_presort,       []],
-  'publisher'       =>  [\&_sort_publisher,     []],
-  'pubstate'        =>  [\&_sort_pubstate,      []],
-  'school'          =>  [\&_sort_place,         ['school']],
-  'shorthand'       =>  [\&_sort_shorthand,     []],
-  'shorttitle'      =>  [\&_sort_title,         ['shorttitle']],
-  'sortkey'         =>  [\&_sort_sortkey,       []],
+  'publisher'       =>  [\&_sort_list,          ['publisher']],
+  'pubstate'        =>  [\&_sort_literal,       ['pubstate']],
+  'school'          =>  [\&_sort_list,          ['school']],
+  'series'          =>  [\&_sort_literal,       ['series']],
+  'shortauthor'     =>  [\&_sort_literaln,      ['shortauthor']],
+  'shorteditor'     =>  [\&_sort_literaln,      ['shorteditor']],
+  'shorthand'       =>  [\&_sort_literal,       ['shorthand']],
+  'shortjournal'    =>  [\&_sort_literaln,      ['shortjournal']],
+  'shortseries'     =>  [\&_sort_literaln,      ['shortseries']],
+  'shorttitle'      =>  [\&_sort_literaln,      ['shorttitle']],
+  'sortkey'         =>  [\&_sort_literal,       ['sortkey']],
   'sortname'        =>  [\&_sort_sortname,      []],
-  'sortshorthand'   =>  [\&_sort_sortshorthand, []],
-  'sorttitle'       =>  [\&_sort_title,         ['sorttitle']],
-  'sortyear'        =>  [\&_sort_year,          ['sortyear']],
-  'subtitle'        =>  [\&_sort_title,         ['subtitle']],
-  'title'           =>  [\&_sort_title,         ['title']],
-  'titleaddon'      =>  [\&_sort_title,         ['titleaddon']],
-  'translator'      =>  [\&_sort_translator,    []],
+  'sortshorthand'   =>  [\&_sort_literal,       ['sortshorthand']],
+  'sorttitle'       =>  [\&_sort_literaln,      ['sorttitle']],
+  'sortyear'        =>  [\&_sort_literal,       ['sortyear']],
+  'subtitle'        =>  [\&_sort_literaln,      ['subtitle']],
+  'title'           =>  [\&_sort_literaln,      ['title']],
+  'titleaddon'      =>  [\&_sort_literaln,      ['titleaddon']],
+  'translator'      =>  [\&_sort_name,          ['translator']],
+  'type'            =>  [\&_sort_literal,       ['type']],
   'urlday'          =>  [\&_sort_dm,            ['urlday']],
   'urlendday'       =>  [\&_sort_dm,            ['urlendday']],
   'urlendmonth'     =>  [\&_sort_dm,            ['urlendmonth']],
-  'urlendyear'      =>  [\&_sort_year,          ['urlendyear']],
+  'urlendyear'      =>  [\&_sort_literal,       ['urlendyear']],
   'urlmonth'        =>  [\&_sort_dm,            ['urlmonth']],
-  'urlyear'         =>  [\&_sort_year,          ['urlyear']],
-  'volume'          =>  [\&_sort_volume,        []],
-  'year'            =>  [\&_sort_year,          ['year']],
+  'urlyear'         =>  [\&_sort_literal,       ['urlyear']],
+  'usera'           =>  [\&_sort_literal,       ['usera']],
+  'userb'           =>  [\&_sort_literal,       ['userb']],
+  'userc'           =>  [\&_sort_literal,       ['userc']],
+  'userd'           =>  [\&_sort_literal,       ['userd']],
+  'usere'           =>  [\&_sort_literal,       ['usere']],
+  'userf'           =>  [\&_sort_literal,       ['userf']],
+  'venue'           =>  [\&_sort_literal,       ['venue']],
+  'verba'           =>  [\&_sort_literal,       ['verba']],
+  'verbb'           =>  [\&_sort_literal,       ['verbb']],
+  'verbc'           =>  [\&_sort_literal,       ['verbc']],
+  'version'         =>  [\&_sort_literal,       ['version']],
+  'volume'          =>  [\&_sort_literal,       ['volume']],
+  'year'            =>  [\&_sort_literal,       ['year']],
   };
 
 # Main sorting dispatch method
@@ -891,7 +924,7 @@ sub _dispatch_sorting {
 
   # if the field is not found in the dispatch table, assume it's a literal string
   unless (exists($dispatch_sorting->{$sortfield})) {
-    $code_ref = \&_sort_literal;
+    $code_ref = \&_sort_string;
     $code_args_ref = [$sortfield];
   }
   else { # real sorting field
@@ -988,21 +1021,6 @@ sub _sortset {
 # Sort dispatch routines
 ##############################################
 
-sub _sort_author {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) and
-    $be->get_field('author')) {
-    my $string = $self->_namestring($citekey, 'author');
-    return _process_sort_attributes($string, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
 sub _sort_citeorder {
   my ($self, $citekey, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
@@ -1024,25 +1042,6 @@ sub _sort_dm {
   my $be = $section->bibentry($citekey);
   if (my $field = $be->get_field($dmtype)) {
     return _process_sort_attributes($field, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
-# This is a meta-sub which uses the optional arguments to the dispatch code
-# It's done to avoid having many repetitions of almost identical sorting code
-# for the editor roles
-sub _sort_editor {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $ed = $args->[0]; # get editor field
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
-    $be->get_field($ed)) {
-    my $string = $self->_namestring($citekey, $ed);
-    return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
     return '';
@@ -1074,21 +1073,6 @@ sub _sort_entrykey {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   return $citekey;
-}
-
-
-sub _sort_labelalpha {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if ($be->get_field('sortlabelalpha')) {
-    my $string = $be->get_field('sortlabelalpha');
-    return _process_sort_attributes($string, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
 }
 
 sub _sort_labelname {
@@ -1123,10 +1107,9 @@ sub _sort_labelyear {
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
-# for the place (address/location/institution etc.) sorting options
 sub _sort_list {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $list = $args->[0]; # get list[abcdef] exact string
+  my $list = $args->[0]; # get list field
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1139,23 +1122,30 @@ sub _sort_list {
   }
 }
 
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for literal strings which need no normalising
 sub _sort_literal {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $string = $args->[0]; # get literal string
+  my $literal = $args->[0]; # get actual field
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $string = $be->get_field($literal) // '';
   return _process_sort_attributes($string, $sortelementattributes);
 }
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
-# for the editor roles
-sub _sort_name {
+# for literal strings which need normalising
+sub _sort_literaln {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $name = $args->[0]; # get name[abc] exact string
+  my $literal = $args->[0]; # get actual field
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if ($be->get_field($name)) {
-    my $string = $self->_namestring($citekey, $name);
+  if (my $field = $be->get_field($literal)) {
+    my $string = normalise_string_sort($field, $literal);
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1165,15 +1155,20 @@ sub _sort_name {
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
-# for the place (address/location/institution etc.) sorting options
-sub _sort_place {
+# for the editor roles
+sub _sort_name {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $pltype = $args->[0]; # get place field type
+  my $name = $args->[0]; # get name field name
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if ($be->get_field($pltype)) {
-    my $string = $self->_liststring($citekey, $pltype);
+  # If there is a biblatex option which controls the use of this name, check it
+  if ($CONFIG_SCOPE_BIBLATEX{"use$name"} and
+      not Biber::Config->getblxoption("use$name", $be->get_field('entrytype'), $citekey)) {
+    return '';
+    }
+  if ($be->get_field($name)) {
+    my $string = $self->_namestring($citekey, $name);
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1187,47 +1182,6 @@ sub _sort_presort {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $string = Biber::Config->getblxoption('presort', $be->get_field('entrytype'), $citekey);
-  return _process_sort_attributes($string, $sortelementattributes);
-}
-
-sub _sort_publisher {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if ($be->get_field('publisher')) {
-    my $string = $self->_liststring($citekey, 'publisher');
-    return _process_sort_attributes($string, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_pubstate {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $string = $be->get_field('pubstate') // '';
-  return _process_sort_attributes($string, $sortelementattributes);
-}
-
-sub _sort_shorthand {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $string = $be->get_field('shorthand') // '';
-  return _process_sort_attributes($string, $sortelementattributes);
-}
-
-sub _sort_sortkey {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $string = $be->get_field('sortkey') // '';
   return _process_sort_attributes($string, $sortelementattributes);
 }
 
@@ -1250,77 +1204,10 @@ sub _sort_sortname {
   }
 }
 
-sub _sort_sortshorthand {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $string = $be->get_field('sortshorthand') // '';
+sub _sort_string {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $string = $args->[0]; # get literal string
   return _process_sort_attributes($string, $sortelementattributes);
-}
-
-# This is a meta-sub which uses the optional arguments to the dispatch code
-# It's done to avoid having many repetitions of almost identical sorting code
-# for the title sorting options
-sub _sort_title {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $ttype = $args->[0]; # get year field type
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (my $field = $be->get_field($ttype)) {
-    my $string = normalise_string_sort($field, $ttype);
-    return _process_sort_attributes($string, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_translator {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (Biber::Config->getblxoption('usetranslator', $be->get_field('entrytype'), $citekey) and
-    $be->get_field('translator')) {
-    my $string = $self->_namestring($citekey, 'translator');
-    return _process_sort_attributes($string, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
-sub _sort_volume {
-  my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (my $field = $be->get_field('volume')) {
-    return _process_sort_attributes($field, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
-}
-
-# This is a meta-sub which uses the optional arguments to the dispatch code
-# It's done to avoid having many repetitions of almost identical sorting code
-# for the many date sorting options
-# It deals with year fields
-sub _sort_year {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $ytype = $args->[0]; # get year field type
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (my $field = $be->get_field($ytype)) {
-    return _process_sort_attributes($field, $sortelementattributes);
-  }
-  else {
-    return '';
-  }
 }
 
 #========================================================
@@ -1330,6 +1217,7 @@ sub _sort_year {
 sub _process_sort_attributes {
   my ($field_string, $sortelementattributes) = @_;
   return $field_string unless $sortelementattributes;
+  return $field_string unless $field_string;
   # process substring
   if ($sortelementattributes->{substring_width} or
       $sortelementattributes->{substring_side}) {
