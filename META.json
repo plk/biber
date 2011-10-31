@@ -44,7 +44,7 @@
             "Readonly" : 0,
             "Regexp::Common" : 0,
             "Text::BibTeX" : "0.61",
-            "Unicode::Collate" : "0.80",
+            "Unicode::Collate" : "0.81",
             "XML::LibXML::Simple" : 0,
             "XML::LibXSLT" : 0,
             "perl" : "v5.14.0"

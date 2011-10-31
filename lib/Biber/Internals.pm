@@ -826,11 +826,20 @@ our $dispatch_sorting = {
   'labelalpha'      =>  [\&_sort_labelalpha,    []],
   'labelname'       =>  [\&_sort_labelname,     []],
   'labelyear'       =>  [\&_sort_labelyear,     []],
+  'lista'           =>  [\&_sort_list,          ['lista']],
+  'listb'           =>  [\&_sort_list,          ['listb']],
+  'listc'           =>  [\&_sort_list,          ['listc']],
+  'listd'           =>  [\&_sort_list,          ['listd']],
+  'liste'           =>  [\&_sort_list,          ['liste']],
+  'listf'           =>  [\&_sort_list,          ['listf']],
   'location'        =>  [\&_sort_place,         ['location']],
   'mainsubtitle'    =>  [\&_sort_title,         ['mainsubtitle']],
   'maintitle'       =>  [\&_sort_title,         ['maintitle']],
   'maintitleaddon'  =>  [\&_sort_title,         ['maintitleaddon']],
   'month'           =>  [\&_sort_dm,            ['month']],
+  'namea'           =>  [\&_sort_name,          ['namea']],
+  'nameb'           =>  [\&_sort_name,          ['nameb']],
+  'namec'           =>  [\&_sort_name,          ['namec']],
   'origday'         =>  [\&_sort_dm,            ['origday']],
   'origendday'      =>  [\&_sort_dm,            ['origendday']],
   'origendmonth'    =>  [\&_sort_dm,            ['origendmonth']],
@@ -1112,10 +1121,46 @@ sub _sort_labelyear {
   }
 }
 
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the place (address/location/institution etc.) sorting options
+sub _sort_list {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $list = $args->[0]; # get list[abcdef] exact string
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  if ($be->get_field($list)) {
+    my $string = $self->_liststring($citekey, $list);
+    return _process_sort_attributes($string, $sortelementattributes);
+  }
+  else {
+    return '';
+  }
+}
+
 sub _sort_literal {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $string = $args->[0]; # get literal string
   return _process_sort_attributes($string, $sortelementattributes);
+}
+
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for the editor roles
+sub _sort_name {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $name = $args->[0]; # get name[abc] exact string
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  if ($be->get_field($name)) {
+    my $string = $self->_namestring($citekey, $name);
+    return _process_sort_attributes($string, $sortelementattributes);
+  }
+  else {
+    return '';
+  }
 }
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
