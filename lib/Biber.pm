@@ -746,7 +746,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
   # Die if there are no citations in any section
   unless ($key_flag) {
-    biber_warn("The file '$ctrl_file_path' does not contain any citations!");
+    biber_error("The file '$ctrl_file_path' does not contain any citations!");
   }
 
   # Add the Biber::Sections object to the Biber object
