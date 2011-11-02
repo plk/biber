@@ -1,6 +1,6 @@
-:: The COPY/DEL steps as so that the packed biber main script is not
+:: The COPY/DEL steps are so that the packed biber main script is not
 :: called "biber" as on case-insensitive file systems, this clashes with
-:: the Biber lib directory and generates a (harmless) warning on first run
+:: the Biber lib directory and generates a (harmless) warning on first run.
 
 :: XML::LibXSLT has a workaround for LibXSLT.dll conflicting with libxslt.dll on
 :: windows due to case-insensitivity. The Makefile.PL for XML::LibXSLT forces its
@@ -15,7 +15,7 @@
 :: then build and install as usual.
 
 :: Have to explicitly include the Input* modules as the names of these are dynamically
-:: constructed in the code so Par::Packer can't auto-detect them
+:: constructed in the code so Par::Packer can't auto-detect them.
 
 COPY C:\strawberry\perl\bin\biber C:\WINDOWS\Temp\biber-MSWIN
 

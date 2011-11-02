@@ -6,10 +6,10 @@
 
 # Had to add /etc/ld.so.conf.d/biber.conf and put "/usr/local/perl/lib" in there
 # and then run "sudo ldconfig" so that libbtparse.so is found. Doesn't really make
-# a difference to the build, just the running of Text::BibTeX itself
+# a difference to the build, just the running of Text::BibTeX itself.
 
 # Have to explicitly include the Input* modules as the names of these are dynamically
-# constructed in the code so Par::Packer can't auto-detect them
+# constructed in the code so Par::Packer can't auto-detect them.
 
 /usr/local/perl/bin/pp \
   --compress=6 \
