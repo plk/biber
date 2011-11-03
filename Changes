@@ -30,12 +30,12 @@ Revision history for Biber
        * Implemented per-name hashes
 0.9.3  05-06-2011
        * New mininit and minfull uniquename options
-       * New mindate uniquelist option
+       * New minyear uniquelist option
        * Major revamp of uniqueness code
        * Moved to new external process calling module because IPC::Run
          doesn't work on Windows in packed binaries (kpsewhich was
          returning nothing).
-0.9.2  09-03-2011
+0.9.2  09-05-2011
        * Some internal changes for perl 5.14
        * Bug fixes for uniquelist processing
 0.9.1  29-04-2011

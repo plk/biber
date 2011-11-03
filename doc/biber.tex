@@ -202,24 +202,29 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   UTF-8 compliant \TeX\ engine)
 \item Creates entry sets dynamically and allows easily defined static entry sets,
   all processed in one pass
-\item Flexible user-customisable crossreference field inheritance
-  model
+\item «Syntactic» inheritance via new \verb+XDATA+ entrytype and
+  field. This can be thought of as a field-based generalisation of the
+  Bib\TeX\ \verb+@STRING+ functionality (which is also supported).
+\item «Semantic» inheritance via a generalisation of the Bib\TeX\
+  crossreference mechanism. This is highly customisable by the
+  user---it is possible to choose which fields to inherit for which
+  entrytypes and to inherit fields under different names etc.
 \item Handles complex auto-expansion and contraction of names and
   namelists (See section 4.11.4 of the Bib\LaTeX\ manual for an excellent
   explanation with examples, this is quite an impressive feature \ldots)
-\item Support for related entries, to enable generic treatment of things
-  like «translated as», «reprinted as», «reprint of»
-  etc. (Bib\LaTeX\ support coming in Bib\LaTeX\ 2.x)
 \item Extensible modular data sources architecture for ease of adding
   more data source types
 \item Support for remote data sources
+\item User-definable mapping and suppression of fields and entrytypes in
+  data sources. You can use this to, for example, ignore all
+  \verb+ABSTRACT+ fields completely. See section \ref{map}
+\item Support for related entries, to enable generic treatment of things
+  like «translated as», «reprinted as», «reprint of»
+  etc. (Bib\LaTeX\ support coming in Bib\LaTeX\ 2.x)
 \item Customisable labels (Bib\LaTeX\ support coming in
   Bib\LaTeX\ 2.x)
 \item Multiple bibliography lists in the same section with different
   sorting and filtering (Bib\LaTeX\ support coming in Bib\LaTeX\ 2.x)
-\item User-definable mapping and suppression of fields and entrytypes in
-  data sources. You can use this to, for example, ignore all
-  \verb+ABSTRACT+ fields completely. See section \ref{map}
 \item No more restriction to a static data model of specific fields and
   entrytypes. (Bib\LaTeX\ support coming in Bib\LaTeX\ 2.x)
 \item Structural validation of the data against the data model with a
@@ -249,7 +254,8 @@ such as \verb+Unicode::Collate+, \verb+Text::BibTeX+ and
     \node[funit] (decode) [below of=dsfiles,node distance=8em] {Decode to UTF-8} edge [<-,very thick] (dsfiles) edge [<-,very thick] (dcfs) edge [<-,very thick] (bcf);
     \node[funit] (mapp) [below of=decode,node distance=6em] {remap/parse} edge [<-,very thick] (decode);
     \node[funit] (dyn) [below of=mapp,node distance=6em] {Instantiate dynamic sets and\\related entries} edge [<-,very thick] (mapp);
-    \node[funit] (crossrefs) [below of=dyn,node distance=6em] {Process cross-references and\\sets} edge [<-,very thick] (dyn);
+    \node[funit] (xdata) [below of=dyn,node distance=6em] {Process XDATA} edge [<-,very thick] (dyn);
+    \node[funit] (crossrefs) [below of=xdata,node distance=6em] {Process cross-references and\\sets} edge [<-,very thick] (xdata);
     \node[funit] (validate) [below of=crossrefs,node distance=6em] {Validate data model} edge [<-,very thick] (crossrefs);
     \node[funit] (pre) [below of=validate,node distance=6em] {Resolve label* fields\\generate hashes\\enforce mincrossrefs} edge [<-,very thick] (validate);
     \node[funit] (unique) [right of=decode,node distance=16em] {Generate uniqueness data};
