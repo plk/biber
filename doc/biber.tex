@@ -491,7 +491,7 @@ Biber's processing steps.
     \node[file] (dsfile) {datasource};
     \node[funit] (remap) [below of=dsfile, node distance=8em] {remap} edge [<-,dashed] (dsfile);
     \node[file] (dcf) [left of=remap, node distance=10em] {data model mapping\\from driver config file} edge [->,dashed] (remap);
-    \node[file] (conf) [below of=remap,  node distance=7em] {data model mapping\\from biber config file} edge [->,dashed] (remap);
+    \node[file] (conf) [below of=remap,  node distance=7em] {data model mapping\\from Biber config file} edge [->,dashed] (remap);
     \node[funit] (parser) [right of=remap, node distance=8em] {parser} edge [<-,very thick] (remap);
     \node[funit] (validation) [right of=parser, node distance=8em] {validation} edge [<-,very thick] (parser);
     \node[file] (hard) [above of=validation, node distance=8em] {static Bib\LaTeX\\data model} edge [->,dashed] (parser) edge [->,dashed] (validation);
