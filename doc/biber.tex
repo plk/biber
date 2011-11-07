@@ -191,7 +191,7 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 
 \begin{itemize}
 \item Deals with the full range of UTF-8
-\item Sorts in a completely customisable manner, using when available,
+\item Sorts in a completely customisable manner using, when available,
   CLDR collation tailoring
 \item Allows for per-entrytype options
 \item Automatically encodes the \verb+.bbl+ into any supported encoding
@@ -250,9 +250,10 @@ such as \verb+Unicode::Collate+, \verb+Text::BibTeX+ and
   \begin{tikzpicture}
     \node[file] (dcfs) {driver config files};
     \node[file] (dsfiles) [right of=dcfs,node distance=8em]{datasources};
-    \node[file] (bcf) [right of=dsfiles,node distance=8em] {.bcf control file};
+    \node[file] (bcf) [right of=dsfiles,node distance=8em] {\texttt{.bcf} control file};
     \node[funit] (decode) [below of=dsfiles,node distance=8em] {Decode to UTF-8} edge [<-,very thick] (dsfiles) edge [<-,very thick] (dcfs) edge [<-,very thick] (bcf);
     \node[funit] (mapp) [below of=decode,node distance=6em] {remap/parse} edge [<-,very thick] (decode);
+    \node[file] (config) [left of=mapp,node distance=12em] {User \texttt{biber.conf} file} edge [->,very thick] (mapp);
     \node[funit] (dyn) [below of=mapp,node distance=6em] {Instantiate dynamic sets and\\related entries} edge [<-,very thick] (mapp);
     \node[funit] (xdata) [below of=dyn,node distance=6em] {Process XDATA} edge [<-,very thick] (dyn);
     \node[funit] (crossrefs) [below of=xdata,node distance=6em] {Process cross-references and\\sets} edge [<-,very thick] (xdata);
@@ -265,7 +266,7 @@ such as \verb+Unicode::Collate+, \verb+Text::BibTeX+ and
     \node[funit] (sort) [below of=post,node distance=6em] {Perform sorting} edge [<-,very thick] (post);
     \node[funit] (output) [below of=sort,node distance=6em] {Construct output objects} edge [<-,very thick] (sort);
     \node[funit] (encode) [below of=output,node distance=6em] {Encode to output encoding} edge [<-,very thick] (output);
-    \node[file] (bbl) [below of=encode,node distance=8em] {.bbl file} edge [<-,very thick] (encode);
+    \node[file] (bbl) [below of=encode,node distance=8em] {\texttt{.bbl} file} edge [<-,very thick] (encode);
   \end{tikzpicture}
   \caption{Overview of Biber's main functional units}
   \label{fig:overview}
@@ -414,9 +415,8 @@ looked for in the following places, in decreasing order of preference:\\[2ex]
 system)\\[2ex]
 
 \noindent The config file format is a very flexible one which allows users to specify
-options in most common formats, even mixed in the same file. It's easier to
-see an example. Here is a config file which displays the Biber
-defaults:
+options in most common formats, even mixed in the same file. Below is
+an example config file which displays the Biber defaults:
 
 \begin{verbatim}
 bblencoding         UTF-8
@@ -447,23 +447,20 @@ validate_structure  0
 wraplines           0
 \end{verbatim}
 
-\noindent You can see here that options with multiple key/value pairs of
+\noindent You can see that options with multiple key/value pairs of
 their own like\linebreak[4]\verb+--collate_options|-c+ can be specified in
 Apache config format. Please see the documentation
 for the \verb+Config::General+ Perl
 module\footnote{\url{http://search.cpan.org/search?query=Config::General&mode=all}}
-if you really need details. In practice, if you use a config file at all
-for Biber, it will contain very little as you will usually set all
-options by setting options in Bib\LaTeX\ which will pass them to
-Biber via the \verb+.bcf+ file.
-
-The \verb+--collate_options|-c+ option takes a number of key/value pairs as
-value. See section \ref{coll} for details.
+if you need details. In practice, the most commonly used options will be set via
+Bib\LaTeX\ macros in your document and automatically passed to Biber
+via the \verb+.bcf+ file. Certain options apply only to Biber and can
+only be set in the config file, particularly the more complex options.
 
 \subsubsection{The \texttt{map} option}\label{map}
 
 The supplied data source drivers implement a default mapping from data
-source entrytypes and fields into the default Bib\LaTeX\ data
+source entrytypes and fields into the Bib\LaTeX\ data
 model\footnote{The Bib\LaTeX\ data model is currently static and
   defined in the Bib\LaTeX\ manual. In the future (Bib\LaTeX\
   2.x), the data model will be dynamically defined by the user.}. If you
@@ -471,7 +468,7 @@ want to override or augment the driver mappings you can use the \verb+map+
 option which makes it possible to, for example, have a data source with
 non-standard entrytypes or fields and to have these automatically mapped
 into other entrytypes/fields without modifying your data source.
-Essentially, what this does it to alter the source data stream which
+Essentially, this alters the source data stream which
 Biber uses to build the internal Bib\LaTeX\ data model. So, you
 are not constrained such that you must map into the Bib\LaTeX\ data
 model. Of course, if you don't, it's likely that your exotic new fields
@@ -858,7 +855,7 @@ Endnote XML format data sources.
 </map>
 \end{lstlisting}
 \bigskip
-\subsubsection{The \texttt{nosort} option}
+\subsubsection{The \texttt{nosort} option}\label{nosort}
 
 The value of the \verb+nosort+ option can only be set in the config file
 and not on the command line. This is because the values are Perl regular
