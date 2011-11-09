@@ -49,7 +49,11 @@ my %map = (
         PUBMEDID => {
           alsoset => { eprinttype => "BMAP_ORIGFIELD", userd => "some string of things" },
           bmap_target => "EPRINT",
-        }
+        },
+        LISTB => {
+          bmap_match  => "\\A(\\S{2})",
+          bmap_replace => "REP\$1CED"
+                 }
       },
       field => {
         lista => { bmap_pertype => "REPORT",

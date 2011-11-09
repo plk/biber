@@ -25,6 +25,7 @@ use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
+use String::Interpolate;
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -262,6 +263,8 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
       my $from;
       my $to;
+      my $val_match;
+      my $val_replace;
       if ($user_map and
           my $field = firstval {lc($_) eq lc($f)} (keys %{$user_map->{field}},
                                                    keys %{$user_map->{globalfield}})) {
@@ -295,19 +298,20 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
 
         # handler information still comes from .dcf
         $from = $dcfxml->{fields}{field}{$f};
-
         if (ref($to_map) eq 'HASH') { # complex field map
-          $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target})};
-          $to = lc($to_map->{bmap_target});
+          $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target} || $field)};
+          $to = lc($to_map->{bmap_target} || $field);
+          $val_match = $to_map->{bmap_match};
+          $val_replace = $to_map->{bmap_replace};
 
           # Deal with alsoset one->many maps
           while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
             if ($bibentry->field_exists(lc($from_as))) {
               if ($user_map->{bmap_overwrite}) {
-                biber_warn("Overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$key'", $bibentry);
+                biber_warn("Overwriting existing field '$from_as' while processing field '" . lc($field) . "in entry '$key'", $bibentry);
               }
               else {
-                biber_warn("Not overwriting existing field '$from_as' during aliasing of field '" . lc($field) . "' to '$to' in entry '$key'", $bibentry);
+                biber_warn("Not overwriting existing field '$from_as' while processing field '" . lc($field) . "in entry '$key'", $bibentry);
                 next;
               }
             }
@@ -328,7 +332,8 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
           }
 
           # map fields to targets
-          if (lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
+          if (defined ($to_map->{bmap_target}) and
+              lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
             next FLOOP;
           }
         }
@@ -343,7 +348,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         }
 
         # Now run any defined handler
-        &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
+        &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key, $val_match, $val_replace);
       }
       # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
       elsif ($from = $dcfxml->{fields}{field}{$f}) {
@@ -463,12 +468,18 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
   return;
 }
 
-
+# HANDLERS
+# ========
 
 # Literal fields
 sub _literal {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $value = decode_utf8($entry->get($f));
+  if ($val_match) {
+    $val_match = qr/$val_match/;
+    $val_replace = new String::Interpolate $val_replace;
+    $value =~ s/$val_match/$val_replace/egxms;
+  }
 
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
@@ -488,17 +499,30 @@ sub _literal {
 
 # Verbatim fields
 sub _verbatim {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $value = decode_utf8($entry->get($f));
+  if ($val_match) {
+    $val_match = qr/$val_match/;
+    $val_replace = new String::Interpolate $val_replace;
+    $value =~ s/$val_match/$val_replace/egxms;
+  }
+
   $bibentry->set_datafield($to, $value);
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $values_ref;
-  my @values = split(/\s*,\s*/, decode_utf8($entry->get($f)));
+  my $value = decode_utf8($entry->get($f));
+  if ($val_match) {
+    $val_match = qr/$val_match/;
+    $val_replace = new String::Interpolate $val_replace;
+    $value =~ s/$val_match/$val_replace/egxms;
+  }
+
+  my @values = split(/\s*,\s*/, $value);
   # Here the "-–" contains two different chars even though they might
   # look the same in some fonts ...
   # If there is a range sep, then we set the end of the range even if it's null
@@ -521,10 +545,17 @@ sub _range {
 
 # Names
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my @tmp = $entry->split($f);
+  my $value = $entry->get($f);
+  if ($val_match) {
+    $val_match = qr/$val_match/;
+    $val_replace = new String::Interpolate $val_replace;
+    $value =~ s/$val_match/$val_replace/egxms;
+  }
+
+  my @tmp = Text::BibTeX::split_list($value, 'and');
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
   foreach my $name (@tmp) {
@@ -574,9 +605,15 @@ sub _name {
 
 # Dates
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my ($datetype) = $f =~ m/\A(.*)date\z/xms;
   my $date = decode_utf8($entry->get($f));
+  if ($val_match) {
+    $val_match = qr/$val_match/;
+    $val_replace = new String::Interpolate $val_replace;
+    $date =~ s/$val_match/$val_replace/egxms;
+  }
+
   # We are not validating dates here, just syntax parsing
   my $date_re = qr/(\d{4}) # year
                    (?:-(\d{2}))? # month
@@ -621,9 +658,15 @@ sub _date {
 
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  my @tmp = $entry->split($f);
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my $value = $entry->get($f);
+  if ($val_match) {
+    $val_match = qr/$val_match/;
+    $val_replace = new String::Interpolate $val_replace;
+    $value =~ s/$val_match/$val_replace/egxms;
+  }
 
+  my @tmp = Text::BibTeX::split_list($value, 'and');
   @tmp = map { decode_utf8($_) } @tmp;
   @tmp = map { remove_outer($_) } @tmp;
   $bibentry->set_datafield($to, [ @tmp ]);
