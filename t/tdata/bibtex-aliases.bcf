@@ -153,6 +153,13 @@
         <bcf:per_type>REPORT</bcf:per_type>
         <bcf:map_pair map_source="LISTA" bmap_null="1"/>
       </bcf:map>
+      <bcf:map maptype="field">
+        <bcf:map_pair map_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>
+      </bcf:map>
+      <bcf:map maptype="field">
+        <bcf:per_type>UNPUBLISHED</bcf:per_type>
+        <bcf:map_pair map_source="LISTC" map_target="INSTITUTION" map_match="\A(\S{2})" map_replace="REP$1CED"/>
+      </bcf:map>
     </bcf:maps>
     <bcf:maps datatype="endnotexml" bmap_overwrite="1">
       <bcf:map maptype="entrytype">
@@ -1439,6 +1446,7 @@
     <bcf:citekey>alias2</bcf:citekey>
     <bcf:citekey>alias3</bcf:citekey>
     <bcf:citekey>alias4</bcf:citekey>
+    <bcf:citekey>alias5</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>

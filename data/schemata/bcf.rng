@@ -281,6 +281,25 @@
                                 <param name="minLength">1</param>
                               </data>
                             </attribute>
+                            <group>
+                              <optional>
+                                <attribute name="map_target">
+                                  <data type="string">
+                                    <param name="minLength">1</param>
+                                  </data>
+                                </attribute>
+                              </optional>
+                              <attribute name="map_match">
+                                <data type="string">
+                                  <param name="minLength">1</param>
+                                </data>
+                              </attribute>
+                              <attribute name="map_replace">
+                                <data type="string">
+                                  <param name="minLength">1</param>
+                                </data>
+                              </attribute>
+                            </group>
                             <attribute name="bmap_null">
                               <value>1</value>
                             </attribute>

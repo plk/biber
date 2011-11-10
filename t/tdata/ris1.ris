@@ -5,7 +5,7 @@ A1  - Fugaccia,I.
 A1  - Brown,D.R.
 A1  - Brown,L.V.
 A1  - Scheff,S.W.
-T1  - Blood-brain barrier breach following cortical contusion in the rat
+TI  - Blood-brain barrier breach following cortical contusion in the rat
 JO  - J.Neurosurg.
 Y1  - 1996
 VL  - 85
@@ -26,7 +26,7 @@ TY  - BOOK
 ID  - test2
 AU  - Smith,John Frederick,III
 ED  - Brown,Alan
-T1  - Sometitle
+TI  - Sometitle
 PY  - 1996/03/12
 SP  - 1
 EP  - 20

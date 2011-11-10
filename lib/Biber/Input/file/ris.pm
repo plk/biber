@@ -219,6 +219,9 @@ FLOOP:  foreach my $f (keys %$entry) {
     # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
     my $from;
     my $to;
+    my $val_match;
+    my $val_replace;
+
     if ($user_map and
         my $field = firstval {lc($_) eq lc($f)} (keys %{$user_map->{field}},
                                                  keys %{$user_map->{globalfield}})) {
@@ -253,17 +256,29 @@ FLOOP:  foreach my $f (keys %$entry) {
       $from = $dcfxml->{fields}{field}{$f}; # handler information still comes from .dcf
 
       if (ref($to_map) eq 'HASH') { # complex field map
-        $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target})};
-        $to = lc($to_map->{bmap_target});
+         $from = $dcfxml->{fields}{field}{$to_map->{bmap_target} || $field};
+         # Just in case we are targeting an alias, resolve it and repoint target
+         if (my $alias = $from->{aliasof}) {
+           $from = $dcfxml->{fields}{field}{$alias};
+           if ($to_map->{bmap_target}) {
+             $to_map->{bmap_target} = $alias;
+           }
+           else {
+             $field = $alias
+           }
+         }
+         $to = $to_map->{bmap_target} || $field;
+         $val_match = $to_map->{bmap_match};
+         $val_replace = $to_map->{bmap_replace};
 
         # Deal with alsoset one->many maps
         while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             if ($user_map->{bmap_overwrite}) {
-              biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
             }
             else {
-              biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Not overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
               next;
             }
           }
@@ -284,7 +299,8 @@ FLOOP:  foreach my $f (keys %$entry) {
         }
 
         # map fields to targets
-        if (lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
+         if (defined ($to_map->{bmap_target}) and
+             lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
           next FLOOP;
         }
       }
@@ -299,7 +315,7 @@ FLOOP:  foreach my $f (keys %$entry) {
       }
 
       # Now run any defined handler
-      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
+      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key, $val_match, $val_replace);
     }
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
     elsif ($from = $dcfxml->{fields}{field}{$f}) {
@@ -396,24 +412,29 @@ FLOOP:  foreach my $f (keys %$entry) {
   return;
 }
 
+# HANDLERS
+# ========
+
 # Verbatim fields
 sub _verbatim {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  $bibentry->set_datafield($to, $entry->{$f});
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my $value = ireplace($entry->{$f}, $val_match, $val_replace);
+  $bibentry->set_datafield($to, $value);
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  $bibentry->set_datafield($to, _parse_range_list($entry->{$f}));
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my $value = ireplace($entry->{$f}, $val_match, $val_replace);
+  $bibentry->set_datafield($to, _parse_range_list($value));
   return;
 }
 
 # Date fields
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  my $date = $entry->{$f};
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my $date = ireplace($entry->{$f}, $val_match, $val_replace);
   if ($date =~ m|\A([0-9]{4})/([0-9]{2})/([0-9]{2}/([^\n]+))\z|xms) {
     $bibentry->set_datafield('year', $1);
     $bibentry->set_datafield('month', $2);
@@ -430,10 +451,11 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $names = $entry->{$f};
   my $names_obj = new Biber::Entry::Names;
   foreach my $name (@$names) {
+    my $name = ireplace($name, $val_match, $val_replace);
     $logger->debug('Parsing RIS name');
     if ($name =~ m|\A([^,]+)\s*,?\s*([^,]+)?\s*,?\s*([^,]+)?\z|xms) {
       my $lastname = _join_name_parts(split(/\s+/, $1)) if $1;

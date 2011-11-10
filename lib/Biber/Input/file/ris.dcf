@@ -133,6 +133,8 @@
     <dcf:field name="publisher" handler="verbatim"/>
     <dcf:field name="KW" aliasof="keywords"/>
     <dcf:field name="keywords" handler="verbatim"/>
+    <dcf:field name="TI" aliasof="title"/>
+    <dcf:field name="title" handler="verbatim"/>
     <dcf:field name="U1" aliasof="usera"/>
     <dcf:field name="usera" handler="verbatim"/>
     <dcf:field name="U2" aliasof="userb"/>

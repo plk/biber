@@ -4,9 +4,10 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 17;
+use Test::More tests => 20;
 
 use Biber;
+use Biber::Utils;
 use Biber::Output::BBL;
 use Log::Log4perl;
 chdir("t/tdata") ;
@@ -77,3 +78,9 @@ is($bibentries->entry('alias4')->get_field('userd'), 'Some string of things', 'A
 is($bibentries->entry('alias4')->get_field('pubmedid'), undef, 'Alias - 15' );
 is($bibentries->entry('alias4')->get_field('namea')->nth_name(1)->get_firstname, 'Sam', 'Alias - 16' );
 is_deeply($bibentries->entry('alias4')->get_field('warnings'), $w2, 'Alias - 17' ) ;
+
+# Testing of .bcf field map match/replace
+ok(is_undef($bibentries->entry('alias5')->get_field('abstract')), 'Alias - 18' );
+is($biber->_liststring('alias5', 'listb'), 'REPlaCEDte_early', 'Alias - 19');
+is($biber->_liststring('alias5', 'institution'), 'REPlaCEDte_early', 'Alias - 20');
+

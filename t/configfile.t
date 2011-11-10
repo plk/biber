@@ -58,6 +58,12 @@ my %map = (
       field => {
         lista => { bmap_pertype => "REPORT",
                    bmap_target => "BMAP_NULL"},
+        listc => {
+          bmap_pertype => "UNPUBLISHED",
+          bmap_target => "INSTITUTION",
+          bmap_match  => "\\A(\\S{2})",
+          bmap_replace => "REP\$1CED"
+                 },
         userb => { bmap_pertype => "MISC",
                    bmap_target => "BMAP_NULL",
           alsoset => { usere => "a string",
@@ -74,6 +80,11 @@ my %map = (
         },
       },
       globalfield => { abstract => "BMAP_NULL" },
+      field => {
+        pages => { bmap_pertype => "Journal Article",
+                   bmap_match  => "64",
+                   bmap_replace => "66"},
+               }
     },
     ris => {
       bmap_overwrite => 0,
@@ -82,6 +93,11 @@ my %map = (
         JOUR => { bmap_target => "REPORT" },
       },
       globalfield => { n2 => "BMAP_NULL" },
+      field => {
+        JO => { bmap_pertype => "JOUR",
+                bmap_match  => "Neurosurg\\.",
+                bmap_replace => "Neurosurgery"},
+               }
     },
     zoterordfxml => {
       bmap_overwrite => 1,
@@ -90,6 +106,10 @@ my %map = (
           bmap_pertype => ["journalArticle", "book", "bookSection"],
           bmap_target  => "BMAP_NULL",
         },
+      "dc:title" => { bmap_pertype => "journalArticle",
+                      bmap_match  => "(.+)",
+                      bmap_replace => "\\L\$1"
+                    },
       },
     });
 

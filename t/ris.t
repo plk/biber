@@ -62,7 +62,8 @@ my $l1 = q|  \entry{test1}{report}{}
     \strng{namehash}{deae9fead6c78a99d3f38159b0710b1f}
     \strng{fullhash}{bde87bef9bb3834837786f78acfebc54}
     \field{sortinit}{B}
-    \field{journaltitle}{J.Neurosurg.}
+    \field{journaltitle}{J.Neurosurgery}
+    \field{title}{Blood-brain barrier breach following cortical contusion in the rat}
     \field{volume}{85}
     \field{pages}{476\bibrangedash 481}
     \keyw{cortical contusion,blood-brain barrier,horseradish peroxidase,head trauma,hippocampus,rat}
@@ -83,6 +84,7 @@ my $l2 = q|  \entry{test2}{mapbook}{}
     \strng{namehash}{f2574dc91f1242eb0e7507a71730631b}
     \strng{fullhash}{f2574dc91f1242eb0e7507a71730631b}
     \field{sortinit}{S}
+    \field{title}{Sometitle}
     \field{pages}{1\bibrangedash 20}
     \keyw{keyword}
     \warn{\item Not overwriting existing field 'keywords' during aliasing of entrytype 'BOOK' to 'mapbook' in entry 'test2'}

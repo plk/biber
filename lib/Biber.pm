@@ -484,16 +484,19 @@ sub parse_ctrlfile {
                 if ($map_pair->{bmap_null}) {
                   $target = 'bmap_null';
                 }
-                else {
+                elsif (defined($map_pair->{map_target})) {
                   $target = $map_pair->{map_target};
                 }
-                # "simple" global fields
-                if (not defined($map->{also_set})) {
+                # "simple" global fields are those with no also_set or match
+                if (not defined($map->{also_set}) and
+                    not defined($map_pair->{map_match})) {
                   $mapsopt->{$maps->{datatype}}{globalfield}{$source} = $target;
                 }
-                # "complex" global fields (with also_set)
+                # "complex" global fields (with also_set or match/replace)
                 else {
-                  $mapsopt->{$maps->{datatype}}{globalfield}{$source}{bmap_target} = $target;
+                  $mapsopt->{$maps->{datatype}}{globalfield}{$source}{bmap_target} = $target if $target;
+                  $mapsopt->{$maps->{datatype}}{globalfield}{$source}{bmap_match} = $map_pair->{map_match} if $map_pair->{map_match};
+                  $mapsopt->{$maps->{datatype}}{globalfield}{$source}{bmap_replace} = $map_pair->{map_replace} if $map_pair->{map_replace};
                 }
               }
               foreach my $as (@{$map->{also_set}}) {
@@ -519,10 +522,14 @@ sub parse_ctrlfile {
                 if ($map_pair->{bmap_null}) {
                   $target = 'bmap_null';
                 }
-                else {
+                elsif (defined($map_pair->{map_target})) {
                   $target = $map_pair->{map_target};
                 }
-                $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_target} = $target;
+
+                $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_target} = $target if $target;
+                $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_match} = $map_pair->{map_match} if $map_pair->{map_match};
+                $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_replace} = $map_pair->{map_replace} if $map_pair->{map_replace};
+
                 foreach my $as (@{$map->{also_set}}) {
                   my $val;
                   if ($as->{bmap_origfield}) {

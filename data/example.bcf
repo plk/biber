@@ -123,18 +123,18 @@
   <bcf:displaymodes>
     <bcf:displaymode>
       <bcf:dtarget>ALL</bcf:dtarget>
-      <bcf:dmode>original</bcf:dmode>
-      <bcf:dmode>romanised</bcf:dmode>
-      <bcf:dmode>uniform</bcf:dmode>
-      <bcf:dmode>translated</bcf:dmode>
+      <bcf:dmode order="1">original</bcf:dmode>
+      <bcf:dmode order="2">romanised</bcf:dmode>
+      <bcf:dmode order="3">uniform</bcf:dmode>
+      <bcf:dmode order="4">translated</bcf:dmode>
     </bcf:displaymode>
     <bcf:displaymode>
       <bcf:dtarget>title</bcf:dtarget>
       <bcf:dtarget>booktitle</bcf:dtarget>
-      <bcf:dmode>romanised</bcf:dmode>
-      <bcf:dmode>uniform</bcf:dmode>
-      <bcf:dmode>translated</bcf:dmode>
-      <bcf:dmode>original</bcf:dmode>
+      <bcf:dmode order="1">romanised</bcf:dmode>
+      <bcf:dmode order="2">uniform</bcf:dmode>
+      <bcf:dmode order="3">translated</bcf:dmode>
+      <bcf:dmode order="4">original</bcf:dmode>
     </bcf:displaymode>
   </bcf:displaymodes>
   <!-- DATA-SOURCE MAPPING -->
@@ -160,6 +160,12 @@
         <bcf:map_pair map_source="PUBMEDID" map_target="EPRINT"/>
         <bcf:also_set map_field="EPRINTTYPE" bmap_origfield="1"/>
         <bcf:also_set map_field="USERD" map_value="Some string of things"/>
+      </bcf:map>
+      <bcf:map maptype="field">
+        <bcf:map_pair map_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>
+      </bcf:map>
+      <bcf:map maptype="field">
+        <bcf:map_pair map_source="LISTC" map_target="INSTITUTION" map_match="\A(\S{2})" map_replace="REP$1CED"/>
       </bcf:map>
       <bcf:map maptype="field">
         <bcf:per_type>MISC</bcf:per_type>

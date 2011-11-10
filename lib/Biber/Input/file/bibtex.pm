@@ -25,7 +25,6 @@ use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
-use String::Interpolate;
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -300,6 +299,16 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         $from = $dcfxml->{fields}{field}{$f};
         if (ref($to_map) eq 'HASH') { # complex field map
           $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target} || $field)};
+          # Just in case we are targeting an alias, resolve it and repoint target
+          if (my $alias = $from->{aliasof}) {
+            $from = $dcfxml->{fields}{field}{$alias};
+            if ($to_map->{bmap_target}) {
+              $to_map->{bmap_target} = $alias;
+            }
+            else {
+              $field = $alias
+            }
+          }
           $to = lc($to_map->{bmap_target} || $field);
           $val_match = $to_map->{bmap_match};
           $val_replace = $to_map->{bmap_replace};
@@ -474,12 +483,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
 # Literal fields
 sub _literal {
   my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = decode_utf8($entry->get($f));
-  if ($val_match) {
-    $val_match = qr/$val_match/;
-    $val_replace = new String::Interpolate $val_replace;
-    $value =~ s/$val_match/$val_replace/egxms;
-  }
+  my $value = ireplace(decode_utf8($entry->get($f)), $val_match, $val_replace);
 
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
@@ -500,12 +504,7 @@ sub _literal {
 # Verbatim fields
 sub _verbatim {
   my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = decode_utf8($entry->get($f));
-  if ($val_match) {
-    $val_match = qr/$val_match/;
-    $val_replace = new String::Interpolate $val_replace;
-    $value =~ s/$val_match/$val_replace/egxms;
-  }
+  my $value = ireplace(decode_utf8($entry->get($f)), $val_match, $val_replace);
 
   $bibentry->set_datafield($to, $value);
   return;
@@ -515,12 +514,7 @@ sub _verbatim {
 sub _range {
   my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $values_ref;
-  my $value = decode_utf8($entry->get($f));
-  if ($val_match) {
-    $val_match = qr/$val_match/;
-    $val_replace = new String::Interpolate $val_replace;
-    $value =~ s/$val_match/$val_replace/egxms;
-  }
+  my $value = ireplace(decode_utf8($entry->get($f)), $val_match, $val_replace);
 
   my @values = split(/\s*,\s*/, $value);
   # Here the "-–" contains two different chars even though they might
@@ -548,12 +542,7 @@ sub _name {
   my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $value = $entry->get($f);
-  if ($val_match) {
-    $val_match = qr/$val_match/;
-    $val_replace = new String::Interpolate $val_replace;
-    $value =~ s/$val_match/$val_replace/egxms;
-  }
+  my $value = ireplace($entry->get($f), $val_match, $val_replace);;
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
@@ -607,12 +596,7 @@ sub _name {
 sub _date {
   my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my ($datetype) = $f =~ m/\A(.*)date\z/xms;
-  my $date = decode_utf8($entry->get($f));
-  if ($val_match) {
-    $val_match = qr/$val_match/;
-    $val_replace = new String::Interpolate $val_replace;
-    $date =~ s/$val_match/$val_replace/egxms;
-  }
+  my $date = ireplace(decode_utf8($entry->get($f)), $val_match, $val_replace);
 
   # We are not validating dates here, just syntax parsing
   my $date_re = qr/(\d{4}) # year
@@ -659,12 +643,7 @@ sub _date {
 # List fields
 sub _list {
   my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = $entry->get($f);
-  if ($val_match) {
-    $val_match = qr/$val_match/;
-    $val_replace = new String::Interpolate $val_replace;
-    $value =~ s/$val_match/$val_replace/egxms;
-  }
+  my $value = ireplace($entry->get($f), $val_match, $val_replace);
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
   @tmp = map { decode_utf8($_) } @tmp;

@@ -1314,7 +1314,9 @@ sub _liststring {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my @items = @{$be->get_field($field)};
+  my $f = $be->get_field($field); # _liststring is used in tests so there has to be
+  return '' unless defined($f);   # more error checking which will never be needed in normal use
+  my @items = @$f;
   my $str = '';
   my $truncated = 0;
 

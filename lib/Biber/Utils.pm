@@ -22,6 +22,7 @@ use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
 use Log::Log4perl qw(:no_extra_logdie_message);
+use String::Interpolate;
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -43,7 +44,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn };
+  filter_entry_options biber_error biber_warn ireplace };
 
 =head1 FUNCTIONS
 
@@ -689,6 +690,25 @@ sub filter_entry_options {
     }
   }
   return join(',', @return_options);
+}
+
+=head2 ireplace
+
+    Do a search/replace on pattern/replacement passed in as variables
+
+=cut
+
+sub ireplace {
+  my ($value, $val_match, $val_replace) = @_;
+  if ($val_match) {
+    $val_match = qr/$val_match/;
+    $val_replace = new String::Interpolate $val_replace;
+    $value =~ s/$val_match/$val_replace/egxms;
+    return $value;
+  }
+  else {
+    return $value;
+  }
 }
 
 

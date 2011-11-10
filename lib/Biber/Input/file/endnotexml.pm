@@ -215,6 +215,9 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
     # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
     my $from;
     my $to;
+    my $val_match;
+    my $val_replace;
+
     if ($user_map and
         my $field = firstval {lc($_) eq lc($f)} (keys %{$user_map->{field}},
                                                  keys %{$user_map->{globalfield}})) {
@@ -250,17 +253,29 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
       $from = $dcfxml->{fields}{field}{$f};
 
       if (ref($to_map) eq 'HASH') { # complex field map
-        $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target})};
-        $to = lc($to_map->{bmap_target});
+        $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target} || $field)};
+         # Just in case we are targeting an alias, resolve it and repoint target
+        if (my $alias = $from->{aliasof}) {
+          $from = $dcfxml->{fields}{field}{$alias};
+          if ($to_map->{bmap_target}) {
+            $to_map->{bmap_target} = $alias;
+          }
+          else {
+            $field = $alias
+          }
+        }
+        $to = lc($to_map->{bmap_target} || $field);
+        $val_match = $to_map->{bmap_match};
+        $val_replace = $to_map->{bmap_replace};
 
         # Deal with alsoset one->many maps
         while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
           if ($bibentry->field_exists(lc($from_as))) {
             if ($user_map->{bmap_overwrite}) {
-              biber_warn("Overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
             }
             else {
-              biber_warn("Not overwriting existing field '$from_as' during aliasing of field '$from' to '$to' in entry '$key'", $bibentry);
+              biber_warn("Not overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
               next;
             }
           }
@@ -281,7 +296,8 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
         }
 
         # map fields to targets
-        if (lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
+        if (defined ($to_map->{bmap_target}) and
+            lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
           next FLOOP;
         }
       }
@@ -296,7 +312,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
       }
 
       # Now run any defined handler
-      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
+      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key, $val_match, $val_replace);
     }
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
     # ignore fields not in .dcf - this means "titles", "contributors" "urls/web-urls" are
@@ -390,25 +406,31 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
   return;
 }
 
+# HANDLERS
+# ========
+
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  $bibentry->set_datafield($to, [ _norm($entry->findvalue("./$f")) ]);
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my $value = ireplace($entry->findvalue("./$f"), $val_match, $val_replace);
+  $bibentry->set_datafield($to, [ _norm($value) ]);
   return;
 }
 
 # literal fields
 sub _literal {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  $bibentry->set_datafield($to, _norm($entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)")));
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my $value = ireplace($entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)"), $val_match, $val_replace);
+  $bibentry->set_datafield($to, _norm($value));
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $values_ref;
-  my @values = split(/\s*,\s*/, _norm($entry->findvalue("./$f")));
+  my $value = ireplace($entry->findvalue("./$f"), $val_match, $val_replace);
+  my @values = split(/\s*,\s*/, _norm($value));
   # Here the "-–" contains two different chars even though they might
   # look the same in some fonts ...
   # If there is a range sep, then we set the end of the range even if it's null
@@ -430,14 +452,12 @@ sub _range {
 
 # Date fields
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $daten = $entry->findnodes("./dates/$f")->get_node(1);
   # Use Endnote explicit date attributes, if present
   # It's not clear if Endnote actually uses these attributes
   if ($daten->hasAttribute('year')) {
-    if ($daten->hasAttribute('year')) {
-      $bibentry->set_datafield('year', $daten->getAttribute('year'));
-    }
+    $bibentry->set_datafield('year', $daten->getAttribute('year'));
     if ($daten->hasAttribute('month')) {
       $bibentry->set_datafield('month', $daten->getAttribute('month'));
     }
@@ -447,7 +467,7 @@ sub _date {
     return;
   }
   else {
-    my $date = _norm($entry->findvalue("./dates/$f"));
+    my $date = _norm(ireplace($entry->findvalue("./dates/$f"), $val_match, $val_replace));
     # We are not validating dates here, just syntax parsing
     my $date_re = qr/(\d{4}) # year
                      (?:-(\d{2}))? # month
@@ -477,22 +497,22 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my $names = new Biber::Entry::Names;
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   foreach my $name ($entry->findnodes("./contributors/$f/*")) {
-    $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
+    $names->add_name(parsename($name, $f, {useprefix => $useprefix}), $val_match, $val_replace);
   }
   $bibentry->set_datafield($to, $names);
   return;
 }
 
 sub _keywords {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   if (my @s = $entry->findnodes("./$f/keyword")) {
     my @kws;
     foreach my $s (@s) {
-      push @kws, '{'._norm($s->textContent()).'}';
+      push @kws, '{'._norm(ireplace($s->textContent(), $val_match, $val_replace)).'}';
     }
     $bibentry->set_datafield('keywords', join(',', @kws));
   }
@@ -521,7 +541,7 @@ sub _keywords {
 =cut
 
 sub parsename {
-  my ($node, $fieldname, $opts) = @_;
+  my ($node, $fieldname, $opts, $val_match, $val_replace) = @_;
   $logger->debug('Parsing Endnote XML name object ' . $node->nodePath);
   my $usepre = $opts->{useprefix};
 
@@ -616,7 +636,7 @@ sub parsename {
     );
   }
   else { # parse with bibtex library because Endnote XML is rubbish
-    my $namestr = $node->textContent();
+    my $namestr = ireplace($node->textContent(), $val_match, $val_replace);
 
     # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
     $namestr =~ s/\A\s*//xms;   # leading whitespace
@@ -793,7 +813,7 @@ sub _gen_initials {
 
 
 
-# Do some sanitising on LaTeX special chars since this can't be nicely done by the parser
+# Do some sanitising since this can't be nicely done by the parser
 sub _norm {
   my $t = shift;
   return undef unless $t;
