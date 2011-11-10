@@ -58,6 +58,8 @@ my %map = (
       field => {
         lista => { bmap_pertype => "REPORT",
                    bmap_target => "BMAP_NULL"},
+        title => { bmap_pertype => "ONLINE",
+                   bmap_target => "BMAP_NULL"},
         listc => {
           bmap_pertype => "UNPUBLISHED",
           bmap_target => "INSTITUTION",

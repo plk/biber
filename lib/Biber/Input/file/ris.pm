@@ -214,6 +214,7 @@ sub create_entry {
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
+  my $pt_fail = 0;
 FLOOP:  foreach my $f (keys %$entry) {
 
     # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
@@ -222,7 +223,8 @@ FLOOP:  foreach my $f (keys %$entry) {
     my $val_match;
     my $val_replace;
 
-    if ($user_map and
+    if (not $pt_fail and
+        $user_map and
         my $field = firstval {lc($_) eq lc($f)} (keys %{$user_map->{field}},
                                                  keys %{$user_map->{globalfield}})) {
 
@@ -241,8 +243,11 @@ FLOOP:  foreach my $f (keys %$entry) {
           if (first {lc($_) eq lc($entry->{TY})} @{$map->{bmap_pertype}}) {
             $to_map = $user_map->{field}{$field}
           }
-          else {
-            $to_map = $user_map->{globalfield}{$field};
+          elsif (my $gm = $user_map->{globalfield}{$field}) {
+            $to_map = $gm;
+          }
+          else { # per_type conditions fail. Set a flag for a redo
+            $pt_fail = 1;
           }
         }
       }
@@ -250,8 +255,9 @@ FLOOP:  foreach my $f (keys %$entry) {
         $to_map = $user_map->{globalfield}{$field};
       }
 
-      # In case per_type doesn't match and there is no global map for this field
-      next FLOOP unless defined($to_map);
+      # In case per_type doesn't match and there is no global map for this field,
+      # skip to .dcf driver mappings
+      redo FLOOP if $pt_fail;
 
       $from = $dcfxml->{fields}{field}{$f}; # handler information still comes from .dcf
 
@@ -319,6 +325,7 @@ FLOOP:  foreach my $f (keys %$entry) {
     }
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
     elsif ($from = $dcfxml->{fields}{field}{$f}) {
+      $pt_fail = 0; # reset this, see above
       $to = $f; # By default, field to set internally is the same as data source
       # Redirect any alias
       if (my $aliases = $from->{alias}) { # complex aliases with alsoset clauses
