@@ -501,8 +501,9 @@ Biber's processing steps.
 
 The \verb+map+ option can only be set in the config file
 and not on the command line as it has a complex structure. This
-option allows you to perform various data source mapping (aliasing)
-tasks:
+option allows you to perform various data source mapping
+tasks which can be useful for pre-processing data which you do not
+generated yourself:
 
 \begin{itemize}
 \item Map data source entrytypes to different entrytypes,
@@ -513,6 +514,8 @@ tasks:
   mappings to specific data source entrytypes.
 \item As a special case of the above, you can map data source fields
   to null, effectively removing them from the input stream.
+\item Modify the contents of a field using standard Perl regular expression
+  match and replace.
 \end{itemize}
 
 \noindent The format of the \verb+map+ option in the
@@ -675,7 +678,9 @@ is often used for abstracts in RIS).
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <globalfield +\textcolor{red}{source-field}+>
-  BMAP_TARGET +\textcolor{red}{target-field}+
+  +\textcolor{blue}{BMAP\_TARGET}+ +\textcolor{red}{target-field}+
+  +\textcolor{blue}{BMAP\_MATCH}+ +\textcolor{red}{source-match}+
+  +\textcolor{blue}{BMAP\_REPLACE}+ +\textcolor{red}{source-replace}+
   +\textcolor{blue}{<alsoset>}+
     +\textcolor{red}{target-field1 target-value$_1$}+
                $\vdots$
@@ -685,9 +690,19 @@ is often used for abstracts in RIS).
 \end{lstlisting}
 
 \noindent Unlike the simple global mapping, this form maps only one
-\textcolor{red}{\texttt{source-field}}. You must specify the
+\textcolor{red}{\texttt{source-field}}. You may specify the
 \textcolor{red}{\texttt{target-field}} using the constant
-\verb+BMAP_TARGET+. The \textcolor{blue}{\texttt{alsoset}} section is
+\verb+BMAP_TARGET+. You may specify \textcolor{red}{\texttt{source-match}}
+and \textcolor{red}{\texttt{source-replace}} using the constants
+\verb+BMAP_MATCH+ and \verb+BMAP_REPLACE+ respectively. While
+\verb+BMAP_TARGET+ and \verb+BMAP_MATCH/BMAP_REPLACE+ are both optional, at
+least one of them must be present, obviously, or you aren't doing anything
+to the field. \verb+BMAP_MATCH+ specifies a Perl regular expression to
+match against the source field contents. You may use (and almost certainly
+will want to use) parentheses for back-references in \verb+BMAP_REPLACE+.
+Do not quote the regular expressions in any way---it's not necessary.
+
+The \textcolor{blue}{\texttt{alsoset}} section is
 optional and specifies one or more \textcolor{red}{\texttt{target-field}}s
 to set in the entry, along with their
 \textcolor{red}{\texttt{target-value}}s. The literal token
@@ -697,7 +712,7 @@ field name. Continuing our example configuration:
 
 {\color{grey}
 \lstset{showspaces=false}
-\begin{lstlisting}[escapechar=+,mathescape=true]
+\begin{lstlisting}[escapechar=:,mathescape=true]
 <map>
   <bibtex>
     BMAP_OVERWRITE 1
@@ -715,13 +730,15 @@ field name. Continuing our example configuration:
       ABSTRACT BMAP_NULL
       PARTICIPANT NAMEA
     </globalfield>
-    +\textcolor{black}{<globalfield PUBMEDID>}+
-       +\textcolor{black}{BMAP\_TARGET  EPRINT}+
-      +\textcolor{black}{<alsoset>}+
-        +\textcolor{black}{EPRINTTYPE BMAP\_ORIGFIELD}+
-        +\textcolor{black}{NOTE "Auto-created this field"}+
-      +\textcolor{black}{</alsoset>}+
-    +\textcolor{black}{</globalfield>}+
+    :\textcolor{black}{<globalfield PUBMEDID>}:
+       :\textcolor{black}{BMAP\_TARGET EPRINT}:
+       :\textcolor{black}{BMAP\_MATCH \textbackslash A\textbackslash d$\ast$(.+)}:
+       :\textcolor{black}{BMAP\_REPLACE \textbackslash L\$1}:
+      :\textcolor{black}{<alsoset>}:
+        :\textcolor{black}{EPRINTTYPE BMAP\_ORIGFIELD}:
+        :\textcolor{black}{NOTE "Auto-created this field"}:
+      :\textcolor{black}{</alsoset>}:
+    :\textcolor{black}{</globalfield>}:
   </bibtex>
   <ris>
     <globalfield>
@@ -734,7 +751,9 @@ field name. Continuing our example configuration:
 
 \noindent Here, in all entries, the \verb+PUBMEDID+ field becomes the
 \verb+EPRINT+ field and the \verb+EPRINTTYPE+ field is set to «pubmedid».
-The \verb+NOTE+ field is set to «Auto-created this field».
+The \verb+NOTE+ field is set to «Auto-created this field». The contents of
+the \verb+EPRINT+ field have leading numbers stripped and the remainder of
+the contents lowercased.
 \bigskip
 \minisec{Entrytype specific field mapping}
 
@@ -744,7 +763,9 @@ The \verb+NOTE+ field is set to «Auto-created this field».
   BMAP_PERTYPE +\textcolor{red}{source-entrytype$_1$}+
                  $\vdots$
   BMAP_PERTYPE +\textcolor{red}{source-entrytype$_n$}+
-  BMAP_TARGET +\textcolor{red}{target-field}+
+  +\textcolor{blue}{BMAP\_TARGET}+ +\textcolor{red}{target-field}+
+  +\textcolor{blue}{BMAP\_MATCH}+ +\textcolor{red}{source-match}+
+  +\textcolor{blue}{BMAP\_REPLACE}+ +\textcolor{red}{source-replace}+
   +\textcolor{blue}{<alsoset>}+
     +\textcolor{red}{target-field1 target-value$_1$}+
                  $\vdots$
@@ -759,8 +780,18 @@ The \verb+NOTE+ field is set to «Auto-created this field».
 the data source entrytypes \textcolor{red}{\texttt{source-entrytype$_1$}}
 \ldots\linebreak\textcolor{red}{\texttt{source-entrytype$_n$}}. The source
 entrytype restrictions must be specified using the \verb+BMAP_PERTYPE+
-token. The target field must be specified using the \verb+BMAP_TARGET+
-token. The \textcolor{blue}{\texttt{alsoset}} section is optional and
+token. The target field may be specified using the \verb+BMAP_TARGET+
+token. You may specify \textcolor{red}{\texttt{source-match}}
+and \textcolor{red}{\texttt{source-replace}} using the constants
+\verb+BMAP_MATCH+ and \verb+BMAP_REPLACE+ respectively. While
+\verb+BMAP_TARGET+ and \verb+BMAP_MATCH/BMAP_REPLACE+ are both optional, at
+least one of them must be present, obviously, or you aren't doing anything
+to the field. \verb+BMAP_MATCH+ specifies a Perl regular expression to
+match against the source field contents. You may use (and almost certainly
+will want to use) parentheses for back-references in \verb+BMAP_REPLACE+.
+Do not quote the regular expressions in any way---it's not necessary.
+
+The \textcolor{blue}{\texttt{alsoset}} section is optional and
 specifies one or more \textcolor{red}{\texttt{target-field}}s to set in the
 entry, along with their \textcolor{red}{\texttt{target-value}}s. The
 literal token \verb+BMAP_ORIGFIELD+ can be used as the
@@ -773,7 +804,7 @@ the example:
 
 {\color{grey}
 \lstset{showspaces=false}
-\begin{lstlisting}[escapechar=+,mathescape=true]
+\begin{lstlisting}[escapechar=:,mathescape=true]
 <map>
   <bibtex>
     BMAP_OVERWRITE 1
@@ -792,20 +823,22 @@ the example:
       PARTICIPANT NAMEA
     </globalfield>
     <globalfield PUBMEDID>
-       BMAP_TARGET  EPRINT
+       BMAP_TARGET EPRINT
+       BMAP_MATCH :\textbackslash A\textbackslash d$\ast$(.+):
+       BMAP_REPLACE :\textbackslash L\$1:
       <alsoset>
         EPRINTTYPE BMAP_ORIGFIELD
         NOTE "Auto-created this field"
       </alsoset>
     </globalfield>
-    +\textcolor{black}{<field NOTE>}+
-      +\textcolor{black}{BMAP\_PERTYPE ARTICLE}+
-      +\textcolor{black}{BMAP\_PERTYPE BOOK}+
-      +\textcolor{black}{BMAP\_TARGET BMAP\_NULL}+
-      +\textcolor{black}{<alsoset>}+
-        +\textcolor{black}{ADDENDUM "A string"}+
-      +\textcolor{black}{</alsoset>}+
-    +\textcolor{black}{</field>}+
+    :\textcolor{black}{<field NOTE>}:
+      :\textcolor{black}{BMAP\_PERTYPE ARTICLE}:
+      :\textcolor{black}{BMAP\_PERTYPE BOOK}:
+      :\textcolor{black}{BMAP\_TARGET BMAP\_NULL}:
+      :\textcolor{black}{<alsoset>}:
+        :\textcolor{black}{ADDENDUM "A string"}:
+      :\textcolor{black}{</alsoset>}:
+    :\textcolor{black}{</field>}:
   </bibtex>
   <ris>
     <globalfield>
