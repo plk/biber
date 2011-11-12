@@ -331,6 +331,7 @@ sub config_file {
 
     chomp $biberconf;
     $biberconf =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
+    $biberconf = undef unless $biberconf; # sanitise just in case it's an empty string
   }
   else {
     $biberconf = undef;
