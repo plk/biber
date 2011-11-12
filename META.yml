@@ -97,8 +97,9 @@ requires:
   Log::Log4perl: 0
   Readonly: 0
   Regexp::Common: 0
+  String::Interpolate: 0
   Text::BibTeX: 0.61
-  Unicode::Collate: 0.81
+  Unicode::Collate: 0.84
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
   perl: v5.14.0

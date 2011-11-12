@@ -323,15 +323,19 @@ sub config_file {
     $biberconf = File::Spec->catfile($ENV{APPDATA}, "biber", $BIBER_CONF_NAME);
   }
   elsif ( can_run('kpsewhich') ) {
-    my $biberconf;
     my $err;
     run3  [ 'kpsewhich', $BIBER_CONF_NAME ], \undef, \$biberconf, \$err, { return_if_system_error => 1};
+    if ($? == -1) {
+      biber_error("Error running kpsewhich to look for config file: $err");
+    }
+
     chomp $biberconf;
     $biberconf =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
   }
   else {
     $biberconf = undef;
   }
+
   return $biberconf;
 }
 
