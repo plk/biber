@@ -1,6 +1,7 @@
 Revision history for Biber
 
 0.9.6  (unreleased)
+       * Fixed bug tracker ticket #3436870
        * Match/replace functionality for data source field filtering
        * New AUCTeX patches for better biblatex/biber support
        * Now requires perl 5.14 for full Unicode 6.0 support
