@@ -41,6 +41,7 @@ pp --compress=6 \
   --module=Encode::TW \
   --module=Encode::Unicode \
   --module=Encode::Unicode::UTF7 \
+  --module=Readonly::XS \
   --link=/tmp/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
   --link=/opt/local/lib/libbtparse.dylib \

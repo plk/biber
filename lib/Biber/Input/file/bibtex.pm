@@ -111,9 +111,6 @@ sub extract_entries {
     }
   }
 
-  # Log that we found a data file
-  $logger->info("Found BibTeX data file '$filename'");
-
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   # We can't redirect STDERR to a variable as libbtparse doesnt' use PerlIO, just stdio
   # so it doesn't understand this. It does understand normal file redirection though as
@@ -681,6 +678,9 @@ sub cache_data {
 
   my $bib = Text::BibTeX::File->new( $pfilename, '<' )
     or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
+
+  # Log that we found a data file
+  $logger->info("Found BibTeX data file '$filename'");
 
   while ( my $entry = new Text::BibTeX::Entry $bib ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {

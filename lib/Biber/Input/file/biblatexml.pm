@@ -89,7 +89,7 @@ sub extract_entries {
   }
 
   # Log that we found a data file
-  $logger->info("Found biblatexml data file '$filename'");
+  $logger->info("Found BibLaTeXML data file '$filename'");
 
   # Set up XML parser and namespace
   my $parser = XML::LibXML->new();
@@ -97,8 +97,6 @@ sub extract_entries {
     or biber_error("Can't parse file $filename");
   my $xpc = XML::LibXML::XPathContext->new($bltxml);
   $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
-
-
 
   if ($section->is_allkeys) {
     $logger->debug("All citekeys will be used for section '$secnum'");

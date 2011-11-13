@@ -35,6 +35,7 @@
   --module=Encode::TW \
   --module=Encode::Unicode \
   --module=Encode::Unicode::UTF7 \
+  --module=Readonly::XS \
   --link=/usr/local/perl/lib/libbtparse.so \
   --link=/usr/lib/libxml2.so.2 \
   --link=/usr/lib/libxslt.so.1 \

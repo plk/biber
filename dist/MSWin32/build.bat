@@ -43,6 +43,7 @@ CALL pp ^
   --module=Encode::TW ^
   --module=Encode::Unicode ^
   --module=Encode::Unicode::UTF7 ^
+  --module=Readonly::XS ^
   --link=C:\WINDOWS\libbtparse.dll ^
   --link=C:\strawberry\c\bin\libxslt-1_.dll ^
   --link=C:\strawberry\c\bin\libexslt-0_.dll ^

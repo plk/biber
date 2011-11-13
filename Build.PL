@@ -51,6 +51,7 @@ my $builder = $class->new(
         'List::MoreUtils' => 0,
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
+        'Readonly::XS' => 0,
         'Readonly' => 0,
         'String::Interpolate' => 0,
         'Unicode::Collate' => '0.84',
