@@ -96,6 +96,7 @@ requires:
   List::MoreUtils: 0
   Log::Log4perl: 0
   Readonly: 0
+  Readonly::XS: 0
   Regexp::Common: 0
   String::Interpolate: 0
   Text::BibTeX: 0.61

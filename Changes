@@ -1,6 +1,7 @@
 Revision history for Biber
 
-0.9.6  (unreleased)
+0.9.6  13-11-2011
+       * Fixed binary issue with Readonly::XS not being detected
        * Fixed bug tracker ticket #3436870
        * Match/replace functionality for data source field filtering
        * New AUCTeX patches for better biblatex/biber support
