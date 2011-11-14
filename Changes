@@ -1,5 +1,7 @@
 Revision history for Biber
 
+0.9.7  (unreleased)
+       * Fixed .bcf XSL inheritance attribute value issue
 0.9.6  13-11-2011
        * Fixed binary issue with Readonly::XS not being detected
        * Fixed bug tracker ticket #3436870

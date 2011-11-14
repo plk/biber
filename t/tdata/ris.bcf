@@ -130,6 +130,17 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>  
+  <!-- DISPLAYMODES -->
+  <bcf:displaymodes type="global">
+    <bcf:displaymode>
+      <bcf:dtarget>*</bcf:dtarget>
+      <bcf:dmode order="1">original</bcf:dmode>
+      <bcf:dmode order="2">romanised</bcf:dmode>
+      <bcf:dmode order="3">uniform</bcf:dmode>
+      <bcf:dmode order="4">translated</bcf:dmode>
+    </bcf:displaymode>
+  </bcf:displaymodes>
+  <!-- CROSSREF -->
   <bcf:inheritance>
     <bcf:defaults inherit_all="true" override_target="false">
     </bcf:defaults>

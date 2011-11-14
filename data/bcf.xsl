@@ -512,16 +512,16 @@
               <tr>
                 <td>* <xsl:text disable-output-escaping="yes"> &amp;asymp; </xsl:text> *</td>
                 <xsl:choose>
-                  <xsl:when test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@inherit_all='yes'">
+                  <xsl:when test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@inherit_all='true'">
                     <td>
                     <span>
-                      <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='yes'">
+                      <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='true'">
                         <xsl:attribute name="class">inherit_override</xsl:attribute>
                       </xsl:if>
                     * </span>
                     <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
                     <span>
-                      <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='no'">
+                      <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='false'">
                         <xsl:attribute name="class">inherit_override</xsl:attribute>
                       </xsl:if>
                     * </span>
@@ -530,13 +530,13 @@
                   <xsl:otherwise>
                     <td>
                       <span>
-                        <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='yes'">
+                        <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='true'">
                           <xsl:attribute name="class">inherit_override</xsl:attribute>
                         </xsl:if>
                       *</span>
                       <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
                       <span>
-                        <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='no'">
+                        <xsl:if test="/bcf:controlfile/bcf:inheritance/bcf:defaults/@override_target='false'">
                           <xsl:attribute name="class">inherit_override</xsl:attribute>
                         </xsl:if>
                         <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
@@ -560,16 +560,16 @@
                     </xsl:choose>
                   </td>
                   <xsl:choose>
-                    <xsl:when test="./@inherit_all='yes'">
+                    <xsl:when test="./@inherit_all='true'">
                       <td>
                         <span>
-                          <xsl:if test="./@override_target='yes'">
+                          <xsl:if test="./@override_target='true'">
                             <xsl:attribute name="class">inherit_override</xsl:attribute>
                           </xsl:if>
                         *</span>
                         <xsl:text disable-output-escaping="yes"> &amp;asymp; </xsl:text>
                         <span>
-                          <xsl:if test="./@override_target='no'">
+                          <xsl:if test="./@override_target='false'">
                             <xsl:attribute name="class">inherit_override</xsl:attribute>
                           </xsl:if>
                         *</span>
@@ -578,13 +578,13 @@
                     <xsl:otherwise>
                       <td>
                         <span>
-                          <xsl:if test="./@override_target='yes'">
+                          <xsl:if test="./@override_target='true'">
                             <xsl:attribute name="class">inherit_override</xsl:attribute>
                           </xsl:if>
                         *</span>
                         <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
                         <span>
-                          <xsl:if test="./@override_target='no'">
+                          <xsl:if test="./@override_target='false'">
                             <xsl:attribute name="class">inherit_override</xsl:attribute>
                           </xsl:if>
                           <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
@@ -627,20 +627,20 @@
                         <li>
                           <xsl:choose>
                             <!-- A field skip specification -->
-                            <xsl:when test ="./@skip='yes'">
+                            <xsl:when test ="./@skip='true'">
                               <xsl:value-of select="./@source"/> <xsl:text disable-output-escaping="yes"> &amp;rarr; </xsl:text> <xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text>
                             </xsl:when>
                             <!-- A normal field inherit specification -->
                             <xsl:otherwise>
                               <span>
-                                <xsl:if test="./@override_target='yes'">
+                                <xsl:if test="./@override_target='true'">
                                   <xsl:attribute name="class">inherit_override</xsl:attribute>
                                 </xsl:if>
                                 <xsl:value-of select="./@source"/>
                               </span>
                               <xsl:text disable-output-escaping="yes"> &amp;rarr; </xsl:text>
                               <span>
-                                <xsl:if test="./@override_target='no'">
+                                <xsl:if test="./@override_target='false'">
                                   <xsl:attribute name="class">inherit_override</xsl:attribute>
                                 </xsl:if>
                                 <xsl:value-of select="./@target"/>

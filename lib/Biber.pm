@@ -424,23 +424,19 @@ sub parse_ctrlfile {
   }
 
   # DISPLAYMODES
-  # TODO This should not be optional any more when biblatex implements this so take
-  # out this conditional
-  if (exists($bcfxml->{displaymodes})) {
-    foreach my $dms (@{$bcfxml->{displaymodes}}) {
-      my $opt_dm;
-      foreach my $dm (@{$dms->{displaymode}}) {
-        foreach my $dt (@{$dm->{dtarget}}) {
-          $opt_dm->{$dt->{content}} = [ map {$_->{content}}  sort { $a->{order} <=> $b->{order} } @{$dm->{dmode}} ];
-        }
+  foreach my $dms (@{$bcfxml->{displaymodes}}) {
+    my $opt_dm;
+    foreach my $dm (@{$dms->{displaymode}}) {
+      foreach my $dt (@{$dm->{dtarget}}) {
+        $opt_dm->{$dt->{content}} = [ map {$_->{content}}  sort { $a->{order} <=> $b->{order} } @{$dm->{dmode}} ];
       }
-      if (not exists($dms->{type}) or $dms->{type} eq 'global') {
-        Biber::Config->setblxoption('displaymode', $opt_dm);
-      }
-      else {
-        # per-type
-        Biber::Config->setblxoption('displaymode', $opt_dm, 'PER_TYPE', $dms->{type});
-      }
+    }
+    if (not exists($dms->{type}) or $dms->{type} eq 'global') {
+      Biber::Config->setblxoption('displaymode', $opt_dm);
+    }
+    else {
+      # per-type
+      Biber::Config->setblxoption('displaymode', $opt_dm, 'PER_TYPE', $dms->{type});
     }
   }
 

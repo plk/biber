@@ -151,7 +151,7 @@
           </optional>
         </element>
       </zeroOrMore>
-      <zeroOrMore>
+      <oneOrMore>
         <!-- Display modes for biblatexml -->
         <element name="bcf:displaymodes">
           <optional>
@@ -187,7 +187,7 @@
             </element>
           </oneOrMore>
         </element>
-      </zeroOrMore>
+      </oneOrMore>
       <optional>
         <!-- field/entrytype mapping -->
         <element name="bcf:sourcemap">

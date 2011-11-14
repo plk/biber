@@ -152,7 +152,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
            ],
   type  => "global",
 },
-   displaymode     => { '*' => ["original", "romanised", "uniform", "translated"] },
    structure       =>
  { constraints => [
                    {

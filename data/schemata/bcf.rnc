@@ -89,7 +89,7 @@ start =
           ("original" | "uniform" | "romanised"  | "translated")
         }+
       }+
-    }*,
+    }+,
 
     # field/entrytype mapping
     element bcf:sourcemap {
