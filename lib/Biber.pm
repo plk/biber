@@ -863,7 +863,6 @@ sub resolve_xdata {
     next if $be->get_field('entrytype') eq 'xdata';
     next unless my $xdata = $be->get_field('xdata');
     $be->resolve_xdata($xdata);
-    $be->del_field('xdata'); # clear the xdata field
   }
 
   # Now remove all XDATA entries since they were only added to

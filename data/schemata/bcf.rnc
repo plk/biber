@@ -250,7 +250,7 @@ start =
           # fieldtype is "field" or "list"
           attribute fieldtype { "field" | "list" },
           # datatype of field content
-          attribute datatype { "literal" | "name" | "key" | "date" | "verbatim" | "integer" | "range" | "special" },
+          attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "special" },
           # Are we allowed to output a null field value to the .bbl for this field?
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?
@@ -263,7 +263,8 @@ start =
       # so that one could share information, this would be hard to manage and confusing as it
       # not be visible in one place which fields were valid for an entrytype.
       element bcf:entryfields {
-        element bcf:entrytype { xsd:NCName }+,
+        (element bcf:entrytype { "ALL" } |
+         element bcf:entrytype { xsd:NCName }+),
         (element bcf:field { "ALL" } |
          element bcf:field { xsd:NCName }+)
       }+,

@@ -1356,6 +1356,12 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "urlyear" },
                      ],
                    },
+                   {
+                     entrytype => [{ content => "xdata" }],
+                     field => [
+                       { content => "ALL" },
+                               ]
+                   }
                  ],
   entrytypes  => {
                    entrytype => [
@@ -1428,7 +1434,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      },
                      { content => "chapter", datatype => "literal", fieldtype => "field" },
                      { content => "commentator", datatype => "name", fieldtype => "list" },
-                     { content => "crossref", datatype => "literal", fieldtype => "field" },
+                     { content => "crossref", datatype => "entrykey", fieldtype => "field" },
                      { content => "day", datatype => "literal", fieldtype => "field" },
                      { content => "doi", datatype => "verbatim", fieldtype => "field" },
                      { content => "edition", datatype => "literal", fieldtype => "field" },
@@ -1634,8 +1640,8 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "version", datatype => "literal", fieldtype => "field" },
                      { content => "volume", datatype => "literal", fieldtype => "field" },
                      { content => "volumes", datatype => "literal", fieldtype => "field" },
-                     { content => "xdata", datatype => "literal", fieldtype => "field" },
-                     { content => "xref", datatype => "literal", fieldtype => "field" },
+                     { content => "xdata", datatype => "entrykey", fieldtype => "list", skip_output => "true" },
+                     { content => "xref", datatype => "entrykey", fieldtype => "field" },
                      { content => "year", datatype => "literal", fieldtype => "field" },
                    ],
                  },

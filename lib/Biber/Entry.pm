@@ -356,7 +356,6 @@ sub resolve_xdata {
       }
     }
   }
-  $self->del_field('xdata');    # clear the xdata field
 }
 
 =head2 inherit_from

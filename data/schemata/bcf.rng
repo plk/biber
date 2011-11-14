@@ -646,6 +646,7 @@
                     <value>literal</value>
                     <value>name</value>
                     <value>key</value>
+                    <value>entrykey</value>
                     <value>date</value>
                     <value>verbatim</value>
                     <value>integer</value>
@@ -677,11 +678,16 @@
               not be visible in one place which fields were valid for an entrytype.
             -->
             <element name="bcf:entryfields">
-              <oneOrMore>
+              <choice>
                 <element name="bcf:entrytype">
-                  <data type="NCName"/>
+                  <value>ALL</value>
                 </element>
-              </oneOrMore>
+                <oneOrMore>
+                  <element name="bcf:entrytype">
+                    <data type="NCName"/>
+                  </element>
+                </oneOrMore>
+              </choice>
               <choice>
                 <element name="bcf:field">
                   <value>ALL</value>

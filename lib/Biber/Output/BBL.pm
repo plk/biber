@@ -227,6 +227,7 @@ sub set_output_entry {
 
   # Output list fields
   foreach my $listfield (@{$struc->get_field_type('list')}) {
+    next if $struc->is_field_type('skipout', $listfield);
     if (my $lf = $be->get_field($listfield)) {
       if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
         $acc .= "    \\true{more$listfield}\n";

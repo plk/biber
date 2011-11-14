@@ -42,7 +42,7 @@ sub new {
   # for quick tests later
 
   # field datatypes
-  my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key);
+  my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key, @entrykey);
 
   # Create data for field types, including any aliases which might be
   # needed when reading the bib data.
@@ -54,6 +54,9 @@ sub new {
       push @list, $f->{content};
     }
     elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
+      push @list, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'entrykey') {
       push @list, $f->{content};
     }
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
@@ -74,6 +77,9 @@ sub new {
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
       push @key, $f->{content};
     }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'entrykey') {
+      push @entrykey, $f->{content};
+    }
 
     # check null_ok
     if ($f->{nullok}) {
@@ -89,7 +95,7 @@ sub new {
   $self->{fields}{nullok}   = $nullok;
   $self->{fields}{skipout}  = $skipout;
   $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range, @date) };
-  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer) };
+  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer, @entrykey) };
   $self->{fields}{name}     = { map {$_ => 1} @name };
   $self->{fields}{list}     = { map {$_ => 1} @list };
   $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };

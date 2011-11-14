@@ -411,6 +411,7 @@
       <bcf:entrytype>thesis</bcf:entrytype>
       <bcf:entrytype>unpublished</bcf:entrytype>
       <bcf:entrytype>video</bcf:entrytype>
+      <bcf:entrytype>xdata</bcf:entrytype>
     </bcf:entrytypes>
     <bcf:fields>
       <bcf:field fieldtype="field" datatype="literal">abstract</bcf:field>
@@ -427,7 +428,7 @@
       <bcf:field fieldtype="field" datatype="literal">booktitleaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">chapter</bcf:field>
       <bcf:field fieldtype="list" datatype="name">commentator</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">crossref</bcf:field>
+      <bcf:field fieldtype="field" datatype="entrykey">crossref</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">day</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">doi</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">edition</bcf:field>
@@ -562,7 +563,8 @@
       <bcf:field fieldtype="field" datatype="literal">version</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">volume</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">volumes</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">xref</bcf:field>
+      <bcf:field fieldtype="list" datatype="entrykey" skip_output="true">xdata</bcf:field>
+      <bcf:field fieldtype="field" datatype="entrykey">xref</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">year</bcf:field>
     </bcf:fields>
     <bcf:entryfields>
@@ -629,6 +631,7 @@
       <bcf:field>verba</bcf:field>
       <bcf:field>verbb</bcf:field>
       <bcf:field>verbc</bcf:field>
+      <bcf:field>xdata</bcf:field>
       <bcf:field>xref</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
@@ -1481,6 +1484,10 @@
       <bcf:field>urlendyear</bcf:field>
       <bcf:field>urlmonth</bcf:field>
       <bcf:field>urlyear</bcf:field>
+    </bcf:entryfields>
+    <bcf:entryfields>
+      <bcf:entrytype>xdata</bcf:entrytype>
+      <bcf:field>ALL</bcf:field>
     </bcf:entryfields>
     <bcf:constraints>
       <bcf:entrytype>article</bcf:entrytype>
