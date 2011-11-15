@@ -31,11 +31,11 @@
             font-family: "Courier New", Courier, monospace ;
           }
           @font-face {
-            font-family: "Cyberbit";
-            src: url(http://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/testfiles/Cyberbit.ttf) format("truetype");
+            font-family: unifont;
+            src: url(http://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/testfiles/unifont.ttf) format("truetype");
           }
           .utf8 {
-            font-family: Cyberbit;
+            font-family: unifont;
           }
           .full {
             background-color: #E6FFE6;
