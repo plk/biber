@@ -60,7 +60,7 @@ GetOptions(
                          -exitval => EXIT_ERROR);
 
 if (exists $opts->{'help'}) {
-  pod2usage(-verbose => 2, -exitval => EXIT_OK);
+  pod2usage(-verbose => 2, -noperldoc => 1, -exitval => EXIT_OK);
 }
 
 if (exists $opts->{'version'}) {

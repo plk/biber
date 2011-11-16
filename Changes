@@ -1,7 +1,8 @@
 Revision history for Biber
 
-0.9.7  (unreleased)
+0.9.7  * Fixed --help issue with PAR::Packer
        * Fixed .bcf XSL inheritance attribute value issue
+       * Moved XDATA output skip into structure where it should have been originally
 0.9.6  13-11-2011
        * Fixed binary issue with Readonly::XS not being detected
        * Fixed bug tracker ticket #3436870
