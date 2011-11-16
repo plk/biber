@@ -59,6 +59,8 @@ GetOptions(
           ) or pod2usage(-verbose => 0,
                          -exitval => EXIT_ERROR);
 
+# verbose > 1 uses external perldoc, this doesn't work with PAR::Packer binaries
+# so use "-noperldoc" to use built-in POD::Text
 if (exists $opts->{'help'}) {
   pod2usage(-verbose => 2, -noperldoc => 1, -exitval => EXIT_OK);
 }
