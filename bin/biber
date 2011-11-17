@@ -216,8 +216,9 @@ to XeTeX or LuaTeX to avoid this situation. By default uses the
 The set of characters included in the conversion routine for
 --bblsafechars. Set to "full" to try harder with a much
 larger set or "base" to use a basic set. Default is "base" which is
-You may need to load more macro packages to deal with the results of
-"full" (Dings, Greek characters, special symbols etc.).
+fine for most use cases. You may need to load more macro packages to
+deal with the results of "full" (Dings, Greek characters, special
+symbols etc.).
 
 =item B<--bibencoding|-e [encoding]>
 
