@@ -133,6 +133,10 @@
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" bmap_overwrite="1">
       <bcf:map maptype="entrytype">
+        <bcf:map_pair map_source="MISC"/>
+        <bcf:also_set map_field="KEYWORDS" map_value="keyw1, keyw2"/>
+      </bcf:map>
+      <bcf:map maptype="entrytype">
         <bcf:map_pair map_source="CONVERSATION" map_target="CUSTOMA"/>
         <bcf:also_set map_field="VERBA" bmap_origentrytype="1"/>
         <bcf:also_set map_field="VERBB" map_value="somevalue"/>
@@ -1457,6 +1461,7 @@
     <bcf:citekey>alias3</bcf:citekey>
     <bcf:citekey>alias4</bcf:citekey>
     <bcf:citekey>alias5</bcf:citekey>
+    <bcf:citekey>alias6</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>

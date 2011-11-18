@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 20;
+use Test::More tests => 21;
 
 use Biber;
 use Biber::Utils;
@@ -53,7 +53,7 @@ my $w1 = [
           "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'",
 ];
 
-my $w2 = ["Overwriting existing field 'VERBC' during aliasing of entrytype 'conversation' to 'customa' in entry 'alias4'",
+my $w2 = ["Overwriting existing field 'VERBC' during mapping of entrytype 'conversation' in entry 'alias4'",
           "Entry 'alias4' - invalid field 'author' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprint' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprinttype' for entrytype 'customa'",
@@ -84,3 +84,5 @@ ok(is_undef($bibentries->entry('alias5')->get_field('abstract')), 'Alias - 18' )
 is($biber->_liststring('alias5', 'listb'), 'REPlaCEDte_early', 'Alias - 19');
 is($biber->_liststring('alias5', 'institution'), 'REPlaCEDte_early', 'Alias - 20');
 
+# Testing of no target but just field additions
+is($bibentries->entry('alias6')->get_field('keywords'), 'keyw1, keyw2', 'Alias - 21' );

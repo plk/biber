@@ -161,6 +161,7 @@ my $murray1 = q|  \entry{murray}{article}{}
     \field{volume}{14}
     \field{year}{1998}
     \field{pages}{17\bibrangedash 30}
+    \keyw{keyw1, keyw2}
   \endentry
 
 |;
@@ -214,6 +215,7 @@ my $murray2 = q|  \entry{murray}{article}{}
     \field{volume}{14}
     \field{year}{1998}
     \field{pages}{17\bibrangedash 30}
+    \keyw{keyw1, keyw2}
   \endentry
 
 |;

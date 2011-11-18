@@ -101,7 +101,7 @@ start =
             (attribute maptype { "entrytype" },
             element bcf:map_pair {
               attribute map_source {xsd:string {minLength="1"}},
-              attribute map_target { xsd:string {minLength="1"} },
+              attribute map_target { xsd:string {minLength="1"} }?,
               empty
             }+,
             element bcf:also_set {

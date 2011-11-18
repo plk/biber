@@ -56,39 +56,38 @@ my $dcfxml = driver_config('endnotexml');
 =cut
 
 sub extract_entries {
-  my ($filename, $keys) = @_;
+  my ($source, $keys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
+  my $filename;
   my @rkeys = @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've
           # used it
-  $logger->trace("Entering extract_entries()");
+  $logger->trace("Entering extract_entries() in driver 'endnotexml'");
 
   # If it's a remote data file, fetch it first
-  if ($filename =~ m/\A(?:https?|ftp):\/\//xms) {
-    $logger->info("Data source '$filename' is a remote .xml - fetching ...");
+  if ($source =~ m/\A(?:https?|ftp):\/\//xms) {
+    $logger->info("Data source '$source' is a remote EndNote XML datasource - fetching ...");
     require LWP::Simple;
     require File::Temp;
     $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
                           DIR => $Biber::MASTER->biber_tempdir,
                           SUFFIX => '.xml');
-    unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-      biber_error("Could not fetch file '$filename'");
+    unless (LWP::Simple::is_success(LWP::Simple::getstore($source, $tf->filename))) {
+      biber_error("Could not fetch '$source'");
     }
     $filename = $tf->filename;
   }
   else {
     # Need to get the filename so we increment
     # the filename count for preambles at the bottom of this sub
-    my $trying_filename = $filename;
-    unless ($filename = locate_biber_file($filename)) {
-      biber_error("Cannot find file '$trying_filename'!")
+    unless ($filename = locate_biber_file($source)) {
+      biber_error("Cannot find '$source'!")
     }
   }
 
   # Log that we found a data file
-  $logger->info("Found endnotexml data file '$filename'");
+  $logger->info("Found EndNote XML data source '$filename'");
 
   # Set up XML parser and namespaces
   my $parser = XML::LibXML->new();
@@ -130,7 +129,7 @@ sub extract_entries {
       # We need this in order to do sorting=none + allkeys because in this case, there is no
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, "$dbdid:$key";
-      create_entry("$dbdid:$key", $entry);
+      create_entry("$dbdid:$key", $entry, $source);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -164,7 +163,7 @@ sub extract_entries {
         $logger->debug('Parsing Endnote XML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($wanted_key, $entry);
+        create_entry($wanted_key, $entry, $source);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -184,7 +183,7 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($key, $entry) = @_;
+  my ($key, $entry, $source) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $struc = Biber::Config->get_structure;
@@ -365,18 +364,21 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
   # This is here so that any field alsosets take precedence over fields in the data source
 
   # User aliases take precedence
-  if (my $eta = firstval {lc($_) eq lc($itype)} keys %{$user_map->{entrytype}}) {
+  if (my $to = is_user_entrytype_map($user_map, lc($itype), $source)) {
     my $from = lc($itype);
-    my $to = $user_map->{entrytype}{$eta};
-    if (ref($to) eq 'HASH') {   # complex entrytype map
-      $bibentry->set_field('entrytype', lc($to->{bmap_target}));
+    # complex entrytype map so check to see if there is a persource restriction we need to
+    # heed
+    if (ref($to) eq 'HASH') {
+      # We are not necessarily changing the entrytype - might just be adding some fields
+      # so there may be no bmap_target
+      $bibentry->set_field('entrytype', lc($to->{bmap_target} // $itype));
       while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
         if ($bibentry->field_exists(lc($from_as))) {
           if ($user_map->{bmap_overwrite}) {
-            biber_warn("Overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
+            biber_warn("Overwriting existing field '$from_as' during mapping of entrytype '$itype' in entry '$key'", $bibentry);
           }
           else {
-            biber_warn("Not overwriting existing field '$from_as' during aliasing of entrytype '$itype' to '" . lc($to->{bmap_target}) . "' in entry '$key'", $bibentry);
+            biber_warn("Not overwriting existing field '$from_as' during mapping of entrytype '$itype' in entry '$key'", $bibentry);
             next;
           }
         }
@@ -386,7 +388,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
         $bibentry->set_datafield(lc($from_as), $to_val);
       }
     }
-    else {                      # simple entrytype map
+    else {
       $bibentry->set_field('entrytype', lc($to));
     }
   }

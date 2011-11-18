@@ -222,11 +222,13 @@
                               <param name="minLength">1</param>
                             </data>
                           </attribute>
-                          <attribute name="map_target">
-                            <data type="string">
-                              <param name="minLength">1</param>
-                            </data>
-                          </attribute>
+                          <optional>
+                            <attribute name="map_target">
+                              <data type="string">
+                                <param name="minLength">1</param>
+                              </data>
+                            </attribute>
+                          </optional>
                           <empty/>
                         </element>
                       </oneOrMore>

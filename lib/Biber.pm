@@ -454,7 +454,7 @@ sub parse_ctrlfile {
             my $source;
             foreach my $map_pair (@{$map->{map_pair}}) {
               $source = $map_pair->{map_source};
-              $mapsopt->{$maps->{datatype}}{entrytype}{$source}{bmap_target} = $map_pair->{map_target};
+              $mapsopt->{$maps->{datatype}}{entrytype}{$source}{bmap_target} = $map_pair->{map_target} if exists($map_pair->{map_target});
             }
             foreach my $as (@{$map->{also_set}}) {
               my $val;

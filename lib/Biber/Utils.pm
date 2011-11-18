@@ -16,7 +16,7 @@ use File::Find;
 use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
-use List::Util qw( first );
+use List::AllUtils qw( first firstval );
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
@@ -44,7 +44,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn ireplace };
+  filter_entry_options biber_error biber_warn ireplace is_user_entrytype_map };
 
 =head1 FUNCTIONS
 
@@ -708,6 +708,34 @@ sub ireplace {
   }
   else {
     return $value;
+  }
+}
+
+=head2 is_user_entrytype_map
+
+    Check in a data structure of user entrytype mappings if a particular
+    entrytype matches any mapping rules. Returns the target entrytype
+    datastructure if there is a match, false otherwise.
+
+=cut
+
+sub is_user_entrytype_map {
+  my ($map, $entrytype, $source) = @_;
+  return 0 unless my $etmap = firstval {lc($_) eq '*' or
+                                      lc($_) eq $entrytype} keys %{$map->{entrytype}};
+  # If we are here, there is a matching entrytype clause
+  my $to = $map->{entrytype}{$etmap};
+  if (ref($to) eq 'HASH') {
+    if (not exists($to->{bmap_persource}) or
+        (exists($to->{bmap_persource}) and $to->{bmap_persource} eq $source)) {
+      return $to; # satisfied persource restriction
+    }
+    else {
+      return 0; # violated persource restriction
+    }
+  }
+  else {
+    return $to; # simple entrytype map with no persource restriction
   }
 }
 

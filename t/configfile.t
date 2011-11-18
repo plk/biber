@@ -39,6 +39,12 @@ my %map = (
           },
           bmap_target => "CUSTOMA",
         },
+        ARTICLE => {
+          bmap_persource => "examples.bib",
+          alsoset => {
+            keywords => "keyw1, keyw2",
+          },
+        },
       },
       globalfield => {
         abstract => "BMAP_NULL",
@@ -77,6 +83,7 @@ my %map = (
       bmap_overwrite => 1,
       entrytype => {
         "journal Article" => {
+          bmap_persource => "endnote.xml",
           alsoset => { usera => "BMAP_ORIGENTRYTYPE" },
           bmap_target => "REPORT",
         },
@@ -92,7 +99,7 @@ my %map = (
       bmap_overwrite => 0,
       entrytype => {
         BOOK => { alsoset => { keywords => "somevalue" }, bmap_target => "MAPBOOK" },
-        JOUR => { bmap_target => "REPORT" },
+        JOUR => { bmap_target => "REPORT", bmap_persource => "ris1.ris" },
       },
       globalfield => { n2 => "BMAP_NULL" },
       field => {
