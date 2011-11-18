@@ -719,15 +719,24 @@ sub ireplace {
 
 =cut
 
+
 sub is_user_entrytype_map {
   my ($map, $entrytype, $source) = @_;
   return 0 unless my $etmap = firstval {lc($_) eq '*' or
-                                      lc($_) eq $entrytype} keys %{$map->{entrytype}};
+                                        lc($_) eq $entrytype} keys %{$map->{entrytype}};
   # If we are here, there is a matching entrytype clause
   my $to = $map->{entrytype}{$etmap};
+
+  # Canonicalise persource, can be a list Config::General is not clever enough
+  # to do this, annoyingly
+  if (exists($to->{bmap_persource}) and
+      ref($to->{bmap_persource}) ne 'ARRAY') {
+    $to->{bmap_persource} = [ $to->{bmap_persource} ];
+  }
+
   if (ref($to) eq 'HASH') {
     if (not exists($to->{bmap_persource}) or
-        (exists($to->{bmap_persource}) and $to->{bmap_persource} eq $source)) {
+        (exists($to->{bmap_persource}) and first {$_ eq $source} @{$to->{bmap_persource}})) {
       return $to; # satisfied persource restriction
     }
     else {
@@ -738,7 +747,6 @@ sub is_user_entrytype_map {
     return $to; # simple entrytype map with no persource restriction
   }
 }
-
 
 1;
 

@@ -133,6 +133,9 @@
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" bmap_overwrite="1">
       <bcf:map maptype="entrytype">
+        <bcf:per_source>bibtex-aliases.bib</bcf:per_source>
+        <!-- Doesn't exist, just testing multi for this option-->
+        <bcf:per_source>bibtex-aliases2.bib</bcf:per_source>
         <bcf:map_pair map_source="MISC"/>
         <bcf:also_set map_field="KEYWORDS" map_value="keyw1, keyw2"/>
       </bcf:map>

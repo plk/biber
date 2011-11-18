@@ -339,6 +339,7 @@ sub parse_ctrlfile {
                                                            qr/\Amap_pair\z/,
                                                            qr/\Aalso_set\z/,
                                                            qr/\Aper_type\z/,
+                                                           qr/\Aper_source\z/,
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
@@ -455,6 +456,9 @@ sub parse_ctrlfile {
             foreach my $map_pair (@{$map->{map_pair}}) {
               $source = $map_pair->{map_source};
               $mapsopt->{$maps->{datatype}}{entrytype}{$source}{bmap_target} = $map_pair->{map_target} if exists($map_pair->{map_target});
+            }
+            foreach my $s (@{$map->{per_source}}) {
+              push @{$mapsopt->{$maps->{datatype}}{entrytype}{$source}{bmap_persource}}, $s->{content};
             }
             foreach my $as (@{$map->{also_set}}) {
               my $val;

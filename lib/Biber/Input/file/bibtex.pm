@@ -434,9 +434,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
     # User aliases take precedence
     if (my $to = is_user_entrytype_map($user_map, lc($entry->type), $source)) {
       my $from = lc($entry->type);
-      # complex entrytype map so check to see if there is a persource restriction we need to
-      # heed
-      if (ref($to) eq 'HASH') {
+      if (ref($to) eq 'HASH') { # complex entrytype map
         # We are not necessarily changing the entrytype - might just be adding some fields
         # so there may be no bmap_target
         $bibentry->set_field('entrytype', lc($to->{bmap_target} // $entry->type));

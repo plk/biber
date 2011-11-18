@@ -40,7 +40,7 @@ my %map = (
           bmap_target => "CUSTOMA",
         },
         ARTICLE => {
-          bmap_persource => "examples.bib",
+          bmap_persource => ["examples.bib", "examples2.bib"],
           alsoset => {
             keywords => "keyw1, keyw2",
           },

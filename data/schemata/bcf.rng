@@ -215,6 +215,13 @@
                       <attribute name="maptype">
                         <value>entrytype</value>
                       </attribute>
+                      <zeroOrMore>
+                        <element name="bcf:per_source">
+                          <data type="string">
+                            <param name="minLength">1</param>
+                          </data>
+                        </element>
+                      </zeroOrMore>
                       <oneOrMore>
                         <element name="bcf:map_pair">
                           <attribute name="map_source">
