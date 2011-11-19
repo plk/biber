@@ -20,7 +20,7 @@
 
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{0.9.6}    % BIBER VERSION
+\gdef\biberversion{0.9.7}    % BIBER VERSION
 \gdef\biblatexversion{1.7}   % BIBLATEX VERSION
 
 % Set up tikz things
@@ -562,7 +562,10 @@ driver section contains one or more of the following subsections:
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <entrytype +\textcolor{red}{source-entrytype}+>
-  BMAP_TARGET +\textcolor{red}{target-entrytype}+
+  +\textcolor{blue}{BMAP\_TARGET} \textcolor{red}{target-entrytype}+
+  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_1$}+
+                 $\vdots$
+  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_n$}+
   +\textcolor{blue}{<alsoset>}+
     +\textcolor{red}{target-field1 target-value$_1$}+
        $\vdots$
@@ -573,9 +576,18 @@ driver section contains one or more of the following subsections:
 
 \noindent An \verb+entrytype+ specification maps the data source entrytype
 \textcolor{red}{\texttt{source-entrytype}} into a different
-entrytype \textcolor{red}{\texttt{target-entrytype}}. The literal string
-\verb+BMAP_TARGET+ is a constant and must be used to specify the target
-entrytype. The \textcolor{blue}{\texttt{alsoset}} section is optional and
+entrytype \textcolor{red}{\texttt{target-entrytype}}.
+\textcolor{red}{\texttt{source-entrytype}} can be the string «\verb+*+»
+which means «all entrytypes». 
+
+The literal string \verb+BMAP_TARGET+ is a constant and may be used to
+specify the target entrytype if you wish to map an entrytype into another
+entrytype. There can be one or more \textcolor{blue}{\texttt{BMAP\_SOURCE}}
+settings which mention a data \textcolor{red}{\texttt{source}} name value
+from one of the \verb+\addresource+ macro values. This restricts the
+mapping section to only entries coming from the named data sources.
+
+The \textcolor{blue}{\texttt{alsoset}} section is optional and
 specifies one or more \textcolor{red}{\texttt{target-field}}s to set in the
 entry, along with their \textcolor{red}{\texttt{target-value}}s. The
 literal token \verb+BMAP_ORIGENTRYTYPE+ can be used as the
@@ -595,6 +607,13 @@ saying whether it will be overwritten or not. An example:
 <map>
   <bibtex>
     BMAP_OVERWRITE 1
+    <entrytype *>
+      BMAP_PERSOURCE examples.bib
+      BMAP_PERSOURCE examples2.bib
+      <alsoset>
+        KEYWORDS "keyw1, keyw2"
+      </alsoset>
+    </entrytype>
     <entrytype CONVERSATION>
       BMAP_TARGET CUSTOMA
       <alsoset>
@@ -610,7 +629,12 @@ saying whether it will be overwritten or not. An example:
 </map>
 \end{lstlisting}
 
-\noindent This would turn a \verb+CONVERSATION+ entrytype in all
+\noindent This would add a \verb+KEYWORDS+ field with value «\verb+keyw1,keyw2+»
+to entries of any entrytype which are found in either the
+\verb+examples1.bib+ or \verb+examples2.bib+ files. This assumes that the
+Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
+\verb+\addresource{example2.bib}+.
+Also, this would turn a \verb+CONVERSATION+ entrytype in all
 Bib\TeX\ data sources into a \verb+CUSTOMA+ entrytype
 and would automatically set the \verb+USERA+ field in the entry to
 «conversation» and the \verb+NOTE+ field to «Auto-created this field». The
@@ -623,6 +647,9 @@ entry. Also, the example turns a \verb+RECORD+ entrytype into a \verb+MUSIC+ ent
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <globalfield>
+  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_1$}+
+                 $\vdots$
+  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_n$}+
   +\textcolor{red}{source-field1 target-field$_1$}+
                  $\vdots$
   +\textcolor{red}{source-fieldn target-field$_n$}+
@@ -633,8 +660,14 @@ entry. Also, the example turns a \verb+RECORD+ entrytype into a \verb+MUSIC+ ent
 regardless of the entrytypes in which they occur (hence «global»). You may
 use the special \textcolor{red}{\texttt{target-field}} constant \verb+BMAP_NULL+
 to map a field to null, that is, to ignore it. This essentially has the
-effect of treating the field as if it did not exist in the data source. For
-example (to add to the previous example, so that you can see a more
+effect of treating the field as if it did not exist in the data source.
+
+There can be one or more \textcolor{blue}{\texttt{BMAP\_SOURCE}}
+settings which mention a data \textcolor{red}{\texttt{source}} name value
+from one of the \verb+\addresource+ macro values. This restricts the
+mapping section to only entries coming from the named data sources.
+
+For example (to add to the previous example, so that you can see a more
 complete mapping example. The previously discussed example settings are greyed):
 
 {\color{grey}
@@ -643,6 +676,13 @@ complete mapping example. The previously discussed example settings are greyed):
 <map>
   <bibtex>
     BMAP_OVERWRITE 1
+    <entrytype *>
+      BMAP_PERSOURCE examples.bib
+      BMAP_PERSOURCE examples2.bib
+      <alsoset>
+        KEYWORDS "keyw1, keyw2"
+      </alsoset>
+    </entrytype>
     <entrytype CONVERSATION>
       BMAP_TARGET CUSTOMA
       <alsoset>
@@ -660,6 +700,7 @@ complete mapping example. The previously discussed example settings are greyed):
   </bibtex>
   +\textcolor{black}{<ris>}+
     +\textcolor{black}{<globalfield>}+
+      +\textcolor{black}{BMAP\_PERSOURCE examples.ris}+
       +\textcolor{black}{N2 BMAP\_NULL}+
     +\textcolor{black}{</globalfield>}+
   +\textcolor{black}{</ris>}+
@@ -671,13 +712,17 @@ complete mapping example. The previously discussed example settings are greyed):
 \verb+BMAP_NULL+) any \verb+ABSTRACT+ fields and that we should map all
 \verb+PARTICIPANT+ fields to the \verb+NAMEA+ field. We have also specified
 that we should ignore the \verb+N2+ field in \verb+ris+ data sources (this
-is often used for abstracts in RIS).
+is often used for abstracts in RIS), but only if found in entries coming
+from the «\verb+examples.ris+» data source.
 \bigskip
 \minisec{Extended Global field mapping}
 
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <globalfield +\textcolor{red}{source-field}+>
+  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_1$}+
+                 $\vdots$
+  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_n$}+
   +\textcolor{blue}{BMAP\_TARGET}+ +\textcolor{red}{target-field}+
   +\textcolor{blue}{BMAP\_MATCH}+ +\textcolor{red}{source-match}+
   +\textcolor{blue}{BMAP\_REPLACE}+ +\textcolor{red}{source-replace}+
@@ -702,6 +747,11 @@ match against the source field contents. You may use (and almost certainly
 will want to use) parentheses for back-references in \verb+BMAP_REPLACE+.
 Do not quote the regular expressions in any way---it's not necessary.
 
+There can be one or more \textcolor{blue}{\texttt{BMAP\_SOURCE}}
+settings which mention a data \textcolor{red}{\texttt{source}} name value
+from one of the \verb+\addresource+ macro values. This restricts the
+mapping section to only entries coming from the named data sources.
+
 The \textcolor{blue}{\texttt{alsoset}} section is
 optional and specifies one or more \textcolor{red}{\texttt{target-field}}s
 to set in the entry, along with their
@@ -716,6 +766,13 @@ field name. Continuing our example configuration:
 <map>
   <bibtex>
     BMAP_OVERWRITE 1
+    <entrytype *>
+      BMAP_PERSOURCE examples.bib
+      BMAP_PERSOURCE examples2.bib
+      <alsoset>
+        KEYWORDS "keyw1, keyw2"
+      </alsoset>
+    </entrytype>
     <entrytype CONVERSATION>
       BMAP_TARGET CUSTOMA
       <alsoset>
@@ -742,6 +799,7 @@ field name. Continuing our example configuration:
   </bibtex>
   <ris>
     <globalfield>
+      BMAP_PERSOURCE examples.ris
       N2 BMAP_NULL
     </globalfield>
   </ris>
@@ -760,12 +818,15 @@ the contents lowercased.
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <field +\textcolor{red}{source-field}+>
+  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_1$}+
+                 $\vdots$
+  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_n$}+
   BMAP_PERTYPE +\textcolor{red}{source-entrytype$_1$}+
                  $\vdots$
   BMAP_PERTYPE +\textcolor{red}{source-entrytype$_n$}+
-  +\textcolor{blue}{BMAP\_TARGET}+ +\textcolor{red}{target-field}+
-  +\textcolor{blue}{BMAP\_MATCH}+ +\textcolor{red}{source-match}+
-  +\textcolor{blue}{BMAP\_REPLACE}+ +\textcolor{red}{source-replace}+
+  +\textcolor{blue}{BMAP\_TARGET} \textcolor{red}{target-field}+
+  +\textcolor{blue}{BMAP\_MATCH} \textcolor{red}{source-match}+
+  +\textcolor{blue}{BMAP\_REPLACE} \textcolor{red}{source-replace}+
   +\textcolor{blue}{<alsoset>}+
     +\textcolor{red}{target-field1 target-value$_1$}+
                  $\vdots$
@@ -791,6 +852,11 @@ match against the source field contents. You may use (and almost certainly
 will want to use) parentheses for back-references in \verb+BMAP_REPLACE+.
 Do not quote the regular expressions in any way---it's not necessary.
 
+There can be one or more \textcolor{blue}{\texttt{BMAP\_SOURCE}}
+settings which mention a data \textcolor{red}{\texttt{source}} name value
+from one of the \verb+\addresource+ macro values. This restricts the
+mapping section to only entries coming from the named data sources.
+
 The \textcolor{blue}{\texttt{alsoset}} section is optional and
 specifies one or more \textcolor{red}{\texttt{target-field}}s to set in the
 entry, along with their \textcolor{red}{\texttt{target-value}}s. The
@@ -808,6 +874,13 @@ the example:
 <map>
   <bibtex>
     BMAP_OVERWRITE 1
+    <entrytype *>
+      BMAP_PERSOURCE examples.bib
+      BMAP_PERSOURCE examples2.bib
+      <alsoset>
+        KEYWORDS "keyw1, keyw2"
+      </alsoset>
+    </entrytype>
     <entrytype CONVERSATION>
       BMAP_TARGET CUSTOMA
       <alsoset>
@@ -832,6 +905,7 @@ the example:
       </alsoset>
     </globalfield>
     :\textcolor{black}{<field NOTE>}:
+      :\textcolor{black}{BMAP\_PERSOURCE example.bib }:
       :\textcolor{black}{BMAP\_PERTYPE ARTICLE}:
       :\textcolor{black}{BMAP\_PERTYPE BOOK}:
       :\textcolor{black}{BMAP\_TARGET BMAP\_NULL}:
@@ -842,6 +916,7 @@ the example:
   </bibtex>
   <ris>
     <globalfield>
+      BMAP_PERSOURCE examples.ris
       N2 BMAP_NULL
     </globalfield>
   </ris>
@@ -850,7 +925,8 @@ the example:
 }
 
 \noindent Here we have specified that within data
-source entrytypes \verb+ARTICLE+ and \verb+BOOK+, the field \verb+NOTE+
+source entrytypes \verb+ARTICLE+ and \verb+BOOK+ coming from the data
+source «\verb+example.bib+», the field \verb+NOTE+
 should be ignored and the \verb+ADDENDUM+ field should be set to «A
 string».
 
@@ -875,13 +951,14 @@ RDF format data sources:
 \end{lstlisting}
 
 \noindent Or here, mapping journal articles into \verb+REPORT+ entries for
-Endnote XML format data sources.
+Endnote XML format data sources within a particular data source.
 
 \lstset{showspaces=false}
 \begin{lstlisting}[escapechar=+,mathescape=true]
 <map>
   <endnotexml>
     <entrytype "journal Article">
+      BMAP_PERSOURCE enote.xml
       BMAP_TARGET REPORT
     </entrytype>
   </endnotexml>
