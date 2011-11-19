@@ -499,6 +499,9 @@ sub parse_ctrlfile {
                   $mapsopt->{$maps->{datatype}}{globalfield}{$source}{bmap_replace} = $map_pair->{map_replace} if $map_pair->{map_replace};
                 }
               }
+              foreach my $s (@{$map->{per_source}}) {
+                push @{$mapsopt->{$maps->{datatype}}{globalfield}{bmap_persource}}, $s->{content};
+              }
               foreach my $as (@{$map->{also_set}}) {
                 my $val;
                 if ($as->{bmap_origfield}) {
@@ -543,6 +546,9 @@ sub parse_ctrlfile {
                   }
                   $mapsopt->{$maps->{datatype}}{field}{$source}{alsoset}{$as->{map_field}} = $val;
                 }
+              }
+              foreach my $s (@{$map->{per_source}}) {
+                push @{$mapsopt->{$maps->{datatype}}{field}{$source}{bmap_persource}}, $s->{content};
               }
               foreach my $rt (@{$map->{per_type}}) {
                 push @{$mapsopt->{$maps->{datatype}}{field}{$source}{bmap_pertype}}, $rt->{content};

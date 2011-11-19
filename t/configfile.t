@@ -47,6 +47,7 @@ my %map = (
         },
       },
       globalfield => {
+        bmap_persource => "examples.bib",
         abstract => "BMAP_NULL",
         conductor => "NAMEA",
         gps => "USERA",
@@ -57,6 +58,7 @@ my %map = (
           bmap_target => "EPRINT",
         },
         LISTB => {
+          bmap_persource => "examples.bib",
           bmap_match  => "\\A(\\S{2})",
           bmap_replace => "REP\$1CED"
                  }
@@ -74,6 +76,7 @@ my %map = (
                  },
         userb => { bmap_pertype => "MISC",
                    bmap_target => "BMAP_NULL",
+                   bmap_persource => "examples.bib",
           alsoset => { usere => "a string",
                        userf => "BMAP_NULL"},
                  },
@@ -88,9 +91,10 @@ my %map = (
           bmap_target => "REPORT",
         },
       },
-      globalfield => { abstract => "BMAP_NULL" },
+      globalfield => { abstract => "BMAP_NULL", bmap_persource => "endnote.xml" },
       field => {
         pages => { bmap_pertype => "Journal Article",
+                   bmap_persource => "endnote.xml",
                    bmap_match  => "64",
                    bmap_replace => "66"},
                }
@@ -101,9 +105,10 @@ my %map = (
         BOOK => { alsoset => { keywords => "somevalue" }, bmap_target => "MAPBOOK" },
         JOUR => { bmap_target => "REPORT", bmap_persource => "ris1.ris" },
       },
-      globalfield => { n2 => "BMAP_NULL" },
+      globalfield => { n2 => "BMAP_NULL", bmap_persource => "ris1.ris" },
       field => {
         JO => { bmap_pertype => "JOUR",
+                bmap_persource => "ris1.ris",
                 bmap_match  => "Neurosurg\\.",
                 bmap_replace => "Neurosurgery"},
                }
@@ -112,6 +117,7 @@ my %map = (
       bmap_overwrite => 1,
       field => {
         "dc:subject" => {
+          bmap_persource => "zotero.rdf",
           bmap_pertype => ["journalArticle", "book", "bookSection"],
           bmap_target  => "BMAP_NULL",
         },

@@ -44,7 +44,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn ireplace is_user_entrytype_map };
+  filter_entry_options biber_error biber_warn ireplace is_user_entrytype_map is_user_field_map };
 
 =head1 FUNCTIONS
 
@@ -734,19 +734,68 @@ sub is_user_entrytype_map {
     $to->{bmap_persource} = [ $to->{bmap_persource} ];
   }
 
-  if (ref($to) eq 'HASH') {
-    if (not exists($to->{bmap_persource}) or
-        (exists($to->{bmap_persource}) and first {$_ eq $source} @{$to->{bmap_persource}})) {
-      return $to; # satisfied persource restriction
-    }
-    else {
-      return 0; # violated persource restriction
-    }
+  # Check persource restrictions
+  unless (not exists($to->{bmap_persource}) or
+          (exists($to->{bmap_persource}) and first {$_ eq $source} @{$to->{bmap_persource}})) {
+    return 0;                   # violated persource restriction
   }
-  else {
-    return $to; # simple entrytype map with no persource restriction
-  }
+  return $to;          # simple entrytype map with no persource restriction
 }
+
+=head2 is_user_field_map
+
+    Check in a data structure of user field mappings if a particular
+    field matches any mapping rules. Returns the target field
+    datastructure if there is a match, false otherwise.
+
+=cut
+
+sub is_user_field_map {
+  my ($map, $entrytype, $field, $source) = @_;
+  return () unless my $fmap = firstval {lc($_) eq $field} (keys %{$map->{field}},
+                                                           keys %{$map->{globalfield}});
+
+  # If we are here, there is a matching field clause
+  # Specific field maps take precedence over global
+  foreach my $to ($map->{field}{$fmap}, $map->{globalfield}{$fmap}) {
+    next unless defined($to);
+
+    # Set the place to look for restrictions. It's different for global and specific mappings
+    my $check = ref($to) eq 'HASH' ? $to : $map->{globalfield};
+
+    # Canonicalise pertype, can be a list Config::General is not clever enough
+    # to do this, annoyingly
+    if (exists($check->{bmap_pertype}) and
+        ref($check->{bmap_pertype}) ne 'ARRAY') {
+      $check->{bmap_pertype} = [ $check->{bmap_pertype} ];
+    }
+
+    # Canonicalise persource, can be a list Config::General is not clever enough
+    # to do this, annoyingly
+    if (exists($check->{bmap_persource}) and
+        ref($check->{bmap_persource}) ne 'ARRAY') {
+      $check->{bmap_persource} = [ $check->{bmap_persource} ];
+    }
+
+    # Check pertype restrictions
+    unless (not exists($check->{bmap_pertype}) or
+            (exists($check->{bmap_pertype}) and first {lc($_) eq $entrytype} @{$check->{bmap_pertype}})) {
+      next;
+    }
+
+    # Check persource restrictions
+    # Don't compare case insensitively - this might not be correct
+    unless (not exists($check->{bmap_persource}) or
+            (exists($check->{bmap_persource}) and first {$_ eq $source} @{$check->{bmap_persource}})) {
+      next;
+    }
+
+    # restrictions passed
+    return ($fmap, $to);
+  }
+  return ();                    # restriction violation
+}
+
 
 1;
 

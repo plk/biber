@@ -115,6 +115,7 @@ start =
               empty
             }*) |
             (attribute maptype { "field" },
+             element bcf:per_source { xsd:string {minLength="1"} }*,
              element bcf:per_type { xsd:string {minLength="1"} }*,
              element bcf:map_pair {
                attribute map_source {xsd:string {minLength="1"}},

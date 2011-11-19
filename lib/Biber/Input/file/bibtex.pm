@@ -247,7 +247,6 @@ sub create_entry {
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
-    my $pt_fail = 0;
 FLOOP:  foreach my $f ($entry->fieldlist) {
 
       # We have to process local options as early as possible in order
@@ -262,42 +261,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       my $to;
       my $val_match;
       my $val_replace;
-      if (not $pt_fail and
-          $user_map and
-          my $field = firstval {lc($_) eq lc($f)} (keys %{$user_map->{field}},
-                                                   keys %{$user_map->{globalfield}})) {
-
-        # Enforce matching per-type mappings before global ones
-        my $to_map;
-        if (my $map = $user_map->{field}{$field}) {
-          if (exists($map->{bmap_pertype})) {
-
-            # Canonicalise pertype, can be a list Config::General is not clever enough
-            # to do this, annoyingly
-            if (ref($map->{bmap_pertype}) ne 'ARRAY') {
-              $map->{bmap_pertype} = [ $map->{bmap_pertype} ];
-            }
-
-            # Now see if the per_type conditions match
-            if (first {lc($_) eq lc($entry->type)} @{$map->{bmap_pertype}}) {
-              $to_map = $user_map->{field}{$field}
-            }
-            elsif (my $gm = $user_map->{globalfield}{$field}) {
-              $to_map = $gm;
-            }
-            else {        # per_type conditions fail. Set a flag for a redo
-              $pt_fail = 1;
-            }
-          }
-        }
-        else {
-          $to_map = $user_map->{globalfield}{$field};
-        }
-
-        # In case per_type doesn't match and there is no global map for this field,
-        # skip to .dcf driver mappings
-        redo FLOOP if $pt_fail;
-
+      if (my ($field, $to_map) = is_user_field_map($user_map, lc($entry->type), lc($f), $source)) {
         # handler information still comes from .dcf
         $from = $dcfxml->{fields}{field}{$f};
         if (ref($to_map) eq 'HASH') { # complex field map
@@ -364,7 +328,6 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       }
       # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
       elsif ($from = $dcfxml->{fields}{field}{$f}) {
-        $pt_fail = 0; # reset this, see above
         $to = $f; # By default, field to set internally is the same as data source
 
         # Redirect any alias

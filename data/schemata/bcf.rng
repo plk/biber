@@ -271,6 +271,13 @@
                         <value>field</value>
                       </attribute>
                       <zeroOrMore>
+                        <element name="bcf:per_source">
+                          <data type="string">
+                            <param name="minLength">1</param>
+                          </data>
+                        </element>
+                      </zeroOrMore>
+                      <zeroOrMore>
                         <element name="bcf:per_type">
                           <data type="string">
                             <param name="minLength">1</param>
