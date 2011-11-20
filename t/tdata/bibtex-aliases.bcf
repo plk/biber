@@ -133,6 +133,11 @@
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" bmap_overwrite="1">
       <bcf:map maptype="entrytype">
+        <!-- Doesn't exist, just testing source restrictions -->
+        <bcf:per_source>doesnotexist.bib</bcf:per_source>
+        <bcf:map_pair map_source="*" map_target="CUSTOMB"/>
+      </bcf:map>
+      <bcf:map maptype="entrytype">
         <bcf:per_source>bibtex-aliases.bib</bcf:per_source>
         <!-- Doesn't exist, just testing multi for this option-->
         <bcf:per_source>bibtex-aliases2.bib</bcf:per_source>

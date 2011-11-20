@@ -516,6 +516,8 @@ generated yourself:
   to null, effectively removing them from the input stream.
 \item Modify the contents of a field using standard Perl regular expression
   match and replace.
+\item Restrict mappings to entries coming from particular data sources
+  which you defined in \verb+\addresource{}+ macros.
 \end{itemize}
 
 \noindent The format of the \verb+map+ option in the
@@ -578,7 +580,8 @@ driver section contains one or more of the following subsections:
 \textcolor{red}{\texttt{source-entrytype}} into a different
 entrytype \textcolor{red}{\texttt{target-entrytype}}.
 \textcolor{red}{\texttt{source-entrytype}} can be the string «\verb+*+»
-which means «all entrytypes». 
+which means «all entrytypes». Mapping for specific entrytypes override the
+generic «\verb+*+» type.
 
 The literal string \verb+BMAP_TARGET+ is a constant and may be used to
 specify the target entrytype if you wish to map an entrytype into another

@@ -90,7 +90,6 @@ sub extract_entries {
   my @rkeys = @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've used it
   $logger->trace("Entering extract_entries() in driver 'bibtex'");
-
   # If it's a remote data file, fetch it first
   if ($source =~ m/\A(?:https?|ftp):\/\//xms) {
     $logger->info("Data source '$source' is a remote BibTeX data source - fetching ...");
@@ -382,6 +381,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         }
         # Now run any defined handler
         &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
+
       }
 
       # Default if no explicit way to set the field
@@ -433,8 +433,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
       }
     }
-    # No alias
-    else {
+    else { # No alias
       $bibentry->set_field('entrytype', $entry->type);
     }
 
@@ -778,7 +777,7 @@ sub preprocess_file {
 
 sub parsename {
   my ($namestr, $fieldname, $opts) = @_;
-  $logger->debug("   Parsing namestring '$namestr'");
+  $logger->debug("Parsing namestring '$namestr'");
   my $usepre = $opts->{useprefix};
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
   $namestr =~ s/\A\s*//xms; # leading whitespace
@@ -918,7 +917,6 @@ sub parsename {
                         'suffix'    => $ss}
     );
 }
-
 
 # Routine to try to hack month into the right biblatex format
 # Especially since we support remote .bibs which we potentially have no control over

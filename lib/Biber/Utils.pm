@@ -722,8 +722,13 @@ sub ireplace {
 
 sub is_user_entrytype_map {
   my ($map, $entrytype, $source) = @_;
-  return 0 unless my $etmap = firstval {lc($_) eq '*' or
-                                        lc($_) eq $entrytype} keys %{$map->{entrytype}};
+
+  # entrytype specific mappings take precedence
+  my $etmap;
+  unless ($etmap = firstval {lc($_) eq $entrytype} keys %{$map->{entrytype}}) {
+   return 0 unless $etmap = firstval {$_ eq '*'} keys %{$map->{entrytype}};
+  }
+
   # If we are here, there is a matching entrytype clause
   my $to = $map->{entrytype}{$etmap};
 
