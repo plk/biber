@@ -9,7 +9,7 @@ use Readonly;
 use base 'Exporter';
 
 our @EXPORT = qw{
-  %CONFIG_DEFAULT_BIBER
+  $CONFIG_DEFAULT_BIBER
   %CONFIG_DEFAULT_BIBLATEX
   %CONFIG_SCOPE_BIBLATEX
   %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS
@@ -99,28 +99,32 @@ our %STRUCTURE_DATATYPES = (
 # Biber option defaults. Not really needed since they are passed by .bcf but
 # useful to know the format. Also needed for options not yet passed in .bcf by biblatex
 
-our %CONFIG_DEFAULT_BIBER = (
-  bblencoding        => 'UTF-8',
-  bibencoding        => 'UTF-8',
-  bblsafechars       => 0,
-  bblsafecharsset    => 'base',
-  collate            => 1,
-  collate_options    => { level => 4 },
-  debug              => 0,
-  decodecharsset     => 'base',
-  mincrossrefs       => 2,
-  nolog              => 0,
-  nostdmacros        => 0,
-  nosort             => { type_name => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ] },
-  quiet              => 0,
-  sortcase           => 1,
-  sortlocale         => $locale,
-  sortupper          => 1,
-  trace              => 0,
-  wraplines          => 0,
-  validate_control   => 0,
-  validate_structure => 0
-  );
+our $CONFIG_DEFAULT_BIBER = {
+  option => [
+             { name => 'bblencoding', value => 'UTF-8' },
+             { name => 'bibencoding', value => 'UTF-8' },
+             { name => 'bblsafechars', value => '0' },
+             { name => 'bblsafecharsset', value => 'base' },
+             { name => 'collate', value => 1 },
+             { name => 'collate_options',
+               value => [ { name => 'level', value => 4 } ] },
+             { name => 'debug', value => 0 },
+             { name => 'decodecharsset', value => 'base' },
+             { name => 'mincrossrefs', value => 2 },
+             { name => 'nolog', value => 0 },
+             { name => 'nostdmacros', value => 0 },
+             { name => 'nosort',
+               value => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
+                          { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
+             { name => 'quiet', value => 0 },
+             { name => 'sortcase', value => 1 },
+             { name => 'sortlocale', value => $locale },
+             { name => 'sortupper', value => 1 },
+             { name => 'trace', value => 0 },
+             { name => 'wraplines', value => 0 },
+             { name => 'validate_control', value => 0 },
+             { name => 'validate_structure', value => 0 }
+]};
 
 # default global options for biblatex
 # in practice these will be obtained from the control file,

@@ -5,7 +5,6 @@ use Biber::Constants;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Cwd qw( abs_path );
-use Config::General qw( ParseConfig );
 use Data::Compare;
 use Data::Dump;
 use Carp;
@@ -117,7 +116,7 @@ sub _init {
 sub _initopts {
   shift; # class method so don't care about class name
   my $opts = shift;
-  my %LOCALCONF = ();
+  my $userconf;
 
   # For testing, need to be able to force ignore of conf file in case user
   # already has one which interferes with test settings.
@@ -130,18 +129,28 @@ sub _initopts {
 
     # Can't use logcroak here because logging isn't initialised yet
     if (defined($opts->{configfile})) {
-      %LOCALCONF = ParseConfig(-LowerCaseNames => 1,
-                               -MergeDuplicateBlocks => 1,
-                               -AllowMultiOptions => 1,
-                               -ConfigFile => $opts->{configfile},
-                               -UTF8 => 1) or
-        croak("Failed to read biber config file '" . $opts->{configfile} . "'\n $@");
+      require XML::LibXML::Simple;
+
+      $userconf = XML::LibXML::Simple::XMLin($opts->{configfile},
+                                          'ForceContent' => 1,
+                                          'ForceArray' => [
+                                                           qr/\Aoption\z/,
+                                                           qr/\Amaps\z/,
+                                                           qr/\Amap\z/,
+                                                           qr/\Amap_pair\z/,
+                                                           qr/\Aalso_set\z/,
+                                                           qr/\Aper_type\z/,
+                                                           qr/\Aper_datasource\z/,
+                                                          ],
+                                          'NsStrip' => 1,
+                                          'KeyAttr' => []) or
+           croak("Failed to read biber config file '" . $opts->{configfile} . "'\n $@");
     }
   }
 
   # Set hard-coded biber option defaults
-  foreach (keys %CONFIG_DEFAULT_BIBER) {
-    Biber::Config->setoption($_, $CONFIG_DEFAULT_BIBER{$_});
+  foreach (@{$CONFIG_DEFAULT_BIBER->{option}}) {
+    Biber::Config->setoption($_->{name}, $_->{value});
   }
 
   # Set hard-coded biblatex option defaults
@@ -150,8 +159,8 @@ sub _initopts {
   }
 
   # Set options from config file.
-  foreach (keys %LOCALCONF) {
-    Biber::Config->setconfigfileoption($_, $LOCALCONF{$_});
+  foreach (@{$userconf->{option}}) {
+    Biber::Config->setconfigfileoption($_->{name}, $_->{value});
   }
 
   # Command-line overrides everything else

@@ -134,13 +134,13 @@
     <bcf:maps datatype="bibtex" bmap_overwrite="1">
       <bcf:map maptype="entrytype">
         <!-- Doesn't exist, just testing source restrictions -->
-        <bcf:per_source>doesnotexist.bib</bcf:per_source>
+        <bcf:per_datasource>doesnotexist.bib</bcf:per_datasource>
         <bcf:map_pair map_source="*" map_target="CUSTOMB"/>
       </bcf:map>
       <bcf:map maptype="entrytype">
-        <bcf:per_source>bibtex-aliases.bib</bcf:per_source>
+        <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
         <!-- Doesn't exist, just testing multi for this option-->
-        <bcf:per_source>bibtex-aliases2.bib</bcf:per_source>
+        <bcf:per_datasource>bibtex-aliases2.bib</bcf:per_datasource>
         <bcf:map_pair map_source="MISC"/>
         <bcf:also_set map_field="KEYWORDS" map_value="keyw1, keyw2"/>
       </bcf:map>
@@ -154,7 +154,7 @@
         <bcf:map_pair map_source="CHAT" map_target="CUSTOMB"/>
       </bcf:map>
       <bcf:map maptype="field">
-        <bcf:per_source>bibtex-aliases.bib</bcf:per_source>
+        <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
         <bcf:map_pair map_source="ABSTRACT" bmap_null="1"/>
         <bcf:map_pair map_source="CONDUCTOR" map_target="NAMEA"/>
         <bcf:map_pair map_source="GPS" map_target="USERA"/>
@@ -167,7 +167,7 @@
         <bcf:also_set map_field="USERD" map_value="Some string of things"/>
       </bcf:map>
       <bcf:map maptype="field">
-        <bcf:per_source>bibtex-aliases.bib</bcf:per_source>
+        <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
         <bcf:per_type>MISC</bcf:per_type>
         <bcf:map_pair map_source="USERB" bmap_null="1"/>
         <bcf:also_set map_field="USERE" map_value="a string"/>

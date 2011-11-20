@@ -242,25 +242,26 @@ sub strip_nosort {
   my $string = shift;
   my $fieldname = shift;
   return '' unless $string; # Sanitise missing data
-  my $nosort = Biber::Config->getoption('nosort');
+  return $string unless my $nosort = Biber::Config->getoption('nosort');
   # Strip user-defined REs from string
   my $restrings;
-  # Specific fieldnames override types
-  if (exists($nosort->{$fieldname})) {
-    $restrings = $nosort->{$fieldname};
+  foreach my $nsopt (@$nosort) {
+    # Specific fieldnames override types
+    if (lc($nsopt->{name}) eq lc($fieldname)) {
+      push @$restrings, $nsopt->{value};
+    }
   }
-  else { # types
-    foreach my $ns (keys %$nosort) {
-      next unless $ns =~ /\Atype_/xms;
-      if ($NOSORT_TYPES{$ns}{$fieldname}) {
-        $restrings = $nosort->{$ns};
+
+  unless ($restrings) {
+    foreach my $nsopt (@$nosort) {
+      next unless $nsopt->{name} =~ /\Atype_/xms;
+      if ($NOSORT_TYPES{lc($nsopt->{name})}{lc($fieldname)}) {
+        push @$restrings, $nsopt->{value};
       }
     }
   }
   # If no nosort to do, just return string
   return $string unless $restrings;
-  # Config::General can't force arrays per option and don't want to set this globally
-  $restrings = [ $restrings ] unless ref($restrings) eq 'ARRAY';
   foreach my $re (@$restrings) {
     $re = qr/$re/;
     $string =~ s/$re//gxms;
@@ -721,30 +722,44 @@ sub ireplace {
 
 
 sub is_user_entrytype_map {
-  my ($map, $entrytype, $source) = @_;
-
+  my ($user_map, $entrytype, $source) = @_;
   # entrytype specific mappings take precedence
-  my $etmap;
-  unless ($etmap = firstval {lc($_) eq $entrytype} keys %{$map->{entrytype}}) {
-   return 0 unless $etmap = firstval {$_ eq '*'} keys %{$map->{entrytype}};
+  my $to;
+MAP:  foreach my $map (@{$user_map->{map}}) {
+    next unless $map->{maptype} eq 'entrytype';
+
+    # Check persource restrictions
+    # Don't compare case insensitively - this might not be correct
+    unless (not exists($map->{per_datasource}) or
+            (exists($map->{per_datasource}) and first {$_->{content} eq $source} @{$map->{per_datasource}})) {
+      next;
+    }
+
+    foreach my $pair (@{$map->{map_pair}}) {
+      if (lc($pair->{map_source}) eq $entrytype) {
+        $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
+        if (exists($map->{also_set})) {
+          foreach my $as (@{$map->{also_set}}) {
+            $to->{also_set}{lc($as->{map_field})} = get_map_val($as, 'map_value');
+          }
+        }
+        last MAP;
+      }
+    }
+    foreach my $pair (@{$map->{map_pair}}) {
+      if ($pair->{map_source} eq '*') {
+        $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
+        if (exists($map->{also_set})) {
+          foreach my $as (@{$map->{also_set}}) {
+            $to->{also_set}{lc($as->{map_field})} = get_map_val($as, 'map_value');
+          }
+        }
+        last MAP;
+      }
+    }
   }
 
-  # If we are here, there is a matching entrytype clause
-  my $to = $map->{entrytype}{$etmap};
-
-  # Canonicalise persource, can be a list Config::General is not clever enough
-  # to do this, annoyingly
-  if (exists($to->{bmap_persource}) and
-      ref($to->{bmap_persource}) ne 'ARRAY') {
-    $to->{bmap_persource} = [ $to->{bmap_persource} ];
-  }
-
-  # Check persource restrictions
-  unless (not exists($to->{bmap_persource}) or
-          (exists($to->{bmap_persource}) and first {$_ eq $source} @{$to->{bmap_persource}})) {
-    return 0;                   # violated persource restriction
-  }
-  return $to;          # simple entrytype map with no persource restriction
+  return $to; # simple entrytype map with no per_datasource restriction
 }
 
 =head2 is_user_field_map
@@ -756,51 +771,70 @@ sub is_user_entrytype_map {
 =cut
 
 sub is_user_field_map {
-  my ($map, $entrytype, $field, $source) = @_;
-  return () unless my $fmap = firstval {lc($_) eq $field} (keys %{$map->{field}},
-                                                           keys %{$map->{globalfield}});
+  my ($user_map, $entrytype, $field, $source) = @_;
 
-  # If we are here, there is a matching field clause
-  # Specific field maps take precedence over global
-  foreach my $to ($map->{field}{$fmap}, $map->{globalfield}{$fmap}) {
-    next unless defined($to);
-
-    # Set the place to look for restrictions. It's different for global and specific mappings
-    my $check = ref($to) eq 'HASH' ? $to : $map->{globalfield};
-
-    # Canonicalise pertype, can be a list Config::General is not clever enough
-    # to do this, annoyingly
-    if (exists($check->{bmap_pertype}) and
-        ref($check->{bmap_pertype}) ne 'ARRAY') {
-      $check->{bmap_pertype} = [ $check->{bmap_pertype} ];
-    }
-
-    # Canonicalise persource, can be a list Config::General is not clever enough
-    # to do this, annoyingly
-    if (exists($check->{bmap_persource}) and
-        ref($check->{bmap_persource}) ne 'ARRAY') {
-      $check->{bmap_persource} = [ $check->{bmap_persource} ];
-    }
+  my $to;
+MAP:  foreach my $map (@{$user_map->{map}}) {
+    next unless $map->{maptype} eq 'field';
 
     # Check pertype restrictions
-    unless (not exists($check->{bmap_pertype}) or
-            (exists($check->{bmap_pertype}) and first {lc($_) eq $entrytype} @{$check->{bmap_pertype}})) {
+    unless (not exists($map->{per_type}) or
+            (exists($map->{per_type}) and first {lc($_->{content}) eq $entrytype} @{$map->{per_type}})) {
       next;
     }
 
-    # Check persource restrictions
+    # Check per_datasource restrictions
     # Don't compare case insensitively - this might not be correct
-    unless (not exists($check->{bmap_persource}) or
-            (exists($check->{bmap_persource}) and first {$_ eq $source} @{$check->{bmap_persource}})) {
+    unless (not exists($map->{per_datasource}) or
+            (exists($map->{per_datasource}) and first {$_->{content} eq $source} @{$map->{per_datasource}})) {
       next;
     }
 
-    # restrictions passed
-    return ($fmap, $to);
+    foreach my $pair (@{$map->{map_pair}}) {
+      if (lc($pair->{map_source}) eq $field) {
+        if (my $v = get_map_val($pair, 'map_target')) {
+          $to->{map_target} = $v
+        }
+        $to->{map_match}  = $pair->{map_match} if exists($pair->{map_match});
+        $to->{map_replace}  = $pair->{map_replace} if exists($pair->{map_replace});
+        if (exists($map->{also_set})) {
+          foreach my $as (@{$map->{also_set}}) {
+            $to->{also_set}{lc($as->{map_field})} = get_map_val($as, 'map_value');
+          }
+        }
+        last MAP;
+      }
+    }
   }
-  return ();                    # restriction violation
+  return $to;
 }
 
+=head2 get_map_val
+
+  Cosmetic to get data into an easy to consume format for drivers.
+  Look for special target markers or use the default if none found.
+
+=cut
+
+sub get_map_val {
+  my ($m, $def) = @_;
+  my $v;
+  given ($m) {
+    when (exists($m->{bmap_null}) and $m->{bmap_null} == 1) {
+      $v = 'bmap_null';
+    }
+    when (exists($m->{bmap_origfield}) and $m->{bmap_origfield} == 1) {
+      $v = 'bmap_origfield';
+    }
+    when (exists($m->{bmap_origentrytype}) and $m->{bmap_origentrytype} == 1) {
+      $v = 'bmap_origentrytype';
+    }
+    default {
+      $v = $m->{$def};
+    }
+  }
+  return $v;
+}
 
 1;
 

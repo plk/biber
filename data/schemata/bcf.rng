@@ -216,7 +216,7 @@
                         <value>entrytype</value>
                       </attribute>
                       <zeroOrMore>
-                        <element name="bcf:per_source">
+                        <element name="bcf:per_datasource">
                           <data type="string">
                             <param name="minLength">1</param>
                           </data>
@@ -271,7 +271,7 @@
                         <value>field</value>
                       </attribute>
                       <zeroOrMore>
-                        <element name="bcf:per_source">
+                        <element name="bcf:per_datasource">
                           <data type="string">
                             <param name="minLength">1</param>
                           </data>
@@ -322,9 +322,6 @@
                             <attribute name="bmap_origfield">
                               <value>1</value>
                             </attribute>
-                            <attribute name="bmap_origentrytype">
-                              <value>1</value>
-                            </attribute>
                           </choice>
                           <empty/>
                         </element>
@@ -346,9 +343,6 @@
                               <value>1</value>
                             </attribute>
                             <attribute name="bmap_origfield">
-                              <value>1</value>
-                            </attribute>
-                            <attribute name="bmap_origentrytype">
                               <value>1</value>
                             </attribute>
                           </choice>

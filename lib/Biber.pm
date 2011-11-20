@@ -443,122 +443,8 @@ sub parse_ctrlfile {
 
   # DATASOURCE MAPPING
   # Always optional
-  # We are limited by the internal format of the user config file version of this
-  # so we convert it into that format here since the drivers expect it.
   if (exists($bcfxml->{sourcemap})) {
-    my $mapsopt;
-    foreach my $maps (@{$bcfxml->{sourcemap}{maps}}) {
-      $mapsopt->{$maps->{datatype}}{bmap_overwrite} = $maps->{bmap_overwrite};
-      foreach my $map (@{$maps->{map}}) {
-        given ($map->{maptype}) {
-          when ('entrytype') {
-            my $source;
-            foreach my $map_pair (@{$map->{map_pair}}) {
-              $source = $map_pair->{map_source};
-              $mapsopt->{$maps->{datatype}}{entrytype}{$source}{bmap_target} = $map_pair->{map_target} if exists($map_pair->{map_target});
-            }
-            foreach my $s (@{$map->{per_source}}) {
-              push @{$mapsopt->{$maps->{datatype}}{entrytype}{$source}{bmap_persource}}, $s->{content};
-            }
-            foreach my $as (@{$map->{also_set}}) {
-              my $val;
-              if ($as->{bmap_origentrytype}) {
-                $val = 'bmap_origentrytype';
-              }
-              elsif ($as->{bmap_null}) {
-                $val = 'bmap_null';
-              }
-              else {
-                $val = $as->{map_value};
-              }
-              $mapsopt->{$maps->{datatype}}{entrytype}{$source}{alsoset}{$as->{map_field}} = $val;
-            }
-          }
-          when ('field') {
-            # "global" fields (unrestricted to particular entrytypes)
-            if (not defined($map->{per_type})) {
-              my $source;
-              my $target;
-              foreach my $map_pair (@{$map->{map_pair}}) {
-                $source = $map_pair->{map_source};
-                if ($map_pair->{bmap_null}) {
-                  $target = 'bmap_null';
-                }
-                elsif (defined($map_pair->{map_target})) {
-                  $target = $map_pair->{map_target};
-                }
-                # "simple" global fields are those with no also_set or match
-                if (not defined($map->{also_set}) and
-                    not defined($map_pair->{map_match})) {
-                  $mapsopt->{$maps->{datatype}}{globalfield}{$source} = $target;
-                }
-                # "complex" global fields (with also_set or match/replace)
-                else {
-                  $mapsopt->{$maps->{datatype}}{globalfield}{$source}{bmap_target} = $target if $target;
-                  $mapsopt->{$maps->{datatype}}{globalfield}{$source}{bmap_match} = $map_pair->{map_match} if $map_pair->{map_match};
-                  $mapsopt->{$maps->{datatype}}{globalfield}{$source}{bmap_replace} = $map_pair->{map_replace} if $map_pair->{map_replace};
-                }
-              }
-              foreach my $s (@{$map->{per_source}}) {
-                push @{$mapsopt->{$maps->{datatype}}{globalfield}{bmap_persource}}, $s->{content};
-              }
-              foreach my $as (@{$map->{also_set}}) {
-                my $val;
-                if ($as->{bmap_origfield}) {
-                  $val = 'bmap_origfield';
-                }
-                elsif ($as->{bmap_null}) {
-                  $val = 'bmap_null';
-                }
-                else {
-                  $val = $as->{map_value};
-                }
-                $mapsopt->{$maps->{datatype}}{globalfield}{$source}{alsoset}{$as->{map_field}} = $val;
-              }
-            }
-            # type-specific field mappings
-            else {
-              my $source;
-              my $target;
-              foreach my $map_pair (@{$map->{map_pair}}) {
-                $source = $map_pair->{map_source};
-                if ($map_pair->{bmap_null}) {
-                  $target = 'bmap_null';
-                }
-                elsif (defined($map_pair->{map_target})) {
-                  $target = $map_pair->{map_target};
-                }
-
-                $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_target} = $target if $target;
-                $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_match} = $map_pair->{map_match} if $map_pair->{map_match};
-                $mapsopt->{$maps->{datatype}}{field}{$source}{bmap_replace} = $map_pair->{map_replace} if $map_pair->{map_replace};
-
-                foreach my $as (@{$map->{also_set}}) {
-                  my $val;
-                  if ($as->{bmap_origfield}) {
-                    $val = 'bmap_origfield';
-                  }
-                  elsif ($as->{bmap_null}) {
-                    $val = 'bmap_null';
-                  }
-                  else {
-                    $val = $as->{map_value};
-                  }
-                  $mapsopt->{$maps->{datatype}}{field}{$source}{alsoset}{$as->{map_field}} = $val;
-                }
-              }
-              foreach my $s (@{$map->{per_source}}) {
-                push @{$mapsopt->{$maps->{datatype}}{field}{$source}{bmap_persource}}, $s->{content};
-              }
-              foreach my $rt (@{$map->{per_type}}) {
-                push @{$mapsopt->{$maps->{datatype}}{field}{$source}{bmap_pertype}}, $rt->{content};
-              }
-            }
-          }
-        }
-      }
-    }
-    Biber::Config->setoption('map', $mapsopt);
+    Biber::Config->setoption('sourcemap', $bcfxml->{sourcemap}{maps});
   }
 
   # LABELALPHATEMPLATE
@@ -2533,10 +2419,13 @@ sub sort_list {
     my $opts = Biber::Config->getoption('collate_options');
     my $collopts;
     unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
-      $collopts = eval "{ $opts }" or $logger->logcarp("Incorrect collate_options: $@");
+      $collopts = eval "{ $opts }" or biber_error('Bad command-line collation options');
     }
     else { # options from config file as hash ref
-      $collopts = $opts;
+      # Massage options in to the correct format for Unicode::Collate
+      foreach my $o (@$opts) {
+        $collopts->{$o->{name}} = $o->{value};
+      }
     }
 
     # UCA level 2 if case insensitive sorting is requested

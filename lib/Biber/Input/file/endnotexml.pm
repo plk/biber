@@ -194,9 +194,9 @@ sub create_entry {
 
   # Get a reference to the map option, if it exists
   my $user_map;
-  if (defined(Biber::Config->getoption('map'))) {
-    if (defined(Biber::Config->getoption('map')->{endnotexml})) {
-      $user_map = Biber::Config->getoption('map')->{endnotexml};
+  if (defined(Biber::Config->getoption('sourcemap'))) {
+    if (my $m = first {$_->{datatype} eq 'endnotexml'} @{Biber::Config->getoption('sourcemap')} ) {
+      $user_map = $m;
     }
   }
 
@@ -217,68 +217,55 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
     my $val_match;
     my $val_replace;
 
-    if (my ($field, $to_map) = is_user_field_map($user_map, lc($itype), lc($f), $source)) {
-
+    if (my $to_map = is_user_field_map($user_map, lc($itype), lc($f), $source)) {
+      my $field = lc($f);
       # handler information still comes from .dcf
-      $from = $dcfxml->{fields}{field}{$f};
-
-      if (ref($to_map) eq 'HASH') { # complex field map
-        $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target} || $field)};
-         # Just in case we are targeting an alias, resolve it and repoint target
-        if (my $alias = $from->{aliasof}) {
-          $from = $dcfxml->{fields}{field}{$alias};
-          if ($to_map->{bmap_target}) {
-            $to_map->{bmap_target} = $alias;
-          }
-          else {
-            $field = $alias
-          }
+      $from = $dcfxml->{fields}{field}{lc($to_map->{bmap_target} || $field)};
+      # Just in case we are targeting an alias, resolve it and repoint target
+      if (my $alias = $from->{aliasof}) {
+        $from = $dcfxml->{fields}{field}{$alias};
+        if ($to_map->{map_target}) {
+          $to_map->{map_target} = $alias;
         }
-        $to = lc($to_map->{bmap_target} || $field);
-        $val_match = $to_map->{bmap_match};
-        $val_replace = $to_map->{bmap_replace};
-
-        # Deal with alsoset one->many maps
-        while (my ($from_as, $to_as) = each %{$to_map->{alsoset}}) {
-          if ($bibentry->field_exists(lc($from_as))) {
-            if ($user_map->{bmap_overwrite}) {
-              biber_warn("Overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
-            }
-            else {
-              biber_warn("Not overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
-              next;
-            }
-          }
-          # Deal with special tokens
-          given (lc($to_as)) {
-            when ('bmap_origfield') {
-              $bibentry->set_datafield(lc($from_as), $f);
-            }
-            when ('bmap_null') {
-              $bibentry->del_datafield(lc($from_as));
-              # 'future' delete in case it's not set yet
-              $bibentry->block_datafield(lc($from_as));
-            }
-            default {
-              $bibentry->set_datafield(lc($from_as), $to_as);
-            }
-          }
-        }
-
-        # map fields to targets
-        if (defined ($to_map->{bmap_target}) and
-            lc($to_map->{bmap_target}) eq 'bmap_null') { # fields to ignore
-          next FLOOP;
+        else {
+          $field = $alias
         }
       }
-      else {                    # simple field map
-        $to = lc($to_map);
-        if ($to eq 'bmap_null') { # fields to ignore
-          next FLOOP;
+      $to = lc($to_map->{map_target} || $field);
+      $val_match = $to_map->{map_match};
+      $val_replace = $to_map->{map_replace};
+
+      # Deal with alsoset one->many maps
+      while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) {
+        if ($bibentry->field_exists(lc($from_as))) {
+          if ($user_map->{bmap_overwrite}) {
+            biber_warn("Overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
+          }
+          else {
+            biber_warn("Not overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
+            next;
+          }
         }
-        else {                  # normal simple field map
-          $from = $dcfxml->{fields}{field}{$to};
+        # Deal with special tokens
+        given (lc($to_as)) {
+          when ('bmap_origfield') {
+            $bibentry->set_datafield(lc($from_as), $f);
+          }
+          when ('bmap_null') {
+            $bibentry->del_datafield(lc($from_as));
+            # 'future' delete in case it's not set yet
+            $bibentry->block_datafield(lc($from_as));
+          }
+          default {
+            $bibentry->set_datafield(lc($from_as), $to_as);
+          }
         }
+      }
+
+      # map fields to targets
+      if (defined ($to_map->{map_target}) and
+          lc($to_map->{map_target}) eq 'bmap_null') { # fields to ignore
+        next FLOOP;
       }
 
       # Now run any defined handler
@@ -330,28 +317,23 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
   # User aliases take precedence
   if (my $to = is_user_entrytype_map($user_map, lc($itype), $source)) {
     my $from = lc($itype);
-    if (ref($to) eq 'HASH') { # complex entrytype map
-      # We are not necessarily changing the entrytype - might just be adding some fields
-      # so there may be no bmap_target
-      $bibentry->set_field('entrytype', lc($to->{bmap_target} // $itype));
-      while (my ($from_as, $to_as) = each %{$to->{alsoset}}) { # any extra fields to set?
-        if ($bibentry->field_exists(lc($from_as))) {
-          if ($user_map->{bmap_overwrite}) {
-            biber_warn("Overwriting existing field '$from_as' during mapping of entrytype '$itype' in entry '$key'", $bibentry);
-          }
-          else {
-            biber_warn("Not overwriting existing field '$from_as' during mapping of entrytype '$itype' in entry '$key'", $bibentry);
-            next;
-          }
+    # We are not necessarily changing the entrytype - might just be adding some fields
+    # so there may be no bmap_target
+    $bibentry->set_field('entrytype', lc($to->{map_target} // $itype));
+    while (my ($from_as, $to_as) = each %{$to->{also_set}}) { # any extra fields to set?
+      if ($bibentry->field_exists(lc($from_as))) {
+        if ($user_map->{bmap_overwrite}) {
+          biber_warn("Overwriting existing field '$from_as' during mapping of entrytype '$itype' in entry '$key'", $bibentry);
         }
-        # Deal with special "BMAP_ORIGENTRYTYPE" token
-        my $to_val = lc($to_as) eq 'bmap_origentrytype' ?
-          $from : $to_as;
-        $bibentry->set_datafield(lc($from_as), $to_val);
+        else {
+          biber_warn("Not overwriting existing field '$from_as' during mapping of entrytype '$itype' in entry '$key'", $bibentry);
+          next;
+        }
       }
-    }
-    else {
-      $bibentry->set_field('entrytype', lc($to));
+      # Deal with special "BMAP_ORIGENTRYTYPE" token
+      my $to_val = lc($to_as) eq 'bmap_origentrytype' ?
+        $from : $to_as;
+      $bibentry->set_datafield(lc($from_as), $to_val);
     }
   }
   # Driver aliases
