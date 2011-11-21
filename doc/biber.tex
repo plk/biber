@@ -75,9 +75,19 @@ Please see the \verb+Changes+ file which accompanies Biber for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
 
+\minisec{0.9.7}
+\textcolor{red}{The user config file has a completely new format}.The
+  reason for this is that the older \verb+Config::General+ format
+  could not be extended to deal with more sophisticated features like
+  per-datasource restrictions. An XML format is much better and in
+  fact easier to understand. The old format of the \verb+map+ option
+  (now called \verb+sourcemap+) was very strange and confusing because
+  of limitations in the old config file format. This is much clearer
+  now. Please convert your config files to the new format.
+
 \minisec{0.9.6}
 \textcolor{red}{Matching of citation keys and datasource entry
-  keys is now \emph{case-sensitive}} . This is to enforce consistency
+  keys is now \emph{case-sensitive}}. This is to enforce consistency
 across the entire Bib\LaTeX\ and Biber processing chain.
 All of the usual referencing mechanisms in \LaTeX\ are case-sensitive and
 so is the matching in Bib\LaTeX\ of citations to entries in the
@@ -414,57 +424,59 @@ looked for in the following places, in decreasing order of preference:\\[2ex]
 \hspace*{4em}the output of «\verb+kpsewhich biber.conf+» (if available on the
 system)\\[2ex]
 
-\noindent The config file format is a very flexible one which allows users to specify
-options in most common formats, even mixed in the same file. Below is
+\noindent The config file is XML. Here Below is
 an example config file which displays the Biber defaults:
 
-\begin{verbatim}
-bblencoding         UTF-8
-bibencoding         UTF-8
-collate             1
-<collate_options>
-    level           3
-</collate_options>
-debug               0
-fastsort            0
-mincrossrefs        2
-nolog               0
-nostdmacros         0
-<nosort>
-  # ignore prefices like 'al-' when sorting name fields
-  type_names      \A\p{L}{2}\p{Pd}
-  # ignore diacritics when sorting author
-  type_names      [\x{2bf}\x{2018}]
-</nosort>
-onlylog             0
-quiet               0
-sortcase            true
-sortlocale          en_US.utf8
-sortupper           true
-trace               0
-validate_control    0
-validate_structure  0
-wraplines           0
-\end{verbatim}
+\begin{lstlisting}[language=xml]
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <bblencoding>UTF-8</bblencoding>
+  <bibencoding>UTF-8</bibencoding>
+  <collate>1</collate>
+  <collate_options>
+    <option name="level" value="4"/>
+  </collate_options>
+  <debug>0</debug>
+  <fastsort>0</fastsort>
+  <mincrossrefs>0</mincrossrefs>
+  <nolog>0</nolog>
+  <nostdmacros>0</nostdmacros>
+  <nosort>
+    <!-- strip prefices like 'al-' when sorting name fields -->
+    <option name="type_names" value="\A\p{L}{2}\p{Pd}"/>
+    <!-- strip diacritics when sorting name fields -->
+    <option name="type_names" value="[\x{2bf}\x{2018}]"/>
+  </nosort>
+  <onlylog>0</onlylog>
+  <quiet>0</quiet>
+  <sortcase>true</sortcase>
+  <sortlocale>en_US.utf8</sortlocale>
+  <sortupper>true</sortupper>
+  <trace>0</trace>
+  <validate_control>0</validate_control>
+  <validate_structure>0</validate_structure>
+  <wraplines>0</wraplines>
+</config>
+\end{lstlisting}
 
-\noindent You can see that options with multiple key/value pairs of
-their own like\linebreak[4]\verb+--collate_options|-c+ can be specified in
-Apache config format. Please see the documentation
-for the \verb+Config::General+ Perl
-module\footnote{\url{http://search.cpan.org/search?query=Config::General&mode=all}}
-if you need details. In practice, the most commonly used options will be set via
+\noindent In practice, the most commonly used options will be set via
 Bib\LaTeX\ macros in your document and automatically passed to Biber
 via the \verb+.bcf+ file. Certain options apply only to Biber and can
-only be set in the config file, particularly the more complex options.
+only be set in the config file, particularly the more complex
+options. Most options are simple tags. Exceptions are the
+\verb+nosort+ and \verb+collate_options+ options which are slightly
+more complex and can have sub-options as shown. A much more complex
+option is the \verb+sourcemap+ option which is not set by default and
+which is described in section \ref{map}.
 
-\subsubsection{The \texttt{map} option}\label{map}
+\subsubsection{The \texttt{sourcemap} option}\label{map}
 
 The supplied data source drivers implement a default mapping from data
 source entrytypes and fields into the Bib\LaTeX\ data
 model\footnote{The Bib\LaTeX\ data model is currently static and
   defined in the Bib\LaTeX\ manual. In the future (Bib\LaTeX\
   2.x), the data model will be dynamically defined by the user.}. If you
-want to override or augment the driver mappings you can use the \verb+map+
+want to override or augment the driver mappings you can use the \verb+sourcemap+
 option which makes it possible to, for example, have a data source with
 non-standard entrytypes or fields and to have these automatically mapped
 into other entrytypes/fields without modifying your data source.
@@ -499,11 +511,11 @@ Biber's processing steps.
   \label{fig:biber-mdf}
 \end{figure}
 
-The \verb+map+ option can only be set in the config file
+The \verb+sourcemap+ option can only be set in the config file
 and not on the command line as it has a complex structure. This
 option allows you to perform various data source mapping
 tasks which can be useful for pre-processing data which you do not
-generated yourself:
+generate yourself:
 
 \begin{itemize}
 \item Map data source entrytypes to different entrytypes,
@@ -520,44 +532,63 @@ generated yourself:
   which you defined in \verb+\addresource{}+ macros.
 \end{itemize}
 
-\noindent The format of the \verb+map+ option in the
+\noindent The format of the \verb+sourcemap+ option section in the
 config file is described below, followed by examples which will make
 everything clear. Items in \textcolor{red}{red} are not
 literal, they are descriptive meta-values which are explained in the
 accompanying text. Items in \textcolor{blue}{blue} are optional within
-their parent section. The entire \verb+map+ option is not case sensitive
-\emph{apart from the angle-bracketed section names which must be
-  lower-cased as shown}. The examples below use uppercase for variable names
-and setting in places, for clarity. The general structure is:
+their parent section. The general structure is:
 
 \lstset{showspaces=false}
-\begin{lstlisting}[escapechar=+,mathescape=true]
-<map>
-  <+\textcolor{red}{driver$_1$}+>
-    +\textcolor{blue}{BMAP\_OVERWRITE 1|0}+
-       ...
-  </+\textcolor{red}{driver$_1$}+>
-    +\textcolor{blue}{BMAP\_OVERWRITE 1|0}+
-       $\vdots$
-  <+\textcolor{red}{driver$_n$}+>
-    +\textcolor{blue}{BMAP\_OVERWRITE 1|0}+
-       ...
-  </+\textcolor{red}{driver$_n$}+>
-</map>
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<sourcemap>
+  <maps datatype="+\textcolor{red}{driver$_1$}+" +\textcolor{blue}{bmap\_overwrite="1|0"}+>
+    <map$_1$> ... </map$_1$>
+               $\vdots$
+    <map$_n$> ... </map$_n$>
+  </maps>
+         $\vdots$
+  <maps datatype="+\textcolor{red}{driver$_n$}+" +\textcolor{blue}{bmap\_overwrite="1|0"}+>
+    <map$_1$> ... </map$_1$>
+               $\vdots$
+    <map$_n$> ... </map$_n$>
+  </maps>
+</sourcemap>
 \end{lstlisting}
 
 \noindent Here, \textcolor{red}{\texttt{driver$_1$}}\ldots
 \textcolor{red}{\texttt{driver$_n$}} are the names of valid Biber data
-source drivers (see section \ref{dcf}). Reserved tokens with special meanings for
-this option have the prefix «\verb+BMAP_+» and are described below. Each
-driver section contains one or more of the following subsections:
+source drivers (see section \ref{dcf}). There are two types of
+mappings you can apply to your datasources:
 
 \begin{itemize}
 \item Entrytype mapping
-\item Simple global field mapping
-\item Extended global field mapping
-\item Entrytype specific field mapping
+\item Field mapping
 \end{itemize}
+
+\noindent An entrytype mapping allows you to do one or more of the
+following:
+
+\begin{itemize}
+\item Map an entrytype to another entrytype
+\item Add extra fields to all entries
+\item Add extra fields to entries of a given entrytype
+\item Restrict the changes to entries coming from particular datasources
+\end{itemize}
+
+\noindent An field mapping allows you to do one or more of the
+following:
+
+\begin{itemize}
+\item Map a field to another field
+\item Change the contents of a field
+\item Add extra fields to entries with particular fields
+\item Restrict the changes to entries coming from particular
+  datasources
+\item Restrict the changes to entries of a particular entrytype
+\end{itemize}
+
+\noindent These facilities are explained in more detail below, with examples.
 
 \minisec{Entrytype mapping}
 
@@ -1744,7 +1775,7 @@ of Biber version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 0.9.6
+INFO - This is Biber 0.9.7
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
