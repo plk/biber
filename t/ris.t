@@ -86,8 +86,8 @@ my $l2 = q|  \entry{test2}{mapbook}{}
     \field{sortinit}{S}
     \field{title}{Sometitle}
     \field{pages}{1\bibrangedash 20}
-    \keyw{keyword}
-    \warn{\item Not overwriting existing field 'KEYWORDS' during mapping of entrytype 'BOOK' in entry 'test2'}
+    \keyw{somevalue}
+    \warn{\item Overwriting existing field 'KEYWORDS' during mapping of entrytype 'BOOK' in entry 'test2'}
   \endentry
 
 |;

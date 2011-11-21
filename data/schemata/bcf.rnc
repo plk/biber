@@ -97,6 +97,7 @@ start =
         attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
         attribute bmap_overwrite { "0" | "1" },
         element bcf:map {
+          attribute bmap_overwrite { "0" | "1" }?,
           (
             (attribute maptype { "entrytype" },
              element bcf:per_datasource { xsd:string {minLength="1"} }*,

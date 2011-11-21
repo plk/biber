@@ -40,7 +40,9 @@ my $sourcemap = [
         per_datasource => [{ content => "doesnotexist.bib" }],
       },
       {
-        also_set       => [{ map_field => "KEYWORDS", map_value => "keyw1, keyw2" }],
+        bmap_overwrite => 0,
+        also_set       => [{ map_field => "KEYWORDS", map_value => "keyw1, keyw2" },
+                           { map_field => "TITLE", map_value => "Blah" }],
         map_pair       => [{ map_source => "ARTICLE" }],
         maptype        => "entrytype",
         per_datasource => [
@@ -160,6 +162,7 @@ my $sourcemap = [
         per_datasource => [{ content => "ris1.ris" }],
       },
       {
+        bmap_overwrite => 1,
         also_set => [{ map_field => "KEYWORDS", map_value => "somevalue" }],
         map_pair => [{ map_source => "BOOK", map_target => "MAPBOOK" }],
         maptype  => "entrytype",

@@ -162,6 +162,7 @@ my $murray1 = q|  \entry{murray}{article}{}
     \field{year}{1998}
     \field{pages}{17\bibrangedash 30}
     \keyw{keyw1, keyw2}
+    \warn{\item Not overwriting existing field 'TITLE' during mapping of entrytype 'article' in entry 'murray'}
   \endentry
 
 |;
@@ -216,6 +217,7 @@ my $murray2 = q|  \entry{murray}{article}{}
     \field{year}{1998}
     \field{pages}{17\bibrangedash 30}
     \keyw{keyw1, keyw2}
+    \warn{\item Not overwriting existing field 'TITLE' during mapping of entrytype 'article' in entry 'murray'}
   \endentry
 
 |;

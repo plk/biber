@@ -250,7 +250,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
       # Deal with alsoset one->many maps
       while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) {
         if ($bibentry->field_exists(lc($from_as))) {
-          if ($user_map->{bmap_overwrite}) {
+          if ($to_map->{bmap_overwrite} // $user_map->{bmap_overwrite}) {
             biber_warn("Overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
           }
           else {
@@ -324,14 +324,14 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
   # This is here so that any field alsosets take precedence over fields in the data source
 
   # User aliases take precedence
-  if (my $to = is_user_entrytype_map($user_map, lc($itype), $source)) {
+  if (my $to_map = is_user_entrytype_map($user_map, lc($itype), $source)) {
     my $from = lc($itype);
     # We are not necessarily changing the entrytype - might just be adding some fields
     # so there may be no bmap_target
-    $bibentry->set_field('entrytype', lc($to->{map_target} // $itype));
-    while (my ($from_as, $to_as) = each %{$to->{also_set}}) { # any extra fields to set?
+    $bibentry->set_field('entrytype', lc($to_map->{map_target} // $itype));
+    while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) { # any extra fields to set?
       if ($bibentry->field_exists(lc($from_as))) {
-        if ($user_map->{bmap_overwrite}) {
+        if ($to_map->{bmap_overwrite} // $user_map->{bmap_overwrite}) {
           biber_warn("Overwriting existing field '$from_as' during mapping of entrytype '$itype' in entry '$key'", $bibentry);
         }
         else {

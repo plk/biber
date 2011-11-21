@@ -720,7 +720,6 @@ sub ireplace {
 
 =cut
 
-
 sub is_user_entrytype_map {
   my ($user_map, $entrytype, $source) = @_;
   # entrytype specific mappings take precedence
@@ -737,6 +736,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
     foreach my $pair (@{$map->{map_pair}}) {
       if (lc($pair->{map_source}) eq $entrytype) {
         $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
+        $to->{bmap_overwrite} = $map->{bmap_overwrite} if exists($map->{bmap_overwrite});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {
             $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');
@@ -748,6 +748,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
     foreach my $pair (@{$map->{map_pair}}) {
       if ($pair->{map_source} eq '*') {
         $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
+        $to->{bmap_overwrite} = $map->{bmap_overwrite} if exists($map->{bmap_overwrite});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {
             $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');
@@ -795,6 +796,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
         }
         $to->{map_match}  = $pair->{map_match} if exists($pair->{map_match});
         $to->{map_replace}  = $pair->{map_replace} if exists($pair->{map_replace});
+        $to->{bmap_overwrite} = $map->{bmap_overwrite} if exists($map->{bmap_overwrite});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {
             $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');

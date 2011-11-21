@@ -210,6 +210,14 @@
               </attribute>
               <oneOrMore>
                 <element name="bcf:map">
+                  <optional>
+                    <attribute name="bmap_overwrite">
+                      <choice>
+                        <value>0</value>
+                        <value>1</value>
+                      </choice>
+                    </attribute>
+                  </optional>
                   <choice>
                     <group>
                       <attribute name="maptype">
