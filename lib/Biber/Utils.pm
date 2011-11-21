@@ -736,7 +736,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
     foreach my $pair (@{$map->{map_pair}}) {
       if (lc($pair->{map_source}) eq $entrytype) {
         $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
-        $to->{bmap_overwrite} = $map->{bmap_overwrite} if exists($map->{bmap_overwrite});
+        $to->{map_overwrite} = $map->{map_overwrite} if exists($map->{map_overwrite});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {
             $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');
@@ -748,7 +748,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
     foreach my $pair (@{$map->{map_pair}}) {
       if ($pair->{map_source} eq '*') {
         $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
-        $to->{bmap_overwrite} = $map->{bmap_overwrite} if exists($map->{bmap_overwrite});
+        $to->{map_overwrite} = $map->{map_overwrite} if exists($map->{map_overwrite});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {
             $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');
@@ -796,7 +796,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
         }
         $to->{map_match}  = $pair->{map_match} if exists($pair->{map_match});
         $to->{map_replace}  = $pair->{map_replace} if exists($pair->{map_replace});
-        $to->{bmap_overwrite} = $map->{bmap_overwrite} if exists($map->{bmap_overwrite});
+        $to->{map_overwrite} = $map->{map_overwrite} if exists($map->{map_overwrite});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {
             $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');
@@ -820,14 +820,14 @@ sub get_map_val {
   my ($m, $def) = @_;
   my $v;
   given ($m) {
-    when (exists($m->{bmap_null}) and $m->{bmap_null} == 1) {
-      $v = 'bmap_null';
+    when (exists($m->{map_null}) and $m->{map_null} == 1) {
+      $v = 'map_null';
     }
-    when (exists($m->{bmap_origfield}) and $m->{bmap_origfield} == 1) {
-      $v = 'bmap_origfield';
+    when (exists($m->{map_origfield}) and $m->{map_origfield} == 1) {
+      $v = 'map_origfield';
     }
-    when (exists($m->{bmap_origentrytype}) and $m->{bmap_origentrytype} == 1) {
-      $v = 'bmap_origentrytype';
+    when (exists($m->{map_origentrytype}) and $m->{map_origentrytype} == 1) {
+      $v = 'map_origentrytype';
     }
     default {
       $v = $m->{$def};

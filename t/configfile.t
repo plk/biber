@@ -31,7 +31,7 @@ my $nosort = [ { name => 'author', value => q/\A\p{L}{2}\p{Pd}/ },
 
 my $sourcemap = [
   {
-    bmap_overwrite => 1,
+    map_overwrite => 1,
     datatype => "bibtex",
     map => [
       {
@@ -40,10 +40,11 @@ my $sourcemap = [
         per_datasource => [{ content => "doesnotexist.bib" }],
       },
       {
-        bmap_overwrite => 0,
+        map_overwrite => 0,
         also_set       => [{ map_field => "KEYWORDS", map_value => "keyw1, keyw2" },
                            { map_field => "TITLE", map_value => "Blah" }],
-        map_pair       => [{ map_source => "ARTICLE" }],
+        map_pair       => [{ map_source => "ARTICLE" },
+                           { map_source => "UNPUBLISHED" }],
         maptype        => "entrytype",
         per_datasource => [
                             { content => "examples.bib" },
@@ -52,7 +53,7 @@ my $sourcemap = [
       },
       {
         also_set => [
-                      { bmap_origentrytype => 1, map_field => "VERBA" },
+                      { map_origentrytype => 1, map_field => "VERBA" },
                       { map_field => "VERBB", map_value => "somevalue" },
                       { map_field => "VERBC", map_value => "somevalue" },
                     ],
@@ -66,16 +67,16 @@ my $sourcemap = [
       {
         also_set       => [
                             { map_field => "USERE", map_value => "a string" },
-                            { bmap_null => 1, map_field => "USERF" },
+                            { map_null => 1, map_field => "USERF" },
                           ],
-        map_pair       => [{ bmap_null => 1, map_source => "USERB" }],
+        map_pair       => [{ map_null => 1, map_source => "USERB" }],
         maptype        => "field",
         per_datasource => [{ content => "examples.bib" }],
         per_type       => [{ content => "MISC" }],
       },
       {
         map_pair => [
-          { bmap_null => 1, map_source => "ABSTRACT" },
+          { map_null => 1, map_source => "ABSTRACT" },
           { map_source => "CONDUCTOR", map_target => "NAMEA" },
           { map_source => "GPS", map_target => "USERA" },
           { map_source => "PARTICIPANT", map_target => "NAMEA" },
@@ -86,7 +87,7 @@ my $sourcemap = [
       },
       {
         also_set => [
-                      { bmap_origfield => 1, map_field => "EPRINTTYPE" },
+                      { map_origfield => 1, map_field => "EPRINTTYPE" },
                       { map_field => "USERD", map_value => "Some string of things" },
                     ],
         map_pair => [{ map_source => "PUBMEDID", map_target => "EPRINT" }],
@@ -104,7 +105,7 @@ my $sourcemap = [
         per_datasource => [{ content => "examples.bib" }],
       },
       {
-        map_pair => [{ bmap_null => 1, map_source => "LISTA" }],
+        map_pair => [{ map_null => 1, map_source => "LISTA" }],
         maptype  => "field",
         per_type => [{ content => "REPORT" }],
       },
@@ -121,18 +122,18 @@ my $sourcemap = [
         per_type => [{ content => "UNPUBLISHED" }],
       },
       {
-        map_pair => [{ bmap_null => 1, map_source => "TITLE" }],
+        map_pair => [{ map_null => 1, map_source => "TITLE" }],
         maptype  => "field",
         per_type => [{ content => "ONLINE" }],
       },
     ],
   },
   {
-    bmap_overwrite => 1,
+    map_overwrite => 1,
     datatype => "endnotexml",
     map => [
       {
-        also_set       => [{ bmap_origentrytype => 1, map_field => "USERA" }],
+        also_set       => [{ map_origentrytype => 1, map_field => "USERA" }],
         map_pair       => [{ map_source => "journal Article", map_target => "REPORT" }],
         maptype        => "entrytype",
         per_datasource => [{ content => "endnote.xml" }],
@@ -146,14 +147,14 @@ my $sourcemap = [
         per_type       => [{ content => "Journal Article" }],
       },
       {
-        map_pair => [{ bmap_null => 1, map_source => "ABSTRACT" }],
+        map_pair => [{ map_null => 1, map_source => "ABSTRACT" }],
         maptype => "field",
         per_datasource => [{ content => "endnote.xml" }],
       },
     ],
   },
   {
-    bmap_overwrite => 0,
+    map_overwrite => 0,
     datatype => "ris",
     map => [
       {
@@ -162,13 +163,13 @@ my $sourcemap = [
         per_datasource => [{ content => "ris1.ris" }],
       },
       {
-        bmap_overwrite => 1,
+        map_overwrite => 1,
         also_set => [{ map_field => "KEYWORDS", map_value => "somevalue" }],
         map_pair => [{ map_source => "BOOK", map_target => "MAPBOOK" }],
         maptype  => "entrytype",
       },
       {
-        map_pair => [{ bmap_null => 1, map_source => "N2" }],
+        map_pair => [{ map_null => 1, map_source => "N2" }],
         maptype => "field",
         per_datasource => [{ content => "ris1.ris" }],
       },
@@ -187,7 +188,7 @@ my $sourcemap = [
     ],
   },
   {
-    bmap_overwrite => 1,
+    map_overwrite => 1,
     datatype => "zoterordfxml",
     map => [
       {
@@ -198,7 +199,7 @@ my $sourcemap = [
         per_type => [{ content => "journalArticle" }],
       },
       {
-        map_pair       => [{ bmap_null => 1, map_source => "dc:subject" }],
+        map_pair       => [{ map_null => 1, map_source => "dc:subject" }],
         maptype        => "field",
         per_datasource => [{ content => "zotero.rdf" }],
         per_type       => [

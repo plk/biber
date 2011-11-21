@@ -281,6 +281,8 @@ my $anon1 = q|  \entry{anon1}{unpublished}{}
     \field{year}{1835}
     \field{pages}{111\bibrangedash 118}
     \keyw{arc}
+    \warn{\item Not overwriting existing field 'TITLE' during mapping of entrytype 'unpublished' in entry 'anon1'}
+    \warn{\item Not overwriting existing field 'KEYWORDS' during mapping of entrytype 'unpublished' in entry 'anon1'}
   \endentry
 
 |;
@@ -306,6 +308,8 @@ my $anon2 = q|  \entry{anon2}{unpublished}{}
     \field{year}{1839}
     \field{pages}{1176\bibrangedash 1276}
     \keyw{arc}
+    \warn{\item Not overwriting existing field 'TITLE' during mapping of entrytype 'unpublished' in entry 'anon2'}
+    \warn{\item Not overwriting existing field 'KEYWORDS' during mapping of entrytype 'unpublished' in entry 'anon2'}
   \endentry
 
 |;

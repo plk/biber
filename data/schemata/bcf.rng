@@ -202,7 +202,7 @@
                   <value>endnotexml</value>
                 </choice>
               </attribute>
-              <attribute name="bmap_overwrite">
+              <attribute name="map_overwrite">
                 <choice>
                   <value>0</value>
                   <value>1</value>
@@ -211,7 +211,7 @@
               <oneOrMore>
                 <element name="bcf:map">
                   <optional>
-                    <attribute name="bmap_overwrite">
+                    <attribute name="map_overwrite">
                       <choice>
                         <value>0</value>
                         <value>1</value>
@@ -260,13 +260,10 @@
                                 <param name="minLength">1</param>
                               </data>
                             </attribute>
-                            <attribute name="bmap_null">
+                            <attribute name="map_null">
                               <value>1</value>
                             </attribute>
-                            <attribute name="bmap_origfield">
-                              <value>1</value>
-                            </attribute>
-                            <attribute name="bmap_origentrytype">
+                            <attribute name="map_origentrytype">
                               <value>1</value>
                             </attribute>
                           </choice>
@@ -324,10 +321,10 @@
                                 </data>
                               </attribute>
                             </group>
-                            <attribute name="bmap_null">
+                            <attribute name="map_null">
                               <value>1</value>
                             </attribute>
-                            <attribute name="bmap_origfield">
+                            <attribute name="map_origfield">
                               <value>1</value>
                             </attribute>
                           </choice>
@@ -347,10 +344,10 @@
                                 <param name="minLength">1</param>
                               </data>
                             </attribute>
-                            <attribute name="bmap_null">
+                            <attribute name="map_null">
                               <value>1</value>
                             </attribute>
-                            <attribute name="bmap_origfield">
+                            <attribute name="map_origfield">
                               <value>1</value>
                             </attribute>
                           </choice>

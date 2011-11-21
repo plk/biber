@@ -18,6 +18,8 @@
 \setsansfont[Ligatures=TeX]{TexGyreHeros}
 \setmonofont[Ligatures=NoCommon]{TeXGyreCursor}
 
+\renewcommand{\labelitemii}{$\circ$}
+
 \MakeAutoQuote{«}{»}
 
 \gdef\biberversion{0.9.7}    % BIBER VERSION
@@ -542,24 +544,32 @@ their parent section. The general structure is:
 \lstset{showspaces=false}
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <sourcemap>
-  <maps datatype="+\textcolor{red}{driver$_1$}+" +\textcolor{blue}{bmap\_overwrite="1|0"}+>
-    <map$_1$> ... </map$_1$>
+  <maps datatype="+\textcolor{red}{driver$_1$}+" map_overwrite="1|0">
+    <map$_1$ maptype="entrytype|field" +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_1$>
                $\vdots$
-    <map$_n$> ... </map$_n$>
+    <map$_n$ maptype="entrytype|field" +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_n$>
   </maps>
          $\vdots$
-  <maps datatype="+\textcolor{red}{driver$_n$}+" +\textcolor{blue}{bmap\_overwrite="1|0"}+>
-    <map$_1$> ... </map$_1$>
+  <maps datatype="+\textcolor{red}{driver$_n$}+" map_overwrite="1|0">
+    <map$_1$ maptype="entrytype|field" +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_1$>
                $\vdots$
-    <map$_n$> ... </map$_n$>
+    <map$_n$ maptype="entrytype|field" +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_n$>
   </maps>
 </sourcemap>
 \end{lstlisting}
 
 \noindent Here, \textcolor{red}{\texttt{driver$_1$}}\ldots
 \textcolor{red}{\texttt{driver$_n$}} are the names of valid Biber data
-source drivers (see section \ref{dcf}). There are two types of
-mappings you can apply to your datasources:
+source drivers (see section \ref{dcf}). One thing to note here is the
+\verb+map_overwrite+ attribute. This must be present and have a value of
+\verb+0+ or \verb+1+. It determines whether, for this driver mapping
+section, whether you may overwrite existing fields when adding new fields
+or mapping them. This attribute can be overridden on a per-map basis, see
+below. A warning will be issued either way saying whether an existing field
+will or will not be overwritten. Only one mapping---the first mapping to
+match a given entry---will be used (since the mappings modify the entries).
+
+There are two types of mappings you can apply to your datasources:
 
 \begin{itemize}
 \item Entrytype mapping
@@ -576,7 +586,7 @@ following:
 \item Restrict the changes to entries coming from particular datasources
 \end{itemize}
 
-\noindent An field mapping allows you to do one or more of the
+\noindent A field mapping allows you to do one or more of the
 following:
 
 \begin{itemize}
@@ -593,253 +603,217 @@ following:
 \minisec{Entrytype mapping}
 
 \lstset{showspaces=false}
-\begin{lstlisting}[escapechar=+,mathescape=true]
-<entrytype +\textcolor{red}{source-entrytype}+>
-  +\textcolor{blue}{BMAP\_TARGET} \textcolor{red}{target-entrytype}+
-  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_1$}+
-                 $\vdots$
-  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_n$}+
-  +\textcolor{blue}{<alsoset>}+
-    +\textcolor{red}{target-field1 target-value$_1$}+
-       $\vdots$
-    +\textcolor{red}{target-fieldn target-value$_n$}+
-  +\textcolor{blue}{</alsoset>}+
-</entrytype>
-\end{lstlisting}
-
-\noindent An \verb+entrytype+ specification maps the data source entrytype
-\textcolor{red}{\texttt{source-entrytype}} into a different
-entrytype \textcolor{red}{\texttt{target-entrytype}}.
-\textcolor{red}{\texttt{source-entrytype}} can be the string «\verb+*+»
-which means «all entrytypes». Mapping for specific entrytypes override the
-generic «\verb+*+» type.
-
-The literal string \verb+BMAP_TARGET+ is a constant and may be used to
-specify the target entrytype if you wish to map an entrytype into another
-entrytype. There can be one or more \textcolor{blue}{\texttt{BMAP\_SOURCE}}
-settings which mention a data \textcolor{red}{\texttt{source}} name value
-from one of the \verb+\addresource+ macro values. This restricts the
-mapping section to only entries coming from the named data sources.
-
-The \textcolor{blue}{\texttt{alsoset}} section is optional and
-specifies one or more \textcolor{red}{\texttt{target-field}}s to set in the
-entry, along with their \textcolor{red}{\texttt{target-value}}s. The
-literal token \verb+BMAP_ORIGENTRYTYPE+ can be used as the
-\textcolor{red}{\texttt{target-value}} and it resolves to the data source
-entrytype name. The literal token \verb+BMAP_NULL+ can be used as the
-\textcolor{red}{\texttt{target-value}} and this serves to delete the
-\textcolor{red}{\texttt{target-field}}. If the option
-\textcolor{blue}{\texttt{BMAP\_OVERWRITE}} is true (set to «1»), then any
-existing fields which the \textcolor{blue}{\texttt{alsoset}} section
-mentions will be overwritten. If this option is missing or false (set to
-«0»), then the field will not be set and the existing field value will
-remain. In both cases, warnings will be issued about the conflicting field,
-saying whether it will be overwritten or not. An example:
-
-\lstset{showspaces=false}
-\begin{lstlisting}[escapechar=+,mathescape=true]
-<map>
-  <bibtex>
-    BMAP_OVERWRITE 1
-    <entrytype *>
-      BMAP_PERSOURCE examples.bib
-      BMAP_PERSOURCE examples2.bib
-      <alsoset>
-        KEYWORDS "keyw1, keyw2"
-      </alsoset>
-    </entrytype>
-    <entrytype CONVERSATION>
-      BMAP_TARGET CUSTOMA
-      <alsoset>
-        USERA  BMAP_ORIGENTRYTYPE
-        USERB  BMAP_NULL
-        NOTE "Auto-created this field"
-      </alsoset>
-    </entrytype>
-    <entrytype RECORD>
-      BMAP_TARGET MUSIC
-    </entrytype>
-  </bibtex>
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<map maptype="entrytype" +\textcolor{blue}{map\_overwrite="0|1"}+>
+  +\textcolor{blue}{<per\_datasource>\textcolor{red}{datasource}</per\_datasource>}+
+  <map_pair map_source="+\textcolor{red}{source-entrytype}+"
+              +\textcolor{blue}{map\_target="\textcolor{red}{target-entrytype}"}+/>
+  <also_set map_field="+\textcolor{red}{set-field}+"
+              +\textcolor{blue}{map\_value="\textcolor{red}{set-value}"}+
+              +\textcolor{blue}{map\_null="1"}+
+              +\textcolor{blue}{map\_origentrytype="1"}+/>
 </map>
 \end{lstlisting}
 
-\noindent This would add a \verb+KEYWORDS+ field with value «\verb+keyw1,keyw2+»
+\noindent An \verb+entrytype+ element performs a mapping of one or more
+mapping «pairs» of entrytypes. Each pair consists of a \verb+map_pair+
+element with a \verb+map_source+ attribute with value
+\linebreak\textcolor{red}{\texttt{source-entrytype}} and an optional
+\verb+map_target+ attribute with value
+\linebreak\textcolor{red}{\texttt{target-entrytype}}. The target is
+optional as you might want to simply modify entries of a certain entrytype
+without changing the entrytype. The
+\textcolor{red}{\texttt{source-entrytype}} is mandatory and can be the
+string «\verb+*+» which means «all entrytypes». Mappings for specific
+entrytypes override the generic «\verb+*+» type. The
+rules for an entrytype mapping are:\\[1ex]
+
+\begin{itemize}
+\item Change the \textcolor{red}{\texttt{source-entrytype}} to
+  \textcolor{red}{\texttt{target-entrytype}}, if defined.
+\item If there are any \textcolor{red}{\texttt{datasource}}s named in
+  \textcolor{blue}{\texttt{per\_datasource}} elements, this mapping only applies to entries
+  coming from the named \textcolor{red}{\texttt{datasource}}s. There can be
+  multiple \textcolor{blue}{\texttt{per\_datasource}} elements each specifying one of the
+  datasource names given in a Bib\LaTeX\ \verb+\addbibresource+ macro.
+\item There can be one or more \verb+also_set+ elements which each specify
+  a behaviour for an entry field. The \verb+map_field+ attribute is
+  mandatory and specified the field \textcolor{red}{\texttt{set-field}} in
+  the entry to map. One and only one of these other attributes are then
+  mandatory:
+  \begin{itemize}
+    \item \verb+map_value+ --- The
+      \textcolor{red}{\texttt{set-field}} is set to
+      \textcolor{red}{\texttt{set-value}}
+    \item \verb+map_null+ --- The field is mapped to
+      null, that is, it is deleted from the input stream completely. This
+      is useful for ignoring field in datasources which are badly formatted
+      or which you don't even want Bib\LaTeX\ to see at all.
+      \item \verb+map_origentrytype+ --- The
+        \textcolor{red}{\texttt{set-field}} is set to the value of the
+        \linebreak\textcolor{red}{\texttt{source-entrytype}} name.
+  \end{itemize}
+\end{itemize}
+
+\noindent Here are some examples:
+
+\lstset{showspaces=false}
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<map maptype="entrytype">
+  <per_datasource>example1.bib</per_datasource>
+  <per_datasource>example2.bib</per_datasource>
+  <map_pair map_source="*"/>
+  <also_set map_field="KEYWORDS" map_value="keyw1, keyw2"/>
+</map>
+\end{lstlisting}
+
+\noindent This would add a \verb+KEYWORDS+ field with value «\verb+keyw1, keyw2+»
 to entries of any entrytype which are found in either the
 \verb+examples1.bib+ or \verb+examples2.bib+ files. This assumes that the
 Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
 \verb+\addresource{example2.bib}+.
-Also, this would turn a \verb+CONVERSATION+ entrytype in all
-Bib\TeX\ data sources into a \verb+CUSTOMA+ entrytype
-and would automatically set the \verb+USERA+ field in the entry to
-«conversation» and the \verb+NOTE+ field to «Auto-created this field». The
-\verb+USERB+ field would be deleted. The
-\verb+USERA+, \verb+USERB+ and \verb+NOTE+ fields will be overwritten if present in the
-entry. Also, the example turns a \verb+RECORD+ entrytype into a \verb+MUSIC+ entrytype.
-\bigskip
-\minisec{Simple global field mapping}
 
-\lstset{showspaces=false}
-\begin{lstlisting}[escapechar=+,mathescape=true]
-<globalfield>
-  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_1$}+
-                 $\vdots$
-  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_n$}+
-  +\textcolor{red}{source-field1 target-field$_1$}+
-                 $\vdots$
-  +\textcolor{red}{source-fieldn target-field$_n$}+
-</globalfield>
-\end{lstlisting}
-
-\noindent This maps data source fields to different fields,
-regardless of the entrytypes in which they occur (hence «global»). You may
-use the special \textcolor{red}{\texttt{target-field}} constant \verb+BMAP_NULL+
-to map a field to null, that is, to ignore it. This essentially has the
-effect of treating the field as if it did not exist in the data source.
-
-There can be one or more \textcolor{blue}{\texttt{BMAP\_SOURCE}}
-settings which mention a data \textcolor{red}{\texttt{source}} name value
-from one of the \verb+\addresource+ macro values. This restricts the
-mapping section to only entries coming from the named data sources.
-
-For example (to add to the previous example, so that you can see a more
-complete mapping example. The previously discussed example settings are greyed):
-
-{\color{grey}
-\lstset{showspaces=false}
-\begin{lstlisting}[escapechar=+,mathescape=true]
-<map>
-  <bibtex>
-    BMAP_OVERWRITE 1
-    <entrytype *>
-      BMAP_PERSOURCE examples.bib
-      BMAP_PERSOURCE examples2.bib
-      <alsoset>
-        KEYWORDS "keyw1, keyw2"
-      </alsoset>
-    </entrytype>
-    <entrytype CONVERSATION>
-      BMAP_TARGET CUSTOMA
-      <alsoset>
-        USERA  BMAP_ORIGENTRYTYPE
-        NOTE "Auto-created this field"
-      </alsoset>
-    </entrytype>
-    <entrytype RECORD>
-      BMAP_TARGET MUSIC
-    </entrytype>
-    +\textcolor{black}{<globalfield>}+
-      +\textcolor{black}{ABSTRACT BMAP\_NULL}+
-      +\textcolor{black}{PARTICIPANT NAMEA}+
-    +\textcolor{black}{</globalfield>}+
-  </bibtex>
-  +\textcolor{black}{<ris>}+
-    +\textcolor{black}{<globalfield>}+
-      +\textcolor{black}{BMAP\_PERSOURCE examples.ris}+
-      +\textcolor{black}{N2 BMAP\_NULL}+
-    +\textcolor{black}{</globalfield>}+
-  +\textcolor{black}{</ris>}+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<map maptype="entrytype" map_overwrite="0">
+  <map_pair map_source="CHAT" map_target="CUSTOMA"/>
+  <also_set map_field="TYPE" map_origentrytype="1"/>
 </map>
 \end{lstlisting}
-}
 
-\noindent Here, we have specified that we should ignore (map to
-\verb+BMAP_NULL+) any \verb+ABSTRACT+ fields and that we should map all
-\verb+PARTICIPANT+ fields to the \verb+NAMEA+ field. We have also specified
-that we should ignore the \verb+N2+ field in \verb+ris+ data sources (this
-is often used for abstracts in RIS), but only if found in entries coming
-from the «\verb+examples.ris+» data source.
-\bigskip
-\minisec{Extended Global field mapping}
+\noindent Any \verb+CHAT+ entrytypes would become \verb+CUSTOMA+ entrytypes and 
+would automatically have a \verb+TYPE+ field set to 
+«chat» unless the \verb+TYPE+ field already existed in the entry.
 
-\lstset{showspaces=false}
-\begin{lstlisting}[escapechar=+,mathescape=true]
-<globalfield +\textcolor{red}{source-field}+>
-  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_1$}+
-                 $\vdots$
-  +\textcolor{blue}{BMAP\_PERSOURCE} \textcolor{red}{source$_n$}+
-  +\textcolor{blue}{BMAP\_TARGET}+ +\textcolor{red}{target-field}+
-  +\textcolor{blue}{BMAP\_MATCH}+ +\textcolor{red}{source-match}+
-  +\textcolor{blue}{BMAP\_REPLACE}+ +\textcolor{red}{source-replace}+
-  +\textcolor{blue}{<alsoset>}+
-    +\textcolor{red}{target-field1 target-value$_1$}+
-               $\vdots$
-    +\textcolor{red}{target-fieldn target-value$_n$}+
-  +\textcolor{blue}{</alsoset>}+
-</globalfield>
-\end{lstlisting}
-
-\noindent Unlike the simple global mapping, this form maps only one
-\textcolor{red}{\texttt{source-field}}. You may specify the
-\textcolor{red}{\texttt{target-field}} using the constant
-\verb+BMAP_TARGET+. You may specify \textcolor{red}{\texttt{source-match}}
-and \textcolor{red}{\texttt{source-replace}} using the constants
-\verb+BMAP_MATCH+ and \verb+BMAP_REPLACE+ respectively. While
-\verb+BMAP_TARGET+ and \verb+BMAP_MATCH/BMAP_REPLACE+ are both optional, at
-least one of them must be present, obviously, or you aren't doing anything
-to the field. \verb+BMAP_MATCH+ specifies a Perl regular expression to
-match against the source field contents. You may use (and almost certainly
-will want to use) parentheses for back-references in \verb+BMAP_REPLACE+.
-Do not quote the regular expressions in any way---it's not necessary.
-
-There can be one or more \textcolor{blue}{\texttt{BMAP\_SOURCE}}
-settings which mention a data \textcolor{red}{\texttt{source}} name value
-from one of the \verb+\addresource+ macro values. This restricts the
-mapping section to only entries coming from the named data sources.
-
-The \textcolor{blue}{\texttt{alsoset}} section is
-optional and specifies one or more \textcolor{red}{\texttt{target-field}}s
-to set in the entry, along with their
-\textcolor{red}{\texttt{target-value}}s. The literal token
-\verb+BMAP_ORIGFIELD+ can be used as the
-\textcolor{red}{\texttt{target-value}} and it resolves to the data source
-field name. Continuing our example configuration:
-
-{\color{grey}
-\lstset{showspaces=false}
-\begin{lstlisting}[escapechar=:,mathescape=true]
-<map>
-  <bibtex>
-    BMAP_OVERWRITE 1
-    <entrytype *>
-      BMAP_PERSOURCE examples.bib
-      BMAP_PERSOURCE examples2.bib
-      <alsoset>
-        KEYWORDS "keyw1, keyw2"
-      </alsoset>
-    </entrytype>
-    <entrytype CONVERSATION>
-      BMAP_TARGET CUSTOMA
-      <alsoset>
-        USERA  BMAP_ORIGENTRYTYPE
-        NOTE "Auto-created this field"
-      </alsoset>
-    </entrytype>
-    <entrytype RECORD>
-      BMAP_TARGET MUSIC
-    </entrytype>
-    <globalfield>
-      ABSTRACT BMAP_NULL
-      PARTICIPANT NAMEA
-    </globalfield>
-    :\textcolor{black}{<globalfield PUBMEDID>}:
-       :\textcolor{black}{BMAP\_TARGET EPRINT}:
-       :\textcolor{black}{BMAP\_MATCH \textbackslash A\textbackslash d$\ast$(.+)}:
-       :\textcolor{black}{BMAP\_REPLACE \textbackslash L\$1}:
-      :\textcolor{black}{<alsoset>}:
-        :\textcolor{black}{EPRINTTYPE BMAP\_ORIGFIELD}:
-        :\textcolor{black}{NOTE "Auto-created this field"}:
-      :\textcolor{black}{</alsoset>}:
-    :\textcolor{black}{</globalfield>}:
-  </bibtex>
-  <ris>
-    <globalfield>
-      BMAP_PERSOURCE examples.ris
-      N2 BMAP_NULL
-    </globalfield>
-  </ris>
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<map maptype="entrytype">
+  <map_pair map_source="ARTICLE"/>
+  <map_pair map_source="BOOK"/>
+  <also_set map_field="ABSTRACT" map_null="1"/>
+  <also_set map_field="NOTE" map_value="Auto-created this field"/>
 </map>
 \end{lstlisting}
-}
+
+\noindent Any \verb+ARTICLE+ or \verb+BOOK+ entrytypes would have their \verb+ABSTRACT+
+fields removed and a \verb+NOTE+ field added with value «Auto-created this field».
+\bigskip
+\minisec{Field mapping}
+
+\lstset{showspaces=false}
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<map maptype="field" +\textcolor{blue}{map\_overwrite="0|1"}+>
+  +\textcolor{blue}{<per\_datasource>\textcolor{red}{datasource}</per\_datasource>}+
+  +\textcolor{blue}{<per\_type>\textcolor{red}{entrytype}</per\_type>}+
+  <map_pair map_source="+\textcolor{red}{source-field}+"
+              +\textcolor{blue}{map\_target="\textcolor{red}{target-field}"}+/>
+              +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
+              +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
+              +\textcolor{blue}{map\_null="1"}+
+              +\textcolor{blue}{map\_origfield="1"}+/>
+  <also_set map_field="+\textcolor{red}{set-field}+"
+              +\textcolor{blue}{map\_value="\textcolor{red}{set-value}"}+
+              +\textcolor{blue}{map\_null="1"}+
+              +\textcolor{blue}{map\_origfield="1"}+/>
+</map>
+\end{lstlisting}
+
+\noindent A \verb+field+ element performs a mapping of one or more
+mapping «pairs» of fields. Each pair consists of a \verb+map_pair+ element with a
+\verb+map_source+ attribute with value \textcolor{red}{\texttt{source-field}} and an optional
+\verb+map_target+ attribute with
+value \textcolor{red}{\texttt{target-field}}. The target is optional as
+you might want to simply modify certain fields without mapping to other fields.
+The \textcolor{red}{\texttt{source-field}} is
+mandatory. The rules for a field mapping are:\\[1ex]
+
+\begin{itemize}
+\item Change the \textcolor{red}{\texttt{source-field}} to
+  \textcolor{red}{\texttt{target-field}}, if defined.
+\item Remove the \textcolor{red}{\texttt{source-field}} if
+  \textcolor{blue}{\texttt{map\_null}} is set.
+\item Perform a Perl Regular Expression match and replace on the value of
+  \textcolor{red}{\texttt{source-field}} if
+  \textcolor{blue}{\texttt{map\_match}} and
+  \textcolor{blue}{\texttt{map\_replace}} are defined. You may use (and almost certainly
+  will want to use) parentheses for back-references in \textcolor{blue}{\texttt{map\_replace}}.
+  Do not quote the regular expressions in any way---it's not necessary.
+\item If there are any \textcolor{red}{\texttt{datasource}}s named in
+  \textcolor{blue}{\texttt{per\_datasource}} elements, this mapping only applies to entries
+  coming from the named \textcolor{red}{\texttt{datasource}}s. There can be
+  multiple \textcolor{blue}{\texttt{per\_datasource}} elements each specifying one of the
+  datasource names given in a Bib\LaTeX\ \verb+\addbibresource+ macro.
+\item If there are any \textcolor{red}{\texttt{entrytypes}}s named in
+  \textcolor{blue}{\texttt{per\_type}} elements, this mapping only applies to entries
+  of the named \textcolor{red}{\texttt{entrytypes}}s.
+\item There can be one or more \verb+also_set+ elements which each specify
+  a behaviour for an entry field. The \verb+map_field+ attribute is
+  mandatory and specified the field \textcolor{red}{\texttt{set-field}} in
+  the entry to map. One and only one of these other attributes are then
+  mandatory:
+  \begin{itemize}
+    \item \verb+map_value+ --- The
+      \textcolor{red}{\texttt{set-field}} is set to
+      \textcolor{red}{\texttt{set-value}}
+    \item \verb+map_null+ --- The field is mapped to
+      null, that is, it is deleted from the input stream completely. This
+      is useful for ignoring field in datasources which are badly formatted
+      or which you don't even want Bib\LaTeX\ to see at all.
+      \item \verb+map_origfield+ --- The
+        \textcolor{red}{\texttt{set-field}} is set to the value of the
+        \linebreak\textcolor{red}{\texttt{source-field}} name.
+  \end{itemize}
+\end{itemize}
+
+\noindent Here are some examples:
+
+\lstset{showspaces=false}
+\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
+<map maptype="field">
+  <map_pair map_source="ABSTRACT" map_null="1"/>
+  <map_pair map_source="CONDUCTOR" map_target="NAMEA"/>
+  <map_pair map_source="GPS" map_target="USERA"/>
+</map>
+\end{lstlisting}
+
+\noindent This removes any \verb+ABSTRACT+ fields from any entry, changes
+\verb+CONDUCTOR+ fields to \verb+NAMEA+ fields and changed \verb+GPS+
+fields to \verb+USERA+ fields
+
+\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
+<map maptype="field">
+  <per_datasource>examples.bib</per_datasource>
+  <per_type>MISC</per_type>
+  <per_type>UNPUBLISHED</per_type>
+  <map_pair map_source="ADDENDUM" map_null="1"/>
+  <map_pair map_source="NOTE" map_null="1"/>
+</map>
+\end{lstlisting}
+
+\noindent Here we remove any \verb+ADDENDUM+ or \verb+NOTE+ fields in
+\verb+MISC+ or \verb+UNPUBLISHED+ entries coming from the
+\verb+examples.bib+ datasource.
+
+\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
+<map maptype="field">
+  <map_pair map_source="PUBMEDID" map_target="EPRINT"/>
+  <also_set map_field="EPRINTTYPE" map_origfield="1"/>
+  <also_set map_field="USERD" map_value="Some string of things"/>
+</map>
+\end{lstlisting}
+
+\noindent This maps \verb+PUBMEDID+ fields to \verb+EPRINT+ fields, sets
+the \verb+EPRINTTYPE+ field to «pubmedid» and also sets the \verb+USERD+
+field to the string «Some string of things».
+
+\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
+<map maptype="field">
+  <per_datasource>examples.bib</per_datasource>
+  <map_pair map_source="LISTB"
+            map_match=":\textbackslash A\textbackslash d$\ast$(.+):"
+            map_replace=":\textbackslash L\$1:"/>
+\end{lstlisting}
+
+HERE
+
 
 \noindent Here, in all entries, the \verb+PUBMEDID+ field becomes the
 \verb+EPRINT+ field and the \verb+EPRINTTYPE+ field is set to «pubmedid».

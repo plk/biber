@@ -95,9 +95,9 @@ start =
     element bcf:sourcemap {
       element bcf:maps {
         attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
-        attribute bmap_overwrite { "0" | "1" },
+        attribute map_overwrite { "0" | "1" },
         element bcf:map {
-          attribute bmap_overwrite { "0" | "1" }?,
+          attribute map_overwrite { "0" | "1" }?,
           (
             (attribute maptype { "entrytype" },
              element bcf:per_datasource { xsd:string {minLength="1"} }*,
@@ -109,9 +109,8 @@ start =
             element bcf:also_set {
               attribute map_field {xsd:string {minLength="1"}},
               ( attribute map_value { xsd:string {minLength="1"} } |
-                attribute bmap_null { "1"} |
-                attribute bmap_origfield { "1"} |
-                attribute bmap_origentrytype { "1"}
+                attribute map_null { "1"} |
+                attribute map_origentrytype { "1"}
               ),
               empty
             }*) |
@@ -124,16 +123,16 @@ start =
                 ( attribute map_target { xsd:string {minLength="1"} }?,
                   attribute map_match { xsd:string {minLength="1"} },
                   attribute map_replace { xsd:string {minLength="1"} }) |
-                attribute bmap_null { "1"} |
-                attribute bmap_origfield { "1"}
+                attribute map_null { "1"} |
+                attribute map_origfield { "1"}
               ),
                empty
              }+,
              element bcf:also_set {
                attribute map_field {xsd:string {minLength="1"}},
               ( attribute map_value { xsd:string {minLength="1"} } |
-                attribute bmap_null { "1"} |
-                attribute bmap_origfield { "1"}
+                attribute map_null { "1"} |
+                attribute map_origfield { "1"}
               ),
                empty
             }*)
