@@ -149,8 +149,15 @@ sub _initopts {
   }
 
   # Set hard-coded biber option defaults
-  foreach (@{$CONFIG_DEFAULT_BIBER->{option}}) {
-    Biber::Config->setoption($_->{name}, $_->{value});
+  while (my ($k, $v) = each %$CONFIG_DEFAULT_BIBER) {
+    if (exists($v->{content})) { # simple option
+      Biber::Config->setoption($k, $v->{content});
+    }
+    # mildly complex options - nosort/collate_options
+    elsif (lc($k) eq 'collate_options' or
+           lc($k) eq 'nosort') {
+      Biber::Config->setoption($k, $v->{option});
+    }
   }
 
   # Set hard-coded biblatex option defaults
@@ -159,8 +166,19 @@ sub _initopts {
   }
 
   # Set options from config file.
-  foreach (@{$userconf->{option}}) {
-    Biber::Config->setconfigfileoption($_->{name}, $_->{value});
+  while (my ($k, $v) = each %$userconf) {
+    if (exists($v->{content})) { # simple option
+      Biber::Config->setconfigfileoption($k, $v->{content});
+    }
+    # mildly complex options - nosort/collate_options
+    elsif (lc($k) eq 'collate_options' or
+           lc($k) eq 'nosort') {
+      Biber::Config->setconfigfileoption($k, $v->{option});
+    }
+    # rather complex options - sourcemap
+    elsif (lc($k) eq 'sourcemap') {
+      Biber::Config->setconfigfileoption($k, $v->{maps});
+    }
   }
 
   # Command-line overrides everything else

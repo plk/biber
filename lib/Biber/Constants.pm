@@ -100,31 +100,28 @@ our %STRUCTURE_DATATYPES = (
 # useful to know the format. Also needed for options not yet passed in .bcf by biblatex
 
 our $CONFIG_DEFAULT_BIBER = {
-  option => [
-             { name => 'bblencoding', value => 'UTF-8' },
-             { name => 'bibencoding', value => 'UTF-8' },
-             { name => 'bblsafechars', value => '0' },
-             { name => 'bblsafecharsset', value => 'base' },
-             { name => 'collate', value => 1 },
-             { name => 'collate_options',
-               value => [ { name => 'level', value => 4 } ] },
-             { name => 'debug', value => 0 },
-             { name => 'decodecharsset', value => 'base' },
-             { name => 'mincrossrefs', value => 2 },
-             { name => 'nolog', value => 0 },
-             { name => 'nostdmacros', value => 0 },
-             { name => 'nosort',
-               value => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
-                          { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
-             { name => 'quiet', value => 0 },
-             { name => 'sortcase', value => 1 },
-             { name => 'sortlocale', value => $locale },
-             { name => 'sortupper', value => 1 },
-             { name => 'trace', value => 0 },
-             { name => 'wraplines', value => 0 },
-             { name => 'validate_control', value => 0 },
-             { name => 'validate_structure', value => 0 }
-]};
+  bblencoding        => { content => 'UTF-8' },
+  bibencoding        => { content => 'UTF-8' },
+  bblsafechars       => { content => 0 },
+  bblsafecharsset    => { content => 'base' },
+  collate            => { content => 1 },
+  collate_options    => { option => [ { name => 'level', value => 4 } ] },
+  debug              => { content => 0 },
+  decodecharsset     => { content => 'base' },
+  mincrossrefs       => { content => 2 },
+  nolog              => { content => 0 },
+  nostdmacros        => { content => 0 },
+  nosort             => { option => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
+                                      { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
+  quiet              => { content => 0 },
+  sortcase           => { content => 1 },
+  sortlocale         => { content => $locale },
+  sortupper          => { content => 1 },
+  trace              => { content => 0 },
+  wraplines          => { content => 0 },
+  validate_control   => { content => 0 },
+  validate_structure => { content => 0 }
+};
 
 # default global options for biblatex
 # in practice these will be obtained from the control file,

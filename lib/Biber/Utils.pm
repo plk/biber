@@ -727,7 +727,6 @@ sub is_user_entrytype_map {
   my $to;
 MAP:  foreach my $map (@{$user_map->{map}}) {
     next unless $map->{maptype} eq 'entrytype';
-
     # Check persource restrictions
     # Don't compare case insensitively - this might not be correct
     unless (not exists($map->{per_datasource}) or
