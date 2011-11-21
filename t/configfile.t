@@ -22,121 +22,201 @@ Log::Log4perl->init(\$l4pconf);
 
 chdir('t/tdata');
 
-my %colloptsA = ( level => 3, table => '/home/user/data/otherkeys.txt' );
-my %nosort = (author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
-              translator => q/[\x{2bf}\x{2018}]/ );
+my $collopts = [ { name => 'level', value => 3 },
+                  { name => 'table', value => '/home/user/data/otherkeys.txt' } ];
 
-my %map = (
-   bibtex => {
-      bmap_overwrite => 1,
-      entrytype => {
-        CHAT => { bmap_target => "CUSTOMB" },
-        CONVERSATION => {
-          alsoset => {
-            verba => "BMAP_ORIGENTRYTYPE",
-            verbb => "somevalue",
-            verbc => "somevalue",
+my $nosort = [ { name => 'author', value => q/\A\p{L}{2}\p{Pd}/ },
+               { name => 'author', value => q/[\x{2bf}\x{2018}]/ },
+               { name => 'translator', value => q/[\x{2bf}\x{2018}]/ } ];
+
+my $sourcemap = [
+  {
+    bmap_overwrite => 1,
+    datatype => "bibtex",
+    map => [
+      {
+        map_pair => [{ map_source => "*", map_target => "CUSTOMB" }],
+        maptype => "entrytype",
+        per_datasource => [{ content => "doesnotexist.bib" }],
+      },
+      {
+        also_set       => [{ map_field => "KEYWORDS", map_value => "keyw1, keyw2" }],
+        map_pair       => [{ map_source => "ARTICLE" }],
+        maptype        => "entrytype",
+        per_datasource => [
+                            { content => "examples.bib" },
+                            { content => "doesnotexist.bib" },
+                          ],
+      },
+      {
+        also_set => [
+                      { bmap_origentrytype => 1, map_field => "VERBA" },
+                      { map_field => "VERBB", map_value => "somevalue" },
+                      { map_field => "VERBC", map_value => "somevalue" },
+                    ],
+        map_pair => [{ map_source => "CONVERSATION", map_target => "CUSTOMA" }],
+        maptype  => "entrytype",
+      },
+      {
+        map_pair => [{ map_source => "CHAT", map_target => "CUSTOMB" }],
+        maptype  => "entrytype",
+      },
+      {
+        also_set       => [
+                            { map_field => "USERE", map_value => "a string" },
+                            { bmap_null => 1, map_field => "USERF" },
+                          ],
+        map_pair       => [{ bmap_null => 1, map_source => "USERB" }],
+        maptype        => "field",
+        per_datasource => [{ content => "examples.bib" }],
+        per_type       => [{ content => "MISC" }],
+      },
+      {
+        map_pair => [
+          { bmap_null => 1, map_source => "ABSTRACT" },
+          { map_source => "CONDUCTOR", map_target => "NAMEA" },
+          { map_source => "GPS", map_target => "USERA" },
+          { map_source => "PARTICIPANT", map_target => "NAMEA" },
+          { map_source => "USERB", map_target => "USERD" },
+        ],
+        maptype => "field",
+        per_datasource => [{ content => "examples.bib" }],
+      },
+      {
+        also_set => [
+                      { bmap_origfield => 1, map_field => "EPRINTTYPE" },
+                      { map_field => "USERD", map_value => "Some string of things" },
+                    ],
+        map_pair => [{ map_source => "PUBMEDID", map_target => "EPRINT" }],
+        maptype  => "field",
+      },
+      {
+        map_pair => [
+          {
+            map_match   => "\\A(\\S{2})",
+            map_replace => "REP\$1CED",
+            map_source  => "LISTB",
           },
-          bmap_target => "CUSTOMA",
-        },
-        ARTICLE => {
-          bmap_persource => ["examples.bib", "examples2.bib"],
-          alsoset => {
-            keywords => "keyw1, keyw2",
-          },
-        },
+        ],
+        maptype => "field",
+        per_datasource => [{ content => "examples.bib" }],
       },
-      globalfield => {
-        bmap_persource => "examples.bib",
-        abstract => "BMAP_NULL",
-        conductor => "NAMEA",
-        gps => "USERA",
-        participant => "NAMEA",
-        userb => "USERD",
-        PUBMEDID => {
-          alsoset => { eprinttype => "BMAP_ORIGFIELD", userd => "some string of things" },
-          bmap_target => "EPRINT",
-        },
-        LISTB => {
-          bmap_persource => "examples.bib",
-          bmap_match  => "\\A(\\S{2})",
-          bmap_replace => "REP\$1CED"
-                 }
+      {
+        map_pair => [{ bmap_null => 1, map_source => "LISTA" }],
+        maptype  => "field",
+        per_type => [{ content => "REPORT" }],
       },
-      field => {
-        lista => { bmap_pertype => "REPORT",
-                   bmap_target => "BMAP_NULL"},
-        title => { bmap_pertype => "ONLINE",
-                   bmap_target => "BMAP_NULL"},
-        listc => {
-          bmap_pertype => "UNPUBLISHED",
-          bmap_target => "INSTITUTION",
-          bmap_match  => "\\A(\\S{2})",
-          bmap_replace => "REP\$1CED"
-                 },
-        userb => { bmap_pertype => "MISC",
-                   bmap_target => "BMAP_NULL",
-                   bmap_persource => "examples.bib",
-          alsoset => { usere => "a string",
-                       userf => "BMAP_NULL"},
-                 },
+      {
+        map_pair => [
+                      {
+                        map_match   => "\\A(\\S{2})",
+                        map_replace => "REP\$1CED",
+                        map_source  => "LISTC",
+                        map_target  => "INSTITUTION",
+                      },
+                    ],
+        maptype  => "field",
+        per_type => [{ content => "UNPUBLISHED" }],
       },
-    },
-    endnotexml => {
-      bmap_overwrite => 1,
-      entrytype => {
-        "journal Article" => {
-          bmap_persource => "endnote.xml",
-          alsoset => { usera => "BMAP_ORIGENTRYTYPE" },
-          bmap_target => "REPORT",
-        },
+      {
+        map_pair => [{ bmap_null => 1, map_source => "TITLE" }],
+        maptype  => "field",
+        per_type => [{ content => "ONLINE" }],
       },
-      globalfield => { abstract => "BMAP_NULL", bmap_persource => "endnote.xml" },
-      field => {
-        pages => { bmap_pertype => "Journal Article",
-                   bmap_persource => "endnote.xml",
-                   bmap_match  => "64",
-                   bmap_replace => "66"},
-               }
-    },
-    ris => {
-      bmap_overwrite => 0,
-      entrytype => {
-        BOOK => { alsoset => { keywords => "somevalue" }, bmap_target => "MAPBOOK" },
-        JOUR => { bmap_target => "REPORT", bmap_persource => "ris1.ris" },
+    ],
+  },
+  {
+    bmap_overwrite => 1,
+    datatype => "endnotexml",
+    map => [
+      {
+        also_set       => [{ bmap_origentrytype => 1, map_field => "USERA" }],
+        map_pair       => [{ map_source => "journal Article", map_target => "REPORT" }],
+        maptype        => "entrytype",
+        per_datasource => [{ content => "endnote.xml" }],
       },
-      globalfield => { n2 => "BMAP_NULL", bmap_persource => "ris1.ris" },
-      field => {
-        JO => { bmap_pertype => "JOUR",
-                bmap_persource => "ris1.ris",
-                bmap_match  => "Neurosurg\\.",
-                bmap_replace => "Neurosurgery"},
-               }
-    },
-    zoterordfxml => {
-      bmap_overwrite => 1,
-      field => {
-        "dc:subject" => {
-          bmap_persource => "zotero.rdf",
-          bmap_pertype => ["journalArticle", "book", "bookSection"],
-          bmap_target  => "BMAP_NULL",
-        },
-      "dc:title" => { bmap_pertype => "journalArticle",
-                      bmap_match  => "(.+)",
-                      bmap_replace => "\\L\$1"
-                    },
+      {
+        map_pair       => [
+                            { map_match => 64, map_replace => 66, map_source => "PAGES" },
+                          ],
+        maptype        => "field",
+        per_datasource => [{ content => "endnote.xml" }],
+        per_type       => [{ content => "Journal Article" }],
       },
-    });
+      {
+        map_pair => [{ bmap_null => 1, map_source => "ABSTRACT" }],
+        maptype => "field",
+        per_datasource => [{ content => "endnote.xml" }],
+      },
+    ],
+  },
+  {
+    bmap_overwrite => 0,
+    datatype => "ris",
+    map => [
+      {
+        map_pair => [{ map_source => "JOUR", map_target => "REPORT" }],
+        maptype => "entrytype",
+        per_datasource => [{ content => "ris1.ris" }],
+      },
+      {
+        also_set => [{ map_field => "KEYWORDS", map_value => "somevalue" }],
+        map_pair => [{ map_source => "BOOK", map_target => "MAPBOOK" }],
+        maptype  => "entrytype",
+      },
+      {
+        map_pair => [{ bmap_null => 1, map_source => "N2" }],
+        maptype => "field",
+        per_datasource => [{ content => "ris1.ris" }],
+      },
+      {
+        map_pair       => [
+                            {
+                              map_match   => "Neurosurg\\.",
+                              map_replace => "Neurosurgery",
+                              map_source  => "JO",
+                            },
+                          ],
+        maptype        => "field",
+        per_datasource => [{ content => "ris1.ris" }],
+        per_type       => [{ content => "JOUR" }],
+      },
+    ],
+  },
+  {
+    bmap_overwrite => 1,
+    datatype => "zoterordfxml",
+    map => [
+      {
+        map_pair => [
+                      { map_match => "(.+)", map_replace => "\\L\$1", map_source => "dc:title" },
+                    ],
+        maptype  => "field",
+        per_type => [{ content => "journalArticle" }],
+      },
+      {
+        map_pair       => [{ bmap_null => 1, map_source => "dc:subject" }],
+        maptype        => "field",
+        per_datasource => [{ content => "zotero.rdf" }],
+        per_type       => [
+                            { content => "journalArticle" },
+                            { content => "book" },
+                            { content => "bookSection" },
+                          ],
+      },
+    ],
+  },
+];
 
 # Set up Biber object
-my $biberA = Biber->new( configfile => 'biber-test.conf', mincrossrefs => 7 );
-$biberA->parse_ctrlfile('general1.bcf');
+my $biber = Biber->new( configfile => 'biber-test.conf', mincrossrefs => 7 );
+$biber->parse_ctrlfile('general1.bcf');
 
 is(Biber::Config->getoption('mincrossrefs'), 7, 'Options 1 - from cmdline');
 is(Biber::Config->getoption('configfile'), File::Spec->catfile('biber-test.conf'), 'Options 2 - from cmdline');
 is(Biber::Config->getoption('sortlocale'), 'testlocale', 'Options 3 - from config file');
-is_deeply(Biber::Config->getoption('collate_options'), \%colloptsA, 'Options 4 - from config file');
-is_deeply(Biber::Config->getoption('nosort'), \%nosort, 'Options 5 - from config file');
+is_deeply(Biber::Config->getoption('collate_options'), $collopts, 'Options 4 - from config file');
+is_deeply(Biber::Config->getoption('nosort'), $nosort, 'Options 5 - from config file');
 is_deeply(Biber::Config->getoption('sortcase'), 0, 'Options 6 - from .bcf');
 is(Biber::Config->getoption('decodecharsset'), 'base', 'Options 7 - from defaults');
-is_deeply(Biber::Config->getoption('map'), \%map, 'Options 8 - from config file');
+is_deeply(Biber::Config->getoption('sourcemap'), $sourcemap, 'Options 8 - from config file');

@@ -40,7 +40,6 @@ my $builder = $class->new(
         'ExtUtils::LibBuilder' => '0.02'
     },
     requires => {
-        'Config::General' => 0,
         'Data::Dump' => 0,
         'Data::Compare' => 0,
         'Date::Simple' => 0,

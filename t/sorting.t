@@ -163,13 +163,15 @@ $S = [
       ]
      ];
 $main->set_sortscheme($S);
-Biber::Config->setoption('nosort', { author => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
-                                     translator => [ q/\A\p{L}{2}\p{Pd}/, q/[\x{2bf}\x{2018}]/ ],
+Biber::Config->setoption('nosort', [ { name => 'author', value => q/\A\p{L}{2}\p{Pd}/ },
+                                     { name => 'author', value => q/[\x{2bf}\x{2018}]/ },
+                                     { name => 'translator', value => q/\A\p{L}{2}\p{Pd}/ },
+                                     { name => 'translator', value => q/[\x{2bf}\x{2018}]/ },
                                      # type_title should be not used as there is an
                                      # explicit title nosort
-                                     type_title => q/\A.*/,
-                                     title => q/\A\p{L}{2}\p{Pd}/
-                                   });
+                                     { name => 'type_title', value => q/\A.*/ },
+                                     { name => 'title', value => q/\A\p{L}{2}\p{Pd}/ }
+                                   ]);
 
 Biber::Config->setoption('sortcase', '1');
 

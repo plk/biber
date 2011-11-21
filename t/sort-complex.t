@@ -35,13 +35,15 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Want to ignore SHORTHAND* fields for the first few tests
-Biber::Config->setoption('map', {
-   bibtex => {
-      globalfield => {
-        shorthand => "BMAP_NULL",
-        sortshorthand => "BMAP_NULL"
-      },
-    }});
+Biber::Config->setoption('sourcemap', [
+  {
+    datatype => "bibtex",
+    map => [
+      {
+        map_pair => [{ map_source => "SHORTHAND", bmap_null => 1 },
+                     { map_source => "SORTSHORTHAND", bmap_null => 1 }],
+        maptype => "field",
+      }]}]);
 
 # Biblatex options
 Biber::Config->setblxoption('labelyear', undef);
@@ -235,7 +237,7 @@ is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'sortorder - 1');
 is_deeply([ $shs->get_keys ], [], 'sortorder - 2');
 
 # reset options and regenerate information
-Biber::Config->setoption('map', undef); # no longer ignore shorthand*
+Biber::Config->setoption('sourcemap', undef); # no longer ignore shorthand*
 # Have to set the sortscheme for the shorthand list explicitly as the sortlos option is processed
 # during control file parsing so it won't be done automatically here. This is only a problem
 # in tests where we want to change sortlos and re-run

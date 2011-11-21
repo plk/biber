@@ -339,7 +339,7 @@ sub parse_ctrlfile {
                                                            qr/\Amap_pair\z/,
                                                            qr/\Aalso_set\z/,
                                                            qr/\Aper_type\z/,
-                                                           qr/\Aper_source\z/,
+                                                           qr/\Aper_datasource\z/,
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
@@ -2418,7 +2418,8 @@ sub sort_list {
     require Unicode::Collate::Locale;
     my $opts = Biber::Config->getoption('collate_options');
     my $collopts;
-    unless (ref($opts) eq "HASH") { # opts for this can come in a string from cmd line
+
+    unless (ref($opts) eq "ARRAY") { # opts for this can come in a string from cmd line
       $collopts = eval "{ $opts }" or biber_error('Bad command-line collation options');
     }
     else { # options from config file as hash ref

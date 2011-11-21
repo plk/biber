@@ -740,7 +740,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
         $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {
-            $to->{also_set}{lc($as->{map_field})} = get_map_val($as, 'map_value');
+            $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');
           }
         }
         last MAP;
@@ -751,7 +751,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
         $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {
-            $to->{also_set}{lc($as->{map_field})} = get_map_val($as, 'map_value');
+            $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');
           }
         }
         last MAP;
@@ -772,7 +772,6 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
 
 sub is_user_field_map {
   my ($user_map, $entrytype, $field, $source) = @_;
-
   my $to;
 MAP:  foreach my $map (@{$user_map->{map}}) {
     next unless $map->{maptype} eq 'field';
@@ -799,7 +798,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
         $to->{map_replace}  = $pair->{map_replace} if exists($pair->{map_replace});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {
-            $to->{also_set}{lc($as->{map_field})} = get_map_val($as, 'map_value');
+            $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');
           }
         }
         last MAP;
