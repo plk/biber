@@ -1,0 +1,96 @@
+start = element config {
+  element bibencoding         { text }? &
+  element bblencoding         { text }? &
+  element bblsafechars        { "0" | "1" }? &
+  element bblsafecharsset     { "base" | "full" }? &
+  element collate             { "0" | "1" }? &
+  element collate_options     {
+    element option {
+      attribute name { text } &
+      attribute value { text }
+    }+
+  }? &
+# Can't specify the config file location in the config file ...
+#  element configfile          { text }? & 
+  element convert_control     { "0" | "1" }? &
+  element decodecharsset      { "base" | "full" }? &
+  element debug               { "0" | "1" }? &
+  element fastsort            { "0" | "1" }? &
+# Would never want this in the config file
+#  element help                { "0" | "1" }? &
+  element mincrossrefs        { xsd:unsignedByte }? &
+  element logfile             { text }? &
+# Can't specify not to use a config file in the config file ...
+#  element noconf              { "0" | "1" }? &
+  element nodieonerror         { "0" | "1" }? &
+  element nolog                { "0" | "1" }? &
+  element nosort     {
+    element option {
+      attribute name { text } &
+      attribute value { text }
+    }+
+  }? &
+  element nostdmacros          { "0" | "1" }? &
+  element onlylog              { "0" | "1" }? &
+  element outfile              { text }? &
+  element output_directory     { text }? &
+  element quiet                { "0" | "1" }? &
+  element sortcase             { "0" | "1" }? &
+  element sortlocale           { text }? &
+  element sourcemap            {
+    element maps {
+      attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
+      attribute map_overwrite { "0" | "1" },
+      element map {
+        attribute map_overwrite { "0" | "1" }?,
+        (
+          (attribute maptype { "entrytype" },
+            element per_datasource { xsd:string {minLength="1"} }*,
+            element map_pair {
+              attribute map_source {xsd:string {minLength="1"}},
+              attribute map_target { xsd:string {minLength="1"} }?,
+              empty
+            }+,
+            element also_set {
+              attribute map_field {xsd:string {minLength="1"}},
+              ( attribute map_value { xsd:string {minLength="1"} } |
+                attribute map_null { "1"} |
+                attribute map_origentrytype { "1"}
+              ),
+              empty
+            }*) |
+          (attribute maptype { "field" },
+            element per_datasource { xsd:string {minLength="1"} }*,
+            element per_type { xsd:string {minLength="1"} }*,
+            element map_pair {
+              attribute map_source {xsd:string {minLength="1"}},
+              ( attribute map_target { xsd:string {minLength="1"} } |
+                ( attribute map_target { xsd:string {minLength="1"} }?,
+                  attribute map_match { xsd:string {minLength="1"} },
+                  attribute map_replace { xsd:string {minLength="1"} }) |
+                attribute map_null { "1"} |
+                attribute map_origfield { "1"}
+              ),
+              empty
+            }+,
+            element also_set {
+              attribute map_field {xsd:string {minLength="1"}},
+              ( attribute map_value { xsd:string {minLength="1"} } |
+                attribute map_null { "1"} |
+                attribute map_origfield { "1"}
+              ),
+              empty
+            }*)
+        )
+      }+
+    }+
+  }? &
+  element sortupper            { "0" | "1" }? &
+  element trace                { "0" | "1" }? &
+  element validate_config      { "0" | "1" }? &
+  element validate_control     { "0" | "1" }? &
+  element validate_structure   { "0" | "1" }? &
+# Meaningless in the config file
+#  element version              { "0" | "1" }? &
+  element wraplines            { "0" | "1" }?
+}

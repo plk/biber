@@ -81,6 +81,16 @@ sub new {
                                      Biber::Config->getoption('bblsafecharsset'));
 
   $MASTER = $self;
+
+  # Validate if asked to
+  # This has to be here, after config file is read and options
+  # are parsed. It seems strange to validate the config file after it's been
+  # read but there is no choice and it's useful anyway as this will catch some semantic
+  # errors. Uses biber_error() and so $MASTER has to be defined before we call this
+  if (Biber::Config->getoption('validate_config')) {
+    validate_biber_xml($opts{configfile}, 'config', '');
+  }
+
   return $self;
 }
 
@@ -211,64 +221,10 @@ sub parse_ctrlfile {
 
   # Validate if asked to
   if (Biber::Config->getoption('validate_control')) {
-    require XML::LibXML;
-
-    # Set up XML parser
-    my $CFxmlparser = XML::LibXML->new();
-    $CFxmlparser->line_numbers(1); # line numbers for more informative errors
-
-    # Set up schema
-    my $CFxmlschema;
-
-    # we assume that the schema files are in the same dir as Biber.pm:
-    (my $vol, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
-
-    # Deal with the strange world of Par::Packer paths
-    # We might be running inside a PAR executable and @INC is a bit odd in this case
-    # Specifically, "Biber.pm" in @INC might resolve to an internal jumbled name
-    # nowhere near to these files. You know what I mean if you've dealt with pp
-    my $bcf_rng;
-    if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
-      $bcf_rng = File::Spec->catpath($vol, "$biber_path/inc/lib/Biber", 'bcf.rng');
-    }
-    else {
-      $bcf_rng = File::Spec->catpath($vol, "$biber_path/Biber", 'bcf.rng');
-    }
-
-    if (-e $bcf_rng) {
-      $CFxmlschema = XML::LibXML::RelaxNG->new( location => $bcf_rng )
-    }
-    else {
-      biber_warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
-      goto CONVERT;
-    }
-
-    # Parse file
-    my $CFxp = $CFxmlparser->parse_file($ctrl_file_path);
-
-    # XPath context
-    my $CFxpc = XML::LibXML::XPathContext->new($CFxp);
-    $CFxpc->registerNs('bcf', 'https://sourceforge.net/projects/biblatex');
-
-    # Validate against schema. Dies if it fails.
-    if ($CFxmlschema) {
-      eval { $CFxmlschema->validate($CFxp) };
-      if (ref($@)) {
-        $logger->debug( $@->dump() );
-        biber_error("BibLaTeX control file '$ctrl_file_path' failed to validate\n$@");
-      }
-      elsif ($@) {
-        biber_error("BibLaTeX control file '$ctrl_file_path' failed to validate\n$@");
-      }
-      else {
-        $logger->info("BibLaTeX control file '$ctrl_file_path' validates");
-      }
-    }
-    undef $CFxmlparser;
+    validate_biber_xml($ctrl_file_path, 'bcf', 'https://sourceforge.net/projects/biblatex');
   }
 
   # Convert .bcf to .html using XSLT transform if asked to
- CONVERT:
   if (Biber::Config->getoption('convert_control')) {
 
     require XML::LibXSLT;

@@ -44,7 +44,8 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn ireplace is_user_entrytype_map is_user_field_map };
+  filter_entry_options biber_error biber_warn ireplace is_user_entrytype_map is_user_field_map
+  validate_biber_xml };
 
 =head1 FUNCTIONS
 
@@ -722,7 +723,6 @@ sub ireplace {
 
 sub is_user_entrytype_map {
   my ($user_map, $entrytype, $source) = @_;
-  # entrytype specific mappings take precedence
   my $to;
 MAP:  foreach my $map (@{$user_map->{map}}) {
     next unless $map->{maptype} eq 'entrytype';
@@ -733,6 +733,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
       next;
     }
 
+    # First look for a specific entrytype match ...
     foreach my $pair (@{$map->{map_pair}}) {
       if (lc($pair->{map_source}) eq $entrytype) {
         $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
@@ -745,6 +746,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
         last MAP;
       }
     }
+    # ... if this fails, look for a general '*' match
     foreach my $pair (@{$map->{map_pair}}) {
       if ($pair->{map_source} eq '*') {
         $to->{map_target} = $pair->{map_target} if exists($pair->{map_target});
@@ -835,6 +837,72 @@ sub get_map_val {
   }
   return $v;
 }
+
+=head2 validate_biber_xml
+
+  Validate a biber/biblatex XML metdata file against an RNG schema
+
+=cut
+
+sub validate_biber_xml {
+  my ($file, $type, $prefix) = @_;
+  require XML::LibXML;
+
+  # Set up XML parser
+  my $xmlparser = XML::LibXML->new();
+  $xmlparser->line_numbers(1); # line numbers for more informative errors
+
+  # Set up schema
+  my $xmlschema;
+
+  # we assume that the schema files are in the same dir as Biber.pm:
+  (my $vol, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+  $biber_path =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+
+  # Deal with the strange world of Par::Packer paths
+  # We might be running inside a PAR executable and @INC is a bit odd in this case
+  # Specifically, "Biber.pm" in @INC might resolve to an internal jumbled name
+  # nowhere near to these files. You know what I mean if you've dealt with pp
+  my $rng;
+  if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
+    $rng = File::Spec->catpath($vol, "$biber_path/inc/lib/Biber", "${type}.rng");
+  }
+  else {
+    $rng = File::Spec->catpath($vol, "$biber_path/Biber", "${type}.rng");
+  }
+
+  if (-e $rng) {
+    $xmlschema = XML::LibXML::RelaxNG->new( location => $rng )
+  }
+  else {
+    biber_warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
+    return;
+  }
+
+  # Parse file
+  my $xp = $xmlparser->parse_file($file);
+
+  # XPath context
+  if ($prefix) {
+    my $xpc = XML::LibXML::XPathContext->new($xp);
+    $xpc->registerNs($type, $prefix);
+  }
+
+  # Validate against schema. Dies if it fails.
+  eval { $xmlschema->validate($xp) };
+  if (ref($@)) {
+    $logger->debug( $@->dump() );
+    biber_error("'$file' failed to validate against schema '$rng'");
+  }
+  elsif ($@) {
+    biber_error("'$file' failed to validate against schema '$rng'\n$@");
+  }
+  else {
+    $logger->info("'$file' validates against schema '$rng'");
+  }
+  undef $xmlparser;
+}
+
 
 1;
 

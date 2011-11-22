@@ -108,19 +108,23 @@ our $CONFIG_DEFAULT_BIBER = {
   collate_options    => { option => [ { name => 'level', value => 4 } ] },
   debug              => { content => 0 },
   decodecharsset     => { content => 'base' },
+  fastsort           => { content => 0 },
   mincrossrefs       => { content => 2 },
+  nodieonerror       => { content => 0 },
   nolog              => { content => 0 },
   nostdmacros        => { content => 0 },
   nosort             => { option => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
                                       { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
+  onlylog            => { content => 0 },
   quiet              => { content => 0 },
   sortcase           => { content => 1 },
   sortlocale         => { content => $locale },
   sortupper          => { content => 1 },
   trace              => { content => 0 },
-  wraplines          => { content => 0 },
+  validate_config    => { content => 0 },
   validate_control   => { content => 0 },
-  validate_structure => { content => 0 }
+  validate_structure => { content => 0 },
+  wraplines          => { content => 0 },
 };
 
 # default global options for biblatex

@@ -52,6 +52,7 @@ GetOptions(
            'trace|T',
            'u',                   # alias for bibencoding=UTF-8
            'U',                   # alias for bblencoding=UTF-8
+           'validate_config',
            'validate_control',
            'validate_structure|V',
            'version|v',
@@ -346,6 +347,10 @@ Alias for B<--bibencoding=UTF-8>
 =item B<-U>
 
 Alias for B<--bblencoding=UTF-8>
+
+=item B<--validate_config>
+
+Schema validate the biber config file.
 
 =item B<--validate_control>
 

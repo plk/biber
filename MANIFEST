@@ -39,6 +39,8 @@ doc/biber.tex
 doc/biber.pdf
 doc/biber-texworks.png
 data/schemata/texmap.rnc
+data/schemata/config.rnc
+data/schemata/config.rng
 data/schemata/bcf.rnc
 data/schemata/bcf.rng
 data/schemata/dcf.rnc

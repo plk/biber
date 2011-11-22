@@ -64,7 +64,9 @@ my $builder = $class->new(
         'Readonly::XS' => 0
     },
     script_files => [ glob( "bin/*" ) ],
-    data_files => {'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
+    data_files => {'data/schemata/config.rnc' => 'lib/Biber/config.rnc',
+                   'data/schemata/config.rng' => 'lib/Biber/config.rng',
+                   'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
                    'data/schemata/bcf.rng' => 'lib/Biber/bcf.rng',
                    'data/schemata/dcf.rnc' => 'lib/Biber/dcf.rnc',
                    'data/schemata/dcf.rng' => 'lib/Biber/dcf.rng',
