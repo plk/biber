@@ -1,6 +1,9 @@
 Revision history for Biber
 
-0.9.7  * Fixed --help issue with PAR::Packer
+0.9.7  (unreleased)
+       * per-datasource mapping restrictions
+       * Completely new config file format to allow for extensions
+       * Fixed --help issue with PAR::Packer
        * Fixed .bcf XSL inheritance attribute value issue
        * Moved XDATA output skip into structure where it should have been originally
 0.9.6  13-11-2011
