@@ -83,9 +83,9 @@ things like incompatible changes which users should be aware of.
   could not be extended to deal with more sophisticated features like
   per-datasource restrictions. An XML format is much better and in
   fact easier to understand. The old format of the \verb+map+ option
-  (now called \verb+sourcemap+) was very strange and confusing because
-  of limitations in the old config file format. This is much clearer
-  now. Please convert your config files to the new format.
+  (now called \verb+sourcemap+) was rather confusing because
+  of limitations in the old config file format. Please convert your
+  config files to the new format.
 
 \minisec{0.9.6}
 \textcolor{red}{Matching of citation keys and datasource entry
@@ -623,9 +623,9 @@ following:
 \noindent An \verb+entrytype+ element performs a mapping of one or more
 mapping «pairs» of entrytypes. Each pair consists of a \verb+map_pair+
 element with a \verb+map_source+ attribute with value
-\linebreak\textcolor{red}{\texttt{source-entrytype}} and an optional
+\textcolor{red}{\texttt{source-entrytype}} and an optional
 \verb+map_target+ attribute with value
-\linebreak\textcolor{red}{\texttt{target-entrytype}}. The target is
+\textcolor{red}{\texttt{target-entrytype}}. The target is
 optional as you might want to simply modify entries of a certain entrytype
 without changing the entrytype. The
 \textcolor{red}{\texttt{source-entrytype}} is mandatory and can be the
