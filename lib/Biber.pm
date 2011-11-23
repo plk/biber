@@ -87,7 +87,7 @@ sub new {
   # are parsed. It seems strange to validate the config file after it's been
   # read but there is no choice and it's useful anyway as this will catch some semantic
   # errors. Uses biber_error() and so $MASTER has to be defined before we call this
-  if (Biber::Config->getoption('validate_config')) {
+  if (Biber::Config->getoption('validate_config') and $opts{configfile}) {
     validate_biber_xml($opts{configfile}, 'config', '');
   }
 
