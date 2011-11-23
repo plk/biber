@@ -44,7 +44,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn ireplace is_user_entrytype_map is_user_field_map
+  filter_entry_options biber_error biber_warn ireplace imatch is_user_entrytype_map is_user_field_map
   validate_biber_xml };
 
 =head1 FUNCTIONS
@@ -694,23 +694,34 @@ sub filter_entry_options {
   return join(',', @return_options);
 }
 
+=head2 imatch
+
+    Do an interpolating match using a match RE and a string passed in as variables
+
+=cut
+
+sub imatch {
+  my ($value, $val_match) = @_;
+  return 0 unless $val_match;
+  $val_match = qr/$val_match/;
+  return $value =~ m/$val_match/xms;
+}
+
+
 =head2 ireplace
 
-    Do a search/replace on pattern/replacement passed in as variables
+    Do an interpolating match/replace using a match RE, replacement RE
+    and string passed in as variables
 
 =cut
 
 sub ireplace {
   my ($value, $val_match, $val_replace) = @_;
-  if ($val_match) {
-    $val_match = qr/$val_match/;
-    $val_replace = new String::Interpolate $val_replace;
-    $value =~ s/$val_match/$val_replace/egxms;
-    return $value;
-  }
-  else {
-    return $value;
-  }
+  return $value unless $val_match;
+  $val_match = qr/$val_match/;
+  $val_replace = new String::Interpolate $val_replace;
+  $value =~ s/$val_match/$val_replace/egxms;
+  return $value;
 }
 
 =head2 is_user_entrytype_map
@@ -773,7 +784,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
 =cut
 
 sub is_user_field_map {
-  my ($user_map, $entrytype, $field, $source) = @_;
+  my ($user_map, $entrytype, $field, $fieldval, $source) = @_;
   my $to;
 MAP:  foreach my $map (@{$user_map->{map}}) {
     next unless $map->{maptype} eq 'field';
@@ -792,12 +803,26 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
     }
 
     foreach my $pair (@{$map->{map_pair}}) {
+      $to = undef;
       if (lc($pair->{map_source}) eq $field) {
-        if (my $v = get_map_val($pair, 'map_target')) {
-          $to->{map_target} = $v
+
+        # Check for a match and skip if no match or,
+        # record the match/replace settings for resolution later
+        if (exists($pair->{map_match})) {
+          if (exists($pair->{map_replace})) {
+            $to->{map_match}  = $pair->{map_match};
+            $to->{map_replace}  = $pair->{map_replace};
+          }
+          else {
+            next unless imatch($fieldval, $pair->{map_match});
+          }
         }
-        $to->{map_match}  = $pair->{map_match} if exists($pair->{map_match});
-        $to->{map_replace}  = $pair->{map_replace} if exists($pair->{map_replace});
+
+        # Set the target
+        if (my $v = get_map_val($pair, 'map_target')) {
+          $to->{map_target} = $v;
+        }
+
         $to->{map_overwrite} = $map->{map_overwrite} if exists($map->{map_overwrite});
         if (exists($map->{also_set})) {
           foreach my $as (@{$map->{also_set}}) {

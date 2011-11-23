@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 
 use Biber;
 use Biber::Utils;
@@ -86,3 +86,6 @@ is($biber->_liststring('alias5', 'institution'), 'REPlaCEDte_early', 'Alias - 20
 
 # Testing of no target but just field additions
 is($bibentries->entry('alias6')->get_field('keywords'), 'keyw1, keyw2', 'Alias - 21' );
+
+# Testing of no regexp match for field value
+is_deeply($bibentries->entry('alias7')->get_field('lista'), ['listaval'], 'Alias - 22' );

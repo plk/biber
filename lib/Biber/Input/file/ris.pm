@@ -220,7 +220,7 @@ FLOOP:  foreach my $f (keys %$entry) {
     my $val_match;
     my $val_replace;
 
-    if (my $to_map = is_user_field_map($user_map, lc($entry->{TY}), lc($f), $source)) {
+    if (my $to_map = is_user_field_map($user_map, lc($entry->{TY}), lc($f), $entry->{$f}, $source)) {
       my $field = $f;
       # handler information still comes from .dcf
       $from = $dcfxml->{fields}{field}{$to_map->{map_target} || $field};

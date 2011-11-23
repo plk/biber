@@ -91,53 +91,13 @@ start =
       }+
     }+,
 
+
     # field/entrytype mapping
     element bcf:sourcemap {
       element bcf:maps {
         attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
         attribute map_overwrite { "0" | "1" },
-        element bcf:map {
-          attribute map_overwrite { "0" | "1" }?,
-          (
-            (attribute maptype { "entrytype" },
-             element bcf:per_datasource { xsd:string {minLength="1"} }*,
-             element bcf:map_pair {
-               attribute map_source {xsd:string {minLength="1"}},
-               attribute map_target { xsd:string {minLength="1"} }?,
-             empty
-            }+,
-            element bcf:also_set {
-              attribute map_field {xsd:string {minLength="1"}},
-              ( attribute map_value { xsd:string {minLength="1"} } |
-                attribute map_null { "1"} |
-                attribute map_origentrytype { "1"}
-              ),
-              empty
-            }*) |
-            (attribute maptype { "field" },
-             element bcf:per_datasource { xsd:string {minLength="1"} }*,
-             element bcf:per_type { xsd:string {minLength="1"} }*,
-             element bcf:map_pair {
-               attribute map_source {xsd:string {minLength="1"}},
-              ( attribute map_target { xsd:string {minLength="1"} } |
-                ( attribute map_target { xsd:string {minLength="1"} }?,
-                  attribute map_match { xsd:string {minLength="1"} },
-                  attribute map_replace { xsd:string {minLength="1"} }) |
-                attribute map_null { "1"} |
-                attribute map_origfield { "1"}
-              ),
-               empty
-             }+,
-             element bcf:also_set {
-               attribute map_field {xsd:string {minLength="1"}},
-              ( attribute map_value { xsd:string {minLength="1"} } |
-                attribute map_null { "1"} |
-                attribute map_origfield { "1"}
-              ),
-               empty
-            }*)
-          )
-        }+
+        ( map_entrytype* | map_field* )+
       }+
     }?,
 
@@ -642,3 +602,48 @@ sortalphaothers =
     }
   }
 
+map_entrytype =
+  element bcf:map {
+    attribute maptype { "entrytype" },
+    attribute map_overwrite { "0" | "1" }?,
+    element bcf:per_datasource { xsd:string {minLength="1"} }*,
+    element bcf:map_pair {
+      attribute map_source { xsd:string {minLength="1"} },
+      attribute map_target { xsd:string {minLength="1"} }?,
+      empty
+    }+,
+    element bcf:also_set {
+      attribute map_field {xsd:string {minLength="1"}},
+      ( attribute map_value { xsd:string {minLength="1"} } |
+        attribute map_null { "1"} |
+        attribute map_origentrytype { "1"}
+      ),
+      empty
+    }*
+  }
+
+map_field =
+  element bcf:map {
+    attribute maptype { "field" },
+    attribute map_overwrite { "0" | "1" }?,
+    element bcf:per_datasource { xsd:string {minLength="1"} }*,
+    element bcf:per_type { xsd:string {minLength="1"} }*,
+    element bcf:map_pair {
+      attribute map_source { xsd:string {minLength="1"} },
+      attribute map_match { xsd:string {minLength="1"} }?,
+      attribute map_replace { xsd:string {minLength="1"} }?,
+      ( attribute map_target { xsd:string {minLength="1"} } |
+        attribute map_null { "1" } |
+        attribute map_origfield { "1"}
+      )?,
+      empty
+    }+,
+    element bcf:also_set {
+      attribute map_field {xsd:string {minLength="1"}},
+      ( attribute map_value { xsd:string {minLength="1"} } |
+        attribute map_null { "1"} |
+        attribute map_origfield { "1"}
+      ),
+      empty
+    }*
+  }

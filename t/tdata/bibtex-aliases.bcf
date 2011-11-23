@@ -175,7 +175,7 @@
       </bcf:map>
       <bcf:map maptype="field">
         <bcf:per_type>REPORT</bcf:per_type>
-        <bcf:map_pair map_source="LISTA" map_null="1"/>
+        <bcf:map_pair map_source="LISTA" map_match="BADMATCH" map_null="1"/>
       </bcf:map>
       <bcf:map maptype="field">
         <bcf:map_pair map_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>
@@ -1472,6 +1472,7 @@
     <bcf:citekey>alias4</bcf:citekey>
     <bcf:citekey>alias5</bcf:citekey>
     <bcf:citekey>alias6</bcf:citekey>
+    <bcf:citekey>alias7</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>

@@ -260,7 +260,7 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       my $to;
       my $val_match;
       my $val_replace;
-      if (my $to_map = is_user_field_map($user_map, lc($entry->type), lc($f), $source)) {
+      if (my $to_map = is_user_field_map($user_map, lc($entry->type), lc($f), decode_utf8($entry->get($f)), $source)) {
         my $field = lc($f);
         # handler information still comes from .dcf
         $from = $dcfxml->{fields}{field}{lc($to_map->{map_target} || $field)};

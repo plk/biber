@@ -733,6 +733,10 @@ mandatory. The rules for a field mapping are:\\[1ex]
   \textcolor{red}{\texttt{target-field}}, if defined.
 \item Remove the \textcolor{red}{\texttt{source-field}} if
   \textcolor{blue}{\texttt{map\_null}} is set.
+\item If \textcolor{blue}{\texttt{map\_match}} is defined but
+  \textcolor{blue}{\texttt{map\_replace}} is not, only apply the
+  mapping if the \textcolor{red}{\texttt{source-field}} matches
+  \textcolor{blue}{\texttt{map\_match}}.
 \item Perform a Perl Regular Expression match and replace on the value of
   \textcolor{red}{\texttt{source-field}} if
   \textcolor{blue}{\texttt{map\_match}} and

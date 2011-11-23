@@ -84,7 +84,6 @@ provides:
 recommends:
   Readonly::XS: 0
 requires:
-  Config::General: 0
   Data::Compare: 0
   Data::Dump: 0
   Date::Simple: 0

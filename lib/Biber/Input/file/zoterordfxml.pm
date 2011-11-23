@@ -229,7 +229,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
     my $val_match;
     my $val_replace;
 
-    if (my $to_map = is_user_field_map($user_map, lc($itype), lc($f), $source)) {
+    if (my $to_map = is_user_field_map($user_map, lc($itype), lc($f), $entry->findvalue("./$f"), $source)) {
       my $field = $f;
       # handler information still comes from .dcf
       $from = $dcfxml->{fields}{field}{lc($to_map->{map_target} || $field)};
