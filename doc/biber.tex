@@ -772,7 +772,6 @@ mandatory. The rules for a field mapping are:\\[1ex]
 
 \noindent Here are some examples:
 
-
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
 <map maptype="field">
   <map_pair map_source="ABSTRACT" map_null="1"/>
@@ -823,6 +822,18 @@ field to the string «Some string of things».
 \noindent Here, the contents of the \verb+SERIES+
 field have leading numbers stripped and the remainder of the contents
 lowercased.
+
+\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
+<map maptype="field">
+  <map_pair map_source="TITLE"
+            map_match=":Collected\textbackslash s+Works.+Freud:"/>
+  <also_set map_field="KEYWORDS" map_value="freud"/>
+</map>
+\end{lstlisting}
+
+\noindent Here, if the \verb+TITLE+ field matches a particular
+regexp, we set a special keyword so we can, for example, make a
+references section just for certain items.
 \bigskip
 \minisec{Other datasource types}
 For data sources other than Bib\TeX, (e.g. \verb+ris+,

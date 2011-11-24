@@ -52,7 +52,6 @@ my $builder = $class->new(
         'Log::Log4perl' => 0,
         'Readonly::XS' => 0,
         'Readonly' => 0,
-        'String::Interpolate' => 0,
         'Unicode::Collate' => '0.84',
         'XML::LibXML::Simple' => 0,
         'XML::LibXSLT' => 0,

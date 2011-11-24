@@ -22,7 +22,6 @@ use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
 use Log::Log4perl qw(:no_extra_logdie_message);
-use String::Interpolate;
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -719,8 +718,9 @@ sub ireplace {
   my ($value, $val_match, $val_replace) = @_;
   return $value unless $val_match;
   $val_match = qr/$val_match/;
-  $val_replace = new String::Interpolate $val_replace;
-  $value =~ s/$val_match/$val_replace/egxms;
+  # Tricky quoting because of later evals
+  $val_replace = '"' . $val_replace . '"';
+  $value =~ s/$val_match/$val_replace/eegxms;
   return $value;
 }
 
