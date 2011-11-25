@@ -80,6 +80,12 @@
       </head>
       <body>
         <h2><tt>Biber</tt> UTF-8  <xsl:text disable-output-escaping="yes">&amp;harr;</xsl:text> LaTeX macro decoding/encoding map</h2>
+        <p>If you are using PDFTeX as opposed to a native UTF-8 engine like
+        XeTeX or LuaTeX, you will have to load some extra packages to use
+        macros in this section. See the &quot;symbols&quot; document that
+        comes with TeXLive for a comprehensive list of symbols and the
+        packages you need for PDFTeX (run &quot;texdoc symbols&quot; to see
+        this document on a TeXLive system).</p>
           <div class="key"><u>Key</u>
           <ul>
             <li><span class="full">Mapping only in &quot;full&quot; mapping set</span></li>
@@ -117,7 +123,7 @@
           </tbody>
         </table>
         <hr/>
-        <h3>General Macros</h3>
+        <h3>General Macros </h3>
         <table>
           <thead>
             <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>

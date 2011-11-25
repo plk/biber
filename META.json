@@ -43,7 +43,6 @@
             "Readonly" : 0,
             "Readonly::XS" : 0,
             "Regexp::Common" : 0,
-            "String::Interpolate" : 0,
             "Text::BibTeX" : "0.61",
             "Unicode::Collate" : "0.84",
             "XML::LibXML::Simple" : 0,
