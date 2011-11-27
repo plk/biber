@@ -39,7 +39,8 @@ $biber->set_output_obj(Biber::Output::BBL->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-Biber::Config->setoption('nodieonerror', 1); # because there is a cyclic crossref check
+Biber::Config->setoption('nodieonerror', 1); # because there is a failing cyclic crossref check
+Biber::Config->setoption('crossref_tree', 1);
 
 # Now generate the information
 my (undef, $stderr) = capture { $biber->prepare };
@@ -501,4 +502,53 @@ is($out->get_output_entry($main0,'ccr2'), $ccr1, 'cascading crossref test 1');
 is($out->get_output_entry($main0,'ccr3'), $ccr2, 'cascading crossref test 2');
 chomp $stderr;
 is($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'", 'Cyclic crossref error check');
+
+
+      # crossref_tree         => {
+      #                            ccr1 => { author => { ccr2 => "author" }, editor => { ccr2 => "editor" } },
+      #                            ccr2 => {
+      #                                      author => { ccr3 => "bookauthor" },
+      #                                      editor => { ccr3 => "editor" },
+      #                                      title  => { ccr3 => "booktitle" },
+      #                                    },
+      #                            cr6i => {
+      #                                      editor        => { cr6 => "editor" },
+      #                                      eventday      => { cr6 => "eventday" },
+      #                                      eventendday   => { cr6 => "eventendday" },
+      #                                      eventendmonth => { cr6 => "eventendmonth" },
+      #                                      eventendyear  => { cr6 => "eventendyear" },
+      #                                      eventmonth    => { cr6 => "eventmonth" },
+      #                                      eventtitle    => { cr6 => "eventtitle" },
+      #                                      eventyear     => { cr6 => "eventyear" },
+      #                                      location      => { cr6 => "location" },
+      #                                      venue         => { cr6 => "venue" },
+      #                                    },
+      #                            cr7i => {
+      #                                      author     => { cr7 => "bookauthor" },
+      #                                      publisher  => { cr7 => "publisher" },
+      #                                      subtitle   => { cr7 => "booksubtitle" },
+      #                                      title      => { cr7 => "booktitle" },
+      #                                      titleaddon => { cr7 => "booktitleaddon" },
+      #                                      verba      => { cr7 => "verbb" },
+      #                                    },
+      #                            cr8i => { title => { cr8 => "booktitle" } },
+      #                            cr_m => {
+      #                                      editor    => { cr1 => "editor", cr2 => "editor" },
+      #                                      publisher => { cr1 => "publisher", cr2 => "publisher" },
+      #                                      title     => { cr1 => "booktitle", cr2 => "booktitle" },
+      #                                      year      => { cr1 => "year", cr2 => "year" },
+      #                                    },
+      #                            crn  => {
+      #                                      editor    => { cr4 => "editor", cr5 => "editor" },
+      #                                      publisher => { cr4 => "publisher", cr5 => "publisher" },
+      #                                      title     => { cr4 => "booktitle", cr5 => "booktitle" },
+      #                                      year      => { cr4 => "year", cr5 => "year" },
+      #                                    },
+      #                            crt  => {
+      #                                      editor    => { cr3 => "editor" },
+      #                                      publisher => { cr3 => "publisher" },
+      #                                      title     => { cr3 => "booktitle" },
+      #                                      year      => { cr3 => "year" },
+      #                                    },
+      #                          };
 

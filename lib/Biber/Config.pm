@@ -56,8 +56,8 @@ $CONFIG->{state}{xdata} = [];
 
 # Record of which entries have inherited what from whom, with the fields inherited.
 # Used for generating inheritance trees
-$CONFIG->{state}{crossref_tree} = [];
-$CONFIG->{state}{xdata_tree} = [];
+$CONFIG->{state}{crossref_tree} = {};
+$CONFIG->{state}{xdata_tree} = {};
 
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
