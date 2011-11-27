@@ -712,13 +712,15 @@ sub get_inheritance {
               t => 'D'}
 ];
 
+  Biber::Config->is_inheritance_path($type, $key1, $key2)
+
 =cut
 
 sub is_inheritance_path {
-  my ($self, $e1, $e2, $type) = @_;
+  my ($self, $type, $e1, $e2) = @_;
   foreach my $dps (grep {$_->{s} eq $e1} @{$CONFIG->{state}{$type}}) {
     return 1 if $dps->{t} eq $e2;
-    return 1 if is_inheritance_path($self, $dps->{t}, $e2, $type);
+    return 1 if is_inheritance_path($self, $type, $dps->{t}, $e2);
   }
   return 0;
 }

@@ -342,7 +342,7 @@ sub resolve_xdata {
       Biber::Config->set_inheritance('xdata', $xdatum, $entry_key);
 
       # Detect XDATA loops
-      unless (Biber::Config->is_inheritance_path($entry_key, $xdatum, 'xdata')) {
+      unless (Biber::Config->is_inheritance_path('xdata', $entry_key, $xdatum)) {
         if (my $recurse_xdata = $xdatum_entry->get_field('xdata')) { # recurse
           $xdatum_entry->resolve_xdata($recurse_xdata);
         }
@@ -382,7 +382,7 @@ sub inherit_from {
   Biber::Config->set_inheritance('crossref', $source_key, $target_key);
 
   # Detect crossref loops
-  unless (Biber::Config->is_inheritance_path($target_key, $source_key, 'crossref')) {
+  unless (Biber::Config->is_inheritance_path('crossref', $target_key, $source_key)) {
     # cascading crossrefs
     if (my $ppkey = $parent->get_field('crossref')) {
       $parent->inherit_from($section->bibentry($ppkey));
