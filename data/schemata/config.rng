@@ -62,6 +62,14 @@
           </element>
         </optional>
         <optional>
+          <element name="crossref_tree">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="decodecharsset">
             <choice>
               <value>base</value>

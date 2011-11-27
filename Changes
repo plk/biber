@@ -1,5 +1,7 @@
 Revision history for Biber
 
+0.9.8  (unreleased)
+       * Added crossref_tree option
 0.9.7  27-11-2011
        * per-datasource mapping restrictions
        * Completely new config file format to allow for extensions

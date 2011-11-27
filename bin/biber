@@ -32,6 +32,7 @@ GetOptions(
            'collate_options|c=s',
            'configfile|g=s',
            'convert_control',
+           'crossref_tree',
            'decodecharsset=s',
            'debug|D',
            'fastsort|f',
@@ -251,6 +252,11 @@ or else the output of C<kpsewhich biber.conf>.
 Converts the F<.bcf> control file into html using an XSLT transform. Can
 be useful for debugging. File is named by appending C<.html>
 to F<.bcf> file.
+
+=item B<--crossref_tree>
+
+Generate a graphical representation of the crossreference inheritance
+tree. This will be a F<.html> file with the same basename as the F<.bbl>.
 
 =item B<--decodecharsset=base|full>
 

@@ -106,6 +106,7 @@ our $CONFIG_DEFAULT_BIBER = {
   bblsafecharsset    => { content => 'base' },
   collate            => { content => 1 },
   collate_options    => { option => [ { name => 'level', value => 4 } ] },
+  crossref_tree      => { content => 0 },
   debug              => { content => 0 },
   decodecharsset     => { content => 'base' },
   fastsort           => { content => 0 },

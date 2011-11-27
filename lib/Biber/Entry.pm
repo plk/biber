@@ -336,10 +336,10 @@ sub resolve_xdata {
       # This will only ever be between two XDATA entrytypes since we
       # always start at a non-XDATA entrytype, which we'll not look at again
       # and recursion is always between XDATA entrytypes.
-      next if Biber::Config->get_inheritance($xdatum, $entry_key, 'xdata');
+      next if Biber::Config->get_inheritance('xdata', $xdatum, $entry_key);
 
       # record the XDATA resolve between these entries to prevent loops
-      Biber::Config->set_inheritance($xdatum, $entry_key, 'xdata');
+      Biber::Config->set_inheritance('xdata', $xdatum, $entry_key);
 
       # Detect XDATA loops
       unless (Biber::Config->is_inheritance_path($entry_key, $xdatum, 'xdata')) {
@@ -379,7 +379,7 @@ sub inherit_from {
   my $source_key = $parent->get_field('citekey'); # source/parent key
 
   # record the inheritance between these entries to prevent loops and repeats.
-  Biber::Config->set_inheritance($source_key, $target_key, 'crossref');
+  Biber::Config->set_inheritance('crossref', $source_key, $target_key);
 
   # Detect crossref loops
   unless (Biber::Config->is_inheritance_path($target_key, $source_key, 'crossref')) {
@@ -428,12 +428,15 @@ sub inherit_from {
           # Set the field if it doesn't exist or override is requested
           elsif (not $self->field_exists($field->{target}) or
                  $field_override_target eq 'true') {
-            $logger->debug("    Entry '$target_key' is inheriting field '" .
+            $logger->debug("Entry '$target_key' is inheriting field '" .
                            $field->{source}.
                            "' as '" .
                            $field->{target} .
                            "' from entry '$source_key'");
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+            if (Biber::Config->getoption('crossref_tree')) {
+              Biber::Config->set_inheritance_tree('crossref', $source_key, $target_key, $field->{source}, $field->{target});
+            }
           }
         }
       }
@@ -443,11 +446,14 @@ sub inherit_from {
   # Now process the rest of the (original data only) fields, if necessary
   if ($inherit_all eq 'true') {
     foreach my $field ($parent->datafields) {
-      next if $processed{$field}; # Skip if we already dealt with this field above
+      next if $processed{$field}; # Skip if we have already dealt with this field above
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
-            $logger->debug("    Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
-        $self->set_datafield($field, $parent->get_field($field));
+            $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
+            $self->set_datafield($field, $parent->get_field($field));
+            if (Biber::Config->getoption('crossref_tree')) {
+              Biber::Config->set_inheritance_tree('crossref', $source_key, $target_key, $field, $field);
+            }
       }
     }
   }

@@ -13,6 +13,7 @@ start = element config {
 # Can't specify the config file location in the config file ...
 #  element configfile          { text }? & 
   element convert_control     { "0" | "1" }? &
+  element crossref_tree       { "0" | "1" }? &
   element decodecharsset      { "base" | "full" }? &
   element debug               { "0" | "1" }? &
   element fastsort            { "0" | "1" }? &

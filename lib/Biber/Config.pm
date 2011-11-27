@@ -50,9 +50,14 @@ $CONFIG->{state}{seenname} = {};
 # Disambiguation data for labelalpha. Used for labelalphatemplate autoinc method
 $CONFIG->{state}{ladisambiguation} = {};
 
-# Record of what has inherited from what
+# Record of which entries have inherited from other fields. Used for loop detection.
 $CONFIG->{state}{crossref} = [];
 $CONFIG->{state}{xdata} = [];
+
+# Record of which entries have inherited what from whom, with the fields inherited.
+# Used for generating inheritance trees
+$CONFIG->{state}{crossref_tree} = [];
+$CONFIG->{state}{xdata_tree} = [];
 
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
@@ -641,11 +646,28 @@ sub getblxoption {
 # Inheritance state methods
 ##############################
 
+=head2 set_inheritance_tree
+
+    Record who inherited what fields from whom
+    Can be used for crossrefs and xdata. This records the actual fields
+    inherited from another entry, for tree generation.
+
+    Biber::Config->set_inheritance_tree($source_key, $target_key, $source_field, $target_field)
+
+=cut
+
+sub set_inheritance_tree {
+  shift; # class method so don't care about class name
+  my ($type, $source_key, $target_key, $source_field, $target_field) = @_;
+  $CONFIG->{state}{"${type}_tree"}{$source_key}{$source_field}{$target_key} = $target_field;
+  return;
+}
 
 =head2 set_inheritance
 
     Record that $target inherited information from $source
-    Can be used for crossrefs and xdata
+    Can be used for crossrefs and xdata. This just records that an entry
+    inherited from another entry, for loop detection.
 
     Biber::Config->set_inheritance($source, $target)
 
@@ -653,7 +675,7 @@ sub getblxoption {
 
 sub set_inheritance {
   shift; # class method so don't care about class name
-  my ($source, $target, $type) = @_;
+  my ($type, $source, $target) = @_;
   push @{$CONFIG->{state}{$type}}, {s => $source, t => $target};
   return;
 }
@@ -670,7 +692,7 @@ sub set_inheritance {
 
 sub get_inheritance {
   shift; # class method so don't care about class name
-  my ($source, $target, $type) = @_;
+  my ($type, $source, $target) = @_;
   return first {$_->{s} eq $source and $_->{t} eq $target} @{$CONFIG->{state}{$type}};
 }
 
