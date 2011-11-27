@@ -23,6 +23,10 @@ REQUIREMENTS
   requirements for installing the Perl program version, please see the
   biber PDF documentation.
 
+  The git repository for Biber is kept on github:
+
+  https://github.com/plk/biber
+
 SUPPORT AND DOCUMENTATION
 
   After installing, biber --help will give you the basic documentation.
