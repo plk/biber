@@ -663,6 +663,18 @@ sub set_inheritance_tree {
   return;
 }
 
+=head2 get_inheritance_tree
+
+    Return an inheritance tree data structure for an inheritance type
+
+=cut
+
+sub get_inheritance_tree {
+  shift; # class method so don't care about class name
+  my $type = shift;
+  return $CONFIG->{state}{"${type}_tree"};
+}
+
 =head2 set_inheritance
 
     Record that $target inherited information from $source

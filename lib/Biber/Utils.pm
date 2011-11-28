@@ -43,8 +43,8 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   reduce_array remove_outer add_outer ucinit strip_nosort
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn ireplace imatch is_user_entrytype_map is_user_field_map
-  validate_biber_xml };
+  filter_entry_options biber_error biber_warn ireplace imatch is_user_entrytype_map
+  is_user_field_map validate_biber_xml };
 
 =head1 FUNCTIONS
 
@@ -927,6 +927,57 @@ sub validate_biber_xml {
   }
   undef $xmlparser;
 }
+
+
+      # crossref_tree         => {
+      #                            ccr1 => { author => { ccr2 => "author" }, editor => { ccr2 => "editor" } },
+      #                            ccr2 => {
+      #                                      author => { ccr3 => "bookauthor" },
+      #                                      editor => { ccr3 => "editor" },
+      #                                      title  => { ccr3 => "booktitle" },
+      #                                    },
+      #                            cr6i => {
+      #                                      editor        => { cr6 => "editor" },
+      #                                      eventday      => { cr6 => "eventday" },
+      #                                      eventendday   => { cr6 => "eventendday" },
+      #                                      eventendmonth => { cr6 => "eventendmonth" },
+      #                                      eventendyear  => { cr6 => "eventendyear" },
+      #                                      eventmonth    => { cr6 => "eventmonth" },
+      #                                      eventtitle    => { cr6 => "eventtitle" },
+      #                                      eventyear     => { cr6 => "eventyear" },
+      #                                      location      => { cr6 => "location" },
+      #                                      venue         => { cr6 => "venue" },
+      #                                    },
+      #                            cr7i => {
+      #                                      author     => { cr7 => "bookauthor" },
+      #                                      publisher  => { cr7 => "publisher" },
+      #                                      subtitle   => { cr7 => "booksubtitle" },
+      #                                      title      => { cr7 => "booktitle" },
+      #                                      titleaddon => { cr7 => "booktitleaddon" },
+      #                                      verba      => { cr7 => "verbb" },
+      #                                    },
+      #                            cr8i => { title => { cr8 => "booktitle" } },
+      #                            cr_m => {
+      #                                      editor    => { cr1 => "editor", cr2 => "editor" },
+      #                                      publisher => { cr1 => "publisher", cr2 => "publisher" },
+      #                                      title     => { cr1 => "booktitle", cr2 => "booktitle" },
+      #                                      year      => { cr1 => "year", cr2 => "year" },
+      #                                    },
+      #                            crn  => {
+      #                                      editor    => { cr4 => "editor", cr5 => "editor" },
+      #                                      publisher => { cr4 => "publisher", cr5 => "publisher" },
+      #                                      title     => { cr4 => "booktitle", cr5 => "booktitle" },
+      #                                      year      => { cr4 => "year", cr5 => "year" },
+      #                                    },
+      #                            crt  => {
+      #                                      editor    => { cr3 => "editor" },
+      #                                      publisher => { cr3 => "publisher" },
+      #                                      title     => { cr3 => "booktitle" },
+      #                                      year      => { cr3 => "year" },
+      #                                    },
+      #                          };
+
+
 
 
 1;

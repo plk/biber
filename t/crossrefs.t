@@ -11,7 +11,7 @@ use Biber::Output::BBL;
 use Log::Log4perl;
 use Capture::Tiny qw(capture);
 
-chdir("t/tdata") ;
+chdir("t/tdata");
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
@@ -511,51 +511,4 @@ ok(defined($section0->bibentry('r3')),'Recursive crossref test 6');
 is($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
 ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
 
-      # crossref_tree         => {
-      #                            ccr1 => { author => { ccr2 => "author" }, editor => { ccr2 => "editor" } },
-      #                            ccr2 => {
-      #                                      author => { ccr3 => "bookauthor" },
-      #                                      editor => { ccr3 => "editor" },
-      #                                      title  => { ccr3 => "booktitle" },
-      #                                    },
-      #                            cr6i => {
-      #                                      editor        => { cr6 => "editor" },
-      #                                      eventday      => { cr6 => "eventday" },
-      #                                      eventendday   => { cr6 => "eventendday" },
-      #                                      eventendmonth => { cr6 => "eventendmonth" },
-      #                                      eventendyear  => { cr6 => "eventendyear" },
-      #                                      eventmonth    => { cr6 => "eventmonth" },
-      #                                      eventtitle    => { cr6 => "eventtitle" },
-      #                                      eventyear     => { cr6 => "eventyear" },
-      #                                      location      => { cr6 => "location" },
-      #                                      venue         => { cr6 => "venue" },
-      #                                    },
-      #                            cr7i => {
-      #                                      author     => { cr7 => "bookauthor" },
-      #                                      publisher  => { cr7 => "publisher" },
-      #                                      subtitle   => { cr7 => "booksubtitle" },
-      #                                      title      => { cr7 => "booktitle" },
-      #                                      titleaddon => { cr7 => "booktitleaddon" },
-      #                                      verba      => { cr7 => "verbb" },
-      #                                    },
-      #                            cr8i => { title => { cr8 => "booktitle" } },
-      #                            cr_m => {
-      #                                      editor    => { cr1 => "editor", cr2 => "editor" },
-      #                                      publisher => { cr1 => "publisher", cr2 => "publisher" },
-      #                                      title     => { cr1 => "booktitle", cr2 => "booktitle" },
-      #                                      year      => { cr1 => "year", cr2 => "year" },
-      #                                    },
-      #                            crn  => {
-      #                                      editor    => { cr4 => "editor", cr5 => "editor" },
-      #                                      publisher => { cr4 => "publisher", cr5 => "publisher" },
-      #                                      title     => { cr4 => "booktitle", cr5 => "booktitle" },
-      #                                      year      => { cr4 => "year", cr5 => "year" },
-      #                                    },
-      #                            crt  => {
-      #                                      editor    => { cr3 => "editor" },
-      #                                      publisher => { cr3 => "publisher" },
-      #                                      title     => { cr3 => "booktitle" },
-      #                                      year      => { cr3 => "year" },
-      #                                    },
-      #                          };
 
