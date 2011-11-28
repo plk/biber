@@ -764,7 +764,7 @@ sub process_crossrefs {
     if ($be->get_field('entrytype') eq 'set') {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
-        $logger->debug("  Adding set member '$inset_key' to the citekeys (section $secnum)");
+        $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
         $section->add_citekeys($inset_key);
       }
       # automatically crossref for the first set member using plain set inheritance
@@ -779,7 +779,7 @@ sub process_crossrefs {
       # Skip inheritance if we've already done it
       next if Biber::Config->get_inheritance('crossref', $cr, $be->get_field('citekey'));
       my $parent = $section->bibentry($cr);
-      $logger->debug("  Entry $citekey inheriting fields from parent $cr");
+      $logger->debug("Entry $citekey inheriting fields from parent $cr");
       unless ($parent) {
         biber_warn("Cannot inherit from crossref key '$cr' - does it exist?", $be);
       }
@@ -1566,7 +1566,7 @@ KEYLOOP: foreach my $k ($list->get_keys) {
 
 sub check_list_filter {
   my ($k, $t, $fs, $be) = @_;
-  $logger->debug("  Checking key '$k' against filter '$t=" . join(',', @$fs) . "'");
+  $logger->debug("Checking key '$k' against filter '$t=" . join(',', @$fs) . "'");
   if ($t eq 'type') {
     return 0 unless grep {$be->get_field('entrytype') eq $_} @$fs;
   }
@@ -2631,10 +2631,11 @@ sub fetch_data {
   # dependent key list generation
   my @dependent_keys = ();
   my $dep_map = {}; # Flag to say an entry has some deps so we can shortcut deletions
+
   foreach my $citekey ($section->get_citekeys) {
     # Dynamic sets don't exist yet but their members do
     if (my @dmems = $section->get_dynamic_set($citekey)) {
-      # skip looking for dependent if it's already been directly cited
+      # skip looking for dependent if it's already there
       foreach my $dm (@dmems) {
         unless ($section->bibentry($dm)) {
           push @dependent_keys, $dm;
@@ -2650,6 +2651,7 @@ sub fetch_data {
       # xdata
       if (my $xdata = $be->get_field('xdata')) {
         foreach my $xdatum (split /\s*,\s*/, $xdata) {
+          # skip looking for dependent if it's already there
           push @dependent_keys, $xdatum unless $section->bibentry($xdatum);
           $logger->debug("Entry '$citekey' has xdata '$xdatum'");
           $dep_map->{$citekey} = 1;
@@ -2660,7 +2662,7 @@ sub fetch_data {
       my $refkey;
       if ($refkey = $be->get_field('xref') or
           $refkey = $be->get_field('crossref')) {
-        # skip looking for dependent if it's already been directly cited
+        # skip looking for dependent if it's already there
         push @dependent_keys, $refkey unless $section->bibentry($refkey);
         $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
         $dep_map->{$citekey} = 1;
@@ -2669,7 +2671,7 @@ sub fetch_data {
       # static sets
       if ($be->get_field('entrytype') eq 'set') {
         my @smems = split /\s*,\s*/, $be->get_field('entryset');
-        # skip looking for dependent if it's already been directly cited
+        # skip looking for dependent if it's already there
         foreach my $sm (@smems) {
           unless ($section->has_citekey($sm)) {
             push @dependent_keys, $sm;
@@ -2682,7 +2684,7 @@ sub fetch_data {
       # Related entries
       if (my $relkeys = $be->get_field('related')) {
         my @rmems = split /\s*,\s*/, $relkeys;
-        # skip looking for dependent if it's already been directly cited
+        # skip looking for dependent if it's already there
         foreach my $rm (@rmems) {
           unless ($section->has_citekey($rm)) {
             push @dependent_keys, $rm;

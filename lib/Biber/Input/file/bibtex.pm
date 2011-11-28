@@ -181,8 +181,7 @@ sub extract_entries {
     # cited, even without allkeys so that we can extract data from them later. We don't try to
     # work out which ones are actually used as the combination of them cascading and not being cited
     # makes this really difficult and it's not worth the complexity as against the minimal memory
-    # requirements of just grabbing them all. We will remove them from the section object citation
-    # list later (see Biber::resolve_xdata()) so that they are not output at all.
+    # requirements of just grabbing them all. The Biber default structure skips them on output
     while (my (undef, $entry) = each %{$cache->{data}{$filename}}) {
       next unless lc($entry->type) eq 'xdata';
       next if $section->has_citekey(decode_utf8($entry->key));
