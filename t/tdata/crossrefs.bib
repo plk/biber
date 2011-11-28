@@ -239,3 +239,24 @@
   DATE      = {1911},
   CROSSREF  = {circ2}
 }
+
+% Test of dependency calculations for non-cited entries
+
+@BOOK{r1,
+  DATE      = {1911},
+  CROSSREF  = {r2}
+}
+
+@BOOK{r2,
+  DATE      = {1911},
+  CROSSREF  = {r3}
+}
+
+@BOOK{r3,
+  DATE      = {1911},
+  CROSSREF  = {r4}
+}
+
+@BOOK{r4,
+  DATE      = {1911},
+}

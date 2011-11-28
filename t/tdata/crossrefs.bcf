@@ -219,6 +219,7 @@
     <bcf:citekey>circ1</bcf:citekey>
     <bcf:citekey>circ2</bcf:citekey>
     <bcf:citekey>circ3</bcf:citekey>
+    <bcf:citekey>r1</bcf:citekey>
     <bcf:sectionlist label="MAIN" type="entry"/>
     <bcf:sectionlist label="SHORTHANDS" type="shorthand">
       <bcf:filter type="field">shorthand</bcf:filter>

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 23;
+use Test::More tests => 31;
 
 use Biber;
 use Biber::Output::BBL;
@@ -502,7 +502,14 @@ is($out->get_output_entry($main0,'ccr2'), $ccr1, 'cascading crossref test 1');
 is($out->get_output_entry($main0,'ccr3'), $ccr2, 'cascading crossref test 2');
 chomp $stderr;
 is($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'", 'Cyclic crossref error check');
-
+is($section0->has_citekey('r1'), 1,'Recursive crossref test 1');
+ok(defined($section0->bibentry('r1')),'Recursive crossref test 2');
+is($section0->has_citekey('r2'), 0,'Recursive crossref test 3');
+ok(defined($section0->bibentry('r2')),'Recursive crossref test 4');
+is($section0->has_citekey('r3'), 0,'Recursive crossref test 5');
+ok(defined($section0->bibentry('r3')),'Recursive crossref test 6');
+is($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
+ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
 
       # crossref_tree         => {
       #                            ccr1 => { author => { ccr2 => "author" }, editor => { ccr2 => "editor" } },
