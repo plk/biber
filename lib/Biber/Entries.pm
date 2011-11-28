@@ -57,6 +57,18 @@ sub entry {
   return $self->{$citekey};
 }
 
+=head2 entries
+
+    Returns an array of all Biber::Entry objects
+
+=cut
+
+sub entries {
+  my $self = shift;
+  return values %$self;
+}
+
+
 =head2 add_entry
 
     Adds a Biber::Entry to the Biber::Entries object

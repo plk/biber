@@ -177,15 +177,15 @@ sub extract_entries {
     # * They can cascade (nested XDATA fields)
     # * They are never cited
     #
-    # So, we add all of them to the internal data model and pretend temporarily that they were
+    # So, we add all of them to the internal data and pretend temporarily that they were
     # cited, even without allkeys so that we can extract data from them later. We don't try to
     # work out which ones are actually used as the combination of them cascading and not being cited
     # makes this really difficult and it's not worth the complexity as against the minimal memory
-    # requirements of just grabbing them all. The Biber default structure skips them on output
+    # requirements of just grabbing them all. Since they are never cited, even though they are in
+    # added to the data internally, they are not output. The Biber default structure skips them
+    # on output anyway, just in case
     while (my (undef, $entry) = each %{$cache->{data}{$filename}}) {
       next unless lc($entry->type) eq 'xdata';
-      next if $section->has_citekey(decode_utf8($entry->key));
-      $section->add_citekeys(decode_utf8($entry->key));
       create_entry(decode_utf8($entry->key), $entry, $source);
     }
   }

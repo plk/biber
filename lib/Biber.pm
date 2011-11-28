@@ -707,23 +707,15 @@ sub resolve_xdata {
   my $section = $self->sections->get_section($secnum);
   $logger->debug("Resolving XDATA entries for section $secnum");
 
-  foreach my $citekey ($section->get_citekeys) {
-    my $be = $section->bibentry($citekey);
+  # We are not looping over citekeys here as XDATA entries are not cited.
+  # They may have been added to the section as entries, however.
+  foreach my $be ($section->bibentries->entries) {
     # Don't directly resolve XDATA entrytypes - this is done recursively in the Entry method
     # Otherwise, we will die on loops etc. for XDATA entries which are never referenced from
     # any cited entry
     next if $be->get_field('entrytype') eq 'xdata';
     next unless my $xdata = $be->get_field('xdata');
     $be->resolve_xdata($xdata);
-  }
-
-  # Now remove all XDATA entries since they were only added to
-  # the section temporarily so we could get information from them
-  foreach my $citekey ($section->get_citekeys) {
-    my $be = $section->bibentry($citekey);
-    if ($be->get_field('entrytype') eq 'xdata') {
-      $section->del_citekey($citekey);
-    }
   }
 }
 

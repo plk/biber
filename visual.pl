@@ -6,7 +6,7 @@ BEGIN {
   push @INC, 'blib/lib/';
 }
 
-my $v = $Biber::VERSION;
-$v .= ' (beta)' if $Biber::BETA_VERSION;
+my $v = $Biber::Config::VERSION;
+$v .= ' (beta)' if $Biber::Config::BETA_VERSION;
 
 print "Finished testing biber $v using Perl $] at $^X\n";
