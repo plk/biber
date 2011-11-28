@@ -44,7 +44,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch is_user_entrytype_map
-  is_user_field_map validate_biber_xml };
+  is_user_field_map validate_biber_xml crossref_tree_to_ascii };
 
 =head1 FUNCTIONS
 
@@ -608,7 +608,7 @@ sub is_notnull_object {
 sub stringify_hash {
   my $hashref = shift;
   my $string;
-  while (my ($k,$v) = each %{$hashref}) {
+  while (my ($k,$v) = each %$hashref) {
     $string .= "$k => $v, ";
   }
   # Take off the trailing comma and space
@@ -928,54 +928,78 @@ sub validate_biber_xml {
   undef $xmlparser;
 }
 
+=head2 crossref_tree_to_ascii
 
-      # crossref_tree         => {
-      #                            ccr1 => { author => { ccr2 => "author" }, editor => { ccr2 => "editor" } },
-      #                            ccr2 => {
-      #                                      author => { ccr3 => "bookauthor" },
-      #                                      editor => { ccr3 => "editor" },
-      #                                      title  => { ccr3 => "booktitle" },
-      #                                    },
-      #                            cr6i => {
-      #                                      editor        => { cr6 => "editor" },
-      #                                      eventday      => { cr6 => "eventday" },
-      #                                      eventendday   => { cr6 => "eventendday" },
-      #                                      eventendmonth => { cr6 => "eventendmonth" },
-      #                                      eventendyear  => { cr6 => "eventendyear" },
-      #                                      eventmonth    => { cr6 => "eventmonth" },
-      #                                      eventtitle    => { cr6 => "eventtitle" },
-      #                                      eventyear     => { cr6 => "eventyear" },
-      #                                      location      => { cr6 => "location" },
-      #                                      venue         => { cr6 => "venue" },
-      #                                    },
-      #                            cr7i => {
-      #                                      author     => { cr7 => "bookauthor" },
-      #                                      publisher  => { cr7 => "publisher" },
-      #                                      subtitle   => { cr7 => "booksubtitle" },
-      #                                      title      => { cr7 => "booktitle" },
-      #                                      titleaddon => { cr7 => "booktitleaddon" },
-      #                                      verba      => { cr7 => "verbb" },
-      #                                    },
-      #                            cr8i => { title => { cr8 => "booktitle" } },
-      #                            cr_m => {
-      #                                      editor    => { cr1 => "editor", cr2 => "editor" },
-      #                                      publisher => { cr1 => "publisher", cr2 => "publisher" },
-      #                                      title     => { cr1 => "booktitle", cr2 => "booktitle" },
-      #                                      year      => { cr1 => "year", cr2 => "year" },
-      #                                    },
-      #                            crn  => {
-      #                                      editor    => { cr4 => "editor", cr5 => "editor" },
-      #                                      publisher => { cr4 => "publisher", cr5 => "publisher" },
-      #                                      title     => { cr4 => "booktitle", cr5 => "booktitle" },
-      #                                      year      => { cr4 => "year", cr5 => "year" },
-      #                                    },
-      #                            crt  => {
-      #                                      editor    => { cr3 => "editor" },
-      #                                      publisher => { cr3 => "publisher" },
-      #                                      title     => { cr3 => "booktitle" },
-      #                                      year      => { cr3 => "year" },
-      #                                    },
-      #                          };
+  Dump an ascii representation of the crossref tree to a file
+
+=cut
+
+sub crossref_tree_to_ascii {
+  my $crt = Biber::Config->get_inheritance_tree('crossref');
+  require Graph::Easy;
+  my $graph = Graph::Easy->new();
+  while (my ($f_entry, $v) = each %$crt) {
+    my $f_entry_group = $graph->group($f_entry) // $graph->add_group($f_entry);
+    while (my ($f_field, $w) = each %$v) {
+      my $f_field_node = $f_entry_group->add_node($f_field);
+      while (my ($t_entry, $t_field) = each %$w) {
+        my $t_entry_group = $graph->group($t_entry) // $graph->add_group($t_entry);
+        my $t_field_node = $t_entry_group->add_node($t_field);
+        $graph->add_edge_once($f_field_node, $t_field_node);
+      }
+    }
+  }
+  say $graph->as_txt;
+}
+
+
+# {
+#   ccr1 => { author => { ccr2 => "author" }, editor => { ccr2 => "editor" } },
+#   ccr2 => {
+#             author => { ccr3 => "bookauthor" },
+#             editor => { ccr3 => "editor" },
+#             title  => { ccr3 => "booktitle" },
+#           },
+#   cr6i => {
+#             editor        => { cr6 => "editor" },
+#             eventday      => { cr6 => "eventday" },
+#             eventendday   => { cr6 => "eventendday" },
+#             eventendmonth => { cr6 => "eventendmonth" },
+#             eventendyear  => { cr6 => "eventendyear" },
+#             eventmonth    => { cr6 => "eventmonth" },
+#             eventtitle    => { cr6 => "eventtitle" },
+#             eventyear     => { cr6 => "eventyear" },
+#             location      => { cr6 => "location" },
+#             venue         => { cr6 => "venue" },
+#           },
+#   cr7i => {
+#             author     => { cr7 => "bookauthor" },
+#             publisher  => { cr7 => "publisher" },
+#             subtitle   => { cr7 => "booksubtitle" },
+#             title      => { cr7 => "booktitle" },
+#             titleaddon => { cr7 => "booktitleaddon" },
+#             verba      => { cr7 => "verbb" },
+#           },
+#   cr8i => { title => { cr8 => "booktitle" } },
+#   cr_m => {
+#             editor    => { cr1 => "editor", cr2 => "editor" },
+#             publisher => { cr1 => "publisher", cr2 => "publisher" },
+#             title     => { cr1 => "booktitle", cr2 => "booktitle" },
+#             year      => { cr1 => "year", cr2 => "year" },
+#           },
+#   crn  => {
+#             editor    => { cr4 => "editor", cr5 => "editor" },
+#             publisher => { cr4 => "publisher", cr5 => "publisher" },
+#             title     => { cr4 => "booktitle", cr5 => "booktitle" },
+#             year      => { cr4 => "year", cr5 => "year" },
+#           },
+#   crt  => {
+#             editor    => { cr3 => "editor" },
+#             publisher => { cr3 => "publisher" },
+#             title     => { cr3 => "booktitle" },
+#             year      => { cr3 => "year" },
+#           },
+# }
 
 
 
