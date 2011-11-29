@@ -512,6 +512,4 @@ ok(defined($section0->bibentry('r3')),'Recursive crossref test 6');
 is($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
 ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
 
-crossref_tree_to_ascii;
-
 

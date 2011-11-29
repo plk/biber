@@ -56,8 +56,8 @@ $CONFIG->{state}{xdata} = [];
 
 # Record of which entries have inherited what from whom, with the fields inherited.
 # Used for generating inheritance trees
-$CONFIG->{state}{crossref_tree} = {};
-$CONFIG->{state}{xdata_tree} = {};
+$CONFIG->{state}{crossref_graph} = {};
+$CONFIG->{state}{xdata_graph} = {};
 
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
@@ -646,33 +646,33 @@ sub getblxoption {
 # Inheritance state methods
 ##############################
 
-=head2 set_inheritance_tree
+=head2 set_inheritance_graph
 
     Record who inherited what fields from whom
     Can be used for crossrefs and xdata. This records the actual fields
     inherited from another entry, for tree generation.
 
-    Biber::Config->set_inheritance_tree($source_key, $target_key, $source_field, $target_field)
+    Biber::Config->set_inheritance_graph($source_key, $target_key, $source_field, $target_field)
 
 =cut
 
-sub set_inheritance_tree {
+sub set_inheritance_graph {
   shift; # class method so don't care about class name
   my ($type, $source_key, $target_key, $source_field, $target_field) = @_;
-  $CONFIG->{state}{"${type}_tree"}{$source_key}{$source_field}{$target_key} = $target_field;
+  $CONFIG->{state}{"${type}_graph"}{$source_key}{$source_field}{$target_key} = $target_field;
   return;
 }
 
-=head2 get_inheritance_tree
+=head2 get_inheritance_graph
 
-    Return an inheritance tree data structure for an inheritance type
+    Return an inheritance graph data structure for an inheritance type
 
 =cut
 
-sub get_inheritance_tree {
+sub get_inheritance_graph {
   shift; # class method so don't care about class name
   my $type = shift;
-  return $CONFIG->{state}{"${type}_tree"};
+  return $CONFIG->{state}{"${type}_graph"};
 }
 
 =head2 set_inheritance

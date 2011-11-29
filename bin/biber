@@ -32,7 +32,7 @@ GetOptions(
            'collate_options|c=s',
            'configfile|g=s',
            'convert_control',
-           'crossref_tree',
+           'crossref_graph',
            'decodecharsset=s',
            'debug|D',
            'fastsort|f',
@@ -161,10 +161,21 @@ if (Biber::Config->getoption('trace')) {
 
 # Get reference to output object
 my $bbloutput = $biber->get_output_obj;
+
 # Set the output target
 $bbloutput->set_output_target_file($bblfile);
+
 # Write the output to the target
 $bbloutput->output;
+
+# Write the crossref graph, if asked
+if (Biber::Config->getoption('crossref_graph')) {
+  my $dotfile = $bblfile =~ s/.bbl$/.dot/r;
+  open(my $dot, '>', $dotfile);
+  print $dot crossref_graph_to_dot();
+  close($dot);
+  $logger->info("Crossreference graph output to '$dotfile'");
+}
 
 $biber->display_problems;
 
@@ -253,10 +264,12 @@ Converts the F<.bcf> control file into html using an XSLT transform. Can
 be useful for debugging. File is named by appending C<.html>
 to F<.bcf> file.
 
-=item B<--crossref_tree>
+=item B<--crossref_graph>
 
-Generate a graphical representation of the crossreference inheritance
-tree. This will be a F<.html> file with the same basename as the F<.bbl>.
+Generate a Graphviz F<.dot> file which shows the crossreference inheritance
+graph. This will be a F<.dot> file with the same basename as the F<.bbl>. You
+must process this with C<dot>, e.g. C<dot -Tpdf test.dot -o test.pdf> to render
+the graph.
 
 =item B<--decodecharsset=base|full>
 

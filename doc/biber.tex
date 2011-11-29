@@ -444,7 +444,7 @@ an example config file which displays the Biber defaults:
   <collate_options>
     <option name="level" value="4"/>
   </collate_options>
-  <crossref_tree>0</crossref_tree>
+  <crossref_graph>0</crossref_graph>
   <debug>0</debug>
   <decodecharsset>base</decodecharsset>
   <fastsort>0</fastsort>
@@ -1411,6 +1411,27 @@ Currently supported data sources drivers are:
 \item \verb+ris+ --- Research Information Systems format
 \item \verb+zoterordfxml+ --- Zotero RDF XML format, version 2.0.9
 \end{itemize}
+
+\subsection{Visualising Inheritance}
+
+The option \verb+--crossref_graph+ will cause Biber to write a
+GraphViz \verb+.dot+ file to the same location as the \verb+.bbl+
+which graphs the inheritance relationships in your
+bibliographic data. You can process this file using the \verb+dot+
+program from GraphViz\footnote{\url{http://www.graphviz.org}} to generate a
+high quality graphical representation of the data in a format of your
+choice. For example, to create a PDF from the \verb+.dot+ file:
+
+\begin{verbatim}
+dot -Tpdf <file>.dot -o <file>.pdf
+\end{verbatim}
+
+\noindent It is unlikely that you will need to use this unless you
+have a fairly large bibliography which uses crossreferences (and
+especially nested crossreferences) extensively. Since there is no
+lightweight and high quality graph renderer which could reasonably be
+packaged with Biber, I chose to leave the output of this feature in
+the best available format.
 
 \section{Binaries}\label{binaries}
 
