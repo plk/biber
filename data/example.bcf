@@ -162,6 +162,10 @@
         <bcf:also_set map_field="USERD" map_value="Some string of things"/>
       </bcf:map>
       <bcf:map maptype="field">
+        <bcf:per_type>REPORT</bcf:per_type>
+        <bcf:map_pair map_source="LISTA" map_match="BADMATCH" map_null="1"/>
+      </bcf:map>
+      <bcf:map maptype="field">
         <bcf:map_pair map_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>
       </bcf:map>
       <bcf:map maptype="field">
