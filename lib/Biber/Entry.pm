@@ -434,7 +434,7 @@ sub inherit_from {
                            $field->{target} .
                            "' from entry '$source_key'");
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
-            if (Biber::Config->getoption('crossref_graph')) {
+            if (Biber::Config->getoption('inheritance_graph')) {
               Biber::Config->set_inheritance_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
             }
           }
@@ -451,7 +451,7 @@ sub inherit_from {
       if (not $self->field_exists($field) or $override_target eq 'true') {
             $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
             $self->set_datafield($field, $parent->get_field($field));
-            if (Biber::Config->getoption('crossref_graph')) {
+            if (Biber::Config->getoption('inheritance_graph')) {
               Biber::Config->set_inheritance_graph('crossref', $source_key, $target_key, $field, $field);
             }
       }

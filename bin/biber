@@ -32,7 +32,7 @@ GetOptions(
            'collate_options|c=s',
            'configfile|g=s',
            'convert_control',
-           'crossref_graph',
+           'inheritance_graph=s',
            'decodecharsset=s',
            'debug|D',
            'fastsort|f',
@@ -169,12 +169,12 @@ $bbloutput->set_output_target_file($bblfile);
 $bbloutput->output;
 
 # Write the crossref graph, if asked
-if (Biber::Config->getoption('crossref_graph')) {
+if (Biber::Config->getoption('inheritance_graph')) {
   my $dotfile = $bblfile =~ s/.bbl$/.dot/r;
   open(my $dot, '>', $dotfile);
-  print $dot crossref_graph_to_dot();
+  print $dot inheritance_graph_to_dot();
   close($dot);
-  $logger->info("Crossreference graph output to '$dotfile'");
+  $logger->info("Inheritance graph output to '$dotfile'");
 }
 
 $biber->display_problems;

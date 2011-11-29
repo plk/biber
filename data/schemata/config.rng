@@ -62,7 +62,7 @@
           </element>
         </optional>
         <optional>
-          <element name="crossref_graph">
+          <element name="inheritance_graph">
             <choice>
               <value>0</value>
               <value>1</value>

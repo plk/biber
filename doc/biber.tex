@@ -444,7 +444,7 @@ an example config file which displays the Biber defaults:
   <collate_options>
     <option name="level" value="4"/>
   </collate_options>
-  <crossref_graph>0</crossref_graph>
+  <inheritance_graph>0</inheritance_graph>
   <debug>0</debug>
   <decodecharsset>base</decodecharsset>
   <fastsort>0</fastsort>
@@ -1414,7 +1414,7 @@ Currently supported data sources drivers are:
 
 \subsection{Visualising Inheritance}
 
-The option \verb+--crossref_graph+ will cause Biber to write a
+The option \verb+--inheritance_graph+ will cause Biber to write a
 GraphViz \verb+.dot+ file to the same location as the \verb+.bbl+
 which graphs the inheritance relationships in your
 bibliographic data. You can process this file using the \verb+dot+

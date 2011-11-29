@@ -34,6 +34,7 @@
             "Data::Dump" : 0,
             "Date::Simple" : 0,
             "File::Slurp::Unicode" : 0,
+            "Graph::Easy" : 0,
             "IPC::Cmd" : 0,
             "IPC::Run3" : 0,
             "LWP::Simple" : 0,
@@ -147,5 +148,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "v0.9.7"
+   "version" : "v0.9.8"
 }
