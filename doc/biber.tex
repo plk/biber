@@ -1414,13 +1414,13 @@ Currently supported data sources drivers are:
 
 \subsection{Visualising Inheritance}
 
-The option \verb+--inheritance_graph+ will cause Biber to write a
-GraphViz \verb+.dot+ file to the same location as the \verb+.bbl+
-which graphs the inheritance relationships in your
+The option \verb+--graph+ will cause Biber to write a GraphViz
+\verb+.dot+ file instead of a \verb+.bbl+.  This file graphs the
 bibliographic data. You can process this file using the \verb+dot+
-program from GraphViz\footnote{\url{http://www.graphviz.org}} to generate a
-high quality graphical representation of the data in a format of your
-choice. For example, to create a PDF from the \verb+.dot+ file:
+program from GraphViz\footnote{\url{http://www.graphviz.org}} to
+generate a high quality graphical representation of the data in a
+format of your choice. For example, to create a PDF from the
+\verb+.dot+ file:
 
 \begin{verbatim}
 dot -Tpdf <file>.dot -o <file>.pdf

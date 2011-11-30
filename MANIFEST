@@ -10,6 +10,7 @@ bin/biber
 lib/Biber.pm
 lib/Biber/Output/Base.pm
 lib/Biber/Output/BBL.pm
+lib/Biber/Output/DOT.pm
 lib/Biber/Output/Test.pm
 lib/Biber/Input/file/ris.pm
 lib/Biber/Input/file/ris.dcf

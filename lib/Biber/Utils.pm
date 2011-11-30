@@ -44,7 +44,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch is_user_entrytype_map
-  is_user_field_map validate_biber_xml inheritance_graph_to_dot };
+  is_user_field_map validate_biber_xml };
 
 =head1 FUNCTIONS
 
@@ -927,52 +927,6 @@ sub validate_biber_xml {
   }
   undef $xmlparser;
 }
-
-=head2 inheritance_graph_to_dot
-
-  Dump an ascii representation of the crossref tree to a file
-
-=cut
-
-sub inheritance_graph_to_dot {
-  my $type = Biber::Config->getoption('inheritance_graph');
-  my $crt = Biber::Config->get_inheritance_graph('crossref');
-  require Graph::Easy;
-  my $graph = Graph::Easy->new();
-
-  # Just show the entries, no fields
-  if ($type eq 'entry') {
-    while (my ($f_entry, $v) = each %$crt) {
-      my $f_entry_node = $graph->add_node($f_entry);
-      $f_entry_node->set_attribute('label', $f_entry);
-      while (my (undef, $w) = each %$v) {
-        while (my ($t_entry, undef) = each %$w) {
-          my $t_entry_node = $graph->add_node($t_entry);
-          $t_entry_node->set_attribute('label', $t_entry);
-          $graph->add_edge_once($f_entry_node, $t_entry_node);
-        }
-      }
-    }
-  }
-  # Show fields too
-  else {
-    while (my ($f_entry, $v) = each %$crt) {
-      my $f_entry_group = $graph->group($f_entry) // $graph->add_group($f_entry);
-      while (my ($f_field, $w) = each %$v) {
-        my $f_field_node = $f_entry_group->add_node("${f_entry}_${f_field}");
-        $f_field_node->set_attribute('label', uc($f_field));
-        while (my ($t_entry, $t_field) = each %$w) {
-          my $t_entry_group = $graph->group($t_entry) // $graph->add_group($t_entry);
-          my $t_field_node = $t_entry_group->add_node("${t_entry}_${t_field}");
-          $t_field_node->set_attribute('label', uc($t_field));
-          $graph->add_edge_once($f_field_node, $t_field_node);
-        }
-      }
-    }
-  }
-  return $graph->as_graphviz;
-}
-
 
 1;
 

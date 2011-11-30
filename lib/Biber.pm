@@ -2511,6 +2511,8 @@ sub sort_list {
 sub prepare {
   my $self = shift;
   $self->process_setup;                  # Place to put global pre-processing things
+  my $out = $self->get_output_obj;       # Biber::Output object
+
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
@@ -2532,10 +2534,10 @@ sub prepare {
     $self->process_entries_post;         # Main entry processing loop, part 2
     $self->process_lists;                # process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
-    $self->create_output_section;        # Generate and push the section output into the
+    $out->create_output_section;         # Generate and push the section output into the
                                          # output object ready for writing
   }
-  $self->create_output_misc;             # Generate and push the final misc bits of output
+  $out->create_output_misc;              # Generate and push the final misc bits of output
                                          # into the output object ready for writing
   return;
 }
@@ -2807,64 +2809,6 @@ sub remove_undef_dependent {
     }
   }
     return;
-}
-
-=head2 create_output_section
-
-    Create the output from the sections data and push it into the
-    output object. You can subclass Biber and
-    override this method to output things other than .bbl
-
-=cut
-
-sub create_output_section {
-  my $self = shift;
-  my $output_obj = $self->get_output_obj;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-
-  # We rely on the order of this array for the order of the .bbl
-  foreach my $k ($section->get_citekeys) {
-    # Regular entry
-    my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
-    $output_obj->set_output_entry($be, $section, Biber::Config->get_structure);
-  }
-
-  # Make sure the output object knows about the output section
-  $output_obj->set_output_section($secnum, $section);
-
-  # undef citekeys are global
-  # Missing citekeys
-  foreach my $k ($section->get_undef_citekeys) {
-    $output_obj->set_output_undefkey($k, $section);
-  }
-
-  return;
-}
-
-=head2 create_output_misc
-
-    Create the output for misc bits and pieces like preamble and closing
-    macro call and add to output object. You can subclass Biber and
-    override this method to output things other than .bbl
-
-=cut
-
-sub create_output_misc {
-  my $self = shift;
-  my $output_obj = $self->get_output_obj;
-
-  if (my $pa = $self->{preamble}) {
-    $pa = join("%\n", @$pa);
-    # Decode UTF-8 -> LaTeX macros if asked to
-    if (Biber::Config->getoption('bblsafechars')) {
-      $pa = Biber::LaTeX::Recode::latex_encode($pa);
-    }
-    $output_obj->add_output_head("\\preamble{%\n$pa%\n}\n\n");
-  }
-
-  $output_obj->add_output_tail("\\endinput\n\n");
-  return;
 }
 
 =head2 _parse_sort

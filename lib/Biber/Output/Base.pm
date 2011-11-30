@@ -259,6 +259,50 @@ sub set_output_entry {
   return;
 }
 
+
+=head2 create_output_misc
+
+    Create the output for misc bits and pieces like preamble and closing
+    macro call and add to output object.
+
+=cut
+
+sub create_output_misc {
+  return;
+}
+
+=head2 create_output_section
+
+    Create the output from the sections data and push it into the
+    output object.
+
+=cut
+
+sub create_output_section {
+  my $self = shift;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+
+  # We rely on the order of this array for the order of the .bbl
+  foreach my $k ($section->get_citekeys) {
+    # Regular entry
+    my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
+    $self->set_output_entry($be, $section, Biber::Config->get_structure);
+  }
+
+  # Make sure the output object knows about the output section
+  $self->set_output_section($secnum, $section);
+
+  # undef citekeys are global
+  # Missing citekeys
+  foreach my $k ($section->get_undef_citekeys) {
+    $self->set_output_undefkey($k, $section);
+  }
+
+  return;
+}
+
+
 =head2 output
 
     Generic base output method

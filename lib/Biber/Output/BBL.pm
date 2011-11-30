@@ -60,6 +60,29 @@ EOF
   return $self;
 }
 
+
+=head2 create_output_misc
+
+    Create the output for misc bits and pieces like preamble and closing
+    macro call and add to output object.
+
+=cut
+
+sub create_output_misc {
+  my $self = shift;
+
+  if (my $pa = $Biber::MASTER->get_preamble) {
+    $pa = join("%\n", @$pa);
+    # Decode UTF-8 -> LaTeX macros if asked to
+    if (Biber::Config->getoption('bblsafechars')) {
+      $pa = Biber::LaTeX::Recode::latex_encode($pa);
+    }
+    $self->{output_data}{HEAD} .= "\\preamble{%\n$pa%\n}\n\n";
+  }
+  $self->{output_data}{TAIL} .= "\\endinput\n\n";
+  return;
+}
+
 =head2 set_output_target_file
 
     Set the output target file of a Biber::Output::BBL object

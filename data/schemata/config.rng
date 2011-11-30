@@ -62,7 +62,7 @@
           </element>
         </optional>
         <optional>
-          <element name="inheritance_graph">
+          <element name="graph">
             <choice>
               <value>0</value>
               <value>1</value>
