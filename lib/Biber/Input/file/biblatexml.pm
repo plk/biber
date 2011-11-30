@@ -64,7 +64,7 @@ sub extract_entries {
   my @rkeys = @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've
           # used it
-  $logger->trace("Entering extract_entries()");
+  $logger->trace("Entering extract_entries() in driver 'biblatexml'");
 
   # If it's a remote data file, fetch it first
   if ($filename =~ m/\A(?:https?|ftp):\/\//xms) {

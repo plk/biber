@@ -748,6 +748,13 @@ sub process_crossrefs {
       $logger->debug("Incrementing cross/xrefkey count for entry '$refkey' via entry '$citekey'");
       Biber::Config->incr_crossrefkey($refkey);
     }
+
+
+    # Record xref inheritance for graphing if required
+    if (Biber::Config->getoption('graph') and my $xref = $be->get_field('xref')) {
+      Biber::Config->set_inheritance_graph('xref', $xref, $citekey, undef, undef);
+    }
+
   }
 
   # promote indirectly cited inset set members to fully cited entries
@@ -2642,7 +2649,6 @@ sub get_dependents {
   my ($self, $keys) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-
   my $dep_map; # Flag to say an entry has some deps so we can shortcut deletions
   my $new_deps;
   no strict 'refs'; # symbolic references below ...
@@ -2727,16 +2733,17 @@ sub get_dependents {
       }
     }
     else {
+      @missing = @$new_deps;
       foreach my $datasource (@{$section->get_datasources}) {
         # shortcut if we have found all the keys now
-        last unless (@$new_deps);
+        last unless @missing;
         my $type = $datasource->{type};
         my $name = $datasource->{name};
         my $datatype = $datasource->{datatype};
         my $package = 'Biber::Input::' . $type . '::' . $datatype;
         eval "require $package" or
           biber_error("Error loading data source package '$package': $@");
-        @missing = &{"${package}::extract_entries"}($name, $new_deps);
+        @missing = &{"${package}::extract_entries"}($name, \@missing);
       }
     }
 
@@ -2752,6 +2759,7 @@ sub get_dependents {
     }
   }
 
+  $logger->trace('Recursing in get_dependents with: ' . join(', ', @$new_deps));
   get_dependents($self, $new_deps) if @$new_deps; # recurse if there are more things to find
   return; # bottom of recursion
 }
@@ -2771,9 +2779,11 @@ sub remove_undef_dependent {
   my $section = $self->sections->get_section($secnum);
 
   # remove from any dynamic keys
-  if (my @dmems = $section->get_dynamic_set($citekey)) {
-    $section->set_dynamic_set($citekey, grep {$_ ne $missing_key} @dmems);
-    biber_warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)") unless first {$_ eq $missing_key} @dmems;
+  if (my @dmems = $section->get_dynamic_set($citekey)){
+    if (first { $missing_key eq $_ } @dmems) {
+      $section->set_dynamic_set($citekey, grep {$_ ne $missing_key} @dmems);
+      biber_warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)") unless first {$_ eq $missing_key} @dmems;
+    }
   }
   else {
     my $be = $section->bibentry($citekey);
@@ -2789,23 +2799,36 @@ sub remove_undef_dependent {
       biber_warn("I didn't find a database entry for crossref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
 
+    # remove xdata
+    if (my $xdata = $be->get_field('xdata')) {
+      my @xdatum = split /\s*,\s*/, $xdata;
+      if (first { $missing_key eq $_ } @xdatum) {
+        $be->set_datafield('xdata', join(',', grep {$_ ne $missing_key} @xdatum));
+        biber_warn("I didn't find a database entry for xdata entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
+      }
+    }
+
     # remove static sets
     if ($be->get_field('entrytype') eq 'set') {
       my @smems = split /\s*,\s*/, $be->get_field('entryset');
-      $be->set_datafield('entryset', join(',', grep {$_ ne $missing_key} @smems));
-      biber_warn("I didn't find a database entry for static set member '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
+      if (first { $missing_key eq $_ } @smems) {
+        $be->set_datafield('entryset', join(',', grep {$_ ne $missing_key} @smems));
+        biber_warn("I didn't find a database entry for static set member '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
+      }
     }
 
     # remove related entries
     if (my $relkeys = $be->get_field('related')) {
       my @rmems = split /\s*,\s*/, $relkeys;
-      $be->set_datafield('related', join(',', grep {$_ ne $missing_key} @rmems));
-      # If no more related entries, remove the other related fields
-      unless ($be->get_field('related')) {
-        $be->del_field('relatedtype');
-        $be->del_field('relatedstring');
+      if (first { $missing_key eq $_ } @rmems) {
+        $be->set_datafield('related', join(',', grep {$_ ne $missing_key} @rmems));
+        # If no more related entries, remove the other related fields
+        unless ($be->get_field('related')) {
+          $be->del_field('relatedtype');
+          $be->del_field('relatedstring');
+        }
+        biber_warn("I didn't find a database entry for related entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
-      biber_warn("I didn't find a database entry for related entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
   }
     return;

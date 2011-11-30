@@ -118,67 +118,38 @@ sub output {
       $context = $section_group;
     }
 
-
     foreach my $be ($section->bibentries->entries) {
       my $citekey = $be->get_field('citekey');
+      my $et = uc($be->get_field('entrytype'));
       # uncited entries are a different colour
       my $c = $section->has_citekey($citekey) ? '#a0d0ff' : '#e3e388';
       if ($gopts->{entry}) { # If granularity is at the level of entries
-        my $entry_node = $context->add_node("section_${secnum}${citekey}");
-        $entry_node->set_attribute('label', $citekey);
+        my $entry_node = $context->add_node("section_${secnum}/${citekey}");
+        $entry_node->set_attribute('label', "$citekey ($et)");
         $entry_node->set_attribute('fill', $c);
       }
       elsif ($gopts->{field}) { # If granularity is at the level of fields
-        my $entry_group = $context->add_group("section_${secnum}${citekey}");
-        $entry_group->set_attribute('label', $citekey);
+        my $entry_group = $context->add_group("section_${secnum}/${citekey}");
+        $entry_group->set_attribute('label', "$citekey ($et)");
         $entry_group->set_attribute('fill', $c);
-        foreach my $field ($be->fields) {
-          my $field_node = $entry_group->add_node("section_${secnum}${citekey}${field}");
+        foreach my $field ($be->datafields) {
+          my $field_node = $entry_group->add_node("section_${secnum}/${citekey}/${field}");
           $field_node->set_attribute('label', uc($field));
         }
       }
     }
 
-    if ($gopts->{crossref} and
-        my $crt = Biber::Config->get_inheritance_graph('crossref')) {
-      # Just show the entries, no fields
-      if ($gopts->{entry}) {
-        while (my ($f_entry, $v) = each %$crt) {
-          while (my (undef, $w) = each %$v) {
-            while (my ($t_entry, undef) = each %$w) {
-              # Connect the two nodes if they exist - since we
-              # are using all entries (not just cited), they only won't
-              # exist if they are not in this section in which case
-              # we don't want to auto-create them when creating the edge
-              if ($graph->node("section_${secnum}${f_entry}") and
-                  $graph->node("section_${secnum}${t_entry}")) {
-                $context->add_edge_once("section_${secnum}${f_entry}", "section_${secnum}${t_entry}");
-              }
-            }
-          }
-        }
-      }
-      # Show fields too
-      elsif ($gopts->{field}) {
-        while (my ($f_entry, $v) = each %$crt) {
-#          my $f_entry_group = $context->group($f_entry) // $context->add_group($f_entry);
-          while (my ($f_field, $w) = each %$v) {
-#            my $f_field_node = $f_entry_group->add_node("${f_entry}_${f_field}");
-#            $f_field_node->set_attribute('label', uc($f_field));
-            while (my ($t_entry, $t_field) = each %$w) {
-#              my $t_entry_group = $context->group($t_entry) // $context->add_group($t_entry);
-#              my $t_field_node = $t_entry_group->add_node("${t_entry}_${t_field}");
-#              $t_field_node->set_attribute('label', uc($t_field));
-              if ($graph->group("section_${secnum}${f_entry}") and
-                  $graph->group("section_${secnum}${t_entry}")) {
-                $context->add_edge_once("section_${secnum}${f_entry}${f_field}", "section_${secnum}${t_entry}${t_field}");
-              }
-            }
-          }
-        }
-      }
-    }
+    # crossrefs
+    _graph_inheritance('crossref', $graph, $context, $secnum);
+
+    # xdata
+    _graph_inheritance('xdata', $graph, $context, $secnum);
+
+    # xref
+    _graph_xref($graph, $context, $secnum);
+
   }
+
   print $target $graph->as_graphviz;
 
   $logger->info("Output to $target_string");
@@ -186,6 +157,81 @@ sub output {
   return;
 }
 
+sub _graph_xref {
+  my ($graph, $context, $secnum) = @_;
+  my $gopts = Biber::Config->getoption('graph');
+
+  if (my $gr = Biber::Config->get_inheritance_graph('xref')) {
+    while (my ($f_entry, $v) = each %$gr) {
+      while (my (undef, $w) = each %$v) {
+        while (my ($t_entry, undef) = each %$w) {
+          # Connect the two nodes if they exist - since we
+          # are using all entries (not just cited), they only won't
+          # exist if they are not in this section in which case
+          # we don't want to auto-create them when creating the edge
+          if (($graph->group("section_${secnum}/${f_entry}") or
+               $graph->node("section_${secnum}/${f_entry}")) and
+              ($graph->group("section_${secnum}/${t_entry}") or
+               $graph->node("section_${secnum}/${t_entry}"))) {
+            my $e = $context->add_edge_once("section_${secnum}/${f_entry}", "section_${secnum}/${t_entry}");
+            $e->set_attribute('style', 'dotted');
+          }
+        }
+      }
+    }
+  }
+}
+
+sub _graph_inheritance {
+  my ($type, $graph, $context, $secnum) = @_;
+  my $gopts = Biber::Config->getoption('graph');
+  my $edgestyle;
+
+  given ($type) {
+    when ('crossref') {
+      $edgestyle = 'solid';
+    }
+    when ('xdata') {
+      $edgestyle = 'dashed';
+    }
+  }
+
+  if ($gopts->{$type} and
+      my $gr = Biber::Config->get_inheritance_graph($type)) {
+    # Just show the entries, no fields
+    if ($gopts->{entry}) {
+      while (my ($f_entry, $v) = each %$gr) {
+        while (my (undef, $w) = each %$v) {
+          while (my ($t_entry, undef) = each %$w) {
+            # Connect the two nodes if they exist - since we
+            # are using all entries (not just cited), they only won't
+            # exist if they are not in this section in which case
+            # we don't want to auto-create them when creating the edge
+            if ($graph->node("section_${secnum}/${f_entry}") and
+                $graph->node("section_${secnum}/${t_entry}")) {
+              my $e = $context->add_edge_once("section_${secnum}/${f_entry}", "section_${secnum}/${t_entry}");
+              $e->set_attribute('style', $edgestyle);
+            }
+          }
+        }
+      }
+    }
+    # Show fields too
+    elsif ($gopts->{field}) {
+      while (my ($f_entry, $v) = each %$gr) {
+        while (my ($f_field, $w) = each %$v) {
+          while (my ($t_entry, $t_field) = each %$w) {
+            if ($graph->group("section_${secnum}/${f_entry}") and
+                $graph->group("section_${secnum}/${t_entry}")) {
+              my $e = $context->add_edge_once("section_${secnum}/${f_entry}/${f_field}", "section_${secnum}/${t_entry}/${t_field}");
+              $e->set_attribute('style', $edgestyle);
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 
 1;

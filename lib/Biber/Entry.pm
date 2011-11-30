@@ -348,6 +348,12 @@ sub resolve_xdata {
         }
         foreach my $field ($xdatum_entry->datafields()) { # set fields
           $self->set_datafield($field, $xdatum_entry->get_field($field));
+
+          # Record graphing information if required
+          if (Biber::Config->getoption('graph')) {
+            Biber::Config->set_inheritance_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
+          }
+
           $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
         }
       }
@@ -434,6 +440,8 @@ sub inherit_from {
                            $field->{target} .
                            "' from entry '$source_key'");
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+
+            # Record graphing information if required
             if (Biber::Config->getoption('graph')) {
               Biber::Config->set_inheritance_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
             }
@@ -451,6 +459,8 @@ sub inherit_from {
       if (not $self->field_exists($field) or $override_target eq 'true') {
             $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
             $self->set_datafield($field, $parent->get_field($field));
+
+            # Record graphing information if required
             if (Biber::Config->getoption('graph')) {
               Biber::Config->set_inheritance_graph('crossref', $source_key, $target_key, $field, $field);
             }

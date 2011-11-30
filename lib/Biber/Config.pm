@@ -56,8 +56,7 @@ $CONFIG->{state}{xdata} = [];
 
 # Record of which entries have inherited what from whom, with the fields inherited.
 # Used for generating inheritance trees
-$CONFIG->{state}{crossref_graph} = {};
-$CONFIG->{state}{xdata_graph} = {};
+$CONFIG->{state}{graph} = {};
 
 # For the uniquelist feature. Records the number of times a name list occurs in all entries
 $CONFIG->{state}{uniquelistcount} = {};
@@ -659,7 +658,7 @@ sub getblxoption {
 sub set_inheritance_graph {
   shift; # class method so don't care about class name
   my ($type, $source_key, $target_key, $source_field, $target_field) = @_;
-  $CONFIG->{state}{"${type}_graph"}{$source_key}{$source_field}{$target_key} = $target_field;
+  $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key} = $target_field;
   return;
 }
 
@@ -672,7 +671,7 @@ sub set_inheritance_graph {
 sub get_inheritance_graph {
   shift; # class method so don't care about class name
   my $type = shift;
-  return $CONFIG->{state}{"${type}_graph"};
+  return $CONFIG->{state}{graph}{$type};
 }
 
 =head2 set_inheritance

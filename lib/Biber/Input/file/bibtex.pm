@@ -90,6 +90,7 @@ sub extract_entries {
   my @rkeys = @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've used it
   $logger->trace("Entering extract_entries() in driver 'bibtex'");
+
   # If it's a remote data file, fetch it first
   if ($source =~ m/\A(?:https?|ftp):\/\//xms) {
     $logger->info("Data source '$source' is a remote BibTeX data source - fetching ...");
@@ -169,24 +170,6 @@ sub extract_entries {
         biber_warn("Possible typo (case mismatch) between citation and datasource keys: '$wanted_key' and '$okey' in file '$filename'");
       }
       $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
-    }
-
-    # XDATA are basically semi-semantic macros - we always include them all even without
-    # allkeys. They are a special case since:
-    #
-    # * They can cascade (nested XDATA fields)
-    # * They are never cited
-    #
-    # So, we add all of them to the internal data and pretend temporarily that they were
-    # cited, even without allkeys so that we can extract data from them later. We don't try to
-    # work out which ones are actually used as the combination of them cascading and not being cited
-    # makes this really difficult and it's not worth the complexity as against the minimal memory
-    # requirements of just grabbing them all. Since they are never cited, even though they are in
-    # added to the data internally, they are not output. The Biber default structure skips them
-    # on output anyway, just in case
-    while (my (undef, $entry) = each %{$cache->{data}{$filename}}) {
-      next unless lc($entry->type) eq 'xdata';
-      create_entry(decode_utf8($entry->key), $entry, $source);
     }
   }
 
