@@ -44,7 +44,6 @@ my $builder = $class->new(
         'Data::Compare' => 0,
         'Date::Simple' => 0,
         'File::Slurp::Unicode'  => 0,
-        'Graph::Easy' => 0,
         'IPC::Cmd' => 0,
         'IPC::Run3' => 0,
         'List::AllUtils' => 0,

@@ -749,12 +749,10 @@ sub process_crossrefs {
       Biber::Config->incr_crossrefkey($refkey);
     }
 
-
     # Record xref inheritance for graphing if required
     if (Biber::Config->getoption('graph') and my $xref = $be->get_field('xref')) {
       Biber::Config->set_inheritance_graph('xref', $xref, $citekey, undef, undef);
     }
-
   }
 
   # promote indirectly cited inset set members to fully cited entries
