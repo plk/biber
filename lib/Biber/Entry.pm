@@ -232,6 +232,17 @@ sub datafields {
   return sort keys %{$self->{datafields}};
 }
 
+=head2 count_datafields
+
+    Returns the number of datafields
+
+=cut
+
+sub count_datafields {
+  my $self = shift;
+  return keys %{$self->{datafields}};
+}
+
 
 =head2 fields
 
@@ -247,6 +258,19 @@ sub fields {
   my %keys = (%{$self->{derivedfields}}, %{$self->{datafields}});
   return sort keys %keys;
 }
+
+=head2 count_fields
+
+    Returns the number of fields
+
+=cut
+
+sub count_fields {
+  my $self = shift;
+  my %keys = (%{$self->{derivedfields}}, %{$self->{datafields}});
+  return keys %keys;
+}
+
 
 =head2 has_keyword
 

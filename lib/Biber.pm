@@ -751,7 +751,7 @@ sub process_crossrefs {
 
     # Record xref inheritance for graphing if required
     if (Biber::Config->getoption('graph') and my $xref = $be->get_field('xref')) {
-      Biber::Config->set_inheritance_graph('xref', $xref, $citekey, undef, undef);
+      Biber::Config->set_inheritance_graph('xref', $citekey, $xref, undef, undef);
     }
   }
 
