@@ -658,7 +658,13 @@ sub getblxoption {
 sub set_inheritance_graph {
   shift; # class method so don't care about class name
   my ($type, $source_key, $target_key, $source_field, $target_field) = @_;
-  $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key} = $target_field;
+  if ($type eq 'set') {
+    $CONFIG->{state}{graph}{$type}{settomem}{$source_key}{$target_key} = 1;
+    $CONFIG->{state}{graph}{$type}{memtoset}{$target_key} = $source_key;
+  }
+  else {
+    $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key} = $target_field;
+  }
   return;
 }
 

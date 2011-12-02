@@ -664,6 +664,13 @@ sub instantiate_dynamic {
     $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
+
+    # Save graph information if requested
+    if (Biber::Config->getoption('graph')) {
+      foreach my $m (@members) {
+        Biber::Config->set_inheritance_graph('set', $dset, $m);
+      }
+    }
     # Setting dataonly for members is handled by process_sets()
   }
 
@@ -719,14 +726,52 @@ sub resolve_xdata {
   }
 }
 
+=head2 cite_setmembers
+
+    $biber->cite_setmembers
+
+=cut
+
+sub cite_setmembers {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+
+  $logger->debug("Adding set members to citekeys for section $secnum");
+
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+
+    # promote indirectly cited inset set members to fully cited entries
+    if ($be->get_field('entrytype') eq 'set') {
+      my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
+      foreach my $inset_key (@inset_keys) {
+        $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
+        $section->add_citekeys($inset_key);
+
+        # Save graph information if requested
+        if (Biber::Config->getoption('graph')) {
+          Biber::Config->set_inheritance_graph('set', $citekey, $inset_key);
+        }
+      }
+      # automatically crossref for the first set member using plain set inheritance
+      $be->set_inherit_from($section->bibentry($inset_keys[0]), $section);
+      # warning for the old pre-Biber way of doing things
+      if ($be->get_field('crossref')) {
+        biber_warn("Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry '$citekey'", $be);
+        $be->del_field('crossref');
+      }
+    }
+  }
+}
+
 =head2 process_crossrefs
 
     $biber->process_crossrefs
 
-    This does several things:
-    1. Ensures that all entryset key members will be output in the bbl.
-    2. Ensures proper inheritance of data from cross-references.
-    3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
+    This does two things:
+    1. Ensures proper inheritance of data from cross-references.
+    2. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
        at least mincrossrefs times are included in the bibliography.
 
 =cut
@@ -751,26 +796,12 @@ sub process_crossrefs {
 
     # Record xref inheritance for graphing if required
     if (Biber::Config->getoption('graph') and my $xref = $be->get_field('xref')) {
-      Biber::Config->set_inheritance_graph('xref', $citekey, $xref, undef, undef);
+      Biber::Config->set_inheritance_graph('xref', $citekey, $xref);
     }
   }
 
-  # promote indirectly cited inset set members to fully cited entries
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
-    if ($be->get_field('entrytype') eq 'set') {
-      my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
-      foreach my $inset_key (@inset_keys) {
-        $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
-        $section->add_citekeys($inset_key);
-      }
-      # automatically crossref for the first set member using plain set inheritance
-      $be->set_inherit_from($section->bibentry($inset_keys[0]), $section);
-      if ($be->get_field('crossref')) {
-        biber_warn("Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry '$citekey'", $be);
-        $be->del_field('crossref');
-      }
-    }
     # Do crossref inheritance
     if (my $cr = $be->get_field('crossref')) {
       # Skip inheritance if we've already done it
@@ -2531,6 +2562,7 @@ sub prepare {
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->resolve_xdata;                # Resolve xdata entries
+    $self->cite_setmembers;              # Cite set members
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure
     $self->process_entries_pre;          # Main entry processing loop, part 1

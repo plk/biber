@@ -28,7 +28,7 @@ Biber::Output::DOT - class for Biber output of GraphViz .dot files
 =cut
 
 my $graph; # accumulator for .dot string
-my $graph_edges; # accumulator for .dot string
+my $graph_edges = ''; # accumulator for .dot string. Initialise as can be empty
 my $state; # some state information for building output
 my $in; # indentation string
 my $i; # indentation level
@@ -132,7 +132,7 @@ sub output {
   foreach my $section (@{$biber->sections->get_sections}) {
     my $secnum = $section->number;
     if ($gopts->{section}) {
-      $graph .= $i x $in . "subgraph \"cluster_section$secnum\" {\n";
+      $graph .= $i x $in . "subgraph \"cluster_section${secnum}\" {\n";
       $in += 2;
       $graph .= $i x $in . "label=\"Section $secnum\";\n";
       $graph .= $i x $in . "tooltip=\"Section $secnum\";\n";
@@ -148,6 +148,24 @@ sub output {
       $state->{$secnum}{"${secnum}/${citekey}"} = 1;
       my $et = uc($be->get_field('entrytype'));
       my $c = $section->has_citekey($citekey) ? '#a0d0ff' : '#e3e388';
+
+      # make a set subgraph if a set member
+      # This will make identically names subgraph sections for 
+      # every element in a set but dot is clever enough to merge them by
+      # ID.
+      if (my $sets = Biber::Config->get_inheritance_graph('set')) {
+        if (my $set = $sets->{memtoset}{$citekey}) { # entry is a set member
+          $graph .= $i x $in . "subgraph \"cluster_${secnum}/set_${set}\" {\n";
+          $in += 2;
+          $graph .= $i x $in . "label=\"$set (SET)\";\n";
+          $graph .= $i x $in . "tooltip=\"$set (SET)\";\n";
+          $graph .= $i x $in . "fontsize=\"10\";\n";
+          $graph .= $i x $in . "fontname=serif;\n";
+          $graph .= $i x $in . "fillcolor=\"#e3dadc\";\n";
+          $graph .= "\n";
+        }
+        next if $sets->{settomem}{$citekey}; # Don't make normal nodes for sets
+      }
 
       if ($gopts->{entry}) { # If granularity is at the level of entries
         $graph .= $i x $in . "\"section${secnum}/${citekey}\" [ label=\"$citekey ($et)\", fillcolor=\"$c\", tooltip=\"$citekey ($et)\" ]\n";
@@ -169,6 +187,14 @@ sub output {
         $graph .= $i x $in . "}\n\n" if $gopts->{section};
         $in -= 2;
       }
+
+      # Close set subgraph if necessary
+      if (my $sets = Biber::Config->get_inheritance_graph('set')) {
+        if ($sets->{memtoset}{$citekey}) { # entry is a set member
+          $graph .= $i x $in . "}\n\n";
+          $in -= 2;
+        }
+      }
     }
 
     # Then add the requested links
@@ -181,6 +207,9 @@ sub output {
 
     # xref
     _graph_xref($secnum) if $gopts->{xref};
+
+    # staticsets
+    _graph_staticsets($secnum) if $gopts->{staticsets};
 
     # Close the section, if any
     if ($gopts->{section}) {
@@ -196,12 +225,13 @@ sub output {
 
   print $target $graph;
 
-
   $logger->info("Output to $target_string");
   close $target;
   return;
 }
 
+
+# Graph xrefs
 sub _graph_xref {
   my ($secnum) = @_;
   my $gopts = Biber::Config->getoption('graph');
@@ -225,6 +255,7 @@ sub _graph_xref {
   }
 }
 
+# Graph crossrefs and xdata
 sub _graph_inheritance {
   my ($type, $secnum) = @_;
   my $edgestyle;
