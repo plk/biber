@@ -147,13 +147,18 @@ sub output {
       my $citekey = $be->get_field('citekey');
       $state->{$secnum}{"${secnum}/${citekey}"} = 1;
       my $et = uc($be->get_field('entrytype'));
-      my $c = $section->has_citekey($citekey) ? '#a0d0ff' : '#e3e388';
+
+      # colour depends on whether cited, uncited or dataonly
+      my $c = $section->has_citekey($citekey) ? '#a0d0ff' : '#deefff';
+      if (my $options = $be->get_field('options')) {
+        $c = '#fdffd9' if $options =~ m/dataonly/o;
+      }
 
       # make a set subgraph if a set member
       # This will make identically names subgraph sections for 
       # every element in a set but dot is clever enough to merge them by
       # ID.
-      if (my $sets = Biber::Config->get_inheritance_graph('set')) {
+      if (my $sets = Biber::Config->get_graph('set')) {
         if (my $set = $sets->{memtoset}{$citekey}) { # entry is a set member
           $graph .= $i x $in . "subgraph \"cluster_${secnum}/set_${set}\" {\n";
           $in += 2;
@@ -167,10 +172,7 @@ sub output {
         next if $sets->{settomem}{$citekey}; # Don't make normal nodes for sets
       }
 
-      if ($gopts->{entry}) { # If granularity is at the level of entries
-        $graph .= $i x $in . "\"section${secnum}/${citekey}\" [ label=\"$citekey ($et)\", fillcolor=\"$c\", tooltip=\"$citekey ($et)\" ]\n";
-      }
-      elsif ($gopts->{field}) { # If granularity is at the level of fields
+      if ($gopts->{field}) { # If granularity is at the level of fields
         $graph .= $i x $in . "subgraph \"cluster_section${secnum}/${citekey}\" {\n";
         $in += 2;
         $graph .= $i x $in . "fontsize=\"10\";\n";
@@ -187,9 +189,13 @@ sub output {
         $graph .= $i x $in . "}\n\n" if $gopts->{section};
         $in -= 2;
       }
+      else { # Granularity is at the level of entries
+        $graph .= $i x $in . "\"section${secnum}/${citekey}\" [ label=\"$citekey ($et)\", fillcolor=\"$c\", tooltip=\"$citekey ($et)\" ]\n";
+      }
+
 
       # Close set subgraph if necessary
-      if (my $sets = Biber::Config->get_inheritance_graph('set')) {
+      if (my $sets = Biber::Config->get_graph('set')) {
         if ($sets->{memtoset}{$citekey}) { # entry is a set member
           $graph .= $i x $in . "}\n\n";
           $in -= 2;
@@ -208,8 +214,8 @@ sub output {
     # xref
     _graph_xref($secnum) if $gopts->{xref};
 
-    # staticsets
-    _graph_staticsets($secnum) if $gopts->{staticsets};
+    # related
+    _graph_related($secnum) if $gopts->{related};
 
     # Close the section, if any
     if ($gopts->{section}) {
@@ -230,26 +236,62 @@ sub output {
   return;
 }
 
+# Graph related entries
+sub _graph_related {
+  my $secnum = shift;
+  if (my $gr = Biber::Config->get_graph('related')) {
+
+    # related links
+    while (my ($f_entry, $m) = each %{$gr->{clonetotarget}}) {
+      foreach my $t_entry (keys %$m) {
+        next unless $state->{$secnum}{"${secnum}/${f_entry}"};
+        next unless $state->{$secnum}{"${secnum}/${t_entry}"};
+
+        if ($gopts->{field}) { # links between clusters
+          my $f_linknode = $state->{$secnum}{$f_entry}{linknode};
+          my $t_linknode = $state->{$secnum}{$t_entry}{linknode};
+          $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_linknode}\" -> \"section${secnum}/${t_entry}/${t_linknode}\" [ penwidth=\"2.0\", color=\"#ad1741\", ltail=\"cluster_section${secnum}/${f_entry}\", lhead=\"cluster_section${secnum}/${t_entry}\", tooltip=\"${f_entry} is a related entry of ${t_entry}\" ]\n";
+        }
+        else {  # links between nodes
+          $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}\" -> \"section${secnum}/${t_entry}\" [ penwidth=\"2.0\", color=\"#ad1741\", tooltip=\"${f_entry} is a related entry of ${t_entry}\" ]\n";
+        }
+      }
+    }
+
+    # clone links
+    while (my ($f_entry, $m) = each %{$gr->{reltoclone}}) {
+      foreach my $t_entry (keys %$m) {
+        next unless $state->{$secnum}{"${secnum}/${f_entry}"};
+        next unless $state->{$secnum}{"${secnum}/${t_entry}"};
+
+        if ($gopts->{field}) { # links between clusters
+          my $f_linknode = $state->{$secnum}{$f_entry}{linknode};
+          my $t_linknode = $state->{$secnum}{$t_entry}{linknode};
+          $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_linknode}\" -> \"section${secnum}/${t_entry}/${t_linknode}\" [ style=\"dashed\", penwidth=\"2.0\", color=\"#ad1741\", ltail=\"cluster_section${secnum}/${f_entry}\", lhead=\"cluster_section${secnum}/${t_entry}\", tooltip=\"${t_entry} is a clone of ${f_entry}\" ]\n";
+        }
+        else {  # links between nodes
+          $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}\" -> \"section${secnum}/${t_entry}\" [ style=\"dashed\", penwidth=\"2.0\", color=\"#ad1741\", tooltip=\"${t_entry} is a clone of ${f_entry}\" ]\n";
+        }
+      }
+    }
+  }
+}
 
 # Graph xrefs
 sub _graph_xref {
-  my ($secnum) = @_;
-  my $gopts = Biber::Config->getoption('graph');
-  if (my $gr = Biber::Config->get_inheritance_graph('xref')) {
-    while (my ($f_entry, $v) = each %$gr) {
-      while (my (undef, $w) = each %$v) {
-        while (my ($t_entry, undef) = each %$w) {
-          next unless $state->{$secnum}{"${secnum}/${f_entry}"};
-          next unless $state->{$secnum}{"${secnum}/${t_entry}"};
-          if ($gopts->{entry}) { # links between nodes
-            $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}\" -> \"section${secnum}/${t_entry}\" [ style=\"dotted\", tooltip=\"${f_entry} XREFS ${t_entry}\" ]\n";
-          }
-          elsif ($gopts->{field}) { # links between clusters
-            my $f_linknode = $state->{$secnum}{$f_entry}{linknode};
-            my $t_linknode = $state->{$secnum}{$t_entry}{linknode};
-            $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_linknode}\" -> \"section${secnum}/${t_entry}/${t_linknode}\" [ style=\"dotted\", ltail=\"cluster_section${secnum}/${f_entry}\", lhead=\"cluster_section${secnum}/${t_entry}\", tooltip=\"${f_entry} XREFS ${t_entry}\" ]\n";
-          }
-        }
+  my $secnum = shift;
+  if (my $gr = Biber::Config->get_graph('xref')) {
+    while (my ($f_entry, $t_entry) = each %$gr) {
+      next unless $state->{$secnum}{"${secnum}/${f_entry}"};
+      next unless $state->{$secnum}{"${secnum}/${t_entry}"};
+
+      if ($gopts->{field}) { # links between clusters
+        my $f_linknode = $state->{$secnum}{$f_entry}{linknode};
+        my $t_linknode = $state->{$secnum}{$t_entry}{linknode};
+        $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_linknode}\" -> \"section${secnum}/${t_entry}/${t_linknode}\" [ penwidth=\"2.0\", style=\"dashed\", color=\"#7d7879\", ltail=\"cluster_section${secnum}/${f_entry}\", lhead=\"cluster_section${secnum}/${t_entry}\", tooltip=\"${f_entry} XREFS ${t_entry}\" ]\n";
+      }
+      else {    # links between nodes
+        $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}\" -> \"section${secnum}/${t_entry}\" [ penwidth=\"2.0\", style=\"dashed\", color=\"#7d7879\", tooltip=\"${f_entry} XREFS ${t_entry}\" ]\n";
       }
     }
   }
@@ -258,40 +300,40 @@ sub _graph_xref {
 # Graph crossrefs and xdata
 sub _graph_inheritance {
   my ($type, $secnum) = @_;
-  my $edgestyle;
+  my $edgecolor;
 
   given ($type) {
     when ('crossref') {
-      $edgestyle = 'solid';
+      $edgecolor = '#7d7879';
     }
     when ('xdata') {
-      $edgestyle = 'dashed';
+      $edgecolor = '#2ca314';
     }
   }
 
-  if (my $gr = Biber::Config->get_inheritance_graph($type)) {
+  if (my $gr = Biber::Config->get_graph($type)) {
+    # Show fields
+    if ($gopts->{field}) {
+      while (my ($f_entry, $v) = each %$gr) {
+        while (my ($f_field, $w) = each %$v) {
+          while (my ($t_entry, $t_field) = each %$w) {
+            next unless $state->{$secnum}{"${secnum}/${f_entry}"};
+            next unless $state->{$secnum}{"${secnum}/${t_entry}"};
+            $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_field}\" -> \"section${secnum}/${t_entry}/${t_field}\" [ penwidth=\"2.0\", color=\"${edgecolor}\", tooltip=\"${t_entry}/" . uc($t_field) . " inherited via " . uc($type) . " from ${f_entry}/" . uc($f_field) . "\" ]\n";
+          }
+        }
+      }
+    }
     # Just show the entries, no fields
-    if ($gopts->{entry}) {
+    else {
       while (my ($f_entry, $v) = each %$gr) {
         while (my (undef, $w) = each %$v) {
           while (my ($t_entry, undef) = each %$w) {
             next unless $state->{$secnum}{"${secnum}/${f_entry}"};
             next unless $state->{$secnum}{"${secnum}/${t_entry}"};
             next if $state->{edges}{"section${secnum}/${f_entry}"}{"section${secnum}/${t_entry}"};
-            $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}\" -> \"section${secnum}/${t_entry}\" [ style=\"${edgestyle}\", tooltip=\"${t_entry} inherits via $type from ${f_entry}\" ]\n";
+            $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}\" -> \"section${secnum}/${t_entry}\" [ penwidth=\"2.0\", color=\"${edgecolor}\", tooltip=\"${t_entry} inherits via $type from ${f_entry}\" ]\n";
             $state->{edges}{"section${secnum}/${f_entry}"}{"section${secnum}/${t_entry}"} = 1;
-          }
-        }
-      }
-    }
-    # Show fields too
-    elsif ($gopts->{field}) {
-      while (my ($f_entry, $v) = each %$gr) {
-        while (my ($f_field, $w) = each %$v) {
-          while (my ($t_entry, $t_field) = each %$w) {
-            next unless $state->{$secnum}{"${secnum}/${f_entry}"};
-            next unless $state->{$secnum}{"${secnum}/${t_entry}"};
-            $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_field}\" -> \"section${secnum}/${t_entry}/${t_field}\" [ style=\"${edgestyle}\", tooltip=\"${t_entry}/" . uc($t_field) . " inherited via " . uc($type) . " from ${f_entry}/" . uc($f_field) . "\" ]\n";
           }
         }
       }

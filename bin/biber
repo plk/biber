@@ -18,6 +18,7 @@ use Biber;
 use Biber::Utils;
 use File::Spec;
 use Pod::Usage;
+use List::AllUtils qw( first );
 
 use Getopt::Long qw/:config no_ignore_case/;
 my $opts = {};
@@ -31,7 +32,7 @@ GetOptions(
            'collate_options|c=s',
            'configfile|g=s',
            'convert_control',
-           'graph=s@',
+           'graph:s@',
            'decodecharsset=s',
            'debug|D',
            'fastsort|f',
@@ -79,9 +80,19 @@ unless (@ARGV) {
             -exitval => EXIT_ERROR);
 }
 
-# Sanitise graph option
+# Sanitise and check the graph option
 if ($opts->{graph}) {
   $opts->{graph} = {map {lc($_) => 1} split(/,/,join(',',@{$opts->{graph}}))};
+  unless (keys %{$opts->{graph}}) {
+    $opts->{graph} = {section => 1, xdata => 1, crossref => 1, xref => 1};
+  }
+  my @suboptions = ( 'section', 'field', 'crossref', 'xref', 'xdata', 'related' );
+  foreach my $g (keys %{$opts->{graph}}) {
+    unless (first {$_ eq lc($g)} @suboptions) {
+      say STDERR "Biber: '$g' is an invalid sub-option of the 'graph' option";
+      exit EXIT_ERROR;
+    }
+  }
 }
 
 # Sanitise collate option if fastsort is specified
@@ -271,13 +282,6 @@ Converts the F<.bcf> control file into html using an XSLT transform. Can
 be useful for debugging. File is named by appending C<.html>
 to F<.bcf> file.
 
-=item B<--graph=section,entry,field,xdata,crossref,xref>
-
-Generate Graphviz F<.dot> output instead of F<.bbl>. This is a directed graph of
-the bibliography data showing sections, entries and fields and arrows showing
-inheritance relationships. You must process this file with C<dot>,
-e.g. C<dot -Tpdf test.dot -o test.pdf> to render the graph.
-
 =item B<--decodecharsset=base|full>
 
 The set of characters included in the conversion routine when decoding
@@ -294,6 +298,17 @@ Turn on debugging for C<biber>.
 
 Use Perl's sort instead of C<Unicode::Collate> for sorting. Also uses
 OS locale definitions (which may be broken for some languages ...).
+
+=item B<--graph=section,field,xdata,crossref,xref,related>
+
+Generate Graphviz F<.dot> output instead of F<.bbl>. This is a directed graph of
+the bibliography data showing entries and, as requested, sections and fields. You
+can also choose to display crossref, xref, xdata and/or related entry connections.
+You must process this file with C<dot>, e.g. C<dot -Tsvg test.dot -o test.svg> to
+render the graph. If only C<--graph> is given, the default is
+C<--graph=section,xdata,crossref,xref>. Don't forget to terminate the options if
+you want to use the defaults: C<biber --graph -- bcffile> otherwise Biber will
+interpret the F<bccfile> as the graph options.
 
 =item B<--help|-h>
 

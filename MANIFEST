@@ -52,7 +52,6 @@ data/texmap.xsl
 data/bcf.xsl
 data/dcf.xsl
 data/latinkeys.txt
-etc/biber.conf
 t/options.t
 t/names.t
 t/biblatexml.t

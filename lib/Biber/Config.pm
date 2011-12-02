@@ -645,36 +645,49 @@ sub getblxoption {
 # Inheritance state methods
 ##############################
 
-=head2 set_inheritance_graph
+=head2 set_graph
 
     Record who inherited what fields from whom
     Can be used for crossrefs and xdata. This records the actual fields
     inherited from another entry, for tree generation.
 
-    Biber::Config->set_inheritance_graph($source_key, $target_key, $source_field, $target_field)
+    Biber::Config->set_graph($source_key, $target_key, $source_field, $target_field)
 
 =cut
 
-sub set_inheritance_graph {
+sub set_graph {
   shift; # class method so don't care about class name
-  my ($type, $source_key, $target_key, $source_field, $target_field) = @_;
-  if ($type eq 'set') {
-    $CONFIG->{state}{graph}{$type}{settomem}{$source_key}{$target_key} = 1;
-    $CONFIG->{state}{graph}{$type}{memtoset}{$target_key} = $source_key;
-  }
-  else {
-    $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key} = $target_field;
+  my $type = shift;
+  given ($type) {
+    when ('set') {
+      my ($source_key, $target_key) = @_;
+      $CONFIG->{state}{graph}{$type}{settomem}{$source_key}{$target_key} = 1;
+      $CONFIG->{state}{graph}{$type}{memtoset}{$target_key} = $source_key;
+    }
+    when ('xref') {
+      my ($source_key, $target_key) = @_;
+      $CONFIG->{state}{graph}{$type}{$source_key} = $target_key;
+    }
+    when ('related') {
+      my ($clone_key, $related_key, $target_key) = @_;
+      $CONFIG->{state}{graph}{$type}{reltoclone}{$related_key}{$clone_key} = 1;
+      $CONFIG->{state}{graph}{$type}{clonetotarget}{$clone_key}{$target_key} = 1;
+    }
+    default {
+      my ($source_key, $target_key, $source_field, $target_field) = @_;
+      $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key} = $target_field;
+    }
   }
   return;
 }
 
-=head2 get_inheritance_graph
+=head2 get_graph
 
     Return an inheritance graph data structure for an inheritance type
 
 =cut
 
-sub get_inheritance_graph {
+sub get_graph {
   shift; # class method so don't care about class name
   my $type = shift;
   return $CONFIG->{state}{graph}{$type};

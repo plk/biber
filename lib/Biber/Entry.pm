@@ -375,7 +375,7 @@ sub resolve_xdata {
 
           # Record graphing information if required
           if (Biber::Config->getoption('graph')) {
-            Biber::Config->set_inheritance_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
+            Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
           }
 
           $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
@@ -467,7 +467,7 @@ sub inherit_from {
 
             # Record graphing information if required
             if (Biber::Config->getoption('graph')) {
-              Biber::Config->set_inheritance_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
+              Biber::Config->set_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
             }
           }
         }
@@ -486,7 +486,7 @@ sub inherit_from {
 
             # Record graphing information if required
             if (Biber::Config->getoption('graph')) {
-              Biber::Config->set_inheritance_graph('crossref', $source_key, $target_key, $field, $field);
+              Biber::Config->set_graph('crossref', $source_key, $target_key, $field, $field);
             }
       }
     }

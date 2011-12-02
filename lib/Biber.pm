@@ -668,7 +668,7 @@ sub instantiate_dynamic {
     # Save graph information if requested
     if (Biber::Config->getoption('graph')) {
       foreach my $m (@members) {
-        Biber::Config->set_inheritance_graph('set', $dset, $m);
+        Biber::Config->set_graph('set', $dset, $m);
       }
     }
     # Setting dataonly for members is handled by process_sets()
@@ -693,8 +693,15 @@ sub instantiate_dynamic {
         $section->bibentries->add_entry($clonekey, $relclone);
         Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $clonekey);
         Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $clonekey);
+
+        # Save graph information if requested
+        if (Biber::Config->getoption('graph')) {
+          Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
+        }
       }
       # point to clone keys and add to citekeys
+      # We have to add the citekeys as we need these clones in the .bbl
+      # but the dataonly will cause biblatex not to print them in the bib
       $section->add_citekeys(@clonekeys);
       $be->set_datafield('related', join(',', @clonekeys));
     }
@@ -751,7 +758,7 @@ sub cite_setmembers {
 
         # Save graph information if requested
         if (Biber::Config->getoption('graph')) {
-          Biber::Config->set_inheritance_graph('set', $citekey, $inset_key);
+          Biber::Config->set_graph('set', $citekey, $inset_key);
         }
       }
       # automatically crossref for the first set member using plain set inheritance
@@ -796,7 +803,7 @@ sub process_crossrefs {
 
     # Record xref inheritance for graphing if required
     if (Biber::Config->getoption('graph') and my $xref = $be->get_field('xref')) {
-      Biber::Config->set_inheritance_graph('xref', $citekey, $xref);
+      Biber::Config->set_graph('xref', $citekey, $xref);
     }
   }
 

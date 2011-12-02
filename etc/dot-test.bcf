@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
+<?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
+<bcf:controlfile version="1.7" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+  <!-- OPTIONS -->
+  <bcf:options component="biber" type="global">
+    <bcf:option type="singlevalued">
+      <bcf:key>bblencoding</bcf:key>
+      <bcf:value>utf8</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>bibencoding</bcf:key>
+      <bcf:value>utf8</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>debug</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>mincrossrefs</bcf:key>
+      <bcf:value>2</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortcase</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortupper</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options component="biblatex" type="global">
+    <bcf:option type="singlevalued">
+      <bcf:key>alphaothers</bcf:key>
+      <bcf:value>\textbf{+}</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>labelalpha</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labelnamespec</bcf:key>
+      <bcf:value order="1">shortauthor</bcf:value>
+      <bcf:value order="2">author</bcf:value>
+      <bcf:value order="3">shorteditor</bcf:value>
+      <bcf:value order="4">editor</bcf:value>
+      <bcf:value order="5">translator</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>labelyear</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labelyearspec</bcf:key>
+      <bcf:value order="1">year</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>maxalphanames</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>maxbibnames</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>maxcitenames</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>maxitems</bcf:key>
+      <bcf:value>3</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minalphanames</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minbibnames</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>mincitenames</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>minitems</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>singletitle</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortalphaothers</bcf:key>
+      <bcf:value>+</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortlos</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>uniquelist</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>uniquename</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useauthor</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useprefix</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>usetranslator</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <!-- DISPLAYMODES -->
+  <bcf:displaymodes type="global">
+    <bcf:displaymode>
+      <bcf:dtarget>*</bcf:dtarget>
+      <bcf:dmode order="1">original</bcf:dmode>
+      <bcf:dmode order="2">romanised</bcf:dmode>
+      <bcf:dmode order="3">uniform</bcf:dmode>
+      <bcf:dmode order="4">translated</bcf:dmode>
+    </bcf:displaymode>
+  </bcf:displaymodes>
+  <!-- INHERITANCE -->
+  <bcf:inheritance>
+    <bcf:defaults inherit_all="true" override_target="false">
+      <bcf:type_pair source="*" target="incollection" inherit_all="false"/>
+    </bcf:defaults>
+    <bcf:inherit>
+      <bcf:type_pair source="*" target="*"/>
+      <bcf:field source="verba" target="verbb" override_target="true"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="*" target="inbook"/>
+      <bcf:field source="author" target="bookauthor" override_target="true"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="book" target="inbook"/>
+      <bcf:field source="title" target="booktitle" override_target="true"/>
+      <bcf:field source="titleaddon" target="booktitleaddon"  override_target="true"/>
+      <bcf:field source="subtitle" target="booksubtitle" override_target="true"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="proceedings" target="inproceedings"/>
+      <bcf:field source="title" target="booktitle" override_target="false"/>
+      <bcf:field source="publisher" skip="true"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="collection" target="incollection"/>
+      <bcf:field source="title" target="booktitle" override_target="true"/>
+    </bcf:inherit>
+  </bcf:inheritance>
+  <!-- SORTING -->
+  <bcf:sorting>
+    <bcf:presort>mm</bcf:presort>
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2" final="1">
+      <bcf:sortitem order="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sortname</bcf:sortitem>
+      <bcf:sortitem order="2">author</bcf:sortitem>
+      <bcf:sortitem order="3">editor</bcf:sortitem>
+      <bcf:sortitem order="4">translator</bcf:sortitem>
+      <bcf:sortitem order="5">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="6">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="5">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="6">
+      <bcf:sortitem order="1">volume</bcf:sortitem>
+      <bcf:sortitem order="2">0000</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <!-- SECTION 0 -->
+  <bcf:bibdata section="0">
+    <bcf:datasource type="file" datatype="bibtex">crossrefs.bib</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="0">
+    <bcf:citekey>cr1</bcf:citekey>
+    <bcf:citekey>cr2</bcf:citekey>
+    <bcf:citekey>cr3</bcf:citekey>
+    <bcf:citekey>cr4</bcf:citekey>
+    <bcf:citekey>cr6</bcf:citekey>
+    <bcf:citekey>cr7</bcf:citekey>
+    <bcf:citekey>cr8</bcf:citekey>
+    <bcf:citekey>crt</bcf:citekey>
+    <bcf:citekey>xr1</bcf:citekey>
+    <bcf:citekey>xr2</bcf:citekey>
+    <bcf:citekey>xr3</bcf:citekey>
+    <bcf:citekey>xr4</bcf:citekey>
+    <bcf:citekey>xrt</bcf:citekey>
+    <bcf:citekey>mxr</bcf:citekey>
+    <bcf:citekey>mcr</bcf:citekey>
+    <bcf:citekey>ccr1</bcf:citekey>
+    <bcf:citekey>ccr2</bcf:citekey>
+    <bcf:citekey>ccr3</bcf:citekey>
+    <bcf:citekey>ccr4</bcf:citekey>
+    <bcf:citekey>r1</bcf:citekey>
+    <bcf:citekey>xd1</bcf:citekey>
+    <bcf:citekey>xd2</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
+  </bcf:section>
+  <!-- SECTION 1 -->
+  <bcf:bibdata section="1">
+    <bcf:datasource type="file" datatype="bibtex">dot-test.bib</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="1">
+    <bcf:citekey type="set" members="Dynamic1,Dynamic2,Dynamic3,missing1">DynSet</bcf:citekey>
+    <bcf:citekey>cr5</bcf:citekey>
+    <bcf:citekey>Static1</bcf:citekey>
+    <bcf:citekey>Static2</bcf:citekey>
+    <bcf:citekey>Dynamic1</bcf:citekey>
+    <bcf:citekey>rel1</bcf:citekey>
+    <bcf:citekey>rel2</bcf:citekey>
+    <bcf:citekey>rel3</bcf:citekey>
+    <bcf:sectionlist label="MAIN" type="entry"/>
+    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
+      <bcf:filter type="field">shorthand</bcf:filter>
+    </bcf:sectionlist>
+  </bcf:section>
+</bcf:controlfile>
