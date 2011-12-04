@@ -8,7 +8,7 @@ build_requires:
 configure_requires:
   Module::Build: 0.38
 dynamic_config: 1
-generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.110930001'
+generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.110440'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -63,6 +63,9 @@ provides:
   Biber::Output::Base:
     file: lib/Biber/Output/Base.pm
     version: 0
+  Biber::Output::DOT:
+    file: lib/Biber/Output/DOT.pm
+    version: 0
   Biber::Output::Test:
     file: lib/Biber/Output/Test.pm
     version: 0
@@ -88,7 +91,6 @@ requires:
   Data::Dump: 0
   Date::Simple: 0
   File::Slurp::Unicode: 0
-  Graph::Easy: 0
   IPC::Cmd: 0
   IPC::Run3: 0
   LWP::Simple: 0
