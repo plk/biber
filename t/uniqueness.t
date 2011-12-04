@@ -8,7 +8,7 @@ use Test::More tests => 184;
 
 use Biber;
 use Biber::Utils;
-use Biber::Output::BBL;
+use Biber::Output::bbl;
 use Log::Log4perl;
 chdir("t/tdata");
 
@@ -27,7 +27,7 @@ my $l4pconf = qq|
 Log::Log4perl->init(\$l4pconf);
 
 $biber->parse_ctrlfile('uniqueness1.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
@@ -69,7 +69,7 @@ is($bibentries->entry('untf3')->get_field($bibentries->entry('untf3')->get_field
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness1.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -96,7 +96,7 @@ is($bibentries->entry('unt5')->get_field($bibentries->entry('unt5')->get_field('
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness2.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -123,7 +123,7 @@ is($bibentries->entry('unall4')->get_field($bibentries->entry('unall4')->get_fie
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness1.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -142,7 +142,7 @@ is($bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_field
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness2.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -203,7 +203,7 @@ is($bibentries->entry('ul02')->get_field($bibentries->entry('ul02')->get_field('
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness1.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -232,7 +232,7 @@ is($bibentries->entry('test5')->get_field($bibentries->entry('test5')->get_field
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness4.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -302,7 +302,7 @@ is($bibentries->entry('us19')->get_field($bibentries->entry('us19')->get_field('
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness4.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -342,7 +342,7 @@ is($bibentries->entry('us25')->get_field($bibentries->entry('us25')->get_field('
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness4.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -378,7 +378,7 @@ is($bibentries->entry('us30')->get_field($bibentries->entry('us30')->get_field('
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness5.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -407,7 +407,7 @@ ok(is_undef($bibentries->entry('uls7')->get_field($bibentries->entry('uls7')->ge
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness5.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -436,7 +436,7 @@ ok(is_undef($bibentries->entry('uls12')->get_field($bibentries->entry('uls12')->
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -465,7 +465,7 @@ ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'Singletitle -
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -494,7 +494,7 @@ is($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
 
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness3.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -523,7 +523,7 @@ ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle -
 # Testing uniquename = 3
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness2.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -550,7 +550,7 @@ is($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_field('
 # Testing uniquename = 4
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness2.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');

@@ -7,7 +7,7 @@ no warnings 'utf8';
 use Test::More tests => 4;
 
 use Biber;
-use Biber::Output::BBL;
+use Biber::Output::bbl;
 use Log::Log4perl;
 chdir("t/tdata");
 
@@ -28,7 +28,7 @@ Log::Log4perl->init(\$l4pconf);
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 $biber->parse_ctrlfile("general1.bcf");
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests

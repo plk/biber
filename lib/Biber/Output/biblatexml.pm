@@ -1,13 +1,15 @@
-package Biber::Output::BBL;
+package Biber::Output::biblatexml;
 use 5.014000;
 use strict;
 use warnings;
-use base 'Biber::Output::Base';
+use base 'Biber::Output::base';
 
 use Biber::Config;
 use Biber::Constants;
 use Biber::Entry;
 use Biber::Utils;
+use XML::Writer;
+use XML::Writer::String;
 use List::AllUtils qw( :all );
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
@@ -17,13 +19,13 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head1 NAME
 
-Biber::Output::BBL - class for Biber output of .bbl
+Biber::Output::biblatexml - class for Biber output of .bltxml
 
 =cut
 
 =head2 new
 
-    Initialize a Biber::Output::BBL object
+    Initialize a Biber::Output::biblatexml object
 
 =cut
 
@@ -31,61 +33,21 @@ sub new {
   my $class = shift;
   my $obj = shift;
   my $self = $class->SUPER::new($obj);
-  my $ctrlver = Biber::Config->getblxoption('controlversion');
-  my $beta = $Biber::Config::BETA_VERSION ? ' (beta)' : '';
 
-  my $BBLHEAD = <<EOF;
-% \$ biblatex auxiliary file \$
-% \$ biblatex version $ctrlver \$
-% \$ biber version $Biber::Config::VERSION$beta \$
-% Do not modify the above lines!
-%
-% This is an auxiliary file used by the 'biblatex' package.
-% This file may safely be deleted. It will be recreated by
-% biber or bibtex as required.
-%
-\\begingroup
-\\makeatletter
-\\\@ifundefined{ver\@biblatex.sty}
-  {\\\@latex\@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
-      \\aftergroup\\endinput}
-  {}
-\\endgroup
-
-EOF
-
-  $self->set_output_head($BBLHEAD);
+  my $xml = XML::Writer::String->new(DATA_MODE => 1,
+                                     DATA_INDENT => 2,
+                                     ENCODING => 'utf-8',
+                                     PREFIX_MAP => {'' => 'bib'},
+                                     FORCED_NS_DECLS => 'http://biblatex-biber.sourceforge.net/biblatexml');
+  $xml->xmlDecl();
+  $self->{output_data} = $xml;
   return $self;
 }
 
 
-=head2 create_output_misc
-
-    Create the output for misc bits and pieces like preamble and closing
-    macro call and add to output object.
-
-=cut
-
-sub create_output_misc {
-  my $self = shift;
-
-  if (my $pa = $Biber::MASTER->get_preamble) {
-    $pa = join("%\n", @$pa);
-    # Decode UTF-8 -> LaTeX macros if asked to
-    if (Biber::Config->getoption('bblsafechars')) {
-      $pa = Biber::LaTeX::Recode::latex_encode($pa);
-    }
-    $self->{output_data}{HEAD} .= "\\preamble{%\n$pa%\n}\n\n";
-  }
-  $self->{output_data}{TAIL} .= "\\endinput\n\n";
-  return;
-}
-
 =head2 set_output_target_file
 
-    Set the output target file of a Biber::Output::BBL object
+    Set the output target file of a Biber::Output::biblatexml object
     A convenience around set_output_target so we can keep track of the
     filename
 
@@ -93,82 +55,19 @@ sub create_output_misc {
 
 sub set_output_target_file {
   my $self = shift;
-  my $bblfile = shift;
-  $self->{output_target_file} = $bblfile;
+  my $bltxmlfile = shift;
+  $self->{output_target_file} = $bltxmlfile;
   my $enc_out;
-  if (Biber::Config->getoption('bblencoding')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
-  }
-  my $BBLFILE = IO::File->new($bblfile, ">$enc_out");
-  $self->set_output_target($BBLFILE);
-}
-
-=head2 _printfield
-
-  Add the .bbl for a text field to the output accumulator.
-
-=cut
-
-sub _printfield {
-  my ($be, $field, $str) = @_;
-  my $field_type = 'field';
-  # crossref and xref are of type 'strng' in the .bbl
-  if (lc($field) eq 'crossref' or
-      lc($field) eq 'xref') {
-    $field_type = 'strng';
-  }
-
-  # auto-escape TeX special chars if:
-  # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
-  # * It's not a strng field
-  if ($field_type ne 'strng' and $be->get_field('datatype') ne 'bibtex') {
-    $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
-  }
-
-  if (Biber::Config->getoption('wraplines')) {
-    ## 12 is the length of '  \field{}{}' or '  \strng{}{}'
-    if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
-      return "    \\${field_type}{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
-    }
-    elsif ( 12 + length($field) + length($str) > $Text::Wrap::columns ) {
-      return wrap('    ', '    ', "\\${field_type}{$field}{$str}" ) . "\n";
-    }
-    else {
-      return "    \\${field_type}{$field}{$str}\n";
-    }
-  }
-  else {
-    return "    \\${field_type}{$field}{$str}\n";
-  }
-  return;
-}
-
-=head2 set_output_undefkey
-
-  Set the .bbl output for an undefined key
-
-=cut
-
-sub set_output_undefkey {
-  my $self = shift;
-  my $key = shift; # undefined key
-  my $section = shift; # Section object the entry occurs in
-  my $acc = '';
-  my $secnum = $section->number;
-
-  $acc .= "  \\missing{$key}\n";
-
-  # Create an index by keyname for easy retrieval
-  $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
-
-  return;
+  $enc_out = ':encoding(UTF-8)';
+  my $BLTXMLFILE = IO::File->new($bltxmlfile, ">$enc_out");
+  $self->set_output_target($BLTXMLFILE);
 }
 
 
 =head2 set_output_entry
 
-  Set the .bbl output for an entry. This is the meat of
-  the .bbl output
+  Set the XML output for an entry. This is the meat of
+  the output
 
 =cut
 
@@ -181,12 +80,15 @@ sub set_output_entry {
   my $opts = '';
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
+  my $xml = $self->{output_data};
+
+  $xml->startTag('entry', 'id' => $key, 'entrytype' => $be->get_field('entrytype'));
 
   if ($be->field_exists('options')) {
     $opts = filter_entry_options($be->get_field('options'));
   }
 
-  $acc .= "  \\entry{$key}{" . $be->get_field('entrytype') . "}{$opts}\n";
+
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
@@ -371,13 +273,39 @@ sub set_output_entry {
     }
   }
 
-  $acc .= "  \\endentry\n\n";
+  $xml->endTag('entry');
 
   # Create an index by keyname for easy retrieval
   $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
 
   return;
 }
+
+=head2 create_output_section
+
+    Create the output from the sections data and push it into the
+    output object.
+
+=cut
+
+sub create_output_section {
+  my $self = shift;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+
+  # We rely on the order of this array for the order of the .bbl
+  foreach my $k ($section->get_citekeys) {
+    # Regular entry
+    my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
+    $self->set_output_entry($be, $section, Biber::Config->get_structure);
+  }
+
+  # Make sure the output object knows about the output section
+  $self->set_output_section($secnum, $section);
+
+  return;
+}
+
 
 
 =head2 output

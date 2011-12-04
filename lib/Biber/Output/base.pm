@@ -1,4 +1,4 @@
-package Biber::Output::Base;
+package Biber::Output::base;
 use 5.014000;
 use strict;
 use warnings;

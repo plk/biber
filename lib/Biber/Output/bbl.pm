@@ -1,13 +1,14 @@
-package Biber::Output::Test;
+package Biber::Output::bbl;
 use 5.014000;
 use strict;
 use warnings;
-use base 'Biber::Output::Base';
+use base 'Biber::Output::base';
 
 use Biber::Config;
 use Biber::Constants;
 use Biber::Entry;
 use Biber::Utils;
+use List::AllUtils qw( :all );
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 my $logger = Log::Log4perl::get_logger('main');
@@ -16,11 +17,90 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head1 NAME
 
-Biber::Output::Test - Output class for loopback testing
-Essentially, this outputs to a string so we can look at it internally in tests
+Biber::Output::bbl - class for Biber output of .bbl
 
 =cut
 
+=head2 new
+
+    Initialize a Biber::Output::bbl object
+
+=cut
+
+sub new {
+  my $class = shift;
+  my $obj = shift;
+  my $self = $class->SUPER::new($obj);
+  my $ctrlver = Biber::Config->getblxoption('controlversion');
+  my $beta = $Biber::Config::BETA_VERSION ? ' (beta)' : '';
+
+  $self->{output_data}{HEAD} = <<EOF;
+% \$ biblatex auxiliary file \$
+% \$ biblatex version $ctrlver \$
+% \$ biber version $Biber::Config::VERSION$beta \$
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber or bibtex as required.
+%
+\\begingroup
+\\makeatletter
+\\\@ifundefined{ver\@biblatex.sty}
+  {\\\@latex\@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \\aftergroup\\endinput}
+  {}
+\\endgroup
+
+EOF
+
+  return $self;
+}
+
+
+=head2 create_output_misc
+
+    Create the output for misc bits and pieces like preamble and closing
+    macro call and add to output object.
+
+=cut
+
+sub create_output_misc {
+  my $self = shift;
+
+  if (my $pa = $Biber::MASTER->get_preamble) {
+    $pa = join("%\n", @$pa);
+    # Decode UTF-8 -> LaTeX macros if asked to
+    if (Biber::Config->getoption('bblsafechars')) {
+      $pa = Biber::LaTeX::Recode::latex_encode($pa);
+    }
+    $self->{output_data}{HEAD} .= "\\preamble{%\n$pa%\n}\n\n";
+  }
+  $self->{output_data}{TAIL} .= "\\endinput\n\n";
+  return;
+}
+
+=head2 set_output_target_file
+
+    Set the output target file of a Biber::Output::bbl object
+    A convenience around set_output_target so we can keep track of the
+    filename
+
+=cut
+
+sub set_output_target_file {
+  my $self = shift;
+  my $bblfile = shift;
+  $self->{output_target_file} = $bblfile;
+  my $enc_out;
+  if (Biber::Config->getoption('bblencoding')) {
+    $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
+  }
+  my $BBLFILE = IO::File->new($bblfile, ">$enc_out");
+  $self->set_output_target($BBLFILE);
+}
 
 =head2 _printfield
 
@@ -37,17 +117,15 @@ sub _printfield {
     $field_type = 'strng';
   }
 
-  # auto-escase TeX special chars if:
-  # * The entry is not a bibtex entry (no auto-escaping for bibtex data)
+  # auto-escape TeX special chars if:
+  # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
   # * It's not a strng field
   if ($field_type ne 'strng' and $be->get_field('datatype') ne 'bibtex') {
     $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
-    $str =~ s/\A[\n\s]+//xms;
-    $str =~ s/[\n\s]+\z//xms;
   }
 
   if (Biber::Config->getoption('wraplines')) {
-    ## 12 is the length of '  \field{}{}'
+    ## 12 is the length of '  \field{}{}' or '  \strng{}{}'
     if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
       return "    \\${field_type}{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
     }
@@ -64,6 +142,28 @@ sub _printfield {
   return;
 }
 
+=head2 set_output_undefkey
+
+  Set the .bbl output for an undefined key
+
+=cut
+
+sub set_output_undefkey {
+  my $self = shift;
+  my $key = shift; # undefined key
+  my $section = shift; # Section object the entry occurs in
+  my $acc = '';
+  my $secnum = $section->number;
+
+  $acc .= "  \\missing{$key}\n";
+
+  # Create an index by keyname for easy retrieval
+  $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
+
+  return;
+}
+
+
 =head2 set_output_entry
 
   Set the .bbl output for an entry. This is the meat of
@@ -74,20 +174,16 @@ sub _printfield {
 sub set_output_entry {
   my $self = shift;
   my $be = shift; # Biber::Entry object
-  my $section = shift; # Section the entry occurs in
+  my $section = shift; # Section object the entry occurs in
   my $struc = shift; # Structure object
   my $acc = '';
   my $opts = '';
   my $secnum = $section->number;
-
   my $key = $be->get_field('citekey');
 
-  if ( $be->field_exists('options') ) {
+  if ($be->field_exists('options')) {
     $opts = filter_entry_options($be->get_field('options'));
   }
-
-  $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
-    if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
   $acc .= "  \\entry{$key}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
@@ -107,17 +203,15 @@ sub set_output_entry {
   # This is essentially doing the same thing twice but in the future,
   # labelname may have different things attached than the raw name
   my $lnn = $be->get_field('labelnamename'); # save name of labelname field
-  my $name_others_deleted = '';
-  my $plo; # per-list options
+  my $plo = ''; # per-list options
 
   if (my $ln = $be->get_field('labelname')) {
     my @plo;
-
     # Add uniquelist, if defined
     if (my $ul = $ln->get_uniquelist){
       push @plo, "uniquelist=$ul";
     }
-    $plo =join(',', @plo);
+    $plo = join(',', @plo);
 
     # Did we have "and others" in the data?
     if ( $ln->get_morenames ) {
@@ -145,7 +239,7 @@ sub set_output_entry {
       my $total = $nf->count_names;
       # Copy perl-list options to the actual labelname too
       $plo = '' unless (defined($lnn) and $namefield eq $lnn);
-      $acc .= "    \\name{$namefield}{$total}{}{%\n";
+      $acc .= "    \\name{$namefield}{$total}{$plo}{%\n";
       foreach my $n (@{$nf->names}) {
         $acc .= $n->name_to_bbl;
       }
@@ -153,8 +247,10 @@ sub set_output_entry {
     }
   }
 
+  # Output list fields
   foreach my $listfield (@{$struc->get_field_type('list')}) {
-    if ( my $lf = $be->get_field($listfield) ) {
+    next if $struc->is_field_type('skipout', $listfield);
+    if (my $lf = $be->get_field($listfield)) {
       if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
         $acc .= "    \\true{more$listfield}\n";
         pop @$lf; # remove the last element in the array
@@ -185,12 +281,10 @@ sub set_output_entry {
   $acc .= "    <BDS>SORTINIT</BDS>\n";
 
   # The labelyear option determines whether "extrayear" is output
-  # Skip generating extrayear for entries with "skiplab" set
   if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $ey = $be->get_field('extrayear')) {
-      my $nameyear_extra = $be->get_field('nameyear_extra');
-      if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
+    if (my $nameyear = $be->get_field('nameyear')) {
+      if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
         $acc .= "    <BDS>EXTRAYEAR</BDS>\n";
       }
     }
@@ -200,12 +294,10 @@ sub set_output_entry {
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  # Skip generating extraalpha for entries with "skiplab" set
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
-    if (my $ea = $be->get_field('extraalpha')) {
-      my $nameyear_extra = $be->get_field('nameyear_extra');
-      if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
+    if (my $la = $be->get_field('labelalpha')) {
+      if (Biber::Config->get_la_disambiguation($la) > 1) {
         $acc .= "    <BDS>EXTRAALPHA</BDS>\n";
       }
     }
@@ -215,8 +307,8 @@ sub set_output_entry {
     if (my $sh = $be->get_field('shorthand')) {
       $acc .= "    \\field{labelnumber}{$sh}\n";
     }
-    elsif (my $ln = $be->get_field('labelnumber')) {
-      $acc .= "    \\field{labelnumber}{$ln}\n";
+    elsif (my $lnum = $be->get_field('labelnumber')) {
+      $acc .= "    \\field{labelnumber}{$lnum}\n";
     }
   }
 
@@ -239,22 +331,32 @@ sub set_output_entry {
         next if ($lfield eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
-
       $acc .= _printfield($be, $lfield, $be->get_field($lfield) );
     }
   }
 
   foreach my $rfield (@{$struc->get_field_type('range')}) {
-    if ( my $rf = $be->get_field($rfield)) {
-      $rf =~ s/[-–]+/\\bibrangedash /g;
-      $acc .= "    \\field{$rfield}{$rf}\n";
+    if ( my $rf = $be->get_field($rfield) ) {
+      # range fields are an array ref of two-element array refs [range_start, range_end]
+      # range_end can be be empty for open-ended range or undef
+      my @pr;
+      foreach my $f (@$rf) {
+        if (defined($f->[1])) {
+          push @pr, $f->[0] . '\bibrangedash' . ($f->[1] ? ' ' . $f->[1] : '');
+        }
+        else {
+          push @pr, $f->[0];
+        }
+      }
+      my $bbl_rf = join(', ', @pr);
+      $acc .= "    \\field{$rfield}{$bbl_rf}\n";
     }
   }
 
   foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
-    if ( my $rf = $be->get_field($vfield) ) {
+    if ( my $vf = $be->get_field($vfield) ) {
       $acc .= "    \\verb{$vfield}\n";
-      $acc .= "    \\verb $rf\n    \\endverb\n";
+      $acc .= "    \\verb $vf\n    \\endverb\n";
     }
   }
   if ( my $k = $be->get_field('keywords') ) {
@@ -262,7 +364,7 @@ sub set_output_entry {
   }
 
   # Append any warnings to the entry, if any
-  if (my $w = $be->get_field('warnings')) {
+  if ( my $w = $be->get_field('warnings')) {
     foreach my $warning (@$w) {
       $acc .= "    \\warn{\\item $warning}\n";
     }
@@ -272,36 +374,15 @@ sub set_output_entry {
 
   # Create an index by keyname for easy retrieval
   $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
+
   return;
 }
 
-
-=head2 create_output_misc
-
-    Create the output for misc bits and pieces like preamble and closing
-    macro call and add to output object.
-
-=cut
-
-sub create_output_misc {
-  my $self = shift;
-
-  if (my $pa = $Biber::MASTER->get_preamble) {
-    $pa = join("%\n", @$pa);
-    # Decode UTF-8 -> LaTeX macros if asked to
-    if (Biber::Config->getoption('bblsafechars')) {
-      $pa = Biber::LaTeX::Recode::latex_encode($pa);
-    }
-    $self->{output_data}{HEAD} .= "\\preamble{%\n$pa%\n}\n\n";
-  }
-  $self->{output_data}{TAIL} .= "\\endinput\n\n";
-  return;
-}
 
 =head2 output
 
     BBL output method - this takes care to output entries in the explicit order
-    derived from the virtual order of the auxcitekeys after sortkey sorting.
+    derived from the virtual order of the citekeys after sortkey sorting.
 
 =cut
 
@@ -309,16 +390,46 @@ sub output {
   my $self = shift;
   my $data = $self->{output_data};
   my $target = $self->{output_target};
+  my $target_string = "Target"; # Default
+  if ($self->{output_target_file}) {
+    $target_string = $self->{output_target_file};
+  }
 
-  $logger->info("Writing output with encoding '" . Biber::Config->getoption('bblencoding') . "'");
+  # for debugging mainly
+  unless ($target) {
+    $target = new IO::File '>-';
+  }
+
+  $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+
+  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
   $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('bblsafechars');
 
+  print $target $data->{HEAD};
+
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
+    $logger->debug("Writing entries for section $secnum");
+
+    print $target "\n\\refsection{$secnum}\n";
     my $section = $self->get_output_section($secnum);
-    foreach my $list (@{$section->get_lists}) {
+
+    # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
+    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$section->get_lists}) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
+      $logger->debug("Writing entries in list '$listlabel'");
+
+      # Remove most of this conditional when biblatex supports lists
+      if ($listlabel eq 'SHORTHANDS') {
+        print $target "  \\lossort\n";
+      }
+      else {
+        print $target "\n  \\sortlist{$listlabel}\n" unless ($listlabel eq 'MAIN');
+      }
+
+      # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
+        $logger->debug("Writing entry for key '$k'");
         if ($listtype eq 'entry') {
           my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
 
@@ -329,15 +440,29 @@ sub output {
           if (Biber::Config->getoption('bblsafechars')) {
             $entry_string = latex_recode_output($entry_string);
           }
+
           print $target $entry_string;
         }
         elsif ($listtype eq 'shorthand') {
-          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
-          print $target $k;
+          print $target "    \\key{$k}\n";
         }
       }
+
+      # Remove most of this conditional when biblatex supports lists
+      if ($listlabel eq 'SHORTHANDS') {
+        print $target "  \\endlossort\n\n";
+      }
+      else {
+        print $target "\n  \\endsortlist\n\n" unless ($listlabel eq 'MAIN');
+      }
     }
+
+    print $target "\\endrefsection\n"
   }
+
+  print $target $data->{TAIL};
+
+  $logger->info("Output to $target_string");
   close $target;
   return;
 }

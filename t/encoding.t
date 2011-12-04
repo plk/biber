@@ -8,7 +8,7 @@ use Test::More tests => 10;
 
 use Biber;
 use Biber::Utils;
-use Biber::Output::Test;
+use Biber::Output::test;
 use Encode;
 use Log::Log4perl;
 chdir("t/tdata");
@@ -168,7 +168,7 @@ my $output;
 
 # Latin9 .bib -> UTF-8 .bbl
 $biber->parse_ctrlfile('encoding1.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'latin9');
 Biber::Config->setoption('bblencoding', 'UTF-8');
@@ -183,7 +183,7 @@ is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode1), 'latin9 .
 
 # UTF-8 .bib -> UTF-8 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'UTF-8');
 Biber::Config->setoption('bblencoding', 'UTF-8');
@@ -198,7 +198,7 @@ is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode1), 'UTF-8 .b
 
 # UTF-8 .bib -> latin1 .bbl
 $biber->parse_ctrlfile('encoding5.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'UTF-8');
 Biber::Config->setoption('bblencoding', 'latin1');
@@ -213,7 +213,7 @@ is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode5), 'UTF-8 .b
 
 # UTF-8 .bib -> UTF-8 with --bblsafechars
 $biber->parse_ctrlfile('encoding6.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'UTF-8');
 Biber::Config->setoption('bblencoding', 'UTF-8');
@@ -229,7 +229,7 @@ is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode6), 'UTF-8 .b
 
 # UTF-8 .bib -> UTF-8 with --bblsafechars and --bblcharsset=full
 $biber->parse_ctrlfile('encoding6.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'UTF-8');
 Biber::Config->setoption('bblencoding', 'UTF-8');
@@ -246,7 +246,7 @@ is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode7), 'UTF-8 .b
 
 # UTF-8 .bib -> Latin9 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bblsafechars', 0);
 Biber::Config->setoption('bibencoding', 'UTF-8');
@@ -262,7 +262,7 @@ is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode1), 'UTF-8 .b
 
 # latin1 .bib -> cp1252 .bbl
 $biber->parse_ctrlfile('encoding3.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'latin1');
 Biber::Config->setoption('bblencoding', 'cp1252');
@@ -277,7 +277,7 @@ is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode2), 'latin1 .
 
 # latin2 .bib -> latin3 .bbl
 $biber->parse_ctrlfile('encoding4.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'latin2');
 Biber::Config->setoption('bblencoding', 'latin3');
@@ -292,7 +292,7 @@ is($outvar, encode(Biber::Config->getoption('bblencoding'), $encode3), 'latin2 .
 
 # latin2 .bib -> latin1 .bbl - should fail
 $biber->parse_ctrlfile('encoding4.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'latin2');
 Biber::Config->setoption('bblencoding', 'latin1');
@@ -312,7 +312,7 @@ isnt($outvar, encode(Biber::Config->getoption('bblencoding'), $encode3), 'latin2
 # Custom encoding alias
 # latin1 .bib -> applemacce (MacRoman) .bbl
 $biber->parse_ctrlfile('encoding3.bcf');
-$biber->set_output_obj(Biber::Output::Test->new());
+$biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('bibencoding', 'latin1');
 Biber::Config->setoption('bblencoding', 'applemacce');

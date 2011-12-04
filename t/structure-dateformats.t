@@ -7,7 +7,7 @@ no warnings 'utf8';
 use Test::More tests => 31;
 
 use Biber;
-use Biber::Output::BBL;
+use Biber::Output::bbl;
 use Biber::Utils;
 use Log::Log4perl;
 chdir("t/tdata");
@@ -27,7 +27,7 @@ my $l4pconf = qq|
 Log::Log4perl->init(\$l4pconf);
 
 $biber->parse_ctrlfile('structure-dateformats.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests

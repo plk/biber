@@ -7,7 +7,7 @@ no warnings 'utf8';
 use Test::More tests => 6;
 
 use Biber;
-use Biber::Output::BBL;
+use Biber::Output::bbl;
 use Log::Log4perl;
 chdir("t/tdata");
 my $S;
@@ -27,7 +27,7 @@ my $l4pconf = qq|
 Log::Log4perl->init(\$l4pconf);
 
 $biber->parse_ctrlfile('sort-uc.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
@@ -100,7 +100,7 @@ is_deeply([$main->get_keys], ['LS4', 'LS3','LS2','LS1'], 'upper_before_lower loc
 $biber->parse_ctrlfile('sort-uc.bcf');
 $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 $S = [
                                                     [
                                                      {sortupper => 0,

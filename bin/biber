@@ -166,12 +166,12 @@ if (Biber::Config->getoption('trace')) {
 
 # Set the output class. Should be a subclass of Biber::Output::Base
 if (Biber::Config->getoption('graph')) { # .dot output
-  require Biber::Output::DOT;
-  $biber->set_output_obj(Biber::Output::DOT->new());
+  require Biber::Output::dot;
+  $biber->set_output_obj(Biber::Output::dot->new());
 }
 else { # .bbl output
-  require Biber::Output::BBL;
-  $biber->set_output_obj(Biber::Output::BBL->new());
+  require Biber::Output::bbl;
+  $biber->set_output_obj(Biber::Output::bbl->new());
 }
 
 # Do all the real work

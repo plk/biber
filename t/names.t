@@ -8,7 +8,7 @@ use Test::More tests => 52;
 
 use Biber;
 use Biber::Input::file::bibtex;
-use Biber::Output::BBL;
+use Biber::Output::bbl;
 use Log::Log4perl;
 chdir("t/tdata");
 
@@ -27,7 +27,7 @@ my $l4pconf = qq|
 Log::Log4perl->init(\$l4pconf);
 
 $biber->parse_ctrlfile('names.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
@@ -754,7 +754,7 @@ is($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_field('labe
 # Have to use a new biber object when trying to change encoding as this isn't
 # dealt with in ->prepare
 $biber->parse_ctrlfile('names.bcf');
-$biber->set_output_obj(Biber::Output::BBL->new());
+$biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('bblencoding', 'latin1');

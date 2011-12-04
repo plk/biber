@@ -8,10 +8,10 @@ THANKS
 TODO.org
 bin/biber
 lib/Biber.pm
-lib/Biber/Output/Base.pm
-lib/Biber/Output/BBL.pm
-lib/Biber/Output/DOT.pm
-lib/Biber/Output/Test.pm
+lib/Biber/Output/base.pm
+lib/Biber/Output/bbl.pm
+lib/Biber/Output/dot.pm
+lib/Biber/Output/test.pm
 lib/Biber/Input/file/ris.pm
 lib/Biber/Input/file/ris.dcf
 lib/Biber/Input/file/bibtex.pm

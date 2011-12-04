@@ -143,14 +143,14 @@ sub sections {
 =head2 set_output_obj
 
     Sets the object used to output final results
-    Must be a subclass of Biber::Output::Base
+    Must be a subclass of Biber::Output::base
 
 =cut
 
 sub set_output_obj {
   my $self = shift;
   my $obj = shift;
-  croak('Output object must be subclass of Biber::Output::Base!') unless $obj->isa('Biber::Output::Base');
+  croak('Output object must be subclass of Biber::Output::base!') unless $obj->isa('Biber::Output::base');
   $self->{output_obj} = $obj;
   return;
 }
