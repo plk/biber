@@ -181,14 +181,17 @@ sub output {
         foreach my $field ($be->datafields) {
           $graph .= $i x $in . "\"section${secnum}/${citekey}/${field}\" [ label=\"" . uc($field) . "\" ]\n";
         }
+        $in -= 2;
+        $graph .= $i x $in . "}\n\n";
+
+        # link node for cluster->cluster links
         my $middle = int($be->count_datafields / 2);
         $state->{$secnum}{$citekey}{linknode} = ($be->datafields)[$middle];
-        # link node for cluster->cluster links
-        $graph .= $i x $in . "}\n\n" if $gopts->{section};
-        $in -= 2;
+
       }
       else { # Granularity is at the level of entries
         $graph .= $i x $in . "\"section${secnum}/${citekey}\" [ label=\"$citekey ($et)\", fillcolor=\"$c\", tooltip=\"$citekey ($et)\" ]\n";
+
       }
 
 
