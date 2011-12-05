@@ -89,7 +89,7 @@
             <tr><td>Name</td><td>Alias of</td><td>Field settings</td></tr>
           </thead>
           <tbody>
-          <xsl:for-each select="/dcf:driver-control/dcf:entry-types/dcf:entry-type">
+          <xsl:for-each select="/dcf:driver-control/dcf:entrytypes/dcf:entrytype">
             <xsl:sort select="./@name"/>
             <tr>
               <td><xsl:value-of select="./@name"/></td>
