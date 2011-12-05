@@ -28,6 +28,7 @@ GetOptions(
            'bblencoding|E=s',
            'bblsafechars',
            'bblsafecharsset=s',
+           'bltxml',
            'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
@@ -78,6 +79,12 @@ if (exists $opts->{'version'}) {
 unless (@ARGV) {
   pod2usage(-verbose => 0,
             -exitval => EXIT_ERROR);
+}
+
+# Can't have more than one output format
+if ($opts->{graph} and $opts->{bltxml}) {
+  say STDERR "Biber: conflicting output formats selected, please choose only of of '--graph' and '--bltxml'";
+  exit EXIT_ERROR;
 }
 
 # Sanitise and check the graph option
@@ -132,6 +139,9 @@ else {
   if (Biber::Config->getoption('graph')) { # .dot output
     $outfile = $bcf =~ s/bcf$/dot/r;
   }
+  elsif (Biber::Config->getoption('bltxml')) { # .bltxml output
+    $outfile = $bcf =~ s/bcf$/bltxml/r;
+  }
   else { # .bbl output
     $outfile = $bcf =~ s/bcf$/bbl/r;
   }
@@ -168,6 +178,10 @@ if (Biber::Config->getoption('trace')) {
 if (Biber::Config->getoption('graph')) { # .dot output
   require Biber::Output::dot;
   $biber->set_output_obj(Biber::Output::dot->new());
+}
+elsif (Biber::Config->getoption('bltxml')) { # biblatexml output
+  require Biber::Output::biblatexml;
+  $biber->set_output_obj(Biber::Output::biblatexml->new());
 }
 else { # .bbl output
   require Biber::Output::bbl;
@@ -257,6 +271,11 @@ Specify the encoding of the data source file(s). Default is "UTF-8"
 Normally it's not necessary to set this as it's passed via the
 .bcf file from biblatex's setting of the same name.
 See "perldoc Encode::Supported" for a list of supported encodings.
+
+=item B<--bltxml>
+
+Output a BibLaTeXML file of the internal data model instead of a F<.bbl>.
+This helps in moving to BibLaTeXML by translating other datasource formats.
 
 =item B<--collate|-C>
 

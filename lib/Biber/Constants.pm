@@ -104,6 +104,7 @@ our $CONFIG_DEFAULT_BIBER = {
   bibencoding        => { content => 'UTF-8' },
   bblsafechars       => { content => 0 },
   bblsafecharsset    => { content => 'base' },
+  bltxml             => { content => 0 },
   collate            => { content => 1 },
   collate_options    => { option => [ { name => 'level', value => 4 } ] },
   graph              => { content => 0 },

@@ -237,7 +237,7 @@ sub set_output_entry {
       }
 
       my $total = $nf->count_names;
-      # Copy perl-list options to the actual labelname too
+      # Copy per-list options to the actual labelname too
       $plo = '' unless (defined($lnn) and $namefield eq $lnn);
       $acc .= "    \\name{$namefield}{$total}{$plo}{%\n";
       foreach my $n (@{$nf->names}) {
@@ -254,7 +254,7 @@ sub set_output_entry {
       if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
         $acc .= "    \\true{more$listfield}\n";
         pop @$lf; # remove the last element in the array
-      };
+      }
       my $total = $#$lf + 1;
       $acc .= "    \\list{$listfield}{$total}{%\n";
       foreach my $f (@$lf) {

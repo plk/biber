@@ -237,6 +237,9 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
     if (_norm($entry->nodeName) eq 'options') {
       if (my $node = _resolve_display_mode($entry, 'options')) {
         $Biber::MASTER->process_entry_options($key, $node->textContent());
+        # Save the raw options in case we are to output another input format like
+        # biblatexml
+        $bibentry->set_field('rawoptions', $node->textContent());
       }
     }
 

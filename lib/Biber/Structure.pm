@@ -242,7 +242,7 @@ sub is_field_for_entrytype {
 sub get_field_type {
   my $self = shift;
   my $type = shift;
-  return $self->{fields}{$type} ? [ sort keys %{$self->{fields}{$type}} ] : '';
+  return $self->{fields}{$type} ? [ sort keys %{$self->{fields}{$type}} ] : [];
 }
 
 =head2 is_field_type

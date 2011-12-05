@@ -14,12 +14,17 @@ use List::AllUtils qw( :all );
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 my $logger = Log::Log4perl::get_logger('main');
+my $bp = 'http://biblatex-biber.sourceforge.net/biblatexml';
 
 =encoding utf-8
 
 =head1 NAME
 
-Biber::Output::biblatexml - class for Biber output of .bltxml
+  Biber::Output::biblatexml - class for Biber output of .bltxml
+  This is slighty odd output format as it's asctually an input format
+  so we are essentially reverse engineering the internal data model.
+  The point of this format is to help in the migration to BibLaTeXML
+  eventually.
 
 =cut
 
@@ -34,11 +39,11 @@ sub new {
   my $obj = shift;
   my $self = $class->SUPER::new($obj);
 
-  my $xml = XML::Writer::String->new(DATA_MODE => 1,
-                                     DATA_INDENT => 2,
-                                     ENCODING => 'utf-8',
-                                     PREFIX_MAP => {'' => 'bib'},
-                                     FORCED_NS_DECLS => 'http://biblatex-biber.sourceforge.net/biblatexml');
+  my $xml = XML::Writer->new(OUTPUT => XML::Writer::String->new(),
+                             DATA_MODE => 1,
+                             DATA_INDENT => 2,
+                             NAMESPACES => 1,
+                             PREFIX_MAP => {$bp => 'bib'});
   $xml->xmlDecl();
   $self->{output_data} = $xml;
   return $self;
@@ -66,218 +71,11 @@ sub set_output_target_file {
 
 =head2 set_output_entry
 
-  Set the XML output for an entry. This is the meat of
-  the output
+  Set the XML output for an entry. Empty stub.
 
 =cut
 
 sub set_output_entry {
-  my $self = shift;
-  my $be = shift; # Biber::Entry object
-  my $section = shift; # Section object the entry occurs in
-  my $struc = shift; # Structure object
-  my $acc = '';
-  my $opts = '';
-  my $secnum = $section->number;
-  my $key = $be->get_field('citekey');
-  my $xml = $self->{output_data};
-
-  $xml->startTag('entry', 'id' => $key, 'entrytype' => $be->get_field('entrytype'));
-
-  if ($be->field_exists('options')) {
-    $opts = filter_entry_options($be->get_field('options'));
-  }
-
-
-
-  # Generate set information
-  if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
-    $acc .= "    \\set{" . $be->get_field('entryset') . "}\n";
-  }
-  else { # Everything else that isn't a set parent ...
-    if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
-      $acc .= "    \\inset{$es}\n";
-    }
-  }
-
-  # Output name fields
-
-  # first output copy in labelname
-  # This is essentially doing the same thing twice but in the future,
-  # labelname may have different things attached than the raw name
-  my $lnn = $be->get_field('labelnamename'); # save name of labelname field
-  my $plo = ''; # per-list options
-
-  if (my $ln = $be->get_field('labelname')) {
-    my @plo;
-    # Add uniquelist, if defined
-    if (my $ul = $ln->get_uniquelist){
-      push @plo, "uniquelist=$ul";
-    }
-    $plo = join(',', @plo);
-
-    # Did we have "and others" in the data?
-    if ( $ln->get_morenames ) {
-      $acc .= "    \\true{morelabelname}\n";
-    }
-
-    my $total = $ln->count_names;
-    $acc .= "    \\name{labelname}{$total}{$plo}{%\n";
-    foreach my $n (@{$ln->names}) {
-      $acc .= $n->name_to_bbl;
-    }
-    $acc .= "    }\n";
-  }
-
-  # then names themselves
-  foreach my $namefield (@{$struc->get_field_type('name')}) {
-    next if $struc->is_field_type('skipout', $namefield);
-    if ( my $nf = $be->get_field($namefield) ) {
-
-      # Did we have "and others" in the data?
-      if ( $nf->get_morenames ) {
-        $acc .= "    \\true{more$namefield}\n";
-      }
-
-      my $total = $nf->count_names;
-      # Copy perl-list options to the actual labelname too
-      $plo = '' unless (defined($lnn) and $namefield eq $lnn);
-      $acc .= "    \\name{$namefield}{$total}{$plo}{%\n";
-      foreach my $n (@{$nf->names}) {
-        $acc .= $n->name_to_bbl;
-      }
-      $acc .= "    }\n";
-    }
-  }
-
-  # Output list fields
-  foreach my $listfield (@{$struc->get_field_type('list')}) {
-    next if $struc->is_field_type('skipout', $listfield);
-    if (my $lf = $be->get_field($listfield)) {
-      if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
-        $acc .= "    \\true{more$listfield}\n";
-        pop @$lf; # remove the last element in the array
-      };
-      my $total = $#$lf + 1;
-      $acc .= "    \\list{$listfield}{$total}{%\n";
-      foreach my $f (@$lf) {
-        $acc .= "      {$f}%\n";
-      }
-      $acc .= "    }\n";
-    }
-  }
-
-  my $namehash = $be->get_field('namehash');
-  $acc .= "    \\strng{namehash}{$namehash}\n" if $namehash;
-  my $fullhash = $be->get_field('fullhash');
-  $acc .= "    \\strng{fullhash}{$fullhash}\n" if $fullhash;
-
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $label = $be->get_field('labelalpha')) {
-      $acc .= "    \\field{labelalpha}{$label}\n";
-    }
-  }
-
-  # This is special, we have to put a marker for sortinit and then replace this string
-  # on output as it can vary between lists
-  $acc .= "    <BDS>SORTINIT</BDS>\n";
-
-  # The labelyear option determines whether "extrayear" is output
-  if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $nameyear = $be->get_field('nameyear')) {
-      if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
-        $acc .= "    <BDS>EXTRAYEAR</BDS>\n";
-      }
-    }
-    if (my $ly = $be->get_field('labelyear')) {
-      $acc .= "    \\field{labelyear}{$ly}\n";
-    }
-  }
-
-  # The labelalpha option determines whether "extraalpha" is output
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $la = $be->get_field('labelalpha')) {
-      if (Biber::Config->get_la_disambiguation($la) > 1) {
-        $acc .= "    <BDS>EXTRAALPHA</BDS>\n";
-      }
-    }
-  }
-
-  if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype')) ) {
-    if (my $sh = $be->get_field('shorthand')) {
-      $acc .= "    \\field{labelnumber}{$sh}\n";
-    }
-    elsif (my $lnum = $be->get_field('labelnumber')) {
-      $acc .= "    \\field{labelnumber}{$lnum}\n";
-    }
-  }
-
-  if (defined($be->get_field('singletitle'))) {
-    $acc .= "    \\true{singletitle}\n";
-  }
-
-  foreach my $lfield (@{$struc->get_field_type('literal')}) {
-    next if $struc->is_field_type('skipout', $lfield);
-    if ( ($struc->is_field_type('nullok', $lfield) and
-          $be->field_exists($lfield)) or
-         $be->get_field($lfield) ) {
-      # we skip outputting the crossref or xref when the parent is not cited
-      # (biblatex manual, section 2.23)
-      # sets are a special case so always output crossref/xref for them since their
-      # children will always be in the .bbl otherwise they make no sense.
-      unless ( $be->get_field('entrytype') eq 'set') {
-        next if ($lfield eq 'crossref' and
-                 not $section->has_citekey($be->get_field('crossref')));
-        next if ($lfield eq 'xref' and
-                 not $section->has_citekey($be->get_field('xref')));
-      }
-      $acc .= _printfield($be, $lfield, $be->get_field($lfield) );
-    }
-  }
-
-  foreach my $rfield (@{$struc->get_field_type('range')}) {
-    if ( my $rf = $be->get_field($rfield) ) {
-      # range fields are an array ref of two-element array refs [range_start, range_end]
-      # range_end can be be empty for open-ended range or undef
-      my @pr;
-      foreach my $f (@$rf) {
-        if (defined($f->[1])) {
-          push @pr, $f->[0] . '\bibrangedash' . ($f->[1] ? ' ' . $f->[1] : '');
-        }
-        else {
-          push @pr, $f->[0];
-        }
-      }
-      my $bbl_rf = join(', ', @pr);
-      $acc .= "    \\field{$rfield}{$bbl_rf}\n";
-    }
-  }
-
-  foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
-    if ( my $vf = $be->get_field($vfield) ) {
-      $acc .= "    \\verb{$vfield}\n";
-      $acc .= "    \\verb $vf\n    \\endverb\n";
-    }
-  }
-  if ( my $k = $be->get_field('keywords') ) {
-    $acc .= "    \\keyw{$k}\n";
-  }
-
-  # Append any warnings to the entry, if any
-  if ( my $w = $be->get_field('warnings')) {
-    foreach my $warning (@$w) {
-      $acc .= "    \\warn{\\item $warning}\n";
-    }
-  }
-
-  $xml->endTag('entry');
-
-  # Create an index by keyname for easy retrieval
-  $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
-
   return;
 }
 
@@ -289,20 +87,6 @@ sub set_output_entry {
 =cut
 
 sub create_output_section {
-  my $self = shift;
-  my $secnum = $Biber::MASTER->get_current_section;
-  my $section = $Biber::MASTER->sections->get_section($secnum);
-
-  # We rely on the order of this array for the order of the .bbl
-  foreach my $k ($section->get_citekeys) {
-    # Regular entry
-    my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
-    $self->set_output_entry($be, $section, Biber::Config->get_structure);
-  }
-
-  # Make sure the output object knows about the output section
-  $self->set_output_section($secnum, $section);
-
   return;
 }
 
@@ -310,16 +94,18 @@ sub create_output_section {
 
 =head2 output
 
-    BBL output method - this takes care to output entries in the explicit order
-    derived from the virtual order of the citekeys after sortkey sorting.
+    BibLaTeXML output method
 
 =cut
 
 sub output {
   my $self = shift;
+  my $biber = $Biber::MASTER;
   my $data = $self->{output_data};
   my $target = $self->{output_target};
   my $target_string = "Target"; # Default
+  my $struc = Biber::Config->get_structure;
+  my $xml = $self->{output_data};
   if ($self->{output_target_file}) {
     $target_string = $self->{output_target_file};
   }
@@ -330,66 +116,152 @@ sub output {
   }
 
   $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  $logger->info("Writing '$target_string' with encoding 'UTF-8'");
 
-  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
-  $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('bblsafechars');
+  $xml->startTag([$bp, 'entries']);
 
-  print $target $data->{HEAD};
+  # Loop over sections.
+  foreach my $section (@{$biber->sections->get_sections}) {
 
-  foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
-    $logger->debug("Writing entries for section $secnum");
+    # Loop over entries
+ENTRIES:    foreach my $be ($section->bibentries->entries) {
+      my $citekey = $be->get_field('citekey');
 
-    print $target "\n\\refsection{$secnum}\n";
-    my $section = $self->get_output_section($secnum);
+      $xml->startTag([$bp, 'entry'], 'id' => $citekey, 'entrytype' => $be->get_field('entrytype'));
 
-    # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
-    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$section->get_lists}) {
-      my $listlabel = $list->get_label;
-      my $listtype = $list->get_type;
-      $logger->debug("Writing entries in list '$listlabel'");
-
-      # Remove most of this conditional when biblatex supports lists
-      if ($listlabel eq 'SHORTHANDS') {
-        print $target "  \\lossort\n";
+      # entry options
+      if (my $options = $be->get_field('rawoptions')) {
+        $xml->startTag([$bp, 'options']);
+        my @entryoptions = split /\s*,\s*/, $options;
+        foreach (@entryoptions) {
+          m/^([^=]+)(=?)(.+)?$/;
+          my $val;
+          if ($2) {
+            given ($3) {
+              when ('true') {
+                $val = 1;
+              }
+              when ('false') {
+                $val = 0;
+              }
+              default {
+                $val = $3;
+              }
+            }
+            $xml->emptyTag('option', 'key' => $1, 'value' => $3);
+          }
+          else {
+            $xml->emptyTag('option', 'key' => $1, 'value' => 1);
+          }
+        }
+        $xml->endTag([$bp, 'options']);
       }
-      else {
-        print $target "\n  \\sortlist{$listlabel}\n" unless ($listlabel eq 'MAIN');
+
+      # Generate set information
+      if ( $be->get_field('entrytype') eq 'set' ) { # Set parents get \set entry ...
+        $xml->startTag([$bp, 'entryset']);
+        my @entryset = split /\s*,\s*/, $be->get_field('entryset');
+        foreach (@entryset) {
+          $xml->dataElement([$bp, 'item'], $_);
+        }
+        $xml->endTag([$bp, 'entryset']);
+        $xml->endTag([$bp, 'entry']);
+        next ENTRIES; # to avoid putting the crossrefe'd stuff in
       }
 
-      # The order of this array is the sorted order
-      foreach my $k ($list->get_keys) {
-        $logger->debug("Writing entry for key '$k'");
-        if ($listtype eq 'entry') {
-          my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
+      # Output name fields
+      foreach my $namefield (@{$struc->get_field_type('name')}) {
+        if ( my $nf = $be->get_field($namefield) ) {
 
-          # Instantiate any dynamic, list specific entry information
-          my $entry_string = $list->instantiate_entry($entry, $k);
-
-          # If requested to convert UTF-8 to macros ...
-          if (Biber::Config->getoption('bblsafechars')) {
-            $entry_string = latex_recode_output($entry_string);
+          # Did we have "and others" in the data?
+          if ( $nf->get_morenames ) {
+            $xml->startTag([$bp, $namefield], 'morenames' => 1);
+          }
+          else {
+            $xml->startTag([$bp, $namefield]);
           }
 
-          print $target $entry_string;
-        }
-        elsif ($listtype eq 'shorthand') {
-          print $target "    \\key{$k}\n";
+          foreach my $n (@{$nf->names}) {
+            $n->name_to_bltxml($xml, $bp);
+          }
+          $xml->endTag([$bp, $namefield]);
         }
       }
 
-      # Remove most of this conditional when biblatex supports lists
-      if ($listlabel eq 'SHORTHANDS') {
-        print $target "  \\endlossort\n\n";
+      # Output list fields
+      foreach my $listfield (@{$struc->get_field_type('list')}) {
+        if (my $lf = $be->get_field($listfield)) {
+          if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
+            $xml->startTag([$bp, $listfield], 'morelist' => 1);
+            pop @$lf;           # remove the last element in the array
+          }
+          else {
+            $xml->startTag([$bp, $listfield]);
+          }
+          foreach my $f (@$lf) {
+            $xml->dataElement([$bp, 'item'], $f);
+          }
+          $xml->endTag([$bp, $listfield]);
+        }
       }
-      else {
-        print $target "\n  \\endsortlist\n\n" unless ($listlabel eq 'MAIN');
+
+      # Output literal fields
+      foreach my $lfield (@{$struc->get_field_type('literal')}) {
+        if (my $lf = $be->get_field($lfield)) {
+          # We have to reverse engineer some special fields like dates as they
+          # have been processed by now and are just "literal" fields
+          if ($lf =~ /\A(.*?)(end)?(year|month|day)\z/xms) {
+            
+          }
+          else {
+            $xml->dataElement([$bp, $lfield], $lf);
+          }
+        }
       }
+
+      # Range fields
+      foreach my $rfield (@{$struc->get_field_type('range')}) {
+        if (my $rf = $be->get_field($rfield)) {
+          $xml->startTag([$bp, $rfield]);
+          # range fields are an array ref of two-element array refs [range_start, range_end]
+          # range_end can be be empty for open-ended range or undef
+          $xml->startTag([$bp, 'list']);
+          foreach my $f (@$rf) {
+            $xml->startTag([$bp, 'item']);
+            $xml->dataElement([$bp, 'start'], $f->[0]);
+            $xml->dataElement([$bp, 'end'], $f->[1]);
+            $xml->endTag([$bp, 'item']);
+          }
+          $xml->endTag([$bp, 'list']);
+          $xml->endTag([$bp, $rfield]);
+        }
+      }
+
+      # Verbatim fields
+      foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
+        if (my $vf = $be->get_field($vfield)) {
+          $xml->dataElement([$bp, $vfield], $vf);
+        }
+      }
+
+      # csv fields
+      foreach my $csvfield (@{$struc->get_field_type('csv')}) {
+        if (my $csvf = $be->get_field($csvfield)) {
+          $xml->startTag([$bp, $csvfield]);
+          my @f = split /\s*,\s*/, $csvf;
+          foreach (@f) {
+            $xml->dataElement([$bp, 'item'], $_);
+          }
+          $xml->endTag([$bp, $csvfield]);
+        }
+      }
+      $xml->endTag([$bp, 'entry']);
     }
-
-    print $target "\\endrefsection\n"
   }
+  $xml->endTag([$bp, 'entries']);
+  $xml->end();
 
-  print $target $data->{TAIL};
+  print $target $xml->getOutput->value();
 
   $logger->info("Output to $target_string");
   close $target;

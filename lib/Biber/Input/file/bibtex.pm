@@ -235,6 +235,9 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       if ($f eq 'options') {
         my $value = decode_utf8($entry->get($f));
         $Biber::MASTER->process_entry_options($key, $value);
+        # Save the raw options in case we are to output another input format like
+        # biblatexml
+        $bibentry->set_field('rawoptions', $value);
       }
 
       # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf

@@ -239,9 +239,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -250,9 +247,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -260,9 +254,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="booktitleaddon">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -323,9 +314,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="eventtitle">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -412,9 +400,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -423,9 +408,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -433,9 +415,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="issuesubtitle">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -450,9 +429,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -460,9 +436,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="journalsubtitle">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -508,9 +481,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -518,9 +488,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="maintitle">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -530,17 +497,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
   <define name="nameaddon">
     <element name="nameaddon">
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <text/>
     </element>
   </define>
@@ -559,26 +520,19 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="options">
     <element name="options">
-      <choice>
-        <element name="option">
-          <element name="key">
-            <text/>
-          </element>
-          <element name="value">
-            <text/>
-          </element>
-        </element>
-        <text/>
-      </choice>
+      <element name="option">
+        <attribute name="key"/>
+        <optional>
+          <attribute name="value"/>
+        </optional>
+        <empty/>
+      </element>
     </element>
   </define>
   <define name="origtitle">
     <element name="origtitle">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -603,9 +557,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -613,9 +564,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="shorthand">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <text/>
     </element>
@@ -625,9 +573,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <text/>
     </element>
   </define>
@@ -635,9 +580,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="shorttitle">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -647,9 +589,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -657,9 +596,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="shortseries">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -676,9 +612,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="sorttitle">
     <element name="sorttitle">
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <text/>
     </element>
   </define>
@@ -686,9 +619,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="subtitle">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -698,9 +628,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lang"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <ref name="formattext"/>
     </element>
   </define>
@@ -708,9 +635,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="titleaddon">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -729,9 +653,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="venue">
       <optional>
         <ref name="att.lang"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <ref name="formattext"/>
     </element>
@@ -945,17 +866,17 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <!-- literal lists -->
   <define name="att.lists">
-    <attribute name="andothers">
-      <value>true</value>
+    <attribute name="morelist">
+      <choice>
+        <value>1</value>
+        <value>true</value>
+      </choice>
     </attribute>
   </define>
   <define name="institution">
     <element name="institution">
       <optional>
         <ref name="att.lists"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <choice>
         <text/>
@@ -971,9 +892,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <optional>
           <ref name="att.lists"/>
         </optional>
-        <optional>
-          <ref name="att.mode"/>
-        </optional>
         <choice>
           <text/>
           <oneOrMore>
@@ -984,9 +902,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <element name="organization">
         <optional>
           <ref name="att.lists"/>
-        </optional>
-        <optional>
-          <ref name="att.mode"/>
         </optional>
         <choice>
           <text/>
@@ -1005,9 +920,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lists"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1020,9 +932,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="origlocation">
       <optional>
         <ref name="att.lists"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <choice>
         <text/>
@@ -1037,9 +946,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="att.lists"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1052,9 +958,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="origpublisher">
       <optional>
         <ref name="att.lists"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <choice>
         <text/>
@@ -1071,8 +974,13 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="pubitem">
     <element name="item">
-      <ref name="publishername"/>
-      <ref name="location"/>
+      <choice>
+        <text/>
+        <group>
+          <ref name="publishername"/>
+          <ref name="location"/>
+        </group>
+      </choice>
     </element>
   </define>
   <define name="publishername">
@@ -1295,11 +1203,11 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <ref name="att.gender"/>
     </optional>
     <optional>
-      <ref name="att.lists"/>
-    </optional>
-    <optional>
       <attribute name="morenames">
-        <value>1</value>
+        <choice>
+          <value>1</value>
+          <value>true</value>
+        </choice>
       </attribute>
     </optional>
   </define>
@@ -1321,9 +1229,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="attlist.name"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1336,9 +1241,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="editor">
       <optional>
         <ref name="attlist.name"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <choice>
         <text/>
@@ -1353,9 +1255,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="attlist.name"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1368,9 +1267,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="annotator">
       <optional>
         <ref name="attlist.name"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <choice>
         <text/>
@@ -1385,9 +1281,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="attlist.name"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1400,9 +1293,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="commentator">
       <optional>
         <ref name="attlist.name"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <choice>
         <text/>
@@ -1417,9 +1307,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="attlist.name"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1432,9 +1319,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="holder">
       <optional>
         <ref name="attlist.name"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <choice>
         <text/>
@@ -1449,9 +1333,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="attlist.name"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1464,9 +1345,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="translator">
       <optional>
         <ref name="attlist.name"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <choice>
         <text/>
@@ -1481,9 +1359,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="attlist.name"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1497,9 +1372,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <optional>
         <ref name="attlist.name"/>
       </optional>
-      <optional>
-        <ref name="att.mode"/>
-      </optional>
       <choice>
         <text/>
         <oneOrMore>
@@ -1512,9 +1384,6 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="sortname">
       <optional>
         <ref name="attlist.name"/>
-      </optional>
-      <optional>
-        <ref name="att.mode"/>
       </optional>
       <choice>
         <text/>
@@ -1670,6 +1539,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>article</value>
         </attribute>
@@ -1769,6 +1641,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>bibnote</value>
         </attribute>
@@ -1783,6 +1658,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>book</value>
         </attribute>
@@ -1900,6 +1778,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>booklet</value>
         </attribute>
@@ -1967,6 +1848,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>books</value>
         </attribute>
@@ -2060,6 +1944,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <choice>
             <value>inbook</value>
@@ -2190,6 +2077,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <choice>
             <value>collection</value>
@@ -2307,6 +2197,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>collections</value>
         </attribute>
@@ -2400,6 +2293,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <choice>
             <value>incollection</value>
@@ -2527,6 +2423,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>inproceedings</value>
         </attribute>
@@ -2635,6 +2534,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>manual</value>
         </attribute>
@@ -2718,6 +2620,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>misc</value>
         </attribute>
@@ -2778,6 +2683,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>online</value>
         </attribute>
@@ -2825,6 +2733,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>patent</value>
         </attribute>
@@ -2881,6 +2792,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>periodical</value>
         </attribute>
@@ -2947,6 +2861,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>proceedings</value>
         </attribute>
@@ -3046,6 +2963,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>report</value>
         </attribute>
@@ -3119,6 +3039,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>thesis</value>
         </attribute>
@@ -3183,6 +3106,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>unpublished</value>
         </attribute>
@@ -3229,6 +3155,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <value>set</value>
         </attribute>
@@ -3245,6 +3174,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     <element name="entry">
       <interleave>
         <attribute name="id"/>
+        <optional>
+          <ref name="att.mode"/>
+        </optional>
         <attribute name="entrytype">
           <choice>
             <value>artwork</value>

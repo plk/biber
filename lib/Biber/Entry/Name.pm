@@ -502,7 +502,7 @@ sub get_nameinitstring {
 =cut
 
 sub name_to_bbl {
-  my ($self, $arg) = @_;
+  my $self = shift;
 
   my @pno; # per-name options
   my $pno; # per-name options final string
@@ -592,6 +592,78 @@ sub name_to_bbl {
     return "      {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
   }
 }
+
+=head2 name_to_bltxml {
+
+    Add BibLaTeXML for the name to an XML::Writer object
+
+=cut
+
+sub name_to_bltxml {
+  my ($self, $xml, $bp) = @_;
+
+  # lastname is always defined
+  $xml->startTag([$bp, 'person']);
+
+  # firstname
+  if (my $fn = $self->get_firstname) {
+    my $fni = $self->get_firstname_i;
+    $xml->startTag([$bp, 'first']);
+    my @nameparts = split(/[~\s]/, $fn);
+    for (my $p = 0;$p <= $#nameparts;$p++) {
+      $xml->dataElement([$bp, 'namepart'], $nameparts[$p], 'initial' => $fni->[$p]);
+    }
+    $xml->endTag([$bp, 'first']);
+  }
+
+  # middlename
+  if (my $mn = $self->get_middlename) {
+    my $mni = $self->get_middlename_i;
+    $xml->startTag([$bp, 'middle']);
+    my @nameparts = split(/[~\s]/, $mn);
+    for (my $p = 0;$p <= $#nameparts;$p++) {
+      $xml->dataElement([$bp, 'namepart'], $nameparts[$p], 'initial' => $mni->[$p]);
+    }
+    $xml->endTag([$bp, 'middle']);
+  }
+
+  # prefix
+  if (my $pre = $self->get_prefix) {
+    my $prei = $self->get_prefix_i;
+    $xml->startTag([$bp, 'prefix']);
+    my @nameparts = split(/[~\s]/, $pre);
+    for (my $p = 0;$p <= $#nameparts;$p++) {
+      $xml->dataElement([$bp, 'namepart'], $nameparts[$p], 'initial' => $prei->[$p]);
+    }
+    $xml->endTag([$bp, 'prefix']);
+  }
+
+  # last
+  if (my $ln = $self->get_lastname) {
+    my $lni = $self->get_lastname_i;
+    $xml->startTag([$bp, 'last']);
+    my @nameparts = split(/[~\s]/, $ln);
+    for (my $p = 0;$p <= $#nameparts;$p++) {
+      $xml->dataElement([$bp, 'namepart'], $nameparts[$p], 'initial' => $lni->[$p]);
+    }
+    $xml->endTag([$bp, 'last']);
+  }
+
+  # suffix
+  if (my $suff = $self->get_suffix) {
+    my $suffi = $self->get_suffix_i;
+    $xml->startTag([$bp, 'suffix']);
+    my @nameparts = split(/[~\s]/, $suff);
+    for (my $p = 0;$p <= $#nameparts;$p++) {
+      $xml->dataElement([$bp, 'namepart'], $nameparts[$p], 'initial' => $suffi->[$p]);
+    }
+    $xml->endTag([$bp, 'suffix']);
+  }
+
+  $xml->endTag([$bp, 'person']);
+  return;
+}
+
 
 
 =head2 dump

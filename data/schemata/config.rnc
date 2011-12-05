@@ -3,6 +3,7 @@ start = element config {
   element bblencoding         { text }? &
   element bblsafechars        { "0" | "1" }? &
   element bblsafecharsset     { "base" | "full" }? &
+  element bltxml              { "0" | "1" }? &
   element collate             { "0" | "1" }? &
   element collate_options     {
     element option {
@@ -13,7 +14,7 @@ start = element config {
 # Can't specify the config file location in the config file ...
 #  element configfile          { text }? & 
   element convert_control     { "0" | "1" }? &
-  element graph               { "0" | "1" }? &
+  element graph               { text | "1" }? &
   element decodecharsset      { "base" | "full" }? &
   element debug               { "0" | "1" }? &
   element fastsort            { "0" | "1" }? &

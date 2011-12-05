@@ -653,7 +653,7 @@ sub inits {
 =head2 join_name
 
   Replace all join typsetting elements in a name part (space, ties) with BibLaTeX macros
-  so that typesetting decisions are made in BibLaTeX, not hard-coded in biber
+  so that typesetting decisions are made in BibLaTeX, not hard-coded in Biber
 
 =cut
 

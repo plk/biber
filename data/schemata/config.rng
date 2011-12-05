@@ -30,6 +30,14 @@
           </element>
         </optional>
         <optional>
+          <element name="bltxml">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="collate">
             <choice>
               <value>0</value>
@@ -64,7 +72,7 @@
         <optional>
           <element name="graph">
             <choice>
-              <value>0</value>
+              <text/>
               <value>1</value>
             </choice>
           </element>

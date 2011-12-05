@@ -131,11 +131,11 @@ nameaddon = element nameaddon { text }
 note = element note { att.lang?, formattext }
 number = element number { text }
 options = element options {
-  ( element option {
-      element key { text},
-      element value { text }
-    }
-  | text )
+  element option {
+      attribute key { text},
+      attribute value { text }?,
+    empty
+  }
 }
 origtitle = element origtitle { att.lang?, formattext }
 pagetotal = element pagetotal { text }
@@ -186,7 +186,7 @@ range.start = element start { text }
 range.end = element end { text }
 
 # literal lists
-att.lists = attribute andothers { "true" }
+att.lists = attribute morelist { "1" | "true" }
 institution = element institution { att.lists?, ( text | item+ ) }
 organisation = (element organisation { att.lists?, ( text | item+ ) } |
                 element organization { att.lists?, ( text | item+ ) } )
@@ -195,7 +195,7 @@ origlocation = element origlocation { att.lists?, ( text | item+ ) }
 publisher = element publisher { att.lists?, ( text | pubitem+ ) }
 origpublisher = element origpublisher { att.lists?, ( text | pubitem+ ) }
 item = element item { formattext }
-pubitem = element item { publishername, location }
+pubitem = element item { (text | (publishername, location)) }
 publishername = element name { attribute id {text}?, formattext }
 publocation = element location { attribute id {text}?, text }
 
@@ -208,7 +208,7 @@ script = element script { script.list | itemscript+ }
 origscript = element origscript { script.list | itemscript+ }
 itemscript = element item { script.list }
 # NAME LISTS
-attlist.name = attribute class { "sub" | "vol" | "main" }?, att.gender?, att.lists?, attribute morenames {"1"}?
+attlist.name = attribute class { "sub" | "vol" | "main" }?, att.gender?, attribute morenames {"1" | "true"}?
 att.gender = attribute gender { "sf" | "sm" | "sn" | "pf" | "pm" | "pn" | "pp" }
 author = element author { attlist.name?, ( text | person+ ) }
 editor = element editor { attlist.name?, (text | person+) }
@@ -225,7 +225,7 @@ shorteditor = element shorteditor { attlist.name?, (text | person+) }
 sortname = element sortname { attlist.name?, (text | person+) }
 person = element person {
     attlist.person,
-    ( text | (first &
+    ( text | (first? &
                 prefix? &
                 middle? &
                 last &
@@ -872,9 +872,8 @@ set = element entry {
   attribute id {text} &
   att.mode? &
   attribute entrytype { "set" } &
-  attribute howpublished { text } &
-  entryset &
-  crossref?
+  attribute howpublished { text }? &
+  entryset
 }
 
 #########################################################
