@@ -57,17 +57,17 @@ provides:
   Biber::LaTeX::Recode:
     file: lib/Biber/LaTeX/Recode.pm
     version: 0
-  Biber::Output::BBL:
-    file: lib/Biber/Output/BBL.pm
+  Biber::Output::base:
+    file: lib/Biber/Output/base.pm
     version: 0
-  Biber::Output::Base:
-    file: lib/Biber/Output/Base.pm
+  Biber::Output::bbl:
+    file: lib/Biber/Output/bbl.pm
     version: 0
-  Biber::Output::DOT:
-    file: lib/Biber/Output/DOT.pm
+  Biber::Output::dot:
+    file: lib/Biber/Output/dot.pm
     version: 0
-  Biber::Output::Test:
-    file: lib/Biber/Output/Test.pm
+  Biber::Output::test:
+    file: lib/Biber/Output/test.pm
     version: 0
   Biber::Section:
     file: lib/Biber/Section.pm
@@ -104,6 +104,7 @@ requires:
   Unicode::Collate: 0.84
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
+  XML::Writer::String: 0
   perl: v5.14.0
 resources:
   license: http://dev.perl.org/licenses/

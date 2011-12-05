@@ -750,7 +750,8 @@ sub cite_setmembers {
     my $be = $section->bibentry($citekey);
 
     # promote indirectly cited inset set members to fully cited entries
-    if ($be->get_field('entrytype') eq 'set') {
+    if ($be->get_field('entrytype') eq 'set' and
+        $be->get_field('entryset')) {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
       foreach my $inset_key (@inset_keys) {
         $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
