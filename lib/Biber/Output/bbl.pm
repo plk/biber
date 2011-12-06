@@ -316,7 +316,7 @@ sub set_output_entry {
     $acc .= "    \\true{singletitle}\n";
   }
 
-  foreach my $lfield (@{$struc->get_field_type('literal')}) {
+  foreach my $lfield (sort (@{$struc->get_field_type('literal')}, @{$struc->get_field_type('datepart')})) {
     next if $struc->is_field_type('skipout', $lfield);
     if ( ($struc->is_field_type('nullok', $lfield) and
           $be->field_exists($lfield)) or

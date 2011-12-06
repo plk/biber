@@ -98,7 +98,7 @@ sub new {
   $self->{fields}{nullok}   = $nullok;
   $self->{fields}{skipout}  = $skipout;
   $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range, @date) };
-  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @datepart, @key, @integer, @entrykey) };
+  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer, @entrykey) };
   $self->{fields}{datepart} = { map {$_ => 1} @datepart };
   $self->{fields}{name}     = { map {$_ => 1} @name };
   $self->{fields}{list}     = { map {$_ => 1} @list };

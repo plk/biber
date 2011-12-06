@@ -532,7 +532,11 @@ sub _name {
 sub _date {
   my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
   my ($datetype) = $f =~ m/\A(.*)date\z/xms;
-  my $date = ireplace(decode_utf8($entry->get($f)), $val_match, $val_replace);
+  my $fv = decode_utf8($entry->get($f));
+  my $date = ireplace($fv, $val_match, $val_replace);
+  # Just in case we need to look at the original field later
+  # an "orig_field" is not counted as current data in the entry
+  $bibentry->set_orig_field($f, $fv);
 
   # We are not validating dates here, just syntax parsing
   my $date_re = qr/(\d{4}) # year

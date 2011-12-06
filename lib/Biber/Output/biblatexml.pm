@@ -213,8 +213,8 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Output date fields
-      foreach my $dp ('', 'event', 'orig', 'url') {
-        if (my $date = $be->get_field($dp . 'date')) {
+      foreach my $dp (('', 'event', 'orig', 'url')) {
+        if (my $date = $be->get_orig_field($dp . 'date')) {
           $dp ? $xml->startTag([$bp, 'date'], 'datetype' => $dp) : $xml->startTag([$bp, 'date']);
           if ($date =~ m|\A([^\/]+)/(.+)?\z|) {
             $xml->dataElement([$bp, 'start'], $1);

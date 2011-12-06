@@ -69,6 +69,9 @@ sub clone {
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = $v;
   }
+  while (my ($k, $v) = each(%{$self->{origfields}})) {
+    $new->{origfields}{$k} = $v;
+  }
   # Need to add entrytype and datatype
   $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
   $new->{derivedfields}{datatype} = $self->{derivedfields}{datatype};
@@ -120,6 +123,36 @@ sub set_datafield {
     delete($self->{datafields}{$key});
   }
   return;
+}
+
+=head2 set_orig_field
+
+    Set a field which came from the datasource which is then split/transformed
+    into other fields. Here we save the original in case we need to look at it again
+    but it is not treated as a real field any more. Such fields are of only historical
+    interest in the processing in case we lose information during processing but need
+    to refer back.
+
+=cut
+
+sub set_orig_field {
+  my $self = shift;
+  my ($key, $val) = @_;
+  $self->{origfields}{$key} = $val;
+  return;
+}
+
+=head2 get_orig_field
+
+    Get an original field which has been subsequently split/transformed.
+
+=cut
+
+sub get_orig_field {
+  my $self = shift;
+  my $key = shift;
+  return $self->{origfields}{$key} if exists($self->{origfields}{$key});
+  return undef;
 }
 
 
