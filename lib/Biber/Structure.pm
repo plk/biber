@@ -42,7 +42,7 @@ sub new {
   # for quick tests later
 
   # field datatypes
-  my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key, @entrykey);
+  my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key, @entrykey, @datepart);
 
   # Create data for field types, including any aliases which might be
   # needed when reading the bib data.
@@ -61,6 +61,9 @@ sub new {
     }
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
       push @literal, $f->{content};
+    }
+    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'datepart') {
+      push @datepart, $f->{content};
     }
     elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
       push @date, $f->{content};
@@ -95,7 +98,8 @@ sub new {
   $self->{fields}{nullok}   = $nullok;
   $self->{fields}{skipout}  = $skipout;
   $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range, @date) };
-  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer, @entrykey) };
+  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @datepart, @key, @integer, @entrykey) };
+  $self->{fields}{datepart} = { map {$_ => 1} @datepart };
   $self->{fields}{name}     = { map {$_ => 1} @name };
   $self->{fields}{list}     = { map {$_ => 1} @list };
   $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };
@@ -396,12 +400,13 @@ sub check_data_constraints {
   my $key = $be->get_field('citekey');
   foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{data}},
                   @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
+    # This is the datatype of the constraint, not the field!
     if ($c->{datatype} eq 'integer') {
       my $dt = $STRUCTURE_DATATYPES{$c->{datatype}};
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
           unless ( $fv =~ /$dt/ ) {
-            push @warnings, "Invalid format (integer) of field '$f' - ignoring field in entry '$key'";
+            push @warnings, 'Invalid format (' . $c->{datatype}. ") of field '$f' - ignoring field in entry '$key'";
             $be->del_field($f);
             next;
           }

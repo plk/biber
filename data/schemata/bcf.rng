@@ -519,6 +519,7 @@
                 <attribute name="datatype">
                   <choice>
                     <value>literal</value>
+                    <value>datepart</value>
                     <value>name</value>
                     <value>key</value>
                     <value>entrykey</value>

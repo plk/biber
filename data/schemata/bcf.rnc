@@ -210,7 +210,7 @@ start =
           # fieldtype is "field" or "list"
           attribute fieldtype { "field" | "list" },
           # datatype of field content
-          attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "special" },
+          attribute datatype { "literal" | "datepart" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "special" },
           # Are we allowed to output a null field value to the .bbl for this field?
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?

@@ -208,14 +208,22 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       # Output literal fields
       foreach my $lfield (@{$struc->get_field_type('literal')}) {
         if (my $lf = $be->get_field($lfield)) {
-          # We have to reverse engineer some special fields like dates as they
-          # have been processed by now and are just "literal" fields
-          if ($lf =~ /\A(.*?)(end)?(year|month|day)\z/xms) {
-            
+          $xml->dataElement([$bp, $lfield], $lf);
+        }
+      }
+
+      # Output date fields
+      foreach my $dp ('', 'event', 'orig', 'url') {
+        if (my $date = $be->get_field($dp . 'date')) {
+          $dp ? $xml->startTag([$bp, 'date'], 'datetype' => $dp) : $xml->startTag([$bp, 'date']);
+          if ($date =~ m|\A([^\/]+)/(.+)?\z|) {
+            $xml->dataElement([$bp, 'start'], $1);
+            $xml->dataElement([$bp, 'end'], $2) if $2;
           }
           else {
-            $xml->dataElement([$bp, $lfield], $lf);
+            $xml->characters($date);
           }
+          $xml->endTag([$bp, 'date']);
         }
       }
 
