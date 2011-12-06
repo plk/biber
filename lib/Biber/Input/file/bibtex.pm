@@ -636,37 +636,40 @@ sub cache_data {
     }
 
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
-    my $key = decode_utf8($entry->key);
+    my $keys = decode_utf8($entry->key);
 
-    # If we've already seen a case variant, warn
-    # This is case mismatch test of datasource entries with other datasource entries
-    if  (my $okey = $section->has_badcasekey($key)) {
-      biber_warn("Possible typo (case mismatch) between datasource keys: '$key' and '$okey' in file '$filename'");
-    }
+    # Allow for multiple keys per entry
+    foreach my $key (split(/\|/, $keys)) {
+      # If we've already seen a case variant, warn
+      # This is case mismatch test of datasource entries with other datasource entries
+      if (my $okey = $section->has_badcasekey($key)) {
+        biber_warn("Possible typo (case mismatch) between datasource keys: '$key' and '$okey' in file '$filename'");
+      }
 
-    # If we've already seen this key in a datasource, ignore it and warn
-    if  ($section->has_everykey($key)) {
-      biber_warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
-      next;
-    }
-    else {
-      $section->add_everykey($key);
-    }
+      # If we've already seen this key in a datasource, ignore it and warn
+      if ($section->has_everykey($key)) {
+        biber_warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
+        next;
+      }
+      else {
+        $section->add_everykey($key);
+      }
 
-    # Bad entry
-    unless ($entry->parse_ok) {
-      biber_warn("Entry $key does not parse correctly");
-      next;
-    }
+      # Bad entry
+      unless ($entry->parse_ok) {
+        biber_warn("Entry $key does not parse correctly");
+        next;
+      }
 
-    # Cache the entry so we don't have to read the file again on next pass.
-    # Two reasons - So we avoid T::B macro redef warnings and speed
-    $cache->{data}{$filename}{$key} = $entry;
-    # We do this as otherwise we have no way of determining the origing .bib entry order
-    # We need this in order to do sorting=none + allkeys because in this case, there is no
-    # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
-    push @{$cache->{orig_key_order}{$filename}}, $key;
-    $logger->debug("Cached Text::BibTeX entry for key '$key' from BibTeX file '$filename'");
+      # Cache the entry so we don't have to read the file again on next pass.
+      # Two reasons - So we avoid T::B macro redef warnings and speed
+      $cache->{data}{$filename}{$key} = $entry;
+      # We do this as otherwise we have no way of determining the origing .bib entry order
+      # We need this in order to do sorting=none + allkeys because in this case, there is no
+      # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
+      push @{$cache->{orig_key_order}{$filename}}, $key;
+      $logger->debug("Cached Text::BibTeX entry for key '$key' from BibTeX file '$filename'");
+    }
   }
 
   $bib->close; # If we don't do this, we can't unlink the temp file on Windows
