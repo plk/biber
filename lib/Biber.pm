@@ -753,7 +753,9 @@ sub process_multikey {
     next unless Biber::Config->is_multikey($citekey);
     unless (Biber::Config->get_multikey($citekey)) {
       my $be = $section->bibentry($citekey);
-      $be->set_datafield('options', 'skipbib', ','); # append mode with comma sep
+      $be->set_datafield('options', 'skipbib', ','); # append-mode with comma sep
+      Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
+      Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
     }
   }
 }
