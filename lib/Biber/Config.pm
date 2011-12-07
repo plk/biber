@@ -47,8 +47,8 @@ our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{seenname} = {};
 
-# Multikey tracking so we can set only one visible in the bib
-$CONFIG->{state}{multikey} = {};
+# Citekeys which refer to the same entry
+$CONFIG->{state}{citkey_aliases} = {};
 
 # Disambiguation data for labelalpha. Used for labelalphatemplate autoinc method
 $CONFIG->{state}{ladisambiguation} = {};
@@ -642,49 +642,6 @@ sub getblxoption {
   elsif ($CONFIG_SCOPE_BIBLATEX{$opt}->{GLOBAL}) {
     return $CONFIG->{options}{biblatex}{GLOBAL}{$opt};
   }
-}
-
-#########################
-# Multi-key state methods
-#########################
-
-=head2 is_multikey
-
-  Returns boolean depending on whether this key is a multikey
-
-=cut
-
-sub is_multikey {
-  shift; # class method so don't care about class name
-  my $key = shift;
-  return exists($CONFIG->{state}{multikey}{$key}) ? 1 : 0;
-}
-
-
-=head2 set_multikey
-
-    Set multikey information
-
-=cut
-
-sub set_multikey {
-  shift; # class method so don't care about class name
-  my ($key, $val) = @_;
-  $CONFIG->{state}{multikey}{$key} = $val;
-  return;
-}
-
-
-=head2 get_multikey
-
-    Get multikey information
-
-=cut
-
-sub get_multikey {
-  shift; # class method so don't care about class name
-  my $key = shift;
-  return $CONFIG->{state}{multikey}{$key} ? 1 : 0;
 }
 
 

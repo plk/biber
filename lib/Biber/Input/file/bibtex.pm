@@ -145,6 +145,12 @@ sub extract_entries {
       create_entry($key, $entry, $source);
     }
 
+    # Loop over all aliases, creating data in section object
+    while (my ($alias, $key) = each %{$cache->{data}{citekey_aliases}}) {
+      $section->set_citekey_alias($alias, $key);
+      $logger->debug("Citekey '$alias' is an alias for citekey '$key'");
+    }
+
     # If allkeys, push all bibdata keys into citekeys (if they are not already there).
     # We are using the special "orig_key_order" array which is used to deal with the
     # sitiation when sorting=none and allkeys is set. We need an array rather than the
@@ -163,6 +169,12 @@ sub extract_entries {
       if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
         $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
         create_entry($wanted_key, $entry, $source);
+        # found a key, remove it from the list of keys we want
+        @rkeys = grep {$wanted_key ne $_} @rkeys;
+      }
+      elsif (my $rk = $cache->{data}{citekey_aliases}{$wanted_key}) {
+        $logger->debug("Citekey '${wanted_key}' is an alias for citekey '$rk'");
+        $section->set_citekey_alias($wanted_key, $rk);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -636,53 +648,47 @@ sub cache_data {
     }
 
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
-    # Allow for multiple keys per entry
-    my @keys = (decode_utf8($entry->key));
+    my $key = decode_utf8($entry->key);
 
     # Any secondary keys?
+    # We can't do this with a driver entry for the IDS field as this needs
+    # an entry object creating first and the whole point of aliases is that
+    # there is no entry object
     if (my $ids = decode_utf8($entry->get('ids'))) {
-      push @keys, split(/\s*,\s*/, $ids);
-    }
-
-    # Privilege the first key of a multikey - we will set all others to skipbib if they
-    # are cited
-    if ($#keys) {
-      for (my $i=0; $i<=$#keys; $i++) {
-        Biber::Config->set_multikey($keys[$i], $i==0 ? 1 : 0);
+      foreach my $id (split(/\s*,\s*/, $ids)) {
+        $cache->{data}{citekey_aliases}{$id} = $key;
       }
     }
 
-    foreach my $key (@keys) {
-      # If we've already seen a case variant, warn
-      # This is case mismatch test of datasource entries with other datasource entries
-      if (my $okey = $section->has_badcasekey($key)) {
-        biber_warn("Possible typo (case mismatch) between datasource keys: '$key' and '$okey' in file '$filename'");
-      }
-
-      # If we've already seen this key in a datasource, ignore it and warn
-      if ($section->has_everykey($key)) {
-        biber_warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
-        next;
-      }
-      else {
-        $section->add_everykey($key);
-      }
-
-      # Bad entry
-      unless ($entry->parse_ok) {
-        biber_warn("Entry $key does not parse correctly");
-        next;
-      }
-
-      # Cache the entry so we don't have to read the file again on next pass.
-      # Two reasons - So we avoid T::B macro redef warnings and speed
-      $cache->{data}{$filename}{$key} = $entry;
-      # We do this as otherwise we have no way of determining the origing .bib entry order
-      # We need this in order to do sorting=none + allkeys because in this case, there is no
-      # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
-      push @{$cache->{orig_key_order}{$filename}}, $key;
-      $logger->debug("Cached Text::BibTeX entry for key '$key' from BibTeX file '$filename'");
+    # If we've already seen a case variant, warn
+    # This is case mismatch test of datasource entries with other datasource entries
+    if (my $okey = $section->has_badcasekey($key)) {
+      biber_warn("Possible typo (case mismatch) between datasource keys: '$key' and '$okey' in file '$filename'");
     }
+
+    # If we've already seen this key in a datasource, ignore it and warn
+    if ($section->has_everykey($key)) {
+      biber_warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
+      next;
+    }
+    else {
+      $section->add_everykey($key);
+    }
+
+    # Bad entry
+    unless ($entry->parse_ok) {
+      biber_warn("Entry $key does not parse correctly");
+      next;
+    }
+
+    # Cache the entry so we don't have to read the file again on next pass.
+    # Two reasons - So we avoid T::B macro redef warnings and speed
+    $cache->{data}{$filename}{$key} = $entry;
+    # We do this as otherwise we have no way of determining the origing .bib entry order
+    # We need this in order to do sorting=none + allkeys because in this case, there is no
+    # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
+    push @{$cache->{orig_key_order}{$filename}}, $key;
+    $logger->debug("Cached Text::BibTeX entry for key '$key' from BibTeX file '$filename'");
   }
 
   $bib->close; # If we don't do this, we can't unlink the temp file on Windows

@@ -110,42 +110,39 @@ sub extract_entries {
         next;
       }
 
-      # Allow multiple keys
-      my @keys = ($entry->getAttribute('id'));
+      my $key = $entry->getAttribute('id');
+
+      # Any secondary keys?
+      # We can't do this with a driver entry for the IDS field as this needs
+      # an entry object creating first and the whole point of aliases is that
+      # there is no entry object
       foreach my $id ($entry->findnodes("./$NS:id")) {
-        push @keys, $id->textContent();
+        my $ids = $id->textContent();
+        $logger->debug("Citekey '$ids' is an alias for citekey '$key'");
+        $section->set_citekey_alias($ids, $key);
       }
 
-      # Privilege the first key of a multikey - we will set all others to skipbib if they
-      # are cited
-      if ($#keys) {
-        for (my $i=0; $i<=$#keys; $i++) {
-          Biber::Config->set_multikey($keys[$i], $i==0 ? 1 : 0);
-        }
+      # If we've already seen a case variant, warn
+      if (my $okey = $section->has_badcasekey($key)) {
+        biber_warn("Possible typo (case mismatch): '$key' and '$okey' in file '$filename', skipping '$key' ...");
       }
 
-      foreach my $ek (@keys) {
-        # If we've already seen a case variant, warn
-        if (my $okey = $section->has_badcasekey($ek)) {
-          biber_warn("Possible typo (case mismatch): '$ek' and '$okey' in file '$filename', skipping '$ek' ...");
-        }
-
-        # If we've already seen this key, ignore it and warn
-        if ($section->has_everykey($ek)) {
-          biber_warn("Duplicate entry key: '$ek' in file '$filename', skipping ...");
-          next;
-        }
-        else {
-          $section->add_everykey($ek);
-        }
-
-        create_entry($ek, $entry);
-
-        # We do this as otherwise we have no way of determining the origing .bib entry order
-        # We need this in order to do sorting=none + allkeys because in this case, there is no
-        # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
-        push @{$orig_key_order->{$filename}}, $ek;
+      # If we've already seen this key, ignore it and warn
+      if ($section->has_everykey($key)) {
+        biber_warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
+        next;
       }
+      else {
+        $section->add_everykey($key);
+      }
+
+      create_entry($key, $entry);
+
+      # We do this as otherwise we have no way of determining the origing .bib entry order
+      # We need this in order to do sorting=none + allkeys because in this case, there is no
+      # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
+      push @{$orig_key_order->{$filename}}, $key;
+
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -162,7 +159,7 @@ sub extract_entries {
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
       $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
-      if (my @entries = $xpc->findnodes("//$NS:entry[\@id='$wanted_key']|//$NS:entry/$NS:id[text()='$wanted_key']")) {
+      if (my @entries = $xpc->findnodes("//$NS:entry[\@id='$wanted_key']")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
           biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
@@ -175,6 +172,13 @@ sub extract_entries {
         # See comment above about the importance of the case of the key
         # passed to create_entry()
         create_entry($wanted_key, $entry);
+        # found a key, remove it from the list of keys we want
+        @rkeys = grep {$wanted_key ne $_} @rkeys;
+      }
+      elsif ($xpc->findnodes("//$NS:entry/$NS:id[text()='$wanted_key']")) {
+        my $key = $xpc->findnodes("//$NS:entry/\@id");
+        $logger->debug("Citekey '$wanted_key' is an alias for citekey '$key'");
+        $section->set_citekey_alias($wanted_key, $key);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }

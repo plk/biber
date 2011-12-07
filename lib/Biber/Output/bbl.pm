@@ -142,6 +142,29 @@ sub _printfield {
   return;
 }
 
+=head2 set_output_keyalias
+
+  Set the output for a key which is an alias to another key
+
+=cut
+
+sub set_output_keyalias {
+  my $self = shift;
+  my $alias = shift;
+  my $key = shift;
+  my $section = shift;
+  my $secnum = $section->number;
+
+  my $acc = "  \\keyalias{$alias}{$key}\n";
+
+  # Create an index by keyname for easy retrieval
+  $self->{output_data}{ALIAS_ENTRIES}{$secnum}{index}{$alias} = \$acc;
+
+  return;
+
+}
+
+
 =head2 set_output_undefkey
 
   Set the .bbl output for an undefined key
@@ -152,13 +175,12 @@ sub set_output_undefkey {
   my $self = shift;
   my $key = shift; # undefined key
   my $section = shift; # Section object the entry occurs in
-  my $acc = '';
   my $secnum = $section->number;
 
-  $acc .= "  \\missing{$key}\n";
+  my $acc = "  \\missing{$key}\n";
 
   # Create an index by keyname for easy retrieval
-  $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
+  $self->{output_data}{MISSING_ENTRIES}{$secnum}{index}{$key} = \$acc;
 
   return;
 }
@@ -455,6 +477,16 @@ sub output {
       else {
         print $target "\n  \\endsortlist\n\n" unless ($listlabel eq 'MAIN');
       }
+    }
+
+    # Aliases
+    while (my ($k, $ks) = each %{$data->{ALIAS_ENTRIES}{$secnum}{index}}) {
+      print $target $$ks;
+    }
+
+    # Missing keys
+    while (my ($k, $ks) = each %{$data->{MISSING_ENTRIES}{$secnum}{index}}) {
+      print $target $$ks;
     }
 
     print $target "\\endrefsection\n"

@@ -35,7 +35,23 @@ sub new {
   $self->{dkeys} = {};
   $self->{orig_order_citekeys} = [];
   $self->{undef_citekeys} = [];
+  $self->{citekey_alias} = {};
   return $self;
+}
+
+=head2 reset_caches
+
+    Reset section caches which need it
+
+=cut
+
+sub reset_caches {
+  my $self = shift;
+  $self->{sortcache} = [];
+  $self->{labelcache_l} = {};
+  $self->{labelcache_v} = {};
+  $self->{bcfkeycache} = {};
+  return;
 }
 
 =head2 has_badcasekey
@@ -195,6 +211,21 @@ sub get_static_citekeys {
 }
 
 
+=head2 add_undef_citekey
+
+    Adds a citekey to the Biber::Section object as an undefined
+    key. This allows us to output this information to the .bbl and
+    so biblatex can do better reporting to external utils like latexmk
+
+=cut
+
+sub add_undef_citekey {
+  my $self = shift;
+  my $key = shift;
+  push @{$self->{undef_citekeys}}, $key;
+  return;
+}
+
 =head2 get_undef_citekeys
 
     Gets the list of undefined citekeys of a Biber::Section object
@@ -282,19 +313,41 @@ sub add_citekeys {
   return;
 }
 
-=head2 add_undef_citekey
 
-    Adds a citekey to the Biber::Section object as an undefined
-    key. This allows us to output this information to the .bbl and
-    so biblatex can do better reporting to external utils like latexmk
+=head2 set_citekey_alias
+
+    Set citekey alias information
 
 =cut
 
-sub add_undef_citekey {
+sub set_citekey_alias {
   my $self = shift;
-  my $key = shift;
-  push @{$self->{undef_citekeys}}, $key;
+  my ($alias, $key) = @_;
+  $self->{citekey_alias}{$alias} = $key;
   return;
+}
+
+=head2 get_citekey_alias
+
+    Get citekey alias information
+
+=cut
+
+sub get_citekey_alias {
+  my $self = shift;
+  my $alias = shift;
+  return $self->{citekey_alias}{$alias};
+}
+
+=head2 get_citekey_aliases
+
+    Get a list of all citekey aliases for the section
+
+=cut
+
+sub get_citekey_aliases {
+  my $self = shift;
+  return ( keys %{$self->{citekey_alias}} );
 }
 
 
@@ -498,21 +551,6 @@ sub add_sort_cache {
 sub get_sort_cache {
   my $self = shift;
   return $self->{sortcache};
-}
-
-=head2 reset_caches
-
-    Reset the section caches
-
-=cut
-
-sub reset_caches {
-  my $self = shift;
-  $self->{sortcache} = [];
-  $self->{labelcache_l} = {};
-  $self->{labelcache_v} = {};
-  $self->{bcfkeycache} = {};
-  return;
 }
 
 

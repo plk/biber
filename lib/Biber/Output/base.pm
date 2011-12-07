@@ -192,7 +192,9 @@ sub get_output_entries {
   my $self = shift;
   my $section = shift;
   my $list = shift;
-  return [ map {$self->{output_data}{ENTRIES}{$section}{index}{$_}} @{$list->get_keys}];
+  return [ map {$self->{output_data}{ENTRIES}{$section}{index}{$_} ||
+                $self->{output_data}{MISSING_ENTRIES}{$section}{index}{$_} ||
+                $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$_}} @{$list->get_keys}];
 }
 
 =head2 get_output_entry
@@ -211,7 +213,9 @@ sub get_output_entry {
   $section = '0' if not defined($section); # default - mainly for tests
   # Force a return of undef if there is no output for this key to avoid
   # dereferencing errors in tests
-  my $out = $self->{output_data}{ENTRIES}{$section}{index}{$key};
+  my $out = $self->{output_data}{ENTRIES}{$section}{index}{$key} ||
+            $self->{output_data}{MISSING_ENTRIES}{$section}{index}{$key} ||
+            $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$key};
   my $out_string = $list->instantiate_entry($out, $key);
   return $out ? $out_string : undef;
 }
@@ -293,15 +297,43 @@ sub create_output_section {
   # Make sure the output object knows about the output section
   $self->set_output_section($secnum, $section);
 
-  # undef citekeys are global
+  # undef citekeys are global to a section
   # Missing citekeys
   foreach my $k ($section->get_undef_citekeys) {
     $self->set_output_undefkey($k, $section);
   }
 
+  # alias citekeys are global to a section
+  # alias citekeys
+  foreach my $k ($section->get_citekey_aliases) {
+    my $realkey = $section->get_citekey_alias($k);
+    $self->set_output_keyalias($k, $realkey, $section)
+  }
+
   return;
 }
 
+
+=head2 set_output_keyalias
+
+  Set the output for a key which is an alias to another key
+
+=cut
+
+sub set_output_keyalias {
+  return;
+}
+
+
+=head2 set_output_undefkey
+
+  Set the output for an undefined key
+
+=cut
+
+sub set_output_undefkey {
+  return;
+}
 
 =head2 output
 
