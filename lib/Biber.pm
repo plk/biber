@@ -733,6 +733,31 @@ sub resolve_xdata {
   }
 }
 
+=head2 process_multikey
+
+    Additional processing for multikey entries:
+
+    * Set dataonly on all but one entry of multikey clones
+
+=cut
+
+sub process_multikey {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  $logger->debug("Processing multikey entries for section $secnum");
+  foreach my $citekey ($section->get_citekeys) {
+    # Skip keys which are not multikey
+    # We need a separate is_ test in order to distinguish between non-first multis
+    # and non-multis
+    next unless Biber::Config->is_multikey($citekey);
+    unless (Biber::Config->get_multikey($citekey)) {
+      my $be = $section->bibentry($citekey);
+      $be->set_datafield('options', 'skipbib', ','); # append mode with comma sep
+    }
+  }
+}
+
 =head2 cite_setmembers
 
     $biber->cite_setmembers
@@ -2570,6 +2595,7 @@ sub prepare {
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->resolve_xdata;                # Resolve xdata entries
+    $self->process_multikey;             # Set dataonly on multi-key clones
     $self->cite_setmembers;              # Cite set members
     $self->process_crossrefs;            # Process crossrefs/sets
     $self->validate_structure;           # Check bib structure

@@ -28,7 +28,7 @@ use XML::LibXML::Simple;
 
 my $logger = Log::Log4perl::get_logger('main');
 
-state $cache; # state variable so it's persistent across calles to extract_entries()
+state $cache; # state variable so it's persistent across calls to extract_entries()
 use vars qw($cache);
 
 
@@ -141,8 +141,8 @@ sub extract_entries {
   if ($section->is_allkeys) {
     $logger->debug("All cached citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
-    while (my (undef, $entry) = each %{$cache->{data}{$filename}}) {
-      create_entry(decode_utf8($entry->key), $entry, $source);
+    while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
+      create_entry($key, $entry, $source);
     }
 
     # If allkeys, push all bibdata keys into citekeys (if they are not already there).
@@ -636,10 +636,18 @@ sub cache_data {
     }
 
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
-    my $keys = decode_utf8($entry->key);
-
     # Allow for multiple keys per entry
-    foreach my $key (split(/\|/, $keys)) {
+    my @keys = split(/\|/, decode_utf8($entry->key));
+
+    # Privilege the first key of a multikey - we will set all others to skipbib if they
+    # are cited
+    if ($#keys) {
+      for (my $i=0; $i<=$#keys; $i++) {
+        Biber::Config->set_multikey($keys[$i], $i==0 ? 1 : 0);
+      }
+    }
+
+    foreach my $key (@keys) {
       # If we've already seen a case variant, warn
       # This is case mismatch test of datasource entries with other datasource entries
       if (my $okey = $section->has_badcasekey($key)) {

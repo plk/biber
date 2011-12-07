@@ -96,35 +96,6 @@ sub notnull {
   return $#arr > -1 ? 1 : 0;
 }
 
-=head2 set_datafield
-
-    Set a field which is in the bib data file
-    Only set to null if the field is a nullable one
-    otherwise if value is null, remove the field
-
-    Don't set if this is a blocked field which means
-    it has been deleted and blocked from future creation
-
-=cut
-
-sub set_datafield {
-  my $self = shift;
-  my ($key, $val) = @_;
-  # Don't set blocked fields
-  if (first { $key eq $_ } @{$self->{blocked_datafields}}) {
-    return;
-  }
-  my $struc = Biber::Config->get_structure;
-  # Only set fields which are either not null or are ok to be null
-  if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
-    $self->{datafields}{$key} = $val;
-  }
-  elsif (is_null($val)) {
-    delete($self->{datafields}{$key});
-  }
-  return;
-}
-
 =head2 set_orig_field
 
     Set a field which came from the datasource which is then split/transformed
@@ -158,16 +129,23 @@ sub get_orig_field {
 
 =head2 set_field
 
-    Set a derived field for a Biber::Entry object, that is, a field which was not
-    an actual bibliography field
+  Set/append to a derived field for a Biber::Entry object, that is, a field
+  which was not an actual bibliography field
 
 =cut
 
 sub set_field {
   my $self = shift;
-  my ($key, $val) = @_;
+  my ($key, $val, $append) = @_;
   # All derived fields can be null
-  $self->{derivedfields}{$key} = $val;
+  # Only add append with seperator if append mode and there is something to append to
+  if ($append and defined($self->{derivedfields}{$key})) {
+    $self->{derivedfields}{$key} .= "$append$val";
+  }
+  # otherwise just set as normal
+  else {
+    $self->{derivedfields}{$key} = $val;
+  }
   return;
 }
 
@@ -183,6 +161,42 @@ sub get_field {
   return $self->{datafields}{$key} if exists($self->{datafields}{$key});
   return $self->{derivedfields}{$key} if exists($self->{derivedfields}{$key});
   return undef;
+}
+
+=head2 set_datafield
+
+    Set/append to a field which is in the bib data file
+    Only set to null if the field is a nullable one
+    otherwise if value is null, remove the field
+
+    Don't set if this is a blocked field which means
+    it has been deleted and blocked from future creation
+
+=cut
+
+sub set_datafield {
+  my $self = shift;
+  my ($key, $val, $append) = @_;
+  # Don't set blocked fields
+  if (first { $key eq $_ } @{$self->{blocked_datafields}}) {
+    return;
+  }
+  my $struc = Biber::Config->get_structure;
+  # Only set fields which are either not null or are ok to be null
+  if ( $struc->is_field_type('nullok', $key) or is_notnull($val)) {
+    # Only add append with seperator if append mode and there is something to append to
+    if ($append and defined($self->{datafields}{$key})) {
+      $self->{datafields}{$key} .= "$append$val";
+    }
+    # otherwise just set as normal
+    else {
+      $self->{datafields}{$key} = $val;
+    }
+  }
+  elsif (is_null($val)) {
+    delete($self->{datafields}{$key});
+  }
+  return;
 }
 
 =head2 get_datafield

@@ -213,6 +213,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="abstract">
     <element name="abstract">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -220,6 +223,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="addendum">
     <element name="addendum">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -229,6 +235,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="annotation">
     <element name="annotation">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -236,6 +245,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="booksubtitle">
     <element name="booksubtitle">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -245,6 +257,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="booktitle">
     <element name="booktitle">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -252,6 +267,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="booktitleaddon">
     <element name="booktitleaddon">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -312,6 +330,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="eventtitle">
     <element name="eventtitle">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -398,6 +419,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="issue">
     <element name="issue">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -406,6 +430,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="issuetitle">
     <element name="issuetitle">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -413,6 +440,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="issuesubtitle">
     <element name="issuesubtitle">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -427,6 +457,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="journaltitle">
     <element name="journaltitle">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -434,6 +467,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="journalsubtitle">
     <element name="journalsubtitle">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -479,6 +515,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="mainsubtitle">
     <element name="mainsubtitle">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -487,6 +526,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="maintitle">
     <element name="maintitle">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -494,6 +536,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="maintitleaddon">
     <element name="maintitleaddon">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -507,6 +552,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="note">
     <element name="note">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -532,6 +580,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="origtitle">
     <element name="origtitle">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -555,6 +606,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="series">
     <element name="series">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -562,6 +616,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="shorthand">
     <element name="shorthand">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -571,6 +628,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="shorthandintro">
     <element name="shorthandintro">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <text/>
@@ -578,6 +638,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="shorttitle">
     <element name="shorttitle">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -587,6 +650,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="shortjournal">
     <element name="shortjournal">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -594,6 +660,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="shortseries">
     <element name="shortseries">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -618,6 +687,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="subtitle">
     <element name="subtitle">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -626,6 +698,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <define name="title">
     <element name="title">
       <optional>
+        <ref name="att.mode"/>
+      </optional>
+      <optional>
         <ref name="att.lang"/>
       </optional>
       <ref name="formattext"/>
@@ -633,6 +708,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="titleaddon">
     <element name="titleaddon">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -651,6 +729,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="venue">
     <element name="venue">
+      <optional>
+        <ref name="att.mode"/>
+      </optional>
       <optional>
         <ref name="att.lang"/>
       </optional>
@@ -866,12 +947,17 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <!-- literal lists -->
   <define name="att.lists">
-    <attribute name="morelist">
-      <choice>
-        <value>1</value>
-        <value>true</value>
-      </choice>
-    </attribute>
+    <optional>
+      <ref name="att.mode"/>
+    </optional>
+    <optional>
+      <attribute name="morelist">
+        <choice>
+          <value>1</value>
+          <value>true</value>
+        </choice>
+      </attribute>
+    </optional>
   </define>
   <define name="institution">
     <element name="institution">
@@ -943,6 +1029,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   </define>
   <define name="publisher">
     <element name="publisher">
+      <optional>
+        <ref name="att.lang"/>
+      </optional>
       <optional>
         <ref name="att.lists"/>
       </optional>
@@ -1191,6 +1280,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
   <!-- NAME LISTS -->
   <define name="attlist.name">
     <optional>
+      <ref name="att.mode"/>
+    </optional>
+    <optional>
       <attribute name="class">
         <choice>
           <value>sub</value>
@@ -1399,7 +1491,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
       <choice>
         <text/>
         <interleave>
-          <ref name="first"/>
+          <optional>
+            <ref name="first"/>
+          </optional>
           <optional>
             <ref name="prefix"/>
           </optional>
@@ -1545,6 +1639,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>article</value>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -1647,6 +1744,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>bibnote</value>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <element name="note">
           <text/>
         </element>
@@ -1664,6 +1764,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>book</value>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -1790,6 +1893,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <optional>
           <attribute name="type"/>
         </optional>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <choice>
           <ref name="author"/>
           <ref name="editor"/>
@@ -1854,6 +1960,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>books</value>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -1954,6 +2063,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
             <value>suppbook</value>
           </choice>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -2086,6 +2198,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
             <value>reference</value>
           </choice>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="editor"/>
         </oneOrMore>
@@ -2203,6 +2318,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>collections</value>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -2303,6 +2421,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
             <value>inreference</value>
           </choice>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -2429,6 +2550,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>inproceedings</value>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -2541,6 +2665,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           <value>manual</value>
         </attribute>
         <attribute name="type"/>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <choice>
           <ref name="author"/>
           <ref name="editor"/>
@@ -2626,12 +2753,21 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>misc</value>
         </attribute>
-        <attribute name="howpublished"/>
-        <attribute name="type"/>
-        <choice>
-          <ref name="author"/>
-          <ref name="editor"/>
-        </choice>
+        <optional>
+          <attribute name="howpublished"/>
+        </optional>
+        <optional>
+          <attribute name="type"/>
+        </optional>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
+        <oneOrMore>
+          <choice>
+            <ref name="author"/>
+            <ref name="editor"/>
+          </choice>
+        </oneOrMore>
         <oneOrMore>
           <ref name="title"/>
         </oneOrMore>
@@ -2689,6 +2825,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>online</value>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <choice>
           <ref name="author"/>
           <ref name="editor"/>
@@ -2740,6 +2879,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           <value>patent</value>
         </attribute>
         <attribute name="type"/>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -2798,6 +2940,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>periodical</value>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="editor"/>
         </oneOrMore>
@@ -2867,6 +3012,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>proceedings</value>
         </attribute>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="editor"/>
         </oneOrMore>
@@ -2970,6 +3118,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           <value>report</value>
         </attribute>
         <attribute name="type"/>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -3046,6 +3197,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           <value>thesis</value>
         </attribute>
         <attribute name="type"/>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -3113,6 +3267,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           <value>unpublished</value>
         </attribute>
         <attribute name="howpublished"/>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <oneOrMore>
           <ref name="author"/>
         </oneOrMore>
@@ -3161,11 +3318,13 @@ the optional attribute "text" gives a Unicode representation of the mathematical
         <attribute name="entrytype">
           <value>set</value>
         </attribute>
-        <attribute name="howpublished"/>
-        <ref name="entryset"/>
         <optional>
-          <ref name="crossref"/>
+          <attribute name="howpublished"/>
         </optional>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
+        <ref name="entryset"/>
       </interleave>
     </element>
   </define>
@@ -3197,6 +3356,9 @@ the optional attribute "text" gives a Unicode representation of the mathematical
           </choice>
         </attribute>
         <attribute name="howpublished"/>
+        <zeroOrMore>
+          <ref name="id"/>
+        </zeroOrMore>
         <zeroOrMore>
           <ref name="author"/>
         </zeroOrMore>
