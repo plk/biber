@@ -584,6 +584,7 @@
       <bcf:field>file</bcf:field>
       <bcf:field>gender</bcf:field>
       <bcf:field>hyphenation</bcf:field>
+      <bcf:field>ids</bcf:field>
       <bcf:field>indextitle</bcf:field>
       <bcf:field>indexsorttitle</bcf:field>
       <bcf:field>isan</bcf:field>

@@ -418,6 +418,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "file" },
                        { content => "gender" },
                        { content => "hyphenation" },
+                       { content => "ids" },
                        { content => "indextitle" },
                        { content => "indexsorttitle" },
                        { content => "isan" },

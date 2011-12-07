@@ -637,7 +637,12 @@ sub cache_data {
 
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
     # Allow for multiple keys per entry
-    my @keys = split(/\|/, decode_utf8($entry->key));
+    my @keys = (decode_utf8($entry->key));
+
+    # Any secondary keys?
+    if (my $ids = decode_utf8($entry->get('ids'))) {
+      push @keys, split(/\s*,\s*/, $ids);
+    }
 
     # Privilege the first key of a multikey - we will set all others to skipbib if they
     # are cited
