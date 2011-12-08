@@ -282,6 +282,18 @@ sub get_keys {
   return @{$self->{keys}};
 }
 
+=head2 count_keys
+
+    Count the keys for the list
+
+=cut
+
+sub count_keys {
+  my $self = shift;
+  return $#{$self->{keys}} + 1;
+}
+
+
 =head2 instantiate_entry
 
   Do any dynamic information replacement for information
