@@ -112,14 +112,37 @@ sub extract_entries {
 
       my $key = $entry->getAttribute('id');
 
+      # Check if this key has already been registered as a citekey alias, if
+      # so, the key takes priority and we delete the alias
+      if ($section->get_citekey_alias($key)) {
+        biber_warn("Citekey alias '$key' is also a real entry key, skipping ...");
+        $section->get_citekey_alias($key);
+      }
+
       # Any secondary keys?
       # We can't do this with a driver entry for the IDS field as this needs
       # an entry object creating first and the whole point of aliases is that
       # there is no entry object
       foreach my $id ($entry->findnodes("./$NS:id")) {
         my $ids = $id->textContent();
-        $logger->debug("Citekey '$ids' is an alias for citekey '$key'");
-        $section->set_citekey_alias($ids, $key);
+
+        # Skip aliases which are also real entry keys
+        if ($section->has_everykey($ids)) {
+          biber_warn("Citekey alias '$ids' is also a real entry key, skipping ...");
+          next;
+        }
+
+
+        # Warn on conflicting aliases
+        if (my $otherid = $section->get_citekey_alias($ids)) {
+          if ($otherid ne $key) {
+            biber_warn("Citekey alias '$ids' already has an alias '$otherid', skipping ...");
+          }
+        }
+        else {
+          $section->set_citekey_alias($ids, $key);
+          $logger->debug("Citekey '$ids' is an alias for citekey '$key'");
+        }
       }
 
       # If we've already seen a case variant, warn

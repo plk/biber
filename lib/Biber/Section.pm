@@ -339,6 +339,20 @@ sub get_citekey_alias {
   return $self->{citekey_alias}{$alias};
 }
 
+=head2 del_citekey_alias
+
+    Delete citekey alias
+
+=cut
+
+sub del_citekey_alias {
+  my $self = shift;
+  my $alias = shift;
+  delete($self->{citekey_alias}{$alias});
+  return;
+}
+
+
 =head2 get_citekey_aliases
 
     Get a list of all citekey aliases for the section

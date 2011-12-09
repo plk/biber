@@ -650,6 +650,8 @@ sub cache_data {
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
     my $key = decode_utf8($entry->key);
 
+    # Check if this key has already been registered as a citekey alias, if
+    # so, the key takes priority and we delete the alias
     if (exists($cache->{data}{citekey_aliases}{$key})) {
       biber_warn("Citekey alias '$key' is also a real entry key, skipping ...");
       delete($cache->{data}{citekey_aliases}{$key});
@@ -677,6 +679,7 @@ sub cache_data {
         }
         else {
           $cache->{data}{citekey_aliases}{$id} = $key;
+          $logger->debug("Citekey '$id' is an alias for citekey '$key'");
         }
       }
     }
