@@ -2,6 +2,8 @@
 <?oxygen RNGSchema="../../data/schemata/biblatexml.rnc" type="compact"?>
 <bib:entries xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml">
   <bib:entry id="origmode" entrytype="book">
+    <bib:id>origmodea1</bib:id>
+    <bib:id>origmodea2</bib:id>
     <bib:author morenames="1">
       <bib:person gender="sm">
         <bib:first>

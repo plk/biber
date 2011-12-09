@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 3;
+use Test::More tests => 5;
 
 use Biber;
 use Biber::Output::bbl;
@@ -186,3 +186,5 @@ my $l3 = q|  \entry{entrymode}{book}{}
 is( $out->get_output_entry($main, 'origmode'), $l1, 'BibLaTeXML displaymode test - 1');
 is( $out->get_output_entry($main, 'typemode'), $l2, 'BibLaTeXML displaymode test - 2');
 is( $out->get_output_entry($main, 'entrymode'), $l3, 'BibLaTeXML displaymode test - 3');
+is($section->get_citekey_alias('origmodea1'), 'origmode', 'Citekey aliases - 1');
+is($section->get_citekey_alias('origmodea2'), 'origmode', 'Citekey aliases - 2');

@@ -157,6 +157,14 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
         $xml->endTag([$bp, 'options']);
       }
 
+      # Citekey aliases
+      foreach my $alias ($section->get_citekey_aliases) {
+        my $realkey = $section->get_citekey_alias($alias);
+        if ($realkey eq $citekey) {
+          $xml->dataElement([$bp, 'id'], $alias);
+        }
+      }
+
       # Generate set information
       if ( $be->get_field('entrytype') eq 'set' ) { # Set parents get \set entry ...
         $xml->startTag([$bp, 'entryset']);
