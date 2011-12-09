@@ -637,20 +637,20 @@ sub process_setup {
   }
 }
 
-=head2 prune_citekey_aliases
+=head2 process_citekey_aliases
 
   Remove citekey aliases from citekeys as they don't point to real
   entries.
 
 =cut
 
-sub prune_citekey_aliases {
+sub process_citekey_aliases {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $citekey ($section->get_citekeys) {
-    if (my $rk = $section->get_citekey_alias($citekey)) {
-      $logger->info("Pruning citekey alias '$citekey'");
+    if ($section->get_citekey_alias($citekey)) {
+      $logger->debug("Pruning citekey alias '$citekey' from citekeys");
       $section->del_citekey($citekey);
     }
   }
@@ -2587,7 +2587,7 @@ sub prepare {
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
-    $self->prune_citekey_aliases;        # Remove citekey aliases from citekeys
+    $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->resolve_xdata;                # Resolve xdata entries
     $self->cite_setmembers;              # Cite set members

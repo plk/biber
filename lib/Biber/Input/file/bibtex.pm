@@ -650,13 +650,34 @@ sub cache_data {
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
     my $key = decode_utf8($entry->key);
 
+    if (exists($cache->{data}{citekey_aliases}{$key})) {
+      biber_warn("Citekey alias '$key' is also a real entry key, skipping ...");
+      delete($cache->{data}{citekey_aliases}{$key});
+    }
+
     # Any secondary keys?
     # We can't do this with a driver entry for the IDS field as this needs
     # an entry object creating first and the whole point of aliases is that
     # there is no entry object
     if (my $ids = decode_utf8($entry->get('ids'))) {
       foreach my $id (split(/\s*,\s*/, $ids)) {
-        $cache->{data}{citekey_aliases}{$id} = $key;
+
+        # Skip aliases which are also real entry keys
+        if ($section->has_everykey($id)) {
+          biber_warn("Citekey alias '$id' is also a real entry key, skipping ...");
+          next;
+        }
+
+        # Warn on conflicting aliases
+        if (exists($cache->{data}{citekey_aliases}{$id})) {
+          my $otherid = $cache->{data}{citekey_aliases}{$id};
+          if ($otherid ne $key) {
+            biber_warn("Citekey alias '$id' already has an alias '$otherid', skipping ...");
+          }
+        }
+        else {
+          $cache->{data}{citekey_aliases}{$id} = $key;
+        }
       }
     }
 
