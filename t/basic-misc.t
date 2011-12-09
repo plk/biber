@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 35;
+use Test::More tests => 38;
 
 use Biber;
 use Biber::Utils;
@@ -51,7 +51,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2};
+my @citedkeys = sort qw{ alias1 alias2 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2};
 
 my @allkeys = sort map {lc()} qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
@@ -64,7 +64,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 } ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 } ;
 
 my $u1 = q|  \entry{u1}{misc}{}
     \name{labelname}{4}{uniquelist=4}{%
@@ -396,6 +396,11 @@ is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('
 is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
 is($biber->_liststring('tmn1', 'institution'), 'A_B_C', 'per_type/entry items - 1');
 is($biber->_liststring('tmn3', 'institution'), "A_B\x{10FFFD}", 'per_type/entry items - 2');
+
+# Citekey alias testing
+is($section->get_citekey_alias('alias3'), 'alias1', 'Citekey aliases - 1');
+ok(is_undef($section->get_citekey_alias('alias2')), 'Citekey aliases - 2');
+is($section->get_citekey_alias('alias4'), 'alias2', 'Citekey aliases - 1');
 
 # This would be how to test JSON output if necessary
 # require JSON::XS;
