@@ -56,7 +56,6 @@ my $main = $section->get_list('MAIN');
 my $shs = $section->get_list('SHORTHANDS');
 my $out = $biber->get_output_obj;
 
-
 my $ss = [
            [
             {},
@@ -251,11 +250,9 @@ $main->set_sortscheme([
                          {'shorthand'    => {}}
                        ]]);
 
-
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $shs = $section->get_list('SHORTHANDS');
-$main = $section->get_list('MAIN');
 
 # Sort by shorthand
 is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');

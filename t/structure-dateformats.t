@@ -306,9 +306,8 @@ is( $out->get_output_entry($main,'L15'), $l15, 'Date values test 15 - labelyear 
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelyearspec', [ 'year', 'eventyear', 'origyear' ]);
-$bibentries->entry('L17')->del_field('year');
-$bibentries->entry('L17')->del_field('month');
-$bibentries->entry('L16')->del_field('warnings');
+$bibentries->del_entry('L17');
+$bibentries->del_entry('L16');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
@@ -319,8 +318,7 @@ is($out->get_output_entry($main,'L17'), $l17, 'Date values test 17a - labelyear 
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelyearspec', [ 'origyear', 'year', 'eventyear' ]);
-$bibentries->entry('L17')->del_field('year');
-$bibentries->entry('L17')->del_field('month');
+$bibentries->del_entry('L17');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
@@ -329,8 +327,7 @@ is($out->get_output_entry($main,'L17'), $l17c, 'Date values test 17c - labelyear
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelyearspec', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'proceedings');
-$bibentries->entry('L17')->del_field('year');
-$bibentries->entry('L17')->del_field('month');
+$bibentries->del_entry('L17');
 $biber->prepare;
 $out = $biber->get_output_obj;
 

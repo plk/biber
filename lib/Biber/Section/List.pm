@@ -85,21 +85,34 @@ sub get_listdata {
            $self->{keys},
            $self->{sortinitdata},
            $self->{extrayeardata},
-           $self->{extraalphadata}];
+           $self->{extraalphadata} ];
 }
 
-=head2 set_extrayeardata
+=head2 set_extrayeardata_for_key
 
-    Saves extrayear field data for a key
+  Saves extrayear field data for a key
 
 =cut
 
-sub set_extrayeardata {
+sub set_extrayeardata_for_key {
   my ($self, $key, $ed) = @_;
   return unless defined($key);
   $self->{extrayeardata}{$key} = $ed;
   return;
 }
+
+=head2 set_extrayeardata
+
+    Saves extrayear field data for all keys
+
+=cut
+
+sub set_extrayeardata {
+  my ($self, $ed) = @_;
+  $self->{extrayeardata} = $ed;
+  return;
+}
+
 
 =head2 get_extrayeardata
 
@@ -113,16 +126,28 @@ sub get_extrayeardata {
   return $self->{extrayeardata}{$key};
 }
 
-=head2 set_extraalphadata
+=head2 set_extraalphadata_for_key
 
     Saves extraalpha field data for a key
 
 =cut
 
-sub set_extraalphadata {
+sub set_extraalphadata_for_key {
   my ($self, $key, $ed) = @_;
   return unless defined($key);
   $self->{extraalphadata}{$key} = $ed;
+  return;
+}
+
+=head2 set_extraalphadata
+
+    Saves extraalpha field data for all keys
+
+=cut
+
+sub set_extraalphadata {
+  my ($self, $ed) = @_;
+  $self->{extraalphadata} = $ed;
   return;
 }
 
@@ -164,16 +189,28 @@ sub get_sortdata {
 }
 
 
+=head2 set_sortinitdata_for_key
+
+ Saves sortinit data for a specific key
+
+=cut
+
+sub set_sortinitdata_for_key {
+  my ($self, $key, $sid) = @_;
+  return unless defined($key);
+  $self->{sortinitdata}{$key} = $sid;
+  return;
+}
+
 =head2 set_sortinitdata
 
-    Saves sortinit data in a list for a key
+ Saves sortinit data for all keys
 
 =cut
 
 sub set_sortinitdata {
-  my ($self, $key, $sid) = @_;
-  return unless defined($key);
-  $self->{sortinitdata}{$key} = $sid;
+  my ($self, $sid) = @_;
+  $self->{sortinitdata} = $sid;
   return;
 }
 

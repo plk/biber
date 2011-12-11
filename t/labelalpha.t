@@ -79,7 +79,7 @@ Biber::Config->setblxoption('mincitenames', 1);
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
   $bibentries->entry($k)->del_field('labelalpha');
-  $main->set_extraalphadata($k, undef);
+  $main->set_extraalphadata_for_key($k, undef);
 }
 
 $biber->prepare;
@@ -113,7 +113,7 @@ Biber::Config->setblxoption('mincitenames', 2);
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
   $bibentries->entry($k)->del_field('labelalpha');
-  $main->set_extraalphadata($k, undef);
+  $main->set_extraalphadata_for_key($k, undef);
 }
 
 $biber->prepare;
@@ -147,7 +147,7 @@ Biber::Config->setblxoption('mincitenames', 1);
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
   $bibentries->entry($k)->del_field('labelalpha');
-  $main->set_extraalphadata($k, undef);
+  $main->set_extraalphadata_for_key($k, undef);
 }
 
 $biber->prepare;
@@ -185,7 +185,7 @@ Biber::Config->setblxoption('labelyear', 1);
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
   $bibentries->entry($k)->del_field('labelalpha');
-  $main->set_extraalphadata($k, undef);
+  $main->set_extraalphadata_for_key($k, undef);
 }
 
 $biber->prepare;
@@ -234,7 +234,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
   $bibentries->entry($k)->del_field('labelalpha');
-  $main->set_extraalphadata($k, undef);
+  $main->set_extraalphadata_for_key($k, undef);
 }
 
 $biber->prepare;
@@ -267,7 +267,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
   $bibentries->entry($k)->del_field('labelalpha');
-  $main->set_extraalphadata($k, undef);
+  $main->set_extraalphadata_for_key($k, undef);
 }
 
 $biber->prepare;
@@ -314,7 +314,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
   $bibentries->entry($k)->del_field('labelalpha');
-  $main->set_extraalphadata($k, undef);
+  $main->set_extraalphadata_for_key($k, undef);
 }
 
 $biber->prepare;

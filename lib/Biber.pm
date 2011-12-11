@@ -2271,7 +2271,7 @@ sub generate_extra {
         if (Biber::Config->get_seen_nameyear($nameyear) > 1) {
           $logger->trace("nameyear for '$nameyear': " . Biber::Config->get_seen_nameyear($nameyear));
           my $v = Biber::Config->incr_seen_extrayear($nameyear);
-          $list->set_extrayeardata($key, $v);
+          $list->set_extrayeardata_for_key($key, $v);
         }
       }
       # extraalpha
@@ -2280,7 +2280,7 @@ sub generate_extra {
         if (Biber::Config->get_la_disambiguation($la) > 1) {
           $logger->trace("labelalpha disambiguartion for '$la': " . Biber::Config->get_la_disambiguation($la));
           my $v = Biber::Config->incr_seen_extraalpha($la);
-          $list->set_extraalphadata($key, $v);
+          $list->set_extraalphadata_for_key($key, $v);
         }
       }
     }

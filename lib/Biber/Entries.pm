@@ -69,6 +69,19 @@ sub entries {
 }
 
 
+=head2 del_entries
+
+  Deletes all Biber::Entry objects
+
+=cut
+
+sub del_entries {
+  my $self = shift;
+  $self = undef;
+  return;
+}
+
+
 =head2 add_entry
 
     Adds a Biber::Entry to the Biber::Entries object
@@ -79,6 +92,21 @@ sub add_entry {
   my $self = shift;
   my ($key, $entry) = @_;
   $self->{$key} = $entry;
+  return;
+}
+
+
+=head2 del_entry
+
+  Deletes a Biber::Entry object for a given
+  citekey. Only used in tests in order to reset
+  data before regeneration with different options.
+
+=cut
+
+sub del_entry {
+  my ($self, $citekey) = @_;
+  delete($self->{$citekey});
   return;
 }
 

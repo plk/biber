@@ -987,7 +987,7 @@ sub _generatesortinfo {
         $init = $initd;
       }
     }
-    $list->set_sortinitdata($citekey, $init);
+    $list->set_sortinitdata_for_key($citekey, $init);
   }
   return;
 }

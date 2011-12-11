@@ -76,12 +76,12 @@ Biber::Config->setblxoption('minalphanames', 1);
 for (my $i=1; $i<5; $i++) {
   $bibentries0->entry("L$i")->del_field('sortlabelalpha');
   $bibentries0->entry("L$i")->del_field('labelalpha');
-  $main0->set_extraalphadata("L$i", undef);
+  $main0->set_extraalphadata_for_key("L$i", undef);
 }
 for (my $i=5; $i<9; $i++) {
   $bibentries1->entry("L$i")->del_field('sortlabelalpha');
   $bibentries1->entry("L$i")->del_field('labelalpha');
-  $main1->set_extraalphadata("L$i", undef);
+  $main1->set_extraalphadata_for_key("L$i", undef);
 }
 $biber->prepare;
 $section0 = $biber->sections->get_section(0);
@@ -117,12 +117,12 @@ Biber::Config->setblxoption('minalphanames', 2);
 for (my $i=1; $i<5; $i++) {
   $bibentries0->entry("L$i")->del_field('sortlabelalpha');
   $bibentries0->entry("L$i")->del_field('labelalpha');
-  $main0->set_extraalphadata("L$i", undef);
+  $main0->set_extraalphadata_for_key("L$i", undef);
 }
 for (my $i=5; $i<9; $i++) {
   $bibentries1->entry("L$i")->del_field('sortlabelalpha');
   $bibentries1->entry("L$i")->del_field('labelalpha');
-  $main1->set_extraalphadata("L$i", undef);
+  $main1->set_extraalphadata_for_key("L$i", undef);
 }
 $biber->prepare;
 $section0 = $biber->sections->get_section(0);
@@ -158,12 +158,12 @@ Biber::Config->setblxoption('minalphanames', 1);
 for (my $i=1; $i<5; $i++) {
   $bibentries0->entry("L$i")->del_field('sortlabelalpha');
   $bibentries0->entry("L$i")->del_field('labelalpha');
-  $main0->set_extraalphadata("L$i", undef);
+  $main0->set_extraalphadata_for_key("L$i", undef);
 }
 for (my $i=5; $i<9; $i++) {
   $bibentries1->entry("L$i")->del_field('sortlabelalpha');
   $bibentries1->entry("L$i")->del_field('labelalpha');
-  $main1->set_extraalphadata("L$i", undef);
+  $main1->set_extraalphadata_for_key("L$i", undef);
 }
 
 $biber->prepare;
