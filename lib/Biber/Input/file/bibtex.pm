@@ -146,6 +146,8 @@ sub extract_entries {
     }
 
     # Loop over all aliases, creating data in section object
+    # Since this is allkeys, we are guaranteed that the real entry for the alias
+    # will be available
     while (my ($alias, $key) = each %{$cache->{data}{citekey_aliases}}) {
       $section->set_citekey_alias($alias, $key);
       $logger->debug("Citekey '$alias' is an alias for citekey '$key'");
@@ -168,13 +170,26 @@ sub extract_entries {
       $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
       if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
         $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
-        create_entry($wanted_key, $entry, $source);
+        # Skip creation if it's already been done, for example, via a citekey alias
+        unless ($section->bibentries->entry_exists($wanted_key)) {
+          create_entry($wanted_key, $entry, $source);
+        }
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
       elsif (my $rk = $cache->{data}{citekey_aliases}{$wanted_key}) {
         $logger->debug("Citekey '${wanted_key}' is an alias for citekey '$rk'");
         $section->set_citekey_alias($wanted_key, $rk);
+
+        # Make sure there is a real, cited entry for the citekey alias
+        # just in case only the alias is cited
+        unless ($section->bibentries->entry_exists($rk)) {
+          if (my $entry = $cache->{data}{$filename}{$rk}) {
+            create_entry($rk, $entry, $source);
+            $section->add_citekeys($rk);
+          }
+        }
+
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 38;
+use Test::More tests => 40;
 
 use Biber;
 use Biber::Utils;
@@ -51,7 +51,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ alias1 alias2 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2};
+my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 };
 
 my @allkeys = sort map {lc()} qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
@@ -64,7 +64,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 } ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 } ;
 
 my $u1 = q|  \entry{u1}{misc}{}
     \name{labelname}{4}{uniquelist=4}{%
@@ -400,7 +400,10 @@ is($biber->_liststring('tmn3', 'institution'), "A_B\x{10FFFD}", 'per_type/entry 
 # Citekey alias testing
 is($section->get_citekey_alias('alias3'), 'alias1', 'Citekey aliases - 1');
 ok(is_undef($section->get_citekey_alias('alias2')), 'Citekey aliases - 2');
-is($section->get_citekey_alias('alias4'), 'alias2', 'Citekey aliases - 1');
+is($section->get_citekey_alias('alias4'), 'alias2', 'Citekey aliases - 3');
+# primary key 'alias5' is not cited but should be added anyway as cited alias 'alias6' needs it
+is($section->get_citekey_alias('alias6'), 'alias5', 'Citekey aliases - 4');
+ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 
 # This would be how to test JSON output if necessary
 # require JSON::XS;
