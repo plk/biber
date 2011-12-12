@@ -100,6 +100,11 @@ my $sourcemap = [
             map_replace => "REP\$1CED",
             map_source  => "LISTB",
           },
+          {
+            map_match   => "CED",
+            map_replace => "ced",
+            map_source  => "LISTB",
+          },
         ],
         maptype => "field",
         per_datasource => [{ content => "examples.bib" }],

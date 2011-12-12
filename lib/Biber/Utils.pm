@@ -16,7 +16,7 @@ use File::Find;
 use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
-use List::AllUtils qw( first firstval );
+use List::AllUtils qw( first firstval each_arrayref );
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
@@ -717,10 +717,13 @@ sub imatch {
 sub ireplace {
   my ($value, $val_match, $val_replace) = @_;
   return $value unless $val_match;
-  $val_match = qr/$val_match/;
-  # Tricky quoting because of later evals
-  $val_replace = '"' . $val_replace . '"';
-  $value =~ s/$val_match/$val_replace/eegxms;
+  my $it = each_arrayref($val_match, $val_replace);
+  while (my ($m, $r) = $it->() ) {
+    $m = qr/$m/;
+    # Tricky quoting because of later evals
+    $r = '"' . $r . '"';
+    $value =~ s/$m/$r/eegxms;
+  }
   return $value;
 }
 
@@ -802,36 +805,48 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
       next;
     }
 
+    # We don't stop on first match - we match all pairs which are appropriate
+    # and append the match/replace information. Other than match/replace info,
+    # the last match pair information found for the field is used.
+    my $match = undef;
+    my $replace = undef;
+    my $target = undef;
+    my $overwrite = undef;
+    my $alsoset = undef;
+    my $found_source = 0;
     foreach my $pair (@{$map->{map_pair}}) {
-      $to = undef;
-      if (lc($pair->{map_source}) eq $field) {
-
-        # Check for a match and skip if no match or,
-        # record the match/replace settings for resolution later
-        if (exists($pair->{map_match})) {
-          if (exists($pair->{map_replace})) {
-            $to->{map_match}  = $pair->{map_match};
-            $to->{map_replace}  = $pair->{map_replace};
-          }
-          else {
-            next unless imatch($fieldval, $pair->{map_match});
-          }
+      next unless lc($pair->{map_source}) eq $field;
+      my $found_source = 1;
+      # Check for a match and skip if no match or,
+      # record the match/replace settings for resolution later
+      if (exists($pair->{map_match})) {
+        if (exists($pair->{map_replace})) {
+          push @$match, $pair->{map_match};
+          push @$replace, $pair->{map_replace};
         }
-
-        # Set the target
-        if (my $v = get_map_val($pair, 'map_target')) {
-          $to->{map_target} = $v;
+        else {
+          next unless imatch($fieldval, $pair->{map_match});
         }
+      }
 
-        $to->{map_overwrite} = $map->{map_overwrite} if exists($map->{map_overwrite});
-        if (exists($map->{also_set})) {
-          foreach my $as (@{$map->{also_set}}) {
-            $to->{also_set}{$as->{map_field}} = get_map_val($as, 'map_value');
-          }
+      # Set the target
+      if (my $v = get_map_val($pair, 'map_target')) {
+        $target = $v;
+      }
+
+      $overwrite = $map->{map_overwrite} if exists($map->{map_overwrite});
+      if (exists($map->{also_set})) {
+        foreach my $as (@{$map->{also_set}}) {
+          $alsoset->{$as->{map_field}} = get_map_val($as, 'map_value');
         }
-        last MAP;
       }
     }
+    $to->{also_set} = $alsoset if defined($alsoset);
+    $to->{map_overwrite} = $overwrite if defined($overwrite);
+    $to->{map_target} = $target if defined($target);
+    $to->{map_match} = $match if defined($match);
+    $to->{map_replace} = $replace if defined($replace);
+    last MAP if $found_source;
   }
   return $to;
 }

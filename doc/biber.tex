@@ -782,7 +782,10 @@ mapping «pairs» of fields. Each pair consists of a \verb+map_pair+ element wit
 value \textcolor{red}{\texttt{target-field}}. The target is optional as
 you might want to simply modify certain fields without mapping to other fields.
 The \textcolor{red}{\texttt{source-field}} is
-mandatory. The rules for a field mapping are:\\[1ex]
+mandatory. If there are more than one \verb+map_pair+ rules for the
+same \textcolor{red}{\texttt{source-field}}, the last one to be
+defined takes precedence (but note the special case of map/replace
+pairs below). The rules for a field mapping are:\\[1ex]
 
 \begin{itemize}
 \item Change the \textcolor{red}{\texttt{source-field}} to
@@ -798,7 +801,13 @@ mandatory. The rules for a field mapping are:\\[1ex]
   \textcolor{blue}{\texttt{map\_match}} and
   \textcolor{blue}{\texttt{map\_replace}} are defined. You may use (and almost certainly
   will want to use) parentheses for back-references in \textcolor{blue}{\texttt{map\_replace}}.
-  Do not quote the regular expressions in any way---it's not necessary.
+  Do not quote the regular expressions in any way---it's not
+  necessary. There may be multiple \verb+map_pair+ elements for the
+  same \textcolor{red}{\texttt{source-field}} within a \verb+map+
+  element. Any \textcolor{blue}{\texttt{map\_match}} and
+  \textcolor{blue}{\texttt{map\_replace}} pairs for the same
+  \textcolor{red}{\texttt{source-field}} are cumulative and will all
+  be applied to the field, in order.
 \item If there are any \textcolor{red}{\texttt{datasource}}s named in
   \textcolor{blue}{\texttt{per\_datasource}} elements, this mapping only applies to entries
   coming from the named \textcolor{red}{\texttt{datasource}}s. There can be
@@ -890,6 +899,21 @@ lowercased.
 \noindent Here, if the \verb+TITLE+ field matches a particular
 regexp, we set a special keyword so we can, for example, make a
 references section just for certain items.
+
+\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
+<map maptype="field">
+  <map_pair map_source="AUTHOR"
+            map_match="Smith, Bill" map_replace="Smith, William"/>
+  <map_pair map_source="AUTHOR"
+            map_match="Jones, Baz" map_replace="Jones, Barry"/>
+</map>
+\end{lstlisting}
+
+\noindent Here, we use multiple match/replace for the same field to
+regularise some inconstant name variants. Bear in mind that the
+results of a match/replace feed into the match of the next
+match/replace as they are processed in serial. This is not usually an
+issue if the matches are mutually exclusive.
 \bigskip
 \minisec{Other datasource types}
 For data sources other than Bib\TeX, (e.g. \verb+ris+,

@@ -353,7 +353,7 @@ is($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
 is($bibentries->entry('i2')->get_field('usere'), 'a string', 'map 4' );
 # Testing of user field map match/replace
-is($biber->_liststring('i1', 'listb'), 'REPlaCEDte_early', 'map 5');
+is($biber->_liststring('i1', 'listb'), 'REPlacedte_early', 'map 5');
 is($biber->_liststring('i1', 'institution'), 'REPlaCEDte_early', 'map 6');
 # Checking deletion of alsosets with value BMAP_NULL
 ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 7' );
