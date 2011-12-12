@@ -77,7 +77,9 @@ sub entries {
 
 sub del_entries {
   my $self = shift;
-  $self = undef;
+  foreach my $e (keys %$self) {
+    delete($self->{$e});
+  }
   return;
 }
 

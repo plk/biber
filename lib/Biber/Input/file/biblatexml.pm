@@ -140,6 +140,8 @@ sub extract_entries {
           }
         }
         else {
+          # Since this is allkeys, we are guaranteed that the real entry for the alias
+          # will be available
           $section->set_citekey_alias($ids, $key);
           $logger->debug("Citekey '$ids' is an alias for citekey '$key'");
         }
@@ -194,7 +196,10 @@ sub extract_entries {
         $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($wanted_key, $entry);
+        # Skip creation if it's already been done, for example, via a citekey alias
+        unless ($section->bibentries->entry_exists($wanted_key)) {
+          create_entry($wanted_key, $entry);
+        }
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -202,6 +207,15 @@ sub extract_entries {
         my $key = $xpc->findnodes("//$NS:entry/\@id");
         $logger->debug("Citekey '$wanted_key' is an alias for citekey '$key'");
         $section->set_citekey_alias($wanted_key, $key);
+
+        # Make sure there is a real, cited entry for the citekey alias
+        # just in case only the alias is cited
+        unless ($section->bibentries->entry_exists($key)) {
+          my $entry = $xpc->findnodes("//$NS:entry/[\@id='$key']");
+          create_entry($key, $entry);
+          $section->add_citekeys($key);
+        }
+
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -211,8 +225,6 @@ sub extract_entries {
 
   return @rkeys;
 }
-
-
 
 
 =head2 create_entry

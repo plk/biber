@@ -250,6 +250,9 @@ $main->set_sortscheme([
                          {'shorthand'    => {}}
                        ]]);
 
+# Need to reset all entries due to "skip if already in Entries"
+# clause in bibtex.pm
+$bibentries->del_entries;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $shs = $section->get_list('SHORTHANDS');
