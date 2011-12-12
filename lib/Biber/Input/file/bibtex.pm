@@ -253,6 +253,74 @@ sub create_entry {
 
   if ( $entry->metatype == BTE_REGULAR ) {
 
+    # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
+    my $from;
+    my $to;
+    my $val_match;
+    my $val_replace;
+    my $fval = decode_utf8($entry->get($f));
+    foreach my $map (@{get_maps_field($user_map, lc($entry->type), $source)}) {
+      my $field = lc($f);
+      # handler information still comes from .dcf
+      $from = $dcfxml->{fields}{field}{lc($to_map->{map_target} || $field)};
+      # Just in case we are targeting an alias, resolve it and repoint target
+      if (my $alias = $from->{aliasof}) {
+        $from = $dcfxml->{fields}{field}{$alias};
+        if ($to_map->{map_target}) {
+          $to_map->{map_target} = $alias;
+        }
+        else {
+          $field = $alias
+        }
+      }
+      $to = lc($to_map->{map_target} || $field);
+      $val_match = $to_map->{map_match};
+      $val_replace = $to_map->{map_replace};
+
+      # Deal with alsoset one->many maps
+      while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) {
+        if ($bibentry->field_exists(lc($from_as))) {
+          if ($to_map->{map_overwrite} // $user_map->{map_overwrite}) {
+            biber_warn("Overwriting existing field '$from_as' while processing field '" . lc($field) . "in entry '$key'", $bibentry);
+          }
+          else {
+            biber_warn("Not overwriting existing field '$from_as' while processing field '" . lc($field) . "in entry '$key'", $bibentry);
+            next;
+          }
+        }
+
+        # Deal with special tokens
+        given (lc($to_as)) {
+          when ('map_origfieldval') {
+            $bibentry->set_datafield(lc($from_as), $fval);
+          }
+          when ('map_origfield') {
+            $bibentry->set_datafield(lc($from_as), $f);
+          }
+          when ('map_null') {
+            $bibentry->del_datafield(lc($from_as));
+            # 'future' delete in case it's not set yet
+            $bibentry->block_datafield(lc($from_as));
+          }
+          default {
+            $bibentry->set_datafield(lc($from_as), $to_as);
+          }
+        }
+      }
+
+      # map fields to targets
+      if (defined ($to_map->{map_target}) and
+          lc($to_map->{map_target}) eq 'map_null') { # fields to ignore
+        next FLOOP;
+      }
+
+      # Now run any defined handler
+      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key, $val_match, $val_replace);
+    }
+
+
+
+
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
 FLOOP:  foreach my $f ($entry->fieldlist) {
@@ -267,72 +335,8 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         $bibentry->set_field('rawoptions', $value);
       }
 
-      # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
-      my $from;
-      my $to;
-      my $val_match;
-      my $val_replace;
-      my $fval = decode_utf8($entry->get($f));
-      if (my $to_map = is_user_field_map($user_map, lc($entry->type), lc($f), $fval, $source)) {
-        my $field = lc($f);
-        # handler information still comes from .dcf
-        $from = $dcfxml->{fields}{field}{lc($to_map->{map_target} || $field)};
-        # Just in case we are targeting an alias, resolve it and repoint target
-        if (my $alias = $from->{aliasof}) {
-          $from = $dcfxml->{fields}{field}{$alias};
-          if ($to_map->{map_target}) {
-            $to_map->{map_target} = $alias;
-          }
-          else {
-            $field = $alias
-          }
-        }
-        $to = lc($to_map->{map_target} || $field);
-        $val_match = $to_map->{map_match};
-        $val_replace = $to_map->{map_replace};
-
-        # Deal with alsoset one->many maps
-        while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) {
-          if ($bibentry->field_exists(lc($from_as))) {
-            if ($to_map->{map_overwrite} // $user_map->{map_overwrite}) {
-              biber_warn("Overwriting existing field '$from_as' while processing field '" . lc($field) . "in entry '$key'", $bibentry);
-            }
-            else {
-              biber_warn("Not overwriting existing field '$from_as' while processing field '" . lc($field) . "in entry '$key'", $bibentry);
-              next;
-            }
-          }
-
-          # Deal with special tokens
-          given (lc($to_as)) {
-            when ('map_origfieldval') {
-              $bibentry->set_datafield(lc($from_as), $fval);
-            }
-            when ('map_origfield') {
-              $bibentry->set_datafield(lc($from_as), $f);
-            }
-            when ('map_null') {
-              $bibentry->del_datafield(lc($from_as));
-              # 'future' delete in case it's not set yet
-              $bibentry->block_datafield(lc($from_as));
-            }
-            default {
-              $bibentry->set_datafield(lc($from_as), $to_as);
-            }
-          }
-        }
-
-        # map fields to targets
-        if (defined ($to_map->{map_target}) and
-            lc($to_map->{map_target}) eq 'map_null') { # fields to ignore
-          next FLOOP;
-        }
-
-        # Now run any defined handler
-        &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key, $val_match, $val_replace);
-      }
       # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
-      elsif ($from = $dcfxml->{fields}{field}{$f}) {
+      if ($from = $dcfxml->{fields}{field}{$f}) {
         $to = $f; # By default, field to set internally is the same as data source
 
         # Redirect any alias
