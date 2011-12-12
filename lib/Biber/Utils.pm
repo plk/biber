@@ -841,6 +841,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
         }
       }
     }
+
     $to->{also_set} = $alsoset if defined($alsoset);
     $to->{map_overwrite} = $overwrite if defined($overwrite);
     $to->{map_target} = $target if defined($target);
@@ -867,6 +868,9 @@ sub get_map_val {
     }
     when (exists($m->{map_origfield}) and $m->{map_origfield} == 1) {
       $v = 'map_origfield';
+    }
+    when (exists($m->{map_origfieldval}) and $m->{map_origfieldval} == 1) {
+      $v = 'map_origfieldval';
     }
     when (exists($m->{map_origentrytype}) and $m->{map_origentrytype} == 1) {
       $v = 'map_origentrytype';

@@ -633,8 +633,7 @@ map_field =
       attribute map_match { xsd:string {minLength="1"} }?,
       attribute map_replace { xsd:string {minLength="1"} }?,
       ( attribute map_target { xsd:string {minLength="1"} } |
-        attribute map_null { "1" } |
-        attribute map_origfield { "1"}
+        attribute map_null { "1" }
       )?,
       empty
     }+,
@@ -642,7 +641,8 @@ map_field =
       attribute map_field {xsd:string {minLength="1"}},
       ( attribute map_value { xsd:string {minLength="1"} } |
         attribute map_null { "1"} |
-        attribute map_origfield { "1"}
+        attribute map_origfield { "1"} |
+        attribute map_origfieldval { "1"}
       ),
       empty
     }*

@@ -766,12 +766,12 @@ fields removed and a \verb+NOTE+ field added with value «Auto-created this fiel
               +\textcolor{blue}{map\_target="\textcolor{red}{target-field}"}+/>
               +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
               +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
-              +\textcolor{blue}{map\_null="1"}+
-              +\textcolor{blue}{map\_origfield="1"}+/>
+              +\textcolor{blue}{map\_null="1"}+/>
   +\textcolor{blue}{<also\_set map\_field="\textcolor{red}{set-field}"}+
               +\textcolor{blue}{map\_value="\textcolor{red}{set-value}"}+
               +\textcolor{blue}{map\_null="1"}+
-              +\textcolor{blue}{map\_origfield="1"/>}+
+              +\textcolor{blue}{map\_origfield="1"}+
+              +\textcolor{blue}{map\_origfieldval="1"/>}+
 </map>
 \end{lstlisting}
 
@@ -831,7 +831,11 @@ pairs below). The rules for a field mapping are:\\[1ex]
       or which you don't even want Bib\LaTeX\ to see at all.
       \item \textcolor{blue}{\texttt{map\_origfield}} --- The
         \textcolor{red}{\texttt{set-field}} is set to the value of the
-        \linebreak\textcolor{red}{\texttt{source-field}} name.
+        \textcolor{red}{\texttt{source-field}} name.
+      \item \textcolor{blue}{\texttt{map\_origfieldval}} --- The
+        \textcolor{red}{\texttt{set-field}} is set to the original value
+        (before, for example, any regular expression match/replace) of the
+        \textcolor{red}{\texttt{source-field}}.
   \end{itemize}
 \end{itemize}
 

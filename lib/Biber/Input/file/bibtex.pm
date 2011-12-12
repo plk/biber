@@ -272,7 +272,8 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       my $to;
       my $val_match;
       my $val_replace;
-      if (my $to_map = is_user_field_map($user_map, lc($entry->type), lc($f), decode_utf8($entry->get($f)), $source)) {
+      my $fval = decode_utf8($entry->get($f));
+      if (my $to_map = is_user_field_map($user_map, lc($entry->type), lc($f), $fval, $source)) {
         my $field = lc($f);
         # handler information still comes from .dcf
         $from = $dcfxml->{fields}{field}{lc($to_map->{map_target} || $field)};
@@ -301,8 +302,12 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
               next;
             }
           }
+
           # Deal with special tokens
           given (lc($to_as)) {
+            when ('map_origfieldval') {
+              $bibentry->set_datafield(lc($from_as), $fval);
+            }
             when ('map_origfield') {
               $bibentry->set_datafield(lc($from_as), $f);
             }

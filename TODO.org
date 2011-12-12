@@ -1,3 +1,8 @@
+* TODO Whole user mapping thing is wrong
+  * Should loop over an entire entry and run every matching map_pair in a
+    map in order. The end result is a modified entry which only then makes
+    it into the main field loop. Should modify at the level of T::B
+    objects. This should also fix the also_set name mappings issues.
 * TODO keyalias in biblatex
 * TODO Generalised \printbibliography system
   * Typed lists - entry, key, shorthand etc.
