@@ -207,15 +207,15 @@ sub create_entry {
     my $last_field = undef;
     my $last_fieldval = undef;
     foreach my $pair (@{$map->{pairs}}) {
-      next unless $entry->findvalue('./' . lc($pair->{map_source}));
+      next unless $entry->exists('./' . lc($pair->{map_source}));
       $last_field = $pair->{map_source};
       $last_fieldval = $entry->findvalue('./' . lc($pair->{map_source}));
 
       # do match/replace
       if (exists($pair->{map_match})) {
         if (exists($pair->{map_replace})) {
-          $entry->set(lc($pair->{map_source}),
-                      ireplace($last_fieldval, $pair->{map_match}, $pair->{map_replace}));
+          my $text = XML::LibXML::Text->new(ireplace($last_fieldval, $pair->{map_match}, $pair->{map_replace}));
+          $entry->findnodes('./' .lc($pair->{map_source}) . '/text()')->get_node(1)->replaceNode($text);
         }
         else {
           next unless imatch($last_fieldval, $pair->{map_match});
@@ -225,11 +225,10 @@ sub create_entry {
       # map fields to targets
       if (exists($pair->{map_target})) {
         if (lc($pair->{map_target}) eq 'map_null') {
-          $entry->delete(lc($pair->{map_source}));
+          $entry->findnodes(lc($pair->{map_source}))->get_node(1)->unbindNode;
         }
         else {
-          $entry->set(lc($pair->{map_target}), $entry->get(lc($pair->{map_source})));
-          $entry->delete(lc($pair->{map_source}));
+          $entry->findnodes(lc($pair->{map_source}))->get_node(1)->setNodeName(lc($pair->{map_target}));
         }
       }
     }
@@ -239,7 +238,7 @@ sub create_entry {
 
     # Deal with alsoset one->many maps
     while (my ($from_as, $to_as) = each %{$map->{also_set}}) {
-      if ($entry->exists(lc($from_as))) {
+      if ($entry->exists('./' . lc($from_as))) {
         if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
           biber_warn("Overwriting existing field '$from_as' while processing entry '$key'", $bibentry);
         }
@@ -252,25 +251,20 @@ sub create_entry {
       # Deal with special tokens
       given (lc($to_as)) {
         when ('map_origfieldval') {
-          $entry->{uc($from_as)} = $last_fieldval;
+          $entry->appendTextChild(lc($from_as), $last_fieldval);
         }
         when ('map_origfield') {
-          $entry->{uc($from_as)} = $last_field;
+          $entry->addTextChild(lc($from_as), $last_field);
         }
         when ('map_null') {
-          delete($entry->{uc($from_as)});
+          $entry->findnodes(lc($from_as))->get_node(1)->unbindNode;
         }
         default {
-          $entry->{uc($from_as)} = $to_as;
+          $entry->addTextChild(lc($from_as), $to_as);
         }
       }
     }
   }
-
-
-
-
-
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
@@ -280,67 +274,6 @@ sub create_entry {
   # is what we do here as these nodes have special aliases we want visible in the .dcf. If we
   # did it all in special handlers, it would all be invisible in the .dcf
 FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
-
-    # # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
-    # my $from;
-    # my $to;
-    # my $val_match;
-    # my $val_replace;
-
-    # if (my $to_map = is_user_field_map($user_map, lc($itype), lc($f), $entry->findvalue("./$f"), $source)) {
-    #   my $field = lc($f);
-    #   # handler information still comes from .dcf
-    #   $from = $dcfxml->{fields}{field}{lc($to_map->{map_target} || $field)};
-    #   # Just in case we are targeting an alias, resolve it and repoint target
-    #   if (my $alias = $from->{aliasof}) {
-    #     $from = $dcfxml->{fields}{field}{$alias};
-    #     if ($to_map->{map_target}) {
-    #       $to_map->{map_target} = $alias;
-    #     }
-    #     else {
-    #       $field = $alias
-    #     }
-    #   }
-    #   $to = lc($to_map->{map_target} || $field);
-    #   $val_match = $to_map->{map_match};
-    #   $val_replace = $to_map->{map_replace};
-
-    #   # Deal with alsoset one->many maps
-    #   while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) {
-    #     if ($bibentry->field_exists(lc($from_as))) {
-    #       if ($to_map->{map_overwrite} // $user_map->{map_overwrite}) {
-    #         biber_warn("Overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
-    #       }
-    #       else {
-    #         biber_warn("Not overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
-    #         next;
-    #       }
-    #     }
-    #     # Deal with special tokens
-    #     given (lc($to_as)) {
-    #       when ('map_origfield') {
-    #         $bibentry->set_datafield(lc($from_as), $f);
-    #       }
-    #       when ('map_null') {
-    #         $bibentry->del_datafield(lc($from_as));
-    #         # 'future' delete in case it's not set yet
-    #         $bibentry->block_datafield(lc($from_as));
-    #       }
-    #       default {
-    #         $bibentry->set_datafield(lc($from_as), $to_as);
-    #       }
-    #     }
-    #   }
-
-    #   # map fields to targets
-    #   if (defined ($to_map->{map_target}) and
-    #       lc($to_map->{map_target}) eq 'map_null') { # fields to ignore
-    #     next FLOOP;
-    #   }
-
-    #   # Now run any defined handler
-    #   &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key, $val_match, $val_replace);
-    # }
 
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
     # ignore fields not in .dcf - this means "titles", "contributors" "urls/web-urls" are

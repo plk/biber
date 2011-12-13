@@ -278,7 +278,7 @@ MAP:    foreach my $map (@{get_maps_field($user_map, lc($entry->type), $source)}
             $entry->delete(lc($pair->{map_source}));
           }
           else {
-            $entry->set(lc($pair->{map_target}), $entry->get(lc($pair->{map_source})));
+            $entry->set(lc($pair->{map_target}), decode_utf8($entry->get(lc($pair->{map_source}))));
             $entry->delete(lc($pair->{map_source}));
           }
         }

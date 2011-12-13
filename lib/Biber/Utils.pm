@@ -871,7 +871,7 @@ sub get_map_val {
 
 =head2 validate_biber_xml
 
-  Validate a biber/biblatex XML metdata file against an RNG schema
+  Validate a biber/biblatex XML metadata file against an RNG schema
 
 =cut
 
