@@ -220,71 +220,78 @@ sub create_entry {
   # Some entries like Series which are created for crossrefs don't have z:itemType
   my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
 
-  # We put all the fields we find modulo field aliases into the object.
-  # Validation happens later and is not datasource dependent
-FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
-    # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
-    my $from;
-    my $to;
-    my $val_match;
-    my $val_replace;
+  # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
+ MAP:    foreach my $map (@{get_maps_field($user_map, lc($itype), $source)}) {
+    my $last_field = undef;
+    my $last_fieldval = undef;
+    foreach my $pair (@{$map->{pairs}}) {
+      next unless $entry->exists('./' . lc($pair->{map_source}));
+      $last_field = $pair->{map_source};
+      $last_fieldval = $entry->findvalue('./' . lc($pair->{map_source}));
 
-    if (my $to_map = is_user_field_map($user_map, lc($itype), lc($f), $entry->findvalue("./$f"), $source)) {
-      my $field = $f;
-      # handler information still comes from .dcf
-      $from = $dcfxml->{fields}{field}{lc($to_map->{map_target} || $field)};
-      # Just in case we are targeting an alias, resolve it and repoint target
-      if (my $alias = $from->{aliasof}) {
-        $from = $dcfxml->{fields}{field}{$alias};
-        if ($to_map->{map_target}) {
-          $to_map->{map_target} = $alias;
+      # do match/replace
+      if (exists($pair->{map_match})) {
+        if (exists($pair->{map_replace})) {
+          my $text = ireplace($last_fieldval, $pair->{map_match}, $pair->{map_replace});
+          $entry->findnodes('./' . lc($pair->{map_source}) . '/text()')->get_node(1)->setData($text);
         }
         else {
-          $field = $alias
-        }
-      }
-      $to = lc($to_map->{map_target} || $field);
-      $val_match = $to_map->{map_match};
-      $val_replace = $to_map->{map_replace};
-
-      # Deal with alsoset one->many maps
-      while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) {
-        if ($bibentry->field_exists(lc($from_as))) {
-          if ($to_map->{map_overwrite} // $user_map->{map_overwrite}) {
-            biber_warn("Overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
-          }
-          else {
-            biber_warn("Not overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
-            next;
-          }
-        }
-        # Deal with special tokens
-        given (lc($to_as)) {
-          when ('map_origfield') {
-            $bibentry->set_datafield(lc($from_as), $f);
-          }
-          when ('map_null') {
-            $bibentry->del_datafield(lc($from_as));
-            # 'future' delete in case it's not set yet
-            $bibentry->block_datafield(lc($from_as));
-          }
-          default {
-            $bibentry->set_datafield(lc($from_as), $to_as);
-          }
+          next unless imatch($last_fieldval, $pair->{map_match});
         }
       }
 
       # map fields to targets
-      if (defined ($to_map->{map_target}) and
-          lc($to_map->{map_target}) eq 'map_null') { # fields to ignore
-        next FLOOP;
+      if (exists($pair->{map_target})) {
+        if (lc($pair->{map_target}) eq 'map_null') {
+          # Can be more than one node ...
+          map {$_->unbindNode} $entry->findnodes(lc($pair->{map_source}));
+        }
+        else {
+          map {$_->setNodeName(lc($pair->{map_target}))} $entry->findnodes(lc($pair->{map_source}));
+        }
       }
-      # Now run any defined handler
-      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key, $val_match, $val_replace);
     }
+
+    # Don't do also_sets unless a pair has matched
+    next MAP unless defined($last_field);
+
+    # Deal with alsoset one->many maps
+    while (my ($from_as, $to_as) = each %{$map->{also_set}}) {
+      if ($entry->exists('./' . lc($from_as))) {
+        if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
+          biber_warn("Overwriting existing field '$from_as' while processing entry '$key'", $bibentry);
+        }
+        else {
+          biber_warn("Not overwriting existing field '$from_as' while processing entry '$key'", $bibentry);
+          next;
+        }
+      }
+
+      # Deal with special tokens
+      given (lc($to_as)) {
+        when ('map_origfieldval') {
+          $entry->appendTextChild(lc($from_as), $last_fieldval);
+        }
+        when ('map_origfield') {
+          $entry->addTextChild(lc($from_as), $last_field);
+        }
+        when ('map_null') {
+          $entry->findnodes(lc($from_as))->get_node(1)->unbindNode;
+        }
+        default {
+          $entry->addTextChild(lc($from_as), $to_as);
+        }
+      }
+    }
+  }
+
+  # We put all the fields we find modulo field aliases into the object.
+  # Validation happens later and is not datasource dependent
+FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
+    # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
-    elsif ($from = $dcfxml->{fields}{field}{$f}) { # ignore fields not in .dcf
-      $to = $f; # By default, field to set internally is the same as data source
+    if (my $from = $dcfxml->{fields}{field}{$f}) { # ignore fields not in .dcf
+      my $to = $f; # By default, field to set internally is the same as data source
       # Redirect any alias
       if (my $aliases = $from->{alias}) { # complex aliases with alsoset clauses
         foreach my $alias (@$aliases) {
@@ -375,30 +382,30 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = ireplace($entry->findvalue("./$f"), $val_match, $val_replace);
+  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my $value = $entry->findvalue("./$f");
   $bibentry->set_datafield($to, [ $value ]);
   return;
 }
 
 # literal fields
 sub _literal {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   # Special case - libraryCatalog is used only if hasn't already been set
   # by LCC
   if ($f eq 'z:libraryCatalog') {
     return if $bibentry->get_field('library');
   }
-  my $value = ireplace($entry->findvalue("./$f"), $val_match, $val_replace);
+  my $value = $entry->findvalue("./$f");
   $bibentry->set_datafield($to, $value);
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $values_ref;
-  my $value = ireplace($entry->findvalue("./$f"), $val_match, $val_replace);
+  my $value = $entry->findvalue("./$f");
   my @values = split(/\s*,\s*/, $value);
   # Here the "-–" contains two different chars even though they might
   # look the same in some fonts ...
@@ -421,8 +428,8 @@ sub _range {
 
 # Date fields
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $date = ireplace($entry->findvalue("./$f"), $val_match, $val_replace);
+  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my $date = $entry->findvalue("./$f");
   # We are not validating dates here, just syntax parsing
     my $date_re = qr/(\d{4}) # year
                      (?:-(\d{2}))? # month
@@ -450,10 +457,10 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $names = new Biber::Entry::Names;
   foreach my $name ($entry->findnodes("./$f/rdf:Seq/rdf:li/foaf:Person")) {
-    $names->add_name(parsename($name, $f, $val_match, $val_replace));
+    $names->add_name(parsename($name, $f));
   }
   $bibentry->set_datafield($to, $names);
   return;
@@ -580,7 +587,7 @@ sub _identifier {
 =cut
 
 sub parsename {
-  my ($node, $fieldname, $val_match, $val_replace) = @_;
+  my ($node, $fieldname) = @_;
   $logger->debug('Parsing Zotero RDF/XML name object ' . $node->nodePath);
 
   my %nmap = ('surname'   => 'last',
@@ -591,7 +598,7 @@ sub parsename {
   foreach my $n ('surname', 'givenname') {
     if (my $nc = $node->findvalue("./foaf:$n")) {
       my $bn = $nmap{$n}; # convert to biblatex namepart name
-      $namec{$bn} = ireplace($nc, $val_match, $val_replace);
+      $namec{$bn} = $nc;
       $logger->debug("Found name component '$bn': $nc");
       $namec{"${bn}_i"} = [_gen_initials($nc)];
     }

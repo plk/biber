@@ -784,7 +784,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
 
 sub get_maps_field {
   my ($user_map, $entrytype, $source) = @_;
-  my $maps;
+  my $maps = [];
   foreach my $map (@{$user_map->{map}}) {
     next unless $map->{maptype} eq 'field';
 

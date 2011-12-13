@@ -47,7 +47,7 @@ sub init_cache {
 # Handlers for field types
 # The names of these have nothing to do whatever with the biblatex field types
 # They just started out copying them - they are categories of this specific
-# data source date types
+# data source data types
 my %handlers = (
                 'date'     => \&_date,
                 'list'     => \&_list,

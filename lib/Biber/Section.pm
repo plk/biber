@@ -83,6 +83,20 @@ sub add_everykey {
   return;
 }
 
+=head2 del_everykeys
+
+  Delete everykey cache. For use in tests.
+
+=cut
+
+sub del_everykeys {
+  my $self = shift;
+  $self->{everykey} = undef
+  $self->{everykey_lc} = undef;
+  return;
+}
+
+
 
 =head2 has_everykey
 

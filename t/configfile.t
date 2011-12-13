@@ -1,6 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
+use utf8;
 
 use Test::More tests => 8;
 use Biber;
@@ -66,7 +67,7 @@ my $sourcemap = [
       },
       {
         also_set       => [
-                            { map_field => "USERE", map_value => "a string" },
+                            { map_field => "USERE", map_value => "a Štring" },
                             { map_null => 1, map_field => "USERF" },
                           ],
         map_pair       => [{ map_null => 1, map_source => "USERB" }],

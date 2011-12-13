@@ -214,8 +214,8 @@ sub create_entry {
       # do match/replace
       if (exists($pair->{map_match})) {
         if (exists($pair->{map_replace})) {
-          my $text = XML::LibXML::Text->new(ireplace($last_fieldval, $pair->{map_match}, $pair->{map_replace}));
-          $entry->findnodes('./' .lc($pair->{map_source}) . '/text()')->get_node(1)->replaceNode($text);
+          my $text = ireplace($last_fieldval, $pair->{map_match}, $pair->{map_replace});
+          $entry->findnodes('./' . lc($pair->{map_source}) . '/style/text()')->get_node(1)->setData($text);
         }
         else {
           next unless imatch($last_fieldval, $pair->{map_match});
@@ -225,10 +225,11 @@ sub create_entry {
       # map fields to targets
       if (exists($pair->{map_target})) {
         if (lc($pair->{map_target}) eq 'map_null') {
-          $entry->findnodes(lc($pair->{map_source}))->get_node(1)->unbindNode;
+          # Can be more than one node ...
+          map {$_->unbindNode} $entry->findnodes(lc($pair->{map_source}));
         }
         else {
-          $entry->findnodes(lc($pair->{map_source}))->get_node(1)->setNodeName(lc($pair->{map_target}));
+          map {$_->setNodeName(lc($pair->{map_target}))} $entry->findnodes(lc($pair->{map_source}));
         }
       }
     }
@@ -368,25 +369,25 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
 
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = ireplace($entry->findvalue("./$f"), $val_match, $val_replace);
+  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my $value = $entry->findvalue("./$f");
   $bibentry->set_datafield($to, [ _norm($value) ]);
   return;
 }
 
 # literal fields
 sub _literal {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = ireplace($entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)"), $val_match, $val_replace);
+  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my $value = $entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)");
   $bibentry->set_datafield($to, _norm($value));
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to) = @_;
   my $values_ref;
-  my $value = ireplace($entry->findvalue("./$f"), $val_match, $val_replace);
+  my $value = $entry->findvalue("./$f");
   my @values = split(/\s*,\s*/, _norm($value));
   # Here the "-–" contains two different chars even though they might
   # look the same in some fonts ...
@@ -409,7 +410,7 @@ sub _range {
 
 # Date fields
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $daten = $entry->findnodes("./dates/$f")->get_node(1);
   # Use Endnote explicit date attributes, if present
   # It's not clear if Endnote actually uses these attributes
@@ -424,7 +425,7 @@ sub _date {
     return;
   }
   else {
-    my $date = _norm(ireplace($entry->findvalue("./dates/$f"), $val_match, $val_replace));
+    my $date = _norm($entry->findvalue("./dates/$f"));
     # We are not validating dates here, just syntax parsing
     my $date_re = qr/(\d{4}) # year
                      (?:-(\d{2}))? # month
@@ -454,22 +455,22 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $names = new Biber::Entry::Names;
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   foreach my $name ($entry->findnodes("./contributors/$f/*")) {
-    $names->add_name(parsename($name, $f, {useprefix => $useprefix}), $val_match, $val_replace);
+    $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
   }
   $bibentry->set_datafield($to, $names);
   return;
 }
 
 sub _keywords {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   if (my @s = $entry->findnodes("./$f/keyword")) {
     my @kws;
     foreach my $s (@s) {
-      push @kws, '{'._norm(ireplace($s->textContent(), $val_match, $val_replace)).'}';
+      push @kws, '{'._norm($s->textContent()).'}';
     }
     $bibentry->set_datafield('keywords', join(',', @kws));
   }
@@ -498,7 +499,7 @@ sub _keywords {
 =cut
 
 sub parsename {
-  my ($node, $fieldname, $opts, $val_match, $val_replace) = @_;
+  my ($node, $fieldname, $opts) = @_;
   $logger->debug('Parsing Endnote XML name object ' . $node->nodePath);
   my $usepre = $opts->{useprefix};
 
@@ -593,7 +594,7 @@ sub parsename {
     );
   }
   else { # parse with bibtex library because Endnote XML is rubbish
-    my $namestr = ireplace($node->textContent(), $val_match, $val_replace);
+    my $namestr = $node->textContent();
 
     # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
     $namestr =~ s/\A\s*//xms;   # leading whitespace

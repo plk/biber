@@ -8,6 +8,7 @@ use Test::More tests => 9;
 
 use Biber;
 use Biber::Output::bbl;
+use Biber::Input::file::bibtex;
 use Log::Log4perl;
 chdir("t/tdata");
 
@@ -251,8 +252,11 @@ $main->set_sortscheme([
                        ]]);
 
 # Need to reset all entries due to "skip if already in Entries"
-# clause in bibtex.pm
+# clause in bibtex.pm. Need to clear the cache as we've modified the T::B objects
+# by the sourcemap. Need to clear everykeys otherwise we'll just skip the keys
 $bibentries->del_entries;
+$section->del_everykeys;
+Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $shs = $section->get_list('SHORTHANDS');
