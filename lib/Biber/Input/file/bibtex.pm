@@ -309,8 +309,6 @@ MAP:    foreach my $map (@{get_maps_field($user_map, lc($entry->type), $source)}
           }
           when ('map_null') {
             $entry->delete(lc($from_as));
-            # 'future' delete in case it's not set yet
-#            $bibentry->block_datafield(lc($from_as));
           }
           default {
             $entry->set(lc($from_as), $to_as);

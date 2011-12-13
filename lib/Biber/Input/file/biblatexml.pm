@@ -244,14 +244,6 @@ sub create_entry {
 
   $bibentry->set_field('citekey', $key);
 
-  # Get a reference to the map option, if it exists
-  my $user_map;
-  if (defined(Biber::Config->getoption('map'))) {
-    if (defined(Biber::Config->getoption('map')->{biblatexml})) {
-      $user_map = Biber::Config->getoption('map')->{biblatexml};
-    }
-  }
-
   # Some entry attributes
   if (my $hp = $entry->getAttribute('howpublished')) {
     $bibentry->set_datafield('howpublished', $hp);

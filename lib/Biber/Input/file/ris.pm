@@ -210,73 +210,82 @@ sub create_entry {
     }
   }
 
-  # We put all the fields we find modulo field aliases into the object.
-  # Validation happens later and is not datasource dependent
-FLOOP:  foreach my $f (keys %$entry) {
+  # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
+ MAP:    foreach my $map (@{get_maps_field($user_map, lc($entry->{TY}), $source)}) {
+    my $last_field = undef;
+    my $last_fieldval = undef;
+    foreach my $pair (@{$map->{pairs}}) {
+      next unless exists($entry->{uc($pair->{map_source})});
+      $last_field = $pair->{map_source};
+      $last_fieldval = $entry->{uc($pair->{map_source})};
 
-    # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
-    my $from;
-    my $to;
-    my $val_match;
-    my $val_replace;
-
-    if (my $to_map = is_user_field_map($user_map, lc($entry->{TY}), lc($f), $entry->{$f}, $source)) {
-      my $field = $f;
-      # handler information still comes from .dcf
-      $from = $dcfxml->{fields}{field}{$to_map->{map_target} || $field};
-      # Just in case we are targeting an alias, resolve it and repoint target
-      if (my $alias = $from->{aliasof}) {
-        $from = $dcfxml->{fields}{field}{$alias};
-        if ($to_map->{map_target}) {
-          $to_map->{map_target} = $alias;
+      # do match/replace
+      if (exists($pair->{map_match})) {
+        if (exists($pair->{map_replace})) {
+          $entry->{uc($pair->{map_source})} =
+            ireplace($last_fieldval, $pair->{map_match}, $pair->{map_replace});
         }
         else {
-          $field = $alias;
-        }
-      }
-      $to = $to_map->{map_target} || $field;
-      $val_match = $to_map->{map_match};
-      $val_replace = $to_map->{map_replace};
-
-      # Deal with alsoset one->many maps
-      while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) {
-        if ($bibentry->field_exists(lc($from_as))) {
-          if ($to_map->{map_overwrite} // $user_map->{map_overwrite}) {
-            biber_warn("Overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
-          }
-          else {
-            biber_warn("Not overwriting existing field '$from_as' during processing of field '$from' in entry '$key'", $bibentry);
-            next;
-          }
-        }
-        # Deal with special tokens
-        given (lc($to_as)) {
-          when ('map_origfield') {
-            $bibentry->set_datafield(lc($from_as), $f);
-          }
-          when ('map_null') {
-            $bibentry->del_datafield(lc($from_as));
-            # 'future' delete in case it's not set yet
-            $bibentry->block_datafield(lc($from_as));
-          }
-          default {
-            $bibentry->set_datafield(lc($from_as), $to_as);
-          }
+          next unless imatch($last_fieldval, $pair->{map_match});
         }
       }
 
       # map fields to targets
-      if (defined ($to_map->{map_target}) and
-          lc($to_map->{map_target}) eq 'map_null') { # fields to ignore
-        next FLOOP;
+      if (exists($pair->{map_target})) {
+        if (lc($pair->{map_target}) eq 'map_null') {
+          delete($entry->{uc($pair->{map_source})});
+        }
+        else {
+          $entry->{uc($pair->{map_target})} = $entry->{uc($pair->{map_source})};
+          delete($entry->{uc($pair->{map_source})});
+        }
+      }
+    }
+
+    # Don't do also_sets unless a pair has matched
+    next MAP unless defined($last_field);
+
+    # Deal with alsoset one->many maps
+    while (my ($from_as, $to_as) = each %{$map->{also_set}}) {
+      if (exists($entry->{uc($from_as)})) {
+        if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
+          biber_warn("Overwriting existing field '$from_as' while processing entry '$key'", $bibentry);
+        }
+        else {
+          biber_warn("Not overwriting existing field '$from_as' while processing entry '$key'", $bibentry);
+          next;
+        }
       }
 
-      # Now run any defined handler
-      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key, $val_match, $val_replace);
+      # Deal with special tokens
+      given (lc($to_as)) {
+        when ('map_origfieldval') {
+          $entry->{uc($from_as)} = $last_fieldval;
+        }
+        when ('map_origfield') {
+          $entry->{uc($from_as)} = $last_field;
+        }
+        when ('map_null') {
+          delete($entry->{uc($from_as)});
+        }
+        default {
+          $entry->{uc($from_as)} = $to_as;
+        }
+      }
+
     }
+  }
+
+
+
+
+  # We put all the fields we find modulo field aliases into the object.
+  # Validation happens later and is not datasource dependent
+FLOOP:  foreach my $f (keys %$entry) {
+
     # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
-    elsif ($from = $dcfxml->{fields}{field}{$f}) {
-      $to = $f; # By default, field to set internally is the same as data source
+    if (my $from = $dcfxml->{fields}{field}{$f}) {
+      my $to = $f; # By default, field to set internally is the same as data source
       # Redirect any alias
       if (my $aliases = $from->{alias}) { # complex aliases with alsoset clauses
         foreach my $alias (@$aliases) {
