@@ -353,7 +353,10 @@ is($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
 is($bibentries->entry('i2')->get_field('usere'), 'a string', 'map 4' );
 # Testing of user field map match/replace
-is($biber->_liststring('i1', 'listb'), 'REPlacedte_early', 'map 5');
+# Why is this test strange? because we have two prepares() which pick up
+# entry i1 above and so these match/replaces happen twice on the T::B object before
+# we get here. The first match is not idempotent, the second is.
+is($biber->_liststring('i1', 'listb'), 'REPREcedPlacedte_early', 'map 5');
 is($biber->_liststring('i1', 'institution'), 'REPlaCEDte_early', 'map 6');
 # Checking deletion of alsosets with value BMAP_NULL
 ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 7' );

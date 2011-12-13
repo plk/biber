@@ -35,7 +35,7 @@ use vars qw($cache);
 
 =head2 init_cache
 
-    Invalidate the T::B object cache. Used only in tests when we change the encoding
+    Invalidate the T::B object cache. Used only in tests when e.g. we change the encoding
     settings and therefore must force a re-read of the data
 
 =cut
@@ -252,39 +252,49 @@ sub create_entry {
   }
 
   if ( $entry->metatype == BTE_REGULAR ) {
-
     # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
-    my $from;
-    my $to;
-    my $val_match;
-    my $val_replace;
-    my $fval = decode_utf8($entry->get($f));
-    foreach my $map (@{get_maps_field($user_map, lc($entry->type), $source)}) {
-      my $field = lc($f);
-      # handler information still comes from .dcf
-      $from = $dcfxml->{fields}{field}{lc($to_map->{map_target} || $field)};
-      # Just in case we are targeting an alias, resolve it and repoint target
-      if (my $alias = $from->{aliasof}) {
-        $from = $dcfxml->{fields}{field}{$alias};
-        if ($to_map->{map_target}) {
-          $to_map->{map_target} = $alias;
-        }
-        else {
-          $field = $alias
-        }
-      }
-      $to = lc($to_map->{map_target} || $field);
-      $val_match = $to_map->{map_match};
-      $val_replace = $to_map->{map_replace};
+MAP:    foreach my $map (@{get_maps_field($user_map, lc($entry->type), $source)}) {
+      my $last_field = undef;
+      my $last_fieldval = undef;
+      foreach my $pair (@{$map->{pairs}}) {
+        next unless $entry->exists(lc($pair->{map_source}));
+        $last_field = $pair->{map_source};
+        $last_fieldval = decode_utf8($entry->get(lc($pair->{map_source})));
 
-      # Deal with alsoset one->many maps
-      while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) {
-        if ($bibentry->field_exists(lc($from_as))) {
-          if ($to_map->{map_overwrite} // $user_map->{map_overwrite}) {
-            biber_warn("Overwriting existing field '$from_as' while processing field '" . lc($field) . "in entry '$key'", $bibentry);
+        # do match/replace
+        if (exists($pair->{map_match})) {
+          if (exists($pair->{map_replace})) {
+            $entry->set(lc($pair->{map_source}),
+                        ireplace($last_fieldval, $pair->{map_match}, $pair->{map_replace}));
           }
           else {
-            biber_warn("Not overwriting existing field '$from_as' while processing field '" . lc($field) . "in entry '$key'", $bibentry);
+            next unless imatch($last_fieldval, $pair->{map_match});
+          }
+        }
+
+        # map fields to targets
+        if (exists($pair->{map_target})) {
+          if (lc($pair->{map_target}) eq 'map_null') {
+            $entry->delete(lc($pair->{map_source}));
+          }
+          else {
+            $entry->set(lc($pair->{map_target}), $entry->get(lc($pair->{map_source})));
+            $entry->delete(lc($pair->{map_source}));
+          }
+        }
+      }
+
+      # Don't do also_sets unless a pair has matched
+      next MAP unless defined($last_field);
+
+      # Deal with alsoset one->many maps
+      while (my ($from_as, $to_as) = each %{$map->{also_set}}) {
+        if ($entry->exists(lc($from_as))) {
+          if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
+            biber_warn("Overwriting existing field '$from_as' while processing entry '$key'", $bibentry);
+          }
+          else {
+            biber_warn("Not overwriting existing field '$from_as' while processing entry '$key'", $bibentry);
             next;
           }
         }
@@ -292,34 +302,22 @@ sub create_entry {
         # Deal with special tokens
         given (lc($to_as)) {
           when ('map_origfieldval') {
-            $bibentry->set_datafield(lc($from_as), $fval);
+            $entry->set(lc($from_as), $last_fieldval);
           }
           when ('map_origfield') {
-            $bibentry->set_datafield(lc($from_as), $f);
+            $entry->set(lc($from_as), $last_field);
           }
           when ('map_null') {
-            $bibentry->del_datafield(lc($from_as));
+            $entry->delete(lc($from_as));
             # 'future' delete in case it's not set yet
-            $bibentry->block_datafield(lc($from_as));
+#            $bibentry->block_datafield(lc($from_as));
           }
           default {
-            $bibentry->set_datafield(lc($from_as), $to_as);
+            $entry->set(lc($from_as), $to_as);
           }
         }
       }
-
-      # map fields to targets
-      if (defined ($to_map->{map_target}) and
-          lc($to_map->{map_target}) eq 'map_null') { # fields to ignore
-        next FLOOP;
-      }
-
-      # Now run any defined handler
-      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key, $val_match, $val_replace);
     }
-
-
-
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
@@ -336,8 +334,8 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       }
 
       # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
-      if ($from = $dcfxml->{fields}{field}{$f}) {
-        $to = $f; # By default, field to set internally is the same as data source
+      if (my $from = $dcfxml->{fields}{field}{$f}) {
+        my $to = $f; # By default, field to set internally is the same as data source
 
         # Redirect any alias
         if (my $aliases = $from->{alias}) { # complex aliases with alsoset clauses
@@ -454,8 +452,8 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
 
 # Literal fields
 sub _literal {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = ireplace(decode_utf8($entry->get($f)), $val_match, $val_replace);
+  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my $value = decode_utf8($entry->get($f));
 
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
@@ -475,8 +473,8 @@ sub _literal {
 
 # Verbatim fields
 sub _verbatim {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = ireplace(decode_utf8($entry->get($f)), $val_match, $val_replace);
+  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my $value = decode_utf8($entry->get($f));
 
   $bibentry->set_datafield($to, $value);
   return;
@@ -484,9 +482,9 @@ sub _verbatim {
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $values_ref;
-  my $value = ireplace(decode_utf8($entry->get($f)), $val_match, $val_replace);
+  my $value = decode_utf8($entry->get($f));
 
   my @values = split(/\s*,\s*/, $value);
   # Here the "-–" contains two different chars even though they might
@@ -511,10 +509,10 @@ sub _range {
 
 # Names
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $value = ireplace($entry->get($f), $val_match, $val_replace);;
+  my $value = decode_utf8($entry->get($f));
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
@@ -566,13 +564,12 @@ sub _name {
 
 # Dates
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f, $to, $key) = @_;
   my ($datetype) = $f =~ m/\A(.*)date\z/xms;
-  my $fv = decode_utf8($entry->get($f));
-  my $date = ireplace($fv, $val_match, $val_replace);
+  my $date = decode_utf8($entry->get($f));
   # Just in case we need to look at the original field later
   # an "orig_field" is not counted as current data in the entry
-  $bibentry->set_orig_field($f, $fv);
+  $bibentry->set_orig_field($f, $f);
 
   # We are not validating dates here, just syntax parsing
   my $date_re = qr/(\d{4}) # year
@@ -618,8 +615,8 @@ sub _date {
 
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = ireplace($entry->get($f), $val_match, $val_replace);
+  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my $value = decode_utf8($entry->get($f));
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
   @tmp = map { decode_utf8($_) } @tmp;

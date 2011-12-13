@@ -44,7 +44,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch is_user_entrytype_map
-  is_user_field_map get_pairs_field validate_biber_xml };
+  get_maps_field validate_biber_xml };
 
 =head1 FUNCTIONS
 
@@ -717,15 +717,13 @@ sub imatch {
 sub ireplace {
   my ($value, $val_match, $val_replace) = @_;
   return $value unless $val_match;
-  my $it = each_arrayref($val_match, $val_replace);
-  while (my ($m, $r) = $it->() ) {
-    $m = qr/$m/;
-    # Tricky quoting because of later evals
-    $r = '"' . $r . '"';
-    $value =~ s/$m/$r/eegxms;
-  }
+  $val_match = qr/$val_match/;
+  # Tricky quoting because of later evals
+  $val_replace = '"' . $val_replace . '"';
+  $value =~ s/$val_match/$val_replace/eegxms;
   return $value;
 }
+
 
 =head2 is_user_entrytype_map
 
@@ -787,7 +785,7 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
 sub get_maps_field {
   my ($user_map, $entrytype, $source) = @_;
   my $maps;
-MAP:  foreach my $map (@{$user_map->{map}}) {
+  foreach my $map (@{$user_map->{map}}) {
     next unless $map->{maptype} eq 'field';
 
     # Check pertype restrictions
@@ -810,22 +808,23 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
     foreach my $pair (@{$map->{map_pair}}) {
       my $p;
       my $target = undef;
-      my $alsoset = undef;
+
+      $p->{map_source} = $pair->{map_source};
 
       # Set the target
       if (my $v = get_map_val($pair, 'map_target')) {
         $target = $v;
       }
 
-      $p->{map_overwrite} = $map->{map_overwrite} if exists($map->{map_overwrite});
       $p->{map_target}    = $target if defined($target);
       $p->{map_match}     = $pair->{map_match} if defined($pair->{map_match});
-      $p->{map_replace}   = $pair->{map_replace} if defined($pair->{map_replace};);
+      $p->{map_replace}   = $pair->{map_replace} if defined($pair->{map_replace});
 
       push @{$m->{pairs}}, $p;
     }
 
     # also_sets
+    my $alsoset = undef;
     if (exists($map->{also_set})) {
       foreach my $as (@{$map->{also_set}}) {
         $alsoset->{$as->{map_field}} = get_map_val($as, 'map_value');
@@ -833,83 +832,11 @@ MAP:  foreach my $map (@{$user_map->{map}}) {
     }
 
     $m->{also_set}  = $alsoset if defined($alsoset);
+    $m->{map_overwrite} = $map->{map_overwrite} if exists($map->{map_overwrite});
 
     push @$maps, $m;
   }
   return $maps;
-}
-
-=head2 is_user_field_map
-
-    Check in a data structure of user field mappings if a particular
-    field matches any mapping rules. Returns the target field
-    datastructure if there is a match, false otherwise.
-
-=cut
-
-sub is_user_field_map {
-  my ($user_map, $entrytype, $field, $fieldval, $source) = @_;
-  my $to;
-MAP:  foreach my $map (@{$user_map->{map}}) {
-    next unless $map->{maptype} eq 'field';
-
-    # Check pertype restrictions
-    unless (not exists($map->{per_type}) or
-            (exists($map->{per_type}) and first {lc($_->{content}) eq $entrytype} @{$map->{per_type}})) {
-      next;
-    }
-
-    # Check per_datasource restrictions
-    # Don't compare case insensitively - this might not be correct
-    unless (not exists($map->{per_datasource}) or
-            (exists($map->{per_datasource}) and first {$_->{content} eq $source} @{$map->{per_datasource}})) {
-      next;
-    }
-
-    # We don't stop on first match - we match all pairs which are appropriate
-    # and append the match/replace information. Other than match/replace info,
-    # the last match pair information found for the field is used.
-    my $pairs;
-    foreach my $pair (@{$map->{map_pair}}) {
-      my $match = undef;
-      my $replace = undef;
-      my $target = undef;
-      my $overwrite = undef;
-      my $alsoset = undef;
-
-      next unless lc($pair->{map_source}) eq $field;
-      # Check for a match and skip if no match or,
-      # record the match/replace settings for resolution later
-      if (exists($pair->{map_match})) {
-        if (exists($pair->{map_replace})) {
-          $match = $pair->{map_match};
-          $replace = $pair->{map_replace};
-        }
-        else {
-          next unless imatch($fieldval, $pair->{map_match});
-        }
-      }
-
-      # Set the target
-      if (my $v = get_map_val($pair, 'map_target')) {
-        $target = $v;
-      }
-
-      $overwrite = $map->{map_overwrite} if exists($map->{map_overwrite});
-      if (exists($map->{also_set})) {
-        foreach my $as (@{$map->{also_set}}) {
-          $alsoset->{$as->{map_field}} = get_map_val($as, 'map_value');
-        }
-      }
-      $pairs->{also_set} = $alsoset if defined($alsoset);
-      $pairs->{map_overwrite} = $overwrite if defined($overwrite);
-      $pairs->{map_target} = $target if defined($target);
-      $pairs->{map_match} = $match if defined($match);
-      $pairs->{map_replace} = $replace if defined($replace);
-    }
-    push @$to, $pairs;
-  }
-  return $to;
 }
 
 =head2 get_map_val
