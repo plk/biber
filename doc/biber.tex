@@ -775,17 +775,45 @@ fields removed and a \verb+NOTE+ field added with value «Auto-created this fiel
 </map>
 \end{lstlisting}
 
-\noindent A \verb+field+ element performs a mapping of one or more
-mapping «pairs» of fields. Each pair consists of a \verb+map_pair+ element with a
-\verb+map_source+ attribute with value \textcolor{red}{\texttt{source-field}} and an optional
-\verb+map_target+ attribute with
-value \textcolor{red}{\texttt{target-field}}. The target is optional as
-you might want to simply modify certain fields without mapping to other fields.
-The \textcolor{red}{\texttt{source-field}} is
-mandatory. If there are more than one \verb+map_pair+ rules for the
-same \textcolor{red}{\texttt{source-field}}, the last one to be
-defined takes precedence (but note the special case of map/replace
-pairs below). The rules for a field mapping are:\\[1ex]
+\noindent Field mappings are a little different to entrytype mappings
+as it is more likely that several mappings will apply to the same
+entry. When processing an entry, Biber first filters the field mappings:\\
+
+\begin{itemize}
+\item If there are any \textcolor{red}{\texttt{datasource}}s named in
+  \textcolor{blue}{\texttt{per\_datasource}} elements, this mapping only applies to entries
+  coming from the named \textcolor{red}{\texttt{datasource}}s. There can be
+  multiple \textcolor{blue}{\texttt{per\_datasource}} elements each specifying one of the
+  datasource names given in a Bib\LaTeX\ \verb+\addbibresource+ macro.
+\item If there are any \textcolor{red}{\texttt{entrytypes}}s named in
+  \textcolor{blue}{\texttt{per\_type}} elements, this mapping only applies to entries
+  of the named \textcolor{red}{\texttt{entrytypes}}s.
+\end{itemize}
+
+\noindent The remaining mappings are then applied in the same order as
+they appear in the config file. Each mapping operates on the entry
+which results from a previous mapping. So, you should sequence the
+\verb+map+ elements in a processing chain. Within a \verb+map+
+element, it is also possible to have multiple processing steps which
+are also processed in order but it is good practice to keep processing
+within a \verb+map+ element restricted to steps which are independent
+of each other and do the sequencing with \verb+map+ elements.
+
+Within a \verb+map+ element, there are one or more of two types of
+processing element: mapping
+«pairs»\footnote{Thusly called as their basic form is a mapping
+  between a pair of fields, the «source» and «target» fields.} and
+field creation «also set» specifications.
+
+Each mapping pair consists of a \verb+map_pair+ element with a
+\verb+map_source+ attribute with value
+\textcolor{red}{\texttt{source-field}} and an optional
+\verb+map_target+ attribute with value
+\textcolor{red}{\texttt{target-field}}. The target is optional as you
+might want to simply modify certain fields without mapping to other
+fields or simply establish that this mapping element applies to a
+certain field.  The \textcolor{red}{\texttt{source-field}} is
+mandatory. Mapping pairs work in the following way:\\
 
 \begin{itemize}
 \item Change the \textcolor{red}{\texttt{source-field}} to
@@ -802,25 +830,17 @@ pairs below). The rules for a field mapping are:\\[1ex]
   \textcolor{blue}{\texttt{map\_replace}} are defined. You may use (and almost certainly
   will want to use) parentheses for back-references in \textcolor{blue}{\texttt{map\_replace}}.
   Do not quote the regular expressions in any way---it's not
-  necessary. There may be multiple \verb+map_pair+ elements for the
-  same \textcolor{red}{\texttt{source-field}} within a \verb+map+
-  element. Any \textcolor{blue}{\texttt{map\_match}} and
-  \textcolor{blue}{\texttt{map\_replace}} pairs for the same
-  \textcolor{red}{\texttt{source-field}} are cumulative and will all
-  be applied to the field, in order.
-\item If there are any \textcolor{red}{\texttt{datasource}}s named in
-  \textcolor{blue}{\texttt{per\_datasource}} elements, this mapping only applies to entries
-  coming from the named \textcolor{red}{\texttt{datasource}}s. There can be
-  multiple \textcolor{blue}{\texttt{per\_datasource}} elements each specifying one of the
-  datasource names given in a Bib\LaTeX\ \verb+\addbibresource+ macro.
-\item If there are any \textcolor{red}{\texttt{entrytypes}}s named in
-  \textcolor{blue}{\texttt{per\_type}} elements, this mapping only applies to entries
-  of the named \textcolor{red}{\texttt{entrytypes}}s.
-\item There can be one or more \textcolor{blue}{\texttt{also\_set}} elements which each specify
-  a behaviour for an entry field. The \textcolor{blue}{\texttt{map\_field}} attribute is
-  mandatory and specified the field \textcolor{red}{\texttt{set-field}} in
-  the entry to map. One and only one of these other attributes are then
-  mandatory:
+  necessary.
+\end{itemize}
+
+\noindent Field creation is performed using an \verb+also_set+ element
+which specifies extra fields to add to an entry. The details of these
+elements and their semantics is given below:\\
+
+\begin{itemize}
+\item The \textcolor{blue}{\texttt{map\_field}} attribute is
+  mandatory and specifies the field \textcolor{red}{\texttt{set-field}} to
+  set. One and only one of these other attributes are then mandatory:
   \begin{itemize}
     \item \textcolor{blue}{\texttt{map\_value}} --- The
       \textcolor{red}{\texttt{set-field}} is set to
@@ -829,13 +849,14 @@ pairs below). The rules for a field mapping are:\\[1ex]
       null, that is, it is deleted from the input stream completely. This
       is useful for ignoring field in datasources which are badly formatted
       or which you don't even want Bib\LaTeX\ to see at all.
-      \item \textcolor{blue}{\texttt{map\_origfield}} --- The
-        \textcolor{red}{\texttt{set-field}} is set to the value of the
-        \textcolor{red}{\texttt{source-field}} name.
-      \item \textcolor{blue}{\texttt{map\_origfieldval}} --- The
-        \textcolor{red}{\texttt{set-field}} is set to the original value
-        (before, for example, any regular expression match/replace) of the
-        \textcolor{red}{\texttt{source-field}}.
+      \item \textcolor{blue}{\texttt{map\_origfield}}---The
+        \textcolor{red}{\texttt{set-field}} is set to the
+        \textcolor{red}{\texttt{source-field}} name of the most recent
+        \verb+map_pair+ element.
+      \item \textcolor{blue}{\texttt{map\_origfieldval}}---The
+        \textcolor{red}{\texttt{set-field}} is set to the
+        \textcolor{red}{\texttt{source-field}} value of the most recent
+        \verb+map_pair+ element.
   \end{itemize}
 \end{itemize}
 
@@ -914,10 +935,32 @@ references section just for certain items.
 \end{lstlisting}
 
 \noindent Here, we use multiple match/replace for the same field to
-regularise some inconstant name variants. Bear in mind that the
-results of a match/replace feed into the match of the next
-match/replace as they are processed in serial. This is not usually an
-issue if the matches are mutually exclusive.
+regularise some inconstant name variants. Bear in mind that
+match/replace processing within a \verb+map+ element is sequential and
+the changes from a previous match/replace are already committed. As
+mentioned above, it's often clearer to sequence using \verb+map+
+elements to avoid confusion. This example is fine as the matches are
+exlusive and therefore mutually idempotent.
+
+\begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
+<maps datatype="bibtex" bmap_overwrite="1">
+  <map maptype="field">
+    <map_pair map_source="AUTHOR" map_match="Doe,"/>
+    <also_set map_field="SHORTAUTHOR" map_origfieldval="1"/>
+    <also_set map_field="SORTNAME" map_origfieldval="1"/>
+  </map>
+  <map maptype="field">
+    <map_pair map_source="SHORTAUTHOR" map_match=";Doe,\textbackslash s*J(?:\textbackslash .|ohn)(?:[ -]*)(?:P\textbackslash .|Paul)*;" map_replace="Doe, John Paul"/>
+    <map_pair map_source="SORTNAME" map_match=";Doe,\textbackslash s*J(?:\textbackslash .|ohn)(?:[ -]*)(?:P\textbackslash .|Paul)*;" map_replace="Doe, John Paul"/>
+  </map>
+</maps>
+\end{lstlisting}
+
+\noindent An example of sequential processing. First the \verb+AUTHOR+
+field is copied to both the \verb+SHORTAUTHOR+ and \verb+SORTNAME+
+fields, overwriting them if they already exist. Then, these two new
+fields are modified to canonicalise a particular name, which
+presumably has some variants in the datasource.
 \bigskip
 \minisec{Other datasource types}
 For data sources other than Bib\TeX, (e.g. \verb+ris+,
