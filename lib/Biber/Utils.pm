@@ -801,9 +801,7 @@ sub get_maps_field {
       next;
     }
 
-    # We don't stop on first match - we match all pairs which are appropriate
-    # and append the match/replace information. Other than match/replace info,
-    # the last match pair information found for the field is used.
+    # Save the pairs information
     my $m;
     foreach my $pair (@{$map->{map_pair}}) {
       my $p;
