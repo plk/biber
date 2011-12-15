@@ -175,6 +175,7 @@ matrix for the recent versions.
 \toprule
 Biber version & Bib\LaTeX\ version\\
 \midrule
+0.9.8 & 1.7x\\
 0.9.7 & 1.7x\\
 0.9.6 & 1.7x\\
 0.9.5 & 1.6x\\
@@ -226,6 +227,8 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   format\footnote{«Supported» here means encodings supported by the
     Perl \texttt{Encode} module}
 \item Processes all bibliography sections in one pass of the tool
+\item Output to GraphViz instead of \verb+.bbl+ in order to help visualise
+  complex bibliographies with many crossrefs etc. (see section \ref{vis})
 \item Handles UTF-8 citekeys and filenames (given a suitable fully
   UTF-8 compliant \TeX\ engine)
 \item Creates entry sets dynamically and allows easily defined static entry sets,
@@ -236,7 +239,8 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 \item «Semantic» inheritance via a generalisation of the Bib\TeX\
   crossreference mechanism. This is highly customisable by the
   user---it is possible to choose which fields to inherit for which
-  entrytypes and to inherit fields under different names etc.
+  entrytypes and to inherit fields under different names etc. Nested
+  crossreferences are also supported.
 \item Handles complex auto-expansion and contraction of names and
   namelists (See section 4.11.4 of the Bib\LaTeX\ manual for an excellent
   explanation with examples, this is quite an impressive feature \ldots)
@@ -325,7 +329,7 @@ entry can take as it passes through Biber.
   status so that they make it into the output:
   \begin{itemize}
   \item Entries instantiated by being members of a set.
-  \item Entries instantiated by being mentioned as an \verb+CROSSREF+ are
+  \item Entries instantiated by being mentioned as a \verb+CROSSREF+ are
     promoted to cited status if \verb+CROSSREF+'ed or \verb+XREF+'ed at
     least \verb+mincrosref+ times.
   \item Clones of entries mentioned as a «related» entry of a cited entry.
@@ -1534,7 +1538,7 @@ Currently supported data sources drivers are:
 \item \verb+zoterordfxml+ --- Zotero RDF XML format, version 2.0.9
 \end{itemize}
 
-\subsection{Visualising the Output}
+\subsection{Visualising the Output}\label{vis}
 
 The option \verb+--graph+ will cause Biber to write a
 GraphViz\footnote{\url{http://www.graphviz.org}} \verb+.dot+ file instead
