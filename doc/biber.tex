@@ -58,8 +58,8 @@
   title={biber},
   subtitle={A backend bibliography processor for biblatex},
   url={http://biblatex-biber.sourceforge.net},
-  author={François Charette, Philip Kime},
-  email={firmicus@ankabut.net, Philip@kime.org.uk},
+  author={Philip Kime, François Charette},
+  email={Philip@kime.org.uk, firmicus@ankabut.net},
   revision={biber \biberversion\ (biblatex \biblatexversion)},
   date={\today}}
 
@@ -125,7 +125,7 @@ notes on AUC\TeX\ support below to reflect this.
 Biber is conceptually a Bib\TeX\ replacement for
 Bib\LaTeX. It is written in Perl with the aim of providing a
 customised and sophisticated data preparation backend for Bib\LaTeX.
-You do \emph{not} need to install Perl use Biber---binaries
+You do \emph{not} need to install Perl to use Biber---binaries
 are provided for many operating systems via the main \TeX\
 distributions (\TeX Live, Mac\TeX, MiK\TeX) and also via download from SourceForge.
 Functionally, Biber offers a superset of Bib\TeX's capabilities but is
@@ -355,8 +355,8 @@ batch program.
 
 \subsection{Acknowledgements}
 
-François Charette originally wrote Biber. Philip Kime joined in
-the development in 2009.
+François Charette originally wrote a first modest version of Biber. Philip Kime joined in
+the development in 2009 and is largely responsible for making it what it is today. 
 
 \section{Use}
 
@@ -944,7 +944,7 @@ match/replace processing within a \verb+map+ element is sequential and
 the changes from a previous match/replace are already committed. As
 mentioned above, it's often clearer to sequence using \verb+map+
 elements to avoid confusion. This example is fine as the matches are
-exlusive and therefore mutually idempotent.
+exclusive and therefore mutually idempotent.
 
 \begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
 <maps datatype="bibtex" bmap_overwrite="1">
@@ -1063,7 +1063,7 @@ type\_title & booktitle\\
 \label{tab:nst}
 \end{table}
 
-For example, this option can be used to ignore diacritic marks and prefices
+For example, this option can be used to ignore diacritic marks and prefixes
 in names which should not be considered when sorting. Given (the default):
 
 \begin{lstlisting}[language=xml]
@@ -1283,7 +1283,7 @@ reverse order at UCA level 2.
 
 \subsection{Encoding of files}
 
-Biber takes care of reencoding the data source data as
+Biber takes care of re-encoding the data source data as
 necessary. In normal use, Bib\LaTeX\ passes its
 \verb+bibencoding+ option value to Biber via the \verb+.bcf+
 file. It also passes the value of its \verb+texencoding+ option (which
@@ -1376,7 +1376,7 @@ macro. The solution is really to use UTF-8 \verb+.bbl+ encoding whenever
 possible. In extreme cases where even with UTF-8 encoding,
 the char is not recognised by \LaTeX\ due to an incomplete UTF-8
 implementation (as with \verb+inputenc+), this might also mean
-switching \TeX\ engines to one that supports full UTF-8.
+switching \TeX\ engines to one that supports full UTF-8 (like Xe\TeX\ or Lua\TeX).
 
 \subsubsection{\LaTeX\ macro encoding}\label{lencode}
 
@@ -1664,7 +1664,7 @@ this and should use the binaries from their \TeX\ distribution or downloaded
 directly from SourceForge in case they need to use a more recent binary
 than is included in their \TeX\ distribution.
 
-The binary distributions of biber are made using the Perl \verb+PAR::Packer+
+The binary distributions of Biber are made using the Perl \verb+PAR::Packer+
 module. They can be used as a normal binary but have some behaviour which
 is worth noting:
 
@@ -1733,7 +1733,7 @@ also via \TeX Live:
 regularly updated for the core architectures which are not flagged as
 third-party built above. If you want to regularly run the latest
 development version, you should probably git clone the relevant branch and
-run Biber as a pure perl program directly.
+run Biber as a pure Perl program directly.
 
 \subsection{Installing}
 
@@ -1758,7 +1758,7 @@ sudo mv ~/Desktop/biber /usr/texbin/
 sudo chmod +x /usr/texbin/biber
 \end{verbatim}
 
-\noindent If you are using the macports \TeX Live distribution:
+\noindent If you are using the MacPorts \TeX Live distribution:
 
 \begin{verbatim}
 sudo mv ~/Desktop/biber /opt/local/bin/
@@ -1812,18 +1812,18 @@ perl ./Build.PL
 
 \noindent invocation in the Biber Perl distribution tree
 directory. Normally, the build procedure for the binaries is as
-follows\footnote{On UNIXequse systems, you may need to specify a full
+follows\footnote{On Unix-like systems, you may need to specify a full
   path to the scripts e.g. \texttt{./Build}}:
 
 \begin{itemize}
-\item Get the biber source tree from SF and put it on the architecture
+\item Get the Biber source tree from SF and put it on the architecture
   you are building for
 \item cd to the root of the source tree
 \item \verb+perl Build.PL+ (this will check your module
   dependencies)
 \item \verb+Build test+
 \item \verb+Build install+ (may need to run this as sudo on
-  UNIXesque systems)
+  Unix-like systems)
 \item \verb+cd dist/<arch>+
 \item \verb+build.sh+ (\verb+build.bat+ on Windows)
 \end{itemize}
@@ -1847,7 +1847,7 @@ which are required by the \verb+PAR::Packer+ module:
 define these two things as part of constructing new build scripts:
 
 \begin{itemize}
-\item Make a new subfolder in the \verb+dist+ directory named after the
+\item Make a new sub-folder in the \verb+dist+ directory named after the
   architecture you are building for. This name is arbitrary but should
   be fairly obvious like «\verb+solaris-sparc-64+», for example.
 \item Copy the \verb+biber.files+ file from an existing build
