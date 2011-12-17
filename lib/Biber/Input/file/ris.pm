@@ -188,7 +188,7 @@ sub extract_entries {
 
 =head2 create_entry
 
-   Create a Biber::Entry object from an entry found in a biblatexml data source
+   Create a Biber::Entry object from an entry found in a RIS data source
 
 =cut
 
@@ -549,11 +549,11 @@ __END__
 
 =head1 NAME
 
-Biber::Input::file::biblatexml - look in a BibLaTeXML file for an entry and create it if found
+Biber::Input::file::ris - look in a RIS file for an entry and create it if found
 
 =head1 DESCRIPTION
 
-Provides the extract_entries() method to get entries from a biblatexml data source
+Provides the extract_entries() method to get entries from a RIS data source
 and instantiate Biber::Entry objects for what it finds
 
 =head1 AUTHOR
