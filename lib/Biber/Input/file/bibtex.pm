@@ -252,66 +252,137 @@ sub create_entry {
   }
 
   if ( $entry->metatype == BTE_REGULAR ) {
-    # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
-MAP:    foreach my $map (@{get_maps_field($user_map, lc($entry->type), $source)}) {
+    # DATASOURCE MAPPING DEFINED BY USER IN CONFIG FILE OR .bcf
+MAP:    foreach my $map (@{$user_map->{map}}) {
+      my $last_type = undef;
       my $last_field = undef;
       my $last_fieldval = undef;
-      foreach my $pair (@{$map->{pairs}}) {
-        next unless $entry->exists(lc($pair->{map_source}));
-        $last_field = $pair->{map_source};
-        $last_fieldval = decode_utf8($entry->get(lc($pair->{map_source})));
 
-        # do match/replace
-        if (exists($pair->{map_match})) {
-          if (exists($pair->{map_replace})) {
-            $entry->set(lc($pair->{map_source}),
-                        ireplace($last_fieldval, $pair->{map_match}, $pair->{map_replace}));
-          }
-          else {
-            next unless imatch($last_fieldval, $pair->{map_match});
-          }
-        }
-
-        # map fields to targets
-        if (exists($pair->{map_target})) {
-          if (lc($pair->{map_target}) eq 'map_null') {
-            $entry->delete(lc($pair->{map_source}));
-          }
-          else {
-            $entry->set(lc($pair->{map_target}), decode_utf8($entry->get(lc($pair->{map_source}))));
-            $entry->delete(lc($pair->{map_source}));
-          }
-        }
+      # Check pertype restrictions
+      unless (not exists($map->{per_type}) or
+              first {lc($_->{content}) eq $entry->type} @{$map->{per_type}}) {
+        next;
       }
 
-      # Don't do also_sets unless a pair has matched
-      next MAP unless defined($last_field);
+      # Check per_datasource restrictions
+      # Don't compare case insensitively - this might not be correct
+      unless (not exists($map->{per_datasource}) or
+              first {$_->{content} eq $source} @{$map->{per_datasource}}) {
+        next;
+      }
 
-      # Deal with alsoset one->many maps
-      while (my ($from_as, $to_as) = each %{$map->{also_set}}) {
-        if ($entry->exists(lc($from_as))) {
-          if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
-            biber_warn("Overwriting existing field '$from_as' while processing entry '$key'", $bibentry);
+      # loop over mapping steps
+      foreach my $step (@{$map->{map_step}}) {
+
+        # Entrytype map
+        if (my $source = $step->{map_type_source}) {
+          unless ($entry->type eq lc($source) or  $source eq '*') {
+            # Skip the rest of the map if this step doesn't match
+            if ($step->{map_final}) {
+              next MAP;
+            }
+            else {
+              # just ignore this step
+              next;
+            }
           }
-          else {
-            biber_warn("Not overwriting existing field '$from_as' while processing entry '$key'", $bibentry);
+          # Change entrytype if requested
+          $last_type = $entry->type;
+          $entry->set_type(lc($step->{map_type_target}));
+        }
+
+        # Field map
+        if (my $source = $step->{map_field_source}) {
+          unless ($entry->exists(lc($source))) {
+            # Skip the rest of the map if this step doesn't match
+            if ($step->{map_final}) {
+              next MAP;
+            }
+            else {
+              # just ignore this step
+              next;
+            }
+          }
+
+          $last_field = $source;
+          $last_fieldval = decode_utf8($entry->get(lc($source)));
+
+          # map fields to targets
+          if (my $m = $step->{map_match}) {
+            if (my $r = $step->{map_replace}) {
+              $entry->set(lc($step->{map_field_source}),
+                          ireplace($last_fieldval, $m, $r));
+            }
+            else {
+              unless (imatch($last_fieldval, $m)) {
+                # Skip the rest of the map if this step doesn't match
+                if ($step->{map_final}) {
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  next;
+                }
+              }
+            }
+          }
+          elsif ($step->{map_null}) {
+            $entry->delete(lc($source));
             next;
+          }
+          elsif ($step->{map_origentrytype}) {
+            next unless $last_type;
+            $entry->set(lc($source), $last_type);
+            next;
+          }
+
+          # Set to a different target if there is one
+          if (my $target = $step->{map_field_target}) {
+            if ($entry->exists(lc($target))) {
+              if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
+                biber_warn("Overwriting existing field '$target' while processing entry '$key'", $bibentry);
+              }
+              else {
+                biber_warn("Not overwriting existing field '$target' while processing entry '$key'", $bibentry);
+                next;
+              }
+            }
+            $entry->set(lc($target), decode_utf8($entry->get(lc($source))));
+            $entry->delete(lc($source));
           }
         }
 
-        # Deal with special tokens
-        given (lc($to_as)) {
-          when ('map_origfieldval') {
-            $entry->set(lc($from_as), $last_fieldval);
+        # field creation
+        if (my $field = $step->{map_field_set}) {
+
+          # Deal with special tokens
+          if ($step->{map_null}) {
+            $entry->delete(lc($field));
           }
-          when ('map_origfield') {
-            $entry->set(lc($from_as), $last_field);
+          if ($entry->exists(lc($field))) {
+            if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
+              biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
+            }
+            else {
+              biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
+              next;
+            }
           }
-          when ('map_null') {
-            $entry->delete(lc($from_as));
+
+          if ($step->{map_origentrytype}) {
+            next unless $last_type;
+            $entry->set(lc($field), $last_type);
           }
-          default {
-            $entry->set(lc($from_as), $to_as);
+          elsif ($step->{map_origfieldval}) {
+            next unless $last_fieldval;
+            $entry->set(lc($field), $last_fieldval);
+          }
+          elsif ($step->{map_origfield}) {
+            next unless $last_field;
+            $entry->set(lc($field), $last_field);
+          }
+          else {
+            $entry->set(lc($field), $step->{map_field_value});
           }
         }
       }
@@ -397,33 +468,8 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       }
     }
 
-    # Set entrytype taking note of any user aliases or aliases for this datasource driver
-    # This is here so that any field alsosets take precedence over fields in the data source
-
-    # User aliases take precedence
-    if (my $to_map = is_user_entrytype_map($user_map, lc($entry->type), $source)) {
-      my $from = lc($entry->type);
-      # We are not necessarily changing the entrytype - might just be adding some fields
-      # so there may be no map_target
-      $bibentry->set_field('entrytype', lc($to_map->{map_target} // $entry->type));
-      while (my ($from_as, $to_as) = each %{$to_map->{also_set}}) { # any extra fields to set?
-        if ($bibentry->field_exists(lc($from_as))) {
-          if ($to_map->{map_overwrite} // $user_map->{map_overwrite}) {
-            biber_warn("Overwriting existing field '$from_as' during mapping of entrytype '" . $entry->type . "' in entry '$key'", $bibentry);
-          }
-          else {
-            biber_warn("Not overwriting existing field '$from_as' during mapping of entrytype '" . $entry->type . "' in entry '$key'", $bibentry);
-            next;
-          }
-        }
-        # Deal with special "BMAP_ORIGENTRYTYPE" token
-        my $to_val = lc($to_as) eq 'map_origentrytype' ?
-          $from : $to_as;
-        $bibentry->set_datafield(lc($from_as), $to_val);
-      }
-    }
     # Driver aliases
-    elsif (my $ealias = $dcfxml->{entrytypes}{entrytype}{lc($entry->type)}) {
+    if (my $ealias = $dcfxml->{entrytypes}{entrytype}{lc($entry->type)}) {
       $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
       foreach my $alsoset (@{$ealias->{alsoset}}) {
         # drivers never overwrite existing fields

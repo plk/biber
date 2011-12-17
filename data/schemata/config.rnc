@@ -43,7 +43,7 @@ start = element config {
     element maps {
       attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
       attribute map_overwrite { "0" | "1" },
-      ( map_entrytype* | map_field* )+
+      map+
     }+
   }? &
   element sortupper            { "0" | "1" }? &
@@ -56,49 +56,33 @@ start = element config {
   element wraplines            { "0" | "1" }?
 }
 
-
-map_entrytype =
+map =
   element map {
-    attribute maptype { "entrytype" },
-    attribute map_overwrite { "0" | "1" }?,
-    element per_datasource { xsd:string {minLength="1"} }*,
-    element map_pair {
-      attribute map_source { xsd:string {minLength="1"} },
-      attribute map_target { xsd:string {minLength="1"} }?,
-      empty
-    }+,
-    element also_set {
-      attribute map_field {xsd:string {minLength="1"}},
-      ( attribute map_value { xsd:string {minLength="1"} } |
-        attribute map_null { "1"} |
-        attribute map_origentrytype { "1"}
-      ),
-      empty
-    }*
-  }
-
-map_field =
-  element map {
-    attribute maptype { "field" },
     attribute map_overwrite { "0" | "1" }?,
     element per_datasource { xsd:string {minLength="1"} }*,
     element per_type { xsd:string {minLength="1"} }*,
-    element map_pair {
-      attribute map_source { xsd:string {minLength="1"} },
-      attribute map_match { xsd:string {minLength="1"} }?,
-      attribute map_replace { xsd:string {minLength="1"} }?,
-      ( attribute map_target { xsd:string {minLength="1"} } |
-        attribute map_null { "1" }
-      )?,
-      empty
-    }+,
-    element also_set {
-      attribute map_field {xsd:string {minLength="1"}},
-      ( attribute map_value { xsd:string {minLength="1"} } |
-        attribute map_null { "1"} |
-        attribute map_origfield { "1"} |
-        attribute map_origfieldval { "1"}
+    element map_step {
+      (
+        (
+          attribute map_type_source { xsd:string {minLength="1"} },
+          attribute map_type_target { xsd:string {minLength="1"} }?
+        ) |
+        (
+          attribute map_field_source { xsd:string {minLength="1"} },
+          attribute map_final { "1" }?,
+          attribute map_match { xsd:string {minLength="1"} }?,
+          attribute map_replace { xsd:string {minLength="1"} }?,
+          ( attribute map_field_target { xsd:string {minLength="1"} } |
+            attribute map_null { "1" } )?
+        ) |
+        (
+          attribute map_field_set { xsd:string {minLength="1"} },
+          ( attribute map_null { "1" } |
+            attribute map_origfield { "1" } |
+            attribute map_origfieldval { "1" } |
+            attribute map_field_value { xsd:string {minLength="1"} } )
+        )
       ),
       empty
-    }*
+    }+
   }

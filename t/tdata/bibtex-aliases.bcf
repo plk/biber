@@ -132,86 +132,58 @@
   <!-- DATA-SOURCE MAPPING -->
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" map_overwrite="1">
-      <bcf:map maptype="entrytype">
+      <bcf:map>
         <!-- Doesn't exist, just testing source restrictions -->
         <bcf:per_datasource>doesnotexist.bib</bcf:per_datasource>
-        <bcf:map_pair map_source="*" map_target="CUSTOMB"/>
+        <bcf:map_step map_type_source="*" map_type_target="CUSTOMB"/>
       </bcf:map>
-      <bcf:map maptype="entrytype">
+      <bcf:map>
         <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
         <!-- Doesn't exist, just testing multi for this option-->
         <bcf:per_datasource>bibtex-aliases2.bib</bcf:per_datasource>
-        <bcf:map_pair map_source="MISC"/>
-        <bcf:also_set map_field="KEYWORDS" map_value="keyw1, keyw2"/>
+        <bcf:map_step map_type_source="MISC" map_final="1"/>
+        <bcf:map_step map_field_set="KEYWORDS" map_field_value="keyw1, keyw2"/>
       </bcf:map>
-      <bcf:map maptype="entrytype">
-        <bcf:map_pair map_source="CONVERSATION" map_target="CUSTOMA"/>
-        <bcf:also_set map_field="VERBA" map_origentrytype="1"/>
-        <bcf:also_set map_field="VERBB" map_value="somevalue"/>
-        <bcf:also_set map_field="VERBC" map_value="somevalue"/>
+      <bcf:map>
+        <bcf:map_step map_type_source="CONVERSATION" map_type_target="CUSTOMA" map_final="1"/>
+        <bcf:map_step map_field_set="VERBA" map_origentrytype="1"/>
+        <bcf:map_step map_field_set="VERBB" map_field_value="somevalue"/>
+        <bcf:map_step map_field_set="VERBC" map_field_value="somevalue"/>
       </bcf:map>
-      <bcf:map maptype="entrytype">
-        <bcf:map_pair map_source="CHAT" map_target="CUSTOMB"/>
+      <bcf:map>
+        <bcf:map_step map_type_source="CHAT" map_type_target="CUSTOMB"/>
       </bcf:map>
-      <bcf:map maptype="field">
+      <bcf:map>
         <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
-        <bcf:map_pair map_source="ABSTRACT" map_null="1"/>
-        <bcf:map_pair map_source="CONDUCTOR" map_target="NAMEA"/>
-        <bcf:map_pair map_source="GPS" map_target="USERA"/>
-        <bcf:map_pair map_source="PARTICIPANT" map_target="NAMEA"/>
-        <bcf:map_pair map_source="USERB" map_target="USERC"/>
+        <bcf:map_step map_field_source="ABSTRACT" map_null="1"/>
+        <bcf:map_step map_field_source="CONDUCTOR" map_field_target="NAMEA"/>
+        <bcf:map_step map_field_source="GPS" map_field_target="USERA"/>
+        <bcf:map_step map_field_source="PARTICIPANT" map_field_target="NAMEA"/>
+        <bcf:map_step map_field_source="USERB" map_field_target="USERC"/>
       </bcf:map>
-      <bcf:map maptype="field">
-        <bcf:map_pair map_source="PUBMEDID" map_target="EPRINT"/>
-        <bcf:also_set map_field="EPRINTTYPE" map_origfield="1"/>
-        <bcf:also_set map_field="USERD" map_value="Some string of things"/>
+      <bcf:map>
+        <bcf:map_step map_field_source="PUBMEDID" map_field_target="EPRINT"
+                      map_final = "1"/>
+        <bcf:map_step map_field_set="EPRINTTYPE" map_origfield="1"/>
+        <bcf:map_step map_field_set="USERD" map_field_value="Some string of things"/>
       </bcf:map>
-      <bcf:map maptype="field">
+      <bcf:map>
         <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
         <bcf:per_type>MISC</bcf:per_type>
-        <bcf:map_pair map_source="USERB" map_null="1"/>
-        <bcf:also_set map_field="USERE" map_value="a string"/>
-        <bcf:also_set map_field="USERF" map_null="1"/>
+        <bcf:map_step map_field_source="USERB" map_null="1"/>
+        <bcf:map_step map_field_set="USERE" map_field_value="a string"/>
+        <bcf:map_step map_field_set="USERF" map_null="1"/>
       </bcf:map>
-      <bcf:map maptype="field">
+      <bcf:map>
         <bcf:per_type>REPORT</bcf:per_type>
-        <bcf:map_pair map_source="LISTA" map_match="BADMATCH" map_null="1"/>
+        <bcf:map_step map_field_source="LISTA" map_match="BADMATCH" map_null="1"/>
       </bcf:map>
-      <bcf:map maptype="field">
-        <bcf:map_pair map_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>
+      <bcf:map>
+        <bcf:map_step map_field_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>
       </bcf:map>
-      <bcf:map maptype="field">
+      <bcf:map>
         <bcf:per_type>UNPUBLISHED</bcf:per_type>
-        <bcf:map_pair map_source="LISTC" map_target="INSTITUTION" map_match="\A(\S{2})" map_replace="REP$1CED"/>
-      </bcf:map>
-    </bcf:maps>
-    <bcf:maps datatype="endnotexml" map_overwrite="1">
-      <bcf:map maptype="entrytype">
-        <bcf:map_pair map_source="journal Article" map_target="REPORT"/>
-        <bcf:also_set map_field="USERA" map_origentrytype="1"/>
-      </bcf:map>
-      <bcf:map maptype="field">
-        <bcf:map_pair map_source="ABSTRACT" map_null="1"/>
-      </bcf:map>
-    </bcf:maps>
-    <bcf:maps datatype="ris" map_overwrite="0">
-      <bcf:map maptype="entrytype">
-        <bcf:map_pair map_source="JOUR" map_target="REPORT"/>
-      </bcf:map>
-      <bcf:map maptype="entrytype">
-        <bcf:map_pair map_source="BOOK" map_target="MAPBOOK"/>
-        <bcf:also_set map_field="KEYWORDS" map_value="somevalue"/>
-      </bcf:map>
-      <bcf:map maptype="field">
-        <bcf:map_pair map_source="N2" map_null="1"/>
-      </bcf:map>
-    </bcf:maps>
-    <bcf:maps datatype="zoterordfxml" map_overwrite="1">
-      <bcf:map maptype="field">
-        <bcf:per_type>journalArticle</bcf:per_type>
-        <bcf:per_type>book</bcf:per_type>
-        <bcf:per_type>bookSection</bcf:per_type>
-        <bcf:map_pair map_source="dc:subject" map_null="1"/>
+        <bcf:map_step map_field_source="LISTC" map_field_target="INSTITUTION" map_match="\A(\S{2})" map_replace="REP$1CED"/>
       </bcf:map>
     </bcf:maps>
   </bcf:sourcemap>

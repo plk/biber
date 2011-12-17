@@ -71,7 +71,7 @@ my $l1 = q|  \entry{test1}{report}{}
 
 |;
 
-my $l2 = q|  \entry{test2}{mapbook}{}
+my $l2 = q|  \entry{test2}{inbook}{}
     \name{labelname}{1}{}{%
       {{uniquename=0,hash=f2574dc91f1242eb0e7507a71730631b}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
     }
@@ -87,7 +87,7 @@ my $l2 = q|  \entry{test2}{mapbook}{}
     \field{title}{Sometitle}
     \field{pages}{1\bibrangedash 20}
     \keyw{somevalue}
-    \warn{\item Overwriting existing field 'KEYWORDS' during mapping of entrytype 'BOOK' in entry 'test2'}
+    \warn{\item Overwriting existing field 'KW' while processing entry 'test2'}
   \endentry
 
 |;

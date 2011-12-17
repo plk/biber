@@ -101,6 +101,9 @@ is_deeply( [ $section->get_list('SHORTHANDS')->get_keys ], [ 'kant:kpv', 'kant:k
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
 $section->allkeys;
+$section->bibentries->del_entries;
+$section->del_everykeys;
+Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 
 $section = $biber->sections->get_section(0);
@@ -162,7 +165,7 @@ my $murray1 = q|  \entry{murray}{article}{}
     \field{year}{1998}
     \field{pages}{17\bibrangedash 30}
     \keyw{keyw1, keyw2}
-    \warn{\item Not overwriting existing field 'TITLE' during mapping of entrytype 'article' in entry 'murray'}
+    \warn{\item Not overwriting existing field 'TITLE' while processing entry 'murray'}
   \endentry
 
 |;
@@ -217,7 +220,7 @@ my $murray2 = q|  \entry{murray}{article}{}
     \field{year}{1998}
     \field{pages}{17\bibrangedash 30}
     \keyw{keyw1, keyw2}
-    \warn{\item Not overwriting existing field 'TITLE' during mapping of entrytype 'article' in entry 'murray'}
+    \warn{\item Not overwriting existing field 'TITLE' while processing entry 'murray'}
   \endentry
 
 |;
@@ -281,8 +284,8 @@ my $anon1 = q|  \entry{anon1}{unpublished}{}
     \field{year}{1835}
     \field{pages}{111\bibrangedash 118}
     \keyw{arc}
-    \warn{\item Not overwriting existing field 'TITLE' during mapping of entrytype 'unpublished' in entry 'anon1'}
-    \warn{\item Not overwriting existing field 'KEYWORDS' during mapping of entrytype 'unpublished' in entry 'anon1'}
+    \warn{\item Not overwriting existing field 'KEYWORDS' while processing entry 'anon1'}
+    \warn{\item Not overwriting existing field 'TITLE' while processing entry 'anon1'}
   \endentry
 
 |;
@@ -308,8 +311,8 @@ my $anon2 = q|  \entry{anon2}{unpublished}{}
     \field{year}{1839}
     \field{pages}{1176\bibrangedash 1276}
     \keyw{arc}
-    \warn{\item Not overwriting existing field 'TITLE' during mapping of entrytype 'unpublished' in entry 'anon2'}
-    \warn{\item Not overwriting existing field 'KEYWORDS' during mapping of entrytype 'unpublished' in entry 'anon2'}
+    \warn{\item Not overwriting existing field 'KEYWORDS' while processing entry 'anon2'}
+    \warn{\item Not overwriting existing field 'TITLE' while processing entry 'anon2'}
   \endentry
 
 |;
@@ -336,6 +339,9 @@ Biber::Config->setblxoption('sortalphaothers', '');
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
+$section->bibentries->del_entries;
+$section->del_everykeys;
+Biber::Input::file::bibtex->init_cache;
 $biber->prepare ;
 $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
@@ -353,10 +359,7 @@ is($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
 is($bibentries->entry('i2')->get_field('usere'), 'a Štring', 'map 4' );
 # Testing of user field map match/replace
-# Why is this test strange? because we have two prepares() which pick up
-# entry i1 above and so these match/replaces happen twice on the T::B object before
-# we get here. The first match is not idempotent, the second is.
-is($biber->_liststring('i1', 'listb'), 'REPREcedPlacedte_early', 'map 5');
+is($biber->_liststring('i1', 'listb'), 'REPlacedte_early', 'map 5');
 is($biber->_liststring('i1', 'institution'), 'REPlaCEDte_early', 'map 6');
 # Checking deletion of alsosets with value BMAP_NULL
 ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 7' );
@@ -387,6 +390,9 @@ Biber::Config->setblxoption('maxitems', 2, 'PER_TYPE', 'unpublished');
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
+$section->bibentries->del_entries;
+$section->del_everykeys;
+Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $section->get_list('MAIN');
