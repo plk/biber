@@ -1760,7 +1760,7 @@ Biber::Constants - global constants for biber
 
 =head1 AUTHOR
 
-François Charette, C<< <firmicus at gmx.net> >>
+François Charette, C<< <firmicus at ankabut.net> >>
 Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS

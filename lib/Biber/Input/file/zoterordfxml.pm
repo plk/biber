@@ -717,16 +717,16 @@ __END__
 
 =head1 NAME
 
-Biber::Input::file::zoterordfxml - look in a Zotero RDFXML file for an entry and create it if found
+Biber::Input::file::zoterordfxml - look in a Zotero RDF/XML file for an entry and create it if found
 
 =head1 DESCRIPTION
 
-Provides the extract_entries() method to get entries from a biblatexml data source
+Provides the extract_entries() method to get entries from a Zotero RDF/XML data source
 and instantiate Biber::Entry objects for what it finds
 
 =head1 AUTHOR
 
-François Charette, C<< <firmicus at gmx.net> >>
+François Charette, C<< <firmicus at ankabut.net> >>
 Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS
