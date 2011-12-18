@@ -65,8 +65,7 @@ my $l1 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42}{report}{}
     \field{sortinit}{A}
     \field{labelyear}{2003}
     \field{edition}{2003/10/01}
-    \field{issn}{0278-2715 (Print)}
-    \field{journaltitle}{Health Aff (Millwood)}
+    \field{label}{Journal Article}
     \field{note}{Alegria, Margarita
 Perez, Debra Joy
 Williams, Sandra
@@ -77,9 +76,9 @@ Research Support, U.S. Gov't, P.H.S.
 United States
 Health affairs (Project Hope)
 Health Aff (Millwood). 2003 Sep-Oct;22(5):51-64.}
-    \field{number}{5}
+    \field{number}{0278-2715 (Print)}
+    \field{subtitle}{Health Aff (Millwood)}
     \field{title}{The role of public policies in reducing mental health status disparities for people of color}
-    \field{usera}{journal article}
     \field{volume}{22}
     \field{year}{2003}
     \field{pages}{51\bibrangedash 66}
@@ -105,18 +104,17 @@ my $l2 = q|  \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47}{report}{}
     \field{labelyear}{2009}
     \field{day}{14}
     \field{edition}{2009/07/18}
-    \field{issn}{1541-0048 (Electronic)}
-    \field{journaltitle}{Am J Public Health}
+    \field{label}{Journal Article}
     \field{month}{03}
     \field{note}{Amico, K Rivet
 Review
 United States
 American journal of public health
 Am J Public Health. 2009 Sep;99(9):1567-75. Epub 2009 Jul 16.}
-    \field{number}{9}
+    \field{number}{1541-0048 (Electronic)}
     \field{shorttitle}{PTA}
+    \field{subtitle}{Am J Public Health}
     \field{title}{Percent total attrition: a poor metric for study rigor in hosted intervention designs}
-    \field{usera}{journal article}
     \field{volume}{99}
     \field{year}{2009}
     \field{pages}{1567\bibrangedash 75}

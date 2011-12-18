@@ -24,6 +24,9 @@
     <dcf:entrytype name="BOOK">
       <dcf:aliasof>book</dcf:aliasof>
     </dcf:entrytype>
+    <dcf:entrytype name="CHAP">
+      <dcf:aliasof>inbook</dcf:aliasof>
+    </dcf:entrytype>
     <dcf:entrytype name="COMP">
       <dcf:aliasof>software</dcf:aliasof>
     </dcf:entrytype>

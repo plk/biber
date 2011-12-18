@@ -53,7 +53,7 @@ my $w1 = [
           "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'",
 ];
 
-my $w2 = ["Overwriting existing field 'VERBC' during mapping of entrytype 'conversation' in entry 'alias4'",
+my $w2 = ["Overwriting existing field 'VERBC' while processing entry 'alias4'",
           "Entry 'alias4' - invalid field 'author' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprint' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprinttype' for entrytype 'customa'",
