@@ -234,7 +234,7 @@ sub create_entry {
 
       # Entrytype map
       if (my $source = $step->{map_type_source}) {
-        unless ($entry->{TY} eq uc($source) or  $source eq '*') {
+        unless ($entry->{TY} eq uc($source)) {
           # Skip the rest of the map if this step doesn't match
           if ($step->{map_final}) {
             next MAP;
@@ -284,15 +284,6 @@ sub create_entry {
             }
           }
         }
-        elsif ($step->{map_null}) {
-          delete($entry->{uc($source)});
-          next;
-        }
-        elsif ($step->{map_origentrytype}) {
-          next unless $last_type;
-          $entry->{uc($source)} = $last_type;
-          next;
-        }
 
         # Set to a different target if there is one
         if (my $target = $step->{map_field_target}) {
@@ -317,30 +308,32 @@ sub create_entry {
         if ($step->{map_null}) {
           delete($entry->{uc($field)});
         }
-        if (exists($entry->{uc($field)})) {
-          if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
-            biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
+        else {
+          if (exists($entry->{uc($field)})) {
+            if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
+              biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
+            }
+            else {
+              biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
+              next;
+            }
+          }
+
+          if ($step->{map_origentrytype}) {
+            next unless $last_type;
+            $entry->{uc($field)} = $last_type;
+          }
+          elsif ($step->{map_origfieldval}) {
+            next unless $last_fieldval;
+            $entry->{uc($field)} = $last_fieldval;
+          }
+          elsif ($step->{map_origfield}) {
+            next unless $last_field;
+            $entry->{uc($field)} = $last_field;
           }
           else {
-            biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
-            next;
+            $entry->{uc($field)} = $step->{map_field_value};
           }
-        }
-
-        if ($step->{map_origentrytype}) {
-          next unless $last_type;
-          $entry->{uc($field)} = $last_type;
-        }
-        elsif ($step->{map_origfieldval}) {
-          next unless $last_fieldval;
-          $entry->{uc($field)} = $last_fieldval;
-        }
-        elsif ($step->{map_origfield}) {
-          next unless $last_field;
-          $entry->{uc($field)} = $last_field;
-        }
-        else {
-          $entry->{uc($field)} = $step->{map_field_value};
         }
       }
     }

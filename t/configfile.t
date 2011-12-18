@@ -35,7 +35,9 @@ my $sourcemap = [
     datatype => "bibtex",
     map => [
       {
-        map_step => [{ map_type_source => "*", map_type_target => "CUSTOMB" }],
+        map_step => [
+          { map_type_source => "ARTICLE", map_type_target => "CUSTOMB" },
+        ],
         per_datasource => [{ content => "doesnotexist.bib" }],
       },
       {
@@ -67,7 +69,8 @@ my $sourcemap = [
       },
       {
         map_step       => [
-                            { map_field_source => "USERB", map_final => 1, map_null => 1 },
+                            { map_field_source => "USERB", map_final => 1 },
+                            { map_field_set => "USERB", map_null => 1 },
                             { map_field_set => "USERE", map_field_value => "a \x{160}tring" },
                             { map_field_set => "USERF", map_null => 1 },
                           ],
@@ -76,7 +79,7 @@ my $sourcemap = [
       },
       {
         map_step => [
-          { map_field_source => "ABSTRACT", map_null => 1 },
+          { map_field_set => "ABSTRACT", map_null => 1 },
           { map_field_source => "CONDUCTOR", map_field_target => "NAMEA" },
           { map_field_source => "GPS", map_field_target => "USERA" },
           { map_field_source => "PARTICIPANT", map_field_target => "NAMEA" },
@@ -110,7 +113,7 @@ my $sourcemap = [
         per_datasource => [{ content => "examples.bib" }],
       },
       {
-        map_step => [{ map_field_source => "LISTA", map_null => 1 }],
+        map_step => [{ map_field_set => "LISTA", map_null => 1 }],
         per_type => [{ content => "REPORT" }],
       },
       {
@@ -125,7 +128,7 @@ my $sourcemap = [
         per_type => [{ content => "UNPUBLISHED" }],
       },
       {
-        map_step => [{ map_field_source => "TITLE", map_null => 1 }],
+        map_step => [{ map_field_set => "TITLE", map_null => 1 }],
         per_type => [{ content => "ONLINE" }],
       },
     ],
@@ -153,7 +156,7 @@ my $sourcemap = [
         per_type       => [{ content => "Report" }],
       },
       {
-        map_step => [{ map_field_source => "abstract", map_null => 1 }],
+        map_step => [{ map_field_set => "abstract", map_null => 1 }],
         per_datasource => [{ content => "endnote.xml" }],
       },
     ],
@@ -174,7 +177,7 @@ my $sourcemap = [
         ],
       },
       {
-        map_step => [{ map_field_source => "N2", map_null => 1 }],
+        map_step => [{ map_field_set => "N2", map_null => 1 }],
         per_datasource => [{ content => "ris1.ris" }],
       },
       {
@@ -205,7 +208,7 @@ my $sourcemap = [
         per_type => [{ content => "journalArticle" }],
       },
       {
-        map_step       => [{ map_field_source => "dc:subject", map_null => 1 }],
+        map_step       => [{ map_field_set => "dc:subject", map_null => 1 }],
         per_datasource => [{ content => "zotero.rdf" }],
         per_type       => [
                             { content => "journalArticle" },

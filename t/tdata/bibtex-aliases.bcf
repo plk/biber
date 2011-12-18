@@ -155,7 +155,7 @@
       </bcf:map>
       <bcf:map>
         <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
-        <bcf:map_step map_field_source="ABSTRACT" map_null="1"/>
+        <bcf:map_step map_field_set="ABSTRACT" map_null="1"/>
         <bcf:map_step map_field_source="CONDUCTOR" map_field_target="NAMEA"/>
         <bcf:map_step map_field_source="GPS" map_field_target="USERA"/>
         <bcf:map_step map_field_source="PARTICIPANT" map_field_target="NAMEA"/>
@@ -170,13 +170,14 @@
       <bcf:map>
         <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
         <bcf:per_type>MISC</bcf:per_type>
-        <bcf:map_step map_field_source="USERB" map_null="1"/>
+        <bcf:map_step map_field_set="USERB" map_null="1"/>
         <bcf:map_step map_field_set="USERE" map_field_value="a string"/>
         <bcf:map_step map_field_set="USERF" map_null="1"/>
       </bcf:map>
       <bcf:map>
         <bcf:per_type>REPORT</bcf:per_type>
-        <bcf:map_step map_field_source="LISTA" map_match="BADMATCH" map_null="1"/>
+        <bcf:map_step map_field_source="LISTA" map_match="BADMATCH" map_final="1"/>
+        <bcf:map_step map_field_set="LISTA" map_null="1"/>
       </bcf:map>
       <bcf:map>
         <bcf:map_step map_field_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>

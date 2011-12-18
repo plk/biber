@@ -41,8 +41,8 @@ Biber::Config->setoption('sourcemap', [
     datatype => "bibtex",
     map => [
       {
-        map_step => [{ map_field_source => "SHORTHAND", map_null => 1 },
-                     { map_field_source => "SORTSHORTHAND", map_null => 1 }]
+        map_step => [{ map_field_set => "SHORTHAND", map_null => 1 },
+                     { map_field_set => "SORTSHORTHAND", map_null => 1 }]
       }]}]);
 
 # Biblatex options

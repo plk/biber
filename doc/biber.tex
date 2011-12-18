@@ -89,6 +89,12 @@ Please see the \verb+Changes+ file which accompanies Biber for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
 
+\minisec{0.9.8}
+\textcolor{red}{The \texttt{sourcemap} option syntax has changed}.The syntax
+was too confusing. It is now simplified and more powerful. It is uses a
+sequential processing model to apply mappings to an entry. See section
+\ref{map}.
+
 \minisec{0.9.7}
 \textcolor{red}{The user config file has a completely new format}.The
   reason for this is that the older \verb+Config::General+ format
@@ -548,18 +554,14 @@ option which makes it possible to, for example, have a data source with
 non-standard entrytypes or fields and to have these automatically mapped
 into other entrytypes/fields without modifying your data source.
 Essentially, this alters the source data stream which
-Biber uses to build the internal Bib\LaTeX\ data model. So, you
-are not constrained such that you must map into the Bib\LaTeX\ data
-model. Of course, if you don't, it's likely that your exotic new fields
-will be ignored by Biber because they are not valid in the
-Bib\LaTeX\ data model. In Bib\LaTeX\ 2.x, you will be able to
-re-define the internal Bib\LaTeX\ data model and pass this to
-Biber which will use it internally. Figure \ref{fig:biber-mdf} is a
-graphical overview of the data flow for data model information. In
-Bib\LaTeX\ 2.x, the greyed static Bib\LaTeX\ data model will be
-replaced by a dynamic data model read from the \verb+.bcf+ control file.
-See Figure \ref{fig:overview} for a more complete overview of
-Biber's processing steps.
+Biber uses to build the internal Bib\LaTeX\ data model and is an automatic
+way of editing the datasource as it is read by Biber.
+
+Figure \ref{fig:biber-mdf} is a graphical overview of the data flow for
+data model information. In Bib\LaTeX\ 2.x, the greyed static Bib\LaTeX\
+data model will be replaced by a dynamic data model read from the
+\verb+.bcf+ control file. See Figure \ref{fig:overview} for a more complete
+overview of Biber's processing steps.
 
 \begin{figure}[!htpb]
   \centering\small
@@ -585,40 +587,40 @@ tasks which can be useful for pre-processing data which you do not
 generate yourself:
 
 \begin{itemize}
-\item Map data source entrytypes to different entrytypes,
-  optionally also adding new fields to the entry.
-\item Map data source fields to different fields,
-  optionally also adding new fields to the entry. This is basically a
-  one$\rightarrow$many field mapping. You can also limit field
-  mappings to specific data source entrytypes.
-\item As a special case of the above, you can map data source fields
-  to null, effectively removing them from the input stream.
+\item Map data source entrytypes to different entrytypes.
+\item Map datasource fields to different fields.
+\item Add new fields to an entry
+\item Remove fields from an entry
 \item Modify the contents of a field using standard Perl regular expression
   match and replace.
-\item Restrict mappings to entries coming from particular data sources
-  which you defined in \verb+\addresource{}+ macros.
+\item Restrict any of the above operations to entries coming from
+  particular datasources which you defined in \verb+\addresource{}+ macros.
+\item Restrict any of the above operations to entries only of a certain
+  entrytype.
 \end{itemize}
 
-\noindent The format of the \verb+sourcemap+ option section in the
-config file is described below, followed by examples which will make
-everything clear. Items in \textcolor{red}{red} are not
-literal, they are descriptive meta-values which are explained in the
-accompanying text. Items in \textcolor{blue}{blue} are optional within
-their parent section. The general structure is:
+\noindent There is in fact, more flexibility than the above suggests,
+examples will show this below. The format of the \verb+sourcemap+ option
+section in the config file is described below, followed by examples which
+will make things clearer. Items in \textcolor{red}{red} are not literal,
+they are descriptive meta-values which are explained in the accompanying
+text. Items in \textcolor{blue}{blue} are optional within their parent
+section. The general structure is:
 
 \lstset{showspaces=false}
+\lstset{showstringspaces=false}
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <sourcemap>
   <maps datatype="+\textcolor{red}{driver$_1$}+" map_overwrite="1|0">
-    <map$_1$ maptype="entrytype|field" +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_1$>
+    <map$_1$ +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_1$>
                $\vdots$
-    <map$_n$ maptype="entrytype|field" +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_n$>
+    <map$_n$ +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_n$>
   </maps>
          $\vdots$
   <maps datatype="+\textcolor{red}{driver$_n$}+" map_overwrite="1|0">
-    <map$_1$ maptype="entrytype|field" +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_1$>
+    <map$_1$ +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_1$>
                $\vdots$
-    <map$_n$ maptype="entrytype|field" +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_n$>
+    <map$_n$ +\textcolor{blue}{map\_overwrite="1|0"}+> ... </map$_n$>
   </maps>
 </sourcemap>
 \end{lstlisting}
@@ -631,157 +633,41 @@ source drivers (see section \ref{dcf}). One thing to note here is the
 section, whether you may overwrite existing fields when adding new fields
 or mapping them. This attribute can be overridden on a per-map basis, see
 below. A warning will be issued either way saying whether an existing field
-will or will not be overwritten. Only one mapping---the first mapping to
-match a given entry---will be used (since the mappings modify the entries).
+will or will not be overwritten.
 
-There are two types of mappings you can apply to your datasources:
-
-\begin{itemize}
-\item Entrytype mapping
-\item Field mapping
-\end{itemize}
-
-\noindent An entrytype mapping allows you to do one or more of the
-following:
+The \verb+map+ elements are processed in sequence and contain a number of
+\verb+map_step+s which are also processed in sequence. Each \verb+map_step+
+allows you to do a particular thing or combination of things:
 
 \begin{itemize}
-\item Map an entrytype to another entrytype
-\item Add extra fields to all entries
-\item Add extra fields to entries of a given entrytype
-\item Restrict the changes to entries coming from particular datasources
-\end{itemize}
-
-\noindent A field mapping allows you to do one or more of the
-following:
-
-\begin{itemize}
-\item Map a field to another field
+\item Change the entrytype of an entry
+\item Change the name of a field
+\item Add extra fields the entry
 \item Change the contents of a field
-\item Add extra fields to entries with particular fields
-\item Restrict the changes to entries coming from particular
-  datasources
-\item Restrict the changes to entries of a particular entrytype
 \end{itemize}
 
-\noindent These facilities are explained in more detail below, with examples.
-
-\minisec{Entrytype mapping}
-
-\lstset{showspaces=false,showstringspaces=false}
-\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<map maptype="entrytype" +\textcolor{blue}{map\_overwrite="0|1"}+>
-  +\textcolor{blue}{<per\_datasource>\textcolor{red}{datasource}</per\_datasource>}+
-  <map_pair map_source="+\textcolor{red}{source-entrytype}+"
-              +\textcolor{blue}{map\_target="\textcolor{red}{target-entrytype}"}+/>
-  +\textcolor{blue}{<also\_set map\_field="\textcolor{red}{set-field}"}+
-              +\textcolor{blue}{map\_value="\textcolor{red}{set-value}"}+
-              +\textcolor{blue}{map\_null="1"}+
-              +\textcolor{blue}{map\_origentrytype="1"/>}+
-</map>
-\end{lstlisting}
-
-\noindent An \verb+entrytype+ element performs a mapping of one or more
-mapping «pairs» of entrytypes. Each pair consists of a \verb+map_pair+
-element with a \verb+map_source+ attribute with value
-\textcolor{red}{\texttt{source-entrytype}} and an optional
-\verb+map_target+ attribute with value
-\textcolor{red}{\texttt{target-entrytype}}. The target is
-optional as you might want to simply modify entries of a certain entrytype
-without changing the entrytype. The
-\textcolor{red}{\texttt{source-entrytype}} is mandatory and can be the
-string «\verb+*+» which means «all entrytypes». Mappings for specific
-entrytypes override the generic «\verb+*+» type. The
-rules for an entrytype mapping are:\\[1ex]
-
-\begin{itemize}
-\item Change the \textcolor{red}{\texttt{source-entrytype}} to
-  \textcolor{red}{\texttt{target-entrytype}}, if defined.
-\item If there are any \textcolor{red}{\texttt{datasource}}s named in
-  \textcolor{blue}{\texttt{per\_datasource}} elements, this mapping only applies to entries
-  coming from the named \textcolor{red}{\texttt{datasource}}s. There can be
-  multiple \textcolor{blue}{\texttt{per\_datasource}} elements each specifying one of the
-  datasource names given in a Bib\LaTeX\ \verb+\addbibresource+ macro.
-\item There can be one or more \textcolor{blue}{\texttt{also\_set}} elements which each specify
-  a behaviour for an entry field. The \textcolor{blue}{\texttt{map\_field}} attribute is
-  mandatory and specified the field \textcolor{red}{\texttt{set-field}} in
-  the entry to map. One and only one of these other attributes are then
-  mandatory:
-  \begin{itemize}
-    \item \textcolor{blue}{\texttt{map\_value}} --- The
-      \textcolor{red}{\texttt{set-field}} is set to
-      \textcolor{red}{\texttt{set-value}}
-    \item \textcolor{blue}{\texttt{map\_null}} --- The field is mapped to
-      null, that is, it is deleted from the input stream completely. This
-      is useful for ignoring field in datasources which are badly formatted
-      or which you don't even want Bib\LaTeX\ to see at all.
-      \item \textcolor{blue}{\texttt{map\_origentrytype}} --- The
-        \textcolor{red}{\texttt{set-field}} is set to the value of the
-        \linebreak\textcolor{red}{\texttt{source-entrytype}} name.
-  \end{itemize}
-\end{itemize}
-
-\noindent Here are some examples:
+\noindent These facilities are explained in more detail below, with
+examples. A \verb+map+ element looks like this:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<map maptype="entrytype">
-  <per_datasource>example1.bib</per_datasource>
-  <per_datasource>example2.bib</per_datasource>
-  <map_pair map_source="*"/>
-  <also_set map_field="KEYWORDS" map_value="keyw1, keyw2"/>
-</map>
-\end{lstlisting}
-
-\noindent This would add a \verb+KEYWORDS+ field with value «\verb+keyw1, keyw2+»
-to entries of any entrytype which are found in either the
-\verb+examples1.bib+ or \verb+examples2.bib+ files. This assumes that the
-Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
-\verb+\addresource{example2.bib}+.
-
-\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<map maptype="entrytype" map_overwrite="0">
-  <map_pair map_source="CHAT" map_target="CUSTOMA"/>
-  <also_set map_field="TYPE" map_origentrytype="1"/>
-</map>
-\end{lstlisting}
-
-\noindent Any \verb+CHAT+ entrytypes would become \verb+CUSTOMA+ entrytypes and 
-would automatically have a \verb+TYPE+ field set to 
-«chat» unless the \verb+TYPE+ field already existed in the entry.
-
-\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<map maptype="entrytype">
-  <map_pair map_source="ARTICLE"/>
-  <map_pair map_source="BOOK"/>
-  <also_set map_field="ABSTRACT" map_null="1"/>
-  <also_set map_field="NOTE" map_value="Auto-created this field"/>
-</map>
-\end{lstlisting}
-
-\noindent Any \verb+ARTICLE+ or \verb+BOOK+ entrytypes would have their \verb+ABSTRACT+
-fields removed and a \verb+NOTE+ field added with value «Auto-created this field».
-\bigskip
-\minisec{Field mapping}
-
-\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<map maptype="field" +\textcolor{blue}{map\_overwrite="0|1"}+>
+<map +\textcolor{blue}{map\_overwrite="0|1"}+>
   +\textcolor{blue}{<per\_datasource>\textcolor{red}{datasource}</per\_datasource>}+
   +\textcolor{blue}{<per\_type>\textcolor{red}{entrytype}</per\_type>}+
-  <map_pair map_source="+\textcolor{red}{source-field}+"
-              +\textcolor{blue}{map\_target="\textcolor{red}{target-field}"}+/>
+  <map_step +\textcolor{blue}{map\_type\_source="\textcolor{red}{source-type}"}+
+              +\textcolor{blue}{map\_field\_source="\textcolor{red}{source-field}"}+
+              +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-type}"}+
+              +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
               +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
               +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
-              +\textcolor{blue}{map\_null="1"}+/>
-  +\textcolor{blue}{<also\_set map\_field="\textcolor{red}{set-field}"}+
-              +\textcolor{blue}{map\_value="\textcolor{red}{set-value}"}+
+              +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
+              +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
               +\textcolor{blue}{map\_null="1"}+
               +\textcolor{blue}{map\_origfield="1"}+
-              +\textcolor{blue}{map\_origfieldval="1"/>}+
+              +\textcolor{blue}{map\_origfieldval="1"}+
+              +\textcolor{blue}{map\_origentrytype="1"}+
+              +\textcolor{blue}{map\_final="1"}+/>
 </map>
 \end{lstlisting}
-
-\noindent Field mappings are a little different to entrytype mappings
-as it is more likely that several mappings will apply to the same
-entry. When processing an entry, Biber first filters the field mappings:\\
 
 \begin{itemize}
 \item If there are any \textcolor{red}{\texttt{datasource}}s named in
@@ -794,39 +680,23 @@ entry. When processing an entry, Biber first filters the field mappings:\\
   of the named \textcolor{red}{\texttt{entrytypes}}s.
 \end{itemize}
 
-\noindent The remaining mappings are then applied in the same order as
-they appear in the config file. Each mapping operates on the entry
-which results from a previous mapping. So, you should sequence the
-\verb+map+ elements in a processing chain. Within a \verb+map+
-element, it is also possible to have multiple processing steps which
-are also processed in order but it is good practice to keep processing
-within a \verb+map+ element restricted to steps which are independent
-of each other and do the sequencing with \verb+map+ elements.
-
-Within a \verb+map+ element, there are one or more of two types of
-processing element: mapping
-«pairs»\footnote{Thusly called as their basic form is a mapping
-  between a pair of fields, the «source» and «target» fields.} and
-field creation «also set» specifications.
-
-Each mapping pair consists of a \verb+map_pair+ element with a
-\verb+map_source+ attribute with value
-\textcolor{red}{\texttt{source-field}} and an optional
-\verb+map_target+ attribute with value
-\textcolor{red}{\texttt{target-field}}. The target is optional as you
-might want to simply modify certain fields without mapping to other
-fields or simply establish that this mapping element applies to a
-certain field.  The \textcolor{red}{\texttt{source-field}} is
-mandatory. Mapping pairs work in the following way:\\
+\noindent Each \verb+map_step+ is looked at in turn and compared with the
+datasource entry being processed. A \verb+map_step+ works like this:
 
 \begin{itemize}
+\item Change the \textcolor{red}{\texttt{source-entrytype}} to
+  \textcolor{red}{\texttt{target-entrytype}}, if defined. If
+  \textcolor{blue}{\texttt{map\_final}} is set then if the entrytype of the
+  entry is not \textcolor{red}{\texttt{source-entrytype}}, processing of
+  this \verb+map+ immediately terminates.
 \item Change the \textcolor{red}{\texttt{source-field}} to
-  \textcolor{red}{\texttt{target-field}}, if defined.
-\item Remove the \textcolor{red}{\texttt{source-field}} if
-  \textcolor{blue}{\texttt{map\_null}} is set.
+  \textcolor{red}{\texttt{target-field}}, if defined. If
+  \textcolor{blue}{\texttt{map\_final}} is set then if no field in the entry
+  matches \textcolor{red}{\texttt{source-field}}, processing of
+  this \verb+map+ immediately terminates.
 \item If \textcolor{blue}{\texttt{map\_match}} is defined but
   \textcolor{blue}{\texttt{map\_replace}} is not, only apply the
-  mapping if the \textcolor{red}{\texttt{source-field}} matches
+  step if the \textcolor{red}{\texttt{source-field}} matches
   \textcolor{blue}{\texttt{map\_match}}.
 \item Perform a Perl regular expression match and replace on the value of
   \textcolor{red}{\texttt{source-field}} if
@@ -835,42 +705,80 @@ mandatory. Mapping pairs work in the following way:\\
   will want to use) parentheses for back-references in \textcolor{blue}{\texttt{map\_replace}}.
   Do not quote the regular expressions in any way---it's not
   necessary.
-\end{itemize}
-
-\noindent Field creation is performed using an \verb+also_set+ element
-which specifies extra fields to add to an entry. The details of these
-elements and their semantics is given below:\\
-
-\begin{itemize}
-\item The \textcolor{blue}{\texttt{map\_field}} attribute is
-  mandatory and specifies the field \textcolor{red}{\texttt{set-field}} to
-  set. One and only one of these other attributes are then mandatory:
+\item If \textcolor{blue}{\texttt{map\_field\_set}} is defined,
+  then one and only one of the following attributes is then mandatory:
   \begin{itemize}
-    \item \textcolor{blue}{\texttt{map\_value}} --- The
+    \item \textcolor{blue}{\texttt{map\_field\_value}} --- The
       \textcolor{red}{\texttt{set-field}} is set to
       \textcolor{red}{\texttt{set-value}}
-    \item \textcolor{blue}{\texttt{map\_null}} --- The field is mapped to
-      null, that is, it is deleted from the input stream completely. This
-      is useful for ignoring field in datasources which are badly formatted
-      or which you don't even want Bib\LaTeX\ to see at all.
-      \item \textcolor{blue}{\texttt{map\_origfield}}---The
-        \textcolor{red}{\texttt{set-field}} is set to the
-        \textcolor{red}{\texttt{source-field}} name of the most recent
-        \verb+map_pair+ element.
-      \item \textcolor{blue}{\texttt{map\_origfieldval}}---The
-        \textcolor{red}{\texttt{set-field}} is set to the
-        \textcolor{red}{\texttt{source-field}} value of the most recent
-        \verb+map_pair+ element.
+    \item \textcolor{blue}{\texttt{map\_null}} --- The field is deleted
+    \item \textcolor{blue}{\texttt{map\_origentrytype}} --- The
+      \textcolor{red}{\texttt{set-field}} is set to the
+      most recently mentioned \textcolor{red}{\texttt{source-entrytype}} name.
+    \item \textcolor{blue}{\texttt{map\_origfield}} --- The
+      \textcolor{red}{\texttt{set-field}} is set to the most recently
+      mentioned \textcolor{red}{\texttt{source-field}} name
+    \item \textcolor{blue}{\texttt{map\_origfieldval}} --- The
+      \textcolor{red}{\texttt{set-field}} is set to the most recently
+      mentioned \textcolor{red}{\texttt{source-field}} value
   \end{itemize}
 \end{itemize}
 
+\noindent Note that for XML datasources (Endnote, Zotero RDF/XML etc.), the names of
+fields and entrytypes are matched in a case sensitive manner. For all other
+datasource types (Bib\TeX, RIS etc.) entrytype and field name matching is
+case insensitive.
+
 \noindent Here are some examples:
 
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<map>
+  <per_datasource>example1.bib</per_datasource>
+  <per_datasource>example2.bib</per_datasource>
+  <map_step map_field_set="KEYWORDS" map_field_value="keyw1, keyw2"/>
+</map>
+\end{lstlisting}
+
+\noindent This would add a \verb+KEYWORDS+ field with value «\verb+keyw1, keyw2+»
+to all entries which are found in either the
+\verb+examples1.bib+ or \verb+examples2.bib+ files. This assumes that the
+Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
+\linebreak\verb+\addresource{example2.bib}+.
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<map map_overwrite="0">
+  <map_step map_type_source="CHAT" map_type_target="CUSTOMA" map_final="1"/>
+  <map_step map_field_set="TYPE" map_origentrytype="1"/>
+</map>
+\end{lstlisting}
+
+\noindent Any \verb+CHAT+ entrytypes would become \verb+CUSTOMA+ entrytypes and 
+would automatically have a \verb+TYPE+ field set to 
+«CHAT» unless the \verb+TYPE+ field already exists in the entry (because
+\verb+map_overwrite+ is true). This mapping applies only to entries of type
+«CHAT» since the first step has \verb+map_final+ set and so if the
+\verb+map_type_source+ does not match the entry, processing of this
+\verb+map+ immediately terminates.
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<map>
+  <per_datasource>examples.bib</per_datasource>
+  <per_type>ARTICLE</per_type>
+  <per_type>BOOK</per_type>
+  <map_step map_field_set="ABSTRACT" map_null="1"/>
+  <map_step map_field_set="NOTE" map_field_value="Auto-created this field"/>
+</map>
+\end{lstlisting}
+
+\noindent Any entries of entrytype \verb+ARTICLE+ or \verb+BOOK+ from the
+«examples.bib» datasource would have their \verb+ABSTRACT+
+fields removed and a \verb+NOTE+ field added with value «Auto-created this field».
+
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
-<map maptype="field">
-  <map_pair map_source="ABSTRACT" map_null="1"/>
-  <map_pair map_source="CONDUCTOR" map_target="NAMEA"/>
-  <map_pair map_source="GPS" map_target="USERA"/>
+<map>
+  <map_step map_field_set="ABSTRACT" map_null="1"/>
+  <map_step map_field_source="CONDUCTOR" map_field_target="NAMEA"/>
+  <map_step map_field_source="GPS" map_field_target="USERA"/>
 </map>
 \end{lstlisting}
 
@@ -879,37 +787,26 @@ elements and their semantics is given below:\\
 fields to \verb+USERA+ fields
 
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
-<map maptype="field">
-  <per_datasource>examples.bib</per_datasource>
-  <per_type>MISC</per_type>
-  <per_type>UNPUBLISHED</per_type>
-  <map_pair map_source="ADDENDUM" map_null="1"/>
-  <map_pair map_source="NOTE" map_null="1"/>
+<map>
+  <map_step map_field_source="PUBMEDID"
+              map_field_target="EPRINT"
+              map_final="1"/>
+  <map_step map_field_set="EPRINTTYPE" map_origfield="1"/>
+  <map_step map_field_set="USERD"
+              map_field_value="Some string of things"/>
 </map>
 \end{lstlisting}
 
-\noindent Here we remove any \verb+ADDENDUM+ or \verb+NOTE+ fields in
-\verb+MISC+ or \verb+UNPUBLISHED+ entries coming from the
-\verb+examples.bib+ datasource.
+\noindent Applies only to entries with \verb+PUBMED+ fields and maps
+\verb+PUBMEDID+ fields to \verb+EPRINT+ fields, sets the \verb+EPRINTTYPE+
+field to «PUBMEDID» and also sets the \verb+USERD+ field to the string
+«Some string of things».
 
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
-<map maptype="field">
-  <map_pair map_source="PUBMEDID" map_target="EPRINT"/>
-  <also_set map_field="EPRINTTYPE" map_origfield="1"/>
-  <also_set map_field="USERD" map_value="Some string of things"/>
-</map>
-\end{lstlisting}
-
-\noindent This maps \verb+PUBMEDID+ fields to \verb+EPRINT+ fields, sets
-the \verb+EPRINTTYPE+ field to «pubmedid» and also sets the \verb+USERD+
-field to the string «Some string of things».
-
-\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
-<map maptype="field">
-  <per_datasource>examples.bib</per_datasource>
-  <map_pair map_source="SERIES"
-            map_match=":\textbackslash A\textbackslash d$\ast$(.+):"
-            map_replace=":\textbackslash L\$1:"/>
+<map>
+  <map_step map_field_source="SERIES"
+              map_match=":\textbackslash A\textbackslash d$\ast$(.+):"
+              map_replace=":\textbackslash L\$1:"/>
 </map>
 \end{lstlisting}
 
@@ -918,22 +815,33 @@ field have leading numbers stripped and the remainder of the contents
 lowercased.
 
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
-<map maptype="field">
-  <map_pair map_source="TITLE"
-            map_match=":Collected\textbackslash s+Works.+Freud:"/>
-  <also_set map_field="KEYWORDS" map_value="freud"/>
+<map>
+  <map_step map_field_source="TITLE"
+              map_match=":Collected\textbackslash s+Works.+Freud:"
+              map_final="1"/>
+  <map_step map_field_set="KEYWORDS" map_field_value="freud"/>
 </map>
 \end{lstlisting}
 
-\noindent Here, if the \verb+TITLE+ field matches a particular
-regexp, we set a special keyword so we can, for example, make a
-references section just for certain items.
+\noindent Here, if for an entry, the \verb+TITLE+ field matches a
+particular regular expression, we set a special keyword so we can, for
+example, make a references section just for certain items.
 
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
-<map maptype="field">
-  <map_pair map_source="AUTHOR"
+<map>
+  <map_step map_field_source="LISTA" map_match="regexp" map_final="1"/>
+  <map_step map_field_set="LISTA" map_null="1"/>
+</map>
+\end{lstlisting}
+
+\noindent If an entry has a \verb+LISTA+ field which matches regular
+expression «regexp», then it is removed.
+
+\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
+<map>
+  <map_step map_field_source="AUTHOR"
             map_match="Smith, Bill" map_replace="Smith, William"/>
-  <map_pair map_source="AUTHOR"
+  <map_step map_field_source="AUTHOR"
             map_match="Jones, Baz" map_replace="Jones, Barry"/>
 </map>
 \end{lstlisting}
@@ -941,57 +849,54 @@ references section just for certain items.
 \noindent Here, we use multiple match/replace for the same field to
 regularise some inconstant name variants. Bear in mind that
 match/replace processing within a \verb+map+ element is sequential and
-the changes from a previous match/replace are already committed. As
-mentioned above, it's often clearer to sequence using \verb+map+
-elements to avoid confusion. This example is fine as the matches are
-exclusive and therefore mutually idempotent.
+the changes from a previous match/replace are already committed.
 
 \begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
-<maps datatype="bibtex" bmap_overwrite="1">
-  <map maptype="field">
-    <map_pair map_source="AUTHOR" map_match="Doe,"/>
-    <also_set map_field="SHORTAUTHOR" map_origfieldval="1"/>
-    <also_set map_field="SORTNAME" map_origfieldval="1"/>
-  </map>
-  <map maptype="field">
-    <map_pair map_source="SHORTAUTHOR" map_match=";Doe,\textbackslash s*J(?:\textbackslash .|ohn)(?:[ -]*)(?:P\textbackslash .|Paul)*;" map_replace="Doe, John Paul"/>
-    <map_pair map_source="SORTNAME" map_match=";Doe,\textbackslash s*J(?:\textbackslash .|ohn)(?:[ -]*)(?:P\textbackslash .|Paul)*;" map_replace="Doe, John Paul"/>
-  </map>
-</maps>
+<map map_overwrite="1">
+  <map_step map_field_source="AUTHOR" map_match="Doe," map_final="1"/>
+  <map_step map_field_set="SHORTAUTHOR" map_origfieldval="1"/>
+  <map_step map_field_set="SORTNAME" map_origfieldval="1"/>
+  <map_step map_field_source="SHORTAUTHOR"
+              map_match=";Doe,\textbackslash s*J(?:\textbackslash .|ohn)(?:[-]*)(?:P\textbackslash .|Paul)*;"
+              map_replace="Doe, John Paul"/>
+  <map_step map_field_source="SORTNAME"
+              map_match=";Doe,\textbackslash s*J(?:\textbackslash .|ohn)(?:[-]*)(?:P\textbackslash .|Paul)*;"
+              map_replace="Doe, John Paul"/>
+</map>
 \end{lstlisting}
 
-\noindent An example of sequential processing. First the \verb+AUTHOR+
-field is copied to both the \verb+SHORTAUTHOR+ and \verb+SORTNAME+
-fields, overwriting them if they already exist. Then, these two new
-fields are modified to canonicalise a particular name, which
-presumably has some variants in the datasource.
+\noindent Only applies to entries with an \verb+AUTHOR+ field matching
+«Doe,». First the \verb+AUTHOR+ field is copied to both the
+\verb+SHORTAUTHOR+ and \verb+SORTNAME+ fields, overwriting them if they
+already exist. Then, these two new fields are modified to canonicalise a
+particular name, which presumably has some variants in the datasource.
 \bigskip
 \minisec{Other datasource types}
-For data sources other than Bib\TeX, (e.g. \verb+ris+,
-\verb+endnotexml+ and \verb+zoterordfxml+), the source entrytypes and
-fields are usually very differently modelled and named. For example, here
-is how to drop \verb+subject+ fields from various entrytypes in Zotero XML
-RDF format data sources:
+For data sources other than Bib\TeX, (e.g. \verb+ris+, \verb+endnotexml+
+and \verb+zoterordfxml+), the source entrytypes and fields are usually very
+differently modelled and named. For example, here is how to drop
+\verb+dc:subject+ fields from various entrytypes in Zotero XML RDF format data
+sources:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <maps datatype="zoterordfxml" map_overwrite="1">
-  <map maptype="field">
+  <map>
     <per_type>journalArticle</per_type>
     <per_type>book</per_type>
     <per_type>bookSection</per_type>
-    <map_pair map_source="dc:subject" map_null="1"/>
+    <map_step map_field_set="dc:subject" map_null="1"/>
   </map>
 </maps>
 \end{lstlisting}
 
-\noindent Or here, mapping journal articles into \verb+REPORT+ entries for
+\noindent Or here, mapping journal articles into \verb+Report+ entries for
 Endnote XML format data sources within a particular data source.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <maps datatype="endnotexml" map_overwrite="1">
   <map>
     <per_datasource>endnote.xml</per_datasource>
-    <map_pair map_source="journal Article" map_target="REPORT"/>
+    <map_step map_type_source="Journal Article" map_type_target="Report"/>
   </map>
 </maps>
 \end{lstlisting}
@@ -1001,9 +906,9 @@ datasources, which are commonly used for abstracts:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <maps datatype="ris" map_overwrite="1">
-      <map maptype="field">
-        <map_pair map_source="N2" map_null="1"/>
-      </map>
+  <map>
+    <map_step map_field_set="N2" map_null="1"/>
+  </map>
 </maps>
 \end{lstlisting}
 \bigskip

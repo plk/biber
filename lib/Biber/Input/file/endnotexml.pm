@@ -226,7 +226,7 @@ sub create_entry {
       # Entrytype map
       if (my $source = $step->{map_type_source}) {
 
-        unless ($itype eq $source or $source eq '*') {
+        unless ($itype eq $source) {
           # Skip the rest of the map if this step doesn't match
           if ($step->{map_final}) {
             next MAP;
@@ -276,15 +276,6 @@ sub create_entry {
             }
           }
         }
-        elsif ($step->{map_null}) {
-          map {$_->unbindNode} $entry->findnodes('./' . $source);
-          next;
-        }
-        elsif ($step->{map_origentrytype}) {
-          next unless $last_type;
-          $entry->findnodes('./' . $source . '/style/text()')->get_node(1)->setData($last_type);
-          next;
-        }
 
         # Set to a different target if there is one
         if (my $target = $step->{map_field_target}) {
@@ -306,32 +297,34 @@ sub create_entry {
 
         # Deal with special tokens
         if ($step->{map_null}) {
-          $entry->findnodes($field)->get_node(1)->unbindNode;
-        }
-        if ($entry->exists($field)) {
-          if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
-            biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
-          }
-          else {
-            biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
-            next;
-          }
-        }
-
-        if ($step->{map_origentrytype}) {
-          next unless $last_type;
-          $entry->appendTextChild($field, $last_type);
-        }
-        elsif ($step->{map_origfieldval}) {
-          next unless $last_fieldval;
-          $entry->appendTextChild($field, $last_fieldval);
-        }
-        elsif ($step->{map_origfield}) {
-          next unless $last_field;
-          $entry->appendTextChild($field, $last_field);
+          map {$_->unbindNode} $entry->findnodes('./' . $field);
         }
         else {
-          $entry->appendTextChild($field, $step->{map_field_value});
+          if ($entry->exists($field)) {
+            if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
+              biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
+            }
+            else {
+              biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
+              next;
+            }
+          }
+
+          if ($step->{map_origentrytype}) {
+            next unless $last_type;
+            $entry->appendTextChild($field, $last_type);
+          }
+          elsif ($step->{map_origfieldval}) {
+            next unless $last_fieldval;
+            $entry->appendTextChild($field, $last_fieldval);
+          }
+          elsif ($step->{map_origfield}) {
+            next unless $last_field;
+            $entry->appendTextChild($field, $last_field);
+          }
+          else {
+            $entry->appendTextChild($field, $step->{map_field_value});
+          }
         }
       }
     }
