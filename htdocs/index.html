@@ -43,42 +43,74 @@ piwik_log(piwik_action_name, piwik_idsite, piwik_url);
 </div>
 
 <div id="info" class="textual">
-<h1>Biber: A BibTeX replacement for users of biblatex</h1>
-<p>The <a href="http://www.ctan.org/tex-archive/help/Catalogue/entries/biblatex.html">biblatex</a> 
-package by Philipp Lehman is likely to become
-the definitive citation management tool for LaTeX users.
-Biblatex relies on the venerable <a href="http://en.wikipedia.org/wiki/BibTeX">BibTeX</a> 
-program only for sorting and generating a very generic bbl file without any
-formatting instruction.  Everything else is taken care of by
-biblatex, which provides a powerful and flexible macro interface for authors of citation styles.</p>
+<h1>Biber: A BibTeX replacement for users of BibLaTeX</h1>
+<p>The <a href="http://www.ctan.org/tex-archive/help/Catalogue/entries/biblatex.html">biblatex</a>
+package by Philipp Lehman is becoming the definitive citation management
+tool for LaTeX users. Biblatex has relied on the
+venerable <a href="http://en.wikipedia.org/wiki/BibTeX">BibTeX</a> program
+only for sorting and generating a very generic .bbl file without any
+formatting instruction. Everything else is taken care of by biblatex, which
+provides a powerful and flexible macro interface for authors of citation
+styles.</p>
 
-<p>With Biber it is no longer necessary to
-rely on BibTeX. For maximal portability, the current version
-includes a Pure Perl BibTeX parser with a Parse::RecDescent grammar, but
-if available it will use the much faster 
-<a href="http://search.cpan.org/dist/Text-BibTeX/">Text::BibTeX</a>
-module which relies on the 
-<a href="http://search.cpan.org/dist/btparse/">btparse C library</a>. 
-The objective of the first development phase is to have a robust
-and reliable emulation of the BibTeX processor with the biblatex.bst style
-file. In other words, given the same data file as input, biber should
-output a functionally identical .bbl file as BibTeX.</p>
+<p>
+Biber offers a large superset of BibTeX functionality for BibLaTeX users.
+In addition to the standard BibTeX funcitionality, it offers the following
+features:
 
-<p>In a future version, Biber will also support a new XML format
-tailored specifically for biblatex data, unimaginatively called
-<i>BibLaTeXML</i>. It owes its inspiration partly to the <a
-href="http://bibtexml.sourceforge.net/">BibTeXML</a> format, but it is far
-more complex. RelaXNG and W3C schemata will be provided, as
-well as a tool for converting .bib files to biblatexml.</p>
-
-<p>The advantages of no longer being dependent upon BibTeX are
-obvious: full Unicode support, no memory limitations,
-extensibility, etc. In the future, support for communication 
-with embedded or relational databases or remote resources via network protocols
-(such as SRU) might also be implemented.</p>
-
-<br/>
-<p><strong>Biber v0.9.7 is now
+<ul>
+<li>Deals with the full range of UTF-8 (Unicode 6.0)
+<li>Sorts in a completely customisable manner using, when available,
+  CLDR collation tailoring
+<li>Allows for per-entrytype options
+<li>Automatically encodes the .bbl into any supported encoding
+  format (&quot;Supported&quot; here means encodings supported by the
+    Perl <tt>Encode</tt> module)
+<li>Processes all bibliography sections in one pass of the tool
+<li>Output to GraphViz instead of .bbl in order to help visualise
+  complex bibliographies with many crossrefs etc.
+<li>Handles UTF-8 citekeys and filenames (given a suitable fully
+  UTF-8 compliant TeX engine)
+<li>Creates entry sets dynamically and allows easily defined static entry sets,
+  all processed in one pass
+<li>&quot;Syntactic&quot; inheritance via new <tt>XDATA</tt> entrytype and
+  field. This can be thought of as a field-based generalisation of the
+  BibTeX <tt>@STRING</tt> functionality (which is also supported).
+<li>&quot;Semantic&quot; inheritance via a generalisation of the BibTeX
+  crossreference mechanism. This is highly customisable by the
+  user--it is possible to choose which fields to inherit for which
+  entrytypes and to inherit fields under different names etc. Nested
+  crossreferences are also supported.
+<li>Handles complex auto-expansion and contraction of names and
+  namelists (See section 4.11.4 of the BibLaTeX manual for an excellent
+  explanation with examples, this is quite an impressive feature ...)
+<li>Extensible modular data sources architecture for ease of adding
+  more data source types
+<li>Support for remote data sources
+<li>User-definable mapping and suppression of fields and entrytypes in
+  data sources. You can use this to, for example, ignore all
+  <tt>ABSTRACT</tt> fields completely.
+<li>Support for related entries, to enable generic treatment of things
+  like &quot;translated as&quot;, &quot;reprinted as&quot;, &quot;reprint of&quot;
+  etc. (BibLaTeX support coming in BibLaTeX 2.x)
+<li>Customisable labels (BibLaTeX support coming in
+  BibLaTeX 2.x)
+<li>Multiple bibliography lists in the same section with different
+  sorting and filtering (BibLaTeX support coming in BibLaTeX 2.x)
+<li>No more restriction to a static data model of specific fields and
+  entrytypes. (BibLaTeX support coming in BibLaTeX 2.x)
+<li>Structural validation of the data against the data model with a
+  customisable validation model (BibLaTeX support coming in
+  BibLaTeX 2.x)
+</ul>
+</p>
+<p>Biber has a comprehensive PDF manual which you can find on SourceForge
+  in the documentation folder for the release. Much of the functionality
+  is exposed through BibLaTeX and the BibLaTeX PDF manual is the primary
+  source for much Biber+BibLaTeX information. Biber-only features are
+  marked prominently in the BibLaTeX manual with the marginal note "Biber
+  only"</p>
+<p><strong>Biber v0.9.8 is now
 <a href="http://sourceforge.net/project/platformdownload.php?group_id=228270">released</a></strong>.
 It should be used in conjunction with biblatex 1.7 with the option "backend=biber".
 </p> 

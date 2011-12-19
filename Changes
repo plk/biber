@@ -1,6 +1,8 @@
 Revision history for Biber
 
-0.9.8  (unreleased)
+0.9.8  20-12-2012
+       * Changed config file sourcemap syntax and docs
+       * Support for citekey aliases
        * New DOT output format
 0.9.7  27-11-2011
        * per-datasource mapping restrictions

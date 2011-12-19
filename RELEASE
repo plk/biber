@@ -2,15 +2,16 @@ Things to remember when releasing new version:
 
 * Change content, if necessary, of README
 * Change version string in and content of "Changes" file
-* Change t/tdata/full1.bbl version string for test
 * Change version string in doc and update volatile doc info (e.g. compat matrix)
 * Update main html page 
 * Update "TODO" file
 * Update any driver .dcf description elements which need it
 * Change version string and beta flag in "Config.pm"
+* Change t/tdata/full1.bbl version string for test
 * Change $BIBLATEX_VERSION in Constants.pm to match appropriate biblatex
   version, if necessary.
 * "perl Build.PL" and "Build dist" to update YAML/JSON
+* Run test suite and make sure it passes cleanly
 * Commit and tag with version number
 * Create a new empty version tree for new version, use the dist/empty_tree.sh script:
   empty_tree.sh <version>
