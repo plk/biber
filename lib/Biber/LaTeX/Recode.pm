@@ -354,19 +354,17 @@ __END__
 
 =head1 AUTHOR
 
-François Charette, C<< <firmicus@cpan.org> >>
+François Charette, C<< <firmicus at ankabut.net> >>
+Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-latex-decode at
-rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=LaTeX-Decode>.  I will be
-notified, and then you'll automatically be notified of progress on your bug as
-I make changes.
+Please report any bugs or feature requests on our sourceforge tracker at
+L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2010 François Charette, all rights reserved.
+Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.
