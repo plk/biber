@@ -630,7 +630,7 @@ section. The general structure is:
 source drivers (see section \ref{dcf}). One thing to note here is the
 \verb+map_overwrite+ attribute. This must be present and have a value of
 \verb+0+ or \verb+1+. It determines whether, for this driver mapping
-section, whether you may overwrite existing fields when adding new fields
+section, you may overwrite existing fields when adding new fields
 or mapping them. This attribute can be overridden on a per-map basis, see
 below. A warning will be issued either way saying whether an existing field
 will or will not be overwritten.
@@ -703,7 +703,7 @@ datasource entry being processed. A \verb+map_step+ works like this:
   \textcolor{blue}{\texttt{map\_match}} and
   \textcolor{blue}{\texttt{map\_replace}} are defined. You may use (and almost certainly
   will want to use) parentheses for back-references in \textcolor{blue}{\texttt{map\_replace}}.
-  Do not quote the regular expressions in any way---it's not
+  Do not quote the regular expressions in any special (i.e. non-Perly) way---it's not
   necessary.
 \item If \textcolor{blue}{\texttt{map\_field\_set}} is defined,
   then one and only one of the following attributes is then mandatory:
@@ -711,7 +711,8 @@ datasource entry being processed. A \verb+map_step+ works like this:
     \item \textcolor{blue}{\texttt{map\_field\_value}} --- The
       \textcolor{red}{\texttt{set-field}} is set to
       \textcolor{red}{\texttt{set-value}}
-    \item \textcolor{blue}{\texttt{map\_null}} --- The field is deleted
+    \item \textcolor{blue}{\texttt{map\_null}} --- The field is ignored, as
+      if it did not exist in the datasource
     \item \textcolor{blue}{\texttt{map\_origentrytype}} --- The
       \textcolor{red}{\texttt{set-field}} is set to the
       most recently mentioned \textcolor{red}{\texttt{source-entrytype}} name.
@@ -755,7 +756,7 @@ Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
 \noindent Any \verb+CHAT+ entrytypes would become \verb+CUSTOMA+ entrytypes and 
 would automatically have a \verb+TYPE+ field set to 
 «CHAT» unless the \verb+TYPE+ field already exists in the entry (because
-\verb+map_overwrite+ is true). This mapping applies only to entries of type
+\verb+map_overwrite+ is false). This mapping applies only to entries of type
 «CHAT» since the first step has \verb+map_final+ set and so if the
 \verb+map_type_source+ does not match the entry, processing of this
 \verb+map+ immediately terminates.
@@ -1033,7 +1034,7 @@ here is an example of a config file setting:
 
 \subsubsection{Control file}\label{loc:cf}
 
-The control file is normally passed as the only argument to biber. It is
+The control file is normally passed as the only argument to Biber. It is
 searched for in the following locations, in decreasing order of
 priority:\\[2ex]
 
@@ -1162,7 +1163,7 @@ value separated by «\verb+=>+». See examples.
 
 \biberex{biber}
 
-\noindent Call biber using all settings from the \verb+.bcf+ generated from the
+\noindent Call Biber using all settings from the \verb+.bcf+ generated from the
 \LaTeX\ run. Case sensitive UCA sorting is performed taking the locale
 for tailoring from the environment if no \verb+sortlocale+ is defined in
 the \verb+.bcf+
