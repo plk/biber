@@ -254,7 +254,7 @@ sub create_entry {
   if ( $entry->metatype == BTE_REGULAR ) {
     # DATASOURCE MAPPING DEFINED BY USER IN CONFIG FILE OR .bcf
 MAP:    foreach my $map (@{$user_map->{map}}) {
-      my $last_type = undef;
+      my $last_type = $entry->type; # defaults to the entrytype unless changed below
       my $last_field = undef;
       my $last_fieldval = undef;
 
