@@ -202,10 +202,10 @@ sub create_entry {
 
     # DATASOURCE MAPPING DEFINED BY USER IN CONFIG FILE OR .bcf
  MAP:    foreach my $map (@{$user_map->{map}}) {
-    my $last_type = undef;
     my $last_field = undef;
     my $last_fieldval = undef;
     my $itype = $entry->findvalue('./ref-type/@name');
+    my $last_type = $itype; # defaults to the entrytype unless changed below
 
     # Check pertype restrictions
     unless (not exists($map->{per_type}) or

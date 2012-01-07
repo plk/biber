@@ -212,7 +212,7 @@ sub create_entry {
 
   # DATASOURCE MAPPING DEFINED BY USER IN CONFIG FILE OR .bcf
  MAP:    foreach my $map (@{$user_map->{map}}) {
-    my $last_type = undef;
+    my $last_type = $entry->{TY}; # defaults to the entrytype unless changed below
     my $last_field = undef;
     my $last_fieldval = undef;
 
