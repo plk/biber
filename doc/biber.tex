@@ -748,6 +748,16 @@ Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <map map_overwrite="0">
+  <map_step map_type_source="TITLE"/>
+  <map_step map_field_set="NOTE" map_origfieldval="1"/>
+</map>
+\end{lstlisting}
+
+\noindent Copy the \verb+TITLE+ field to the \verb+NOTE+ field unless the
+\verb+NOTE+ field already exists.
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<map map_overwrite="0">
   <map_step map_type_source="CHAT" map_type_target="CUSTOMA" map_final="1"/>
   <map_step map_field_set="TYPE" map_origentrytype="1"/>
 </map>

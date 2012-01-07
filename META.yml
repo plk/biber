@@ -8,7 +8,7 @@ build_requires:
 configure_requires:
   Module::Build: 0.38
 dynamic_config: 1
-generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.110440'
+generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.112150'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -20,7 +20,7 @@ provides:
     version: 0
   Biber::Config:
     file: lib/Biber/Config.pm
-    version: v0.9.8
+    version: v0.9.9
   Biber::Constants:
     file: lib/Biber/Constants.pm
     version: 0
@@ -101,11 +101,11 @@ requires:
   Readonly::XS: 0
   Regexp::Common: 0
   Text::BibTeX: 0.61
-  Unicode::Collate: 0.84
+  Unicode::Collate: 0.87
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
   XML::Writer::String: 0
   perl: v5.14.0
 resources:
   license: http://dev.perl.org/licenses/
-version: v0.9.8
+version: v0.9.9
