@@ -1,5 +1,9 @@
 Revision history for Biber
 
+0.9.9  (unreleased beta)
+       * Merged --graph and --bltxml options into --outformat option
+       * Updated some internal Unicode 6.0 things
+       * Minor bug fixes
 0.9.8  20-12-2012
        * Changed config file sourcemap syntax and docs
        * Support for citekey aliases

@@ -22,7 +22,7 @@
 
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{0.9.8}    % BIBER VERSION
+\gdef\biberversion{0.9.9}    % BIBER VERSION
 \gdef\biblatexversion{1.7}   % BIBLATEX VERSION
 
 % Set up tikz things
@@ -88,6 +88,23 @@
 Please see the \verb+Changes+ file which accompanies Biber for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
+
+\minisec{0.9.9}
+The output format option \verb+--graph+ has been moved to a
+new option \verb+--outformat+. The option \verb+--graph+ should now be
+specified as \verb+--outformat=dot+ and the \linebreak\verb+--dot_include+ option
+should be used to specify the elements to include in the DOT output. For
+example:
+
+\begin{verbatim}
+  biber --graph=section,field <file>
+\end{verbatim}
+
+\noindent is now:
+
+\begin{verbatim}
+  biber --outformat=dot --dot_include=section,field <file>
+\end{verbatim}
 
 \minisec{0.9.8}
 \textcolor{red}{The \texttt{sourcemap} option syntax has changed}.The syntax
@@ -1456,7 +1473,7 @@ Currently supported data sources drivers are:
 
 \subsection{Visualising the Output}\label{vis}
 
-The option \verb+--graph+ will cause Biber to write a
+The option \verb+--outformat=dot+ will cause Biber to write a
 GraphViz\footnote{\url{http://www.graphviz.org}} \verb+.dot+ file instead
 of a \verb+.bbl+. This file graphs the bibliographic data as it exists
 after all processing. You can transform this file using the \verb+dot+
@@ -1472,14 +1489,14 @@ means. To output in SVG, use this command after installing GraphViz:
 dot -Tsvg <file>.dot -o <file>.svg
 \end{verbatim}
 
-\noindent The \verb+--graph+ option takes a comma delimited string as
+\noindent The \verb+--dot_include+ option takes a comma delimited string as
 argument. The elements of this string define the information to include in
 the \verb+.dot+ output graph. The valid sub-options are shown in Table
-\ref{tab:graphopts}. If the \verb+--graph+ option is given with no argument
-then the default is
+\ref{tab:graphopts}. If the \verb+--dot_include+ option is not given
+then the default setting is implicitly used, which is:
 
 \begin{verbatim}
---graph=crossref,section,xdata,xref
+--dot_include=crossref,section,xdata,xref
 \end{verbatim}
 
 \begin{table}
@@ -1501,20 +1518,6 @@ xref     & Show XREF relationships\\
 \caption{Valid sub-options for the \texttt{graph} option}
 \label{tab:graphopts}
 \end{table}
-
-\noindent As with all options which take an optional value, be careful to
-terminate the options if you use \verb+--graph+ with the implied defaults,
-otherwise Biber will interpret the \verb+.bcf+ file name as the value of
-the option:
-
-\begin{verbatim}
-biber --graph -- file[.bcf]
-\end{verbatim}
-
-\noindent Without the option terminating \verb+--+, Biber would try to use
-the \verb+.bcf+ filename as the value of the \verb+--graph+ option. Figure
-\ref{fig:graphkey} is a key to the elements included to the \verb+.dot+
-output.
 
 \begin{figure}[!htpb]
   \centering\small

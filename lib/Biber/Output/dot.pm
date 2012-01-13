@@ -32,7 +32,7 @@ my $graph_edges = ''; # accumulator for .dot string. Initialise as can be empty
 my $state; # some state information for building output
 my $in; # indentation string
 my $i; # indentation level
-my $gopts = Biber::Config->getoption('graph');
+my $gopts = Biber::Config->getoption('dot_include');
 my $linknode; # node to use to do cluster links
 
 sub new {
