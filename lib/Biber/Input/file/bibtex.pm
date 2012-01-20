@@ -21,6 +21,7 @@ use Biber::Utils;
 use Biber::Config;
 use Encode;
 use File::Spec;
+use File::Slurp::Unicode;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
@@ -796,24 +797,19 @@ sub preprocess_file {
   (undef, undef, my $fn) = File::Spec->splitpath($filename);
   my $ufilename = File::Spec->catfile($td->dirname, "${fn}_$$.utf8");
 
-  # bib encoding is not UTF-8
-  if (Biber::Config->getoption('bibencoding') ne 'UTF-8') {
-    require File::Slurp::Unicode;
-    my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
-      or biber_error("Can't read $filename");
+  # We read the file in the bib encoding and then output to UTF-8, even if it was already UTF-8,
+  # just in case there was a BOM so we can delete it as it makes T::B complain
+  my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
+    or biber_error("Can't read $filename");
 
-    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-        or biber_error("Can't write $ufilename");
+  # strip UTF-8 BOM if it exists - this just makes T::B complain about junk characters
+  $buf =~ s/\A\x{feff}//;
 
-  }
-  else {
-    File::Copy::copy($filename, $ufilename)
-        or biber_error("Can't write $ufilename");
-  }
+  File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+      or biber_error("Can't write $ufilename");
 
   # Decode LaTeX to UTF8 if output is UTF-8
   if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
-    require File::Slurp::Unicode;
     my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
       or biber_error("Can't read $ufilename");
     $logger->info('Decoding LaTeX character macros into UTF-8');
