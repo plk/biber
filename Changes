@@ -1,7 +1,7 @@
 Revision history for Biber
 
 0.9.9  (unreleased beta)
-       * Deals with PUBSTATE for extrayear
+       * Deals with PUBSTATE for extrayear calculation
        * Strips UTF-8 BOMs before passing to Text::BibTeX otherwise it complains
        * Merged --graph and --bltxml options into --outformat option
        * Updated some internal Unicode 6.0 things
