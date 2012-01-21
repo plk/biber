@@ -1052,7 +1052,8 @@ sub process_extrayear {
   # This is all used to generate extrayear and the rules for this are:
   # * Generate labelname/year combination for tracking extrayear
   # * If there is no labelname to use, use empty string
-  # * If there is no labelyear to use, use empty string
+  # * If there is no labelyear to use:
+  #   * If there is no pubstate to use, use empty string otherwise use pubstate key
   # * Don't increment the seen_nameyear count if either name or year string is empty
   #   (see code in incr_nameyear method).
   # * Don't increment if skiplab is set
@@ -1072,6 +1073,9 @@ sub process_extrayear {
   }
   elsif (my $y = $be->get_field('year')) {
     $year_string = $y;
+  }
+  elsif (my $ps = $be->get_field('pubstate')) {
+    $year_string = $ps;
   }
   else {
     $year_string = '';
@@ -1689,7 +1693,7 @@ sub uniqueness {
   #      goto step 1
   #    } else { return }
 
-  # uniquelist can never do anything to a list shorter than maxcitenames because:
+  # uniquelist can never shorten to a list shorter than maxcitenames because:
   # * Shortening a list can't make it unique
   # * You can't lengthen it if the list is shorter than maxcitenames because there
   #   is no more information to add that you don't already have.
