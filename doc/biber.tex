@@ -373,7 +373,7 @@ way performance-wise. Biber is written in Perl and does a
 Biber's test cases is a 2150 entry, 15,000 line \verb+.bib+ file
 which references a 630 entry macros file with a resulting 160 or so page (A4)
 formatted bibliography. This takes Biber under 3 minutes to process on
-on a reasonable computer. This is perfectly acceptable, especially for a
+a reasonable computer. This is perfectly acceptable, especially for a
 batch program.
 
 \subsection{Acknowledgements}
@@ -531,7 +531,7 @@ an example config file which displays the Biber defaults:
   <nolog>0</nolog>
   <nostdmacros>0</nostdmacros>
   <nosort>
-    <!-- strip prefices like 'al-' when sorting name fields -->
+    <!-- strip prefixes like 'al-' when sorting name fields -->
     <option name="type_names" value="\A\p{L}{2}\p{Pd}"/>
     <!-- strip diacritics when sorting name fields -->
     <option name="type_names" value="[\x{2bf}\x{2018}]"/>
@@ -1001,7 +1001,7 @@ in names which should not be considered when sorting. Given (the default):
 
 \begin{lstlisting}[language=xml]
 <nosort>
-  <!-- strip prefices like 'al-' when sorting names -->
+  <!-- strip prefixes like 'al-' when sorting names -->
   <option name="type_names" value="\A\p{L}{2}\p{Pd}"/>
   <!-- strip diacritics when sorting names -->
   <option name="type_names" value="[\x{2bf}\x{2018}]"/>
