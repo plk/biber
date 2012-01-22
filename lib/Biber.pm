@@ -1074,9 +1074,6 @@ sub process_extrayear {
   elsif (my $y = $be->get_field('year')) {
     $year_string = $y;
   }
-  elsif (my $ps = $be->get_field('pubstate')) {
-    $year_string = $ps;
-  }
   else {
     $year_string = '';
   }
