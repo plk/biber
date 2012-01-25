@@ -1,7 +1,9 @@
 Revision history for Biber
 
 0.9.9  (unreleased beta)
-       * Deals with PUBSTATE for extrayear calculation
+       * Biber now ignores names when it can't determine minimal
+         information like a lastname. Before, it would throw lots of errors
+         and die.
        * Strips UTF-8 BOMs before passing to Text::BibTeX otherwise it complains
        * Merged --graph and --bltxml options into --outformat option
        * Updated some internal Unicode 6.0 things
