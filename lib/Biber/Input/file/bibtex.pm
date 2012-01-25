@@ -585,7 +585,8 @@ sub _name {
       }
     }
 
-    my $no = parsename($name, $f, {useprefix => $useprefix});
+    # Skip names that don't parse for some reason (like no lastname found)
+    next unless my $no = parsename($name, $f, {useprefix => $useprefix});
 
     # Deal with "and others" in data source
     if (lc($no->get_namestring) eq 'others') {
@@ -875,6 +876,13 @@ sub parsename {
   my $prefix    = decode_utf8($name->format($p_f));
   my $suffix    = decode_utf8($name->format($s_f));
 
+  # Skip the name if we can't determine last name - otherwise many other things will
+  # fail later
+  unless ($lastname) {
+    biber_warn("Couldn't determine Last Name for name \"$namestr\" - ignoring name");
+    return 0;
+  }
+
   # Variables to hold the Text::BibTeX::NameFormat generated initials string
   my $gen_lastname_i;
   my $gen_firstname_i;
@@ -910,9 +918,6 @@ sub parsename {
   $gen_firstname_i   = inits(decode_utf8($nd_name->format($fi_f)));
   $gen_prefix_i      = inits(decode_utf8($nd_name->format($pi_f)));
   $gen_suffix_i      = inits(decode_utf8($nd_name->format($si_f)));
-
-  # Only warn about lastnames since there should always be one
-  biber_warn("Couldn't determine Last Name for name \"$namestr\"") unless $lastname;
 
   my $namestring = '';
   # prefix

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 20;
+use Test::More tests => 17;
 
 use Biber;
 use Biber::Utils;
@@ -64,6 +64,3 @@ ok(is_undef($main->get_extrayeardata('vangennep')), 'Entry vangennep - prefix ma
 ok(is_undef($main->get_extrayeardata('gennep')), 'Entry gennep - different from prefix name');
 ok(is_undef($main->get_extrayeardata('LY1')), 'Date range means no extrayear - 1');
 ok(is_undef($main->get_extrayeardata('LY2')), 'Date range means no extrayear - 2');
-is($main->get_extrayeardata('PS1'), '1', 'extrayear using pubstate states - 1');
-is($main->get_extrayeardata('PS2'), '2', 'extrayear using pubstate states - 1');
-ok(is_undef($main->get_extrayeardata('PS3')), 'extrayear using pubstate states - 3');
