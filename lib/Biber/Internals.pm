@@ -216,9 +216,9 @@ sub _getpnhash {
 }
 
 
-#########################
-# custom label generation (labelalpha = 2)
-#########################
+##################
+# label generation
+##################
 
 our $dispatch_label = {
   'afterword'         =>  [\&_label_name,             ['afterword']],
@@ -295,6 +295,11 @@ sub _labelpart {
   my $slp;
 
   foreach my $part (@$labelpart) {
+    # Implement defaults not set by biblatex itself
+    unless (exists($part->{substring_fixed_threshold})) {
+      $part->{substring_fixed_threshold} = 1;
+    }
+
     # Deal with various tests
     # ifnamecount only uses this label template part if the list it is applied to is a certain
     # length
@@ -768,7 +773,7 @@ sub _label_listdisambiguation {
         # Then we count the items in this slice of @col to see if it's the same size
         # as the substring cache count for this substring. If it is, we can stop here.
         # It would be more obvious to look for the first substring with count == 1 but
-        # we can't do that because this requires using uniq to trim @col and we can do that
+        # we can't do that because this requires using uniq to trim @col and we can't do that
         # because we need to keep the indexes into $strings the same dimensions as @equiv_class
         if (not $lcache->{data}[$k][$i] and
             ($substr_cache{$equiv_class[$k]->[$i]}{$s} == scalar(grep {$_ eq $col[$k] } @col_eq) or
