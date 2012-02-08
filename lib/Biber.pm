@@ -1276,7 +1276,8 @@ sub process_labelyear {
       $be->set_field('labelyear', $be->get_field($yf));
 
       # ignore endyear if it's the same as year
-      my ($ytype) = $yf =~ /\A(.*)year\z/xms;
+      my ($ytype) = $yf =~ /\A(.*)year\z/xms;;
+      $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
       # endyear can be null
       if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
         and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
