@@ -645,12 +645,12 @@ section. The general structure is:
 \noindent Here, \textcolor{red}{\texttt{driver$_1$}}\ldots
 \textcolor{red}{\texttt{driver$_n$}} are the names of valid Biber data
 source drivers (see section \ref{dcf}). One thing to note here is the
-\verb+map_overwrite+ attribute. This must be present and have a value of
-\verb+0+ or \verb+1+. It determines whether, for this driver mapping
-section, you may overwrite existing fields when adding new fields
-or mapping them. This attribute can be overridden on a per-map basis, see
-below. A warning will be issued either way saying whether an existing field
-will or will not be overwritten.
+\verb+map_overwrite+ attribute. This boolean attribute determines whether,
+for this driver mapping section, you may overwrite existing fields when
+adding new fields or mapping them. This attribute can be overridden on a
+per-map basis, see below. A warning will be issued either way saying
+whether an existing field will or will not be overwritten. If omitted, it
+defaults to «0».
 
 The \verb+map+ elements are processed in sequence and contain a number of
 \verb+map_step+s which are also processed in sequence. Each \verb+map_step+
@@ -695,6 +695,9 @@ examples. A \verb+map+ element looks like this:
 \item If there are any \textcolor{red}{\texttt{entrytypes}}s named in
   \textcolor{blue}{\texttt{per\_type}} elements, this mapping only applies to entries
   of the named \textcolor{red}{\texttt{entrytypes}}s.
+\item The \texttt{map\_overwrite} attribute can be used to override the
+  value for this attribute set on the parent \verb+maps+ element. If
+  omitted, it defaults to the parent \verb+maps+ attribute value.
 \end{itemize}
 
 \noindent Each \verb+map_step+ is looked at in turn and compared with the

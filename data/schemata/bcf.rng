@@ -202,12 +202,14 @@
                   <value>endnotexml</value>
                 </choice>
               </attribute>
-              <attribute name="map_overwrite">
-                <choice>
-                  <value>0</value>
-                  <value>1</value>
-                </choice>
-              </attribute>
+              <optional>
+                <attribute name="map_overwrite">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
               <oneOrMore>
                 <ref name="map"/>
               </oneOrMore>

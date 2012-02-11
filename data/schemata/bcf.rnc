@@ -96,7 +96,7 @@ start =
     element bcf:sourcemap {
       element bcf:maps {
         attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
-        attribute map_overwrite { "0" | "1" },
+        attribute map_overwrite { "0" | "1" }?,
         map+
       }+
     }?,

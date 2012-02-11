@@ -249,6 +249,7 @@ sub create_entry {
   if (defined(Biber::Config->getoption('sourcemap'))) {
     if (my $m = first {$_->{datatype} eq 'bibtex'} @{Biber::Config->getoption('sourcemap')} ) {
       $user_map = $m;
+      $user_map->{map_overwrite} = $user_map->{map_overwrite} // 0; # default
     }
   }
 

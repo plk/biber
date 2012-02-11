@@ -192,7 +192,6 @@ my $sourcemap = [
         per_type       => [{ content => "RPRT" }],
       },
     ],
-    map_overwrite => 0,
   },
   {
     datatype => "zoterordfxml",
