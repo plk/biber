@@ -91,7 +91,6 @@ start =
       }+
     }+,
 
-
     # field/entrytype mapping
     element bcf:sourcemap {
       element bcf:maps {
