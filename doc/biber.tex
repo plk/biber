@@ -711,8 +711,8 @@ datasource entry being processed. A \verb+map_step+ works like this:
   this \verb+map+ immediately terminates.
 \item Change the \textcolor{red}{\texttt{source-field}} to
   \textcolor{red}{\texttt{target-field}}, if defined. If
-  \textcolor{blue}{\texttt{map\_final}} is set then if no field in the entry
-  matches \textcolor{red}{\texttt{source-field}}, processing of
+  \textcolor{blue}{\texttt{map\_final}} is set, then if there is no
+  \textcolor{red}{\texttt{source-field}} field in the entry, processing of
   this \verb+map+ immediately terminates.
 \item If \textcolor{blue}{\texttt{map\_match}} is defined but
   \textcolor{blue}{\texttt{map\_replace}} is not, only apply the
