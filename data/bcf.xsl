@@ -179,6 +179,25 @@
           .sort_final {
             background-color: #FFAAAA;
           }
+          .map_final {
+            color: #FF0000;
+          }
+          .map_origentrytype {
+            color: #04FF04;
+          }
+          .map_origfield {
+            color: #6699CC;
+          }
+          .map_origfieldval {
+            color: #FF9933;
+          }
+          .map_null {
+            text-decoration: line-through;
+          }
+          .map_regexp {
+            font-size: 60%;
+            font-family: "Courier New",monospace;
+          }
           .la_final {
             color: #FF0000;
           }
@@ -312,107 +331,85 @@
           <hr/>
           <h3>Datasource Mappings</h3>
           <xsl:for-each select="/bcf:controlfile/bcf:sourcemap/bcf:maps">
-            <h4>Mappings for type <xsl:value-of select="./@datatype"/>(overwrite = <xsl:value-of select="./@bmap_overwrite"/>)</h4>
-            <xsl:if test="./bcf:map/@maptype='entrytype'">
-              <h5>Entrytype Mappings</h5>
+            <h4>Mappings for datatype <xsl:value-of select="./@datatype"/> (default overwrite = <xsl:value-of select="./@map_overwrite"/>)</h4>
+            <xsl:for-each select="./bcf:map">
               <table>
                 <thead>
-                  <tr><td>Mapping</td><td>Also set</td></tr>
+                  <tr>
+                  <td align="left">Mapping (<xsl:choose>
+                    <xsl:when test="./@map_overwrite">overwrite = <xsl:value-of select="./@map_overwrite"/></xsl:when>
+                    <xsl:otherwise>default overwrite</xsl:otherwise>
+                  </xsl:choose>
+                  <xsl:if test="./bcf:per_type">
+                    , <b>for types</b>: 
+                    <xsl:for-each select="./bcf:per_type">
+                      <xsl:sort select="./text()"/>
+                      <xsl:value-of select="./text()"/>
+                      <xsl:if test="not(position()=last())">, </xsl:if>
+                    </xsl:for-each>
+                  </xsl:if>
+                  <xsl:if test="./bcf:per_datasource">
+                    , <b>for datasources</b>: 
+                    <xsl:for-each select="./bcf:per_datasource">
+                      <xsl:sort select="./text()"/>
+                      <xsl:value-of select="./text()"/>
+                      <xsl:if test="not(position()=last())">, </xsl:if>
+                    </xsl:for-each>
+                  </xsl:if>)</td>
+                  </tr>
                 </thead>
                 <tbody>
-                  <xsl:for-each select="./bcf:map[@maptype='entrytype']">
-                    <tr>
-                      <td>
-                        <ul>
-                          <xsl:for-each select="./bcf:map_pair">
-                            <li><xsl:value-of select="./@map_source"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./@map_target"/></li>
-                          </xsl:for-each>
-                        </ul>
-                      </td>
-                      <td>
-                        <ul>
-                          <xsl:for-each select="./bcf:also_set">
-                            <li><xsl:value-of select="./@map_field"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
-                            <xsl:choose>
-                              <xsl:when test="./@bmap_origentrytype='1'">
-                                <span class="map_meta">BMAP_ORIGENTRYTYPE</span>
-                              </xsl:when>
-                              <xsl:when test="./@bmap_null='1'">
-                                <span class="map_meta">BMAP_NULL</span>
-                              </xsl:when>
-                              <xsl:otherwise>
-                                <xsl:value-of select="./@map_value"/>
-                              </xsl:otherwise>
-                            </xsl:choose>
-                            </li>
-                          </xsl:for-each>
-                        </ul>
-                      </td>
-                    </tr>
+                  <xsl:for-each select="./bcf:map_step">
+                    <tr><td>
+                      <xsl:if test="./@map_type_source">
+                        <span><xsl:if test="./@map_final='1'">
+                          <xsl:attribute name="class">map_final</xsl:attribute>
+                        </xsl:if>
+                        @<xsl:value-of select="./@map_type_source"/></span>
+                        <xsl:if test="./@map_type_target">
+                          <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>@<xsl:value-of select="./@map_type_target"/>
+                        </xsl:if>
+                      </xsl:if>
+                      <xsl:if test="./@map_field_source">
+                        <span><xsl:if test="./@map_final='1'">
+                          <xsl:attribute name="class">map_final</xsl:attribute>
+                        </xsl:if>
+                        <xsl:value-of select="./@map_field_source"/></span>
+                        <xsl:if test="./@map_field_target">
+                          <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./@map_field_target"/>
+                        </xsl:if>
+                        <xsl:if test="./@map_match"> <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_match"/></span></xsl:if>
+                        <xsl:if test="./@map_replace"> <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_replace"/></span></xsl:if>
+                      </xsl:if>
+
+                      <xsl:if test="./@map_field_set">
+                        <span><xsl:if test="./@map_null='1'">
+                          <xsl:attribute name="class">map_null</xsl:attribute>
+                        </xsl:if>
+                        <xsl:value-of select="./@map_field_set"/></span>
+                        <xsl:if test="./@map_field_value">=&quot;<xsl:value-of select="./@map_field_value"/>&quot;</xsl:if>
+                        <xsl:if test="./@map_origentrytype='1'">=<span class="map_origentrytype">TYPE</span></xsl:if>
+                        <xsl:if test="./@map_origfield='1'">=<span class="map_origfield">FIELD</span></xsl:if>
+                        <xsl:if test="./@map_origfieldval='1'">=<span class="map_origfieldval">FIELDVAL</span></xsl:if></xsl:if></td></tr>
                   </xsl:for-each>
                 </tbody>
               </table>
-            </xsl:if>
-            <xsl:if test="./bcf:map/@maptype='field'">
-              <h5>Field Mappings</h5>
-              <table>
-                <thead>
-                  <tr><td>Mapping only for entrytypes</td><td>Mapping</td><td>Also set</td></tr>
-                </thead>
-                <tbody>
-                  <xsl:for-each select="./bcf:map[@maptype='field']">
-                    <tr>
-                      <td>
-                        <ul>
-                          <xsl:for-each select="./bcf:per_type">
-                            <li><xsl:value-of select="./text()"/></li>
-                          </xsl:for-each>
-                        </ul>
-                      </td>
-                      <td>
-                        <ul>
-                          <xsl:for-each select="./bcf:map_pair">
-                            <li><xsl:value-of select="./@map_source"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
-                            <xsl:choose>
-                              <xsl:when test="./@bmap_null='1'">
-                                <span class="map_meta">BMAP_NULL</span>
-                              </xsl:when>
-                              <xsl:otherwise>
-                                <xsl:value-of select="./@map_target"/>
-                              </xsl:otherwise>
-                            </xsl:choose>
-                            </li>
-                          </xsl:for-each>
-                        </ul>
-                      </td>
-                      <td>
-                        <ul>
-                          <xsl:for-each select="./bcf:also_set">
-                            <li><xsl:value-of select="./@map_field"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
-                            <xsl:choose>
-                              <xsl:when test="./@bmap_origfield='1'">
-                                <span class="map_meta">BMAP_ORIGFIELD</span>
-                              </xsl:when>
-                              <xsl:when test="./@bmap_null='1'">
-                                <span class="map_meta">BMAP_NULL</span>
-                              </xsl:when>
-                              <xsl:otherwise>
-                                <xsl:value-of select="./@map_value"/>
-                              </xsl:otherwise>
-                            </xsl:choose>
-                            </li>
-                          </xsl:for-each>
-                        </ul>
-                      </td>
-                    </tr>
-                  </xsl:for-each>
-                </tbody>
-              </table>
-            </xsl:if>
+              <br/>
+            </xsl:for-each>
           </xsl:for-each>
           <div class="key"><u>Key</u>
           <ul>
-            <li><b>Key</b>: Special mapping targets - <span class="map_meta">BMAP_NULL</span> = map to null (delete). <span class="map_meta">BMAP_ORIGENTRYTYPE</span> = map to name of the original (pre-map) entrytype. <span class="map_meta">BMAP_ORIGFIELD</span> = map to name of original (pre-map) field</li>
+            <li><b><span class="map_final">@entrytype</span></b>: Entrytype for entry must match or mapping terminates</li>
+            <li><b><span class="map_final">field</span></b>: Entry must have field or mapping terminates</li>
+            <li><b>@source<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>@target</b>: Change source entrytype to target entrytype</li>
+            <li><b>source<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>target</b>: Change source field to target field</li>
+            <li><b><span class="map_null">field</span></b>: Delete field</li>
+            <li><b>field=&quot;string&quot;</b>: Set field to &quot;string&quot;</li>
+            <li><b><span class="map_origentrytype">TYPE</span></b>: Most recently mentioned source entrytype</li>
+            <li><b><span class="map_origfield">FIELD</span></b>: Most recently source field</li>
+            <li><b><span class="map_origfieldval">FIELDVAL</span></b>: Most recently source field value</li>
+            <li><b>field<xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text>MATCH</b>: field must match Regular Expression MATCH</li>
+            <li><b>field<xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text>MATCH <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> REPLACE</b>: Perform Regular Expression match/replace on field</li>
           </ul>
           </div>
         </xsl:if>
@@ -493,7 +490,7 @@
           <div class="key"><u>Key</u>
           <ul>
             <li><b>Heading key</b>: Label parts are concatenated together in part order shown</li>
-            <li><b>Labelpart key</b>: <span class="la_final">Final label, no more parts are considered</span>. &quot;namecount&gt;n<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>field&quot; - conditional field part, only used if there are more than n names. <span class="la_substring">Substring specification</span>: <span class="la_substring">&gt;&gt;&gt;</span>field = use three chars from left side of field, field<span class="la_substring">&lt;&lt;</span> = use two chars from right side of field, field<span class="la_substring">v/n</span> = variable-width substring, max n chars, field<span class="la_substring">vf/n</span> = variable-width substring fixed to same length as longest string occuring at least n times, field<span class="la_substring">l</span> = list scope disambiguation where the label as a whole is unique, not necessarily the individual parts. <span class="la_compound">field with compound substring extraction enabled</span>. field<span class="la_namecount">=n</span> = only use the first n names to form the labelpart</li>
+            <li><b>Labelpart key</b>: <span class="la_final">Final label, no more parts are considered</span>. &quot;namecount&gt;n<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>field&quot; - conditional field part, only used if there are more than n names. Substring specification: <span class="la_substring">&gt;&gt;&gt;</span>field = use three chars from left side of field, field<span class="la_substring">&lt;&lt;</span> = use two chars from right side of field, field<span class="la_substring">v/n</span> = variable-width substring, max n chars, field<span class="la_substring">vf/n</span> = variable-width substring fixed to same length as longest string occuring at least n times, field<span class="la_substring">l</span> = list scope disambiguation where the label as a whole is unique, not necessarily the individual parts. <span class="la_compound">field with compound substring extraction enabled</span>. field<span class="la_namecount">=n</span> = only use the first n names to form the labelpart</li>
           </ul>
           </div>
         </xsl:if>
