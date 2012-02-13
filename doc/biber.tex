@@ -2,6 +2,7 @@
 % PDF 1.4 and TeXGyre fonts
 \pdfminorversion=4
 \documentclass{ltxdockit}
+\usepackage{btxdockit}
 \usepackage[british]{babel}
 \usepackage[strict=true,autostyle=true]{csquotes}
 \usepackage{ifthen}
@@ -90,9 +91,9 @@ details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
 
 \minisec{0.9.9}
-The output format option \verb+--graph+ has been moved to a
-new option \verb+--outformat+. The option \verb+--graph+ should now be
-specified as \verb+--outformat=dot+ and the \linebreak\verb+--dot_include+ option
+The output format option \opt{--graph} has been moved to a
+new option \opt{--outformat}. The option \opt{--graph} should now be
+specified as \opt{--outformat=dot} and the \linebreak\opt{--dot\_include} option
 should be used to specify the elements to include in the DOT output. For
 example:
 
@@ -107,7 +108,7 @@ example:
 \end{verbatim}
 
 \minisec{0.9.8}
-\textcolor{red}{The \texttt{sourcemap} option syntax has changed}.The syntax
+\textcolor{red}{The \opt{sourcemap} option syntax has changed}.The syntax
 was too confusing. It is now simplified and more powerful. It is uses a
 sequential processing model to apply mappings to an entry. See section
 \ref{map}.
@@ -117,8 +118,8 @@ sequential processing model to apply mappings to an entry. See section
   reason for this is that the older \verb+Config::General+ format
   could not be extended to deal with more sophisticated features like
   per-datasource restrictions. An XML format is much better and in
-  fact easier to understand. The old format of the \verb+map+ option
-  (now called \verb+sourcemap+) was rather confusing because
+  fact easier to understand. The old format of the \opt{map} option
+  (now called \opt{sourcemap}) was rather confusing because
   of limitations in the old config file format. Please see section
   \ref{map} and convert your config files to the new format.
 
@@ -256,9 +257,9 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   UTF-8 compliant \TeX\ engine)
 \item Creates entry sets dynamically and allows easily defined static entry sets,
   all processed in one pass
-\item «Syntactic» inheritance via new \verb+XDATA+ entrytype and
+\item «Syntactic» inheritance via new \bibtype{XDATA} entrytype and
   field. This can be thought of as a field-based generalisation of the
-  Bib\TeX\ \verb+@STRING+ functionality (which is also supported).
+  Bib\TeX\ \bibtype{STRING} functionality (which is also supported).
 \item «Semantic» inheritance via a generalisation of the Bib\TeX\
   crossreference mechanism. This is highly customisable by the
   user---it is possible to choose which fields to inherit for which
@@ -272,7 +273,7 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 \item Support for remote data sources
 \item User-definable mapping and suppression of fields and entrytypes in
   data sources. You can use this to, for example, ignore all
-  \verb+ABSTRACT+ fields completely. See section \ref{map}
+  \bibfield{ABSTRACT} fields completely. See section \ref{map}
 \item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of»
   etc. (Bib\LaTeX\ support coming in Bib\LaTeX\ 2.x)
@@ -289,8 +290,8 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 
 \noindent Figure \ref{fig:overview} shows the main functional units of
 processing in Biber. The most difficult tasks which Biber
-performs are the processing of Bib\LaTeX's \verb+uniquename+ and
-\verb+uniquelist+ options\footnote{A rather tricky unbounded loop but with
+performs are the processing of Bib\LaTeX's \opt{uniquename} and
+\opt{uniquelist} options\footnote{A rather tricky unbounded loop but with
   a guaranteed eventual stable exit state.}, the sorting of
 lists\footnote{This is a complex, arbitrary multi-field Schwartzian
   Transform which has to deal with potentially different case and order
@@ -336,25 +337,26 @@ entry can take as it passes through Biber.
 \item Some uncited entries on which cited entries depend are
   instantiated in the internal Biber data model:
   \begin{itemize}
-  \item Entries with entrytype \verb+XDATA+ which are referenced from cited
+  \item Entries with entrytype \bibtype{XDATA} which are referenced from cited
     entries.
-    \item Entries mentioned in the \verb+CROSSREF+ or \verb+XREF +field of a cited entry
-      (unless they are also cited themselves in which case they are already
-      instantiated as per item \ref{list:cited} above).
+  \item Entries mentioned in the \bibfield{CROSSREF} or
+    \bibfield{XREF} field of a cited entry (unless they are also cited
+    themselves in which case they are already instantiated as per item
+    \ref{list:cited} above).
       \item Clones of entries mentioned as a «related» entry of a cited
         entry\footnote{This is done to 
           implement the «related» entry feature which does not currently
           have a Bib\LaTeX\ interface.}.
-      \item Members of sets, either explicit \verb+SET+ entrytype entries or
+      \item Members of sets, either explicit \bibtype{SET} entrytype entries or
         dynamic sets.
   \end{itemize}
 \item Some uncited but instantiated entries are promoted to cited
   status so that they make it into the output:
   \begin{itemize}
   \item Entries instantiated by being members of a set.
-  \item Entries instantiated by being mentioned as a \verb+CROSSREF+ are
-    promoted to cited status if \verb+CROSSREF+'ed or \verb+XREF+'ed at
-    least \verb+mincrosref+ times.
+  \item Entries instantiated by being mentioned as a \bibfield{CROSSREF} are
+    promoted to cited status if \bibfield{CROSSREF}'ed or \bibfield{XREF}'ed at
+    least \opt{mincrosref} times.
   \item Clones of entries mentioned as a «related» entry of a cited entry.
   \end{itemize}
 \item Some of these auto-cited entries have the «dataonly» option set on
@@ -386,31 +388,31 @@ the development in 2009 and is largely responsible for making it what it is toda
 Firstly, please note that Biber will \emph{not} attempt to sanitise
 the content of Bib\TeX\ data sources. That is, don't expect it to
 auto-escape any \TeX\ special characters like «\verb+&+» or «\verb+%+» which
-it finds in, for example, your \verb+TITLE+ fields. It used to do this in
+it finds in, for example, your \bibfield{TITLE} fields. It used to do this in
 earlier versions in some cases but as of version 0.9, it doesn't because
 it's fraught with problems and leads to inconsistent expectations and
 behaviour between different data source types. In your Bib\TeX\ data
 sources, please make sure your entries are legal \TeX\ code.
 
-Running \verb+biber --help+ will display all options and a brief
+Running \opt{biber --help} will display all options and a brief
 description of each. This is the most useful brief source of usage
 information. Biber returns an exit code of 0 on success or 1 if
 there was an error.
 
 Most Biber options can be specified in long or short format. When
 mentioning options below, they are referred to as
-«\verb+long form|short form+» when an option has both a long and short
+«\opt{long form|short form}» when an option has both a long and short
 form. As usual with such options, when the option requires an argument, the
 long form is followed by an equals sign «\verb+=+» and then the argument,
 the short form is followed by a space and then the argument. For example,
-the \verb+--configfile|-g+ option can be given in two ways:
+the \opt{--configfile|-g} option can be given in two ways:
 
 \begin{verbatim}
 biber --configfile=somefile.conf
 biber -g somefile.conf
 \end{verbatim}
 
-With the \verb+backend=biber+ option, Bib\LaTeX\ switches its backend
+With the \opt{backend=biber} option, Bib\LaTeX\ switches its backend
 interface and passes all options and information relevant to Biber's
 operation in a control file with extension \verb+.bcf+\footnote{Bib\LaTeX\ Control
   File}. This is conceptually equivalent to the \verb+.aux+ file which
@@ -495,8 +497,8 @@ command-line options and also to set options which cannot be set on the
 command line.
 
 The configuration file is by default called \verb+biber.conf+ but this can
-be changed using the \verb+--configfile|-g+ option. Unless
-\verb+--configfile|-g+ is used, the config file is
+be changed using the \opt{--configfile|-g} option. Unless
+\opt{--configfile|-g} is used, the config file is
 looked for in the following places, in decreasing order of preference:\\[2ex]
 
 \noindent \verb+biber.conf+ in the current directory $\rightarrow$\\
@@ -554,9 +556,9 @@ Bib\LaTeX\ macros in your document and automatically passed to Biber
 via the \verb+.bcf+ file. Certain options apply only to Biber and can
 only be set in the config file, particularly the more complex
 options. Most options are simple tags. Exceptions are the
-\verb+nosort+ and \verb+collate_options+ options which are slightly
+\opt{nosort} and \opt{collate\_options} options which are slightly
 more complex and can have sub-options as shown. A much more complex
-option is the \verb+sourcemap+ option which is not set by default and
+option is the \opt{sourcemap} option which is not set by default and
 which is described in section \ref{map}.
 
 \subsubsection{The \texttt{sourcemap} option}\label{map}
@@ -566,7 +568,7 @@ source entrytypes and fields into the Bib\LaTeX\ data
 model\footnote{The Bib\LaTeX\ data model is currently static and
   defined in the Bib\LaTeX\ manual. In the future (Bib\LaTeX\
   2.x), the data model will be dynamically defined by the user.}. If you
-want to override or augment the driver mappings you can use the \verb+sourcemap+
+want to override or augment the driver mappings you can use the \opt{sourcemap}
 option which makes it possible to, for example, have a data source with
 non-standard entrytypes or fields and to have these automatically mapped
 into other entrytypes/fields without modifying your data source.
@@ -597,7 +599,7 @@ overview of Biber's processing steps.
   \label{fig:biber-mdf}
 \end{figure}
 
-The \verb+sourcemap+ option can only be set in the config file
+The \opt{sourcemap} option can only be set in the config file
 and not on the command line as it has a complex structure. This
 option allows you to perform various data source mapping
 tasks which can be useful for pre-processing data which you do not
@@ -617,7 +619,7 @@ generate yourself:
 \end{itemize}
 
 \noindent There is in fact, more flexibility than the above suggests,
-examples will show this below. The format of the \verb+sourcemap+ option
+examples will show this below. The format of the \opt{sourcemap} option
 section in the config file is described below, followed by examples which
 will make things clearer. Items in \textcolor{red}{red} are not literal,
 they are descriptive meta-values which are explained in the accompanying
@@ -645,15 +647,15 @@ section. The general structure is:
 \noindent Here, \textcolor{red}{\texttt{driver$_1$}}\ldots
 \textcolor{red}{\texttt{driver$_n$}} are the names of valid Biber data
 source drivers (see section \ref{dcf}). One thing to note here is the
-\verb+map_overwrite+ attribute. This boolean attribute determines whether,
+\opt{map\_overwrite} attribute. This boolean attribute determines whether,
 for this driver mapping section, you may overwrite existing fields when
 adding new fields or mapping them. This attribute can be overridden on a
 per-map basis, see below. A warning will be issued either way saying
 whether an existing field will or will not be overwritten. If omitted, it
 defaults to «0».
 
-The \verb+map+ elements are processed in sequence and contain a number of
-\verb+map_step+s which are also processed in sequence. Each \verb+map_step+
+The \opt{map} elements are processed in sequence and contain a number of
+\opt{map\_step}s which are also processed in sequence. Each \opt{map\_step}
 allows you to do a particular thing or combination of things:
 
 \begin{itemize}
@@ -664,7 +666,7 @@ allows you to do a particular thing or combination of things:
 \end{itemize}
 
 \noindent These facilities are explained in more detail below, with
-examples. A \verb+map+ element looks like this:
+examples. A \opt{map} element looks like this:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <map +\textcolor{blue}{map\_overwrite="0|1"}+>
@@ -696,24 +698,24 @@ examples. A \verb+map+ element looks like this:
   \textcolor{blue}{\texttt{per\_type}} elements, this mapping only applies to entries
   of the named \textcolor{red}{\texttt{entrytypes}}s.
 \item The \texttt{map\_overwrite} attribute can be used to override the
-  value for this attribute set on the parent \verb+maps+ element. If
-  omitted, it defaults to the parent \verb+maps+ attribute value.
+  value for this attribute set on the parent \opt{maps} element. If
+  omitted, it defaults to the parent \opt{maps} attribute value.
 \end{itemize}
 
-\noindent Each \verb+map_step+ is looked at in turn and compared with the
-datasource entry being processed. A \verb+map_step+ works like this:
+\noindent Each \opt{map\_step} is looked at in turn and compared with the
+datasource entry being processed. A \opt{map\_step} works like this:
 
 \begin{itemize}
 \item Change the \textcolor{red}{\texttt{source-entrytype}} to
   \textcolor{red}{\texttt{target-entrytype}}, if defined. If
   \textcolor{blue}{\texttt{map\_final}} is set then if the entrytype of the
   entry is not \textcolor{red}{\texttt{source-entrytype}}, processing of
-  this \verb+map+ immediately terminates.
+  this \opt{map} immediately terminates.
 \item Change the \textcolor{red}{\texttt{source-field}} to
   \textcolor{red}{\texttt{target-field}}, if defined. If
   \textcolor{blue}{\texttt{map\_final}} is set, then if there is no
   \textcolor{red}{\texttt{source-field}} field in the entry, processing of
-  this \verb+map+ immediately terminates.
+  this \opt{map} immediately terminates.
 \item If \textcolor{blue}{\texttt{map\_match}} is defined but
   \textcolor{blue}{\texttt{map\_replace}} is not, only apply the
   step if the \textcolor{red}{\texttt{source-field}} matches
@@ -760,7 +762,7 @@ case insensitive.
 </map>
 \end{lstlisting}
 
-\noindent This would add a \verb+KEYWORDS+ field with value «\verb+keyw1, keyw2+»
+\noindent This would add a \bibfield{KEYWORDS} field with value «\verb+keyw1, keyw2+»
 to all entries which are found in either the
 \verb+examples1.bib+ or \verb+examples2.bib+ files. This assumes that the
 Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
@@ -773,8 +775,8 @@ Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
 </map>
 \end{lstlisting}
 
-\noindent Copy the \verb+TITLE+ field to the \verb+NOTE+ field unless the
-\verb+NOTE+ field already exists.
+\noindent Copy the \bibfield{TITLE} field to the \bibfield{NOTE} field unless the
+\bibfield{NOTE} field already exists.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <map map_overwrite="0">
@@ -783,13 +785,13 @@ Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
 </map>
 \end{lstlisting}
 
-\noindent Any \verb+CHAT+ entrytypes would become \verb+CUSTOMA+ entrytypes and 
-would automatically have a \verb+TYPE+ field set to 
-«CHAT» unless the \verb+TYPE+ field already exists in the entry (because
-\verb+map_overwrite+ is false). This mapping applies only to entries of type
-«CHAT» since the first step has \verb+map_final+ set and so if the
-\verb+map_type_source+ does not match the entry, processing of this
-\verb+map+ immediately terminates.
+\noindent Any \bibtype{CHAT} entrytypes would become \bibtype{CUSTOMA} entrytypes and 
+would automatically have a \bibfield{TYPE} field set to 
+«CHAT» unless the \bibfield{TYPE} field already exists in the entry (because
+\opt{map\_overwrite} is false). This mapping applies only to entries of type
+\bibtype{CHAT} since the first step has \opt{map\_final} set and so if the
+\opt{map\_type\_source} does not match the entry, processing of this
+\opt{map} immediately terminates.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <map>
@@ -801,9 +803,9 @@ would automatically have a \verb+TYPE+ field set to
 </map>
 \end{lstlisting}
 
-\noindent Any entries of entrytype \verb+ARTICLE+ or \verb+BOOK+ from the
-«examples.bib» datasource would have their \verb+ABSTRACT+
-fields removed and a \verb+NOTE+ field added with value «Auto-created this field».
+\noindent Any entries of entrytype \bibfield{ARTICLE} or \bibfield{BOOK} from the
+«examples.bib» datasource would have their \bibfield{ABSTRACT}
+fields removed and a \bibfield{NOTE} field added with value «Auto-created this field».
 
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
 <map>
@@ -813,9 +815,9 @@ fields removed and a \verb+NOTE+ field added with value «Auto-created this fiel
 </map>
 \end{lstlisting}
 
-\noindent This removes \verb+ABSTRACT+ fields from any entry, changes
-\verb+CONDUCTOR+ fields to \verb+NAMEA+ fields and changes \verb+GPS+
-fields to \verb+USERA+ fields
+\noindent This removes \bibfield{ABSTRACT} fields from any entry, changes
+\bibfield{CONDUCTOR} fields to \bibfield{NAMEA} fields and changes \bibfield{GPS}
+fields to \bibfield{USERA} fields
 
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
 <map>
@@ -828,9 +830,9 @@ fields to \verb+USERA+ fields
 </map>
 \end{lstlisting}
 
-\noindent Applies only to entries with \verb+PUBMED+ fields and maps
-\verb+PUBMEDID+ fields to \verb+EPRINT+ fields, sets the \verb+EPRINTTYPE+
-field to «PUBMEDID» and also sets the \verb+USERD+ field to the string
+\noindent Applies only to entries with \bibfield{PUBMED} fields and maps
+\bibfield{PUBMEDID} fields to \bibfield{EPRINT} fields, sets the \bibfield{EPRINTTYPE}
+field to «PUBMEDID» and also sets the \bibfield{USERD} field to the string
 «Some string of things».
 
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
@@ -841,7 +843,7 @@ field to «PUBMEDID» and also sets the \verb+USERD+ field to the string
 </map>
 \end{lstlisting}
 
-\noindent Here, the contents of the \verb+SERIES+
+\noindent Here, the contents of the \bibfield{SERIES}
 field have leading numbers stripped and the remainder of the contents
 lowercased.
 
@@ -854,7 +856,7 @@ lowercased.
 </map>
 \end{lstlisting}
 
-\noindent Here, if for an entry, the \verb+TITLE+ field matches a
+\noindent Here, if for an entry, the \bibfield{TITLE} field matches a
 particular regular expression, we set a special keyword so we can, for
 example, make a references section just for certain items.
 
@@ -865,7 +867,7 @@ example, make a references section just for certain items.
 </map>
 \end{lstlisting}
 
-\noindent If an entry has a \verb+LISTA+ field which matches regular
+\noindent If an entry has a \bibfield{LISTA} field which matches regular
 expression «regexp», then it is removed.
 
 \begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
@@ -879,7 +881,7 @@ expression «regexp», then it is removed.
 
 \noindent Here, we use multiple match/replace for the same field to
 regularise some inconstant name variants. Bear in mind that
-match/replace processing within a \verb+map+ element is sequential and
+match/replace processing within a \opt{map} element is sequential and
 the changes from a previous match/replace are already committed.
 
 \begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
@@ -896,9 +898,9 @@ the changes from a previous match/replace are already committed.
 </map>
 \end{lstlisting}
 
-\noindent Only applies to entries with an \verb+AUTHOR+ field matching
-«Doe,». First the \verb+AUTHOR+ field is copied to both the
-\verb+SHORTAUTHOR+ and \verb+SORTNAME+ fields, overwriting them if they
+\noindent Only applies to entries with an \bibfield{AUTHOR} field matching
+«Doe,». First the \bibfield{AUTHOR} field is copied to both the
+\bibfield{SHORTAUTHOR} and \bibfield{SORTNAME} fields, overwriting them if they
 already exist. Then, these two new fields are modified to canonicalise a
 particular name, which presumably has some variants in the datasource.
 \bigskip
@@ -920,7 +922,7 @@ sources:
 </maps>
 \end{lstlisting}
 
-\noindent Or here, mapping journal articles into \verb+Report+ entries for
+\noindent Or here, mapping journal articles into \bibtype{Report} entries for
 Endnote XML format data sources within a particular data source.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
@@ -932,7 +934,7 @@ Endnote XML format data sources within a particular data source.
 </maps>
 \end{lstlisting}
 
-\noindent Or here, dropping the \verb+N2+ field from \verb+RIS+
+\noindent Or here, dropping the \bibfield{N2} field from \verb+RIS+
 datasources, which are commonly used for abstracts:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
@@ -945,14 +947,14 @@ datasources, which are commonly used for abstracts:
 \bigskip
 \subsubsection{The \texttt{nosort} option}\label{nosort}
 
-The value of the \verb+nosort+ option can only be set in the config file
+The value of the \opt{nosort} option can only be set in the config file
 and not on the command line. This is because the values are Perl regular
 expressions and would need special quoting to set on the command line. This
 can get a bit tricky on some OSes (like Windows) so it's safer to set them
 in the config file. In any case, it's unlikely you would want to set them
 for particular Biber runs; they would more likely be set as your
 personal default and thus they would naturally be set in the config file
-anyway. \verb+nosort+ allows you to ignore parts of a field for sorting.
+anyway. \opt{nosort} allows you to ignore parts of a field for sorting.
 This is done using Perl regular expressions which specify what to
 ignore in a field. You can specify as many patterns as you like for a
 specific field. Also available are some field type aliases so you can, for
@@ -1021,12 +1023,12 @@ AUTHOR = {{al-Hasan}, ʿAlī},
 when sorting. See the Perl regular expression manual page for
 details of the regular expression syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
 
-You may specify any number of \verb+option+ elements. If a
-\verb+nosort+ option is found for a specific field, it will override
+You may specify any number of \opt{option} elements. If a
+\opt{nosort} option is found for a specific field, it will override
 any option for a type which also covers that field.
 
 Here is another example. Suppose you wanted to ignore «The» at the
-beginning of a \verb+TITLE+ field when sorting, you could add this to your
+beginning of a \bibfield{TITLE} field when sorting, you could add this to your
 \verb+biber.conf+:
 
 \begin{lstlisting}[language=xml]
@@ -1044,13 +1046,13 @@ beginning of a \verb+TITLE+ field when sorting, you could add this to your
 </nosort>
 \end{lstlisting}
 
-\noindent \textbf{Note:} \verb+nosort+ can be specified for most fields but
+\noindent \textbf{Note:} \opt{nosort} can be specified for most fields but
 not for things like dates and special fields as that wouldn't make much sense.
 \bigskip
 \subsubsection{The \texttt{collate\_options} option}
 
-The \verb+collate_options+ option has format similar to
-\verb+nosort+. See Section \ref{coll} for details about the option,
+The \opt{collate\_options} option has format similar to
+\opt{nosort}. See Section \ref{coll} for details about the option,
 here is an example of a config file setting:
 
 \begin{lstlisting}[language=xml]
@@ -1069,7 +1071,7 @@ searched for in the following locations, in decreasing order of
 priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
-\hspace*{1em}In the \verb+--output_directory+, if specified$\rightarrow$\\
+\hspace*{1em}In the \opt{--output\_directory}, if specified$\rightarrow$\\
 \hspace*{2em}Relative to current directory$\rightarrow$\\
 \hspace*{3em}Using \verb+kpsewhich+, if available
 
@@ -1079,7 +1081,7 @@ Local data sources of type «file» are searched for in the following
 locations, in decreasing order of priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
-\hspace*{1em}In the \verb+--output_directory+, if specified$\rightarrow$\\
+\hspace*{1em}In the \opt{--output\_directory}, if specified$\rightarrow$\\
 \hspace*{2em}Relative to current directory$\rightarrow$\\
 \hspace*{3em}In the same directory as the control file$\rightarrow$\\
 \hspace*{4em}Using \verb+kpsewhich+ for supported formats, if available\\[2ex]
@@ -1101,8 +1103,8 @@ so, if you run
 
 \noindent then the logfile will be called «\verb+test.blg+». Like the
 \verb+.bbl+ output file, it will be created in the
-\verb+--output_directory|-c+, if this option is defined. You can
-override the logfile name by using the \verb+--logfile+ option:
+\opt{--output\_directory|-c}, if this option is defined. You can
+override the logfile name by using the \opt{--logfile} option:
 
 \begin{verbatim}
   biber --logfile=lfname test.bcf
@@ -1115,7 +1117,7 @@ write to directories which you don't have appropriate permissions to. This
 is more commonly an issue on non-Windows OSes. For example, if you rely on
 \verb+kpsewhich+ to find your database files which are in system \TeX\
 directories, you may well not have write permission there so Biber
-will not be able to write the \verb+.bbl+. Use the \verb+--outfile|-O+
+will not be able to write the \verb+.bbl+. Use the \opt{--outfile|-O}
 option to specify the location to write the \verb+.bbl+ to in such cases.
 
 \subsection{Collation and Localisation}\label{coll}
@@ -1131,8 +1133,8 @@ collation:\\[2ex]
   \verb+Unicode::Collate+ module for collation which implements the full UCA (Unicode
   Collation Algorithm). It also has CLDR (Common Locale Data
   Repository) tailoring to deal with cases which are not covered by the
-  UCA. It is a little slower than \verb+--fastsort|-f+ but the
-  advantages are such that it's rarely worth using \verb+--fastsort|-f+\\[1ex]
+  UCA. It is a little slower than \opt{--fastsort|-f} but the
+  advantages are such that it's rarely worth using \opt{--fastsort|-f}\\[1ex]
 
 \biberex{--fastsort|-f}
   \noindent Biber will sort using
@@ -1145,37 +1147,37 @@ collation:\\[2ex]
 \noindent The locale used for collation is determined by the following resource
 chain which is given in decreasing precedence order:\\[2ex]
 
-\noindent\verb+--collate_options|-c+ (e.g. \verb+-c 'locale => "de_DE"'+) $\rightarrow$\\
-\hspace*{1em}\verb+--sortlocale|-l+ $\rightarrow$\\
+\noindent\opt{--collate\_options|-c} (e.g. \opt{-c 'locale => "de\_DE"'}) $\rightarrow$\\
+\hspace*{1em}\opt{--sortlocale|-l} $\rightarrow$\\
 \hspace*{2em}\verb+LC_COLLATE+ environment variable $\rightarrow$\\
 \hspace*{3em}\verb+LANG+ environment variable $\rightarrow$\\
 \hspace*{4em}\verb+LC_ALL+ environment variable\\[2ex]
 
-\noindent With the default \verb+--collate|-C+ option, the locale will
+\noindent With the default \opt{--collate|-C} option, the locale will
 be used to look for a collation tailoring for that locale. It will generate an
 informational warning if it finds none. This is not a problem as the vast
 majority of collation cases are covered by the standard UCA and many
 locales neither have nor need any special collation tailoring.
 
-With the \verb+--fastsort|-f+ option, the locale will be
+With the \opt{--fastsort|-f} option, the locale will be
 used to locate an OS locale definition to use for the collation. This
 may or may not be correctly tailored, depending on the locale and the OS.
 
 Collation is by default case sensitive. You can turn this
-off globally using the Biber option \verb+--sortcase=false+ or from
-Bib\LaTeX\ using its option\linebreak[4]\verb+sortcase=false+. The option can also
+off globally using the Biber option \opt{--sortcase=false} or from
+Bib\LaTeX\ using its option\linebreak[4]\opt{sortcase=false}. The option can also
 be defined per-field so you can sort some fields case sensitively and
 others case insensitively. See the Bib\LaTeX\ manual.
 
-\verb+--collate|-C+ by default collates uppercase before lower.
+\opt{--collate|-C} by default collates uppercase before lower.
 You can reverse this globally for all sorting using the Biber option
-\verb+--sortupper=false+ or from\linebreak[4]Bib\LaTeX\ by using its option
-\verb+sortupper=false+. The option can also be defined per-field so you can
+\opt{--sortupper=false} or from\linebreak[4]Bib\LaTeX\ by using its option
+\opt{sortupper=false}. The option can also be defined per-field so you can
 sort some fields uppercase before lower and others lower before upper. See the
 Bib\LaTeX\ manual. Be aware though that some locales rightly enforce a
 particular setting for this (for example, Danish). You will be able to
-override it but Biber will warn you if you do. \verb+sortupper+ has
-no effect when using \verb+--fastsort|-f+--you are at the mercy of what
+override it but Biber will warn you if you do. \opt{sortupper} has
+no effect when using \opt{--fastsort|-f}--you are at the mercy of what
 your OS locale does.
 
 There are in fact many options to \verb+Unicode::Collate+
@@ -1185,7 +1187,7 @@ Users should see the the documentation to the module for the various
 options, most of which the vast majority of users will never
 need\footnote{For details on the various options, see
   \url{http://search.cpan.org/search?query=Unicode\%3A\%3ACollate&mode=all}}.
-Options are passed using the \verb+--collate_options|-c+ option as a
+Options are passed using the \opt{--collate\_options|-c} option as a
 single quoted string, each option separated by comma, each key and
 value separated by «\verb+=>+». See examples.
 
@@ -1195,7 +1197,7 @@ value separated by «\verb+=>+». See examples.
 
 \noindent Call Biber using all settings from the \verb+.bcf+ generated from the
 \LaTeX\ run. Case sensitive UCA sorting is performed taking the locale
-for tailoring from the environment if no \verb+sortlocale+ is defined in
+for tailoring from the environment if no \opt{sortlocale} is defined in
 the \verb+.bcf+
 
 \biberex{biber --sortlocale=de_DE}
@@ -1221,9 +1223,9 @@ reverse order at UCA level 2.
 
 Biber takes care of re-encoding the data source data as
 necessary. In normal use, Bib\LaTeX\ passes its
-\verb+bibencoding+ option value to Biber via the \verb+.bcf+
-file. It also passes the value of its \verb+texencoding+ option (which
-maps to Biber's \verb+--bblencoding|-E+ option) the default value
+\opt{bibencoding} option value to Biber via the \verb+.bcf+
+file. It also passes the value of its \opt{texencoding} option (which
+maps to Biber's \opt{--bblencoding|-E} option) the default value
 of which depends on which \TeX\ engine and encoding packages you are
 using (see Bib\LaTeX\ manual for details).
 
@@ -1231,13 +1233,13 @@ using (see Bib\LaTeX\ manual for details).
 
 \begin{enumerate}
 \item Decodes the data source into UTF-8 if it is not UTF-8 already
-\item Decodes \LaTeX\ character macros into UTF-8 if \verb+--bblencoding|-E+
+\item Decodes \LaTeX\ character macros into UTF-8 if \opt{--bblencoding|-E}
   is UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
-  the encoding that \verb+--bblencoding|-E+ specifies
+  the encoding that \opt{--bblencoding|-E} specifies
 \item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
   decoded \LaTeX\ character macros which are not in the
-  \verb+--bblencoding|-E+ encoding. Replaces with a suitable \LaTeX\ macro
+  \opt{--bblencoding|-E} encoding. Replaces with a suitable \LaTeX\ macro
 \end{enumerate}
 
 \noindent Normally, you do not need to set the encoding options on the
@@ -1247,7 +1249,7 @@ the \verb+.bcf+ settings with the command line. The resource chain for
 encoding settings is, in decreasing order
 of preference:\\[2ex]
 
-\noindent\verb+--bibencoding|-e+ and \verb+--bblencoding|-E+ $\rightarrow$\\
+\noindent\opt{--bibencoding|-e} and \opt{--bblencoding|-E} $\rightarrow$\\
 \hspace*{1em}Biber config file $\rightarrow$\\
 \hspace*{2em}\verb+.bcf+ control file
 
@@ -1258,7 +1260,7 @@ character macros into UTF-8. In fact there are two situations in which
 this occurs.
 
 \begin{enumerate}
-\item When \verb+--bblencoding|-E+ is UTF-8
+\item When \opt{--bblencoding|-E} is UTF-8
 \item Always for internal sorting purposes
 \end{enumerate}
 
@@ -1278,13 +1280,13 @@ Biber decodes this correctly to «Đ» and this breaks \verb+inputenc+
 because it doesn't understand that UTF-8 character. The real solution here
 is to switch to a \TeX\ engine with full UTF-8 support like \XeTeX\ or Lua\TeX\
 as these don't use or need \verb+inputenc+. However, you can also try the
-\verb+--bblsafechars+ option which will try to convert any UTF-8 chars into
-\LaTeX\ macros on output. For information on the \verb+--bblsafechars+
+\opt{--bblsafechars} option which will try to convert any UTF-8 chars into
+\LaTeX\ macros on output. For information on the \opt{--bblsafechars}
 option, see section \ref{lencode}.
 \bigskip
 \minisec{Decoding for internal sorting}
 
-If your \verb+bblencoding+ is not UTF-8, and you are using some UTF-8
+If your \opt{bblencoding} is not UTF-8, and you are using some UTF-8
 equivalent \LaTeX\ character macros in your \verb+.bib+ data source, then some
 \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might end up
 with invalid characters in them, according to the \verb+.bbl+
@@ -1306,7 +1308,7 @@ data source entry:
 \verb+{\v S}+ is decoded into «Š» and so with name-first sorting,
 \verb+\sortinit{}+ would be «Š». This is an invalid character in
 latin1 encoding and so the \verb+.bbl+ would be broken. In such cases
-when \verb+\sortinit{}+ is a char not valid in the \verb+bblencoding+,
+when \verb+\sortinit{}+ is a char not valid in the \opt{bblencoding},
 Biber tries to replace the character with a suitable \LaTeX\
 macro. The solution is really to use UTF-8 \verb+.bbl+ encoding whenever
 possible. In extreme cases where even with UTF-8 encoding,
@@ -1317,7 +1319,7 @@ switching \TeX\ engines to one that supports full UTF-8 (like Xe\TeX\ or Lua\TeX
 \subsubsection{\LaTeX\ macro encoding}\label{lencode}
 
 The opposite of decoding; converting UTF-8 characters into \LaTeX\ macros.
-You can force this with the \verb+--bblsafechars+ option which will do a
+You can force this with the \opt{--bblsafechars} option which will do a
 generally good job of making your \verb+.bbl+ plain ASCII. It can be useful
 in certain edge cases where your bibliography introduces characters which
 can't be handled by your main document. See section \ref{ldecode} above for
@@ -1325,14 +1327,14 @@ an example such case.
 
 A common use case for \LaTeX\ macro encoding is when the bibliography
 data source is not ASCII but the \verb+.tex+ file is and so this case
-is automated for you: if the Bib\LaTeX\ option «\verb+texencoding+»
-(which corresponds to the Biber option «\verb+--bblencoding|-E+») is
+is automated for you: if the Bib\LaTeX\ option «\opt{texencoding}»
+(which corresponds to the Biber option «\opt{--bblencoding|-E}») is
 set to an ASCII encoding («\verb+ascii+» or «\verb+x-ascii+») and
-«\verb+--bibencoding|-e+» is not ASCII, Biber will automatically set
-\verb+--bblsafechars+.
+«\opt{--bibencoding|-e}» is not ASCII, Biber will automatically set
+\opt{--bblsafechars}.
 
-See also the \verb+biber --help+ output for the \verb+--bblsafecharsset+
-and \linebreak[4]\verb+--decodecharsset+ options which can customise the set
+See also the \opt{biber --help} output for the \opt{--bblsafecharsset}
+and \linebreak[4]\opt{--decodecharsset} options which can customise the set
 of conversion rules to use. The characters and macros which Biber
 maps during encoding and decoding are documented\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/\biberversion/documentation/utf8-macro-map.html}}.
 \bigskip
@@ -1340,7 +1342,7 @@ maps during encoding and decoding are documented\footnote{\url{https://sourcefor
 
 \biberex{biber}
 
-\noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
+\noindent Set \opt{bibencoding} and \opt{bblencoding} from the
 config file or \verb+.bcf+
 
 \biberex{biber --bblencoding=latin2}
@@ -1350,36 +1352,36 @@ config file or \verb+.bcf+
 
 \biberex{biber --bblsafechars}
 
-\noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
+\noindent Set \opt{bibencoding} and \opt{bblencoding} from the
 config file or \verb+.bcf+. Force encoding of UTF-8 chars to \LaTeX\
 macros using default conversion set
 
 \biberex{biber --bblencoding=ascii}
 
 \noindent Encode the \verb+.bbl+ as ascii, overriding the
-\verb+.bcf+. Automatically sets \verb+--bblsafechars+ to force UTF-8
+\verb+.bcf+. Automatically sets \opt{--bblsafechars} to force UTF-8
 to \LaTeX\ macro conversion
 
 \biberex{biber --bblencoding=ascii --bblsafecharsset=full}
 
 \noindent Encode the \verb+.bbl+ as ascii, overriding the
-\verb+.bcf+. Automatically sets \verb+--bblsafechars+ to force UTF-8
+\verb+.bcf+. Automatically sets \opt{--bblsafechars} to force UTF-8
 to \LaTeX\ macro conversion using the full set of conversions
 
 \biberex{biber --decodecharsset=full}
 
-\noindent Set \verb+bibencoding+ and \verb+bblencoding+ from the
+\noindent Set \opt{bibencoding} and \opt{bblencoding} from the
 config file or \verb+.bcf+. Use the full \LaTeX\ macro to UTF-8
 conversion set because you have some more obscure character macros in
 your \verb+.bib+ data source which you want to sort correctly
 
 \biberex{biber -u}
 
-\noindent Shortcut alias for \verb+biber --bibencoding=UTF-8+
+\noindent Shortcut alias for \opt{biber --bibencoding=UTF-8}
 
 \biberex{biber -U}
 
-\noindent Shortcut alias for \verb+biber --bblencoding=UTF-8+
+\noindent Shortcut alias for \opt{biber --bblencoding=UTF-8}
 
 \subsection{Editor Integration}
 
@@ -1434,14 +1436,14 @@ case you are also defining these yourself (although if you are only
 using Bib\LaTeX, there isn't much point), you will get macro
 redefinition warnings from the \verb+btparse+ library. You can turn
 off Biber's macro definitions to avoid this by using the option
-\verb+--nostdmacros+.
+\opt{--nostdmacros}.
 
-Biber will look at any \verb+MONTH+ field in a Bib\TeX\ data
+Biber will look at any \bibfield{MONTH} field in a Bib\TeX\ data
 source and if it's not a number as Bib\LaTeX\ expects (because it
 wasn't one of the macros as mentioned above or these macros were disabled
-by \verb+--nostdmacros+), it will try to turn it into the right number in
+by \opt{--nostdmacros}), it will try to turn it into the right number in
 the \verb+.bbl+. If you only use Bib\LaTeX\ with your Bib\TeX\
-data source files, you should probably make any \verb+MONTH+ fields be the
+data source files, you should probably make any \bibfield{MONTH} fields be the
 numbers which Bib\LaTeX\ expects.
 
 \subsection{Biber data source drivers}\label{dcf}
@@ -1476,7 +1478,7 @@ Currently supported data sources drivers are:
 
 \subsection{Visualising the Output}\label{vis}
 
-The option \verb+--outformat=dot+ will cause Biber to write a
+The option \opt{--outformat=dot} will cause Biber to write a
 GraphViz\footnote{\url{http://www.graphviz.org}} \verb+.dot+ file instead
 of a \verb+.bbl+. This file graphs the bibliographic data as it exists
 after all processing. You can transform this file using the \verb+dot+
@@ -1492,10 +1494,10 @@ means. To output in SVG, use this command after installing GraphViz:
 dot -Tsvg <file>.dot -o <file>.svg
 \end{verbatim}
 
-\noindent The \verb+--dot_include+ option takes a comma delimited string as
+\noindent The \opt{--dot\_include} option takes a comma delimited string as
 argument. The elements of this string define the information to include in
 the \verb+.dot+ output graph. The valid sub-options are shown in Table
-\ref{tab:graphopts}. If the \verb+--dot_include+ option is not given
+\ref{tab:graphopts}. If the \opt{--dot\_include} option is not given
 then the default setting is implicitly used, which is:
 
 \begin{verbatim}
@@ -1781,20 +1783,20 @@ define these two things as part of constructing new build scripts:
 \item Copy the build script from a vaguely similar architecture
   (i.e. Windows/non-Windows \ldots) to your new architecture
   directory. 
-\item Change the \verb+--link+ options to point to where the required
+\item Change the \opt{--link} options to point to where the required
   libraries reside on your system.
-\item Change the \verb+--output+ option to name the resulting binary
+\item Change the \opt{--output} option to name the resulting binary
   for your architecture.
 \item Run the build script
 \end{itemize}
 
-\noindent The \verb+--link+ options can be a little tricky
+\noindent The \opt{--link} options can be a little tricky
 sometimes. It is usually best to build without them once and then run
 \verb+ldd+ (or OS equivalent) on the binary to see which
 version/location of a library you should link to. You can also try
 just running the binary and it should complain about missing libraries
 and where it expected to find them. Put this path into the
-\verb+--link+ option. The \verb+--module+ options are the same for all
+\opt{--link} option. The \opt{--module} options are the same for all
 architectures and do not need to be modified.
 On architectures which have or can have case-insensitive file systems,
 you should use the build script from either Windows or OSX as a reference
@@ -1831,7 +1833,7 @@ of Biber version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 0.9.8
+INFO - This is Biber 0.9.9
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
