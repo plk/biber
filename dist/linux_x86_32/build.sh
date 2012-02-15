@@ -36,6 +36,7 @@
   --module=Encode::Unicode \
   --module=Encode::Unicode::UTF7 \
   --module=Readonly::XS \
+  --module=IO::Socket::SSL \
   --link=/usr/local/perl/lib/libbtparse.so \
   --link=/usr/lib/libxml2.so.2 \
   --link=/usr/lib/libxslt.so.1 \

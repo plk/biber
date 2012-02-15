@@ -37,6 +37,7 @@ pp --compress=6 \
    --module=Encode::Unicode \
    --module=Encode::Unicode::UTF7 \
    --module=Readonly::XS \
+   --module=IO::Socket::SSL \
    --link=/usr/bin/cygz.dll \
    --link=/usr/bin/cyggcrypt-11.dll \
    --link=/usr/bin/cygiconv-2.dll \

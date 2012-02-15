@@ -1,6 +1,7 @@
 Revision history for Biber
 
 0.9.9  (unreleased beta)
+       * HTTPS support for remote data sources
        * Biber now ignores names when it can't determine minimal
          information like a lastname. Before, it would throw lots of errors
          and die.
