@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 
 use Biber;
 use Biber::Output::bbl;
@@ -100,7 +100,33 @@ my $dl1 = q|  \entry{AbdelbarH98}{article}{}
 
 |;
 
+my $ssl = q|  \entry{kaiser-abraham_vermeintliche_2005}{thesis}{}
+    \name{labelname}{1}{}{%
+      {{uniquename=0,hash=486fe335b5912ccaaf7ddd371d3c373d}{{Kaiser-Abraham}}{K\bibinitperiod}{Julia}{J\bibinitperiod}{}{}{}{}}%
+    }
+    \name{author}{1}{}{%
+      {{uniquename=0,hash=486fe335b5912ccaaf7ddd371d3c373d}{{Kaiser-Abraham}}{K\bibinitperiod}{Julia}{J\bibinitperiod}{}{}{}{}}%
+    }
+    \list{institution}{1}{%
+      {{Georg-August-Universität} Göttingen}%
+    }
+    \strng{namehash}{486fe335b5912ccaaf7ddd371d3c373d}
+    \strng{fullhash}{486fe335b5912ccaaf7ddd371d3c373d}
+    \field{sortinit}{K}
+    \field{labelyear}{2005}
+    \field{shorttitle}{Vermeintliche Welten?}
+    \field{title}{Vermeintliche Welten? – Vagheit in der Erzählliteratur der deutschen, englischen und amerikanischen Romantik}
+    \field{type}{phdthesis}
+    \field{year}{2005}
+    \keyw{E. T. A. Hoffmann, Geistergeschichte, Geisterseher, Gothic Novel, Literatur, Ludwig Tieck, Phantastik, Poe, Romantik, deutsche Literatur, englische literatur, us-amerikanische Literatur}
+  \endentry
+
+|;
+
+
+
 is( $out->get_output_entry($main,'citeulike:8283461'), $cu1, 'Fetch from citeulike') ;
 is( $out->get_output_entry($main,'AbdelbarH98'), $dl1, 'Fetch from plain bib download') ;
+is( $out->get_output_entry($main,'kaiser-abraham_vermeintliche_2005'), $ssl, 'HTTPS test') ;
 
 
