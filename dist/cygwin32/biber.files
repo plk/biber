@@ -18,4 +18,4 @@
 /usr/lib/perl5/5.14/i686-cygwin/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
 /usr/lib/perl5/5.14/i686-cygwin/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
 /usr/lib/perl5/5.14/i686-cygwin/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
-
+/usr/lib/perl5/site_perl/5.14/Mozilla/CA/cacert.pm;lib/Mozilla/CA/cacert.pem

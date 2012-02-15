@@ -41,6 +41,8 @@
   --link=/usr/lib/libxml2.so.2 \
   --link=/usr/lib/libxslt.so.1 \
   --link=/usr/lib/libexslt.so.0 \
+  --link=/lib/libssl.so.0.9.8 \
+  --link=/lib/libcrypto.so.0.9.8 \
   --addlist=biber.files \
   --cachedeps=scancache \
   --output=biber-linux_x86_32 \
