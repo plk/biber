@@ -93,9 +93,10 @@ sub extract_entries {
   $logger->trace("Entering extract_entries() in driver 'bibtex'");
 
   # If it's a remote data file, fetch it first
-  if ($source =~ m/\A(?:https?|ftp):\/\//xms) {
+  if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$source' is a remote BibTeX data source - fetching ...");
     require LWP::Simple;
+    require LWP::Protocol::https if $1;
     $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
                           DIR => $Biber::MASTER->biber_tempdir,
                           SUFFIX => '.bib');

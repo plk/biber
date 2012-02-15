@@ -67,9 +67,10 @@ sub extract_entries {
   $logger->trace("Entering extract_entries() in driver 'biblatexml'");
 
   # If it's a remote data file, fetch it first
-  if ($filename =~ m/\A(?:https?|ftp):\/\//xms) {
+  if ($filename =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$filename' is a remote .xml - fetching ...");
     require LWP::Simple;
+    require LWP::Protocol::https if $1;
     require File::Temp;
     $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
                           DIR => $Biber::MASTER->biber_tempdir,

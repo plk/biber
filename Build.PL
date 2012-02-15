@@ -58,6 +58,7 @@ my $builder = $class->new(
         'XML::Writer::String' => 0,
         'Text::BibTeX' => '0.62',
         'LWP::Simple' => 0,
+        'LWP::Protocol::https' => 0,
         'perl' => '5.14.0'
     },
     recommends => {

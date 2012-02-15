@@ -50,6 +50,8 @@ CALL pp ^
   --link=C:\strawberry\c\bin\libz_.dll ^
   --link=C:\strawberry\c\bin\libxml2-2_.dll ^
   --link=C:\strawberry\c\bin\libiconv-2_.dll ^
+  --link=C:\strawberry\c\bin\libssl32_.dll ^
+  --link=C:\strawberry\c\bin\libeay32_.dll ^
   --addlist=biber.files ^
   --cachedeps=scancache ^
   --info=ProductName=biber ^
