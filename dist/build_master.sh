@@ -97,7 +97,7 @@ if [ ! -e $DIR/biber-cygwin32.tar.gz ]; then
   ssh root@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
   sleep 20
   # We have to move aside the windows libbtparse.dll otherwise it's picked up by cygwin
-  ssh bbf-wxp32 ". bin/set-biber-cyg-build-env.sh;mv /cygdrive/c/WINDOWS/libbtparse.dll /cygdrive/c/WINDOWS/libbtparse.dll.DIS;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build installdeps;./Build install;cd dist/cygwin32;./build.sh;mv /cygdrive/c/WINDOWS/libbtparse.dll.DIS /cygdrive/c/WINDOWS/libbtparse.dll;cd ~/biblatex-biber;./Build realclean"
+  ssh bbf-wxp32 ". bin/set-biber-cyg-build-env.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build installdeps;./Build install;cd dist/cygwin32;./build.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS /cygdrive/c/WINDOWS/system32/libbtparse.dll;cd ~/biblatex-biber;./Build realclean"
   scp bbf-wxp32:biblatex-biber/dist/cygwin32/biber-cygwin32.exe $DIR/
   ssh bbf-wxp32 "\\rm -f biblatex-biber/dist/cygwin32/biber-cygwin32.exe"
   ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
