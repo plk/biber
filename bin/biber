@@ -51,6 +51,7 @@ GetOptions(
            'sortcase=s',
            'sortlocale|l=s',
            'sortupper=s',
+           'ssl-noverify-host',
            'trace|T',
            'u',                   # alias for bibencoding=UTF-8
            'U',                   # alias for bblencoding=UTF-8
@@ -317,16 +318,16 @@ if you have less common UTF-8 characters in your data source.
 
 Turn on debugging for C<biber>.
 
-=item B<--fastsort|-f>
-
-Use Perl's sort instead of C<Unicode::Collate> for sorting. Also uses
-OS locale definitions (which may be broken for some languages ...).
-
 =item B<--dot_include=section,field,xdata,crossref,xref,related>
 
 Specifies the element to include in GraphViz DOT output format if the output format is 'dot'.
 You can also choose to display crossref, xref, xdata and/or related entry connections.
 The default if not specified is C<--dot_include=section,xdata,crossref,xref>.
+
+=item B<--fastsort|-f>
+
+Use Perl's sort instead of C<Unicode::Collate> for sorting. Also uses
+OS locale definitions (which may be broken for some languages ...).
 
 =item B<--help|-h>
 
@@ -409,6 +410,11 @@ Whether to sort uppercase before lowercase when using
 default sorting (B<--collate|-C>). When
 using B<--fastsort|-f>, your OS collation locale determines
 this and this option is ignored (default is true).
+
+=item B<--ssl-noverify-host>
+
+Turn off host verification when using HTTPS to fetch remote data sources.
+You may need this if the SSL certificate is self-signed for example.
 
 =item B<-u>
 

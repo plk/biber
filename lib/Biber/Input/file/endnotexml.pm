@@ -69,13 +69,19 @@ sub extract_entries {
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$source' is a remote EndNote XML datasource - fetching ...");
     if ($1) { # HTTPS
+      # use IO::Socket::SSL qw(debug4); # useful for debugging SSL issues
       # We have to explicitly set the cert path because otherwise the https module
       # can't find the .pem when PAR::Packer'ed
-      require Mozilla::CA; # Have to explicitly require this here to get it into %INC below
-      # we assume that the CA file is in .../Mozilla/CA/cacert.pem
-      (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );
-      $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
-      $ENV{PERL_LWP_SSL_CA_FILE} = File::Spec->catpath($vol, "$dir/CA", 'cacert.pem');
+      if (not exists($ENV{PERL_LWP_SSL_CA_FILE})) {
+        require Mozilla::CA; # Have to explicitly require this here to get it into %INC below
+        # we assume that the default CA file is in .../Mozilla/CA/cacert.pem
+        (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );
+        $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+        $ENV{PERL_LWP_SSL_CA_FILE} = File::Spec->catpath($vol, "$dir/CA", 'cacert.pem');
+      }
+      if (defined(Biber::Config->getoption('ssl-noverify-host'))) {
+          $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;
+      }
       require LWP::Protocol::https;
     }
     require LWP::Simple;
