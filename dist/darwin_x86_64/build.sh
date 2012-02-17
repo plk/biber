@@ -12,7 +12,6 @@
 # constructed in the code so Par::Packer can't auto-detect them.
 
 cp /opt/local/bin/biber /tmp/biber-darwin
-cp /opt/local/lib/libgdbm.3.0.0.dylib /tmp/libgdbm.3.dylib
 cp /opt/local/lib/libz.1.2.5.dylib /tmp/libz.1.dylib
 
 pp --compress=6 \
@@ -45,7 +44,7 @@ pp --compress=6 \
   --link=/opt/local/lib/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
   --link=/opt/local/lib/libxslt.1.dylib \
-  --link=/tmp/libgdbm.3.dylib \
+  --link=/opt/local/lib/libgdbm.4.dylib \
   --link=/opt/local/lib/libexslt.0.dylib \
   --link=/opt/local/lib/libssl.1.0.0.dylib \
   --link=/opt/local/lib/libcrypto.1.0.0.dylib \
@@ -55,5 +54,4 @@ pp --compress=6 \
   /tmp/biber-darwin
 
 \rm -f /tmp/biber-darwin
-\rm -f /tmp/libgdbm.3.dylib
 \rm -f /tmp/libz.1.dylib

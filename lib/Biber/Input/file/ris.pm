@@ -17,6 +17,7 @@ use Biber::Utils;
 use Biber::Config;
 use Encode;
 use File::Spec;
+use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
@@ -63,9 +64,18 @@ sub extract_entries {
   # If it's a remote data file, fetch it first
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$source' is a remote RIS data source - fetching ...");
+    if ($1) { # HTTPS
+      # We have to explicitly set the cert path because otherwise the https module
+      # can't find the .pem when PAR::Packer'ed
+      require Mozilla::CA; # Have to explicitly require this here to get it into %INC below
+      # we assume that the CA file is in .../Mozilla/CA/cacert.pem
+      (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );
+      $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+      $ENV{PERL_LWP_SSL_CA_FILE} = File::Spec->catpath($vol, "$dir/CA", 'cacert.pem');
+      require LWP::Protocol::https;
+    }
     require LWP::Simple;
-    require LWP::Protocol::https if $1;
-    require File::Temp;
+
     $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
                           DIR => $Biber::MASTER->biber_tempdir,
                           SUFFIX => '.ris');
