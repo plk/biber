@@ -100,25 +100,34 @@ my $dl1 = q|  \entry{AbdelbarH98}{article}{}
 
 |;
 
-my $ssl = q|  \entry{kaiser-abraham_vermeintliche_2005}{thesis}{}
+my $ssl = q|  \entry{jung_alchemical_????}{book}{}
     \name{labelname}{1}{}{%
-      {{uniquename=0,hash=486fe335b5912ccaaf7ddd371d3c373d}{{Kaiser-Abraham}}{K\bibinitperiod}{Julia}{J\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=c6e712b3aef74e9dabcb8d7a074952ba}{Jung}{J\bibinitperiod}{Carl\bibnamedelima Gustav}{C\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
     }
     \name{author}{1}{}{%
-      {{uniquename=0,hash=486fe335b5912ccaaf7ddd371d3c373d}{{Kaiser-Abraham}}{K\bibinitperiod}{Julia}{J\bibinitperiod}{}{}{}{}}%
+      {{uniquename=0,hash=c6e712b3aef74e9dabcb8d7a074952ba}{Jung}{J\bibinitperiod}{Carl\bibnamedelima Gustav}{C\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
     }
-    \list{institution}{1}{%
-      {{Georg-August-Universität} Göttingen}%
+    \name{editor}{4}{}{%
+      {{hash=78e9cfd427143d50e6fb3c72d6529fd4}{Read}{R\bibinitperiod}{Herbert}{H\bibinitperiod}{}{}{}{}}%
+      {{hash=47ed09185c6dabbd5a9868d756f5fe6d}{Fordham}{F\bibinitperiod}{Michael}{M\bibinitperiod}{}{}{}{}}%
+      {{hash=fe82f0d25dcaecad96556b92f0fa6c2e}{Adler}{A\bibinitperiod}{Gerhard}{G\bibinitperiod}{}{}{}{}}%
+      {{hash=6028fc97827ed51ce0fcb78439bd4d4b}{{McGuire}}{M\bibinitperiod}{William}{W\bibinitperiod}{}{}{}{}}%
     }
-    \strng{namehash}{486fe335b5912ccaaf7ddd371d3c373d}
-    \strng{fullhash}{486fe335b5912ccaaf7ddd371d3c373d}
-    \field{sortinit}{K}
-    \field{labelyear}{2005}
-    \field{shorttitle}{Vermeintliche Welten?}
-    \field{title}{Vermeintliche Welten? – Vagheit in der Erzählliteratur der deutschen, englischen und amerikanischen Romantik}
-    \field{type}{phdthesis}
-    \field{year}{2005}
-    \keyw{E. T. A. Hoffmann, Geistergeschichte, Geisterseher, Gothic Novel, Literatur, Ludwig Tieck, Phantastik, Poe, Romantik, deutsche Literatur, englische literatur, us-amerikanische Literatur}
+    \name{translator}{1}{}{%
+      {{hash=79d3c54975451a4e16baf4ff6f7066f2}{Hull}{H\bibinitperiod}{R.\bibnamedelimi F.\bibnamedelimi C.}{R\bibinitperiod\bibinitdelim F\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+    }
+    \list{location}{1}{%
+      {Princeton, {NJ}}%
+    }
+    \list{publisher}{1}{%
+      {Princeton University Press}%
+    }
+    \strng{namehash}{c6e712b3aef74e9dabcb8d7a074952ba}
+    \strng{fullhash}{c6e712b3aef74e9dabcb8d7a074952ba}
+    \field{sortinit}{J}
+    \field{series}{Bollingen Series {XX}}
+    \field{title}{Alchemical Studies}
+    \field{volume}{{XIII}}
   \endentry
 
 |;
@@ -127,6 +136,6 @@ my $ssl = q|  \entry{kaiser-abraham_vermeintliche_2005}{thesis}{}
 
 is( $out->get_output_entry($main,'citeulike:8283461'), $cu1, 'Fetch from citeulike') ;
 is( $out->get_output_entry($main,'AbdelbarH98'), $dl1, 'Fetch from plain bib download') ;
-is( $out->get_output_entry($main,'kaiser-abraham_vermeintliche_2005'), $ssl, 'HTTPS test') ;
+is( $out->get_output_entry($main,'jung_alchemical_????'), $ssl, 'HTTPS test') ;
 
 

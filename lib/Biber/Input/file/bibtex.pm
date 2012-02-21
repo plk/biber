@@ -96,7 +96,7 @@ sub extract_entries {
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$source' is a remote BibTeX data source - fetching ...");
     if ($1) { # HTTPS
-      # use IO::Socket::SSL qw(debug4); # useful for debugging SSL issues
+      # use IO::Socket::SSL qw(debug99); # useful for debugging SSL issues
       # We have to explicitly set the cert path because otherwise the https module
       # can't find the .pem when PAR::Packer'ed
       if (not exists($ENV{PERL_LWP_SSL_CA_FILE})) {
