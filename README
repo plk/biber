@@ -2,6 +2,10 @@
 Biber is a BibTeX replacement for users of biblatex, with full Unicode
 support.
 
+  * Please note - the default download for all platforms is 32-bit. Please
+    look in the files section for the correct 64-bit platform instead of
+    using the default download button if you want 64-bit.
+
 REQUIREMENTS
 
   Biber is written in Perl with the aim of providing a

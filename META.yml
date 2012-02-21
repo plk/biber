@@ -93,6 +93,7 @@ requires:
   File::Slurp::Unicode: 0
   IPC::Cmd: 0
   IPC::Run3: 0
+  LWP::Protocol::https: 0
   LWP::Simple: 0
   List::AllUtils: 0
   List::MoreUtils: 0
