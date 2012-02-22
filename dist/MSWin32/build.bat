@@ -55,7 +55,6 @@ CALL pp ^
   --link=C:\strawberry\c\bin\libeay32_.dll ^
   --addlist=biber.files ^
   --cachedeps=scancache ^
-  --info=ProductName=biber ^
   --icon=biber.ico ^
   --output=biber-MSWIN.exe ^
   C:\WINDOWS\Temp\biber-MSWIN
