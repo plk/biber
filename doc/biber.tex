@@ -1619,8 +1619,8 @@ delete the caches for older binaries as they are not needed and can take up
 a fair bit of space. The caches are located in a temporary location which
 varies from OS to OS. The cache name is:\\[1ex]
 
-\noindent\verb+par-<username>/cache-<hash>+ (Linux/Unix/OSX)\\
-\verb+par-<username>\cache-<hash>+ (Windows)\\[1ex]
+\noindent\verb+par-<hex_encoded_username>/cache-<hash>+ (Linux/Unix/OSX)\\
+\verb+par-<hex_encoded_username>\cache-<hash>+ (Windows)\\[1ex]
 
 \noindent The temp location is not always obvious but these are sensible
 places to look (where \verb+*+ can vary depending on username):
@@ -1633,7 +1633,7 @@ places to look (where \verb+*+ can vary depending on username):
 \item \verb+C:\Windows\Temp+ (Windows)
 \end{itemize}
 
-\noindent To clean up, you can just remove the whole \verb+par-<username>+
+\noindent To clean up, you can just remove the whole \verb+par-<hex_encoded_username>+
 directory/folder and then run the current binary again.
 
 \subsection{Binary Architectures}
