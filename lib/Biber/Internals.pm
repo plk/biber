@@ -1290,7 +1290,7 @@ sub _namestring {
     # Append last name
     $str .= normalise_string_sort($n->get_lastname, $field) . $nsi;
 
-    # Append last name
+    # Append first name
     $str .= normalise_string_sort($n->get_firstname, $field) . $nsi if $n->get_firstname;
 
     # Append suffix
