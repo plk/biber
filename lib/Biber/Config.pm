@@ -411,13 +411,30 @@ sub set_unul_changed {
 
 sub postprocess_biber_opts {
   shift; # class method so don't care about class name
-  # Turn sortcase and sortupper into booleans if they are not already
+  # Turn sortcase, sortupper, sortfirstinits into booleans if they are not already
   # They are not booleans on the command-line/config file so that they
   # mirror biblatex option syntax for users
+
+  # sortfirstinits
+  if (exists($CONFIG->{options}{biber}{sortfirstinits})) {
+    if ($CONFIG->{options}{biber}{sortfirstinits} eq 'true') {
+      $CONFIG->{options}{biber}{sortfirstinits} = 1;
+    }
+    elsif ($CONFIG->{options}{biber}{sortfirstinits} eq 'false') {
+      $CONFIG->{options}{biber}{sortfirstinits} = 0;
+    }
+    unless ($CONFIG->{options}{biber}{sortfirstinits} eq '1' or
+            $CONFIG->{options}{biber}{sortfirstinits} eq '0') {
+      biber_error("Invalid value for option 'sortfirstinits'");
+    }
+  }
+
+  # sortcase
   if (exists($CONFIG->{options}{biber}{sortcase})) {
     if ($CONFIG->{options}{biber}{sortcase} eq 'true') {
       $CONFIG->{options}{biber}{sortcase} = 1;
-    } elsif ($CONFIG->{options}{biber}{sortcase} eq 'false') {
+    }
+    elsif ($CONFIG->{options}{biber}{sortcase} eq 'false') {
       $CONFIG->{options}{biber}{sortcase} = 0;
     }
     unless ($CONFIG->{options}{biber}{sortcase} eq '1' or
@@ -426,10 +443,12 @@ sub postprocess_biber_opts {
     }
   }
 
+  # sortupper
   if (exists($CONFIG->{options}{biber}{sortupper})) {
     if ($CONFIG->{options}{biber}{sortupper} eq 'true') {
       $CONFIG->{options}{biber}{sortupper} = 1;
-    } elsif ($CONFIG->{options}{biber}{sortupper} eq 'false') {
+    }
+    elsif ($CONFIG->{options}{biber}{sortupper} eq 'false') {
       $CONFIG->{options}{biber}{sortupper} = 0;
     }
     unless ($CONFIG->{options}{biber}{sortupper} eq '1' or

@@ -120,6 +120,7 @@ our $CONFIG_DEFAULT_BIBER = {
   onlylog            => { content => 0 },
   quiet              => { content => 0 },
   sortcase           => { content => 1 },
+  sortfirstinits     => { content => 0 },
   sortlocale         => { content => $locale },
   sortupper          => { content => 1 },
   trace              => { content => 0 },

@@ -849,9 +849,9 @@ sub preprocess_file {
     returns an object which internally looks a bit like this:
 
     { firstname     => 'John',
-      firstname_i   => 'J.',
+      firstname_i   => ['J'],
       lastname      => 'Doe',
-      lastname_i    => 'D.',
+      lastname_i    => ['D'],
       prefix        => undef,
       prefix_i      => undef,
       suffix        => undef,

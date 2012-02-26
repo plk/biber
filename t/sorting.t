@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 40;
+use Test::More tests => 41;
 
 use Biber;
 use Biber::Output::bbl;
@@ -59,6 +59,7 @@ my $anyvt_la4   = "mm,HW+98,,Hostetler_Michael J+Wingate_Julia E\x{10FFFD},1998,
 my $anyvt       = 'mm,,,Glashow_Sheldon,1961,0022,Partial Symmetries of Weak Interactions';
 my $ynt         = 'mm,,1961,Glashow_Sheldon,Partial Symmetries of Weak Interactions';
 my $ydnt        = 'mm,,1961,Glashow_Sheldon,Partial Symmetries of Weak Interactions';
+my $sortinits   = 'mm,,1961,Glashow_S,Partial Symmetries of Weak Interactions';
 my $debug       = 'stdmodel';
 my $sk1         = 'mm,,AATESTKEY,AATESTKEY,AATESTKEY,AATESTKEY';
 my $ps_sc       = 'zs,,Partial Symmetries of Weak Interactions,,Partial Symmetries of Weak Interactions,Partial Symmetries of Weak Interactions';
@@ -1269,6 +1270,11 @@ $main->set_sortscheme($S);
 $biber->prepare;
 
 is($main->get_sortdata('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
+Biber::Config->setoption('sortfirstinits', 1);
+$biber->prepare;
+is($main->get_sortdata('stdmodel')->[0], $sortinits, 'sort first name inits only' );
+
+Biber::Config->setoption('sortfirstinits', 0);
 Biber::Config->setblxoption('labelalpha', 0);
 
 # debug

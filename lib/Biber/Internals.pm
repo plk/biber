@@ -179,6 +179,7 @@ sub _getfullhash {
 }
 
 
+# Special hash to track per-name information
 sub _getpnhash {
   my ($self, $citekey, $n) = @_;
   my $secnum = $self->get_current_section;
@@ -1257,7 +1258,7 @@ sub _process_sort_attributes {
   return $field_string;
 }
 
-# This is used to generate sorting strings for names
+# This is used to generate sorting string for names
 sub _namestring {
   my $self = shift;
   my ($citekey, $field) = @_;
@@ -1290,8 +1291,13 @@ sub _namestring {
     # Append last name
     $str .= normalise_string_sort($n->get_lastname, $field) . $nsi;
 
-    # Append first name
-    $str .= normalise_string_sort($n->get_firstname, $field) . $nsi if $n->get_firstname;
+    # Append first name or inits if sortfirstinits is set
+    if (Biber::Config->getoption('sortfirstinits')) {
+      $str .=  normalise_string_sort(join('', @{$n->get_firstname_i}), $field) . $nsi if $n->get_firstname_i;
+    }
+    else {
+      $str .= normalise_string_sort($n->get_firstname, $field) . $nsi if $n->get_firstname;
+    }
 
     # Append suffix
     $str .= normalise_string_sort($n->get_suffix, $field) . $nsi if $n->get_suffix;

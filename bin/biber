@@ -49,6 +49,7 @@ GetOptions(
            'output_directory=s',
            'quiet|q+',
            'sortcase=s',
+           'sortfirstinits=s',
            'sortlocale|l=s',
            'sortupper=s',
            'ssl-noverify-host',
@@ -396,6 +397,12 @@ Log only errors. If this option is used more than once, don't even log errors.
 =item B<--sortcase=true|false>
 
 Case-sensitive sorting (default is true).
+
+=item B<--sortfirstinits=true|false>
+
+When sorting names, use only the first name initials, not full first name. Some people expect
+the biblatex B<firstinits> option to do this but it needs to be a separate option in case
+users, for example, need to show only initials but sort with full first names (default is false).
 
 =item B<--sortlocale|-l [locale]>
 
