@@ -19,6 +19,9 @@
 \setsansfont[Ligatures=TeX]{TexGyreHeros}
 \setmonofont[Ligatures=NoCommon]{TeXGyreCursor}
 
+\def\BibLaTeX{\textsc{Bib}\LaTeX}
+\def\BibTeX{\textsc{Bib}\kern-.08em \TeX}
+
 \renewcommand{\labelitemii}{$\circ$}
 
 \MakeAutoQuote{«}{»}
@@ -146,24 +149,24 @@ notes on AUC\TeX\ support below to reflect this.
 
 \subsection{About}
 
-Biber is conceptually a Bib\TeX\ replacement for
-Bib\LaTeX. It is written in Perl with the aim of providing a
-customised and sophisticated data preparation backend for Bib\LaTeX.
+Biber is conceptually a \BibTeX\ replacement for
+\BibLaTeX. It is written in Perl with the aim of providing a
+customised and sophisticated data preparation backend for \BibLaTeX.
 You do \emph{not} need to install Perl to use Biber---binaries
 are provided for many operating systems via the main \TeX\
 distributions (\TeX Live, Mac\TeX, MiK\TeX) and also via download from SourceForge.
-Functionally, Biber offers a superset of Bib\TeX's capabilities but is
-tightly coupled with Bib\LaTeX\ and cannot be used as a stand-alone tool
+Functionally, Biber offers a superset of \BibTeX's capabilities but is
+tightly coupled with \BibLaTeX\ and cannot be used as a stand-alone tool
 with standard \verb+.bst+ styles. Biber's role is to support
-Bib\LaTeX\ by performing the following tasks:
+\BibLaTeX\ by performing the following tasks:
 
 \begin{itemize}
 \item Parsing data from data sources
 \item Processing cross-references, entry sets, related entries
 \item Generating data for name, name list and name/year disambiguation
-\item Structural validation according to Bib\LaTeX\ data model
+\item Structural validation according to \BibLaTeX\ data model
 \item Sorting reference lists
-\item Outputting data to a \verb+.bbl+ for Bib\LaTeX\ to consume
+\item Outputting data to a \verb+.bbl+ for \BibLaTeX\ to consume
 \end{itemize}
 
 \subsection{Requirements}\label{ref:req}
@@ -186,10 +189,10 @@ SourceForge.
 
 \subsection{Compatibility Matrix}
 
-Biber versions are closed coupled with Bib\LaTeX\ versions. You
+Biber versions are closed coupled with \BibLaTeX\ versions. You
 need to have the right combination of the two. Biber will warn you
 during processing if it encounters information which comes from the wrong
-Bib\LaTeX\ version. Table \ref{tab:compat} shows a compatibility
+\BibLaTeX\ version. Table \ref{tab:compat} shows a compatibility
 matrix for the recent versions.
 
 \begin{table}
@@ -197,7 +200,7 @@ matrix for the recent versions.
 \small
 \begin{tabular}{lllll}
 \toprule
-Biber version & Bib\LaTeX\ version\\
+Biber version & \BibLaTeX\ version\\
 \midrule
 0.9.8 & 1.7x\\
 0.9.7 & 1.7x\\
@@ -211,7 +214,7 @@ Biber version & Bib\LaTeX\ version\\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{Biber/Bib\LaTeX\ compatibility matrix}
+\caption{Biber/\BibLaTeX\ compatibility matrix}
 \label{tab:compat}
 \end{table}
 
@@ -221,7 +224,7 @@ Biber is released under the free software Artistic License 2.0\footnote{\url{htt
 
 \subsection{History}
 
-Bib\TeX\ has been the default (only \ldots) integrated choice for
+\BibTeX\ has been the default (only \ldots) integrated choice for
 bibliography processing in \TeX\ for a long time. It has well known
 limitations which stem from its data format, data model and lack of Unicode
 support\footnote{In fact, there is now a Unicode version}. The
@@ -229,16 +232,16 @@ support\footnote{In fact, there is now a Unicode version}. The
 and use. It is not a general programming language and this makes it really
 very hard to do sophisticated automated processing of bibliographies.
 
-Bib\LaTeX\ was a major advance for \LaTeX\ users as it moved much
+\BibLaTeX\ was a major advance for \LaTeX\ users as it moved much
 of the bibliography processing into \LaTeX\ macros. However,
-Bib\LaTeX\ still used Bib\TeX\ as a sorting engine for the
+\BibLaTeX\ still used \BibTeX\ as a sorting engine for the
 bibliography and also to generate various labels for
-entries. Bib\TeX's capabilities even for this reduced set of
+entries. \BibTeX's capabilities even for this reduced set of
 tasks was still quite restricted due to the lack of Unicode support and
 the more and more complex programming issues involved in label
 preparation and file encoding.
 
-Biber was designed specifically for Bib\LaTeX\ in order to
+Biber was designed specifically for \BibLaTeX\ in order to
 provide a powerful backend engine which could deal with any required
 tasks to do with \verb+.bbl+ preparation. Its main features are:
 
@@ -259,14 +262,14 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   all processed in one pass
 \item «Syntactic» inheritance via new \bibtype{XDATA} entrytype and
   field. This can be thought of as a field-based generalisation of the
-  Bib\TeX\ \bibtype{STRING} functionality (which is also supported).
-\item «Semantic» inheritance via a generalisation of the Bib\TeX\
+  \BibTeX\ \bibtype{STRING} functionality (which is also supported).
+\item «Semantic» inheritance via a generalisation of the \BibTeX\
   crossreference mechanism. This is highly customisable by the
   user---it is possible to choose which fields to inherit for which
   entrytypes and to inherit fields under different names etc. Nested
   crossreferences are also supported.
 \item Handles complex auto-expansion and contraction of names and
-  namelists (See section 4.11.4 of the Bib\LaTeX\ manual for an excellent
+  namelists (See section 4.11.4 of the \BibLaTeX\ manual for an excellent
   explanation with examples, this is quite an impressive feature \ldots)
 \item Extensible modular data sources architecture for ease of adding
   more data source types
@@ -276,21 +279,21 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   \bibfield{ABSTRACT} fields completely. See section \ref{map}
 \item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of»
-  etc. (Bib\LaTeX\ support coming in Bib\LaTeX\ 2.x)
-\item Customisable labels (Bib\LaTeX\ support coming in
-  Bib\LaTeX\ 2.x)
+  etc. (\BibLaTeX\ support coming in \BibLaTeX\ 2.x)
+\item Customisable labels (\BibLaTeX\ support coming in
+  \BibLaTeX\ 2.x)
 \item Multiple bibliography lists in the same section with different
-  sorting and filtering (Bib\LaTeX\ support coming in Bib\LaTeX\ 2.x)
+  sorting and filtering (\BibLaTeX\ support coming in \BibLaTeX\ 2.x)
 \item No more restriction to a static data model of specific fields and
-  entrytypes. (Bib\LaTeX\ support coming in Bib\LaTeX\ 2.x)
+  entrytypes. (\BibLaTeX\ support coming in \BibLaTeX\ 2.x)
 \item Structural validation of the data against the data model with a
-  customisable validation model (Bib\LaTeX\ support coming in
-  Bib\LaTeX\ 2.x)
+  customisable validation model (\BibLaTeX\ support coming in
+  \BibLaTeX\ 2.x)
 \end{itemize}
 
 \noindent Figure \ref{fig:overview} shows the main functional units of
 processing in Biber. The most difficult tasks which Biber
-performs are the processing of Bib\LaTeX's \opt{uniquename} and
+performs are the processing of \BibLaTeX's \opt{uniquename} and
 \opt{uniquelist} options\footnote{A rather tricky unbounded loop but with
   a guaranteed eventual stable exit state.}, the sorting of
 lists\footnote{This is a complex, arbitrary multi-field Schwartzian
@@ -346,7 +349,7 @@ entry can take as it passes through Biber.
       \item Clones of entries mentioned as a «related» entry of a cited
         entry\footnote{This is done to 
           implement the «related» entry feature which does not currently
-          have a Bib\LaTeX\ interface.}.
+          have a \BibLaTeX\ interface.}.
       \item Members of sets, either explicit \bibtype{SET} entrytype entries or
         dynamic sets.
   \end{itemize}
@@ -360,7 +363,7 @@ entry can take as it passes through Biber.
   \item Clones of entries mentioned as a «related» entry of a cited entry.
   \end{itemize}
 \item Some of these auto-cited entries have the «dataonly» option set on
-  them so that Bib\LaTeX\ will only use them for data and will not output
+  them so that \BibLaTeX\ will only use them for data and will not output
   them to the bibliography:
   \begin{itemize}
   \item Clones of entries mentioned as a «related» entry of a cited entry.
@@ -369,9 +372,9 @@ entry can take as it passes through Biber.
 
 \subsection{Performance}
 
-Biber can't really be compared with Bib\TeX\ in any meaningful
+Biber can't really be compared with \BibTeX\ in any meaningful
 way performance-wise. Biber is written in Perl and does a
-\emph{great} deal more than Bib\TeX\ which is written in C. One of
+\emph{great} deal more than \BibTeX\ which is written in C. One of
 Biber's test cases is a 2150 entry, 15,000 line \verb+.bib+ file
 which references a 630 entry macros file with a resulting 160 or so page (A4)
 formatted bibliography. This takes Biber under 3 minutes to process on
@@ -386,12 +389,12 @@ the development in 2009 and is largely responsible for making it what it is toda
 \section{Use}
 
 Firstly, please note that Biber will \emph{not} attempt to sanitise
-the content of Bib\TeX\ data sources. That is, don't expect it to
+the content of \BibTeX\ data sources. That is, don't expect it to
 auto-escape any \TeX\ special characters like «\verb+&+» or «\verb+%+» which
 it finds in, for example, your \bibfield{TITLE} fields. It used to do this in
 earlier versions in some cases but as of version 0.9, it doesn't because
 it's fraught with problems and leads to inconsistent expectations and
-behaviour between different data source types. In your Bib\TeX\ data
+behaviour between different data source types. In your \BibTeX\ data
 sources, please make sure your entries are legal \TeX\ code.
 
 Running \opt{biber --help} will display all options and a brief
@@ -412,16 +415,16 @@ biber --configfile=somefile.conf
 biber -g somefile.conf
 \end{verbatim}
 
-With the \opt{backend=biber} option, Bib\LaTeX\ switches its backend
+With the \opt{backend=biber} option, \BibLaTeX\ switches its backend
 interface and passes all options and information relevant to Biber's
-operation in a control file with extension \verb+.bcf+\footnote{Bib\LaTeX\ Control
+operation in a control file with extension \verb+.bcf+\footnote{\BibLaTeX\ Control
   File}. This is conceptually equivalent to the \verb+.aux+ file which
-\LaTeX\ uses to pass information to Bib\TeX. The \verb+.bcf+ file is
+\LaTeX\ uses to pass information to \BibTeX. The \verb+.bcf+ file is
 XML and contains many options and settings which configure how Biber
 is to process the bibliography and generate the \verb+.bbl+ file.
 
 The usual way to call Biber is simply with the \verb+.bcf+ file
-as the only argument. Bib\LaTeX\ always writes the control file with
+as the only argument. \BibLaTeX\ always writes the control file with
 a \verb+.bcf+ extension. Specifying the «\verb+.bcf+» extension to
 Biber is optional. Assuming a control file called
 \verb+test.bcf+, the following two commands are equivalent:
@@ -432,8 +435,8 @@ biber test
 \end{verbatim}
 
 \subsection{Options and config file}
-Bib\LaTeX\ options which Biber needs to know about are passed
-via the \verb+.bcf+ file. See Table \ref{tab:bltxopts} for the Bib\LaTeX\
+\BibLaTeX\ options which Biber needs to know about are passed
+via the \verb+.bcf+ file. See Table \ref{tab:bltxopts} for the \BibLaTeX\
 options which Biber uses and also for the scopes which are supported
 for each option. Biber also has its own options which are set using
 the following resource chain, given in decreasing precedence order:\\[2ex]
@@ -443,7 +446,7 @@ the following resource chain, given in decreasing precedence order:\\[2ex]
 \small
 \begin{tabular}{lllll}
 \toprule
-Bib\LaTeX\ option & Global & Per-type & Per-entry\\
+\BibLaTeX\ option & Global & Per-type & Per-entry\\
 \midrule
 alphaothers        & \checkmark & \checkmark &  \\
 dataonly           &   & \checkmark  & \checkmark\\
@@ -481,7 +484,7 @@ usetranslator      & \checkmark & \checkmark & \checkmark\\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{Bib\LaTeX\ options which Biber uses}
+\caption{\BibLaTeX\ options which Biber uses}
 \label{tab:bltxopts}
 \end{table}
 
@@ -492,7 +495,7 @@ usetranslator      & \checkmark & \checkmark & \checkmark\\
 
 \noindent Users do not need to care directly about the contents or format of the
 \verb+.bcf+ file as this is generated from the options which they specify
-via Bib\LaTeX. The config file is a place to set commonly used
+via \BibLaTeX. The config file is a place to set commonly used
 command-line options and also to set options which cannot be set on the
 command line.
 
@@ -552,7 +555,7 @@ an example config file which displays the Biber defaults:
 \end{lstlisting}
 
 \noindent In practice, the most commonly used options will be set via
-Bib\LaTeX\ macros in your document and automatically passed to Biber
+\BibLaTeX\ macros in your document and automatically passed to Biber
 via the \verb+.bcf+ file. Certain options apply only to Biber and can
 only be set in the config file, particularly the more complex
 options. Most options are simple tags. Exceptions are the
@@ -564,20 +567,20 @@ which is described in section \ref{map}.
 \subsubsection{The \texttt{sourcemap} option}\label{map}
 
 The supplied data source drivers implement a default mapping from data
-source entrytypes and fields into the Bib\LaTeX\ data
-model\footnote{The Bib\LaTeX\ data model is currently static and
-  defined in the Bib\LaTeX\ manual. In the future (Bib\LaTeX\
+source entrytypes and fields into the \BibLaTeX\ data
+model\footnote{The \BibLaTeX\ data model is currently static and
+  defined in the \BibLaTeX\ manual. In the future (\BibLaTeX\
   2.x), the data model will be dynamically defined by the user.}. If you
 want to override or augment the driver mappings you can use the \opt{sourcemap}
 option which makes it possible to, for example, have a data source with
 non-standard entrytypes or fields and to have these automatically mapped
 into other entrytypes/fields without modifying your data source.
 Essentially, this alters the source data stream which
-Biber uses to build the internal Bib\LaTeX\ data model and is an automatic
+Biber uses to build the internal \BibLaTeX\ data model and is an automatic
 way of editing the datasource as it is read by Biber.
 
 Figure \ref{fig:biber-mdf} is a graphical overview of the data flow for
-data model information. In Bib\LaTeX\ 2.x, the greyed static Bib\LaTeX\
+data model information. In \BibLaTeX\ 2.x, the greyed static \BibLaTeX\
 data model will be replaced by a dynamic data model read from the
 \verb+.bcf+ control file. See Figure \ref{fig:overview} for a more complete
 overview of Biber's processing steps.
@@ -591,7 +594,7 @@ overview of Biber's processing steps.
     \node[file] (conf) [below of=remap,  node distance=7em] {data model mapping\\from Biber config file} edge [->,dashed] (remap);
     \node[funit] (parser) [right of=remap, node distance=8em] {parser} edge [<-,very thick] (remap);
     \node[funit] (validation) [right of=parser, node distance=8em] {validation} edge [<-,very thick] (parser);
-    \node[file] (hard) [above of=validation, node distance=8em] {static Bib\LaTeX\\data model} edge [->,dashed] (parser) edge [->,dashed] (validation);
+    \node[file] (hard) [above of=validation, node distance=8em] {static \BibLaTeX\\data model} edge [->,dashed] (parser) edge [->,dashed] (validation);
     \node[file] (bbl) [right of=parser, node distance=16em] {output file} edge [<-,very thick] (validation);
     \node[rectangle, draw=gray, fill=grey!40, opacity=0.4, fit=(hard), inner sep=1em] {};
   \end{tikzpicture}
@@ -693,7 +696,7 @@ examples. A \opt{map} element looks like this:
   \textcolor{blue}{\texttt{per\_datasource}} elements, this mapping only applies to entries
   coming from the named \textcolor{red}{\texttt{datasource}}s. There can be
   multiple \textcolor{blue}{\texttt{per\_datasource}} elements each specifying one of the
-  datasource names given in a Bib\LaTeX\ \verb+\addbibresource+ macro.
+  datasource names given in a \BibLaTeX\ \verb+\addbibresource+ macro.
 \item If there are any \textcolor{red}{\texttt{entrytypes}}s named in
   \textcolor{blue}{\texttt{per\_type}} elements, this mapping only applies to entries
   of the named \textcolor{red}{\texttt{entrytypes}}s.
@@ -749,7 +752,7 @@ datasource entry being processed. A \opt{map\_step} works like this:
 
 \noindent Note that for XML datasources (Endnote, Zotero RDF/XML etc.), the names of
 fields and entrytypes are matched in a case sensitive manner. For all other
-datasource types (Bib\TeX, RIS etc.) entrytype and field name matching is
+datasource types (\BibTeX, RIS etc.) entrytype and field name matching is
 case insensitive.
 
 \noindent Here are some examples:
@@ -765,7 +768,7 @@ case insensitive.
 \noindent This would add a \bibfield{KEYWORDS} field with value «\verb+keyw1, keyw2+»
 to all entries which are found in either the
 \verb+examples1.bib+ or \verb+examples2.bib+ files. This assumes that the
-Bib\LaTeX\ source contains \verb+\addresource{example1.bib}+ and
+\BibLaTeX\ source contains \verb+\addresource{example1.bib}+ and
 \linebreak\verb+\addresource{example2.bib}+.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
@@ -905,7 +908,7 @@ already exist. Then, these two new fields are modified to canonicalise a
 particular name, which presumably has some variants in the datasource.
 \bigskip
 \minisec{Other datasource types}
-For data sources other than Bib\TeX, (e.g. \verb+ris+, \verb+endnotexml+
+For data sources other than \BibTeX, (e.g. \verb+ris+, \verb+endnotexml+
 and \verb+zoterordfxml+), the source entrytypes and fields are usually very
 differently modelled and named. For example, here is how to drop
 \verb+dc:subject+ fields from various entrytypes in Zotero XML RDF format data
@@ -1013,7 +1016,7 @@ in names which should not be considered when sorting. Given (the default):
 </nosort>
 \end{lstlisting}
 
-\noindent and the Bib\TeX\ data source entry:
+\noindent and the \BibTeX\ data source entry:
 
 \begin{verbatim}
 AUTHOR = {{al-Hasan}, ʿAlī},
@@ -1090,7 +1093,7 @@ locations, in decreasing order of priority:\\[2ex]
 \verb+ftp://+) are retrieved to a temp file and processed as normal. Users
 do not specify explicitly the bibliography database files; they are passed
 in the \verb+.bcf+ control file, which is constructed from the
-Bib\LaTeX\ «\verb+\addbibresource{}+» macros.
+\BibLaTeX\ «\verb+\addbibresource{}+» macros.
 
 \subsection{Logfile}
 
@@ -1123,9 +1126,9 @@ option to specify the location to write the \verb+.bbl+ to in such cases.
 \subsection{Collation and Localisation}\label{coll}
 
 Biber takes care of collating the bibliography for
-Bib\LaTeX. It writes entries to the \verb+.bbl+ file sorted by a
+\BibLaTeX. It writes entries to the \verb+.bbl+ file sorted by a
 completely customisable set of rules which are passed in the
-\verb+.bcf+ file by Bib\LaTeX. Biber has two ways of performing
+\verb+.bcf+ file by \BibLaTeX. Biber has two ways of performing
 collation:\\[2ex]
 
 \biberex{--collate|-C}
@@ -1165,16 +1168,16 @@ may or may not be correctly tailored, depending on the locale and the OS.
 
 Collation is by default case sensitive. You can turn this
 off globally using the Biber option \opt{--sortcase=false} or from
-Bib\LaTeX\ using its option\linebreak[4]\opt{sortcase=false}. The option can also
+\BibLaTeX\ using its option\linebreak[4]\opt{sortcase=false}. The option can also
 be defined per-field so you can sort some fields case sensitively and
-others case insensitively. See the Bib\LaTeX\ manual.
+others case insensitively. See the \BibLaTeX\ manual.
 
 \opt{--collate|-C} by default collates uppercase before lower.
 You can reverse this globally for all sorting using the Biber option
-\opt{--sortupper=false} or from\linebreak[4]Bib\LaTeX\ by using its option
+\opt{--sortupper=false} or from\linebreak[4]\BibLaTeX\ by using its option
 \opt{sortupper=false}. The option can also be defined per-field so you can
 sort some fields uppercase before lower and others lower before upper. See the
-Bib\LaTeX\ manual. Be aware though that some locales rightly enforce a
+\BibLaTeX\ manual. Be aware though that some locales rightly enforce a
 particular setting for this (for example, Danish). You will be able to
 override it but Biber will warn you if you do. \opt{sortupper} has
 no effect when using \opt{--fastsort|-f}--you are at the mercy of what
@@ -1222,12 +1225,12 @@ reverse order at UCA level 2.
 \subsection{Encoding of files}
 
 Biber takes care of re-encoding the data source data as
-necessary. In normal use, Bib\LaTeX\ passes its
+necessary. In normal use, \BibLaTeX\ passes its
 \opt{bibencoding} option value to Biber via the \verb+.bcf+
 file. It also passes the value of its \opt{texencoding} option (which
 maps to Biber's \opt{--bblencoding|-E} option) the default value
 of which depends on which \TeX\ engine and encoding packages you are
-using (see Bib\LaTeX\ manual for details).
+using (see \BibLaTeX\ manual for details).
 
 \noindent Biber performs the following tasks:
 
@@ -1244,7 +1247,7 @@ using (see Bib\LaTeX\ manual for details).
 
 \noindent Normally, you do not need to set the encoding options on the
 Biber command line as they are passed in the \verb+.bcf+ via the
-information in your Bib\LaTeX\ environment. However, you can override
+information in your \BibLaTeX\ environment. However, you can override
 the \verb+.bcf+ settings with the command line. The resource chain for
 encoding settings is, in decreasing order
 of preference:\\[2ex]
@@ -1295,7 +1298,7 @@ sorting data which is only available after the \LaTeX\ character macro
 decoding step.
 
 For example, suppose you are using PDF\LaTeX\ with\\
-\verb+\usepackage[latin1]{inputenc}+ and the following Bib\TeX\
+\verb+\usepackage[latin1]{inputenc}+ and the following \BibTeX\
 data source entry:
 
 \begin{verbatim}
@@ -1327,7 +1330,7 @@ an example such case.
 
 A common use case for \LaTeX\ macro encoding is when the bibliography
 data source is not ASCII but the \verb+.tex+ file is and so this case
-is automated for you: if the Bib\LaTeX\ option «\opt{texencoding}»
+is automated for you: if the \BibLaTeX\ option «\opt{texencoding}»
 (which corresponds to the Biber option «\opt{--bblencoding|-E}») is
 set to an ASCII encoding («\verb+ascii+» or «\verb+x-ascii+») and
 «\opt{--bibencoding|-e}» is not ASCII, Biber will automatically set
@@ -1405,11 +1408,11 @@ official AUC\TeX\ distributions soon.
 The additions augment AUC\TeX\ in the following ways:
 
 \begin{itemize}
-\item Adds font-lock support for most Bib\LaTeX\ macros
-\item Auto-detects whether you are using Biber with Bib\LaTeX\
+\item Adds font-lock support for most \BibLaTeX\ macros
+\item Auto-detects whether you are using Biber with \BibLaTeX\
 \item Can detect whether dependencies like data sources have changed without
   them being open in Emacs
-\item Understands Bib\LaTeX\ and Biber messages so that
+\item Understands \BibLaTeX\ and Biber messages so that
   AUC\TeX\ will prompt you with the best default command to run next
   when using \verb+C-cC-c+
 \end{itemize}
@@ -1427,36 +1430,36 @@ select the Typesetting tab and then add a new Processing Tool as in Figure
   \label{fig:biber-texworks}
 \end{figure}
 
-\subsection{Bib\TeX\ macros and the \texttt{MONTH} field}
+\subsection{\BibTeX\ macros and the \texttt{MONTH} field}
 
-Bib\TeX\ defines macros for month abbreviations
+\BibTeX\ defines macros for month abbreviations
 like «\verb+jan+», «\verb+feb+» etc. Biber also does this,
-defining them as numbers since that is what Bib\LaTeX\ wants. In
+defining them as numbers since that is what \BibLaTeX\ wants. In
 case you are also defining these yourself (although if you are only
-using Bib\LaTeX, there isn't much point), you will get macro
+using \BibLaTeX, there isn't much point), you will get macro
 redefinition warnings from the \verb+btparse+ library. You can turn
 off Biber's macro definitions to avoid this by using the option
 \opt{--nostdmacros}.
 
-Biber will look at any \bibfield{MONTH} field in a Bib\TeX\ data
-source and if it's not a number as Bib\LaTeX\ expects (because it
+Biber will look at any \bibfield{MONTH} field in a \BibTeX\ data
+source and if it's not a number as \BibLaTeX\ expects (because it
 wasn't one of the macros as mentioned above or these macros were disabled
 by \opt{--nostdmacros}), it will try to turn it into the right number in
-the \verb+.bbl+. If you only use Bib\LaTeX\ with your Bib\TeX\
+the \verb+.bbl+. If you only use \BibLaTeX\ with your \BibTeX\
 data source files, you should probably make any \bibfield{MONTH} fields be the
-numbers which Bib\LaTeX\ expects.
+numbers which \BibLaTeX\ expects.
 
 \subsection{Biber data source drivers}\label{dcf}
 
 Biber uses a modular data source driver model to provide access
 to supported data sources. The drivers are responsible for mapping
-driver entry types and fields to the Bib\LaTeX\ model. This is
+driver entry types and fields to the \BibLaTeX\ model. This is
 aided by a driver configuration file (\verb+.dcf+). The information in
 this file for each driver can be found in the driver documentation folder on
 SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/\biberversion/documentation/drivers}}. This
 file shows you which handlers the driver uses for different fields and
 what certain entry types and fields are aliased to in the
-Bib\LaTeX\ data model. This is not fantastically useful to know
+\BibLaTeX\ data model. This is not fantastically useful to know
 without knowing also what the named driver handlers do specifically but there
 is a «description» section which mentions any special handling and
 general comments on the driver. You should read the documentation for
@@ -1465,12 +1468,12 @@ data. Data model mapping is an imprecise art
 and the drivers are where the necessarily messy parts of Biber
 live. Most data source models are not designed with typesetting in
 mind and are usually not fine-grained enough to provide the sorts of
-information that Bib\LaTeX\ needs. Biber does its best to
+information that \BibLaTeX\ needs. Biber does its best to
 obtain as much meaningful information from a data source as possible.
 Currently supported data sources drivers are:
 
 \begin{itemize}
-\item Bib\TeX\ --- Bib\TeX\ data files
+\item \BibTeX\ --- \BibTeX\ data files
 \item \verb+endnotexml+ --- Endnote XML export format, version $\geq$ Endnote X1
 \item \verb+ris+ --- Research Information Systems format
 \item \verb+zoterordfxml+ --- Zotero RDF XML format, version 2.0.9
@@ -1827,7 +1830,7 @@ biber --validate_control --convert_control test
 \noindent This will run Biber normally on the test files plus it
 will also perform an XSLT transform on the \verb+.bcf+ and
 leave an HTML representation of it in the same directory thus testing the
-links to the XML and XSLT libraries as well as the Bib\TeX\ parsing
+links to the XML and XSLT libraries as well as the \BibTeX\ parsing
 libraries. The output should look something like this (may be differences
 of Biber version and locale of course but there should be no errors
 or warnings).
