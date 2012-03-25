@@ -132,6 +132,7 @@ my $l2 = q|  \entry{typemode}{misc}{}
     \field{urlmonth}{07}
     \field{urlyear}{1991}
     \field{year}{1995}
+    \field{pages}{100\bibrangedash 200}
   \endentry
 
 |;

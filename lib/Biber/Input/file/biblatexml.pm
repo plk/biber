@@ -368,7 +368,24 @@ sub _range {
   }
   # simple list
   else {
-    $bibentry->set_datafield(_norm($to), $node->textContent());
+    my $values_ref;
+    my @values = split(/\s*,\s*/, $node->textContent());
+    # Here the "-–" contains two different chars even though they might
+    # look the same in some fonts ...
+    # If there is a range sep, then we set the end of the range even if it's null
+    # If no  range sep, then the end of the range is undef
+    foreach my $value (@values) {
+      $value =~ m/\A\s*([^-–]+)([-–]*)([^-–]*)\s*\z/xms;
+      my $end;
+      if ($2) {
+        $end = $3;
+      }
+      else {
+        $end = undef;
+      }
+      push @$values_ref, [$1 || '', $end];
+    }
+    $bibentry->set_datafield(_norm($to), $values_ref);
   }
   return;
 }
