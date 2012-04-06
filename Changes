@@ -1,5 +1,7 @@
 Revision history for Biber
 
+1.0    (unreleased)
+       * Sorting per list enabled for biblatex 1.?
 0.9.9  30-03-2012
        * Added sortfirstinits option
        * HTTPS support for remote data sources

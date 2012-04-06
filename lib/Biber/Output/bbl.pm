@@ -447,7 +447,7 @@ sub output {
         print $target "  \\lossort\n";
       }
       else {
-        print $target "\n  \\sortlist{$listlabel}\n" unless ($listlabel eq 'MAIN');
+        print $target "\n  \\sectionlist{$listlabel}{entry}\n" unless ($listlabel eq 'MAIN');
       }
 
       # The order of this array is the sorted order
@@ -476,7 +476,7 @@ sub output {
         print $target "  \\endlossort\n\n";
       }
       else {
-        print $target "\n  \\endsortlist\n\n" unless ($listlabel eq 'MAIN');
+        print $target "\n  \\endsectionlist\n\n" unless ($listlabel eq 'MAIN');
       }
     }
 
