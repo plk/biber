@@ -366,14 +366,14 @@ sub instantiate_entry {
   # extrayear
   my $eys;
   if (my $e = $self->get_extrayeardata($key)) {
-    $eys = "    \\field{extrayear}{$e}\n";
+    $eys = "      \\field{extrayear}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
   }
 
   # extraalpha
   my $eas;
   if (my $e = $self->get_extraalphadata($key)) {
-    $eas = "    \\field{extraalpha}{$e}\n";
+    $eas = "      \\field{extraalpha}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
   }
 

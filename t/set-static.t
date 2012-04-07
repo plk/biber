@@ -41,95 +41,90 @@ my $section = $biber->sections->get_section(0);
 my $main = $section->get_list('MAIN');
 my $out = $biber->get_output_obj;
 
-my $string1 = q|  \entry{Static1}{set}{}
-    \set{Static2,Static3,Static4}
-    \name{labelname}{1}{}{%
-      {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{43874d80d7ce68027102819f16c47df1}
-    \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-    \field{sortinit}{0}
-    \field{labelyear}{2001}
-    \field{annotation}{Some notes}
-    \field{title}{Blessed Brains}
-    \field{year}{2001}
-  \endentry
-
+my $string1 = q|    \entry{Static1}{set}{}
+      \set{Static2,Static3,Static4}
+      \name{labelname}{1}{}{%
+        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{43874d80d7ce68027102819f16c47df1}
+      \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \field{sortinit}{0}
+      \field{labelyear}{2001}
+      \field{annotation}{Some notes}
+      \field{title}{Blessed Brains}
+      \field{year}{2001}
+    \endentry
 |;
 
-my $string2 = q|  \entry{Static2}{book}{}
-    \inset{Static1}
-    \name{labelname}{1}{}{%
-      {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{43874d80d7ce68027102819f16c47df1}
-    \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-    \field{sortinit}{0}
-    \field{annotation}{Some Blessed Note}
-    \field{title}{Blessed Brains}
-    \field{year}{2001}
-  \endentry
-
+my $string2 = q|    \entry{Static2}{book}{}
+      \inset{Static1}
+      \name{labelname}{1}{}{%
+        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{43874d80d7ce68027102819f16c47df1}
+      \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \field{sortinit}{0}
+      \field{annotation}{Some Blessed Note}
+      \field{title}{Blessed Brains}
+      \field{year}{2001}
+    \endentry
 |;
 
-my $string3 = q|  \entry{Static3}{book}{}
-    \inset{Static1}
-    \name{labelname}{1}{}{%
-      {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
-    \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
-    \field{sortinit}{0}
-    \field{title}{Castles and Crime}
-    \field{year}{2002}
-  \endentry
-
+my $string3 = q|    \entry{Static3}{book}{}
+      \inset{Static1}
+      \name{labelname}{1}{}{%
+        {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \field{sortinit}{0}
+      \field{title}{Castles and Crime}
+      \field{year}{2002}
+    \endentry
 |;
 
-my $string4 = q|  \entry{Static4}{book}{}
-    \inset{Static1}
-    \name{labelname}{1}{}{%
-      {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
-    \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
-    \field{sortinit}{0}
-    \field{title}{Dungeons, Dark and Dangerous}
-    \field{year}{2005}
-  \endentry
-
+my $string4 = q|    \entry{Static4}{book}{}
+      \inset{Static1}
+      \name{labelname}{1}{}{%
+        {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \field{sortinit}{0}
+      \field{title}{Dungeons, Dark and Dangerous}
+      \field{year}{2005}
+    \endentry
 |;
 
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
-my $string5 = q|  \entry{Static2}{book}{}
-    \name{labelname}{1}{}{%
-      {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{43874d80d7ce68027102819f16c47df1}
-    \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-    \field{sortinit}{0}
-    \field{labelyear}{2001}
-    \field{annotation}{Some Blessed Note}
-    \field{title}{Blessed Brains}
-    \field{year}{2001}
-  \endentry
-
+my $string5 = q|    \entry{Static2}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{43874d80d7ce68027102819f16c47df1}
+      \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \field{sortinit}{0}
+      \field{labelyear}{2001}
+      \field{annotation}{Some Blessed Note}
+      \field{title}{Blessed Brains}
+      \field{year}{2001}
+    \endentry
 |;
 
 

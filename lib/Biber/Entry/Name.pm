@@ -586,10 +586,10 @@ sub name_to_bbl {
   $pno = join(',', @pno);
   # Some data sources support middle names
   if ($self->get_middlename) {
-    return "      {{$pno}{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+    return "        {{$pno}{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";
   }
   else {
-    return "      {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+    return "        {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
   }
 }
 

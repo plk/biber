@@ -125,19 +125,19 @@ sub _printfield {
   }
 
   if (Biber::Config->getoption('wraplines')) {
-    ## 12 is the length of '  \field{}{}' or '  \strng{}{}'
-    if ( 12 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
-      return "    \\${field_type}{$field}{%\n" . wrap('  ', '  ', $str) . "%\n  }\n";
+    ## 16 is the length of '      \field{}{}' or '      \strng{}{}'
+    if ( 16 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
+      return "      \\${field_type}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
     }
-    elsif ( 12 + length($field) + length($str) > $Text::Wrap::columns ) {
-      return wrap('    ', '    ', "\\${field_type}{$field}{$str}" ) . "\n";
+    elsif ( 16 + length($field) + length($str) > $Text::Wrap::columns ) {
+      return wrap('      ', '      ', "\\${field_type}{$field}{$str}" ) . "\n";
     }
     else {
-      return "    \\${field_type}{$field}{$str}\n";
+      return "      \\${field_type}{$field}{$str}\n";
     }
   }
   else {
-    return "    \\${field_type}{$field}{$str}\n";
+    return "      \\${field_type}{$field}{$str}\n";
   }
   return;
 }
@@ -207,15 +207,15 @@ sub set_output_entry {
     $opts = filter_entry_options($be->get_field('options'));
   }
 
-  $acc .= "  \\entry{$key}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $acc .= "    \\entry{$key}{" . $be->get_field('entrytype') . "}{$opts}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
-    $acc .= "    \\set{" . $be->get_field('entryset') . "}\n";
+    $acc .= "      \\set{" . $be->get_field('entryset') . "}\n";
   }
   else { # Everything else that isn't a set parent ...
     if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
-      $acc .= "    \\inset{$es}\n";
+      $acc .= "      \\inset{$es}\n";
     }
   }
 
@@ -237,15 +237,15 @@ sub set_output_entry {
 
     # Did we have "and others" in the data?
     if ( $ln->get_morenames ) {
-      $acc .= "    \\true{morelabelname}\n";
+      $acc .= "      \\true{morelabelname}\n";
     }
 
     my $total = $ln->count_names;
-    $acc .= "    \\name{labelname}{$total}{$plo}{%\n";
+    $acc .= "      \\name{labelname}{$total}{$plo}{%\n";
     foreach my $n (@{$ln->names}) {
       $acc .= $n->name_to_bbl;
     }
-    $acc .= "    }\n";
+    $acc .= "      }\n";
   }
 
   # then names themselves
@@ -255,17 +255,17 @@ sub set_output_entry {
 
       # Did we have "and others" in the data?
       if ( $nf->get_morenames ) {
-        $acc .= "    \\true{more$namefield}\n";
+        $acc .= "      \\true{more$namefield}\n";
       }
 
       my $total = $nf->count_names;
       # Copy per-list options to the actual labelname too
       $plo = '' unless (defined($lnn) and $namefield eq $lnn);
-      $acc .= "    \\name{$namefield}{$total}{$plo}{%\n";
+      $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
       foreach my $n (@{$nf->names}) {
         $acc .= $n->name_to_bbl;
       }
-      $acc .= "    }\n";
+      $acc .= "      }\n";
     }
   }
 
@@ -274,44 +274,44 @@ sub set_output_entry {
     next if $struc->is_field_type('skipout', $listfield);
     if (my $lf = $be->get_field($listfield)) {
       if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
-        $acc .= "    \\true{more$listfield}\n";
+        $acc .= "      \\true{more$listfield}\n";
         pop @$lf; # remove the last element in the array
       }
       my $total = $#$lf + 1;
-      $acc .= "    \\list{$listfield}{$total}{%\n";
+      $acc .= "      \\list{$listfield}{$total}{%\n";
       foreach my $f (@$lf) {
-        $acc .= "      {$f}%\n";
+        $acc .= "        {$f}%\n";
       }
-      $acc .= "    }\n";
+      $acc .= "      }\n";
     }
   }
 
   my $namehash = $be->get_field('namehash');
-  $acc .= "    \\strng{namehash}{$namehash}\n" if $namehash;
+  $acc .= "      \\strng{namehash}{$namehash}\n" if $namehash;
   my $fullhash = $be->get_field('fullhash');
-  $acc .= "    \\strng{fullhash}{$fullhash}\n" if $fullhash;
+  $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
 
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     # Might not have been set due to skiplab/dataonly
     if (my $label = $be->get_field('labelalpha')) {
-      $acc .= "    \\field{labelalpha}{$label}\n";
+      $acc .= "      \\field{labelalpha}{$label}\n";
     }
   }
 
   # This is special, we have to put a marker for sortinit and then replace this string
   # on output as it can vary between lists
-  $acc .= "    <BDS>SORTINIT</BDS>\n";
+  $acc .= "      <BDS>SORTINIT</BDS>\n";
 
   # The labelyear option determines whether "extrayear" is output
   if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear = $be->get_field('nameyear')) {
       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
-        $acc .= "    <BDS>EXTRAYEAR</BDS>\n";
+        $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
       }
     }
     if (my $ly = $be->get_field('labelyear')) {
-      $acc .= "    \\field{labelyear}{$ly}\n";
+      $acc .= "      \\field{labelyear}{$ly}\n";
     }
   }
 
@@ -320,22 +320,22 @@ sub set_output_entry {
     # Might not have been set due to skiplab/dataonly
     if (my $la = $be->get_field('labelalpha')) {
       if (Biber::Config->get_la_disambiguation($la) > 1) {
-        $acc .= "    <BDS>EXTRAALPHA</BDS>\n";
+        $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
       }
     }
   }
 
   if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype')) ) {
     if (my $sh = $be->get_field('shorthand')) {
-      $acc .= "    \\field{labelnumber}{$sh}\n";
+      $acc .= "      \\field{labelnumber}{$sh}\n";
     }
     elsif (my $lnum = $be->get_field('labelnumber')) {
-      $acc .= "    \\field{labelnumber}{$lnum}\n";
+      $acc .= "      \\field{labelnumber}{$lnum}\n";
     }
   }
 
   if (defined($be->get_field('singletitle'))) {
-    $acc .= "    \\true{singletitle}\n";
+    $acc .= "      \\true{singletitle}\n";
   }
 
   foreach my $lfield (sort (@{$struc->get_field_type('literal')}, @{$struc->get_field_type('datepart')})) {
@@ -371,28 +371,28 @@ sub set_output_entry {
         }
       }
       my $bbl_rf = join(', ', @pr);
-      $acc .= "    \\field{$rfield}{$bbl_rf}\n";
+      $acc .= "      \\field{$rfield}{$bbl_rf}\n";
     }
   }
 
   foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
     if ( my $vf = $be->get_field($vfield) ) {
-      $acc .= "    \\verb{$vfield}\n";
-      $acc .= "    \\verb $vf\n    \\endverb\n";
+      $acc .= "      \\verb{$vfield}\n";
+      $acc .= "      \\verb $vf\n      \\endverb\n";
     }
   }
   if ( my $k = $be->get_field('keywords') ) {
-    $acc .= "    \\keyw{$k}\n";
+    $acc .= "      \\keyw{$k}\n";
   }
 
   # Append any warnings to the entry, if any
   if ( my $w = $be->get_field('warnings')) {
     foreach my $warning (@$w) {
-      $acc .= "    \\warn{\\item $warning}\n";
+      $acc .= "      \\warn{\\item $warning}\n";
     }
   }
 
-  $acc .= "  \\endentry\n\n";
+  $acc .= "    \\endentry\n";
 
   # Create an index by keyname for easy retrieval
   $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
@@ -443,12 +443,14 @@ sub output {
       $logger->debug("Writing entries in list '$listlabel'");
 
       # Remove most of this conditional when biblatex supports lists
-      if ($listlabel eq 'SHORTHANDS') {
-        print $target "  \\lossort\n";
-      }
-      else {
-        print $target "\n  \\sectionlist{$listlabel}{entry}\n" unless ($listlabel eq 'MAIN');
-      }
+      # if ($listlabel eq 'SHORTHANDS') {
+      #   print $target "  \\lossort\n";
+      # }
+      # else {
+      #   print $target "\n  \\sectionlist{$listlabel}{entry}\n" unless ($listlabel eq 'MAIN');
+      # }
+
+      print $target "  \\sectionlist{$listlabel}{$listtype}\n";
 
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
@@ -472,12 +474,15 @@ sub output {
       }
 
       # Remove most of this conditional when biblatex supports lists
-      if ($listlabel eq 'SHORTHANDS') {
-        print $target "  \\endlossort\n\n";
-      }
-      else {
-        print $target "\n  \\endsectionlist\n\n" unless ($listlabel eq 'MAIN');
-      }
+      # if ($listlabel eq 'SHORTHANDS') {
+      #   print $target "  \\endlossort\n\n";
+      # }
+      # else {
+      #   print $target "\n  \\endsectionlist\n\n" unless ($listlabel eq 'MAIN');
+      # }
+
+      print $target "  \\endsectionlist\n\n";
+
     }
 
     # Aliases
