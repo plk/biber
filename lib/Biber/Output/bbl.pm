@@ -481,7 +481,7 @@ sub output {
       #   print $target "\n  \\endsectionlist\n\n" unless ($listlabel eq 'MAIN');
       # }
 
-      print $target "  \\endsectionlist\n\n";
+      print $target "  \\endsectionlist\n";
 
     }
 
