@@ -1538,12 +1538,13 @@ sub process_lists {
   my $section = $self->sections->get_section($secnum);
   foreach my $list (@{$section->get_lists}) {
     my $llabel = $list->get_label;
+    my $ltype = $list->get_type;
 
     # Last-ditch fallback in case we still don't have a sorting spec
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
 
     $list->set_keys([ $section->get_citekeys ]);
-    $logger->debug("Populated list '$llabel' in section $secnum with keys: " . join(', ', $list->get_keys));
+    $logger->debug("Populated '$ltype' list '$llabel' in section $secnum with keys: " . join(', ', $list->get_keys));
 
     # Now we check the sorting cache to see if we already have results
     # for this scheme since sorting is computationally expensive.
