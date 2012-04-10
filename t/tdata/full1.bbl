@@ -19,7 +19,7 @@
 
 
 \refsection{0}
-  \sectionlist{MAIN}{entry}
+  \sectionlist{entry}{MAIN}
     \entry{F1}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
@@ -38,7 +38,7 @@
     \endentry
   \endsectionlist
 
-  \sectionlist{SHORTHANDS}{shorthand}
+  \sectionlist{shorthand}{SHORTHANDS}
     \key{F1}
   \endsectionlist
 

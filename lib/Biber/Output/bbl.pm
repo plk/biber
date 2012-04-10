@@ -450,7 +450,7 @@ sub output {
       #   print $target "\n  \\sectionlist{$listlabel}{entry}\n" unless ($listlabel eq 'MAIN');
       # }
 
-      print $target "  \\sectionlist{$listlabel}{$listtype}\n";
+      print $target "  \\sectionlist{$listtype}{$listlabel}\n";
 
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
