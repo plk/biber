@@ -540,35 +540,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       $bib_section->add_list($dlist);
     }
 
-    # Intermediate code until biblatex moves main \printbibliography to a list
-    # MAIN list has no filter and no sorting spec so it uses all citekeys and the
-    # global sort default.
-    # unless ($bib_section->get_list('MAIN')) {
-    #   my $mainlist = Biber::Section::List->new(label => 'MAIN');
-    #   $mainlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-    #   $mainlist->set_type('entry');
-    #   $bib_section->add_list($mainlist);
-    # }
-
-    # Intermediate code until biblatex moves SHORTHANDS to a .bcf supported list
-    # unless ($bib_section->get_list('SHORTHANDS')) {
-    #   my $los = Biber::Section::List->new(label => 'SHORTHANDS');
-    #   if (Biber::Config->getblxoption('sortlos')) {
-    #     $los->set_sortscheme([
-    #                           [ {'final' => 1},
-    #                             {'sortshorthand'    => {}}
-    #                           ],
-    #                           [ {}, {'shorthand'     => {}} ] ]);
-    #     $los->add_filter('field', 'shorthand');
-    #   }
-    #   else {
-    #     $los->set_sortscheme(Biber::Config->getblxoption('sorting'));
-    #     $los->add_filter('field', 'shorthand');
-    #   }
-    #   $los->set_type('shorthand');
-    #   $bib_section->add_list($los);
-    # }
-
     # Stop reading citekeys if we encounter "*" as a citation as this means
     # "all keys"
     my @keys = ();

@@ -442,14 +442,6 @@ sub output {
       my $listtype = $list->get_type;
       $logger->debug("Writing entries in list '$listlabel'");
 
-      # Remove most of this conditional when biblatex supports lists
-      # if ($listlabel eq 'SHORTHANDS') {
-      #   print $target "  \\lossort\n";
-      # }
-      # else {
-      #   print $target "\n  \\sectionlist{$listlabel}{entry}\n" unless ($listlabel eq 'MAIN');
-      # }
-
       print $target "  \\sectionlist{$listtype}{$listlabel}\n";
 
       # The order of this array is the sorted order
@@ -472,14 +464,6 @@ sub output {
           print $target "    \\key{$k}\n";
         }
       }
-
-      # Remove most of this conditional when biblatex supports lists
-      # if ($listlabel eq 'SHORTHANDS') {
-      #   print $target "  \\endlossort\n\n";
-      # }
-      # else {
-      #   print $target "\n  \\endsectionlist\n\n" unless ($listlabel eq 'MAIN');
-      # }
 
       print $target "  \\endsectionlist\n";
 
