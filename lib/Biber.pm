@@ -501,10 +501,13 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
     # Add any list specs to the Biber::Section object
     foreach my $list (@{$section->{sectionlist}}) {
+      my $ltype  = $list->{type};
       my $llabel = $list->{label};
-      if ($bib_section->get_list($llabel)) {
-        biber_warn("Section list '$llabel' is repeated for section $secnum - ignoring subsequent mentions");
-        next;
+      if (my $l = $bib_section->get_list($llabel)) {
+        if ($l->get_type eq $ltype) { # Same type, same label
+          biber_warn("Section '$ltype' list '$llabel' is repeated for section $secnum - ignoring subsequent mentions");
+          next;
+        }
       }
 
       my $seclist = Biber::Section::List->new(label => $llabel);
@@ -2331,6 +2334,7 @@ sub sort_list {
   my $sortscheme = $list->get_sortscheme;
   my @keys = $list->get_keys;
   my $llabel = $list->get_label;
+  my $ltype = $list->get_type;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
@@ -2345,7 +2349,7 @@ sub sort_list {
     $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
   }
 
-  $logger->trace("Sorting list '$llabel' with scheme\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
+  $logger->trace("Sorting '$ltype' list '$llabel' with scheme\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
 
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
@@ -2359,7 +2363,7 @@ sub sort_list {
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->info("Sorting list '$llabel' keys");
+    $logger->info("Sorting '$ltype' list '$llabel' keys");
     $logger->debug("Sorting with fastsort (locale $thislocale)");
     unless (setlocale(LC_ALL, $thislocale)) {
       biber_warn("Unavailable locale $thislocale");
@@ -2477,7 +2481,7 @@ sub sort_list {
     }
 
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting list '$llabel' keys");
+    $logger->info("Sorting '$ltype' list '$llabel' keys");
     $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion)");
 
     # Log if U::C::L currently has no tailoring for used locale
