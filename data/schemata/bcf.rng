@@ -60,7 +60,7 @@
         <optional>
           <ref name="sortalphaothers"/>
         </optional>
-        <ref name="sortlos"/>
+        <ref name="sortscheme"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
         <ref name="useauthor"/>
@@ -1292,19 +1292,16 @@
       </element>
     </element>
   </define>
-  <define name="sortlos">
+  <define name="sortscheme">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>sortlos</value>
+        <value>sortscheme</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="NCName"/>
       </element>
     </element>
   </define>

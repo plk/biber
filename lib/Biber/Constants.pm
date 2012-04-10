@@ -1707,7 +1707,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   sortalphaothers    => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sortexclusion      => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
   sorting            => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  sortlos            => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  sortscheme         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   structure          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   uniquelist         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   uniquename         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},

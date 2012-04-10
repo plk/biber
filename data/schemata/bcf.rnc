@@ -40,7 +40,7 @@ start =
       minitems,
       singletitle,
       sortalphaothers?,
-      sortlos,
+      sortscheme,
       uniquelist,
       uniquename,
       useauthor,
@@ -517,11 +517,11 @@ mincitenames =
     element bcf:key { "mincitenames" },
     element bcf:value { xsd:integer }
   }
-sortlos =
+sortscheme =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "sortlos" },
-    element bcf:value { "0" | "1" }
+    element bcf:key { "sortscheme" },
+    element bcf:value { xsd:NCName }
   }
 labelnamespec =
   element bcf:option {

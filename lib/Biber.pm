@@ -530,6 +530,16 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       $bib_section->add_list($seclist);
     }
 
+    # Make sure there is a default entry list with global sorting
+    # Needed in case someone only specified \printshorthands which results
+    # in no entry lists in the .bcf
+    unless ($bib_section->has_list_type('entry')) {
+      my $dlist = Biber::Section::List->new(label => Biber::Config->getblxoption('sortscheme'));
+      $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $dlist->set_type('entry');
+      $bib_section->add_list($dlist);
+    }
+
     # Intermediate code until biblatex moves main \printbibliography to a list
     # MAIN list has no filter and no sorting spec so it uses all citekeys and the
     # global sort default.

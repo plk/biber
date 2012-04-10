@@ -554,6 +554,22 @@ sub get_list {
   return undef;
 }
 
+=head2 has_list_type
+
+    Returns boolean saying whether a section has any list of
+    specified type
+
+=cut
+
+sub has_list_type {
+  my $self = shift;
+  my $type = shift;
+  foreach my $list (@{$self->{lists}}) {
+    return 1 if ($list->get_type eq $type);
+  }
+  return 0;
+}
+
 
 =head2 add_sort_cache
 
