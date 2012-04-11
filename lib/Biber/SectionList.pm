@@ -1,4 +1,4 @@
-package Biber::Section::List;
+package Biber::SectionList;
 use 5.014000;
 use strict;
 use warnings;
@@ -11,11 +11,11 @@ use List::Util qw( first );
 
 =head1 NAME
 
-Biber::Section::List
+Biber::SectionList
 
 =head2 new
 
-    Initialize a Biber::Section::List object
+    Initialize a Biber::SectionList object
 
 =cut
 
@@ -23,6 +23,31 @@ sub new {
   my ($class, %params) = @_;
   my $self = bless {%params}, $class;
   return $self;
+}
+
+
+=head2 set_section
+
+    Sets the section of a section list
+
+=cut
+
+sub set_section {
+  my $self = shift;
+  my $section = shift;
+  $self->{section} = lc($section);
+  return;
+}
+
+=head2 get_section
+
+    Gets the section of a section list
+
+=cut
+
+sub get_section {
+  my $self = shift;
+  return $self->{section};
 }
 
 =head2 set_label
@@ -72,6 +97,41 @@ sub get_type {
   my $self = shift;
   return $self->{type};
 }
+
+=head2 set_keys
+
+    Sets the keys for the list
+
+=cut
+
+sub set_keys {
+  my ($self, $keys) = @_;
+  $self->{keys} = $keys;
+  return;
+}
+
+=head2 get_keys
+
+    Gets the keys for the list
+
+=cut
+
+sub get_keys {
+  my $self = shift;
+  return @{$self->{keys}};
+}
+
+=head2 count_keys
+
+    Count the keys for the list
+
+=cut
+
+sub count_keys {
+  my $self = shift;
+  return $#{$self->{keys}} + 1;
+}
+
 
 =head2 get_listdata
 
@@ -294,42 +354,6 @@ sub get_filters {
   my $self = shift;
   return $self->{filters};
 }
-
-
-=head2 set_keys
-
-    Sets the keys for the list
-
-=cut
-
-sub set_keys {
-  my ($self, $keys) = @_;
-  $self->{keys} = $keys;
-  return;
-}
-
-=head2 get_keys
-
-    Gets the keys for the list
-
-=cut
-
-sub get_keys {
-  my $self = shift;
-  return @{$self->{keys}};
-}
-
-=head2 count_keys
-
-    Count the keys for the list
-
-=cut
-
-sub count_keys {
-  my $self = shift;
-  return $#{$self->{keys}} + 1;
-}
-
 
 =head2 instantiate_entry
 

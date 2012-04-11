@@ -96,8 +96,6 @@ sub del_everykeys {
   return;
 }
 
-
-
 =head2 has_everykey
 
     Returns a boolean to say if we've seen a key in any datasource for this section.
@@ -513,61 +511,6 @@ sub get_datasources {
   else {
     return undef;
   }
-}
-
-=head2 add_list
-
-    Adds a section list to this section
-
-=cut
-
-sub add_list {
-  my $self = shift;
-  my $list = shift;
-  push @{$self->{lists}}, $list;
-  return;
-}
-
-=head2 get_lists
-
-    Returns an array ref of all section lists
-
-=cut
-
-sub get_lists {
-  my $self = shift;
-  return $self->{lists};
-}
-
-=head2 get_list
-
-    Returns a specific list by label
-
-=cut
-
-sub get_list {
-  my $self = shift;
-  my $label = shift;
-  foreach my $list (@{$self->{lists}}) {
-    return $list if ($list->get_label eq $label);
-  }
-  return undef;
-}
-
-=head2 has_list_type
-
-    Returns boolean saying whether a section has any list of
-    specified type
-
-=cut
-
-sub has_list_type {
-  my $self = shift;
-  my $type = shift;
-  foreach my $list (@{$self->{lists}}) {
-    return 1 if ($list->get_type eq $type);
-  }
-  return 0;
 }
 
 

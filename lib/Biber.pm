@@ -27,7 +27,8 @@ use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
 use Biber::LaTeX::Recode;
-use Biber::Section::List;
+use Biber::SectionLists;
+use Biber::SectionList;
 use Biber::Structure;
 use Biber::Utils;
 use Storable qw( dclone );
@@ -138,6 +139,20 @@ sub sections {
   my $self = shift;
   return $self->{sections};
 }
+
+=head2 sectionlists
+
+    my $sectionlists= $biber->sectionlists
+
+    Returns a Biber::SectionLists object describing the bibliography sorting lists
+
+=cut
+
+sub sectionlists {
+  my $self = shift;
+  return $self->{sectionlists};
+}
+
 
 
 =head2 set_output_obj
@@ -499,47 +514,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $bib_section->set_datasources($bibdatasources{$secnum}) unless
       $bib_section->get_datasources;
 
-    # Add any list specs to the Biber::Section object
-    foreach my $list (@{$section->{sectionlist}}) {
-      my $ltype  = $list->{type};
-      my $llabel = $list->{label};
-      if (my $l = $bib_section->get_list($llabel)) {
-        if ($l->get_type eq $ltype) { # Same type, same label
-          biber_warn("Section '$ltype' list '$llabel' is repeated for section $secnum - ignoring subsequent mentions");
-          next;
-        }
-      }
-
-      my $seclist = Biber::Section::List->new(label => $llabel);
-      foreach my $filter (@{$list->{filter}}) {
-        $seclist->add_filter($filter->{type}, $filter->{content});
-      }
-      # disjunctive filters
-      foreach my $orfilter (@{$list->{orfilter}}) {
-        $seclist->add_filter('orfilter', { map {$_->{type} => [$_->{content}]} @{$orfilter->{filter}} });
-      }
-
-      if (my $sorting = $list->{sorting}) { # can be undef for fallback to global sorting
-        $seclist->set_sortscheme(_parse_sort($sorting));
-      }
-      else {
-        $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-      }
-      $seclist->set_type($list->{type} || 'entry'); # lists are entry lists by default
-      $logger->debug("Adding list '$llabel' to section $secnum");
-      $bib_section->add_list($seclist);
-    }
-
-    # Make sure there is a default entry list with global sorting
-    # Needed in case someone only specified \printshorthands which results
-    # in no entry lists in the .bcf
-    unless ($bib_section->has_list_type('entry')) {
-      my $dlist = Biber::Section::List->new(label => Biber::Config->getblxoption('sortscheme'));
-      $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-      $dlist->set_type('entry');
-      $bib_section->add_list($dlist);
-    }
-
     # Stop reading citekeys if we encounter "*" as a citation as this means
     # "all keys"
     my @keys = ();
@@ -582,13 +556,50 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $bib_sections->add_section($bib_section);
   }
 
+  # Add the Biber::Sections object to the Biber object
+  $self->{sections} = $bib_sections;
+
+  # Read sectionlists
+  my $sectionlists = new Biber::SectionLists;
+  foreach my $list (@{$bcfxml->{sectionlists}{sectionlist}}) {
+    my $ltype  = $list->{type};
+    my $llabel = $list->{label};
+    my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
+    if (my $l = $sectionlists->get_list($llabel)) {
+      if ($l->get_type eq $ltype and
+          $l->get_section eq $lsection) { # Same type, same section, same label
+        biber_warn("Section '$ltype' list '$llabel' is repeated for section $lsection - ignoring subsequent mentions");
+        next;
+      }
+    }
+
+    my $seclist = Biber::SectionList->new(section => $lsection, label => $llabel);
+    $seclist->set_type($ltype || 'entry'); # lists are entry lists by default
+    foreach my $filter (@{$list->{filter}}) {
+      $seclist->add_filter($filter->{type}, $filter->{content});
+    }
+    # disjunctive filters
+    foreach my $orfilter (@{$list->{orfilter}}) {
+      $seclist->add_filter('orfilter', { map {$_->{type} => [$_->{content}]} @{$orfilter->{filter}} });
+    }
+
+    if (my $sorting = $list->{sorting}) { # can be undef for fallback to global sorting
+      $seclist->set_sortscheme(_parse_sort($sorting));
+    }
+    else {
+      $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+    }
+    $logger->debug("Adding '$ltype' list '$llabel' for section $lsection");
+    $sectionlists->add_list($seclist);
+  }
+
+  # Add the Biber::SectionLists object to the Biber object
+  $self->{sectionlists} = $sectionlists;
+
   # Die if there are no citations in any section
   unless ($key_flag) {
     biber_warn("The file '$ctrl_file_path' does not contain any citations!");
   }
-
-  # Add the Biber::Sections object to the Biber object
-  $self->{sections} = $bib_sections;
 
   # Normalise any UTF-8 encoding string immediately to exactly what we want
   # We want the strict perl utf8 "UTF-8"
@@ -606,6 +617,20 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
 sub process_setup {
   my $self = shift;
+
+  # Make sure there is a default entry list with global sorting for each refsection
+  # Needed in case someone cites entries which are included in no
+  # bibliography as this results in no entry list in the .bcf
+  foreach my $section (@{$self->sections->get_sections}) {
+    my $secnum = $section->number;
+    unless ($self->sectionlists->has_lists_of_type_for_section($secnum, 'entry')) {
+      my $dlist = Biber::SectionList->new(label => Biber::Config->getblxoption('sortscheme'));
+      $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $dlist->set_type('entry');
+      $dlist->set_section($secnum);
+      $self->sectionlists->add_list($dlist);
+    }
+  }
 
   # Break structure information up into more processing-friendly formats
   # for use in verification checks later
@@ -1517,7 +1542,7 @@ sub process_lists {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  foreach my $list (@{$section->get_lists}) {
+  foreach my $list (@{$self->sectionlists->get_lists_for_section($secnum)}) {
     my $llabel = $list->get_label;
     my $ltype = $list->get_type;
 
