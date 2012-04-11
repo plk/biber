@@ -44,7 +44,7 @@ Biber::Config->setblxoption('maxbibnames', 1);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 my $bibentries = $section->bibentries;
 
 is($main->get_extrayeardata('L1'), '1', 'Entry L1 - one name, first in 1995');

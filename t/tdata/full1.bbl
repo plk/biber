@@ -19,7 +19,7 @@
 
 
 \refsection{0}
-  \sectionlist{entry}{MAIN}
+  \sortlist{entry}{MAIN}
     \entry{F1}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
@@ -36,10 +36,10 @@
       \field{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
-  \endsectionlist
-  \sectionlist{shorthand}{SHORTHANDS}
+  \endsortlist
+  \sortlist{shorthand}{SHORTHANDS}
     \key{F1}
-  \endsectionlist
+  \endsortlist
   \missing{C1}
 \endrefsection
 \endinput

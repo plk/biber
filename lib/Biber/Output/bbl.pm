@@ -436,13 +436,13 @@ sub output {
     my $section = $self->get_output_section($secnum);
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
-    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$Biber::MASTER->sectionlists->get_lists_for_section($secnum)}) {
+    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
       next unless $list->count_keys; # skip empty lists
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
       $logger->debug("Writing entries in '$listtype' list '$listlabel'");
 
-      print $target "  \\sectionlist{$listtype}{$listlabel}\n";
+      print $target "  \\sortlist{$listtype}{$listlabel}\n";
 
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
@@ -465,7 +465,7 @@ sub output {
         }
       }
 
-      print $target "  \\endsectionlist\n";
+      print $target "  \\endsortlist\n";
 
     }
 

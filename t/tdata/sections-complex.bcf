@@ -278,10 +278,6 @@
     <bcf:citekey>L2</bcf:citekey>
     <bcf:citekey>L3</bcf:citekey>
     <bcf:citekey>L4</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">labelalpha.bib</bcf:datasource>
@@ -291,10 +287,15 @@
     <bcf:citekey>L6</bcf:citekey>
     <bcf:citekey>L7</bcf:citekey>
     <bcf:citekey>L8</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
+  <!-- SORT LISTS -->
+  <bcf:sortlist section="0" label="MAIN" type="entry"/>
+  <bcf:sortlist section="0" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
+  <bcf:sortlist section="1" label="MAIN" type="entry"/>
+  <bcf:sortlist section="1" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
 </bcf:controlfile>
 

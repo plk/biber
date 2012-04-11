@@ -41,7 +41,7 @@ Biber::Config->setblxoption('mincitenames', 3);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 my $bibentries = $section->bibentries;
 
 my $name1 =
@@ -735,7 +735,7 @@ Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 $bibentries = $section->bibentries;
 
 is_deeply($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_field('labelnamename'))->nth_name(1)->get_firstname_i, ['{\v S}'], 'Terseinitials 1');

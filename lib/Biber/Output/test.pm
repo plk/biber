@@ -315,7 +315,7 @@ sub output {
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     my $section = $self->get_output_section($secnum);
-    foreach my $list (@{$section->get_lists}) {
+    foreach my $list (@{$Biber::MASTER->sortlists->get_lists}) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
       foreach my $k ($list->get_keys) {

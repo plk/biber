@@ -1434,9 +1434,10 @@
     <bcf:citekey>L15</bcf:citekey>
     <bcf:citekey>L16</bcf:citekey>
     <bcf:citekey>L17</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
+  <!-- SORT LISTS -->
+  <bcf:sortlist section="0" label="MAIN" type="entry"/>
+  <bcf:sortlist section="0" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
 </bcf:controlfile>

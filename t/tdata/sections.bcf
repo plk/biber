@@ -278,10 +278,6 @@
     <bcf:citekey>sect1</bcf:citekey>
     <bcf:citekey>sect2</bcf:citekey>
     <bcf:citekey>sect3</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
@@ -290,10 +286,6 @@
   <bcf:section number="1">
     <bcf:citekey>sect4</bcf:citekey>
     <bcf:citekey>sect5</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 2 -->
   <bcf:bibdata section="2">
@@ -306,10 +298,6 @@
     <bcf:citekey>sect7</bcf:citekey>
     <bcf:citekey>sect3</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
     <bcf:citekey>sectx</bcf:citekey> <!-- Bad key for section 2, should be dropped in tests -->
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 3 -->
   <bcf:bibdata section="3">
@@ -317,14 +305,27 @@
   </bcf:bibdata>
   <bcf:section number="3">
     <bcf:citekey>*</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 0 -->
   <bcf:section number="0">
     <bcf:citekey>sect8</bcf:citekey>
   </bcf:section>
+  <!-- SORT LISTS -->
+  <bcf:sortlist section="0" label="MAIN" type="entry"/>
+  <bcf:sortlist section="0" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
+  <bcf:sortlist section="1" label="MAIN" type="entry"/>
+  <bcf:sortlist section="1" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
+  <bcf:sortlist section="2" label="MAIN" type="entry"/>
+  <bcf:sortlist section="2" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
+  <bcf:sortlist section="3" label="MAIN" type="entry"/>
+  <bcf:sortlist section="3" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
 </bcf:controlfile>
 

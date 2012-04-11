@@ -42,7 +42,7 @@ Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 my $bibentries = $section->bibentries;
 
 my $dmv =  [

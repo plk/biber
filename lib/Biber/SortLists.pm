@@ -1,4 +1,4 @@
-package Biber::SectionLists;
+package Biber::SortLists;
 use 5.014000;
 use strict;
 use warnings;
@@ -7,11 +7,11 @@ use warnings;
 
 =head1 NAME
 
-Biber::SectionLists
+Biber::SortLists
 
 =head2 new
 
-    Initialize a Biber::SectionLists object
+    Initialize a Biber::SortLists object
 
 =cut
 
@@ -36,7 +36,7 @@ sub add_list {
 
 =head2 get_lists
 
-    Returns an array ref of all section lists
+    Returns an array ref of all sort lists
 
 =cut
 
@@ -47,7 +47,7 @@ sub get_lists {
 
 =head2 get_lists_for_section
 
-    Returns an array ref of all section lists for a given section
+    Returns an array ref of all sort lists for a given section
     Using numeric equals as section identifiers are numbers
 
 =cut
@@ -66,22 +66,23 @@ sub get_lists_for_section {
 
 =head2 get_list
 
-    Returns a specific list by label
+    Returns a specific list by section, type and label
 
 =cut
 
 sub get_list {
-  my $self = shift;
-  my $label = shift;
+  my ($self, $section, $type, $label) = @_;
   foreach my $list (@{$self->{lists}}) {
-    return $list if ($list->get_label eq $label);
+    return $list if ($list->get_label eq $label and
+                     $list->get_type eq $type and
+                     $list->get_section == $section);
   }
   return undef;
 }
 
 =head2 has_lists_of_type_for_section
 
-    Returns boolean saying whether there is a list for a section of a
+    Returns boolean saying whether there is a sort list for a section of a
     specified type
 
 =cut

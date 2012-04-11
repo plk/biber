@@ -307,10 +307,11 @@
   <bcf:section number="0">
     <bcf:citekey>fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42</bcf:citekey>
     <bcf:citekey>fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
+  <!-- SORT LISTS -->
+  <bcf:sortlist section="0" label="MAIN" type="entry"/>
+  <bcf:sortlist section="0" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
 </bcf:controlfile>
 

@@ -251,15 +251,16 @@
     <bcf:citekey>LS2</bcf:citekey>
     <bcf:citekey>LS3</bcf:citekey>
     <bcf:citekey>LS4</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-      <bcf:sorting>
-        <bcf:sort order="1">
-          <bcf:sortitem order="1">shorthand</bcf:sortitem>
-        </bcf:sort>
-      </bcf:sorting>
-    </bcf:sectionlist>
   </bcf:section>
+  <!-- SORT LISTS -->
+  <bcf:sortlist section="0" label="MAIN" type="entry"/>
+  <bcf:sortlist section="0" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+    <bcf:sorting>
+      <bcf:sort order="1">
+        <bcf:sortitem order="1">shorthand</bcf:sortitem>
+      </bcf:sort>
+    </bcf:sorting>
+  </bcf:sortlist>
 </bcf:controlfile>
 

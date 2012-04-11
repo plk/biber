@@ -36,8 +36,8 @@ Biber::Config->setoption('sortlocale', 'sv_SE');
 # U::C Swedish tailoring
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
-my $shs = $section->get_list('SHORTHANDS');
+my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
+my $shs = $biber->sortlists->get_list(0, 'shorthand', 'SHORTHANDS');
 
 # Shorthands are sorted by shorthand (as per bcf)
 is_deeply([$main->get_keys], ['LS2','LS1','LS3','LS4'], 'U::C tailoring - 1');
@@ -99,7 +99,7 @@ is_deeply([$main->get_keys], ['LS4', 'LS3','LS2','LS1'], 'upper_before_lower loc
 # test is kept for things that are not sort distinguishable
 $biber->parse_ctrlfile('sort-uc.bcf');
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 $biber->set_output_obj(Biber::Output::bbl->new());
 $S = [
                                                     [

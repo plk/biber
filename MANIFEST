@@ -33,8 +33,8 @@ lib/Biber/LaTeX/Recode.pm
 lib/Biber/LaTeX/recode_data.xml
 lib/Biber/Sections.pm
 lib/Biber/Section.pm
-lib/Biber/SectionLists.pm
-lib/Biber/SectionList.pm
+lib/Biber/SortLists.pm
+lib/Biber/SortList.pm
 lib/Biber/Structure.pm
 lib/Biber/Utils.pm
 doc/biber.tex

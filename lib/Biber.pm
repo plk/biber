@@ -27,8 +27,8 @@ use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
 use Biber::LaTeX::Recode;
-use Biber::SectionLists;
-use Biber::SectionList;
+use Biber::SortLists;
+use Biber::SortList;
 use Biber::Structure;
 use Biber::Utils;
 use Storable qw( dclone );
@@ -140,17 +140,17 @@ sub sections {
   return $self->{sections};
 }
 
-=head2 sectionlists
+=head2 sortlists
 
-    my $sectionlists= $biber->sectionlists
+    my $sortlists= $biber->sortlists
 
-    Returns a Biber::SectionLists object describing the bibliography sorting lists
+    Returns a Biber::SortLists object describing the bibliography sorting lists
 
 =cut
 
-sub sectionlists {
+sub sortlists {
   my $self = shift;
-  return $self->{sectionlists};
+  return $self->{sortlists};
 }
 
 
@@ -321,7 +321,7 @@ sub parse_ctrlfile {
                                                            qr/\Aconstraint\z/,
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
-                                                           qr/\Asectionlist\z/,
+                                                           qr/\Asortlist\z/,
                                                            qr/\Alabel(?:part|element|alphatemplate)\z/,
                                                            qr/\Acondition\z/,
                                                            qr/\A(?:or)?filter\z/,
@@ -559,21 +559,18 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   # Add the Biber::Sections object to the Biber object
   $self->{sections} = $bib_sections;
 
-  # Read sectionlists
-  my $sectionlists = new Biber::SectionLists;
-  foreach my $list (@{$bcfxml->{sectionlists}{sectionlist}}) {
+  # Read sortlists
+  my $sortlists = new Biber::SortLists;
+  foreach my $list (@{$bcfxml->{sortlist}}) {
     my $ltype  = $list->{type};
     my $llabel = $list->{label};
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
-    if (my $l = $sectionlists->get_list($llabel)) {
-      if ($l->get_type eq $ltype and
-          $l->get_section eq $lsection) { # Same type, same section, same label
-        biber_warn("Section '$ltype' list '$llabel' is repeated for section $lsection - ignoring subsequent mentions");
-        next;
-      }
+    if (my $l = $sortlists->get_list($lsection, $ltype, $llabel)) {
+      biber_warn("Section '$ltype' list '$llabel' is repeated for section $lsection - ignoring subsequent mentions");
+      next;
     }
 
-    my $seclist = Biber::SectionList->new(section => $lsection, label => $llabel);
+    my $seclist = Biber::SortList->new(section => $lsection, label => $llabel);
     $seclist->set_type($ltype || 'entry'); # lists are entry lists by default
     foreach my $filter (@{$list->{filter}}) {
       $seclist->add_filter($filter->{type}, $filter->{content});
@@ -590,11 +587,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
     }
     $logger->debug("Adding '$ltype' list '$llabel' for section $lsection");
-    $sectionlists->add_list($seclist);
+    $sortlists->add_list($seclist);
   }
 
-  # Add the Biber::SectionLists object to the Biber object
-  $self->{sectionlists} = $sectionlists;
+  # Add the Biber::SortLists object to the Biber object
+  $self->{sortlists} = $sortlists;
 
   # Die if there are no citations in any section
   unless ($key_flag) {
@@ -623,12 +620,12 @@ sub process_setup {
   # bibliography as this results in no entry list in the .bcf
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
-    unless ($self->sectionlists->has_lists_of_type_for_section($secnum, 'entry')) {
-      my $dlist = Biber::SectionList->new(label => Biber::Config->getblxoption('sortscheme'));
+    unless ($self->sortlists->has_lists_of_type_for_section($secnum, 'entry')) {
+      my $dlist = Biber::SortList->new(label => Biber::Config->getblxoption('sortscheme'));
       $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $dlist->set_type('entry');
       $dlist->set_section($secnum);
-      $self->sectionlists->add_list($dlist);
+      $self->sortlists->add_list($dlist);
     }
   }
 
@@ -1542,7 +1539,7 @@ sub process_lists {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  foreach my $list (@{$self->sectionlists->get_lists_for_section($secnum)}) {
+  foreach my $list (@{$self->sortlists->get_lists_for_section($secnum)}) {
     my $llabel = $list->get_label;
     my $ltype = $list->get_type;
 

@@ -40,17 +40,20 @@ Biber::Config->setoption('bblsafechars', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $section0->get_list('MAIN');
-my $shs0 = $section0->get_list('SHORTHANDS');
+my $main0 = $biber->sortlists->get_list(0, 'entry', 'MAIN');
+my $shs0 = $biber->sortlists->get_list(0, 'shorthand', 'SHORTHANDS');
+
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $section1->get_list('MAIN');
-my $shs1 = $section1->get_list('SHORTHANDS');
+my $main1 = $biber->sortlists->get_list(1, 'entry', 'MAIN');
+my $shs1 = $biber->sortlists->get_list(1, 'shorthand', 'SHORTHANDS');
+
 my $section2 = $biber->sections->get_section(2);
-my $main2 = $section2->get_list('MAIN');
-my $shs2 = $section2->get_list('SHORTHANDS');
+my $main2 = $biber->sortlists->get_list(2, 'entry', 'MAIN');
+my $shs2 = $biber->sortlists->get_list(2, 'shorthand', 'SHORTHANDS');
+
 my $section3 = $biber->sections->get_section(3);
-my $main3 = $section3->get_list('MAIN');
-my $shs3 = $section3->get_list('SHORTHANDS');
+my $main3 = $biber->sortlists->get_list(3, 'entry', 'MAIN');
+my $shs3 = $biber->sortlists->get_list(3, 'shorthand', 'SHORTHANDS');
 
 my $preamble = [
                 'Štring for Preamble 1',

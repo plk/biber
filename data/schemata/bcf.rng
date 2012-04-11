@@ -722,8 +722,45 @@
         <!-- Section specifications -->
         <ref name="secspec"/>
       </oneOrMore>
+      <oneOrMore>
+        <ref name="listspec"/>
+      </oneOrMore>
     </element>
   </start>
+  <define name="listspec">
+    <zeroOrMore>
+      <element name="bcf:sortlist">
+        <attribute name="section">
+          <data type="integer"/>
+        </attribute>
+        <attribute name="type">
+          <choice>
+            <value>entry</value>
+            <value>key</value>
+            <value>shorthand</value>
+          </choice>
+        </attribute>
+        <attribute name="label">
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </attribute>
+        <zeroOrMore>
+          <choice>
+            <ref name="filter"/>
+            <ref name="orfilter"/>
+          </choice>
+        </zeroOrMore>
+        <optional>
+          <element name="bcf:sorting">
+            <oneOrMore>
+              <ref name="sort"/>
+            </oneOrMore>
+          </element>
+        </optional>
+      </element>
+    </zeroOrMore>
+  </define>
   <define name="sorting">
     <element name="bcf:sorting">
       <oneOrMore>
@@ -898,35 +935,6 @@
               <param name="minLength">1</param>
             </data>
           </choice>
-        </element>
-      </zeroOrMore>
-      <zeroOrMore>
-        <element name="bcf:sectionlist">
-          <attribute name="label">
-            <data type="string">
-              <param name="minLength">1</param>
-            </data>
-          </attribute>
-          <attribute name="type">
-            <choice>
-              <value>entry</value>
-              <value>key</value>
-              <value>shorthand</value>
-            </choice>
-          </attribute>
-          <zeroOrMore>
-            <choice>
-              <ref name="filter"/>
-              <ref name="orfilter"/>
-            </choice>
-          </zeroOrMore>
-          <optional>
-            <element name="bcf:sorting">
-              <oneOrMore>
-                <ref name="sort"/>
-              </oneOrMore>
-            </element>
-          </optional>
         </element>
       </zeroOrMore>
     </element>

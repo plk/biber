@@ -289,8 +289,21 @@ start =
         }+
       }?,
       # Section specifications
-      secspec+
+      secspec+,
+      listspec+
     }
+
+listspec = 
+    element bcf:sortlist {
+      attribute section { xsd:integer },
+      attribute type { "entry" | "key" | "shorthand" },
+      attribute label { xsd:string {minLength="1"}},
+      (filter | orfilter )*,
+      element bcf:sorting {
+        sort+
+      }?
+    }*
+
 
 sorting = 
   element bcf:sorting {
@@ -355,14 +368,6 @@ secspec =
         attribute members { xsd:string {minLength="1"}},
         xsd:string {minLength="1"}) |
       xsd:string {minLength="1"}
-    }*,
-    element bcf:sectionlist {
-      attribute label { xsd:string {minLength="1"}},
-      attribute type { "entry" | "key" | "shorthand" },
-      (filter | orfilter )*,
-      element bcf:sorting {
-        sort+
-      }?
     }*
   }
 
@@ -375,7 +380,6 @@ filter = element bcf:filter {
                          | "keyword" | "notkeyword" | "field" | "notfield" },
            xsd:string {minLength="1"}
          }
-
 
 # option definitions
 useprefix =

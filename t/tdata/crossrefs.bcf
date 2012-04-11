@@ -220,10 +220,6 @@
     <bcf:citekey>circ2</bcf:citekey>
     <bcf:citekey>circ3</bcf:citekey>
     <bcf:citekey>r1</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">
@@ -231,9 +227,14 @@
   </bcf:bibdata>
   <bcf:section number="1">
     <bcf:citekey>cr5</bcf:citekey>
-    <bcf:sectionlist label="MAIN" type="entry"/>
-    <bcf:sectionlist label="SHORTHANDS" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
+  <!-- SORT LISTS -->
+  <bcf:sortlist section="0" label="MAIN" type="entry"/>
+  <bcf:sortlist section="0" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
+  <bcf:sortlist section="1" label="MAIN" type="entry"/>
+  <bcf:sortlist section="1" label="SHORTHANDS" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
 </bcf:controlfile>

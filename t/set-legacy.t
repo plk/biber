@@ -38,7 +38,7 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Elias1955}{set}{}

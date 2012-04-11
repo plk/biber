@@ -44,7 +44,7 @@ Biber::Config->setblxoption('labelyear', undef);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 my $bibentries = $section->bibentries;
 
 is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=1 minalphanames=1 entry L1 labelalpha');
@@ -84,7 +84,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=1 entry L1 labelalpha');
@@ -118,7 +118,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=2 entry L1 labelalpha');
@@ -152,7 +152,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=3 minalphanames=1 entry L1 labelalpha');
@@ -191,7 +191,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 my $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('L11')->get_field('sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
@@ -239,7 +239,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 $bibentries = $section->bibentries;
 
 # "Agas" and not "Aga" because the Schmidt/Schnee below need 4 chars to disambiguate
@@ -272,7 +272,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 $bibentries = $section->bibentries;
 
 
@@ -319,7 +319,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'Sch+07', 'extraalpha ne extrayear 1');

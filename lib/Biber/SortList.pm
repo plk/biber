@@ -1,4 +1,4 @@
-package Biber::SectionList;
+package Biber::SortList;
 use 5.014000;
 use strict;
 use warnings;
@@ -11,11 +11,11 @@ use List::Util qw( first );
 
 =head1 NAME
 
-Biber::SectionList
+Biber::SortList
 
 =head2 new
 
-    Initialize a Biber::SectionList object
+    Initialize a Biber::SortList object
 
 =cut
 
@@ -28,7 +28,7 @@ sub new {
 
 =head2 set_section
 
-    Sets the section of a section list
+    Sets the section of a sort list
 
 =cut
 
@@ -41,7 +41,7 @@ sub set_section {
 
 =head2 get_section
 
-    Gets the section of a section list
+    Gets the section of a sort list
 
 =cut
 
@@ -52,7 +52,7 @@ sub get_section {
 
 =head2 set_label
 
-    Sets the label of a section list
+    Sets the label of a sort list
 
 =cut
 
@@ -65,7 +65,7 @@ sub set_label {
 
 =head2 get_label
 
-    Gets the label of a section list
+    Gets the label of a sort list
 
 =cut
 
@@ -76,7 +76,7 @@ sub get_label {
 
 =head2 set_type
 
-    Sets the type of a section list
+    Sets the type of a sort list
 
 =cut
 

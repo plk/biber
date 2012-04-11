@@ -52,8 +52,8 @@ Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $section->get_list('MAIN');
-my $shs = $section->get_list('SHORTHANDS');
+my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
+my $shs = $biber->sortlists->get_list(0, 'shorthand', 'SHORTHANDS');
 my $out = $biber->get_output_obj;
 
 my $ss = [
@@ -253,7 +253,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$shs = $section->get_list('SHORTHANDS');
+$shs = $biber->sortlists->get_list(0, 'shorthand', 'SHORTHANDS');
 
 # Sort by shorthand
 is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');

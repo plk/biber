@@ -39,8 +39,8 @@ Biber::Config->setoption('sortlocale', 'C');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $shs = $section->get_list('SHORTHANDS');
-my $main = $section->get_list('MAIN');
+my $shs = $biber->sortlists->get_list(0, 'shorthand', 'SHORTHANDS');
+my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
 my $bibentries = $section->bibentries;
 
 my $k1 = q|    \entry{key1}{article}{}
