@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../data/schemata/bcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../data/bcf.xsl"?>
-<bcf:controlfile version="1.7" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="1.8" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -92,8 +92,8 @@
       <bcf:value>+</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>sortlos</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:key>sortscheme</bcf:key>
+      <bcf:value>nty</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
@@ -1659,28 +1659,6 @@
     <bcf:citekey>Key7</bcf:citekey>
     <bcf:citekey>Key2</bcf:citekey>
     <bcf:citekey>Key5</bcf:citekey>
-    <bcf:sectionlist label="listA" type="entry">
-      <bcf:filter type="field">editor,translator</bcf:filter>
-      <bcf:orfilter>
-        <bcf:filter type="keyword">key1</bcf:filter>
-        <bcf:filter type="type">book</bcf:filter>
-      </bcf:orfilter>
-      <bcf:filter type="notkeyword">ignore</bcf:filter>
-      <bcf:sorting>
-        <bcf:sort order="1">
-          <bcf:sortitem order="1">presort</bcf:sortitem>
-        </bcf:sort>
-        <bcf:sort order="2">
-          <bcf:sortitem order="1">labelalpha</bcf:sortitem>
-        </bcf:sort>
-        <bcf:sort order="3" final="1">
-          <bcf:sortitem order="1">sortkey</bcf:sortitem>
-        </bcf:sort>
-      </bcf:sorting>
-    </bcf:sectionlist>
-    <bcf:sectionlist label="shorthands" type="shorthand">
-      <bcf:filter type="field">shorthand</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">bibdata1.bib</bcf:datasource>
@@ -1695,9 +1673,31 @@
     <bcf:citekey>Key7</bcf:citekey>
     <bcf:citekey>Key34</bcf:citekey>
     <bcf:citekey>Key99</bcf:citekey>
-    <bcf:sectionlist label="nobooks" type="entry">
-      <bcf:filter type="nottype">book</bcf:filter>
-    </bcf:sectionlist>
   </bcf:section>
+  <bcf:sortlist section="0" label="listA" type="entry">
+    <bcf:filter type="field">editor,translator</bcf:filter>
+    <bcf:orfilter>
+      <bcf:filter type="keyword">key1</bcf:filter>
+      <bcf:filter type="type">book</bcf:filter>
+    </bcf:orfilter>
+    <bcf:filter type="notkeyword">ignore</bcf:filter>
+    <bcf:sorting>
+      <bcf:sort order="1">
+        <bcf:sortitem order="1">presort</bcf:sortitem>
+      </bcf:sort>
+      <bcf:sort order="2">
+        <bcf:sortitem order="1">labelalpha</bcf:sortitem>
+      </bcf:sort>
+      <bcf:sort order="3" final="1">
+        <bcf:sortitem order="1">sortkey</bcf:sortitem>
+      </bcf:sort>
+    </bcf:sorting>
+  </bcf:sortlist>
+  <bcf:sortlist section="0" label="shorthands" type="shorthand">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:sortlist>
+  <bcf:sortlist section="1" label="nobooks" type="entry">
+    <bcf:filter type="nottype">book</bcf:filter>
+  </bcf:sortlist>
 </bcf:controlfile>
 

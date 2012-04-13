@@ -1025,35 +1025,36 @@
               </tr>
             </tbody>
           </table>
-          <xsl:for-each select="./bcf:sectionlist">
-            <h5><u>Output list &quot;<xsl:value-of select="./@label"/>&quot;</u></h5>
-            <div>
-              <h6>Filters</h6>
-              <table>
-                <thead>
-                  <tr><td>Filter type</td><td>Filter value</td></tr>
-                </thead>
-                <tbody>
-                  <xsl:for-each select="./bcf:filter">
-                    <tr><td><xsl:value-of select="./@type"/></td><td><xsl:value-of select="./text()"/></td></tr>
-                  </xsl:for-each>
-                </tbody>
-              </table>
-            </div>
-            <div>
-              <h6>Sorting Specification</h6>
-              <xsl:choose>
-                <xsl:when test="./bcf:sorting">
-                  <xsl:call-template name="sorting-spec">
-                    <xsl:with-param name="spec" select="./bcf:sorting"/>
-                  </xsl:call-template>
-                </xsl:when>
-                <xsl:otherwise>
-                  (global default)
-                </xsl:otherwise>
-              </xsl:choose>
-            </div>
-          </xsl:for-each>
+        </xsl:for-each>
+        <h3>Sorting Lists</h3>
+        <xsl:for-each select="/bcf:controlfile/bcf:sortlist">
+          <h4><u>Sorting list &quot;<xsl:value-of select="./@label"/>&quot;</u></h4>
+          <div>
+            <h6>Filters</h6>
+            <table>
+              <thead>
+                <tr><td>Filter type</td><td>Filter value</td></tr>
+              </thead>
+              <tbody>
+                <xsl:for-each select="./bcf:filter">
+                  <tr><td><xsl:value-of select="./@type"/></td><td><xsl:value-of select="./text()"/></td></tr>
+                </xsl:for-each>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h6>Sorting Specification</h6>
+            <xsl:choose>
+              <xsl:when test="./bcf:sorting">
+                <xsl:call-template name="sorting-spec">
+                  <xsl:with-param name="spec" select="./bcf:sorting"/>
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>
+                (global default)
+              </xsl:otherwise>
+            </xsl:choose>
+          </div>
         </xsl:for-each>
       </body>
     </html>
