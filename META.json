@@ -60,7 +60,7 @@
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
-         "version" : "v0.9.9"
+         "version" : "1.0"
       },
       "Biber::Constants" : {
          "file" : "lib/Biber/Constants.pm",
@@ -130,12 +130,16 @@
          "file" : "lib/Biber/Section.pm",
          "version" : 0
       },
-      "Biber::Section::List" : {
-         "file" : "lib/Biber/Section/List.pm",
-         "version" : 0
-      },
       "Biber::Sections" : {
          "file" : "lib/Biber/Sections.pm",
+         "version" : 0
+      },
+      "Biber::SortList" : {
+         "file" : "lib/Biber/SortList.pm",
+         "version" : 0
+      },
+      "Biber::SortLists" : {
+         "file" : "lib/Biber/SortLists.pm",
          "version" : 0
       },
       "Biber::Structure" : {
@@ -153,5 +157,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "v0.9.9"
+   "version" : "1.0"
 }
