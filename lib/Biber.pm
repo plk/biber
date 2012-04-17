@@ -447,6 +447,7 @@ sub parse_ctrlfile {
   foreach my $ns (@{$bcfxml->{nosorts}{nosort}}) {
     push @$nosort, { name => $ns->{field}[0], value => $ns->{value}[0]};
   }
+  # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nosort', $nosort) if $nosort;
 
   # SORTING
