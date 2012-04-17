@@ -423,6 +423,21 @@
           </element>
         </zeroOrMore>
       </element>
+      <optional>
+        <!-- nosort specification -->
+        <element name="bcf:nosorts">
+          <oneOrMore>
+            <element name="bcf:nosort">
+              <attribute name="field">
+                <data type="string"/>
+              </attribute>
+              <attribute name="value">
+                <data type="string"/>
+              </attribute>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
       <!-- Global sorting specification -->
       <ref name="sorting"/>
       <optional>

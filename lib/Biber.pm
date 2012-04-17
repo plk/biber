@@ -310,6 +310,7 @@ sub parse_ctrlfile {
                                                            qr/\Amap_step\z/,
                                                            qr/\Aper_type\z/,
                                                            qr/\Aper_datasource\z/,
+                                                           qr/\Anosort\z/,
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
@@ -437,6 +438,16 @@ sub parse_ctrlfile {
 
   # INHERITANCE schemes for crossreferences (always global)
   Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
+
+  # NOSORTS
+  # Make the data structure look like the biber config file structure
+  # "field" and "value" are forced to arrays for other elements so we extract
+  # the first element here as they will always be only length=1
+  my $nosort;
+  foreach my $ns (@{$bcfxml->{nosorts}{nosort}}) {
+    push @$nosort, { name => $ns->{field}[0], value => $ns->{value}[0]};
+  }
+  Biber::Config->setoption('nosort', $nosort) if $nosort;
 
   # SORTING
 

@@ -160,7 +160,13 @@ start =
         }+
       }*
     },
-    
+    # nosort specification
+    element bcf:nosorts {
+      element bcf:nosort {
+        attribute field { xsd:string },
+        attribute value { xsd:string }
+      }+
+    }?,
     # Global sorting specification
     sorting,
     # Structure specification
