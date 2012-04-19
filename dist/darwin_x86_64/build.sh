@@ -3,6 +3,7 @@
 # The cp/rm steps are so that the packed biber main script is not
 # called "biber" as on case-insensitive file systems, this clashes with
 # the Biber lib directory and generates a (harmless) warning on first run
+
 # Also, pp resolves symlinks and copies the symlink targets of linked libs
 # which then don't have the right names and so things that link to them
 # through the link name break. So, we copy them to the link names first and
