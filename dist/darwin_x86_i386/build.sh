@@ -6,8 +6,9 @@
 # Also, pp resolves symlinks and copies the symlink targets of linked libs
 # which then don't have the right names and so things that link to them
 # through the link name break. So, we copy them to the link names first and
-# and package those.
-#
+# and package those. This is because OSX is not ELF object format, unlike Linux
+# and so PAR::Packer doesn't understand how to follow the links.
+
 # Don't try to build 32-bit 10.5 binaries on >10.5 by manipulating macports
 # flags and SDKs. It doesn't work. You need a real 10.5 box/VM.
 #
