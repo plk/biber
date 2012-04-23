@@ -9,6 +9,10 @@
 # is not searched first, even though it's at the top of LD_LIBRARY_PATH. So, the wrong
 # libraries will be found and things may well break. Strip any RPATH out of such libs
 # with "chrpath -d <lib>". Check for presence with "readelf -d <lib>".
+#
+# Check all perl binaries with:
+# for file in `find /usr/local/perl/lib* -name \*.so`; do echo $file >> /tmp/out ;readelf -d $file >> /tmp/out; done
+# and then grep the file for "RPATH"
 
 # Had to add /etc/ld.so.conf.d/biber.conf and put "/usr/local/perl/lib64" in there
 # and then run "sudo ldconfig" so that libbtparse.so is found. Doesn't really make
