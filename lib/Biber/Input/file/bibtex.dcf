@@ -135,7 +135,7 @@
     <dcf:field name="pubstate" handler="literal"/>
     <dcf:field name="related" handler="literal"/>
     <dcf:field name="relatedtype" handler="literal"/>
-    <dcf:field name="reprinttitle" handler="literal"/>
+    <dcf:field name="relatedstring" handler="literal"/>
     <dcf:field name="series" handler="literal"/>
     <dcf:field name="shorthand" handler="literal"/>
     <dcf:field name="shorthandintro" handler="literal"/>

@@ -1,13 +1,3 @@
-* TODO keyalias in biblatex
-* TODO labelalphatemplate implementation
-* TODO Biblatex implements sourcemap
-  * Take out labelalphatemplate defaults, optional in rnc/rng and parsing when biblatex implements it
-* TODO Generalised \printbibliography system
-  * Typed lists - entry, key, shorthand etc.
-  * Take out MAIN, SHORTHANDS backwards compat hacks in Biber.pm and BBL.pm
-  * Shorthands should be requested otherwise it's a big sorting overhead
-
-* TODO When biblatex implements related entries, take out reprinttitle
 * TODO When biblatex implements data model section, remove greyed and add line from .bcf to remap in Figure 1 in docs
 
 * TODO Structure ALL fields need to be put into types where possible

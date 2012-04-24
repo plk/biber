@@ -1576,7 +1576,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                      { content => "related", datatype => "literal", fieldtype => "field" },
                      { content => "relatedtype", datatype => "literal", fieldtype => "field" },
                      { content => "relatedstring", datatype => "literal", fieldtype => "field" },
-                     { content => "reprinttitle", datatype => "literal", fieldtype => "field" },
                      { content => "series", datatype => "literal", fieldtype => "field" },
                      { content => "shortauthor", datatype => "name", fieldtype => "list" },
                      { content => "shorteditor", datatype => "name", fieldtype => "list" },
