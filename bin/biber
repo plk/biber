@@ -36,6 +36,7 @@ GetOptions(
            'decodecharsset=s',
            'debug|D',
            'fastsort|f',
+           'fixinits',
            'help|h|?',
            'mincrossrefs|m=s',
            'logfile=s',
@@ -329,6 +330,12 @@ The default if not specified is C<--dot_include=section,xdata,crossref,xref>.
 
 Use Perl's sort instead of C<Unicode::Collate> for sorting. Also uses
 OS locale definitions (which may be broken for some languages ...).
+
+=item B<--fixinits>
+
+Try to fix broken multiple initials with they have no space between them in BibTeX
+data sources. That is, "A.B. Clarke" becomes "A. B. Clarke" before name parsing.
+This can slightly mess up things like "{U.K. Government}" and other esoteric cases.
 
 =item B<--help|-h>
 

@@ -111,6 +111,7 @@ our $CONFIG_DEFAULT_BIBER = {
   debug              => { content => 0 },
   decodecharsset     => { content => 'base' },
   fastsort           => { content => 0 },
+  fixinits           => { content => 0 },
   mincrossrefs       => { content => 2 },
   nodieonerror       => { content => 0 },
   nolog              => { content => 0 },

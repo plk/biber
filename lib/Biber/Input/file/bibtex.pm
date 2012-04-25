@@ -875,6 +875,11 @@ sub parsename {
   $namestr =~ s/\s*\z//xms; # trailing whitespace
   $namestr =~ s/\s+/ /g;    # Collapse internal whitespace
 
+  # If requested, try to correct broken initials with no space between them.
+  # This can slightly mess up some other names like {{U.K. Government}} etc.
+  # btparse can't do this so we do it before name parsing
+  $namestr =~ s/(\w)\.(\w)/$1. $2/g if Biber::Config->getoption('fixinits');
+
   my $name = new Text::BibTeX::Name($namestr);
 
   # Formats so we can get BibTeX compatible nbsp inserted
