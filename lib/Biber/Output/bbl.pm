@@ -370,7 +370,7 @@ sub set_output_entry {
           push @pr, $f->[0];
         }
       }
-      my $bbl_rf = join(', ', @pr);
+      my $bbl_rf = join('\bibrangessep ', @pr);
       $acc .= "      \\field{$rfield}{$bbl_rf}\n";
     }
   }
