@@ -28,6 +28,7 @@ GetOptions(
            'bblencoding|E=s',
            'bblsafechars',
            'bblsafecharsset=s',
+           'cache',
            'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
@@ -75,6 +76,16 @@ if (exists $opts->{'version'}) {
   my $v = "biber version: $Biber::Config::VERSION";
   $v .= ' (beta)' if $Biber::Config::BETA_VERSION;
   say "$v";
+  exit EXIT_OK;
+}
+
+if (exists $opts->{'cache'}) {
+  if (my $cache = $ENV{PAR_TEMP}) {
+    say $cache;
+  }
+  else {
+    say "No cache - you are not running the PAR::Packer executable version of biber";
+  }
   exit EXIT_OK;
 }
 
@@ -283,6 +294,10 @@ Specify the encoding of the data source file(s). Default is "UTF-8"
 Normally it's not necessary to set this as it's passed via the
 .bcf file from biblatex's setting of the same name.
 See "perldoc Encode::Supported" for a list of supported encodings.
+
+=item B<--cache>
+
+If running as a PAR::Packer binary, show the cache location and exit.
 
 =item B<--collate|-C>
 
