@@ -18,6 +18,9 @@
 # and then run "sudo ldconfig" so that libbtparse.so is found. Doesn't really make
 # a difference to the build, just the running of Text::BibTeX itself.
 
+# Using an newer locally build libxml2 (and rebuilt XL::LibXML) in /usr/local because
+# beginning with 32-bit Debian Wheezy, the older ones would segfault
+
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them
 # Added libz as some linux distros like SUSE 11.3 have a slightly older zlib
@@ -51,7 +54,7 @@
   --module=Readonly::XS \
   --module=IO::Socket::SSL \
   --link=/usr/local/perl/lib64/libbtparse.so \
-  --link=/usr/lib/libxml2.so.2 \
+  --link=/usr/local/lib/libxml2.so.2 \
   --link=/usr/lib/libxslt.so.1 \
   --link=/usr/lib/libexslt.so.0 \
   --link=/lib/libz.so.1 \
