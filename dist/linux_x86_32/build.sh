@@ -45,6 +45,7 @@
   --module=Encode::TW \
   --module=Encode::Unicode \
   --module=Encode::Unicode::UTF7 \
+  --File::Find::Rule \
   --module=Readonly::XS \
   --module=IO::Socket::SSL \
   --link=/usr/local/perl/lib/libbtparse.so \
