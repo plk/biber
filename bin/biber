@@ -409,7 +409,7 @@ other datasource formats.
 
 =item B<--output_directory [directory]>
 
-Files (F<.bbl> and F<.log>) are output to directory F<directory> instead
+Files (F<.bbl> and F<.blg>) are output to directory F<directory> instead
 of the current directory. Input files are also looked for in F<directory>
 before current directory.
 
