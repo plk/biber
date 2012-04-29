@@ -38,7 +38,7 @@
   --module=Readonly::XS \
   --module=IO::Socket::SSL \
   --link=/usr/local/perl/lib/libbtparse.so \
-  --link=/usr/lib/libxml2.so.2 \
+  --link=/usr/local/lib/libxml2.so.2 \
   --link=/usr/lib/libxslt.so.1 \
   --link=/usr/lib/libexslt.so.0 \
   --link=/lib/libssl.so.0.9.8 \
