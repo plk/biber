@@ -47,6 +47,10 @@ our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{seenname} = {};
 
+# Set tracking, partent->child and child->parent
+$CONFIG->{state}{set}{pc} = {};
+$CONFIG->{state}{set}{cp} = {};
+
 # Citekeys which refer to the same entry
 $CONFIG->{state}{citkey_aliases} = {};
 
@@ -110,6 +114,8 @@ sub _init {
   $CONFIG->{state}{datafiles} = [];
   $CONFIG->{state}{crossref} = [];
   $CONFIG->{state}{xdata} = [];
+  $CONFIG->{state}{set}{pc} = {};
+  $CONFIG->{state}{set}{cp} = {};
 
   return;
 }
@@ -715,6 +721,92 @@ sub get_graph {
   my $type = shift;
   return $CONFIG->{state}{graph}{$type};
 }
+
+=head2 set_set_pc
+
+  Record a parent->child set relationship
+
+=cut
+
+sub set_set_pc {
+  shift; # class method so don't care about class name
+  my ($parent, $child) = @_;
+  $CONFIG->{state}{set}{pc}{$parent}{$child} = 1;
+  return;
+}
+
+=head2 set_set_cp
+
+  Record a child->parent set relationship
+
+=cut
+
+sub set_set_cp {
+  shift; # class method so don't care about class name
+  my ($child, $parent) = @_;
+  $CONFIG->{state}{set}{cp}{$child}{$parent} = 1;
+  return;
+}
+
+=head2 get_set_pc
+
+  Return a boolean saying if there is a parent->child set relationship
+
+=cut
+
+sub get_set_pc {
+  shift; # class method so don't care about class name
+  my ($parent, $child) = @_;
+  return exists($CONFIG->{state}{set}{pc}{$parent}{$child}) ? 1 : 0;
+}
+
+=head2 get_set_cp
+
+  Return a boolean saying if there is a child->parent set relationship
+
+=cut
+
+sub get_set_cp {
+  shift; # class method so don't care about class name
+  my ($child, $parent) = @_;
+  return exists($CONFIG->{state}{set}{cp}{$child}{$parent}) ? 1 : 0;
+}
+
+=head2 get_set_children
+
+  Return a list of children for a parent set
+
+=cut
+
+sub get_set_children {
+  shift; # class method so don't care about class name
+  my $parent = shift;
+  if (exists($CONFIG->{state}{set}{pc}{$parent})) {
+    return (keys %{$CONFIG->{state}{set}{pc}{$parent}});
+  }
+  else {
+    return ();
+  }
+}
+
+=head2 get_set_parents
+
+  Return a list of parents for a child of a set
+
+=cut
+
+sub get_set_parents {
+  shift; # class method so don't care about class name
+  my $child = shift;
+  if (exists($CONFIG->{state}{set}{cp}{$child})) {
+    return (keys %{$CONFIG->{state}{set}{cp}{$child}});
+  }
+  else {
+    return ();
+  }
+}
+
+
 
 =head2 set_inheritance
 

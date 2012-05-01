@@ -809,30 +809,43 @@ sub cite_setmembers {
   }
 }
 
-=head2 process_crossrefs
+=head2 process_interentry
 
-    $biber->process_crossrefs
+    $biber->process_interentry
 
-    This does two things:
-    1. Ensures proper inheritance of data from cross-references.
-    2. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
+    This does several things:
+    1. Records the set information for use later
+    2. Ensures proper inheritance of data from cross-references.
+    3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
        at least mincrossrefs times are included in the bibliography.
 
 =cut
 
-sub process_crossrefs {
+sub process_interentry {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
   $logger->debug("Processing explicit and implicit crossrefs for section $secnum");
 
-  # Loop over cited keys and count the cross/xrefs
-  # Can't do this when parsing entries as this would count them
-  # for potentially uncited children
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
     my $refkey;
+
+    # Record set information
+    # It's best to do this in the loop here as every entry needs the information
+    # from all other entries in process_sets()
+    if ($be->get_field('entrytype') eq 'set') {
+      my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
+      foreach my $member (@entrysetkeys) {
+        Biber::Config->set_set_pc($citekey, $member);
+        Biber::Config->set_set_cp($member, $citekey);
+      }
+    }
+
+    # Loop over cited keys and count the cross/xrefs
+    # Can't do this when parsing entries as this would count them
+    # for potentially uncited children
     if ($refkey = $be->get_field('xref') or $refkey = $be->get_field('crossref')) {
       $logger->debug("Incrementing cross/xrefkey count for entry '$refkey' via entry '$citekey'");
       Biber::Config->incr_crossrefkey($refkey);
@@ -953,7 +966,7 @@ sub process_entries_pre {
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing entry '$citekey' from section $secnum (before uniqueness)");
 
-    # process "set" entries:
+    # process set entries
     $self->process_sets($citekey);
 
     # generate labelname name
@@ -1126,14 +1139,13 @@ sub process_sets {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if ($be->get_field('entrytype') eq 'set') {
-    my @entrysetkeys = split /\s*,\s*/, $be->get_field('entryset');
-
+  if (my @entrysetkeys = Biber::Config->get_set_children($citekey)) {
     # Enforce Biber parts of virtual "dataonly" for set members
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
       Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
       Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
+
       my $me = $section->bibentry($member);
       if ($me->get_field('entryset')) {
         biber_warn("Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'", $me);
@@ -1147,25 +1159,12 @@ sub process_sets {
       biber_warn("No entryset found for entry $citekey of type 'set'", $be);
     }
   }
-  # check if this non-set entry is in a cited set and if so, we
-  # have enforced Biber parts of virtual "dataonly" otherwise
-  # this entry will spuriously generate disambiguation data for itself
-  # This would only happen if the non-set entry was cited before any set
-  # in which it occurred of course since otherwise it would have already had
-  # "dataonly" enforced by the code above
+  # Also set this here for any non-set keys which are in a set and which haven't
+  # had skips set by being seen as a member of that set yet
   else {
-    foreach my $pset_key ($section->get_citekeys) {
-      my $pset_be = $section->bibentry($pset_key);
-      if ($pset_be->get_field('entrytype') eq 'set') {
-        my @entrysetkeys = split /\s*,\s*/, $pset_be->get_field('entryset');
-        foreach my $member (@entrysetkeys) {
-          next unless $member eq $citekey;
-          # Posssible that this has already been set if this set entry member
-          # was dealt with above but in case we haven't seen the set it's in yet ...
-          Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
-          Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
-        }
-      }
+    if (Biber::Config->get_set_parents($citekey)) {
+      Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
+      Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
     }
   }
 }
@@ -1273,11 +1272,12 @@ sub process_labelyear {
   my $be = $section->bibentry($citekey);
 
   if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-    my $lyearspec = Biber::Config->getblxoption('labelyearspec', $be->get_field('entrytype'));
-
     if (Biber::Config->getblxoption('skiplab', $be->get_field('entrytype'), $citekey)) {
       return;
     }
+
+    my $lyearspec = Biber::Config->getblxoption('labelyearspec', $be->get_field('entrytype'));
+
     # make sure we gave the correct data type:
     biber_error("Invalid value for option labelyear: $lyearspec\n")
       unless ref $lyearspec eq 'ARRAY';
@@ -2602,7 +2602,7 @@ sub prepare {
     next unless $section->get_citekeys or $section->is_allkeys;
     my $secnum = $section->number;
 
-    $logger->info("Processing bib section $secnum");
+    $logger->info("Processing section $secnum");
 
     $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
     Biber::Config->_init;                # (re)initialise Config object
@@ -2612,7 +2612,7 @@ sub prepare {
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->resolve_xdata;                # Resolve xdata entries
     $self->cite_setmembers;              # Cite set members
-    $self->process_crossrefs;            # Process crossrefs/sets
+    $self->process_interentry;           # Process crossrefs/sets etc.
     $self->validate_structure;           # Check bib structure
     $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information
