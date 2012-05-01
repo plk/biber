@@ -855,10 +855,7 @@ sub process_interentry {
     if (Biber::Config->getoption('graph') and my $xref = $be->get_field('xref')) {
       Biber::Config->set_graph('xref', $citekey, $xref);
     }
-  }
 
-  foreach my $citekey ($section->get_citekeys) {
-    my $be = $section->bibentry($citekey);
     # Do crossref inheritance
     if (my $cr = $be->get_field('crossref')) {
       # Skip inheritance if we've already done it
