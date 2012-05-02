@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 52;
+use Test::More tests => 53;
 
 use Biber;
 use Biber::Input::file::bibtex;
@@ -229,11 +229,14 @@ my $name14 =
       namestring     => 'de la Vallée Poussin, J. C. G.',
       nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
 
+# Note that the lastname initials are wrong because the prefix "El-" was not stripped
+# This is because the default noinit regexp only strips lower-case prefices to protect
+# hyphenated names
 my $name15 =
    {  firstname      => 'E.~S.',
       firstname_i    => ['E', 'S'],
       lastname       => 'El-{M}allah',
-      lastname_i     => ['M'],
+      lastname_i     => ['E-M'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
@@ -519,6 +522,20 @@ my $l19 = q|    \entry{L19}{book}{}
     \endentry
 |;
 
+my $l19a = q|    \entry{L19a}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=0963f6904ccfeaac2770c5882a587001}{Lam}{L\bibinitperiod}{Ho-Pun}{H\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=0963f6904ccfeaac2770c5882a587001}{Lam}{L\bibinitperiod}{Ho-Pun}{H\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{0963f6904ccfeaac2770c5882a587001}
+      \strng{fullhash}{0963f6904ccfeaac2770c5882a587001}
+      \field{sortinit}{L}
+    \endentry
+|;
+
+
 my $l20 = q|    \entry{L20}{book}{}
       \name{labelname}{1}{}{%
         {{hash=fdaa0936724be89ef8bd16cf02e08c74}{Ford}{F\bibinitperiod}{{John\bibnamedelimb Henry}}{J\bibinitperiod}{}{}{}{}}%
@@ -703,6 +720,7 @@ is( $out->get_output_entry($main,'L16'), $l16, 'First {F.\bibinitdelim F.} Last'
 is( $out->get_output_entry($main,'L17'), $l17, 'Last, First {F.\bibinitdelim F.}');
 is( $out->get_output_entry($main,'L18'), $l18, 'Last, First F.{\bibinitdelim }F.');
 is( $out->get_output_entry($main,'L19'), $l19, 'Firstname with hyphen');
+is( $out->get_output_entry($main,'L19a'), $l19a, 'Short firstname with hyphen');
 is( $out->get_output_entry($main,'L20'), $l20, 'Protected dual first name');
 is( $out->get_output_entry($main,'L22'), $l22u, 'LaTeX encoded unicode lastname - 1');
 is( $out->get_output_entry($main,'L23'), $l23, 'Unicode firstname');

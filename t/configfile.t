@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Biber;
 use Cwd qw(getcwd);
 use File::Spec;
@@ -25,6 +25,8 @@ chdir('t/tdata');
 
 my $collopts = [ { name => 'level', value => 3 },
                   { name => 'table', value => '/home/user/data/otherkeys.txt' } ];
+
+my $noinit = [ {value => q/\b\p{Ll}{2}\p{Pd}/}, {value => q/[\x{2bf}\x{2018}]/} ];
 
 my $nosort = [ { name => 'author', value => q/\A\p{L}{2}\p{Pd}/ },
                { name => 'author', value => q/[\x{2bf}\x{2018}]/ },
@@ -228,6 +230,7 @@ is(Biber::Config->getoption('configfile'), File::Spec->catfile('biber-test.conf'
 is(Biber::Config->getoption('sortlocale'), 'testlocale', 'Options 3 - from config file');
 is_deeply(Biber::Config->getoption('collate_options'), $collopts, 'Options 4 - from config file');
 is_deeply(Biber::Config->getoption('nosort'), $nosort, 'Options 5 - from config file');
-is_deeply(Biber::Config->getoption('sortcase'), 0, 'Options 6 - from .bcf');
-is(Biber::Config->getoption('decodecharsset'), 'base', 'Options 7 - from defaults');
-is_deeply(Biber::Config->getoption('sourcemap'), $sourcemap, 'Options 8 - from config file');
+is_deeply(Biber::Config->getoption('noinit'), $noinit, 'Options 6 - from config file');
+is_deeply(Biber::Config->getoption('sortcase'), 0, 'Options 7 - from .bcf');
+is(Biber::Config->getoption('decodecharsset'), 'base', 'Options 8 - from defaults');
+is_deeply(Biber::Config->getoption('sourcemap'), $sourcemap, 'Options 9 - from config file');

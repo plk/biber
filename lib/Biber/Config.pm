@@ -167,7 +167,8 @@ sub _initopts {
     }
     # mildly complex options - nosort/collate_options
     elsif (lc($k) eq 'collate_options' or
-           lc($k) eq 'nosort') {
+           lc($k) eq 'nosort' or
+           lc($k) eq 'noinit' ) {
       Biber::Config->setoption($k, $v->{option});
     }
   }
@@ -184,7 +185,8 @@ sub _initopts {
     }
     # mildly complex options - nosort/collate_options
     elsif (lc($k) eq 'collate_options' or
-           lc($k) eq 'nosort') {
+           lc($k) eq 'nosort' or
+           lc($k) eq 'noinit' ) {
       Biber::Config->setconfigfileoption($k, $v->{option});
     }
     # rather complex options - sourcemap
@@ -805,7 +807,6 @@ sub get_set_parents {
     return ();
   }
 }
-
 
 
 =head2 set_inheritance

@@ -533,10 +533,16 @@ an example config file which displays the Biber defaults:
   <graph>0</graph>
   <mincrossrefs>0</mincrossrefs>
   <nodieonerror>0</nodieonerror>
+  <noinit>
+    <!-- strip lowercase prefices like 'al-' when generating initials -->
+    <option value="\b\p{Ll}{2}\p{Pd}"/>
+    <!-- strip diacritics when generating initials -->
+    <option value="[\x{2bf}\x{2018}]"/>
+  </noinit>
   <nolog>0</nolog>
   <nostdmacros>0</nostdmacros>
   <nosort>
-    <!-- strip prefixes like 'al-' when sorting name fields -->
+    <!-- strip prefices like 'El-' when sorting name fields -->
     <option name="type_names" value="\A\p{L}{2}\p{Pd}"/>
     <!-- strip diacritics when sorting name fields -->
     <option name="type_names" value="[\x{2bf}\x{2018}]"/>
@@ -559,7 +565,7 @@ an example config file which displays the Biber defaults:
 via the \verb+.bcf+ file. Certain options apply only to Biber and can
 only be set in the config file, particularly the more complex
 options. Most options are simple tags. Exceptions are the
-\opt{nosort} and \opt{collate\_options} options which are slightly
+\opt{nosort}, \opt{noinit} and \opt{collate\_options} options which are slightly
 more complex and can have sub-options as shown. A much more complex
 option is the \opt{sourcemap} option which is not set by default and
 which is described in section \ref{map}.
@@ -948,6 +954,47 @@ datasources, which are commonly used for abstracts:
 </maps>
 \end{lstlisting}
 \bigskip
+\subsubsection{The \texttt{noinit} option}\label{noinit}
+
+The value of the \opt{noinit} option can only be set in the config file and
+not on the command line. This is because the values are Perl regular
+expressions and would need special quoting to set on the command line. This
+can get a bit tricky on some OSes (like Windows) so it's safer to set them
+in the config file. \opt{noinit} allows you to ignore parts of a name when
+generating initials. This is done using Perl regular expressions which
+specify what to ignore. You can specific multiple regular expressions and
+they will be removed from the name before it is passed to the initials
+generating system.
+
+For example, this option can be used to ignore diacritic marks and prefices
+in names which should not be considered when sorting. Given (the default):
+
+\begin{lstlisting}[language=xml]
+  <noinit>
+    <!-- strip lowercase prefices like 'al-' when generating initials -->
+    <option value="\b\p{Ll}{2}\p{Pd}"/>
+    <!-- strip diacritics when generating initials -->
+    <option value="[\x{2bf}\x{2018}]"/>
+  </noinit>
+\end{lstlisting}
+
+\noindent and the \BibTeX\ data source entry:
+
+\begin{verbatim}
+AUTHOR = {{al-Hasan}, ʿAlī},
+\end{verbatim}
+
+\noindent the initials for the last name will be «H» and not «a-H». The
+initial for the first name will be «A» as the diacritic is also ignored.
+This is tricky in general as you cannot often determine the difference
+between a name with a prefix and a hyphenated name with only, say, two
+chars in the first part such as «Ho-Pun». You can adjust this option for
+your individual cases. By default, only lowercased prefices are looked for
+so as to avoid breaking things like «Ho-Pun» where you want the initials to
+be «H.-P.», for example. See the Perl regular expression manual page for
+details of the regular expression
+syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
+
 \subsubsection{The \texttt{nosort} option}\label{nosort}
 
 The value of the \opt{nosort} option can only be set in the config file
@@ -1004,12 +1051,12 @@ type\_title & booktitle\\
 \label{tab:nst}
 \end{table}
 
-For example, this option can be used to ignore diacritic marks and prefixes
+For example, this option can be used to ignore diacritic marks and prefices
 in names which should not be considered when sorting. Given (the default):
 
 \begin{lstlisting}[language=xml]
 <nosort>
-  <!-- strip prefixes like 'al-' when sorting names -->
+  <!-- strip prefices like 'al-' when sorting names -->
   <option name="type_names" value="\A\p{L}{2}\p{Pd}"/>
   <!-- strip diacritics when sorting names -->
   <option name="type_names" value="[\x{2bf}\x{2018}]"/>
