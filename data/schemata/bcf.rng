@@ -424,6 +424,18 @@
         </zeroOrMore>
       </element>
       <optional>
+        <!-- noinit specification -->
+        <element name="bcf:noinits">
+          <oneOrMore>
+            <element name="bcf:noinit">
+              <attribute name="value">
+                <data type="string"/>
+              </attribute>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
         <!-- nosort specification -->
         <element name="bcf:nosorts">
           <oneOrMore>

@@ -304,11 +304,17 @@
       <bcf:field source="subtitle" target="journalsubtitle"/>
     </bcf:inherit>
   </bcf:inheritance>
+  <bcf:noinits>
+    <!-- strip lowercase prefices like 'al-' when generating initials -->
+    <bcf:noinit value="\b\p{Ll}{2}\p{Pd}"/>
+    <!-- strip diacritics when generating initials -->
+    <bcf:noinit value="[\x{2bf}\x{2018}]"/>
+  </bcf:noinits>
   <bcf:nosorts>
     <!-- strip prefixes like 'al-' when sorting name fields -->
-    <nosort field="type_names" value="\A\p{L}{2}\p{Pd}"/>
+    <bcf:nosort field="type_names" value="\A\p{L}{2}\p{Pd}"/>
     <!-- strip diacritics when sorting name fields -->
-    <nosort field="type_names" value="[\x{2bf}\x{2018}]"/>
+    <bcf:nosort field="type_names" value="[\x{2bf}\x{2018}]"/>
   </bcf:nosorts>
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>

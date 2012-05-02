@@ -160,6 +160,12 @@ start =
         }+
       }*
     },
+    # noinit specification
+    element bcf:noinits {
+      element bcf:noinit {
+        attribute value { xsd:string }
+      }+
+    }?,
     # nosort specification
     element bcf:nosorts {
       element bcf:nosort {
