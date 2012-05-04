@@ -14,7 +14,7 @@
 # constructed in the code so Par::Packer can't auto-detect them.
 
 cp /opt/local/bin/biber /tmp/biber-darwin
-cp /opt/local/lib/libz.1.2.5.dylib /tmp/libz.1.dylib
+cp /opt/local/lib/libz.1.2.7.dylib /tmp/libz.1.dylib
 
 pp --compress=6 \
   --module=deprecate \
