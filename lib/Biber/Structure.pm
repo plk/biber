@@ -47,64 +47,60 @@ sub new {
   # Create data for field types, including any aliases which might be
   # needed when reading the bib data.
   foreach my $f (@{$struc->{fields}{field}}) {
-    if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
-      push @name, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
-      push @list, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
-      push @list, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'entrykey') {
-      push @list, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
-      push @literal, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'datepart') {
-      push @datepart, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
-      push @date, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
-      push @integer, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
-      push @range, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
-      push @verbatim, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
-      push @key, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'entrykey') {
-      push @entrykey, $f->{content};
-    }
+    foreach my $et ($f->{entrytypes} ? split(/\s*,\s*/, $f->{entrytypes}) : ('ALL')) {
+      if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
+        $self->{$et}->{fields}{name}{$f->{content}} = 1;
+        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
+        $self->{$et}->{fields}{list}{$f->{content}} = 1;
+        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
+        $self->{$et}->{fields}{list}{$f->{content}} = 1;
+        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'entrykey') {
+        $self->{$et}->{fields}{list}{$f->{content}} = 1;
+        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
+        $self->{$et}->{fields}{literal}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'datepart') {
+        $self->{$et}->{fields}{datepart}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
+        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+        $self->{$et}->{fields}{date}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
+        $self->{$et}->{fields}{literal}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
+        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+        $self->{$et}->{fields}{range}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
+        $self->{$et}->{fields}{verbatim}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
+        $self->{$et}->{fields}{literal}{$f->{content}} = 1;
+      }
+      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'entrykey') {
+        $self->{$et}->{fields}{literal}{$f->{content}} = 1;
+      }
 
-    # check null_ok
-    if ($f->{nullok}) {
-      $nullok->{$f->{content}} = 1;
-    }
-    # check skips - fields we dont' want to output to BBL
-    if ($f->{skip_output}) {
-      $skipout->{$f->{content}} = 1;
+      # check null_ok
+      if ($f->{nullok}) {
+        $self->{$et}->{fields}{nullok}{$f->{content}} = 1;
+      }
+      # check skips - fields we dont' want to output to BBL
+      if ($f->{skip_output}) {
+        $self->{$et}->{fields}{skipout}{$f->{content}} = 1;
+      }
     }
   }
-
-  # Store as lookup tables for speed and multiple re-use
-  $self->{fields}{nullok}   = $nullok;
-  $self->{fields}{skipout}  = $skipout;
-  $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range, @date) };
-  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer, @entrykey) };
-  $self->{fields}{datepart} = { map {$_ => 1} @datepart };
-  $self->{fields}{name}     = { map {$_ => 1} @name };
-  $self->{fields}{list}     = { map {$_ => 1} @list };
-  $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };
-  $self->{fields}{range}    = { map {$_ => 1} @range };
-  $self->{fields}{date}     = { map {$_ => 1} @date };
 
   my $leg_ents;
   my $ets = [ sort map {$_->{content}} @{$struc->{entrytypes}{entrytype}} ];
@@ -244,9 +240,9 @@ sub is_field_for_entrytype {
 =cut
 
 sub get_field_type {
-  my $self = shift;
-  my $type = shift;
-  return $self->{fields}{$type} ? [ sort keys %{$self->{fields}{$type}} ] : [];
+  my ($self, $entrytype, $type) = @_;
+  my $f = $self->{$entrytype}{fields}{$type} || $self->{ALL}{fields}{$type};
+  return $f ? [ sort keys %$f ] : [];
 }
 
 =head2 is_field_type
@@ -256,9 +252,9 @@ sub get_field_type {
 =cut
 
 sub is_field_type {
-  my $self = shift;
-  my ($type, $field) = @_;
-  return $self->{fields}{$type}{$field} // 0;
+  my ($self, $entrytype, $type, $field) = @_;
+  my $f = $self->{$entrytype}{fields}{$type}{$field} || $self->{ALL}{fields}{$type}{$field};
+  return $f // 0;
 }
 
 

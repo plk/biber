@@ -1201,7 +1201,8 @@ sub process_labelname {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $lnamespec = Biber::Config->getblxoption('labelnamespec', $be->get_field('entrytype'));
+  my $bee = $be->get_field('entrytype');
+  my $lnamespec = Biber::Config->getblxoption('labelnamespec', $bee);
   my $struc = Biber::Config->get_structure;
 
   # First we set the normal labelname name
@@ -1214,7 +1215,7 @@ sub process_labelname {
       $lnameopt = $ln;
     }
 
-    unless (first {$_ eq $ln} @{$struc->get_field_type('name')}) {
+    unless (first {$_ eq $ln} @{$struc->get_field_type($bee, 'name')}) {
       biber_warn("Labelname candidate '$ln' is not a name field - skipping");
       next;
     }
@@ -1240,7 +1241,7 @@ sub process_labelname {
     }
 
     # We have already warned about this above
-    unless (first {$_ eq $ln} @{$struc->get_field_type('name')}) {
+    unless (first {$_ eq $ln} @{$struc->get_field_type($bee, 'name')}) {
       next;
     }
 
@@ -1379,9 +1380,10 @@ sub process_pername_hashes {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
   my $struc = Biber::Config->get_structure;
 
-  foreach my $pn (@{$struc->get_field_type('name')}) {
+  foreach my $pn (@{$struc->get_field_type($bee, 'name')}) {
     my $names = $be->get_field($pn) or next;
     foreach my $n (@{$names->names}) {
       $n->set_hash($self->_getpnhash($citekey, $n));
@@ -1417,7 +1419,7 @@ sub process_visible_names {
     my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
     my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
 
-    foreach my $n (@{$struc->get_field_type('name')}) {
+    foreach my $n (@{$struc->get_field_type($bee, 'name')}) {
       next unless my $names = $be->get_field($n);
 
       my $count = $names->count_names;

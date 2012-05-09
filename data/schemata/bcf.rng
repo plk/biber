@@ -564,6 +564,13 @@
                     <value>true</value>
                   </attribute>
                 </optional>
+                <optional>
+                  <!--
+                    limit this field definition to specific entrytypes?
+                    Is parsed as a csv list
+                  -->
+                  <attribute name="entrytypes"/>
+                </optional>
                 <data type="NCName"/>
               </element>
             </oneOrMore>

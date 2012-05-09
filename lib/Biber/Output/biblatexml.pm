@@ -126,8 +126,9 @@ sub output {
     # Loop over entries
 ENTRIES:    foreach my $be ($section->bibentries->entries) {
       my $citekey = $be->get_field('citekey');
+      my $bee = $be->get_field('entrytype');
 
-      $xml->startTag([$bp, 'entry'], 'id' => $citekey, 'entrytype' => $be->get_field('entrytype'));
+      $xml->startTag([$bp, 'entry'], 'id' => $citekey, 'entrytype' => $bee);
 
       # entry options
       if (my $options = $be->get_field('rawoptions')) {
@@ -178,7 +179,7 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Output name fields
-      foreach my $namefield (@{$struc->get_field_type('name')}) {
+      foreach my $namefield (@{$struc->get_field_type($bee, 'name')}) {
         if ( my $nf = $be->get_field($namefield) ) {
 
           # Did we have "and others" in the data?
@@ -197,7 +198,7 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Output list fields
-      foreach my $listfield (@{$struc->get_field_type('list')}) {
+      foreach my $listfield (@{$struc->get_field_type($bee, 'list')}) {
         if (my $lf = $be->get_field($listfield)) {
           if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
             $xml->startTag([$bp, $listfield], 'morelist' => 1);
@@ -214,7 +215,7 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Output literal fields
-      foreach my $lfield (@{$struc->get_field_type('literal')}) {
+      foreach my $lfield (@{$struc->get_field_type($bee, 'literal')}) {
         if (my $lf = $be->get_field($lfield)) {
           $xml->dataElement([$bp, $lfield], $lf);
         }
@@ -236,7 +237,7 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Range fields
-      foreach my $rfield (@{$struc->get_field_type('range')}) {
+      foreach my $rfield (@{$struc->get_field_type($bee, 'range')}) {
         if (my $rf = $be->get_field($rfield)) {
           $xml->startTag([$bp, $rfield]);
           # range fields are an array ref of two-element array refs [range_start, range_end]
@@ -254,14 +255,14 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Verbatim fields
-      foreach my $vfield (@{$struc->get_field_type('verbatim')}) {
+      foreach my $vfield (@{$struc->get_field_type($bee, 'verbatim')}) {
         if (my $vf = $be->get_field($vfield)) {
           $xml->dataElement([$bp, $vfield], $vf);
         }
       }
 
       # csv fields
-      foreach my $csvfield (@{$struc->get_field_type('csv')}) {
+      foreach my $csvfield (@{$struc->get_field_type($bee, 'csv')}) {
         if (my $csvf = $be->get_field($csvfield)) {
           $xml->startTag([$bp, $csvfield]);
           my @f = split /\s*,\s*/, $csvf;
