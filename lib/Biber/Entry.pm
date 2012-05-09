@@ -164,46 +164,21 @@ sub get_field {
 =head2 set_datafield
 
     Set/append to a field which is in the bib data file
-    Only set to null if the field is a nullable one
-    otherwise if value is null, remove the field
 
 =cut
-
-# sub set_datafield {
-#   my $self = shift;
-#   my ($key, $val, $append) = @_;
-#   my $struc = Biber::Config->get_structure;
-#   # Only set fields which are either not null or are ok to be null
-#   if ( $struc->is_field_type('ALL', 'nullok', $key) or is_notnull($val)) {
-#     # Only add append with seperator if append mode and there is something to append to
-#     if ($append and defined($self->{datafields}{$key})) {
-#       $self->{datafields}{$key} .= "$append$val";
-#     }
-#     # otherwise just set as normal
-#     else {
-#       $self->{datafields}{$key} = $val;
-#     }
-#   }
-#   elsif (is_null($val)) {
-#     delete($self->{datafields}{$key});
-#   }
-#   return;
-# }
-
 
 sub set_datafield {
   my $self = shift;
   my ($key, $val, $append) = @_;
   my $struc = Biber::Config->get_structure;
-  # Only set fields which are either not null or are ok to be null
-    # Only add append with seperator if append mode and there is something to append to
-    if ($append and defined($self->{datafields}{$key})) {
-      $self->{datafields}{$key} .= "$append$val";
-    }
-    # otherwise just set as normal
-    else {
-      $self->{datafields}{$key} = $val;
-    }
+  # Only add append with seperator if append mode and there is something to append to
+  if ($append and defined($self->{datafields}{$key})) {
+    $self->{datafields}{$key} .= "$append$val";
+  }
+  # otherwise just set as normal
+  else {
+    $self->{datafields}{$key} = $val;
+  }
   return;
 }
 

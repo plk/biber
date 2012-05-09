@@ -499,7 +499,13 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
 
     # Now we can check for nullables per-type - this can't be done until we have finally
     # settled on an entrytype
-    foreach (my $) {
+    my $struc = Biber::Config->get_structure;
+    foreach my $f ($bibentry->datafields) {
+      if (is_null($bibentry->get_datafield($f))) {
+        unless ($struc->is_field_type($entry->type, 'nullok', $f)) {
+          $bibentry->del_field($f);
+        }
+      }
     }
     $bibentries->add_entry($key, $bibentry);
   }
