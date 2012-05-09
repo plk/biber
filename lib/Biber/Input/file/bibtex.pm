@@ -496,6 +496,11 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
     }
 
     $bibentry->set_field('datatype', 'bibtex');
+
+    # Now we can check for nullables per-type - this can't be done until we have finally
+    # settled on an entrytype
+    foreach (my $) {
+    }
     $bibentries->add_entry($key, $bibentry);
   }
 

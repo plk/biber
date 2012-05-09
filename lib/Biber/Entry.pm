@@ -169,13 +169,33 @@ sub get_field {
 
 =cut
 
+# sub set_datafield {
+#   my $self = shift;
+#   my ($key, $val, $append) = @_;
+#   my $struc = Biber::Config->get_structure;
+#   # Only set fields which are either not null or are ok to be null
+#   if ( $struc->is_field_type('ALL', 'nullok', $key) or is_notnull($val)) {
+#     # Only add append with seperator if append mode and there is something to append to
+#     if ($append and defined($self->{datafields}{$key})) {
+#       $self->{datafields}{$key} .= "$append$val";
+#     }
+#     # otherwise just set as normal
+#     else {
+#       $self->{datafields}{$key} = $val;
+#     }
+#   }
+#   elsif (is_null($val)) {
+#     delete($self->{datafields}{$key});
+#   }
+#   return;
+# }
+
+
 sub set_datafield {
   my $self = shift;
-  my $bee = $self->get_field('entrytype');
   my ($key, $val, $append) = @_;
   my $struc = Biber::Config->get_structure;
   # Only set fields which are either not null or are ok to be null
-  if ( $struc->is_field_type($bee, 'nullok', $key) or is_notnull($val)) {
     # Only add append with seperator if append mode and there is something to append to
     if ($append and defined($self->{datafields}{$key})) {
       $self->{datafields}{$key} .= "$append$val";
@@ -184,10 +204,6 @@ sub set_datafield {
     else {
       $self->{datafields}{$key} = $val;
     }
-  }
-  elsif (is_null($val)) {
-    delete($self->{datafields}{$key});
-  }
   return;
 }
 

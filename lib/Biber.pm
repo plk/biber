@@ -685,6 +685,7 @@ sub process_citekey_aliases {
   }
 }
 
+
 =head2 instantiate_dynamic
 
     This instantiates any dynamic entries so that they are available
