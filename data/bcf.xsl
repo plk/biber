@@ -788,10 +788,10 @@
               </xsl:for-each>
             </tbody>
           </table>
-          <h4>Legal Fields</h4>
+          <h4>Field Types</h4>
           <table>
             <thead>
-              <tr><td>Field</td><td>Data type</td></tr>
+              <tr><td>Field</td><td>Data type</td><td>Entrytypes</td></tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:structure/bcf:fields/bcf:field">
@@ -803,6 +803,12 @@
                   </td>
                   <td>
                     <xsl:value-of select="./@datatype"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./@fieldtype"/>
+                  </td>
+                  <td>
+                    <xsl:choose>
+                      <xsl:when test="./@entrytypes"><xsl:value-of select="./@entrytypes"/></xsl:when>
+                      <xsl:otherwise>ALL</xsl:otherwise>
+                    </xsl:choose>
                   </td>
                 </tr>
               </xsl:for-each>
