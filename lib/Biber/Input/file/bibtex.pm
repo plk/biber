@@ -496,17 +496,6 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
     }
 
     $bibentry->set_field('datatype', 'bibtex');
-
-    # Now we can check for nullables per-type - this can't be done until we have finally
-    # settled on an entrytype
-    my $dm = Biber::Config->get_dm;
-    foreach my $f ($bibentry->datafields) {
-      if (is_null($bibentry->get_datafield($f))) {
-        unless ($dm->is_field_type($entry->type, 'nullok', $f)) {
-          $bibentry->del_field($f);
-        }
-      }
-    }
     $bibentries->add_entry($key, $bibentry);
   }
 

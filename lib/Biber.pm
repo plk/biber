@@ -685,6 +685,31 @@ sub process_citekey_aliases {
   }
 }
 
+=head2 nullable_check
+
+  Check entries for nullable fields
+
+=cut
+
+sub nullable_check {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $dm = Biber::Config->get_dm;
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+    my $bee = $be->get_field('entrytype');
+    foreach my $f ($be->datafields) {
+      if (is_null($be->get_datafield($f))) {
+        unless ($dm->is_field_type($bee, 'nullok', $f)) {
+          biber_warn("The field '$f' in entry '$citekey' cannot be null, deleting it");
+          $be->del_field($f);
+        }
+      }
+    }
+  }
+}
+
 
 =head2 instantiate_dynamic
 
@@ -2625,6 +2650,7 @@ sub prepare {
     $self->resolve_xdata;                # Resolve xdata entries
     $self->cite_setmembers;              # Cite set members
     $self->process_interentry;           # Process crossrefs/sets etc.
+    $self->nullable_check;               # Check entries for nullable fields
     $self->validate_datamodel;           # Check against data model
     $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information
