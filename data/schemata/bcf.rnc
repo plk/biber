@@ -175,8 +175,8 @@ start =
     }?,
     # Global sorting specification
     sorting,
-    # Structure specification
-    element bcf:structure {
+    # Data model specification
+    element bcf:datamodel {
       # Valid datetypes
       element bcf:datetypes {
         element bcf:datetype { xsd:NCName }+

@@ -453,8 +453,8 @@
       <!-- Global sorting specification -->
       <ref name="sorting"/>
       <optional>
-        <!-- Structure specification -->
-        <element name="bcf:structure">
+        <!-- Data model specification -->
+        <element name="bcf:datamodel">
           <!-- Valid datetypes -->
           <element name="bcf:datetypes">
             <oneOrMore>

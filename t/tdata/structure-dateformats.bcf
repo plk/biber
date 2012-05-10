@@ -257,7 +257,7 @@
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
-  <bcf:structure>
+  <bcf:datamodel>
     <bcf:datetypes>
       <bcf:datetype>date</bcf:datetype>
       <bcf:datetype>origdate</bcf:datetype>
@@ -1411,7 +1411,7 @@
         <bcf:field>title</bcf:field>
       </bcf:constraint>
     </bcf:constraints>
-  </bcf:structure>
+  </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
     <bcf:datasource type="file" datatype="bibtex">structure-dateformats.bib</bcf:datasource>

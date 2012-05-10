@@ -35,7 +35,7 @@ lib/Biber/Sections.pm
 lib/Biber/Section.pm
 lib/Biber/SortLists.pm
 lib/Biber/SortList.pm
-lib/Biber/Structure.pm
+lib/Biber/DataModel.pm
 lib/Biber/Utils.pm
 doc/biber.tex
 doc/biber.pdf

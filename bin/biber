@@ -60,7 +60,7 @@ GetOptions(
            'U',                   # alias for bblencoding=UTF-8
            'validate_config',
            'validate_control',
-           'validate_structure|V',
+           'validate_datamodel|V',
            'version|v',
            'wraplines|w'
           ) or pod2usage(-verbose => 0,
@@ -462,7 +462,7 @@ Schema validate the biber config file.
 
 Schema validate the F<.bcf> biblatex control file.
 
-=item B<--validate_structure|-V>
+=item B<--validate_datamodel|-V>
 
 Validate the data against a data model.
 

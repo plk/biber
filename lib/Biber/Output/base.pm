@@ -291,7 +291,7 @@ sub create_output_section {
   foreach my $k ($section->get_citekeys) {
     # Regular entry
     my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
-    $self->set_output_entry($be, $section, Biber::Config->get_structure);
+    $self->set_output_entry($be, $section, Biber::Config->get_dm);
   }
 
   # Make sure the output object knows about the output section

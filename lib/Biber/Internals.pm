@@ -289,7 +289,7 @@ sub _labelpart {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $struc = Biber::Config->get_structure;
+  my $dm = Biber::Config->get_dm;
   my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
   my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
   my $lp;
@@ -306,7 +306,7 @@ sub _labelpart {
     # length
     if (my $ic = $part->{ifnamecount}) {
       my $f = $part->{content};
-      if (first {$_ eq $f} @{$struc->get_field_type($bee, 'name')} or
+      if (first {$_ eq $f} @{$dm->get_field_type($bee, 'name')} or
           $f eq 'labelname') {
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;
@@ -342,7 +342,6 @@ sub _dispatch_label {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $struc = Biber::Config->get_structure;
   my $code_ref;
   my $code_args_ref;
   my $lp;

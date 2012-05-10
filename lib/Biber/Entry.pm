@@ -170,7 +170,6 @@ sub get_field {
 sub set_datafield {
   my $self = shift;
   my ($key, $val, $append) = @_;
-  my $struc = Biber::Config->get_structure;
   # Only add append with seperator if append mode and there is something to append to
   if ($append and defined($self->{datafields}{$key})) {
     $self->{datafields}{$key} .= "$append$val";

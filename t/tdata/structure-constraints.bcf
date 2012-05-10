@@ -238,7 +238,7 @@
       <bcf:sortitem order="2">0000</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
-  <bcf:structure>
+  <bcf:datamodel>
     <bcf:datetypes>
       <bcf:datetype>date</bcf:datetype>
       <bcf:datetype>origdate</bcf:datetype>
@@ -635,7 +635,7 @@
         </bcf:consequent>
       </bcf:constraint>
     </bcf:constraints>
-  </bcf:structure>
+  </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
     <bcf:datasource type="file" datatype="bibtex">structure-constraints.bib</bcf:datasource>

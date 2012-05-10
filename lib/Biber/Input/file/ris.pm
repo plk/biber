@@ -6,13 +6,13 @@ use base 'Exporter';
 
 use Carp;
 use Biber::Constants;
+use Biber::DataModel;
 use Biber::Entries;
 use Biber::Entry;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
-use Biber::Structure;
 use Biber::Utils;
 use Biber::Config;
 use Encode;
@@ -213,7 +213,7 @@ sub create_entry {
   my ($key, $entry, $source) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $struc = Biber::Config->get_structure;
+  my $dm = Biber::Config->get_dm;
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
 

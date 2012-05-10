@@ -1,4 +1,4 @@
-package Biber::Structure;
+package Biber::DataModel;
 use 5.014000;
 use strict;
 use warnings;
@@ -13,7 +13,7 @@ use Date::Simple;
 
 =head1 NAME
 
-Biber::Structure
+Biber::DataModel
 
 
 =cut
@@ -23,16 +23,16 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head2 new
 
-    Initialize a Biber::Structure object
+    Initialize a Biber::DataModel object
 
 =cut
 
 sub new {
   my $class = shift;
-  my $struc = shift;
+  my $dm = shift;
   my $self;
-  if (defined($struc) and ref($struc) eq 'HASH') {
-    $self = bless $struc, $class;
+  if (defined($dm) and ref($dm) eq 'HASH') {
+    $self = bless $dm, $class;
   }
   else {
     $self = bless {}, $class;
@@ -46,7 +46,7 @@ sub new {
 
   # Create data for field types, including any aliases which might be
   # needed when reading the bib data.
-  foreach my $f (@{$struc->{fields}{field}}) {
+  foreach my $f (@{$dm->{fields}{field}}) {
     foreach my $et ($f->{entrytypes} ? split(/\s*,\s*/, $f->{entrytypes}) : ('ALL')) {
       if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
         $self->{$et}->{fields}{name}{$f->{content}} = 1;
@@ -103,13 +103,13 @@ sub new {
   }
 
   my $leg_ents;
-  my $ets = [ sort map {$_->{content}} @{$struc->{entrytypes}{entrytype}} ];
+  my $ets = [ sort map {$_->{content}} @{$dm->{entrytypes}{entrytype}} ];
 
   foreach my $es (@$ets) {
 
     # fields for entrytypes
     my $lfs;
-    foreach my $ef (@{$struc->{entryfields}}) {
+    foreach my $ef (@{$dm->{entryfields}}) {
       # Found a section describing legal fields for entrytype
       if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$ef->{entrytype}}) {
         foreach my $f (@{$ef->{field}}) {
@@ -120,7 +120,7 @@ sub new {
 
     # constraints
     my $constraints;
-    foreach my $cd (@{$struc->{constraints}}) {
+    foreach my $cd (@{$dm->{constraints}}) {
       # Found a section describing constraints for entrytype
       if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$cd->{entrytype}}) {
         foreach my $c (@{$cd->{constraint}}) {
@@ -189,7 +189,7 @@ sub new {
 
   # date types
   my $dts;
-  foreach my $dt (@{$struc->{datetypes}{datetype}}) {
+  foreach my $dt (@{$dm->{datetypes}{datetype}}) {
     push @$dts, $dt->{content};
   }
 
@@ -233,7 +233,7 @@ sub is_field_for_entrytype {
 
 =head2 get_field_type
 
-    Retrieve fields of a certain biblatex type from structure
+    Retrieve fields of a certain biblatex type from data model
     Return in sorted order so that bbl order doesn't change when changing
     .bcf. This really messes up tests otherwise.
 
@@ -398,7 +398,7 @@ sub check_data_constraints {
                   @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
     # This is the datatype of the constraint, not the field!
     if ($c->{datatype} eq 'integer') {
-      my $dt = $STRUCTURE_DATATYPES{$c->{datatype}};
+      my $dt = $DM_DATATYPES{$c->{datatype}};
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
           unless ( $fv =~ /$dt/ ) {
@@ -499,7 +499,7 @@ sub check_date_components {
 
 =head2 dump
 
-    Dump Biber::Structure object
+    Dump Biber::DataModel object
 
 =cut
 

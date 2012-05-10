@@ -14,7 +14,7 @@ our @EXPORT = qw{
   %CONFIG_SCOPE_BIBLATEX
   %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS
   %NOSORT_TYPES
-  %STRUCTURE_DATATYPES
+  %DM_DATATYPES
   $BIBER_CONF_NAME
   $BIBLATEX_VERSION
   $BIBER_SORT_FINAL
@@ -91,8 +91,8 @@ our %NOSORT_TYPES = (
                                    }
 );
 
-# datatypes for structure validation
-our %STRUCTURE_DATATYPES = (
+# datatypes for data model validation
+our %DM_DATATYPES = (
                             integer => qr/\A\d+\z/xms
 );
 
@@ -129,7 +129,7 @@ our $CONFIG_DEFAULT_BIBER = {
   trace              => { content => 0 },
   validate_config    => { content => 0 },
   validate_control   => { content => 0 },
-  validate_structure => { content => 0 },
+  validate_datamodel => { content => 0 },
   wraplines          => { content => 0 },
 };
 
@@ -163,7 +163,7 @@ our %CONFIG_DEFAULT_BIBLATEX =
            ],
   type  => "global",
 },
-   structure       =>
+   datamodel       =>
  { constraints => [
                    {
                      constraint => [
@@ -1684,6 +1684,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   alphaothers        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   controlversion     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  datamodel          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   dataonly           => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
   displaymode        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   inheritance        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
@@ -1710,7 +1711,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   sortexclusion      => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
   sorting            => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   sortscheme         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  structure          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   uniquelist         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   uniquename         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useauthor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},

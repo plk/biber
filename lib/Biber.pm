@@ -20,6 +20,7 @@ use Biber::Config;
 use Biber::Constants;
 use List::AllUtils qw( :all );
 use Digest::MD5 qw( md5_hex );
+use Biber::DataModel;
 use Biber::Internals;
 use Biber::Entries;
 use Biber::Entry;
@@ -29,7 +30,6 @@ use Biber::Section;
 use Biber::LaTeX::Recode;
 use Biber::SortLists;
 use Biber::SortList;
-use Biber::Structure;
 use Biber::Utils;
 use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
@@ -495,11 +495,11 @@ sub parse_ctrlfile {
 
   Biber::Config->setblxoption('sorting', $sorting);
 
-  # STRUCTURE schema (always global)
+  # DATAMODEL schema (always global)
   # This should not be optional any more when biblatex implements this so take
   # out this conditional
-  if (exists($bcfxml->{structure})) {
-    Biber::Config->setblxoption('structure', $bcfxml->{structure});
+  if (exists($bcfxml->{datamodel})) {
+    Biber::Config->setblxoption('datamodel', $bcfxml->{datamodel});
   }
 
   # SECTIONS
@@ -653,11 +653,11 @@ sub process_setup {
     }
   }
 
-  # Break structure information up into more processing-friendly formats
+  # Break data model information up into more processing-friendly formats
   # for use in verification checks later
   # This has to be here as opposed to in parse_control() so that it can pick
-  # up structure defaults in Constants.pm in case there is nothing in the .bcf
-  Biber::Config->set_structure(Biber::Structure->new(Biber::Config->getblxoption('structure')));
+  # up data model defaults in Constants.pm in case there is nothing in the .bcf
+  Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
   # Force bblsafechars flag if output to ASCII and bibencoding is not ASCII
   if (Biber::Config->getoption('bblencoding') =~ /(?:x-)?ascii/xmsi and
@@ -896,9 +896,9 @@ sub process_interentry {
   }
 }
 
-=head2 validate_structure
+=head2 validate_datamodel
 
-  Validate bib structure according to a bib schema
+  Validate bib data according to a datamodel
   Note that we are validating the internal Biber::Entries
   after they have been created from the datasources so this is
   datasource neutral, as it should be. It is here to enforce
@@ -906,20 +906,20 @@ sub process_interentry {
 
 =cut
 
-sub validate_structure {
+sub validate_datamodel {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $struc = Biber::Config->get_structure;
+  my $dm = Biber::Config->get_dm;
 
-  if (Biber::Config->getoption('validate_structure')) {
+  if (Biber::Config->getoption('validate_datamodel')) {
     foreach my $citekey ($section->get_citekeys) {
       my $be = $section->bibentry($citekey);
       my $citekey = $be->get_field('citekey');
       my $et = $be->get_field('entrytype');
 
       # default entrytype to MISC type if not a known type
-      unless ($struc->is_entrytype($et)) {
+      unless ($dm->is_entrytype($et)) {
         biber_warn("Entry '$citekey' - invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
         $be->set_field('entrytype', 'misc');
         $et = 'misc';           # reset this too
@@ -931,28 +931,28 @@ sub validate_structure {
       # * Valid field for the specific entrytype OR
       # * Valid because entrytype allows "ALL" fields
       foreach my $ef ($be->datafields) {
-        unless ($struc->is_field_for_entrytype($et, $ef)) {
+        unless ($dm->is_field_for_entrytype($et, $ef)) {
           biber_warn("Entry '$citekey' - invalid field '$ef' for entrytype '$et'", $be);
         }
       }
 
       # Mandatory constraints
-      foreach my $warning ($struc->check_mandatory_constraints($be)) {
+      foreach my $warning ($dm->check_mandatory_constraints($be)) {
         biber_warn($warning, $be);
       }
 
       # Conditional constraints
-      foreach my $warning ($struc->check_conditional_constraints($be)) {
+      foreach my $warning ($dm->check_conditional_constraints($be)) {
         biber_warn($warning, $be);
       }
 
       # Data constraints
-      foreach my $warning ($struc->check_data_constraints($be)) {
+      foreach my $warning ($dm->check_data_constraints($be)) {
         biber_warn($warning, $be);
       }
 
       # Date constraints
-      foreach my $warning ($struc->check_date_components($be)) {
+      foreach my $warning ($dm->check_date_components($be)) {
         biber_warn($warning, $be);
       }
     }
@@ -1204,7 +1204,7 @@ sub process_labelname {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $lnamespec = Biber::Config->getblxoption('labelnamespec', $bee);
-  my $struc = Biber::Config->get_structure;
+  my $dm = Biber::Config->get_dm;
 
   # First we set the normal labelname name
   foreach my $ln ( @{$lnamespec} ) {
@@ -1216,7 +1216,7 @@ sub process_labelname {
       $lnameopt = $ln;
     }
 
-    unless (first {$_ eq $ln} @{$struc->get_field_type($bee, 'name')}) {
+    unless (first {$_ eq $ln} @{$dm->get_field_type($bee, 'name')}) {
       biber_warn("Labelname candidate '$ln' is not a name field - skipping");
       next;
     }
@@ -1242,7 +1242,7 @@ sub process_labelname {
     }
 
     # We have already warned about this above
-    unless (first {$_ eq $ln} @{$struc->get_field_type($bee, 'name')}) {
+    unless (first {$_ eq $ln} @{$dm->get_field_type($bee, 'name')}) {
       next;
     }
 
@@ -1382,9 +1382,9 @@ sub process_pername_hashes {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $struc = Biber::Config->get_structure;
+  my $dm = Biber::Config->get_dm;
 
-  foreach my $pn (@{$struc->get_field_type($bee, 'name')}) {
+  foreach my $pn (@{$dm->get_field_type($bee, 'name')}) {
     my $names = $be->get_field($pn) or next;
     foreach my $n (@{$names->names}) {
       $n->set_hash($self->_getpnhash($citekey, $n));
@@ -1406,7 +1406,7 @@ sub process_visible_names {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $struc = Biber::Config->get_structure;
+  my $dm = Biber::Config->get_dm;
 
   foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Postprocessing visible names for key '$citekey'");
@@ -1420,7 +1420,7 @@ sub process_visible_names {
     my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
     my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
 
-    foreach my $n (@{$struc->get_field_type($bee, 'name')}) {
+    foreach my $n (@{$dm->get_field_type($bee, 'name')}) {
       next unless my $names = $be->get_field($n);
 
       my $count = $names->count_names;
@@ -2625,7 +2625,7 @@ sub prepare {
     $self->resolve_xdata;                # Resolve xdata entries
     $self->cite_setmembers;              # Cite set members
     $self->process_interentry;           # Process crossrefs/sets etc.
-    $self->validate_structure;           # Check bib structure
+    $self->validate_datamodel;           # Check against data model
     $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information
     $self->process_visible_names;        # Generate visible names information for all entries

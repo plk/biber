@@ -466,28 +466,28 @@ sub postprocess_biber_opts {
   }
 }
 
-=head2 set_structure
+=head2 set_dm
 
-    Sets the structure information object
+    Sets the data model information object
 
 =cut
 
-sub set_structure {
+sub set_dm {
   shift;
   my $obj = shift;
-  $CONFIG->{structure} = $obj;
+  $CONFIG->{dm} = $obj;
   return;
 }
 
-=head2 get_structure
+=head2 get_dm
 
-    Gets the structure information object
+    Gets the data model information object
 
 =cut
 
-sub get_structure {
+sub get_dm {
   shift;
-  return $CONFIG->{structure};
+  return $CONFIG->{dm};
 }
 
 =head2 set_ctrlfile_path

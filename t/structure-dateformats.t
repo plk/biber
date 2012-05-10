@@ -35,7 +35,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-Biber::Config->setoption('validate_structure', 1);
+Biber::Config->setoption('validate_datamodel', 1);
 
 # Biblatex options
 Biber::Config->setblxoption('labelyearspec', [ 'year' ]);

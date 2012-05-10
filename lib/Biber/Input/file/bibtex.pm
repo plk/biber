@@ -10,13 +10,13 @@ use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
 use Biber::Constants;
+use Biber::DataModel;
 use Biber::Entries;
 use Biber::Entry;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
-use Biber::Structure;
 use Biber::Utils;
 use Biber::Config;
 use Encode;
@@ -499,10 +499,10 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
 
     # Now we can check for nullables per-type - this can't be done until we have finally
     # settled on an entrytype
-    my $struc = Biber::Config->get_structure;
+    my $dm = Biber::Config->get_dm;
     foreach my $f ($bibentry->datafields) {
       if (is_null($bibentry->get_datafield($f))) {
-        unless ($struc->is_field_type($entry->type, 'nullok', $f)) {
+        unless ($dm->is_field_type($entry->type, 'nullok', $f)) {
           $bibentry->del_field($f);
         }
       }
