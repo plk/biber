@@ -6,10 +6,13 @@ use base qw(Exporter);
 use Biber::Config;
 use Unicode::Normalize;
 use List::AllUtils qw (first);
+use Log::Log4perl qw(:no_extra_logdie_message);
 use XML::LibXML::Simple;
 use Carp;
 
 our @EXPORT  = qw(latex_encode latex_decode);
+
+my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
 
@@ -209,6 +212,8 @@ sub latex_decode {
     # Optimisation - if there are no macros, no point doing anything
     return $text unless $text =~ m/\\/;
 
+    $logger->trace("String before latex_decode() -> '$text'");
+
     my %opts      = @_;
     my $norm      = exists $opts{normalize} ? $opts{normalize} : 1;
     my $norm_form = exists $opts{normalization} ? $opts{normalization} : 'NFC';
@@ -235,12 +240,14 @@ sub latex_decode {
     $text =~ s/(\\(?:$DIAC_RE|$ACCENTS_RE)){\\i}/$1\{i\}/g;
            # special cases such as '\={\i}' -> '\={i}' -> "i\x{304}"
 
+    $logger->trace("String in latex_decode() now -> '$text'");
+
     ## remove {} around macros that print one character
     ## by default we skip that, as it would break constructions like \foo{\i}
     if ($strip_outer_braces) {
         $text =~ s/ \{\\($WORDMAC_RE)\} / $WORDMAC{$1} /gxe;
     }
-    $text =~ s/ \\($WORDMAC_RE)(?: \{\} | \s+ | \b) / $WORDMAC{$1} /gxe;
+    $text =~ s/\\($WORDMAC_RE)(?: \{\} | \s+ | \b) / $WORDMAC{$1} /gxe;
 
     $text =~ s/\\($ACCENTS_RE)\{(\p{L}\p{M}*)\}/$2 . $ACCENTS{$1}/ge;
 
@@ -257,6 +264,7 @@ sub latex_decode {
     $text =~ s/\\($DIAC_RE)\s*\{(\p{L}\p{M}*)\}/$2 . $DIAC{$1}/ge;
 
     $text =~ s/\\($DIAC_RE)\s+(\p{L}\p{M}*)/$2 . $DIAC{$1}/ge;
+
 
     ## remove {} around letter+combining mark(s)
     ## by default we skip that, as it would destroy constructions like \foo{\`e}
@@ -264,8 +272,10 @@ sub latex_decode {
         $text =~ s/{(\PM\pM+)}/$1/g;
     }
 
+    $logger->trace("String in latex_decode() now -> '$text'");
+
     if ($norm) {
-        return Unicode::Normalize::normalize( $norm_form, $text );
+      return Unicode::Normalize::normalize( $norm_form, $text );
     }
     else {
         return $text;

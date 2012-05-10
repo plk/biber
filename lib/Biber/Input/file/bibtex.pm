@@ -570,6 +570,7 @@ sub _name {
   my $value = decode_utf8($entry->get($f));
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
+
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
   foreach my $name (@tmp) {
@@ -602,7 +603,7 @@ sub _name {
       }
     }
 
-    # Skip names that don't parse for some reason (like no lastname found - see parsename()
+    # Skip names that don't parse for some reason (like no lastname found - see parsename())
     next unless my $no = parsename($name, $f, {useprefix => $useprefix});
 
     # Deal with "and others" in data source
@@ -831,9 +832,12 @@ sub preprocess_file {
     my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
       or biber_error("Can't read $ufilename");
     $logger->info('Decoding LaTeX character macros into UTF-8');
+    $logger->trace("Buffer before decoding -> '$buf'");
     $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1);
+    $logger->trace("Buffer after decoding -> '$buf'");
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
         or biber_error("Can't write $ufilename");
+
     $logger->info('Finished Decoding LaTeX character macros into UTF-8');
   }
 
