@@ -52,8 +52,8 @@ Biber::Config->setblxoption('labelyear', undef);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
-my $shs = $biber->sortlists->get_list(0, 'shorthand', 'SHORTHANDS');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
 my $out = $biber->get_output_obj;
 
 my $ss = [
@@ -227,7 +227,7 @@ is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'sortorder - 1');
 
 # This would be the same as $main citeorder as both $main and $shs use same
 # global sort spec but here it's null because we've removed all shorthands using a map
-# above and the filter for the SHORTHANDS list only uses entries with SHORTHAND fields ...
+# above and the filter for the shorthand list only uses entries with SHORTHAND fields ...
 is_deeply([ $shs->get_keys ], [], 'sortorder - 2');
 
 # reset options and regenerate information
@@ -253,7 +253,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$shs = $biber->sortlists->get_list(0, 'shorthand', 'SHORTHANDS');
+$shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
 
 # Sort by shorthand
 is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');

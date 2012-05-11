@@ -49,7 +49,7 @@ Biber::Config->setblxoption('minbibnames', 7);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my @keys = sort $section->get_citekeys;
 my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 };
 
@@ -92,7 +92,7 @@ my $u1 = q|    \entry{u1}{misc}{}
 is( $out->get_output_entry($main, 'u1'), $u1, 'uniquelist 1' ) ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
-is_deeply( [ $biber->sortlists->get_list(0, 'shorthand', 'SHORTHANDS')->get_keys ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
+is_deeply( [ $biber->sortlists->get_list(0, 'shorthand', 'shorthand')->get_keys ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
 
 # reset some options and re-generate information
 
@@ -337,7 +337,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare ;
 $section = $biber->sections->get_section(0);
-$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $out = $biber->get_output_obj;
 
 is( $out->get_output_entry($main,'murray'), $murray2, 'bbl with > maxcitenames, empty alphaothers' ) ;
@@ -388,7 +388,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 
 is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible_cite, '1', 'per_type maxcitenames - 1');
 is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible_cite, '3', 'per_type maxcitenames - 2');

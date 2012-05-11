@@ -310,8 +310,8 @@
     <bcf:citekey>alias7</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist section="0" label="MAIN" type="entry"/>
-  <bcf:sortlist section="0" label="SHORTHANDS" type="shorthand">
+  <bcf:sortlist section="0" label="nty" type="entry"/>
+  <bcf:sortlist section="0" label="shorthand" type="shorthand">
     <bcf:filter type="field">shorthand</bcf:filter>
   </bcf:sortlist>
 </bcf:controlfile>

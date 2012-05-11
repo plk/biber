@@ -38,11 +38,11 @@ Biber::Config->setoption('sortlocale', 'C');
 # Now generate the information
 $biber->prepare;
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $biber->sortlists->get_list(0, 'entry', 'MAIN');
-my $sh0 = $biber->sortlists->get_list(0, 'shorthand', 'SHORTHANDS');
+my $main0 = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $sh0 = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->sortlists->get_list(1, 'entry', 'MAIN');
-my $sh1 = $biber->sortlists->get_list(1, 'shorthand', 'SHORTHANDS');
+my $main1 = $biber->sortlists->get_list(1, 'entry', 'nty');
+my $sh1 = $biber->sortlists->get_list(1, 'shorthand', 'shorthand');
 my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{DynSet}{set}{}

@@ -45,7 +45,7 @@ Biber::Config->setoption('nodieonerror', 1); # because there is a cyclic xdata c
 #$biber->prepare;
 my (undef, $stderr) = capture { $biber->prepare };
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'entry', 'MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $out = $biber->get_output_obj;
 
 my $xd1 = q|    \entry{xd1}{book}{}
