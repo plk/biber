@@ -224,10 +224,10 @@
     <bcf:datasource type="file" datatype="bibtex">sortlists.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>K1</bcf:citekey>
-    <bcf:citekey>K2</bcf:citekey>
-    <bcf:citekey>K3</bcf:citekey>
-    <bcf:citekey>K4</bcf:citekey>
+    <bcf:citekey order="1">K1</bcf:citekey>
+    <bcf:citekey order="2">K2</bcf:citekey>
+    <bcf:citekey order="3">K3</bcf:citekey>
+    <bcf:citekey order="4">K4</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="lname" type="entry">

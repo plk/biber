@@ -261,8 +261,8 @@
     <bcf:datasource type="file" datatype="bibtex">full.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>F1</bcf:citekey>
-    <bcf:citekey>C1</bcf:citekey>
+    <bcf:citekey order="1">F1</bcf:citekey>
+    <bcf:citekey order="2">C1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

@@ -1032,7 +1032,17 @@ sub _sort_citeorder {
   my $section = $self->sections->get_section($secnum);
   # Pad the numbers so that they sort with "cmp" properly. Assume here max of
   # a million bib entries. Probably enough ...
-  return sprintf('%.7d', (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1);
+  # Allkeys and sorting=none means use bib order which is in orig_order_citekeys
+  if ($section->is_allkeys) {
+    return sprintf('%.7d', (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1);
+  }
+  # otherwise, we need to take account of citations with simulataneous order like
+  # \cite{key1, key2} so this tied sorting order can be further sorted with other fields
+  # Note the fallback of "0" - this is for auto-generated entries which are not cited
+  # and so never have a keyorder entry
+  else {
+    return sprintf('%.7d', Biber::Config->get_keyorder($secnum, $citekey) || 0);
+  }
 }
 
 # This is a meta-sub which uses the optional arguments to the dispatch code

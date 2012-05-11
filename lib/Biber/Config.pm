@@ -47,7 +47,7 @@ our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{seenname} = {};
 
-# Set tracking, partent->child and child->parent
+# Set tracking, parent->child and child->parent
 $CONFIG->{state}{set}{pc} = {};
 $CONFIG->{state}{set}{cp} = {};
 
@@ -84,6 +84,10 @@ $CONFIG->{state}{seen_extrayear} = {};
 # Counter for the actual extraalpha value
 $CONFIG->{state}{seen_extraalpha} = {};
 $CONFIG->{state}{seenkeys} = {};
+
+# Track the order of keys as cited. Keys cited in the same \cite*{} get the same order
+# Used for sorting schemes which use \citeorder
+$CONFIG->{state}{keyorder} = {};
 
 # Location of the control file
 $CONFIG->{state}{control_file_location} = '';
@@ -872,13 +876,7 @@ sub is_inheritance_path {
 }
 
 
-##############################
-# Biber state static methods
-##############################
-
-#============================
-#  labelalpha disambiguation
-#============================
+=head1 labelalpha disambiguation
 
 =head2 incr_la_disambiguation
 
@@ -910,11 +908,35 @@ sub get_la_disambiguation {
   return $CONFIG->{state}{ladisambiguation}{$la};
 }
 
+=head1 keyorder
+
+=head2 set_keyorder
+
+  Set some key order information
+
+=cut
+
+sub set_keyorder {
+  shift; # class method so don't care about class name
+  my ($section, $key, $keyorder) = @_;
+  $CONFIG->{state}{keyorder}{$section}{$key} = $keyorder;
+  return;
+}
+
+=head2 get_keyorder
+
+  Get some key order information
+
+=cut
+
+sub get_keyorder {
+  shift; # class method so don't care about class name
+  my ($section, $key) = @_;
+  return $CONFIG->{state}{keyorder}{$section}{$key};
+}
 
 
-#============================
-#        seenkey
-#============================
+=head1 seenkey
 
 =head2 get_seenkey
 
@@ -1088,9 +1110,7 @@ sub incr_seen_nameyear {
   return;
 }
 
-#============================
-#       uniquelistcount
-#============================
+=head1 uniquelistcount
 
 =head2 get_uniquelistcount
 
@@ -1318,9 +1338,7 @@ sub list_differs_superset {
 }
 
 
-#============================
-#       uniquenamecount
-#============================
+=head1 uniquenamecount
 
 =head2 get_numofuniquenames
 
@@ -1420,11 +1438,7 @@ sub _get_uniquename {
   return \@list;
 }
 
-
-#============================
-#       crossrefkeys
-#============================
-
+=head1 crossrefkeys
 
 =head2 get_crossrefkeys
 

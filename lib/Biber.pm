@@ -559,6 +559,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
           $bib_section->set_dynamic_set($key, split /\s*,\s*/, $keyc->{members});
         }
+        else {
+          # Set order information - there is no order on dynamic key defs above
+          # as they are a definition, not a cite really
+          Biber::Config->set_keyorder($secnum, $key, $keyc->{order});
+        }
         push @keys, $key;
         $key_flag = 1; # There is at least one key, used for error reporting below
         Biber::Config->incr_seenkey($key, $secnum);

@@ -641,14 +641,14 @@
     <bcf:datasource type="file" datatype="bibtex">structure-constraints.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>c1</bcf:citekey>
-    <bcf:citekey>c2</bcf:citekey>
-    <bcf:citekey>c3</bcf:citekey>
-    <bcf:citekey>c4</bcf:citekey>
-    <bcf:citekey>c5</bcf:citekey>
-    <bcf:citekey>c6</bcf:citekey>
-    <bcf:citekey>c7</bcf:citekey>
-    <bcf:citekey>c8</bcf:citekey>
+    <bcf:citekey order="1">c1</bcf:citekey>
+    <bcf:citekey order="2">c2</bcf:citekey>
+    <bcf:citekey order="3">c3</bcf:citekey>
+    <bcf:citekey order="4">c4</bcf:citekey>
+    <bcf:citekey order="5">c5</bcf:citekey>
+    <bcf:citekey order="6">c6</bcf:citekey>
+    <bcf:citekey order="7">c7</bcf:citekey>
+    <bcf:citekey order="8">c8</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

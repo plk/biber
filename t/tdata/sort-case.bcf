@@ -247,9 +247,9 @@
     <bcf:datasource type="file" datatype="bibtex">sort-case.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>CS1</bcf:citekey>
-    <bcf:citekey>CS2</bcf:citekey>
-    <bcf:citekey>CS3</bcf:citekey>
+    <bcf:citekey order="1">CS1</bcf:citekey>
+    <bcf:citekey order="2">CS2</bcf:citekey>
+    <bcf:citekey order="3">CS3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

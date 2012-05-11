@@ -231,7 +231,7 @@
     <bcf:datasource type="file" datatype="bibtex">sets.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
-    <bcf:citekey>Dynamic3</bcf:citekey>
+    <bcf:citekey order="1">Dynamic3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

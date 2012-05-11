@@ -301,13 +301,13 @@
     <bcf:datasource type="file" datatype="bibtex">bibtex-aliases.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>alias1</bcf:citekey>
-    <bcf:citekey>alias2</bcf:citekey>
-    <bcf:citekey>alias3</bcf:citekey>
-    <bcf:citekey>alias4</bcf:citekey>
-    <bcf:citekey>alias5</bcf:citekey>
-    <bcf:citekey>alias6</bcf:citekey>
-    <bcf:citekey>alias7</bcf:citekey>
+    <bcf:citekey order="1">alias1</bcf:citekey>
+    <bcf:citekey order="2">alias2</bcf:citekey>
+    <bcf:citekey order="3">alias3</bcf:citekey>
+    <bcf:citekey order="4">alias4</bcf:citekey>
+    <bcf:citekey order="5">alias5</bcf:citekey>
+    <bcf:citekey order="6">alias6</bcf:citekey>
+    <bcf:citekey order="7">alias7</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

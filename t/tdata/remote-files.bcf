@@ -256,9 +256,9 @@
     <bcf:datasource type="file" datatype="bibtex">https://api.zotero.org/users/480477/items/XFNEBXUT?format=bibtex&amp;limit=10</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>citeulike:8283461</bcf:citekey>
-    <bcf:citekey>AbdelbarH98</bcf:citekey>
-    <bcf:citekey>jung_alchemical_????</bcf:citekey>
+    <bcf:citekey order="1">citeulike:8283461</bcf:citekey>
+    <bcf:citekey order="2">AbdelbarH98</bcf:citekey>
+    <bcf:citekey order="3">jung_alchemical_????</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

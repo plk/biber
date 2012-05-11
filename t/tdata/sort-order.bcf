@@ -236,17 +236,17 @@
     <bcf:datasource type="file" datatype="bibtex">sort-order.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>L2</bcf:citekey>
-    <bcf:citekey>L1B</bcf:citekey>
-    <bcf:citekey>L1</bcf:citekey>
-    <bcf:citekey>L4</bcf:citekey>
-    <bcf:citekey>L3</bcf:citekey>
-    <bcf:citekey>L5</bcf:citekey>
-    <bcf:citekey>L1A</bcf:citekey>
-    <bcf:citekey>L7</bcf:citekey>
-    <bcf:citekey>L8</bcf:citekey>
-    <bcf:citekey>L6</bcf:citekey>
-    <bcf:citekey>L9</bcf:citekey>
+    <bcf:citekey order="1">L2</bcf:citekey>
+    <bcf:citekey order="2">L1B</bcf:citekey>
+    <bcf:citekey order="3">L1</bcf:citekey>
+    <bcf:citekey order="4">L4</bcf:citekey>
+    <bcf:citekey order="5">L3</bcf:citekey>
+    <bcf:citekey order="6">L5</bcf:citekey>
+    <bcf:citekey order="7">L1A</bcf:citekey>
+    <bcf:citekey order="8">L7</bcf:citekey>
+    <bcf:citekey order="9">L8</bcf:citekey>
+    <bcf:citekey order="10">L6</bcf:citekey>
+    <bcf:citekey order="11">L9</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

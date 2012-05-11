@@ -259,25 +259,25 @@
     <bcf:datasource type="file" datatype="bibtex">examples.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>stdmodel</bcf:citekey>
-    <bcf:citekey>knuth:ct</bcf:citekey>
-    <bcf:citekey>angenendtsk</bcf:citekey>
-    <bcf:citekey>angenendtsa</bcf:citekey>
-    <bcf:citekey>stdmodel:glashow</bcf:citekey>
-    <bcf:citekey>stdmodel:ps_sc</bcf:citekey>
-    <bcf:citekey>murray</bcf:citekey>
-    <bcf:citekey>aristotle:anima</bcf:citekey>
-    <bcf:citekey>aristotle:rhetoric</bcf:citekey>
-    <bcf:citekey>augustine</bcf:citekey>
-    <bcf:citekey>cotton</bcf:citekey>
-    <bcf:citekey>chiu</bcf:citekey>
-    <bcf:citekey>moraux</bcf:citekey>
-    <bcf:citekey>jaffe</bcf:citekey>
-    <bcf:citekey>luzzatto</bcf:citekey>
-    <bcf:citekey>hasan</bcf:citekey>
-    <bcf:citekey>t1</bcf:citekey>
-    <bcf:citekey>tvonb</bcf:citekey>
-    <bcf:citekey>lne1</bcf:citekey>
+    <bcf:citekey order="1">stdmodel</bcf:citekey>
+    <bcf:citekey order="2">knuth:ct</bcf:citekey>
+    <bcf:citekey order="3">angenendtsk</bcf:citekey>
+    <bcf:citekey order="4">angenendtsa</bcf:citekey>
+    <bcf:citekey order="5">stdmodel:glashow</bcf:citekey>
+    <bcf:citekey order="6">stdmodel:ps_sc</bcf:citekey>
+    <bcf:citekey order="7">murray</bcf:citekey>
+    <bcf:citekey order="8">aristotle:anima</bcf:citekey>
+    <bcf:citekey order="9">aristotle:rhetoric</bcf:citekey>
+    <bcf:citekey order="10">augustine</bcf:citekey>
+    <bcf:citekey order="11">cotton</bcf:citekey>
+    <bcf:citekey order="12">chiu</bcf:citekey>
+    <bcf:citekey order="13">moraux</bcf:citekey>
+    <bcf:citekey order="14">jaffe</bcf:citekey>
+    <bcf:citekey order="15">luzzatto</bcf:citekey>
+    <bcf:citekey order="16">hasan</bcf:citekey>
+    <bcf:citekey order="17">t1</bcf:citekey>
+    <bcf:citekey order="18">tvonb</bcf:citekey>
+    <bcf:citekey order="19">lne1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

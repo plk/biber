@@ -1417,23 +1417,23 @@
     <bcf:datasource type="file" datatype="bibtex">structure-dateformats.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>L1</bcf:citekey>
-    <bcf:citekey>L2</bcf:citekey>
-    <bcf:citekey>L3</bcf:citekey>
-    <bcf:citekey>L4</bcf:citekey>
-    <bcf:citekey>L5</bcf:citekey>
-    <bcf:citekey>L6</bcf:citekey>
-    <bcf:citekey>L7</bcf:citekey>
-    <bcf:citekey>L8</bcf:citekey>
-    <bcf:citekey>L9</bcf:citekey>
-    <bcf:citekey>L10</bcf:citekey>
-    <bcf:citekey>L11</bcf:citekey>
-    <bcf:citekey>L12</bcf:citekey>
-    <bcf:citekey>L13</bcf:citekey>
-    <bcf:citekey>L14</bcf:citekey>
-    <bcf:citekey>L15</bcf:citekey>
-    <bcf:citekey>L16</bcf:citekey>
-    <bcf:citekey>L17</bcf:citekey>
+    <bcf:citekey order="1">L1</bcf:citekey>
+    <bcf:citekey order="2">L2</bcf:citekey>
+    <bcf:citekey order="3">L3</bcf:citekey>
+    <bcf:citekey order="4">L4</bcf:citekey>
+    <bcf:citekey order="5">L5</bcf:citekey>
+    <bcf:citekey order="6">L6</bcf:citekey>
+    <bcf:citekey order="7">L7</bcf:citekey>
+    <bcf:citekey order="8">L8</bcf:citekey>
+    <bcf:citekey order="9">L9</bcf:citekey>
+    <bcf:citekey order="10">L10</bcf:citekey>
+    <bcf:citekey order="11">L11</bcf:citekey>
+    <bcf:citekey order="12">L12</bcf:citekey>
+    <bcf:citekey order="13">L13</bcf:citekey>
+    <bcf:citekey order="14">L14</bcf:citekey>
+    <bcf:citekey order="15">L15</bcf:citekey>
+    <bcf:citekey order="16">L16</bcf:citekey>
+    <bcf:citekey order="17">L17</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

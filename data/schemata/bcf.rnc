@@ -382,7 +382,8 @@ secspec =
       ( attribute type { "set" },
         attribute members { xsd:string {minLength="1"}},
         xsd:string {minLength="1"}) |
-      xsd:string {minLength="1"}
+      ( attribute order { xsd:integer },
+        xsd:string {minLength="1"} )
     }*
   }
 

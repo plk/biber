@@ -224,9 +224,9 @@
     <bcf:datasource type="file" datatype="bibtex">related.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>key1</bcf:citekey>
-    <bcf:citekey>key2</bcf:citekey>
-    <bcf:citekey>key3</bcf:citekey>
+    <bcf:citekey order="1">key1</bcf:citekey>
+    <bcf:citekey order="2">key2</bcf:citekey>
+    <bcf:citekey order="3">key3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

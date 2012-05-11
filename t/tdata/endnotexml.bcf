@@ -305,8 +305,8 @@
     <bcf:datasource type="file" datatype="endnotexml">endnote.xml</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42</bcf:citekey>
-    <bcf:citekey>fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47</bcf:citekey>
+    <bcf:citekey order="1">fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42</bcf:citekey>
+    <bcf:citekey order="2">fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

@@ -965,9 +965,14 @@
                 <param name="minLength">1</param>
               </data>
             </group>
-            <data type="string">
-              <param name="minLength">1</param>
-            </data>
+            <group>
+              <attribute name="order">
+                <data type="integer"/>
+              </attribute>
+              <data type="string">
+                <param name="minLength">1</param>
+              </data>
+            </group>
           </choice>
         </element>
       </zeroOrMore>

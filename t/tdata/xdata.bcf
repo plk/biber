@@ -198,9 +198,9 @@
     <bcf:datasource type="file" datatype="biblatexml">xdata.bltxml</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>xd1</bcf:citekey>
-    <bcf:citekey>xd2</bcf:citekey>
-    <bcf:citekey>xd3</bcf:citekey>
+    <bcf:citekey order="1">xd1</bcf:citekey>
+    <bcf:citekey order="2">xd2</bcf:citekey>
+    <bcf:citekey order="3">xd3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>
