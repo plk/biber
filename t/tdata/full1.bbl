@@ -19,7 +19,7 @@
 
 
 \refsection{0}
-  \sortlist{entry}{MAIN}
+  \sortlist{entry}{nty}
     \entry{F1}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
@@ -37,7 +37,7 @@
       \field{year}{1995}
     \endentry
   \endsortlist
-  \sortlist{shorthand}{SHORTHANDS}
+  \sortlist{shorthand}{shorthand}
     \key{F1}
   \endsortlist
   \missing{C1}

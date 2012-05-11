@@ -614,6 +614,18 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $sortlists->add_list($seclist);
   }
 
+  # Check to make sure that each section has an entry  sortlist for global sorting
+  # We have to make sure in case sortcites is used which uses the global order.
+  foreach my $section (@{$bcfxml->{section}}) {
+    my $globalss = Biber::Config->getblxoption('sortscheme');
+    my $secnum = $section->{number};
+    unless ($sortlists->get_list($secnum, 'entry', $globalss)) {
+      my $seclist = Biber::SortList->new(section => $secnum, type => 'entry', label => $globalss);
+      $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $sortlists->add_list($seclist);
+    }
+  }
+
   # Add the Biber::SortLists object to the Biber object
   $self->{sortlists} = $sortlists;
 
