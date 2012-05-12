@@ -18,7 +18,7 @@
 # and then run "sudo ldconfig" so that libbtparse.so is found. Doesn't really make
 # a difference to the build, just the running of Text::BibTeX itself.
 
-# Using an newer locally build libxml2 (and rebuilt XL::LibXML) in /usr/local because
+# Using a newer locally build libxml2 (and rebuilt XL::LibXML) in /usr/local because
 # beginning with 32-bit Debian Wheezy, the older ones would segfault
 
 # Have to explicitly include the Input* modules as the names of these are dynamically
