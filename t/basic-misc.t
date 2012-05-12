@@ -99,7 +99,7 @@ is_deeply( [ $biber->sortlists->get_list(0, 'shorthand', 'shorthand')->get_keys 
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
-$section->allkeys;
+$section->set_allkeys(1);
 $section->bibentries->del_entries;
 $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;

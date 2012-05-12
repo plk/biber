@@ -544,7 +544,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     foreach my $keyc (@{$section->{citekey}}) {
       my $key = $keyc->{content};
       if ($key eq '*') {
-        $bib_section->allkeys;
+        $bib_section->set_allkeys(1);
         # Normalise - when allkeys is true don't need citekeys - just in case someone
         # lists "*" and also some other citekeys
         $bib_section->del_citekeys;

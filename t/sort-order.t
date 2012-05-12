@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 use Biber;
 use Biber::Output::bbl;
@@ -41,7 +41,7 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 
-is_deeply([ $main->get_keys ], ['L2','L1B','L1','L4','L3','L5','L1A','L7','L8','L6','L9'], 'citeorder');
+is_deeply([ $main->get_keys ], ['L2','L3','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'citeorder');
 
 # nty
 $S = [
@@ -496,7 +496,7 @@ $S = [
 $main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::bbl->new());
-# Have to set local to something which understand lexical/case differences for this test
+# Have to set locale to something which understand lexical/case differences for this test
 # otherwise testing on Windows doesn't work ...
 Biber::Config->setoption('sortlocale', 'C');
 $biber->prepare;
@@ -520,20 +520,40 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8'], 'nosort 1');
 
+# Testing sorting keys which have the same order as they were cited in the same \cite*{} cmd.
+# In this case, they will be tied on sorting=none and can be further sorted by other fields
+$S =  [
+                                                      [
+                                                       {},
+                                                       {'citeorder'    => {}}
+                                                      ],
+                                                      [
+                                                       {},
+                                                       {'year'    => {}}
+                                                      ],
+                                                     ];
+$main->set_sortscheme($S);
+# Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
+# Otherwise, we have citekeys and allkeys which confuses fetch_data()
+$biber->set_output_obj(Biber::Output::bbl->new());
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+is_deeply([ $main->get_keys ], ['L3','L2','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'sorting=none + year');
+
 # Testing special case of sorting=none and allkeys because in this case "citeorder" means
 # bib order
 $S =  [
                                                       [
                                                        {},
                                                        {'citeorder'    => {}}
-                                                      ]
+                                                      ],
                                                      ];
 
 $main->set_sortscheme($S);
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
-$section->allkeys;
+$section->set_allkeys(1);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);

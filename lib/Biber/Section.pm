@@ -110,15 +110,16 @@ sub has_everykey {
 }
 
 
-=head2 allkeys
+=head2 set_allkeys
 
     Sets flag to say citekey '*' occurred in citekeys
+    We allow setting it to false too because it's useful in tests
 
 =cut
 
-sub allkeys {
-  my $self = shift;
-  $self->{allkeys} = 1;
+sub set_allkeys {
+  my ($self, $val) = @_;
+  $self->{allkeys} = $val;
   return;
 }
 
