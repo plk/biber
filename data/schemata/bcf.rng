@@ -74,9 +74,7 @@
           <attribute name="component">
             <value>biblatex</value>
           </attribute>
-          <attribute name="type">
-            <data type="NCName"/>
-          </attribute>
+          <attribute name="type"/>
           <optional>
             <ref name="alphaothers"/>
           </optional>
@@ -155,9 +153,7 @@
         <!-- Display modes for biblatexml -->
         <element name="bcf:displaymodes">
           <optional>
-            <attribute name="type">
-              <data type="NCName"/>
-            </attribute>
+            <attribute name="type"/>
           </optional>
           <oneOrMore>
             <element name="bcf:displaymode">
@@ -455,11 +451,46 @@
       <optional>
         <!-- Data model specification -->
         <element name="bcf:datamodel">
+          <optional>
+            <!-- entrytype and field aliases -->
+            <element name="bcf:aliases">
+              <attribute name="type">
+                <choice>
+                  <value>entrytype</value>
+                  <value>field</value>
+                </choice>
+              </attribute>
+              <attribute name="datatype">
+                <choice>
+                  <value>bibtex</value>
+                  <value>biblatexml</value>
+                  <value>ris</value>
+                  <value>zoterordfxml</value>
+                  <value>endnotexml</value>
+                </choice>
+              </attribute>
+              <oneOrMore>
+                <element name="bcf:alias">
+                  <attribute name="name"/>
+                  <attribute name="aliasof"/>
+                  <choice>
+                    <oneOrMore>
+                      <element name="bcf:alsoset">
+                        <attribute name="target"/>
+                        <attribute name="value"/>
+                      </element>
+                    </oneOrMore>
+                    <empty/>
+                  </choice>
+                </element>
+              </oneOrMore>
+            </element>
+          </optional>
           <!-- Valid datetypes -->
           <element name="bcf:datetypes">
             <oneOrMore>
               <element name="bcf:datetype">
-                <data type="NCName"/>
+                <text/>
               </element>
             </oneOrMore>
           </element>
@@ -467,7 +498,7 @@
           <element name="bcf:entrytypes">
             <oneOrMore>
               <element name="bcf:entrytype">
-                <data type="NCName"/>
+                <text/>
               </element>
             </oneOrMore>
           </element>
@@ -484,11 +515,11 @@
                       </attribute>
                       <!-- alias name -->
                       <element name="bcf:name">
-                        <data type="NCName"/>
+                        <text/>
                       </element>
                       <!-- canonical name -->
                       <element name="bcf:realname">
-                        <data type="NCName"/>
+                        <text/>
                       </element>
                       <zeroOrMore>
                         <!--
@@ -497,10 +528,8 @@
                           "type" = "phdthesis"
                         -->
                         <element name="bcf:field">
-                          <attribute name="name">
-                            <data type="NCName"/>
-                          </attribute>
-                          <data type="NCName"/>
+                          <attribute name="name"/>
+                          <text/>
                         </element>
                       </zeroOrMore>
                     </group>
@@ -511,11 +540,11 @@
                       </attribute>
                       <!-- alias name -->
                       <element name="bcf:name">
-                        <data type="NCName"/>
+                        <text/>
                       </element>
                       <!-- canonical name -->
                       <element name="bcf:realname">
-                        <data type="NCName"/>
+                        <text/>
                       </element>
                     </group>
                   </choice>
@@ -571,7 +600,7 @@
                   -->
                   <attribute name="entrytypes"/>
                 </optional>
-                <data type="NCName"/>
+                <text/>
               </element>
             </oneOrMore>
           </element>
@@ -589,7 +618,7 @@
                 </element>
                 <oneOrMore>
                   <element name="bcf:entrytype">
-                    <data type="NCName"/>
+                    <text/>
                   </element>
                 </oneOrMore>
               </choice>
@@ -599,7 +628,7 @@
                 </element>
                 <oneOrMore>
                   <element name="bcf:field">
-                    <data type="NCName"/>
+                    <text/>
                   </element>
                 </oneOrMore>
               </choice>
@@ -620,7 +649,7 @@
                 </element>
                 <oneOrMore>
                   <element name="bcf:entrytype">
-                    <data type="NCName"/>
+                    <text/>
                   </element>
                 </oneOrMore>
               </choice>
@@ -651,7 +680,7 @@
                         </attribute>
                         <oneOrMore>
                           <element name="bcf:field">
-                            <data type="NCName"/>
+                            <text/>
                           </element>
                         </oneOrMore>
                       </element>
@@ -665,7 +694,7 @@
                         </attribute>
                         <oneOrMore>
                           <element name="bcf:field">
-                            <data type="NCName"/>
+                            <text/>
                           </element>
                         </oneOrMore>
                       </element>
@@ -699,7 +728,7 @@
                       </optional>
                       <oneOrMore>
                         <element name="bcf:field">
-                          <data type="NCName"/>
+                          <text/>
                         </element>
                       </oneOrMore>
                     </group>
@@ -711,7 +740,7 @@
                       <oneOrMore>
                         <choice>
                           <element name="bcf:field">
-                            <data type="NCName"/>
+                            <text/>
                           </element>
                           <!--
                             An XOR set of fields so you can enforce:
@@ -726,7 +755,7 @@
                                     <value>true</value>
                                   </attribute>
                                 </optional>
-                                <data type="NCName"/>
+                                <text/>
                               </element>
                             </oneOrMore>
                           </element>
@@ -738,7 +767,7 @@
                           <element name="bcf:fieldor">
                             <oneOrMore>
                               <element name="bcf:field">
-                                <data type="NCName"/>
+                                <text/>
                               </element>
                             </oneOrMore>
                           </element>
@@ -801,9 +830,7 @@
         <!-- presort default strings for different entry types -->
         <element name="bcf:presort">
           <optional>
-            <attribute name="type">
-              <data type="NCName"/>
-            </attribute>
+            <attribute name="type"/>
           </optional>
           <text/>
         </element>
@@ -814,7 +841,7 @@
           <attribute name="type"/>
           <oneOrMore>
             <element name="bcf:exclusion">
-              <data type="NCName"/>
+              <text/>
             </element>
           </oneOrMore>
         </element>
@@ -1114,7 +1141,7 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
-          <data type="NCName"/>
+          <text/>
         </element>
       </oneOrMore>
     </element>
@@ -1348,7 +1375,7 @@
         <value>sortscheme</value>
       </element>
       <element name="bcf:value">
-        <data type="NCName"/>
+        <text/>
       </element>
     </element>
   </define>
@@ -1365,7 +1392,7 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
-          <data type="NCName"/>
+          <text/>
         </element>
       </oneOrMore>
     </element>
@@ -1421,7 +1448,7 @@
         <value>bblencoding</value>
       </element>
       <element name="bcf:value">
-        <data type="NCName"/>
+        <text/>
       </element>
     </element>
   </define>
@@ -1434,7 +1461,7 @@
         <value>bibencoding</value>
       </element>
       <element name="bcf:value">
-        <data type="NCName"/>
+        <text/>
       </element>
     </element>
   </define>

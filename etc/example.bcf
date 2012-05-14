@@ -354,6 +354,20 @@
    </bcf:sort>
  </bcf:sorting>
   <bcf:datamodel>
+    <bcf:aliases type="entrytype" datatype="bibtex">
+      <bcf:alias name="conference" aliasof="inproceedings"/>
+      <bcf:alias name="electronic" aliasof="online"/>
+      <bcf:alias name="www" aliasof="online"/>
+      <bcf:alias name="mastersthesis" aliasof="thesis">
+        <bcf:alsoset target="type" value="mathesis"/>
+      </bcf:alias>
+      <bcf:alias name="phdthesis" aliasof="thesis">
+        <bcf:alsoset target="type" value="phdthesis"/>
+      </bcf:alias>
+      <bcf:alias name="techreport" aliasof="report">
+        <bcf:alsoset target="type" value="techreport"/>
+      </bcf:alias>
+    </bcf:aliases>
     <bcf:datetypes>
       <bcf:datetype>date</bcf:datetype>
       <bcf:datetype>origdate</bcf:datetype>
@@ -1666,11 +1680,11 @@
     <bcf:datasource type="file" datatype="bibtex">bibdata2</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey>Key1</bcf:citekey>
-    <bcf:citekey>Key2</bcf:citekey>
-    <bcf:citekey>Key7</bcf:citekey>
-    <bcf:citekey>Key2</bcf:citekey>
-    <bcf:citekey>Key5</bcf:citekey>
+    <bcf:citekey order="1">Key1</bcf:citekey>
+    <bcf:citekey order="2">Key2</bcf:citekey>
+    <bcf:citekey order="3">Key7</bcf:citekey>
+    <bcf:citekey order="4">Key2</bcf:citekey>
+    <bcf:citekey order="5">Key5</bcf:citekey>
   </bcf:section>
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">bibdata1.bib</bcf:datasource>
@@ -1680,11 +1694,11 @@
     <bcf:datasource type="file" datatype="bibtex">http://www.citeulike.org/bibtex/9517</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="1">
-    <bcf:citekey>Key1</bcf:citekey>
-    <bcf:citekey>Key2</bcf:citekey>
-    <bcf:citekey>Key7</bcf:citekey>
-    <bcf:citekey>Key34</bcf:citekey>
-    <bcf:citekey>Key99</bcf:citekey>
+    <bcf:citekey order="1">Key1</bcf:citekey>
+    <bcf:citekey order="2">Key2</bcf:citekey>
+    <bcf:citekey order="3">Key7</bcf:citekey>
+    <bcf:citekey order="4">Key34</bcf:citekey>
+    <bcf:citekey order="5">Key99</bcf:citekey>
   </bcf:section>
   <bcf:sortlist section="0" label="listA" type="entry">
     <bcf:filter type="field">editor,translator</bcf:filter>
