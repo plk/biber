@@ -257,6 +257,7 @@ sub create_entry {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
+  my $dm = Biber::Config->getblxoption('datamodel');
 
   $bibentry->set_field('citekey', $key);
 
@@ -480,33 +481,21 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
     }
 
     # Driver aliases
-    foreach my $aliases (@{Biber::Config->getblxoption('datamodel')->{aliases}}) {
-      next unless $ealias->{datatype} eq 'bibtex';
-      next unless $ealias->{type} eq 'entrytype';
-      foreach my $alias (@{$ealias->{alias}}) {
+    $bibentry->set_field('entrytype', $entry->type);
+    if (my $aliases = $dm->{aliases}) {
+      next unless $aliases->{datatype} eq 'bibtex';
+      next unless $aliases->{type} eq 'entrytype';
+      foreach my $alias (@{$aliases->{alias}}) {
         next unless $alias->{name} eq lc($entry->type);
         $bibentry->set_field('entrytype', $alias->{aliasof});
         foreach my $alsoset (@{$alias->{alsoset}}) {
-          biber_warn("Not overwriting existing field '" . $alsoset->{asfield} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($alias->{aliasof}) . "' in entry '$key'", $bibentry);
-          next;
+          if ($bibentry->field_exists(lc($alsoset->{asfield}))) {
+            biber_warn("Not overwriting existing field '" . $alsoset->{asfield} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($alias->{aliasof}) . "' in entry '$key'", $bibentry);
+            next;
+          }
+          $bibentry->set_datafield($alsoset->{asfield}, $alsoset->{asvalue});
         }
-        $bibentry->set_datafield($alsoset->{asfield}, $alsoset->{asvalue});
       }
-    }
-
-    # if (my $ealias = $dcfxml->{entrytypes}{entrytype}{lc($entry->type)}) {
-    #   $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
-    #   foreach my $alsoset (@{$ealias->{alsoset}}) {
-    #     # drivers never overwrite existing fields
-    #     if ($bibentry->field_exists(lc($alsoset->{target}))) {
-    #       biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
-    #       next;
-    #     }
-    #     $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
-    #   }
-    # }
-    else { # No alias
-      $bibentry->set_field('entrytype', $entry->type);
     }
 
     $bibentry->set_field('datatype', 'bibtex');

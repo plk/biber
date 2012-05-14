@@ -104,7 +104,7 @@ requires:
   Readonly: 0
   Readonly::XS: 0
   Regexp::Common: 0
-  Text::BibTeX: 0.62
+  Text::BibTeX: 0.63
   Unicode::Collate: 0.89
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
