@@ -164,7 +164,32 @@ our %CONFIG_DEFAULT_BIBLATEX =
   type  => "global",
 },
    datamodel       =>
- { constraints => [
+ {
+                            aliases     => {
+                                             alias => [
+                                               { aliasof => "inproceedings", name => "conference" },
+                                               { aliasof => "online", name => "electronic" },
+                                               { aliasof => "online", name => "www" },
+                                               {
+                                                 aliasof => "thesis",
+                                                 alsoset => [{ asfield => "type", asvalue => "mathesis" }],
+                                                 name    => "mastersthesis",
+                                               },
+                                               {
+                                                 aliasof => "thesis",
+                                                 alsoset => [{ asfield => "type", asvalue => "phdthesis" }],
+                                                 name    => "phdthesis",
+                                               },
+                                               {
+                                                 aliasof => "report",
+                                                 alsoset => [{ asfield => "type", asvalue => "techreport" }],
+                                                 name    => "techreport",
+                                               },
+                                             ],
+                                             datatype => "bibtex",
+                                             type => "entrytype",
+                                           },
+constraints => [
                    {
                      constraint => [
                                      {

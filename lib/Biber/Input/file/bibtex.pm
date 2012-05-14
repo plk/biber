@@ -480,17 +480,31 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
     }
 
     # Driver aliases
-    if (my $ealias = $dcfxml->{entrytypes}{entrytype}{lc($entry->type)}) {
-      $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
-      foreach my $alsoset (@{$ealias->{alsoset}}) {
-        # drivers never overwrite existing fields
-        if ($bibentry->field_exists(lc($alsoset->{target}))) {
-          biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
+    foreach my $aliases (@{Biber::Config->getblxoption('datamodel')->{aliases}}) {
+      next unless $ealias->{datatype} eq 'bibtex';
+      next unless $ealias->{type} eq 'entrytype';
+      foreach my $alias (@{$ealias->{alias}}) {
+        next unless $alias->{name} eq lc($entry->type);
+        $bibentry->set_field('entrytype', $alias->{aliasof});
+        foreach my $alsoset (@{$alias->{alsoset}}) {
+          biber_warn("Not overwriting existing field '" . $alsoset->{asfield} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($alias->{aliasof}) . "' in entry '$key'", $bibentry);
           next;
         }
-        $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
+        $bibentry->set_datafield($alsoset->{asfield}, $alsoset->{asvalue});
       }
     }
+
+    # if (my $ealias = $dcfxml->{entrytypes}{entrytype}{lc($entry->type)}) {
+    #   $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
+    #   foreach my $alsoset (@{$ealias->{alsoset}}) {
+    #     # drivers never overwrite existing fields
+    #     if ($bibentry->field_exists(lc($alsoset->{target}))) {
+    #       biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
+    #       next;
+    #     }
+    #     $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
+    #   }
+    # }
     else { # No alias
       $bibentry->set_field('entrytype', $entry->type);
     }

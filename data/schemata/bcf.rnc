@@ -185,8 +185,8 @@ start =
           attribute name { text },
           attribute aliasof { text },
           ( element bcf:alsoset {
-            attribute target { text },
-            attribute value { text }
+            attribute asfield { text },
+            attribute asvalue { text }
             }+
           | empty)
         }+

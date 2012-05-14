@@ -359,13 +359,13 @@
       <bcf:alias name="electronic" aliasof="online"/>
       <bcf:alias name="www" aliasof="online"/>
       <bcf:alias name="mastersthesis" aliasof="thesis">
-        <bcf:alsoset target="type" value="mathesis"/>
+        <bcf:alsoset asfield="type" asvalue="mathesis"/>
       </bcf:alias>
       <bcf:alias name="phdthesis" aliasof="thesis">
-        <bcf:alsoset target="type" value="phdthesis"/>
+        <bcf:alsoset asfield="type" asvalue="phdthesis"/>
       </bcf:alias>
       <bcf:alias name="techreport" aliasof="report">
-        <bcf:alsoset target="type" value="techreport"/>
+        <bcf:alsoset asfield="type" asvalue="techreport"/>
       </bcf:alias>
     </bcf:aliases>
     <bcf:datetypes>

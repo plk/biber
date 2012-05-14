@@ -476,8 +476,8 @@
                   <choice>
                     <oneOrMore>
                       <element name="bcf:alsoset">
-                        <attribute name="target"/>
-                        <attribute name="value"/>
+                        <attribute name="asfield"/>
+                        <attribute name="asvalue"/>
                       </element>
                     </oneOrMore>
                     <empty/>
