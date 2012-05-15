@@ -81,6 +81,12 @@ $CONFIG->{state}{uniquenamecount_all} = {};
 $CONFIG->{state}{seen_nameyear} = {};
 # Counter for the actual extrayear value
 $CONFIG->{state}{seen_extrayear} = {};
+
+# Counter for tracking name/title combinations for extratitle
+$CONFIG->{state}{seen_nametitle} = {};
+# Counter for the actual extratitle value
+$CONFIG->{state}{seen_extratitle} = {};
+
 # Counter for the actual extraalpha value
 $CONFIG->{state}{seen_extraalpha} = {};
 $CONFIG->{state}{seenkeys} = {};
@@ -113,6 +119,8 @@ sub _init {
   $CONFIG->{state}{uniquelistcount} = {};
   $CONFIG->{state}{seen_nameyear} = {};
   $CONFIG->{state}{seen_extrayear} = {};
+  $CONFIG->{state}{seen_nametitle} = {};
+  $CONFIG->{state}{seen_extratitle} = {};
   $CONFIG->{state}{seen_extrayearalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{datafiles} = [];
@@ -1026,6 +1034,7 @@ sub reset_seen_extra {
   shift; # class method so don't care about class name
   my $ay = shift;
   $CONFIG->{state}{seen_extrayear} = {};
+  $CONFIG->{state}{seen_extratitle} = {};
   $CONFIG->{state}{seen_extraalpha} = {};
   return;
 }
@@ -1035,14 +1044,24 @@ sub reset_seen_extra {
 
     Increment and return the counter for extrayear
 
-    Biber::Config->incr_seen_extrayear($ay);
-
 =cut
 
 sub incr_seen_extrayear {
   shift; # class method so don't care about class name
   my $ey = shift;
   return ++$CONFIG->{state}{seen_extrayear}{$ey};
+}
+
+=head2 incr_seen_extratitle
+
+    Increment and return the counter for extratitle
+
+=cut
+
+sub incr_seen_extratitle {
+  shift; # class method so don't care about class name
+  my $et = shift;
+  return ++$CONFIG->{state}{seen_extratitle}{$et};
 }
 
 
@@ -1109,6 +1128,52 @@ sub incr_seen_nameyear {
   }
   return;
 }
+
+
+=head2 get_seen_nametitle
+
+    Get the count of an labelname/labeltitle combination for tracking
+    extratitle.
+
+=cut
+
+sub get_seen_nametitle {
+  shift; # class method so don't care about class name
+  my $nt = shift;
+  return $CONFIG->{state}{seen_nametitle}{$nt};
+}
+
+=head2 incr_seen_nametitle
+
+    Increment the count of an labelname/labeltitle combination for extratitle
+
+    We pass in the name and year strings seperately as we have to
+    be careful and only increment this counter beyond 1 if there is
+    a title component. Otherwise, extratitle gets defined for all
+    entries with no title.
+
+=cut
+
+sub incr_seen_nametitle {
+  shift; # class method so don't care about class name
+  my ($ns, $ts) = @_;
+  my $tmp = "$ns,$ts";
+  # We can always increment this to 1
+  unless ($CONFIG->{state}{seen_nametitle}{$tmp}) {
+    $CONFIG->{state}{seen_nametitle}{$tmp}++;
+  }
+  # But beyond that only if we have a labeltitle in the entry since
+  # this counter is used to create extratitle which doesn't mean anything for
+  # entries with no title
+  else {
+    if ($ts) {
+      $CONFIG->{state}{seen_nametitle}{$tmp}++;
+    }
+  }
+  return;
+}
+
+
 
 =head1 uniquelistcount
 

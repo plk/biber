@@ -200,6 +200,16 @@ sub set_output_entry {
     }
   }
 
+  # The labeltitle option determines whether "extratitle" is output
+  if ( Biber::Config->getblxoption('labeltitle', $bee)) {
+    # Might not have been set due to skiplab/dataonly
+    if (my $nametitle = $be->get_field('nametitle')) {
+      if ( Biber::Config->get_seen_nametitle($nametitle) > 1) {
+        $acc .= "      <BDS>EXTRATITLE</BDS>\n";
+      }
+    }
+  }
+
   # The labelalpha option determines whether "extraalpha" is output
   # Skip generating extraalpha for entries with "skiplab" set
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {

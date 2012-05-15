@@ -208,10 +208,10 @@ sub set_output_entry {
     $opts = filter_entry_options($be->get_field('options'));
   }
 
-  $acc .= "    \\entry{$key}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $acc .= "    \\entry{$key}{$bee}{$opts}\n";
 
   # Generate set information
-  if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
+  if ( $bee eq 'set' ) {   # Set parents get \set entry ...
     $acc .= "      \\set{" . $be->get_field('entryset') . "}\n";
   }
   else { # Everything else that isn't a set parent ...
@@ -292,7 +292,7 @@ sub set_output_entry {
   my $fullhash = $be->get_field('fullhash');
   $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
 
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
+  if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
     # Might not have been set due to skiplab/dataonly
     if (my $label = $be->get_field('labelalpha')) {
       $acc .= "      \\field{labelalpha}{$label}\n";
@@ -304,7 +304,7 @@ sub set_output_entry {
   $acc .= "      <BDS>SORTINIT</BDS>\n";
 
   # The labelyear option determines whether "extrayear" is output
-  if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+  if ( Biber::Config->getblxoption('labelyear', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear = $be->get_field('nameyear')) {
       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
@@ -316,8 +316,18 @@ sub set_output_entry {
     }
   }
 
+  # The labeltitle option determines whether "extratitle" is output
+  if ( Biber::Config->getblxoption('labeltitle', $bee)) {
+    # Might not have been set due to skiplab/dataonly
+    if (my $nametitle = $be->get_field('nametitle')) {
+      if ( Biber::Config->get_seen_nametitle($nametitle) > 1) {
+        $acc .= "      <BDS>EXTRATITLE</BDS>\n";
+      }
+    }
+  }
+
   # The labelalpha option determines whether "extraalpha" is output
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+  if ( Biber::Config->getblxoption('labelalpha', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $la = $be->get_field('labelalpha')) {
       if (Biber::Config->get_la_disambiguation($la) > 1) {
@@ -326,7 +336,7 @@ sub set_output_entry {
     }
   }
 
-  if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype')) ) {
+  if ( Biber::Config->getblxoption('labelnumber', $bee) ) {
     if (my $sh = $be->get_field('shorthand')) {
       $acc .= "      \\field{labelnumber}{$sh}\n";
     }
@@ -348,7 +358,7 @@ sub set_output_entry {
       # (biblatex manual, section 2.23)
       # sets are a special case so always output crossref/xref for them since their
       # children will always be in the .bbl otherwise they make no sense.
-      unless ( $be->get_field('entrytype') eq 'set') {
+      unless ( $bee eq 'set') {
         next if ($lfield eq 'crossref' and
                  not $section->has_citekey($be->get_field('crossref')));
         next if ($lfield eq 'xref' and

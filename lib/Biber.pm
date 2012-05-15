@@ -1065,6 +1065,9 @@ sub process_entries_post {
     # generate information for tracking extrayear
     $self->process_extrayear($citekey);
 
+    # generate information for tracking extratitle
+    $self->process_extratitle($citekey);
+
     # generate information for tracking singletitle
     $self->process_singletitle($citekey);
 
@@ -1131,51 +1134,87 @@ sub process_extrayear {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  $logger->trace("Creating extrayear information for '$citekey'");
 
-  # This is all used to generate extrayear and the rules for this are:
-  # * Generate labelname/year combination for tracking extrayear
+  # Generate labelname/year combination for tracking extrayear
   # * If there is no labelname to use, use empty string
   # * If there is no labelyear to use:
   #   * If there is no pubstate to use, use empty string otherwise use pubstate key
   # * Don't increment the seen_nameyear count if either name or year string is empty
-  #   (see code in incr_nameyear method).
+  #   (see code in incr_seen_nameyear method).
   # * Don't increment if skiplab is set
 
-  my $name_string;
-  if (my $lnn = $be->get_field('labelnamename')) {
-    $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
-  }
-  else {
-    $name_string = '';
-  }
-
-  # extrayear takes into account the labelyear which can be a range
-  my $year_string;
-  if (my $ly = $be->get_field('labelyear')) {
-    $year_string = $ly;
-  }
-  elsif (my $y = $be->get_field('year')) {
-    $year_string = $y;
-  }
-  else {
-    $year_string = '';
-  }
-
-  # Don't create disambiguation data for skiplab entries
-  unless (Biber::Config->getblxoption('skiplab',
-                                      $be->get_field('entrytype'),
-                                      $be->get_field('citekey'))) {
-    if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-      my $nameyear_string = "$name_string,$year_string";
-      $logger->trace("Setting nameyear to '$nameyear_string' for entry '$citekey'");
-      $be->set_field('nameyear', $nameyear_string);
-      $logger->trace("Incrementing nameyear for '$name_string'");
-      Biber::Config->incr_seen_nameyear($name_string, $year_string);
+  if (Biber::Config->getblxoption('labelyear', $bee)) {
+    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+      return;
     }
+
+    $logger->trace("Creating extrayear information for '$citekey'");
+
+    my $name_string = '';
+    if (my $lnn = $be->get_field('labelnamename')) {
+      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
+    }
+
+    # extrayear takes into account the labelyear which can be a range
+    my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
+
+    my $nameyear_string = "$name_string,$year_string";
+    $logger->trace("Setting nameyear to '$nameyear_string' for entry '$citekey'");
+    $be->set_field('nameyear', $nameyear_string);
+    $logger->trace("Incrementing nameyear for '$name_string'");
+    Biber::Config->incr_seen_nameyear($name_string, $year_string);
   }
+
   return;
 }
+
+=head2 process_extratitle
+
+    Track labelname/labeltitle combination for generation of extratitle
+
+=cut
+
+sub process_extratitle {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+
+  # Generate labelname/labeltitle combination for tracking extratitle
+  # * If there is no labelname to use, use empty string
+  # * If there is no labeltitle to use, use empty string
+  # * Don't increment if skiplab is set
+
+  # This is different from extrayear in that we do track the information
+  # if the labelname is empty as titles are much more unique than years
+
+  if (Biber::Config->getblxoption('labeltitle', $bee)) {
+    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+      return;
+    }
+
+    $logger->trace("Creating extratitle information for '$citekey'");
+
+    my $name_string = '';
+    if (my $lnn = $be->get_field('labelnamename')) {
+      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
+    }
+
+    # extrayear takes into account the labelyear which can be a range
+    my $title_string = $be->get_field('shorttitle') || $be->get_field('title') || '';
+
+    my $nametitle_string = "$name_string,$title_string";
+    $logger->trace("Setting nametitle to '$nametitle_string' for entry '$citekey'");
+    $be->set_field('nametitle', $nametitle_string);
+    $logger->trace("Incrementing nametitle for '$name_string'");
+    Biber::Config->incr_seen_nametitle($name_string, $title_string);
+  }
+
+  return;
+}
+
 
 
 =head2 process_sets
@@ -1324,9 +1363,10 @@ sub process_labelyear {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
 
-  if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
-    if (Biber::Config->getblxoption('skiplab', $be->get_field('entrytype'), $citekey)) {
+  if (Biber::Config->getblxoption('labelyear', $bee)) {
+    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
       return;
     }
 
@@ -2320,6 +2360,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 
       * extraalpha
       * extrayear
+      * extratitle
 
 =cut
 
@@ -2337,11 +2378,11 @@ sub generate_extra {
   foreach my $key ($list->get_keys) {
     my $be = $section->bibentry($key);
     my $bee = $be->get_field('entrytype');
-    # Only generate extrayear and extraalpha if skiplab is not set.
-    # Don't forget that skiplab is implied for set members 
+    # Only generate extra* information if skiplab is not set.
+    # Don't forget that skiplab is implied for set members
    unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
       # extrayear
-      if (Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+      if (Biber::Config->getblxoption('labelyear', $bee)) {
         my $nameyear = $be->get_field('nameyear');
         if (Biber::Config->get_seen_nameyear($nameyear) > 1) {
           $logger->trace("nameyear for '$nameyear': " . Biber::Config->get_seen_nameyear($nameyear));
@@ -2349,11 +2390,20 @@ sub generate_extra {
           $list->set_extrayeardata_for_key($key, $v);
         }
       }
+      # extratitle
+      if (Biber::Config->getblxoption('labeltitle', $bee)) {
+        my $nametitle = $be->get_field('nametitle');
+        if (Biber::Config->get_seen_nametitle($nametitle) > 1) {
+          $logger->trace("nametitle for '$nametitle': " . Biber::Config->get_seen_nametitle($nametitle));
+          my $v = Biber::Config->incr_seen_extratitle($nametitle);
+          $list->set_extratitledata_for_key($key, $v);
+        }
+      }
       # extraalpha
-      if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+      if (Biber::Config->getblxoption('labelalpha', $bee)) {
         my $la = $be->get_field('labelalpha');
         if (Biber::Config->get_la_disambiguation($la) > 1) {
-          $logger->trace("labelalpha disambiguartion for '$la': " . Biber::Config->get_la_disambiguation($la));
+          $logger->trace("labelalpha disambiguation for '$la': " . Biber::Config->get_la_disambiguation($la));
           my $v = Biber::Config->incr_seen_extraalpha($la);
           $list->set_extraalphadata_for_key($key, $v);
         }

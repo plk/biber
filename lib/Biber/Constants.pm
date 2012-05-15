@@ -1717,6 +1717,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   labelalphatemplate => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelnamespec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelnumber        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labeltitle         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelyear          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelyearspec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   maxalphanames      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
