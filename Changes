@@ -1,6 +1,8 @@
 Revision history for Biber
 
 1.0    (unreleased)
+       * Internal data model processing changes
+       * New labeltitle and extratitle functionality
        * Sorting per list enabled for biblatex 2.0
        * New noinit option for ignoring parts of names when generating
          initials
