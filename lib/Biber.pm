@@ -1028,6 +1028,9 @@ sub process_entries_pre {
     # generate labelyear name
     $self->process_labelyear($citekey);
 
+    # generate labeltitle name
+    $self->process_labeltitle($citekey);
+
     # generate fullhash
     $self->process_fullhash($citekey);
 
@@ -1202,8 +1205,7 @@ sub process_extratitle {
       $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
     }
 
-    # extrayear takes into account the labelyear which can be a range
-    my $title_string = $be->get_field('shorttitle') || $be->get_field('title') || '';
+    my $title_string = $be->get_field('labeltitlename')) // '';
 
     my $nametitle_string = "$name_string,$title_string";
     $logger->trace("Setting nametitle to '$nametitle_string' for entry '$citekey'");
@@ -1370,11 +1372,7 @@ sub process_labelyear {
       return;
     }
 
-    my $lyearspec = Biber::Config->getblxoption('labelyearspec', $be->get_field('entrytype'));
-
-    # make sure we gave the correct data type:
-    biber_error("Invalid value for option labelyear: $lyearspec\n")
-      unless ref $lyearspec eq 'ARRAY';
+    my $lyearspec = Biber::Config->getblxoption('labelyearspec', $bee);
     foreach my $ly ( @{$lyearspec} ) {
       if ($be->get_field($ly)) {
         $be->set_field('labelyearname', $ly);
@@ -1399,6 +1397,38 @@ sub process_labelyear {
     }
     else {
       $logger->debug("Could not determine the labelyearname of entry $citekey");
+    }
+  }
+}
+
+=head2 process_labeltitle
+
+    Generate labeltitle
+    Here, "labeltitlename" is the name of the labeltitle field
+    and "labeltitle" is the actual copy of the relevant field
+
+=cut
+
+
+sub process_labeltitle {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+
+  if (Biber::Config->getblxoption('labeltitle', $bee)) {
+    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+      return;
+    }
+
+    my $ltitlespec = Biber::Config->getblxoption('labeltitlespec', $bee);
+    foreach my $lt ( @{$ltitlespec} ) {
+      if ($be->get_field($lt)) {
+        $be->set_field('labeltitlename', $lt);
+        last;
+      }
     }
   }
 }
