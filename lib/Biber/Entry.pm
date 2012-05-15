@@ -156,6 +156,7 @@ sub set_field {
 sub get_field {
   my $self = shift;
   my $key = shift;
+  return undef unless $key;
   return $self->{datafields}{$key} if exists($self->{datafields}{$key});
   return $self->{derivedfields}{$key} if exists($self->{derivedfields}{$key});
   return undef;

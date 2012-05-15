@@ -1205,7 +1205,8 @@ sub process_extratitle {
       $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
     }
 
-    my $title_string = $be->get_field('labeltitlename')) // '';
+    my $ltn = $be->get_field('labeltitlename');
+    my $title_string = $be->get_field($ltn) // '';
 
     my $nametitle_string = "$name_string,$title_string";
     $logger->trace("Setting nametitle to '$nametitle_string' for entry '$citekey'");
@@ -1373,7 +1374,7 @@ sub process_labelyear {
     }
 
     my $lyearspec = Biber::Config->getblxoption('labelyearspec', $bee);
-    foreach my $ly ( @{$lyearspec} ) {
+    foreach my $ly (@$lyearspec) {
       if ($be->get_field($ly)) {
         $be->set_field('labelyearname', $ly);
         last;
@@ -1396,7 +1397,7 @@ sub process_labelyear {
       }
     }
     else {
-      $logger->debug("Could not determine the labelyearname of entry $citekey");
+      $logger->debug("labelyearname of entry $citekey is unset");
     }
   }
 }
@@ -1424,12 +1425,13 @@ sub process_labeltitle {
     }
 
     my $ltitlespec = Biber::Config->getblxoption('labeltitlespec', $bee);
-    foreach my $lt ( @{$ltitlespec} ) {
+    foreach my $lt (@$ltitlespec) {
       if ($be->get_field($lt)) {
         $be->set_field('labeltitlename', $lt);
         last;
       }
-    }
+      $logger->debug("labeltitlename of entry $citekey is unset");
+   }
   }
 }
 
