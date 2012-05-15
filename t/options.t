@@ -91,6 +91,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{labelyear}{1998}
+      \field{labeltitle}{Title 1}
       \field{day}{05}
       \field{month}{04}
       \field{origday}{30}
@@ -115,6 +116,7 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
       \field{sortinit}{E}
       \field{labelyear}{1998}
+      \field{labeltitle}{Title 2}
       \field{day}{05}
       \field{month}{04}
       \field{title}{Title 2}
@@ -136,6 +138,7 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \strng{fullhash}{490250da1f3b92580d97563dc96c6c84}
       \field{sortinit}{B}
       \field{labelyear}{1999}
+      \field{labeltitle}{Title 3}
       \field{day}{05}
       \field{month}{04}
       \field{title}{Title 3}

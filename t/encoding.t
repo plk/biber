@@ -45,6 +45,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{labelyear}{1999}
+      \field{labeltitle}{Šome title}
       \true{singletitle}
       \field{title}{Šome title}
       \field{year}{1999}
@@ -66,6 +67,7 @@ my $encode2 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{labelyear}{1999}
+      \field{labeltitle}{Söme title}
       \true{singletitle}
       \field{title}{Söme title}
       \field{year}{1999}
@@ -87,6 +89,7 @@ my $encode3 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{labelyear}{1999}
+      \field{labeltitle}{Żome title}
       \true{singletitle}
       \field{title}{Żome title}
       \field{year}{1999}
@@ -108,6 +111,7 @@ my $encode5 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{labelyear}{1999}
+      \field{labeltitle}{à titlé}
       \true{singletitle}
       \field{title}{à titlé}
       \field{year}{1999}
@@ -129,6 +133,7 @@ my $encode6 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{labelyear}{1999}
+      \field{labeltitle}{↑\`{a} titl\'{e}}
       \true{singletitle}
       \field{title}{↑\`{a} titl\'{e}}
       \field{year}{1999}
@@ -150,6 +155,7 @@ my $encode7 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{labelyear}{1999}
+      \field{labeltitle}{{$\uparrow$}\`{a} titl\'{e}}
       \true{singletitle}
       \field{title}{{$\uparrow$}\`{a} titl\'{e}}
       \field{year}{1999}

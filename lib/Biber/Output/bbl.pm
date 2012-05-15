@@ -325,6 +325,10 @@ sub set_output_entry {
       }
     }
   }
+  # labeltitle is always output
+  if (my $lt = $be->get_field('labeltitle')) {
+    $acc .= "      \\field{labeltitle}{$lt}\n";
+  }
 
   # The labelalpha option determines whether "extraalpha" is output
   if ( Biber::Config->getblxoption('labelalpha', $bee)) {

@@ -68,6 +68,7 @@ my $l1 = q|    \entry{origmode}{book}{}
       \strng{fullhash}{afcf3a11058ba0a3fc7609c2a29ae6da}
       \field{sortinit}{Б}
       \field{labelyear}{1983}
+      \field{labeltitle}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{05}
@@ -114,6 +115,7 @@ my $l2 = q|    \entry{typemode}{misc}{}
       \strng{fullhash}{d7496ef500ebf349c7532b094f35def9}
       \field{sortinit}{B}
       \field{labelyear}{1995}
+      \field{labeltitle}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{05}
@@ -161,6 +163,7 @@ my $l3 = q|    \entry{entrymode}{book}{}
       \strng{fullhash}{afcf3a11058ba0a3fc7609c2a29ae6da}
       \field{sortinit}{Б}
       \field{labelyear}{1989}
+      \field{labeltitle}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{05}

@@ -53,6 +53,7 @@ my $string1 = q|    \entry{Static1}{set}{}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
       \field{labelyear}{2001}
+      \field{labeltitle}{Blessed Brains}
       \field{annotation}{Some notes}
       \field{title}{Blessed Brains}
       \field{year}{2001}
@@ -70,6 +71,7 @@ my $string2 = q|    \entry{Static2}{book}{}
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
+      \field{labeltitle}{Blessed Brains}
       \field{annotation}{Some Blessed Note}
       \field{title}{Blessed Brains}
       \field{year}{2001}
@@ -87,6 +89,7 @@ my $string3 = q|    \entry{Static3}{book}{}
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{0}
+      \field{labeltitle}{Castles and Crime}
       \field{title}{Castles and Crime}
       \field{year}{2002}
     \endentry
@@ -103,6 +106,7 @@ my $string4 = q|    \entry{Static4}{book}{}
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{0}
+      \field{labeltitle}{Dungeons, Dark and Dangerous}
       \field{title}{Dungeons, Dark and Dangerous}
       \field{year}{2005}
     \endentry
@@ -121,6 +125,7 @@ my $string5 = q|    \entry{Static2}{book}{}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
       \field{labelyear}{2001}
+      \field{labeltitle}{Blessed Brains}
       \field{annotation}{Some Blessed Note}
       \field{title}{Blessed Brains}
       \field{year}{2001}

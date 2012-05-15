@@ -61,6 +61,7 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \strng{fullhash}{ee363ce5e21ebe022f83aae896dd47f9}
       \field{sortinit}{M}
       \field{labelyear}{1999}
+      \field{labeltitle}{Alteration of the platelet serotonin transporter in romantic love.}
       \field{abstract}{{BACKGROUND}: The evolutionary consequences of love are so important that there must be some long-established biological process regulating it. Recent findings suggest that the serotonin ({5-HT}) transporter might be linked to both neuroticism and sexual behaviour as well as to obsessive-compulsive disorder ({OCD}). The similarities between an overvalued idea, such as that typical of subjects in the early phase of a love relationship, and obsession, prompted us to explore the possibility that the two conditions might share alterations at the level of the {5-HT} transporter. {METHODS}: Twenty subjects who had recently (within the previous 6 months) fallen in love, 20 unmedicated {OCD} patients and 20 normal controls, were included in the study. The {5-HT} transporter was evaluated with the specific binding of {3H}-paroxetine ({3H}-Par) to platelet membranes. {RESULTS}: The results showed that the density of {3H}-Par binding sites was significantly lower in subjects who had recently fallen in love and in {OCD} patients than in controls. {DISCUSSION}: The main finding of the present study is that subjects who were in the early romantic phase of a love relationship were not different from {OCD} patients in terms of the density of the platelet {5-HT} transporter, which proved to be significantly lower than in the normal controls. This would suggest common neurochemical changes involving the {5-HT} system, linked to psychological dimensions shared by the two conditions, perhaps at an ideational level.}
       \field{issn}{0033-2917}
       \field{journaltitle}{Psychological medicine}
@@ -90,6 +91,7 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \strng{fullhash}{01599a4cb58316d64208b12a07741765}
       \field{sortinit}{A}
       \field{labelyear}{1998}
+      \field{labeltitle}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
       \field{journaltitle}{Artificial Intelligence}
       \field{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
       \field{volume}{102}
@@ -123,6 +125,7 @@ my $ssl = q|    \entry{jung_alchemical_????}{book}{}
       \strng{namehash}{c6e712b3aef74e9dabcb8d7a074952ba}
       \strng{fullhash}{c6e712b3aef74e9dabcb8d7a074952ba}
       \field{sortinit}{J}
+      \field{labeltitle}{Alchemical Studies}
       \field{series}{Bollingen Series {XX}}
       \field{title}{Alchemical Studies}
       \field{volume}{{XIII}}

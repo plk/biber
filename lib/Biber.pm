@@ -1404,9 +1404,13 @@ sub process_labelyear {
 
 =head2 process_labeltitle
 
-    Generate labeltitle
-    Here, "labeltitlename" is the name of the labeltitle field
-    and "labeltitle" is the actual copy of the relevant field
+  Generate labeltitle
+  Here, "labeltitlename" is the name of the labeltitle field
+  and "labeltitle" is the actual copy of the relevant field
+
+  Note that this is not conditionalised on the biblatex "labeltitle"
+  as labeltitle should always be output since all standard styles need it.
+  Only extratitle is conditionalised on the biblatex "labeltitle" option.
 
 =cut
 
@@ -1419,19 +1423,14 @@ sub process_labeltitle {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  if (Biber::Config->getblxoption('labeltitle', $bee)) {
-    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
-      return;
+  my $ltitlespec = Biber::Config->getblxoption('labeltitlespec', $bee);
+  foreach my $ltn (@$ltitlespec) {
+    if (my $lt = $be->get_field($ltn)) {
+      $be->set_field('labeltitlename', $ltn);
+      $be->set_field('labeltitle', $lt);
+      last;
     }
-
-    my $ltitlespec = Biber::Config->getblxoption('labeltitlespec', $bee);
-    foreach my $lt (@$ltitlespec) {
-      if ($be->get_field($lt)) {
-        $be->set_field('labeltitlename', $lt);
-        last;
-      }
-      $logger->debug("labeltitlename of entry $citekey is unset");
-   }
+    $logger->debug("labeltitlename of entry $citekey is unset");
   }
 }
 

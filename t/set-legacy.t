@@ -53,6 +53,7 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{sortinit}{0}
       \field{labelyear}{1955}
+      \field{labeltitle}{Predictive coding--I}
       \field{issn}{0096-1000}
       \field{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
@@ -79,6 +80,7 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{sortinit}{0}
+      \field{labeltitle}{Predictive coding--I}
       \field{issn}{0096-1000}
       \field{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
@@ -105,6 +107,7 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{sortinit}{0}
+      \field{labeltitle}{Predictive coding--II}
       \field{issn}{0096-1000}
       \field{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}

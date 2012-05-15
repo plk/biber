@@ -77,6 +77,7 @@ my $l13c = q|    \entry{L13}{book}{}
       \field{sortinit}{D}
       \field{extrayear}{3}
       \field{labelyear}{1996}
+      \field{labeltitle}{Title 2}
       \field{day}{01}
       \field{endyear}{}
       \field{month}{01}
@@ -102,6 +103,7 @@ my $l14 = q|    \entry{L14}{book}{}
       \field{sortinit}{D}
       \field{extrayear}{4}
       \field{labelyear}{1996}
+      \field{labeltitle}{Title 2}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -127,6 +129,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
+      \field{labeltitle}{Title 2}
       \field{title}{Title 2}
       \warn{\item Missing mandatory field - one of 'date, year' must be defined in entry 'L15'}
     \endentry
@@ -149,6 +152,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{sortinit}{D}
       \field{extrayear}{6}
       \field{labelyear}{1996}
+      \field{labeltitle}{Title 2}
       \field{eventday}{01}
       \field{eventmonth}{01}
       \field{eventyear}{1996}
@@ -174,6 +178,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{sortinit}{D}
       \field{extrayear}{5}
       \field{labelyear}{1996}
+      \field{labeltitle}{Title 2}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -212,6 +217,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{labelyear}{1998}
+      \field{labeltitle}{Title 2}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -250,6 +256,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{labelyear}{1998\bibdatedash 2004}
+      \field{labeltitle}{Title 2}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}

@@ -839,6 +839,7 @@ our $dispatch_sorting = {
   'journaltitle'    =>  [\&_sort_literaln,      ['journaltitle']],
   'labelalpha'      =>  [\&_sort_literal,       ['sortlabelalpha']],
   'labelname'       =>  [\&_sort_labelname,     []],
+  'labeltitle'      =>  [\&_sort_labeltitle,    []],
   'labelyear'       =>  [\&_sort_labelyear,     []],
   'language'        =>  [\&_sort_list,          ['language']],
   'library'         =>  [\&_sort_literal,       ['library']],
@@ -1099,6 +1100,21 @@ sub _sort_labelname {
   if (my $ln = $be->get_field('labelnamename')) {
     # Don't process attributes as they will be processed in the real sub
     return $self->_dispatch_sorting($ln, $citekey, $sortelementattributes);
+  }
+  else {
+    return '';
+  }
+}
+
+sub _sort_labeltitle {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  # re-direct to the right sorting routine for the labeltitle
+  if (my $lt = $be->get_field('labeltitlename')) {
+    # Don't process attributes as they will be processed in the real sub
+    return $self->_dispatch_sorting($lt, $citekey, $sortelementattributes);
   }
   else {
     return '';

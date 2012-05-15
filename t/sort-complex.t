@@ -116,6 +116,7 @@ my $l4 = q|    \entry{L4}{book}{}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
+      \field{labeltitle}{Some title about sorting}
       \field{extraalpha}{2}
       \field{title}{Some title about sorting}
       \field{year}{1995}
@@ -139,6 +140,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
+      \field{labeltitle}{Algorithms For Sorting}
       \field{extraalpha}{1}
       \field{title}{Algorithms For Sorting}
       \field{year}{1995}
@@ -162,6 +164,7 @@ my $l2 = q|    \entry{L2}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
+      \field{labeltitle}{Sorting Algorithms}
       \field{extraalpha}{3}
       \field{title}{Sorting Algorithms}
       \field{year}{1995}
@@ -185,6 +188,7 @@ my $l3 = q|    \entry{L3}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
+      \field{labeltitle}{More and More Algorithms}
       \field{extraalpha}{2}
       \field{title}{More and More Algorithms}
       \field{year}{1995}
@@ -210,6 +214,7 @@ my $l5 = q|    \entry{L5}{book}{}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
+      \field{labeltitle}{Some other title about sorting}
       \field{extraalpha}{1}
       \field{title}{Some other title about sorting}
       \field{year}{1995}

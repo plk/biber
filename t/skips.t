@@ -57,6 +57,7 @@ my $set1 = q|    \entry{seta}{set}{}
       \field{sortinit}{D}
       \field{extrayear}{1}
       \field{labelyear}{2010}
+      \field{labeltitle}{Set Member A}
       \field{extraalpha}{1}
       \field{title}{Set Member A}
       \field{year}{2010}
@@ -75,6 +76,7 @@ my $set2 = q|    \entry{set:membera}{book}{}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
+      \field{labeltitle}{Set Member A}
       \field{title}{Set Member A}
       \field{year}{2010}
       \keyw{key1, key2}
@@ -92,6 +94,7 @@ my $set3 = q|    \entry{set:memberb}{book}{}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
+      \field{labeltitle}{Set Member B}
       \field{title}{Set Member B}
       \field{year}{2010}
     \endentry
@@ -108,6 +111,7 @@ my $set4 = q|    \entry{set:memberc}{book}{}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
+      \field{labeltitle}{Set Member C}
       \field{title}{Set Member C}
       \field{year}{2010}
     \endentry
@@ -126,6 +130,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{sortinit}{D}
       \field{extrayear}{2}
       \field{labelyear}{2010}
+      \field{labeltitle}{Stand-Alone A}
       \field{extraalpha}{2}
       \field{title}{Stand-Alone A}
       \field{year}{2010}
@@ -145,6 +150,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{sortinit}{D}
       \field{extrayear}{3}
       \field{labelyear}{2010}
+      \field{labeltitle}{Stand-Alone B}
       \field{extraalpha}{3}
       \field{title}{Stand-Alone B}
       \field{year}{2010}
@@ -164,6 +170,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{sortinit}{D}
       \field{extrayear}{4}
       \field{labelyear}{2010}
+      \field{labeltitle}{Stand-Alone C}
       \field{extraalpha}{4}
       \field{title}{Stand-Alone C}
       \field{year}{2010}
@@ -186,6 +193,7 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
+      \field{labeltitle}{Algorithms Which Sort}
       \field{shorthand}{AWS}
       \field{title}{Algorithms Which Sort}
       \field{year}{1932}
