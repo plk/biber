@@ -72,7 +72,7 @@ sub new {
   my ($class, %opts) = @_;
   my $self = bless {}, $class;
 
-  Biber::Config->_initopts( \%opts );
+  Biber::Config->_initopts(\%opts);
 
   # Add a reference to a global temp dir we might use for various things
   $self->{TEMPDIR} = File::Temp->newdir();
@@ -421,20 +421,16 @@ sub parse_ctrlfile {
   }
 
   # LABELALPHATEMPLATE
-  # TODO This should not be optional any more when biblatex implements this so take
-  # out this conditional
-  if (exists($bcfxml->{labelalphatemplate})) {
-    foreach my $t (@{$bcfxml->{labelalphatemplate}}) {
-      my $latype = $t->{type};
-      if ($latype eq 'global') {
-        Biber::Config->setblxoption('labelalphatemplate', $t);
-      }
-      else {
-        Biber::Config->setblxoption('labelalphatemplate',
-                                    $t,
-                                    'PER_TYPE',
-                                    $latype);
-      }
+  foreach my $t (@{$bcfxml->{labelalphatemplate}}) {
+    my $latype = $t->{type};
+    if ($latype eq 'global') {
+      Biber::Config->setblxoption('labelalphatemplate', $t);
+    }
+    else {
+      Biber::Config->setblxoption('labelalphatemplate',
+                                  $t,
+                                  'PER_TYPE',
+                                  $latype);
     }
   }
 

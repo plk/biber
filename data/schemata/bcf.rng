@@ -193,7 +193,7 @@
         </element>
       </oneOrMore>
       <optional>
-        <!-- field/entrytype mapping -->
+        <!-- user field/entrytype mapping -->
         <element name="bcf:sourcemap">
           <oneOrMore>
             <element name="bcf:maps">
@@ -214,6 +214,14 @@
                   </choice>
                 </attribute>
               </optional>
+              <optional>
+                <attribute name="driver_defaults">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
               <oneOrMore>
                 <ref name="map"/>
               </oneOrMore>
@@ -221,7 +229,7 @@
           </oneOrMore>
         </element>
       </optional>
-      <zeroOrMore>
+      <oneOrMore>
         <!-- labelalpha template specification -->
         <element name="bcf:labelalphatemplate">
           <optional>
@@ -297,7 +305,7 @@
             </element>
           </oneOrMore>
         </element>
-      </zeroOrMore>
+      </oneOrMore>
       <!-- Cross-reference inheritance specifications -->
       <element name="bcf:inheritance">
         <!-- Defaults -->
