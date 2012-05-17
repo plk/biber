@@ -203,7 +203,16 @@ sub _initopts {
     }
     # rather complex options - sourcemap
     elsif (lc($k) eq 'sourcemap') {
-      Biber::Config->setconfigfileoption($k, $v->{maps});
+      my $sms;
+      foreach my $sm (@{$v->{maps}}) {
+        if ($sm->{driver_defaults}) {
+          carp("You can't set driver default sourcemaps via biber - use \\DeclareDefaultSourcemap in biblatex. Ignoring map.");
+        }
+        else {
+          push @$sms, $sm;
+        }
+      }
+      Biber::Config->setconfigfileoption($k, $sms);
     }
   }
 
