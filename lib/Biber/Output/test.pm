@@ -134,8 +134,8 @@ sub set_output_entry {
   }
 
   # then names themselves
-  foreach my $namefield (@{$dm->get_field_type($bee, 'name')}) {
-    next if $dm->is_field_type($bee, 'skipout', $namefield);
+  foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
+    next if $dm->field_is_skipout($namefield);
     if ( my $nf = $be->get_field($namefield) ) {
 
       # Did we have "and others" in the data?
@@ -154,7 +154,8 @@ sub set_output_entry {
     }
   }
 
-  foreach my $listfield (@{$dm->get_field_type($bee, 'list')}) {
+  foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
+    next if $dm->field_is_datatype('name', $listfield); # name is a special list
     if ( my $lf = $be->get_field($listfield) ) {
       if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
         $acc .= "      \\true{more$listfield}\n";
@@ -239,9 +240,13 @@ sub set_output_entry {
     $acc .= "      \\true{singletitle}\n";
   }
 
-  foreach my $lfield (sort (@{$dm->get_field_type($bee, 'literal')}, @{$dm->get_field_type($bee, 'datepart')})) {
-    next if $dm->is_field_type($bee, 'skipout', $lfield);
-    if ( ($dm->is_field_type($bee, 'nullok', $lfield) and
+  foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
+                           @{$dm->get_fields_of_type('field', 'key')},
+                           @{$dm->get_fields_of_datatype('integer')},
+                           @{$dm->get_fields_of_type('field', 'literal')},
+                           @{$dm->get_fields_of_datatype('datepart')}) {
+    next if $dm->field_is_skipout($lfield);
+    if ( ($dm->field_is_nullok($lfield) and
           $be->field_exists($lfield)) or
          $be->get_field($lfield) ) {
       # we skip outputting the crossref or xref when the parent is not cited
@@ -259,14 +264,14 @@ sub set_output_entry {
     }
   }
 
-  foreach my $rfield (@{$dm->get_field_type($bee, 'range')}) {
+  foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
     if ( my $rf = $be->get_field($rfield)) {
       $rf =~ s/[-–]+/\\bibrangedash /g;
       $acc .= "      \\field{$rfield}{$rf}\n";
     }
   }
 
-  foreach my $vfield (@{$dm->get_field_type($bee, 'verbatim')}) {
+  foreach my $vfield (@{$dm->get_fields_of_datatype('verbatim')}) {
     if ( my $rf = $be->get_field($vfield) ) {
       $acc .= "      \\verb{$vfield}\n";
       $acc .= "      \\verb $rf\n    \\endverb\n";

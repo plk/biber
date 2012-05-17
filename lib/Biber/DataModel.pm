@@ -41,70 +41,69 @@ sub new {
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
 
-  # field datatypes
-  my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key, @entrykey, @datepart);
-
-  # Create data for field types, including any aliases which might be
-  # needed when reading the bib data.
   foreach my $f (@{$dm->{fields}{field}}) {
-    foreach my $et ($f->{entrytypes} ? split(/\s*,\s*/, $f->{entrytypes}) : ('ALL')) {
-      if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
-        $self->{$et}->{fields}{name}{$f->{content}} = 1;
-        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
-        $self->{$et}->{fields}{list}{$f->{content}} = 1;
-        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
-        $self->{$et}->{fields}{list}{$f->{content}} = 1;
-        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'entrykey') {
-        $self->{$et}->{fields}{list}{$f->{content}} = 1;
-        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
-        $self->{$et}->{fields}{literal}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'datepart') {
-        $self->{$et}->{fields}{datepart}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
-        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-        $self->{$et}->{fields}{date}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
-        $self->{$et}->{fields}{literal}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
-        $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-        $self->{$et}->{fields}{range}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
-        $self->{$et}->{fields}{verbatim}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
-        $self->{$et}->{fields}{literal}{$f->{content}} = 1;
-      }
-      elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'entrykey') {
-        $self->{$et}->{fields}{literal}{$f->{content}} = 1;
-      }
+    $self->{fieldsbyname}{$f->{content}} = {'fieldtype' => $f->{fieldtype},
+                                            'datatype'  => $f->{datatype}};
+    push @{$self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}}, $f->{content};
+    push @{$self->{fieldsbyfieldtype}{$f->{fieldtype}}}, $f->{content};
+    push @{$self->{fieldsbydatatype}{$f->{datatype}}}, $f->{content};
 
-      # check null_ok
-      if ($f->{nullok}) {
-        $self->{$et}->{fields}{nullok}{$f->{content}} = 1;
-      }
-      # check skips - fields we dont' want to output to BBL
-      if ($f->{skip_output}) {
-        $self->{$et}->{fields}{skipout}{$f->{content}} = 1;
-      }
+    # check null_ok
+    if ($f->{nullok}) {
+      $self->{fieldsbyname}{$f->{content}}{nullok} = 1;
     }
+    # check skips - fields we don't want to output to BBL
+    if ($f->{skip_output}) {
+      $self->{fieldsbyname}{$f->{content}}{skipout} = 1;
+    }
+
+    # if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
+    #   $self->{$et}->{fields}{name}{$f->{content}} = 1;
+    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
+    #   $self->{$et}->{fields}{list}{$f->{content}} = 1;
+    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
+    #   $self->{$et}->{fields}{list}{$f->{content}} = 1;
+    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'entrykey') {
+    #   $self->{$et}->{fields}{list}{$f->{content}} = 1;
+    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
+    #   $self->{$et}->{fields}{literal}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'datepart') {
+    #   $self->{$et}->{fields}{datepart}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
+    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+    #   $self->{$et}->{fields}{date}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
+    #   $self->{$et}->{fields}{literal}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
+    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
+    #   $self->{$et}->{fields}{range}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
+    #   $self->{$et}->{fields}{verbatim}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
+    #   $self->{$et}->{fields}{literal}{$f->{content}} = 1;
+    # }
+    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'entrykey') {
+    #   $self->{$et}->{fields}{literal}{$f->{content}} = 1;
+    # }
+
   }
 
   my $leg_ents;
   my $ets = [ sort map {$_->{content}} @{$dm->{entrytypes}{entrytype}} ];
-
   foreach my $es (@$ets) {
 
     # fields for entrytypes
@@ -187,14 +186,6 @@ sub new {
   }
   $self->{legal_entrytypes} = $leg_ents;
 
-  # date types
-  my $dts;
-  foreach my $dt (@{$dm->{datetypes}{datetype}}) {
-    push @$dts, $dt->{content};
-  }
-
-  $self->{legal_datetypes} = $dts;
-
   return $self;
 }
 
@@ -230,8 +221,36 @@ sub is_field_for_entrytype {
   }
 }
 
+=head2 get_fields_of_fieldtype
 
-=head2 get_field_type
+    Retrieve fields of a certain biblatex fieldtype from data model
+    Return in sorted order so that bbl order doesn't change when changing
+    .bcf. This really messes up tests otherwise.
+
+=cut
+
+sub get_fields_of_fieldtype {
+  my ($self, $fieldtype) = @_;
+  my $f = $self->{fieldsbyfieldtype}{$fieldtype};
+  return $f ? [ sort @$f ] : [];
+}
+
+=head2 get_fields_of_datatype
+
+    Retrieve fields of a certain biblatex datatype from data model
+    Return in sorted order so that bbl order doesn't change when changing
+    .bcf. This really messes up tests otherwise.
+
+=cut
+
+sub get_fields_of_datatype {
+  my ($self, $datatype) = @_;
+  my $f = $self->{fieldsbydatatype}{$datatype};
+  return $f ? [ sort @$f ] : [];
+}
+
+
+=head2 get_fields_of_type
 
     Retrieve fields of a certain biblatex type from data model
     Return in sorted order so that bbl order doesn't change when changing
@@ -239,23 +258,80 @@ sub is_field_for_entrytype {
 
 =cut
 
-sub get_field_type {
-  my ($self, $entrytype, $type) = @_;
-  my $f = $self->{$entrytype}{fields}{$type} || $self->{ALL}{fields}{$type};
-  return $f ? [ sort keys %$f ] : [];
+sub get_fields_of_type {
+  my ($self, $fieldtype, $datatype) = @_;
+  my $f = $self->{fieldsbytype}{$fieldtype}{$datatype};
+  return $f ? [ sort @$f ] : [];
 }
 
-=head2 is_field_type
+=head2 get_fieldtype
 
-    Returns boolean depending on whether a field is a certain biblatex type
+    Returns the fieldtype of a field
 
 =cut
 
-sub is_field_type {
-  my ($self, $entrytype, $type, $field) = @_;
-  my $f = $self->{$entrytype}{fields}{$type}{$field} || $self->{ALL}{fields}{$type}{$field};
-  return $f // 0;
+sub get_fieldtype {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{fieldtype};
 }
+
+=head2 get_datatype
+
+    Returns the datatype of a field
+
+=cut
+
+sub get_datatype {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{datatype};
+}
+
+
+=head2 field_is_fieldtype
+
+    Returns boolean depending on whether a field is a certain biblatex fieldtype
+
+=cut
+
+sub field_is_fieldtype {
+  my ($self, $fieldtype, $field) = @_;
+  return $self->{fieldsbyname}{$field}{fieldtype} eq $fieldtype ? 1 : 0;
+}
+
+=head2 field_is_datatype
+
+    Returns boolean depending on whether a field is a certain biblatex datatype
+
+=cut
+
+sub field_is_datatype {
+  my ($self, $datatype, $field) = @_;
+  return $self->{fieldsbyname}{$field}{datatype} eq $datatype ? 1 : 0;
+}
+
+
+=head2 field_is_nullok
+
+    Returns boolean depending on whether a field is ok to be null
+
+=cut
+
+sub field_is_nullok {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{nullok} // 0;
+}
+
+=head2 field_is_skipout
+
+    Returns boolean depending on whether a field is to be skipped on output
+
+=cut
+
+sub field_is_skipout {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{skipout} // 0;
+}
+
 
 
 =head2 check_mandatory_constraints
@@ -441,7 +517,7 @@ sub check_date_components {
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
 
-  foreach my $f (@{$self->{legal_datetypes}}) {
+  foreach my $f (@{$self->get_fields_of_type('field', 'date')}) {
     my ($d) = $f =~ m/\A(.*)date\z/xms;
     # Don't bother unless this type of date is defined (has a year)
     next unless $be->get_datafield($d . 'year');

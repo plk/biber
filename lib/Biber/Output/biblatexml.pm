@@ -179,7 +179,7 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Output name fields
-      foreach my $namefield (@{$dm->get_field_type($bee, 'name')}) {
+      foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
         if ( my $nf = $be->get_field($namefield) ) {
 
           # Did we have "and others" in the data?
@@ -198,7 +198,8 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Output list fields
-      foreach my $listfield (@{$dm->get_field_type($bee, 'list')}) {
+      foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
+        next if $dm->field_is_datatype('name', $listfield); # name is a special list
         if (my $lf = $be->get_field($listfield)) {
           if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
             $xml->startTag([$bp, $listfield], 'morelist' => 1);
@@ -215,7 +216,7 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Output literal fields
-      foreach my $lfield (@{$dm->get_field_type($bee, 'literal')}) {
+      foreach my $lfield (@{$dm->get_fields_of_datatype('literal')}) {
         if (my $lf = $be->get_field($lfield)) {
           $xml->dataElement([$bp, $lfield], $lf);
         }
@@ -237,7 +238,7 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Range fields
-      foreach my $rfield (@{$dm->get_field_type($bee, 'range')}) {
+      foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
         if (my $rf = $be->get_field($rfield)) {
           $xml->startTag([$bp, $rfield]);
           # range fields are an array ref of two-element array refs [range_start, range_end]
@@ -255,14 +256,14 @@ ENTRIES:    foreach my $be ($section->bibentries->entries) {
       }
 
       # Verbatim fields
-      foreach my $vfield (@{$dm->get_field_type($bee, 'verbatim')}) {
+      foreach my $vfield (@{$dm->get_fields_of_datatype('verbatim')}) {
         if (my $vf = $be->get_field($vfield)) {
           $xml->dataElement([$bp, $vfield], $vf);
         }
       }
 
       # csv fields
-      foreach my $csvfield (@{$dm->get_field_type($bee, 'csv')}) {
+      foreach my $csvfield (@{$dm->get_fields_of_datatype('csv')}) {
         if (my $csvf = $be->get_field($csvfield)) {
           $xml->startTag([$bp, $csvfield]);
           my @f = split /\s*,\s*/, $csvf;

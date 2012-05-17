@@ -467,41 +467,6 @@
       <optional>
         <!-- Data model specification -->
         <element name="bcf:datamodel">
-          <optional>
-            <!-- entrytype and field aliases -->
-            <element name="bcf:aliases">
-              <attribute name="type">
-                <choice>
-                  <value>entrytype</value>
-                  <value>field</value>
-                </choice>
-              </attribute>
-              <attribute name="datatype">
-                <choice>
-                  <value>bibtex</value>
-                  <value>biblatexml</value>
-                  <value>ris</value>
-                  <value>zoterordfxml</value>
-                  <value>endnotexml</value>
-                </choice>
-              </attribute>
-              <oneOrMore>
-                <element name="bcf:alias">
-                  <attribute name="name"/>
-                  <attribute name="aliasof"/>
-                  <choice>
-                    <oneOrMore>
-                      <element name="bcf:alsoset">
-                        <attribute name="asfield"/>
-                        <attribute name="asvalue"/>
-                      </element>
-                    </oneOrMore>
-                    <empty/>
-                  </choice>
-                </element>
-              </oneOrMore>
-            </element>
-          </optional>
           <!-- Valid datetypes -->
           <element name="bcf:datetypes">
             <oneOrMore>
@@ -518,56 +483,6 @@
               </element>
             </oneOrMore>
           </element>
-          <optional>
-            <!-- Entrytype and field alias specifications -->
-            <element name="bcf:aliases">
-              <oneOrMore>
-                <element name="bcf:alias">
-                  <choice>
-                    <group>
-                      <!-- entrytype alias specification -->
-                      <attribute name="type">
-                        <value>entrytype</value>
-                      </attribute>
-                      <!-- alias name -->
-                      <element name="bcf:name">
-                        <text/>
-                      </element>
-                      <!-- canonical name -->
-                      <element name="bcf:realname">
-                        <text/>
-                      </element>
-                      <zeroOrMore>
-                        <!--
-                          Any other fields that need setting when resolving the alias
-                          for example when "phdthesis" -> "thesis", we also need to set
-                          "type" = "phdthesis"
-                        -->
-                        <element name="bcf:field">
-                          <attribute name="name"/>
-                          <text/>
-                        </element>
-                      </zeroOrMore>
-                    </group>
-                    <group>
-                      <!-- field alias specification -->
-                      <attribute name="type">
-                        <value>field</value>
-                      </attribute>
-                      <!-- alias name -->
-                      <element name="bcf:name">
-                        <text/>
-                      </element>
-                      <!-- canonical name -->
-                      <element name="bcf:realname">
-                        <text/>
-                      </element>
-                    </group>
-                  </choice>
-                </element>
-              </oneOrMore>
-            </element>
-          </optional>
           <!--
             BibLaTeX field types. Biber uses this to determine how to output various types
             to the .bbl

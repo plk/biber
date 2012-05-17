@@ -331,7 +331,7 @@ sub parse_ctrlfile {
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []);
-
+#  use Data::Dump;dd($bcfxml);exit 0;
   my $controlversion = $bcfxml->{version};
   Biber::Config->setblxoption('controlversion', $controlversion);
   unless ($controlversion eq $BIBLATEX_VERSION) {
@@ -732,7 +732,7 @@ sub nullable_check {
     my $bee = $be->get_field('entrytype');
     foreach my $f ($be->datafields) {
       if (is_null($be->get_datafield($f))) {
-        unless ($dm->is_field_type($bee, 'nullok', $f)) {
+        unless ($dm->field_is_nullok($f)) {
           biber_warn("The field '$f' in entry '$citekey' cannot be null, deleting it");
           $be->del_field($f);
         }
@@ -1314,7 +1314,7 @@ sub process_labelname {
       $lnameopt = $ln;
     }
 
-    unless (first {$_ eq $ln} @{$dm->get_field_type($bee, 'name')}) {
+    unless (first {$_ eq $ln} @{$dm->get_fields_of_type('list', 'name')}) {
       biber_warn("Labelname candidate '$ln' is not a name field - skipping");
       next;
     }
@@ -1340,7 +1340,7 @@ sub process_labelname {
     }
 
     # We have already warned about this above
-    unless (first {$_ eq $ln} @{$dm->get_field_type($bee, 'name')}) {
+    unless (first {$_ eq $ln} @{$dm->get_fields_of_type('list', 'name')}) {
       next;
     }
 
@@ -1511,7 +1511,7 @@ sub process_pername_hashes {
   my $bee = $be->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
 
-  foreach my $pn (@{$dm->get_field_type($bee, 'name')}) {
+  foreach my $pn (@{$dm->get_fields_of_type('list', 'name')}) {
     my $names = $be->get_field($pn) or next;
     foreach my $n (@{$names->names}) {
       $n->set_hash($self->_getpnhash($citekey, $n));
@@ -1547,7 +1547,7 @@ sub process_visible_names {
     my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
     my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
 
-    foreach my $n (@{$dm->get_field_type($bee, 'name')}) {
+    foreach my $n (@{$dm->get_fields_of_type('list', 'name')}) {
       next unless my $names = $be->get_field($n);
 
       my $count = $names->count_names;

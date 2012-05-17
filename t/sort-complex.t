@@ -8,7 +8,6 @@ use Test::More tests => 9;
 
 use Biber;
 use Biber::Output::bbl;
-use Biber::Input::file::bibtex;
 use Log::Log4perl;
 chdir("t/tdata");
 

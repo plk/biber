@@ -64,6 +64,19 @@ sub extract_entries {
           # used it
   $logger->trace("Entering extract_entries() in driver 'endnotexml'");
 
+  # Get a reference to the correct sourcemap sections, if they exist
+  my $smaps = [];
+  if (defined(Biber::Config->getoption('sourcemap'))) {
+    # User maps
+    if (my $m = first {$_->{datatype} eq 'endnotexml' and not exists($_->{driver_defaults})} @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+    # Driver default maps
+    if (my $m = first {$_->{datatype} eq 'endnotexml' and $_->{driver_defaults}} @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+  }
+
   # If it's a remote data file, fetch it first
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$source' is a remote EndNote XML datasource - fetching ...");
@@ -143,7 +156,7 @@ sub extract_entries {
       # We need this in order to do sorting=none + allkeys because in this case, there is no
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, "$dbdid:$key";
-      create_entry("$dbdid:$key", $entry, $source);
+      create_entry("$dbdid:$key", $entry, $source, $smaps);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -177,7 +190,7 @@ sub extract_entries {
         $logger->debug('Parsing Endnote XML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($wanted_key, $entry, $source);
+        create_entry($wanted_key, $entry, $source, $smaps);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -197,7 +210,7 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($key, $entry, $source) = @_;
+  my ($key, $entry, $source, $smaps) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
@@ -353,65 +366,76 @@ sub create_entry {
   my $itype = $entry->findvalue('./ref-type/@name');
 FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
 
-    # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
-    # ignore fields not in .dcf - this means "titles", "contributors" "urls/web-urls" are
-    # skipped but their children are not
+    # # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
+    # # ignore fields not in .dcf - this means "titles", "contributors" "urls/web-urls" are
+    # # skipped but their children are not
+    # if (my $from = $dcfxml->{fields}{field}{$f}) {
+    #   my $to = $f; # By default, field to set internally is the same as data source
+    #   # Redirect any alias
+    #   if (my $aliases = $from->{alias}) { # complex aliases
+    #     foreach my $alias (@$aliases) {
+    #       if (my $t = $alias->{aliasfortype}) { # type-specific alias
+    #         if (lc($t) eq lc($itype)) {
+    #           my $a = $alias->{aliasof};
+    #           $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
+    #           $from = $dcfxml->{fields}{field}{$a};
+    #           $to = $a;         # Field to set internally is the alias
+    #           last;
+    #         }
+    #       }
+    #       else {
+    #         my $a = $alias->{aliasof}; # global alias
+    #         $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
+    #         $from = $dcfxml->{fields}{field}{$a};
+    #         $to = $a;           # Field to set internally is the alias
+    #       }
+
+    #       # Deal with additional fields to split information into (one->many map)
+    #       foreach my $alsoset (@{$alias->{alsoset}}) {
+    #         my $val = $alsoset->{value} // $f; # defaults to original field name if no value
+    #         $bibentry->set_datafield($alsoset->{target}, $val);
+    #       }
+    #     }
+    #   }
+    #   elsif (my $a = $from->{aliasof}) { # simple, global only alias
+    #     $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
+    #     $from = $dcfxml->{fields}{field}{$a};
+    #     $to = $a;               # Field to set internally is the alias
+    #   }
+    #   &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
+    # }
+
+
+    # Now run any defined handler
     if (my $from = $dcfxml->{fields}{field}{$f}) {
-      my $to = $f; # By default, field to set internally is the same as data source
-      # Redirect any alias
-      if (my $aliases = $from->{alias}) { # complex aliases
-        foreach my $alias (@$aliases) {
-          if (my $t = $alias->{aliasfortype}) { # type-specific alias
-            if (lc($t) eq lc($itype)) {
-              my $a = $alias->{aliasof};
-              $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
-              $from = $dcfxml->{fields}{field}{$a};
-              $to = $a;         # Field to set internally is the alias
-              last;
-            }
-          }
-          else {
-            my $a = $alias->{aliasof}; # global alias
-            $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
-            $from = $dcfxml->{fields}{field}{$a};
-            $to = $a;           # Field to set internally is the alias
-          }
-
-          # Deal with additional fields to split information into (one->many map)
-          foreach my $alsoset (@{$alias->{alsoset}}) {
-            my $val = $alsoset->{value} // $f; # defaults to original field name if no value
-            $bibentry->set_datafield($alsoset->{target}, $val);
-          }
-        }
+      if ($from->{handler}) {
+        &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $key);
       }
-      elsif (my $a = $from->{aliasof}) { # simple, global only alias
-        $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
-        $from = $dcfxml->{fields}{field}{$a};
-        $to = $a;               # Field to set internally is the alias
-      }
-      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
     }
-  }
 
-  # Driver aliases
-  if (my $ealias = $dcfxml->{entrytypes}{entrytype}{$itype}) {
-    $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
-    foreach my $alsoset (@{$ealias->{alsoset}}) {
-      # drivers never overwrite existing fields
-      if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '$itype' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
-        next;
-      }
-      $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
-    }
-  }
-  # No alias
-  else {
     $bibentry->set_field('entrytype', $itype);
-  }
 
-  $bibentry->set_field('datatype', 'endnotexml');
-  $bibentries->add_entry($key, $bibentry);
+    # Driver aliases
+    # if (my $ealias = $dcfxml->{entrytypes}{entrytype}{$itype}) {
+    #   $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
+    #   foreach my $alsoset (@{$ealias->{alsoset}}) {
+    #     # drivers never overwrite existing fields
+    #     if ($bibentry->field_exists(lc($alsoset->{target}))) {
+    #       biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '$itype' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
+    #       next;
+    #     }
+    #     $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
+    #   }
+    # }
+    # # No alias
+    # else {
+    #   $bibentry->set_field('entrytype', $itype);
+    # }
+
+    $bibentry->set_field('datatype', 'endnotexml');
+    $bibentries->add_entry($key, $bibentry);
+
+  }
 
   return;
 }
@@ -421,23 +445,23 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./title
 
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $value = $entry->findvalue("./$f");
-  $bibentry->set_datafield($to, [ _norm($value) ]);
+  $bibentry->set_datafield($f, [ _norm($value) ]);
   return;
 }
 
 # literal fields
 sub _literal {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $value = $entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)");
-  $bibentry->set_datafield($to, _norm($value));
+  $bibentry->set_datafield($f, _norm($value));
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $values_ref;
   my $value = $entry->findvalue("./$f");
   my @values = split(/\s*,\s*/, _norm($value));
@@ -456,13 +480,13 @@ sub _range {
     }
     push @$values_ref, [$1 || '', $end];
   }
-  $bibentry->set_datafield($to, $values_ref);
+  $bibentry->set_datafield($f, $values_ref);
   return;
 }
 
 # Date fields
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   my $daten = $entry->findnodes("./dates/$f")->get_node(1);
   # Use Endnote explicit date attributes, if present
   # It's not clear if Endnote actually uses these attributes
@@ -507,18 +531,18 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   my $names = new Biber::Entry::Names;
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   foreach my $name ($entry->findnodes("./contributors/$f/*")) {
     $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
   }
-  $bibentry->set_datafield($to, $names);
+  $bibentry->set_datafield($f, $names);
   return;
 }
-
+# Keywords
 sub _keywords {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f) = @_;
   if (my @s = $entry->findnodes("./$f/keyword")) {
     my @kws;
     foreach my $s (@s) {

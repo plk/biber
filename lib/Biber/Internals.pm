@@ -306,7 +306,7 @@ sub _labelpart {
     # length
     if (my $ic = $part->{ifnamecount}) {
       my $f = $part->{content};
-      if (first {$_ eq $f} @{$dm->get_field_type($bee, 'name')} or
+      if (first {$_ eq $f} @{$dm->get_fields_of_type('list', 'name')} or
           $f eq 'labelname') {
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;

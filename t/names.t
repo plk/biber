@@ -7,7 +7,6 @@ no warnings 'utf8';
 use Test::More tests => 53;
 
 use Biber;
-use Biber::Input::file::bibtex;
 use Biber::Output::bbl;
 use Log::Log4perl;
 chdir("t/tdata");
@@ -682,7 +681,6 @@ my $l31 = q|    \entry{L31}{book}{}
       \field{sortinit}{Z}
     \endentry
 |;
-
 
 is_deeply(Biber::Input::file::bibtex::parsename('John Doe', 'author'), $name1, 'parsename 1');
 is_deeply(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author'), $name2, 'parsename 2');

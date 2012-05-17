@@ -75,6 +75,13 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \verb http://www.biomedexperts.com/Abstract.bme/10405096
       \endverb
       \keyw{love, romantic}
+      \warn{\item Field 'citeulike-article-id' invalid in data model for entry 'citeulike:8283461' - ignoring}
+      \warn{\item Field 'citeulike-linkout-0' invalid in data model for entry 'citeulike:8283461' - ignoring}
+      \warn{\item Field 'citeulike-linkout-1' invalid in data model for entry 'citeulike:8283461' - ignoring}
+      \warn{\item Field 'citeulike-linkout-2' invalid in data model for entry 'citeulike:8283461' - ignoring}
+      \warn{\item Field 'pmid' invalid in data model for entry 'citeulike:8283461' - ignoring}
+      \warn{\item Field 'posted-at' invalid in data model for entry 'citeulike:8283461' - ignoring}
+      \warn{\item Field 'priority' invalid in data model for entry 'citeulike:8283461' - ignoring}
     \endentry
 |;
 

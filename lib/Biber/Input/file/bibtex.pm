@@ -45,22 +45,28 @@ sub init_cache {
   $cache = {};
 }
 
-# Handlers for field types
-# The names of these have nothing to do whatever with the biblatex field types
-# They just started out copying them - they are categories of this specific
-# data source data types
-my %handlers = (
-                'date'     => \&_date,
-                'list'     => \&_list,
-                'literal'  => \&_literal,
-                'name'     => \&_name,
-                'range'    => \&_range,
-                'verbatim' => \&_verbatim
-);
+# Determine handlers from data model
+my $dm = Biber::Config->get_dm;
+my $handlers = {
+                'field' => {
+                            'csv'      => \&_verbatim,
+                            'date'     => \&_date,
+                            'datepart' => \&_literal,
+                            'entrykey' => \&_literal,
+                            'integer'  => \&_literal,
+                            'key'      => \&_literal,
+                            'literal'  => \&_literal,
+                            'range'    => \&_range,
+                            'verbatim' => \&_verbatim,
+                           },
+                'list' => {
+                           'entrykey' => \&_literal,
+                           'key'      => \&_list,
+                           'literal'  => \&_list,
+                           'name'     => \&_name,
+                          }
+};
 
-
-# Read driver config file
-my $dcfxml = driver_config('bibtex');
 
 =head2 TBSIG
 
@@ -270,7 +276,6 @@ sub create_entry {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
-  my $dm = Biber::Config->getblxoption('datamodel');
 
   $bibentry->set_field('citekey', $key);
 
@@ -485,16 +490,19 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
       # }
 
       # Now run any defined handler
-      if (my $from = $dcfxml->{fields}{field}{$f}) {
-        if ($from->{handler}) {
-          &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $f, $key);
-        }
+#      if ($dm->is_field_for_entrytype($entry->type, $f)) {
+      if (my $handler = $handlers->{$dm->get_fieldtype($f)}{$dm->get_datatype($f)}) {
+        &$handler($bibentry, $entry, $f, $key);
       }
-      # Default if no explicit way to set the field
       else {
-        my $value = decode_utf8($entry->get($f));
-        $bibentry->set_datafield($f, $value);
+        biber_warn("Field '$f' invalid in data model for entry '$key' - ignoring", $bibentry);
       }
+      # }
+      # # Default if no explicit way to set the field
+      # else {
+      #   my $value = decode_utf8($entry->get($f));
+      #   $bibentry->set_datafield($f, $value);
+      # }
     }
 
     $bibentry->set_field('entrytype', $entry->type);
@@ -529,37 +537,37 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
 
 # Literal fields
 sub _literal {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
 
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
-  return if ($to eq 'year' and $bibentry->get_datafield('year'));
-  return if ($to eq 'month' and $bibentry->get_datafield('month'));
+  return if ($f eq 'year' and $bibentry->get_datafield('year'));
+  return if ($f eq 'month' and $bibentry->get_datafield('month'));
 
   # Try to sanitise months to biblatex requirements
-  if ($to eq 'month') {
-    $bibentry->set_datafield($to, _hack_month($value));
+  if ($f eq 'month') {
+    $bibentry->set_datafield($f, _hack_month($value));
   }
   else {
-    $bibentry->set_datafield($to, $value);
+    $bibentry->set_datafield($f, $value);
   }
   return;
 }
 
 # Verbatim fields
 sub _verbatim {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
 
-  $bibentry->set_datafield($to, $value);
+  $bibentry->set_datafield($f, $value);
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $values_ref;
   my $value = decode_utf8($entry->get($f));
 
@@ -579,14 +587,14 @@ sub _range {
     }
     push @$values_ref, [$1 || '', $end];
   }
-  $bibentry->set_datafield($to, $values_ref);
+  $bibentry->set_datafield($f, $values_ref);
   return;
 }
 
 
 # Names
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $value = decode_utf8($entry->get($f));
@@ -637,13 +645,13 @@ sub _name {
     }
 
   }
-  $bibentry->set_datafield($to, $names);
+  $bibentry->set_datafield($f, $names);
   return;
 }
 
 # Dates
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   my ($datetype) = $f =~ m/\A(.*)date\z/xms;
   my $date = decode_utf8($entry->get($f));
   # Just in case we need to look at the original field later
@@ -694,13 +702,13 @@ sub _date {
 
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
   @tmp = map { decode_utf8($_) } @tmp;
   @tmp = map { remove_outer($_) } @tmp;
-  $bibentry->set_datafield($to, [ @tmp ]);
+  $bibentry->set_datafield($f, [ @tmp ]);
   return;
 }
 

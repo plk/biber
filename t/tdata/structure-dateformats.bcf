@@ -653,6 +653,7 @@
       <bcf:field fieldtype="field" datatype="literal">chapter</bcf:field>
       <bcf:field fieldtype="list" datatype="name">commentator</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">crossref</bcf:field>
+      <bcf:field fieldtype="field" datatype="date">date</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">day</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">doi</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">edition</bcf:field>
@@ -673,6 +674,7 @@
       <bcf:field fieldtype="field" datatype="verbatim">eprint</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprintclass</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprinttype</bcf:field>
+      <bcf:field fieldtype="field" datatype="date">eventdate</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">eventday</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">eventendday</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">eventendmonth</bcf:field>
@@ -728,6 +730,7 @@
       <bcf:field fieldtype="field" datatype="literal">number</bcf:field>
       <bcf:field fieldtype="field" datatype="special">options</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">organization</bcf:field>
+      <bcf:field fieldtype="field" datatype="date">origdate</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">origday</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">origendday</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">origendmonth</bcf:field>
@@ -767,6 +770,7 @@
       <bcf:field fieldtype="list" datatype="name">translator</bcf:field>
       <bcf:field fieldtype="field" datatype="key">type</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">url</bcf:field>
+      <bcf:field fieldtype="field" datatype="date">urldate</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">usera</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userb</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userc</bcf:field>

@@ -182,20 +182,6 @@ start =
     sorting,
     # Data model specification
     element bcf:datamodel {
-      # entrytype and field aliases
-      element bcf:aliases {
-        attribute type { "entrytype" | "field" },
-        attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
-        element bcf:alias {
-          attribute name { text },
-          attribute aliasof { text },
-          ( element bcf:alsoset {
-            attribute asfield { text },
-            attribute asvalue { text }
-            }+
-          | empty)
-        }+
-      }?,
       # Valid datetypes
       element bcf:datetypes {
         element bcf:datetype { text }+
@@ -204,35 +190,6 @@ start =
       element bcf:entrytypes {
         element bcf:entrytype { text }+
       },
-      # Entrytype and field alias specifications
-      element bcf:aliases {
-        element bcf:alias {
-          (
-            (
-              # entrytype alias specification
-              attribute type { "entrytype" },
-              # alias name
-              element bcf:name { text },
-              # canonical name
-              element bcf:realname { text },
-              # Any other fields that need setting when resolving the alias
-              # for example when "phdthesis" -> "thesis", we also need to set
-              # "type" = "phdthesis"
-              element bcf:field {
-                attribute name { text },
-                text
-              }* ) |
-            (
-              # field alias specification
-              attribute type { "field" },
-              # alias name
-              element bcf:name { text },
-              # canonical name
-              element bcf:realname { text }
-            )
-          )
-        }+
-      }?,
       # BibLaTeX field types. Biber uses this to determine how to output various types
       # to the .bbl
       element bcf:fields {

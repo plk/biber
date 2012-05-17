@@ -49,6 +49,7 @@ my $bibentries = $section->bibentries;
 
 my $w1 = [
           "Field 'school' is aliased to field 'institution' but both are defined in entry with key 'alias2' - skipping alias",
+          "Field 'school' invalid in data model for entry 'alias2' - ignoring",
           "Entry 'alias2' - invalid entry type 'thing' - defaulting to 'misc'",
           "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'",
 ];

@@ -41,7 +41,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('nodieonerror', 1); # because there is a failing cyclic crossref check
-Biber::Config->setoption('crossref_tree', 1);
 
 # Now generate the information
 my (undef, $stderr) = capture { $biber->prepare };
@@ -108,6 +107,7 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \field{title}{Fabulous Fourier Forms}
       \field{year}{1974}
       \warn{\item Field 'school' is aliased to field 'institution' but both are defined in entry with key 'cr2' - skipping alias}
+      \warn{\item Field 'school' invalid in data model for entry 'cr2' - ignoring}
     \endentry
 |;
 
@@ -154,6 +154,7 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \field{title}{Arrangements of All Articles}
       \field{year}{1996}
       \warn{\item Field 'archiveprefix' is aliased to field 'eprinttype' but both are defined in entry with key 'cr3' - skipping alias}
+      \warn{\item Field 'archiveprefix' invalid in data model for entry 'cr3' - ignoring}
     \endentry
 |;
 
