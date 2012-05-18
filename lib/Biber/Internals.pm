@@ -242,6 +242,7 @@ our $dispatch_label = {
   'journaltitle'      =>  [\&_label_title,            ['journaltitle']],
   'label'             =>  [\&_label_label,            []],
   'labelname'         =>  [\&_label_labelname,        []],
+  'labeltitle'        =>  [\&_label_labeltitle,       []],
   'labelyear'         =>  [\&_label_labelyear,        []],
   'maintitle'         =>  [\&_label_title,            ['maintitle']],
   'month'             =>  [\&_label_month,            ['month']],
@@ -253,6 +254,7 @@ our $dispatch_label = {
   'origyear'          =>  [\&_label_year,             ['origyear']],
   'origtitle'         =>  [\&_label_title,            ['origtitle']],
   'shorthand'         =>  [\&_label_shorthand,        []],
+  'sortkey'           =>  [\&_label_sortkey,          []],
   'title'             =>  [\&_label_title,            ['title']],
   'translator'        =>  [\&_label_name,             ['translator']],
   'urlday'            =>  [\&_label_day,              ['urlday']],
@@ -393,6 +395,21 @@ sub _label_label {
   }
 }
 
+sub _label_labeltitle {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  # re-direct to the right label routine for the labelyear
+  if (my $ltn = $be->get_field('labeltitlename')) {
+    $args->[0] = $ltn;
+    return $self->_label_title($citekey, $args, $labelattrs);
+  }
+  else {
+    return ['', ''];
+  }
+}
+
 sub _label_labelyear {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $secnum = $self->get_current_section;
@@ -524,13 +541,27 @@ sub _label_shorthand {
   }
 }
 
+sub _label_sortkey {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  if (my $f = $be->get_field('sortkey')) {
+    my $s = _process_label_attributes($self, $citekey, $f, $labelattrs, 'sortkey');
+    return [$s, $s];
+  }
+  else {
+    return ['', ''];
+  }
+}
+
 sub _label_title {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $title = $args->[0];
   my $be = $section->bibentry($citekey);
-  if (my $f = $be->get_field($title)) {
+  if (my $f = normalise_string_label($be->get_field($title))) {
     my $t = _process_label_attributes($self, $citekey, $f, $labelattrs, $title);
     return [$t, $t];
   }
@@ -1169,6 +1200,7 @@ sub _sort_literal {
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
 # for literal strings which need normalising
+# Same as literal but with a normalise step
 sub _sort_literaln {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $literal = $args->[0]; # get actual field

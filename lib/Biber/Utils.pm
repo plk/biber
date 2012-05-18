@@ -40,7 +40,7 @@ All functions are exported by default.
 
 our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
-  reduce_array remove_outer add_outer ucinit strip_nosort strip_noinit
+  normalise_string_label reduce_array remove_outer add_outer ucinit strip_nosort strip_noinit
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml };
@@ -288,6 +288,34 @@ sub strip_nosort {
   }
   return $string;
 }
+
+
+=head2 normalise_string_label
+
+Remove some things from a string for label generation, like braces.
+It also decodes LaTeX character macros into Unicode as this is always safe when
+normalising strings for sorting since they don't appear in the output.
+
+=cut
+
+sub normalise_string_label {
+  my $str = shift;
+  my $fieldname = shift;
+  return '' unless $str; # Sanitise missing data
+  # Replace LaTeX chars by Unicode for sorting
+  # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
+  # before we read the file (see Biber.pm)
+  unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+    $str = latex_decode($str, strip_outer_braces => 1,
+                              scheme => Biber::Config->getoption('decodecharsset'));
+  }
+  $str =~ s/^\s+//;                # Remove leading spaces
+  $str =~ s/\s+$//;                # Remove trailing spaces
+  $str =~ s/\s+/ /g;               # collapse spaces
+  $str =~ s/\A\{(.+)\}\z/$1/xms;    # Remove outer braces
+  return $str;
+}
+
 
 =head2 normalise_string_sort
 

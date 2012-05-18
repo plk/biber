@@ -519,6 +519,11 @@
       <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="customb">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="3" substring_side="left">title</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
   <!-- INHERITANCE -->
   <bcf:inheritance>
     <bcf:defaults inherit_all="true" override_target="false">
@@ -670,6 +675,7 @@
     <bcf:citekey order="32">Schnee2007a</bcf:citekey>
     <bcf:citekey order="33">LDN1</bcf:citekey>
     <bcf:citekey order="34">LDN2</bcf:citekey>
+    <bcf:citekey order="35">title1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

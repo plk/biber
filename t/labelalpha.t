@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 101;
+use Test::More tests => 102;
 
 use Biber;
 use Biber::Utils;
@@ -278,6 +278,7 @@ $bibentries = $section->bibentries;
 
 is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha disambiguation 7');
 is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCEm', 'labelalpha disambiguation 8');
+is($bibentries->entry('title1')->get_field('sortlabelalpha'), 'Tït', 'Title in braces with UTF-8 char - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 3);
@@ -331,6 +332,8 @@ is($bibentries->entry('Schnee2007')->get_field('sortlabelalpha'), 'Sch+07', 'ext
 is($main->get_extraalphadata('Schnee2007'), '2', 'extraalpha ne extrayear 6');
 is($bibentries->entry('Schnee2007a')->get_field('sortlabelalpha'), 'Sch07', 'extraalpha ne extrayear 7');
 is($main->get_extraalphadata('Schnee2007a'), '2', 'extraalpha ne extrayear 8');
+
+
 
 
 
