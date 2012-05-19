@@ -53,8 +53,6 @@ my $handlers = {
                           }
 };
 
-# Read driver config file
-my $dcfxml = driver_config('endnotexml');
 
 =head2 extract_entries
 
@@ -368,13 +366,6 @@ sub create_entry {
     }
   }
 
-  # We put all the fields we find modulo field aliases into the object.
-  # Validation happens later and is not datasource dependent
-  # the findnodes() on the entry is complex as some fields are not at the top
-  # level of the entry, which is annoying. This is a trade-off between having special handlers
-  # for the top-level nodes and forcing the right nodes to be visible to this loop, which
-  # is what we do here as these nodes have special aliases we want visible in the .dcf. If we
-  # did it all in special handlers, it would all be invisible in the .dcf
   my $itype = $entry->findvalue('./ref-type/@name');
 FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
 

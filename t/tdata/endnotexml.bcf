@@ -158,9 +158,9 @@
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" driver_defaults="1">
       <bcf:map>
-        <bcf:map_step map_type_source="conference" map_type_target="inproceedings" map_final="1"/>
-        <bcf:map_step map_type_source="electronic" map_type_target="online" map_final="1"/>
-        <bcf:map_step map_type_source="www" map_type_target="online" map_final="1"/>
+        <bcf:map_step map_type_source="conference" map_type_target="inproceedings"/>
+        <bcf:map_step map_type_source="electronic" map_type_target="online"/>
+        <bcf:map_step map_type_source="www" map_type_target="online"/>
       </bcf:map>
       <bcf:map>
         <bcf:map_step map_type_source="mastersthesis" map_type_target="thesis" map_final="1"/>

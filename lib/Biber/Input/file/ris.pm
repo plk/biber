@@ -27,19 +27,28 @@ use Data::Dump qw(dump);
 my $logger = Log::Log4perl::get_logger('main');
 my $orig_key_order = {};
 
-# Handlers for field types
-# The names of these have nothing to do whatever with the biblatex field types
-# They just started out copying them - they are categories of this specific
-# data source date types
-my %handlers = (
-                'date'     => \&_date,
-                'name'     => \&_name,
-                'range'    => \&_range,
-                'verbatim' => \&_verbatim
-);
+# Determine handlers from data model
+my $dm = Biber::Config->get_dm;
+my $handlers = {
+                'field' => {
+                            'csv'      => \&_verbatim,
+                            'date'     => \&_date,
+                            'datepart' => \&_verbatim,
+                            'entrykey' => \&_verbatim,
+                            'integer'  => \&_verbatim,
+                            'key'      => \&_verbatim,
+                            'literal'  => \&_verbatim,
+                            'range'    => \&_range,
+                            'verbatim' => \&_verbatim,
+                           },
+                'list' => {
+                           'entrykey' => \&_verbatim,
+                           'key'      => \&_verbatim,
+                           'literal'  => \&_verbatim,
+                           'name'     => \&_name,
+                          }
+};
 
-# Read driver config file
-my $dcfxml = driver_config('ris');
 
 =head2 extract_entries
 
@@ -60,6 +69,19 @@ sub extract_entries {
   my $tf;
 
   $logger->trace("Entering extract_entries() in driver 'ris'");
+
+  # Get a reference to the correct sourcemap sections, if they exist
+  my $smaps = [];
+  if (defined(Biber::Config->getoption('sourcemap'))) {
+    # User maps
+    if (my $m = first {$_->{datatype} eq 'ris' and not exists($_->{driver_defaults})} @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+    # Driver default maps
+    if (my $m = first {$_->{datatype} eq 'ris' and $_->{driver_defaults}} @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+  }
 
   # If it's a remote data file, fetch it first
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
@@ -164,7 +186,7 @@ sub extract_entries {
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, $ek;
 
-      create_entry($ek, $entry, $source);
+      create_entry($ek, $entry, $source, $smaps);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -192,7 +214,7 @@ sub extract_entries {
         $logger->debug('Parsing RIS entry object ' . $entry->{ID});
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($wanted_key, $entry, $source);
+        create_entry($wanted_key, $entry, $source, $smaps);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -210,7 +232,7 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($key, $entry, $source) = @_;
+  my ($key, $entry, $source, $smaps) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $dm = Biber::Config->get_dm;
@@ -219,207 +241,148 @@ sub create_entry {
 
   $bibentry->set_field('citekey', $key);
 
-  # Get a reference to the map option, if it exists
-  my $user_map;
-  if (defined(Biber::Config->getoption('sourcemap'))) {
-    if (my $m = first {$_->{datatype} eq 'ris'} @{Biber::Config->getoption('sourcemap')} ) {
-      $user_map = $m;
-    }
-  }
+  # Datasource mapping. We process driver defaults first and then user
+  # (see code which creates $smaps above)
+  foreach my $smap (@$smaps) {
 
-  # DATASOURCE MAPPING DEFINED BY USER IN CONFIG FILE OR .bcf
- MAP:    foreach my $map (@{$user_map->{map}}) {
-    my $last_type = $entry->{TY}; # defaults to the entrytype unless changed below
-    my $last_field = undef;
-    my $last_fieldval = undef;
+  MAP:    foreach my $map (@{$smap->{map}}) {
+      my $last_type = $entry->{TY}; # defaults to the entrytype unless changed below
+      my $last_field = undef;
+      my $last_fieldval = undef;
 
-    # Check pertype restrictions
-    unless (not exists($map->{per_type}) or
-            first {uc($_->{content}) eq $entry->{TY}} @{$map->{per_type}}) {
-      next;
-    }
-
-    # Check per_datasource restrictions
-    # Don't compare case insensitively - this might not be correct
-    unless (not exists($map->{per_datasource}) or
-            first {$_->{content} eq $source} @{$map->{per_datasource}}) {
-      next;
-    }
-
-    # loop over mapping steps
-    foreach my $step (@{$map->{map_step}}) {
-
-      # Entrytype map
-      if (my $source = $step->{map_type_source}) {
-        unless ($entry->{TY} eq uc($source)) {
-          # Skip the rest of the map if this step doesn't match
-          if ($step->{map_final}) {
-            next MAP;
-          }
-          else {
-            # just ignore this step
-            next;
-          }
-        }
-        # Change entrytype if requested
-        $last_type = $entry->{TY};
-        $entry->{TY} = uc($step->{map_type_target});
+      # Check pertype restrictions
+      unless (not exists($map->{per_type}) or
+              first {$_->{content} eq $entry->{TY}} @{$map->{per_type}}) {
+        next;
       }
 
-      # Field map
-      if (my $source = $step->{map_field_source}) {
-        unless (exists($entry->{uc($source)})) {
-          # Skip the rest of the map if this step doesn't match
-          if ($step->{map_final}) {
-            next MAP;
+      # Check per_datasource restrictions
+      # Don't compare case insensitively - this might not be correct
+      unless (not exists($map->{per_datasource}) or
+              first {$_->{content} eq $source} @{$map->{per_datasource}}) {
+        next;
+      }
+
+      # loop over mapping steps
+      foreach my $step (@{$map->{map_step}}) {
+
+        # Entrytype map
+        if (my $source = $step->{map_type_source}) {
+          unless ($entry->{TY} eq $source) {
+            # Skip the rest of the map if this step doesn't match
+            if ($step->{map_final}) {
+              next MAP;
+            }
+            else {
+              # just ignore this step
+              next;
+            }
           }
-          else {
-            # just ignore this step
-            next;
-          }
+          # Change entrytype if requested
+          $last_type = $entry->{TY};
+          $entry->{TY} = $step->{map_type_target};
         }
 
-        $last_field = $source;
-        $last_fieldval = $entry->{uc($source)};
-
-        # map fields to targets
-        if (my $m = $step->{map_match}) {
-          if (my $r = $step->{map_replace}) {
-            $entry->{uc($step->{map_field_source})} =
-                        ireplace($last_fieldval, $m, $r);
+        # Field map
+        if (my $source = $step->{map_field_source}) {
+          unless (exists($entry->{$source})) {
+            # Skip the rest of the map if this step doesn't match
+            if ($step->{map_final}) {
+              next MAP;
+            }
+            else {
+              # just ignore this step
+              next;
+            }
           }
-          else {
-            unless (imatch($last_fieldval, $m)) {
-              # Skip the rest of the map if this step doesn't match
-              if ($step->{map_final}) {
-                next MAP;
+
+          $last_field = $source;
+          $last_fieldval = $entry->{$source};
+
+          # map fields to targets
+          if (my $m = $step->{map_match}) {
+            if (my $r = $step->{map_replace}) {
+              $entry->{$step->{map_field_source}} =
+                ireplace($last_fieldval, $m, $r);
+            }
+            else {
+              unless (imatch($last_fieldval, $m)) {
+                # Skip the rest of the map if this step doesn't match
+                if ($step->{map_final}) {
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  next;
+                }
+              }
+            }
+          }
+
+          # Set to a different target if there is one
+          if (my $target = $step->{map_field_target}) {
+            if (exists($entry->{$target})) {
+              if ($map->{map_overwrite} // $smap->{map_overwrite}) {
+                biber_warn("Overwriting existing field '$target' while processing entry '$key'", $bibentry);
               }
               else {
-                # just ignore this step
+                biber_warn("Not overwriting existing field '$target' while processing entry '$key'", $bibentry);
                 next;
               }
             }
+            $entry->{$target} = $entry->{$source};
+            delete($entry->{$source});
           }
         }
 
-        # Set to a different target if there is one
-        if (my $target = $step->{map_field_target}) {
-          if (exists($entry->{uc($target)})) {
-            if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
-              biber_warn("Overwriting existing field '$target' while processing entry '$key'", $bibentry);
-            }
-            else {
-              biber_warn("Not overwriting existing field '$target' while processing entry '$key'", $bibentry);
-              next;
-            }
-          }
-          $entry->{uc($target)} = $entry->{uc($source)};
-          delete($entry->{uc($source)});
-        }
-      }
+        # field creation
+        if (my $field = $step->{map_field_set}) {
 
-      # field creation
-      if (my $field = $step->{map_field_set}) {
-
-        # Deal with special tokens
-        if ($step->{map_null}) {
-          delete($entry->{uc($field)});
-        }
-        else {
-          if (exists($entry->{uc($field)})) {
-            if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
-              biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
-            }
-            else {
-              biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
-              next;
-            }
-          }
-
-          if ($step->{map_origentrytype}) {
-            next unless $last_type;
-            $entry->{uc($field)} = $last_type;
-          }
-          elsif ($step->{map_origfieldval}) {
-            next unless $last_fieldval;
-            $entry->{uc($field)} = $last_fieldval;
-          }
-          elsif ($step->{map_origfield}) {
-            next unless $last_field;
-            $entry->{uc($field)} = $last_field;
+          # Deal with special tokens
+          if ($step->{map_null}) {
+            delete($entry->{$field});
           }
           else {
-            $entry->{uc($field)} = $step->{map_field_value};
-          }
-        }
-      }
-    }
-  }
+            if (exists($entry->{$field})) {
+              if ($map->{map_overwrite} // $smap->{map_overwrite}) {
+                biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
+              }
+              else {
+                biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
+                next;
+              }
+            }
 
-  # We put all the fields we find modulo field aliases into the object.
-  # Validation happens later and is not datasource dependent
-FLOOP:  foreach my $f (keys %$entry) {
-
-    # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
-    if (my $from = $dcfxml->{fields}{field}{$f}) {
-      my $to = $f; # By default, field to set internally is the same as data source
-      # Redirect any alias
-      if (my $aliases = $from->{alias}) { # complex aliases with alsoset clauses
-        foreach my $alias (@$aliases) {
-          if (my $t = $alias->{aliasfortype}) { # type-specific alias
-            if (lc($t) eq lc($entry->{TY})) {
-              my $a = $alias->{aliasof};
-              $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
-              $from = $dcfxml->{fields}{field}{$a};
-              $to = $a; # Field to set internally is the alias
-              last;
+            if ($step->{map_origentrytype}) {
+              next unless $last_type;
+              $entry->{$field} = $last_type;
+            }
+            elsif ($step->{map_origfieldval}) {
+              next unless $last_fieldval;
+              $entry->{$field} = $last_fieldval;
+            }
+            elsif ($step->{map_origfield}) {
+              next unless $last_field;
+              $entry->{$field} = $last_field;
+            }
+            else {
+              $entry->{$field} = $step->{map_field_value};
             }
           }
-          else {
-            my $a = $alias->{aliasof}; # global alias
-            $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
-            $from = $dcfxml->{fields}{field}{$a};
-            $to = $a; # Field to set internally is the alias
-          }
-
-          # Deal with additional fields to split information into (one->many map)
-          foreach my $alsoset (@{$alias->{alsoset}}) {
-            my $val = $alsoset->{value} // $f; # defaults to original field name if no value
-            $bibentry->set_datafield($alsoset->{target}, $val);
-          }
-
         }
       }
-      elsif (my $alias = $from->{aliasof}) { # simple alias
-        $logger->debug("Found alias '$alias' of field '$f' in entry '$key'");
-        $from = $dcfxml->{fields}{field}{$alias};
-        $to = $alias; # Field to set internally is the alias
-      }
-      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
-    }
-    # Default if no explicit way to set the field
-    else {
-      $bibentry->set_datafield($f, $entry->{$f});
     }
   }
 
-  # Driver aliases
-  if (my $ealias = $dcfxml->{entrytypes}{entrytype}{$entry->{TY}}) {
-    $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
-    foreach my $alsoset (@{$ealias->{alsoset}}) {
-      # drivers never overwrite existing fields
-      if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '" . $entry->{TY} . "' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
-        next;
-      }
-      $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
+ FLOOP:  foreach my $f (keys %$entry) {
+    # Now run any defined handler
+    if ($dm->is_field($f)) {
+      my $handler = $handlers->{$dm->get_fieldtype($f)}{$dm->get_datatype($f)};
+      &$handler($bibentry, $entry, $f, );
     }
   }
-  # No alias
-  else {
-    $bibentry->set_field('entrytype', $entry->{TY});
-  }
 
+  $bibentry->set_field('entrytype', $entry->{TY});
   $bibentry->set_field('datatype', 'ris');
   $bibentries->add_entry($key, $bibentry);
 
@@ -431,24 +394,22 @@ FLOOP:  foreach my $f (keys %$entry) {
 
 # Verbatim fields
 sub _verbatim {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = ireplace($entry->{$f}, $val_match, $val_replace);
-  $bibentry->set_datafield($to, $value);
+  my ($bibentry, $entry, $f) = @_;
+  $bibentry->set_datafield($f, $entry->{$f});
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $value = ireplace($entry->{$f}, $val_match, $val_replace);
-  $bibentry->set_datafield($to, _parse_range_list($value));
+  my ($bibentry, $entry, $f) = @_;
+  $bibentry->set_datafield($f, _parse_range_list($entry->{$f}));
   return;
 }
 
 # Date fields
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
-  my $date = ireplace($entry->{$f}, $val_match, $val_replace);
+  my ($bibentry, $entry, $f) = @_;
+  my $date = $entry->{$f};
   if ($date =~ m|\A([0-9]{4})/([0-9]{2})/([0-9]{2}/([^\n]+))\z|xms) {
     $bibentry->set_datafield('year', $1);
     $bibentry->set_datafield('month', $2);
@@ -465,11 +426,10 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key, $val_match, $val_replace) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $names = $entry->{$f};
   my $names_obj = new Biber::Entry::Names;
   foreach my $name (@$names) {
-    my $name = ireplace($name, $val_match, $val_replace);
     $logger->debug('Parsing RIS name');
     if ($name =~ m|\A([^,]+)\s*,?\s*([^,]+)?\s*,?\s*([^,]+)?\z|xms) {
       my $lastname = _join_name_parts(split(/\s+/, $1)) if $1;
@@ -518,7 +478,7 @@ sub _name {
         nameinitstring  => $nameinitstr
       );
       $names_obj->add_name($name_obj);
-      $bibentry->set_datafield($to, $names_obj);
+      $bibentry->set_datafield($f, $names_obj);
 
       # Special case
       if ($f eq 'A3') {
