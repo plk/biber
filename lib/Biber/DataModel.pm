@@ -56,50 +56,6 @@ sub new {
     if ($f->{skip_output}) {
       $self->{fieldsbyname}{$f->{content}}{skipout} = 1;
     }
-
-    # if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
-    #   $self->{$et}->{fields}{name}{$f->{content}} = 1;
-    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
-    #   $self->{$et}->{fields}{list}{$f->{content}} = 1;
-    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
-    #   $self->{$et}->{fields}{list}{$f->{content}} = 1;
-    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'entrykey') {
-    #   $self->{$et}->{fields}{list}{$f->{content}} = 1;
-    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
-    #   $self->{$et}->{fields}{literal}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'datepart') {
-    #   $self->{$et}->{fields}{datepart}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
-    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-    #   $self->{$et}->{fields}{date}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
-    #   $self->{$et}->{fields}{literal}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
-    #   $self->{$et}->{fields}{complex}{$f->{content}} = 1;
-    #   $self->{$et}->{fields}{range}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
-    #   $self->{$et}->{fields}{verbatim}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
-    #   $self->{$et}->{fields}{literal}{$f->{content}} = 1;
-    # }
-    # elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'entrykey') {
-    #   $self->{$et}->{fields}{literal}{$f->{content}} = 1;
-    # }
-
   }
 
   my $leg_ents;
@@ -184,9 +140,21 @@ sub new {
     $leg_ents->{$es}{legal_fields} = $lfs;
     $leg_ents->{$es}{constraints} = $constraints;
   }
-  $self->{legal_entrytypes} = $leg_ents;
+  $self->{entrytypesbyname} = $leg_ents;
 
   return $self;
+}
+
+=head2 is_field
+
+    Returns boolean to say if a field is a legal field
+
+=cut
+
+sub is_field {
+  my $self = shift;
+  my $field = shift;
+  return $self->{fieldsbyname}{$field} ? 1 : 0;
 }
 
 
@@ -199,7 +167,7 @@ sub new {
 sub is_entrytype {
   my $self = shift;
   my $type = shift;
-  return $self->{legal_entrytypes}{$type} ? 1 : 0;
+  return $self->{entrytypesbyname}{$type} ? 1 : 0;
 }
 
 =head2 is_field_for_entrytype
@@ -211,9 +179,9 @@ sub is_entrytype {
 sub is_field_for_entrytype {
   my $self = shift;
   my ($type, $field) = @_;
-  if ($self->{legal_entrytypes}{ALL}{legal_fields}{$field} or
-      $self->{legal_entrytypes}{$type}{legal_fields}{$field} or
-      $self->{legal_entrytypes}{$type}{legal_fields}{ALL}) {
+  if ($self->{entrytypesbyname}{ALL}{legal_fields}{$field} or
+      $self->{entrytypesbyname}{$type}{legal_fields}{$field} or
+      $self->{entrytypesbyname}{$type}{legal_fields}{ALL}) {
     return 1;
   }
   else {
@@ -347,8 +315,8 @@ sub check_mandatory_constraints {
   my @warnings;
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
-  foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{mandatory}},
-                  @{$self->{legal_entrytypes}{$et}{constraints}{mandatory}})) {
+  foreach my $c ((@{$self->{entrytypesbyname}{ALL}{constraints}{mandatory}},
+                  @{$self->{entrytypesbyname}{$et}{constraints}{mandatory}})) {
     if (ref($c) eq 'ARRAY') {
       # Exactly one of a set is mandatory
       if ($c->[0] eq 'XOR') {
@@ -408,8 +376,8 @@ sub check_conditional_constraints {
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
 
-  foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{conditional}},
-                  @{$self->{legal_entrytypes}{$et}{constraints}{conditional}})) {
+  foreach my $c ((@{$self->{entrytypesbyname}{ALL}{constraints}{conditional}},
+                  @{$self->{entrytypesbyname}{$et}{constraints}{conditional}})) {
     my $aq  = $c->[0];          # Antecedent quantifier
     my $afs = $c->[1];          # Antecedent fields
     my $cq  = $c->[2];          # Consequent quantifier
@@ -470,8 +438,8 @@ sub check_data_constraints {
   my @warnings;
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
-  foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{data}},
-                  @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
+  foreach my $c ((@{$self->{entrytypesbyname}{ALL}{constraints}{data}},
+                  @{$self->{entrytypesbyname}{$et}{constraints}{data}})) {
     # This is the datatype of the constraint, not the field!
     if ($c->{datatype} eq 'integer') {
       my $dt = $DM_DATATYPES{$c->{datatype}};

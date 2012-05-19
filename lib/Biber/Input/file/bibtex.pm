@@ -430,101 +430,17 @@ FLOOP:  foreach my $f ($entry->fieldlist) {
         $bibentry->set_field('rawoptions', $value);
       }
 
-      # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
-      # if (my $from = $dcfxml->{fields}{field}{$f}) {
-      #   my $to = $f; # By default, field to set internally is the same as data source
-
-      #   # Redirect any alias
-      #   if (my $aliases = $from->{alias}) { # complex aliases with alsoset clauses
-      #     foreach my $alias (@$aliases) {
-      #       if (my $t = $alias->{aliasfortype}) { # type-specific alias
-      #         if (lc($t) eq lc($entry->type)) {
-      #           my $a = $alias->{aliasof};
-      #           $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
-      #           # If both a field and its alias is set, warn and delete alias field
-      #           if ($entry->exists($a)) {
-      #             biber_warn("Field '$f' is aliased to field '$a' but both are defined in entry with key '$key' - skipping alias", $bibentry);
-      #             next;
-      #           }
-      #           $from = $dcfxml->{fields}{field}{$a};
-      #           $to = $a;  # Field to set internally is the alias
-      #           last;
-      #         }
-      #       }
-      #       else {
-      #         my $a = $alias->{aliasof}; # global alias
-      #         $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
-      #         # If both a field and its alias is set, warn and delete alias field
-      #         if ($entry->exists($a)) {
-      #           biber_warn("Field '$f' is aliased to field '$a' but both are defined in entry with key '$key' - skipping alias", $bibentry);
-      #           next;
-      #         }
-      #         $from = $dcfxml->{fields}{field}{$a};
-      #         $to = $a; # Field to set internally is the alias
-      #       }
-
-      #       # Deal with additional fields to split information into (one->many map)
-      #       foreach my $alsoset (@{$alias->{alsoset}}) {
-      #         # If both a field and an alsoset field are set, warn and ignore alsoset
-      #         if ($entry->exists($alsoset->{target})) {
-      #           biber_warn("Field '" . $alsoset->{target}. "' is supposed to be additionally set but it already exists - ignoring", $bibentry);
-      #           next;
-      #         }
-      #         my $val = $alsoset->{value} // $f; # defaults to original field name if no value
-      #         $bibentry->set_datafield($alsoset->{target}, $val);
-      #       }
-      #     }
-      #   }
-      #   elsif (my $alias = $from->{aliasof}) { # simple alias
-      #     $logger->debug("Found alias '$alias' of field '$f' in entry '$key'");
-      #     if ($entry->exists($alias)) {
-      #       biber_warn("Field '$f' is aliased to field '$alias' but both are defined in entry with key '$key' - skipping alias", $bibentry);
-      #       next;
-      #     }
-      #     $from = $dcfxml->{fields}{field}{$alias};
-      #     $to = $alias; # Field to set internally is the alias
-      #   }
-      #   # Now run any defined handler
-      #   &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
-
-      # }
-
       # Now run any defined handler
-#      if ($dm->is_field_for_entrytype($entry->type, $f)) {
-      if (my $handler = $handlers->{$dm->get_fieldtype($f)}{$dm->get_datatype($f)}) {
+      if ($dm->is_field($f)) {
+        my $handler = $handlers->{$dm->get_fieldtype($f)}{$dm->get_datatype($f)};
         &$handler($bibentry, $entry, $f, $key);
       }
       else {
         biber_warn("Field '$f' invalid in data model for entry '$key' - ignoring", $bibentry);
       }
-      # }
-      # # Default if no explicit way to set the field
-      # else {
-      #   my $value = decode_utf8($entry->get($f));
-      #   $bibentry->set_datafield($f, $value);
-      # }
     }
 
     $bibentry->set_field('entrytype', $entry->type);
-
-    # Driver aliases
-    # $bibentry->set_field('entrytype', $entry->type);
-    # if (my $aliases = $dm->{aliases}) {
-    #   next unless $aliases->{datatype} eq 'bibtex';
-    #   next unless $aliases->{type} eq 'entrytype';
-    #   foreach my $alias (@{$aliases->{alias}}) {
-    #     next unless $alias->{name} eq lc($entry->type);
-    #     $bibentry->set_field('entrytype', $alias->{aliasof});
-    #     foreach my $alsoset (@{$alias->{alsoset}}) {
-    #       if ($bibentry->field_exists(lc($alsoset->{asfield}))) {
-    #         biber_warn("Not overwriting existing field '" . $alsoset->{asfield} . "' during aliasing of entrytype '" . $entry->type . "' to '" . lc($alias->{aliasof}) . "' in entry '$key'", $bibentry);
-    #         next;
-    #       }
-    #       $bibentry->set_datafield($alsoset->{asfield}, $alsoset->{asvalue});
-    #     }
-    #   }
-    # }
-
     $bibentry->set_field('datatype', 'bibtex');
     $bibentries->add_entry($key, $bibentry);
   }
