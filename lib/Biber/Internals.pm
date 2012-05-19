@@ -579,11 +579,6 @@ sub _label_year {
   my $year = $args->[0];
   if (my $f = $be->get_field($year)) {
     my $y = _process_label_attributes($self, $citekey, $f, $labelattrs, $year);
-
-    # Make "in press" years look nice in alpha styles
-    if ($f =~ m/\A\s*in\s*press\s*\z/ixms) {
-      $y = 'ip';
-    }
     return [$y, $y];
   }
   else {
