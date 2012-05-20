@@ -1,11 +1,7 @@
+* TODO When driver default maps are done, put to example.bcf, all .bcfs and Constants. When biblatex has defaults to .bcf, remove Constants.
+* TODO Use Business::ISBN Business::ISSN to validate these fields in the datamodel
+* TODO Filter mode
 * TODO When biblatex implements data model section, remove greyed and add line from .bcf to remap in Figure 1 in docs
 
-* TODO Structure ALL fields need to be put into types where possible
-* TODO Zotero data sources
-  * Change Zotero driver when 2.2 comes out with real keys
-  * Zotero ATOM API? http://www.zotero.org/support/dev/start
-    [[https://api.zotero.org/users/<USERID>/items/<ITEMID>?key=<APIKEY>]]
-    gives a parseable ATOM XML with the information but it's ugly
-    [[https://api.zotero.org/users/<USERID>/items?key=<APIKEY>]] give all entries
-
+* TODO Datamodel ALL fields need to be put into types where possible
 * TODO uniquename needs changing everywhere if middlename is implemented

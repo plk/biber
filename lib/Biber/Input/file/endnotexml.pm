@@ -275,7 +275,7 @@ sub create_entry {
 
         # Field map
         if (my $source = $step->{map_field_source}) {
-          unless ($entry->exists('./' . $source)) {
+          unless ($entry->exists($source)) {
             # Skip the rest of the map if this step doesn't match
             if ($step->{map_final}) {
               next MAP;
@@ -287,13 +287,13 @@ sub create_entry {
           }
 
           $last_field = $source;
-          $last_fieldval = $entry->findvalue('./' . $source);
+          $last_fieldval = $entry->findvalue($source);
 
           # map fields to targets
           if (my $m = $step->{map_match}) {
             if (my $r = $step->{map_replace}) {
               my $text = ireplace($last_fieldval, $m, $r);
-              $entry->findnodes('./' . $source . '/style/text()')->get_node(1)->setData($text);
+              $entry->findnodes($source . '/style/text()')->get_node(1)->setData($text);
             }
             else {
               unless (imatch($last_fieldval, $m)) {
@@ -311,7 +311,7 @@ sub create_entry {
 
           # Set to a different target if there is one
           if (my $target = $step->{map_field_target}) {
-            if (my @t = $entry->findnodes('./' . $target)) {
+            if (my @t = $entry->findnodes($target)) {
               if ($map->{map_overwrite} // $smap->{map_overwrite}) {
                 biber_warn("Overwriting existing field '$target' while processing entry '$key'", $bibentry);
                 # Have to do this otherwise XML::LibXML will merge the nodes
@@ -332,7 +332,7 @@ sub create_entry {
 
           # Deal with special tokens
           if ($step->{map_null}) {
-            map {$_->unbindNode} $entry->findnodes('./' . $field);
+            map {$_->unbindNode} $entry->findnodes($field);
           }
           else {
             if ($entry->exists($field)) {
@@ -367,7 +367,7 @@ sub create_entry {
   }
 
   my $itype = $entry->findvalue('./ref-type/@name');
-FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
+  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('(./*|./titles/*|./contributors/*|./urls/web-urls/*|./dates/*)')) {
 
     # Now run any defined handler
     # There is no else clause here to warn on invalid fields as there are so many

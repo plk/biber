@@ -374,7 +374,7 @@ sub create_entry {
     }
   }
 
- FLOOP:  foreach my $f (keys %$entry) {
+  foreach my $f (keys %$entry) {
     # Now run any defined handler
     if ($dm->is_field($f)) {
       my $handler = $handlers->{$dm->get_fieldtype($f)}{$dm->get_datatype($f)};

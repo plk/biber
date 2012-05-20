@@ -418,7 +418,7 @@ sub create_entry {
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
-FLOOP:  foreach my $f ($entry->fieldlist) {
+    foreach my $f ($entry->fieldlist) {
 
       # We have to process local options as early as possible in order
       # to make them available for things that need them like parsename()

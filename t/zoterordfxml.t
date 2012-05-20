@@ -60,7 +60,6 @@ my $l1 = q|    \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journal
       \field{sortinit}{R}
       \field{labelyear}{2001}
       \field{labeltitle}{ten theses on politics}
-      \field{issn}{1092-311X}
       \field{journaltitle}{Theory \& Event}
       \field{library}{Project MUSE}
       \field{note}{Volume 5, Issue 3, 2001}
@@ -130,7 +129,6 @@ my $l3 = q|    \entry{item_54}{inbook}{}
       \field{endday}{07}
       \field{endmonth}{04}
       \field{endyear}{1996}
-      \field{isbn}{157027018}
       \field{month}{03}
       \field{title}{The Ethics of the Concern for Self as a Practice of Freedom}
       \field{year}{1996}
