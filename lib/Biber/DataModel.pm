@@ -148,13 +148,22 @@ sub new {
 =head2 is_field
 
     Returns boolean to say if a field is a legal field
+    Allows intermediate temp custom fields which are used
+    when a driver source field doesn't have an obvious 1:1 mapping
+    to a datamodel field. Such intermediates are defined in the target
+    field mapping of a sourcemap.
 
 =cut
 
 sub is_field {
   my $self = shift;
   my $field = shift;
-  return $self->{fieldsbyname}{$field} ? 1 : 0;
+  if ($field =~ m/^BIBERCUSTOM/o) {
+    return 1;
+  }
+  else {
+    return $self->{fieldsbyname}{$field} ? 1 : 0;
+  }
 }
 
 

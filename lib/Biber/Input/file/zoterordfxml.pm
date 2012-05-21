@@ -31,6 +31,12 @@ my $orig_key_order = {};
 # Determine handlers from data model
 my $dm = Biber::Config->get_dm;
 my $handlers = {
+                'CUSTOM' => {'BIBERCUSTOMpartof'      => \&_partof,
+                             'BIBERCUSTOMidentifier'  => \&_identifier,
+                             'BIBERCUSTOMpublisher'   => \&_publisher,
+                             'BIBERCUSTOMpresentedat' => \&_presentedat,
+                             'BIBERCUSTOMsubject'     => \&_subject,
+                            },
                 'field' => {
                             'csv'      => \&_csv,
                             'date'     => \&_date,
@@ -335,7 +341,6 @@ sub create_entry {
                 next;
               }
             }
-
             map {$_->setNodeName(_leaf_node($target))} $entry->findnodes($source);
           }
         }
@@ -383,9 +388,8 @@ sub create_entry {
     # Now run any defined handler
     # There is no else clause here to warn on invalid fields as there are so many
     # in zoterordfxml
-    my $fs = _strip_ns($f);
-    if ($dm->is_field($fs)) {
-      my $handler = $handlers->{$dm->get_fieldtype($fs)}{$dm->get_datatype($fs)};
+    if ($dm->is_field(_strip_ns($f))) {
+      my $handler = _get_handler($f);
       &$handler($bibentry, $entry, $f, $key, $smaps);
     }
   }
@@ -401,8 +405,93 @@ sub create_entry {
 # HANDLERS
 # ========
 
-# List fields
+# Handler for partof
+sub _partof {
+  my ($bibentry, $entry, $f, $key, $smaps) = @_;
+  my $partof = $entry->findnodes($f)->get_node(1);
+  my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
+  if ($partof->hasAttribute('rdf:resource')) { # remote ISSN resources aren't much use
+    return;
+  }
+  # For 'webpage' types ('online' biblatex type), Zotero puts in a pointless
+  # empty partof z:Website container
+  if ($itype eq 'webpage') {
+    return;
+  }
 
+  # create a dataonly entry for the partOf and add a crossref to it
+  my $crkey = $key . '_' . md5_hex($key);
+  $logger->debug("Creating a dataonly crossref '$crkey' for key '$key'");
+  my $cref = create_entry($crkey, $partof->findnodes('*')->get_node(1), $smaps);
+  $cref->set_datafield('options', 'dataonly');
+  Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $crkey);
+  Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $crkey);
+  $bibentry->set_datafield('crossref', $crkey);
+  return;
+}
+
+# identifier
+sub _identifier {
+  my ($bibentry, $entry, $f) = @_;
+  if (my $url = $entry->findnodes("./$f/dcterms:URI/rdf:value")->get_node(1)) {
+    $bibentry->set_datafield('url', $url->textContent());
+  }
+  else {
+    foreach my $id_node ($entry->findnodes($f)) {
+      if ($id_node->textContent() =~ m/\A(ISSN|ISBN|DOI)\s(.+)\z/) {
+        $bibentry->set_datafield(lc($1), $2);
+      }
+    }
+  }
+  return;
+}
+
+# Publisher
+sub _publisher {
+  my ($bibentry, $entry, $f) = @_;
+  if (my $org = $entry->findnodes("./$f/foaf:Organization")->get_node(1)) {
+    # There is an address, set location.
+    # Location is a list field in bibaltex, hence the array ref
+    if (my $adr = $org->findnodes('./vcard:adr')->get_node(1)) {
+      $bibentry->set_datafield('location', [ $adr->findvalue('./vcard:Address/vcard:locality') ]);
+    }
+    # set publisher
+    # publisher is a list field in bibaltex, hence the array ref
+    if (my $adr = $org->findnodes('./foaf:name')->get_node(1)) {
+      $bibentry->set_datafield('publisher', [ $adr->textContent() ]);
+    }
+  }
+  return;
+}
+
+# presentedAt
+sub _presentedat {
+  my ($bibentry, $entry, $f) = @_;
+  if (my $conf = $entry->findnodes("./$f/bib:Conference")->get_node(1)) {
+    $bibentry->set_datafield('eventtitle', $conf->findvalue('./dc:title'));
+  }
+  return;
+}
+
+# subject
+sub _subject {
+  my ($bibentry, $entry, $f) = @_;
+  if (my $lib = $entry->findnodes("./$f/dcterms:LCC/rdf:value")->get_node(1)) {
+    # This overrides any z:libraryCatalog node
+    $bibentry->set_datafield('library', $lib->textContent());
+  }
+  elsif (my @s = $entry->findnodes("./$f")) {
+    my @kws;
+    foreach my $s (@s) {
+      push @kws, '{'.$s->textContent().'}';
+    }
+    $bibentry->set_datafield('keywords', join(',', @kws));
+  }
+  return;
+}
+
+
+# List fields
 sub _list {
   my ($bibentry, $entry, $f) = @_;
   my $value = $entry->findvalue($f);
@@ -410,92 +499,18 @@ sub _list {
   return;
 }
 
-# literal fields
+# Literal fields
 sub _literal {
-  my ($bibentry, $entry, $f, $key, $smaps) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
 
-  # dcterms:isPartOf
-  if (_strip_ns($f) eq 'usera') {
-    my $partof = $entry->findnodes($f)->get_node(1);
-    my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
-    if ($partof->hasAttribute('rdf:resource')) { # remote ISSN resources aren't much use
-      return;
-    }
-    # For 'webpage' types ('online' biblatex type), Zotero puts in a pointless
-    # empty partof z:Website container
-    if ($itype eq 'webpage') {
-      return;
-    }
+  # Special case - libraryCatalog is used only if hasn't already been set
+  # by LCC
+  if (_strip_ns($f) eq 'library') {
+    return if $bibentry->get_field('library');
+  }
 
-    # create a dataonly entry for the partOf and add a crossref to it
-    my $crkey = $key . '_' . md5_hex($key);
-    $logger->debug("Creating a dataonly crossref '$crkey' for key '$key'");
-    my $cref = create_entry($crkey, $partof->findnodes('*')->get_node(1), $smaps);
-    $cref->set_datafield('options', 'dataonly');
-    Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $crkey);
-    Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $crkey);
-    $bibentry->set_datafield('crossref', $crkey);
-  }
-  # dc:identifier into
-  elsif (_strip_ns($f) eq 'userb') {
-    if (my $url = $entry->findnodes("./$f/dcterms:URI/rdf:value")->get_node(1)) {
-      $bibentry->set_datafield('url', $url->textContent());
-    }
-    else {
-      foreach my $id_node ($entry->findnodes($f)) {
-        if ($id_node->textContent() =~ m/\A(ISSN|ISBN|DOI)\s(.+)\z/) {
-          $bibentry->set_datafield(lc($1), $2);
-        }
-      }
-    }
-  }
-  # dc:publisher
-  elsif (_strip_ns($f) eq 'userc') {
-    my ($bibentry, $entry, $f) = @_;
-    if (my $org = $entry->findnodes("./$f/foaf:Organization")->get_node(1)) {
-      # There is an address, set location.
-      # Location is a list field in bibaltex, hence the array ref
-      if (my $adr = $org->findnodes('./vcard:adr')->get_node(1)) {
-        $bibentry->set_datafield('location', [ $adr->findvalue('./vcard:Address/vcard:locality') ]);
-      }
-      # set publisher
-      # publisher is a list field in bibaltex, hence the array ref
-      if (my $adr = $org->findnodes('./foaf:name')->get_node(1)) {
-        $bibentry->set_datafield('publisher', [ $adr->textContent() ]);
-      }
-    }
-  }
-  # bib:presentedAt
-  elsif (_strip_ns($f) eq 'userd') {
-    my ($bibentry, $entry, $f) = @_;
-    if (my $conf = $entry->findnodes("./$f/bib:Conference")->get_node(1)) {
-      $bibentry->set_datafield('eventtitle', $conf->findvalue('./dc:title'));
-    }
-  }
-  # dc:subject
-  elsif (_strip_ns($f) eq 'usere') {
-    my ($bibentry, $entry, $f) = @_;
-    if (my $lib = $entry->findnodes("./$f/dcterms:LCC/rdf:value")->get_node(1)) {
-      # This overrides any z:libraryCatalog node
-      $bibentry->set_datafield('library', $lib->textContent());
-    }
-    elsif (my @s = $entry->findnodes("./$f")) {
-      my @kws;
-      foreach my $s (@s) {
-        push @kws, '{'.$s->textContent().'}';
-      }
-      $bibentry->set_datafield('keywords', join(',', @kws));
-    }
-  }
-  else {
-    # Special case - libraryCatalog is used only if hasn't already been set
-    # by LCC
-    if (_strip_ns($f) eq 'library') {
-      return if $bibentry->get_field('library');
-    }
-    my $value = $entry->findvalue($f);
-    $bibentry->set_datafield(_strip_ns($f), $value);
-  }
+  my $value = $entry->findvalue($f);
+  $bibentry->set_datafield(_strip_ns($f), $value);
   return;
 }
 
@@ -671,6 +686,17 @@ sub _leaf_node {
 sub _strip_ns {
   my $node = shift;
   return $node =~ s|^[^:]+:||r;
+}
+
+
+sub _get_handler {
+  my $field = shift;
+  if (my $h = $handlers->{CUSTOM}{_strip_ns($field)}) {
+    return $h;
+  }
+  else {
+    return $handlers->{$dm->get_fieldtype(_strip_ns($field))}{$dm->get_datatype(_strip_ns($field))};
+  }
 }
 
 

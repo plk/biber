@@ -34,6 +34,7 @@ Readonly::Scalar our $NS => 'bib';
 # Determine handlers from data model
 my $dm = Biber::Config->get_dm;
 my $handlers = {
+                'CUSTOM' => {'related' => \&_related},
                 'field' => {
                             'csv'      => \&_literal,
                             'date'     => \&_date,
@@ -292,7 +293,7 @@ sub create_entry {
 
     # Now run any defined handler
     if ($dm->is_field(_norm($f))) {
-      my $handler = $handlers->{$dm->get_fieldtype(_norm($f))}{$dm->get_datatype(_norm($f))};
+      my $handler = _get_handler($f);
       &$handler($bibentry, $entry, $f, $key);
     }
     else {
@@ -714,6 +715,16 @@ sub _norm {
   my $name = lc(shift);
   $name =~ s/\A$NS://xms;
   return $name;
+}
+
+sub _get_handler {
+  my $field = shift;
+  if (my $h = $handlers->{CUSTOM}{_norm($field)}) {
+    return $h;
+  }
+  else {
+    return $handlers->{$dm->get_fieldtype(_norm($field))}{$dm->get_datatype(_norm($field))};
+  }
 }
 
 

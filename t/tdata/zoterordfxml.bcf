@@ -457,15 +457,15 @@
         <bcf:map_step map_field_source="z:language"          map_field_target="language"/>
         <bcf:map_step map_field_source="z:version"           map_field_target="version"/>
         <bcf:map_step map_field_source="z:libraryCatalog"    map_field_target="library"/>
-        <bcf:map_step map_field_source="dcterms:isPartOf"    map_field_target="usera"/>
-        <bcf:map_step map_field_source="dc:identifier"       map_field_target="userb"/>
-        <bcf:map_step map_field_source="dc:publisher"        map_field_target="userc"/>
-        <bcf:map_step map_field_source="bib:presentedAt"     map_field_target="userd"/>
-        <bcf:map_step map_field_source="dc:subject"          map_field_target="usere"/>
+        <bcf:map_step map_field_source="dcterms:isPartOf"    map_field_target="BIBERCUSTOMpartof"/>
+        <bcf:map_step map_field_source="dc:identifier"       map_field_target="BIBERCUSTOMidentifier"/>
+        <bcf:map_step map_field_source="dc:publisher"        map_field_target="BIBERCUSTOMpublisher"/>
+        <bcf:map_step map_field_source="bib:presentedAt"     map_field_target="BIBERCUSTOMpresentedat"/>
+        <bcf:map_step map_field_source="dc:subject"          map_field_target="BIBERCUSTOMsubject"/>
         <!-- fields describing crossref entrytypes -->
-        <bcf:map_step map_field_source="dcterms:usera/bib:Journal"    map_field_target="dcterms:usera/periodical"/>
-        <bcf:map_step map_field_source="dcterms:usera/bib:Book"    map_field_target="dcterms:usera/book"/>
-        <bcf:map_step map_field_source="dcterms:usera/bib:ConferenceProceedings"    map_field_target="dcterms:usera/proceedings"/>
+        <bcf:map_step map_field_source="dcterms:BIBERCUSTOMpartof/bib:Journal"    map_field_target="dcterms:BIBERCUSTOMpartof/periodical"/>
+        <bcf:map_step map_field_source="dcterms:BIBERCUSTOMpartof/bib:Book"    map_field_target="dcterms:BIBERCUSTOMpartof/book"/>
+        <bcf:map_step map_field_source="dcterms:BIBERCUSTOMpartof/bib:ConferenceProceedings"    map_field_target="dcterms:BIBERCUSTOMpartof/proceedings"/>
       </bcf:map>
     </bcf:maps>
   </bcf:sourcemap>

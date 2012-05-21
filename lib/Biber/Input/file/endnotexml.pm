@@ -373,7 +373,7 @@ sub create_entry {
     # There is no else clause here to warn on invalid fields as there are so many
     # in Endnote
     if ($dm->is_field($f)) {
-      my $handler = $handlers->{$dm->get_fieldtype($f)}{$dm->get_datatype($f)};
+      my $handler = _get_handler($f);
       &$handler($bibentry, $entry, $f, $key);
     }
   }
@@ -814,6 +814,16 @@ sub _norm {
   $t =~ s/\A[\n\s]+//xms;
   $t =~ s/[\n\s]+\z//xms;
   return $t;
+}
+
+sub _get_handler {
+  my $field = shift;
+  if (my $h = $handlers->{CUSTOM}{$field}) {
+    return $h;
+  }
+  else {
+    return $handlers->{$dm->get_fieldtype($field)}{$dm->get_datatype($field)};
+  }
 }
 
 1;

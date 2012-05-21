@@ -377,7 +377,7 @@ sub create_entry {
   foreach my $f (keys %$entry) {
     # Now run any defined handler
     if ($dm->is_field($f)) {
-      my $handler = $handlers->{$dm->get_fieldtype($f)}{$dm->get_datatype($f)};
+      my $handler = _get_handler($f);
       &$handler($bibentry, $entry, $f, );
     }
   }
@@ -550,6 +550,15 @@ sub _parse_range_list {
   return [[$start, $end]];
 }
 
+sub _get_handler {
+  my $field = shift;
+  if (my $h = $handlers->{CUSTOM}{$field}) {
+    return $h;
+  }
+  else {
+    return $handlers->{$dm->get_fieldtype($field)}{$dm->get_datatype($field)};
+  }
+}
 
 1;
 
