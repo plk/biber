@@ -27,6 +27,7 @@
         <ref name="debug"/>
         <ref name="mincrossrefs"/>
         <ref name="sortcase"/>
+        <ref name="sortfirstinits"/>
         <optional>
           <ref name="sortlocale"/>
         </optional>
@@ -1429,6 +1430,22 @@
       </attribute>
       <element name="bcf:key">
         <value>sortcase</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="sortfirstinits">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>sortfirstinits</value>
       </element>
       <element name="bcf:value">
         <choice>

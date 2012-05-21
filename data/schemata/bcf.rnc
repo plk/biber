@@ -16,6 +16,7 @@ start =
       debug,
       mincrossrefs,
       sortcase,
+      sortfirstinits,
       sortlocale?,
       sortupper
     },
@@ -573,6 +574,12 @@ sortcase =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "sortcase" },
+    element bcf:value { "0" | "1" }
+  }
+sortfirstinits =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "sortfirstinits" },
     element bcf:value { "0" | "1" }
   }
 alphaothers =
