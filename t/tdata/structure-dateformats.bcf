@@ -585,12 +585,6 @@
     </bcf:sort>
   </bcf:sorting>
   <bcf:datamodel>
-    <bcf:datetypes>
-      <bcf:datetype>date</bcf:datetype>
-      <bcf:datetype>origdate</bcf:datetype>
-      <bcf:datetype>eventdate</bcf:datetype>
-      <bcf:datetype>urldate</bcf:datetype>
-    </bcf:datetypes>
     <bcf:entrytypes>
       <bcf:entrytype>article</bcf:entrytype>
       <bcf:entrytype>artwork</bcf:entrytype>
@@ -704,7 +698,7 @@
       <bcf:field fieldtype="field" datatype="literal">iswc</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">journalsubtitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">journaltitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="special">keywords</bcf:field>
+      <bcf:field fieldtype="field" datatype="csv">keywords</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">label</bcf:field>
       <bcf:field fieldtype="list" datatype="key">language</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">library</bcf:field>
@@ -728,7 +722,7 @@
       <bcf:field fieldtype="field" datatype="key">namectype</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">note</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">number</bcf:field>
-      <bcf:field fieldtype="field" datatype="special">options</bcf:field>
+      <bcf:field fieldtype="field" datatype="csv">options</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">organization</bcf:field>
       <bcf:field fieldtype="field" datatype="date">origdate</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">origday</bcf:field>

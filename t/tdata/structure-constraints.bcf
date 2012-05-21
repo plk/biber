@@ -566,12 +566,6 @@
     </bcf:sort>
   </bcf:sorting>
   <bcf:datamodel>
-    <bcf:datetypes>
-      <bcf:datetype>date</bcf:datetype>
-      <bcf:datetype>origdate</bcf:datetype>
-      <bcf:datetype>eventdate</bcf:datetype>
-      <bcf:datetype>urldate</bcf:datetype>
-    </bcf:datetypes>
     <bcf:entrytypes>
       <bcf:entrytype>eta</bcf:entrytype>
       <bcf:entrytype>etb</bcf:entrytype>
