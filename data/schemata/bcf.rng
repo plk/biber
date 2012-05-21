@@ -467,14 +467,6 @@
       <optional>
         <!-- Data model specification -->
         <element name="bcf:datamodel">
-          <!-- Valid datetypes -->
-          <element name="bcf:datetypes">
-            <oneOrMore>
-              <element name="bcf:datetype">
-                <text/>
-              </element>
-            </oneOrMore>
-          </element>
           <!-- Valid entrytypes -->
           <element name="bcf:entrytypes">
             <oneOrMore>
@@ -509,7 +501,7 @@
                     <value>verbatim</value>
                     <value>integer</value>
                     <value>range</value>
-                    <value>special</value>
+                    <value>csv</value>
                   </choice>
                 </attribute>
                 <optional>

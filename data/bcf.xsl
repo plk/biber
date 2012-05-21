@@ -331,7 +331,14 @@
           <hr/>
           <h3>Datasource Mappings</h3>
           <xsl:for-each select="/bcf:controlfile/bcf:sourcemap/bcf:maps">
-            <h4>Mappings for datatype <xsl:value-of select="./@datatype"/> (default overwrite = <xsl:value-of select="./@map_overwrite"/>)</h4>
+            <h4><xsl:choose>
+              <xsl:when test="./@driver_defaults">Driver default</xsl:when>
+              <xsl:otherwise>User</xsl:otherwise>
+              </xsl:choose> Mappings for datatype <xsl:value-of select="./@datatype"/> (default overwrite = 
+            <xsl:choose>
+              <xsl:when test="./@map_overwrite">1</xsl:when>
+              <xsl:otherwise>0</xsl:otherwise>
+            </xsl:choose>)</h4>
             <xsl:for-each select="./bcf:map">
               <table>
                 <thead>

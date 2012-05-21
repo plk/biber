@@ -182,10 +182,6 @@ start =
     sorting,
     # Data model specification
     element bcf:datamodel {
-      # Valid datetypes
-      element bcf:datetypes {
-        element bcf:datetype { text }+
-      },
       # Valid entrytypes
       element bcf:entrytypes {
         element bcf:entrytype { text }+
@@ -197,7 +193,7 @@ start =
           # fieldtype is "field" or "list"
           attribute fieldtype { "field" | "list" },
           # datatype of field content
-          attribute datatype { "literal" | "datepart" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "special" },
+          attribute datatype { "literal" | "datepart" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" },
           # Are we allowed to output a null field value to the .bbl for this field?
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?
