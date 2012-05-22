@@ -11,6 +11,9 @@ use Biber::Output::bbl;
 use Log::Log4perl;
 chdir("t/tdata") ;
 
+SKIP: {
+        skip "BIBER_SKIP_DEV_TESTS env var is set, skipping remote tests", 3 if $ENV{BIBER_SKIP_DEV_TESTS};
+
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
 my $LEVEL = 'ERROR';
@@ -144,4 +147,4 @@ is( $out->get_output_entry($main,'citeulike:8283461'), $cu1, 'Fetch from citeuli
 is( $out->get_output_entry($main,'AbdelbarH98'), $dl1, 'Fetch from plain bib download') ;
 is( $out->get_output_entry($main,'jung_alchemical_????'), $ssl, 'HTTPS test') ;
 
-
+}
