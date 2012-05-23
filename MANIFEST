@@ -73,9 +73,9 @@ t/sections.t
 t/sections-complex.t
 t/encoding.t
 t/crossrefs.t
-t/structure-dateformats.t
+t/dm-dateformats.t
 t/bibtex-aliases.t
-t/structure-constraints.t
+t/dm-constraints.t
 t/related-entries.t
 t/sortlists.t
 t/endnotexml.t
@@ -111,7 +111,7 @@ t/tdata/sections4.bib
 t/tdata/names.bcf
 t/tdata/biblatexml.bcf
 t/tdata/general2.bcf
-t/tdata/structure-dateformats.bcf
+t/tdata/dm-dateformats.bcf
 t/tdata/general1.bcf
 t/tdata/extrayear.bcf
 t/tdata/extratitle.bcf
@@ -123,7 +123,7 @@ t/tdata/sortlists.bcf
 t/tdata/sortlists.bib
 t/tdata/sort-uc.bcf
 t/tdata/sort-case.bcf
-t/tdata/structure-dateformats.bib
+t/tdata/dm-dateformats.bib
 t/tdata/extrayear.bib
 t/tdata/extratitle.bib
 t/tdata/labelalpha.bib
@@ -165,8 +165,8 @@ t/tdata/uniqueness4.bcf
 t/tdata/uniqueness5.bcf
 t/tdata/bibtex-aliases.bcf
 t/tdata/bibtex-aliases.bib
-t/tdata/structure-constraints.bcf
-t/tdata/structure-constraints.bib
+t/tdata/dm-constraints.bcf
+t/tdata/dm-constraints.bib
 t/tdata/ris.bcf
 t/tdata/ris1.ris
 t/tdata/zotero.rdf
