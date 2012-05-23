@@ -750,6 +750,8 @@
     <bcf:entryfields>
       <bcf:entrytype>ALL</bcf:entrytype>
       <bcf:field>abstract</bcf:field>
+      <bcf:field>isbn</bcf:field>
+      <bcf:field>issn</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>set</bcf:entrytype>
@@ -964,6 +966,15 @@
         </bcf:consequent>
       </bcf:constraint>
     </bcf:constraints>
+    <bcf:constraints>
+      <bcf:entrytype>ALL</bcf:entrytype>
+      <bcf:constraint type="data" datatype="isbn">
+        <bcf:field>isbn</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="issn">
+        <bcf:field>issn</bcf:field>
+      </bcf:constraint>
+    </bcf:constraints>
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
@@ -978,6 +989,8 @@
     <bcf:citekey order="6">c6</bcf:citekey>
     <bcf:citekey order="7">c7</bcf:citekey>
     <bcf:citekey order="8">c8</bcf:citekey>
+    <bcf:citekey order="9">c9</bcf:citekey>
+    <bcf:citekey order="10">c10</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

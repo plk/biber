@@ -437,7 +437,7 @@ sub check_conditional_constraints {
 =head2 check_data_constraints
 
     Checks constraints of type "data" on entry and
-    returns an arry of warnings, if any
+    returns an array of warnings, if any
 
 =cut
 
@@ -450,7 +450,33 @@ sub check_data_constraints {
   foreach my $c ((@{$self->{entrytypesbyname}{ALL}{constraints}{data}},
                   @{$self->{entrytypesbyname}{$et}{constraints}{data}})) {
     # This is the datatype of the constraint, not the field!
-    if ($c->{datatype} eq 'integer') {
+    if ($c->{datatype} eq 'isbn') {
+      foreach my $f (@{$c->{fields}}) {
+        if (my $fv = $be->get_field($f)) {
+          require Business::ISBN;
+          my $isbn = Business::ISBN->new($fv);
+          if (not $isbn) {
+            push @warnings, "Invalid ISBN for value of field '$f' in '$key'";
+          }
+          # Business::ISBN has an error() method so we might get more information
+          elsif (not $isbn->is_valid) {
+            push @warnings, "Invalid ISBN for value of field '$f' in '$key' (" . $isbn->error. ')';
+          }
+        }
+      }
+    }
+    elsif ($c->{datatype} eq 'issn') {
+      foreach my $f (@{$c->{fields}}) {
+        if (my $fv = $be->get_field($f)) {
+          require Business::ISSN;
+          my $issn = Business::ISSN->new($fv);
+          unless ($issn and $issn->is_valid) {
+            push @warnings, "Invalid ISSN for value of field '$f' in '$key'";
+          }
+        }
+      }
+    }
+    elsif ($c->{datatype} eq 'integer') {
       my $dt = $DM_DATATYPES{$c->{datatype}};
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {

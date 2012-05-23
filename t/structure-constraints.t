@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 
 use Biber;
 use Biber::Output::bbl;
@@ -63,6 +63,9 @@ my $c8 = [ "Constraint violation - none of fields (field4) must exist when none 
            "Constraint violation - one of fields (field10, field11) must exist when none of fields (field8, field9) exist",
            "Constraint violation - all of fields (field12, field13) must exist when none of fields (field6) exist" ];
 
+my $c10 = [ "Invalid ISBN for value of field 'isbn' in 'c10'",
+            "Invalid ISSN for value of field 'issn' in 'c10'" ];
+
 is_deeply($bibentries->entry('c1')->get_field('warnings'), $c1, 'Constraints test 1' );
 is_deeply($bibentries->entry('c2')->get_field('warnings'), $c2, 'Constraints test 2' );
 is_deeply($bibentries->entry('c3')->get_field('warnings'), $c3, 'Constraints test 3a' );
@@ -77,4 +80,5 @@ is_deeply($bibentries->entry('c7')->get_field('warnings'), $c7, 'Constraints tes
 ok(is_undef($bibentries->entry('c7')->get_field('field7')), 'Constraints test 7b' );
 is_deeply($bibentries->entry('c8')->get_field('warnings'), $c8, 'Constraints test 8a' );
 ok(is_undef($bibentries->entry('c8')->get_field('field4')), 'Constraints test 8b' );
-
+ok(is_undef($bibentries->entry('c9')->get_field('warnings')), 'Constraints test 9' );
+is_deeply($bibentries->entry('c10')->get_field('warnings'), $c10, 'Constraints test 10' );

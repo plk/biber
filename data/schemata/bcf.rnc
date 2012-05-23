@@ -247,7 +247,7 @@ start =
             (attribute type { "data" },
               # datespec is a BibLaTeX date range specification
               # range* attributes are for limiting integer type range
-              attribute datatype { "integer" | "datespec" }?,
+              attribute datatype { "integer" | "datespec" | "isbn" | "issn" }?,
               attribute rangemin { xsd:int }?,
               attribute rangemax { xsd:int }?,                                      
               element bcf:field { text }+

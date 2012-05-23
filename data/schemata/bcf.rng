@@ -637,6 +637,8 @@
                           <choice>
                             <value>integer</value>
                             <value>datespec</value>
+                            <value>isbn</value>
+                            <value>issn</value>
                           </choice>
                         </attribute>
                       </optional>
