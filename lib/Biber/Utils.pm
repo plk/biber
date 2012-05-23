@@ -309,11 +309,7 @@ sub normalise_string_label {
     $str = latex_decode($str, strip_outer_braces => 1,
                               scheme => Biber::Config->getoption('decodecharsset'));
   }
-  $str =~ s/^\s+//;                # Remove leading spaces
-  $str =~ s/\s+$//;                # Remove trailing spaces
-  $str =~ s/\s+/ /g;               # collapse spaces
-  $str =~ s/\A\{(.+)\}\z/$1/xms;    # Remove outer braces
-  return $str;
+  return normalise_string_common($str);
 }
 
 
