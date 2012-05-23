@@ -106,8 +106,6 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \field{origyear}{1943}
       \field{title}{Fabulous Fourier Forms}
       \field{year}{1974}
-      \warn{\item Field 'school' is aliased to field 'institution' but both are defined in entry with key 'cr2' - skipping alias}
-      \warn{\item Field 'school' invalid in data model for entry 'cr2' - ignoring}
     \endentry
 |;
 
@@ -153,8 +151,6 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \field{origyear}{1934}
       \field{title}{Arrangements of All Articles}
       \field{year}{1996}
-      \warn{\item Field 'archiveprefix' is aliased to field 'eprinttype' but both are defined in entry with key 'cr3' - skipping alias}
-      \warn{\item Field 'archiveprefix' invalid in data model for entry 'cr3' - ignoring}
     \endentry
 |;
 

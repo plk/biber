@@ -364,10 +364,10 @@ sub create_entry {
             if (my $target = $step->{map_field_target}) {
               if ($entry->exists(lc($target))) {
                 if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                  biber_warn("Overwriting existing field '$target' while processing entry '$key'", $bibentry);
+                  $logger->debug("Overwriting existing field '$target' while processing entry '$key'");
                 }
                 else {
-                  biber_warn("Field '$source' is aliased to field '$target' but both are defined in entry with key '$key' - skipping alias", $bibentry);
+                  $logger->debug("Field '$source' is aliased to field '$target' but both are defined in entry with key '$key' - skipping alias");
 
                   next;
                 }
@@ -387,10 +387,10 @@ sub create_entry {
             else {
               if ($entry->exists(lc($field))) {
                 if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                  biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
+                  $logger->debug("Overwriting existing field '$field' while processing entry '$key'");
                 }
                 else {
-                  biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
+                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
                   next;
                 }
               }
@@ -435,7 +435,7 @@ sub create_entry {
         my $handler = _get_handler($f);
         &$handler($bibentry, $entry, $f, $key);
       }
-      else {
+      elsif (Biber::Config->getoption('validate_datamodel')) {
         biber_warn("Field '$f' invalid in data model for entry '$key' - ignoring", $bibentry);
       }
     }

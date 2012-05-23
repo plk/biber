@@ -88,7 +88,6 @@ my $l2 = q|    \entry{test2}{inbook}{}
       \field{title}{Sometitle}
       \field{pages}{1\bibrangedash 20}
       \keyw{somevalue}
-      \warn{\item Overwriting existing field 'KW' while processing entry 'test2'}
     \endentry
 |;
 

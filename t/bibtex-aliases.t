@@ -47,15 +47,12 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $w1 = [
-          "Field 'school' is aliased to field 'institution' but both are defined in entry with key 'alias2' - skipping alias",
-          "Field 'school' invalid in data model for entry 'alias2' - ignoring",
+my $w1 = ["Field 'school' invalid in data model for entry 'alias2' - ignoring",
           "Entry 'alias2' - invalid entry type 'thing' - defaulting to 'misc'",
           "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'",
 ];
 
-my $w2 = ["Overwriting existing field 'VERBC' while processing entry 'alias4'",
-          "Entry 'alias4' - invalid field 'author' for entrytype 'customa'",
+my $w2 = ["Entry 'alias4' - invalid field 'author' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprint' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'eprinttype' for entrytype 'customa'",
           "Entry 'alias4' - invalid field 'namea' for entrytype 'customa'",

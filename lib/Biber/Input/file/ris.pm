@@ -323,10 +323,10 @@ sub create_entry {
           if (my $target = $step->{map_field_target}) {
             if (exists($entry->{$target})) {
               if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                biber_warn("Overwriting existing field '$target' while processing entry '$key'", $bibentry);
+                $logger->debug("Overwriting existing field '$target' while processing entry '$key'");
               }
               else {
-                biber_warn("Not overwriting existing field '$target' while processing entry '$key'", $bibentry);
+                $logger->debug("Not overwriting existing field '$target' while processing entry '$key'");
                 next;
               }
             }
@@ -345,10 +345,10 @@ sub create_entry {
           else {
             if (exists($entry->{$field})) {
               if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
+                $logger->debug("Overwriting existing field '$field' while processing entry '$key'");
               }
               else {
-                biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
+                $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
                 next;
               }
             }

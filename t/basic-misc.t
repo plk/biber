@@ -166,7 +166,6 @@ my $murray1 = q|    \entry{murray}{article}{}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
       \keyw{keyw1, keyw2}
-      \warn{\item Not overwriting existing field 'TITLE' while processing entry 'murray'}
     \endentry
 |;
 
@@ -221,7 +220,6 @@ my $murray2 = q|    \entry{murray}{article}{}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
       \keyw{keyw1, keyw2}
-      \warn{\item Not overwriting existing field 'TITLE' while processing entry 'murray'}
     \endentry
 |;
 
@@ -285,8 +283,6 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \field{year}{1835}
       \field{pages}{111\bibrangedash 118}
       \keyw{arc}
-      \warn{\item Not overwriting existing field 'KEYWORDS' while processing entry 'anon1'}
-      \warn{\item Not overwriting existing field 'TITLE' while processing entry 'anon1'}
     \endentry
 |;
 
@@ -312,8 +308,6 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \field{year}{1839}
       \field{pages}{1176\bibrangedash 1276}
       \keyw{arc}
-      \warn{\item Not overwriting existing field 'KEYWORDS' while processing entry 'anon2'}
-      \warn{\item Not overwriting existing field 'TITLE' while processing entry 'anon2'}
     \endentry
 |;
 
