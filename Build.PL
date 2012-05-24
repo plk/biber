@@ -59,6 +59,9 @@ my $builder = $class->new(
         'Text::BibTeX' => '0.63',
         'LWP::Simple' => 0,
         'LWP::Protocol::https' => 0,
+        'Business::ISBN' => 0,
+        'Business::ISSN' => 0,
+        'Business::ISMN' => 0,
         'perl' => '5.14.0'
     },
     recommends => {

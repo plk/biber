@@ -536,47 +536,31 @@
               not be visible in one place which fields were valid for an entrytype.
             -->
             <element name="bcf:entryfields">
-              <choice>
+              <zeroOrMore>
                 <element name="bcf:entrytype">
-                  <value>ALL</value>
+                  <text/>
                 </element>
-                <oneOrMore>
-                  <element name="bcf:entrytype">
-                    <text/>
-                  </element>
-                </oneOrMore>
-              </choice>
-              <choice>
+              </zeroOrMore>
+              <oneOrMore>
                 <element name="bcf:field">
-                  <value>ALL</value>
+                  <text/>
                 </element>
-                <oneOrMore>
-                  <element name="bcf:field">
-                    <text/>
-                  </element>
-                </oneOrMore>
-              </choice>
+              </oneOrMore>
             </element>
           </oneOrMore>
           <oneOrMore>
             <!-- Constraints on field (co-)existence and format -->
             <element name="bcf:constraints">
-              <!--
-                Set of entrytypes that this constraint applies to
-                An entrytype can be specified in multiple constraints
-                
-                Special entrytype "ALL" can be used to cover, well, all entrytypes ...
-              -->
-              <choice>
+              <zeroOrMore>
+                <!--
+                  Set of entrytypes that this constraint applies to
+                  An entrytype can be specified in multiple constraints
+                  
+                -->
                 <element name="bcf:entrytype">
-                  <value>ALL</value>
+                  <text/>
                 </element>
-                <oneOrMore>
-                  <element name="bcf:entrytype">
-                    <text/>
-                  </element>
-                </oneOrMore>
-              </choice>
+              </zeroOrMore>
               <zeroOrMore>
                 <!-- A constraint specification -->
                 <element name="bcf:constraint">
@@ -639,6 +623,7 @@
                             <value>datespec</value>
                             <value>isbn</value>
                             <value>issn</value>
+                            <value>ismn</value>
                           </choice>
                         </attribute>
                       </optional>
@@ -677,7 +662,8 @@
                             <oneOrMore>
                               <element name="bcf:field">
                                 <optional>
-                                  <attribute name="coerce">
+                                  <!-- In case there are more than one, flag the preferred one -->
+                                  <attribute name="preferred">
                                     <value>true</value>
                                   </attribute>
                                 </optional>
@@ -688,7 +674,7 @@
                           <!--
                             An OR set of fields so you can enforce:
                             
-                            One (possibly more of fields a,b,c must exist
+                            One (possibly more) of fields a,b,c must exist
                           -->
                           <element name="bcf:fieldor">
                             <oneOrMore>
