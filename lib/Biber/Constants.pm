@@ -383,7 +383,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                  ],
   entryfields => [
                    {
-                     entrytype => [{ content => "ALL" }],
                      field => [
                        { content => "abstract" },
                        { content => "annotation" },
@@ -1341,10 +1340,6 @@ our %CONFIG_DEFAULT_BIBLATEX =
                        { content => "urlmonth" },
                        { content => "urlyear" },
                      ],
-                   },
-                   {
-                     entrytype => [{ content => "xdata" }],
-                     field => [{ content => "ALL" }],
                    },
                  ],
   entrytypes  => {

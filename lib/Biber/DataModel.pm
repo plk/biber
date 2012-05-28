@@ -66,9 +66,16 @@ sub new {
     my $lfs;
     foreach my $ef (@{$dm->{entryfields}}) {
       # Found a section describing legal fields for entrytype
-      if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$ef->{entrytype}}) {
+      if (not exists($ef->{entrytype}) or
+          grep {$_->{content} eq $es} @{$ef->{entrytype}}) {
         foreach my $f (@{$ef->{field}}) {
           $lfs->{$f->{content}} = 1;
+        }
+      }
+      # no fields section for entrytype which means all fields
+      else {
+        foreach my $f (keys %{$self->{fieldsbyname}}) {
+          $lfs->{$self->{fieldsbyname}{$f}} = 1;
         }
       }
     }
@@ -77,7 +84,8 @@ sub new {
     my $constraints;
     foreach my $cd (@{$dm->{constraints}}) {
       # Found a section describing constraints for entrytype
-      if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$cd->{entrytype}}) {
+      if (not exists($cd->{entrytype}) or
+          grep {$_->{content} eq $es} @{$cd->{entrytype}}) {
         foreach my $c (@{$cd->{constraint}}) {
           if ($c->{type} eq 'mandatory') {
             # field
@@ -89,8 +97,8 @@ sub new {
             foreach my $fxor (@{$c->{fieldxor}}) {
               my $xorset;
               foreach my $f (@{$fxor->{field}}) {
-                if ($f->{coerce}) {
-                  # put the default override element at the front and flag it
+                if ($f->{preferred}) {
+                  # put the preferred field at the front so if it's there, it's found first
                   unshift @$xorset, $f->{content};
                 }
                 else {
@@ -188,9 +196,7 @@ sub is_entrytype {
 sub is_field_for_entrytype {
   my $self = shift;
   my ($type, $field) = @_;
-  if ($self->{entrytypesbyname}{ALL}{legal_fields}{$field} or
-      $self->{entrytypesbyname}{$type}{legal_fields}{$field} or
-      $self->{entrytypesbyname}{$type}{legal_fields}{ALL}) {
+  if ($self->{entrytypesbyname}{$type}{legal_fields}{$field}) {
     return 1;
   }
   else {
@@ -324,8 +330,7 @@ sub check_mandatory_constraints {
   my @warnings;
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
-  foreach my $c ((@{$self->{entrytypesbyname}{ALL}{constraints}{mandatory}},
-                  @{$self->{entrytypesbyname}{$et}{constraints}{mandatory}})) {
+  foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{mandatory}}) {
     if (ref($c) eq 'ARRAY') {
       # Exactly one of a set is mandatory
       if ($c->[0] eq 'XOR') {
@@ -385,8 +390,7 @@ sub check_conditional_constraints {
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
 
-  foreach my $c ((@{$self->{entrytypesbyname}{ALL}{constraints}{conditional}},
-                  @{$self->{entrytypesbyname}{$et}{constraints}{conditional}})) {
+  foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{conditional}}) {
     my $aq  = $c->[0];          # Antecedent quantifier
     my $afs = $c->[1];          # Antecedent fields
     my $cq  = $c->[2];          # Consequent quantifier
@@ -447,8 +451,7 @@ sub check_data_constraints {
   my @warnings;
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
-  foreach my $c ((@{$self->{entrytypesbyname}{ALL}{constraints}{data}},
-                  @{$self->{entrytypesbyname}{$et}{constraints}{data}})) {
+  foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{data}}) {
     # This is the datatype of the constraint, not the field!
     if ($c->{datatype} eq 'isbn') {
       foreach my $f (@{$c->{fields}}) {
@@ -472,6 +475,17 @@ sub check_data_constraints {
           my $issn = Business::ISSN->new($fv);
           unless ($issn and $issn->is_valid) {
             push @warnings, "Invalid ISSN for value of field '$f' in '$key'";
+          }
+        }
+      }
+    }
+    elsif ($c->{datatype} eq 'ismn') {
+      foreach my $f (@{$c->{fields}}) {
+        if (my $fv = $be->get_field($f)) {
+          require Business::ISMN;
+          my $ismn = Business::ISMN->new($fv);
+          unless ($ismn and $ismn->is_valid) {
+            push @warnings, "Invalid ISMN for value of field '$f' in '$key'";
           }
         }
       }

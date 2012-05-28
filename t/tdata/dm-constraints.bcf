@@ -748,14 +748,9 @@
       <bcf:field fieldtype="field" datatype="literal">field14</bcf:field>
     </bcf:fields>
     <bcf:entryfields>
-      <bcf:entrytype>ALL</bcf:entrytype>
       <bcf:field>abstract</bcf:field>
       <bcf:field>isbn</bcf:field>
       <bcf:field>issn</bcf:field>
-    </bcf:entryfields>
-    <bcf:entryfields>
-      <bcf:entrytype>set</bcf:entrytype>
-      <bcf:field>ALL</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>eta</bcf:entrytype>
@@ -813,7 +808,6 @@
       <bcf:field>journaltitle</bcf:field>
     </bcf:entryfields>
     <bcf:constraints>
-      <bcf:entrytype>ALL</bcf:entrytype>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
         <bcf:field>month</bcf:field>
       </bcf:constraint>
@@ -967,7 +961,6 @@
       </bcf:constraint>
     </bcf:constraints>
     <bcf:constraints>
-      <bcf:entrytype>ALL</bcf:entrytype>
       <bcf:constraint type="data" datatype="isbn">
         <bcf:field>isbn</bcf:field>
       </bcf:constraint>

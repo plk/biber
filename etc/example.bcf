@@ -883,7 +883,6 @@
       <bcf:field fieldtype="field" datatype="datepart">year</bcf:field>
     </bcf:fields>
     <bcf:entryfields>
-      <bcf:entrytype>ALL</bcf:entrytype>
       <bcf:field>abstract</bcf:field>
       <bcf:field>annotation</bcf:field>
       <bcf:field>authortype</bcf:field>
@@ -1801,10 +1800,6 @@
       <bcf:field>urlmonth</bcf:field>
       <bcf:field>urlyear</bcf:field>
     </bcf:entryfields>
-    <bcf:entryfields>
-      <bcf:entrytype>xdata</bcf:entrytype>
-      <bcf:field>ALL</bcf:field>
-    </bcf:entryfields>
     <bcf:constraints>
       <bcf:entrytype>article</bcf:entrytype>
       <bcf:entrytype>book</bcf:entrytype>
@@ -1833,7 +1828,7 @@
       <bcf:entrytype>unpublished</bcf:entrytype>
       <bcf:constraint type="mandatory">
         <bcf:fieldxor>
-          <bcf:field coerce="true">date</bcf:field>
+          <bcf:field preferred="true">date</bcf:field>
           <bcf:field>year</bcf:field>
         </bcf:fieldxor>
       </bcf:constraint>

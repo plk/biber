@@ -210,19 +210,15 @@ start =
       # so that one could share information, this would be hard to manage and confusing as it
       # not be visible in one place which fields were valid for an entrytype.
       element bcf:entryfields {
-        (element bcf:entrytype { "ALL" } |
-         element bcf:entrytype { text }+),
-        (element bcf:field { "ALL" } |
-         element bcf:field { text }+)
+         element bcf:entrytype { text }*,
+         element bcf:field { text }+
       }+,
       # Constraints on field (co-)existence and format
       element bcf:constraints {
         # Set of entrytypes that this constraint applies to
         # An entrytype can be specified in multiple constraints
         #
-        # Special entrytype "ALL" can be used to cover, well, all entrytypes ...
-        (element bcf:entrytype { "ALL" } |
-         element bcf:entrytype { text }+),    
+        element bcf:entrytype { text }*,
         # A constraint specification
         element bcf:constraint {
           (
@@ -247,7 +243,7 @@ start =
             (attribute type { "data" },
               # datespec is a BibLaTeX date range specification
               # range* attributes are for limiting integer type range
-              attribute datatype { "integer" | "datespec" | "isbn" | "issn" }?,
+              attribute datatype { "integer" | "datespec" | "isbn" | "issn" | "ismn" }?,
               attribute rangemin { xsd:int }?,
               attribute rangemax { xsd:int }?,                                      
               element bcf:field { text }+
@@ -260,13 +256,14 @@ start =
                 # One (but not more) of fields a,b,c must exist
                 element bcf:fieldxor {
                   element bcf:field {
-                    attribute coerce { "true" }?,
+                    # In case there are more than one, flag the preferred one
+                    attribute preferred { "true" }?,
                     text
                   }+
                 } |
                 # An OR set of fields so you can enforce:
                 #
-                # One (possibly more of fields a,b,c must exist
+                # One (possibly more) of fields a,b,c must exist
                 element bcf:fieldor {
                   element bcf:field { text }+
                 }
