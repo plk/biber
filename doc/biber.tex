@@ -546,9 +546,9 @@ an example config file which displays the Biber defaults:
   <nostdmacros>0</nostdmacros>
   <nosort>
     <!-- strip prefices like 'El-' when sorting name fields -->
-    <option name="type_names" value="\A\p{L}{2}\p{Pd}"/>
+    <option name="type_name" value="\A\p{L}{2}\p{Pd}"/>
     <!-- strip diacritics when sorting name fields -->
-    <option name="type_names" value="[\x{2bf}\x{2018}]"/>
+    <option name="type_name" value="[\x{2bf}\x{2018}]"/>
   </nosort>
   <onlylog>0</onlylog>
   <quiet>0</quiet>
@@ -1060,9 +1060,9 @@ in names which should not be considered when sorting. Given (the default):
 \begin{lstlisting}[language=xml]
 <nosort>
   <!-- strip prefices like 'al-' when sorting names -->
-  <option name="type_names" value="\A\p{L}{2}\p{Pd}"/>
+  <option name="type_name" value="\A\p{L}{2}\p{Pd}"/>
   <!-- strip diacritics when sorting names -->
-  <option name="type_names" value="[\x{2bf}\x{2018}]"/>
+  <option name="type_name" value="[\x{2bf}\x{2018}]"/>
 </nosort>
 \end{lstlisting}
 
