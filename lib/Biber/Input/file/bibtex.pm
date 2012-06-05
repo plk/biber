@@ -783,8 +783,6 @@ sub preprocess_file {
     $logger->trace("Buffer after decoding -> '$buf'");
     File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
         or biber_error("Can't write $ufilename");
-
-    $logger->info('Finished Decoding LaTeX character macros into UTF-8');
   }
 
   return $ufilename;

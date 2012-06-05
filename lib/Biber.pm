@@ -510,11 +510,7 @@ sub parse_ctrlfile {
   Biber::Config->setblxoption('sorting', $sorting);
 
   # DATAMODEL schema (always global)
-  # This should not be optional any more when biblatex implements this so take
-  # out this conditional
-  if (exists($bcfxml->{datamodel})) {
-    Biber::Config->setblxoption('datamodel', $bcfxml->{datamodel});
-  }
+  Biber::Config->setblxoption('datamodel', $bcfxml->{datamodel});
 
   # SECTIONS
   # This is also where we set data files as these are associated with a bib section

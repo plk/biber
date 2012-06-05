@@ -569,6 +569,7 @@
       <bcf:sortitem order="2">0000</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
+  <!-- DATA MODEL -->
   <bcf:datamodel>
     <bcf:entrytypes>
       <bcf:entrytype>eta</bcf:entrytype>

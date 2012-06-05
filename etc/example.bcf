@@ -1980,12 +1980,15 @@
       <bcf:constraint type="data" datatype="issn">
         <bcf:field>issn</bcf:field>
       </bcf:constraint>
+      <bcf:constraint type="data" datatype="ismn">
+        <bcf:field>ismn</bcf:field>
+      </bcf:constraint>
     </bcf:constraints>
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">bibdata1</bcf:datasource>
-    <bcf:datasource type="file" datatype="bibtex">bibdata2</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">bibdata1.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">bibdata2.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">Key1</bcf:citekey>

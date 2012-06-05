@@ -14,7 +14,7 @@ chdir("t/tdata");
 
 # Set up Biber object
 my $biber = Biber->new( configfile => 'biber-test.conf');
-my $LEVEL = 'ERROR';
+my $LEVEL = 'DEBUG';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
     log4perl.category.screen                           = $LEVEL, Screen
