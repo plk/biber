@@ -624,6 +624,7 @@
                             <value>isbn</value>
                             <value>issn</value>
                             <value>ismn</value>
+                            <value>pattern</value>
                           </choice>
                         </attribute>
                       </optional>
@@ -636,6 +637,9 @@
                         <attribute name="rangemax">
                           <data type="int"/>
                         </attribute>
+                      </optional>
+                      <optional>
+                        <attribute name="pattern"/>
                       </optional>
                       <oneOrMore>
                         <element name="bcf:field">

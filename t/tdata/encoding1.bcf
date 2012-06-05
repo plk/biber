@@ -745,7 +745,6 @@
       <bcf:field fieldtype="field" datatype="date">date</bcf:field>
       <bcf:field fieldtype="field" datatype="date">eventdate</bcf:field>
       <bcf:field fieldtype="field" datatype="date">origdate</bcf:field>
-
       <bcf:field fieldtype="field" datatype="date">urldate</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">doi</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">eprint</bcf:field>
