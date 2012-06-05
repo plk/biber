@@ -205,6 +205,7 @@ matrix for the recent versions.
 \toprule
 Biber version & \BibLaTeX\ version\\
 \midrule
+1.0 & 2.0x\\
 0.9.9 & 1.7x\\
 0.9.8 & 1.7x\\
 0.9.7 & 1.7x\\
@@ -283,16 +284,14 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   \bibfield{ABSTRACT} fields completely. See section \ref{map}
 \item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of»
-  etc. (\BibLaTeX\ support coming in \BibLaTeX\ 2.x)
-\item Customisable labels (\BibLaTeX\ support coming in
-  \BibLaTeX\ 2.x)
+  etc.
+\item Customisable labels
 \item Multiple bibliography lists in the same section with different
-  sorting and filtering (\BibLaTeX\ support coming in \BibLaTeX\ 2.x)
+  sorting and filtering
 \item No more restriction to a static data model of specific fields and
-  entrytypes. (\BibLaTeX\ support coming in \BibLaTeX\ 2.x)
+  entrytypes
 \item Structural validation of the data against the data model with a
-  customisable validation model (\BibLaTeX\ support coming in
-  \BibLaTeX\ 2.x)
+  customisable validation model
 \end{itemize}
 
 \noindent Figure \ref{fig:overview} shows the main functional units of
@@ -575,23 +574,18 @@ which is described in section \ref{map}.
 
 \subsubsection{The \texttt{sourcemap} option}\label{map}
 
-The supplied data source drivers implement a default mapping from data
-source entrytypes and fields into the \BibLaTeX\ data
-model\footnote{The \BibLaTeX\ data model is currently static and
-  defined in the \BibLaTeX\ manual. In the future (\BibLaTeX\
-  2.x), the data model will be dynamically defined by the user.}. If you
-want to override or augment the driver mappings you can use the \opt{sourcemap}
-option which makes it possible to, for example, have a data source with
-non-standard entrytypes or fields and to have these automatically mapped
-into other entrytypes/fields without modifying your data source.
-Essentially, this alters the source data stream which
-Biber uses to build the internal \BibLaTeX\ data model and is an automatic
-way of editing the datasource as it is read by Biber.
+The data source drivers implement a mapping from data source
+entrytypes and fields into the \BibLaTeX\ data model. If you want to
+override or augment the driver mappings you can use the
+\opt{sourcemap} option which makes it possible to, for example, have a
+data source with non-standard entrytypes or fields and to have these
+automatically mapped into other entrytypes/fields without modifying
+your data source.  Essentially, this alters the source data stream
+which Biber uses to build the internal \BibLaTeX\ data model and is an
+automatic way of editing the datasource as it is read by Biber.
 
 Figure \ref{fig:biber-mdf} is a graphical overview of the data flow for
-data model information. In \BibLaTeX\ 2.x, the greyed static \BibLaTeX\
-data model will be replaced by a dynamic data model read from the
-\verb+.bcf+ control file. See Figure \ref{fig:overview} for a more complete
+data model information. See Figure \ref{fig:overview} for a more complete
 overview of Biber's processing steps.
 
 \begin{figure}[!htpb]
@@ -603,9 +597,10 @@ overview of Biber's processing steps.
     \node[file] (conf) [below of=remap,  node distance=7em] {data model mapping\\from Biber config file} edge [->,dashed] (remap);
     \node[funit] (parser) [right of=remap, node distance=8em] {parser} edge [<-,very thick] (remap);
     \node[funit] (validation) [right of=parser, node distance=8em] {validation} edge [<-,very thick] (parser);
-    \node[file] (hard) [above of=validation, node distance=8em] {static \BibLaTeX\\data model} edge [->,dashed] (parser) edge [->,dashed] (validation);
+    \node[file] (hard) [above of=validation, node distance=8em]
+    {\BibLaTeX\ data\\model from \texttt{.bcf}} edge [->,dashed]
+    (parser) edge [->,dashed] (remap) edge [->,dashed] (validation);
     \node[file] (bbl) [right of=parser, node distance=16em] {output file} edge [<-,very thick] (validation);
-    \node[rectangle, draw=gray, fill=grey!40, opacity=0.4, fit=(hard), inner sep=1em] {};
   \end{tikzpicture}
   \caption{Model data flow in Biber}
   \label{fig:biber-mdf}
