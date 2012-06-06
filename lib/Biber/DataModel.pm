@@ -97,13 +97,7 @@ sub new {
             foreach my $fxor (@{$c->{fieldxor}}) {
               my $xorset;
               foreach my $f (@{$fxor->{field}}) {
-                if ($f->{preferred}) {
-                  # put the preferred field at the front so if it's there, it's found first
-                  unshift @$xorset, $f->{content};
-                }
-                else {
-                  push @$xorset, $f->{content};
-                }
+                push @$xorset, $f->{content};
               }
               unshift @$xorset, 'XOR';
               push @{$constraints->{mandatory}}, $xorset;

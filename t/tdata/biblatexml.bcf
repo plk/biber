@@ -1760,7 +1760,7 @@
       <bcf:entrytype>unpublished</bcf:entrytype>
       <bcf:constraint type="mandatory">
         <bcf:fieldxor>
-          <bcf:field preferred="true">date</bcf:field>
+          <bcf:field>date</bcf:field>
           <bcf:field>year</bcf:field>
         </bcf:fieldxor>
       </bcf:constraint>

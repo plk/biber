@@ -255,11 +255,7 @@ start =
                 #
                 # One (but not more) of fields a,b,c must exist
                 element bcf:fieldxor {
-                  element bcf:field {
-                    # In case there are more than one, flag the preferred one
-                    attribute preferred { "true" }?,
-                    text
-                  }+
+                  element bcf:field { text }+
                 } |
                 # An OR set of fields so you can enforce:
                 #

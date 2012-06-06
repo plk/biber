@@ -662,12 +662,6 @@
                           <element name="bcf:fieldxor">
                             <oneOrMore>
                               <element name="bcf:field">
-                                <optional>
-                                  <!-- In case there are more than one, flag the preferred one -->
-                                  <attribute name="preferred">
-                                    <value>true</value>
-                                  </attribute>
-                                </optional>
                                 <text/>
                               </element>
                             </oneOrMore>
