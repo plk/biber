@@ -647,12 +647,20 @@
       <bcf:field fieldtype="field" datatype="literal">booktitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">booktitleaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">chapter</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">day</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">edition</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eid</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">endday</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">endmonth</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">entrysubtype</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprintclass</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprinttype</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">eventday</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">eventendday</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">eventendmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">eventmonth</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">eventyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">execute</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">gender</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">howpublished</bcf:field>
@@ -675,10 +683,16 @@
       <bcf:field fieldtype="field" datatype="literal">mainsubtitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">maintitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">maintitleaddon</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">month</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">nameaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">note</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">number</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">origday</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">origendday</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">origendmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">origmonth</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">origtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">origyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">pagetotal</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">part</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">related</bcf:field>
@@ -694,6 +708,11 @@
       <bcf:field fieldtype="field" datatype="literal">subtitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">title</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">titleaddon</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">urlday</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">urlendday</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">urlendmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">urlmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">urlyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">usera</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userb</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userc</bcf:field>
@@ -704,6 +723,11 @@
       <bcf:field fieldtype="field" datatype="literal">version</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">volume</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">volumes</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">year</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" nullok="true">urlendyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" nullok="true">endyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" nullok="true">eventendyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" nullok="true">origendyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sorttitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortshorthand</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortyear</bcf:field>
@@ -758,6 +782,7 @@
       <bcf:field fieldtype="field" datatype="entrykey">crossref</bcf:field>
       <bcf:field fieldtype="field" datatype="entrykey">xref</bcf:field>
       <bcf:field fieldtype="list" datatype="entrykey" skip_output="true">xdata</bcf:field>
+      <bcf:field fieldtype="list" datatype="entrykey" skip_output="true">ids</bcf:field>
       <bcf:field fieldtype="field" datatype="date">date</bcf:field>
       <bcf:field fieldtype="field" datatype="date">eventdate</bcf:field>
       <bcf:field fieldtype="field" datatype="date">origdate</bcf:field>
@@ -769,30 +794,6 @@
       <bcf:field fieldtype="field" datatype="verbatim">verba</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verbb</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verbc</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">day</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">endday</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">eventday</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">eventendday</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">origday</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">origendday</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">urlday</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">urlendday</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">month</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">endmonth</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">eventmonth</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">eventendmonth</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">origmonth</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">origendmonth</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">urlmonth</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">urlendmonth</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">year</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">eventyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">origyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">urlyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart" nullok="true">urlendyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart" nullok="true">endyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart" nullok="true">eventendyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart" nullok="true">origendyear</bcf:field>
       <bcf:field fieldtype="field" datatype="csv">keywords</bcf:field>
       <bcf:field fieldtype="field" datatype="csv" skip_output="true">options</bcf:field>
       <bcf:field fieldtype="field" datatype="range">pages</bcf:field>
@@ -1898,8 +1899,18 @@
       <bcf:constraint type="data" datatype="ismn">
         <bcf:field>ismn</bcf:field>
       </bcf:constraint>
+      <bcf:constraint type="data" datatype="date">
+        <bcf:field>date</bcf:field>
+        <bcf:field>eventdate</bcf:field>
+        <bcf:field>origdate</bcf:field>
+        <bcf:field>urldate</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="pattern" pattern="(?:sf|sm|sn|pf|pm|pn|pp)">
+        <bcf:field>gender</bcf:field>
+      </bcf:constraint>
     </bcf:constraints>
-  </bcf:datamodel>  <!-- SECTION 0 -->
+  </bcf:datamodel>
+  <!-- SECTION 0 -->
   <bcf:bibdata section="0">
     <bcf:datasource type="file" datatype="bibtex">names.bib</bcf:datasource>
   </bcf:bibdata>

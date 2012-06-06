@@ -140,6 +140,7 @@ sub new {
             $data->{datatype} = $c->{datatype};
             $data->{rangemin} = $c->{rangemin};
             $data->{rangemax} = $c->{rangemax};
+            $data->{pattern} = $c->{pattern};
             push @{$constraints->{data}}, $data;
           }
         }
@@ -491,7 +492,7 @@ sub check_data_constraints {
       }
     }
     elsif ($c->{datatype} eq 'integer') {
-      my $dt = $DM_DATATYPES{$c->{datatype}};
+      my $dt = $DM_DATATYPES{'integer'};
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
           unless ( $fv =~ /$dt/ ) {
@@ -516,74 +517,74 @@ sub check_data_constraints {
         }
       }
     }
-  }
-  return @warnings;
-}
+    elsif ($c->{datatype} eq 'date') {
+      # Perform content validation checks on date components by trying to
+      # instantiate a Date::Simple object.
+      foreach my $f (@{$self->get_fields_of_type('field', 'date')}) {
+        my ($d) = $f =~ m/\A(.*)date\z/xms;
+        # Don't bother unless this type of date is defined (has a year)
+        next unless $be->get_datafield($d . 'year');
 
-=head2 check_date_components
+        # When checking date components not split from date fields, have ignore the value
+        # of an explicit YEAR field as it is allowed to be an arbitrary string
+        # so we just set it to any valid value for the test
+        my $byc;
+        my $byc_d; # Display value for errors so as not to confuse people
+        if ($d eq '' and not $be->get_field('datesplit')) {
+          $byc = '1900';        # Any valid value is fine
+          $byc_d = 'YYYY';
+        }
+        else {
+          $byc = $be->get_datafield($d . 'year')
+        }
 
-     Perform content validation checks on date components by trying to
-     instantiate a Date::Simple object.
-
-=cut
-
-sub check_date_components {
-  my $self = shift;
-  my $be = shift;
-  my @warnings;
-  my $et = $be->get_field('entrytype');
-  my $key = $be->get_field('citekey');
-
-  foreach my $f (@{$self->get_fields_of_type('field', 'date')}) {
-    my ($d) = $f =~ m/\A(.*)date\z/xms;
-    # Don't bother unless this type of date is defined (has a year)
-    next unless $be->get_datafield($d . 'year');
-
-    # When checking date components not split from date fields, have ignore the value
-    # of an explicit YEAR field as it is allowed to be an arbitrary string
-    # so we just set it to any valid value for the test
-    my $byc;
-    my $byc_d; # Display value for errors so as not to confuse people
-    if ($d eq '' and not $be->get_field('datesplit')) {
-      $byc = '1900'; # Any valid value is fine
-      $byc_d = 'YYYY';
-    }
-    else {
-      $byc = $be->get_datafield($d . 'year')
-    }
-
-    # Begin date
-    if ($byc) {
-      my $bm = $be->get_datafield($d . 'month') || 'MM';
-      my $bmc = $bm  eq 'MM' ? '01' : $bm;
-      my $bd = $be->get_datafield($d . 'day') || 'DD';
-      my $bdc = $bd  eq 'DD' ? '01' : $bd;
-      $logger->debug("Checking '${d}date' date value '$byc/$bmc/$bdc' for key '$key'");
-      unless (Date::Simple->new("$byc$bmc$bdc")) {
-        push @warnings, "Invalid date value '" .
-          ($byc_d || $byc) .
+        # Begin date
+        if ($byc) {
+          my $bm = $be->get_datafield($d . 'month') || 'MM';
+          my $bmc = $bm  eq 'MM' ? '01' : $bm;
+          my $bd = $be->get_datafield($d . 'day') || 'DD';
+          my $bdc = $bd  eq 'DD' ? '01' : $bd;
+          $logger->debug("Checking '${d}date' date value '$byc/$bmc/$bdc' for key '$key'");
+          unless (Date::Simple->new("$byc$bmc$bdc")) {
+            push @warnings, "Invalid date value '" .
+              ($byc_d || $byc) .
                 "/$bm/$bd' - ignoring its components in entry '$key'";
-        $be->del_datafield($d . 'year');
-        $be->del_datafield($d . 'month');
-        $be->del_datafield($d . 'day');
-        next;
+            $be->del_datafield($d . 'year');
+            $be->del_datafield($d . 'month');
+            $be->del_datafield($d . 'day');
+            next;
+          }
+        }
+        # End date
+        # defined and some value - end*year can be empty but defined in which case,
+        # we don't need to validate
+        if (my $eyc = $be->get_datafield($d . 'endyear')) {
+          my $em = $be->get_datafield($d . 'endmonth') || 'MM';
+          my $emc = $em  eq 'MM' ? '01' : $em;
+          my $ed = $be->get_datafield($d . 'endday') || 'DD';
+          my $edc = $ed  eq 'DD' ? '01' : $ed;
+          $logger->debug("Checking '${d}date' date value '$eyc/$emc/$edc' for key '$key'");
+          unless (Date::Simple->new("$eyc$emc$edc")) {
+            push @warnings, "Invalid date value '$eyc/$em/$ed' - ignoring its components in entry '$key'";
+            $be->del_datafield($d . 'endyear');
+            $be->del_datafield($d . 'endmonth');
+            $be->del_datafield($d . 'endday');
+            next;
+          }
+        }
       }
     }
-    # End date
-    # defined and some value - end*year can be empty but defined in which case,
-    # we don't need to validate
-    if (my $eyc = $be->get_datafield($d . 'endyear')) {
-      my $em = $be->get_datafield($d . 'endmonth') || 'MM';
-      my $emc = $em  eq 'MM' ? '01' : $em;
-      my $ed = $be->get_datafield($d . 'endday') || 'DD';
-      my $edc = $ed  eq 'DD' ? '01' : $ed;
-      $logger->debug("Checking '${d}date' date value '$eyc/$emc/$edc' for key '$key'");
-      unless (Date::Simple->new("$eyc$emc$edc")) {
-        push @warnings, "Invalid date value '$eyc/$em/$ed' - ignoring its components in entry '$key'";
-        $be->del_datafield($d . 'endyear');
-        $be->del_datafield($d . 'endmonth');
-        $be->del_datafield($d . 'endday');
-        next;
+    elsif ($c->{datatype} eq 'pattern') {
+      my $patt;
+      unless ($patt = $c->{pattern}) {
+        push @warnings, "Pattern constraint has no pattern!";
+      }
+      foreach my $f (@{$c->{fields}}) {
+        if (my $fv = $be->get_field($f)) {
+          unless (imatch($fv, $patt)) {
+            push @warnings, "Invalid value (pattern match fails) for field '$f' in entry '$key'";
+          }
+        }
       }
     }
   }

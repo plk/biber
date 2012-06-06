@@ -47,7 +47,8 @@ my $c1 = [ "Entry 'c1' - invalid entry type 'badtype' - defaulting to 'misc'" ];
 my $c2 = [ "Field 'badfield' invalid in data model for entry 'c2' - ignoring",
            "Entry 'c2' - invalid field 'journaltitle' for entrytype 'eta'",
            "Missing mandatory field 'author' in entry 'c2'" ];
-my $c3 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'c3'" ];
+my $c3 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'c3'",
+           "Invalid value (pattern match fails) for field 'gender' in entry 'c3'" ];
 my $c4 = [ "Invalid value of field 'month' must be '<=12' - ignoring field in entry 'c4'",
            "Invalid value of field 'field1' must be '>=5' - ignoring field in entry 'c4'" ];
 # There would also have been a date+year constraint violation in the next test if

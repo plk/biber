@@ -1002,11 +1002,6 @@ sub validate_datamodel {
       foreach my $warning ($dm->check_data_constraints($be)) {
         biber_warn($warning, $be);
       }
-
-      # Date constraints
-      foreach my $warning ($dm->check_date_components($be)) {
-        biber_warn($warning, $be);
-      }
     }
   }
 }

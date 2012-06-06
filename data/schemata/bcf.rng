@@ -613,17 +613,14 @@
                         <value>data</value>
                       </attribute>
                       <optional>
-                        <!--
-                          datespec is a BibLaTeX date range specification
-                          range* attributes are for limiting integer type range
-                        -->
+                        <!-- range* attributes are for limiting integer type range -->
                         <attribute name="datatype">
                           <choice>
                             <value>integer</value>
-                            <value>datespec</value>
                             <value>isbn</value>
                             <value>issn</value>
                             <value>ismn</value>
+                            <value>date</value>
                             <value>pattern</value>
                           </choice>
                         </attribute>

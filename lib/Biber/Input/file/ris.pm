@@ -33,7 +33,6 @@ my $handlers = {
                 'field' => {
                             'csv'      => \&_verbatim,
                             'date'     => \&_date,
-                            'datepart' => \&_verbatim,
                             'entrykey' => \&_verbatim,
                             'integer'  => \&_verbatim,
                             'key'      => \&_verbatim,

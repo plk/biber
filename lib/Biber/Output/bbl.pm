@@ -357,14 +357,13 @@ sub set_output_entry {
   foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
                            @{$dm->get_fields_of_type('field', 'key')},
                            @{$dm->get_fields_of_datatype('integer')},
-                           @{$dm->get_fields_of_type('field', 'literal')},
-                           @{$dm->get_fields_of_datatype('datepart')}) {
+                           @{$dm->get_fields_of_type('field', 'literal')}) {
     next if $dm->field_is_skipout($lfield);
     if ( ($dm->field_is_nullok($lfield) and
           $be->field_exists($lfield)) or
          $be->get_field($lfield) ) {
       # we skip outputting the crossref or xref when the parent is not cited
-      # (biblatex manual, section 2.23)
+      # (biblatex manual, section 2.2.3)
       # sets are a special case so always output crossref/xref for them since their
       # children will always be in the .bbl otherwise they make no sense.
       unless ( $bee eq 'set') {

@@ -1,8 +1,10 @@
 % Not a valid type
+% Valid gender
 @BADTYPE{c1,
   AUTHOR      = {Clive Constraint},
   TITLE       = {Limits of Things},
   DATE        = {2003-10-01},
+  GENDER      = {sm}
 }
 
 % Completely nonexistent field and field (alias) not valid for this type
@@ -18,13 +20,15 @@
 
 % Datatype constraint - wrong month format
 % Randomly named field
+% Invalid gender
 @ETB{c3,
   AUTHOR      = {Clive Constraint},
   TITLE       = {Limits of Things},
   JOURNAL     = {Some journal},
   YEAR        = {2003},
   MONTH       = {WRONG FORMAT},
-  FIELD1      = {7}
+  FIELD1      = {7},
+  GENDER      = {zz}
 }
 
 % Datatype constraint - wrong month format (range)

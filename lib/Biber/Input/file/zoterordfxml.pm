@@ -40,7 +40,6 @@ my $handlers = {
                 'field' => {
                             'csv'      => \&_csv,
                             'date'     => \&_date,
-                            'datepart' => \&_literal,
                             'entrykey' => \&_literal,
                             'integer'  => \&_literal,
                             'key'      => \&_literal,
