@@ -494,7 +494,6 @@
                 <attribute name="datatype">
                   <choice>
                     <value>literal</value>
-                    <value>datepart</value>
                     <value>name</value>
                     <value>key</value>
                     <value>entrykey</value>
@@ -503,6 +502,7 @@
                     <value>integer</value>
                     <value>range</value>
                     <value>csv</value>
+                    <value>code</value>
                   </choice>
                 </attribute>
                 <optional>

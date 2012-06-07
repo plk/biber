@@ -357,7 +357,8 @@ sub set_output_entry {
   foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
                            @{$dm->get_fields_of_type('field', 'key')},
                            @{$dm->get_fields_of_datatype('integer')},
-                           @{$dm->get_fields_of_type('field', 'literal')}) {
+                           @{$dm->get_fields_of_type('field', 'literal')},
+                           @{$dm->get_fields_of_type('field', 'code')}) {
     next if $dm->field_is_skipout($lfield);
     if ( ($dm->field_is_nullok($lfield) and
           $be->field_exists($lfield)) or

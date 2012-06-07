@@ -36,6 +36,7 @@ my $dm = Biber::Config->get_dm;
 my $handlers = {
                 'field' => {
                             'csv'      => \&_csv,
+                            'code'     => \&_literal,
                             'date'     => \&_date,
                             'entrykey' => \&_literal,
                             'integer'  => \&_literal,

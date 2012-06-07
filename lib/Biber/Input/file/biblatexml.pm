@@ -37,6 +37,7 @@ my $handlers = {
                 'CUSTOM' => {'related' => \&_related},
                 'field' => {
                             'csv'      => \&_literal,
+                            'code'     => \&_literal,
                             'date'     => \&_date,
                             'entrykey' => \&_literal,
                             'integer'  => \&_literal,
