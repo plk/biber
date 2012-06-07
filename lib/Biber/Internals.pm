@@ -824,105 +824,76 @@ our $sorting_sep = ',';
 # a pointer to extra arguments to the code. This is to make code re-use possible
 # so the sorting can share code for similar things.
 our $dispatch_sorting = {
-  'addendum'        =>  [\&_sort_literaln,      ['addendum']],
-  'annotator'       =>  [\&_sort_name,          ['annotator']],
-  'author'          =>  [\&_sort_name,          ['author']],
-  'bookauthor'      =>  [\&_sort_name,          ['bookauthor']],
-  'booksubtitle'    =>  [\&_sort_literaln,      ['booksubtitle']],
-  'booktitle'       =>  [\&_sort_literaln,      ['booktitle']],
-  'booktitleaddon'  =>  [\&_sort_literaln,      ['booktitleaddon']],
-  'chapter'         =>  [\&_sort_literal,       ['chapter']],
+# special sorting routines - not part of the dm but special fields for biblatex
   'citeorder'       =>  [\&_sort_citeorder,     []],
-  'commentator'     =>  [\&_sort_name,          ['commentator']],
-  'day'             =>  [\&_sort_dm,            ['day']],
-  'edition'         =>  [\&_sort_literal,       ['edition']],
-  'editor'          =>  [\&_sort_name,          ['editor']],
-  'editora'         =>  [\&_sort_name,          ['editora']],
-  'editoratype'     =>  [\&_sort_editortc,      ['editoratype']],
-  'editorb'         =>  [\&_sort_name,          ['editorb']],
-  'editorbtype'     =>  [\&_sort_editortc,      ['editorbtype']],
-  'editorc'         =>  [\&_sort_name,          ['editorc']],
-  'editorctype'     =>  [\&_sort_editortc,      ['editorctype']],
-  'endday'          =>  [\&_sort_dm,            ['endday']],
-  'endmonth'        =>  [\&_sort_dm,            ['endmonth']],
-  'endyear'         =>  [\&_sort_literal,       ['endyear']],
-  'entrykey'        =>  [\&_sort_entrykey,      []],
-  'eventday'        =>  [\&_sort_dm,            ['eventday']],
-  'eventendday'     =>  [\&_sort_dm,            ['eventendday']],
-  'eventendmonth'   =>  [\&_sort_dm,            ['eventendmonth']],
-  'eventendyear'    =>  [\&_sort_literal,       ['eventendyear']],
-  'eventmonth'      =>  [\&_sort_dm,            ['eventmonth']],
-  'eventtitle'      =>  [\&_sort_literaln,      ['eventtitle']],
-  'eventyear'       =>  [\&_sort_literal,       ['eventyear']],
-  'foreword'        =>  [\&_sort_name,          ['foreword']],
-  'holder'          =>  [\&_sort_name,          ['holder']],
-  'issue'           =>  [\&_sort_literal,       ['issue']],
-  'issuesubtitle'   =>  [\&_sort_literaln,      ['issuesubtitle']],
-  'issuetitle'      =>  [\&_sort_literaln,      ['issuetitle']],
-  'institution'     =>  [\&_sort_list,          ['institution']],
-  'introduction'    =>  [\&_sort_name,          ['introduction']],
-  'journalsubtitle' =>  [\&_sort_literaln,      ['journalsubtitle']],
-  'journaltitle'    =>  [\&_sort_literaln,      ['journaltitle']],
-  'labelalpha'      =>  [\&_sort_literal,       ['sortlabelalpha']],
+  'labelalpha'      =>  [\&_sort_labelalpha,    []],
   'labelname'       =>  [\&_sort_labelname,     []],
   'labeltitle'      =>  [\&_sort_labeltitle,    []],
   'labelyear'       =>  [\&_sort_labelyear,     []],
-  'language'        =>  [\&_sort_list,          ['language']],
-  'library'         =>  [\&_sort_literal,       ['library']],
-  'lista'           =>  [\&_sort_list,          ['lista']],
-  'listb'           =>  [\&_sort_list,          ['listb']],
-  'listc'           =>  [\&_sort_list,          ['listc']],
-  'listd'           =>  [\&_sort_list,          ['listd']],
-  'liste'           =>  [\&_sort_list,          ['liste']],
-  'listf'           =>  [\&_sort_list,          ['listf']],
-  'location'        =>  [\&_sort_list,          ['location']],
-  'mainsubtitle'    =>  [\&_sort_literaln,      ['mainsubtitle']],
-  'maintitle'       =>  [\&_sort_literaln,      ['maintitle']],
-  'maintitleaddon'  =>  [\&_sort_literaln,      ['maintitleaddon']],
-  'month'           =>  [\&_sort_dm,            ['month']],
+  'presort'         =>  [\&_sort_presort,       []],
+  'sortname'        =>  [\&_sort_sortname,      []],
+  'entrykey'        =>  [\&_sort_entrykey,      []],
+
+# field/key (this will have special clauses for the default dm but will default to literal otherwise)
+  'editoratype'     =>  [\&_sort_editortc,      ['editoratype']],
+  'editorbtype'     =>  [\&_sort_editortc,      ['editorbtype']],
+  'editorctype'     =>  [\&_sort_editortc,      ['editorctype']],
+
+# list/name
+  'afterword'       =>  [\&_sort_name,          ['afterword']],
+  'annotator'       =>  [\&_sort_name,          ['annotator']],
+  'author'          =>  [\&_sort_name,          ['author']],
+  'bookauthor'      =>  [\&_sort_name,          ['bookauthor']],
+  'commentator'     =>  [\&_sort_name,          ['commentator']],
+  'editor'          =>  [\&_sort_name,          ['editor']],
+  'editora'         =>  [\&_sort_name,          ['editora']],
+  'editorb'         =>  [\&_sort_name,          ['editorb']],
+  'editorc'         =>  [\&_sort_name,          ['editorc']],
+  'foreword'        =>  [\&_sort_name,          ['foreword']],
+  'holder'          =>  [\&_sort_name,          ['holder']],
+  'introduction'    =>  [\&_sort_name,          ['introduction']],
   'namea'           =>  [\&_sort_name,          ['namea']],
   'nameb'           =>  [\&_sort_name,          ['nameb']],
   'namec'           =>  [\&_sort_name,          ['namec']],
+  'translator'      =>  [\&_sort_name,          ['translator']],
+  'shortauthor'     =>  [\&_sort_name,          ['shortauthor']],
+  'shorteditor'     =>  [\&_sort_name,          ['shorteditor']],
+
+# field/literal
+  'addendum'        =>  [\&_sort_literal,      ['addendum']],
+  'booksubtitle'    =>  [\&_sort_literal,      ['booksubtitle']],
+  'booktitle'       =>  [\&_sort_literal,      ['booktitle']],
+  'booktitleaddon'  =>  [\&_sort_literal,      ['booktitleaddon']],
+  'chapter'         =>  [\&_sort_literal,       ['chapter']],
+  'edition'         =>  [\&_sort_literal,       ['edition']],
+  'eventtitle'      =>  [\&_sort_literal,      ['eventtitle']],
+  'issue'           =>  [\&_sort_literal,       ['issue']],
+  'issuesubtitle'   =>  [\&_sort_literal,      ['issuesubtitle']],
+  'issuetitle'      =>  [\&_sort_literal,      ['issuetitle']],
+  'journalsubtitle' =>  [\&_sort_literal,      ['journalsubtitle']],
+  'journaltitle'    =>  [\&_sort_literal,      ['journaltitle']],
+  'library'         =>  [\&_sort_literal,       ['library']],
+  'mainsubtitle'    =>  [\&_sort_literal,      ['mainsubtitle']],
+  'maintitle'       =>  [\&_sort_literal,      ['maintitle']],
+  'maintitleaddon'  =>  [\&_sort_literal,      ['maintitleaddon']],
   'note'            =>  [\&_sort_literal,       ['note']],
   'number'          =>  [\&_sort_literal,       ['number']],
-  'origday'         =>  [\&_sort_dm,            ['origday']],
-  'origendday'      =>  [\&_sort_dm,            ['origendday']],
-  'origendmonth'    =>  [\&_sort_dm,            ['origendmonth']],
-  'origendyear'     =>  [\&_sort_literal,       ['origendyear']],
-  'origlocation'    =>  [\&_sort_list,          ['origlocation']],
-  'origmonth'       =>  [\&_sort_dm,            ['origmonth']],
-  'origpublisher'   =>  [\&_sort_list,          ['origpublisher']],
-  'origtitle'       =>  [\&_sort_literaln,      ['origtitle']],
-  'origyear'        =>  [\&_sort_literal,       ['origyear']],
-  'organization'    =>  [\&_sort_list,          ['organization']],
+  'origtitle'       =>  [\&_sort_literal,      ['origtitle']],
   'part'            =>  [\&_sort_literal,       ['part']],
-  'presort'         =>  [\&_sort_presort,       []],
-  'publisher'       =>  [\&_sort_list,          ['publisher']],
   'pubstate'        =>  [\&_sort_literal,       ['pubstate']],
-  'school'          =>  [\&_sort_list,          ['school']],
   'series'          =>  [\&_sort_literal,       ['series']],
-  'shortauthor'     =>  [\&_sort_literaln,      ['shortauthor']],
-  'shorteditor'     =>  [\&_sort_literaln,      ['shorteditor']],
   'shorthand'       =>  [\&_sort_literal,       ['shorthand']],
-  'shortjournal'    =>  [\&_sort_literaln,      ['shortjournal']],
-  'shortseries'     =>  [\&_sort_literaln,      ['shortseries']],
-  'shorttitle'      =>  [\&_sort_literaln,      ['shorttitle']],
+  'shortjournal'    =>  [\&_sort_literal,      ['shortjournal']],
+  'shortseries'     =>  [\&_sort_literal,      ['shortseries']],
+  'shorttitle'      =>  [\&_sort_literal,      ['shorttitle']],
   'sortkey'         =>  [\&_sort_literal,       ['sortkey']],
-  'sortname'        =>  [\&_sort_sortname,      []],
   'sortshorthand'   =>  [\&_sort_literal,       ['sortshorthand']],
-  'sorttitle'       =>  [\&_sort_literaln,      ['sorttitle']],
+  'sorttitle'       =>  [\&_sort_literal,      ['sorttitle']],
   'sortyear'        =>  [\&_sort_literal,       ['sortyear']],
-  'subtitle'        =>  [\&_sort_literaln,      ['subtitle']],
-  'title'           =>  [\&_sort_literaln,      ['title']],
-  'titleaddon'      =>  [\&_sort_literaln,      ['titleaddon']],
-  'translator'      =>  [\&_sort_name,          ['translator']],
+  'subtitle'        =>  [\&_sort_literal,      ['subtitle']],
+  'title'           =>  [\&_sort_literal,      ['title']],
+  'titleaddon'      =>  [\&_sort_literal,      ['titleaddon']],
   'type'            =>  [\&_sort_literal,       ['type']],
-  'urlday'          =>  [\&_sort_dm,            ['urlday']],
-  'urlendday'       =>  [\&_sort_dm,            ['urlendday']],
-  'urlendmonth'     =>  [\&_sort_dm,            ['urlendmonth']],
-  'urlendyear'      =>  [\&_sort_literal,       ['urlendyear']],
-  'urlmonth'        =>  [\&_sort_dm,            ['urlmonth']],
-  'urlyear'         =>  [\&_sort_literal,       ['urlyear']],
   'usera'           =>  [\&_sort_literal,       ['usera']],
   'userb'           =>  [\&_sort_literal,       ['userb']],
   'userc'           =>  [\&_sort_literal,       ['userc']],
@@ -936,6 +907,48 @@ our $dispatch_sorting = {
   'version'         =>  [\&_sort_literal,       ['version']],
   'volume'          =>  [\&_sort_literal,       ['volume']],
   'year'            =>  [\&_sort_literal,       ['year']],
+  'month'           =>  [\&_sort_literal,            ['month']],
+
+# field/integer
+  'day'             =>  [\&_sort_integer,            ['day']],
+  'endday'          =>  [\&_sort_integer,            ['endday']],
+  'endmonth'        =>  [\&_sort_integer,            ['endmonth']],
+  'eventday'        =>  [\&_sort_integer,            ['eventday']],
+  'eventendday'     =>  [\&_sort_integer,            ['eventendday']],
+  'eventendmonth'   =>  [\&_sort_integer,            ['eventendmonth']],
+  'eventmonth'      =>  [\&_sort_integer,            ['eventmonth']],
+  'origday'         =>  [\&_sort_integer,            ['origday']],
+  'origendday'      =>  [\&_sort_integer,            ['origendday']],
+  'origendmonth'    =>  [\&_sort_integer,            ['origendmonth']],
+  'origmonth'       =>  [\&_sort_integer,            ['origmonth']],
+  'urlday'          =>  [\&_sort_integer,            ['urlday']],
+  'urlendday'       =>  [\&_sort_integer,            ['urlendday']],
+  'urlendmonth'     =>  [\&_sort_integer,            ['urlendmonth']],
+  'urlmonth'        =>  [\&_sort_integer,            ['urlmonth']],
+  'origendyear'     =>  [\&_sort_integer,       ['origendyear']],
+  'origyear'        =>  [\&_sort_integer,       ['origyear']],
+  'urlendyear'      =>  [\&_sort_integer,       ['urlendyear']],
+  'urlyear'         =>  [\&_sort_integer,       ['urlyear']],
+  'endyear'         =>  [\&_sort_integer,       ['endyear']],
+  'eventendyear'    =>  [\&_sort_integer,       ['eventendyear']],
+  'eventyear'       =>  [\&_sort_integer,       ['eventyear']],
+
+
+# list/literal + list/key
+  'institution'     =>  [\&_sort_list,          ['institution']],
+  'language'        =>  [\&_sort_list,          ['language']],
+  'lista'           =>  [\&_sort_list,          ['lista']],
+  'listb'           =>  [\&_sort_list,          ['listb']],
+  'listc'           =>  [\&_sort_list,          ['listc']],
+  'listd'           =>  [\&_sort_list,          ['listd']],
+  'liste'           =>  [\&_sort_list,          ['liste']],
+  'listf'           =>  [\&_sort_list,          ['listf']],
+  'location'        =>  [\&_sort_list,          ['location']],
+  'origlocation'    =>  [\&_sort_list,          ['origlocation']],
+  'origpublisher'   =>  [\&_sort_list,          ['origpublisher']],
+  'organization'    =>  [\&_sort_list,          ['organization']],
+  'publisher'       =>  [\&_sort_list,          ['publisher']],
+
   };
 
 # Main sorting dispatch method
@@ -1076,7 +1089,7 @@ sub _sort_citeorder {
 # It's done to avoid having many repetitions of almost identical sorting code
 # for the many date sorting options
 # It deals with day and month fields
-sub _sort_dm {
+sub _sort_integer {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $dmtype = $args->[0]; # get day/month field type
   my $secnum = $self->get_current_section;
@@ -1115,6 +1128,15 @@ sub _sort_entrykey {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   return $citekey;
+}
+
+sub _sort_labelalpha {
+  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $string = $be->get_field('sortlabelalpha') // '';
+  return _process_sort_attributes($string, $sortelementattributes);
 }
 
 sub _sort_labelname {
@@ -1181,22 +1203,8 @@ sub _sort_list {
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
-# for literal strings which need no normalising
-sub _sort_literal {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
-  my $literal = $args->[0]; # get actual field
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $string = $be->get_field($literal) // '';
-  return _process_sort_attributes($string, $sortelementattributes);
-}
-
-# This is a meta-sub which uses the optional arguments to the dispatch code
-# It's done to avoid having many repetitions of almost identical sorting code
 # for literal strings which need normalising
-# Same as literal but with a normalise step
-sub _sort_literaln {
+sub _sort_literal {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $literal = $args->[0]; # get actual field
   my $secnum = $self->get_current_section;
