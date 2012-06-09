@@ -264,6 +264,16 @@ sub get_datatype {
   return $self->{fieldsbyname}{$field}{datatype};
 }
 
+=head2 get_dm_for_field
+
+    Returns the fieldtype and datatype of a field
+
+=cut
+
+sub get_dm_for_field {
+  my ($self, $field) = @_;
+  return ($self->{fieldsbyname}{$field}{fieldtype}, $self->{fieldsbyname}{$field}{datatype});
+}
 
 =head2 field_is_fieldtype
 

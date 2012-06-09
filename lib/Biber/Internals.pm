@@ -6,6 +6,7 @@ use warnings;
 use Carp;
 use Biber::Constants;
 use Biber::Utils;
+use Biber::DataModel;
 use Data::Compare;
 use Text::Wrap;
 $Text::Wrap::columns = 80;
@@ -221,47 +222,31 @@ sub _getpnhash {
 # label generation
 ##################
 
-our $dispatch_label = {
-  'afterword'         =>  [\&_label_name,             ['afterword']],
-  'annotator'         =>  [\&_label_name,             ['annotator']],
-  'author'            =>  [\&_label_name,             ['author']],
-  'bookauthor'        =>  [\&_label_name,             ['bookauthor']],
-  'booktitle'         =>  [\&_label_title,            ['booktitle']],
-  'commentator'       =>  [\&_label_name,             ['commentator']],
-  'editor'            =>  [\&_label_name,             ['editor']],
-  'editora'           =>  [\&_label_name,             ['editora']],
-  'editorb'           =>  [\&_label_name,             ['editorb']],
-  'editorc'           =>  [\&_label_name,             ['editorc']],
-  'eventday'          =>  [\&_label_day,              ['eventday']],
-  'eventmonth'        =>  [\&_label_month,            ['eventmonth']],
-  'eventyear'         =>  [\&_label_year,             ['eventyear']],
-  'day'               =>  [\&_label_day,              ['day']],
-  'foreword'          =>  [\&_label_name,             ['foreword']],
-  'holder'            =>  [\&_label_name,             ['holder']],
-  'introduction'      =>  [\&_label_name,             ['introduction']],
-  'journaltitle'      =>  [\&_label_title,            ['journaltitle']],
-  'label'             =>  [\&_label_label,            []],
-  'labelname'         =>  [\&_label_labelname,        []],
-  'labeltitle'        =>  [\&_label_labeltitle,       []],
-  'labelyear'         =>  [\&_label_labelyear,        []],
-  'maintitle'         =>  [\&_label_title,            ['maintitle']],
-  'month'             =>  [\&_label_month,            ['month']],
-  'namea'             =>  [\&_label_name,             ['namea']],
-  'nameb'             =>  [\&_label_name,             ['nameb']],
-  'namec'             =>  [\&_label_name,             ['namec']],
-  'origday'           =>  [\&_label_day,              ['origday']],
-  'origmonth'         =>  [\&_label_month,            ['origmonth']],
-  'origyear'          =>  [\&_label_year,             ['origyear']],
-  'origtitle'         =>  [\&_label_title,            ['origtitle']],
-  'shorthand'         =>  [\&_label_shorthand,        []],
-  'sortkey'           =>  [\&_label_sortkey,          []],
-  'title'             =>  [\&_label_title,            ['title']],
-  'translator'        =>  [\&_label_name,             ['translator']],
-  'urlday'            =>  [\&_label_day,              ['urlday']],
-  'urlmonth'          =>  [\&_label_month,            ['urlmonth']],
-  'urlyear'           =>  [\&_label_year,             ['urlyear']],
-  'year'              =>  [\&_label_year,             ['year']],
-};
+# special label routines - not part of the dm but special fields for biblatex
+my %internal_dispatch_label = (
+                               'labelname'         =>  [\&_label_labelname,        []],
+                               'labeltitle'        =>  [\&_label_labeltitle,       []],
+                               'labelyear'         =>  [\&_label_labelyear,        []]);
+
+sub _dispatch_table_label {
+  my ($field, $dm) = @_;
+  # internal fields not part of the data model
+  if (my $id = $internal_dispatch_label{$field}) {
+    return $id;
+  }
+  # Sorting elements which aren't fields
+  unless ($dm->is_field($field)) {
+    return undef;
+  }
+  # Fields which are part of the datamodel
+  my ($t, $dt) = $dm->get_dm_for_field($field);
+  if ($t eq 'list' and $dt eq 'name') {
+    return [\&_label_name, [$field]];
+  }
+  else {
+    return [\&_label_basic, [$field]];
+  }
+}
 
 # Main label loop
 sub _genlabel {
@@ -348,15 +333,16 @@ sub _dispatch_label {
   my $code_args_ref;
   my $lp;
   my $slp;
+  my $dm = Biber::Config->get_dm;
 
   # if the field is not found in the dispatch table, assume it's a literal string
-  unless (exists($dispatch_label->{$part->{content}})) {
+  unless (_dispatch_table_label($part->{content}, $dm)) {
     $code_ref = \&_label_literal;
     $code_args_ref = [$part->{content}];
   }
   else { # real label field
-    $code_ref = ${$dispatch_label->{$part->{content}}}[0];
-    $code_args_ref = ${$dispatch_label->{$part->{content}}}[1];
+    $code_ref = ${_dispatch_table_label($part->{content}, $dm)}[0];
+    $code_args_ref = ${_dispatch_table_label($part->{content}, $dm)}[1];
   }
   return &{$code_ref}($self, $citekey, $code_args_ref, $part);
 }
@@ -366,29 +352,15 @@ sub _dispatch_label {
 # Label dispatch routines
 #########################
 
-sub _label_day {
+sub _label_basic {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $day = $args->[0];
-  if (my $f = $be->get_field($day)) {
-    my $y = _process_label_attributes($self, $citekey, $f, $labelattrs, $day);
-    return [$y, $y];
-  }
-  else {
-    return ['', ''];
-  }
-}
-
-sub _label_label {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (my $f = $be->get_field('label')) {
-    my $l = _process_label_attributes($self, $citekey, $f, $labelattrs, 'label');
-    return [$l, $l];
+  my $int = $args->[0];
+  if (my $f = normalise_string_label($be->get_field($int))) {
+    my $i = _process_label_attributes($self, $citekey, $f, $labelattrs, $int);
+    return [$i, $i];
   }
   else {
     return ['', ''];
@@ -418,7 +390,7 @@ sub _label_labelyear {
   # re-direct to the right label routine for the labelyear
   if (my $lyn = $be->get_field('labelyearname')) {
     $args->[0] = $lyn;
-    return $self->_label_year($citekey, $args, $labelattrs);
+    return $self->_label_basic($citekey, $args, $labelattrs);
   }
   else {
     return ['', ''];
@@ -445,21 +417,6 @@ sub _label_literal {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $string = $args->[0];
   return [$string, $string];
-}
-
-sub _label_month {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $month = $args->[0];
-  if (my $f = $be->get_field($month)) {
-    my $y = _process_label_attributes($self, $citekey, $f, $labelattrs, $month);
-    return [$y, $y];
-  }
-  else {
-    return ['', ''];
-  }
 }
 
 sub _label_name {
@@ -526,66 +483,6 @@ sub _label_name {
     return ['', ''];
   }
 }
-
-sub _label_shorthand {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (my $f = $be->get_field('shorthand')) {
-    my $s = _process_label_attributes($self, $citekey, $f, $labelattrs, 'shorthand');
-    return [$s, $s];
-  }
-  else {
-    return ['', ''];
-  }
-}
-
-sub _label_sortkey {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  if (my $f = $be->get_field('sortkey')) {
-    my $s = _process_label_attributes($self, $citekey, $f, $labelattrs, 'sortkey');
-    return [$s, $s];
-  }
-  else {
-    return ['', ''];
-  }
-}
-
-sub _label_title {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $title = $args->[0];
-  my $be = $section->bibentry($citekey);
-  if (my $f = normalise_string_label($be->get_field($title))) {
-    my $t = _process_label_attributes($self, $citekey, $f, $labelattrs, $title);
-    return [$t, $t];
-  }
-  else {
-    return ['', ''];
-  }
-}
-
-
-sub _label_year {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $year = $args->[0];
-  if (my $f = $be->get_field($year)) {
-    my $y = _process_label_attributes($self, $citekey, $f, $labelattrs, $year);
-    return [$y, $y];
-  }
-  else {
-    return ['', ''];
-  }
-}
-
 
 # Label generation utilities
 
@@ -819,137 +716,55 @@ sub _label_listdisambiguation {
 
 our $sorting_sep = ',';
 
-# The keys are defined by BibLaTeX and passed in the control file
+# special sorting routines - not part of the dm but special fields for biblatex
+my %internal_dispatch_sorting = (
+                                 'citeorder'       =>  [\&_sort_citeorder,     []],
+                                 'labelalpha'      =>  [\&_sort_labelalpha,    []],
+                                 'labelname'       =>  [\&_sort_labelname,     []],
+                                 'labeltitle'      =>  [\&_sort_labeltitle,    []],
+                                 'labelyear'       =>  [\&_sort_labelyear,     []],
+                                 'presort'         =>  [\&_sort_presort,       []],
+                                 'sortname'        =>  [\&_sort_sortname,      []],
+                                 'entrykey'        =>  [\&_sort_entrykey,      []]);
+
 # The value is an array pointer, first element is a code pointer, second is
 # a pointer to extra arguments to the code. This is to make code re-use possible
 # so the sorting can share code for similar things.
-our $dispatch_sorting = {
-# special sorting routines - not part of the dm but special fields for biblatex
-  'citeorder'       =>  [\&_sort_citeorder,     []],
-  'labelalpha'      =>  [\&_sort_labelalpha,    []],
-  'labelname'       =>  [\&_sort_labelname,     []],
-  'labeltitle'      =>  [\&_sort_labeltitle,    []],
-  'labelyear'       =>  [\&_sort_labelyear,     []],
-  'presort'         =>  [\&_sort_presort,       []],
-  'sortname'        =>  [\&_sort_sortname,      []],
-  'entrykey'        =>  [\&_sort_entrykey,      []],
-
-# field/key (this will have special clauses for the default dm but will default to literal otherwise)
-  'editoratype'     =>  [\&_sort_editortc,      ['editoratype']],
-  'editorbtype'     =>  [\&_sort_editortc,      ['editorbtype']],
-  'editorctype'     =>  [\&_sort_editortc,      ['editorctype']],
-
-# list/name
-  'afterword'       =>  [\&_sort_name,          ['afterword']],
-  'annotator'       =>  [\&_sort_name,          ['annotator']],
-  'author'          =>  [\&_sort_name,          ['author']],
-  'bookauthor'      =>  [\&_sort_name,          ['bookauthor']],
-  'commentator'     =>  [\&_sort_name,          ['commentator']],
-  'editor'          =>  [\&_sort_name,          ['editor']],
-  'editora'         =>  [\&_sort_name,          ['editora']],
-  'editorb'         =>  [\&_sort_name,          ['editorb']],
-  'editorc'         =>  [\&_sort_name,          ['editorc']],
-  'foreword'        =>  [\&_sort_name,          ['foreword']],
-  'holder'          =>  [\&_sort_name,          ['holder']],
-  'introduction'    =>  [\&_sort_name,          ['introduction']],
-  'namea'           =>  [\&_sort_name,          ['namea']],
-  'nameb'           =>  [\&_sort_name,          ['nameb']],
-  'namec'           =>  [\&_sort_name,          ['namec']],
-  'translator'      =>  [\&_sort_name,          ['translator']],
-  'shortauthor'     =>  [\&_sort_name,          ['shortauthor']],
-  'shorteditor'     =>  [\&_sort_name,          ['shorteditor']],
-
-# field/literal
-  'addendum'        =>  [\&_sort_literal,      ['addendum']],
-  'booksubtitle'    =>  [\&_sort_literal,      ['booksubtitle']],
-  'booktitle'       =>  [\&_sort_literal,      ['booktitle']],
-  'booktitleaddon'  =>  [\&_sort_literal,      ['booktitleaddon']],
-  'chapter'         =>  [\&_sort_literal,       ['chapter']],
-  'edition'         =>  [\&_sort_literal,       ['edition']],
-  'eventtitle'      =>  [\&_sort_literal,      ['eventtitle']],
-  'issue'           =>  [\&_sort_literal,       ['issue']],
-  'issuesubtitle'   =>  [\&_sort_literal,      ['issuesubtitle']],
-  'issuetitle'      =>  [\&_sort_literal,      ['issuetitle']],
-  'journalsubtitle' =>  [\&_sort_literal,      ['journalsubtitle']],
-  'journaltitle'    =>  [\&_sort_literal,      ['journaltitle']],
-  'library'         =>  [\&_sort_literal,       ['library']],
-  'mainsubtitle'    =>  [\&_sort_literal,      ['mainsubtitle']],
-  'maintitle'       =>  [\&_sort_literal,      ['maintitle']],
-  'maintitleaddon'  =>  [\&_sort_literal,      ['maintitleaddon']],
-  'note'            =>  [\&_sort_literal,       ['note']],
-  'number'          =>  [\&_sort_literal,       ['number']],
-  'origtitle'       =>  [\&_sort_literal,      ['origtitle']],
-  'part'            =>  [\&_sort_literal,       ['part']],
-  'pubstate'        =>  [\&_sort_literal,       ['pubstate']],
-  'series'          =>  [\&_sort_literal,       ['series']],
-  'shorthand'       =>  [\&_sort_literal,       ['shorthand']],
-  'shortjournal'    =>  [\&_sort_literal,      ['shortjournal']],
-  'shortseries'     =>  [\&_sort_literal,      ['shortseries']],
-  'shorttitle'      =>  [\&_sort_literal,      ['shorttitle']],
-  'sortkey'         =>  [\&_sort_literal,       ['sortkey']],
-  'sortshorthand'   =>  [\&_sort_literal,       ['sortshorthand']],
-  'sorttitle'       =>  [\&_sort_literal,      ['sorttitle']],
-  'sortyear'        =>  [\&_sort_literal,       ['sortyear']],
-  'subtitle'        =>  [\&_sort_literal,      ['subtitle']],
-  'title'           =>  [\&_sort_literal,      ['title']],
-  'titleaddon'      =>  [\&_sort_literal,      ['titleaddon']],
-  'type'            =>  [\&_sort_literal,       ['type']],
-  'usera'           =>  [\&_sort_literal,       ['usera']],
-  'userb'           =>  [\&_sort_literal,       ['userb']],
-  'userc'           =>  [\&_sort_literal,       ['userc']],
-  'userd'           =>  [\&_sort_literal,       ['userd']],
-  'usere'           =>  [\&_sort_literal,       ['usere']],
-  'userf'           =>  [\&_sort_literal,       ['userf']],
-  'venue'           =>  [\&_sort_literal,       ['venue']],
-  'verba'           =>  [\&_sort_literal,       ['verba']],
-  'verbb'           =>  [\&_sort_literal,       ['verbb']],
-  'verbc'           =>  [\&_sort_literal,       ['verbc']],
-  'version'         =>  [\&_sort_literal,       ['version']],
-  'volume'          =>  [\&_sort_literal,       ['volume']],
-  'year'            =>  [\&_sort_literal,       ['year']],
-  'month'           =>  [\&_sort_literal,            ['month']],
-
-# field/integer
-  'day'             =>  [\&_sort_integer,            ['day']],
-  'endday'          =>  [\&_sort_integer,            ['endday']],
-  'endmonth'        =>  [\&_sort_integer,            ['endmonth']],
-  'eventday'        =>  [\&_sort_integer,            ['eventday']],
-  'eventendday'     =>  [\&_sort_integer,            ['eventendday']],
-  'eventendmonth'   =>  [\&_sort_integer,            ['eventendmonth']],
-  'eventmonth'      =>  [\&_sort_integer,            ['eventmonth']],
-  'origday'         =>  [\&_sort_integer,            ['origday']],
-  'origendday'      =>  [\&_sort_integer,            ['origendday']],
-  'origendmonth'    =>  [\&_sort_integer,            ['origendmonth']],
-  'origmonth'       =>  [\&_sort_integer,            ['origmonth']],
-  'urlday'          =>  [\&_sort_integer,            ['urlday']],
-  'urlendday'       =>  [\&_sort_integer,            ['urlendday']],
-  'urlendmonth'     =>  [\&_sort_integer,            ['urlendmonth']],
-  'urlmonth'        =>  [\&_sort_integer,            ['urlmonth']],
-  'origendyear'     =>  [\&_sort_integer,       ['origendyear']],
-  'origyear'        =>  [\&_sort_integer,       ['origyear']],
-  'urlendyear'      =>  [\&_sort_integer,       ['urlendyear']],
-  'urlyear'         =>  [\&_sort_integer,       ['urlyear']],
-  'endyear'         =>  [\&_sort_integer,       ['endyear']],
-  'eventendyear'    =>  [\&_sort_integer,       ['eventendyear']],
-  'eventyear'       =>  [\&_sort_integer,       ['eventyear']],
-
-
-# list/literal + list/key
-  'institution'     =>  [\&_sort_list,          ['institution']],
-  'language'        =>  [\&_sort_list,          ['language']],
-  'lista'           =>  [\&_sort_list,          ['lista']],
-  'listb'           =>  [\&_sort_list,          ['listb']],
-  'listc'           =>  [\&_sort_list,          ['listc']],
-  'listd'           =>  [\&_sort_list,          ['listd']],
-  'liste'           =>  [\&_sort_list,          ['liste']],
-  'listf'           =>  [\&_sort_list,          ['listf']],
-  'location'        =>  [\&_sort_list,          ['location']],
-  'origlocation'    =>  [\&_sort_list,          ['origlocation']],
-  'origpublisher'   =>  [\&_sort_list,          ['origpublisher']],
-  'organization'    =>  [\&_sort_list,          ['organization']],
-  'publisher'       =>  [\&_sort_list,          ['publisher']],
-
-  };
+sub _dispatch_table_sorting {
+  my ($field, $dm) = @_;
+  # internal fields not part of the data model
+  if (my $id = $internal_dispatch_sorting{$field}) {
+    return $id;
+  }
+  # Sorting elements which aren't fields
+  unless ($dm->is_field($field)) {
+    return undef;
+  }
+  # Fields which are part of the datamodel
+  my ($t, $dt) = $dm->get_dm_for_field($field);
+  if ($t eq 'list' and $dt eq 'name') {
+    return [\&_sort_name, [$field]];
+  }
+  elsif ($t eq 'field' and $dt eq 'literal') {
+    return [\&_sort_literal, [$field]];
+  }
+  elsif ($t eq 'field' and $dt eq 'integer') {
+    return [\&_sort_integer, [$field]];
+  }
+  elsif ($t eq 'list' and
+         ($dt eq 'literal' or $dt eq 'key')) {
+    return [\&_sort_list, [$field]];
+  }
+  elsif ($t eq 'field' and $dt eq 'key') {
+    # Special case as we need to check use* options
+    if ($field =~ m/^editor[abc]type$/) {
+      return [\&_sort_editortc, [$field]];
+    }
+    else {
+      return [\&_sort_literal, [$field]];
+    }
+  }
+}
 
 # Main sorting dispatch method
 sub _dispatch_sorting {
@@ -959,6 +774,7 @@ sub _dispatch_sorting {
   my $be = $section->bibentry($citekey);
   my $code_ref;
   my $code_args_ref;
+  my $dm = Biber::Config->get_dm;
 
   # If this field is excluded from sorting for this entrytype, then skip it and return
   if (my $se = Biber::Config->getblxoption('sortexclusion', $be->get_field('entrytype'))) {
@@ -968,13 +784,13 @@ sub _dispatch_sorting {
   }
 
   # if the field is not found in the dispatch table, assume it's a literal string
-  unless (exists($dispatch_sorting->{$sortfield})) {
+  unless (_dispatch_table_sorting($sortfield, $dm)) {
     $code_ref = \&_sort_string;
     $code_args_ref = [$sortfield];
   }
   else { # real sorting field
-    $code_ref = ${$dispatch_sorting->{$sortfield}}[0];
-    $code_args_ref  = ${$dispatch_sorting->{$sortfield}}[1];
+    $code_ref = ${_dispatch_table_sorting($sortfield, $dm)}[0];
+    $code_args_ref  = ${_dispatch_table_sorting($sortfield, $dm)}[1];
   }
   return &{$code_ref}($self, $citekey, $sortelementattributes, $code_args_ref);
 }
