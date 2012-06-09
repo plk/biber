@@ -16,7 +16,6 @@ use File::Find;
 use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
-use List::AllUtils qw( first firstval each_arrayref );
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;

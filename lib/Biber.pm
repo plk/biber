@@ -18,7 +18,7 @@ use IO::File;
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Biber::Config;
 use Biber::Constants;
-use List::AllUtils qw( :all );
+use List::AllUtils qw( first uniq );
 use Digest::MD5 qw( md5_hex );
 use Biber::DataModel;
 use Biber::Internals;
@@ -1305,7 +1305,7 @@ sub process_labelname {
       $lnameopt = $ln;
     }
 
-    unless (first {$_ eq $ln} @{$dm->get_fields_of_type('list', 'name')}) {
+    unless ($ln ~~ $dm->get_fields_of_type('list', 'name')) {
       biber_warn("Labelname candidate '$ln' is not a name field - skipping");
       next;
     }
@@ -1331,7 +1331,7 @@ sub process_labelname {
     }
 
     # We have already warned about this above
-    unless (first {$_ eq $ln} @{$dm->get_fields_of_type('list', 'name')}) {
+    unless ($ln ~~ $dm->get_fields_of_type('list', 'name')) {
       next;
     }
 
@@ -2055,7 +2055,6 @@ sub create_uniquename_info {
               $name->set_minimal_info($lastnames_string);
             }
           }
-
           if (first {Compare($_, $name)} @truncnames) {
             # Record a uniqueness information entry for the lastname showing that
             # this lastname has been seen in this name context
@@ -3002,9 +3001,11 @@ sub remove_undef_dependent {
 
   # remove from any dynamic keys
   if (my @dmems = $section->get_dynamic_set($citekey)){
-    if (first { $missing_key eq $_ } @dmems) {
+    if ($missing_key ~~ @dmems) {
       $section->set_dynamic_set($citekey, grep {$_ ne $missing_key} @dmems);
-      biber_warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)") unless first {$_ eq $missing_key} @dmems;
+    }
+    else {
+      biber_warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)");
     }
   }
   else {
@@ -3024,7 +3025,7 @@ sub remove_undef_dependent {
     # remove xdata
     if (my $xdata = $be->get_field('xdata')) {
       my @xdatum = split /\s*,\s*/, $xdata;
-      if (first { $missing_key eq $_ } @xdatum) {
+      if ($missing_key ~~ @xdatum) {
         $be->set_datafield('xdata', join(',', grep {$_ ne $missing_key} @xdatum));
         biber_warn("I didn't find a database entry for xdata entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
@@ -3033,7 +3034,7 @@ sub remove_undef_dependent {
     # remove static sets
     if ($be->get_field('entrytype') eq 'set') {
       my @smems = split /\s*,\s*/, $be->get_field('entryset');
-      if (first { $missing_key eq $_ } @smems) {
+      if ($missing_key ~~ @smems) {
         $be->set_datafield('entryset', join(',', grep {$_ ne $missing_key} @smems));
         biber_warn("I didn't find a database entry for static set member '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
@@ -3042,7 +3043,7 @@ sub remove_undef_dependent {
     # remove related entries
     if (my $relkeys = $be->get_field('related')) {
       my @rmems = split /\s*,\s*/, $relkeys;
-      if (first { $missing_key eq $_ } @rmems) {
+      if ($missing_key ~~ @rmems) {
         $be->set_datafield('related', join(',', grep {$_ ne $missing_key} @rmems));
         # If no more related entries, remove the other related fields
         unless ($be->get_field('related')) {

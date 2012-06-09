@@ -19,7 +19,7 @@ use Encode;
 use File::Spec;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
-use List::AllUtils qw( :all );
+use List::AllUtils qw( uniq );
 use XML::LibXML;
 use XML::LibXML::Simple;
 use Readonly;
@@ -686,7 +686,7 @@ sub _resolve_display_mode {
   # Either a fieldname specific mode or the default or a last-ditch fallback
   my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'} || ['original'];
   # Make sure there is an 'original' fallback in the list
-  push @$modelist, 'original' unless first {$_ eq 'original'} @$modelist;
+  push @$modelist, 'original' unless 'original' ~~ $modelist;
   foreach my $mode (@$modelist) {
     my $modeattr;
     # mode is omissable if it is "original"

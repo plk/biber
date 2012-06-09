@@ -222,11 +222,16 @@ sub _getpnhash {
 # label generation
 ##################
 
-# special label routines - not part of the dm but special fields for biblatex
+# special label routines - either not part of the dm but special fields for biblatex
+# or dm fields which need special treatment. Technically users could remove such fields
+# from the dm but it would be very strange.
 my %internal_dispatch_label = (
-                               'labelname'         =>  [\&_label_labelname,        []],
-                               'labeltitle'        =>  [\&_label_labeltitle,       []],
-                               'labelyear'         =>  [\&_label_labelyear,        []]);
+                'label'             =>  [\&_label_basic,            ['label', 'nostrip']],
+                'shorthand'         =>  [\&_label_basic,            ['shorthand', 'nostrip']],
+                'sortkey'           =>  [\&_label_basic,            ['sortkey', 'nostrip']],
+                'labelname'         =>  [\&_label_labelname,        []],
+                'labeltitle'        =>  [\&_label_labeltitle,       []],
+                'labelyear'         =>  [\&_label_labelyear,        []]);
 
 sub _dispatch_table_label {
   my ($field, $dm) = @_;
@@ -293,7 +298,7 @@ sub _labelpart {
     # length
     if (my $ic = $part->{ifnamecount}) {
       my $f = $part->{content};
-      if (first {$_ eq $f} @{$dm->get_fields_of_type('list', 'name')} or
+      if ( $f ~~ $dm->get_fields_of_type('list', 'name') or
           $f eq 'labelname') {
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;
@@ -357,10 +362,18 @@ sub _label_basic {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $int = $args->[0];
-  if (my $f = normalise_string_label($be->get_field($int))) {
-    my $i = _process_label_attributes($self, $citekey, $f, $labelattrs, $int);
-    return [$i, $i];
+  my $e = $args->[0];
+  my $f;
+  if ($args->[1] and
+      $args->[1] eq 'nostrip') {
+    $f = $be->get_field($e);
+  }
+  else {
+    $f = normalise_string_label($be->get_field($e));
+  }
+  if ($f) {
+    my $b = _process_label_attributes($self, $citekey, $f, $labelattrs, $e);
+    return [$b, $b];
   }
   else {
     return ['', ''];
@@ -718,6 +731,9 @@ our $sorting_sep = ',';
 
 # special sorting routines - not part of the dm but special fields for biblatex
 my %internal_dispatch_sorting = (
+                                 'editoratype'     =>  [\&_sort_editort,       ['editoratype']],
+                                 'editorbtype'     =>  [\&_sort_editort,       ['editorbtype']],
+                                 'editorctype'     =>  [\&_sort_editort,       ['editorctype']],
                                  'citeorder'       =>  [\&_sort_citeorder,     []],
                                  'labelalpha'      =>  [\&_sort_labelalpha,    []],
                                  'labelname'       =>  [\&_sort_labelname,     []],
@@ -756,13 +772,7 @@ sub _dispatch_table_sorting {
     return [\&_sort_list, [$field]];
   }
   elsif ($t eq 'field' and $dt eq 'key') {
-    # Special case as we need to check use* options
-    if ($field =~ m/^editor[abc]type$/) {
-      return [\&_sort_editortc, [$field]];
-    }
-    else {
-      return [\&_sort_literal, [$field]];
-    }
+    return [\&_sort_literal, [$field]];
   }
 }
 
@@ -901,10 +911,6 @@ sub _sort_citeorder {
   }
 }
 
-# This is a meta-sub which uses the optional arguments to the dispatch code
-# It's done to avoid having many repetitions of almost identical sorting code
-# for the many date sorting options
-# It deals with day and month fields
 sub _sort_integer {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $dmtype = $args->[0]; # get day/month field type
@@ -919,10 +925,7 @@ sub _sort_integer {
   }
 }
 
-# This is a meta-sub which uses the optional arguments to the dispatch code
-# It's done to avoid having many repetitions of almost identical sorting code
-# for the editor type/class roles
-sub _sort_editortc {
+sub _sort_editort {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $edtypeclass = $args->[0]; # get editor type/class field
   my $secnum = $self->get_current_section;
