@@ -530,7 +530,9 @@ sub _process_label_attributes {
           if (my $f = $section->bibentry($key)->get_field($field)) {
             if ($namepart) {
               foreach my $n (@{$f->first_n_names($f->get_visible_alpha)}) {
-               $indices{$n->get_namepart($namepart)} = $n->get_index;
+                # Do strip/nosort here as that's what we also do to the field contents
+                # we will use to look up in this hash later
+                $indices{strip_nosort(normalise_string($n->get_namepart($namepart)), $field)} = $n->get_index;
               }
             }
             else {
@@ -541,7 +543,6 @@ sub _process_label_attributes {
 
         # This ends up as a flat list due to array interpolation
         my @strings = uniq keys %indices;
-
         # Look to the index of the longest string or the explicit max width if set
         my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings;
         for (my $i = 1; $i <= $maxlen; $i++) {
@@ -558,7 +559,6 @@ sub _process_label_attributes {
             }
           }
         }
-
         # We want to use a string width for all strings equal to the longest one needed
         # to disambiguate this list. We do this by saving an override for the minimal
         # disambiguation length per index
@@ -627,10 +627,10 @@ sub _process_label_attributes {
         $subs_offset = 0 - $subs_width;
       }
 
-      # If desired, do the substring on all part of compound strings (strings with internal spaces)
+      # If desired, do the substring on all part of compound strings (strings with internal spaces or hyphens)
       if ($labelattrs->{substring_compound}) {
         my $tmpstring;
-        foreach my $part (split(/\s+/, $field_string)) {
+        foreach my $part (split(/[ -]+/, $field_string)) {
           $tmpstring .= substr( $part, $subs_offset, $subs_width );
         }
         $field_string = $tmpstring;

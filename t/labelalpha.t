@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 102;
+use Test::More tests => 103;
 
 use Biber;
 use Biber::Utils;
@@ -211,6 +211,7 @@ is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgConLe', 'labelalph
 is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgCouLa', 'labelalpha disambiguation 6');
 is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BoConEdb', 'labelalpha disambiguation 7');
 is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BoConEm', 'labelalpha disambiguation 8');
+is($bibentries->entry('L23')->get_field('sortlabelalpha'), 'Sa', 'labelalpha disambiguation 9');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
