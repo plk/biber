@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 103;
+use Test::More tests => 105;
 
 use Biber;
 use Biber::Utils;
@@ -244,9 +244,9 @@ $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 # "Agas" and not "Aga" because the Schmidt/Schnee below need 4 chars to disambiguate
-is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AgasChaLaver', 'labelalpha disambiguation 4');
-is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgasConLendl', 'labelalpha disambiguation 5');
-is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgasCouLaver', 'labelalpha disambiguation 6');
+is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AgasChaLaver', 'labelalpha disambiguation 10');
+is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgasConLendl', 'labelalpha disambiguation 11');
+is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgasCouLaver', 'labelalpha disambiguation 12');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -277,8 +277,10 @@ $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 
-is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha disambiguation 7');
-is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCEm', 'labelalpha disambiguation 8');
+is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha disambiguation 13');
+is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCEm', 'labelalpha disambiguation 14');
+is($bibentries->entry('L24')->get_field('sortlabelalpha'), 'Z', 'labelalpha disambiguation 15');
+is($bibentries->entry('L25')->get_field('sortlabelalpha'), 'ZX', 'labelalpha disambiguation 16');
 is($bibentries->entry('title1')->get_field('sortlabelalpha'), 'Tït', 'Title in braces with UTF-8 char - 1');
 
 # reset options and regenerate information

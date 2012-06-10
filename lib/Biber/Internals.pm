@@ -644,32 +644,38 @@ sub _process_label_attributes {
 }
 
 # This turns a list of label strings:
-# (
+# [
 #  ['Agassi', 'Chang',   'Laver', 'bob'],
 #  ['Agassi', 'Connors', 'Lendl'],
 #  ['Agassi', 'Courier', 'Laver'],
 #  ['Borg',   'Connors', 'Edberg'],
-#  ['Borg',   'Connors', 'Emerson']
-# )
+#  ['Borg',   'Connors', 'Emerson'],
+#  ['Becker', 'Connors', 'Emerson'],
+#  ['Becker']
+# ]
 #
 # firstly into the equivalence context:
-# (
-#   ["", "Agassi", "AgassiChang", "AgassiChangLaver"],
-#   ["", "Agassi", "AgassiConnors"],
-#   ["", "Agassi", "AgassiCourier"],
-#   ["", "Borg", "BorgConnors"],
-#   ["", "Borg", "BorgConnors"],
-# )
+# [
+#   ["", "Agassi", "AgassiChang",   "AgassiChangLaver"],
+#   ["", "Agassi", "AgassiConnors", "AgassiConnorsLendl"],
+#   ["", "Agassi", "AgassiCourier", "AgassiCourierLaver"],
+#   ["", "Borg",   "BorgConnors",   "BorgConnorsEdberg"],
+#   ["", "Borg",   "BorgConnors",   "BorgConnorsEmerson"],
+#   ["", "Becker", "BeckerConnors", "BeckerConnorsEmerson"],
+#   ["", "Becker", "Becker",        "Becker"],
+# ]
 #
 # and finally, using this, into a disambiguated list of the same
 # strings.
 #
 # { data => [
-#            ['A', 'Ch',  'L',  'b'],
-#            ['A', 'Con', 'L',  ''],
-#            ['A', 'Cou', 'L',  ''],
-#            ['B', 'C',   'Ed', ''],
-#            ['B', 'C',   'Em', '']
+#            ['A',  'C',   'L',  'b'],
+#            ['A',  'Con', 'L',  ''],
+#            ['A',  'Cou', 'L',  ''],
+#            ['B',  'C',   'Ed', ''],
+#            ['B',  'C',   'E',  ''],
+#            ['Be', 'C',   'E',  ''],
+#            ['B',  '',    '',   '']
 #           ],
 # }
 #
