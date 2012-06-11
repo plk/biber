@@ -686,15 +686,6 @@ sub _label_listdisambiguation {
   for (my $i = 0; $i <= $#$strings; $i++) {
     $dups[$i] = join('', @{$strings->[$i]});
   }
-  # record for each index which other indices are exactly the same list
-  for (my $i = 0; $i <= $#dups; $i++) {
-    for (my $j = 0; $j<= $#dups; $j++) {
-      next if $i == $j;
-      if ($dups[$i] eq $dups[$j]) {
-        push @{$cache->{dups}{$i}}, $j;
-      }
-    }
-  }
 
   _do_substr($lcache, $cache, $strings);
 
@@ -717,14 +708,7 @@ sub _label_listdisambiguation {
       _gen_first_disambiguating_name_map($cache, $ambiguous_strings, $ambiguous_indices);
 
       # Then increment appropriate substr map
-      if (defined($cache->{name_map}[$ambiguous_indices->[0]])) {
-        $cache->{substr_map}[$ambiguous_indices->[0]][$cache->{name_map}[$ambiguous_indices->[0]]]++;
-      }
-      # Can't be disambiguated (no name_map) which means there is no name
-      # index to start from which would help disambiguation), save now with minimal substring.
-      else {
-        $lcache->{data}[$ambiguous_indices->[0]] = [ map {substr($_, 0, 1)} $ambiguous_strings->[0] ];
-      }
+      $cache->{substr_map}[$ambiguous_indices->[0]][$cache->{name_map}[$ambiguous_indices->[0]]]++;
       # Rebuild the cache and loop
       _do_substr($lcache, $cache, $strings);
     }
@@ -763,9 +747,6 @@ sub _check_counts {
     else {
       $lcache->{data}[$cache->{keys}{$key}{index}] = $cache->{keys}{$key}{strings};
       # Also shortcut here and set the label for any identical lists
-      foreach my $dup (@{$cache->{dups}{$cache->{keys}{$key}{index}}}) {
-        $lcache->{data}[$dup] = $cache->{keys}{$key}{strings};
-      }
     }
   }
 }
@@ -779,16 +760,20 @@ sub _check_counts {
 #  ['Agassi', 'Chang',   'Laver'],
 #  ['Agassi', 'Connors', 'Lendl'],
 #  ['Agassi', 'Courier', 'Laver'],
+#  ['Agassi', 'Courier', 'Lendl'],
 # ]
 
 # results in
 
-# $cache->{name_map} = [ undef, undef, 1, 1 ]
+# $cache->{name_map} = [ 1, 1, 1, 1, 2 ]
 sub _gen_first_disambiguating_name_map {
   my ($cache, $array, $indices) = @_;
   for (my $i = 0; $i <= $#$array; $i++) {
     my @check_array = @$array;
     splice(@check_array, $i, 1);
+    # Remove duplicates from the check array otherwise the duplicate makes generating the
+    # name disambiguation index fail because there is a same name in every position
+    @check_array = grep {not Compare($array->[$i], $_)} @check_array;
     # all ambiguous must be same length (otherwise they wouldn't be ambiguous)
     my $len = $#{$array->[0]};
     for (my $j = 0; $j <= $len; $j++) {
