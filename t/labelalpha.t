@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 105;
+use Test::More tests => 109;
 
 use Biber;
 use Biber::Utils;
@@ -277,10 +277,14 @@ $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 
-is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha disambiguation 13');
-is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCE', 'labelalpha disambiguation 14');
-is($bibentries->entry('L24')->get_field('sortlabelalpha'), 'Z', 'labelalpha disambiguation 15');
-is($bibentries->entry('L25')->get_field('sortlabelalpha'), 'ZX', 'labelalpha disambiguation 16');
+is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AChL', 'labelalpha list disambiguation 1');
+is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'ACoL', 'labelalpha list disambiguation 2');
+is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'ACL', 'labelalpha list disambiguation 3');
+is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha list disambiguation 4');
+is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCE', 'labelalpha list disambiguation 5');
+is($bibentries->entry('L24')->get_field('sortlabelalpha'), 'Z', 'labelalpha list disambiguation 6');
+is($bibentries->entry('L25')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 7');
+is($bibentries->entry('L26')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 8');
 is($bibentries->entry('title1')->get_field('sortlabelalpha'), 'Tït', 'Title in braces with UTF-8 char - 1');
 
 # reset options and regenerate information

@@ -646,6 +646,8 @@ sub _process_label_attributes {
 # This turns a list of label strings:
 # [
 #  ['Agassi', 'Chang',   'Laver', 'bob'],
+#  ['Agassi', 'Chang',   'Laver'],
+#  ['Agassi', 'Chang',   'Laver'],
 #  ['Agassi', 'Connors', 'Lendl'],
 #  ['Agassi', 'Courier', 'Laver'],
 #  ['Borg',   'Connors', 'Edberg'],
@@ -654,80 +656,150 @@ sub _process_label_attributes {
 #  ['Becker']
 # ]
 #
-# firstly into the equivalence context:
-# [
-#   ["", "Agassi", "AgassiChang",   "AgassiChangLaver"],
-#   ["", "Agassi", "AgassiConnors", "AgassiConnorsLendl"],
-#   ["", "Agassi", "AgassiCourier", "AgassiCourierLaver"],
-#   ["", "Borg",   "BorgConnors",   "BorgConnorsEdberg"],
-#   ["", "Borg",   "BorgConnors",   "BorgConnorsEmerson"],
-#   ["", "Becker", "BeckerConnors", "BeckerConnorsEmerson"],
-#   ["", "Becker", "Becker",        "Becker"],
-# ]
 #
-# and finally, using this, into a disambiguated list of the same
-# strings.
+# into a disambiguated list of substrings:
 #
 # { data => [
-#            ['A',  'C',   'L',  'b'],
-#            ['A',  'Con', 'L',  ''],
-#            ['A',  'Cou', 'L',  ''],
-#            ['B',  'C',   'Ed', ''],
-#            ['B',  'C',   'E',  ''],
-#            ['Be', 'C',   'E',  ''],
-#            ['B',  '',    '',   '']
+#            ['A',  'C',  'L',  'b'],
+#            ['A',  'Ch', 'L'      ],
+#            ['A',  'Ch', 'L'      ],
+#            ['A',  'Co', 'L'      ],
+#            ['A',  'C',  'L'      ],
+#            ['B',  'C',  'Ed'     ],
+#            ['Bo', 'C',  'E'      ],
+#            ['B',  'C',  'E'      ],
+#            ['B'                  ]
 #           ],
 # }
 #
 
 sub _label_listdisambiguation {
   my $strings = shift;
-  # normalise to the same length
-  my $ml = max map {$#$_} @$strings;
-  foreach my $row (@$strings) {
-    for (my $i = 0; $i <= $ml; $i++) {
-      $row->[$i] = $row->[$i] // '';
-    }
+
+  # Cache map says which index are we substr'ing to for each name.
+  # Starting default is first char from each
+  my $cache->{substr_map} = [map {[map {1} @$_]} @$strings];
+  my $lcache->{data} = [map {undef} @$strings];
+
+  # First flag any duplicates so we can shortcut setting these later
+  my @dups;
+  for (my $i = 0; $i <= $#$strings; $i++) {
+    $dups[$i] = join('', @{$strings->[$i]});
   }
-
-  my @equiv_class = map {my $acc; [map {$acc .= $_} ('', @$_[0 .. $#$_ - 1])]} @$strings;
-  my $lcache = {};
-  for (my $i = 0; $i <= $ml; $i++) {
-    # This contains a mapping of equivalance classes to strings to substrings of
-    # increasing lengths
-    my %substr_cache = ();
-    my @col = map {$_->[$i]} @$strings;
-    my %seen = ();
-    my $maxlen = max map {length} @col;
-    for (my $k = 0; $k <= $#col; $k++) {
-      for (my $j = 1; $j <= $maxlen; $j++) {
-        my $s = substr($col[$k], 0, $j);
-        $substr_cache{$equiv_class[$k]->[$i]}{$s}++;
-      }
-    }
-
-    for (my $j = 1; $j <= $maxlen; $j++) {
-      for (my $k = 0; $k <= $#col; $k++) {
-        my $s = substr($col[$k], 0, $j);
-        # We need the items from @col which are in the same equivalance class as the current
-        # @col item
-        my @col_eq = @col[indexes {$equiv_class[$k]->[$i] eq $_} map {$_->[$i]} @equiv_class];
-        # Then we count the items in this slice of @col to see if it's the same size
-        # as the substring cache count for this substring. If it is, we can stop here.
-        # It would be more obvious to look for the first substring with count == 1 but
-        # we can't do that because this requires using uniq to trim @col and we can't do that
-        # because we need to keep the indexes into $strings the same dimensions as @equiv_class
-        if (not $lcache->{data}[$k][$i] and
-            ($substr_cache{$equiv_class[$k]->[$i]}{$s} == scalar(grep {$_ eq $col[$k] } @col_eq) or
-             $j == $maxlen)) {
-          $lcache->{data}[$k][$i] = $s;
-        }
+  # record for each index which other indices are exactly the same list
+  for (my $i = 0; $i <= $#dups; $i++) {
+    for (my $j = 0; $j<= $#dups; $j++) {
+      next if $i == $j;
+      if ($dups[$i] eq $dups[$j]) {
+        push @{$cache->{dups}{$i}}, $j;
       }
     }
   }
+
+  _do_substr($lcache, $cache, $strings);
+
+  # loop until the entire disambiguation cache is filled.
+  while (undef ~~ $lcache->{data}) {
+    _check_counts($lcache, $cache);
+    foreach my $ambiguous_indices (@{$cache->{ambiguity}}) {
+      my $ambiguous_strings = [@$strings[@$ambiguous_indices]]; # slice
+      # We work on the first in an ambiguous set
+      # We have to find the first name which is not the same as another name in the
+      # same position as we can't disambiguate on the basis of an identical name. For example:
+      # [
+      #   [ 'Smith', 'Jones' ]
+      #   [ 'Smith', 'Janes' ]
+      # ]
+      #
+      # Here there is no point trying more characters in "Smith" as it won't help
+
+      # Get disambiguating list position information
+      _gen_first_disambiguating_name_map($cache, $ambiguous_strings, $ambiguous_indices);
+
+      # Then increment appropriate substr map
+      if (defined($cache->{name_map}[$ambiguous_indices->[0]])) {
+        $cache->{substr_map}[$ambiguous_indices->[0]][$cache->{name_map}[$ambiguous_indices->[0]]]++;
+      }
+      # Can't be disambiguated, save now with minimal substring.
+      else {
+        $lcache->{data}[$ambiguous_indices->[0]] = [ map {substr($_, 0, 1)} $ambiguous_strings->[0] ];
+      }
+      # Rebuild the cache and loop
+      _do_substr($lcache, $cache, $strings);
+    }
+  }
+
   return $lcache;
 }
 
+# Take substrings of name lists according to a map and save the results
+sub _do_substr {
+  my ($lcache, $cache, $strings) = @_;
+  delete($cache->{keys});
+  for (my $i = 0; $i <= $#$strings; $i++) {
+    next if defined($lcache->{data}[$i]); # ignore names already disambiguated
+    my $row = $strings->[$i];
+    my @s;
+    for (my $j = 0; $j <= $#$row; $j++) {
+      push @s, substr($row->[$j], 0 ,$cache->{substr_map}[$i][$j]);
+    }
+    my $js = join('', @s);
+    $cache->{keys}{$js}{index} = $i; # index of the last seen $js key - useless for count >1
+    push @{$cache->{keys}{$js}{indices}}, $i;
+    $cache->{keys}{$js}{count}++;
+    $cache->{keys}{$js}{strings} = \@s;
+  }
+}
+
+# Push finished disambiguation into results and save still ambiguous labels for loop
+sub _check_counts {
+  my ($lcache, $cache) = @_;
+  delete($cache->{ambiguity});
+  foreach my $key (keys %{$cache->{keys}}) {
+    if ($cache->{keys}{$key}{count} > 1) {
+      push @{$cache->{ambiguity}}, $cache->{keys}{$key}{indices};
+    }
+    else {
+      $lcache->{data}[$cache->{keys}{$key}{index}] = $cache->{keys}{$key}{strings};
+      # Also shortcut here and set the label for any identical lists
+      foreach my $dup (@{$cache->{dups}{$cache->{keys}{$key}{index}}}) {
+        $lcache->{data}[$dup] = $cache->{keys}{$key}{strings};
+      }
+    }
+  }
+}
+
+# Find the index of the first name in $array->[0] which doesn't
+# occur in any other of $array in the same position. This must be the name
+# which disambiguates.
+
+# [
+#  ['Agassi', 'Chang',   'Laver'],
+#  ['Agassi', 'Chang',   'Laver'],
+#  ['Agassi', 'Connors', 'Lendl'],
+#  ['Agassi', 'Courier', 'Laver'],
+# ]
+
+# results in
+
+# $cache->{name_map} = [ undef, undef, 1, 1 ]
+sub _gen_first_disambiguating_name_map {
+  my ($cache, $array, $indices) = @_;
+  for (my $i = 0; $i <= $#$array; $i++) {
+    my @check_array = @$array;
+    splice(@check_array, $i, 1);
+    # all ambiguous must be same length (otherwise they wouldn't be ambiguous)
+    my $len = $#{$array->[0]};
+    for (my $j = 0; $j <= $len; $j++) {
+      # if no other name equal to this one in same place, this is the index of the name
+      # to use for disambiguation
+      unless (grep {$array->[$i][$j] eq $_} map {$_->[$j]} @check_array) {
+        $cache->{name_map}[$indices->[$i]] = $j;
+        last;
+      }
+    }
+  }
+}
 
 #########
 # Sorting
