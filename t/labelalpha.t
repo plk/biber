@@ -278,7 +278,7 @@ $bibentries = $section->bibentries;
 
 
 is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha disambiguation 13');
-is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCEm', 'labelalpha disambiguation 14');
+is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCE', 'labelalpha disambiguation 14');
 is($bibentries->entry('L24')->get_field('sortlabelalpha'), 'Z', 'labelalpha disambiguation 15');
 is($bibentries->entry('L25')->get_field('sortlabelalpha'), 'ZX', 'labelalpha disambiguation 16');
 is($bibentries->entry('title1')->get_field('sortlabelalpha'), 'Tït', 'Title in braces with UTF-8 char - 1');
