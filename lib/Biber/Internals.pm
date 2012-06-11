@@ -720,7 +720,8 @@ sub _label_listdisambiguation {
       if (defined($cache->{name_map}[$ambiguous_indices->[0]])) {
         $cache->{substr_map}[$ambiguous_indices->[0]][$cache->{name_map}[$ambiguous_indices->[0]]]++;
       }
-      # Can't be disambiguated, save now with minimal substring.
+      # Can't be disambiguated (no name_map) which means there is no name
+      # index to start from which would help disambiguation), save now with minimal substring.
       else {
         $lcache->{data}[$ambiguous_indices->[0]] = [ map {substr($_, 0, 1)} $ambiguous_strings->[0] ];
       }
