@@ -654,6 +654,12 @@ sub _process_label_attributes {
 #  ['Borg',   'Connors', 'Emerson'],
 #  ['Becker', 'Connors', 'Emerson'],
 #  ['Becker']
+#  ['Zoo', 'Xaa'],
+#  ['Zoo', 'Xaa'],
+#  ['Zaa'],
+#  ['Abc', 'Abc', 'Abc'],
+#  ['Abc', 'Abc', 'Abc'],
+#  ['Abc', 'Abc', 'Abc']
 # ]
 #
 #
@@ -669,6 +675,12 @@ sub _process_label_attributes {
 #            ['Bo', 'C',  'E'      ],
 #            ['B',  'C',  'E'      ],
 #            ['B'                  ]
+#            ['Z'   'X'            ]
+#            ['Z'   'X'            ]
+#            ['Z'                  ]
+#            ['A',  'A',  'A'      ]
+#            ['A',  'A',  'A'      ]
+#            ['A',  'A',  'A'      ]
 #           ],
 # }
 #
@@ -704,11 +716,26 @@ sub _label_listdisambiguation {
       #
       # Here there is no point trying more characters in "Smith" as it won't help
 
-      # Get disambiguating list position information
-      _gen_first_disambiguating_name_map($cache, $ambiguous_strings, $ambiguous_indices);
+      # Special case: If all lists in an ambiguity set are identical, like
+      #
+      # [
+      #  [ 'Smith, 'Jones' ],
+      #  [ 'Smith, 'Jones' ],
+      # ]
+      #
+      # Then we can shortcut and take a 1-char substring only
+      # if all name lists in the ambiguous list are in fact the same
+      if (all {Compare($ambiguous_strings->[0], $_)} @$ambiguous_strings) {
+        $lcache->{data}[$ambiguous_indices->[0]] =  [map {substr($_,0,1)} @{$ambiguous_strings->[0]}];
+      }
+      else {
+        # Get disambiguating list position information
+        _gen_first_disambiguating_name_map($cache, $ambiguous_strings, $ambiguous_indices);
 
-      # Then increment appropriate substr map
-      $cache->{substr_map}[$ambiguous_indices->[0]][$cache->{name_map}[$ambiguous_indices->[0]]]++;
+        # Then increment appropriate substr map
+        $cache->{substr_map}[$ambiguous_indices->[0]][$cache->{name_map}[$ambiguous_indices->[0]]]++;
+      }
+
       # Rebuild the cache and loop
       _do_substr($lcache, $cache, $strings);
     }
@@ -746,7 +773,6 @@ sub _check_counts {
     }
     else {
       $lcache->{data}[$cache->{keys}{$key}{index}] = $cache->{keys}{$key}{strings};
-      # Also shortcut here and set the label for any identical lists
     }
   }
 }
