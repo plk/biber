@@ -72,12 +72,6 @@ sub new {
           $lfs->{$f->{content}} = 1;
         }
       }
-      # no fields section for entrytype which means all fields
-      else {
-        foreach my $f (keys %{$self->{fieldsbyname}}) {
-          $lfs->{$self->{fieldsbyname}{$f}} = 1;
-        }
-      }
     }
 
     # constraints
@@ -145,6 +139,7 @@ sub new {
   }
   $self->{entrytypesbyname} = $leg_ents;
 
+#  use Data::Dump;dd($self);exit 0;
   return $self;
 }
 
