@@ -525,9 +525,7 @@ sub parse_ctrlfile {
     }
   }
 
-  unless (%bibdatasources or Biber::Config->getoption('bibdata')) {
-    biber_error("No data files on command line or provided in the file '$ctrl_file_path'! Exiting")
-  }
+  biber_warn("No data sources defined!") unless %bibdatasources;
 
   my $key_flag = 0;
   my $bib_sections = new Biber::Sections;
