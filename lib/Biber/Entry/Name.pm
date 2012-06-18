@@ -581,7 +581,7 @@ sub name_to_bbl {
   if (defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename;
   }
-  # Add the name has to the options
+  # Add the name hash to the options
   push @pno, 'hash=' . $self->get_hash;
   $pno = join(',', @pno);
   # Some data sources support middle names
@@ -664,6 +664,66 @@ sub name_to_bltxml {
   return;
 }
 
+=head2 name_to_bib {
+
+    Return bib data for a name
+
+=cut
+
+sub name_to_bib {
+  my $self = shift;
+
+  my @pno; # per-name options
+  my $pno; # per-name options final string
+
+  # lastname is always defined
+  my $ln  = Biber::Utils::join_name($self->get_lastname);
+  if ($self->was_stripped('lastname')) {
+    $ln = Biber::Utils::add_outer($ln);
+  }
+
+  # firstname
+  my $fn;
+  if ($fn = $self->get_firstname) {
+    $fn = Biber::Utils::join_name($fn);
+    if ($self->was_stripped('firstname')) {
+      $fn = Biber::Utils::add_outer($fn);
+    }
+  }
+  else {
+    $fn = '';
+  }
+
+  # prefix
+  my $pre;
+  if ($pre = $self->get_prefix) {
+    $pre = Biber::Utils::join_name($pre);
+    if ($self->was_stripped('prefix')) {
+      $pre = Biber::Utils::add_outer($pre);
+    }
+  }
+  else {
+    $pre = '';
+  }
+
+  # suffix
+  my $suf;
+  if ($suf = $self->get_suffix) {
+    $suf = Biber::Utils::join_name($suf);
+    if ($self->was_stripped('suffix')) {
+      $suf = Biber::Utils::add_outer($suf);
+    }
+  }
+  else {
+    $suf = '';
+  }
+  if ($suf) {
+    return "$pre $ln, $suf" . $fn ? ", $fn" : '';
+  }
+  else {
+    return "$pre $ln" . $fn ? ", $fn" : '';
+  }
+}
 
 
 =head2 dump
