@@ -525,7 +525,11 @@ sub parse_ctrlfile {
     }
   }
 
-  biber_warn("No data sources defined!") unless %bibdatasources;
+  # Be friendly to latekmk etc.
+  unless (%bibdatasources) {
+    biber_warn("No data sources defined!");
+    exit EXIT_OK;
+  }
 
   my $key_flag = 0;
   my $bib_sections = new Biber::Sections;
