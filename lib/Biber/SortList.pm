@@ -224,6 +224,46 @@ sub get_extratitledata {
   return $self->{extratitledata}{$key};
 }
 
+
+=head2 set_extratitleyeardata_for_key
+
+  Saves extratitleyear field data for a key
+
+=cut
+
+sub set_extratitleyeardata_for_key {
+  my ($self, $key, $ed) = @_;
+  return unless defined($key);
+  $self->{extratitleyeardata}{$key} = $ed;
+  return;
+}
+
+=head2 set_extratitleyeardata
+
+    Saves extratitleyear field data for all keys
+
+=cut
+
+sub set_extratitleyeardata {
+  my ($self, $ed) = @_;
+  $self->{extratitleyeardata} = $ed;
+  return;
+}
+
+
+=head2 get_extratitleyeardata
+
+    Gets the extratitleyear field data for a key
+
+=cut
+
+sub get_extratitleyeardata {
+  my ($self, $key) = @_;
+  return unless defined($key);
+  return $self->{extratitleyeardata}{$key};
+}
+
+
 =head2 set_extraalphadata_for_key
 
     Saves extraalpha field data for a key
@@ -437,6 +477,13 @@ sub instantiate_entry {
   if (my $e = $self->get_extratitledata($key)) {
     $ets = "      \\field{extratitle}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRATITLE</BDS>\n|$ets|gxms;
+  }
+
+  # extratitle
+  my $etys;
+  if (my $e = $self->get_extratitleyeardata($key)) {
+    $etys = "      \\field{extratitleyear}{$e}\n";
+    $entry_string =~ s|^\s*<BDS>EXTRATITLEYEAR</BDS>\n|$etys|gxms;
   }
 
   # extraalpha

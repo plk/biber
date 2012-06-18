@@ -87,6 +87,11 @@ $CONFIG->{state}{seen_nametitle} = {};
 # Counter for the actual extratitle value
 $CONFIG->{state}{seen_extratitle} = {};
 
+# Counter for tracking title/year combinations for extratitleyear
+$CONFIG->{state}{seen_titleyear} = {};
+# Counter for the actual extratitleyear value
+$CONFIG->{state}{seen_extratitleyear} = {};
+
 # Counter for the actual extraalpha value
 $CONFIG->{state}{seen_extraalpha} = {};
 $CONFIG->{state}{seenkeys} = {};
@@ -121,6 +126,8 @@ sub _init {
   $CONFIG->{state}{seen_extrayear} = {};
   $CONFIG->{state}{seen_nametitle} = {};
   $CONFIG->{state}{seen_extratitle} = {};
+  $CONFIG->{state}{seen_titleyear} = {};
+  $CONFIG->{state}{seen_extratitleyear} = {};
   $CONFIG->{state}{seen_extrayearalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{datafiles} = [];
@@ -1044,6 +1051,7 @@ sub reset_seen_extra {
   my $ay = shift;
   $CONFIG->{state}{seen_extrayear} = {};
   $CONFIG->{state}{seen_extratitle} = {};
+  $CONFIG->{state}{seen_extratitleyear} = {};
   $CONFIG->{state}{seen_extraalpha} = {};
   return;
 }
@@ -1071,6 +1079,18 @@ sub incr_seen_extratitle {
   shift; # class method so don't care about class name
   my $et = shift;
   return ++$CONFIG->{state}{seen_extratitle}{$et};
+}
+
+=head2 incr_seen_extratitleyear
+
+    Increment and return the counter for extratitleyear
+
+=cut
+
+sub incr_seen_extratitleyear {
+  shift; # class method so don't care about class name
+  my $ety = shift;
+  return ++$CONFIG->{state}{seen_extratitleyear}{$ety};
 }
 
 
@@ -1177,6 +1197,50 @@ sub incr_seen_nametitle {
   else {
     if ($ts) {
       $CONFIG->{state}{seen_nametitle}{$tmp}++;
+    }
+  }
+  return;
+}
+
+
+=head2 get_seen_titleyear
+
+    Get the count of an labeltitle/labelyear combination for tracking
+    extratitleyear
+
+=cut
+
+sub get_seen_titleyear {
+  shift; # class method so don't care about class name
+  my $ty = shift;
+  return $CONFIG->{state}{seen_titleyear}{$ty};
+}
+
+=head2 incr_seen_titleyear
+
+    Increment the count of an labeltitle/labelyear combination for extratitleyear
+
+    We pass in the title and year strings seperately as we have to
+    be careful and only increment this counter beyond 1 if there is
+    a title component. Otherwise, extratitleyear gets defined for all
+    entries with no title.
+
+=cut
+
+sub incr_seen_titleyear {
+  shift; # class method so don't care about class name
+  my ($ts, $ys) = @_;
+  my $tmp = "$ts,$ys";
+  # We can always increment this to 1
+  unless ($CONFIG->{state}{seen_titleyear}{$tmp}) {
+    $CONFIG->{state}{seen_titleyear}{$tmp}++;
+  }
+  # But beyond that only if we have a labeltitle in the entry since
+  # this counter is used to create extratitleyear which doesn't mean anything for
+  # entries with no title
+  else {
+    if ($ts) {
+      $CONFIG->{state}{seen_titleyear}{$tmp}++;
     }
   }
   return;

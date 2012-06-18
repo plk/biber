@@ -44,11 +44,15 @@
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labelnamespec</bcf:key>
-      <bcf:value order="1">author</bcf:value>
+      <bcf:value order="1">shortauthor</bcf:value>
+      <bcf:value order="2">author</bcf:value>
+      <bcf:value order="3">shorteditor</bcf:value>
+      <bcf:value order="4">editor</bcf:value>
+      <bcf:value order="5">translator</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labeltitle</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labeltitlespec</bcf:key>
@@ -57,7 +61,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labeltitleyear</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelyear</bcf:key>
@@ -82,7 +86,7 @@
     <bcf:option type="singlevalued">
       <bcf:key>maxitems</bcf:key>
       <bcf:value>3</bcf:value>
-    </bcf:option>    
+    </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minalphanames</bcf:key>
       <bcf:value>1</bcf:value>
@@ -117,7 +121,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useauthor</bcf:key>
@@ -125,7 +129,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useeditor</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
@@ -133,7 +137,19 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options component="biblatex" type="collection">
+    <bcf:option type="multivalued">
+      <bcf:key>labelnamespec</bcf:key>
+      <bcf:value order="1">shorteditor</bcf:value>
+      <bcf:value order="2">editor</bcf:value>
+      <bcf:value order="3">translator</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>0</bcf:value>
     </bcf:option>
   </bcf:options>
   <!-- DISPLAYMODES -->
@@ -451,62 +467,6 @@
         <bcf:map_step map_field_source="z:libraryCatalog" map_field_target="library"/>
       </bcf:map>
     </bcf:maps>
-    <bcf:maps datatype="bibtex" map_overwrite="1">
-      <bcf:map>
-        <!-- Doesn't exist, just testing source restrictions -->
-        <bcf:per_datasource>doesnotexist.bib</bcf:per_datasource>
-        <bcf:map_step map_type_source="*" map_type_target="CUSTOMB"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
-        <!-- Doesn't exist, just testing multi for this option-->
-        <bcf:per_datasource>bibtex-aliases2.bib</bcf:per_datasource>
-        <bcf:map_step map_type_source="MISC" map_final="1"/>
-        <bcf:map_step map_field_set="KEYWORDS" map_field_value="keyw1, keyw2"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:map_step map_type_source="CONVERSATION" map_type_target="CUSTOMA" map_final="1"/>
-        <bcf:map_step map_field_set="VERBA" map_origentrytype="1"/>
-        <bcf:map_step map_field_set="VERBB" map_field_value="somevalue"/>
-        <bcf:map_step map_field_set="VERBC" map_field_value="somevalue"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:map_step map_type_source="CHAT" map_type_target="CUSTOMB"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
-        <bcf:map_step map_field_set="ABSTRACT" map_null="1"/>
-        <bcf:map_step map_field_source="CONDUCTOR" map_field_target="NAMEA"/>
-        <bcf:map_step map_field_source="GPS" map_field_target="USERA"/>
-        <bcf:map_step map_field_source="PARTICIPANT" map_field_target="NAMEA"/>
-        <bcf:map_step map_field_source="USERB" map_field_target="USERC"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:map_step map_field_source="PUBMEDID" map_field_target="EPRINT"
-                      map_final = "1"/>
-        <bcf:map_step map_field_set="EPRINTTYPE" map_origfield="1"/>
-        <bcf:map_step map_field_set="USERD" map_field_value="Some string of things"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:per_datasource>bibtex-aliases.bib</bcf:per_datasource>
-        <bcf:per_type>MISC</bcf:per_type>
-        <bcf:map_step map_field_set="USERB" map_null="1"/>
-        <bcf:map_step map_field_set="USERE" map_field_value="a string"/>
-        <bcf:map_step map_field_set="USERF" map_null="1"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:per_type>REPORT</bcf:per_type>
-        <bcf:map_step map_field_source="LISTA" map_match="BADMATCH" map_final="1"/>
-        <bcf:map_step map_field_set="LISTA" map_null="1"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:map_step map_field_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:per_type>UNPUBLISHED</bcf:per_type>
-        <bcf:map_step map_field_source="LISTC" map_field_target="INSTITUTION" map_match="\A(\S{2})" map_replace="REP$1CED"/>
-      </bcf:map>
-    </bcf:maps>
   </bcf:sourcemap>
   <!-- LABELALPHA TEMPLATE -->
   <bcf:labelalphatemplate type="global">
@@ -599,16 +559,19 @@
       <bcf:field source="subtitle" target="journalsubtitle"/>
     </bcf:inherit>
   </bcf:inheritance>
+  <!-- SORTING -->
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
-      <bcf:sortitem order="2">mm</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="2" final="1">
       <bcf:sortitem order="1">sortkey</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="3">
+      <bcf:sortitem order="1">labelalpha</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
       <bcf:sortitem order="1">sortname</bcf:sortitem>
       <bcf:sortitem order="2">author</bcf:sortitem>
       <bcf:sortitem order="3">editor</bcf:sortitem>
@@ -616,17 +579,17 @@
       <bcf:sortitem order="5">sorttitle</bcf:sortitem>
       <bcf:sortitem order="6">title</bcf:sortitem>
     </bcf:sort>
-    <bcf:sort order="4">
-      <bcf:sortitem order="1">sortyear</bcf:sortitem>
-      <bcf:sortitem order="2">year</bcf:sortitem>
-    </bcf:sort>
     <bcf:sort order="5">
-      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
-      <bcf:sortitem order="2">title</bcf:sortitem>
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem substring_side="right" substring_width="4" order="2">year</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="6">
-      <bcf:sortitem order="1">volume</bcf:sortitem>
+      <bcf:sortitem order="1" pad_char="0">volume</bcf:sortitem>
       <bcf:sortitem order="2">0000</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="7">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
   <!-- DATA MODEL -->
@@ -1953,16 +1916,16 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">bibtex-aliases.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">extratitleyear.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">alias1</bcf:citekey>
-    <bcf:citekey order="2">alias2</bcf:citekey>
-    <bcf:citekey order="3">alias3</bcf:citekey>
-    <bcf:citekey order="4">alias4</bcf:citekey>
-    <bcf:citekey order="5">alias5</bcf:citekey>
-    <bcf:citekey order="6">alias6</bcf:citekey>
-    <bcf:citekey order="7">alias7</bcf:citekey>
+    <bcf:citekey order="1">L1</bcf:citekey>
+    <bcf:citekey order="2">L2</bcf:citekey>
+    <bcf:citekey order="3">L3</bcf:citekey>
+    <bcf:citekey order="4">L4</bcf:citekey>
+    <bcf:citekey order="5">L5</bcf:citekey>
+    <bcf:citekey order="6">L6</bcf:citekey>
+    <bcf:citekey order="6">L7</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

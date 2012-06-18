@@ -1073,6 +1073,9 @@ sub process_entries_post {
     # generate information for tracking extratitle
     $self->process_extratitle($citekey);
 
+    # generate information for tracking extratitleyear
+    $self->process_extratitleyear($citekey);
+
     # generate information for tracking singletitle
     $self->process_singletitle($citekey);
 
@@ -1220,6 +1223,49 @@ sub process_extratitle {
   return;
 }
 
+=head2 process_extratitleyear
+
+    Track labeltitle/labelyear combination for generation of extratitleyear
+
+=cut
+
+sub process_extratitleyear {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+
+  # Generate labeltitle/labelyear combination for tracking extratitleyear
+  # * If there is no labeltitle to use, use empty string
+  # * If there is no labelyear to use, use empty string
+  # * Don't increment the seen_titleyear count if the labeltitle field is empty
+  #   (see code in incr_seen_titleyear method).
+  # * Don't increment if skiplab is set
+
+  if (Biber::Config->getblxoption('labeltitleyear', $bee)) {
+    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+      return;
+    }
+
+    $logger->trace("Creating extratitleyear information for '$citekey'");
+
+    my $ltn = $be->get_field('labeltitlename');
+    my $title_string = $be->get_field($ltn) // '';
+
+    # Takes into account the labelyear which can be a range
+    my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
+
+    my $titleyear_string = "$title_string,$year_string";
+    $logger->trace("Setting titleyear to '$titleyear_string' for entry '$citekey'");
+    $be->set_field('titleyear', $titleyear_string);
+    $logger->trace("Incrementing titleyear for '$title_string'");
+    Biber::Config->incr_seen_titleyear($title_string, $year_string);
+  }
+
+  return;
+}
 
 
 =head2 process_sets
@@ -2393,6 +2439,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
       * extraalpha
       * extrayear
       * extratitle
+      * extratitleyear
 
 =cut
 
@@ -2429,6 +2476,15 @@ sub generate_extra {
           $logger->trace("nametitle for '$nametitle': " . Biber::Config->get_seen_nametitle($nametitle));
           my $v = Biber::Config->incr_seen_extratitle($nametitle);
           $list->set_extratitledata_for_key($key, $v);
+        }
+      }
+      # extratitle
+      if (Biber::Config->getblxoption('labeltitleyear', $bee)) {
+        my $titleyear = $be->get_field('titleyear');
+        if (Biber::Config->get_seen_titleyear($titleyear) > 1) {
+          $logger->trace("titleyear for '$titleyear': " . Biber::Config->get_seen_titleyear($titleyear));
+          my $v = Biber::Config->incr_seen_extratitleyear($titleyear);
+          $list->set_extratitleyeardata_for_key($key, $v);
         }
       }
       # extraalpha

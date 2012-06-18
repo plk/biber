@@ -326,6 +326,17 @@ sub set_output_entry {
       }
     }
   }
+
+  # The labeltitleyear option determines whether "extratitleyear" is output
+  if ( Biber::Config->getblxoption('labeltitleyear', $bee)) {
+    # Might not have been set due to skiplab/dataonly
+    if (my $titleyear = $be->get_field('titleyear')) {
+      if ( Biber::Config->get_seen_titleyear($titleyear) > 1) {
+        $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
+      }
+    }
+  }
+
   # labeltitle is always output
   if (my $lt = $be->get_field('labeltitle')) {
     $acc .= "      \\field{labeltitle}{$lt}\n";

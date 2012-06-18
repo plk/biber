@@ -31,6 +31,7 @@ start =
       labelnamespec,
       labeltitle,
       labeltitlespec,
+      labeltitleyear,
       labelyear,
       labelyearspec,
       maxalphanames,
@@ -60,6 +61,7 @@ start =
       labelalpha?,
       labeltitle?,
       labeltitlespec?,
+      labeltitleyear?,
       labelnamespec?,
       labelyear?,
       labelyearspec?,
@@ -408,6 +410,12 @@ labeltitlespec =
       attribute order { xsd:integer },
       text
     }+
+  }
+labeltitleyear =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "labeltitleyear" },
+    element bcf:value { "0" | "1" }
   }
 labelyear =
   element bcf:option {

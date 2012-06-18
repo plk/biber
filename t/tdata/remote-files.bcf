@@ -56,6 +56,10 @@
       <bcf:value order="2">title</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>labeltitleyear</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>labelyear</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
