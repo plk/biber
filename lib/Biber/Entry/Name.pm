@@ -673,9 +673,6 @@ sub name_to_bltxml {
 sub name_to_bib {
   my $self = shift;
 
-  my @pno; # per-name options
-  my $pno; # per-name options final string
-
   # lastname is always defined
   my $ln  = Biber::Utils::join_name($self->get_lastname);
   if ($self->was_stripped('lastname')) {
@@ -717,11 +714,14 @@ sub name_to_bib {
   else {
     $suf = '';
   }
+
+  $pre = "$pre " if $pre;
+
   if ($suf) {
-    return "$pre $ln, $suf" . $fn ? ", $fn" : '';
+    return "$pre$ln, $suf" . ($fn ? ", $fn" : '');
   }
   else {
-    return "$pre $ln" . $fn ? ", $fn" : '';
+    return "$pre$ln" . ($fn ? ", $fn" : '');
   }
 }
 
