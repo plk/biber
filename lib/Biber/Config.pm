@@ -45,7 +45,7 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
-$CONFIG->{state}{seenname} = {};
+$CONFIG->{state}{seenwork} = {};
 
 # Set tracking, parent->child and child->parent
 $CONFIG->{state}{set}{pc} = {};
@@ -116,7 +116,7 @@ sub _init {
   $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
-  $CONFIG->{state}{seenname} = {};
+  $CONFIG->{state}{seenwork} = {};
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{ladisambiguation} = {};
   $CONFIG->{state}{uniquenamecount} = {};
@@ -710,8 +710,6 @@ sub getblxoption {
     Can be used for crossrefs and xdata. This records the actual fields
     inherited from another entry, for tree generation.
 
-    Biber::Config->set_graph($source_key, $target_key, $source_field, $target_field)
-
 =cut
 
 sub set_graph {
@@ -843,8 +841,6 @@ sub get_set_parents {
     Can be used for crossrefs and xdata. This just records that an entry
     inherited from another entry, for loop detection.
 
-    Biber::Config->set_inheritance($source, $target)
-
 =cut
 
 sub set_inheritance {
@@ -859,8 +855,6 @@ sub set_inheritance {
 
     Check if $target directly inherited information from $source
     Can be used for crossrefs and xdata
-
-    Biber::Config->get_inheritance($source, $target)
 
 =cut
 
@@ -886,8 +880,6 @@ sub get_inheritance {
               t => 'D'}
 ];
 
-  Biber::Config->is_inheritance_path($type, $key1, $key2)
-
 =cut
 
 sub is_inheritance_path {
@@ -906,8 +898,6 @@ sub is_inheritance_path {
 
     Increment a counter to say we have seen this labelalpha
 
-    Biber::Config->incr_la_disambiguation($la);
-
 =cut
 
 sub incr_la_disambiguation {
@@ -921,8 +911,6 @@ sub incr_la_disambiguation {
 =head2 get_la_disambiguation
 
     Get the disambiguation counter for this labelalpha
-
-    Biber::Config->get_la_disambiguation($la);
 
 =cut
 
@@ -966,8 +954,6 @@ sub get_keyorder {
 
     Get the count of a key
 
-    Biber::Config->get_seenkey($hash);
-
 =cut
 
 sub get_seenkey {
@@ -991,8 +977,6 @@ sub get_seenkey {
 
     Increment the seen count of a key
 
-    Biber::Config->incr_seenkey($ay);
-
 =cut
 
 sub incr_seenkey {
@@ -1003,36 +987,28 @@ sub incr_seenkey {
   return;
 }
 
-=head2 get_seenname
+=head2 get_seenwork
 
-    Get the count of occurences of a labelname which
-    takes into account all of maxcitenames, uniquelist,
-    uniquename, useprefix
-
-    Biber::Config->get_seenname($name);
+    Get the count of occurences of a labelname or labeltitle
 
 =cut
 
-sub get_seenname {
+sub get_seenwork {
   shift; # class method so don't care about class name
-  my $name = shift;
-  return $CONFIG->{state}{seenname}{$name};
+  my $identifier = shift;
+  return $CONFIG->{state}{seenwork}{$identifier};
 }
 
-=head2 incr_seenname
+=head2 incr_seenwork
 
-    Increment the count of occurences of a labelname which
-    takes into account all of maxcitenames, uniquelist,
-    uniquename, useprefix
-
-    Biber::Config->incr_seename($name);
+    Increment the count of occurences of a labelname or labeltitle
 
 =cut
 
-sub incr_seenname {
+sub incr_seenwork {
   shift; # class method so don't care about class name
-  my $name = shift;
-  $CONFIG->{state}{seenname}{$name}++;
+  my $identifier = shift;
+  $CONFIG->{state}{seenwork}{$identifier}++;
   return;
 }
 
@@ -1041,8 +1017,6 @@ sub incr_seenname {
 =head2 reset_seen_extra
 
     Reset the counters for extra*
-
-    Biber::Config->reset_extra;
 
 =cut
 
@@ -1098,8 +1072,6 @@ sub incr_seen_extratitleyear {
 
     Increment and return the counter for extraalpha
 
-    Biber::Config->incr_seen_extraalpha($ay);
-
 =cut
 
 sub incr_seen_extraalpha {
@@ -1116,8 +1088,6 @@ sub incr_seen_extraalpha {
     entries with different labelyear (like differentiating 1984--1986 from
     just 1984)
 
-    Biber::Config->get_seen_nameyear($ny);
-
 =cut
 
 sub get_seen_nameyear {
@@ -1129,8 +1099,6 @@ sub get_seen_nameyear {
 =head2 incr_seen_nameyear
 
     Increment the count of an labelname/labelyear combination for extrayear
-
-    Biber::Config->incr_seen_nameyear($ns, $ys);
 
     We pass in the name and year strings seperately as we have to
     be careful and only increment this counter beyond 1 if there is
@@ -1254,8 +1222,6 @@ sub incr_seen_titleyear {
 
     Get the number of uniquelist entries for a (possibly partial) list
 
-    Biber::Config->get_uniquelistcount($namelist);
-
 =cut
 
 sub get_uniquelistcount {
@@ -1267,8 +1233,6 @@ sub get_uniquelistcount {
 =head2 add_uniquelistcount
 
     Incremenent the count for a list part to the data for a name
-
-    Biber::Config->add_uniquelistcount($liststring);
 
 =cut
 
@@ -1282,8 +1246,6 @@ sub add_uniquelistcount {
 =head2 add_uniquelistcount_final
 
     Incremenent the count for a complete list to the data for a name
-
-    Biber::Config->add_uniquelistcount_final($liststring);
 
 =cut
 
@@ -1300,8 +1262,6 @@ sub add_uniquelistcount_final {
     Incremenent the count for a list and year to the data for a name
     Used to track uniquelist = minyear
 
-    Biber::Config->add_uniquelistcount_minyear($minyearliststring, $year, $namelist);
-
 =cut
 
 sub add_uniquelistcount_minyear {
@@ -1317,8 +1277,6 @@ sub add_uniquelistcount_minyear {
     Get the count for a list and year to the data for a name
     Used to track uniquelist = minyear
 
-    Biber::Config->get_uniquelistcount_minyear($minyearliststring, $year);
-
 =cut
 
 sub get_uniquelistcount_minyear {
@@ -1333,8 +1291,6 @@ sub get_uniquelistcount_minyear {
 
     Get the number of uniquelist entries for a full list
 
-    Biber::Config->get_uniquelistcount_final($namelist);
-
 =cut
 
 sub get_uniquelistcount_final {
@@ -1348,8 +1304,6 @@ sub get_uniquelistcount_final {
 =head2 reset_uniquelistcount
 
     Reset the count for list parts and complete lists
-
-    Biber::Config->reset_uniquelistcount;
 
 =cut
 
@@ -1370,8 +1324,6 @@ sub reset_uniquelistcount {
 
     [a, b, d, e, f]
     [a, b, e, z, z, y]
-
-    Biber::Config->list_differs_nth($namelist, $n)
 
 =cut
 
@@ -1409,8 +1361,6 @@ sub list_differs_nth {
 
     [a, b, d]
     [a, b, d, e]
-
-    Biber::Config->list_differs_last($namelist)
 
 =cut
 
@@ -1452,8 +1402,6 @@ sub list_differs_last {
     [a, b, c, d]
     [a, b, c, d, e]
 
-    Biber::Config->list_differs_superset($namelist)
-
 =cut
 
 sub list_differs_superset {
@@ -1482,8 +1430,6 @@ sub list_differs_superset {
 
     Get the number of uniquenames entries for a visible name
 
-    Biber::Config->get_numofuniquenames($name);
-
 =cut
 
 sub get_numofuniquenames {
@@ -1498,8 +1444,6 @@ sub get_numofuniquenames {
 =head2 get_numofuniquenames_all
 
     Get the number of uniquenames entries for a name
-
-    Biber::Config->get_numofuniquenames_all($name);
 
 =cut
 
@@ -1518,8 +1462,6 @@ sub get_numofuniquenames_all {
     Add a name to the list of name contexts which have the name in it
     (only called for visible names)
 
-    Biber::Config->add_uniquenamecount($name, $namecontext);
-
 =cut
 
 sub add_uniquenamecount {
@@ -1534,8 +1476,6 @@ sub add_uniquenamecount {
     Add a name to the list of name contexts which have the name in it
     (called for all names)
 
-    Biber::Config->add_uniquenamecount_all($name, $namecontext);
-
 =cut
 
 sub add_uniquenamecount_all {
@@ -1548,8 +1488,6 @@ sub add_uniquenamecount_all {
 =head2 reset_uniquenamecount
 
     Reset the list of names which have the name part in it
-
-    Biber::Config->reset_uniquenamecount;
 
 =cut
 
@@ -1564,8 +1502,6 @@ sub reset_uniquenamecount {
 
     Get the list of name contexts which contain a name
     Mainly for use in tests
-
-    Biber::Config->get_uniquename($name);
 
 =cut
 
@@ -1582,8 +1518,6 @@ sub _get_uniquename {
 
     Return ref to array of keys which are crossref targets
 
-    Biber::Config->get_crossrefkeys();
-
 =cut
 
 sub get_crossrefkeys {
@@ -1596,8 +1530,6 @@ sub get_crossrefkeys {
     Return an integer representing the number of times a
     crossref target key has been ref'ed
 
-    Biber::Config->get_crossrefkey($key);
-
 =cut
 
 sub get_crossrefkey {
@@ -1609,8 +1541,6 @@ sub get_crossrefkey {
 =head2 del_crossrefkey
 
     Remove a crossref target key from the crossrefkeys state
-
-    Biber::Config->del_crossrefkey($key);
 
 =cut
 
@@ -1626,8 +1556,6 @@ sub del_crossrefkey {
 =head2 incr_crossrefkey
 
     Increment the crossreferences count for a target crossref key
-
-    Biber::Config->incr_crossrefkey($key);
 
 =cut
 

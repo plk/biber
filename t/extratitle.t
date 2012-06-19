@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 7;
+use Test::More tests => 14;
 
 use Biber;
 use Biber::Utils;
@@ -54,4 +54,10 @@ is($main->get_extratitledata('L4'), '2', 'No name, same title - 2');
 ok(is_undef($main->get_extratitledata('L5')), 'No name, same title as with name - 1');
 is($main->get_extratitledata('L6'), '1', 'No name, same shorttitle/title - 1');
 is($main->get_extratitledata('L7'), '2', 'No name, same shorttitle/title - 2');
-
+ok(is_undef($bibentries->entry('L8')->get_field('singletitle')), 'Singletitle test - 1');
+ok(is_undef($bibentries->entry('L9')->get_field('singletitle')), 'Singletitle test - 2');
+is($bibentries->entry('L10')->get_field('singletitle'), '1', 'Singletitle test - 3');
+is($bibentries->entry('L11')->get_field('singletitle'), '1', 'Singletitle test - 4');
+ok(is_undef($bibentries->entry('L12')->get_field('singletitle')), 'Singletitle test - 5');
+ok(is_undef($bibentries->entry('L1')->get_field('singletitle')), 'Singletitle test - 6');
+is($bibentries->entry('L5')->get_field('singletitle'), '1', 'Singletitle test - 7');

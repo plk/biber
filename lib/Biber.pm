@@ -1099,7 +1099,7 @@ sub process_entries_post {
 
 =head2 process_singletitle
 
-    Track seen name combination for generation of singletitle
+    Track seen work combination for generation of singletitle
 
 =cut
 
@@ -1112,21 +1112,22 @@ sub process_singletitle {
   my $bee = $be->get_field('entrytype');
   $logger->trace("Creating singletitle information for '$citekey'");
 
-  my $name_string;
+  # Use labelname to generate this, if there is one ...
+  my $identifier;
   if (my $lnn = $be->get_field('labelnamename')) {
-    $name_string = $self->_getnamehash_u($citekey, $be->get_field($lnn));
+    $identifier = $self->_getnamehash_u($citekey, $be->get_field($lnn));
   }
-  else {
-    $name_string = '';
+  # ... otherwise use labeltitle
+  elsif (my $ltn = $be->get_field('labeltitlename')) {
+    $identifier = $be->get_field($ltn);
   }
 
-  # Only generate this information if singletitle option is requested and there is a
-  # labelname
-  if ($name_string and
-      Biber::Config->getblxoption('singletitle', $bee)) {
-    Biber::Config->incr_seenname($name_string);
-    $logger->trace("Setting seenname for '$citekey' to '$name_string'");
-    $be->set_field('seenname', $name_string);
+  # Don't generate this information for entries with no labelname or labeltitle
+  # as it would make no sense
+  if ($identifier and Biber::Config->getblxoption('singletitle', $bee)) {
+    Biber::Config->incr_seenwork($identifier);
+    $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
+    $be->set_field('seenwork', $identifier);
   }
   return;
 }
@@ -2521,8 +2522,8 @@ sub generate_singletitle {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))) {
-      if ($be->get_field('seenname') and
-          Biber::Config->get_seenname($be->get_field('seenname')) < 2 ) {
+      if ($be->get_field('seenwork') and
+          Biber::Config->get_seenwork($be->get_field('seenwork')) < 2 ) {
         $logger->trace("Setting singletitle for '$citekey'");
         $be->set_field('singletitle', 1);
       }
