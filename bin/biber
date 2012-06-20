@@ -98,8 +98,8 @@ unless (@ARGV) {
 
 # Sanitise and check the outformat option
 if (my $of = $opts->{outformat}) {
-  unless ($opts->{outformat} =~ /\A(?:bbl|dot|bltxml|bibtex)\z/xms) {
-    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot' or 'bltxml'";
+  unless ($opts->{outformat} =~ /\A(?:bbl|dot)\z/xms) {
+    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot'";
     exit EXIT_ERROR;
   }
 }
@@ -163,12 +163,6 @@ else {
   if (Biber::Config->getoption('outformat') eq 'dot') { # .dot output
     $outfile = $bcf =~ s/bcf$/dot/r;
   }
-  elsif (Biber::Config->getoption('outformat') eq 'bltxml') { # .bltxml output
-    $outfile = $bcf =~ s/bcf$/bltxml/r;
-  }
-  elsif (Biber::Config->getoption('outformat') eq 'bibtex') { # .bib output
-    $outfile = $bcf =~ s/bcf$/bibtex/r;
-  }
   else { # .bbl output
     $outfile = $bcf =~ s/bcf$/bbl/r;
   }
@@ -205,14 +199,6 @@ if (Biber::Config->getoption('trace')) {
 if (Biber::Config->getoption('outformat') eq 'dot') { # .dot output
   require Biber::Output::dot;
   $biber->set_output_obj(Biber::Output::dot->new());
-}
-elsif (Biber::Config->getoption('outformat') eq 'bltxml') { # biblatexml output
-  require Biber::Output::biblatexml;
-  $biber->set_output_obj(Biber::Output::biblatexml->new());
-}
-elsif (Biber::Config->getoption('outformat') eq 'bibtex') { # bibtex output
-  require Biber::Output::bibtex;
-  $biber->set_output_obj(Biber::Output::bibtex->new());
 }
 else { # .bbl output
   require Biber::Output::bbl;
@@ -403,20 +389,14 @@ F<file> is relative to B<--output_directory>, if set (absolute
 paths in this case are stripped to filename only). F<file> can
 be absolute if B<--output_directory> is not set.
 
-=item B<--outformat=bbl|dot|bltxml|bibtex>
+=item B<--outformat=bbl|dot>
 
 Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
 to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of
 the bibliography data showing entries and, as requested, sections and fields.
 You must process this file with C<dot>, e.g. C<dot -Tsvg test.dot -o test.svg> to
 render the graph. See the B<--dot_include> option to select what is included in
-the DOT output. Use F<bltxml> to output a BibLaTeXML file of the internal data
-model instead of a F<.bbl>. This helps in moving to BibLaTeXML by translating
-other datasource formats. Use F<bibtex> to get a BibTeX data format representation
-of the data. Can be useful if using source mapping transformation to get a
-hard copy of the transformed data. F<bibtex> outputs a file with extension F<.bibtex>
-and not F<.bib> to avoid overwriting any F<.bib> file with the same name as the
-F<.bcf>.
+the DOT output.
 
 =item B<--output_directory [directory]>
 

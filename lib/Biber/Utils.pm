@@ -709,6 +709,7 @@ sub join_name {
   return $nstring;
 }
 
+
 =head2 filter_entry_options
 
     Process any per_entry option transformations which are necessary
