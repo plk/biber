@@ -310,10 +310,9 @@ such as \verb+Unicode::Collate+, \verb+Text::BibTeX+ and
 \begin{figure}[!htpb]
   \centering\small
   \begin{tikzpicture}
-    \node[file] (dcfs) {driver config files};
-    \node[file] (dsfiles) [right of=dcfs,node distance=8em]{datasources};
+    \node[file] (dsfiles) {datasources};
     \node[file] (bcf) [right of=dsfiles,node distance=8em] {\texttt{.bcf} control file};
-    \node[funit] (decode) [below of=dsfiles,node distance=8em] {Decode to UTF-8} edge [<-,very thick] (dsfiles) edge [<-,very thick] (dcfs) edge [<-,very thick] (bcf);
+    \node[funit] (decode) [below of=dsfiles,node distance=8em] {Decode to UTF-8} edge [<-,very thick] (dsfiles) edge [<-,very thick] (bcf);
     \node[funit] (mapp) [below of=decode,node distance=6em] {remap/parse} edge [<-,very thick] (decode);
     \node[file] (config) [left of=mapp,node distance=12em] {User \texttt{biber.conf} file} edge [->,very thick] (mapp);
     \node[funit] (dyn) [below of=mapp,node distance=6em] {Instantiate dynamic sets and\\related entries} edge [<-,very thick] (mapp);
@@ -350,9 +349,7 @@ entry can take as it passes through Biber.
     themselves in which case they are already instantiated as per item
     \ref{list:cited} above).
       \item Clones of entries mentioned as a «related» entry of a cited
-        entry\footnote{This is done to 
-          implement the «related» entry feature which does not currently
-          have a \BibLaTeX\ interface.}.
+        entry.
       \item Members of sets, either explicit \bibtype{SET} entrytype entries or
         dynamic sets.
   \end{itemize}
@@ -458,6 +455,8 @@ labelalpha         & \checkmark & \checkmark &  \\
 labelalphatemplate & \checkmark & \checkmark &  \\
 labelnamespec      & \checkmark & \checkmark &  \\
 labelnumber        & \checkmark & \checkmark &  \\
+labeltitle         & \checkmark & \checkmark &  \\
+labeltitleyear     & \checkmark & \checkmark &  \\
 labelyear          & \checkmark & \checkmark &  \\
 labelyearspec      & \checkmark & \checkmark &  \\
 maxalphanames      & \checkmark & \checkmark & \checkmark\\
@@ -475,6 +474,7 @@ skiplab            &   & \checkmark & \checkmark\\
 skiplos            &   & \checkmark & \checkmark\\
 sortalphaothers    & \checkmark & \checkmark &  \\
 sortexclusion      &   & \checkmark &  \\
+sortfirstinits     & \checkmark &   & \\
 sorting            & \checkmark &   &  \\
 structure          & \checkmark &   &  \\
 uniquelist         & \checkmark & \checkmark & \checkmark\\
@@ -581,7 +581,11 @@ data source with non-standard entrytypes or fields and to have these
 automatically mapped into other entrytypes/fields without modifying
 your data source.  Essentially, this alters the source data stream
 which Biber uses to build the internal \BibLaTeX\ data model and is an
-automatic way of editing the datasource as it is read by Biber.
+automatic way of editing the datasource as it is read by Biber. This
+option is completely equivalent to the \BibLaTeX\
+\cmd{DeclareSourcemap} macro which is in fact a per-document \LaTeX\
+macro-based interface to exactly the same functionality (see the
+\BibLaTeX\ manual).
 
 Figure \ref{fig:biber-mdf} is a graphical overview of the data flow for
 data model information. See Figure \ref{fig:overview} for a more complete
@@ -592,14 +596,15 @@ overview of Biber's processing steps.
   \begin{tikzpicture}
     \node[file] (dsfile) {datasource};
     \node[funit] (remap) [below of=dsfile, node distance=8em] {remap} edge [<-,dashed] (dsfile);
-    \node[file] (dcf) [left of=remap, node distance=10em] {data model mapping\\from driver config file} edge [->,dashed] (remap);
+    \node[file] (docremap) [left of=dsfile, node distance=15em] {document data model mapping\\from \texttt{.bcf}} edge [->,dashed] (remap);
+    \node[file] (defaultremap) [left of=remap, node distance=15em] {default data model mapping\\from \texttt{.bcf}} edge [->,dashed] (remap);
     \node[file] (conf) [below of=remap,  node distance=7em] {data model mapping\\from Biber config file} edge [->,dashed] (remap);
     \node[funit] (parser) [right of=remap, node distance=8em] {parser} edge [<-,very thick] (remap);
     \node[funit] (validation) [right of=parser, node distance=8em] {validation} edge [<-,very thick] (parser);
     \node[file] (hard) [above of=validation, node distance=8em]
     {\BibLaTeX\ data\\model from \texttt{.bcf}} edge [->,dashed]
     (parser) edge [->,dashed] (remap) edge [->,dashed] (validation);
-    \node[file] (bbl) [right of=parser, node distance=16em] {output file} edge [<-,very thick] (validation);
+    \node[file] (bbl) [below of=validation, node distance=8em] {output file} edge [<-,very thick] (validation);
   \end{tikzpicture}
   \caption{Model data flow in Biber}
   \label{fig:biber-mdf}
@@ -652,7 +657,7 @@ section. The general structure is:
 
 \noindent Here, \textcolor{red}{\texttt{driver$_1$}}\ldots
 \textcolor{red}{\texttt{driver$_n$}} are the names of valid Biber data
-source drivers (see section \ref{dcf}). One thing to note here is the
+source drivers (see section \ref{dsd}). One thing to note here is the
 \opt{map\_overwrite} attribute. This boolean attribute determines whether,
 for this driver mapping section, you may overwrite existing fields when
 adding new fields or mapping them. This attribute can be overridden on a
@@ -1493,28 +1498,24 @@ the \verb+.bbl+. If you only use \BibLaTeX\ with your \BibTeX\
 data source files, you should probably make any \bibfield{MONTH} fields be the
 numbers which \BibLaTeX\ expects.
 
-\subsection{Biber data source drivers}\label{dcf}
+\subsection{Biber data source drivers}\label{dsd}
 
 Biber uses a modular data source driver model to provide access
 to supported data sources. The drivers are responsible for mapping
-driver entry types and fields to the \BibLaTeX\ model. This is
-aided by a driver configuration file (\verb+.dcf+). The information in
-this file for each driver can be found in the driver documentation folder on
-SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/\biberversion/documentation/drivers}}. This
-file shows you which handlers the driver uses for different fields and
-what certain entry types and fields are aliased to in the
-\BibLaTeX\ data model. This is not fantastically useful to know
-without knowing also what the named driver handlers do specifically but there
-is a «description» section which mentions any special handling and
-general comments on the driver. You should read the documentation for
-the drivers you use to get an idea of how Biber handles your
-data. Data model mapping is an imprecise art
-and the drivers are where the necessarily messy parts of Biber
-live. Most data source models are not designed with typesetting in
-mind and are usually not fine-grained enough to provide the sorts of
-information that \BibLaTeX\ needs. Biber does its best to
-obtain as much meaningful information from a data source as possible.
-Currently supported data sources drivers are:
+driver entrytypes and fields to the \BibLaTeX\ data model according to a
+data model specification in the \BibLaTeX\ file \file{blx-dm.def}. The
+data model can be changed using \BibLaTeX\ macros in case you would
+like to, for example, use your own entrytype or field names or perhaps
+have Biber do some validation on your data sources (see the \BibLaTeX\
+manual). 
+
+Data model mapping is an imprecise art and the drivers are the
+necessarily the most messy parts of Biber. Most data source models are
+not designed with typesetting in mind and are usually not fine-grained
+enough to provide the sorts of information that \BibLaTeX\
+needs. Biber does its best to obtain as much meaningful information
+from a data source as possible. Currently supported data sources
+drivers are:
 
 \begin{itemize}
 \item \BibTeX\ --- \BibTeX\ data files
@@ -1567,7 +1568,7 @@ xref     & Show XREF relationships\\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{Valid sub-options for the \texttt{graph} option}
+\caption{Valid sub-options for the \texttt{dot\_include} option}
 \label{tab:graphopts}
 \end{table}
 
