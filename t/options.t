@@ -42,7 +42,7 @@ Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 my $dmv =  [
@@ -77,73 +77,73 @@ my $dmv =  [
 
 my $bln = [ 'author', 'editor' ];
 
-my $l1 = q|  \entry{L1}{book}{}
-    \name{labelname}{1}{}{%
-      {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-    }
-    \list{publisher}{1}{%
-      {Oxford}%
-    }
-    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-    \field{sortinit}{D}
-    \field{labelyear}{1998}
-    \field{day}{05}
-    \field{month}{04}
-    \field{origday}{30}
-    \field{origmonth}{10}
-    \field{origyear}{1985}
-    \field{title}{Title 1}
-    \field{year}{1998}
-  \endentry
-
+my $l1 = q|    \entry{L1}{book}{}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford}%
+      }
+      \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \field{sortinit}{D}
+      \field{labelyear}{1998}
+      \field{labeltitle}{Title 1}
+      \field{day}{05}
+      \field{month}{04}
+      \field{origday}{30}
+      \field{origmonth}{10}
+      \field{origyear}{1985}
+      \field{title}{Title 1}
+      \field{year}{1998}
+    \endentry
 |;
 
-my $l2 = q|  \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
-    \name{labelname}{1}{}{%
-      {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
-    }
-    \list{publisher}{1}{%
-      {Oxford}%
-    }
-    \strng{namehash}{19eec87c959944d6d9c72434a42856ba}
-    \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
-    \field{sortinit}{E}
-    \field{labelyear}{1998}
-    \field{day}{05}
-    \field{month}{04}
-    \field{title}{Title 2}
-    \field{year}{1998}
-  \endentry
-
+my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford}%
+      }
+      \strng{namehash}{19eec87c959944d6d9c72434a42856ba}
+      \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
+      \field{sortinit}{E}
+      \field{labelyear}{1998}
+      \field{labeltitle}{Title 2}
+      \field{day}{05}
+      \field{month}{04}
+      \field{title}{Title 2}
+      \field{year}{1998}
+    \endentry
 |;
 
-my $l3 = q|  \entry{L3}{book}{blah=10}
-    \name{labelname}{1}{}{%
-      {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \list{publisher}{1}{%
-      {Oxford}%
-    }
-    \strng{namehash}{490250da1f3b92580d97563dc96c6c84}
-    \strng{fullhash}{490250da1f3b92580d97563dc96c6c84}
-    \field{sortinit}{B}
-    \field{labelyear}{1999}
-    \field{day}{05}
-    \field{month}{04}
-    \field{title}{Title 3}
-    \field{year}{1999}
-  \endentry
-
+my $l3 = q|    \entry{L3}{book}{blah=10}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \list{publisher}{1}{%
+        {Oxford}%
+      }
+      \strng{namehash}{490250da1f3b92580d97563dc96c6c84}
+      \strng{fullhash}{490250da1f3b92580d97563dc96c6c84}
+      \field{sortinit}{B}
+      \field{labelyear}{1999}
+      \field{labeltitle}{Title 3}
+      \field{day}{05}
+      \field{month}{04}
+      \field{title}{Title 3}
+      \field{year}{1999}
+    \endentry
 |;
 
 ok(Biber::Config->getblxoption('uniquename') == 1, "Single-valued option") ;

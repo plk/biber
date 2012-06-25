@@ -1,4 +1,4 @@
-package Biber::Section::List;
+package Biber::SortList;
 use 5.014000;
 use strict;
 use warnings;
@@ -11,11 +11,11 @@ use List::Util qw( first );
 
 =head1 NAME
 
-Biber::Section::List
+Biber::SortList
 
 =head2 new
 
-    Initialize a Biber::Section::List object
+    Initialize a Biber::SortList object
 
 =cut
 
@@ -25,9 +25,34 @@ sub new {
   return $self;
 }
 
+
+=head2 set_section
+
+    Sets the section of a sort list
+
+=cut
+
+sub set_section {
+  my $self = shift;
+  my $section = shift;
+  $self->{section} = lc($section);
+  return;
+}
+
+=head2 get_section
+
+    Gets the section of a sort list
+
+=cut
+
+sub get_section {
+  my $self = shift;
+  return $self->{section};
+}
+
 =head2 set_label
 
-    Sets the label of a section list
+    Sets the label of a sort list
 
 =cut
 
@@ -40,7 +65,7 @@ sub set_label {
 
 =head2 get_label
 
-    Gets the label of a section list
+    Gets the label of a sort list
 
 =cut
 
@@ -51,7 +76,7 @@ sub get_label {
 
 =head2 set_type
 
-    Sets the type of a section list
+    Sets the type of a sort list
 
 =cut
 
@@ -72,6 +97,41 @@ sub get_type {
   my $self = shift;
   return $self->{type};
 }
+
+=head2 set_keys
+
+    Sets the keys for the list
+
+=cut
+
+sub set_keys {
+  my ($self, $keys) = @_;
+  $self->{keys} = $keys;
+  return;
+}
+
+=head2 get_keys
+
+    Gets the keys for the list
+
+=cut
+
+sub get_keys {
+  my $self = shift;
+  return @{$self->{keys}};
+}
+
+=head2 count_keys
+
+    Count the keys for the list
+
+=cut
+
+sub count_keys {
+  my $self = shift;
+  return $#{$self->{keys}} + 1;
+}
+
 
 =head2 get_listdata
 
@@ -125,6 +185,84 @@ sub get_extrayeardata {
   return unless defined($key);
   return $self->{extrayeardata}{$key};
 }
+
+=head2 set_extratitledata_for_key
+
+  Saves extratitle field data for a key
+
+=cut
+
+sub set_extratitledata_for_key {
+  my ($self, $key, $ed) = @_;
+  return unless defined($key);
+  $self->{extratitledata}{$key} = $ed;
+  return;
+}
+
+=head2 set_extratitledata
+
+    Saves extratitle field data for all keys
+
+=cut
+
+sub set_extratitledata {
+  my ($self, $ed) = @_;
+  $self->{extratitledata} = $ed;
+  return;
+}
+
+
+=head2 get_extratitledata
+
+    Gets the extratitle field data for a key
+
+=cut
+
+sub get_extratitledata {
+  my ($self, $key) = @_;
+  return unless defined($key);
+  return $self->{extratitledata}{$key};
+}
+
+
+=head2 set_extratitleyeardata_for_key
+
+  Saves extratitleyear field data for a key
+
+=cut
+
+sub set_extratitleyeardata_for_key {
+  my ($self, $key, $ed) = @_;
+  return unless defined($key);
+  $self->{extratitleyeardata}{$key} = $ed;
+  return;
+}
+
+=head2 set_extratitleyeardata
+
+    Saves extratitleyear field data for all keys
+
+=cut
+
+sub set_extratitleyeardata {
+  my ($self, $ed) = @_;
+  $self->{extratitleyeardata} = $ed;
+  return;
+}
+
+
+=head2 get_extratitleyeardata
+
+    Gets the extratitleyear field data for a key
+
+=cut
+
+sub get_extratitleyeardata {
+  my ($self, $key) = @_;
+  return unless defined($key);
+  return $self->{extratitleyeardata}{$key};
+}
+
 
 =head2 set_extraalphadata_for_key
 
@@ -295,42 +433,6 @@ sub get_filters {
   return $self->{filters};
 }
 
-
-=head2 set_keys
-
-    Sets the keys for the list
-
-=cut
-
-sub set_keys {
-  my ($self, $keys) = @_;
-  $self->{keys} = $keys;
-  return;
-}
-
-=head2 get_keys
-
-    Gets the keys for the list
-
-=cut
-
-sub get_keys {
-  my $self = shift;
-  return @{$self->{keys}};
-}
-
-=head2 count_keys
-
-    Count the keys for the list
-
-=cut
-
-sub count_keys {
-  my $self = shift;
-  return $#{$self->{keys}} + 1;
-}
-
-
 =head2 instantiate_entry
 
   Do any dynamic information replacement for information
@@ -366,14 +468,28 @@ sub instantiate_entry {
   # extrayear
   my $eys;
   if (my $e = $self->get_extrayeardata($key)) {
-    $eys = "    \\field{extrayear}{$e}\n";
+    $eys = "      \\field{extrayear}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
+  }
+
+  # extratitle
+  my $ets;
+  if (my $e = $self->get_extratitledata($key)) {
+    $ets = "      \\field{extratitle}{$e}\n";
+    $entry_string =~ s|^\s*<BDS>EXTRATITLE</BDS>\n|$ets|gxms;
+  }
+
+  # extratitle
+  my $etys;
+  if (my $e = $self->get_extratitleyeardata($key)) {
+    $etys = "      \\field{extratitleyear}{$e}\n";
+    $entry_string =~ s|^\s*<BDS>EXTRATITLEYEAR</BDS>\n|$etys|gxms;
   }
 
   # extraalpha
   my $eas;
   if (my $e = $self->get_extraalphadata($key)) {
-    $eas = "    \\field{extraalpha}{$e}\n";
+    $eas = "      \\field{extraalpha}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
   }
 

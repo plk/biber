@@ -6,20 +6,20 @@ use base 'Exporter';
 
 use Carp;
 use Biber::Constants;
+use Biber::DataModel;
 use Biber::Entries;
 use Biber::Entry;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
-use Biber::Structure;
 use Biber::Utils;
 use Biber::Config;
 use Encode;
 use File::Spec;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
-use List::AllUtils qw( :all );
+use List::AllUtils qw( uniq );
 use XML::LibXML;
 use XML::LibXML::Simple;
 use Readonly;
@@ -31,21 +31,28 @@ my $orig_key_order = {};
 Readonly::Scalar our $BIBLATEXML_NAMESPACE_URI => 'http://biblatex-biber.sourceforge.net/biblatexml';
 Readonly::Scalar our $NS => 'bib';
 
-# Handlers for field types
-# The names of these have nothing to do whatever with the biblatex field types
-# They just started out copying them - they are categories of this specific
-# data source date types
-my %handlers = (
-                'date'     => \&_date,
-                'list'     => \&_list,
-                'name'     => \&_name,
-                'range'    => \&_range,
-                'related'  => \&_related,
-                'verbatim' => \&_verbatim
-);
-
-# Read driver config file
-my $dcfxml = driver_config('biblatexml');
+# Determine handlers from data model
+my $dm = Biber::Config->get_dm;
+my $handlers = {
+                'CUSTOM' => {'related' => \&_related},
+                'field' => {
+                            'csv'      => \&_literal,
+                            'code'     => \&_literal,
+                            'date'     => \&_date,
+                            'entrykey' => \&_literal,
+                            'integer'  => \&_literal,
+                            'key'      => \&_literal,
+                            'literal'  => \&_literal,
+                            'range'    => \&_range,
+                            'verbatim' => \&_literal,
+                           },
+                'list' => {
+                           'entrykey' => \&_literal,
+                           'key'      => \&_list,
+                           'literal'  => \&_list,
+                           'name'     => \&_name,
+                          }
+};
 
 =head2 extract_entries
 
@@ -254,7 +261,7 @@ sub create_entry {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
 
-  my $struc = Biber::Config->get_structure;
+  my $dm = Biber::Config->get_dm;
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
 
@@ -271,7 +278,7 @@ sub create_entry {
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
-FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
+  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
     # We have to process local options as early as possible in order
     # to make them available for things that need them like name parsing
@@ -284,12 +291,11 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
       }
     }
 
-    if (my $fm = $dcfxml->{fields}{field}{_norm($f)}) {
-      # No aliases processed here as this data source is supposed to be a 1:1 mapping
-      # of the biblatex data model
-      &{$handlers{$fm->{handler}}}($bibentry, $entry, $f, $f, $key);
+    # Now run any defined handler
+    if ($dm->is_field(_norm($f))) {
+      my $handler = _get_handler($f);
+      &$handler($bibentry, $entry, $f, $key);
     }
-    # Default if no explicit way to set the field
     else {
       my $node = _resolve_display_mode($entry, $f);
       my $value = $node->textContent();
@@ -306,7 +312,7 @@ FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
 
 # Related entries
 sub _related {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   # Pick out the node with the right mode
   my $node = _resolve_display_mode($entry, $f, $key);
   # TODO
@@ -321,9 +327,9 @@ sub _related {
   return;
 }
 
-# Verbatim fields
-sub _verbatim {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+# literal fields
+sub _literal {
+  my ($bibentry, $entry, $f, $key) = @_;
   # Pick out the node with the right mode
   my $node = _resolve_display_mode($entry, $f, $key);
 
@@ -335,23 +341,23 @@ sub _verbatim {
     }
   }
   else {
-    $bibentry->set_datafield(_norm($to), $node->textContent());
+    $bibentry->set_datafield(_norm($f), $node->textContent());
   }
   return;
 }
 
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   # Pick out the node with the right mode
   my $node = _resolve_display_mode($entry, $f, $key);
-  $bibentry->set_datafield(_norm($to), _split_list($node));
+  $bibentry->set_datafield(_norm($f), _split_list($node));
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   # Pick out the node with the right mode
   my $node = _resolve_display_mode($entry, $f, $key);
   # List of ranges/values
@@ -360,11 +366,11 @@ sub _range {
     foreach my $range (@rangelist) {
       push @$rl, _parse_range_list($range);
     }
-    $bibentry->set_datafield(_norm($to), $rl);
+    $bibentry->set_datafield(_norm($f), $rl);
   }
   # Simple range
   elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
-    $bibentry->set_datafield(_norm($to), [ _parse_range_list($range) ]);
+    $bibentry->set_datafield(_norm($f), [ _parse_range_list($range) ]);
   }
   # simple list
   else {
@@ -385,14 +391,14 @@ sub _range {
       }
       push @$values_ref, [$1 || '', $end];
     }
-    $bibentry->set_datafield(_norm($to), $values_ref);
+    $bibentry->set_datafield(_norm($f), $values_ref);
   }
   return;
 }
 
 # Date fields
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
     my $datetype = $node->getAttribute('datetype') // '';
     # We are not validating dates here, just syntax parsing
@@ -451,7 +457,7 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   # Pick out the node with the right mode
   my $node = _resolve_display_mode($entry, $f, $key);
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
@@ -465,7 +471,7 @@ sub _name {
     $names->set_morenames;
   }
 
-  $bibentry->set_datafield(_norm($to), $names);
+  $bibentry->set_datafield(_norm($f), $names);
   return;
 }
 
@@ -680,7 +686,7 @@ sub _resolve_display_mode {
   # Either a fieldname specific mode or the default or a last-ditch fallback
   my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'} || ['original'];
   # Make sure there is an 'original' fallback in the list
-  push @$modelist, 'original' unless first {$_ eq 'original'} @$modelist;
+  push @$modelist, 'original' unless 'original' ~~ $modelist;
   foreach my $mode (@$modelist) {
     my $modeattr;
     # mode is omissable if it is "original"
@@ -709,6 +715,16 @@ sub _norm {
   my $name = lc(shift);
   $name =~ s/\A$NS://xms;
   return $name;
+}
+
+sub _get_handler {
+  my $field = shift;
+  if (my $h = $handlers->{CUSTOM}{_norm($field)}) {
+    return $h;
+  }
+  else {
+    return $handlers->{$dm->get_fieldtype(_norm($field))}{$dm->get_datatype(_norm($field))};
+  }
 }
 
 

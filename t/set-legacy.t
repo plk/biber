@@ -38,89 +38,89 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $out = $biber->get_output_obj;
 
-my $string1 = q|  \entry{Elias1955}{set}{}
-    \set{Elias1955a,Elias1955b}
-    \name{labelname}{1}{}{%
-      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-    \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-    \field{sortinit}{0}
-    \field{labelyear}{1955}
-    \field{issn}{0096-1000}
-    \field{journaltitle}{IRE Transactions on Information Theory}
-    \field{month}{03}
-    \field{number}{1}
-    \field{title}{Predictive coding--I}
-    \field{volume}{1}
-    \field{year}{1955}
-    \field{pages}{16\bibrangedash 24}
-    \verb{doi}
-    \verb 10.1109/TIT.1955.1055126
-    \endverb
-    \warn{\item Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry 'Elias1955'}
-  \endentry
-
+my $string1 = q|    \entry{Elias1955}{set}{}
+      \set{Elias1955a,Elias1955b}
+      \name{labelname}{1}{}{%
+        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \field{sortinit}{0}
+      \field{labelyear}{1955}
+      \field{labeltitle}{Predictive coding--I}
+      \field{issn}{0096-1000}
+      \field{journaltitle}{IRE Transactions on Information Theory}
+      \field{month}{03}
+      \field{number}{1}
+      \field{title}{Predictive coding--I}
+      \field{volume}{1}
+      \field{year}{1955}
+      \field{pages}{16\bibrangedash 24}
+      \verb{doi}
+      \verb 10.1109/TIT.1955.1055126
+      \endverb
+      \warn{\item Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry 'Elias1955'}
+    \endentry
 |;
 
-my $string2 = q|  \entry{Elias1955a}{article}{}
-    \inset{Elias1955}
-    \name{labelname}{1}{}{%
-      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-    \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-    \field{sortinit}{0}
-    \field{issn}{0096-1000}
-    \field{journaltitle}{IRE Transactions on Information Theory}
-    \field{month}{03}
-    \field{number}{1}
-    \field{title}{Predictive coding--I}
-    \field{volume}{1}
-    \field{year}{1955}
-    \field{pages}{16\bibrangedash 24}
-    \verb{doi}
-    \verb 10.1109/TIT.1955.1055126
-    \endverb
-    \warn{\item Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'Elias1955a'}
-  \endentry
-
+my $string2 = q|    \entry{Elias1955a}{article}{}
+      \inset{Elias1955}
+      \name{labelname}{1}{}{%
+        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \field{sortinit}{0}
+      \field{labeltitle}{Predictive coding--I}
+      \field{issn}{0096-1000}
+      \field{journaltitle}{IRE Transactions on Information Theory}
+      \field{month}{03}
+      \field{number}{1}
+      \field{title}{Predictive coding--I}
+      \field{volume}{1}
+      \field{year}{1955}
+      \field{pages}{16\bibrangedash 24}
+      \verb{doi}
+      \verb 10.1109/TIT.1955.1055126
+      \endverb
+      \warn{\item Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'Elias1955a'}
+    \endentry
 |;
 
-my $string3 = q|  \entry{Elias1955b}{article}{}
-    \inset{Elias1955}
-    \name{labelname}{1}{}{%
-      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-    \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-    \field{sortinit}{0}
-    \field{issn}{0096-1000}
-    \field{journaltitle}{IRE Transactions on Information Theory}
-    \field{month}{03}
-    \field{number}{1}
-    \field{title}{Predictive coding--II}
-    \field{volume}{1}
-    \field{year}{1955}
-    \field{pages}{24\bibrangedash 33}
-    \verb{doi}
-    \verb 10.1109/TIT.1955.1055116
-    \endverb
-    \warn{\item Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'Elias1955b'}
-  \endentry
-
+my $string3 = q|    \entry{Elias1955b}{article}{}
+      \inset{Elias1955}
+      \name{labelname}{1}{}{%
+        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \field{sortinit}{0}
+      \field{labeltitle}{Predictive coding--II}
+      \field{issn}{0096-1000}
+      \field{journaltitle}{IRE Transactions on Information Theory}
+      \field{month}{03}
+      \field{number}{1}
+      \field{title}{Predictive coding--II}
+      \field{volume}{1}
+      \field{year}{1955}
+      \field{pages}{24\bibrangedash 33}
+      \verb{doi}
+      \verb 10.1109/TIT.1955.1055116
+      \endverb
+      \warn{\item Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'Elias1955b'}
+    \endentry
 |;
 
 is($out->get_output_entry($main,'Elias1955'), $string1, 'Legacy set test 1');

@@ -15,7 +15,7 @@ use Log::Log4perl::Appender::File;
 use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
 
-our $VERSION = '0.9.9';
+our $VERSION = '1.0';
 our $BETA_VERSION = 0; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
@@ -45,7 +45,11 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 $CONFIG->{state}{crossrefkeys} = {};
-$CONFIG->{state}{seenname} = {};
+$CONFIG->{state}{seenwork} = {};
+
+# Set tracking, parent->child and child->parent
+$CONFIG->{state}{set}{pc} = {};
+$CONFIG->{state}{set}{cp} = {};
 
 # Citekeys which refer to the same entry
 $CONFIG->{state}{citkey_aliases} = {};
@@ -77,9 +81,24 @@ $CONFIG->{state}{uniquenamecount_all} = {};
 $CONFIG->{state}{seen_nameyear} = {};
 # Counter for the actual extrayear value
 $CONFIG->{state}{seen_extrayear} = {};
+
+# Counter for tracking name/title combinations for extratitle
+$CONFIG->{state}{seen_nametitle} = {};
+# Counter for the actual extratitle value
+$CONFIG->{state}{seen_extratitle} = {};
+
+# Counter for tracking title/year combinations for extratitleyear
+$CONFIG->{state}{seen_titleyear} = {};
+# Counter for the actual extratitleyear value
+$CONFIG->{state}{seen_extratitleyear} = {};
+
 # Counter for the actual extraalpha value
 $CONFIG->{state}{seen_extraalpha} = {};
 $CONFIG->{state}{seenkeys} = {};
+
+# Track the order of keys as cited. Keys cited in the same \cite*{} get the same order
+# Used for sorting schemes which use \citeorder
+$CONFIG->{state}{keyorder} = {};
 
 # Location of the control file
 $CONFIG->{state}{control_file_location} = '';
@@ -97,7 +116,7 @@ sub _init {
   $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
-  $CONFIG->{state}{seenname} = {};
+  $CONFIG->{state}{seenwork} = {};
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{ladisambiguation} = {};
   $CONFIG->{state}{uniquenamecount} = {};
@@ -105,11 +124,17 @@ sub _init {
   $CONFIG->{state}{uniquelistcount} = {};
   $CONFIG->{state}{seen_nameyear} = {};
   $CONFIG->{state}{seen_extrayear} = {};
+  $CONFIG->{state}{seen_nametitle} = {};
+  $CONFIG->{state}{seen_extratitle} = {};
+  $CONFIG->{state}{seen_titleyear} = {};
+  $CONFIG->{state}{seen_extratitleyear} = {};
   $CONFIG->{state}{seen_extrayearalpha} = {};
   $CONFIG->{state}{seenkeys} = {};
   $CONFIG->{state}{datafiles} = [];
   $CONFIG->{state}{crossref} = [];
   $CONFIG->{state}{xdata} = [];
+  $CONFIG->{state}{set}{pc} = {};
+  $CONFIG->{state}{set}{cp} = {};
 
   return;
 }
@@ -161,7 +186,8 @@ sub _initopts {
     }
     # mildly complex options - nosort/collate_options
     elsif (lc($k) eq 'collate_options' or
-           lc($k) eq 'nosort') {
+           lc($k) eq 'nosort' or
+           lc($k) eq 'noinit' ) {
       Biber::Config->setoption($k, $v->{option});
     }
   }
@@ -178,12 +204,22 @@ sub _initopts {
     }
     # mildly complex options - nosort/collate_options
     elsif (lc($k) eq 'collate_options' or
-           lc($k) eq 'nosort') {
+           lc($k) eq 'nosort' or
+           lc($k) eq 'noinit' ) {
       Biber::Config->setconfigfileoption($k, $v->{option});
     }
     # rather complex options - sourcemap
     elsif (lc($k) eq 'sourcemap') {
-      Biber::Config->setconfigfileoption($k, $v->{maps});
+      my $sms;
+      foreach my $sm (@{$v->{maps}}) {
+        if ($sm->{driver_defaults}) {
+          carp("You can't set driver default sourcemaps via biber - use \\DeclareDefaultSourcemap in biblatex. Ignoring map.");
+        }
+        else {
+          push @$sms, $sm;
+        }
+      }
+      Biber::Config->setconfigfileoption($k, $sms);
     }
   }
 
@@ -458,28 +494,28 @@ sub postprocess_biber_opts {
   }
 }
 
-=head2 set_structure
+=head2 set_dm
 
-    Sets the structure information object
+    Sets the data model information object
 
 =cut
 
-sub set_structure {
+sub set_dm {
   shift;
   my $obj = shift;
-  $CONFIG->{structure} = $obj;
+  $CONFIG->{dm} = $obj;
   return;
 }
 
-=head2 get_structure
+=head2 get_dm
 
-    Gets the structure information object
+    Gets the data model information object
 
 =cut
 
-sub get_structure {
+sub get_dm {
   shift;
-  return $CONFIG->{structure};
+  return $CONFIG->{dm};
 }
 
 =head2 set_ctrlfile_path
@@ -674,8 +710,6 @@ sub getblxoption {
     Can be used for crossrefs and xdata. This records the actual fields
     inherited from another entry, for tree generation.
 
-    Biber::Config->set_graph($source_key, $target_key, $source_field, $target_field)
-
 =cut
 
 sub set_graph {
@@ -716,13 +750,96 @@ sub get_graph {
   return $CONFIG->{state}{graph}{$type};
 }
 
+=head2 set_set_pc
+
+  Record a parent->child set relationship
+
+=cut
+
+sub set_set_pc {
+  shift; # class method so don't care about class name
+  my ($parent, $child) = @_;
+  $CONFIG->{state}{set}{pc}{$parent}{$child} = 1;
+  return;
+}
+
+=head2 set_set_cp
+
+  Record a child->parent set relationship
+
+=cut
+
+sub set_set_cp {
+  shift; # class method so don't care about class name
+  my ($child, $parent) = @_;
+  $CONFIG->{state}{set}{cp}{$child}{$parent} = 1;
+  return;
+}
+
+=head2 get_set_pc
+
+  Return a boolean saying if there is a parent->child set relationship
+
+=cut
+
+sub get_set_pc {
+  shift; # class method so don't care about class name
+  my ($parent, $child) = @_;
+  return exists($CONFIG->{state}{set}{pc}{$parent}{$child}) ? 1 : 0;
+}
+
+=head2 get_set_cp
+
+  Return a boolean saying if there is a child->parent set relationship
+
+=cut
+
+sub get_set_cp {
+  shift; # class method so don't care about class name
+  my ($child, $parent) = @_;
+  return exists($CONFIG->{state}{set}{cp}{$child}{$parent}) ? 1 : 0;
+}
+
+=head2 get_set_children
+
+  Return a list of children for a parent set
+
+=cut
+
+sub get_set_children {
+  shift; # class method so don't care about class name
+  my $parent = shift;
+  if (exists($CONFIG->{state}{set}{pc}{$parent})) {
+    return (keys %{$CONFIG->{state}{set}{pc}{$parent}});
+  }
+  else {
+    return ();
+  }
+}
+
+=head2 get_set_parents
+
+  Return a list of parents for a child of a set
+
+=cut
+
+sub get_set_parents {
+  shift; # class method so don't care about class name
+  my $child = shift;
+  if (exists($CONFIG->{state}{set}{cp}{$child})) {
+    return (keys %{$CONFIG->{state}{set}{cp}{$child}});
+  }
+  else {
+    return ();
+  }
+}
+
+
 =head2 set_inheritance
 
     Record that $target inherited information from $source
     Can be used for crossrefs and xdata. This just records that an entry
     inherited from another entry, for loop detection.
-
-    Biber::Config->set_inheritance($source, $target)
 
 =cut
 
@@ -738,8 +855,6 @@ sub set_inheritance {
 
     Check if $target directly inherited information from $source
     Can be used for crossrefs and xdata
-
-    Biber::Config->get_inheritance($source, $target)
 
 =cut
 
@@ -765,8 +880,6 @@ sub get_inheritance {
               t => 'D'}
 ];
 
-  Biber::Config->is_inheritance_path($type, $key1, $key2)
-
 =cut
 
 sub is_inheritance_path {
@@ -779,19 +892,11 @@ sub is_inheritance_path {
 }
 
 
-##############################
-# Biber state static methods
-##############################
-
-#============================
-#  labelalpha disambiguation
-#============================
+=head1 labelalpha disambiguation
 
 =head2 incr_la_disambiguation
 
     Increment a counter to say we have seen this labelalpha
-
-    Biber::Config->incr_la_disambiguation($la);
 
 =cut
 
@@ -807,8 +912,6 @@ sub incr_la_disambiguation {
 
     Get the disambiguation counter for this labelalpha
 
-    Biber::Config->get_la_disambiguation($la);
-
 =cut
 
 sub get_la_disambiguation {
@@ -817,17 +920,39 @@ sub get_la_disambiguation {
   return $CONFIG->{state}{ladisambiguation}{$la};
 }
 
+=head1 keyorder
+
+=head2 set_keyorder
+
+  Set some key order information
+
+=cut
+
+sub set_keyorder {
+  shift; # class method so don't care about class name
+  my ($section, $key, $keyorder) = @_;
+  $CONFIG->{state}{keyorder}{$section}{$key} = $keyorder;
+  return;
+}
+
+=head2 get_keyorder
+
+  Get some key order information
+
+=cut
+
+sub get_keyorder {
+  shift; # class method so don't care about class name
+  my ($section, $key) = @_;
+  return $CONFIG->{state}{keyorder}{$section}{$key};
+}
 
 
-#============================
-#        seenkey
-#============================
+=head1 seenkey
 
 =head2 get_seenkey
 
     Get the count of a key
-
-    Biber::Config->get_seenkey($hash);
 
 =cut
 
@@ -852,8 +977,6 @@ sub get_seenkey {
 
     Increment the seen count of a key
 
-    Biber::Config->incr_seenkey($ay);
-
 =cut
 
 sub incr_seenkey {
@@ -864,36 +987,28 @@ sub incr_seenkey {
   return;
 }
 
-=head2 get_seenname
+=head2 get_seenwork
 
-    Get the count of occurences of a labelname which
-    takes into account all of maxcitenames, uniquelist,
-    uniquename, useprefix
-
-    Biber::Config->get_seenname($name);
+    Get the count of occurences of a labelname or labeltitle
 
 =cut
 
-sub get_seenname {
+sub get_seenwork {
   shift; # class method so don't care about class name
-  my $name = shift;
-  return $CONFIG->{state}{seenname}{$name};
+  my $identifier = shift;
+  return $CONFIG->{state}{seenwork}{$identifier};
 }
 
-=head2 incr_seenname
+=head2 incr_seenwork
 
-    Increment the count of occurences of a labelname which
-    takes into account all of maxcitenames, uniquelist,
-    uniquename, useprefix
-
-    Biber::Config->incr_seename($name);
+    Increment the count of occurences of a labelname or labeltitle
 
 =cut
 
-sub incr_seenname {
+sub incr_seenwork {
   shift; # class method so don't care about class name
-  my $name = shift;
-  $CONFIG->{state}{seenname}{$name}++;
+  my $identifier = shift;
+  $CONFIG->{state}{seenwork}{$identifier}++;
   return;
 }
 
@@ -903,14 +1018,14 @@ sub incr_seenname {
 
     Reset the counters for extra*
 
-    Biber::Config->reset_extra;
-
 =cut
 
 sub reset_seen_extra {
   shift; # class method so don't care about class name
   my $ay = shift;
   $CONFIG->{state}{seen_extrayear} = {};
+  $CONFIG->{state}{seen_extratitle} = {};
+  $CONFIG->{state}{seen_extratitleyear} = {};
   $CONFIG->{state}{seen_extraalpha} = {};
   return;
 }
@@ -920,8 +1035,6 @@ sub reset_seen_extra {
 
     Increment and return the counter for extrayear
 
-    Biber::Config->incr_seen_extrayear($ay);
-
 =cut
 
 sub incr_seen_extrayear {
@@ -930,12 +1043,34 @@ sub incr_seen_extrayear {
   return ++$CONFIG->{state}{seen_extrayear}{$ey};
 }
 
+=head2 incr_seen_extratitle
+
+    Increment and return the counter for extratitle
+
+=cut
+
+sub incr_seen_extratitle {
+  shift; # class method so don't care about class name
+  my $et = shift;
+  return ++$CONFIG->{state}{seen_extratitle}{$et};
+}
+
+=head2 incr_seen_extratitleyear
+
+    Increment and return the counter for extratitleyear
+
+=cut
+
+sub incr_seen_extratitleyear {
+  shift; # class method so don't care about class name
+  my $ety = shift;
+  return ++$CONFIG->{state}{seen_extratitleyear}{$ety};
+}
+
 
 =head2 incr_seen_extraalpha
 
     Increment and return the counter for extraalpha
-
-    Biber::Config->incr_seen_extraalpha($ay);
 
 =cut
 
@@ -953,8 +1088,6 @@ sub incr_seen_extraalpha {
     entries with different labelyear (like differentiating 1984--1986 from
     just 1984)
 
-    Biber::Config->get_seen_nameyear($ny);
-
 =cut
 
 sub get_seen_nameyear {
@@ -966,8 +1099,6 @@ sub get_seen_nameyear {
 =head2 incr_seen_nameyear
 
     Increment the count of an labelname/labelyear combination for extrayear
-
-    Biber::Config->incr_seen_nameyear($ns, $ys);
 
     We pass in the name and year strings seperately as we have to
     be careful and only increment this counter beyond 1 if there is
@@ -995,15 +1126,101 @@ sub incr_seen_nameyear {
   return;
 }
 
-#============================
-#       uniquelistcount
-#============================
+
+=head2 get_seen_nametitle
+
+    Get the count of an labelname/labeltitle combination for tracking
+    extratitle.
+
+=cut
+
+sub get_seen_nametitle {
+  shift; # class method so don't care about class name
+  my $nt = shift;
+  return $CONFIG->{state}{seen_nametitle}{$nt};
+}
+
+=head2 incr_seen_nametitle
+
+    Increment the count of an labelname/labeltitle combination for extratitle
+
+    We pass in the name and year strings seperately as we have to
+    be careful and only increment this counter beyond 1 if there is
+    a title component. Otherwise, extratitle gets defined for all
+    entries with no title.
+
+=cut
+
+sub incr_seen_nametitle {
+  shift; # class method so don't care about class name
+  my ($ns, $ts) = @_;
+  my $tmp = "$ns,$ts";
+  # We can always increment this to 1
+  unless ($CONFIG->{state}{seen_nametitle}{$tmp}) {
+    $CONFIG->{state}{seen_nametitle}{$tmp}++;
+  }
+  # But beyond that only if we have a labeltitle in the entry since
+  # this counter is used to create extratitle which doesn't mean anything for
+  # entries with no title
+  else {
+    if ($ts) {
+      $CONFIG->{state}{seen_nametitle}{$tmp}++;
+    }
+  }
+  return;
+}
+
+
+=head2 get_seen_titleyear
+
+    Get the count of an labeltitle/labelyear combination for tracking
+    extratitleyear
+
+=cut
+
+sub get_seen_titleyear {
+  shift; # class method so don't care about class name
+  my $ty = shift;
+  return $CONFIG->{state}{seen_titleyear}{$ty};
+}
+
+=head2 incr_seen_titleyear
+
+    Increment the count of an labeltitle/labelyear combination for extratitleyear
+
+    We pass in the title and year strings seperately as we have to
+    be careful and only increment this counter beyond 1 if there is
+    a title component. Otherwise, extratitleyear gets defined for all
+    entries with no title.
+
+=cut
+
+sub incr_seen_titleyear {
+  shift; # class method so don't care about class name
+  my ($ts, $ys) = @_;
+  my $tmp = "$ts,$ys";
+  # We can always increment this to 1
+  unless ($CONFIG->{state}{seen_titleyear}{$tmp}) {
+    $CONFIG->{state}{seen_titleyear}{$tmp}++;
+  }
+  # But beyond that only if we have a labeltitle in the entry since
+  # this counter is used to create extratitleyear which doesn't mean anything for
+  # entries with no title
+  else {
+    if ($ts) {
+      $CONFIG->{state}{seen_titleyear}{$tmp}++;
+    }
+  }
+  return;
+}
+
+
+
+=head1 uniquelistcount
 
 =head2 get_uniquelistcount
 
     Get the number of uniquelist entries for a (possibly partial) list
-
-    Biber::Config->get_uniquelistcount($namelist);
 
 =cut
 
@@ -1017,8 +1234,6 @@ sub get_uniquelistcount {
 
     Incremenent the count for a list part to the data for a name
 
-    Biber::Config->add_uniquelistcount($liststring);
-
 =cut
 
 sub add_uniquelistcount {
@@ -1031,8 +1246,6 @@ sub add_uniquelistcount {
 =head2 add_uniquelistcount_final
 
     Incremenent the count for a complete list to the data for a name
-
-    Biber::Config->add_uniquelistcount_final($liststring);
 
 =cut
 
@@ -1049,8 +1262,6 @@ sub add_uniquelistcount_final {
     Incremenent the count for a list and year to the data for a name
     Used to track uniquelist = minyear
 
-    Biber::Config->add_uniquelistcount_minyear($minyearliststring, $year, $namelist);
-
 =cut
 
 sub add_uniquelistcount_minyear {
@@ -1066,8 +1277,6 @@ sub add_uniquelistcount_minyear {
     Get the count for a list and year to the data for a name
     Used to track uniquelist = minyear
 
-    Biber::Config->get_uniquelistcount_minyear($minyearliststring, $year);
-
 =cut
 
 sub get_uniquelistcount_minyear {
@@ -1082,8 +1291,6 @@ sub get_uniquelistcount_minyear {
 
     Get the number of uniquelist entries for a full list
 
-    Biber::Config->get_uniquelistcount_final($namelist);
-
 =cut
 
 sub get_uniquelistcount_final {
@@ -1097,8 +1304,6 @@ sub get_uniquelistcount_final {
 =head2 reset_uniquelistcount
 
     Reset the count for list parts and complete lists
-
-    Biber::Config->reset_uniquelistcount;
 
 =cut
 
@@ -1119,8 +1324,6 @@ sub reset_uniquelistcount {
 
     [a, b, d, e, f]
     [a, b, e, z, z, y]
-
-    Biber::Config->list_differs_nth($namelist, $n)
 
 =cut
 
@@ -1158,8 +1361,6 @@ sub list_differs_nth {
 
     [a, b, d]
     [a, b, d, e]
-
-    Biber::Config->list_differs_last($namelist)
 
 =cut
 
@@ -1201,8 +1402,6 @@ sub list_differs_last {
     [a, b, c, d]
     [a, b, c, d, e]
 
-    Biber::Config->list_differs_superset($namelist)
-
 =cut
 
 sub list_differs_superset {
@@ -1225,15 +1424,11 @@ sub list_differs_superset {
 }
 
 
-#============================
-#       uniquenamecount
-#============================
+=head1 uniquenamecount
 
 =head2 get_numofuniquenames
 
     Get the number of uniquenames entries for a visible name
-
-    Biber::Config->get_numofuniquenames($name);
 
 =cut
 
@@ -1249,8 +1444,6 @@ sub get_numofuniquenames {
 =head2 get_numofuniquenames_all
 
     Get the number of uniquenames entries for a name
-
-    Biber::Config->get_numofuniquenames_all($name);
 
 =cut
 
@@ -1269,8 +1462,6 @@ sub get_numofuniquenames_all {
     Add a name to the list of name contexts which have the name in it
     (only called for visible names)
 
-    Biber::Config->add_uniquenamecount($name, $namecontext);
-
 =cut
 
 sub add_uniquenamecount {
@@ -1285,8 +1476,6 @@ sub add_uniquenamecount {
     Add a name to the list of name contexts which have the name in it
     (called for all names)
 
-    Biber::Config->add_uniquenamecount_all($name, $namecontext);
-
 =cut
 
 sub add_uniquenamecount_all {
@@ -1299,8 +1488,6 @@ sub add_uniquenamecount_all {
 =head2 reset_uniquenamecount
 
     Reset the list of names which have the name part in it
-
-    Biber::Config->reset_uniquenamecount;
 
 =cut
 
@@ -1316,8 +1503,6 @@ sub reset_uniquenamecount {
     Get the list of name contexts which contain a name
     Mainly for use in tests
 
-    Biber::Config->get_uniquename($name);
-
 =cut
 
 sub _get_uniquename {
@@ -1327,17 +1512,11 @@ sub _get_uniquename {
   return \@list;
 }
 
-
-#============================
-#       crossrefkeys
-#============================
-
+=head1 crossrefkeys
 
 =head2 get_crossrefkeys
 
     Return ref to array of keys which are crossref targets
-
-    Biber::Config->get_crossrefkeys();
 
 =cut
 
@@ -1351,8 +1530,6 @@ sub get_crossrefkeys {
     Return an integer representing the number of times a
     crossref target key has been ref'ed
 
-    Biber::Config->get_crossrefkey($key);
-
 =cut
 
 sub get_crossrefkey {
@@ -1364,8 +1541,6 @@ sub get_crossrefkey {
 =head2 del_crossrefkey
 
     Remove a crossref target key from the crossrefkeys state
-
-    Biber::Config->del_crossrefkey($key);
 
 =cut
 
@@ -1381,8 +1556,6 @@ sub del_crossrefkey {
 =head2 incr_crossrefkey
 
     Increment the crossreferences count for a target crossref key
-
-    Biber::Config->incr_crossrefkey($key);
 
 =cut
 

@@ -16,6 +16,7 @@ start =
       debug,
       mincrossrefs,
       sortcase,
+      sortfirstinits,
       sortlocale?,
       sortupper
     },
@@ -28,6 +29,9 @@ start =
       alphaothers,
       labelalpha,
       labelnamespec,
+      labeltitle,
+      labeltitlespec,
+      labeltitleyear,
       labelyear,
       labelyearspec,
       maxalphanames,
@@ -40,7 +44,7 @@ start =
       minitems,
       singletitle,
       sortalphaothers?,
-      sortlos,
+      sortscheme,
       uniquelist,
       uniquename,
       useauthor,
@@ -52,9 +56,12 @@ start =
     # Per-entrytype BibLaTeX options
     element bcf:options {
       attribute component { "biblatex" },
-      attribute type { xsd:NCName },
+      attribute type { text },
       alphaothers?,
       labelalpha?,
+      labeltitle?,
+      labeltitlespec?,
+      labeltitleyear?,
       labelnamespec?,
       labelyear?,
       labelyearspec?,
@@ -81,7 +88,7 @@ start =
 
     # Display modes for biblatexml
     element bcf:displaymodes {
-      attribute type { xsd:NCName }?,
+      attribute type { text }?,
       element bcf:displaymode {
         element bcf:dtarget { "*" | xsd:string {minLength="1"}}+,
         element bcf:dmode {
@@ -91,11 +98,12 @@ start =
       }+
     }+,
 
-    # field/entrytype mapping
+    # user field/entrytype mapping
     element bcf:sourcemap {
       element bcf:maps {
         attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
         attribute map_overwrite { "0" | "1" }?,
+        attribute driver_defaults { "0" | "1" }?,
         map+
       }+
     }?,
@@ -117,7 +125,7 @@ start =
           xsd:string
         }+
       }+
-    }*,
+    }+,
 
     # Cross-reference inheritance specifications
     element bcf:inheritance {
@@ -160,48 +168,27 @@ start =
         }+
       }*
     },
-    
+    # noinit specification
+    element bcf:noinits {
+      element bcf:noinit {
+        attribute value { xsd:string }
+      }+
+    }?,
+    # nosort specification
+    element bcf:nosorts {
+      element bcf:nosort {
+        attribute field { xsd:string },
+        attribute value { xsd:string }
+      }+
+    }?,
     # Global sorting specification
     sorting,
-    # Structure specification
-    element bcf:structure {
-      # Valid datetypes
-      element bcf:datetypes {
-        element bcf:datetype { xsd:NCName }+
-      },
+    # Data model specification
+    element bcf:datamodel {
       # Valid entrytypes
       element bcf:entrytypes {
-        element bcf:entrytype { xsd:NCName }+
+        element bcf:entrytype { text }+
       },
-      # Entrytype and field alias specifications
-      element bcf:aliases {
-        element bcf:alias {
-          (
-            (
-              # entrytype alias specification
-              attribute type { "entrytype" },
-              # alias name
-              element bcf:name { xsd:NCName },
-              # canonical name
-              element bcf:realname { xsd:NCName },
-              # Any other fields that need setting when resolving the alias
-              # for example when "phdthesis" -> "thesis", we also need to set
-              # "type" = "phdthesis"
-              element bcf:field {
-                attribute name { xsd:NCName },
-                xsd:NCName
-              }* ) |
-            (
-              # field alias specification
-              attribute type { "field" },
-              # alias name
-              element bcf:name { xsd:NCName },
-              # canonical name
-              element bcf:realname { xsd:NCName }
-            )
-          )
-        }+
-      }?,
       # BibLaTeX field types. Biber uses this to determine how to output various types
       # to the .bbl
       element bcf:fields {
@@ -209,12 +196,15 @@ start =
           # fieldtype is "field" or "list"
           attribute fieldtype { "field" | "list" },
           # datatype of field content
-          attribute datatype { "literal" | "datepart" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "special" },
+          attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" },
           # Are we allowed to output a null field value to the .bbl for this field?
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?
           attribute skip_output { "true" }?,
-          xsd:NCName
+          # limit this field definition to specific entrytypes?
+          # Is parsed as a csv list
+          attribute entrytypes { text }?,
+          text
         }+
       },
       # Allowable fields for entrytypes
@@ -222,19 +212,15 @@ start =
       # so that one could share information, this would be hard to manage and confusing as it
       # not be visible in one place which fields were valid for an entrytype.
       element bcf:entryfields {
-        (element bcf:entrytype { "ALL" } |
-         element bcf:entrytype { xsd:NCName }+),
-        (element bcf:field { "ALL" } |
-         element bcf:field { xsd:NCName }+)
+         element bcf:entrytype { text }*,
+         element bcf:field { text }+
       }+,
       # Constraints on field (co-)existence and format
       element bcf:constraints {
         # Set of entrytypes that this constraint applies to
         # An entrytype can be specified in multiple constraints
         #
-        # Special entrytype "ALL" can be used to cover, well, all entrytypes ...
-        (element bcf:entrytype { "ALL" } |
-         element bcf:entrytype { xsd:NCName }+),    
+        element bcf:entrytype { text }*,
         # A constraint specification
         element bcf:constraint {
           (
@@ -248,39 +234,36 @@ start =
             (attribute type { "conditional" },
               element bcf:antecedent {
                 attribute quant { "all" | "one" | "none"},
-                element bcf:field { xsd:NCName }+
+                element bcf:field { text }+
               },
               element bcf:consequent {
                 attribute quant { "all" | "one" | "none"},
-                element bcf:field { xsd:NCName }+
+                element bcf:field { text }+
               }
             ) |
             # Datatype and format constraints
             (attribute type { "data" },
-              # datespec is a BibLaTeX date range specification
               # range* attributes are for limiting integer type range
-              attribute datatype { "integer" | "datespec" }?,
+              attribute datatype { "integer" | "isbn" | "issn" | "ismn" | "date" | "pattern" }?,
               attribute rangemin { xsd:int }?,
-              attribute rangemax { xsd:int }?,                                      
-              element bcf:field { xsd:NCName }+
+              attribute rangemax { xsd:int }?,
+              attribute pattern { text }?,
+              element bcf:field { text }+
             ) |
             # Mandatoriness constraints which say which fields must appear
             (attribute type { "mandatory" },
-              (element bcf:field { xsd:NCName } |
+              (element bcf:field { text } |
                 # An XOR set of fields so you can enforce:
                 #
                 # One (but not more) of fields a,b,c must exist
                 element bcf:fieldxor {
-                  element bcf:field {
-                    attribute coerce { "true" }?,
-                    xsd:NCName
-                  }+
+                  element bcf:field { text }+
                 } |
                 # An OR set of fields so you can enforce:
                 #
-                # One (possibly more of fields a,b,c must exist
+                # One (possibly more) of fields a,b,c must exist
                 element bcf:fieldor {
-                  element bcf:field { xsd:NCName }+
+                  element bcf:field { text }+
                 }
                 )+
               )
@@ -289,20 +272,33 @@ start =
         }+
       }?,
       # Section specifications
-      secspec+
+      secspec+,
+      listspec+
     }
+
+listspec = 
+    element bcf:sortlist {
+      attribute section { xsd:integer },
+      attribute type { "entry" | "key" | "shorthand" },
+      attribute label { xsd:string {minLength="1"}},
+      (filter | orfilter )*,
+      element bcf:sorting {
+        sort+
+      }?
+    }*
+
 
 sorting = 
   element bcf:sorting {
     # presort default strings for different entry types
     element bcf:presort {
-      attribute type { xsd:NCName }?,
+      attribute type { text }?,
       text
     }+,
     # excludes of certain fields for sorting for specified types
     element bcf:sortexclusion {
       attribute type { text },
-      element bcf:exclusion { xsd:NCName }+
+      element bcf:exclusion { text }+
     }*,
     sort+
   }
@@ -354,15 +350,8 @@ secspec =
       ( attribute type { "set" },
         attribute members { xsd:string {minLength="1"}},
         xsd:string {minLength="1"}) |
-      xsd:string {minLength="1"}
-    }*,
-    element bcf:sectionlist {
-      attribute label { xsd:string {minLength="1"}},
-      attribute type { "entry" | "key" | "shorthand" },
-      (filter | orfilter )*,
-      element bcf:sorting {
-        sort+
-      }?
+      ( attribute order { xsd:integer },
+        xsd:string {minLength="1"} )
     }*
   }
 
@@ -375,7 +364,6 @@ filter = element bcf:filter {
                          | "keyword" | "notkeyword" | "field" | "notfield" },
            xsd:string {minLength="1"}
          }
-
 
 # option definitions
 useprefix =
@@ -408,6 +396,27 @@ labelalpha =
     element bcf:key { "labelalpha" },
     element bcf:value { "0" | "1" }
   }
+labeltitle =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "labeltitle" },
+    element bcf:value { "0" | "1" }
+  }
+labeltitlespec =
+  element bcf:option {
+    attribute type { "multivalued" },
+    element bcf:key { "labeltitlespec" },
+    element bcf:value {
+      attribute order { xsd:integer },
+      text
+    }+
+  }
+labeltitleyear =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "labeltitleyear" },
+    element bcf:value { "0" | "1" }
+  }
 labelyear =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -420,7 +429,7 @@ labelyearspec =
     element bcf:key { "labelyearspec" },
     element bcf:value {
       attribute order { xsd:integer },
-      xsd:NCName
+      text
     }+
   }
 singletitle =
@@ -517,11 +526,11 @@ mincitenames =
     element bcf:key { "mincitenames" },
     element bcf:value { xsd:integer }
   }
-sortlos =
+sortscheme =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "sortlos" },
-    element bcf:value { "0" | "1" }
+    element bcf:key { "sortscheme" },
+    element bcf:value { text }
   }
 labelnamespec =
   element bcf:option {
@@ -529,7 +538,7 @@ labelnamespec =
     element bcf:key { "labelnamespec" },
     element bcf:value {
       attribute order { xsd:integer },
-      xsd:NCName
+      text
     }+
   }
 mincrossrefs =
@@ -554,18 +563,24 @@ bblencoding =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "bblencoding" },
-    element bcf:value { xsd:NCName }
+    element bcf:value { text }
   }
 bibencoding =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "bibencoding" },
-    element bcf:value { xsd:NCName }
+    element bcf:value { text }
   }
 sortcase =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "sortcase" },
+    element bcf:value { "0" | "1" }
+  }
+sortfirstinits =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "sortfirstinits" },
     element bcf:value { "0" | "1" }
   }
 alphaothers =

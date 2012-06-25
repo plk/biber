@@ -38,106 +38,106 @@ Biber::Config->setoption('sortlocale', 'C');
 # Now generate the information
 $biber->prepare;
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $section0->get_list('MAIN');
-my $sh0 = $section0->get_list('SHORTHANDS');
+my $main0 = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $sh0 = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $section1->get_list('MAIN');
-my $sh1 = $section1->get_list('SHORTHANDS');
+my $main1 = $biber->sortlists->get_list(1, 'entry', 'nty');
+my $sh1 = $biber->sortlists->get_list(1, 'shorthand', 'shorthand');
 my $out = $biber->get_output_obj;
 
-my $string1 = q|  \entry{DynSet}{set}{}
-    \set{Dynamic1,Dynamic2,Dynamic3}
-    \name{labelname}{1}{}{%
-      {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
-    \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
-    \field{sortinit}{0}
-    \field{labelyear}{2002}
-    \field{annotation}{Some Dynamic Note}
-    \field{shorthand}{d1}
-    \field{title}{Doing Daring Deeds}
-    \field{year}{2002}
-  \endentry
-
+my $string1 = q|    \entry{DynSet}{set}{}
+      \set{Dynamic1,Dynamic2,Dynamic3}
+      \name{labelname}{1}{}{%
+        {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
+      \field{sortinit}{0}
+      \field{labelyear}{2002}
+      \field{labeltitle}{Doing Daring Deeds}
+      \field{annotation}{Some Dynamic Note}
+      \field{shorthand}{d1}
+      \field{title}{Doing Daring Deeds}
+      \field{year}{2002}
+    \endentry
 |;
 
-my $string2 = q|  \entry{Dynamic1}{book}{}
-    \inset{DynSet}
-    \name{labelname}{1}{}{%
-      {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
-    \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
-    \field{sortinit}{0}
-    \field{annotation}{Some Dynamic Note}
-    \field{shorthand}{d1}
-    \field{title}{Doing Daring Deeds}
-    \field{year}{2002}
-  \endentry
-
+my $string2 = q|    \entry{Dynamic1}{book}{}
+      \inset{DynSet}
+      \name{labelname}{1}{}{%
+        {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
+      \field{sortinit}{0}
+      \field{labeltitle}{Doing Daring Deeds}
+      \field{annotation}{Some Dynamic Note}
+      \field{shorthand}{d1}
+      \field{title}{Doing Daring Deeds}
+      \field{year}{2002}
+    \endentry
 |;
 
-my $string3 = q|  \entry{Dynamic2}{book}{}
-    \inset{DynSet}
-    \name{labelname}{1}{}{%
-      {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
-    \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
-    \field{sortinit}{0}
-    \field{shorthand}{d2}
-    \field{title}{Beautiful Birthdays}
-    \field{year}{2010}
-  \endentry
-
+my $string3 = q|    \entry{Dynamic2}{book}{}
+      \inset{DynSet}
+      \name{labelname}{1}{}{%
+        {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
+      \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
+      \field{sortinit}{0}
+      \field{labeltitle}{Beautiful Birthdays}
+      \field{shorthand}{d2}
+      \field{title}{Beautiful Birthdays}
+      \field{year}{2010}
+    \endentry
 |;
 
-my $string4 = q|  \entry{Dynamic3}{book}{}
-    \inset{DynSet}
-    \name{labelname}{1}{}{%
-      {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-    \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-    \field{sortinit}{0}
-    \field{shorthand}{d3}
-    \field{title}{Reckless Ravishings}
-    \field{year}{2000}
-  \endentry
-
+my $string4 = q|    \entry{Dynamic3}{book}{}
+      \inset{DynSet}
+      \name{labelname}{1}{}{%
+        {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \field{sortinit}{0}
+      \field{labeltitle}{Reckless Ravishings}
+      \field{shorthand}{d3}
+      \field{title}{Reckless Ravishings}
+      \field{year}{2000}
+    \endentry
 |;
 
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
-my $string5 = q|  \entry{Dynamic3}{book}{}
-    \name{labelname}{1}{}{%
-      {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-    \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-    \field{sortinit}{0}
-    \field{labelyear}{2000}
-    \field{shorthand}{d3}
-    \field{title}{Reckless Ravishings}
-    \field{year}{2000}
-  \endentry
-
+my $string5 = q|    \entry{Dynamic3}{book}{}
+      \name{labelname}{1}{}{%
+        {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \field{sortinit}{0}
+      \field{labelyear}{2000}
+      \field{labeltitle}{Reckless Ravishings}
+      \field{shorthand}{d3}
+      \field{title}{Reckless Ravishings}
+      \field{year}{2000}
+    \endentry
 |;
 
 is($out->get_output_entry($main0,'DynSet'), $string1, 'Dynamic set test 1');

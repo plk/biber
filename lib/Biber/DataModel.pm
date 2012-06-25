@@ -1,4 +1,4 @@
-package Biber::Structure;
+package Biber::DataModel;
 use 5.014000;
 use strict;
 use warnings;
@@ -13,7 +13,7 @@ use Date::Simple;
 
 =head1 NAME
 
-Biber::Structure
+Biber::DataModel
 
 
 =cut
@@ -23,16 +23,16 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head2 new
 
-    Initialize a Biber::Structure object
+    Initialize a Biber::DataModel object
 
 =cut
 
 sub new {
   my $class = shift;
-  my $struc = shift;
+  my $dm = shift;
   my $self;
-  if (defined($struc) and ref($struc) eq 'HASH') {
-    $self = bless $struc, $class;
+  if (defined($dm) and ref($dm) eq 'HASH') {
+    $self = bless $dm, $class;
   }
   else {
     $self = bless {}, $class;
@@ -41,81 +41,33 @@ sub new {
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
 
-  # field datatypes
-  my ($nullok, $skipout, @name, @list, @literal, @date, @integer, @range, @verbatim, @key, @entrykey, @datepart);
-
-  # Create data for field types, including any aliases which might be
-  # needed when reading the bib data.
-  foreach my $f (@{$struc->{fields}{field}}) {
-    if ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'name') {
-      push @name, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'literal') {
-      push @list, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'key') {
-      push @list, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'list' and $f->{datatype} eq 'entrykey') {
-      push @list, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'literal') {
-      push @literal, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'datepart') {
-      push @datepart, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'date') {
-      push @date, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'integer') {
-      push @integer, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'range') {
-      push @range, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'verbatim') {
-      push @verbatim, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'key') {
-      push @key, $f->{content};
-    }
-    elsif ($f->{fieldtype} eq 'field' and $f->{datatype} eq 'entrykey') {
-      push @entrykey, $f->{content};
-    }
+  foreach my $f (@{$dm->{fields}{field}}) {
+    $self->{fieldsbyname}{$f->{content}} = {'fieldtype' => $f->{fieldtype},
+                                            'datatype'  => $f->{datatype}};
+    push @{$self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}}, $f->{content};
+    push @{$self->{fieldsbyfieldtype}{$f->{fieldtype}}}, $f->{content};
+    push @{$self->{fieldsbydatatype}{$f->{datatype}}}, $f->{content};
 
     # check null_ok
     if ($f->{nullok}) {
-      $nullok->{$f->{content}} = 1;
+      $self->{fieldsbyname}{$f->{content}}{nullok} = 1;
     }
-    # check skips - fields we dont' want to output to BBL
+    # check skips - fields we don't want to output to BBL
     if ($f->{skip_output}) {
-      $skipout->{$f->{content}} = 1;
+      $self->{fieldsbyname}{$f->{content}}{skipout} = 1;
     }
   }
 
-  # Store as lookup tables for speed and multiple re-use
-  $self->{fields}{nullok}   = $nullok;
-  $self->{fields}{skipout}  = $skipout;
-  $self->{fields}{complex}  = { map {$_ => 1} (@name, @list, @range, @date) };
-  $self->{fields}{literal}  = { map {$_ => 1} (@literal, @key, @integer, @entrykey) };
-  $self->{fields}{datepart} = { map {$_ => 1} @datepart };
-  $self->{fields}{name}     = { map {$_ => 1} @name };
-  $self->{fields}{list}     = { map {$_ => 1} @list };
-  $self->{fields}{verbatim} = { map {$_ => 1} @verbatim };
-  $self->{fields}{range}    = { map {$_ => 1} @range };
-  $self->{fields}{date}     = { map {$_ => 1} @date };
-
   my $leg_ents;
-  my $ets = [ sort map {$_->{content}} @{$struc->{entrytypes}{entrytype}} ];
-
+  my $ets = [ sort map {$_->{content}} @{$dm->{entrytypes}{entrytype}} ];
   foreach my $es (@$ets) {
 
     # fields for entrytypes
     my $lfs;
-    foreach my $ef (@{$struc->{entryfields}}) {
+    foreach my $ef (@{$dm->{entryfields}}) {
       # Found a section describing legal fields for entrytype
-      if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$ef->{entrytype}}) {
+      if (not exists($ef->{entrytype}) or
+          grep {$_->{content} eq $es} @{$ef->{entrytype}}) {
         foreach my $f (@{$ef->{field}}) {
           $lfs->{$f->{content}} = 1;
         }
@@ -124,9 +76,10 @@ sub new {
 
     # constraints
     my $constraints;
-    foreach my $cd (@{$struc->{constraints}}) {
+    foreach my $cd (@{$dm->{constraints}}) {
       # Found a section describing constraints for entrytype
-      if (grep {($_->{content} eq $es) or ($_->{content} eq 'ALL')} @{$cd->{entrytype}}) {
+      if (not exists($cd->{entrytype}) or
+          grep {$_->{content} eq $es} @{$cd->{entrytype}}) {
         foreach my $c (@{$cd->{constraint}}) {
           if ($c->{type} eq 'mandatory') {
             # field
@@ -138,13 +91,7 @@ sub new {
             foreach my $fxor (@{$c->{fieldxor}}) {
               my $xorset;
               foreach my $f (@{$fxor->{field}}) {
-                if ($f->{coerce}) {
-                  # put the default override element at the front and flag it
-                  unshift @$xorset, $f->{content};
-                }
-                else {
-                  push @$xorset, $f->{content};
-                }
+                push @$xorset, $f->{content};
               }
               unshift @$xorset, 'XOR';
               push @{$constraints->{mandatory}}, $xorset;
@@ -181,6 +128,7 @@ sub new {
             $data->{datatype} = $c->{datatype};
             $data->{rangemin} = $c->{rangemin};
             $data->{rangemax} = $c->{rangemax};
+            $data->{pattern} = $c->{pattern};
             push @{$constraints->{data}}, $data;
           }
         }
@@ -189,17 +137,31 @@ sub new {
     $leg_ents->{$es}{legal_fields} = $lfs;
     $leg_ents->{$es}{constraints} = $constraints;
   }
-  $self->{legal_entrytypes} = $leg_ents;
+  $self->{entrytypesbyname} = $leg_ents;
 
-  # date types
-  my $dts;
-  foreach my $dt (@{$struc->{datetypes}{datetype}}) {
-    push @$dts, $dt->{content};
-  }
-
-  $self->{legal_datetypes} = $dts;
-
+#  use Data::Dump;dd($self);exit 0;
   return $self;
+}
+
+=head2 is_field
+
+    Returns boolean to say if a field is a legal field
+    Allows intermediate temp custom fields which are used
+    when a driver source field doesn't have an obvious 1:1 mapping
+    to a datamodel field. Such intermediates are defined in the target
+    field mapping of a sourcemap.
+
+=cut
+
+sub is_field {
+  my $self = shift;
+  my $field = shift;
+  if ($field =~ m/^BIBERCUSTOM/o) {
+    return 1;
+  }
+  else {
+    return $self->{fieldsbyname}{$field} ? 1 : 0;
+  }
 }
 
 
@@ -212,7 +174,7 @@ sub new {
 sub is_entrytype {
   my $self = shift;
   my $type = shift;
-  return $self->{legal_entrytypes}{$type} ? 1 : 0;
+  return $self->{entrytypesbyname}{$type} ? 1 : 0;
 }
 
 =head2 is_field_for_entrytype
@@ -224,9 +186,7 @@ sub is_entrytype {
 sub is_field_for_entrytype {
   my $self = shift;
   my ($type, $field) = @_;
-  if ($self->{legal_entrytypes}{ALL}{legal_fields}{$field} or
-      $self->{legal_entrytypes}{$type}{legal_fields}{$field} or
-      $self->{legal_entrytypes}{$type}{legal_fields}{ALL}) {
+  if ($self->{entrytypesbyname}{$type}{legal_fields}{$field}) {
     return 1;
   }
   else {
@@ -234,32 +194,127 @@ sub is_field_for_entrytype {
   }
 }
 
+=head2 get_fields_of_fieldtype
 
-=head2 get_field_type
-
-    Retrieve fields of a certain biblatex type from structure
+    Retrieve fields of a certain biblatex fieldtype from data model
     Return in sorted order so that bbl order doesn't change when changing
     .bcf. This really messes up tests otherwise.
 
 =cut
 
-sub get_field_type {
-  my $self = shift;
-  my $type = shift;
-  return $self->{fields}{$type} ? [ sort keys %{$self->{fields}{$type}} ] : [];
+sub get_fields_of_fieldtype {
+  my ($self, $fieldtype) = @_;
+  my $f = $self->{fieldsbyfieldtype}{$fieldtype};
+  return $f ? [ sort @$f ] : [];
 }
 
-=head2 is_field_type
+=head2 get_fields_of_datatype
 
-    Returns boolean depending on whether a field is a certain biblatex type
+    Retrieve fields of a certain biblatex datatype from data model
+    Return in sorted order so that bbl order doesn't change when changing
+    .bcf. This really messes up tests otherwise.
 
 =cut
 
-sub is_field_type {
-  my $self = shift;
-  my ($type, $field) = @_;
-  return $self->{fields}{$type}{$field} // 0;
+sub get_fields_of_datatype {
+  my ($self, $datatype) = @_;
+  my $f = $self->{fieldsbydatatype}{$datatype};
+  return $f ? [ sort @$f ] : [];
 }
+
+
+=head2 get_fields_of_type
+
+    Retrieve fields of a certain biblatex type from data model
+    Return in sorted order so that bbl order doesn't change when changing
+    .bcf. This really messes up tests otherwise.
+
+=cut
+
+sub get_fields_of_type {
+  my ($self, $fieldtype, $datatype) = @_;
+  my $f = $self->{fieldsbytype}{$fieldtype}{$datatype};
+  return $f ? [ sort @$f ] : [];
+}
+
+=head2 get_fieldtype
+
+    Returns the fieldtype of a field
+
+=cut
+
+sub get_fieldtype {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{fieldtype};
+}
+
+=head2 get_datatype
+
+    Returns the datatype of a field
+
+=cut
+
+sub get_datatype {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{datatype};
+}
+
+=head2 get_dm_for_field
+
+    Returns the fieldtype and datatype of a field
+
+=cut
+
+sub get_dm_for_field {
+  my ($self, $field) = @_;
+  return ($self->{fieldsbyname}{$field}{fieldtype}, $self->{fieldsbyname}{$field}{datatype});
+}
+
+=head2 field_is_fieldtype
+
+    Returns boolean depending on whether a field is a certain biblatex fieldtype
+
+=cut
+
+sub field_is_fieldtype {
+  my ($self, $fieldtype, $field) = @_;
+  return $self->{fieldsbyname}{$field}{fieldtype} eq $fieldtype ? 1 : 0;
+}
+
+=head2 field_is_datatype
+
+    Returns boolean depending on whether a field is a certain biblatex datatype
+
+=cut
+
+sub field_is_datatype {
+  my ($self, $datatype, $field) = @_;
+  return $self->{fieldsbyname}{$field}{datatype} eq $datatype ? 1 : 0;
+}
+
+
+=head2 field_is_nullok
+
+    Returns boolean depending on whether a field is ok to be null
+
+=cut
+
+sub field_is_nullok {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{nullok} // 0;
+}
+
+=head2 field_is_skipout
+
+    Returns boolean depending on whether a field is to be skipped on output
+
+=cut
+
+sub field_is_skipout {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{skipout} // 0;
+}
+
 
 
 =head2 check_mandatory_constraints
@@ -275,8 +330,7 @@ sub check_mandatory_constraints {
   my @warnings;
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
-  foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{mandatory}},
-                  @{$self->{legal_entrytypes}{$et}{constraints}{mandatory}})) {
+  foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{mandatory}}) {
     if (ref($c) eq 'ARRAY') {
       # Exactly one of a set is mandatory
       if ($c->[0] eq 'XOR') {
@@ -336,8 +390,7 @@ sub check_conditional_constraints {
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
 
-  foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{conditional}},
-                  @{$self->{legal_entrytypes}{$et}{constraints}{conditional}})) {
+  foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{conditional}}) {
     my $aq  = $c->[0];          # Antecedent quantifier
     my $afs = $c->[1];          # Antecedent fields
     my $cq  = $c->[2];          # Consequent quantifier
@@ -388,7 +441,7 @@ sub check_conditional_constraints {
 =head2 check_data_constraints
 
     Checks constraints of type "data" on entry and
-    returns an arry of warnings, if any
+    returns an array of warnings, if any
 
 =cut
 
@@ -398,11 +451,47 @@ sub check_data_constraints {
   my @warnings;
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
-  foreach my $c ((@{$self->{legal_entrytypes}{ALL}{constraints}{data}},
-                  @{$self->{legal_entrytypes}{$et}{constraints}{data}})) {
+  foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{data}}) {
     # This is the datatype of the constraint, not the field!
-    if ($c->{datatype} eq 'integer') {
-      my $dt = $STRUCTURE_DATATYPES{$c->{datatype}};
+    if ($c->{datatype} eq 'isbn') {
+      foreach my $f (@{$c->{fields}}) {
+        if (my $fv = $be->get_field($f)) {
+          require Business::ISBN;
+          my $isbn = Business::ISBN->new($fv);
+          if (not $isbn) {
+            push @warnings, "Invalid ISBN for value of field '$f' in '$key'";
+          }
+          # Business::ISBN has an error() method so we might get more information
+          elsif (not $isbn->is_valid) {
+            push @warnings, "Invalid ISBN for value of field '$f' in '$key' (" . $isbn->error. ')';
+          }
+        }
+      }
+    }
+    elsif ($c->{datatype} eq 'issn') {
+      foreach my $f (@{$c->{fields}}) {
+        if (my $fv = $be->get_field($f)) {
+          require Business::ISSN;
+          my $issn = Business::ISSN->new($fv);
+          unless ($issn and $issn->is_valid) {
+            push @warnings, "Invalid ISSN for value of field '$f' in '$key'";
+          }
+        }
+      }
+    }
+    elsif ($c->{datatype} eq 'ismn') {
+      foreach my $f (@{$c->{fields}}) {
+        if (my $fv = $be->get_field($f)) {
+          require Business::ISMN;
+          my $ismn = Business::ISMN->new($fv);
+          unless ($ismn and $ismn->is_valid) {
+            push @warnings, "Invalid ISMN for value of field '$f' in '$key'";
+          }
+        }
+      }
+    }
+    elsif ($c->{datatype} eq 'integer') {
+      my $dt = $DM_DATATYPES{'integer'};
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
           unless ( $fv =~ /$dt/ ) {
@@ -427,74 +516,74 @@ sub check_data_constraints {
         }
       }
     }
-  }
-  return @warnings;
-}
+    elsif ($c->{datatype} eq 'date') {
+      # Perform content validation checks on date components by trying to
+      # instantiate a Date::Simple object.
+      foreach my $f (@{$self->get_fields_of_type('field', 'date')}) {
+        my ($d) = $f =~ m/\A(.*)date\z/xms;
+        # Don't bother unless this type of date is defined (has a year)
+        next unless $be->get_datafield($d . 'year');
 
-=head2 check_date_components
+        # When checking date components not split from date fields, have ignore the value
+        # of an explicit YEAR field as it is allowed to be an arbitrary string
+        # so we just set it to any valid value for the test
+        my $byc;
+        my $byc_d; # Display value for errors so as not to confuse people
+        if ($d eq '' and not $be->get_field('datesplit')) {
+          $byc = '1900';        # Any valid value is fine
+          $byc_d = 'YYYY';
+        }
+        else {
+          $byc = $be->get_datafield($d . 'year')
+        }
 
-     Perform content validation checks on date components by trying to
-     instantiate a Date::Simple object.
-
-=cut
-
-sub check_date_components {
-  my $self = shift;
-  my $be = shift;
-  my @warnings;
-  my $et = $be->get_field('entrytype');
-  my $key = $be->get_field('citekey');
-
-  foreach my $f (@{$self->{legal_datetypes}}) {
-    my ($d) = $f =~ m/\A(.*)date\z/xms;
-    # Don't bother unless this type of date is defined (has a year)
-    next unless $be->get_datafield($d . 'year');
-
-    # When checking date components not split from date fields, have ignore the value
-    # of an explicit YEAR field as it is allowed to be an arbitrary string
-    # so we just set it to any valid value for the test
-    my $byc;
-    my $byc_d; # Display value for errors so as not to confuse people
-    if ($d eq '' and not $be->get_field('datesplit')) {
-      $byc = '1900'; # Any valid value is fine
-      $byc_d = 'YYYY';
-    }
-    else {
-      $byc = $be->get_datafield($d . 'year')
-    }
-
-    # Begin date
-    if ($byc) {
-      my $bm = $be->get_datafield($d . 'month') || 'MM';
-      my $bmc = $bm  eq 'MM' ? '01' : $bm;
-      my $bd = $be->get_datafield($d . 'day') || 'DD';
-      my $bdc = $bd  eq 'DD' ? '01' : $bd;
-      $logger->debug("Checking '${d}date' date value '$byc/$bmc/$bdc' for key '$key'");
-      unless (Date::Simple->new("$byc$bmc$bdc")) {
-        push @warnings, "Invalid date value '" .
-          ($byc_d || $byc) .
+        # Begin date
+        if ($byc) {
+          my $bm = $be->get_datafield($d . 'month') || 'MM';
+          my $bmc = $bm  eq 'MM' ? '01' : $bm;
+          my $bd = $be->get_datafield($d . 'day') || 'DD';
+          my $bdc = $bd  eq 'DD' ? '01' : $bd;
+          $logger->debug("Checking '${d}date' date value '$byc/$bmc/$bdc' for key '$key'");
+          unless (Date::Simple->new("$byc$bmc$bdc")) {
+            push @warnings, "Invalid date value '" .
+              ($byc_d || $byc) .
                 "/$bm/$bd' - ignoring its components in entry '$key'";
-        $be->del_datafield($d . 'year');
-        $be->del_datafield($d . 'month');
-        $be->del_datafield($d . 'day');
-        next;
+            $be->del_datafield($d . 'year');
+            $be->del_datafield($d . 'month');
+            $be->del_datafield($d . 'day');
+            next;
+          }
+        }
+        # End date
+        # defined and some value - end*year can be empty but defined in which case,
+        # we don't need to validate
+        if (my $eyc = $be->get_datafield($d . 'endyear')) {
+          my $em = $be->get_datafield($d . 'endmonth') || 'MM';
+          my $emc = $em  eq 'MM' ? '01' : $em;
+          my $ed = $be->get_datafield($d . 'endday') || 'DD';
+          my $edc = $ed  eq 'DD' ? '01' : $ed;
+          $logger->debug("Checking '${d}date' date value '$eyc/$emc/$edc' for key '$key'");
+          unless (Date::Simple->new("$eyc$emc$edc")) {
+            push @warnings, "Invalid date value '$eyc/$em/$ed' - ignoring its components in entry '$key'";
+            $be->del_datafield($d . 'endyear');
+            $be->del_datafield($d . 'endmonth');
+            $be->del_datafield($d . 'endday');
+            next;
+          }
+        }
       }
     }
-    # End date
-    # defined and some value - end*year can be empty but defined in which case,
-    # we don't need to validate
-    if (my $eyc = $be->get_datafield($d . 'endyear')) {
-      my $em = $be->get_datafield($d . 'endmonth') || 'MM';
-      my $emc = $em  eq 'MM' ? '01' : $em;
-      my $ed = $be->get_datafield($d . 'endday') || 'DD';
-      my $edc = $ed  eq 'DD' ? '01' : $ed;
-      $logger->debug("Checking '${d}date' date value '$eyc/$emc/$edc' for key '$key'");
-      unless (Date::Simple->new("$eyc$emc$edc")) {
-        push @warnings, "Invalid date value '$eyc/$em/$ed' - ignoring its components in entry '$key'";
-        $be->del_datafield($d . 'endyear');
-        $be->del_datafield($d . 'endmonth');
-        $be->del_datafield($d . 'endday');
-        next;
+    elsif ($c->{datatype} eq 'pattern') {
+      my $patt;
+      unless ($patt = $c->{pattern}) {
+        push @warnings, "Pattern constraint has no pattern!";
+      }
+      foreach my $f (@{$c->{fields}}) {
+        if (my $fv = $be->get_field($f)) {
+          unless (imatch($fv, $patt)) {
+            push @warnings, "Invalid value (pattern match fails) for field '$f' in entry '$key'";
+          }
+        }
       }
     }
   }
@@ -503,7 +592,7 @@ sub check_date_components {
 
 =head2 dump
 
-    Dump Biber::Structure object
+    Dump Biber::DataModel object
 
 =cut
 

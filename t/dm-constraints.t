@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 
 use Biber;
 use Biber::Output::bbl;
@@ -26,7 +26,7 @@ my $l4pconf = qq|
 |;
 Log::Log4perl->init(\$l4pconf);
 
-$biber->parse_ctrlfile('structure-constraints.bcf');
+$biber->parse_ctrlfile('dm-constraints.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
@@ -34,7 +34,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('validate_structure', 1);
+Biber::Config->setoption('validate_datamodel', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Now generate the information
@@ -44,10 +44,11 @@ my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
 my $c1 = [ "Entry 'c1' - invalid entry type 'badtype' - defaulting to 'misc'" ];
-my $c2 = [ "Entry 'c2' - invalid field 'badfield' for entrytype 'eta'",
+my $c2 = [ "Field 'badfield' invalid in data model for entry 'c2' - ignoring",
            "Entry 'c2' - invalid field 'journaltitle' for entrytype 'eta'",
            "Missing mandatory field 'author' in entry 'c2'" ];
-my $c3 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'c3'" ];
+my $c3 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'c3'",
+           "Invalid value (pattern match fails) for field 'gender' in entry 'c3'" ];
 my $c4 = [ "Invalid value of field 'month' must be '<=12' - ignoring field in entry 'c4'",
            "Invalid value of field 'field1' must be '>=5' - ignoring field in entry 'c4'" ];
 # There would also have been a date+year constraint violation in the next test if
@@ -63,6 +64,9 @@ my $c8 = [ "Constraint violation - none of fields (field4) must exist when none 
            "Constraint violation - one of fields (field10, field11) must exist when none of fields (field8, field9) exist",
            "Constraint violation - all of fields (field12, field13) must exist when none of fields (field6) exist" ];
 
+my $c10 = [ "Invalid ISBN for value of field 'isbn' in 'c10'",
+            "Invalid ISSN for value of field 'issn' in 'c10'" ];
+
 is_deeply($bibentries->entry('c1')->get_field('warnings'), $c1, 'Constraints test 1' );
 is_deeply($bibentries->entry('c2')->get_field('warnings'), $c2, 'Constraints test 2' );
 is_deeply($bibentries->entry('c3')->get_field('warnings'), $c3, 'Constraints test 3a' );
@@ -77,4 +81,5 @@ is_deeply($bibentries->entry('c7')->get_field('warnings'), $c7, 'Constraints tes
 ok(is_undef($bibentries->entry('c7')->get_field('field7')), 'Constraints test 7b' );
 is_deeply($bibentries->entry('c8')->get_field('warnings'), $c8, 'Constraints test 8a' );
 ok(is_undef($bibentries->entry('c8')->get_field('field4')), 'Constraints test 8b' );
-
+ok(is_undef($bibentries->entry('c9')->get_field('warnings')), 'Constraints test 9' );
+is_deeply($bibentries->entry('c10')->get_field('warnings'), $c10, 'Constraints test 10' );

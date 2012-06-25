@@ -12,7 +12,6 @@ use Biber::Entry::Names;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
-use Biber::Structure;
 use Biber::Utils;
 use Biber::Config;
 use Digest::MD5 qw( md5_hex );
@@ -29,6 +28,34 @@ use Data::Dump qw(dump);
 my $logger = Log::Log4perl::get_logger('main');
 my $orig_key_order = {};
 
+# Determine handlers from data model
+my $dm = Biber::Config->get_dm;
+my $handlers = {
+                'CUSTOM' => {'BIBERCUSTOMpartof'      => \&_partof,
+                             'BIBERCUSTOMidentifier'  => \&_identifier,
+                             'BIBERCUSTOMpublisher'   => \&_publisher,
+                             'BIBERCUSTOMpresentedat' => \&_presentedat,
+                             'BIBERCUSTOMsubject'     => \&_subject,
+                            },
+                'field' => {
+                            'csv'      => \&_csv,
+                            'code'     => \&_literal,
+                            'date'     => \&_date,
+                            'entrykey' => \&_literal,
+                            'integer'  => \&_literal,
+                            'key'      => \&_literal,
+                            'literal'  => \&_literal,
+                            'range'    => \&_range,
+                            'verbatim' => \&_literal,
+                           },
+                'list' => {
+                           'entrykey' => \&_literal,
+                           'key'      => \&_list,
+                           'literal'  => \&_list,
+                           'name'     => \&_name,
+                          }
+};
+
 my %PREFICES = ('z'       => 'http://www.zotero.org/namespaces/export#',
                 'foaf'    => 'http://xmlns.com/foaf/0.1/',
                 'rdf'     => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -38,23 +65,6 @@ my %PREFICES = ('z'       => 'http://www.zotero.org/namespaces/export#',
                 'prism'   => 'http://prismstandard.org/namespaces/1.2/basic/',
                 'vcard'   => 'http://nwalsh.com/rdf/vCard#',
                 'vcard2'  => 'http://www.w3.org/2006/vcard/ns#');
-
-# Handlers for field types
-my %handlers = (
-                'name'        => \&_name,
-                'date'        => \&_date,
-                'range'       => \&_range,
-                'literal'     => \&_literal,
-                'list'        => \&_list,
-                'partof'      => \&_partof,
-                'publisher'   => \&_publisher,
-                'identifier'  => \&_identifier,
-                'presentedat' => \&_presentedat,
-                'subject'     => \&_subject
-);
-
-# Read driver config file
-my $dcfxml = driver_config('zoterordfxml');
 
 =head2 extract_entries
 
@@ -75,6 +85,19 @@ sub extract_entries {
   my $tf; # Up here so that the temp file has enough scope to survive until we've
           # used it
   $logger->trace("Entering extract_entries()");
+
+  # Get a reference to the correct sourcemap sections, if they exist
+  my $smaps = [];
+  if (defined(Biber::Config->getoption('sourcemap'))) {
+    # User maps
+    if (my $m = first {$_->{datatype} eq 'zoterordfxml' and not exists($_->{driver_defaults})} @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+    # Driver default maps
+    if (my $m = first {$_->{datatype} eq 'zoterordfxml' and $_->{driver_defaults}} @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+  }
 
   # If it's a remote data file, fetch it first
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
@@ -161,7 +184,7 @@ sub extract_entries {
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, $ek;
 
-      create_entry($ek, $entry, $source);
+      create_entry($ek, $entry, $source, $smaps);
     }
 
     # if allkeys, push all bibdata keys into citekeys (if they are not already there)
@@ -197,7 +220,7 @@ sub extract_entries {
         $logger->debug('Parsing Zotero RDF/XML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
-        create_entry($wanted_key, $entry, $source);
+        create_entry($wanted_key, $entry, $source, $smaps);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
@@ -217,250 +240,285 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($key, $entry, $source) = @_;
+  my ($key, $entry, $source, $smaps) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $struc = Biber::Config->get_structure;
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
 
   $bibentry->set_field('citekey', $key);
 
-  # Get a reference to the map option, if it exists
-  my $user_map;
-  if (defined(Biber::Config->getoption('sourcemap'))) {
-    if (my $m = first {$_->{datatype} eq 'zoterordfxml'} @{Biber::Config->getoption('sourcemap')} ) {
-      $user_map = $m;
-    }
-  }
+  # Datasource mapping. We process driver defaults first and then user
+  # (see code which creates $smaps above)
+  foreach my $smap (@$smaps) {
 
   # DATASOURCE MAPPING DEFINED BY USER IN CONFIG FILE OR .bcf
- MAP:    foreach my $map (@{$user_map->{map}}) {
-    my $last_field = undef;
-    my $last_fieldval = undef;
-    my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
-    my $last_type = $itype; # defaults to the entrytype unless changed below
+  MAP:    foreach my $map (@{$smap->{map}}) {
+      my $last_field = undef;
+      my $last_fieldval = undef;
+      my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
+      my $last_type = $itype; # defaults to the entrytype unless changed below
 
-    # Check pertype restrictions
-    unless (not exists($map->{per_type}) or
-            first {$_->{content} eq $itype} @{$map->{per_type}}) {
-      next;
-    }
-
-    # Check per_datasource restrictions
-    # Don't compare case insensitively - this might not be correct
-    unless (not exists($map->{per_datasource}) or
-            first {$_->{content} eq $source} @{$map->{per_datasource}}) {
-      next;
-    }
-
-    # loop over mapping steps
-    foreach my $step (@{$map->{map_step}}) {
-
-      # Entrytype map
-      if (my $source = $step->{map_type_source}) {
-
-        unless ($itype eq $source) {
-          # Skip the rest of the map if this step doesn't match
-          if ($step->{map_final}) {
-            next MAP;
-          }
-          else {
-            # just ignore this step
-            next;
-          }
-        }
-        # Change entrytype if requested
-        $last_type = $itype;
-        $entry->findnodes('./z:itemType/text()')->get_node(1)->setData($step->{map_type_target});
+      # Check pertype restrictions
+      unless (not exists($map->{per_type}) or
+              first {$_->{content} eq $itype} @{$map->{per_type}}) {
+        next;
       }
 
-      # Field map
-      if (my $source = $step->{map_field_source}) {
-        unless ($entry->exists('./' . $source)) {
-          # Skip the rest of the map if this step doesn't match
-          if ($step->{map_final}) {
-            next MAP;
+      # Check per_datasource restrictions
+      # Don't compare case insensitively - this might not be correct
+      unless (not exists($map->{per_datasource}) or
+              first {$_->{content} eq $source} @{$map->{per_datasource}}) {
+        next;
+      }
+
+      # loop over mapping steps
+      foreach my $step (@{$map->{map_step}}) {
+
+        # Entrytype map
+        if (my $source = $step->{map_type_source}) {
+
+          unless ($itype eq $source) {
+            # Skip the rest of the map if this step doesn't match
+            if ($step->{map_final}) {
+              next MAP;
+            }
+            else {
+              # just ignore this step
+              next;
+            }
           }
-          else {
-            # just ignore this step
-            next;
-          }
+          # Change entrytype if requested
+          $last_type = $itype;
+          $entry->findnodes('./z:itemType/text()')->get_node(1)->setData($step->{map_type_target});
         }
 
-        $last_field = $source;
-        $last_fieldval = $entry->findvalue('./' . $source);
-
-        # map fields to targets
-        if (my $m = $step->{map_match}) {
-          if (my $r = $step->{map_replace}) {
-            my $text = ireplace($last_fieldval, $m, $r);
-            $entry->findnodes('./' . $source . '/text()')->get_node(1)->setData($text);
+        # Field map
+        if (my $source = $step->{map_field_source}) {
+          unless ($entry->exists($source)) {
+            # Skip the rest of the map if this step doesn't match
+            if ($step->{map_final}) {
+              next MAP;
+            }
+            else {
+              # just ignore this step
+              next;
+            }
           }
-          else {
-            unless (imatch($last_fieldval, $m)) {
-              # Skip the rest of the map if this step doesn't match
-              if ($step->{map_final}) {
-                next MAP;
+          $last_field = $source;
+          $last_fieldval = $entry->findvalue($source);
+
+          # map fields to targets
+          if (my $m = $step->{map_match}) {
+            if (my $r = $step->{map_replace}) {
+              my $text = ireplace($last_fieldval, $m, $r);
+              $entry->findnodes($source . '/text()')->get_node(1)->setData($text);
+            }
+            else {
+              unless (imatch($last_fieldval, $m)) {
+                # Skip the rest of the map if this step doesn't match
+                if ($step->{map_final}) {
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  next;
+                }
+              }
+            }
+          }
+
+          # Set to a different target if there is one
+          if (my $target = $step->{map_field_target}) {
+            if (my @t = $entry->findnodes($target)) {
+              if ($map->{map_overwrite} // $smap->{map_overwrite}) {
+                $logger->debug("Overwriting existing field '$target' while processing entry '$key'");
+                # Have to do this otherwise XML::LibXML will merge the nodes
+                map {$_->unbindNode} @t;
               }
               else {
-                # just ignore this step
+                $logger->debug("Not overwriting existing field '$target' while processing entry '$key'");
                 next;
               }
             }
+            map {$_->setNodeName(_leaf_node($target))} $entry->findnodes($source);
           }
         }
 
-        # Set to a different target if there is one
-        if (my $target = $step->{map_field_target}) {
-          if ($entry->exists('./' . $target)) {
-            if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
-              biber_warn("Overwriting existing field '$target' while processing entry '$key'", $bibentry);
-            }
-            else {
-              biber_warn("Not overwriting existing field '$target' while processing entry '$key'", $bibentry);
-              next;
-            }
-          }
-          map {$_->setNodeName($target)} $entry->findnodes($source);
-        }
-      }
+        # field creation
+        if (my $field = $step->{map_field_set}) {
 
-      # field creation
-      if (my $field = $step->{map_field_set}) {
-
-        # Deal with special tokens
-        if ($step->{map_null}) {
-          map {$_->unbindNode} $entry->findnodes('./' . $field);
-        }
-        else {
-          if ($entry->exists($field)) {
-            if ($map->{map_overwrite} // $user_map->{map_overwrite}) {
-              biber_warn("Overwriting existing field '$field' while processing entry '$key'", $bibentry);
-            }
-            else {
-              biber_warn("Not overwriting existing field '$field' while processing entry '$key'", $bibentry);
-              next;
-            }
-          }
-
-          if ($step->{map_origentrytype}) {
-            next unless $last_type;
-            $entry->appendTextChild($field, $last_type);
-          }
-          elsif ($step->{map_origfieldval}) {
-            next unless $last_fieldval;
-            $entry->appendTextChild($field, $last_fieldval);
-          }
-          elsif ($step->{map_origfield}) {
-            next unless $last_field;
-            $entry->appendTextChild($field, $last_field);
+          # Deal with special tokens
+          if ($step->{map_null}) {
+            map {$_->unbindNode} $entry->findnodes($field);
           }
           else {
-            $entry->appendTextChild($field, $step->{map_field_value});
-          }
-        }
-      }
-    }
-  }
+            if ($entry->exists($field)) {
+              if ($map->{map_overwrite} // $smap->{map_overwrite}) {
+                $logger->debug("Overwriting existing field '$field' while processing entry '$key'");
+              }
+              else {
+                $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
+                next;
+              }
+            }
 
-  # We put all the fields we find modulo field aliases into the object.
-  # Validation happens later and is not datasource dependent
-  my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
-FLOOP:  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
-    # FIELD MAPPING (ALIASES) DEFINED BY USER IN CONFIG FILE OR .bcf
-    # FIELD MAPPING (ALIASES) DEFINED BY DRIVER IN DRIVER CONFIG FILE
-    if (my $from = $dcfxml->{fields}{field}{$f}) { # ignore fields not in .dcf
-      my $to = $f; # By default, field to set internally is the same as data source
-      # Redirect any alias
-      if (my $aliases = $from->{alias}) { # complex aliases with alsoset clauses
-        foreach my $alias (@$aliases) {
-          if (my $t = $alias->{aliasfortype}) { # type-specific alias
-            if (lc($t) eq lc($itype)) {
-              my $a = $alias->{aliasof};
-              $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
-              $from = $dcfxml->{fields}{field}{$a};
-              $to = $a; # Field to set internally is the alias
-              last;
+            if ($step->{map_origentrytype}) {
+              next unless $last_type;
+              $entry->appendTextChild($field, $last_type);
+            }
+            elsif ($step->{map_origfieldval}) {
+              next unless $last_fieldval;
+              $entry->appendTextChild($field, $last_fieldval);
+            }
+            elsif ($step->{map_origfield}) {
+              next unless $last_field;
+              $entry->appendTextChild($field, $last_field);
+            }
+            else {
+              $entry->appendTextChild($field, $step->{map_field_value});
             }
           }
-          else {
-            my $a = $alias->{aliasof}; # global alias
-            $logger->debug("Found alias '$a' of field '$f' in entry '$key'");
-            $from = $dcfxml->{fields}{field}{$a};
-            $to = $a; # Field to set internally is the alias
-          }
-
-          # Deal with additional fields to split information into (one->many map)
-          if (my $alsoset = $alias->{alsoset}) {
-            my $val = $alsoset->{value} // $f; # defaults to original field name if no value
-            $bibentry->set_datafield($alsoset->{target}, $val);
-          }
         }
       }
-      elsif (my $alias = $from->{aliasof}) { # simple alias
-        $logger->debug("Found alias '$alias' of field '$f' in entry '$key'");
-        $from = $dcfxml->{fields}{field}{$alias};
-        $to = $alias; # Field to set internally is the alias
-      }
-      &{$handlers{$from->{handler}}}($bibentry, $entry, $f, $to, $key);
     }
   }
 
-  # Driver aliases
-  if (my $ealias = $dcfxml->{entrytypes}{entrytype}{$itype}) {
-    $bibentry->set_field('entrytype', $ealias->{aliasof}{content});
-    foreach my $alsoset (@{$ealias->{alsoset}}) {
-      # drivers never overwrite existing fields
-      if ($bibentry->field_exists(lc($alsoset->{target}))) {
-        biber_warn("Not overwriting existing field '" . $alsoset->{target} . "' during aliasing of entrytype '$itype' to '" . lc($ealias->{aliasof}{content}) . "' in entry '$key'", $bibentry);
-        next;
-      }
-      $bibentry->set_datafield($alsoset->{target}, $alsoset->{value});
+  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
+    # Now run any defined handler
+    # There is no else clause here to warn on invalid fields as there are so many
+    # in zoterordfxml
+    if ($dm->is_field(_strip_ns($f))) {
+      my $handler = _get_handler($f);
+      &$handler($bibentry, $entry, $f, $key, $smaps);
     }
   }
-  # No alias
-  else {
-    $bibentry->set_field('entrytype', $itype);
-  }
 
+  my $itype = $entry->findvalue('./z:itemType') || _strip_ns($entry->nodeName);
+  $bibentry->set_field('entrytype', $itype);
   $bibentry->set_field('datatype', 'zoterordfxml');
   $bibentries->add_entry($key, $bibentry);
 
-  return $bibentry; # We need to return the entry here for _partof() below
+  return $bibentry; # We need to return the entry here for partof handling below
 }
 
 # HANDLERS
 # ========
-# Not all handlers have match/replace capability - some are just too nested
-# and messy
 
-# List fields
-sub _list {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  my $value = $entry->findvalue("./$f");
-  $bibentry->set_datafield($to, [ $value ]);
+# Handler for partof
+sub _partof {
+  my ($bibentry, $entry, $f, $key, $smaps) = @_;
+  my $partof = $entry->findnodes($f)->get_node(1);
+  my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
+  if ($partof->hasAttribute('rdf:resource')) { # remote ISSN resources aren't much use
+    return;
+  }
+  # For 'webpage' types ('online' biblatex type), Zotero puts in a pointless
+  # empty partof z:Website container
+  if ($itype eq 'webpage') {
+    return;
+  }
+
+  # create a dataonly entry for the partOf and add a crossref to it
+  my $crkey = $key . '_' . md5_hex($key);
+  $logger->debug("Creating a dataonly crossref '$crkey' for key '$key'");
+  my $cref = create_entry($crkey, $partof->findnodes('*')->get_node(1), $smaps);
+  $cref->set_datafield('options', 'dataonly');
+  Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $crkey);
+  Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $crkey);
+  $bibentry->set_datafield('crossref', $crkey);
   return;
 }
 
-# literal fields
+# identifier
+sub _identifier {
+  my ($bibentry, $entry, $f) = @_;
+  if (my $url = $entry->findnodes("./$f/dcterms:URI/rdf:value")->get_node(1)) {
+    $bibentry->set_datafield('url', $url->textContent());
+  }
+  else {
+    foreach my $id_node ($entry->findnodes($f)) {
+      if ($id_node->textContent() =~ m/\A(ISSN|ISBN|DOI)\s(.+)\z/) {
+        $bibentry->set_datafield(lc($1), $2);
+      }
+    }
+  }
+  return;
+}
+
+# Publisher
+sub _publisher {
+  my ($bibentry, $entry, $f) = @_;
+  if (my $org = $entry->findnodes("./$f/foaf:Organization")->get_node(1)) {
+    # There is an address, set location.
+    # Location is a list field in bibaltex, hence the array ref
+    if (my $adr = $org->findnodes('./vcard:adr')->get_node(1)) {
+      $bibentry->set_datafield('location', [ $adr->findvalue('./vcard:Address/vcard:locality') ]);
+    }
+    # set publisher
+    # publisher is a list field in bibaltex, hence the array ref
+    if (my $adr = $org->findnodes('./foaf:name')->get_node(1)) {
+      $bibentry->set_datafield('publisher', [ $adr->textContent() ]);
+    }
+  }
+  return;
+}
+
+# presentedAt
+sub _presentedat {
+  my ($bibentry, $entry, $f) = @_;
+  if (my $conf = $entry->findnodes("./$f/bib:Conference")->get_node(1)) {
+    $bibentry->set_datafield('eventtitle', $conf->findvalue('./dc:title'));
+  }
+  return;
+}
+
+# subject
+sub _subject {
+  my ($bibentry, $entry, $f) = @_;
+  if (my $lib = $entry->findnodes("./$f/dcterms:LCC/rdf:value")->get_node(1)) {
+    # This overrides any z:libraryCatalog node
+    $bibentry->set_datafield('library', $lib->textContent());
+  }
+  elsif (my @s = $entry->findnodes("./$f")) {
+    my @kws;
+    foreach my $s (@s) {
+      push @kws, '{'.$s->textContent().'}';
+    }
+    $bibentry->set_datafield('keywords', join(',', @kws));
+  }
+  return;
+}
+
+
+# List fields
+sub _list {
+  my ($bibentry, $entry, $f) = @_;
+  my $value = $entry->findvalue($f);
+  $bibentry->set_datafield($f, [ $value ]);
+  return;
+}
+
+# Literal fields
 sub _literal {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
+
   # Special case - libraryCatalog is used only if hasn't already been set
   # by LCC
-  if ($f eq 'z:libraryCatalog') {
+  if (_strip_ns($f) eq 'library') {
     return if $bibentry->get_field('library');
   }
-  my $value = $entry->findvalue("./$f");
-  $bibentry->set_datafield($to, $value);
+
+  my $value = $entry->findvalue($f);
+  $bibentry->set_datafield(_strip_ns($f), $value);
   return;
 }
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $values_ref;
-  my $value = $entry->findvalue("./$f");
+  my $value = $entry->findvalue($f);
   my @values = split(/\s*,\s*/, $value);
   # Here the "-–" contains two different chars even though they might
   # look the same in some fonts ...
@@ -477,14 +535,14 @@ sub _range {
     }
     push @$values_ref, [$1 || '', $end];
   }
-  $bibentry->set_datafield($to, $values_ref);
+  $bibentry->set_datafield(_strip_ns($f), $values_ref);
   return;
 }
 
 # Date fields
 sub _date {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  my $date = $entry->findvalue("./$f");
+  my ($bibentry, $entry, $f, $key) = @_;
+  my $date = $entry->findvalue($f);
   # We are not validating dates here, just syntax parsing
     my $date_re = qr/(\d{4}) # year
                      (?:-(\d{2}))? # month
@@ -512,111 +570,12 @@ sub _date {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
+  my ($bibentry, $entry, $f) = @_;
   my $names = new Biber::Entry::Names;
   foreach my $name ($entry->findnodes("./$f/rdf:Seq/rdf:li/foaf:Person")) {
     $names->add_name(parsename($name, $f));
   }
-  $bibentry->set_datafield($to, $names);
-  return;
-}
-
-# partof container
-# This essentially is a bit like biblatex inheritance, but much more primitive
-sub _partof {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  my $partof = $entry->findnodes("./$f")->get_node(1);
-  my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
-  if ($partof->hasAttribute('rdf:resource')) { # remote ISSN resources aren't much use
-    return;
-  }
-  # For 'webpage' types ('online' biblatex type), Zotero puts in a pointless
-  # empty partof z:Website container
-  if ($itype eq 'webpage') {
-    return;
-  }
-
-  # create a dataonly entry for the partOf and add a crossref to it
-  my $crkey = $key . '_' . md5_hex($key);
-  $logger->debug("Creating a dataonly crossref '$crkey' for key '$key'");
-  my $cref = create_entry($crkey, $partof->findnodes('*')->get_node(1));
-  $cref->set_datafield('options', 'dataonly');
-  Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $crkey);
-  Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $crkey);
-  $bibentry->set_datafield('crossref', $crkey);
-  # crossrefs are a pain as we have to try to guess the
-  # crossref type a bit. This corresponds to the relevant parts of the
-  # default inheritance setup
-  # This is a bit messy as we have to map from zotero entrytypes to biblatex data model types
-  # because entrytypes are set after fields so bibaltex datatypes are not set yet.
-  # The crossref entry isn't processed later so we have to set the real entrytype here.
-  if ($cref->get_field('entrytype') =~ /\Abib:/) {
-    given (lc($itype)) {
-      when ('book')            { $cref->set_field('entrytype', 'mvbook') }
-      when ('booksection')     { $cref->set_field('entrytype', 'book') }
-      when ('conferencepaper') { $cref->set_field('entrytype', 'proceedings') }
-      when ('presentation')    { $cref->set_field('entrytype', 'proceedings') }
-      when ('journalarticle')  { $cref->set_field('entrytype', 'periodical') }
-      when ('magazinearticle') { $cref->set_field('entrytype', 'periodical') }
-      when ('newspaperarticle'){ $cref->set_field('entrytype', 'periodical') }
-    }
-  }
-  return;
-}
-
-sub _publisher {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  if (my $org = $entry->findnodes("./$f/foaf:Organization")->get_node(1)) {
-    # There is an address, set location.
-    # Location is a list field in bibaltex, hence the array ref
-    if (my $adr = $org->findnodes('./vcard:adr')->get_node(1)) {
-      $bibentry->set_datafield('location', [ $adr->findvalue('./vcard:Address/vcard:locality') ]);
-    }
-    # set publisher
-    # publisher is a list field in bibaltex, hence the array ref
-    if (my $adr = $org->findnodes('./foaf:name')->get_node(1)) {
-      $bibentry->set_datafield('publisher', [ $adr->textContent() ]);
-    }
-  }
-  return;
-}
-
-sub _presentedat {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  if (my $conf = $entry->findnodes("./$f/bib:Conference")->get_node(1)) {
-    $bibentry->set_datafield('eventtitle', $conf->findvalue('./dc:title'));
-  }
-  return;
-}
-
-sub _subject {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  if (my $lib = $entry->findnodes("./$f/dcterms:LCC/rdf:value")->get_node(1)) {
-    # This overrides any z:libraryCatalog node
-    $bibentry->set_datafield('library', $lib->textContent());
-  }
-  elsif (my @s = $entry->findnodes("./$f")) {
-    my @kws;
-    foreach my $s (@s) {
-      push @kws, '{'.$s->textContent().'}';
-    }
-    $bibentry->set_datafield('keywords', join(',', @kws));
-  }
-  return;
-}
-
-sub _identifier {
-  my ($bibentry, $entry, $f, $to, $key) = @_;
-  if (my $url = $entry->findnodes("./$f/dcterms:URI/rdf:value")->get_node(1)) {
-    $bibentry->set_datafield('url', $url->textContent());
-  }
-  else {
-    foreach my $id_node ($entry->findnodes("./$f")) {
-      if ($id_node->textContent() =~ m/\A(ISSN|ISBN|DOI)\s(.+)\z/) {
-        $bibentry->set_datafield(lc($1), $2);
-      }
-    }
-  }
+  $bibentry->set_datafield(_strip_ns($f), $names);
   return;
 }
 
@@ -716,6 +675,30 @@ sub _gen_initials {
   }
   return @strings_out;
 }
+
+# Syntactically get the leaf node of a node path
+sub _leaf_node {
+  my $node_path = shift;
+  return $node_path =~ s|.+/([^/]+$)|$1|r;
+}
+
+# Strip interim bltx namespace
+sub _strip_ns {
+  my $node = shift;
+  return $node =~ s|^[^:]+:||r;
+}
+
+
+sub _get_handler {
+  my $field = shift;
+  if (my $h = $handlers->{CUSTOM}{_strip_ns($field)}) {
+    return $h;
+  }
+  else {
+    return $handlers->{$dm->get_fieldtype(_strip_ns($field))}{$dm->get_datatype(_strip_ns($field))};
+  }
+}
+
 
 1;
 

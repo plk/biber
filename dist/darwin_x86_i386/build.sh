@@ -6,8 +6,9 @@
 # Also, pp resolves symlinks and copies the symlink targets of linked libs
 # which then don't have the right names and so things that link to them
 # through the link name break. So, we copy them to the link names first and
-# and package those.
-#
+# and package those. This is because OSX is not ELF object format, unlike Linux
+# and so PAR::Packer doesn't understand how to follow the links.
+
 # Don't try to build 32-bit 10.5 binaries on >10.5 by manipulating macports
 # flags and SDKs. It doesn't work. You need a real 10.5 box/VM.
 #
@@ -16,7 +17,7 @@
 
 cp /opt/local/bin/biber /tmp/biber-darwin
 cp /opt/local/lib/libgdbm.3.0.0.dylib /tmp/libgdbm.3.dylib
-cp /opt/local/lib/libz.1.2.5.dylib /tmp/libz.1.dylib
+cp /opt/local/lib/libz.1.2.7.dylib /tmp/libz.1.dylib
 
 pp --compress=6 \
   --module=deprecate \

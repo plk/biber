@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 101;
+use Test::More tests => 109;
 
 use Biber;
 use Biber::Utils;
@@ -44,7 +44,7 @@ Biber::Config->setblxoption('labelyear', undef);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $section->get_list('MAIN');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=1 minalphanames=1 entry L1 labelalpha');
@@ -84,7 +84,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=1 entry L1 labelalpha');
@@ -118,7 +118,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=2 entry L1 labelalpha');
@@ -152,7 +152,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=3 minalphanames=1 entry L1 labelalpha');
@@ -191,7 +191,7 @@ foreach my $k ($section->get_citekeys) {
 $biber->prepare;
 my $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('L11')->get_field('sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
@@ -211,6 +211,7 @@ is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgConLe', 'labelalph
 is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgCouLa', 'labelalpha disambiguation 6');
 is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BoConEdb', 'labelalpha disambiguation 7');
 is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BoConEm', 'labelalpha disambiguation 8');
+is($bibentries->entry('L23')->get_field('sortlabelalpha'), 'Sa', 'labelalpha disambiguation 9');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -239,13 +240,13 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 # "Agas" and not "Aga" because the Schmidt/Schnee below need 4 chars to disambiguate
-is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AgasChaLaver', 'labelalpha disambiguation 4');
-is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgasConLendl', 'labelalpha disambiguation 5');
-is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgasCouLaver', 'labelalpha disambiguation 6');
+is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AgasChaLaver', 'labelalpha disambiguation 10');
+is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgasConLendl', 'labelalpha disambiguation 11');
+is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgasCouLaver', 'labelalpha disambiguation 12');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -272,12 +273,19 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 
-is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha disambiguation 7');
-is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCEm', 'labelalpha disambiguation 8');
+is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AChL', 'labelalpha list disambiguation 1');
+is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'ACoL', 'labelalpha list disambiguation 2');
+is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'ACL', 'labelalpha list disambiguation 3');
+is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha list disambiguation 4');
+is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCE', 'labelalpha list disambiguation 5');
+is($bibentries->entry('L24')->get_field('sortlabelalpha'), 'Z', 'labelalpha list disambiguation 6');
+is($bibentries->entry('L25')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 7');
+is($bibentries->entry('L26')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 8');
+is($bibentries->entry('title1')->get_field('sortlabelalpha'), 'Tït', 'Title in braces with UTF-8 char - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 3);
@@ -319,7 +327,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $section->get_list('MAIN');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'Sch+07', 'extraalpha ne extrayear 1');
@@ -331,6 +339,8 @@ is($bibentries->entry('Schnee2007')->get_field('sortlabelalpha'), 'Sch+07', 'ext
 is($main->get_extraalphadata('Schnee2007'), '2', 'extraalpha ne extrayear 6');
 is($bibentries->entry('Schnee2007a')->get_field('sortlabelalpha'), 'Sch07', 'extraalpha ne extrayear 7');
 is($main->get_extraalphadata('Schnee2007a'), '2', 'extraalpha ne extrayear 8');
+
+
 
 
 

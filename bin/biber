@@ -28,6 +28,7 @@ GetOptions(
            'bblencoding|E=s',
            'bblsafechars',
            'bblsafecharsset=s',
+           'cache',
            'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
@@ -36,6 +37,7 @@ GetOptions(
            'decodecharsset=s',
            'debug|D',
            'fastsort|f',
+           'fixinits',
            'help|h|?',
            'mincrossrefs|m=s',
            'logfile=s',
@@ -58,7 +60,7 @@ GetOptions(
            'U',                   # alias for bblencoding=UTF-8
            'validate_config',
            'validate_control',
-           'validate_structure|V',
+           'validate_datamodel|V',
            'version|v',
            'wraplines|w'
           ) or pod2usage(-verbose => 0,
@@ -77,6 +79,17 @@ if (exists $opts->{'version'}) {
   exit EXIT_OK;
 }
 
+if (exists $opts->{'cache'}) {
+  if (my $cache = $ENV{PAR_TEMP}) {
+    $cache =~ s|//|/|og; # Sanitise path in case it worries people
+    say $cache;
+  }
+  else {
+    say "No cache - you are not running the PAR::Packer executable version of biber";
+  }
+  exit EXIT_OK;
+}
+
 # Catch this situation early
 unless (@ARGV) {
   pod2usage(-verbose => 0,
@@ -85,8 +98,8 @@ unless (@ARGV) {
 
 # Sanitise and check the outformat option
 if (my $of = $opts->{outformat}) {
-  unless ($opts->{outformat} =~ /\A(?:bbl|dot|bltxml)\z/xms) {
-    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot' or 'bltxml'";
+  unless ($opts->{outformat} =~ /\A(?:bbl|dot)\z/xms) {
+    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot'";
     exit EXIT_ERROR;
   }
 }
@@ -150,9 +163,6 @@ else {
   if (Biber::Config->getoption('outformat') eq 'dot') { # .dot output
     $outfile = $bcf =~ s/bcf$/dot/r;
   }
-  elsif (Biber::Config->getoption('outformat') eq 'bltxml') { # .bltxml output
-    $outfile = $bcf =~ s/bcf$/bltxml/r;
-  }
   else { # .bbl output
     $outfile = $bcf =~ s/bcf$/bbl/r;
   }
@@ -189,10 +199,6 @@ if (Biber::Config->getoption('trace')) {
 if (Biber::Config->getoption('outformat') eq 'dot') { # .dot output
   require Biber::Output::dot;
   $biber->set_output_obj(Biber::Output::dot->new());
-}
-elsif (Biber::Config->getoption('outformat') eq 'bltxml') { # biblatexml output
-  require Biber::Output::biblatexml;
-  $biber->set_output_obj(Biber::Output::biblatexml->new());
 }
 else { # .bbl output
   require Biber::Output::bbl;
@@ -283,6 +289,10 @@ Normally it's not necessary to set this as it's passed via the
 .bcf file from biblatex's setting of the same name.
 See "perldoc Encode::Supported" for a list of supported encodings.
 
+=item B<--cache>
+
+If running as a PAR::Packer binary, show the cache location and exit.
+
 =item B<--collate|-C>
 
 Sort with C<Unicode::Collate> instead of the built-in sort function.
@@ -330,6 +340,12 @@ The default if not specified is C<--dot_include=section,xdata,crossref,xref>.
 Use Perl's sort instead of C<Unicode::Collate> for sorting. Also uses
 OS locale definitions (which may be broken for some languages ...).
 
+=item B<--fixinits>
+
+Try to fix broken multiple initials with they have no space between them in BibTeX
+data sources. That is, "A.B. Clarke" becomes "A. B. Clarke" before name parsing.
+This can slightly mess up things like "{U.K. Government}" and other esoteric cases.
+
 =item B<--help|-h>
 
 Show this help message.
@@ -373,20 +389,18 @@ F<file> is relative to B<--output_directory>, if set (absolute
 paths in this case are stripped to filename only). F<file> can
 be absolute if B<--output_directory> is not set.
 
-=item B<--outformat=bbl|dot|bltxml>
+=item B<--outformat=bbl|dot>
 
 Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
 to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of
 the bibliography data showing entries and, as requested, sections and fields.
 You must process this file with C<dot>, e.g. C<dot -Tsvg test.dot -o test.svg> to
 render the graph. See the B<--dot_include> option to select what is included in
-the DOT output. Use F<bltxml> to output a BibLaTeXML file of the internal data
-model instead of a F<.bbl>. This helps in moving to BibLaTeXML by translating
-other datasource formats.
+the DOT output.
 
 =item B<--output_directory [directory]>
 
-Files (F<.bbl> and F<.log>) are output to directory F<directory> instead
+Files (F<.bbl> and F<.blg>) are output to directory F<directory> instead
 of the current directory. Input files are also looked for in F<directory>
 before current directory.
 
@@ -439,7 +453,7 @@ Schema validate the biber config file.
 
 Schema validate the F<.bcf> biblatex control file.
 
-=item B<--validate_structure|-V>
+=item B<--validate_datamodel|-V>
 
 Validate the data against a data model.
 

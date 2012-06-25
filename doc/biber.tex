@@ -26,8 +26,8 @@
 
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{0.9.9}    % BIBER VERSION
-\gdef\biblatexversion{1.7}   % BIBLATEX VERSION
+\gdef\biberversion{1.0}    % BIBER VERSION
+\gdef\biblatexversion{2.0}   % BIBLATEX VERSION
 
 % Set up tikz things
 
@@ -92,6 +92,9 @@
 Please see the \verb+Changes+ file which accompanies Biber for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
+
+\minisec{1.0}
+The \opt{--validate\_structure} option is now called \opt{--validate\_datamodel}
 
 \minisec{0.9.9}
 The output format option \opt{--graph} has been moved to a
@@ -202,6 +205,7 @@ matrix for the recent versions.
 \toprule
 Biber version & \BibLaTeX\ version\\
 \midrule
+1.0 & 2.0x\\
 0.9.9 & 1.7x\\
 0.9.8 & 1.7x\\
 0.9.7 & 1.7x\\
@@ -280,16 +284,14 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   \bibfield{ABSTRACT} fields completely. See section \ref{map}
 \item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of»
-  etc. (\BibLaTeX\ support coming in \BibLaTeX\ 2.x)
-\item Customisable labels (\BibLaTeX\ support coming in
-  \BibLaTeX\ 2.x)
+  etc.
+\item Customisable labels
 \item Multiple bibliography lists in the same section with different
-  sorting and filtering (\BibLaTeX\ support coming in \BibLaTeX\ 2.x)
+  sorting and filtering
 \item No more restriction to a static data model of specific fields and
-  entrytypes. (\BibLaTeX\ support coming in \BibLaTeX\ 2.x)
+  entrytypes
 \item Structural validation of the data against the data model with a
-  customisable validation model (\BibLaTeX\ support coming in
-  \BibLaTeX\ 2.x)
+  customisable validation model
 \end{itemize}
 
 \noindent Figure \ref{fig:overview} shows the main functional units of
@@ -308,10 +310,9 @@ such as \verb+Unicode::Collate+, \verb+Text::BibTeX+ and
 \begin{figure}[!htpb]
   \centering\small
   \begin{tikzpicture}
-    \node[file] (dcfs) {driver config files};
-    \node[file] (dsfiles) [right of=dcfs,node distance=8em]{datasources};
+    \node[file] (dsfiles) {datasources};
     \node[file] (bcf) [right of=dsfiles,node distance=8em] {\texttt{.bcf} control file};
-    \node[funit] (decode) [below of=dsfiles,node distance=8em] {Decode to UTF-8} edge [<-,very thick] (dsfiles) edge [<-,very thick] (dcfs) edge [<-,very thick] (bcf);
+    \node[funit] (decode) [below of=dsfiles,node distance=8em] {Decode to UTF-8} edge [<-,very thick] (dsfiles) edge [<-,very thick] (bcf);
     \node[funit] (mapp) [below of=decode,node distance=6em] {remap/parse} edge [<-,very thick] (decode);
     \node[file] (config) [left of=mapp,node distance=12em] {User \texttt{biber.conf} file} edge [->,very thick] (mapp);
     \node[funit] (dyn) [below of=mapp,node distance=6em] {Instantiate dynamic sets and\\related entries} edge [<-,very thick] (mapp);
@@ -348,9 +349,7 @@ entry can take as it passes through Biber.
     themselves in which case they are already instantiated as per item
     \ref{list:cited} above).
       \item Clones of entries mentioned as a «related» entry of a cited
-        entry\footnote{This is done to 
-          implement the «related» entry feature which does not currently
-          have a \BibLaTeX\ interface.}.
+        entry.
       \item Members of sets, either explicit \bibtype{SET} entrytype entries or
         dynamic sets.
   \end{itemize}
@@ -456,6 +455,8 @@ labelalpha         & \checkmark & \checkmark &  \\
 labelalphatemplate & \checkmark & \checkmark &  \\
 labelnamespec      & \checkmark & \checkmark &  \\
 labelnumber        & \checkmark & \checkmark &  \\
+labeltitle         & \checkmark & \checkmark &  \\
+labeltitleyear     & \checkmark & \checkmark &  \\
 labelyear          & \checkmark & \checkmark &  \\
 labelyearspec      & \checkmark & \checkmark &  \\
 maxalphanames      & \checkmark & \checkmark & \checkmark\\
@@ -473,8 +474,8 @@ skiplab            &   & \checkmark & \checkmark\\
 skiplos            &   & \checkmark & \checkmark\\
 sortalphaothers    & \checkmark & \checkmark &  \\
 sortexclusion      &   & \checkmark &  \\
+sortfirstinits     & \checkmark &   & \\
 sorting            & \checkmark &   &  \\
-sortlos            & \checkmark &   &  \\
 structure          & \checkmark &   &  \\
 uniquelist         & \checkmark & \checkmark & \checkmark\\
 uniquename         & \checkmark & \checkmark & \checkmark\\
@@ -523,7 +524,6 @@ an example config file which displays the Biber defaults:
   <bibencoding>UTF-8</bibencoding>
   <bblsafechars>0</bblsafechars>
   <bblsafecharsset>base</bblsafecharsset>
-  <bltxml>0</bltxml>
   <collate>1</collate>
   <collate_options>
     <option name="level" value="4"/>
@@ -534,13 +534,19 @@ an example config file which displays the Biber defaults:
   <graph>0</graph>
   <mincrossrefs>0</mincrossrefs>
   <nodieonerror>0</nodieonerror>
+  <noinit>
+    <!-- strip lowercase prefices like 'al-' when generating initials -->
+    <option value="\b\p{Ll}{2}\p{Pd}"/>
+    <!-- strip diacritics when generating initials -->
+    <option value="[\x{2bf}\x{2018}]"/>
+  </noinit>
   <nolog>0</nolog>
   <nostdmacros>0</nostdmacros>
   <nosort>
-    <!-- strip prefixes like 'al-' when sorting name fields -->
-    <option name="type_names" value="\A\p{L}{2}\p{Pd}"/>
+    <!-- strip prefices like 'El-' when sorting name fields -->
+    <option name="type_name" value="\A\p{L}{2}\p{Pd}"/>
     <!-- strip diacritics when sorting name fields -->
-    <option name="type_names" value="[\x{2bf}\x{2018}]"/>
+    <option name="type_name" value="[\x{2bf}\x{2018}]"/>
   </nosort>
   <onlylog>0</onlylog>
   <quiet>0</quiet>
@@ -560,30 +566,29 @@ an example config file which displays the Biber defaults:
 via the \verb+.bcf+ file. Certain options apply only to Biber and can
 only be set in the config file, particularly the more complex
 options. Most options are simple tags. Exceptions are the
-\opt{nosort} and \opt{collate\_options} options which are slightly
+\opt{nosort}, \opt{noinit} and \opt{collate\_options} options which are slightly
 more complex and can have sub-options as shown. A much more complex
 option is the \opt{sourcemap} option which is not set by default and
 which is described in section \ref{map}.
 
 \subsubsection{The \texttt{sourcemap} option}\label{map}
 
-The supplied data source drivers implement a default mapping from data
-source entrytypes and fields into the \BibLaTeX\ data
-model\footnote{The \BibLaTeX\ data model is currently static and
-  defined in the \BibLaTeX\ manual. In the future (\BibLaTeX\
-  2.x), the data model will be dynamically defined by the user.}. If you
-want to override or augment the driver mappings you can use the \opt{sourcemap}
-option which makes it possible to, for example, have a data source with
-non-standard entrytypes or fields and to have these automatically mapped
-into other entrytypes/fields without modifying your data source.
-Essentially, this alters the source data stream which
-Biber uses to build the internal \BibLaTeX\ data model and is an automatic
-way of editing the datasource as it is read by Biber.
+The data source drivers implement a mapping from data source
+entrytypes and fields into the \BibLaTeX\ data model. If you want to
+override or augment the driver mappings you can use the
+\opt{sourcemap} option which makes it possible to, for example, have a
+data source with non-standard entrytypes or fields and to have these
+automatically mapped into other entrytypes/fields without modifying
+your data source.  Essentially, this alters the source data stream
+which Biber uses to build the internal \BibLaTeX\ data model and is an
+automatic way of editing the datasource as it is read by Biber. This
+option is completely equivalent to the \BibLaTeX\
+\cmd{DeclareSourcemap} macro which is in fact a per-document \LaTeX\
+macro-based interface to exactly the same functionality (see the
+\BibLaTeX\ manual).
 
 Figure \ref{fig:biber-mdf} is a graphical overview of the data flow for
-data model information. In \BibLaTeX\ 2.x, the greyed static \BibLaTeX\
-data model will be replaced by a dynamic data model read from the
-\verb+.bcf+ control file. See Figure \ref{fig:overview} for a more complete
+data model information. See Figure \ref{fig:overview} for a more complete
 overview of Biber's processing steps.
 
 \begin{figure}[!htpb]
@@ -591,13 +596,15 @@ overview of Biber's processing steps.
   \begin{tikzpicture}
     \node[file] (dsfile) {datasource};
     \node[funit] (remap) [below of=dsfile, node distance=8em] {remap} edge [<-,dashed] (dsfile);
-    \node[file] (dcf) [left of=remap, node distance=10em] {data model mapping\\from driver config file} edge [->,dashed] (remap);
+    \node[file] (docremap) [left of=dsfile, node distance=15em] {document data model mapping\\from \texttt{.bcf}} edge [->,dashed] (remap);
+    \node[file] (defaultremap) [left of=remap, node distance=15em] {default data model mapping\\from \texttt{.bcf}} edge [->,dashed] (remap);
     \node[file] (conf) [below of=remap,  node distance=7em] {data model mapping\\from Biber config file} edge [->,dashed] (remap);
     \node[funit] (parser) [right of=remap, node distance=8em] {parser} edge [<-,very thick] (remap);
     \node[funit] (validation) [right of=parser, node distance=8em] {validation} edge [<-,very thick] (parser);
-    \node[file] (hard) [above of=validation, node distance=8em] {static \BibLaTeX\\data model} edge [->,dashed] (parser) edge [->,dashed] (validation);
-    \node[file] (bbl) [right of=parser, node distance=16em] {output file} edge [<-,very thick] (validation);
-    \node[rectangle, draw=gray, fill=grey!40, opacity=0.4, fit=(hard), inner sep=1em] {};
+    \node[file] (hard) [above of=validation, node distance=8em]
+    {\BibLaTeX\ data\\model from \texttt{.bcf}} edge [->,dashed]
+    (parser) edge [->,dashed] (remap) edge [->,dashed] (validation);
+    \node[file] (bbl) [below of=validation, node distance=8em] {output file} edge [<-,very thick] (validation);
   \end{tikzpicture}
   \caption{Model data flow in Biber}
   \label{fig:biber-mdf}
@@ -650,7 +657,7 @@ section. The general structure is:
 
 \noindent Here, \textcolor{red}{\texttt{driver$_1$}}\ldots
 \textcolor{red}{\texttt{driver$_n$}} are the names of valid Biber data
-source drivers (see section \ref{dcf}). One thing to note here is the
+source drivers (see section \ref{dsd}). One thing to note here is the
 \opt{map\_overwrite} attribute. This boolean attribute determines whether,
 for this driver mapping section, you may overwrite existing fields when
 adding new fields or mapping them. This attribute can be overridden on a
@@ -949,6 +956,47 @@ datasources, which are commonly used for abstracts:
 </maps>
 \end{lstlisting}
 \bigskip
+\subsubsection{The \texttt{noinit} option}\label{noinit}
+
+The value of the \opt{noinit} option can only be set in the config file and
+not on the command line. This is because the values are Perl regular
+expressions and would need special quoting to set on the command line. This
+can get a bit tricky on some OSes (like Windows) so it's safer to set them
+in the config file. \opt{noinit} allows you to ignore parts of a name when
+generating initials. This is done using Perl regular expressions which
+specify what to ignore. You can specific multiple regular expressions and
+they will be removed from the name before it is passed to the initials
+generating system.
+
+For example, this option can be used to ignore diacritic marks and prefices
+in names which should not be considered when sorting. Given (the default):
+
+\begin{lstlisting}[language=xml]
+  <noinit>
+    <!-- strip lowercase prefices like 'al-' when generating initials -->
+    <option value="\b\p{Ll}{2}\p{Pd}"/>
+    <!-- strip diacritics when generating initials -->
+    <option value="[\x{2bf}\x{2018}]"/>
+  </noinit>
+\end{lstlisting}
+
+\noindent and the \BibTeX\ data source entry:
+
+\begin{verbatim}
+AUTHOR = {{al-Hasan}, ʿAlī},
+\end{verbatim}
+
+\noindent the initials for the last name will be «H» and not «a-H». The
+initial for the first name will be «A» as the diacritic is also ignored.
+This is tricky in general as you cannot often determine the difference
+between a name with a prefix and a hyphenated name with only, say, two
+chars in the first part such as «Ho-Pun». You can adjust this option for
+your individual cases. By default, only lowercased prefices are looked for
+so as to avoid breaking things like «Ho-Pun» where you want the initials to
+be «H.-P.», for example. See the Perl regular expression manual page for
+details of the regular expression
+syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
+
 \subsubsection{The \texttt{nosort} option}\label{nosort}
 
 The value of the \opt{nosort} option can only be set in the config file
@@ -1005,15 +1053,15 @@ type\_title & booktitle\\
 \label{tab:nst}
 \end{table}
 
-For example, this option can be used to ignore diacritic marks and prefixes
+For example, this option can be used to ignore diacritic marks and prefices
 in names which should not be considered when sorting. Given (the default):
 
 \begin{lstlisting}[language=xml]
 <nosort>
-  <!-- strip prefixes like 'al-' when sorting names -->
-  <option name="type_names" value="\A\p{L}{2}\p{Pd}"/>
+  <!-- strip prefices like 'al-' when sorting names -->
+  <option name="type_name" value="\A\p{L}{2}\p{Pd}"/>
   <!-- strip diacritics when sorting names -->
-  <option name="type_names" value="[\x{2bf}\x{2018}]"/>
+  <option name="type_name" value="[\x{2bf}\x{2018}]"/>
 </nosort>
 \end{lstlisting}
 
@@ -1450,28 +1498,24 @@ the \verb+.bbl+. If you only use \BibLaTeX\ with your \BibTeX\
 data source files, you should probably make any \bibfield{MONTH} fields be the
 numbers which \BibLaTeX\ expects.
 
-\subsection{Biber data source drivers}\label{dcf}
+\subsection{Biber data source drivers}\label{dsd}
 
 Biber uses a modular data source driver model to provide access
 to supported data sources. The drivers are responsible for mapping
-driver entry types and fields to the \BibLaTeX\ model. This is
-aided by a driver configuration file (\verb+.dcf+). The information in
-this file for each driver can be found in the driver documentation folder on
-SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/\biberversion/documentation/drivers}}. This
-file shows you which handlers the driver uses for different fields and
-what certain entry types and fields are aliased to in the
-\BibLaTeX\ data model. This is not fantastically useful to know
-without knowing also what the named driver handlers do specifically but there
-is a «description» section which mentions any special handling and
-general comments on the driver. You should read the documentation for
-the drivers you use to get an idea of how Biber handles your
-data. Data model mapping is an imprecise art
-and the drivers are where the necessarily messy parts of Biber
-live. Most data source models are not designed with typesetting in
-mind and are usually not fine-grained enough to provide the sorts of
-information that \BibLaTeX\ needs. Biber does its best to
-obtain as much meaningful information from a data source as possible.
-Currently supported data sources drivers are:
+driver entrytypes and fields to the \BibLaTeX\ data model according to a
+data model specification in the \BibLaTeX\ file \file{blx-dm.def}. The
+data model can be changed using \BibLaTeX\ macros in case you would
+like to, for example, use your own entrytype or field names or perhaps
+have Biber do some validation on your data sources (see the \BibLaTeX\
+manual). 
+
+Data model mapping is an imprecise art and the drivers are the
+necessarily the most messy parts of Biber. Most data source models are
+not designed with typesetting in mind and are usually not fine-grained
+enough to provide the sorts of information that \BibLaTeX\
+needs. Biber does its best to obtain as much meaningful information
+from a data source as possible. Currently supported data sources
+drivers are:
 
 \begin{itemize}
 \item \BibTeX\ --- \BibTeX\ data files
@@ -1524,7 +1568,7 @@ xref     & Show XREF relationships\\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{Valid sub-options for the \texttt{graph} option}
+\caption{Valid sub-options for the \texttt{dot\_include} option}
 \label{tab:graphopts}
 \end{table}
 
@@ -1638,7 +1682,7 @@ places to look (where \verb+*+ can vary depending on username):
 \end{itemize}
 
 \noindent To clean up, you can just remove the whole \verb+par-<hex_encoded_username>+
-directory/folder and then run the current binary again.
+directory/folder and then run the current binary again. You can see the active cache by running biber with the \texttt{--cache} option which will print the current cache location and exit.
 
 \subsection{Binary Architectures}
 
@@ -1837,7 +1881,7 @@ of Biber version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 0.9.9
+INFO - This is Biber 1.0 
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

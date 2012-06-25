@@ -1,6 +1,6 @@
 % $ biblatex auxiliary file $
-% $ biblatex version 1.7 $
-% $ biber version 0.9.9 $
+% $ biblatex version 2.0 $
+% $ biber version 1.0 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -19,27 +19,28 @@
 
 
 \refsection{0}
-  \entry{F1}{book}{}
-    \name{labelname}{1}{}{%
-      {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-    }
-    \name{author}{1}{}{%
-      {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-    }
-    \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-    \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-    \field{labelalpha}{\emph{A}}
-    \field{sortinit}{A}
-    \true{singletitle}
-    \field{shorthand}{\emph{A}}
-    \field{title}{The Fullness of Times}
-    \field{year}{1995}
-  \endentry
-
-  \lossort
+  \sortlist{entry}{nty}
+    \entry{F1}{book}{}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \field{labelalpha}{\emph{A}}
+      \field{sortinit}{A}
+      \field{labeltitle}{The Fullness of Times}
+      \true{singletitle}
+      \field{shorthand}{\emph{A}}
+      \field{title}{The Fullness of Times}
+      \field{year}{1995}
+    \endentry
+  \endsortlist
+  \sortlist{shorthand}{shorthand}
     \key{F1}
-  \endlossort
-
+  \endsortlist
   \missing{C1}
 \endrefsection
 \endinput

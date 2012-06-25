@@ -30,6 +30,9 @@
             "Readonly::XS" : 0
          },
          "requires" : {
+            "Business::ISBN" : 0,
+            "Business::ISMN" : 0,
+            "Business::ISSN" : 0,
             "Data::Compare" : 0,
             "Data::Dump" : 0,
             "Date::Simple" : 0,
@@ -44,7 +47,7 @@
             "Readonly" : 0,
             "Readonly::XS" : 0,
             "Regexp::Common" : 0,
-            "Text::BibTeX" : "0.62",
+            "Text::BibTeX" : "0.63",
             "Unicode::Collate" : "0.89",
             "XML::LibXML::Simple" : 0,
             "XML::LibXSLT" : 0,
@@ -60,10 +63,14 @@
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
-         "version" : "v0.9.9"
+         "version" : "1.0"
       },
       "Biber::Constants" : {
          "file" : "lib/Biber/Constants.pm",
+         "version" : 0
+      },
+      "Biber::DataModel" : {
+         "file" : "lib/Biber/DataModel.pm",
          "version" : 0
       },
       "Biber::Entries" : {
@@ -130,16 +137,16 @@
          "file" : "lib/Biber/Section.pm",
          "version" : 0
       },
-      "Biber::Section::List" : {
-         "file" : "lib/Biber/Section/List.pm",
-         "version" : 0
-      },
       "Biber::Sections" : {
          "file" : "lib/Biber/Sections.pm",
          "version" : 0
       },
-      "Biber::Structure" : {
-         "file" : "lib/Biber/Structure.pm",
+      "Biber::SortList" : {
+         "file" : "lib/Biber/SortList.pm",
+         "version" : 0
+      },
+      "Biber::SortLists" : {
+         "file" : "lib/Biber/SortLists.pm",
          "version" : 0
       },
       "Biber::Utils" : {
@@ -153,5 +160,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "v0.9.9"
+   "version" : "1.0"
 }

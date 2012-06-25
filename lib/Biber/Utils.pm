@@ -16,7 +16,6 @@ use File::Find;
 use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
-use List::AllUtils qw( first firstval each_arrayref );
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
@@ -40,7 +39,7 @@ All functions are exported by default.
 
 our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
-  reduce_array remove_outer add_outer ucinit strip_nosort
+  normalise_string_label reduce_array remove_outer add_outer ucinit strip_nosort strip_noinit
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml };
@@ -231,9 +230,30 @@ sub latex_recode_output {
   return Biber::LaTeX::Recode::latex_encode($string);
 };
 
+
+=head2 strip_noinit
+
+  Removes elements which are not to be considered during initials generation
+  in names
+
+=cut
+
+sub strip_noinit {
+  my $string = shift;
+  return '' unless $string; # Sanitise missing data
+  return $string unless my $noinit = Biber::Config->getoption('noinit');
+  foreach my $opt (@$noinit) {
+    my $re = $opt->{value};
+    $re = qr/$re/;
+    $string =~ s/$re//gxms;
+  }
+  return $string;
+}
+
+
 =head2 strip_nosort
 
-Removes elements which are not to be used in sorting a name from a string
+  Removes elements which are not to be used in sorting a name from a string
 
 =cut
 
@@ -267,6 +287,30 @@ sub strip_nosort {
   }
   return $string;
 }
+
+
+=head2 normalise_string_label
+
+Remove some things from a string for label generation, like braces.
+It also decodes LaTeX character macros into Unicode as this is always safe when
+normalising strings for sorting since they don't appear in the output.
+
+=cut
+
+sub normalise_string_label {
+  my $str = shift;
+  my $fieldname = shift;
+  return '' unless $str; # Sanitise missing data
+  # Replace LaTeX chars by Unicode for sorting
+  # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
+  # before we read the file (see Biber.pm)
+  unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+    $str = latex_decode($str, strip_outer_braces => 1,
+                              scheme => Biber::Config->getoption('decodecharsset'));
+  }
+  return normalise_string_common($str);
+}
+
 
 =head2 normalise_string_sort
 
@@ -664,6 +708,7 @@ sub join_name {
   $nstring =~ s/(?<=\.)\\bibnamedelim[ab]/\\bibnamedelimi/gxms;
   return $nstring;
 }
+
 
 =head2 filter_entry_options
 
