@@ -1,11 +1,11 @@
 Revision history for Biber
 
-1.0    (unreleased)
+1.0    (01-07-2012)
        * Internal data model processing changes
-       * New labeltitle and extratitle functionality
+       * New labeltitleyear and extratitleyear disambiguation tracker
+       * New labeltitle and extratitle disambiguation tracker
        * Sorting per list enabled for biblatex 2.0
-       * New noinit option for ignoring parts of names when generating
-         initials
+       * New noinit option for ignoring parts of names when generating initials
        * Some optimisations for large data sources
        * Fixed build issues which broke PAR::Packer binary under latest Debian (Wheezy)
 0.9.9  30-03-2012
