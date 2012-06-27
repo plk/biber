@@ -142,7 +142,7 @@ sub extract_entries {
         when ('A3')              { push @{$e->{A3}}, $2 } # amalgamate names
         when ('AU')              { push @{$e->{AU}}, $2 } # amalgamate names
         when ('ED')              { push @{$e->{ED}}, $2 } # amalgamate names
-        when ('ER')              { $e->{KW} = join(',', @{$e->{KW}});
+        when ('ER')              { if (exists($e->{KW})) {$e->{KW} = join(',', @{$e->{KW}})}
                                    push @ris_entries, $e }
         default                  { $e->{$1} = $2 }
       }
