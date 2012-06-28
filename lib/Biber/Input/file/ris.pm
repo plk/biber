@@ -42,9 +42,9 @@ my $handlers = {
                             'verbatim' => \&_verbatim,
                            },
                 'list' => {
-                           'entrykey' => \&_verbatim,
-                           'key'      => \&_verbatim,
-                           'literal'  => \&_verbatim,
+                           'entrykey' => \&_list,
+                           'key'      => \&_list,
+                           'literal'  => \&_list,
                            'name'     => \&_name,
                           }
 };
@@ -391,6 +391,13 @@ sub create_entry {
 
 # HANDLERS
 # ========
+
+# List fields
+sub _list {
+  my ($bibentry, $entry, $f) = @_;
+  $bibentry->set_datafield($f, [ $entry->{$f} ]);
+  return;
+}
 
 # Verbatim fields
 sub _verbatim {
