@@ -2464,7 +2464,7 @@ sub generate_extra {
     my $bee = $be->get_field('entrytype');
     # Only generate extra* information if skiplab is not set.
     # Don't forget that skiplab is implied for set members
-   unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
+    unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
       # extrayear
       if (Biber::Config->getblxoption('labelyear', $bee)) {
         my $nameyear = $be->get_field('nameyear');
@@ -2483,7 +2483,7 @@ sub generate_extra {
           $list->set_extratitledata_for_key($key, $v);
         }
       }
-      # extratitle
+      # extratitleyear
       if (Biber::Config->getblxoption('labeltitleyear', $bee)) {
         my $titleyear = $be->get_field('titleyear');
         if (Biber::Config->get_seen_titleyear($titleyear) > 1) {
