@@ -409,7 +409,9 @@ sub _verbatim {
 # Range fields
 sub _range {
   my ($bibentry, $entry, $f) = @_;
-  $bibentry->set_datafield($f, _parse_range_list($entry->{$f}));
+  if (my $r = _parse_range_list($entry->{$f})) {
+    $bibentry->set_datafield($f, $r);
+  }
   return;
 }
 
@@ -550,11 +552,18 @@ sub _gen_initials {
 
 
 # parses a range and returns a ref to an array of start and end values
+# Don't return anything if the range is invalid. Deals with RIS files which
+# have empty SP or EP fields
 sub _parse_range_list {
   my $range = shift;
   my $start = $range->{SP} || '';
   my $end = $range->{EP} || '';
-  return [[$start, $end]];
+  if ($start) {
+    return [[$start, $end]];
+  }
+  else {
+    return undef;
+  }
 }
 
 sub _get_handler {
