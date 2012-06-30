@@ -419,12 +419,12 @@ sub _range {
 sub _date {
   my ($bibentry, $entry, $f) = @_;
   my $date = $entry->{$f};
-  if ($date =~ m|\A([0-9]{4})/([0-9]{2})/([0-9]{2}/([^\n]+))\z|xms) {
+  if ($date =~ m|\A([0-9]{4})/([0-9]{2})/([0-9]{2})\s*\z|xms) {
     $bibentry->set_datafield('year', $1);
     $bibentry->set_datafield('month', $2);
     $bibentry->set_datafield('day', $3);
   }
-  elsif ($date =~ m|\A([0-9])\z|xms) {
+  elsif ($date =~ m|\A([0-9]+)\s*\z|xms) {
     $bibentry->set_datafield('year', $1);
   }
   else {

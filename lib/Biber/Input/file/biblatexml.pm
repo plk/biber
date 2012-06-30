@@ -700,7 +700,8 @@ sub _resolve_display_mode {
     $logger->debug("Found display mode '$mode' for field '$fieldname'");
     if (@nodelist = $entry->findnodes("./${fieldname}[$modeattr]")) {
       # Check to see if there is more than one entry with a mode and warn
-      if ($#nodelist > 0) {
+      # There can be multiple bib:id fields though
+      if ($#nodelist > 0 and $fieldname ne 'bib:id') {
         biber_warn("Found more than one mode '$mode' '$fieldname' field in entry '" .
                    $entry->getAttribute('id') . "' - skipping duplicates ...");
       }
