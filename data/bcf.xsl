@@ -17,15 +17,15 @@
   <xsl:template name="generate-string">
     <xsl:param name="text"/>
     <xsl:param name="count"/>
-
     <xsl:choose>
+      <xsl:when test="string(number($count))='NaN'"/>
       <xsl:when test="string-length($text) = 0 or $count &lt;= 0"/>
       <xsl:otherwise>
-	<xsl:value-of select="$text"/>
-	<xsl:call-template name="generate-string">
-	  <xsl:with-param name="text" select="$text"/>
-	  <xsl:with-param name="count" select="$count - 1"/>
-	</xsl:call-template>
+	      <xsl:value-of select="$text"/>
+	      <xsl:call-template name="generate-string">
+	        <xsl:with-param name="text" select="$text"/>
+	        <xsl:with-param name="count" select="$count - 1"/>
+	      </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -52,7 +52,7 @@
               <tt>
                 <!-- sortupper -->
                 <xsl:choose>
-                  <xsl:when test ="./@sortupper">
+                  <xsl:when test="./@sortupper">
                     <!-- Field setting -->
                     <xsl:choose>
                       <xsl:when test="./@sortupper='1'">Aa/</xsl:when>
