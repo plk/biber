@@ -344,7 +344,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
              {
                labelpart => [
                  {
-                   content         => "entrykey",
+                   content         => "citekey",
                    substring_side  => "left",
                    substring_width => 3,
                  },

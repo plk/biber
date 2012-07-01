@@ -229,7 +229,7 @@ my %internal_dispatch_label = (
                 'label'             =>  [\&_label_basic,            ['label', 'nostrip']],
                 'shorthand'         =>  [\&_label_basic,            ['shorthand', 'nostrip']],
                 'sortkey'           =>  [\&_label_basic,            ['sortkey', 'nostrip']],
-                'entrykey'          =>  [\&_label_entrykey,         []],
+                'citekey'           =>  [\&_label_citekey,          []],
                 'labelname'         =>  [\&_label_labelname,        []],
                 'labeltitle'        =>  [\&_label_labeltitle,       []],
                 'labelyear'         =>  [\&_label_labelyear,        []]);
@@ -358,7 +358,7 @@ sub _dispatch_label {
 # Label dispatch routines
 #########################
 
-sub _label_entrykey {
+sub _label_citekey {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $k = _process_label_attributes($self, $citekey, $citekey, $labelattrs, $args->[0]);
   return [$k, $k];
