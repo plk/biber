@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 109;
+use Test::More tests => 110;
 
 use Biber;
 use Biber::Utils;
@@ -276,7 +276,6 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-
 is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AChL', 'labelalpha list disambiguation 1');
 is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'ACoL', 'labelalpha list disambiguation 2');
 is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'ACL', 'labelalpha list disambiguation 3');
@@ -340,7 +339,34 @@ is($main->get_extraalphadata('Schnee2007'), '2', 'extraalpha ne extrayear 6');
 is($bibentries->entry('Schnee2007a')->get_field('sortlabelalpha'), 'Sch07', 'extraalpha ne extrayear 7');
 is($main->get_extraalphadata('Schnee2007a'), '2', 'extraalpha ne extrayear 8');
 
+Biber::Config->setblxoption('labelalphatemplate', {
+  labelelement => [
+             {
+               labelpart => [
+                 {
+                   content         => "entrykey",
+                   substring_side  => "left",
+                   substring_width => 3,
+                 },
+               ],
+               order => 1,
+             },
+           ],
+  type  => "global",
+});
 
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extraalphadata_for_key($k, undef);
+}
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$bibentries = $section->bibentries;
+
+is($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'Sch', 'entrykey label 1');
 
 
 

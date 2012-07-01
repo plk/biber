@@ -229,6 +229,7 @@ my %internal_dispatch_label = (
                 'label'             =>  [\&_label_basic,            ['label', 'nostrip']],
                 'shorthand'         =>  [\&_label_basic,            ['shorthand', 'nostrip']],
                 'sortkey'           =>  [\&_label_basic,            ['sortkey', 'nostrip']],
+                'entrykey'          =>  [\&_label_entrykey,         []],
                 'labelname'         =>  [\&_label_labelname,        []],
                 'labeltitle'        =>  [\&_label_labeltitle,       []],
                 'labelyear'         =>  [\&_label_labelyear,        []]);
@@ -239,7 +240,7 @@ sub _dispatch_table_label {
   if (my $id = $internal_dispatch_label{$field}) {
     return $id;
   }
-  # Sorting elements which aren't fields
+  # Label elements which aren't fields
   unless ($dm->is_field($field)) {
     return undef;
   }
@@ -356,6 +357,12 @@ sub _dispatch_label {
 #########################
 # Label dispatch routines
 #########################
+
+sub _label_entrykey {
+  my ($self, $citekey, $args, $labelattrs) = @_;
+  my $k = _process_label_attributes($self, $citekey, $citekey, $labelattrs, $args->[0]);
+  return [$k, $k];
+}
 
 sub _label_basic {
   my ($self, $citekey, $args, $labelattrs) = @_;
@@ -1031,11 +1038,8 @@ sub _sort_editort {
   }
 }
 
-# debug sorting
 sub _sort_entrykey {
   my ($self, $citekey, $sortelementattributes) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
   return $citekey;
 }
 
