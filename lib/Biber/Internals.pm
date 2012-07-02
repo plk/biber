@@ -647,6 +647,19 @@ sub _process_label_attributes {
       }
     }
   }
+
+  # Case changes
+  if ($labelattrs->{uppercase} and
+      $labelattrs->{lowercase}) {
+    # do nothing if both are set, for sanity
+  }
+  elsif ($labelattrs->{uppercase}) {
+    $field_string = uc($field_string);
+  }
+  elsif ($labelattrs->{lowercase}) {
+    $field_string = lc($field_string);
+  }
+
   return $field_string;
 }
 

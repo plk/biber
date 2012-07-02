@@ -347,6 +347,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                    content         => "citekey",
                    substring_side  => "left",
                    substring_width => 3,
+                   uppercase => 1,
                  },
                ],
                order => 1,
@@ -366,7 +367,7 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'Sch', 'entrykey label 1');
+is($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'SCH', 'entrykey label 1');
 
 
 
