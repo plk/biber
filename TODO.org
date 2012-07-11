@@ -1,0 +1,3 @@
+* When perl 5.16.1 is released, move build farm to this and:
+** Convert lc() compares to fc()
+** use v5.16 everywhere
