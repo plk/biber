@@ -96,24 +96,23 @@ unless (@ARGV) {
             -exitval => EXIT_ERROR);
 }
 
-# Sanitise and check the outformat option
+# Check the outformat option
 if (my $of = $opts->{outformat}) {
   unless ($opts->{outformat} =~ /\A(?:bbl|dot)\z/xms) {
     say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot'";
     exit EXIT_ERROR;
   }
 }
-else {
-  $opts->{outformat} = 'bbl';
+
+# Check the dot_include option
+if (exists($opts->{dot_include}) and (not exists($opts->{outformat})
+                                      or (exists($opts->{outformat}) and
+                                          $opts->{outformat} ne 'dot'))) {
+  say STDERR "Biber: DOT output format specified but output format is not DOT!";
+  exit EXIT_ERROR;
 }
 
-# Sanitise and check the dot_include option
 if (exists($opts->{dot_include})) {
-  unless ($opts->{outformat} eq 'dot') {
-    say STDERR "Biber: DOT output format specified but output format is not DOT!";
-    exit EXIT_ERROR;
-  }
-
   $opts->{dot_include} = {map {lc($_) => 1} split(/,/,join(',',@{$opts->{dot_include}}))};
   my @suboptions = ( 'section', 'field', 'crossref', 'xref', 'xdata', 'related' );
   foreach my $g (keys %{$opts->{dot_include}}) {
@@ -123,12 +122,6 @@ if (exists($opts->{dot_include})) {
     }
   }
 }
-
-# defaults
-unless (keys %{$opts->{dot_include}}) {
-  $opts->{dot_include} = {section => 1, xdata => 1, crossref => 1, xref => 1};
-}
-
 
 # Sanitise collate option if fastsort is specified
 if ($opts->{fastsort}) {

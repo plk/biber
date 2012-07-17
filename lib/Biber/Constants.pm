@@ -96,8 +96,8 @@ our %DM_DATATYPES = (
                      integer => qr/\A\d+\z/xms
 );
 
-# Biber option defaults. Not really needed since they are passed by .bcf but
-# useful to know the format. Also needed for options not yet passed in .bcf by biblatex
+# Biber option defaults. Many not really needed since they are always passed by .bcf
+# Useful here for options not yet passed in .bcf by biblatex
 
 our $CONFIG_DEFAULT_BIBER = {
   bblencoding        => { content => 'UTF-8' },
@@ -109,6 +109,7 @@ our $CONFIG_DEFAULT_BIBER = {
   graph              => { content => 0 },
   debug              => { content => 0 },
   decodecharsset     => { content => 'base' },
+  dot_include        => { option => {section => 1, xdata => 1, crossref => 1, xref => 1 }},
   fastsort           => { content => 0 },
   fixinits           => { content => 0 },
   mincrossrefs       => { content => 2 },
@@ -120,6 +121,7 @@ our $CONFIG_DEFAULT_BIBER = {
   nosort             => { option => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
                                       { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
   onlylog            => { content => 0 },
+  outformat          => { content => 'bbl' },
   quiet              => { content => 0 },
   sortcase           => { content => 1 },
   sortfirstinits     => { content => 0 },

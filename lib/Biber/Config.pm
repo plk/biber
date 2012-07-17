@@ -184,8 +184,9 @@ sub _initopts {
     if (exists($v->{content})) { # simple option
       Biber::Config->setoption($k, $v->{content});
     }
-    # mildly complex options - nosort/collate_options
-    elsif (lc($k) eq 'collate_options' or
+    # mildly complex options
+    elsif (lc($k) eq 'dot_include' or
+           lc($k) eq 'collate_options' or
            lc($k) eq 'nosort' or
            lc($k) eq 'noinit' ) {
       Biber::Config->setoption($k, $v->{option});
