@@ -113,10 +113,8 @@ if (exists($opts->{dot_include})) {
     say STDERR "Biber: DOT output format specified but output format is not DOT!";
     exit EXIT_ERROR;
   }
+
   $opts->{dot_include} = {map {lc($_) => 1} split(/,/,join(',',@{$opts->{dot_include}}))};
-  unless (keys %{$opts->{dot_include}}) {
-    $opts->{dot_include} = {section => 1, xdata => 1, crossref => 1, xref => 1};
-  }
   my @suboptions = ( 'section', 'field', 'crossref', 'xref', 'xdata', 'related' );
   foreach my $g (keys %{$opts->{dot_include}}) {
     unless (first {$_ eq lc($g)} @suboptions) {
@@ -125,6 +123,12 @@ if (exists($opts->{dot_include})) {
     }
   }
 }
+
+# defaults
+unless (keys %{$opts->{dot_include}}) {
+  $opts->{dot_include} = {section => 1, xdata => 1, crossref => 1, xref => 1};
+}
+
 
 # Sanitise collate option if fastsort is specified
 if ($opts->{fastsort}) {

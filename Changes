@@ -1,5 +1,7 @@
 Revision history for Biber
 
+1.1    (unreleased)
+       * Fixed DOT output (SF bug 3544894)
 1.0    (01-07-2012)
        * Internal data model processing changes
        * New labeltitleyear and extratitleyear disambiguation tracker
