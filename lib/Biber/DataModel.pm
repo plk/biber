@@ -40,8 +40,17 @@ sub new {
 
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
-
   foreach my $f (@{$dm->{fields}{field}}) {
+
+    # In case of conflicts, we need to remove the previous definitions since
+    # later overrides earlier
+    if (my $previous = $self->{fieldsbyname}{$f->{content}}) {
+      @{$self->{fieldsbytype}{$previous->{'fieldtype'}}{$previous->{'datatype'}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbytype}{$previous->{'fieldtype'}}{$previous->{'datatype'}}};
+      @{$self->{fieldsbyfieldtype}{$previous->{'fieldtype'}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbyfieldtype}{$previous->{'fieldtype'}}};
+      @{$self->{fieldsbydatatype}{$previous->{'datatype'}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbydatatype}{$previous->{'datatype'}}};
+      delete $self->{fieldsbyname}{$f->{content}};
+    }
+
     $self->{fieldsbyname}{$f->{content}} = {'fieldtype' => $f->{fieldtype},
                                             'datatype'  => $f->{datatype}};
     push @{$self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}}, $f->{content};

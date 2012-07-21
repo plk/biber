@@ -20,7 +20,7 @@ provides:
     version: 0
   Biber::Config:
     file: lib/Biber/Config.pm
-    version: 1.0
+    version: 1.1
   Biber::Constants:
     file: lib/Biber/Constants.pm
     version: 0
@@ -107,7 +107,7 @@ requires:
   Readonly: 0
   Readonly::XS: 0
   Regexp::Common: 0
-  Text::BibTeX: 0.63
+  Text::BibTeX: 0.64
   Unicode::Collate: 0.89
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
@@ -115,4 +115,4 @@ requires:
   perl: v5.14.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.0
+version: 1.1
