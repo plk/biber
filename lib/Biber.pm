@@ -550,11 +550,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $bib_section->set_datasources($bibdatasources{$secnum}) unless
       $bib_section->get_datasources;
 
-    # Stop reading citekeys if we encounter "*" as a citation as this means
-    # "all keys"
     my @keys = ();
     foreach my $keyc (@{$section->{citekey}}) {
       my $key = $keyc->{content};
+      # Stop reading citekeys if we encounter "*" as a citation as this means
+      # "all keys"
       if ($key eq '*') {
         $bib_section->set_allkeys(1);
         # Normalise - when allkeys is true don't need citekeys - just in case someone
@@ -573,12 +573,12 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         }
         else {
           # Set order information - there is no order on dynamic key defs above
-          # as they are a definition, not a cite really
+          # as they are a definition, not a cite
           Biber::Config->set_keyorder($secnum, $key, $keyc->{order});
+          push @keys, $key;
+          $key_flag = 1; # There is at least one key, used for error reporting below
+          Biber::Config->incr_seenkey($key, $secnum);
         }
-        push @keys, $key;
-        $key_flag = 1; # There is at least one key, used for error reporting below
-        Biber::Config->incr_seenkey($key, $secnum);
       }
     }
 
