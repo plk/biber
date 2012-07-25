@@ -1,11 +1,10 @@
 % $ biblatex auxiliary file $
-% $ biblatex version 2.0 $
-% $ biber version 1.1 (beta) $
+% $ biblatex bbl format version 2.0 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
 % This file may safely be deleted. It will be recreated by
-% biber or bibtex as required.
+% biber as required.
 %
 \begingroup
 \makeatletter

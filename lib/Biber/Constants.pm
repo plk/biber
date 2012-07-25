@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Encode::Alias;
-use Readonly;
 
 use base 'Exporter';
 
@@ -16,15 +15,18 @@ our @EXPORT = qw{
   %NOSORT_TYPES
   %DM_DATATYPES
   $BIBER_CONF_NAME
-  $BIBLATEX_VERSION
+  $BCF_VERSION
+  $BBL_VERSION
   $BIBER_SORT_FINAL
   $BIBER_SORT_NULL
   $LABEL_FINAL
   };
 
-# Version of biblatex which this release works with. Matched against version
-# passed in control file
-Readonly::Scalar our $BIBLATEX_VERSION => '2.0';
+# Version of biblatex control file which this release expects. Matched against version
+# passed in control file. Used when checking the .bcf
+our $BCF_VERSION = '2.0';
+# Format version of the .bbl. Used when writing the .bbl
+our $BBL_VERSION = '2.0';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;

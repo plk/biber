@@ -334,8 +334,8 @@ sub parse_ctrlfile {
 #  use Data::Dump;dd($bcfxml);exit 0;
   my $controlversion = $bcfxml->{version};
   Biber::Config->setblxoption('controlversion', $controlversion);
-  unless ($controlversion eq $BIBLATEX_VERSION) {
-    biber_warn("Warning: Found biblatex control file version $controlversion, expected version $BIBLATEX_VERSION");
+  unless ($controlversion eq $BCF_VERSION) {
+    biber_warn("Warning: Found biblatex control file version $controlversion, expected version $BCF_VERSION");
   }
 
   # Look at control file and populate our main data structure with its information

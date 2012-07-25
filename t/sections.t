@@ -68,13 +68,12 @@ if ($Biber::Config::BETA_VERSION) {
 }
 
 my $head = qq|% \$ biblatex auxiliary file \$
-% \$ biblatex version $BIBLATEX_VERSION \$
-% \$ biber version $v \$
+% \$ biblatex bbl format version $BBL_VERSION \$
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
 % This file may safely be deleted. It will be recreated by
-% biber or bibtex as required.
+% biber as required.
 %
 \\begingroup
 \\makeatletter

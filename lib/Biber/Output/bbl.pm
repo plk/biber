@@ -31,18 +31,15 @@ sub new {
   my $class = shift;
   my $obj = shift;
   my $self = $class->SUPER::new($obj);
-  my $ctrlver = Biber::Config->getblxoption('controlversion');
-  my $beta = $Biber::Config::BETA_VERSION ? ' (beta)' : '';
 
   $self->{output_data}{HEAD} = <<EOF;
 % \$ biblatex auxiliary file \$
-% \$ biblatex version $ctrlver \$
-% \$ biber version $Biber::Config::VERSION$beta \$
+% \$ biblatex bbl format version $Biber::Config::BBL_VERSION \$
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
 % This file may safely be deleted. It will be recreated by
-% biber or bibtex as required.
+% biber as required.
 %
 \\begingroup
 \\makeatletter
