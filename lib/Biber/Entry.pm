@@ -37,24 +37,6 @@ sub new {
 }
 
 
-=head2 TO_JSON
-
-   Serialiser for JSON::XS::encode
-
-=cut
-
-sub TO_JSON {
-  my $self = shift;
-  my $json;
-  while (my ($k, $v) = each(%{$self->{datafields}})) {
-    $json->{$k} = $v;
-  }
-  while (my ($k, $v) = each(%{$self->{derivedfields}})) {
-    $json->{$k} = $v;
-  }
-  return $json;
-}
-
 =head2 clone
 
     Clone a Biber::Entry object and return a copy
@@ -127,23 +109,16 @@ sub get_orig_field {
 
 =head2 set_field
 
-  Set/append to a derived field for a Biber::Entry object, that is, a field
+  Set a derived field for a Biber::Entry object, that is, a field
   which was not an actual bibliography field
 
 =cut
 
 sub set_field {
   my $self = shift;
-  my ($key, $val, $append) = @_;
+  my ($key, $val) = @_;
   # All derived fields can be null
-  # Only add append with seperator if append mode and there is something to append to
-  if ($append and defined($self->{derivedfields}{$key})) {
-    $self->{derivedfields}{$key} .= "$append$val";
-  }
-  # otherwise just set as normal
-  else {
-    $self->{derivedfields}{$key} = $val;
-  }
+  $self->{derivedfields}{$key} = $val;
   return;
 }
 
@@ -164,7 +139,7 @@ sub get_field {
 
 =head2 set_datafield
 
-    Set/append to a field which is in the bib data file
+    Set a field which is in the bib data file
 
 =cut
 

@@ -408,8 +408,3 @@ is($section->get_citekey_alias('alias4'), 'alias2', 'Citekey aliases - 3');
 is($section->get_citekey_alias('alias6'), 'alias5', 'Citekey aliases - 4');
 ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 
-# This would be how to test JSON output if necessary
-# require JSON::XS;
-# my $json = JSON::XS->new->indent->utf8->canonical->convert_blessed->allow_blessed->allow_nonref;
-# is( $json->encode($bibentries->entry('murray')), $j1, 'JSON representation' ) ;
-
