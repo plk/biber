@@ -1,6 +1,8 @@
 Revision history for Biber
 
-1.1    (unreleased)
+1.1    (01-08-2012)
+       * Misc bug fixes
+       * Fixed later CentOS libz issue by including latest libz for linux builds
        * Fixed DOT output (SF bug 3544894)
 1.0    (01-07-2012)
        * Internal data model processing changes
