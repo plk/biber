@@ -339,7 +339,7 @@ OS locale definitions (which may be broken for some languages ...).
 
 =item B<--fixinits>
 
-Try to fix broken multiple initials with they have no space between them in BibTeX
+Try to fix broken multiple initials when they have no space between them in BibTeX
 data sources. That is, "A.B. Clarke" becomes "A. B. Clarke" before name parsing.
 This can slightly mess up things like "{U.K. Government}" and other esoteric cases.
 

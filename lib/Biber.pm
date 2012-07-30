@@ -2574,6 +2574,7 @@ sub sort_list {
   # 6. Built-in defaults
 
   my $thislocale = Biber::Config->getoption('sortlocale');
+  $logger->debug("Locale for sorting is '$thislocale'");
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
