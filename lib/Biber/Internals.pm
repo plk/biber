@@ -1350,6 +1350,7 @@ sub process_entry_options {
   return unless $options;       # Just in case it's null
   my @entryoptions = split /\s*,\s*/, $options;
   foreach (@entryoptions) {
+    s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)(=?)(.+)?$/;
     my $val;
     if ($2) {
