@@ -2697,7 +2697,7 @@ sub sort_list {
 
     my $UCAversion = $Collator->version();
     $logger->info("Sorting '$ltype' list '$llabel' keys");
-    $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion)");
+    $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion, Locale: " . $Collator->getlocale . ")");
 
     # Log if U::C::L currently has no tailoring for used locale
     if ($Collator->getlocale eq 'default') {
