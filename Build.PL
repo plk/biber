@@ -60,6 +60,7 @@ my $builder = $class->new(
         'Business::ISBN' => 0,
         'Business::ISSN' => 0,
         'Business::ISMN' => 0,
+        'Mozilla::CA' => 0,
         'perl' => '5.14.0'
     },
     recommends => {
