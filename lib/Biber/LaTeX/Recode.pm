@@ -220,6 +220,12 @@ sub latex_decode {
     my $strip_outer_braces =
       exists $opts{strip_outer_braces} ? $opts{strip_outer_braces} : 0;
 
+    # Deal with raw TeX \char macros.
+    $text =~ s/\{(\\char['"]*[[:xdigit:]]+)\}/$1/g; # strip braces around \char
+    $text =~ s/\\char"([[:xdigit:]]+)/"chr(0x$1)"/gee; # hex chars
+    $text =~ s/\\char'(\d+)/"chr(0$1)"/gee;  # octal chars
+    $text =~ s/\\char(\d+)/"chr($1)"/gee;    # decimal chars
+
     my %WORDMAC;
 
     if ( $scheme_d eq 'base' ) {
