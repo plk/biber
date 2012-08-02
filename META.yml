@@ -104,6 +104,7 @@ requires:
   List::AllUtils: 0
   List::MoreUtils: 0
   Log::Log4perl: 0
+  Mozilla::CA: 0
   Regexp::Common: 0
   Text::BibTeX: 0.64
   Unicode::Collate: 0.89

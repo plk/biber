@@ -493,7 +493,8 @@ sub _range {
   # If there is a range sep, then we set the end of the range even if it's null
   # If no  range sep, then the end of the range is undef
   foreach my $value (@values) {
-    $value =~ m/\A\s*([^-–]+)([-–]*)([^-–]*)\s*\z/xms;
+    $value =~ m/\A\s*(\{[^\}]+\}|[^-– ]+)\s*([-–]*)\s*(\{[^\}]+\}|[^-–]*)\s*\z/xms;
+    my $start = $1;
     my $end;
     if ($2) {
       $end = $3;
@@ -501,7 +502,9 @@ sub _range {
     else {
       $end = undef;
     }
-    push @$values_ref, [$1 || '', $end];
+    $start =~ s/\A\{([^\}]+)\}\z/$1/;
+    $end =~ s/\A\{([^\}]+)\}\z/$1/;
+    push @$values_ref, [$start || '', $end];
   }
   $bibentry->set_datafield($f, $values_ref);
   return;
