@@ -237,7 +237,7 @@ sub _initopts {
     # If we don't we can get errors when contructing the sorting call to eval() later
     if (lc($copt) eq 'collate_options') {
       my $collopts = Biber::Config->getoption('collate_options');
-      my $copt_h = eval "{ $opts->{$copt} }" or biber_error('Bad command-line collation options');
+      my $copt_h = eval "{ $opts->{$copt} }" or croak('Bad command-line collation options');
       # Override defaults with any cmdline settings
       foreach my $co (keys %$copt_h) {
         $collopts->{$co} = $copt_h->{$co};
