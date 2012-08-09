@@ -1260,8 +1260,8 @@ sub _namestring {
 
   # These should be symbols which can't appear in names
   # This means, symbols which normalise_string_sort strips out
-  my $nsi    = '_';          # name separator, internal
-  my $nse    = '+';          # name separator, external
+  my $nsi    = "_";          # name separator, internal
+  my $nse    = "+";          # name separator, external
   # Guaranteed to sort after everything else as it's the last legal Unicode code point
   my $trunc = "\x{10FFFD}";  # sort string for "et al" truncated name
 

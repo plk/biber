@@ -204,12 +204,19 @@ sub _initopts {
       Biber::Config->setconfigfileoption($k, $v->{content});
     }
     # mildly complex options - nosort/collate_options
-    elsif (lc($k) eq 'collate_options' or
-           lc($k) eq 'nosort' or
+    elsif (lc($k) eq 'nosort' or
            lc($k) eq 'noinit' ) {
       Biber::Config->setconfigfileoption($k, $v->{option});
     }
-    # rather complex options - sourcemap
+    # rather complex options
+    elsif (lc($k) eq 'collate_options') {
+      my $collopts = Biber::Config->getoption('collate_options');
+      # Override defaults with any user settings
+      foreach my $co (@{$v->{option}}) {
+        $collopts->{$co->{name}} = $co->{value};
+      }
+      Biber::Config->setconfigfileoption($k, $collopts);
+    }
     elsif (lc($k) eq 'sourcemap') {
       my $sms;
       foreach my $sm (@{$v->{maps}}) {
@@ -225,8 +232,21 @@ sub _initopts {
   }
 
   # Command-line overrides everything else
-  foreach (keys %$opts) {
-    Biber::Config->setcmdlineoption($_, $opts->{$_});
+  foreach my $copt (keys %$opts) {
+    # This is a tricky option as we need to keep non-overriden defaults
+    # If we don't we can get errors when contructing the sorting call to eval() later
+    if (lc($copt) eq 'collate_options') {
+      my $collopts = Biber::Config->getoption('collate_options');
+      my $copt_h = eval "{ $opts->{$copt} }" or biber_error('Bad command-line collation options');
+      # Override defaults with any cmdline settings
+      foreach my $co (keys %$copt_h) {
+        $collopts->{$co} = $copt_h->{$co};
+      }
+      Biber::Config->setconfigfileoption('collate_options', $collopts);
+    }
+    else {
+      Biber::Config->setcmdlineoption($copt, $opts->{$copt});
+    }
   }
 
   # Set control file name. In a conditional as @ARGV might not be set in tests

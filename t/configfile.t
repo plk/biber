@@ -23,8 +23,8 @@ Log::Log4perl->init(\$l4pconf);
 
 chdir('t/tdata');
 
-my $collopts = [ { name => 'level', value => 3 },
-                 { name => 'table', value => '/home/user/data/otherkeys.txt' } ];
+my $collopts = { level => 3,
+                 table => '/home/user/data/otherkeys.txt' };
 
 my $noinit = [ {value => q/\b\p{Ll}{2}\p{Pd}/}, {value => q/[\x{2bf}\x{2018}]/} ];
 

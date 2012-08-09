@@ -2646,18 +2646,7 @@ sub sort_list {
   }
   else {
     require Unicode::Collate::Locale;
-    my $opts = Biber::Config->getoption('collate_options');
-    my $collopts;
-
-    unless (ref($opts) eq "ARRAY") { # opts for this can come in a string from cmd line
-      $collopts = eval "{ $opts }" or biber_error('Bad command-line collation options');
-    }
-    else { # options from config file as hash ref
-      # Massage options in to the correct format for Unicode::Collate
-      foreach my $o (@$opts) {
-        $collopts->{$o->{name}} = $o->{value};
-      }
-    }
+    my $collopts = Biber::Config->getoption('collate_options');
 
     # UCA level 2 if case insensitive sorting is requested
     unless (Biber::Config->getoption('sortcase')) {
