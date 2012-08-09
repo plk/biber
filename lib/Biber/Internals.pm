@@ -941,6 +941,7 @@ sub _generatesortinfo {
   # for debugging purposes
   my $ss = join($sorting_sep, @$sortobj);
   $list->set_sortdata($citekey, [$ss, $sortobj]);
+  $logger->debug("Sorting object for key '$citekey' -> " . Data::Dump::pp($sortobj));
 
   # Generate sortinit - the initial letter of the sortstring. Skip
   # if there is no sortstring, which is possible in tests

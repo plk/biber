@@ -2680,7 +2680,16 @@ sub sort_list {
     my $coll_locale = delete $collopts->{locale};
     # Now create the collator object
     my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
-      or $logger->logcarp("Problem with Unicode::Collate options: $@");
+      or $logger->logcarp("Problem creating Unicode::Collate::Locale object: $@");
+
+    # Fix the old "alternate" alias otherwise we have problems as U::C->change() always
+    # returns the new "variable" option and we get confused.
+    if (my $alt = delete $collopts->{alternate}) {
+      $collopts->{variable} = $alt;
+    }
+
+    #Show the collation options when debugging
+    $logger->debug('Collation options: ' . Data::Dump::pp($collopts));
 
     # Tailor the collation object and report differences from defaults for locale
     # Have to do this in ->change method as ->new can croak with conflicting tailoring
