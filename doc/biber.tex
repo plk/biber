@@ -529,6 +529,7 @@ an example config file which displays the Biber defaults:
   <collate>1</collate>
   <collate_options>
     <option name="level" value="4"/>
+    <option name="variable" value="non-ignorable"/>
   </collate_options>
   <debug>0</debug>
   <decodecharsset>base</decodecharsset>
@@ -1245,6 +1246,13 @@ Options are passed using the \opt{--collate\_options|-c} option as a
 single quoted string, each option separated by comma, each key and
 value separated by «\verb+=>+». See examples.
 
+\textbf{Note:} Biber sets the Unicode collation tailoring
+«variable» to «non-ignorable». Effectively, this means that punctuation is
+not ignored when sorting. The default setting is to ignore such «variable
+weight» elements. Sorting bibliographies is slightly more specialised than
+collating general text and punctuation often matters. In case you want the
+UCA default behaviour, see examples.
+
 \subsubsection{Examples}
 
 \biberex{biber}
@@ -1272,6 +1280,11 @@ files which may or may not be accurate.
 
 \noindent Collate lowercase before upper and collate French accents in
 reverse order at UCA level 2.
+
+\biberex{biber --collate_options="variable => 'shifted'"}
+
+\noindent Use the UCA default setting for variable weight punctuation
+(which is to ignore it for sorting, effectively).
 
 \subsection{Encoding of files}
 

@@ -353,8 +353,8 @@ is($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
 is($bibentries->entry('i2')->get_field('usere'), 'a Štring', 'map 4' );
 # Testing of user field map match/replace
-is($biber->_liststring('i1', 'listb'), 'REPlacedte_early', 'map 5');
-is($biber->_liststring('i1', 'institution'), 'REPlaCEDte_early', 'map 6');
+is($biber->_liststring('i1', 'listb'), 'REPlacedte!early', 'map 5');
+is($biber->_liststring('i1', 'institution'), 'REPlaCEDte!early', 'map 6');
 # Checking deletion of alsosets with value BMAP_NULL
 ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 7' );
 # Checking that the "misc" type-specific mapping to null takes precedence over global userb->userc
@@ -397,8 +397,8 @@ is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_field('
 is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_field('labelnamename'))->get_visible_bib, '3', 'per_type bibnames - 4');
 is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
 is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
-is($biber->_liststring('tmn1', 'institution'), 'A_B_C', 'per_type/entry items - 1');
-is($biber->_liststring('tmn3', 'institution'), "A_B\x{10FFFD}", 'per_type/entry items - 2');
+is($biber->_liststring('tmn1', 'institution'), 'A!B!C', 'per_type/entry items - 1');
+is($biber->_liststring('tmn3', 'institution'), "A!B\x{10FFFD}", 'per_type/entry items - 2');
 
 # Citekey alias testing
 is($section->get_citekey_alias('alias3'), 'alias1', 'Citekey aliases - 1');

@@ -79,8 +79,8 @@ is_deeply($bibentries->entry('alias4')->get_field('warnings'), $w2, 'Alias - 17'
 
 # Testing of .bcf field map match/replace
 ok(is_undef($bibentries->entry('alias5')->get_field('abstract')), 'Alias - 18' );
-is($biber->_liststring('alias5', 'listb'), 'REPlaCEDte_early', 'Alias - 19');
-is($biber->_liststring('alias5', 'institution'), 'REPlaCEDte_early', 'Alias - 20');
+is($biber->_liststring('alias5', 'listb'), 'REPlaCEDte!early', 'Alias - 19');
+is($biber->_liststring('alias5', 'institution'), 'REPlaCEDte!early', 'Alias - 20');
 
 # Testing of no target but just field additions
 is($bibentries->entry('alias6')->get_field('keywords'), 'keyw1, keyw2', 'Alias - 21' );

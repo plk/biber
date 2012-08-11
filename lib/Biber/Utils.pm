@@ -327,7 +327,7 @@ sub normalise_string_sort {
   return '' unless $str; # Sanitise missing data
   # First strip nosort REs
   $str = strip_nosort($str, $fieldname);
-  # First replace ties with spaces or they will be lost
+  # Then replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   # Replace LaTeX chars by Unicode for sorting
   # Don't bother if output is UTF-8 as in this case, we've already decoded everthing

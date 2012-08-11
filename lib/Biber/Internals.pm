@@ -1258,10 +1258,13 @@ sub _namestring {
   my $count = $names->count_names;
   my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
 
-  # These should be symbols which can't appear in names
-  # This means, symbols which normalise_string_sort strips out
-  my $nsi    = "_";          # name separator, internal
-  my $nse    = "+";          # name separator, external
+  # These should be symbols which can't appear in names and which sort before all alphanum
+  # so that "Alan Smith" sorts after "Al Smth". This means, symbols which normalise_string_sort()
+  # strips out. Unfortuately, this means using punctuation and these are by default variable
+  # weight and ignorable in DUCET so we have to redefine these these symbols after loading DUCET
+  # when sorting so that they are non-ignorable (see Biber.pm)
+  my $nsi    = '!';          # name separator, internal
+  my $nse    = '#';          # name separator, external
   # Guaranteed to sort after everything else as it's the last legal Unicode code point
   my $trunc = "\x{10FFFD}";  # sort string for "et al" truncated name
 
@@ -1318,9 +1321,12 @@ sub _liststring {
   my $str = '';
   my $truncated = 0;
 
-  # These should be symbols which can't appear in lists
-  # This means, symbols which normalise_string_sort strips out
-  my $lsi    = '_';          # list separator, internal
+  # These should be symbols which can't appear in lists and which sort before all alphanum
+  # so that "Alan Smith" sorts after "Al Smth". This means, symbols which normalise_string_sort()
+  # strips out. Unfortuately, this means using punctuation and these are by default variable
+  # weight and ignorable in DUCET so we have to redefine these these symbols after loading DUCET
+  # when sorting so that they are non-ignorable (see Biber.pm)
+  my $lsi    = '!';          # list separator, internal
   # Guaranteed to sort after everything else as it's the last legal Unicode code point
   my $trunc = "\x{10FFFD}";  # sort string for truncated list
 

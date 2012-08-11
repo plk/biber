@@ -2668,7 +2668,9 @@ sub sort_list {
     # Remove locale from options as we need this to make the object
     my $coll_locale = delete $collopts->{locale};
     # Now create the collator object
-    my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale )
+    # Since names are internally seperated into parts by exclamation mark
+    # and externally by hash, these can't be variable weight so redefine them
+    my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale)
       or $logger->logcarp("Problem creating Unicode::Collate::Locale object: $@");
 
     # Fix the old "alternate" alias otherwise we have problems as U::C->change() always

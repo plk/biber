@@ -24,6 +24,7 @@ Log::Log4perl->init(\$l4pconf);
 chdir('t/tdata');
 
 my $collopts = { level => 3,
+                 variable => 'non-ignorable',
                  table => '/home/user/data/otherkeys.txt' };
 
 my $noinit = [ {value => q/\b\p{Ll}{2}\p{Pd}/}, {value => q/[\x{2bf}\x{2018}]/} ];
