@@ -298,7 +298,7 @@ This is the default.
 =item B<--collate_options|-c [options]>
 
 Options to pass to the C<Unicode::Collate> object used for sorting
-(default is 'level => "4"').
+(default is 'level => "4", variable => "non-ignorable"').
 See C<perldoc Unicode::Collate> for details.
 
 =item B<--configfile|-g [file]>

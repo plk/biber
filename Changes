@@ -1,5 +1,7 @@
 Revision history for Biber
 
+1.2    (20-08-2012)
+       * Misc bug fixes
 1.1    (01-08-2012)
        * Misc bug fixes
        * Fixed later CentOS libz issue by including latest libz for linux builds
