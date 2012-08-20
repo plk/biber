@@ -500,6 +500,17 @@
         <bcf:map_step map_field_set="LISTA" map_null="1"/>
       </bcf:map>
       <bcf:map>
+        <bcf:per_type>REPORT</bcf:per_type>
+        <bcf:map_step map_field_source="USERA" map_final="1"/>
+        <bcf:map_step map_field_set="USERB" map_origfieldval="1"
+                      map_append="1"/>
+      </bcf:map>
+      <bcf:map>
+        <bcf:per_type>REPORT</bcf:per_type>
+        <bcf:map_step map_field_source="USERB" map_final="1"/>
+        <bcf:map_step map_field_set="USERC" map_origfieldval="1" map_append="1"/>
+      </bcf:map>
+      <bcf:map>
         <bcf:map_step map_field_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>
       </bcf:map>
       <bcf:map>
