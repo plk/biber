@@ -641,7 +641,8 @@ map =
             attribute map_origfield { "1" } |
             attribute map_origfieldval { "1" } |
             attribute map_origentrytype { "1" } |
-            attribute map_field_value { xsd:string {minLength="1"} } )
+            attribute map_field_value { xsd:string {minLength="1"} } |
+            attribute map_append { "1" } )
         )
       ),
       empty

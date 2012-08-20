@@ -395,20 +395,23 @@ sub create_entry {
                 }
               }
 
+              # If append is set, keep the original value and append the new
+              my $orig = $step->{map_append} ? decode_utf8($entry->get(lc($field))) : '';
+
               if ($step->{map_origentrytype}) {
                 next unless $last_type;
-                $entry->set(lc($field), $last_type);
+                $entry->set(lc($field), $orig . $last_type);
               }
               elsif ($step->{map_origfieldval}) {
                 next unless $last_fieldval;
-                $entry->set(lc($field), $last_fieldval);
+                $entry->set(lc($field), $orig . $last_fieldval);
               }
               elsif ($step->{map_origfield}) {
                 next unless $last_field;
-                $entry->set(lc($field), $last_field);
+                $entry->set(lc($field), $orig . $last_field);
               }
               else {
-                $entry->set(lc($field), $step->{map_field_value});
+                $entry->set(lc($field), $orig . $step->{map_field_value});
               }
             }
           }
