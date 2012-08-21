@@ -89,5 +89,5 @@ is($bibentries->entry('alias6')->get_field('keywords'), 'keyw1, keyw2', 'Alias -
 is_deeply($bibentries->entry('alias7')->get_field('lista'), ['listaval'], 'Alias - 22' );
 
 # Testing append overwrites
-is($bibentries->entry('alias7')->get_field('userb'), 'val2val1', 'Alias - 23' );
-is($bibentries->entry('alias7')->get_field('userc'), 'val3val2val1', 'Alias - 24' );
+is($bibentries->entry('alias7')->get_field('verbb'), 'val2val1', 'Alias - 23' );
+is($bibentries->entry('alias7')->get_field('verbc'), 'val3val2val1', 'Alias - 24' );

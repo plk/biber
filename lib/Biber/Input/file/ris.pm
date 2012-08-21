@@ -353,20 +353,23 @@ sub create_entry {
               }
             }
 
+            # If append is set, keep the original value and append the new
+            my $orig = $step->{map_append} ? $entry->{$field} : '';
+
             if ($step->{map_origentrytype}) {
               next unless $last_type;
-              $entry->{$field} = $last_type;
+              $entry->{$field} = $orig . $last_type;
             }
             elsif ($step->{map_origfieldval}) {
               next unless $last_fieldval;
-              $entry->{$field} = $last_fieldval;
+              $entry->{$field} = $orig . $last_fieldval;
             }
             elsif ($step->{map_origfield}) {
               next unless $last_field;
-              $entry->{$field} = $last_field;
+              $entry->{$field} = $orig . $last_field;
             }
             else {
-              $entry->{$field} = $step->{map_field_value};
+              $entry->{$field} = $orig . $step->{map_field_value};
             }
           }
         }

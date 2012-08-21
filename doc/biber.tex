@@ -695,6 +695,7 @@ examples. A \opt{map} element looks like this:
               +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
               +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
               +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
+              +\textcolor{blue}{map\_append="1"}+
               +\textcolor{blue}{map\_null="1"}+
               +\textcolor{blue}{map\_origfield="1"}+
               +\textcolor{blue}{map\_origfieldval="1"}+
@@ -742,8 +743,13 @@ datasource entry being processed. A \opt{map\_step} works like this:
   will want to use) parentheses for back-references in \textcolor{blue}{\texttt{map\_replace}}.
   Do not quote the regular expressions in any special (i.e. non-Perly) way---it's not
   necessary.
-\item If \textcolor{blue}{\texttt{map\_field\_set}} is defined,
-  then one and only one of the following attributes is then mandatory:
+\item If \textcolor{blue}{\texttt{map\_field\_set}} is defined, then
+  its value is \textcolor{red}{\texttt{set-field}} which will be set
+  to a value specified by further attributes. If
+  \textcolor{blue}{\texttt{map\_append}} is set, then the value to set
+  is appended to the current value of
+  \textcolor{red}{\texttt{set-field}}. The value to set is specified by
+  a mandatory one and only one of the following attributes:
   \begin{itemize}
     \item \textcolor{blue}{\texttt{map\_field\_value}} --- The
       \textcolor{red}{\texttt{set-field}} is set to
