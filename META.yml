@@ -20,7 +20,7 @@ provides:
     version: 0
   Biber::Config:
     file: lib/Biber/Config.pm
-    version: 1.2
+    version: 1.3
   Biber::Constants:
     file: lib/Biber/Constants.pm
     version: 0
