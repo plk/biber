@@ -22,6 +22,7 @@ use List::AllUtils qw( :all );
 use XML::LibXML;
 use XML::LibXML::Simple;
 use Data::Dump qw(dump);
+use URI;
 
 ##### This is based on Zotero 2.0.9 #####
 
@@ -47,6 +48,7 @@ my $handlers = {
                             'literal'  => \&_literal,
                             'range'    => \&_range,
                             'verbatim' => \&_literal,
+                            'uri'      => \&_uri,
                            },
                 'list' => {
                            'entrykey' => \&_literal,
@@ -516,6 +518,23 @@ sub _literal {
   $bibentry->set_datafield(_strip_ns($f), $value);
   return;
 }
+
+# URI fields
+sub _uri {
+  my ($bibentry, $entry, $f, $key) = @_;
+  my $value = $entry->findvalue($f);
+
+  # URL escape if it doesn't look like it already is
+  # This is useful if we are generating URLs automatically with maps which may
+  # contain UTF-8 from other fields
+  unless ($value =~ /\%/) {
+   $value = URI->new($value)->as_string;
+  }
+
+  $bibentry->set_datafield(_strip_ns($f), $value);
+  return;
+}
+
 
 # Range fields
 sub _range {

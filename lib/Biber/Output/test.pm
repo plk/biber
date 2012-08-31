@@ -282,7 +282,8 @@ sub set_output_entry {
     }
   }
 
-  foreach my $vfield (@{$dm->get_fields_of_datatype('verbatim')}) {
+  foreach my $vfield ((@{$dm->get_fields_of_datatype('verbatim')},
+                       @{$dm->get_fields_of_datatype('uri')})) {
     if ( my $rf = $be->get_field($vfield) ) {
       $acc .= "      \\verb{$vfield}\n";
       $acc .= "      \\verb $rf\n    \\endverb\n";

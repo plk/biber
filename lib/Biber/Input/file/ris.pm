@@ -23,6 +23,7 @@ use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
 use Readonly;
 use Data::Dump qw(dump);
+use URI;
 
 my $logger = Log::Log4perl::get_logger('main');
 my $orig_key_order = {};
@@ -40,6 +41,7 @@ my $handlers = {
                             'literal'  => \&_verbatim,
                             'range'    => \&_range,
                             'verbatim' => \&_verbatim,
+                            'uri'      => \&_uri,
                            },
                 'list' => {
                            'entrykey' => \&_list,
@@ -406,6 +408,22 @@ sub _list {
 sub _verbatim {
   my ($bibentry, $entry, $f) = @_;
   $bibentry->set_datafield($f, $entry->{$f});
+  return;
+}
+
+# URI fields
+sub _uri {
+  my ($bibentry, $entry, $f) = @_;
+  my $value = $entry->{$f};
+
+  # URL escape if it doesn't look like it already is
+  # This is useful if we are generating URLs automatically with maps which may
+  # contain UTF-8 from other fields
+  unless ($value =~ /\%/) {
+   $value = URI->new($value)->as_string;
+  }
+
+  $bibentry->set_datafield($f, $value);
   return;
 }
 

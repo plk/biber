@@ -59,7 +59,7 @@ my $handlers = {
                             'literal'  => \&_literal,
                             'range'    => \&_range,
                             'verbatim' => \&_verbatim,
-                            'url'      => \&_url,
+                            'uri'      => \&_uri,
                            },
                 'list' => {
                            'entrykey' => \&_literal,
@@ -477,12 +477,22 @@ sub _literal {
   return;
 }
 
-# url fields
-sub _url {
+# URI fields
+sub _uri {
   my ($bibentry, $entry, $f) = @_;
-  my $value = URI->new(decode_utf8($entry->get($f)));
+  my $value = decode_utf8($entry->get($f));
 
-  $bibentry->set_datafield($f, $value->as_string);
+  # If there are some escapes in the URI, unescape them
+  if ($value =~ /\%/) {
+    $value =~ s/\\%/%/g; # just in case someone BibTeX escaped the "%"
+    # This is what uri_unescape() does but it's faster
+    $value =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+    $value = decode_utf8($value);
+  }
+
+  $value = URI->new($value)->as_string;
+
+  $bibentry->set_datafield($f, $value);
   return;
 }
 

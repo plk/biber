@@ -403,7 +403,8 @@ sub set_output_entry {
     }
   }
 
-  foreach my $vfield (@{$dm->get_fields_of_datatype('verbatim')}) {
+  foreach my $vfield ((@{$dm->get_fields_of_datatype('verbatim')},
+                       @{$dm->get_fields_of_datatype('uri')})) {
     next if $dm->field_is_skipout($vfield);
     if ( my $vf = $be->get_field($vfield) ) {
       $acc .= "      \\verb{$vfield}\n";

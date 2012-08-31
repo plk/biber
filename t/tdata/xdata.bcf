@@ -728,7 +728,7 @@
       <bcf:field fieldtype="field" datatype="verbatim">doi</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">eprint</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">file</bcf:field>
-      <bcf:field fieldtype="field" datatype="verbatim">url</bcf:field>
+      <bcf:field fieldtype="field" datatype="uri">url</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verba</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verbb</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verbc</bcf:field>

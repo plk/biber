@@ -25,6 +25,7 @@ use Data::Dump qw(dump);
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
+use URI;
 
 ##### This is based on Endnote X4 #####
 
@@ -44,6 +45,7 @@ my $handlers = {
                             'literal'  => \&_literal,
                             'range'    => \&_range,
                             'verbatim' => \&_verbatim,
+                            'uri'      => \&_uri,
                            },
                 'list' => {
                            'entrykey' => \&_literal,
@@ -412,6 +414,22 @@ sub _verbatim {
   my ($bibentry, $entry, $f) = @_;
   my $value = $entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)");
   $bibentry->set_datafield($f, _norm($value));
+  return;
+}
+
+# URI fields
+sub _uri {
+  my ($bibentry, $entry, $f) = @_;
+  my $value = _norm($entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)"));
+
+  # URL escape if it doesn't look like it already is
+  # This is useful if we are generating URLs automatically with maps which may
+  # contain UTF-8 from other fields
+  unless ($value =~ /\%/) {
+   $value = URI->new($value)->as_string;
+  }
+
+  $bibentry->set_datafield($f, $value);
   return;
 }
 

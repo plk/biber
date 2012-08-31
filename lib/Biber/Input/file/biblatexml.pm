@@ -24,6 +24,7 @@ use XML::LibXML;
 use XML::LibXML::Simple;
 use Readonly;
 use Data::Dump qw(dump);
+use URI;
 
 my $logger = Log::Log4perl::get_logger('main');
 my $orig_key_order = {};
@@ -45,6 +46,7 @@ my $handlers = {
                             'literal'  => \&_literal,
                             'range'    => \&_range,
                             'verbatim' => \&_literal,
+                            'uri'      => \&_uri,
                            },
                 'list' => {
                            'entrykey' => \&_literal,
@@ -345,6 +347,24 @@ sub _literal {
   }
   return;
 }
+
+# uri fields
+sub _uri {
+  my ($bibentry, $entry, $f, $key) = @_;
+  # Pick out the node with the right mode
+  my $node = _resolve_display_mode($entry, $f, $key);
+  my $value = $node->textContent();
+
+  # URL escape if it doesn't look like it already is
+  # This is useful if we are generating URLs automatically with maps which may
+  # contain UTF-8 from other fields
+  unless ($value =~ /\%/) {
+   $value = URI->new($value)->as_string;
+  }
+  $bibentry->set_datafield(_norm($f), $value);
+  return;
+}
+
 
 # List fields
 sub _list {
