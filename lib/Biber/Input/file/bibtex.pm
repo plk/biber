@@ -25,6 +25,7 @@ use File::Slurp::Unicode;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
+use URI;
 use XML::LibXML::Simple;
 
 my $logger = Log::Log4perl::get_logger('main');
@@ -58,6 +59,7 @@ my $handlers = {
                             'literal'  => \&_literal,
                             'range'    => \&_range,
                             'verbatim' => \&_verbatim,
+                            'url'      => \&_url,
                            },
                 'list' => {
                            'entrykey' => \&_literal,
@@ -472,6 +474,15 @@ sub _literal {
   else {
     $bibentry->set_datafield($f, $value);
   }
+  return;
+}
+
+# url fields
+sub _url {
+  my ($bibentry, $entry, $f) = @_;
+  my $value = URI->new(decode_utf8($entry->get($f)));
+
+  $bibentry->set_datafield($f, $value->as_string);
   return;
 }
 

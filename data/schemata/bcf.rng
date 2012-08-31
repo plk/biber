@@ -507,6 +507,7 @@
                     <value>range</value>
                     <value>csv</value>
                     <value>code</value>
+                    <value>url</value>
                   </choice>
                 </attribute>
                 <optional>

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 40;
+use Test::More tests => 41;
 
 use Biber;
 use Biber::Utils;
@@ -64,7 +64,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 } ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 } ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{labelname}{4}{uniquelist=4}{%
@@ -408,3 +408,5 @@ is($section->get_citekey_alias('alias4'), 'alias2', 'Citekey aliases - 3');
 is($section->get_citekey_alias('alias6'), 'alias5', 'Citekey aliases - 4');
 ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 
+# URL encoding testing
+is($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
