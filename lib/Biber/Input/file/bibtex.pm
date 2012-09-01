@@ -292,6 +292,7 @@ sub create_entry {
         my $last_type = $entry->type; # defaults to the entrytype unless changed below
         my $last_field = undef;
         my $last_fieldval = undef;
+        my @imatches; # For persising parenthetical matches over several steps
 
         # Check pertype restrictions
         unless (not exists($map->{per_type}) or
@@ -349,7 +350,7 @@ sub create_entry {
                             ireplace($last_fieldval, $m, $r));
               }
               else {
-                unless (imatch($last_fieldval, $m)) {
+                unless (@imatches = imatch($last_fieldval, $m)) {
                   # Skip the rest of the map if this step doesn't match
                   if ($step->{map_final}) {
                     next MAP;
@@ -413,7 +414,12 @@ sub create_entry {
                 $entry->set(lc($field), $orig . $last_field);
               }
               else {
-                $entry->set(lc($field), $orig . $step->{map_field_value});
+                my $fv = $step->{map_field_value};
+                # Now re-instate any unescaped $1 .. $9 to get round these being
+                # dynamically scoped and being null when we get here from any
+                # previous map_match
+                $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/e;
+                $entry->set(lc($field), $orig . $fv);
               }
             }
           }

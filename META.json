@@ -4,7 +4,7 @@
       "Philip Kime <Philip@kime.org.uk>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110440",
+   "generated_by" : "Module::Build version 0.4, CPAN::Meta::Converter version 2.112150",
    "license" : [
       "perl_5"
    ],
@@ -47,6 +47,7 @@
             "Mozilla::CA" : 0,
             "Regexp::Common" : 0,
             "Text::BibTeX" : "0.64",
+            "URI" : 0,
             "Unicode::Collate" : "0.89",
             "XML::LibXML::Simple" : 0,
             "XML::LibXSLT" : 0,
