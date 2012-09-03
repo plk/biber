@@ -345,7 +345,8 @@ sub create_entry {
 
             # map fields to targets
             if (my $m = $step->{map_match}) {
-              if (my $r = $step->{map_replace}) {
+              if (defined($step->{map_replace})) { # replace can be null
+                my $r = $step->{map_replace};
                 $entry->set(lc($step->{map_field_source}),
                             ireplace($last_fieldval, $m, $r));
               }
