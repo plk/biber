@@ -68,9 +68,13 @@ sub new {
   }
 
   my $leg_ents;
-  my $ets = [ sort map {$_->{content}} @{$dm->{entrytypes}{entrytype}} ];
-  foreach my $es (@$ets) {
-
+  # my $ets = [ sort map {$_->{content}} @{$dm->{entrytypes}{entrytype}} ];
+  # foreach my $es (@$ets) {
+  foreach my $et (@{$dm->{entrytypes}{entrytype}}) {
+    my $es = $et->{content};
+    if ($et->{skip_output}) {
+      $leg_ents->{$es}{skipout} = 1;
+    }
     # fields for entrytypes
     my $lfs;
     foreach my $ef (@{$dm->{entryfields}}) {
@@ -202,6 +206,18 @@ sub is_field_for_entrytype {
     return 0;
   }
 }
+
+=head2 entrytype_is_skipout
+
+    Returns boolean depending on whether an entrytype is to be skipped on output
+
+=cut
+
+sub entrytype_is_skipout {
+  my ($self, $type) = @_;
+  return $self->{entrytypesbyname}{$type}{skipout} // 0;
+}
+
 
 =head2 get_fields_of_fieldtype
 

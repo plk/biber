@@ -201,6 +201,9 @@ sub set_output_entry {
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
 
+  # Skip entrytypes we don't want to output according to datamodel
+  return if $dm->entrytype_is_skipout($bee);
+
   if ($be->field_exists('options')) {
     $opts = filter_entry_options($be->get_field('options'));
   }
