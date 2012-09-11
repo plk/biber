@@ -53,7 +53,6 @@ my $builder = $class->new(
         'Unicode::Collate' => '0.89',
         'XML::LibXML::Simple' => 0,
         'XML::LibXSLT' => 0,
-        'XML::Writer::String' => 0,
         'URI' => 0,
         'Text::BibTeX' => '0.64',
         'LWP::Simple' => 0,

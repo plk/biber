@@ -525,7 +525,7 @@ sub parse_ctrlfile {
     }
   }
 
-  # Be friendly to latekmk etc.
+  # Be friendly to latexmk etc.
   unless (%bibdatasources) {
     biber_warn("No data sources defined!");
     exit EXIT_OK;

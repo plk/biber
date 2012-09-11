@@ -187,7 +187,11 @@ start =
     element bcf:datamodel {
       # Valid entrytypes
       element bcf:entrytypes {
-        element bcf:entrytype { text }+
+        element bcf:entrytype {
+          # Some entrytypes should be completely skipped on output (XDATA etc.)
+          attribute skip_output { "true" }?,
+          text
+        }+
       },
       # BibLaTeX field types. Biber uses this to determine how to output various types
       # to the .bbl

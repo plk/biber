@@ -641,7 +641,7 @@
       <bcf:entrytype>thesis</bcf:entrytype>
       <bcf:entrytype>unpublished</bcf:entrytype>
       <bcf:entrytype>video</bcf:entrytype>
-      <bcf:entrytype>xdata</bcf:entrytype>
+      <bcf:entrytype skip_output="true">xdata</bcf:entrytype>
     </bcf:entrytypes>
     <bcf:fields>
       <bcf:field fieldtype="field" datatype="integer">day</bcf:field>

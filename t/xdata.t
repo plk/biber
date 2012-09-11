@@ -42,7 +42,6 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('nodieonerror', 1); # because there is a cyclic xdata check
 
 # Now generate the information
-#$biber->prepare;
 my (undef, $stderr) = capture { $biber->prepare };
 my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'entry', 'nty');

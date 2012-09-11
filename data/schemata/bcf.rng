@@ -476,6 +476,12 @@
           <element name="bcf:entrytypes">
             <oneOrMore>
               <element name="bcf:entrytype">
+                <optional>
+                  <!-- Some entrytypes should be completely skipped on output (XDATA etc.) -->
+                  <attribute name="skip_output">
+                    <value>true</value>
+                  </attribute>
+                </optional>
                 <text/>
               </element>
             </oneOrMore>
