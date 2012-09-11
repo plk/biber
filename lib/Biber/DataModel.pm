@@ -68,10 +68,10 @@ sub new {
   }
 
   my $leg_ents;
-  # my $ets = [ sort map {$_->{content}} @{$dm->{entrytypes}{entrytype}} ];
-  # foreach my $es (@$ets) {
   foreach my $et (@{$dm->{entrytypes}{entrytype}}) {
     my $es = $et->{content};
+
+    # Skip output flag for certain entrytypes
     if ($et->{skip_output}) {
       $leg_ents->{$es}{skipout} = 1;
     }
