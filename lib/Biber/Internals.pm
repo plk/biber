@@ -1054,7 +1054,7 @@ sub _sort_editort {
 
 sub _sort_entrykey {
   my ($self, $citekey, $sortelementattributes) = @_;
-  return $citekey;
+  return _process_sort_attributes($citekey, $sortelementattributes);
 }
 
 sub _sort_labelalpha {
