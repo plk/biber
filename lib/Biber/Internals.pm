@@ -1261,8 +1261,8 @@ sub _namestring {
   # These should be symbols which can't appear in names and which sort before all alphanum
   # so that "Alan Smith" sorts after "Al Smth". This means, symbols which normalise_string_sort()
   # strips out. Unfortuately, this means using punctuation and these are by default variable
-  # weight and ignorable in DUCET so we have to redefine these these symbols after loading DUCET
-  # when sorting so that they are non-ignorable (see Biber.pm)
+  # weight and ignorable in DUCET so we have to set U::C to variable=>'non-ignorable' as
+  # sorting default so that they are non-ignorable
   my $nsi    = '!';          # name separator, internal
   my $nse    = '#';          # name separator, external
   # Guaranteed to sort after everything else as it's the last legal Unicode code point
