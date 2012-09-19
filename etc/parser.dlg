@@ -1,0 +1,215 @@
+<<
+/* parser.dlg -- DLG Description of scanner
+ *
+ * Generated from: bibtex.g
+ *
+ * Terence Parr, Will Cohen, and Hank Dietz: 1989-1994
+ * Purdue University Electrical Engineering
+ * With AHPCRC, University of Minnesota
+ * ANTLR Version 1.33
+ */
+
+#include <stdio.h>
+#define ANTLR_VERSION	133
+
+#define ZZCOL
+#define USER_ZZSYN
+
+#include "config.h"
+#include "btparse.h"
+#include "attrib.h"
+#include "lex_auxiliary.h"
+#include "error.h"
+#include "my_dmalloc.h"
+
+extern char * InputFilename;            /* for zzcr_ast call in pccts/ast.c */
+#include "antlr.h"
+#include "ast.h"
+#include "tokens.h"
+#include "dlgdef.h"
+LOOKAHEAD
+void zzerraction()
+{
+	(*zzerr)("invalid token");
+	zzadvance();
+	zzskip();
+}
+>>
+
+
+%%START
+
+@
+	<<
+		NLA = 1;
+	>>
+
+\@
+	<<
+		NLA = AT;
+		at_sign ();   
+	>>
+
+\n
+	<<
+		NLA = 3;
+		newline ();   
+	>>
+
+\%~[\n]*\n
+	<<
+		NLA = COMMENT;
+		comment ();   
+	>>
+
+[\ \r\t]+
+	<<
+		NLA = 5;
+		zzskip ();   
+	>>
+
+~[\@\n\ \r\t]+
+	<<
+		NLA = 6;
+		toplevel_junk ();   
+	>>
+
+
+%%LEX_ENTRY
+
+@
+	<<
+		NLA = 1;
+	>>
+
+\n
+	<<
+		NLA = 7;
+		newline ();   
+	>>
+
+\%~[\n]*\n
+	<<
+		NLA = COMMENT;
+		comment ();   
+	>>
+
+[\ \r\t]+
+	<<
+		NLA = 8;
+		zzskip ();   
+	>>
+
+[0-9]+
+	<<
+		NLA = NUMBER;
+	>>
+
+[a-z0-9\!\$\&\*\+\-\.\/\:\;\<\>\?\[\]\^\_\`\|]+
+	<<
+		NLA = NAME;
+		name ();   
+	>>
+
+\{
+	<<
+		NLA = LBRACE;
+		lbrace ();   
+	>>
+
+\}
+	<<
+		NLA = RBRACE;
+		rbrace ();   
+	>>
+
+\(
+	<<
+		NLA = ENTRY_OPEN;
+		lparen ();   
+	>>
+
+\)
+	<<
+		NLA = ENTRY_CLOSE;
+		rparen ();   
+	>>
+
+=
+	<<
+		NLA = EQUALS;
+	>>
+
+\#
+	<<
+		NLA = HASH;
+	>>
+
+,
+	<<
+		NLA = COMMA;
+	>>
+
+\"
+	<<
+		NLA = 18;
+		start_string ('"');   
+	>>
+
+
+%%LEX_STRING
+
+@
+	<<
+		NLA = 1;
+	>>
+
+\n~[\n\{\}\(\)\"\\]*
+	<<
+		NLA = 19;
+		check_runaway_string ();   
+	>>
+
+[\r\t]
+	<<
+		NLA = 20;
+		zzreplchar (' '); zzmore ();   
+	>>
+
+\{
+	<<
+		NLA = 21;
+		open_brace ();   
+	>>
+
+\}
+	<<
+		NLA = 22;
+		close_brace ();   
+	>>
+
+\(
+	<<
+		NLA = 23;
+		lparen_in_string ();   
+	>>
+
+\)
+	<<
+		NLA = 24;
+		rparen_in_string ();   
+	>>
+
+\"
+	<<
+		NLA = STRING;
+		quote_in_string ();   
+	>>
+
+~[\n\{\}\(\)\"]+
+	<<
+		NLA = 26;
+		zzmore ();   
+	>>
+
+%%

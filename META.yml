@@ -111,7 +111,6 @@ requires:
   Unicode::Collate: 0.89
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
-  XML::Writer::String: 0
   perl: v5.14.0
 resources:
   license: http://dev.perl.org/licenses/
