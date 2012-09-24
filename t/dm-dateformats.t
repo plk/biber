@@ -129,6 +129,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
+      \field{extrayear}{4}
       \field{labeltitle}{Title 2}
       \field{title}{Title 2}
       \warn{\item Missing mandatory field - one of 'date, year' must be defined in entry 'L15'}

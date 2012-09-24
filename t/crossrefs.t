@@ -67,7 +67,6 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \strng{namehash}{121b6dc164b5b619c81c670fbd823f12}
       \strng{fullhash}{121b6dc164b5b619c81c670fbd823f12}
       \field{sortinit}{G}
-      \field{labelyear}{1974}
       \field{labeltitle}{Great and Good Graphs}
       \field{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
@@ -99,7 +98,6 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \strng{namehash}{2d51a96bc0a6804995b3a9ff350c3384}
       \strng{fullhash}{2d51a96bc0a6804995b3a9ff350c3384}
       \field{sortinit}{F}
-      \field{labelyear}{1974}
       \field{labeltitle}{Fabulous Fourier Forms}
       \field{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
@@ -119,7 +117,6 @@ my $cr_m = q|    \entry{cr_m}{book}{}
         {Grimble}%
       }
       \field{sortinit}{G}
-      \field{labelyear}{1974}
       \field{labeltitle}{Graphs of the Continent}
       \field{title}{Graphs of the Continent}
       \field{year}{1974}
@@ -143,7 +140,6 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \strng{namehash}{2baf676a220704f6914223aefccaaa88}
       \strng{fullhash}{2baf676a220704f6914223aefccaaa88}
       \field{sortinit}{A}
-      \field{labelyear}{1996}
       \field{labeltitle}{Arrangements of All Articles}
       \field{booktitle}{Beasts of the Burbling Burns}
       \strng{crossref}{crt}
@@ -163,7 +159,6 @@ my $crt = q|    \entry{crt}{book}{}
         {Rancour}%
       }
       \field{sortinit}{B}
-      \field{labelyear}{1996}
       \field{labeltitle}{Beasts of the Burbling Burns}
       \field{title}{Beasts of the Burbling Burns}
       \field{year}{1996}
@@ -187,7 +182,6 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
       \field{sortinit}{A}
-      \field{labelyear}{2009}
       \field{labeltitle}{Title of inproceeding}
       \field{booktitle}{Manual booktitle}
       \field{eventday}{21}
@@ -221,7 +215,6 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
       \field{sortinit}{A}
-      \field{labelyear}{2010}
       \field{labeltitle}{Title of Book bit}
       \field{booksubtitle}{Book Subtitle}
       \field{booktitle}{Book Title}
@@ -246,7 +239,6 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \strng{namehash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{fullhash}{3d449e56eb3ca1ae80dc99a18d689795}
       \field{sortinit}{S}
-      \field{labelyear}{2010}
       \field{labeltitle}{Title of Collection bit}
       \field{booktitle}{Book Title}
       \field{title}{Title of Collection bit}
@@ -301,7 +293,6 @@ my $xrm = q|    \entry{xrm}{book}{}
         {Mainstream}%
       }
       \field{sortinit}{C}
-      \field{labelyear}{1970}
       \field{labeltitle}{Calligraphy, Calisthenics, Culture}
       \field{title}{Calligraphy, Calisthenics, Culture}
       \field{year}{1970}
@@ -335,7 +326,6 @@ my $xrt = q|    \entry{xrt}{book}{}
         {Middling}%
       }
       \field{sortinit}{K}
-      \field{labelyear}{1977}
       \field{labeltitle}{Kings, Cork and Calculation}
       \field{title}{Kings, Cork and Calculation}
       \field{year}{1977}
@@ -359,7 +349,6 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
       \strng{fullhash}{50ef7fd3a1be33bccc5de2768b013836}
       \field{sortinit}{M}
-      \field{labelyear}{1945}
       \field{labeltitle}{Enterprising Entities}
       \field{booktitle}{Vanquished, Victor, Vandal}
       \field{origyear}{1911}
@@ -432,7 +421,6 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \strng{namehash}{6268941b408d3263bddb208a54899ea9}
       \strng{fullhash}{6268941b408d3263bddb208a54899ea9}
       \field{sortinit}{V}
-      \field{labelyear}{1923}
       \field{labeltitle}{Misc etc.}
       \strng{crossref}{ccr1}
       \field{title}{Misc etc.}
@@ -448,7 +436,6 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
       \field{sortinit}{P}
-      \field{labelyear}{1911}
       \field{labeltitle}{Perhaps, Perchance, Possibilities?}
       \field{booktitle}{Misc etc.}
       \strng{crossref}{ccr2}
@@ -467,7 +454,6 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
       \field{sortinit}{S}
-      \field{labelyear}{1911}
       \field{labeltitle}{Stuff Concerning Varia}
       \field{booktitle}{Misc etc.}
       \field{title}{Stuff Concerning Varia}
