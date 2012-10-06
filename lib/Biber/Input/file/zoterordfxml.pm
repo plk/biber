@@ -361,8 +361,16 @@ sub create_entry {
                 $logger->debug("Overwriting existing field '$field' while processing entry '$key'");
               }
               else {
-                $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
-                next;
+                if ($step->{map_final}) {
+                  # map_final is set, ignore and skip rest of step
+                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key' and skipping rest of map");
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
+                  next;
+                }
               }
             }
 

@@ -131,7 +131,11 @@ my $sourcemap = [
         per_type => [{ content => "UNPUBLISHED" }],
       },
       {
-        map_step => [{ map_field_set => "TITLE", map_null => 1 }],
+        map_overwrite  => 0,
+        map_step => [{ map_field_set => "NOTE",
+                       map_field_value => "Overwrite note",
+                       map_final => "1"},
+                     { map_field_set => "TITLE", map_null => 1 }],
         per_type => [{ content => "ONLINE" }],
       },
     ],

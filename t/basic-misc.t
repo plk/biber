@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 43;
+use Test::More tests => 45;
 
 use Biber;
 use Biber::Utils;
@@ -64,7 +64,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 } ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1} ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{labelname}{4}{uniquelist=4}{%
@@ -432,3 +432,7 @@ ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 is($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
 is($bibentries->entry('url2')->get_field('url'), 'http://www.something.com/q=one%20two', 'URL encoding - 2');
 is($out->get_output_entry($main,'url1'), $url1, 'URL encoding - 3' ) ;
+
+# map_final testing with map_field_set
+is($bibentries->entry('ol1')->get_field('note'), 'A note', 'map_final - 1');
+is($bibentries->entry('ol1')->get_field('title'), 'Online1', 'map_final - 2');

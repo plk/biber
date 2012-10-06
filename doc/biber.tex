@@ -744,13 +744,17 @@ datasource entry being processed. A \opt{map\_step} works like this:
   will want to use) parentheses for back-references in \textcolor{blue}{\texttt{map\_replace}}.
   Do not quote the regular expressions in any special (i.e. non-Perly) way---it's not
   necessary.
-\item If \textcolor{blue}{\texttt{map\_field\_set}} is defined, then
-  its value is \textcolor{red}{\texttt{set-field}} which will be set
-  to a value specified by further attributes. If
-  \textcolor{blue}{\texttt{map\_append}} is set, then the value to set
-  is appended to the current value of
-  \textcolor{red}{\texttt{set-field}}. The value to set is specified by
-  a mandatory one and only one of the following attributes:
+\item If \textcolor{blue}{\texttt{map\_field\_set}} is defined, then its
+  value is \textcolor{red}{\texttt{set-field}} which will be set to a value
+  specified by further attributes. If
+  \textcolor{blue}{\texttt{map\_overwrite}} is false for this step and the
+  field to set already exists then the map step is ignored. If
+  \textcolor{blue}{\texttt{map\_final}} is also set on this step, then
+  processing of the parent map stops at this point. If
+  \textcolor{blue}{\texttt{map\_append}} is set, then the value to set is
+  appended to the current value of \textcolor{red}{\texttt{set-field}}. The
+  value to set is specified by a mandatory one and only one of the
+  following attributes:
   \begin{itemize}
     \item \textcolor{blue}{\texttt{map\_field\_value}} --- The
       \textcolor{red}{\texttt{set-field}} is set to
@@ -799,6 +803,19 @@ to all entries which are found in either the
 
 \noindent Copy the \bibfield{TITLE} field to the \bibfield{NOTE} field unless the
 \bibfield{NOTE} field already exists.
+
+\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
+<map map_overwrite="0">
+  <map_step map_field_source="AUTHOR" />
+  <map_step map_field_set="SORTNAME" map_origfieldval="1"  map_final="1"/>
+  <map_step map_field_source="SORTNAME" map_match=":\textbackslash A(.+?)\textbackslash s+and.\ast" map\_replace="\$1:"/>
+</map>
+\end{lstlisting}
+
+\noindent For any entry with an \bibfield{AUTHOR} field, try to set
+\bibfield{SORTNAME} to the same as \bibfield{AUTHOR}. If this fails because
+\bibfield{SORTNAME} already exists, stop, otherwise truncate
+\bibfield{SORTNAME} to just the first name in the name list.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <map map_overwrite="0">

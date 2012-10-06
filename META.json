@@ -46,7 +46,7 @@
             "Log::Log4perl" : 0,
             "Mozilla::CA" : 0,
             "Regexp::Common" : 0,
-            "Text::BibTeX" : "0.64",
+            "Text::BibTeX" : "0.65",
             "URI" : 0,
             "Unicode::Collate" : "0.89",
             "XML::LibXML::Simple" : 0,
