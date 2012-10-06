@@ -96,7 +96,8 @@ sub extract_entries {
       # use IO::Socket::SSL qw(debug4); # useful for debugging SSL issues
       # We have to explicitly set the cert path because otherwise the https module
       # can't find the .pem when PAR::Packer'ed
-      if (not exists($ENV{PERL_LWP_SSL_CA_FILE})) {
+      if (not exists($ENV{PERL_LWP_SSL_CA_FILE}) and
+          not defined(Biber::Config->getoption('ssl-nointernalca'))) {
         require Mozilla::CA; # Have to explicitly require this here to get it into %INC below
         # we assume that the default CA file is in .../Mozilla/CA/cacert.pem
         (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );

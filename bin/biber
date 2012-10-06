@@ -54,6 +54,7 @@ GetOptions(
            'sortfirstinits=s',
            'sortlocale|l=s',
            'sortupper=s',
+           'ssl-nointernalca',
            'ssl-noverify-host',
            'trace|T',
            'u',                   # alias for bibencoding=UTF-8
@@ -428,6 +429,12 @@ Whether to sort uppercase before lowercase when using
 default sorting (B<--collate|-C>). When
 using B<--fastsort|-f>, your OS collation locale determines
 this and this option is ignored (default is true).
+
+=item B<--ssl-nointernalca>
+
+Don't try to use the default Mozilla CA certificates when using HTTPS to fetch remote data.
+This assumes that the user will set one of the perl LWP::UserAgent module environment variables
+to find the CA certs.
 
 =item B<--ssl-noverify-host>
 

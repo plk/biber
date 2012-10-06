@@ -108,7 +108,7 @@ requires:
   Regexp::Common: 0
   Text::BibTeX: 0.65
   URI: 0
-  Unicode::Collate: 0.89
+  Unicode::Collate: 0.90
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
   perl: v5.14.0
