@@ -3,11 +3,13 @@ use 5.014000;
 use strict;
 use warnings;
 
-use List::Util qw( first );
 use Biber::Utils;
 use Biber::Constants;
+use Data::Diver qw( Dive );
 use Data::Dump qw( pp );
 use Log::Log4perl qw( :no_extra_logdie_message );
+use List::Util qw( first );
+use Storable qw( dclone );
 
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -49,17 +51,17 @@ sub clone {
   my $newkey = shift;
   my $new = new Biber::Entry;
   while (my ($k, $v) = each(%{$self->{datafields}})) {
-    $new->{datafields}{$k} = $v;
+    $new->{datafields}{$k} = dclone($v);
   }
   while (my ($k, $v) = each(%{$self->{origfields}})) {
-    $new->{origfields}{$k} = $v;
+    $new->{origfields}{$k} = dclone($v);
   }
   # Need to add entrytype and datatype
-  $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
-  $new->{derivedfields}{datatype} = $self->{derivedfields}{datatype};
+  $new->{derivedfields}{entrytype}{default} = $self->{derivedfields}{entrytype}{default};
+  $new->{derivedfields}{datatype}{default} = $self->{derivedfields}{datatype}{default};
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{citekey} = $newkey;
+    $new->{derivedfields}{citekey}{default} = $newkey;
   }
   return $new;
 }
@@ -88,8 +90,9 @@ sub notnull {
 
 sub set_orig_field {
   my $self = shift;
-  my ($key, $val) = @_;
-  $self->{origfields}{$key} = $val;
+  my ($key, $val, $form) = @_;
+  $form = $form || 'default';
+  $self->{origfields}{$key}{$form} = $val;
   return;
 }
 
@@ -101,9 +104,9 @@ sub set_orig_field {
 
 sub get_orig_field {
   my $self = shift;
-  my $key = shift;
-  return $self->{origfields}{$key} if exists($self->{origfields}{$key});
-  return undef;
+  my ($key, $form) = @_;
+  $form = $form || 'default';
+  return Dive($self, 'origfields', $key, $form);
 }
 
 
@@ -116,9 +119,10 @@ sub get_orig_field {
 
 sub set_field {
   my $self = shift;
-  my ($key, $val) = @_;
+  my ($key, $val, $form) = @_;
+  $form = $form || 'default';
   # All derived fields can be null
-  $self->{derivedfields}{$key} = $val;
+  $self->{derivedfields}{$key}{$form} = $val;
   return;
 }
 
@@ -130,11 +134,25 @@ sub set_field {
 
 sub get_field {
   my $self = shift;
+  my ($key, $form) = @_;
+  return undef unless $key;
+  $form = $form || 'default';
+  return Dive($self, 'datafields', $key, $form) ||
+         Dive($self, 'derivedfields', $key, $form);
+}
+
+=head2 get_field_forms
+
+    Get all field_forms for a Biber::Entry object
+
+=cut
+
+sub get_field_forms {
+  my $self = shift;
   my $key = shift;
   return undef unless $key;
-  return $self->{datafields}{$key} if exists($self->{datafields}{$key});
-  return $self->{derivedfields}{$key} if exists($self->{derivedfields}{$key});
-  return undef;
+  return Dive($self, 'datafields', $key) ||
+         Dive($self, 'derivedfields', $key);
 }
 
 =head2 set_datafield
@@ -145,10 +163,25 @@ sub get_field {
 
 sub set_datafield {
   my $self = shift;
+  my ($key, $val, $form) = @_;
+  $form = $form || 'default';
+  $self->{datafields}{$key}{$form} = $val;
+  return;
+}
+
+=head2 set_datafield_forms
+
+    Set all forms of a field which is in the bib data file
+
+=cut
+
+sub set_datafield_forms {
+  my $self = shift;
   my ($key, $val) = @_;
   $self->{datafields}{$key} = $val;
   return;
 }
+
 
 =head2 get_datafield
 
@@ -158,8 +191,9 @@ sub set_datafield {
 
 sub get_datafield {
   my $self = shift;
-  my $key = shift;
-  return $self->{datafields}{$key};
+  my ($key, $form) = @_;
+  $form = $form || 'default';
+  return Dive($self, 'datafields', $key, $form);
 }
 
 
@@ -200,9 +234,24 @@ sub del_datafield {
 sub field_exists {
   my $self = shift;
   my $key = shift;
-  return (exists($self->{datafields}{$key}) or
-          exists($self->{derivedfields}{$key})) ? 1 : 0;
+  return (Dive($self, 'datafields', $key) or
+          Dive($self, 'derivedfields', $key)) ? 1 : 0;
 }
+
+=head2 field_form_exists
+
+    Check whether a representation form for a field exists (even if null)
+
+=cut
+
+sub field_form_exists {
+  my $self = shift;
+  my ($key, $form) = @_;
+  $form = $form || 'default';
+  return (Dive($self, 'datafields', $key, $form) or
+          Dive($self, 'derivedfields', $key, $form)) ? 1 : 0;
+}
+
 
 =head2 datafields
 
@@ -265,8 +314,9 @@ sub count_fields {
 
 sub has_keyword {
   my $self = shift;
-  my $keyword = shift;
-  if (my $keywords = $self->{datafields}{keywords}) {
+  my ($keyword, $form) = @_;
+  $form = $form || 'default';
+  if (my $keywords = Dive($self, 'datafields', 'keywords', $form)) {
     return (first {$_ eq $keyword} split(/\s*,\s*/, $keywords)) ? 1 : 0;
   }
   else {
@@ -286,7 +336,7 @@ sub has_keyword {
 sub add_warning {
   my $self = shift;
   my $warning = shift;
-  push @{$self->{derivedfields}{warnings}}, $warning;
+  push @{$self->{derivedfields}{warnings}{default}}, $warning;
   return;
 }
 
@@ -310,7 +360,7 @@ sub set_inherit_from {
   # Data source fields
   foreach my $field ($parent->datafields) {
     next if $self->field_exists($field); # Don't overwrite existing fields
-    $self->set_datafield($field, $parent->get_field($field));
+    $self->set_datafield_forms($field, dclone($parent->get_field_forms($field)));
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
@@ -355,7 +405,7 @@ sub resolve_xdata {
           $xdatum_entry->resolve_xdata($recurse_xdata);
         }
         foreach my $field ($xdatum_entry->datafields()) { # set fields
-          $self->set_datafield($field, $xdatum_entry->get_field($field));
+          $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
 
           # Record graphing information if required
           if (Biber::Config->getoption('outformat') eq 'dot') {
@@ -447,7 +497,7 @@ sub inherit_from {
                            "' as '" .
                            $field->{target} .
                            "' from entry '$source_key'");
-            $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+            $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
 
             # Record graphing information if required
             if (Biber::Config->getoption('outformat') eq 'dot') {
@@ -466,7 +516,7 @@ sub inherit_from {
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
             $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
-            $self->set_datafield($field, $parent->get_field($field));
+            $self->set_datafield_forms($field, $parent->get_field_forms($field));
 
             # Record graphing information if required
             if (Biber::Config->getoption('outformat') eq 'dot') {

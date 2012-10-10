@@ -116,7 +116,7 @@ sub _printfield {
 
   # auto-escape TeX special chars if:
   # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
-  # * It's not a strng field
+  # * It's not a string field
   if ($field_type ne 'strng' and $be->get_field('datatype') ne 'bibtex') {
     $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
   }

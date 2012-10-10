@@ -1299,7 +1299,7 @@ sub process_sets {
         biber_warn("Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'", $me);
         $me->del_field('entryset');
       }
-      # This ends up setting \inset{} in the bib
+      # This ends up setting \inset{} in the bbl
       $me->set_field('entryset', $citekey);
     }
 
