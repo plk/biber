@@ -286,7 +286,7 @@ sub create_entry {
     # We have to process local options as early as possible in order
     # to make them available for things that need them like name parsing
     if (_norm($entry->nodeName) eq 'options') {
-      if (my $node = _resolve_display_mode($entry, 'options')) {
+      if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
         $Biber::MASTER->process_entry_options($key, $node->textContent());
         # Save the raw options in case we are to output another input format like
         # biblatexml
@@ -299,11 +299,11 @@ sub create_entry {
       my $handler = _get_handler($f);
       &$handler($bibentry, $entry, $f, $key);
     }
-    else {
-      my $node = _resolve_display_mode($entry, $f);
-      my $value = $node->textContent();
-      $bibentry->set_datafield($f, $value);
-    }
+    # else {
+    #   my $node = _resolve_display_mode($entry, $f);
+    #   my $value = $node->textContent();
+    #   $bibentry->set_datafield($f, $value);
+    # }
   }
 
   $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
@@ -316,8 +316,7 @@ sub create_entry {
 # Related entries
 sub _related {
   my ($bibentry, $entry, $f, $key) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($entry, $f, $key);
+  my $node = $entry->findnodes("./$f")->get_node(1);
   # TODO
   # Current biblatex data model doesn't allow for multiple items here
   foreach my $item ($node->findnodes("./$NS:item")) {
@@ -333,27 +332,29 @@ sub _related {
 # literal fields
 sub _literal {
   my ($bibentry, $entry, $f, $key) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($entry, $f, $key);
-
-  # eprint is special case
-  if ($f eq "$NS:eprint") {
-    $bibentry->set_datafield('eprinttype', $node->getAttribute('type'));
-    if (my $ec = $node->getAttribute('class')) {
-      $bibentry->set_datafield('eprintclass', $ec);
+  # can be multiple nodes with different script forms
+  foreach my $node ($entry->findnodes("./$f")) {
+    my $form = $node->getAttribute('form') || 'original';
+    my $lang = $node->getAttribute('xml.lang');
+    # eprint is special case
+    if ($f eq "$NS:eprint") {
+      $bibentry->set_datafield('eprinttype', $node->getAttribute('type'), $form, $lang);
+      if (my $ec = $node->getAttribute('class')) {
+        $bibentry->set_datafield('eprintclass', $ec, $form, $lang);
+      }
     }
-  }
-  else {
-    $bibentry->set_datafield(_norm($f), $node->textContent());
+    else {
+      $bibentry->set_datafield(_norm($f), $node->textContent(), $form, $lang);
+    }
   }
   return;
 }
 
 # uri fields
+# No script form or language - makes no sense in a URI
 sub _uri {
   my ($bibentry, $entry, $f, $key) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($entry, $f, $key);
+  my $node = $entry->findnodes("./$f")->get_node(1);
   my $value = $node->textContent();
 
   # URL escape if it doesn't look like it already is
@@ -370,54 +371,62 @@ sub _uri {
 # List fields
 sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($entry, $f, $key);
-  $bibentry->set_datafield(_norm($f), _split_list($node));
+  # can be multiple nodes with different script forms
+  foreach my $node ($entry->findnodes("./$f")) {
+    my $form = $node->getAttribute('form') || 'original';
+    my $lang = $node->getAttribute('xml.lang');
+    $bibentry->set_datafield(_norm($f), _split_list($node), $form, $lang);
+  }
   return;
 }
 
 # Range fields
 sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($entry, $f, $key);
-  # List of ranges/values
-  if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
-    my $rl;
-    foreach my $range (@rangelist) {
-      push @$rl, _parse_range_list($range);
-    }
-    $bibentry->set_datafield(_norm($f), $rl);
-  }
-  # Simple range
-  elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
-    $bibentry->set_datafield(_norm($f), [ _parse_range_list($range) ]);
-  }
-  # simple list
-  else {
-    my $values_ref;
-    my @values = split(/\s*,\s*/, $node->textContent());
-    # Here the "-–" contains two different chars even though they might
-    # look the same in some fonts ...
-    # If there is a range sep, then we set the end of the range even if it's null
-    # If no  range sep, then the end of the range is undef
-    foreach my $value (@values) {
-      $value =~ m/\A\s*([^-–]+)([-–]*)([^-–]*)\s*\z/xms;
-      my $end;
-      if ($2) {
-        $end = $3;
+  # can be multiple nodes with different script forms
+  foreach my $node ($entry->findnodes("./$f")) {
+    my $form = $node->getAttribute('form') || 'original';
+    my $lang = $node->getAttribute('xml.lang');
+
+    # List of ranges/values
+    if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
+      my $rl;
+      foreach my $range (@rangelist) {
+        push @$rl, _parse_range_list($range);
       }
-      else {
-        $end = undef;
-      }
-      push @$values_ref, [$1 || '', $end];
+      $bibentry->set_datafield(_norm($f), $rl, $form, $lang);
     }
-    $bibentry->set_datafield(_norm($f), $values_ref);
+    # Simple range
+    elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
+      $bibentry->set_datafield(_norm($f), [ _parse_range_list($range) ], $form, $lang);
+    }
+    # simple list
+    else {
+      my $values_ref;
+      my @values = split(/\s*,\s*/, $node->textContent());
+      # Here the "-–" contains two different chars even though they might
+      # look the same in some fonts ...
+      # If there is a range sep, then we set the end of the range even if it's null
+      # If no  range sep, then the end of the range is undef
+      foreach my $value (@values) {
+        $value =~ m/\A\s*([^-–]+)([-–]*)([^-–]*)\s*\z/xms;
+        my $end;
+        if ($2) {
+          $end = $3;
+        }
+        else {
+          $end = undef;
+        }
+        push @$values_ref, [$1 || '', $end];
+      }
+      $bibentry->set_datafield(_norm($f), $values_ref, $form, $lang);
+    }
   }
   return;
 }
 
 # Date fields
+# Can't have form/lang - they are a(n ISO) standard format
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
@@ -479,20 +488,24 @@ sub _date {
 # Name fields
 sub _name {
   my ($bibentry, $entry, $f, $key) = @_;
-  # Pick out the node with the right mode
-  my $node = _resolve_display_mode($entry, $f, $key);
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
-  my $names = new Biber::Entry::Names;
-  foreach my $name ($node->findnodes("./$NS:person")) {
-    $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
-  }
+  # can be multiple nodes with different script forms
+  foreach my $node ($entry->findnodes("./$f")) {
+    my $form = $node->getAttribute('form') || 'original';
+    my $lang = $node->getAttribute('xml.lang');
 
-  # Deal with explicit "moreenames" in data source
-  if ($node->getAttribute('morenames')) {
-    $names->set_morenames;
-  }
+    my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
+    my $names = new Biber::Entry::Names;
+    foreach my $name ($node->findnodes("./$NS:person")) {
+      $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
+    }
 
-  $bibentry->set_datafield(_norm($f), $names);
+    # Deal with explicit "moreenames" in data source
+    if ($node->getAttribute('morenames')) {
+      $names->set_morenames;
+    }
+
+    $bibentry->set_datafield(_norm($f), $names, $form, $lang);
+  }
   return;
 }
 
@@ -695,41 +708,6 @@ sub _split_list {
   else {
     return [ $node->textContent() ];
   }
-}
-
-
-# Given an entry and a fieldname, returns the field node with the right language mode
-sub _resolve_display_mode {
-  my ($entry, $fieldname, $key) = @_;
-  my @nodelist;
-  my $dm = Biber::Config->getblxoption('displaymode', $entry->getAttribute('entrytype'), $key);
-  $logger->debug("Resolving display mode for '$fieldname' in node " . $entry->nodePath );
-  # Either a fieldname specific mode or the default or a last-ditch fallback
-  my $modelist = $dm->{_norm($fieldname)} || $dm->{'*'} || ['original'];
-  # Make sure there is an 'original' fallback in the list
-  push @$modelist, 'original' unless 'original' ~~ $modelist;
-  foreach my $mode (@$modelist) {
-    my $modeattr;
-    # mode is omissable if it is "original"
-    if ($mode eq 'original') {
-      $mode = 'original';
-      $modeattr = "\@mode='$mode' or not(\@mode)"
-    }
-    else {
-      $modeattr = "\@mode='$mode'"
-    }
-    $logger->debug("Found display mode '$mode' for field '$fieldname'");
-    if (@nodelist = $entry->findnodes("./${fieldname}[$modeattr]")) {
-      # Check to see if there is more than one entry with a mode and warn
-      # There can be multiple bib:id fields though
-      if ($#nodelist > 0 and $fieldname ne 'bib:id') {
-        biber_warn("Found more than one mode '$mode' '$fieldname' field in entry '" .
-                   $entry->getAttribute('id') . "' - skipping duplicates ...");
-      }
-      return $nodelist[0];
-    }
-  }
-  return undef; # Shouldn't get here
 }
 
 # normalise a node name as they have a namsespace and might not be lowercase

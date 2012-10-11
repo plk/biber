@@ -47,6 +47,7 @@ data/bcf.xsl
 data/latinkeys.txt
 t/options.t
 t/names.t
+t/bibtex-forms.t
 t/biblatexml.t
 t/ris.t
 t/utils.t
@@ -84,6 +85,8 @@ t/zoterordfxml.t
 t/xdata.t
 t/pod-coverage.t
 t/pod.t
+t/tdata/bibtex-forms.bcf
+t/tdata/bibtex-forms.bib
 t/tdata/options.bcf
 t/tdata/remote-files.bcf
 t/tdata/encoding1.bcf

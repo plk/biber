@@ -57,11 +57,11 @@ sub clone {
     $new->{origfields}{$k} = dclone($v);
   }
   # Need to add entrytype and datatype
-  $new->{derivedfields}{entrytype}{default} = $self->{derivedfields}{entrytype}{default};
-  $new->{derivedfields}{datatype}{default} = $self->{derivedfields}{datatype}{default};
+  $new->{derivedfields}{entrytype}{original} = $self->{derivedfields}{entrytype}{original};
+  $new->{derivedfields}{datatype}{original} = $self->{derivedfields}{datatype}{original};
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{citekey}{default} = $newkey;
+    $new->{derivedfields}{citekey}{original} = $newkey;
   }
   return $new;
 }
@@ -91,7 +91,7 @@ sub notnull {
 sub set_orig_field {
   my $self = shift;
   my ($key, $val, $form) = @_;
-  $form = $form || 'default';
+  $form = $form || 'original';
   $self->{origfields}{$key}{$form} = $val;
   return;
 }
@@ -105,7 +105,7 @@ sub set_orig_field {
 sub get_orig_field {
   my $self = shift;
   my ($key, $form) = @_;
-  $form = $form || 'default';
+  $form = $form || 'original';
   return Dive($self, 'origfields', $key, $form);
 }
 
@@ -119,10 +119,11 @@ sub get_orig_field {
 
 sub set_field {
   my $self = shift;
-  my ($key, $val, $form) = @_;
-  $form = $form || 'default';
+  my ($key, $val, $form, $lang) = @_;
+  $form = $form || 'original';
   # All derived fields can be null
   $self->{derivedfields}{$key}{$form} = $val;
+  $self->{derivedfields}{$key}{$form}{lang} = $lang if $lang;
   return;
 }
 
@@ -137,10 +138,26 @@ sub get_field {
   my $self = shift;
   my ($key, $form) = @_;
   return undef unless $key;
-  $form = $form || 'default';
+  $form = $form || 'original';
   return Dive($self, 'datafields', $key, $form) //
          Dive($self, 'derivedfields', $key, $form);
 }
+
+=head2 get_field_lang
+
+    Get the language for a field form
+
+=cut
+
+sub get_field_lang {
+  my $self = shift;
+  my ($key, $form) = @_;
+  return undef unless $key;
+  $form = $form || 'original';
+  return Dive($self, 'datafields', $key, $form, 'lang') ||
+         Dive($self, 'derivedfields', $key, $form, 'lang');
+}
+
 
 =head2 get_field_forms
 
@@ -164,9 +181,10 @@ sub get_field_forms {
 
 sub set_datafield {
   my $self = shift;
-  my ($key, $val, $form) = @_;
-  $form = $form || 'default';
+  my ($key, $val, $form, $lang) = @_;
+  $form = $form || 'original';
   $self->{datafields}{$key}{$form} = $val;
+  $self->{datafields}{$key}{$form}{lang} = $lang if $lang;
   return;
 }
 
@@ -193,7 +211,7 @@ sub set_datafield_forms {
 sub get_datafield {
   my $self = shift;
   my ($key, $form) = @_;
-  $form = $form || 'default';
+  $form = $form || 'original';
   return Dive($self, 'datafields', $key, $form);
 }
 
@@ -248,7 +266,7 @@ sub field_exists {
 sub field_form_exists {
   my $self = shift;
   my ($key, $form) = @_;
-  $form = $form || 'default';
+  $form = $form || 'original';
   return (Dive($self, 'datafields', $key, $form) ||
           Dive($self, 'derivedfields', $key, $form)) ? 1 : 0;
 }
@@ -316,7 +334,7 @@ sub count_fields {
 sub has_keyword {
   my $self = shift;
   my ($keyword, $form) = @_;
-  $form = $form || 'default';
+  $form = $form || 'original';
   if (my $keywords = Dive($self, 'datafields', 'keywords', $form)) {
     return (first {$_ eq $keyword} split(/\s*,\s*/, $keywords)) ? 1 : 0;
   }
@@ -337,7 +355,7 @@ sub has_keyword {
 sub add_warning {
   my $self = shift;
   my $warning = shift;
-  push @{$self->{derivedfields}{warnings}{default}}, $warning;
+  push @{$self->{derivedfields}{warnings}{original}}, $warning;
   return;
 }
 

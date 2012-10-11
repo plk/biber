@@ -472,10 +472,13 @@ sub create_entry {
 # HANDLERS
 # ========
 
+my $forms_re = qr/^([^_]+)_?(original|translated|romanised|uniform)?\z/;
+
 # Literal fields
 sub _literal {
   my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form) = $f =~ m/$forms_re/xms;
 
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
@@ -485,10 +488,10 @@ sub _literal {
 
   # Try to sanitise months to biblatex requirements
   if ($f eq 'month') {
-    $bibentry->set_datafield($f, _hack_month($value));
+    $bibentry->set_datafield($field, _hack_month($value), $form);
   }
   else {
-    $bibentry->set_datafield($f, $value);
+    $bibentry->set_datafield($field, $value, $form);
   }
   return;
 }
@@ -497,6 +500,7 @@ sub _literal {
 sub _uri {
   my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form) = $f =~ m/$forms_re/xms;
 
   # If there are some escapes in the URI, unescape them
   if ($value =~ /\%/) {
@@ -508,7 +512,7 @@ sub _uri {
 
   $value = URI->new($value)->as_string;
 
-  $bibentry->set_datafield($f, $value);
+  $bibentry->set_datafield($field, $value, $form);
   return;
 }
 
@@ -516,8 +520,9 @@ sub _uri {
 sub _verbatim {
   my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form) = $f =~ m/$forms_re/xms;
 
-  $bibentry->set_datafield($f, $value);
+  $bibentry->set_datafield($field, $value, $form);
   return;
 }
 
@@ -526,6 +531,7 @@ sub _range {
   my ($bibentry, $entry, $f) = @_;
   my $values_ref;
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form) = $f =~ m/$forms_re/xms;
 
   my @values = split(/\s*[;,]\s*/, $value);
   # Here the "-–" contains two different chars even though they might
@@ -546,7 +552,7 @@ sub _range {
     $end =~ s/\A\{([^\}]+)\}\z/$1/;
     push @$values_ref, [$start || '', $end];
   }
-  $bibentry->set_datafield($f, $values_ref);
+  $bibentry->set_datafield($field, $values_ref, $form);
   return;
 }
 
@@ -557,6 +563,7 @@ sub _name {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form) = $f =~ m/$forms_re/xms;
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
 
@@ -604,15 +611,18 @@ sub _name {
     }
 
   }
-  $bibentry->set_datafield($f, $names);
+  $bibentry->set_datafield($field, $names, $form);
   return;
 }
 
 # Dates
+# Date fields can't have script forms - they are just a(n ISO) standard format
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
   my ($datetype) = $f =~ m/\A(.*)date\z/xms;
   my $date = decode_utf8($entry->get($f));
+  my ($field, $form) = $f =~ m/$forms_re/xms;
+
   # Just in case we need to look at the original field later
   # an "orig_field" is not counted as current data in the entry
   $bibentry->set_orig_field($f, $f);
@@ -663,11 +673,12 @@ sub _date {
 sub _list {
   my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form) = $f =~ m/$forms_re/xms;
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
   @tmp = map { decode_utf8($_) } @tmp;
   @tmp = map { remove_outer($_) } @tmp;
-  $bibentry->set_datafield($f, [ @tmp ]);
+  $bibentry->set_datafield($field, [ @tmp ], $form);
   return;
 }
 
@@ -1035,6 +1046,7 @@ sub _hack_month {
 
 sub _get_handler {
   my $field = shift;
+  $field =~ s/_(?:original|translated|romanised|uniform)$//;
   if (my $h = $handlers->{CUSTOM}{$field}) {
     return $h;
   }
