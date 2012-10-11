@@ -137,7 +137,7 @@ sub get_field {
   my ($key, $form) = @_;
   return undef unless $key;
   $form = $form || 'default';
-  return Dive($self, 'datafields', $key, $form) ||
+  return Dive($self, 'datafields', $key, $form) //
          Dive($self, 'derivedfields', $key, $form);
 }
 
@@ -151,7 +151,7 @@ sub get_field_forms {
   my $self = shift;
   my $key = shift;
   return undef unless $key;
-  return Dive($self, 'datafields', $key) ||
+  return Dive($self, 'datafields', $key) //
          Dive($self, 'derivedfields', $key);
 }
 
@@ -234,7 +234,7 @@ sub del_datafield {
 sub field_exists {
   my $self = shift;
   my $key = shift;
-  return (Dive($self, 'datafields', $key) or
+  return (Dive($self, 'datafields', $key) ||
           Dive($self, 'derivedfields', $key)) ? 1 : 0;
 }
 
@@ -248,7 +248,7 @@ sub field_form_exists {
   my $self = shift;
   my ($key, $form) = @_;
   $form = $form || 'default';
-  return (Dive($self, 'datafields', $key, $form) or
+  return (Dive($self, 'datafields', $key, $form) ||
           Dive($self, 'derivedfields', $key, $form)) ? 1 : 0;
 }
 

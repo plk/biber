@@ -42,6 +42,7 @@ my $builder = $class->new(
     requires => {
         'Data::Dump' => 0,
         'Data::Compare' => 0,
+        'Data::Diver' => 0,
         'Date::Simple' => 0,
         'File::Slurp::Unicode'  => 0,
         'IPC::Cmd' => 0,
