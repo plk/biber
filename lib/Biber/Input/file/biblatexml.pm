@@ -274,10 +274,6 @@ sub create_entry {
   if (my $hp = $entry->getAttribute('howpublished')) {
     $bibentry->set_datafield('howpublished', $hp);
   }
-  # displaymode is set as an option so we benefit from option scope handling
-  if (my $mode = $entry->getAttribute('mode')) {
-    Biber::Config->setblxoption('displaymode', {'*' => [ $mode ] }, 'PER_ENTRY', $key);
-  }
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
@@ -299,11 +295,6 @@ sub create_entry {
       my $handler = _get_handler($f);
       &$handler($bibentry, $entry, $f, $key);
     }
-    # else {
-    #   my $node = _resolve_display_mode($entry, $f);
-    #   my $value = $node->textContent();
-    #   $bibentry->set_datafield($f, $value);
-    # }
   }
 
   $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));

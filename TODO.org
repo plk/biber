@@ -1,4 +1,7 @@
 * When perl 5.16.1 is released, move build farm to this and:
 ** Convert lc() compares to fc()
 ** use v5.16 everywhere
-* Documenting script forms - not relevant for date datatypes
+* Forms
+** Documentation
+*** not relevant for date/url datatypes
+** labelnamespec, labeltitlespec need to specify which form

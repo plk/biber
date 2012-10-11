@@ -162,41 +162,6 @@
           </optional>
         </element>
       </zeroOrMore>
-      <oneOrMore>
-        <!-- Display modes for biblatexml -->
-        <element name="bcf:displaymodes">
-          <optional>
-            <attribute name="type"/>
-          </optional>
-          <oneOrMore>
-            <element name="bcf:displaymode">
-              <oneOrMore>
-                <element name="bcf:dtarget">
-                  <choice>
-                    <value>*</value>
-                    <data type="string">
-                      <param name="minLength">1</param>
-                    </data>
-                  </choice>
-                </element>
-              </oneOrMore>
-              <oneOrMore>
-                <element name="bcf:dmode">
-                  <attribute name="order">
-                    <data type="integer"/>
-                  </attribute>
-                  <choice>
-                    <value>original</value>
-                    <value>uniform</value>
-                    <value>romanised</value>
-                    <value>translated</value>
-                  </choice>
-                </element>
-              </oneOrMore>
-            </element>
-          </oneOrMore>
-        </element>
-      </oneOrMore>
       <optional>
         <!-- user field/entrytype mapping -->
         <element name="bcf:sourcemap">

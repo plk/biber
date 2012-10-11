@@ -303,7 +303,6 @@ sub parse_ctrlfile {
                                                            qr/\Asortexclusion\z/,
                                                            qr/\Aexclusion\z/,
                                                            qr/\Asort\z/,
-                                                           qr/\Adisplaymodes?\z/,
                                                            qr/\Amode\z/,
                                                            qr/\Amaps\z/,
                                                            qr/\Amap\z/,
@@ -394,23 +393,6 @@ sub parse_ctrlfile {
           }
         }
       }
-    }
-  }
-
-  # DISPLAYMODES
-  foreach my $dms (@{$bcfxml->{displaymodes}}) {
-    my $opt_dm;
-    foreach my $dm (@{$dms->{displaymode}}) {
-      foreach my $dt (@{$dm->{dtarget}}) {
-        $opt_dm->{$dt->{content}} = [ map {$_->{content}}  sort { $a->{order} <=> $b->{order} } @{$dm->{dmode}} ];
-      }
-    }
-    if (not exists($dms->{type}) or $dms->{type} eq 'global') {
-      Biber::Config->setblxoption('displaymode', $opt_dm);
-    }
-    else {
-      # per-type
-      Biber::Config->setblxoption('displaymode', $opt_dm, 'PER_TYPE', $dms->{type});
     }
   }
 

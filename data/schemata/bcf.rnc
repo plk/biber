@@ -86,18 +86,6 @@ start =
       usetranslator?
     }*,
 
-    # Display modes for biblatexml
-    element bcf:displaymodes {
-      attribute type { text }?,
-      element bcf:displaymode {
-        element bcf:dtarget { "*" | xsd:string {minLength="1"}}+,
-        element bcf:dmode {
-          attribute order { xsd:integer },
-          ("original" | "uniform" | "romanised"  | "translated")
-        }+
-      }+
-    }+,
-
     # user field/entrytype mapping
     element bcf:sourcemap {
       element bcf:maps {
