@@ -129,6 +129,7 @@ sub set_field {
 =head2 get_field
 
     Get a field for a Biber::Entry object
+    Uses // as fields can be null (end dates etc).
 
 =cut
 
@@ -143,7 +144,7 @@ sub get_field {
 
 =head2 get_field_forms
 
-    Get all field_forms for a Biber::Entry object
+    Get all field_forms for a Biber::Entry object field
 
 =cut
 
@@ -151,7 +152,7 @@ sub get_field_forms {
   my $self = shift;
   my $key = shift;
   return undef unless $key;
-  return Dive($self, 'datafields', $key) //
+  return Dive($self, 'datafields', $key) ||
          Dive($self, 'derivedfields', $key);
 }
 
