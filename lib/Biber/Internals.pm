@@ -1119,7 +1119,7 @@ sub _sort_list {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if ($be->get_field($list)) {
+  if ($be->get_field($list, $sortelementattributes->{form})) {
     my $string = $self->_liststring($citekey, $list);
     return _process_sort_attributes($string, $sortelementattributes);
   }
@@ -1137,7 +1137,7 @@ sub _sort_literal {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if (my $field = $be->get_field($literal)) {
+  if (my $field = $be->get_field($literal, $sortelementattributes->{form})) {
     my $string = normalise_string_sort($field, $literal);
     return _process_sort_attributes($string, $sortelementattributes);
   }
@@ -1160,8 +1160,8 @@ sub _sort_name {
       not Biber::Config->getblxoption("use$name", $be->get_field('entrytype'), $citekey)) {
     return '';
     }
-  if ($be->get_field($name)) {
-    my $string = $self->_namestring($citekey, $name);
+  if ($be->get_field($name, $sortelementattributes->{form})) {
+    my $string = $self->_namestring($citekey, $name, $sortelementattributes->{form});
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1185,11 +1185,11 @@ sub _sort_sortname {
   my $be = $section->bibentry($citekey);
 
   # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
-  if ($be->get_field('sortname') and
+  if ($be->get_field('sortname', $sortelementattributes->{form}) and
     (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
       Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) or
       Biber::Config->getblxoption('useetranslator', $be->get_field('entrytype'), $citekey))) {
-    my $string = $self->_namestring($citekey, 'sortname');
+    my $string = $self->_namestring($citekey, 'sortname', $sortelementattributes->{form});
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1248,12 +1248,12 @@ sub _process_sort_attributes {
 # This is used to generate sorting string for names
 sub _namestring {
   my $self = shift;
-  my ($citekey, $field) = @_;
+  my ($citekey, $field, $form) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $names = $be->get_field($field);
+  my $names = $be->get_field($field, $form);
   my $str = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite

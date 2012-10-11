@@ -818,6 +818,16 @@
                 </data>
               </attribute>
             </optional>
+            <optional>
+              <attribute name="form">
+                <choice>
+                  <value>original</value>
+                  <value>translated</value>
+                  <value>romanised</value>
+                  <value>uniform</value>
+                </choice>
+              </attribute>
+            </optional>
             <text/>
           </element>
         </oneOrMore>

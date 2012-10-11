@@ -319,6 +319,7 @@ sort =
       attribute pad_side { "left" | "right" }?,
       attribute pad_width { xsd:integer }?,
       attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
+      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
       text
     }+
   }+

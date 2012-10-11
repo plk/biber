@@ -3129,6 +3129,9 @@ sub _parse_sort {
       if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
         $sortitemattributes->{pad_side} = $sortitem->{pad_side};
       }
+      if (defined($sortitem->{form})) { # Found script form attribute
+        $sortitemattributes->{form} = $sortitem->{form};
+      }
       push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
     }
 
