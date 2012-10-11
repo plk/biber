@@ -161,7 +161,7 @@ sub get_field_lang {
 
 =head2 get_field_forms
 
-    Get all field_forms for a Biber::Entry object field
+    Get all field forms for a Biber::Entry object field
 
 =cut
 
@@ -171,6 +171,20 @@ sub get_field_forms {
   return undef unless $key;
   return Dive($self, 'datafields', $key) ||
          Dive($self, 'derivedfields', $key);
+}
+
+=head2 get_field_form_names
+
+    Get all field form names for a Biber::Entry object field
+
+=cut
+
+sub get_field_form_names {
+  my $self = shift;
+  my $key = shift;
+  return undef unless $key;
+  return keys %{Dive($self, 'datafields', $key) ||
+         Dive($self, 'derivedfields', $key)};
 }
 
 =head2 set_datafield
