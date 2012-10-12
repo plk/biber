@@ -5,6 +5,7 @@
 ** Documentation
 *** form arg for field in sortspecs (biblatex and biber)
 *** not relevant for date/url datatypes
-** What about sortinit and sorting - how to choose which form?
 ** fields need two optional arguments for form and lang in bbl, by default empty for backwards compat
 ** labelnamespec, labeltitlespec need to specify which form
+** Potential issues
+*** You can sort on one form of a name/title but labelname/labeltitle could cause labels to be generated from another form? One way to avoid is to specify a labelname form and then to sort on labelname?

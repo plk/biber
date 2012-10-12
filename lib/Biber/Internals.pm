@@ -392,7 +392,7 @@ sub _label_labeltitle {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  # re-direct to the right label routine for the labelyear
+  # re-direct to the right label routine for the labeltitle
   if (my $ltn = $be->get_field('labeltitlename')) {
     $args->[0] = $ltn;
     return $self->_label_title($citekey, $args, $labelattrs);
