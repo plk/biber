@@ -110,6 +110,7 @@ start =
           attribute substring_compound { "0" | "1" }?,
           attribute ifnamecount { xsd:integer }?,
           attribute namecount { xsd:integer }?,
+          attribute form { "original" | "translated" | "romanised" | "uniform" }?,
           xsd:string
         }+
       }+

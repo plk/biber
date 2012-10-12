@@ -373,10 +373,10 @@ sub _label_basic {
   my $f;
   if ($args->[1] and
       $args->[1] eq 'nostrip') {
-    $f = $be->get_field($e);
+    $f = $be->get_field($e, $labelattrs->{form});
   }
   else {
-    $f = normalise_string_label($be->get_field($e));
+    $f = normalise_string_label($be->get_field($e, $labelattrs->{form}));
   }
   if ($f) {
     my $b = _process_label_attributes($self, $citekey, $f, $labelattrs, $e);
@@ -395,7 +395,7 @@ sub _label_labeltitle {
   # re-direct to the right label routine for the labeltitle
   if (my $ltn = $be->get_field('labeltitlename')) {
     $args->[0] = $ltn;
-    return $self->_label_title($citekey, $args, $labelattrs);
+    return $self->_label_basic($citekey, $args, $labelattrs);
   }
   else {
     return ['', ''];
@@ -465,7 +465,7 @@ sub _label_name {
 
   if (Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) and
     $be->get_field($namename)) {
-    my $names = $be->get_field($namename);
+    my $names = $be->get_field($namename, $labelattrs->{form});
     my $numnames  = $names->count_names;
     my $visibility = $names->get_visible_alpha;
 
