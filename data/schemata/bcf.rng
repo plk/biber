@@ -1044,6 +1044,19 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
+          <optional>
+            <attribute name="form">
+              <choice>
+                <value>original</value>
+                <value>translated</value>
+                <value>romanised</value>
+                <value>uniform</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="lang"/>
+          </optional>
           <text/>
         </element>
       </oneOrMore>
@@ -1345,6 +1358,19 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
+          <optional>
+            <attribute name="form">
+              <choice>
+                <value>original</value>
+                <value>translated</value>
+                <value>romanised</value>
+                <value>uniform</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="lang"/>
+          </optional>
           <text/>
         </element>
       </oneOrMore>
