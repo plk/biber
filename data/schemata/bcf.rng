@@ -86,6 +86,9 @@
             <ref name="labelalpha"/>
           </optional>
           <optional>
+            <ref name="labelnamespec"/>
+          </optional>
+          <optional>
             <ref name="labeltitle"/>
           </optional>
           <optional>
@@ -93,9 +96,6 @@
           </optional>
           <optional>
             <ref name="labeltitleyear"/>
-          </optional>
-          <optional>
-            <ref name="labelnamespec"/>
           </optional>
           <optional>
             <ref name="labelyear"/>
