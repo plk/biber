@@ -57,11 +57,11 @@ sub clone {
     $new->{origfields}{$k} = dclone($v);
   }
   # Need to add entrytype and datatype
-  $new->{derivedfields}{entrytype}{original} = $self->{derivedfields}{entrytype}{original};
-  $new->{derivedfields}{datatype}{original} = $self->{derivedfields}{datatype}{original};
+  $new->{derivedfields}{entrytype}{original}{default} = $self->{derivedfields}{entrytype}{original}{default};
+  $new->{derivedfields}{datatype}{original}{default} = $self->{derivedfields}{datatype}{original}{default};
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{citekey}{original} = $newkey;
+    $new->{derivedfields}{citekey}{original}{default} = $newkey;
   }
   return $new;
 }
@@ -78,6 +78,130 @@ sub notnull {
   return $#arr > -1 ? 1 : 0;
 }
 
+=head2 set_labelname_info
+
+  Record the labelname information. This is special
+  meta-information so we have a seperate method for this
+  Takes a hash ref with the information.
+
+=cut
+
+sub set_labelname_info {
+  my $self = shift;
+  my $data = shift;
+  $data->{form} = $data->{form} || 'original';
+  $data->{lang} = $data->{lang} || 'default';
+  $self->{labelnameinfo} = $data;
+  return;
+}
+
+=head2 get_labelname_info
+
+  Retrieve the labelname information. This is special
+  meta-information so we have a seperate method for this
+  Returns a hash ref with the information.
+
+=cut
+
+sub get_labelname_info {
+  my $self = shift;
+  return $self->{labelnameinfo};
+}
+
+=head2 set_labelnamefh_info
+
+  Record the fullhash labelname information. This is special
+  meta-information so we have a seperate method for this
+  Takes a hash ref with the information.
+
+=cut
+
+sub set_labelnamefh_info {
+  my $self = shift;
+  my $data = shift;
+  $data->{form} = $data->{form} || 'original';
+  $data->{lang} = $data->{lang} || 'default';
+  $self->{labelnamefhinfo} = $data;
+  return;
+}
+
+=head2 get_labelnamefh_info
+
+  Retrieve the fullhash labelname information. This is special
+  meta-information so we have a seperate method for this
+  Returns a hash ref with the information.
+
+=cut
+
+sub get_labelnamefh_info {
+  my $self = shift;
+  return $self->{labelnamefhinfo};
+}
+
+=head2 set_labeltitle_info
+
+  Record the labeltitle information. This is special
+  meta-information so we have a seperate method for this
+  Takes a hash ref with the information.
+
+=cut
+
+sub set_labeltitle_info {
+  my $self = shift;
+  my $data = shift;
+  $data->{form} = $data->{form} || 'original';
+  $data->{lang} = $data->{lang} || 'default';
+  $self->{labeltitleinfo} = $data;
+  return;
+}
+
+=head2 get_labeltitle_info
+
+  Retrieve the labeltitle information. This is special
+  meta-information so we have a seperate method for this
+  Returns a hash ref with the information.
+
+=cut
+
+sub get_labeltitle_info {
+  my $self = shift;
+  return $self->{labeltitleinfo};
+}
+
+
+=head2 set_labelyear_info
+
+  Record the labelyear information. This is special
+  meta-information so we have a seperate method for this
+  Takes a hash ref with the information.
+
+=cut
+
+sub set_labelyear_info {
+  my $self = shift;
+  my $data = shift;
+  $data->{form} = $data->{form} || 'original';
+  $data->{lang} = $data->{lang} || 'default';
+  $self->{labelyearinfo} = $data;
+  return;
+}
+
+=head2 get_labelyear_info
+
+  Retrieve the labelyear information. This is special
+  meta-information so we have a seperate method for this
+  Returns a hash ref with the information.
+
+=cut
+
+sub get_labelyear_info {
+  my $self = shift;
+  return $self->{labelyearinfo};
+}
+
+
+
+
 =head2 set_orig_field
 
     Set a field which came from the datasource which is then split/transformed
@@ -90,9 +214,10 @@ sub notnull {
 
 sub set_orig_field {
   my $self = shift;
-  my ($key, $val, $form) = @_;
+  my ($key, $val, $form, $lang) = @_;
   $form = $form || 'original';
-  $self->{origfields}{$key}{$form} = $val;
+  $lang = $lang || 'default';
+  $self->{origfields}{$key}{$form}{$lang} = $val;
   return;
 }
 
@@ -104,9 +229,10 @@ sub set_orig_field {
 
 sub get_orig_field {
   my $self = shift;
-  my ($key, $form) = @_;
+  my ($key, $form, $lang) = @_;
   $form = $form || 'original';
-  return Dive($self, 'origfields', $key, $form);
+  $lang = $lang || 'default';
+  return Dive($self, 'origfields', $key, $form, $lang);
 }
 
 
@@ -121,9 +247,9 @@ sub set_field {
   my $self = shift;
   my ($key, $val, $form, $lang) = @_;
   $form = $form || 'original';
+  $lang = $lang || 'default';
   # All derived fields can be null
-  $self->{derivedfields}{$key}{$form} = $val;
-  $self->{derivedfields}{$key}{$form}{lang} = $lang if $lang;
+  $self->{derivedfields}{$key}{$form}{$lang} = $val;
   return;
 }
 
@@ -136,26 +262,12 @@ sub set_field {
 
 sub get_field {
   my $self = shift;
-  my ($key, $form) = @_;
+  my ($key, $form, $lang) = @_;
   return undef unless $key;
   $form = $form || 'original';
-  return Dive($self, 'datafields', $key, $form) //
-         Dive($self, 'derivedfields', $key, $form);
-}
-
-=head2 get_field_lang
-
-    Get the language for a field form
-
-=cut
-
-sub get_field_lang {
-  my $self = shift;
-  my ($key, $form) = @_;
-  return undef unless $key;
-  $form = $form || 'original';
-  return Dive($self, 'datafields', $key, $form, 'lang') ||
-         Dive($self, 'derivedfields', $key, $form, 'lang');
+  $lang = $lang || 'default';
+  return Dive($self, 'datafields', $key, $form, $lang) //
+         Dive($self, 'derivedfields', $key, $form, $lang);
 }
 
 
@@ -197,8 +309,9 @@ sub set_datafield {
   my $self = shift;
   my ($key, $val, $form, $lang) = @_;
   $form = $form || 'original';
-  $self->{datafields}{$key}{$form} = $val;
-  $self->{datafields}{$key}{$form}{lang} = $lang if $lang;
+  $lang = $lang || 'default';
+  $self->{datafields}{$key}{$form}{$lang} = $val;
+  $self->{datafields}{$key}{$form}{lang}{$lang} = $lang if $lang;
   return;
 }
 
@@ -224,9 +337,10 @@ sub set_datafield_forms {
 
 sub get_datafield {
   my $self = shift;
-  my ($key, $form) = @_;
+  my ($key, $form, $lang) = @_;
   $form = $form || 'original';
-  return Dive($self, 'datafields', $key, $form);
+  $lang = $lang || 'default';
+  return Dive($self, 'datafields', $key, $form, $lang);
 }
 
 
@@ -347,9 +461,10 @@ sub count_fields {
 
 sub has_keyword {
   my $self = shift;
-  my ($keyword, $form) = @_;
+  my ($keyword, $form, $lang) = @_;
   $form = $form || 'original';
-  if (my $keywords = Dive($self, 'datafields', 'keywords', $form)) {
+  $lang = $lang || 'default';
+  if (my $keywords = Dive($self, 'datafields', 'keywords', $form, $lang)) {
     return (first {$_ eq $keyword} split(/\s*,\s*/, $keywords)) ? 1 : 0;
   }
   else {
@@ -369,7 +484,7 @@ sub has_keyword {
 sub add_warning {
   my $self = shift;
   my $warning = shift;
-  push @{$self->{derivedfields}{warnings}{original}}, $warning;
+  push @{$self->{derivedfields}{warnings}{original}{default}}, $warning;
   return;
 }
 

@@ -225,7 +225,7 @@ sub set_output_entry {
   # first output copy in labelname
   # This is essentially doing the same thing twice but in the future,
   # labelname may have different things attached than the raw name
-  my $lnn = $be->get_field('labelnamename'); # save name of labelname field
+  my $lni = $be->get_labelname_info;
   my $plo = ''; # per-list options
 
   if (my $ln = $be->get_field('labelname')) {
@@ -261,7 +261,7 @@ sub set_output_entry {
 
       my $total = $nf->count_names;
       # Copy per-list options to the actual labelname too
-      $plo = '' unless (defined($lnn) and $namefield eq $lnn);
+      $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
       $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
       foreach my $n (@{$nf->names}) {
         $acc .= $n->name_to_bbl;

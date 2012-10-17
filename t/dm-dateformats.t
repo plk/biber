@@ -38,7 +38,7 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('validate_datamodel', 1);
 
 # Biblatex options
-Biber::Config->setblxoption('labelyearspec', [ 'year' ]);
+Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
 
 # Now generate the information
 $biber->prepare;
@@ -306,32 +306,38 @@ is( $out->get_output_entry($main,'L14'), $l14, 'Date values test 14 - labelyear 
 is( $out->get_output_entry($main,'L15'), $l15, 'Date values test 15 - labelyear should be undef, no DATE or YEAR') ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyearspec', [ 'year', 'eventyear', 'origyear' ]);
+Biber::Config->setblxoption('labelyearspec', [ {content => 'year'},
+                                               {content => 'eventyear'},
+                                               {content => 'origyear'} ]);
 $bibentries->del_entry('L17');
 $bibentries->del_entry('L16');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('L16')->get_field('labelyearname'), 'eventyear', 'Date values test 16 - labelyearname = eventyear when YEAR is (mistakenly) missing' ) ;
+is($bibentries->entry('L16')->get_labelyear_info->{field}, 'eventyear', 'Date values test 16 - labelyearname = eventyear when YEAR is (mistakenly) missing' ) ;
 is($out->get_output_entry($main,'L16'), $l16, 'Date values test 16a - labelyear = EVENTYEAR value when YEAR is (mistakenly) missing' );
-is($bibentries->entry('L17')->get_field('labelyearname'), 'year', 'Date values test 17 - labelyearname = YEAR' ) ;
+is($bibentries->entry('L17')->get_labelyear_info->{field}, 'year', 'Date values test 17 - labelyearname = YEAR' ) ;
 is($out->get_output_entry($main,'L17'), $l17, 'Date values test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyearspec', [ 'origyear', 'year', 'eventyear' ]);
+Biber::Config->setblxoption('labelyearspec', [ {content => 'origyear'},
+                                               {content => 'year'},
+                                               {content => 'eventyear'} ]);
 $bibentries->del_entry('L17');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('L17')->get_field('labelyearname'), 'origyear', 'Date values test 17b - labelyearname = ORIGYEAR' ) ;
+is($bibentries->entry('L17')->get_labelyear_info->{field}, 'origyear', 'Date values test 17b - labelyearname = ORIGYEAR' ) ;
 is($out->get_output_entry($main,'L17'), $l17c, 'Date values test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelyearspec', [ 'eventyear', 'year', 'origyear' ], 'PER_TYPE', 'proceedings');
+Biber::Config->setblxoption('labelyearspec', [ {content => 'eventyear'},
+                                               {content => 'year'},
+                                               {content => 'origyear'} ], 'PER_TYPE', 'proceedings');
 $bibentries->del_entry('L17');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('L17')->get_field('labelyearname'), 'eventyear', 'Date values test 17d - labelyearname = EVENTYEAR' ) ;
+is($bibentries->entry('L17')->get_labelyear_info->{field}, 'eventyear', 'Date values test 17d - labelyearname = EVENTYEAR' ) ;
 is($out->get_output_entry($main,'L17'), $l17e, 'Date values test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 

@@ -373,10 +373,10 @@ sub _label_basic {
   my $f;
   if ($args->[1] and
       $args->[1] eq 'nostrip') {
-    $f = $be->get_field($e, $labelattrs->{form});
+    $f = $be->get_field($e, $labelattrs->{form}, $labelattrs->{lang});
   }
   else {
-    $f = normalise_string_label($be->get_field($e, $labelattrs->{form}));
+    $f = normalise_string_label($be->get_field($e, $labelattrs->{form}, $labelattrs->{lang}));
   }
   if ($f) {
     my $b = _process_label_attributes($self, $citekey, $f, $labelattrs, $e);
@@ -393,8 +393,8 @@ sub _label_labeltitle {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right label routine for the labeltitle
-  if (my $ltn = $be->get_field('labeltitlename')) {
-    $args->[0] = $ltn;
+  if (my $lti = $be->get_labeltitle_info) {
+    $args->[0] = $lti->{field};
     return $self->_label_basic($citekey, $args, $labelattrs);
   }
   else {
@@ -408,8 +408,8 @@ sub _label_labelyear {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right label routine for the labelyear
-  if (my $lyn = $be->get_field('labelyearname')) {
-    $args->[0] = $lyn;
+  if (my $lyi = $be->get_labelyear_info) {
+    $args->[0] = $lyi->{field};
     return $self->_label_basic($citekey, $args, $labelattrs);
   }
   else {
@@ -423,8 +423,8 @@ sub _label_labelname {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right label routine for the labelname
-  if (my $lnn = $be->get_field('labelnamename')) {
-    $args->[0] = $lnn;
+  if (my $lni = $be->get_labelname_info) {
+    $args->[0] = $lni->{field};
     return $self->_label_name($citekey, $args, $labelattrs);
   }
   else {
@@ -465,7 +465,7 @@ sub _label_name {
 
   if (Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) and
     $be->get_field($namename)) {
-    my $names = $be->get_field($namename, $labelattrs->{form});
+    my $names = $be->get_field($namename, $labelattrs->{form}, $labelattrs->{lang});
     my $numnames  = $names->count_names;
     my $visibility = $names->get_visible_alpha;
 
@@ -1072,9 +1072,9 @@ sub _sort_labelname {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right sorting routine for the labelname
-  if (my $ln = $be->get_field('labelnamename')) {
+  if (my $lni = $be->get_labelname_info) {
     # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($ln, $citekey, $sortelementattributes);
+    return $self->_dispatch_sorting($lni->{field}, $citekey, $sortelementattributes);
   }
   else {
     return '';
@@ -1087,9 +1087,9 @@ sub _sort_labeltitle {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right sorting routine for the labeltitle
-  if (my $lt = $be->get_field('labeltitlename')) {
+  if (my $lti = $be->get_labeltitle_info) {
     # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($lt, $citekey, $sortelementattributes);
+    return $self->_dispatch_sorting($lti->{field}, $citekey, $sortelementattributes);
   }
   else {
     return '';
@@ -1102,9 +1102,9 @@ sub _sort_labelyear {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right sorting routine for the labelyear
-  if (my $ly = $be->get_field('labelyearname')) {
+  if (my $lyi = $be->get_labelyear_info) {
     # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($ly, $citekey, $sortelementattributes);
+    return $self->_dispatch_sorting($lyi->{field}, $citekey, $sortelementattributes);
   }
   else {
     return '';
@@ -1119,7 +1119,7 @@ sub _sort_list {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if ($be->get_field($list, $sortelementattributes->{form})) {
+  if ($be->get_field($list, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
     my $string = $self->_liststring($citekey, $list);
     return _process_sort_attributes($string, $sortelementattributes);
   }
@@ -1137,7 +1137,7 @@ sub _sort_literal {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if (my $field = $be->get_field($literal, $sortelementattributes->{form})) {
+  if (my $field = $be->get_field($literal, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
     my $string = normalise_string_sort($field, $literal);
     return _process_sort_attributes($string, $sortelementattributes);
   }
@@ -1160,8 +1160,8 @@ sub _sort_name {
       not Biber::Config->getblxoption("use$name", $be->get_field('entrytype'), $citekey)) {
     return '';
     }
-  if ($be->get_field($name, $sortelementattributes->{form})) {
-    my $string = $self->_namestring($citekey, $name, $sortelementattributes->{form});
+  if ($be->get_field($name, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
+    my $string = $self->_namestring($citekey, $name, $sortelementattributes->{form}, $sortelementattributes->{lang});
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1185,11 +1185,11 @@ sub _sort_sortname {
   my $be = $section->bibentry($citekey);
 
   # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
-  if ($be->get_field('sortname', $sortelementattributes->{form}) and
+  if ($be->get_field('sortname', $sortelementattributes->{form}, $sortelementattributes->{lang}) and
     (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
       Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) or
       Biber::Config->getblxoption('useetranslator', $be->get_field('entrytype'), $citekey))) {
-    my $string = $self->_namestring($citekey, 'sortname', $sortelementattributes->{form});
+    my $string = $self->_namestring($citekey, 'sortname', $sortelementattributes->{form}, $sortelementattributes->{lang});
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {

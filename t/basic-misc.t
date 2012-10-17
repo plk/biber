@@ -381,7 +381,7 @@ ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 7' );
 ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 8' );
 
 # Make sure visibility doesn't exceed number of names.
-is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_field('labelnamename'))->get_visible_bib, '3', 'bib visibility - 1');
+is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info->{field})->get_visible_bib, '3', 'bib visibility - 1');
 
 # Testing per_type and per_entry max/min* so reset globals to defaults
 Biber::Config->setblxoption('uniquelist', 0);
@@ -411,12 +411,12 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible_cite, '1', 'per_type maxcitenames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible_cite, '3', 'per_type maxcitenames - 2');
-is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_field('labelnamename'))->get_visible_bib, '2', 'per_type bibnames - 3');
-is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_field('labelnamename'))->get_visible_bib, '3', 'per_type bibnames - 4');
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info->{field})->get_visible_cite, '1', 'per_type maxcitenames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info->{field})->get_visible_cite, '3', 'per_type maxcitenames - 2');
+is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info->{field})->get_visible_bib, '2', 'per_type bibnames - 3');
+is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info->{field})->get_visible_bib, '3', 'per_type bibnames - 4');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info->{field})->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info->{field})->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
 is($biber->_liststring('tmn1', 'institution'), 'A!B!C', 'per_type/entry items - 1');
 is($biber->_liststring('tmn3', 'institution'), "A!B\x{10FFFD}", 'per_type/entry items - 2');
 
