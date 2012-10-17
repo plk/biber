@@ -5,9 +5,9 @@
 ** Documentation
 *** form and lang args for field in sortspecs and labelalphatemplate (biblatex and biber)
 *** form and lang args for labelnamespec, labeltitle spec
+*** labelnamefield, labelnameform, labelnamelang etc.
 *** not relevant for date/url datatypes
-** labelnamespec, labeltitlespec forms and lang in biber, override per-entry
+** tests for sorting, labelname, labeltitle, labels with forms, langs
 ** fields need two optional arguments for form and lang in bbl, by default empty for backwards compat
-** tests for sorting, label with forms
 ** Potential issues
 *** You can sort on one form of a name/title but labelname/labeltitle could cause labels to be generated from another form? One way to avoid is to specify a labelname form and then to sort on labelname?

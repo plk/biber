@@ -140,6 +140,16 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
+  <bcf:options component="biblatex" type="misc">
+    <bcf:option type="multivalued">
+      <bcf:key>labelnamespec</bcf:key>
+      <bcf:value order="1" form="uniform">translator</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labeltitlespec</bcf:key>
+      <bcf:value order="1" form="romanised">title</bcf:value>
+    </bcf:option>
+  </bcf:options>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" driver_defaults="1">
@@ -1894,6 +1904,8 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">forms1</bcf:citekey>
+    <bcf:citekey order="2">forms2</bcf:citekey>
+    <bcf:citekey order="3">forms3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

@@ -1329,6 +1329,21 @@ sub process_labelname {
   my $lnamespec = Biber::Config->getblxoption('labelnamespec', $bee);
   my $dm = Biber::Config->get_dm;
 
+  # prepend any per-entry labelname specification to the labelnamespec
+  my $tmp_lns;
+  if (my $lnfield = Biber::Config->getblxoption('labelnamefield', undef, $citekey)) {
+    $tmp_lns->{content} = $lnfield;
+  }
+  if (my $lnform = Biber::Config->getblxoption('labelnameform', undef, $citekey)) {
+    $tmp_lns->{form} = $lnform;
+  }
+  if (my $lnlang = Biber::Config->getblxoption('labelnamelang', undef, $citekey)) {
+    $tmp_lns->{lang} = $lnlang;
+  }
+  if ($tmp_lns) {
+    unshift @$lnamespec, $tmp_lns;
+  }
+
   # First we set the normal labelname name
   foreach my $h_ln ( @$lnamespec ) {
     my $lnameopt;
@@ -1347,7 +1362,7 @@ sub process_labelname {
 
     # If there is a biblatex option which controls the use of this labelname info, check it
     if ($CONFIG_SCOPE_BIBLATEX{"use$lnameopt"} and
-       not Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey)) {
+       not Biber::Config->getblxoption("use$lnameopt", $bee, $citekey)) {
       next;
     }
 
@@ -1375,7 +1390,7 @@ sub process_labelname {
 
     # If there is a biblatex option which controls the use of this labelname info, check it
     if ($CONFIG_SCOPE_BIBLATEX{"use$ln"} and
-       not Biber::Config->getblxoption("use$ln", $be->get_field('entrytype'), $citekey)) {
+       not Biber::Config->getblxoption("use$ln", $bee, $citekey)) {
       next;
     }
 
@@ -1470,6 +1485,22 @@ sub process_labeltitle {
   my $bee = $be->get_field('entrytype');
 
   my $ltitlespec = Biber::Config->getblxoption('labeltitlespec', $bee);
+
+  # prepend any per-entry labeltitle specification to the labeltitlespec
+  my $tmp_lts;
+  if (my $ltfield = Biber::Config->getblxoption('labeltitlefield', undef, $citekey)) {
+    $tmp_lts->{content} = $ltfield;
+  }
+  if (my $ltform = Biber::Config->getblxoption('labeltitleform', undef, $citekey)) {
+    $tmp_lts->{form} = $ltform;
+  }
+  if (my $ltlang = Biber::Config->getblxoption('labeltitlelang', undef, $citekey)) {
+    $tmp_lts->{lang} = $ltlang;
+  }
+  if ($tmp_lts) {
+    unshift @$ltitlespec, $tmp_lts;
+  }
+
   foreach my $h_ltn (@$ltitlespec) {
     my $ltn = $h_ltn->{content};
     if (my $lt = $be->get_field($ltn, $h_ltn->{form}, $h_ltn->{lang})) {
