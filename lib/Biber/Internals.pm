@@ -181,7 +181,7 @@ sub _getfullhash {
 
 
 # Special hash to track per-name information
-sub _getpnhash {
+sub _genpnhash {
   my ($self, $citekey, $n) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);

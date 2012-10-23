@@ -1582,13 +1582,17 @@ sub process_pername_hashes {
   my $bee = $be->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
 
-  foreach my $pn (@{$dm->get_fields_of_type('list', 'name')}) {
-    my $names = $be->get_field($pn) or next;
-    foreach my $n (@{$names->names}) {
-      $n->set_hash($self->_getpnhash($citekey, $n));
+  # Generate hashes for all forms and langs
+N:  foreach my $pn (@{$dm->get_fields_of_type('list', 'name')}) {
+    foreach my $form ($be->get_field_form_names($pn)) {
+      foreach my $lang ($be->get_field_form_lang_names($pn, $form)) {
+        my $names = $be->get_field($pn, $form, $lang) or next N;
+        foreach my $n (@{$names->names}) {
+          $n->set_hash($self->_genpnhash($citekey, $n));
+        }
+      }
     }
   }
-
   return;
 }
 

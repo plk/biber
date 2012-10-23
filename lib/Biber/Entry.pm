@@ -296,7 +296,24 @@ sub get_field_form_names {
   my $key = shift;
   return undef unless $key;
   return keys %{Dive($self, 'datafields', $key) ||
-         Dive($self, 'derivedfields', $key)};
+                Dive($self, 'derivedfields', $key) ||
+                {}};
+}
+
+=head2 get_field_form_lang_names
+
+    Get all field lang names for a Biber::Entry object field and form
+
+=cut
+
+sub get_field_form_lang_names {
+  my $self = shift;
+  my ($key, $form) = @_;
+  return undef unless $key;
+  return undef unless $form;
+  return keys %{Dive($self, 'datafields', $key, $form) ||
+                Dive($self, 'derivedfields', $key, $form) ||
+                {}};
 }
 
 =head2 set_datafield
@@ -311,7 +328,6 @@ sub set_datafield {
   $form = $form || 'original';
   $lang = $lang || 'default';
   $self->{datafields}{$key}{$form}{$lang} = $val;
-  $self->{datafields}{$key}{$form}{lang}{$lang} = $lang if $lang;
   return;
 }
 
