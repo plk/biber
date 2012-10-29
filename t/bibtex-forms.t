@@ -63,7 +63,7 @@ is($bibentries->entry('forms2')->get_field('labeltitle'), 'Mukhammad al-Khorezmi
 is($bibentries->entry('forms3')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'labeltitle - 3');
 
 # 
-$S = [
+my $S = [
                                                     [
                                                      {},
                                                      {'sortname'   => {}},
