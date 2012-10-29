@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 40;
+use Test::More tests => 45;
 
 use Biber;
 use Biber::Utils;
@@ -14,7 +14,7 @@ chdir("t/tdata");
 
 # Set up Biber object
 my $biber = Biber->new( configfile => 'biber-test.conf');
-my $LEVEL = 'DEBUG';
+my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
     log4perl.category.screen                           = $LEVEL, Screen
@@ -64,7 +64,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 } ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1} ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{labelname}{4}{uniquelist=4}{%
@@ -311,6 +311,26 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
     \endentry
 |;
 
+my $url1 = q|    \entry{url1}{misc}{}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=b2106a3dda6c5a4879a0cab37e9cca55}{Alias}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=b2106a3dda6c5a4879a0cab37e9cca55}{Alias}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{b2106a3dda6c5a4879a0cab37e9cca55}
+      \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
+      \field{labelalpha}{Ali05}
+      \field{sortinit}{A}
+      \field{extraalpha}{4}
+      \field{year}{2005}
+      \verb{url}
+      \verb http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0
+      \endverb
+    \endentry
+|;
+
+
 my $Worman_N = [ 'Worman_N' ] ;
 my $Gennep = [ 'v_Gennep_A', 'v_Gennep_J' ] ;
 
@@ -361,7 +381,7 @@ ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 7' );
 ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 8' );
 
 # Make sure visibility doesn't exceed number of names.
-is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_field('labelnamename'))->get_visible_bib, '3', 'bib visibility - 1');
+is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info->{field})->get_visible_bib, '3', 'bib visibility - 1');
 
 # Testing per_type and per_entry max/min* so reset globals to defaults
 Biber::Config->setblxoption('uniquelist', 0);
@@ -391,12 +411,12 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible_cite, '1', 'per_type maxcitenames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible_cite, '3', 'per_type maxcitenames - 2');
-is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_field('labelnamename'))->get_visible_bib, '2', 'per_type bibnames - 3');
-is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_field('labelnamename'))->get_visible_bib, '3', 'per_type bibnames - 4');
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_field('labelnamename'))->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_field('labelnamename'))->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info->{field})->get_visible_cite, '1', 'per_type maxcitenames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info->{field})->get_visible_cite, '3', 'per_type maxcitenames - 2');
+is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info->{field})->get_visible_bib, '2', 'per_type bibnames - 3');
+is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info->{field})->get_visible_bib, '3', 'per_type bibnames - 4');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info->{field})->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info->{field})->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
 is($biber->_liststring('tmn1', 'institution'), 'A!B!C', 'per_type/entry items - 1');
 is($biber->_liststring('tmn3', 'institution'), "A!B\x{10FFFD}", 'per_type/entry items - 2');
 
@@ -408,3 +428,11 @@ is($section->get_citekey_alias('alias4'), 'alias2', 'Citekey aliases - 3');
 is($section->get_citekey_alias('alias6'), 'alias5', 'Citekey aliases - 4');
 ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 
+# URL encoding testing
+is($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
+is($bibentries->entry('url2')->get_field('url'), 'http://www.something.com/q=one%20two', 'URL encoding - 2');
+is($out->get_output_entry($main,'url1'), $url1, 'URL encoding - 3' ) ;
+
+# map_final testing with map_field_set
+is($bibentries->entry('ol1')->get_field('note'), 'A note', 'map_final - 1');
+is($bibentries->entry('ol1')->get_field('title'), 'Online1', 'map_final - 2');

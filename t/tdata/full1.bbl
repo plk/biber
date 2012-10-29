@@ -18,6 +18,9 @@
 
 
 \refsection{0}
+  \sortlist{shorthand}{shorthand}
+    \key{F1}
+  \endsortlist
   \sortlist{entry}{nty}
     \entry{F1}{book}{}
       \name{labelname}{1}{}{%
@@ -36,9 +39,6 @@
       \field{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
-  \endsortlist
-  \sortlist{shorthand}{shorthand}
-    \key{F1}
   \endsortlist
   \missing{C1}
 \endrefsection

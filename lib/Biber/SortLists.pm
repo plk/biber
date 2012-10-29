@@ -56,6 +56,7 @@ sub get_lists_for_section {
   my $self = shift;
   my $section = shift;
   my $lists = [];
+  my $glist;
   foreach my $list (@{$self->{lists}}) {
     if ($list->get_section == $section) {
       push @$lists, $list;

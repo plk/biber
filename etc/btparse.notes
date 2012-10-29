@@ -1,0 +1,8 @@
+To regenerate grammar using old PCCTS, get version 1.33 from here:
+
+http://www.polhode.com/pccts133mr.zip
+
+and compile by adding this to makefile:
+
+COPT=-DPCCTS_USE_STDARG
+

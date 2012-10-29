@@ -86,6 +86,9 @@
             <ref name="labelalpha"/>
           </optional>
           <optional>
+            <ref name="labelnamespec"/>
+          </optional>
+          <optional>
             <ref name="labeltitle"/>
           </optional>
           <optional>
@@ -93,9 +96,6 @@
           </optional>
           <optional>
             <ref name="labeltitleyear"/>
-          </optional>
-          <optional>
-            <ref name="labelnamespec"/>
           </optional>
           <optional>
             <ref name="labelyear"/>
@@ -162,41 +162,6 @@
           </optional>
         </element>
       </zeroOrMore>
-      <oneOrMore>
-        <!-- Display modes for biblatexml -->
-        <element name="bcf:displaymodes">
-          <optional>
-            <attribute name="type"/>
-          </optional>
-          <oneOrMore>
-            <element name="bcf:displaymode">
-              <oneOrMore>
-                <element name="bcf:dtarget">
-                  <choice>
-                    <value>*</value>
-                    <data type="string">
-                      <param name="minLength">1</param>
-                    </data>
-                  </choice>
-                </element>
-              </oneOrMore>
-              <oneOrMore>
-                <element name="bcf:dmode">
-                  <attribute name="order">
-                    <data type="integer"/>
-                  </attribute>
-                  <choice>
-                    <value>original</value>
-                    <value>uniform</value>
-                    <value>romanised</value>
-                    <value>translated</value>
-                  </choice>
-                </element>
-              </oneOrMore>
-            </element>
-          </oneOrMore>
-        </element>
-      </oneOrMore>
       <optional>
         <!-- user field/entrytype mapping -->
         <element name="bcf:sourcemap">
@@ -302,6 +267,16 @@
                   <optional>
                     <attribute name="namecount">
                       <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="form">
+                      <choice>
+                        <value>original</value>
+                        <value>translated</value>
+                        <value>romanised</value>
+                        <value>uniform</value>
+                      </choice>
                     </attribute>
                   </optional>
                   <data type="string"/>
@@ -476,6 +451,12 @@
           <element name="bcf:entrytypes">
             <oneOrMore>
               <element name="bcf:entrytype">
+                <optional>
+                  <!-- Some entrytypes should be completely skipped on output (XDATA etc.) -->
+                  <attribute name="skip_output">
+                    <value>true</value>
+                  </attribute>
+                </optional>
                 <text/>
               </element>
             </oneOrMore>
@@ -507,6 +488,7 @@
                     <value>range</value>
                     <value>csv</value>
                     <value>code</value>
+                    <value>uri</value>
                   </choice>
                 </attribute>
                 <optional>
@@ -846,6 +828,16 @@
                 </data>
               </attribute>
             </optional>
+            <optional>
+              <attribute name="form">
+                <choice>
+                  <value>original</value>
+                  <value>translated</value>
+                  <value>romanised</value>
+                  <value>uniform</value>
+                </choice>
+              </attribute>
+            </optional>
             <text/>
           </element>
         </oneOrMore>
@@ -1052,6 +1044,19 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
+          <optional>
+            <attribute name="form">
+              <choice>
+                <value>original</value>
+                <value>translated</value>
+                <value>romanised</value>
+                <value>uniform</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="lang"/>
+          </optional>
           <text/>
         </element>
       </oneOrMore>
@@ -1353,6 +1358,19 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
+          <optional>
+            <attribute name="form">
+              <choice>
+                <value>original</value>
+                <value>translated</value>
+                <value>romanised</value>
+                <value>uniform</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="lang"/>
+          </optional>
           <text/>
         </element>
       </oneOrMore>
@@ -1605,6 +1623,11 @@
                   <param name="minLength">1</param>
                 </data>
               </attribute>
+              <optional>
+                <attribute name="map_append">
+                  <value>1</value>
+                </attribute>
+              </optional>
               <choice>
                 <attribute name="map_null">
                   <value>1</value>

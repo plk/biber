@@ -23,6 +23,7 @@ use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
 use Readonly;
 use Data::Dump qw(dump);
+use URI;
 
 my $logger = Log::Log4perl::get_logger('main');
 my $orig_key_order = {};
@@ -40,6 +41,7 @@ my $handlers = {
                             'literal'  => \&_verbatim,
                             'range'    => \&_range,
                             'verbatim' => \&_verbatim,
+                            'uri'      => \&_uri,
                            },
                 'list' => {
                            'entrykey' => \&_list,
@@ -90,7 +92,8 @@ sub extract_entries {
       # use IO::Socket::SSL qw(debug4); # useful for debugging SSL issues
       # We have to explicitly set the cert path because otherwise the https module
       # can't find the .pem when PAR::Packer'ed
-      if (not exists($ENV{PERL_LWP_SSL_CA_FILE})) {
+      if (not exists($ENV{PERL_LWP_SSL_CA_FILE}) and
+          not defined(Biber::Config->getoption('ssl-nointernalca'))) {
         require Mozilla::CA; # Have to explicitly require this here to get it into %INC below
         # we assume that the default CA file is in .../Mozilla/CA/cacert.pem
         (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );
@@ -301,7 +304,8 @@ sub create_entry {
 
           # map fields to targets
           if (my $m = $step->{map_match}) {
-            if (my $r = $step->{map_replace}) {
+            if (defined($step->{map_replace})) { # replace can be null
+              my $r = $step->{map_replace};
               $entry->{$step->{map_field_source}} =
                 ireplace($last_fieldval, $m, $r);
             }
@@ -348,25 +352,36 @@ sub create_entry {
                 $logger->debug("Overwriting existing field '$field' while processing entry '$key'");
               }
               else {
-                $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
-                next;
+                if ($step->{map_final}) {
+                  # map_final is set, ignore and skip rest of step
+                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key' and skipping rest of map");
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
+                  next;
+                }
               }
             }
 
+            # If append is set, keep the original value and append the new
+            my $orig = $step->{map_append} ? $entry->{$field} : '';
+
             if ($step->{map_origentrytype}) {
               next unless $last_type;
-              $entry->{$field} = $last_type;
+              $entry->{$field} = $orig . $last_type;
             }
             elsif ($step->{map_origfieldval}) {
               next unless $last_fieldval;
-              $entry->{$field} = $last_fieldval;
+              $entry->{$field} = $orig . $last_fieldval;
             }
             elsif ($step->{map_origfield}) {
               next unless $last_field;
-              $entry->{$field} = $last_field;
+              $entry->{$field} = $orig . $last_field;
             }
             else {
-              $entry->{$field} = $step->{map_field_value};
+              $entry->{$field} = $orig . $step->{map_field_value};
             }
           }
         }
@@ -403,6 +418,22 @@ sub _list {
 sub _verbatim {
   my ($bibentry, $entry, $f) = @_;
   $bibentry->set_datafield($f, $entry->{$f});
+  return;
+}
+
+# URI fields
+sub _uri {
+  my ($bibentry, $entry, $f) = @_;
+  my $value = $entry->{$f};
+
+  # URL escape if it doesn't look like it already is
+  # This is useful if we are generating URLs automatically with maps which may
+  # contain UTF-8 from other fields
+  unless ($value =~ /\%/) {
+   $value = URI->new($value)->as_string;
+  }
+
+  $bibentry->set_datafield($f, $value);
   return;
 }
 

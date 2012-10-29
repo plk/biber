@@ -59,10 +59,10 @@ start =
       attribute type { text },
       alphaothers?,
       labelalpha?,
+      labelnamespec?,
       labeltitle?,
       labeltitlespec?,
       labeltitleyear?,
-      labelnamespec?,
       labelyear?,
       labelyearspec?,
       maxalphanames?,
@@ -85,18 +85,6 @@ start =
       useprefix?,
       usetranslator?
     }*,
-
-    # Display modes for biblatexml
-    element bcf:displaymodes {
-      attribute type { text }?,
-      element bcf:displaymode {
-        element bcf:dtarget { "*" | xsd:string {minLength="1"}}+,
-        element bcf:dmode {
-          attribute order { xsd:integer },
-          ("original" | "uniform" | "romanised"  | "translated")
-        }+
-      }+
-    }+,
 
     # user field/entrytype mapping
     element bcf:sourcemap {
@@ -122,6 +110,7 @@ start =
           attribute substring_compound { "0" | "1" }?,
           attribute ifnamecount { xsd:integer }?,
           attribute namecount { xsd:integer }?,
+          attribute form { "original" | "translated" | "romanised" | "uniform" }?,
           xsd:string
         }+
       }+
@@ -187,7 +176,11 @@ start =
     element bcf:datamodel {
       # Valid entrytypes
       element bcf:entrytypes {
-        element bcf:entrytype { text }+
+        element bcf:entrytype {
+          # Some entrytypes should be completely skipped on output (XDATA etc.)
+          attribute skip_output { "true" }?,
+          text
+        }+
       },
       # BibLaTeX field types. Biber uses this to determine how to output various types
       # to the .bbl
@@ -196,7 +189,7 @@ start =
           # fieldtype is "field" or "list"
           attribute fieldtype { "field" | "list" },
           # datatype of field content
-          attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" },
+          attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" | "uri" },
           # Are we allowed to output a null field value to the .bbl for this field?
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?
@@ -327,6 +320,7 @@ sort =
       attribute pad_side { "left" | "right" }?,
       attribute pad_width { xsd:integer }?,
       attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
+      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
       text
     }+
   }+
@@ -408,6 +402,8 @@ labeltitlespec =
     element bcf:key { "labeltitlespec" },
     element bcf:value {
       attribute order { xsd:integer },
+      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+      attribute lang { text }?,
       text
     }+
   }
@@ -538,6 +534,8 @@ labelnamespec =
     element bcf:key { "labelnamespec" },
     element bcf:value {
       attribute order { xsd:integer },
+      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+      attribute lang { text }?,
       text
     }+
   }
@@ -637,6 +635,7 @@ map =
         ) |
         (
           attribute map_field_set { xsd:string {minLength="1"} },
+          attribute map_append { "1" }?,
           ( attribute map_null { "1" } |
             attribute map_origfield { "1" } |
             attribute map_origfieldval { "1" } |

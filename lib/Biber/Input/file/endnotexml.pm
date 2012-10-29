@@ -25,6 +25,7 @@ use Data::Dump qw(dump);
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
+use URI;
 
 ##### This is based on Endnote X4 #####
 
@@ -44,6 +45,7 @@ my $handlers = {
                             'literal'  => \&_literal,
                             'range'    => \&_range,
                             'verbatim' => \&_verbatim,
+                            'uri'      => \&_uri,
                            },
                 'list' => {
                            'entrykey' => \&_literal,
@@ -94,7 +96,8 @@ sub extract_entries {
       # use IO::Socket::SSL qw(debug4); # useful for debugging SSL issues
       # We have to explicitly set the cert path because otherwise the https module
       # can't find the .pem when PAR::Packer'ed
-      if (not exists($ENV{PERL_LWP_SSL_CA_FILE})) {
+      if (not exists($ENV{PERL_LWP_SSL_CA_FILE}) and
+          not defined(Biber::Config->getoption('ssl-nointernalca'))) {
         require Mozilla::CA; # Have to explicitly require this here to get it into %INC below
         # we assume that the default CA file is in .../Mozilla/CA/cacert.pem
         (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );
@@ -291,7 +294,8 @@ sub create_entry {
 
           # map fields to targets
           if (my $m = $step->{map_match}) {
-            if (my $r = $step->{map_replace}) {
+            if (defined($step->{map_replace})) { # replace can be null
+              my $r = $step->{map_replace};
               my $text = ireplace($last_fieldval, $m, $r);
               $entry->findnodes($source . '/style/text()')->get_node(1)->setData($text);
             }
@@ -340,25 +344,36 @@ sub create_entry {
                 $logger->debug("Overwriting existing field '$field' while processing entry '$key'");
               }
               else {
-                $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
-                next;
+                if ($step->{map_final}) {
+                  # map_final is set, ignore and skip rest of step
+                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key' and skipping rest of map");
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
+                  next;
+                }
               }
             }
 
+            # If append is set, keep the original value and append the new
+            my $orig = $step->{map_append} ? $entry->findvalue($field) : '';
+
             if ($step->{map_origentrytype}) {
               next unless $last_type;
-              $entry->appendTextChild($field, $last_type);
+              $entry->appendTextChild($field, $orig . $last_type);
             }
             elsif ($step->{map_origfieldval}) {
               next unless $last_fieldval;
-              $entry->appendTextChild($field, $last_fieldval);
+              $entry->appendTextChild($field, $orig . $last_fieldval);
             }
             elsif ($step->{map_origfield}) {
               next unless $last_field;
-              $entry->appendTextChild($field, $last_field);
+              $entry->appendTextChild($field, $orig . $last_field);
             }
             else {
-              $entry->appendTextChild($field, $step->{map_field_value});
+              $entry->appendTextChild($field, $orig . $step->{map_field_value});
             }
           }
         }
@@ -409,6 +424,22 @@ sub _verbatim {
   my ($bibentry, $entry, $f) = @_;
   my $value = $entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)");
   $bibentry->set_datafield($f, _norm($value));
+  return;
+}
+
+# URI fields
+sub _uri {
+  my ($bibentry, $entry, $f) = @_;
+  my $value = _norm($entry->findvalue("(./$f|./titles/$f|./contributors/$f|./urls/web-urls/$f)"));
+
+  # URL escape if it doesn't look like it already is
+  # This is useful if we are generating URLs automatically with maps which may
+  # contain UTF-8 from other fields
+  unless ($value =~ /\%/) {
+   $value = URI->new($value)->as_string;
+  }
+
+  $bibentry->set_datafield($f, $value);
   return;
 }
 

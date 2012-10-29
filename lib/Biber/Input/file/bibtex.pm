@@ -25,6 +25,7 @@ use File::Slurp::Unicode;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
+use URI;
 use XML::LibXML::Simple;
 
 my $logger = Log::Log4perl::get_logger('main');
@@ -58,6 +59,7 @@ my $handlers = {
                             'literal'  => \&_literal,
                             'range'    => \&_range,
                             'verbatim' => \&_verbatim,
+                            'uri'      => \&_uri,
                            },
                 'list' => {
                            'entrykey' => \&_literal,
@@ -118,7 +120,8 @@ sub extract_entries {
       # use IO::Socket::SSL qw(debug99); # useful for debugging SSL issues
       # We have to explicitly set the cert path because otherwise the https module
       # can't find the .pem when PAR::Packer'ed
-      if (not exists($ENV{PERL_LWP_SSL_CA_FILE})) {
+      if (not exists($ENV{PERL_LWP_SSL_CA_FILE}) and
+          not defined(Biber::Config->getoption('ssl-nointernalca'))) {
         require Mozilla::CA; # Have to explicitly require this here to get it into %INC below
         # we assume that the default CA file is in .../Mozilla/CA/cacert.pem
         (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );
@@ -290,6 +293,7 @@ sub create_entry {
         my $last_type = $entry->type; # defaults to the entrytype unless changed below
         my $last_field = undef;
         my $last_fieldval = undef;
+        my @imatches; # For persising parenthetical matches over several steps
 
         # Check pertype restrictions
         unless (not exists($map->{per_type}) or
@@ -342,12 +346,13 @@ sub create_entry {
 
             # map fields to targets
             if (my $m = $step->{map_match}) {
-              if (my $r = $step->{map_replace}) {
+              if (defined($step->{map_replace})) { # replace can be null
+                my $r = $step->{map_replace};
                 $entry->set(lc($step->{map_field_source}),
                             ireplace($last_fieldval, $m, $r));
               }
               else {
-                unless (imatch($last_fieldval, $m)) {
+                unless (@imatches = imatch($last_fieldval, $m)) {
                   # Skip the rest of the map if this step doesn't match
                   if ($step->{map_final}) {
                     next MAP;
@@ -390,25 +395,41 @@ sub create_entry {
                   $logger->debug("Overwriting existing field '$field' while processing entry '$key'");
                 }
                 else {
-                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
-                  next;
+                  if ($step->{map_final}) {
+                    # map_final is set, ignore and skip rest of step
+                    $logger->debug("Not overwriting existing field '$field' while processing entry '$key' and skipping rest of map");
+                    next MAP;
+                  }
+                  else {
+                    # just ignore this step
+                    $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
+                    next;
+                  }
                 }
               }
 
+              # If append is set, keep the original value and append the new
+              my $orig = $step->{map_append} ? decode_utf8($entry->get(lc($field))) : '';
+
               if ($step->{map_origentrytype}) {
                 next unless $last_type;
-                $entry->set(lc($field), $last_type);
+                $entry->set(lc($field), $orig . $last_type);
               }
               elsif ($step->{map_origfieldval}) {
                 next unless $last_fieldval;
-                $entry->set(lc($field), $last_fieldval);
+                $entry->set(lc($field), $orig . $last_fieldval);
               }
               elsif ($step->{map_origfield}) {
                 next unless $last_field;
-                $entry->set(lc($field), $last_field);
+                $entry->set(lc($field), $orig . $last_field);
               }
               else {
-                $entry->set(lc($field), $step->{map_field_value});
+                my $fv = $step->{map_field_value};
+                # Now re-instate any unescaped $1 .. $9 to get round these being
+                # dynamically scoped and being null when we get here from any
+                # previous map_match
+                $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/e;
+                $entry->set(lc($field), $orig . $fv);
               }
             }
           }
@@ -451,10 +472,13 @@ sub create_entry {
 # HANDLERS
 # ========
 
+my $fl_re = qr/^([^_]+)_?(original|translated|romanised|uniform)?_?(.+)?$/;
+
 # Literal fields
 sub _literal {
   my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
@@ -464,11 +488,31 @@ sub _literal {
 
   # Try to sanitise months to biblatex requirements
   if ($f eq 'month') {
-    $bibentry->set_datafield($f, _hack_month($value));
+    $bibentry->set_datafield($field, _hack_month($value), $form, $lang);
   }
   else {
-    $bibentry->set_datafield($f, $value);
+    $bibentry->set_datafield($field, $value, $form, $lang);
   }
+  return;
+}
+
+# URI fields
+sub _uri {
+  my ($bibentry, $entry, $f) = @_;
+  my $value = decode_utf8($entry->get($f));
+  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+
+  # If there are some escapes in the URI, unescape them
+  if ($value =~ /\%/) {
+    $value =~ s/\\%/%/g; # just in case someone BibTeX escaped the "%"
+    # This is what uri_unescape() does but it's faster
+    $value =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+    $value = decode_utf8($value);
+  }
+
+  $value = URI->new($value)->as_string;
+
+  $bibentry->set_datafield($field, $value, $form, $lang);
   return;
 }
 
@@ -476,8 +520,9 @@ sub _literal {
 sub _verbatim {
   my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
-  $bibentry->set_datafield($f, $value);
+  $bibentry->set_datafield($field, $value, $form, $lang);
   return;
 }
 
@@ -486,6 +531,7 @@ sub _range {
   my ($bibentry, $entry, $f) = @_;
   my $values_ref;
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
   my @values = split(/\s*[;,]\s*/, $value);
   # Here the "-–" contains two different chars even though they might
@@ -506,7 +552,7 @@ sub _range {
     $end =~ s/\A\{([^\}]+)\}\z/$1/;
     push @$values_ref, [$start || '', $end];
   }
-  $bibentry->set_datafield($f, $values_ref);
+  $bibentry->set_datafield($field, $values_ref, $form, $lang);
   return;
 }
 
@@ -517,6 +563,7 @@ sub _name {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
 
@@ -564,15 +611,18 @@ sub _name {
     }
 
   }
-  $bibentry->set_datafield($f, $names);
+  $bibentry->set_datafield($field, $names, $form, $lang);
   return;
 }
 
 # Dates
+# Date fields can't have script forms - they are just a(n ISO) standard format
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
   my ($datetype) = $f =~ m/\A(.*)date\z/xms;
   my $date = decode_utf8($entry->get($f));
+  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+
   # Just in case we need to look at the original field later
   # an "orig_field" is not counted as current data in the entry
   $bibentry->set_orig_field($f, $f);
@@ -623,11 +673,12 @@ sub _date {
 sub _list {
   my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
+  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
   my @tmp = Text::BibTeX::split_list($value, 'and');
   @tmp = map { decode_utf8($_) } @tmp;
   @tmp = map { remove_outer($_) } @tmp;
-  $bibentry->set_datafield($f, [ @tmp ]);
+  $bibentry->set_datafield($field, [ @tmp ], $form, $lang);
   return;
 }
 
@@ -995,6 +1046,7 @@ sub _hack_month {
 
 sub _get_handler {
   my $field = shift;
+  $field =~ s/_(?:original|translated|romanised|uniform)$//;
   if (my $h = $handlers->{CUSTOM}{$field}) {
     return $h;
   }

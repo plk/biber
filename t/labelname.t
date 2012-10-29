@@ -34,15 +34,21 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # relying on here for tests
 
 # Biblatex options
-Biber::Config->setblxoption('labelnamespec', ['shortauthor', 'author', 'shorteditor', 'editor', 'translator']);
-Biber::Config->setblxoption('labelnamespec', ['editor', 'translator'], 'PER_TYPE', 'book');
-Biber::Config->setblxoption('labelnamespec', ['namea', 'author'], 'PER_TYPE', 'misc');
+Biber::Config->setblxoption('labelnamespec', [ {content => 'shortauthor'},
+                                               {content => 'author'},
+                                               {content => 'shorteditor'},
+                                               {content => 'editor'},
+                                               {content => 'translator'}]);
+Biber::Config->setblxoption('labelnamespec', [ {content => 'editor'},
+                                               {content => 'translator'}], 'PER_TYPE', 'book');
+Biber::Config->setblxoption('labelnamespec', [ {content => 'namea'},
+                                               {content => 'author' }], 'PER_TYPE', 'misc');
 
 # Now generate the information
 $biber->prepare;
 my $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('angenendtsa')->get_field('labelnamename'), 'shortauthor', 'global shortauthor' );
-is($bibentries->entry('stdmodel')->get_field('labelnamename'), 'author', 'global author' );
-is($bibentries->entry('aristotle:anima')->get_field('labelnamename'), 'editor', 'type-specific editor' );
-is($bibentries->entry('lne1')->get_field('labelnamename'), 'namea', 'type-specific exotic name' );
+is($bibentries->entry('angenendtsa')->get_labelname_info->{field}, 'shortauthor', 'global shortauthor' );
+is($bibentries->entry('stdmodel')->get_labelname_info->{field}, 'author', 'global author' );
+is($bibentries->entry('aristotle:anima')->get_labelname_info->{field}, 'editor', 'type-specific editor' );
+is($bibentries->entry('lne1')->get_labelname_info->{field}, 'namea', 'type-specific exotic name' );

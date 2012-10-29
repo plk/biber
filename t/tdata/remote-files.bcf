@@ -147,16 +147,6 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>  
-  <!-- DISPLAYMODES -->
-  <bcf:displaymodes type="global">
-    <bcf:displaymode>
-      <bcf:dtarget>*</bcf:dtarget>
-      <bcf:dmode order="1">original</bcf:dmode>
-      <bcf:dmode order="2">romanised</bcf:dmode>
-      <bcf:dmode order="3">uniform</bcf:dmode>
-      <bcf:dmode order="4">translated</bcf:dmode>
-    </bcf:displaymode>
-  </bcf:displaymodes>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" driver_defaults="1">
@@ -632,7 +622,7 @@
       <bcf:entrytype>thesis</bcf:entrytype>
       <bcf:entrytype>unpublished</bcf:entrytype>
       <bcf:entrytype>video</bcf:entrytype>
-      <bcf:entrytype>xdata</bcf:entrytype>
+      <bcf:entrytype skip_output="true">xdata</bcf:entrytype>
     </bcf:entrytypes>
     <bcf:fields>
       <bcf:field fieldtype="field" datatype="integer">day</bcf:field>
@@ -784,7 +774,7 @@
       <bcf:field fieldtype="field" datatype="verbatim">doi</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">eprint</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">file</bcf:field>
-      <bcf:field fieldtype="field" datatype="verbatim">url</bcf:field>
+      <bcf:field fieldtype="field" datatype="uri">url</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verba</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verbb</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verbc</bcf:field>

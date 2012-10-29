@@ -40,11 +40,15 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labelnamespec</bcf:key>
-      <bcf:value order="1">author</bcf:value>
+      <bcf:value order="1">shortauthor</bcf:value>
+      <bcf:value order="2">author</bcf:value>
+      <bcf:value order="3">shorteditor</bcf:value>
+      <bcf:value order="4">editor</bcf:value>
+      <bcf:value order="5">translator</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labeltitle</bcf:key>
@@ -61,7 +65,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelyear</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labelyearspec</bcf:key>
@@ -82,7 +86,7 @@
     <bcf:option type="singlevalued">
       <bcf:key>maxitems</bcf:key>
       <bcf:value>3</bcf:value>
-    </bcf:option>    
+    </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minalphanames</bcf:key>
       <bcf:value>1</bcf:value>
@@ -101,7 +105,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortalphaothers</bcf:key>
@@ -129,11 +133,21 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
       <bcf:value>1</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options component="biblatex" type="misc">
+    <bcf:option type="multivalued">
+      <bcf:key>labelnamespec</bcf:key>
+      <bcf:value order="1" form="uniform">translator</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>labeltitlespec</bcf:key>
+      <bcf:value order="1" form="romanised">title</bcf:value>
     </bcf:option>
   </bcf:options>
   <!-- SOURCEMAP -->
@@ -533,13 +547,8 @@
       <bcf:field source="subtitle" target="journalsubtitle"/>
     </bcf:inherit>
   </bcf:inheritance>
-  <bcf:sorting> 
+  <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
-    <bcf:presort type="misc">ww</bcf:presort>
-    <bcf:sortexclusion type="misc">
-      <bcf:exclusion>year</bcf:exclusion>
-      <bcf:exclusion>title</bcf:exclusion>
-    </bcf:sortexclusion>
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -555,12 +564,12 @@
       <bcf:sortitem order="6">title</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="4">
-      <bcf:sortitem order="1">sortyear</bcf:sortitem>
-      <bcf:sortitem order="2">year</bcf:sortitem>
-    </bcf:sort>
-    <bcf:sort order="5">
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>
       <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="5">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="6">
       <bcf:sortitem order="1">volume</bcf:sortitem>
@@ -1891,28 +1900,12 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">examples.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">bibtex-forms.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">stdmodel</bcf:citekey>
-    <bcf:citekey order="2">knuth:ct</bcf:citekey>
-    <bcf:citekey order="3">angenendtsk</bcf:citekey>
-    <bcf:citekey order="4">angenendtsa</bcf:citekey>
-    <bcf:citekey order="5">stdmodel:glashow</bcf:citekey>
-    <bcf:citekey order="6">stdmodel:ps_sc</bcf:citekey>
-    <bcf:citekey order="7">murray</bcf:citekey>
-    <bcf:citekey order="8">aristotle:anima</bcf:citekey>
-    <bcf:citekey order="9">aristotle:rhetoric</bcf:citekey>
-    <bcf:citekey order="10">augustine</bcf:citekey>
-    <bcf:citekey order="11">cotton</bcf:citekey>
-    <bcf:citekey order="12">chiu</bcf:citekey>
-    <bcf:citekey order="13">moraux</bcf:citekey>
-    <bcf:citekey order="14">jaffe</bcf:citekey>
-    <bcf:citekey order="15">luzzatto</bcf:citekey>
-    <bcf:citekey order="16">hasan</bcf:citekey>
-    <bcf:citekey order="17">t1</bcf:citekey>
-    <bcf:citekey order="18">tvonb</bcf:citekey>
-    <bcf:citekey order="19">lne1</bcf:citekey>
+    <bcf:citekey order="1">forms1</bcf:citekey>
+    <bcf:citekey order="2">forms2</bcf:citekey>
+    <bcf:citekey order="3">forms3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>
@@ -1920,4 +1913,3 @@
     <bcf:filter type="field">shorthand</bcf:filter>
   </bcf:sortlist>
 </bcf:controlfile>
-

@@ -15,8 +15,8 @@ use Log::Log4perl::Appender::File;
 use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
 
-our $VERSION = '1.2';
-our $BETA_VERSION = 0; # Is this a beta version?
+our $VERSION = '1.3';
+our $BETA_VERSION = 1; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
 our $screen  = Log::Log4perl::get_logger('screen');
@@ -1123,7 +1123,7 @@ sub get_seen_nameyear {
 
     We pass in the name and year strings seperately as we have to
     be careful and only increment this counter beyond 1 if there is
-    both a name and year component. Otherwise, extrayear gets defined for all
+    a name component. Otherwise, extrayear gets defined for all
     entries with no name but the same year etc.
 
 =cut
@@ -1136,11 +1136,13 @@ sub incr_seen_nameyear {
   unless ($CONFIG->{state}{seen_nameyear}{$tmp}) {
     $CONFIG->{state}{seen_nameyear}{$tmp}++;
   }
-  # But beyond that only if we have a labelname and labelyear in the entry since
+  # But beyond that only if we have a labelname in the entry since
   # this counter is used to create extrayear which doesn't mean anything for
-  # entries with only one of these.
+  # entries with no name
+  # We allow empty year so that we generate extrayear for the same name with no year
+  # so we can do things like "n.d.-a", "n.d.-b" etc.
   else {
-    if ($ns and $ys) {
+    if ($ns) {
       $CONFIG->{state}{seen_nameyear}{$tmp}++;
     }
   }

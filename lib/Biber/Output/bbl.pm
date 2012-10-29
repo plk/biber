@@ -116,7 +116,7 @@ sub _printfield {
 
   # auto-escape TeX special chars if:
   # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
-  # * It's not a strng field
+  # * It's not a string field
   if ($field_type ne 'strng' and $be->get_field('datatype') ne 'bibtex') {
     $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
   }
@@ -201,6 +201,9 @@ sub set_output_entry {
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
 
+  # Skip entrytypes we don't want to output according to datamodel
+  return if $dm->entrytype_is_skipout($bee);
+
   if ($be->field_exists('options')) {
     $opts = filter_entry_options($be->get_field('options'));
   }
@@ -222,7 +225,7 @@ sub set_output_entry {
   # first output copy in labelname
   # This is essentially doing the same thing twice but in the future,
   # labelname may have different things attached than the raw name
-  my $lnn = $be->get_field('labelnamename'); # save name of labelname field
+  my $lni = $be->get_labelname_info;
   my $plo = ''; # per-list options
 
   if (my $ln = $be->get_field('labelname')) {
@@ -258,7 +261,7 @@ sub set_output_entry {
 
       my $total = $nf->count_names;
       # Copy per-list options to the actual labelname too
-      $plo = '' unless (defined($lnn) and $namefield eq $lnn);
+      $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
       $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
       foreach my $n (@{$nf->names}) {
         $acc .= $n->name_to_bbl;
@@ -403,7 +406,8 @@ sub set_output_entry {
     }
   }
 
-  foreach my $vfield (@{$dm->get_fields_of_datatype('verbatim')}) {
+  foreach my $vfield ((@{$dm->get_fields_of_datatype('verbatim')},
+                       @{$dm->get_fields_of_datatype('uri')})) {
     next if $dm->field_is_skipout($vfield);
     if ( my $vf = $be->get_field($vfield) ) {
       $acc .= "      \\verb{$vfield}\n";
@@ -464,8 +468,21 @@ sub output {
     print $target "\n\\refsection{$secnum}\n";
     my $section = $self->get_output_section($secnum);
 
+    my @lists; # Need to reshuffle list to put global sort order list at end, see below
+
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     foreach my $list (sort {$a->get_label cmp $b->get_label} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
+      next if $list->get_label eq Biber::Config->getblxoption('sortscheme');
+      push @lists, $list;
+    }
+
+    # biblatex requires the last list in the .bbl to be the global sort list
+    # due to its sequential reading of the .bbl as the final list overrides the
+    # previously read ones and the global list determines the order of labelnumber
+    # and sortcites etc. which not using defernumbers
+    push @lists, $Biber::MASTER->sortlists->get_list($secnum, 'entry', Biber::Config->getblxoption('sortscheme'));
+
+    foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;

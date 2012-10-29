@@ -68,9 +68,13 @@ sub new {
   }
 
   my $leg_ents;
-  my $ets = [ sort map {$_->{content}} @{$dm->{entrytypes}{entrytype}} ];
-  foreach my $es (@$ets) {
+  foreach my $et (@{$dm->{entrytypes}{entrytype}}) {
+    my $es = $et->{content};
 
+    # Skip output flag for certain entrytypes
+    if ($et->{skip_output}) {
+      $leg_ents->{$es}{skipout} = 1;
+    }
     # fields for entrytypes
     my $lfs;
     foreach my $ef (@{$dm->{entryfields}}) {
@@ -160,6 +164,8 @@ sub new {
     to a datamodel field. Such intermediates are defined in the target
     field mapping of a sourcemap.
 
+    Also allows for fields with script form suffix
+
 =cut
 
 sub is_field {
@@ -167,6 +173,9 @@ sub is_field {
   my $field = shift;
   if ($field =~ m/^BIBERCUSTOM/o) {
     return 1;
+  }
+  elsif ($field =~ m/^([^_]+)_(?:original|translated|romanised|uniform)$/) {
+    return $self->{fieldsbyname}{$1} ? 1 : 0;
   }
   else {
     return $self->{fieldsbyname}{$field} ? 1 : 0;
@@ -202,6 +211,18 @@ sub is_field_for_entrytype {
     return 0;
   }
 }
+
+=head2 entrytype_is_skipout
+
+    Returns boolean depending on whether an entrytype is to be skipped on output
+
+=cut
+
+sub entrytype_is_skipout {
+  my ($self, $type) = @_;
+  return $self->{entrytypesbyname}{$type}{skipout} // 0;
+}
+
 
 =head2 get_fields_of_fieldtype
 

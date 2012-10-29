@@ -28,7 +28,7 @@
         <bib:last>Aхмедов</bib:last>
       </bib:person>
     </bib:author>
-    <bib:author mode="uniform" morenames="1">
+    <bib:author form="uniform" morenames="1">
       <bib:person>
         <bib:first>
           <bib:namepart initial="P">Pavel</bib:namepart>
@@ -53,173 +53,18 @@
       </bib:person>
     </bib:author>
     <bib:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bib:title>
-    <bib:title mode="romanised">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bib:title>
-    <bib:title mode="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bib:title>
+    <bib:title form="romanised">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bib:title>
+    <bib:title form="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bib:title>
     <bib:location>Москва</bib:location>
-    <bib:location mode="romanised">Moskva</bib:location>
-    <bib:location mode="uniform">Moscow</bib:location>
+    <bib:location form="romanised">Moskva</bib:location>
+    <bib:location form="uniform">Moscow</bib:location>
     <bib:publisher>Наука</bib:publisher>
-    <bib:publisher mode="romanised">Nauka</bib:publisher>
-    <bib:publisher mode="translated" xml:lang="en">Science</bib:publisher>
+    <bib:publisher form="romanised">Nauka</bib:publisher>
+    <bib:publisher form="translated" xml:lang="en">Science</bib:publisher>
     <bib:language>Russian</bib:language>
     <bib:series>Научно-биографическая литература</bib:series>
-    <bib:series mode="romanised">Nauchno-biograficheskaya literatura</bib:series>
+    <bib:series form="romanised">Nauchno-biograficheskaya literatura</bib:series>
     <bib:date>1983</bib:date>
-    <bib:date datetype="orig">1985-04-02</bib:date>
-    <bib:date datetype ="event">
-      <bib:start>1990-05-16</bib:start>
-      <bib:end>1990-05-17</bib:end>
-    </bib:date>
-    <bib:date datetype="url">
-      <bib:start>1991-07-01</bib:start>
-      <bib:end></bib:end>
-    </bib:date>
-    <bib:pagetotal>240</bib:pagetotal>
-    <bib:related>
-      <bib:item type="reprint" string="Somestring" ids="rel1,rel2"/>
-    </bib:related>
-  </bib:entry>
-  <!-- Same as above but different type --> 
-  <bib:entry id="typemode" entrytype="misc">
-    <bib:author morenames="1">
-      <bib:person gender="sm">
-        <bib:first>
-          <bib:namepart initial="П">Павел</bib:namepart>
-          <bib:namepart initial="Г">Георгиевич</bib:namepart>
-        </bib:first>
-        <bib:last>Булгаков</bib:last>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart>Борис-ZZ</bib:namepart>
-          <bib:namepart>Aбрамович</bib:namepart>
-        </bib:first>
-        <bib:last>Розенфельд</bib:last>
-        <bib:middle initial="Б">Билл</bib:middle>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart initial="A">Ашраф</bib:namepart>
-          <bib:namepart>Ахмедович</bib:namepart>
-        </bib:first>
-        <bib:last>Aхмедов</bib:last>
-      </bib:person>
-    </bib:author>
-    <bib:author mode="uniform" morenames="1">
-      <bib:person>
-        <bib:first>
-          <bib:namepart initial="P">Pavel</bib:namepart>
-          <bib:namepart initial="G">G.</bib:namepart>
-        </bib:first>
-        <bib:last>Bulgakov</bib:last>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart>Boris</bib:namepart>
-          <bib:namepart>A.</bib:namepart>
-        </bib:first>
-        <bib:last>Rozenfeld</bib:last>
-        <bib:middle initial="B">Bill</bib:middle>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart initial="A">Ashraf</bib:namepart>
-          <bib:namepart>A.</bib:namepart>
-        </bib:first>
-        <bib:last>Akhmedov</bib:last>
-      </bib:person>
-    </bib:author>
-    <bib:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bib:title>
-    <bib:title mode="romanised">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bib:title>
-    <bib:title mode="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bib:title>
-    <bib:location>Москва</bib:location>
-    <bib:location mode="romanised">Moskva</bib:location>
-    <bib:location mode="uniform">Moscow</bib:location>
-    <bib:publisher>Наука</bib:publisher>
-    <bib:publisher mode="romanised">Nauka</bib:publisher>
-    <bib:publisher mode="translated" xml:lang="en">Science</bib:publisher>
-    <bib:language>Russian</bib:language>
-    <bib:series>Научно-биографическая литература</bib:series>
-    <bib:series mode="romanised">Nauchno-biograficheskaya literatura</bib:series>
-    <bib:pages>100--200</bib:pages>
-    <bib:date>1995</bib:date>
-    <bib:date datetype="orig">1985-04-02</bib:date>
-    <bib:date datetype ="event">
-      <bib:start>1990-05-16</bib:start>
-      <bib:end>1990-05-17</bib:end>
-    </bib:date>
-    <bib:date datetype="url">
-      <bib:start>1991-07-01</bib:start>
-      <bib:end></bib:end>
-    </bib:date>
-    <bib:pagetotal>240</bib:pagetotal>
-    <bib:related>
-      <bib:item type="reprint" string="Somestring" ids="rel1,rel2"/>
-    </bib:related>
-  </bib:entry>
-  <!-- Same as above but per-entry displaymode --> 
-  <bib:entry id="entrymode" entrytype="book" mode="translated">
-    <bib:author morenames="1">
-      <bib:person gender="sm">
-        <bib:first>
-          <bib:namepart initial="П">Павел</bib:namepart>
-          <bib:namepart initial="Г">Георгиевич</bib:namepart>
-        </bib:first>
-        <bib:last>Булгаков</bib:last>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart>Борис-ZZ</bib:namepart>
-          <bib:namepart>Aбрамович</bib:namepart>
-        </bib:first>
-        <bib:last>Розенфельд</bib:last>
-        <bib:middle initial="Б">Билл</bib:middle>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart initial="A">Ашраф</bib:namepart>
-          <bib:namepart>Ахмедович</bib:namepart>
-        </bib:first>
-        <bib:last>Aхмедов</bib:last>
-      </bib:person>
-    </bib:author>
-    <bib:author mode="uniform" morenames="1">
-      <bib:person>
-        <bib:first>
-          <bib:namepart initial="P">Pavel</bib:namepart>
-          <bib:namepart initial="G">G.</bib:namepart>
-        </bib:first>
-        <bib:last>Bulgakov</bib:last>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart>Boris</bib:namepart>
-          <bib:namepart>A.</bib:namepart>
-        </bib:first>
-        <bib:last>Rozenfeld</bib:last>
-        <bib:middle initial="B">Bill</bib:middle>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart initial="A">Ashraf</bib:namepart>
-          <bib:namepart>A.</bib:namepart>
-        </bib:first>
-        <bib:last>Akhmedov</bib:last>
-      </bib:person>
-    </bib:author>
-    <bib:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bib:title>
-    <bib:title mode="romanised">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bib:title>
-    <bib:title mode="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bib:title>
-    <bib:location>Москва</bib:location>
-    <bib:location mode="romanised">Moskva</bib:location>
-    <bib:location mode="uniform">Moscow</bib:location>
-    <bib:publisher>Наука</bib:publisher>
-    <bib:publisher mode="romanised">Nauka</bib:publisher>
-    <bib:publisher mode="translated" xml:lang="en">Science</bib:publisher>
-    <bib:language>Russian</bib:language>
-    <bib:series>Научно-биографическая литература</bib:series>
-    <bib:series mode="romanised">Nauchno-biograficheskaya literatura</bib:series>
-    <bib:date>1989</bib:date>
     <bib:date datetype="orig">1985-04-02</bib:date>
     <bib:date datetype ="event">
       <bib:start>1990-05-16</bib:start>

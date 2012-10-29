@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 17;
+use Test::More tests => 19;
 
 use Biber;
 use Biber::Utils;
@@ -54,6 +54,8 @@ is($main->get_extrayeardata('L4'), '1', 'Entry L4 - two names, first in 1995');
 is($main->get_extrayeardata('L5'), '2', 'Entry L5 - two names, second in 1995');
 is($main->get_extrayeardata('L6'), '1', 'Entry L6 - two names, first in 1996');
 is($main->get_extrayeardata('L7'), '2', 'Entry L7 - two names, second in 1996');
+is($main->get_extrayeardata('nodate1'), '1', 'Same name, no year 1');
+is($main->get_extrayeardata('nodate2'), '2', 'Same name, no year 2');
 ok(is_undef($main->get_extrayeardata('L8')), 'Entry L8 - one name, only in year');
 ok(is_undef($main->get_extrayeardata('L9')), 'Entry L9 - No name, same year as another with no name');
 ok(is_undef($main->get_extrayeardata('L10')), 'Entry L10 - No name, same year as another with no name');

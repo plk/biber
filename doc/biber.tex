@@ -26,8 +26,8 @@
 
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{1.2}    % BIBER VERSION
-\gdef\biblatexversion{2.2}   % BIBLATEX VERSION
+\gdef\biberversion{1.3}    % BIBER VERSION
+\gdef\biblatexversion{2.3}   % BIBLATEX VERSION
 
 % Set up tikz things
 
@@ -205,6 +205,7 @@ compatibility matrix for the recent versions.
 \toprule
 Biber version & \BibLaTeX\ version\\
 \midrule
+1.3 & 2.3\\
 1.2 & 2.1, 2.2\\
 1.1 & 2.1\\
 1.0 & 2.0\\
@@ -694,6 +695,7 @@ examples. A \opt{map} element looks like this:
               +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
               +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
               +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
+              +\textcolor{blue}{map\_append="1"}+
               +\textcolor{blue}{map\_null="1"}+
               +\textcolor{blue}{map\_origfield="1"}+
               +\textcolor{blue}{map\_origfieldval="1"}+
@@ -733,7 +735,8 @@ datasource entry being processed. A \opt{map\_step} works like this:
 \item If \textcolor{blue}{\texttt{map\_match}} is defined but
   \textcolor{blue}{\texttt{map\_replace}} is not, only apply the
   step if the \textcolor{red}{\texttt{source-field}} matches
-  \textcolor{blue}{\texttt{map\_match}}.
+  \textcolor{blue}{\texttt{map\_match}}. You can use parentheses as usual
+  to capture parts of the match and can then use these later when setting a \textcolor{blue}{\texttt{map\_field\_value}}.
 \item Perform a Perl regular expression match and replace on the value of
   \textcolor{red}{\texttt{source-field}} if
   \textcolor{blue}{\texttt{map\_match}} and
@@ -741,8 +744,17 @@ datasource entry being processed. A \opt{map\_step} works like this:
   will want to use) parentheses for back-references in \textcolor{blue}{\texttt{map\_replace}}.
   Do not quote the regular expressions in any special (i.e. non-Perly) way---it's not
   necessary.
-\item If \textcolor{blue}{\texttt{map\_field\_set}} is defined,
-  then one and only one of the following attributes is then mandatory:
+\item If \textcolor{blue}{\texttt{map\_field\_set}} is defined, then its
+  value is \textcolor{red}{\texttt{set-field}} which will be set to a value
+  specified by further attributes. If
+  \textcolor{blue}{\texttt{map\_overwrite}} is false for this step and the
+  field to set already exists then the map step is ignored. If
+  \textcolor{blue}{\texttt{map\_final}} is also set on this step, then
+  processing of the parent map stops at this point. If
+  \textcolor{blue}{\texttt{map\_append}} is set, then the value to set is
+  appended to the current value of \textcolor{red}{\texttt{set-field}}. The
+  value to set is specified by a mandatory one and only one of the
+  following attributes:
   \begin{itemize}
     \item \textcolor{blue}{\texttt{map\_field\_value}} --- The
       \textcolor{red}{\texttt{set-field}} is set to
@@ -791,6 +803,19 @@ to all entries which are found in either the
 
 \noindent Copy the \bibfield{TITLE} field to the \bibfield{NOTE} field unless the
 \bibfield{NOTE} field already exists.
+
+\begin{lstlisting}[language=xml,escapechar=:,mathescape=true]
+<map map_overwrite="0">
+  <map_step map_field_source="AUTHOR" />
+  <map_step map_field_set="SORTNAME" map_origfieldval="1"  map_final="1"/>
+  <map_step map_field_source="SORTNAME" map_match=":\textbackslash A(.+?)\textbackslash s+and.\ast" map\_replace="\$1:"/>
+</map>
+\end{lstlisting}
+
+\noindent For any entry with an \bibfield{AUTHOR} field, try to set
+\bibfield{SORTNAME} to the same as \bibfield{AUTHOR}. If this fails because
+\bibfield{SORTNAME} already exists, stop, otherwise truncate
+\bibfield{SORTNAME} to just the first name in the name list.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <map map_overwrite="0">
