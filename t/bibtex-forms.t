@@ -61,3 +61,28 @@ is($bibentries->entry('forms1')->get_field('labeltitle'), 'Мухаммад иб
 is($bibentries->entry('forms2')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Okolo 783 – okolo 850', 'labeltitle - 2');
 # per-entry labeltitle form
 is($bibentries->entry('forms3')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'labeltitle - 3');
+
+# 
+$S = [
+                                                    [
+                                                     {},
+                                                     {'sortname'   => {}},
+                                                     {'author'     => {}},
+                                                     {'editor'     => {}},
+                                                     {'translator' => {}},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
+                                                    ],
+                                                    [
+                                                     {},
+                                                     {'sorttitle'  => {}},
+                                                     {'title'      => {}}
+                                                    ],
+                                                   ];
+
+# $main->set_sortscheme($S);
+
+# $biber->set_output_obj(Biber::Output::bbl->new());
+# $biber->prepare;
+# $section = $biber->sections->get_section(0);
+# is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
