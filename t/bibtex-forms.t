@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 13;
+use Test::More tests => 17;
 
 use Biber;
 use Biber::Utils;
@@ -86,3 +86,56 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['forms5', 'forms4', 'forms6', 'forms3', 'forms1', 'forms2'], 'Forms sorting - 1');
+
+# reset options and regenerate information
+Biber::Config->setblxoption('labelalphatemplate', {
+  labelelement => [
+             {
+               labelpart => [
+                 {
+                  content                   => "author",
+                  form                      => "uniform",
+                  substring_width           => "3",
+                  substring_side            => "left"
+                 },
+               ],
+               order => 1,
+             },
+             {
+               labelpart => [
+                 {
+                  content                   => "title",
+                  form                      => "translated",
+                  lang                      => "lang1",
+                  substring_width           => "3",
+                  substring_side            => "left"
+                 },
+                 {
+                  content                   => "title",
+                  substring_width           => "3",
+                  substring_side            => "left"
+                 },
+               ],
+               order => 2,
+             },
+           ],
+  type  => "global",
+});
+
+
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extraalphadata_for_key($k, undef);
+}
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$bibentries = $section->bibentries;
+
+is($bibentries->entry('forms1')->get_field('sortlabelalpha'), 'BulRosМух', 'labelalpha forms - 1');
+is($bibentries->entry('forms4')->get_field('sortlabelalpha'), 'F t', 'labelalpha forms - 2');
+is($bibentries->entry('forms5')->get_field('sortlabelalpha'), 'A t', 'labelalpha forms - 3');
+is($bibentries->entry('forms6')->get_field('sortlabelalpha'), 'Z t', 'labelalpha forms - 4');
+
