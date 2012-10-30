@@ -931,14 +931,15 @@ sub incr_la_disambiguation {
 
 =head2 get_la_disambiguation
 
-    Get the disambiguation counter for this labelalpha
+    Get the disambiguation counter for this labelalpha.
+    Return a 0 for undefs to avoid spurious errors.
 
 =cut
 
 sub get_la_disambiguation {
   shift; # class method so don't care about class name
   my $la = shift;
-  return $CONFIG->{state}{ladisambiguation}{$la};
+  return $CONFIG->{state}{ladisambiguation}{$la} // 0;
 }
 
 =head1 keyorder

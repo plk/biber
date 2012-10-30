@@ -472,14 +472,13 @@ sub create_entry {
 # HANDLERS
 # ========
 
-my $fl_re = qr/^([^_]+)_?(original|translated|romanised|uniform)?_?(.+)?$/;
+my $fl_re = qr/\A([^_]+)_?(original|translated|romanised|uniform)?_?(.+)?\z/;
 
 # Literal fields
 sub _literal {
   my ($bibentry, $entry, $f) = @_;
   my $value = decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
-
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
@@ -1046,7 +1045,7 @@ sub _hack_month {
 
 sub _get_handler {
   my $field = shift;
-  $field =~ s/_(?:original|translated|romanised|uniform)$//;
+  $field =~ s/_(?:original|translated|romanised|uniform)_?.*$//;
   if (my $h = $handlers->{CUSTOM}{$field}) {
     return $h;
   }

@@ -3203,6 +3203,9 @@ sub _parse_sort {
       if (defined($sortitem->{form})) { # Found script form attribute
         $sortitemattributes->{form} = $sortitem->{form};
       }
+      if (defined($sortitem->{lang})) { # Found script lang attribute
+        $sortitemattributes->{lang} = $sortitem->{lang};
+      }
       push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
     }
 

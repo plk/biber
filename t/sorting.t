@@ -101,66 +101,44 @@ my $S;
 # Testing nosort
 $S = [
       [
-       {
-       },
-       {
-        'presort'    => {}}
+       {},
+       {'presort'    => {}}
       ],
       [
        {final          => 1,
        },
-       {
-        'sortkey'    => {}}
+       {'sortkey'    => {}}
       ],
       [
-       {
-       },
-       {
-        'sortname'   => {}},
-       {
-        'author'     => {}},
-       {
-        'editor'     => {}},
-       {
-        'translator' => {}},
-       {
-        'sorttitle'  => {}},
-       {
-        'title'      => {}}
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
       ],
       [
-       {
-       },
-       {
-        'editor'   => {}},
+       {},
+       {'editor'   => {}},
       ],
       [
-       {
-       },
-       {
-        'translator'   => {}},
+       {},
+       {'translator'   => {}},
       ],
       [
-       {
-       },
-       {
-        'sorttitle'  => {}},
-       {
-        'title'      => {}}
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
       ],
       [
-       {
-       },
-       {
-        'labelyear'       => {}}
+       {},
+       {'labelyear'       => {}}
       ],
       [
-       {
-       },
-       {
-        'volume'     => {}},
-       {
-        '0000'       => {}}
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
       ]
      ];
 $main->set_sortscheme($S);
@@ -186,18 +164,15 @@ is($main->get_sortdata('hasan')->[0], $diacritic1, 'Name with nosort' );
 $S = [
       [
        {},
-       {
-        'editoratype'     => {}},
+       {'editoratype'     => {}},
       ],
       [
        {},
-       {
-        'editor'     => {}},
+       {'editor'     => {}},
       ],
       [
        {},
-       {
-        'editora'     => {}},
+       {'editora'     => {}},
       ],
      ];
 $main->set_sortscheme($S);
@@ -211,107 +186,107 @@ is($main->get_sortdata('jaffe')->[0], $edtypeclass1, 'Editor type/class' );
 
 # Testing sorting using various date fields
 $S = [
-                                                [
-                                                 {},
-                                                 {'year'       => {}},
-                                                ],
-                                                [
-                                                 {},
-                                                 {'month'       => {}},
-                                                ],
-                                                [
-                                                 {},
-                                                 {'day'       => {pad_side => 'right',
-                                                                  pad_width => 7}},
-                                                ],
-                                                [
-                                                 {},
-                                                 {'endyear'       => {}},
-                                                ],
-                                                [
-                                                 {},
-                                                 {'endmonth'       => {}},
-                                                ],
-                                                [
-                                                 {},
-                                                 {'endday'       => {}},
-                                                ],
-                                                [
-                                                 {},
-                                                 {'origyear'   => {'sort_direction'  => 'descending'}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'origmonth'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'origday'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'origendyear'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'origendmonth'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'origendday'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'eventendyear'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'eventendmonth'   => {pad_side => 'left',
-                                                                  pad_width => 4}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'eventendday'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'eventyear'   => {'substring_side' => 'left',
-                                                                   'substring_width' => 3}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'eventmonth'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'eventday'   => {}}
-                                                ],
-                                                [
-                                                 {sort_direction => 'descending'},
-                                                 {'urlendyear'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'urlendmonth'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'urlendday'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'urlyear'   => {'substring_side' => 'right',
-                                                                   'substring_width' => 2}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'urlmonth'   => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'urlday'   => {}}
-                                                ],
-                                               ];
+      [
+       {},
+       {'year'       => {}},
+      ],
+      [
+       {},
+       {'month'       => {}},
+      ],
+      [
+       {},
+       {'day'       => {pad_side => 'right',
+                        pad_width => 7}},
+      ],
+      [
+       {},
+       {'endyear'       => {}},
+      ],
+      [
+       {},
+       {'endmonth'       => {}},
+      ],
+      [
+       {},
+       {'endday'       => {}},
+      ],
+      [
+       {},
+       {'origyear'   => {'sort_direction'  => 'descending'}}
+      ],
+      [
+       {},
+       {'origmonth'   => {}}
+      ],
+      [
+       {},
+       {'origday'   => {}}
+      ],
+      [
+       {},
+       {'origendyear'   => {}}
+      ],
+      [
+       {},
+       {'origendmonth'   => {}}
+      ],
+      [
+       {},
+       {'origendday'   => {}}
+      ],
+      [
+       {},
+       {'eventendyear'   => {}}
+      ],
+      [
+       {},
+       {'eventendmonth'   => {pad_side => 'left',
+                              pad_width => 4}}
+      ],
+      [
+       {},
+       {'eventendday'   => {}}
+      ],
+      [
+       {},
+       {'eventyear'   => {'substring_side' => 'left',
+                          'substring_width' => 3}}
+      ],
+      [
+       {},
+       {'eventmonth'   => {}}
+      ],
+      [
+       {},
+       {'eventday'   => {}}
+      ],
+      [
+       {sort_direction => 'descending'},
+       {'urlendyear'   => {}}
+      ],
+      [
+       {},
+       {'urlendmonth'   => {}}
+      ],
+      [
+       {},
+       {'urlendday'   => {}}
+      ],
+      [
+       {},
+       {'urlyear'   => {'substring_side' => 'right',
+                        'substring_width' => 2}}
+      ],
+      [
+       {},
+       {'urlmonth'   => {}}
+      ],
+      [
+       {},
+       {'urlday'   => {}}
+      ],
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -322,11 +297,11 @@ is($main->get_sortdata('moraux')->[0], $dates1, 'Very contrived but thorough tes
 # Testing max/minITEMS with sorting using list fields
 # publisher
 $S = [
-                                                [
-                                                 {},
-                                                 {'publisher'    => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'publisher'    => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -336,11 +311,11 @@ is($main->get_sortdata('augustine')->[0], $lists1, 'max/minitems test 1 (publish
 
 # location
 $S = [
-                                                [
-                                                 {},
-                                                 {'location'    => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'location'    => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -351,11 +326,11 @@ is($main->get_sortdata('cotton')->[0], $lists2, 'max/minitems test 2 (location)'
 
 # institution
 $S = [
-                                                [
-                                                 {},
-                                                 {'institution'    => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'institution'    => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -366,11 +341,11 @@ is($main->get_sortdata('chiu')->[0], $lists3, 'max/minitems test 3 (institution)
 # institution with minitems=2
 Biber::Config->setblxoption('minitems', 2);
 $S = [
-                                                [
-                                                 {},
-                                                 {'institution'    => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'institution'    => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -382,11 +357,11 @@ is($main->get_sortdata('chiu')->[0], $lists4, 'max/minitems test 4 (institution 
 Biber::Config->setblxoption('maxitems', 4);
 Biber::Config->setblxoption('minitems', 3);
 $S = [
-                                                [
-                                                 {},
-                                                 {'institution'    => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'institution'    => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -398,39 +373,39 @@ is($main->get_sortdata('chiu')->[0], $lists5, 'max/minitems test 5 (institution 
 
 # nty with implicit default left, 4-digit year sort
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -440,40 +415,40 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff1, 'nty with default left offse
 
 # nty with left, 3-digit year sort, case sensitive
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'year'       => {'substring_side' => 'left',
-                                                                   'substring_width' => 3}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'year'       => {'substring_side' => 'left',
+                         'substring_width' => 3}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 1);
 # regenerate information
@@ -484,40 +459,40 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff2, 'nty with left offset, 3 dig
 
 # nty with left, 4-digit year sort, case sensitive
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'year'       => {'substring_side' => 'left',
-                                                                   'substring_width' => 4}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'year'       => {'substring_side' => 'left',
+                         'substring_width' => 4}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -527,40 +502,40 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff3, 'nty with left offset, 4 dig
 
 # nty with right, 3-digit year sort
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'year'       => {'substring_side' => 'right',
-                                                                   'substring_width' => 3}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'year'       => {'substring_side' => 'right',
+                         'substring_width' => 3}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 0);
 # regenerate information
@@ -570,40 +545,40 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff4, 'nty with right offset, 3 di
 
 # nty with right, 4-digit year sort
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'year'       => {'substring_side' => 'right',
-                                                                   'substring_width' => 4}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'year'       => {'substring_side' => 'right',
+                         'substring_width' => 4}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -613,41 +588,41 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff5, 'nty with right offset, 4 di
 
 # ntyd with left, 4-digit year sort
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'year'       => {'substring_side'  => 'left',
-                                                                   'substring_width' => 4,
-                                                                   'sort_direction'  => 'descending'}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'year'       => {'substring_side'  => 'left',
+                         'substring_width' => 4,
+                         'sort_direction'  => 'descending'}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -657,41 +632,41 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff6, 'ntyd with left offset, 4 di
 
 # ntyd with left, 3-digit year sort
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'year'       => {'substring_side'  => 'left',
-                                                                   'substring_width' => 3,
-                                                                   'sort_direction'  => 'descending'}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'year'       => {'substring_side'  => 'left',
+                         'substring_width' => 3,
+                         'sort_direction'  => 'descending'}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -701,41 +676,41 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff7, 'ntyd with left offset, 3 di
 
 # ntyd with right, 4-digit year sort
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'year'       => {'substring_side'  => 'right',
-                                                                   'substring_width' => 4,
-                                                                   'sort_direction'  => 'descending'}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'year'       => {'substring_side'  => 'right',
+                         'substring_width' => 4,
+                         'sort_direction'  => 'descending'}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -745,41 +720,41 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff8, 'ntyd with right offset, 4 d
 
 # ntyd with right, 3-digit year sort
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'year'       => {'substring_side' => 'right',
-                                                                   'substring_width' => 3,
-                                                                   'sort_direction'  => 'descending'}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'year'       => {'substring_side' => 'right',
+                         'substring_width' => 3,
+                         'sort_direction'  => 'descending'}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -789,40 +764,40 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff9, 'ntyd with right offset, 3 d
 
 # nty with right-padded vol
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {pad_side => 'right'}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'volume'     => {pad_side => 'right'}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -832,41 +807,41 @@ is($main->get_sortdata('stdmodel')->[0], $vol1, 'nty with right-padded vol' );
 
 # nty with right-padded 7-char vol
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {pad_side => 'right',
-                                                                  pad_width => 7}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'volume'     => {pad_side => 'right',
+                         pad_width => 7}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -877,42 +852,42 @@ is($main->get_sortdata('stdmodel')->[0], $vol2, 'nty with right-padded 7-char vo
 # nty with left-padded 5-char using Unicode "Đ" as pad_char vol
 # Unicode char will be lowercase "đ" in sortstring
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {pad_side => 'left',
-                                                                  pad_width => 5,
-                                                                  pad_char => 'Đ'}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'volume'     => {pad_side => 'left',
+                         pad_width => 5,
+                         pad_char => 'Đ'}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -923,40 +898,40 @@ is($main->get_sortdata('stdmodel')->[0], $vol3, 'nty with left-padded 5-char "a"
 
 # nty
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -967,41 +942,41 @@ is($main->get_sortdata('angenendtsk')->[0], $sk1, 'basic sortkey sort' );
 
 # nyt
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'labelname'  => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'labelname'  => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1011,40 +986,40 @@ is($main->get_sortdata('stdmodel')->[0], $nyt, 'basic nyt sort' );
 
 # nyvt
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1055,44 +1030,44 @@ is($main->get_sortdata('stdmodel')->[0], $nyvt, 'basic nyvt sort' );
 # anyt with labelalpha
 Biber::Config->setblxoption('labelalpha', 1);
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'labelalpha' => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {},
+       {'labelalpha' => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1114,44 +1089,44 @@ is($main->get_sortdata('stdmodel')->[0], $anyt, 'anyt sort (without labelalpha)'
 # anyvt with labelalpha
 Biber::Config->setblxoption('labelalpha',1);
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'labelalpha' => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {pad_width => 4}},
-                                                 {'0000'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {},
+       {'labelalpha' => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'volume'     => {pad_width => 4}},
+       {'0000'       => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1195,36 +1170,36 @@ is($main->get_sortdata('stdmodel')->[0], $anyvt, 'anyvt sort (without labelalpha
 
 # ynt
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'labelyear'  => {}},
-                                                 {'9999'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'labelyear'  => {}},
+       {'9999'       => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1234,36 +1209,36 @@ is($main->get_sortdata('stdmodel')->[0], $ynt, 'basic ynt sort' );
 
 # ydnt
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {sort_direction => 'descending'},
-                                                 {'sortyear'   => {}},
-                                                 {'year'      => {}},
-                                                 {'9999'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {sort_direction => 'descending'},
+       {'sortyear'   => {}},
+       {'year'      => {}},
+       {'9999'       => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1279,11 +1254,11 @@ Biber::Config->setblxoption('labelalpha', 0);
 
 # debug
 $S = [
-                                                [
-                                                 {},
-                                                 {'entrykey'    => {}},
-                                                ],
-                                               ];
+      [
+       {},
+       {'entrykey'    => {}},
+      ],
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1296,40 +1271,40 @@ Biber::Config->setblxoption('useauthor', 0);
 Biber::Config->setblxoption('useeditor', 0);
 Biber::Config->setblxoption('usetranslator', 0);
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1340,41 +1315,41 @@ is($main->get_sortdata('stdmodel')->[0], $noname, 'nty with use* all off' );
 
 # nty with modified presort and short_circuit at title
 $S = [
-                                                [
-                                                 {},
-                                                 {'presort'    => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sortkey'    => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortname'   => {}},
-                                                 {'author'     => {}},
-                                                 {'editor'     => {}},
-                                                 {'translator' => {}},
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {final          => 1,
-                                                  },
-                                                 {'sorttitle'  => {}},
-                                                 {'title'      => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'sortyear'   => {}},
-                                                 {'year'       => {}}
-                                                ],
-                                                [
-                                                 {},
-                                                 {'volume'     => {}},
-                                                 {'0000'       => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'presort'    => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sortkey'    => {}}
+      ],
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+       {'editor'     => {}},
+       {'translator' => {}},
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {final          => 1,
+       },
+       {'sorttitle'  => {}},
+       {'title'      => {}}
+      ],
+      [
+       {},
+       {'sortyear'   => {}},
+       {'year'       => {}}
+      ],
+      [
+       {},
+       {'volume'     => {}},
+       {'0000'       => {}}
+      ]
+     ];
 
 $main->set_sortscheme($S);
 
@@ -1385,13 +1360,12 @@ is($main->get_sortdata('stdmodel:ps_sc')->[0], $ps_sc, 'nty with modified presor
 
 
 # citeorder sort
-
 $S = [
-                                                [
-                                                 {},
-                                                 {'citeorder'    => {}}
-                                                ]
-                                               ];
+      [
+       {},
+       {'citeorder'    => {}}
+      ]
+     ];
 $main->set_sortscheme($S);
 
 # regenerate information

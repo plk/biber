@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use Biber;
 use Biber::Utils;
@@ -62,27 +62,27 @@ is($bibentries->entry('forms2')->get_field('labeltitle'), 'Mukhammad al-Khorezmi
 # per-entry labeltitle form
 is($bibentries->entry('forms3')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'labeltitle - 3');
 
-# 
 my $S = [
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                   ];
+         [
+          {},
+          {'author'     => {'form' => 'uniform'}},
+          {'author'     => {}},
+         ],
+         [
+          {},
+          {'title'      => {'form' => 'translated', 'lang' => 'lang1'}},
+          {'title'      => {'form' => 'translated', 'lang' => 'lang2'}},
+          {'title'      => {}}
+         ],
+         [
+          {},
+          {'year'  => {}},
+         ],
+        ];
 
-# $main->set_sortscheme($S);
+$main->set_sortscheme($S);
 
-# $biber->set_output_obj(Biber::Output::bbl->new());
-# $biber->prepare;
-# $section = $biber->sections->get_section(0);
-# is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
+$biber->set_output_obj(Biber::Output::bbl->new());
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+is_deeply([$main->get_keys], ['forms5', 'forms4', 'forms6', 'forms3', 'forms1', 'forms2'], 'Forms sorting - 1');

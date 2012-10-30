@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
-<bcf:controlfile version="2.0" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="2.2" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -1906,6 +1906,9 @@
     <bcf:citekey order="1">forms1</bcf:citekey>
     <bcf:citekey order="2">forms2</bcf:citekey>
     <bcf:citekey order="3">forms3</bcf:citekey>
+    <bcf:citekey order="1">forms4</bcf:citekey>
+    <bcf:citekey order="2">forms5</bcf:citekey>
+    <bcf:citekey order="3">forms6</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

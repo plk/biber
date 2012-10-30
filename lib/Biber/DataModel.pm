@@ -164,7 +164,7 @@ sub new {
     to a datamodel field. Such intermediates are defined in the target
     field mapping of a sourcemap.
 
-    Also allows for fields with script form suffix
+    Also allows for fields with script form and optional lang suffix
 
 =cut
 
@@ -174,7 +174,7 @@ sub is_field {
   if ($field =~ m/^BIBERCUSTOM/o) {
     return 1;
   }
-  elsif ($field =~ m/^([^_]+)_(?:original|translated|romanised|uniform)$/) {
+  elsif ($field =~ m/^([^_]+)_(?:original|translated|romanised|uniform)_?.*$/) {
     return $self->{fieldsbyname}{$1} ? 1 : 0;
   }
   else {
