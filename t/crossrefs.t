@@ -422,7 +422,7 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \strng{fullhash}{6268941b408d3263bddb208a54899ea9}
       \field{sortinit}{V}
       \field{labeltitle}{Misc etc.}
-      \strng{crossref}{ccr1}
+      \strng{crossref}{ccr1alias}
       \field{title}{Misc etc.}
       \field{year}{1923}
     \endentry

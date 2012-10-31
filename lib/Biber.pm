@@ -911,6 +911,7 @@ sub process_interentry {
     if (my $cr = $be->get_field('crossref')) {
       # Skip inheritance if we've already done it
       next if Biber::Config->get_inheritance('crossref', $cr, $be->get_field('citekey'));
+
       my $parent = $section->bibentry($cr);
       $logger->debug("Entry $citekey inheriting fields from parent $cr");
       unless ($parent) {

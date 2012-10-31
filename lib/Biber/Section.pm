@@ -138,12 +138,18 @@ sub is_allkeys {
 =head2 bibentry
 
     Returns a Biber::Entry object for the given citation key
+    Understands citekey aliases
 
 =cut
 
 sub bibentry {
   my ($self, $key) = @_;
-  return $self->bibentries->entry($key);
+  if (my $realkey = $self->get_citekey_alias($key)) {
+    return $self->bibentries->entry($realkey);
+  }
+  else {
+    return $self->bibentries->entry($key);
+  }
 }
 
 =head2 bibentries
@@ -268,13 +274,14 @@ sub get_orig_order_citekeys {
 =head2 has_citekey
 
     Returns true when $key is in the Biber::Section object
+    Understands key alaises
 
 =cut
 
 sub has_citekey {
   my $self = shift;
   my $key = shift;
-  return $self->{citekeys_h}{$key} ? 1 : 0;
+  return $self->{citekeys_h}{$self->get_citekey_alias($key) || $key} ? 1 : 0;
 }
 
 

@@ -205,16 +205,18 @@
 
 % Testing cascading crossrefs
 @MVBOOK{ccr1,
+  IDS       = {ccr1alias},
   AUTHOR    = {Vince Various},
   EDITOR    = {Edward Editor},
   TITLE     = {Stuff Concerning Varia},
   DATE      = {1934}
 }
 
+% using alias
 @BOOK{ccr2,
   TITLE     = {Misc etc.},
   DATE      = {1923},
-  CROSSREF  = {ccr1}
+  CROSSREF  = {ccr1alias}
 }
 
 @INBOOK{ccr3,

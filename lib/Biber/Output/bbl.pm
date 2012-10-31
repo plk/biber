@@ -378,7 +378,7 @@ sub set_output_entry {
       # (biblatex manual, section 2.2.3)
       # sets are a special case so always output crossref/xref for them since their
       # children will always be in the .bbl otherwise they make no sense.
-      unless ( $bee eq 'set') {
+      unless ($bee eq 'set') {
         next if ($lfield eq 'crossref' and
                  not $section->has_citekey($be->get_field('crossref')));
         next if ($lfield eq 'xref' and
