@@ -873,7 +873,7 @@ sub resolve_xdata {
 
 =head2 cite_setmembers
 
-    $biber->cite_setmembers
+    Promotes set member to cited status
 
 =cut
 
@@ -891,6 +891,13 @@ sub cite_setmembers {
     if ($be->get_field('entrytype') eq 'set' and
         $be->get_field('entryset')) {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
+
+      my @realmems;
+      foreach my $mem (@inset_keys) {
+        push @realmems, $section->get_citekey_alias($mem) // $mem;
+      }
+      @inset_keys = @realmems;
+      $be->set_datafield('entryset', join(',', @inset_keys));
 
       foreach my $inset_key (@inset_keys) {
         $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
