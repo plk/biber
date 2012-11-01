@@ -679,10 +679,49 @@ sub process_setup {
   }
 }
 
+=head2 resolve_alias_refs
+
+  Resolve aliases in xref/crossref/xdata which take keys as values to their real keys
+
+  We use set_datafield as we are overriding the alias in the datasource
+
+=cut
+
+sub resolve_alias_refs {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+
+    # XREF
+    if (my $refkey = $be->get_field('xref')) {
+      if (my $realkey = $section->get_citekey_alias($refkey)) {
+        $be->set_datafield('xref', $realkey);
+      }
+    }
+    # CROSSREF
+    if (my $refkey = $be->get_field('crossref')) {
+      if (my $realkey = $section->get_citekey_alias($refkey)) {
+        $be->set_datafield('crossref', $realkey);
+      }
+    }
+    # XDATA
+    if (my $xdata = $be->get_field('xdata')) {
+      my @resolved_keys;
+      foreach my $refkey (split /\s*,\s*/, $xdata) {
+        $refkey = $section->get_citekey_alias($refkey) // $refkey;
+        push @resolved_keys, $refkey;
+      }
+      $be->set_datafield('xdata', join(',', @resolved_keys));
+    }
+  }
+}
+
 =head2 process_citekey_aliases
 
-  Remove citekey aliases from citekeys as they don't point to real
-  entries.
+ Remove citekey aliases from citekeys as they don't point to real
+ entries.
 
 =cut
 
@@ -744,6 +783,15 @@ sub instantiate_dynamic {
   # Instantiate any dynamic set entries before we do anything else
   foreach my $dset (@{$section->dynamic_set_keys}) {
     my @members = $section->get_dynamic_set($dset);
+
+    # Resolve any aliases in the members
+    my @realmems;
+    foreach my $mem (@members) {
+      push @realmems, $section->get_citekey_alias($mem) // $mem;
+    }
+    @members = @realmems;
+    $section->set_dynamic_set($dset, @realmems);
+
     my $be = new Biber::Entry;
     $be->set_field('entrytype', 'set');
     $be->set_field('entryset', join(',', @members));
@@ -767,6 +815,9 @@ sub instantiate_dynamic {
       $be->del_field('related'); # clear the related field
       my @clonekeys;
       foreach my $relkey (split /\s*,\s*/, $relkeys) {
+        # Resolve any alias
+        $relkey = $section->get_citekey_alias($relkey) // $relkey;
+
         my $relentry = $section->bibentry($relkey);
         my $clonekey = md5_hex($relkey);
         push @clonekeys, $clonekey;
@@ -840,6 +891,7 @@ sub cite_setmembers {
     if ($be->get_field('entrytype') eq 'set' and
         $be->get_field('entryset')) {
       my @inset_keys = split /\s*,\s*/, $be->get_field('entryset');
+
       foreach my $inset_key (@inset_keys) {
         $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
         $section->add_citekeys($inset_key);
@@ -2861,6 +2913,7 @@ sub prepare {
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
     $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
+    $self->resolve_alias_refs;           # Resolve xref/crossref/xdata aliases to real keys
     $self->resolve_xdata;                # Resolve xdata entries
     $self->cite_setmembers;              # Cite set members
     $self->process_interentry;           # Process crossrefs/sets etc.
@@ -2961,7 +3014,7 @@ sub fetch_data {
   $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
 
   # dependent key list generation - has to be a sub as it's recursive to catch
-  # nested crossrefs etc.
+  # nested crossrefs, xdata etc.
   get_dependents($self, [$section->get_citekeys]);
 
   $logger->debug("Citekeys for section '$secnum' after fetching data: " . join(', ', $section->get_citekeys));
@@ -2985,10 +3038,14 @@ sub get_dependents {
   no strict 'refs'; # symbolic references below ...
 
   foreach my $citekey (@$keys) {
-    # skip aliases as they have no entries
-    next if $section->get_citekey_alias($citekey);
+    # aliases need resolving here and are treated as dependents
+    if (my $real = $section->get_citekey_alias($citekey)) {
+      $logger->debug("Alias '$citekey' requires real key '$real'");
+      push @$new_deps, $real;
+      $dep_map->{$real} = 1;
+    }
     # Dynamic sets don't exist yet but their members do
-    if (my @dmems = $section->get_dynamic_set($citekey)) {
+    elsif (my @dmems = $section->get_dynamic_set($citekey)) {
       # skip looking for dependent if it's already there
       foreach my $dm (@dmems) {
         unless ($section->bibentry($dm)) {

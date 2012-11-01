@@ -229,7 +229,7 @@ sub extract_entries {
           }
         }
 
-        # found a key, remove it from the list of keys we want
+        # found an alias key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
       elsif (my $okey = $section->has_badcasekey($wanted_key)) {

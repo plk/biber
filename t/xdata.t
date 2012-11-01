@@ -13,6 +13,9 @@ use Capture::Tiny qw(capture);
 
 chdir("t/tdata") ;
 
+# USING CAPTURE - DEBUGGING PRINTS, DUMPS WON'T BE VISIBLE UNLESS YOU PRINT $stderr
+# AT THE END!
+
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
 
@@ -42,7 +45,7 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('nodieonerror', 1); # because there is a cyclic xdata check
 
 # Now generate the information
-my (undef, $stderr) = capture { $biber->prepare };
+my ($stdout, $stderr) = capture { $biber->prepare };
 my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $out = $biber->get_output_obj;
@@ -102,4 +105,6 @@ is($out->get_output_entry($main,'macmillan'), undef, 'xdata test - 3');
 is($out->get_output_entry($main,'macmillan:pub'), undef, 'xdata test - 4');
 chomp $stderr;
 is($stderr, "ERROR - Circular XDATA inheritance between 'loop'<->'loop:3'", 'Cyclic xdata error check');
+#print $stdout;
+
 

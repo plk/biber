@@ -433,6 +433,18 @@ sub get_labelcache_l {
 
 
 
+=head2 is_dynamic_set
+
+    Test if a key is a dynamic set
+
+=cut
+
+sub is_dynamic_set {
+  my $self = shift;
+  my $dkey = shift;
+  return defined($self->{dkeys}{$dkey}) ? 1 : 0;
+}
+
 =head2 set_dynamic_set
 
     Record a mapping of dynamic key to member keys

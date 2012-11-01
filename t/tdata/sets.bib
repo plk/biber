@@ -34,11 +34,12 @@
 }
 
 @SET{Static1,
-  ENTRYSET   = {Static2, Static3, Static4, missing1},
+  ENTRYSET   = {Static2alias, Static3, Static4, missing1},
   ANNOTATION = {Some notes}
 }
 
 @BOOK{Static2,
+  IDS         = {Somealias, Static2alias},
   AUTHOR      = {Brian Bumble},
   TITLE       = {Blessed Brains},
   YEAR        = {2001},
@@ -73,6 +74,7 @@
 }
 
 @BOOK{Dynamic3,
+  IDS         = {Dynamic3alias},
   AUTHOR      = {Roger Regardless},
   TITLE       = {Reckless Ravishings},
   YEAR        = {2000},
