@@ -10,6 +10,19 @@
 # <branch> is a git branch to checkout on the build farm servers
 # <justbuild> is a boolean which says to just build and stop without uploading
 
+function vmon {
+  VM=$(pgrep -f -- "-startvm bbf-$1")
+  if [ ! -z "$VM" ]; then
+    echo "Biber build farm VM already running with PID: $VM"
+  else
+    nohup VBoxHeadless --startvm bbf-$1 &
+  fi
+}
+
+function vmoff {
+  VBoxManage controlvm bbf-$1 savestate
+}
+
 # Example: build_master.sh ~/Desktop/b development dev 1
 
 BASE="/usr/local/data/code/biblatex-biber"
