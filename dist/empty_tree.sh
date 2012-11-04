@@ -5,7 +5,6 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-mkdir -p /tmp/sftree/documentation/drivers
 mkdir -p /tmp/sftree/binaries/Cygwin
 mkdir -p /tmp/sftree/binaries/Linux
 mkdir -p /tmp/sftree/binaries/Solaris_Intel
