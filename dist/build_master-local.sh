@@ -3,8 +3,6 @@
 # This version of the build script can be run on the server hosting the VMs instead of a remote
 # client
 
-# Need, perl to run transforms, keys to access SF, keys to get to VMs, host entries for VMs
-
 # build_master.sh <dir> <release> <branch> <justbuild>
 
 # <dir> is where the binaries are
