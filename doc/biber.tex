@@ -15,9 +15,9 @@
 \usepackage{listings}
 \usepackage{metalogo}
 \usepackage[retainmissing]{MnSymbol}
-\setmainfont[Ligatures=TeX]{TexGyrePagella}
-\setsansfont[Ligatures=TeX]{TexGyreHeros}
-\setmonofont[Ligatures=NoCommon]{TeXGyreCursor}
+\setmainfont[Ligatures=TeX]{CMU Serif}
+\setsansfont[Ligatures=TeX]{CMU Sans Serif}
+\setmonofont[Ligatures=TeX]{CMU Typewriter Text}
 
 \def\BibLaTeX{\textsc{Bib}\LaTeX}
 \def\BibTeX{\textsc{Bib}\kern-.08em \TeX}
@@ -1690,17 +1690,17 @@ respectively. \texttt{<lang>}, if specified, should be a known
 For example:
 \begin{lstlisting}[style=bibtex]{}
 @BOOK{example1,
-  AUTHOR                    = {Булгаков, Павел and Розенфельд, Борис},
-  AUTHOR_translated_english = {Bulgakov, Pavel and Rosenfeld, Boris},
-  TITLE                     = {廣州話},
-  TITLE_romanised           = {gwóng jàu wá},
+  AUTHOR                    = { Булгаков, Павел and Розенфельд, Борис },
+  AUTHOR_translated_english = { Bulgakov, Pavel and Rosenfeld, Boris },
+  TITLE                     = { Славься, Отечество наше свободное },
+  TITLE_romanised           = { Slavʹsâ, Otečestvo naše svobodnoe },
 }
 \end{lstlisting}
 %
 This example has an \bibfield{AUTHOR} field in Russian Cyrillic script
 and a variant the «translated» form with and language setting of
-«english». There is also a Traditional Cantonese title with a (tone
-marks) romanised variant.
+«english». There is also a Russian Cyrillic \bibfield{TITLE} with an
+ISO 9 romanised variant.
 
 \bigskip
 \section{Binaries}\label{binaries}
