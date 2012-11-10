@@ -282,8 +282,7 @@ sub get_field {
   $form = $form || 'original';
   $lang = $lang || 'default';
   # Override for special fields whose form and langs are assumed to be already resolved.
-  my @special = qw( labelname labeltitle labelyear);
-  if ($key ~~ @special) {
+  if ($key ~~ [ 'labelname', 'labeltitle', 'labelyear' ]) {
     $form = 'original';
     $lang = 'default';
   }

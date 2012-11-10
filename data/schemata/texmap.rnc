@@ -1,43 +1,9 @@
 start =
   element texmap {
-    element accents {
-      attribute set { "base" | "full" },
-      map+
-    },
-    element wordmacros {
-      attribute set { "base" | "full" },
-      map+
-    }+,
-    element diacritics {
-      attribute set { "base" | "full" },
-      map+
-    }+,
-    element punctuation {
-      attribute set { "base" | "full" },
-      map+
-    }+,
-    element symbols {
-      attribute set { "base" | "full" },
-      map+
-    }+,
-    element negatedsymbols {
-      attribute set { "base" | "full" },
-      map+
-    }+,
-    element superscripts {
-      attribute set { "base" | "full" },
-      map+
-    }+,
-    element cmdsuperscripts {
-      attribute set { "base" | "full" },
-      map+
-    }+,
-    element dings {
-      attribute set { "base" | "full" },
-      map+
-    }+,
-    element greek {
-      attribute set { "base" | "full" },
+    element maps {
+      # CSV list of sets
+      attribute set { text },
+      attribute type { "accents" | "wordmacros" | "diacritics" | "punctuation" | "symbols" | "negatedsymbols" | "superscripts" | "cmdsuperscripts" | "dings" | "greek"  },
       map+
     }+,
     element encode_exclude {

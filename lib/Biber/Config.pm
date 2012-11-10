@@ -414,7 +414,7 @@ sub config_file {
   }
   elsif ( can_run('kpsewhich') ) {
     my $err;
-    run3  [ 'kpsewhich', $BIBER_CONF_NAME ], \undef, \$biberconf, \$err, { return_if_system_error => 1};
+    run3 [ 'kpsewhich', $BIBER_CONF_NAME ], \undef, \$biberconf, \$err, { return_if_system_error => 1};
     if ($? == -1) {
       biber_error("Error running kpsewhich to look for config file: $err");
     }
