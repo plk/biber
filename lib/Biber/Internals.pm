@@ -228,9 +228,9 @@ my %internal_dispatch_label = (
                 'shorthand'         =>  [\&_label_basic,            ['shorthand', 'nostrip']],
                 'sortkey'           =>  [\&_label_basic,            ['sortkey', 'nostrip']],
                 'citekey'           =>  [\&_label_citekey,          []],
-                'labelname'         =>  [\&_label_labelname,        []],
-                'labeltitle'        =>  [\&_label_labeltitle,       []],
-                'labelyear'         =>  [\&_label_labelyear,        []]);
+                'labelname'         =>  [\&_label_name,             ['labelname']],
+                'labeltitle'        =>  [\&_label_basic,            ['labeltitle']],
+                'labelyear'         =>  [\&_label_basic,            ['labelyear']]);
 
 sub _dispatch_table_label {
   my ($field, $dm) = @_;
@@ -299,6 +299,8 @@ sub _labelpart {
       my $f = $part->{content};
       if ( $f ~~ $dm->get_fields_of_type('list', 'name') or
           $f eq 'labelname') {
+        # get-field doesn't need form/lang here as we are just counting names
+        # and we assume that the name count is the same for all forms/langs
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;
         my $visible_names;
@@ -385,51 +387,6 @@ sub _label_basic {
   }
 }
 
-sub _label_labeltitle {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  # re-direct to the right label routine for the labeltitle
-  if (my $lti = $be->get_labeltitle_info) {
-    $args->[0] = $lti->{field};
-    return $self->_label_basic($citekey, $args, $labelattrs);
-  }
-  else {
-    return ['', ''];
-  }
-}
-
-sub _label_labelyear {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  # re-direct to the right label routine for the labelyear
-  if (my $lyi = $be->get_labelyear_info) {
-    $args->[0] = $lyi->{field};
-    return $self->_label_basic($citekey, $args, $labelattrs);
-  }
-  else {
-    return ['', ''];
-  }
-}
-
-sub _label_labelname {
-  my ($self, $citekey, $args, $labelattrs) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  # re-direct to the right label routine for the labelname
-  if (my $lni = $be->get_labelname_info) {
-    $args->[0] = $lni->{field};
-    return $self->_label_name($citekey, $args, $labelattrs);
-  }
-  else {
-    return ['', ''];
-  }
-}
-
 # literal string - don't post-process this, there is no point
 sub _label_literal {
   my ($self, $citekey, $args, $labelattrs) = @_;
@@ -437,6 +394,7 @@ sub _label_literal {
   return [$string, $string];
 }
 
+# names
 sub _label_name {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $secnum = $self->get_current_section;
@@ -445,6 +403,10 @@ sub _label_name {
   my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
+
+  # Shortcut - if there is no labelname, don't do anything
+  return ['',''] unless defined($be->get_labelname_info);
+
   my $namename = $args->[0];
   my $acc;
   # This contains sortalphaothers instead of alphaothers, if defined
@@ -452,23 +414,35 @@ sub _label_name {
   # '\textasteriskcentered' which would mess up sorting.
   my $sortacc;
 
+  # Careful to extract the information we need about the real name behind labelname
+  # as we need this to set the use* options below.
+  my $realname;
+  if ($namename eq 'labelname') {
+    $realname = $be->get_labelname_info->{field};
+  }
+  else {
+    $realname = $namename;
+  }
+
+  # If $namename is 'labelname', form and lang will be ignored anyway
+  my $nameval  = $be->get_field($namename, $labelattrs->{form}, $labelattrs->{lang});
+
   # Account for labelname set to short* when testing use* options
   my $lnameopt;
-  if ( $namename =~ /\Ashort(.+)\z/ ) {
+  if ( $realname =~ /\Ashort(.+)\z/ ) {
     $lnameopt = $1;
   }
   else {
-    $lnameopt = $namename;
+    $lnameopt = $realname;
   }
 
   if (Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) and
-    $be->get_field($namename)) {
-    my $names = $be->get_field($namename, $labelattrs->{form}, $labelattrs->{lang});
-    my $numnames  = $names->count_names;
-    my $visibility = $names->get_visible_alpha;
+    $nameval) {
+    my $numnames  = $nameval->count_names;
+    my $visibility = $nameval->get_visible_alpha;
 
-    my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namename) } @{$names->names};
-    my @prefices  = map { $_->get_prefix } @{$names->names};
+    my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namename) } @{$nameval->names};
+    my @prefices  = map { $_->get_prefix } @{$nameval->names};
     my $loopnames;
 
     # loopnames is the number of names to loop over in the name list when constructing the label
@@ -490,7 +464,7 @@ sub _label_name {
     $sortacc = $acc;
 
     # Add alphaothers if name list is truncated
-    if ($numnames > $loopnames or $names->get_morenames) {
+    if ($numnames > $loopnames or $nameval->get_morenames) {
       $acc .= $alphaothers // ''; # alphaothers can be undef
       $sortacc .= $sortalphaothers // ''; # sortalphaothers can be undef
     }
@@ -532,7 +506,7 @@ sub _process_label_attributes {
         # Get the indices of each field (or namepart) we are dealing with
         my %indices;
         foreach my $key (@citekeys) {
-          if (my $f = $section->bibentry($key)->get_field($field)) {
+          if (my $f = $section->bibentry($key)->get_field($field, $labelattrs->{form}, $labelattrs->{lang})) {
             if ($namepart) {
               foreach my $n (@{$f->first_n_names($f->get_visible_alpha)}) {
                 # Do strip/nosort here as that's what we also do to the field contents
@@ -606,8 +580,9 @@ sub _process_label_attributes {
       }
       else {
         # This retains the structure of the entries for the "l" list disambiguation
-        my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
-                            $namepart ? [map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_alpha)}] : [$f]
+        # Have to be careful if field "$f" is not set for all entries
+        my $strings = [map {my $f = $section->bibentry($_)->get_field($field, $labelattrs->{form}, $labelattrs->{lang});
+                            $f ? ($namepart ? [map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_alpha)}] : [$f]) : ['']
                           } @citekeys];
         my $lcache = _label_listdisambiguation($strings);
 
@@ -1118,7 +1093,7 @@ sub _sort_list {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   if ($be->get_field($list, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
-    my $string = $self->_liststring($citekey, $list);
+    my $string = $self->_liststring($citekey, $list, $sortelementattributes->{form}, $sortelementattributes->{lang});
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1246,12 +1221,12 @@ sub _process_sort_attributes {
 # This is used to generate sorting string for names
 sub _namestring {
   my $self = shift;
-  my ($citekey, $field, $form) = @_;
+  my ($citekey, $field, $form, $lang) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $names = $be->get_field($field, $form);
+  my $names = $be->get_field($field, $form, $lang);
   my $str = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
@@ -1308,12 +1283,12 @@ sub _namestring {
 }
 
 sub _liststring {
-  my ( $self, $citekey, $field ) = @_;
+  my ( $self, $citekey, $field, $form, $lang ) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $f = $be->get_field($field); # _liststring is used in tests so there has to be
+  my $f = $be->get_field($field, $form, $lang); # _liststring is used in tests so there has to be
   return '' unless defined($f);   # more error checking which will never be needed in normal use
   my @items = @$f;
   my $str = '';

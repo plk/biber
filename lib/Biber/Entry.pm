@@ -253,6 +253,21 @@ sub set_field {
   return;
 }
 
+=head2 ref_field
+
+  Make a field a reference to another field
+
+=cut
+
+sub ref_field {
+  my $self = shift;
+  my ($ref, $field) = @_;
+  $self->{datafields}{$ref} = $self->{datafields}{$field};
+  $self->{derivedfields}{$ref} = $self->{derivedfields}{$field};
+  return;
+}
+
+
 =head2 get_field
 
     Get a field for a Biber::Entry object
@@ -266,6 +281,12 @@ sub get_field {
   return undef unless $key;
   $form = $form || 'original';
   $lang = $lang || 'default';
+  # Override for special fields whose form and langs are assumed to be already resolved.
+  my @special = qw( labelname labeltitle labelyear);
+  if ($key ~~ @special) {
+    $form = 'original';
+    $lang = 'default';
+  }
   return Dive($self, 'datafields', $key, $form, $lang) //
          Dive($self, 'derivedfields', $key, $form, $lang);
 }
