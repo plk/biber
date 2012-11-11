@@ -37,9 +37,6 @@
           .utf8 {
             font-family: unifont;
           }
-          .full {
-            background-color: #E6FFE6;
-          }
           .preferred {
             color: #FF0000;
             font-family: "Courier New", Courier, monospace ;
@@ -88,7 +85,6 @@
         this document on a TeXLive system).</p>
           <div class="key"><u>Key</u>
           <ul>
-            <li><span class="full">Mapping only in &quot;full&quot; mapping set</span></li>
             <li><span class="preferred">In encoding mapping (UTF-8 <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> LaTeX macros), when there are multiple possible mappings, red highlighted macro is the preferred mapping</span></li>
           </ul>
           </div>
@@ -107,14 +103,18 @@
           </tbody>
         </table>
         <hr/>
-        <h3>Accents</h3>
+        <xsl:for-each select="/texmap/maps">
+          <h3><xsl:value-of select="./@type"/> (sets: <xsl:value-of select="./@set"/>)</h3>
         <table>
           <thead>
             <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>
           </thead>
           <tbody>
-            <xsl:for-each select="/texmap/accents/map">
+            <xsl:for-each select="./map">
               <tr>
+                <xsl:if test="./from/@preferred='1'">
+                  <xsl:attribute name="class">preferred</xsl:attribute>
+                </xsl:if>
                 <td><span class="macro">\<xsl:value-of select="./from/text()"/></span></td>
                 <td><span class="utf8"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./to/text()"/></span></td>
                 <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
@@ -123,176 +123,7 @@
           </tbody>
         </table>
         <hr/>
-        <h3>General Macros </h3>
-        <table>
-          <thead>
-            <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>
-          </thead>
-          <tbody>
-            <xsl:for-each select="/texmap/wordmacros[@set='base']/map">
-              <tr>
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \<xsl:value-of select="./from/text()"/></span></td>
-                <td><span class="utf8"><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
-          </tbody>
-        </table>
-        <hr/>
-        <h3>Diacritics</h3>
-        <table>
-          <thead>
-            <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>
-          </thead>
-          <tbody>
-            <xsl:for-each select="/texmap/diacritics[@set='base']/map">
-              <tr>
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \<xsl:value-of select="./from/text()"/></span></td>
-                <td><span class="utf8"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
-          </tbody>
-        </table>
-        <hr/>
-        <h3>Punctuation</h3>
-        <table>
-          <thead>
-            <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>
-          </thead>
-          <tbody>
-            <xsl:for-each select="/texmap/punctuation/map">
-              <tr>
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \<xsl:value-of select="./from/text()"/></span></td>
-                <td><span class="utf8"><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
-          </tbody>
-        </table>
-        <hr/>
-        <h3>Symbols</h3>
-        <table>
-          <thead>
-            <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>
-          </thead>
-          <tbody>
-            <xsl:for-each select="/texmap/symbols/map">
-              <tr class="full">
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \<xsl:value-of select="./from/text()"/></span></td>
-                <td><span class="utf8"><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
-          </tbody>
-        </table>
-        <hr/>
-        <h3>Negated Symbols</h3>
-        <table>
-          <thead>
-            <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>
-          </thead>
-          <tbody>
-            <xsl:for-each select="/texmap/negatedsymbols/map">
-              <tr class="full">
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \not\<xsl:value-of select="./from/text()"/></span></td>
-                <td><span class="utf8"><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
-          </tbody>
-        </table>
-        <hr/>
-        <h3>Superscripts</h3>
-        <table>
-          <thead>
-            <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>
-          </thead>
-          <tbody>
-            <xsl:for-each select="/texmap/superscripts/map">
-              <tr class="full">
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \<xsl:value-of select="./from/text()"/></span></td>
-                <td><span style="line-height: 120%" class="utf8"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
-            <xsl:for-each select="/texmap/cmdsuperscripts/map">
-              <tr class="full">
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \<xsl:value-of select="./from/text()"/></span></td>
-                <td><span style="line-height: 120%" class="utf8"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
-          </tbody>
-        </table>
-        <hr/>
-        <h3>Dingbats</h3>
-        <table>
-          <thead>
-            <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>
-          </thead>
-          <tbody>
-            <xsl:for-each select="/texmap/dings/map">
-              <tr class="full">
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \ding{<xsl:value-of select="./from/text()"/>}</span></td>
-                <td><span class="utf8"><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
-          </tbody>
-        </table>
-        <hr/>
-        <h3>Greek symbols</h3>
-        <table>
-          <thead>
-            <tr><td>Macro</td><td>Unicode character</td><td>Unicode hex value</td></tr>
-          </thead>
-          <tbody>
-            <xsl:for-each select="/texmap/greek/map">
-              <tr class="full">
-                <td><span class="macro">
-                  <xsl:if test="./from/@preferred='1'">
-                    <xsl:attribute name="class">preferred</xsl:attribute>
-                  </xsl:if>
-                \<xsl:value-of select="./from/text()"/></span></td>
-                <td><span class="utf8"><xsl:value-of select="./to/text()"/></span></td>
-                <td><span class="hex"><xsl:value-of select="./to/@hex"/></span></td>
-              </tr>
-            </xsl:for-each>              
-          </tbody>
-        </table>
+        </xsl:for-each>
       </body>
     </html>
   </xsl:template>
