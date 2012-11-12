@@ -2079,7 +2079,7 @@ sub create_uniquename_info {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
+
     if (my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
       $logger->trace("Generating uniquename information for '$citekey'");
 
@@ -2254,7 +2254,7 @@ sub generate_uniquename {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
+
     if (my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
       $logger->trace("Setting uniquename for '$citekey'");
 
@@ -2398,7 +2398,6 @@ sub create_uniquelist_info {
     my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
       $logger->trace("Generating uniquelist information for '$citekey'");
 
@@ -2487,7 +2486,6 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
     my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
     if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
       $logger->trace("Creating uniquelist for '$citekey'");
 
