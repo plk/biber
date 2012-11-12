@@ -214,7 +214,10 @@ our %CONFIG_SCOPE_BIBLATEX = (
 # for local entry-specific options, note therefore the presence here of some
 # options like max/mincitenames which are not passed in the .bcf
 our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
-  dataonly       => {OUTPUT => 1, INPUT => ['skiplab', 'skiplos']},
+  dataonly       => {OUTPUT => 1, INPUT => {'skiplab' => 1,
+                                            'skiplos' => 1,
+                                            'uniquename' => 0,
+                                            'uniquelist' => 0}},
   maxitems       => {OUTPUT => 1},
   minitems       => {OUTPUT => 1},
   maxbibnames    => {OUTPUT => 1},

@@ -826,10 +826,17 @@ sub instantiate_dynamic {
         $relclone->del_field('related');
         $relclone->del_field('relatedtype');
         $relclone->del_field('relatedstring');
+        $relclone->del_field('relatedoptions');
         $relclone->set_datafield('options', 'dataonly');
         $section->bibentries->add_entry($clonekey, $relclone);
-        Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $clonekey);
-        Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $clonekey);
+
+        # Set related clone options
+        if (my $relopts = $be->get_field('relatedoptions')) {
+          $self->process_entry_options($clonekey, $relopts);
+        }
+        else {
+          $self->process_entry_options($clonekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
+        }
 
         # Save graph information if requested
         if (Biber::Config->getoption('outformat') eq 'dot') {
@@ -1347,8 +1354,7 @@ sub process_sets {
     # Enforce Biber parts of virtual "dataonly" for set members
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
-      Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $member);
-      Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $member);
+      $self->process_entry_options($member, 'skiplab, skiplos, uniquename=0, uniquelist=0');
 
       my $me = $section->bibentry($member);
       if ($me->get_field('entryset')) {
@@ -1367,8 +1373,7 @@ sub process_sets {
   # had skips set by being seen as a member of that set yet
   else {
     if (Biber::Config->get_set_parents($citekey)) {
-      Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $citekey);
-      Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $citekey);
+      $self->process_entry_options($citekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
     }
   }
 }
@@ -2079,7 +2084,6 @@ sub create_uniquename_info {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
 
     if (my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
       $logger->trace("Generating uniquename information for '$citekey'");
@@ -2255,7 +2259,6 @@ sub generate_uniquename {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
 
     if (my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
       $logger->trace("Setting uniquename for '$citekey'");
@@ -2399,7 +2402,6 @@ sub create_uniquelist_info {
     my $bee = $be->get_field('entrytype');
     my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
 
     if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
       $logger->trace("Generating uniquelist information for '$citekey'");
@@ -2488,7 +2490,6 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
     my $bee = $be->get_field('entrytype');
     my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
-    next if Biber::Config->getblxoption('skiplab', $bee, $citekey);
 
     if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
       $logger->trace("Creating uniquelist for '$citekey'");

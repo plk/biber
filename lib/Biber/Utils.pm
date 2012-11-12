@@ -724,12 +724,20 @@ sub filter_entry_options {
   foreach (@entryoptions) {
     m/^([^=]+)=?(.+)?$/;
     given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT}) {
+      # Standard option
       when (not defined($_) or $_ == 1) {
         push @return_options, $1 . ($2 ? "=$2" : '') ;
       }
+      # Set all split options to same value as parent
       when (ref($_) eq 'ARRAY') {
         foreach my $map (@$_) {
           push @return_options, "$map=$2";
+        }
+      }
+      # Set all splits to specific values
+      when (ref($_) eq 'HASH') {
+        foreach my $map (keys %$_) {
+          push @return_options, "$map=" . $_->{$map};
         }
       }
     }
