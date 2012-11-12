@@ -2085,160 +2085,161 @@ sub create_uniquename_info {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    if (my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
-      $logger->trace("Generating uniquename information for '$citekey'");
+    next unless my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey);
 
-      if (my $lni = $be->get_labelname_info) {
+    $logger->trace("Generating uniquename information for '$citekey'");
 
-        # Set the index limit beyond which we don't look for disambiguating information
-        my $ul = undef; # Not set
-        if (defined($be->get_field($lni->{field},
-                                   $lni->{form},
-                                   $lni->{lang})->get_uniquelist)) {
-          # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
-          $ul = $be->get_field($lni->{field},
-                               $lni->{form},
-                               $lni->{lang})->get_uniquelist;
-        }
-        my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
-        my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
+    if (my $lni = $be->get_labelname_info) {
 
-        # Note that we don't determine if a name is unique here -
-        # we can't, were still processing entries at this point.
-        # Here we are just recording seen combinations of:
+      # Set the index limit beyond which we don't look for disambiguating information
+      my $ul = undef;           # Not set
+      if (defined($be->get_field($lni->{field},
+                                 $lni->{form},
+                                 $lni->{lang})->get_uniquelist)) {
+        # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
+        $ul = $be->get_field($lni->{field},
+                             $lni->{form},
+                             $lni->{lang})->get_uniquelist;
+      }
+      my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
+      my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
+
+      # Note that we don't determine if a name is unique here -
+      # we can't, were still processing entries at this point.
+      # Here we are just recording seen combinations of:
+      #
+      # lastname and how many name context keys contain this (uniquename = 0)
+      # lastnames+initials and how many name context keys contain this (uniquename = 1)
+      # Full name and how many name context keys contain this (uniquename = 2)
+      #
+      # A name context can be either a complete single name or a list of names
+      # depending on whether uniquename=min* or not
+      #
+      # Anything which has more than one combination for both of these would
+      # be uniquename = 2 unless even the full name doesn't disambiguate
+      # and then it is left at uniquename = 0
+
+      my $nl = $be->get_field($lni->{field},
+                              $lni->{form},
+                              $lni->{lang});
+      my $num_names = $nl->count_names;
+      my $names = $nl->names;
+      # If name list was truncated in bib with "and others", this overrides maxcitenames
+      my $morenames = $nl->get_morenames ? 1 : 0;
+
+      my @truncnames;
+      my @lastnames;
+      my @fullnames;
+      my @initnames;
+
+      foreach my $name (@$names) {
+        # We need to track two types of uniquename disambiguation here:
         #
-        # lastname and how many name context keys contain this (uniquename = 0)
-        # lastnames+initials and how many name context keys contain this (uniquename = 1)
-        # Full name and how many name context keys contain this (uniquename = 2)
-        #
-        # A name context can be either a complete single name or a list of names
-        # depending on whether uniquename=min* or not
-        #
-        # Anything which has more than one combination for both of these would
-        # be uniquename = 2 unless even the full name doesn't disambiguate
-        # and then it is left at uniquename = 0
+        # 1. Information to disambiguate visible names from visible names
+        #    where "visibility" is governed by uniquelist/max/mincitenames.
+        #    This is the actual "uniquename" feature information.
+        # 2. Information to disambiguate all names, regardless of visibility
+        #    This is needed for uniquelist because it needs to construct
+        #    hypothetical ambiguity information for every list position.
 
-        my $nl = $be->get_field($lni->{field},
-                                $lni->{form},
-                                $lni->{lang});
-        my $num_names = $nl->count_names;
-        my $names = $nl->names;
-        # If name list was truncated in bib with "and others", this overrides maxcitenames
-        my $morenames = $nl->get_morenames ? 1 : 0;
+        # We want to record disambiguation information for visible names when:
+        # uniquename = 3 (allinit) or 4 (allfull)
+        # Uniquelist is set and a name appears before the uniquelist truncation
+        # Uniquelist is not set and the entry has an explicit "and others" at the end
+        #   since this means that every name is less than maxcitenames by definition
+        # Uniquelist is not set and a name list is shorter than the maxcitenames truncation
+        # Uniquelist is not set, a name list is longer than the maxcitenames truncation
+        #   and the name appears before the mincitenames truncation
+        if ($un == 3 or $un == 4 or
+            ($ul and $name->get_index <= $ul) or
+            $morenames or
+            $num_names <= $maxcn or
+            $name->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
 
-        my @truncnames;
-        my @lastnames;
-        my @fullnames;
-        my @initnames;
-
-        foreach my $name (@$names) {
-          # We need to track two types of uniquename disambiguation here:
-          #
-          # 1. Information to disambiguate visible names from visible names
-          #    where "visibility" is governed by uniquelist/max/mincitenames.
-          #    This is the actual "uniquename" feature information.
-          # 2. Information to disambiguate all names, regardless of visibility
-          #    This is needed for uniquelist because it needs to construct
-          #    hypothetical ambiguity information for every list position.
-
-          # We want to record disambiguation information for visible names when:
-          # uniquename = 3 (allinit) or 4 (allfull)
-          # Uniquelist is set and a name appears before the uniquelist truncation
-          # Uniquelist is not set and the entry has an explicit "and others" at the end
-          #   since this means that every name is less than maxcitenames by definition
-          # Uniquelist is not set and a name list is shorter than the maxcitenames truncation
-          # Uniquelist is not set, a name list is longer than the maxcitenames truncation
-          #   and the name appears before the mincitenames truncation
-          if ($un == 3 or $un == 4 or
-              ($ul and $name->get_index <= $ul) or
-              $morenames or
-              $num_names <= $maxcn or
-              $name->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
-
-            push @truncnames, $name;
-            if ($un == 5 or $un == 6) {
-              push @lastnames, $name->get_lastname;
-              push @fullnames, $name->get_namestring;
-              push @initnames, $name->get_nameinitstring;
-            }
+          push @truncnames, $name;
+          if ($un == 5 or $un == 6) {
+            push @lastnames, $name->get_lastname;
+            push @fullnames, $name->get_namestring;
+            push @initnames, $name->get_nameinitstring;
           }
         }
-        # Information for mininit ($un=5) or minfull ($un=6)
-        my $lastnames_string;
-        my $fullnames_string;
-        my $initnames_string;
-        if ($un == 5) {
-          $lastnames_string = join("\x{10FFFD}", @lastnames);
-          $initnames_string = join("\x{10FFFD}", @initnames);
-          if ($#lastnames + 1 < $num_names or
-              $morenames) {
-            $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
-            $initnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+      }
+      # Information for mininit ($un=5) or minfull ($un=6)
+      my $lastnames_string;
+      my $fullnames_string;
+      my $initnames_string;
+      if ($un == 5) {
+        $lastnames_string = join("\x{10FFFD}", @lastnames);
+        $initnames_string = join("\x{10FFFD}", @initnames);
+        if ($#lastnames + 1 < $num_names or
+            $morenames) {
+          $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+          $initnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+        }
+      }
+      elsif ($un == 6) {
+        $lastnames_string = join("\x{10FFFD}", @lastnames);
+        $fullnames_string = join("\x{10FFFD}", @fullnames);
+        if ($#lastnames + 1 < $num_names or
+            $morenames) {
+          $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+          $fullnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+        }
+      }
+
+      foreach my $name (@$names) {
+        my $lastname       = $name->get_lastname;
+        my $nameinitstring = $name->get_nameinitstring;
+        my $namestring     = $name->get_namestring;
+        my $namecontext;
+        my $key;
+
+        # Context and key depend on the uniquename setting
+        given ($un) {
+          when ([1,3]) {
+            $namecontext = 'global';
+            $key = $nameinitstring;
+          }
+          when ([2,4]) {
+            $namecontext = 'global';
+            $key = $namestring;
+          }
+          when (5) {
+            $namecontext = $lastnames_string;
+            $key = $initnames_string;
+            $name->set_minimal_info($lastnames_string);
+          }
+          when (6) {
+            $namecontext = $lastnames_string;
+            $key = $fullnames_string;
+            $name->set_minimal_info($lastnames_string);
           }
         }
-        elsif ($un == 6) {
-          $lastnames_string = join("\x{10FFFD}", @lastnames);
-          $fullnames_string = join("\x{10FFFD}", @fullnames);
-          if ($#lastnames + 1 < $num_names or
-              $morenames) {
-            $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
-            $fullnames_string .= "\x{10FFFD}et al"; # if truncated, record this
-          }
+        if (first {Compare($_, $name)} @truncnames) {
+          # Record a uniqueness information entry for the lastname showing that
+          # this lastname has been seen in this name context
+          Biber::Config->add_uniquenamecount($lastname, $namecontext, $key);
+
+          # Record a uniqueness information entry for the lastname+initials showing that
+          # this lastname_initials has been seen in this name context
+          Biber::Config->add_uniquenamecount($nameinitstring, $namecontext, $key);
+
+          # Record a uniqueness information entry for the fullname
+          # showing that this fullname has been seen in this name context
+          Biber::Config->add_uniquenamecount($namestring, $namecontext, $key);
         }
 
-        foreach my $name (@$names) {
-          my $lastname       = $name->get_lastname;
-          my $nameinitstring = $name->get_nameinitstring;
-          my $namestring     = $name->get_namestring;
-          my $namecontext;
-          my $key;
-
-          # Context and key depend on the uniquename setting
-          given ($un) {
-            when ([1,3]) {
-              $namecontext = 'global';
-              $key = $nameinitstring;
-            }
-            when ([2,4]) {
-              $namecontext = 'global';
-              $key = $namestring;
-            }
-            when (5) {
-              $namecontext = $lastnames_string;
-              $key = $initnames_string;
-              $name->set_minimal_info($lastnames_string);
-            }
-            when (6) {
-              $namecontext = $lastnames_string;
-              $key = $fullnames_string;
-              $name->set_minimal_info($lastnames_string);
-            }
-          }
-          if (first {Compare($_, $name)} @truncnames) {
-            # Record a uniqueness information entry for the lastname showing that
-            # this lastname has been seen in this name context
-            Biber::Config->add_uniquenamecount($lastname, $namecontext, $key);
-
-            # Record a uniqueness information entry for the lastname+initials showing that
-            # this lastname_initials has been seen in this name context
-            Biber::Config->add_uniquenamecount($nameinitstring, $namecontext, $key);
-
-            # Record a uniqueness information entry for the fullname
-            # showing that this fullname has been seen in this name context
-            Biber::Config->add_uniquenamecount($namestring, $namecontext, $key);
-          }
-
-          # As above but here we are collecting (separate) information for all
-          # names, regardless of visibility (needed to track uniquelist)
-          if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-            Biber::Config->add_uniquenamecount_all($lastname, $namecontext, $key);
-            Biber::Config->add_uniquenamecount_all($nameinitstring, $namecontext, $key);
-            Biber::Config->add_uniquenamecount_all($namestring, $namecontext, $key);
-          }
+        # As above but here we are collecting (separate) information for all
+        # names, regardless of visibility (needed to track uniquelist)
+        if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
+          Biber::Config->add_uniquenamecount_all($lastname, $namecontext, $key);
+          Biber::Config->add_uniquenamecount_all($nameinitstring, $namecontext, $key);
+          Biber::Config->add_uniquenamecount_all($namestring, $namecontext, $key);
         }
       }
     }
   }
+
   return;
 }
 
@@ -2260,119 +2261,119 @@ sub generate_uniquename {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    if (my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey)) {
-      $logger->trace("Setting uniquename for '$citekey'");
+    next unless my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey);
 
-      if (my $lni = $be->get_labelname_info) {
-        # Set the index limit beyond which we don't look for disambiguating information
+    $logger->trace("Setting uniquename for '$citekey'");
 
-        # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
-        my $ul = $be->get_field($lni->{field},
-                                $lni->{form},
-                                $lni->{lang})->get_uniquelist;
+    if (my $lni = $be->get_labelname_info) {
+      # Set the index limit beyond which we don't look for disambiguating information
 
-        my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
-        my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
+      # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
+      my $ul = $be->get_field($lni->{field},
+                              $lni->{form},
+                              $lni->{lang})->get_uniquelist;
 
-        my $nl = $be->get_field($lni->{field},
-                                $lni->{form},
-                                $lni->{lang});
-        my $num_names = $nl->count_names;
-        my $names = $nl->names;
-        # If name list was truncated in bib with "and others", this overrides maxcitenames
-        my $morenames = ($nl->get_morenames) ? 1 : 0;
+      my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
+      my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
-        my @truncnames;
+      my $nl = $be->get_field($lni->{field},
+                              $lni->{form},
+                              $lni->{lang});
+      my $num_names = $nl->count_names;
+      my $names = $nl->names;
+      # If name list was truncated in bib with "and others", this overrides maxcitenames
+      my $morenames = ($nl->get_morenames) ? 1 : 0;
 
-        foreach my $name (@$names) {
-          if ($un == 3 or $un == 4 or
-              ($ul and $name->get_index <= $ul) or
-              $morenames or
-              $num_names <= $maxcn or
-              $name->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
-            push @truncnames, $name;
+      my @truncnames;
+
+      foreach my $name (@$names) {
+        if ($un == 3 or $un == 4 or
+            ($ul and $name->get_index <= $ul) or
+            $morenames or
+            $num_names <= $maxcn or
+            $name->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
+          push @truncnames, $name;
+        }
+        else {
+          # Set anything now not visible due to uniquelist back to 0
+          $name->reset_uniquename;
+        }
+      }
+
+      foreach my $name (@$names) {
+        my $lastname   = $name->get_lastname;
+        my $nameinitstring = $name->get_nameinitstring;
+        my $namestring = $name->get_namestring;
+        my $namecontext = 'global'; # default
+        if ($un == 5 or $un == 6) {
+          $namecontext = $name->get_minimal_info; # $un=5 and 6
+        }
+
+        if (first {Compare($_, $name)} @truncnames) {
+
+          # If there is one key for the lastname, then it's unique using just lastname
+          # because either:
+          # * There are no other identical lastnames
+          # * All identical lastnames have a lastname+init ($un=5) or fullname ($un=6)
+          #   which is identical and therefore can't be disambiguated any further anyway
+          if (Biber::Config->get_numofuniquenames($lastname, $namecontext) == 1) {
+            $name->set_uniquename(0);
           }
+          # Otherwise, if there is one key for the lastname+inits, then it's unique
+          # using initials because either:
+          # * There are no other identical lastname+inits
+          # * All identical lastname+inits have a fullname ($un=6) which is identical
+          #   and therefore can't be disambiguated any further anyway
+          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) == 1) {
+            $name->set_uniquename(1);
+          }
+          # Otherwise if there is one key for the fullname, then it's unique using
+          # the fullname because:
+          # * There are no other identical full names
+          #
+          # But restrict to uniquename biblatex option maximum
+          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) == 1) {
+            my $run;
+            given ($un) {
+              when (1) {$run = 1}   # init
+              when (2) {$run = 2}   # full
+              when (3) {$run = 1}   # allinit
+              when (4) {$run = 2}   # allfull
+              when (5) {$run = 1}   # mininit
+              when (6) {$run = 2}   # minfull
+            }
+            $name->set_uniquename($run)
+          }
+          # Otherwise, there must be more than one key for the full name,
+          # so set to 0 since nothing will uniqueify this name and it's just
+          # misleading to expand it
           else {
-            # Set anything now not visible due to uniquelist back to 0
-            $name->reset_uniquename;
+            $name->set_uniquename(0);
           }
         }
 
-        foreach my $name (@$names) {
-          my $lastname   = $name->get_lastname;
-          my $nameinitstring = $name->get_nameinitstring;
-          my $namestring = $name->get_namestring;
-          my $namecontext = 'global'; # default
-          if ($un == 5 or $un == 6) {
-            $namecontext = $name->get_minimal_info; # $un=5 and 6
+        # As above but not just for visible names (needed for uniquelist)
+        if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
+          if (Biber::Config->get_numofuniquenames_all($lastname, $namecontext) == 1) {
+            $name->set_uniquename_all(0);
           }
-
-          if (first {Compare($_, $name)} @truncnames) {
-
-            # If there is one key for the lastname, then it's unique using just lastname
-            # because either:
-            # * There are no other identical lastnames
-            # * All identical lastnames have a lastname+init ($un=5) or fullname ($un=6)
-            #   which is identical and therefore can't be disambiguated any further anyway
-            if (Biber::Config->get_numofuniquenames($lastname, $namecontext) == 1) {
-              $name->set_uniquename(0);
-            }
-            # Otherwise, if there is one key for the lastname+inits, then it's unique
-            # using initials because either:
-            # * There are no other identical lastname+inits
-            # * All identical lastname+inits have a fullname ($un=6) which is identical
-            #   and therefore can't be disambiguated any further anyway
-            elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) == 1) {
-              $name->set_uniquename(1);
-            }
-            # Otherwise if there is one key for the fullname, then it's unique using
-            # the fullname because:
-            # * There are no other identical full names
-            #
-            # But restrict to uniquename biblatex option maximum
-            elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) == 1) {
-              my $run;
-              given ($un) {
-                when (1) {$run = 1} # init
-                when (2) {$run = 2} # full
-                when (3) {$run = 1} # allinit
-                when (4) {$run = 2} # allfull
-                when (5) {$run = 1} # mininit
-                when (6) {$run = 2} # minfull
-              }
-              $name->set_uniquename($run)
-            }
-            # Otherwise, there must be more than one key for the full name,
-            # so set to 0 since nothing will uniqueify this name and it's just
-            # misleading to expand it
-            else {
-              $name->set_uniquename(0);
-            }
+          elsif (Biber::Config->get_numofuniquenames_all($nameinitstring, $namecontext) == 1) {
+            $name->set_uniquename_all(1);
           }
-
-          # As above but not just for visible names (needed for uniquelist)
-          if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-            if (Biber::Config->get_numofuniquenames_all($lastname, $namecontext) == 1) {
-              $name->set_uniquename_all(0);
+          elsif (Biber::Config->get_numofuniquenames_all($namestring, $namecontext) == 1) {
+            my $run;
+            given ($un) {
+              when (1) {$run = 1}   # init
+              when (2) {$run = 2}   # full
+              when (3) {$run = 1}   # allinit
+              when (4) {$run = 2}   # allfull
+              when (5) {$run = 1}   # mininit
+              when (6) {$run = 2}   # minfull
             }
-            elsif (Biber::Config->get_numofuniquenames_all($nameinitstring, $namecontext) == 1) {
-              $name->set_uniquename_all(1);
-            }
-            elsif (Biber::Config->get_numofuniquenames_all($namestring, $namecontext) == 1) {
-              my $run;
-              given ($un) {
-                when (1) {$run = 1} # init
-                when (2) {$run = 2} # full
-                when (3) {$run = 1} # allinit
-                when (4) {$run = 2} # allfull
-                when (5) {$run = 1} # mininit
-                when (6) {$run = 2} # minfull
-              }
-              $name->set_uniquename_all($run)
-            }
-            else {
-              $name->set_uniquename_all(0);
-            }
+            $name->set_uniquename_all($run)
+          }
+          else {
+            $name->set_uniquename_all(0);
           }
         }
       }
@@ -2403,68 +2404,68 @@ sub create_uniquelist_info {
     my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
-    if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-      $logger->trace("Generating uniquelist information for '$citekey'");
+    next unless my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey);
 
-      if (my $lni = $be->get_labelname_info) {
-        my $nl = $be->get_field($lni->{field},
-                                $lni->{form},
-                                $lni->{lang});
-        my $num_names = $nl->count_names;
-        my $namelist = [];
-        my $ulminyear_namelist = [];
+    $logger->trace("Generating uniquelist information for '$citekey'");
 
-        foreach my $name (@{$nl->names}) {
+    if (my $lni = $be->get_labelname_info) {
+      my $nl = $be->get_field($lni->{field},
+                              $lni->{form},
+                              $lni->{lang});
+      my $num_names = $nl->count_names;
+      my $namelist = [];
+      my $ulminyear_namelist = [];
 
-          my $lastname   = $name->get_lastname;
-          my $nameinitstring = $name->get_nameinitstring;
-          my $namestring = $name->get_namestring;
-          my $ulminyearflag = 0;
+      foreach my $name (@{$nl->names}) {
 
-          # uniquelist = minyear
-          if ($ul == 2) {
+        my $lastname   = $name->get_lastname;
+        my $nameinitstring = $name->get_nameinitstring;
+        my $namestring = $name->get_namestring;
+        my $ulminyearflag = 0;
+
+        # uniquelist = minyear
+        if ($ul == 2) {
           # minyear uniquename, we set based on the max/mincitenames list
-            if ($num_names > $maxcn and
-                $name->get_index <= $mincn) {
-              $ulminyearflag = 1;
-            }
+          if ($num_names > $maxcn and
+              $name->get_index <= $mincn) {
+            $ulminyearflag = 1;
           }
-
-          # uniquename is not set so generate uniquelist based on just lastname
-          if (not defined($name->get_uniquename_all)) {
-            push @$namelist, $lastname;
-            push @$ulminyear_namelist, $lastname if $ulminyearflag;
-          }
-          # uniquename indicates unique with just lastname
-          elsif ($name->get_uniquename_all == 0) {
-            push @$namelist, $lastname;
-            push @$ulminyear_namelist, $lastname if $ulminyearflag;
-          }
-          # uniquename indicates unique with lastname with initials
-          elsif ($name->get_uniquename_all == 1) {
-            push @$namelist, $nameinitstring;
-            push @$ulminyear_namelist, $nameinitstring if $ulminyearflag;
-          }
-          # uniquename indicates unique with full name
-          elsif ($name->get_uniquename_all == 2) {
-            push @$namelist, $namestring;
-            push @$ulminyear_namelist, $namestring if $ulminyearflag;
-          }
-
-          Biber::Config->add_uniquelistcount($namelist);
         }
-        # We need to know the list uniqueness counts for the whole list seperately otherwise
-        # we will falsely "disambiguate" identical name lists from each other by setting
-        # uniquelist to the full list because every part of each list will have more than
-        # one count. We therefore need to distinguish counts which are of the final, complete
-        # list of names. If there is more than one count for these, (meaning that there are
-        # two or more identical name lists), we don't expand them at all as there is no point.
-        Biber::Config->add_uniquelistcount_final($namelist);
 
-        # Add count for uniquelist=minyear
-        unless (Compare($ulminyear_namelist, [])) {
-          Biber::Config->add_uniquelistcount_minyear($ulminyear_namelist, $be->get_field('labelyear'), $namelist);
+        # uniquename is not set so generate uniquelist based on just lastname
+        if (not defined($name->get_uniquename_all)) {
+          push @$namelist, $lastname;
+          push @$ulminyear_namelist, $lastname if $ulminyearflag;
         }
+        # uniquename indicates unique with just lastname
+        elsif ($name->get_uniquename_all == 0) {
+          push @$namelist, $lastname;
+          push @$ulminyear_namelist, $lastname if $ulminyearflag;
+        }
+        # uniquename indicates unique with lastname with initials
+        elsif ($name->get_uniquename_all == 1) {
+          push @$namelist, $nameinitstring;
+          push @$ulminyear_namelist, $nameinitstring if $ulminyearflag;
+        }
+        # uniquename indicates unique with full name
+        elsif ($name->get_uniquename_all == 2) {
+          push @$namelist, $namestring;
+          push @$ulminyear_namelist, $namestring if $ulminyearflag;
+        }
+
+        Biber::Config->add_uniquelistcount($namelist);
+      }
+      # We need to know the list uniqueness counts for the whole list seperately otherwise
+      # we will falsely "disambiguate" identical name lists from each other by setting
+      # uniquelist to the full list because every part of each list will have more than
+      # one count. We therefore need to distinguish counts which are of the final, complete
+      # list of names. If there is more than one count for these, (meaning that there are
+      # two or more identical name lists), we don't expand them at all as there is no point.
+      Biber::Config->add_uniquelistcount_final($namelist);
+
+      # Add count for uniquelist=minyear
+      unless (Compare($ulminyear_namelist, [])) {
+        Biber::Config->add_uniquelistcount_minyear($ulminyear_namelist, $be->get_field('labelyear'), $namelist);
       }
     }
   }
@@ -2491,62 +2492,62 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
     my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
-    if (my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-      $logger->trace("Creating uniquelist for '$citekey'");
+    next unless my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey);
 
-      if (my $lni = $be->get_labelname_info) {
-        my $nl = $be->get_field($lni->{field},
-                                $lni->{form},
-                                $lni->{lang});
-        my $namelist = [];
-        my $num_names = $nl->count_names;
+    $logger->trace("Creating uniquelist for '$citekey'");
 
-        foreach my $name (@{$nl->names}) {
+    if (my $lni = $be->get_labelname_info) {
+      my $nl = $be->get_field($lni->{field},
+                              $lni->{form},
+                              $lni->{lang});
+      my $namelist = [];
+      my $num_names = $nl->count_names;
 
-          my $lastname   = $name->get_lastname;
-          my $nameinitstring = $name->get_nameinitstring;
-          my $namestring = $name->get_namestring;
+      foreach my $name (@{$nl->names}) {
 
-          # uniquename is not set so generate uniquelist based on just lastname
-          if (not defined($name->get_uniquename_all)) {
-            push @$namelist, $lastname;
-          }
-          # uniquename indicates unique with just lastname
-          elsif ($name->get_uniquename_all == 0) {
-            push @$namelist, $lastname;
-          }
-          # uniquename indicates unique with lastname with initials
-          elsif ($name->get_uniquename_all == 1) {
-            push @$namelist, $nameinitstring;
-          }
-          # uniquename indicates unique with full name
-          elsif ($name->get_uniquename_all == 2) {
-            push @$namelist, $namestring;
-          }
+        my $lastname   = $name->get_lastname;
+        my $nameinitstring = $name->get_nameinitstring;
+        my $namestring = $name->get_namestring;
 
-          # With uniquelist=minyear, uniquelist should not be set at all if there are
-          # no other entries with the same max/mincitenames visible list and different years
-          # to disambiguate from
-          if ($ul == 2 and
-              $num_names > $maxcn and
-              $name->get_index <= $mincn and
-              Biber::Config->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
-            $logger->trace("Not setting uniquelist=minyear for '$citekey'");
-            next LOOP;
-          }
-
-          # list is unique after this many names so we set uniquelist to this point
-          # Even if uniquelist=minyear, we record normal uniquelist information if
-          # we didn't skip this key in the test above
-          if (Biber::Config->get_uniquelistcount($namelist) == 1) {
-            last;
-          }
+        # uniquename is not set so generate uniquelist based on just lastname
+        if (not defined($name->get_uniquename_all)) {
+          push @$namelist, $lastname;
+        }
+        # uniquename indicates unique with just lastname
+        elsif ($name->get_uniquename_all == 0) {
+          push @$namelist, $lastname;
+        }
+        # uniquename indicates unique with lastname with initials
+        elsif ($name->get_uniquename_all == 1) {
+          push @$namelist, $nameinitstring;
+        }
+        # uniquename indicates unique with full name
+        elsif ($name->get_uniquename_all == 2) {
+          push @$namelist, $namestring;
         }
 
-        $logger->trace("Setting uniquelist for '$citekey' using " . join(',', @$namelist));
-        $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount_final($namelist) . "'");
-        $nl->set_uniquelist($namelist, $maxcn, $mincn);
+        # With uniquelist=minyear, uniquelist should not be set at all if there are
+        # no other entries with the same max/mincitenames visible list and different years
+        # to disambiguate from
+        if ($ul == 2 and
+            $num_names > $maxcn and
+            $name->get_index <= $mincn and
+            Biber::Config->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
+          $logger->trace("Not setting uniquelist=minyear for '$citekey'");
+          next LOOP;
+        }
+
+        # list is unique after this many names so we set uniquelist to this point
+        # Even if uniquelist=minyear, we record normal uniquelist information if
+        # we didn't skip this key in the test above
+        if (Biber::Config->get_uniquelistcount($namelist) == 1) {
+          last;
+        }
       }
+
+      $logger->trace("Setting uniquelist for '$citekey' using " . join(',', @$namelist));
+      $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount_final($namelist) . "'");
+      $nl->set_uniquelist($namelist, $maxcn, $mincn);
     }
   }
   return;
