@@ -827,16 +827,18 @@ sub instantiate_dynamic {
         $relclone->del_field('relatedtype');
         $relclone->del_field('relatedstring');
         $relclone->del_field('relatedoptions');
-        $relclone->set_datafield('options', 'dataonly');
-        $section->bibentries->add_entry($clonekey, $relclone);
 
         # Set related clone options
         if (my $relopts = $be->get_field('relatedoptions')) {
           $self->process_entry_options($clonekey, $relopts);
+          $relclone->set_datafield('options', $relopts);
         }
         else {
           $self->process_entry_options($clonekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
+          $relclone->set_datafield('options', 'dataonly');
         }
+
+        $section->bibentries->add_entry($clonekey, $relclone);
 
         # Save graph information if requested
         if (Biber::Config->getoption('outformat') eq 'dot') {
