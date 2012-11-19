@@ -127,6 +127,18 @@ my $sourcemap = [
                         map_match        => "\\A(\\S{2})",
                         map_replace      => "REP\$1CED",
                       },
+                      {
+                        map_field_source => "entrykey",
+                        map_null         => 1
+                      },
+                      {
+                        map_field_source => "entrykey",
+                        map_field_target => "NOTE"
+                      },
+                      {
+                        map_field_set    => "NOTE",
+                        map_origfieldval => 1
+                      },
                     ],
         per_type => [{ content => "UNPUBLISHED" }],
       },

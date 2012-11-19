@@ -196,9 +196,6 @@ sub extract_entries {
         }
         my $entry = $entries[0];
 
-        my $dbid = $entry->findvalue('./foreign-keys/key/@db-id');
-        my $key = $entry->findvalue('./rec-number');
-
         $logger->debug("Found key '$wanted_key' in Endnote XML file '$filename'");
         $logger->debug('Parsing Endnote XML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key

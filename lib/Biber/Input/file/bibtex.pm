@@ -330,7 +330,10 @@ sub create_entry {
 
           # Field map
           if (my $source = $step->{map_field_source}) {
-            unless ($entry->exists(lc($source))) {
+            # key is a psudo-field. It's guaranteed to exist so
+            # just check if that's what's being asked for
+            unless (lc($source) eq 'entrykey' or
+                    $entry->exists(lc($source))) {
               # Skip the rest of the map if this step doesn't match
               if ($step->{map_final}) {
                 next MAP;
@@ -342,13 +345,20 @@ sub create_entry {
             }
 
             $last_field = $source;
-            $last_fieldval = decode_utf8($entry->get(lc($source)));
+            $last_fieldval = lc($source) eq 'entrykey' ? decode_utf8($entry->key) : decode_utf8($entry->get(lc($source)));
 
             # map fields to targets
             if (my $m = $step->{map_match}) {
               if (defined($step->{map_replace})) { # replace can be null
+
+                # Can't modify entrykey
+                if (lc($source) eq 'entrykey') {
+                  $logger->debug("Field '$source' is 'entrykey'- cannot remap the value of this field - skipping ...");
+                  next;
+                }
+
                 my $r = $step->{map_replace};
-                $entry->set(lc($step->{map_field_source}),
+                $entry->set(lc($source),
                             ireplace($last_fieldval, $m, $r));
               }
               else {
@@ -367,12 +377,19 @@ sub create_entry {
 
             # Set to a different target if there is one
             if (my $target = $step->{map_field_target}) {
+
+              # Can't remap entry key pseudo-field
+              if (lc($source) eq 'entrykey') {
+                $logger->debug("Field '$source' is 'entrykey'- cannot map this to a new field as you must have an entrykey - skipping ...");
+                next;
+              }
+
               if ($entry->exists(lc($target))) {
                 if ($map->{map_overwrite} // $smap->{map_overwrite}) {
                   $logger->debug("Overwriting existing field '$target' while processing entry '$key'");
                 }
                 else {
-                  $logger->debug("Field '$source' is aliased to field '$target' but both are defined in entry with key '$key' - skipping alias");
+                  $logger->debug("Field '$source' is aliased to field '$target' but both are defined in entry with key '$key' - skipping ...");
 
                   next;
                 }

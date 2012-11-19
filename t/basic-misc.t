@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 52;
+use Test::More tests => 53;
 
 use Biber;
 use Biber::Utils;
@@ -278,6 +278,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \field{labeltitle}{Shorttitle}
       \true{singletitle}
       \field{hyphenation}{USenglish}
+      \field{note}{anon1}
       \field{shorttitle}{Shorttitle}
       \field{title}{Title1}
       \field{year}{1835}
@@ -303,6 +304,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \field{labeltitle}{Shorttitle}
       \true{singletitle}
       \field{hyphenation}{USenglish}
+      \field{note}{anon2}
       \field{shorttitle}{Shorttitle}
       \field{title}{Title2}
       \field{year}{1839}
@@ -375,6 +377,8 @@ is($bibentries->entry('i2')->get_field('usere'), 'a Štring', 'map 4' );
 # Testing of user field map match/replace
 is($biber->_liststring('i1', 'listb'), 'REPlacedte!early', 'map 5');
 is($biber->_liststring('i1', 'institution'), 'REPlaCEDte!early', 'map 6');
+# Testing of pseudo-field "entrykey" handling
+is($bibentries->entry('i1')->get_field('note'), 'i1', 'map 3' );
 # Checking deletion of alsosets with value BMAP_NULL
 ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 7' );
 # Checking that the "misc" type-specific mapping to null takes precedence over global userb->userc
