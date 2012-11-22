@@ -445,7 +445,7 @@ sub create_entry {
                 # Now re-instate any unescaped $1 .. $9 to get round these being
                 # dynamically scoped and being null when we get here from any
                 # previous map_match
-                $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/e;
+                $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
                 $entry->set(lc($field), $orig . $fv);
               }
             }
