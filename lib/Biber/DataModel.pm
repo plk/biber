@@ -171,10 +171,11 @@ sub new {
 sub is_field {
   my $self = shift;
   my $field = shift;
+  my $forms = $DM_DATATYPES{'forms'};
   if ($field =~ m/^BIBERCUSTOM/o) {
     return 1;
   }
-  elsif ($field =~ m/^([^_]+)_(?:original|translated|romanised|uniform)_?.*$/) {
+  elsif ($field =~ m/^([^_]+)_(?:${forms})_?.*$/) {
     return $self->{fieldsbyname}{$1} ? 1 : 0;
   }
   else {

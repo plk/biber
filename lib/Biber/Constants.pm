@@ -95,7 +95,8 @@ our %NOSORT_TYPES = (
 
 # datatypes for data model validation
 our %DM_DATATYPES = (
-                     integer => qr/\A\d+\z/xms
+                     integer => qr/\A\d+\z/xms,
+                     forms   => qr/original|translated|romanised|uniform/xms
 );
 
 # Biber option defaults. Many not really needed since they are always passed by .bcf

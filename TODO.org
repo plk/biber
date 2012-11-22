@@ -1,6 +1,8 @@
 * When perl 5.16.1 is released, move build farm to this and:
 ** Convert lc() compares to fc()
 ** use v5.16 everywhere
-
+* Multiscript
+** Document that maps must specify form/lang, there is no auto mapping of all field variants. This would be messy at best.
+** Inidividual name hashes are different between variants - does this matter?
 
 

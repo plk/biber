@@ -108,37 +108,62 @@ sub set_output_target_file {
 =cut
 
 sub _printfield {
-  my ($be, $field, $str) = @_;
-  my $field_type = 'field';
+  my ($be, $field) = @_;
+  my $acc;
+
   # crossref and xref are of type 'strng' in the .bbl
-  if (lc($field) eq 'crossref' or
-      lc($field) eq 'xref') {
-    $field_type = 'strng';
-  }
-
-  # auto-escape TeX special chars if:
-  # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
-  # * It's not a string field
-  if ($field_type ne 'strng' and $be->get_field('datatype') ne 'bibtex') {
-    $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
-  }
-
-  if (Biber::Config->getoption('wraplines')) {
-    ## 16 is the length of '      \field{}{}' or '      \strng{}{}'
-    if ( 16 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
-      return "      \\${field_type}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
-    }
-    elsif ( 16 + length($field) + length($str) > $Text::Wrap::columns ) {
-      return wrap('      ', '      ', "\\${field_type}{$field}{$str}" ) . "\n";
+  if (lc($field) eq 'crossref' or lc($field) eq 'xref') {
+    my $str = $be->get_field($field);
+    if (Biber::Config->getoption('wraplines')) {
+      ## 16 is the length of '      \strng{}{}'
+      if ( 16 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
+        $acc .= "      \\strng{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
+      }
+      elsif ( 16 + length($field) + length($str) > $Text::Wrap::columns ) {
+        $acc .= wrap('      ', '      ', "\\strng{$field}{$str}" ) . "\n";
+      }
+      else {
+        $acc .= "      \\strng{$field}{$str}\n";
+      }
     }
     else {
-      return "      \\${field_type}{$field}{$str}\n";
+      $acc .= "      \\strng{$field}{$str}\n";
     }
   }
   else {
-    return "      \\${field_type}{$field}{$str}\n";
+    # loop over all field forms and langs
+    foreach my $form ($be->get_field_form_names($field)) {
+      foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
+        my $str = $be->get_field($field, $form, $lang);
+
+        # auto-escape TeX special chars if:
+        # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
+        # * It's not a \\strng field
+        if ($be->get_field('datatype') ne 'bibtex') {
+          $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
+        }
+
+        if (Biber::Config->getoption('wraplines')) {
+          ## 20 is the length of '      \field{}{}{}{}'
+          if ( 20 + length($form) + length($lang) + length($field) + length($str) > 2*$Text::Wrap::columns ) {
+            $acc .= "      \\field{$form}{$lang}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
+          }
+          elsif ( 20 + length($form) + length($lang) + length($field) + length($str) > $Text::Wrap::columns ) {
+            $acc .= wrap('      ', '      ', "\\field{$form}{$lang}{$field}{$str}" ) . "\n";
+          }
+          else {
+            $acc .= "      \\field{$form}{$lang}{$field}{$str}\n";
+          }
+        }
+        else {
+          $acc .= "      \\field{$form}{$lang}{$field}{$str}\n";
+        }
+
+      }
+    }
+
   }
-  return;
+  return $acc;
 }
 
 =head2 set_output_keyalias
@@ -244,7 +269,9 @@ sub set_output_entry {
     }
 
     my $total = $ln->count_names;
-    $acc .= "      \\name{labelname}{$total}{$plo}{%\n";
+    # labelname has a pseudo form and lang because it is resolved to a real name
+    # plus form and lang but is also a name field
+    $acc .= "      \\name{original}{default}{labelname}{$total}{$plo}{%\n";
     foreach my $n (@{$ln->names}) {
       $acc .= $n->name_to_bbl;
     }
@@ -254,21 +281,30 @@ sub set_output_entry {
   # then names themselves
   foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
     next if $dm->field_is_skipout($namefield);
-    if ( my $nf = $be->get_field($namefield) ) {
 
-      # Did we have "and others" in the data?
-      if ( $nf->get_morenames ) {
-        $acc .= "      \\true{more$namefield}\n";
-      }
+    # Did we have "and others" in the data?
+    # Don't need a per-form/lang more<name> field
+    if ( $be->get_field($namefield) and
+         $be->get_field($namefield)->get_morenames ) {
+      $acc .= "      \\true{more$namefield}\n";
+    }
 
-      my $total = $nf->count_names;
-      # Copy per-list options to the actual labelname too
-      $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
-      $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
-      foreach my $n (@{$nf->names}) {
-        $acc .= $n->name_to_bbl;
+    # loop over all name forms and langs
+    foreach my $form ($be->get_field_form_names($namefield)) {
+      foreach my $lang ($be->get_field_form_lang_names($namefield, $form)) {
+        if ( my $nf = $be->get_field($namefield, $form, $lang) ) {
+
+          my $total = $nf->count_names;
+          # Copy per-list options to the actual labelname too
+          $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
+
+          $acc .= "      \\name{$form}{$lang}{$namefield}{$total}{$plo}{%\n";
+          foreach my $n (@{$nf->names}) {
+            $acc .= $n->name_to_bbl;
+          }
+          $acc .= "      }\n";
+        }
       }
-      $acc .= "      }\n";
     }
   }
 
@@ -276,17 +312,29 @@ sub set_output_entry {
   foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
     next if $dm->field_is_skipout($listfield);
-    if (my $lf = $be->get_field($listfield)) {
-      if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
-        $acc .= "      \\true{more$listfield}\n";
-        pop @$lf; # remove the last element in the array
+
+    # Don't need a per-form/lang more<list> field
+    if ( $be->get_field($listfield) and
+         lc($be->get_field($listfield)->[-1]) eq 'others' ) {
+      $acc .= "      \\true{more$listfield}\n";
+    }
+
+    # loop over all list forms and langs
+    foreach my $form ($be->get_field_form_names($listfield)) {
+      foreach my $lang ($be->get_field_form_lang_names($listfield, $form)) {
+        if (my $lf = $be->get_field($listfield, $form, $lang)) {
+          if ( lc($be->get_field($listfield, $form, $lang)->[-1]) eq 'others' ) {
+            pop @$lf;           # remove the last element in the array
+          }
+          my $total = $#$lf + 1;
+
+          $acc .= "      \\list{$form}{$lang}{$listfield}{$total}{%\n";
+          foreach my $f (@$lf) {
+            $acc .= "        {$f}%\n";
+          }
+          $acc .= "      }\n";
+        }
       }
-      my $total = $#$lf + 1;
-      $acc .= "      \\list{$listfield}{$total}{%\n";
-      foreach my $f (@$lf) {
-        $acc .= "        {$f}%\n";
-      }
-      $acc .= "      }\n";
     }
   }
 
@@ -298,7 +346,7 @@ sub set_output_entry {
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
     # Might not have been set due to skiplab/dataonly
     if (my $label = $be->get_field('labelalpha')) {
-      $acc .= "      \\field{labelalpha}{$label}\n";
+      $acc .= "      \\field{original}{default}{labelalpha}{$label}\n";
     }
   }
 
@@ -315,7 +363,7 @@ sub set_output_entry {
       }
     }
     if (my $ly = $be->get_field('labelyear')) {
-      $acc .= "      \\field{labelyear}{$ly}\n";
+      $acc .= "      \\field{original}{default}{labelyear}{$ly}\n";
     }
   }
 
@@ -341,7 +389,7 @@ sub set_output_entry {
 
   # labeltitle is always output
   if (my $lt = $be->get_field('labeltitle')) {
-    $acc .= "      \\field{labeltitle}{$lt}\n";
+    $acc .= "      \\field{original}{default}{labeltitle}{$lt}\n";
   }
 
   # The labelalpha option determines whether "extraalpha" is output
@@ -356,10 +404,10 @@ sub set_output_entry {
 
   if ( Biber::Config->getblxoption('labelnumber', $bee) ) {
     if (my $sh = $be->get_field('shorthand')) {
-      $acc .= "      \\field{labelnumber}{$sh}\n";
+      $acc .= "      \\field{original}{default}{labelnumber}{$sh}\n";
     }
     elsif (my $lnum = $be->get_field('labelnumber')) {
-      $acc .= "      \\field{labelnumber}{$lnum}\n";
+      $acc .= "      \\field{original}{default}{labelnumber}{$lnum}\n";
     }
   }
 
@@ -386,7 +434,7 @@ sub set_output_entry {
         next if ($lfield eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
-      $acc .= _printfield($be, $lfield, $be->get_field($lfield) );
+      $acc .= _printfield($be, $lfield);
     }
   }
 
@@ -404,7 +452,7 @@ sub set_output_entry {
         }
       }
       my $bbl_rf = join('\bibrangessep ', @pr);
-      $acc .= "      \\field{$rfield}{$bbl_rf}\n";
+      $acc .= "      \\field{original}{default}{$rfield}{$bbl_rf}\n";
     }
   }
 

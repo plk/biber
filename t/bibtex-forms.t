@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 17;
+use Test::More tests => 18;
 
 use Biber;
 use Biber::Utils;
@@ -139,3 +139,53 @@ is($bibentries->entry('forms4')->get_field('sortlabelalpha'), 'F t', 'labelalpha
 is($bibentries->entry('forms5')->get_field('sortlabelalpha'), 'A t', 'labelalpha forms - 3');
 is($bibentries->entry('forms6')->get_field('sortlabelalpha'), 'Z t', 'labelalpha forms - 4');
 
+my $forms1 = q|    \entry{forms1}{book}{}
+      \name{original}{default}{labelname}{2}{}{%
+        {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
+      }
+      \name{uniform}{default}{author}{2}{}{%
+        {{hash=d3e42eb37529f4d05f9646c333b5fd5f}{Bulgakov}{B\bibinitperiod}{Pavel}{P\bibinitperiod}{}{}{}{}}%
+        {{hash=87d0ec74cbe7f9e39f5bbc25930f1474}{Rosenfeld}{R\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
+      }
+      \name{original}{default}{author}{2}{}{%
+        {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
+      }
+      \list{original}{default}{institution}{1}{%
+        {University of Life}%
+      }
+      \list{uniform}{default}{location}{1}{%
+        {Moscow}%
+      }
+      \list{original}{default}{location}{1}{%
+        {Москва}%
+      }
+      \list{romanised}{default}{location}{1}{%
+        {Moskva}%
+      }
+      \list{original}{default}{publisher}{1}{%
+        {Наука}%
+      }
+      \list{romanised}{default}{publisher}{1}{%
+        {Nauka}%
+      }
+      \list{translated}{default}{publisher}{1}{%
+        {Science}%
+      }
+      \strng{namehash}{253fe13319a1daadcda3e2acce242883}
+      \strng{fullhash}{253fe13319a1daadcda3e2acce242883}
+      \field{original}{default}{labelalpha}{БР02}
+      \field{original}{default}{sortinit}{Б}
+      \field{original}{default}{labeltitle}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \true{singletitle}
+      \field{original}{default}{day}{01}
+      \field{original}{default}{month}{10}
+      \field{original}{default}{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field{romanised}{default}{title}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
+      \field{translated}{default}{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
+      \field{original}{default}{year}{2002}
+    \endentry
+|;
+
+is($out->get_output_entry($main,'forms1'), $forms1, 'bbl entry - forms 1') ;
