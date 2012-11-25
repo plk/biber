@@ -401,15 +401,19 @@ sub parse_ctrlfile {
   # DATASOURCE MAPPING
   # This is special as it's both a biblatex option and a biber option
   # We merge into the biber option
-  # In biblatex you can set driver default mappings but not in biber
-  # user maps set via biblatex take preference for a given driver.
+  # In biblatex you can set driver mappings but not in biber
+  # user/style maps set via biblatex take preference for a given driver.
   # The case we have to deal with is where there are driver defaults
   # from biblatex and user settings in biber - we need to merge
   if (exists($bcfxml->{sourcemap})) {
     # Users maps are set in config file
     if (my $usms = Biber::Config->getoption('sourcemap')) {
-      # Merge the driver defaults with the user maps from the config file
-      if (my @m = grep {$_->{driver_defaults}} @{$bcfxml->{sourcemap}{maps}} ) {
+      # Force "user" level for the maps
+      @$usms = map {$_->{level} = 'user';$_} @$usms;
+
+      # Merge the driver/style maps with the user maps from the config file
+      if (my @m = grep {$_->{level} eq 'driver' or
+                        $_->{level} eq 'style'} @{$bcfxml->{sourcemap}{maps}} ) {
         Biber::Config->setoption('sourcemap', [@$usms, @m]);
       }
       else { # no driver defaults, just override the config file user map settings

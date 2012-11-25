@@ -154,7 +154,7 @@
   </bcf:options>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
-    <bcf:maps datatype="bibtex" driver_defaults="1">
+    <bcf:maps datatype="bibtex" level="driver">
       <bcf:map>
         <bcf:map_step map_type_source="conference" map_type_target="inproceedings"/>
         <bcf:map_step map_type_source="electronic" map_type_target="online"/>
@@ -183,7 +183,7 @@
         <bcf:map_step map_field_source="pdf"           map_field_target="file"/>
       </bcf:map>
     </bcf:maps>
-    <bcf:maps datatype="endnotexml" driver_defaults="1">
+    <bcf:maps datatype="endnotexml" level="driver">
       <bcf:map>
         <bcf:map_step map_type_source="Aggregated Database"      map_type_target="misc"/>
         <bcf:map_step map_type_source="Ancient Text"             map_type_target="misc"/>
@@ -306,7 +306,7 @@
         <bcf:map_step map_field_source="titles/tertiary-title" map_field_target="titles/series"/>
       </bcf:map>
     </bcf:maps>
-    <bcf:maps datatype="ris" driver_defaults="1">
+    <bcf:maps datatype="ris" level="driver">
       <bcf:map>
         <bcf:map_step map_type_source="ART"    map_type_target="artwork"/>
         <bcf:map_step map_type_source="BILL"   map_type_target="jurisdiction"/>
@@ -365,7 +365,7 @@
         <bcf:map_step map_field_source="L1"   map_field_target="file"/>
       </bcf:map>
     </bcf:maps>
-    <bcf:maps datatype="zoterordfxml" driver_defaults="1">
+    <bcf:maps datatype="zoterordfxml" level="driver">
       <bcf:map>
         <bcf:map_step map_type_source="conferencePaper"     map_type_target="inproceedings"/>
         <bcf:map_step map_type_source="bookSection"         map_type_target="inbook"/>

@@ -36,6 +36,7 @@ my $nosort = [ { name => 'author', value => q/\A\p{L}{2}\p{Pd}/ },
 my $sourcemap = [
   {
     datatype => "bibtex",
+    level    => "user",
     map => [
       {
         map_step => [
@@ -155,6 +156,7 @@ my $sourcemap = [
   },
   {
     datatype => "endnotexml",
+    level    => "user",
     map => [
       {
         map_step => [
@@ -183,6 +185,7 @@ my $sourcemap = [
   },
   {
     datatype => "ris",
+    level    => "user",
     map => [
       {
         map_step => [{ map_type_source => "JOUR", map_type_target => "RPRT" }],
@@ -214,6 +217,7 @@ my $sourcemap = [
   },
   {
     datatype => "zoterordfxml",
+    level    => "user",
     map => [
       {
         map_step => [
@@ -239,7 +243,7 @@ my $sourcemap = [
   },
   {
     datatype => "bibtex",
-    driver_defaults => 1,
+    level => "driver",
     map => [
       {
         map_step => [
@@ -308,7 +312,7 @@ my $sourcemap = [
   },
   {
     datatype => "endnotexml",
-    driver_defaults => 1,
+    level => "driver",
     map => [
       {
         map_step => [
@@ -689,7 +693,7 @@ my $sourcemap = [
   },
   {
     datatype => "ris",
-    driver_defaults => 1,
+    level => "driver",
     map => [
       {
         map_step => [
@@ -780,7 +784,7 @@ my $sourcemap = [
   },
   {
     datatype => "zoterordfxml",
-    driver_defaults => 1,
+    level => "driver",
     map => [
       {
         map_step => [

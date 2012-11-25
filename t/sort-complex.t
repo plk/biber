@@ -38,6 +38,7 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('sourcemap', [
   {
     datatype => "bibtex",
+    level => "user",
     map => [
       {
         map_step => [{ map_field_set => "SHORTHAND", map_null => 1 },
