@@ -104,11 +104,15 @@ sub extract_entries {
   my $smaps = [];
   if (defined(Biber::Config->getoption('sourcemap'))) {
     # User maps
-    if (my $m = first {$_->{datatype} eq 'bibtex' and not exists($_->{driver_defaults})} @{Biber::Config->getoption('sourcemap')} ) {
+    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'user' } @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+    # Style maps
+    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'style' } @{Biber::Config->getoption('sourcemap')} ) {
       push @$smaps, $m;
     }
     # Driver default maps
-    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{driver_defaults}} @{Biber::Config->getoption('sourcemap')} ) {
+    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'driver'} @{Biber::Config->getoption('sourcemap')} ) {
       push @$smaps, $m;
     }
   }

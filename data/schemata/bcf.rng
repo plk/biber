@@ -185,10 +185,11 @@
                 </attribute>
               </optional>
               <optional>
-                <attribute name="driver_defaults">
+                <attribute name="level">
                   <choice>
-                    <value>0</value>
-                    <value>1</value>
+                    <value>user</value>
+                    <value>style</value>
+                    <value>driver</value>
                   </choice>
                 </attribute>
               </optional>

@@ -91,7 +91,7 @@ start =
       element bcf:maps {
         attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
         attribute map_overwrite { "0" | "1" }?,
-        attribute driver_defaults { "0" | "1" }?,
+        attribute level { "user" | "style" | "driver" }?,
         map+
       }+
     }?,
