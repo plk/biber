@@ -61,7 +61,7 @@ my $sourcemap = [
           {
             map_final       => 1,
             map_type_source => "CONVERSATION",
-            map_type_target => "CUSTOMA",
+            map_type_target => "CUSTOMC",
           },
           { map_field_set => "VERBA", map_origentrytype => 1 },
           { map_field_set => "VERBB", map_field_value => "somevalue" },
