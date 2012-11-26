@@ -51,50 +51,50 @@ my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $out = $biber->get_output_obj;
 
 my $xd1 = q|    \entry{xd1}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{Ellington}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{Ellington}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list{location}{2}{%
+      \list{original}{default}{location}{2}{%
         {New York}%
         {London}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Macmillan}%
       }
       \strng{namehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{fullhash}{51db4bfd331cba22959ce2d224c517cd}
-      \field{sortinit}{E}
-      \field{labelyear}{2007}
-      \field{note}{A Note}
-      \field{year}{2007}
+      \field{original}{default}{sortinit}{E}
+      \field{original}{default}{labelyear}{2007}
+      \field{original}{default}{note}{A Note}
+      \field{original}{default}{year}{2007}
     \endentry
 |;
 
 my $xd2 = q|    \entry{xd2}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{Pillington}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{Pillington}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
       }
-      \list{location}{2}{%
+      \list{original}{default}{location}{2}{%
         {New York}%
         {London}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Routledge}%
       }
       \strng{namehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{fullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
-      \field{sortinit}{P}
-      \field{labelyear}{2003}
-      \field{abstract}{An abstract}
-      \field{addendum}{Москва}
-      \field{note}{A Note}
-      \field{year}{2003}
+      \field{original}{default}{sortinit}{P}
+      \field{original}{default}{labelyear}{2003}
+      \field{original}{default}{abstract}{An abstract}
+      \field{original}{default}{addendum}{Москва}
+      \field{original}{default}{note}{A Note}
+      \field{original}{default}{year}{2003}
     \endentry
 |;
 

@@ -61,222 +61,222 @@ my $l11 = [ "Overwriting field 'year' with year value from field 'date' for entr
 my $l12 = [ "Overwriting field 'month' with month value from field 'date' for entry 'L12'" ];
 
 my $l13c = q|    \entry{L13}{book}{}
-      \name{labelname}{2}{}{%
+      \name{original}{default}{labelname}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{2}{}{%
+      \name{original}{default}{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
-      \field{extrayear}{3}
-      \field{labelyear}{1996}
-      \field{labeltitle}{Title 2}
-      \field{day}{01}
-      \field{endyear}{}
-      \field{month}{01}
-      \field{title}{Title 2}
-      \field{year}{1996}
+      \field{original}{default}{sortinit}{D}
+      \field{original}{default}{extrayear}{3}
+      \field{original}{default}{labelyear}{1996}
+      \field{original}{default}{labeltitle}{Title 2}
+      \field{original}{default}{day}{01}
+      \field{original}{default}{endyear}{}
+      \field{original}{default}{month}{01}
+      \field{original}{default}{title}{Title 2}
+      \field{original}{default}{year}{1996}
     \endentry
 |;
 
 my $l14 = q|    \entry{L14}{book}{}
-      \name{labelname}{2}{}{%
+      \name{original}{default}{labelname}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{2}{}{%
+      \name{original}{default}{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
-      \field{extrayear}{4}
-      \field{labelyear}{1996}
-      \field{labeltitle}{Title 2}
-      \field{day}{10}
-      \field{endday}{12}
-      \field{endmonth}{12}
-      \field{endyear}{1996}
-      \field{month}{12}
-      \field{title}{Title 2}
-      \field{year}{1996}
+      \field{original}{default}{sortinit}{D}
+      \field{original}{default}{extrayear}{4}
+      \field{original}{default}{labelyear}{1996}
+      \field{original}{default}{labeltitle}{Title 2}
+      \field{original}{default}{day}{10}
+      \field{original}{default}{endday}{12}
+      \field{original}{default}{endmonth}{12}
+      \field{original}{default}{endyear}{1996}
+      \field{original}{default}{month}{12}
+      \field{original}{default}{title}{Title 2}
+      \field{original}{default}{year}{1996}
     \endentry
 |;
 
 my $l15 = q|    \entry{L15}{book}{}
-      \name{labelname}{2}{}{%
+      \name{original}{default}{labelname}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{2}{}{%
+      \name{original}{default}{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
-      \field{extrayear}{4}
-      \field{labeltitle}{Title 2}
-      \field{title}{Title 2}
+      \field{original}{default}{sortinit}{D}
+      \field{original}{default}{extrayear}{4}
+      \field{original}{default}{labeltitle}{Title 2}
+      \field{original}{default}{title}{Title 2}
       \warn{\item Missing mandatory field - one of 'date, year' must be defined in entry 'L15'}
     \endentry
 |;
 
 my $l16 = q|    \entry{L16}{proceedings}{}
-      \name{labelname}{2}{}{%
+      \name{original}{default}{labelname}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{2}{}{%
+      \name{original}{default}{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
-      \field{extrayear}{6}
-      \field{labelyear}{1996}
-      \field{labeltitle}{Title 2}
-      \field{eventday}{01}
-      \field{eventmonth}{01}
-      \field{eventyear}{1996}
-      \field{title}{Title 2}
+      \field{original}{default}{sortinit}{D}
+      \field{original}{default}{extrayear}{6}
+      \field{original}{default}{labelyear}{1996}
+      \field{original}{default}{labeltitle}{Title 2}
+      \field{original}{default}{eventday}{01}
+      \field{original}{default}{eventmonth}{01}
+      \field{original}{default}{eventyear}{1996}
+      \field{original}{default}{title}{Title 2}
       \warn{\item Missing mandatory field - one of 'date, year' must be defined in entry 'L16'}
     \endentry
 |;
 
 my $l17 = q|    \entry{L17}{proceedings}{}
-      \name{labelname}{2}{}{%
+      \name{original}{default}{labelname}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{2}{}{%
+      \name{original}{default}{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
-      \field{extrayear}{5}
-      \field{labelyear}{1996}
-      \field{labeltitle}{Title 2}
-      \field{day}{10}
-      \field{endday}{12}
-      \field{endmonth}{12}
-      \field{endyear}{1996}
-      \field{eventday}{10}
-      \field{eventendday}{12}
-      \field{eventendmonth}{12}
-      \field{eventendyear}{2004}
-      \field{eventmonth}{12}
-      \field{eventyear}{1998}
-      \field{month}{12}
-      \field{origday}{10}
-      \field{origendday}{12}
-      \field{origendmonth}{12}
-      \field{origendyear}{1998}
-      \field{origmonth}{12}
-      \field{origyear}{1998}
-      \field{title}{Title 2}
-      \field{year}{1996}
+      \field{original}{default}{sortinit}{D}
+      \field{original}{default}{extrayear}{5}
+      \field{original}{default}{labelyear}{1996}
+      \field{original}{default}{labeltitle}{Title 2}
+      \field{original}{default}{day}{10}
+      \field{original}{default}{endday}{12}
+      \field{original}{default}{endmonth}{12}
+      \field{original}{default}{endyear}{1996}
+      \field{original}{default}{eventday}{10}
+      \field{original}{default}{eventendday}{12}
+      \field{original}{default}{eventendmonth}{12}
+      \field{original}{default}{eventendyear}{2004}
+      \field{original}{default}{eventmonth}{12}
+      \field{original}{default}{eventyear}{1998}
+      \field{original}{default}{month}{12}
+      \field{original}{default}{origday}{10}
+      \field{original}{default}{origendday}{12}
+      \field{original}{default}{origendmonth}{12}
+      \field{original}{default}{origendyear}{1998}
+      \field{original}{default}{origmonth}{12}
+      \field{original}{default}{origyear}{1998}
+      \field{original}{default}{title}{Title 2}
+      \field{original}{default}{year}{1996}
     \endentry
 |;
 
 my $l17c = q|    \entry{L17}{proceedings}{}
-      \name{labelname}{2}{}{%
+      \name{original}{default}{labelname}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{2}{}{%
+      \name{original}{default}{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
-      \field{labelyear}{1998}
-      \field{labeltitle}{Title 2}
-      \field{day}{10}
-      \field{endday}{12}
-      \field{endmonth}{12}
-      \field{endyear}{1996}
-      \field{eventday}{10}
-      \field{eventendday}{12}
-      \field{eventendmonth}{12}
-      \field{eventendyear}{2004}
-      \field{eventmonth}{12}
-      \field{eventyear}{1998}
-      \field{month}{12}
-      \field{origday}{10}
-      \field{origendday}{12}
-      \field{origendmonth}{12}
-      \field{origendyear}{1998}
-      \field{origmonth}{12}
-      \field{origyear}{1998}
-      \field{title}{Title 2}
-      \field{year}{1996}
+      \field{original}{default}{sortinit}{D}
+      \field{original}{default}{labelyear}{1998}
+      \field{original}{default}{labeltitle}{Title 2}
+      \field{original}{default}{day}{10}
+      \field{original}{default}{endday}{12}
+      \field{original}{default}{endmonth}{12}
+      \field{original}{default}{endyear}{1996}
+      \field{original}{default}{eventday}{10}
+      \field{original}{default}{eventendday}{12}
+      \field{original}{default}{eventendmonth}{12}
+      \field{original}{default}{eventendyear}{2004}
+      \field{original}{default}{eventmonth}{12}
+      \field{original}{default}{eventyear}{1998}
+      \field{original}{default}{month}{12}
+      \field{original}{default}{origday}{10}
+      \field{original}{default}{origendday}{12}
+      \field{original}{default}{origendmonth}{12}
+      \field{original}{default}{origendyear}{1998}
+      \field{original}{default}{origmonth}{12}
+      \field{original}{default}{origyear}{1998}
+      \field{original}{default}{title}{Title 2}
+      \field{original}{default}{year}{1996}
     \endentry
 |;
 
 my $l17e = q|    \entry{L17}{proceedings}{}
-      \name{labelname}{2}{}{%
+      \name{original}{default}{labelname}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{2}{}{%
+      \name{original}{default}{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
-      \field{labelyear}{1998\bibdatedash 2004}
-      \field{labeltitle}{Title 2}
-      \field{day}{10}
-      \field{endday}{12}
-      \field{endmonth}{12}
-      \field{endyear}{1996}
-      \field{eventday}{10}
-      \field{eventendday}{12}
-      \field{eventendmonth}{12}
-      \field{eventendyear}{2004}
-      \field{eventmonth}{12}
-      \field{eventyear}{1998}
-      \field{month}{12}
-      \field{origday}{10}
-      \field{origendday}{12}
-      \field{origendmonth}{12}
-      \field{origendyear}{1998}
-      \field{origmonth}{12}
-      \field{origyear}{1998}
-      \field{title}{Title 2}
-      \field{year}{1996}
+      \field{original}{default}{sortinit}{D}
+      \field{original}{default}{labelyear}{1998\bibdatedash 2004}
+      \field{original}{default}{labeltitle}{Title 2}
+      \field{original}{default}{day}{10}
+      \field{original}{default}{endday}{12}
+      \field{original}{default}{endmonth}{12}
+      \field{original}{default}{endyear}{1996}
+      \field{original}{default}{eventday}{10}
+      \field{original}{default}{eventendday}{12}
+      \field{original}{default}{eventendmonth}{12}
+      \field{original}{default}{eventendyear}{2004}
+      \field{original}{default}{eventmonth}{12}
+      \field{original}{default}{eventyear}{1998}
+      \field{original}{default}{month}{12}
+      \field{original}{default}{origday}{10}
+      \field{original}{default}{origendday}{12}
+      \field{original}{default}{origendmonth}{12}
+      \field{original}{default}{origendyear}{1998}
+      \field{original}{default}{origmonth}{12}
+      \field{original}{default}{origyear}{1998}
+      \field{original}{default}{title}{Title 2}
+      \field{original}{default}{year}{1996}
     \endentry
 |;
 

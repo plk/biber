@@ -259,426 +259,426 @@ my $name16 =
 
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=72287a68c1714cb1b9f4ab9e03a88b96}{Adler}{A\bibinitperiod}{Alfred}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=72287a68c1714cb1b9f4ab9e03a88b96}{Adler}{A\bibinitperiod}{Alfred}{A\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{fullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
-      \field{sortinit}{A}
+      \field{original}{default}{sortinit}{A}
     \endentry
 |;
 
 my $l2 = q|    \entry{L2}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=1c867a2b5ceb243bab70afb18702dc04}{Bull}{B\bibinitperiod}{Bertie\bibnamedelima B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=1c867a2b5ceb243bab70afb18702dc04}{Bull}{B\bibinitperiod}{Bertie\bibnamedelima B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{1c867a2b5ceb243bab70afb18702dc04}
       \strng{fullhash}{1c867a2b5ceb243bab70afb18702dc04}
-      \field{sortinit}{B}
+      \field{original}{default}{sortinit}{B}
     \endentry
 |;
 
 my $l3 = q|    \entry{L3}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=cecd18116c43ee86e5a136b6e0362948}{Crop}{C\bibinitperiod}{C.\bibnamedelimi Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=cecd18116c43ee86e5a136b6e0362948}{Crop}{C\bibinitperiod}{C.\bibnamedelimi Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{cecd18116c43ee86e5a136b6e0362948}
       \strng{fullhash}{cecd18116c43ee86e5a136b6e0362948}
-      \field{sortinit}{C}
+      \field{original}{default}{sortinit}{C}
     \endentry
 |;
 
 my $l4 = q|    \entry{L4}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=675883f3aca7c6069c0b154d47af4c86}{Decket}{D\bibinitperiod}{Derek\bibnamedelima D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=675883f3aca7c6069c0b154d47af4c86}{Decket}{D\bibinitperiod}{Derek\bibnamedelima D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{675883f3aca7c6069c0b154d47af4c86}
       \strng{fullhash}{675883f3aca7c6069c0b154d47af4c86}
-      \field{sortinit}{D}
+      \field{original}{default}{sortinit}{D}
     \endentry
 |;
 
 my $l5 = q|    \entry{L5}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=c2d41bb75b01ec2339c1050981f9c2cc}{Eel}{E\bibinitperiod}{Egbert}{E\bibinitperiod}{von}{v\bibinitperiod}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=c2d41bb75b01ec2339c1050981f9c2cc}{Eel}{E\bibinitperiod}{Egbert}{E\bibinitperiod}{von}{v\bibinitperiod}{}{}}%
       }
       \strng{namehash}{c2d41bb75b01ec2339c1050981f9c2cc}
       \strng{fullhash}{c2d41bb75b01ec2339c1050981f9c2cc}
-      \field{sortinit}{v}
+      \field{original}{default}{sortinit}{v}
     \endentry
 |;
 
 my $l6 = q|    \entry{L6}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=68e9105aa98379a85ef6cd2e7ac29c00}{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van\bibnamedelimb der\bibnamedelima valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=68e9105aa98379a85ef6cd2e7ac29c00}{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van\bibnamedelimb der\bibnamedelima valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
       }
       \strng{namehash}{68e9105aa98379a85ef6cd2e7ac29c00}
       \strng{fullhash}{68e9105aa98379a85ef6cd2e7ac29c00}
-      \field{sortinit}{v}
+      \field{original}{default}{sortinit}{v}
     \endentry
 |;
 
 my $l7 = q|    \entry{L7}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=4dbef3c5464f951b537a49ba93676a9a}{Gloom}{G\bibinitperiod}{Gregory\bibnamedelima R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=4dbef3c5464f951b537a49ba93676a9a}{Gloom}{G\bibinitperiod}{Gregory\bibnamedelima R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
       \strng{namehash}{4dbef3c5464f951b537a49ba93676a9a}
       \strng{fullhash}{4dbef3c5464f951b537a49ba93676a9a}
-      \field{sortinit}{v}
+      \field{original}{default}{sortinit}{v}
     \endentry
 |;
 
 my $l8 = q|    \entry{L8}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=9fb4d242b62f047e4255282864eedb97}{Henkel}{H\bibinitperiod}{Henry\bibnamedelima F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=9fb4d242b62f047e4255282864eedb97}{Henkel}{H\bibinitperiod}{Henry\bibnamedelima F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
       \strng{namehash}{9fb4d242b62f047e4255282864eedb97}
       \strng{fullhash}{9fb4d242b62f047e4255282864eedb97}
-      \field{sortinit}{v}
+      \field{original}{default}{sortinit}{v}
     \endentry
 |;
 
 my $l9 = q|    \entry{L9}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=1734924c4c55de5bb18d020c34a5249e}{{Iliad\bibnamedelimb Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=1734924c4c55de5bb18d020c34a5249e}{{Iliad\bibnamedelimb Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{1734924c4c55de5bb18d020c34a5249e}
       \strng{fullhash}{1734924c4c55de5bb18d020c34a5249e}
-      \field{sortinit}{I}
+      \field{original}{default}{sortinit}{I}
     \endentry
 |;
 
 
 my $l10 = q|    \entry{L10}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=758a11cc45860d7635b1f6091b2d95a9}{Jolly}{J\bibinitperiod}{James}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=758a11cc45860d7635b1f6091b2d95a9}{Jolly}{J\bibinitperiod}{James}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
       }
       \strng{namehash}{758a11cc45860d7635b1f6091b2d95a9}
       \strng{fullhash}{758a11cc45860d7635b1f6091b2d95a9}
-      \field{sortinit}{J}
+      \field{original}{default}{sortinit}{J}
     \endentry
 |;
 
 
 my $l10a = q|    \entry{L10a}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=5e60d697e6432558eab7dccf9890eb79}{Pimentel}{P\bibinitperiod}{Joseph\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=5e60d697e6432558eab7dccf9890eb79}{Pimentel}{P\bibinitperiod}{Joseph\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
       }
       \strng{namehash}{5e60d697e6432558eab7dccf9890eb79}
       \strng{fullhash}{5e60d697e6432558eab7dccf9890eb79}
-      \field{sortinit}{P}
+      \field{original}{default}{sortinit}{P}
     \endentry
 |;
 
 
 my $l11 = q|    \entry{L11}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=ef4ab7eba5cd140b54ba4329e1dda90b}{Kluster}{K\bibinitperiod}{Kevin}{K\bibinitperiod}{van}{v\bibinitperiod}{Jr.}{J\bibinitperiod}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=ef4ab7eba5cd140b54ba4329e1dda90b}{Kluster}{K\bibinitperiod}{Kevin}{K\bibinitperiod}{van}{v\bibinitperiod}{Jr.}{J\bibinitperiod}}%
       }
       \strng{namehash}{ef4ab7eba5cd140b54ba4329e1dda90b}
       \strng{fullhash}{ef4ab7eba5cd140b54ba4329e1dda90b}
-      \field{sortinit}{v}
+      \field{original}{default}{sortinit}{v}
     \endentry
 |;
 
 my $l12 = q|    \entry{L12}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=87634072c9c157a0b9ca250bd6914a65}{Vall{\'e}e\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=87634072c9c157a0b9ca250bd6914a65}{Vall{\'e}e\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
       }
       \strng{namehash}{87634072c9c157a0b9ca250bd6914a65}
       \strng{fullhash}{87634072c9c157a0b9ca250bd6914a65}
-      \field{sortinit}{d}
+      \field{original}{default}{sortinit}{d}
     \endentry
 |;
 
 my $l13 = q|    \entry{L13}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=5e79da6869afaf0d38e01285b494d555}{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelimi J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=5e79da6869afaf0d38e01285b494d555}{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelimi J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{5e79da6869afaf0d38e01285b494d555}
       \strng{fullhash}{5e79da6869afaf0d38e01285b494d555}
-      \field{sortinit}{V}
+      \field{original}{default}{sortinit}{V}
     \endentry
 |;
 
 my $l14 = q|    \entry{L14}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=2319907d9a5d5dd46da77879bdb7e609}{St\bibnamedelima John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=2319907d9a5d5dd46da77879bdb7e609}{St\bibnamedelima John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{2319907d9a5d5dd46da77879bdb7e609}
       \strng{fullhash}{2319907d9a5d5dd46da77879bdb7e609}
-      \field{sortinit}{S}
+      \field{original}{default}{sortinit}{S}
     \endentry
 |;
 
 my $l15 = q|    \entry{L15}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=379b415d869a4751678a5eee23b07e48}{Gompel}{G\bibinitperiod}{Roger\bibnamedelima P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=379b415d869a4751678a5eee23b07e48}{Gompel}{G\bibinitperiod}{Roger\bibnamedelima P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
       \strng{namehash}{379b415d869a4751678a5eee23b07e48}
       \strng{fullhash}{379b415d869a4751678a5eee23b07e48}
-      \field{sortinit}{v}
+      \field{original}{default}{sortinit}{v}
     \endentry
 |;
 
 my $l16 = q|    \entry{L16}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=0a9532fa161f6305ec403c1c85951bdf}{Gompel}{G\bibinitperiod}{Roger\bibnamedelima {P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=0a9532fa161f6305ec403c1c85951bdf}{Gompel}{G\bibinitperiod}{Roger\bibnamedelima {P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
       \strng{namehash}{0a9532fa161f6305ec403c1c85951bdf}
       \strng{fullhash}{0a9532fa161f6305ec403c1c85951bdf}
-      \field{sortinit}{v}
+      \field{original}{default}{sortinit}{v}
     \endentry
 |;
 
 my $l17 = q|    \entry{L17}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=766d5329cf995fcc7c1cef19de2a2ae8}{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=766d5329cf995fcc7c1cef19de2a2ae8}{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{766d5329cf995fcc7c1cef19de2a2ae8}
       \strng{fullhash}{766d5329cf995fcc7c1cef19de2a2ae8}
-      \field{sortinit}{L}
+      \field{original}{default}{sortinit}{L}
     \endentry
 |;
 
 my $l18 = q|    \entry{L18}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=58620d2c7d6839bac23306c732c563fb}{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima {H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=58620d2c7d6839bac23306c732c563fb}{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima {H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{58620d2c7d6839bac23306c732c563fb}
       \strng{fullhash}{58620d2c7d6839bac23306c732c563fb}
-      \field{sortinit}{L}
+      \field{original}{default}{sortinit}{L}
     \endentry
 |;
 
 my $l19 = q|    \entry{L19}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=83caa52f21f97e572dd3267bdf62978a}{Mustermann}{M\bibinitperiod}{Klaus-Peter}{K\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=83caa52f21f97e572dd3267bdf62978a}{Mustermann}{M\bibinitperiod}{Klaus-Peter}{K\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{fullhash}{83caa52f21f97e572dd3267bdf62978a}
-      \field{sortinit}{M}
+      \field{original}{default}{sortinit}{M}
     \endentry
 |;
 
 my $l19a = q|    \entry{L19a}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=0963f6904ccfeaac2770c5882a587001}{Lam}{L\bibinitperiod}{Ho-Pun}{H\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=0963f6904ccfeaac2770c5882a587001}{Lam}{L\bibinitperiod}{Ho-Pun}{H\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{0963f6904ccfeaac2770c5882a587001}
       \strng{fullhash}{0963f6904ccfeaac2770c5882a587001}
-      \field{sortinit}{L}
+      \field{original}{default}{sortinit}{L}
     \endentry
 |;
 
 
 my $l20 = q|    \entry{L20}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=fdaa0936724be89ef8bd16cf02e08c74}{Ford}{F\bibinitperiod}{{John\bibnamedelimb Henry}}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=fdaa0936724be89ef8bd16cf02e08c74}{Ford}{F\bibinitperiod}{{John\bibnamedelimb Henry}}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{fdaa0936724be89ef8bd16cf02e08c74}
       \strng{fullhash}{fdaa0936724be89ef8bd16cf02e08c74}
-      \field{sortinit}{F}
+      \field{original}{default}{sortinit}{F}
     \endentry
 |;
 
 my $l21 = q|    \entry{L21}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=386636fcff8e45365739b90e4986cd7b}{Smith}{S\bibinitperiod}{{\v S}omeone}{{\v S}\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=386636fcff8e45365739b90e4986cd7b}{Smith}{S\bibinitperiod}{{\v S}omeone}{{\v S}\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{386636fcff8e45365739b90e4986cd7b}
       \strng{fullhash}{386636fcff8e45365739b90e4986cd7b}
-      \field{sortinit}{S}
+      \field{original}{default}{sortinit}{S}
     \endentry
 |;
 
 my $l22u = q|    \entry{L22}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
-      \field{sortinit}{Š}
+      \field{original}{default}{sortinit}{Š}
     \endentry
 |;
 
 
 my $l22 = q|    \entry{L22}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=940a7383a6d76d516f02cf790a468362}{{\v S}mith}{{\v S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=940a7383a6d76d516f02cf790a468362}{{\v S}mith}{{\v S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{940a7383a6d76d516f02cf790a468362}
       \strng{fullhash}{940a7383a6d76d516f02cf790a468362}
-      \field{sortinit}{\v{S}}
+      \field{original}{default}{sortinit}{\v{S}}
       \warn{\item The character 'Š' cannot be encoded in 'latin1'. sortinit will be set to macro '\v{S}' for entry 'L22'}
     \endentry
 |;
 
 
 my $l23 = q|    \entry{L23}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{Smith}{S\bibinitperiod}{Šomeone}{Š\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{Smith}{S\bibinitperiod}{Šomeone}{Š\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
-      \field{sortinit}{S}
+      \field{original}{default}{sortinit}{S}
     \endentry
 |;
 
 my $l24 = q|    \entry{L24}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
-      \field{sortinit}{Š}
+      \field{original}{default}{sortinit}{Š}
     \endentry
 |;
 
 my $l25 = q|    \entry{L25}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=7069367d4a4f37ffb0377e3830e98ed0}{{American\bibnamedelimb Psychological\bibnamedelimb Association,\bibnamedelimb Task\bibnamedelimb Force\bibnamedelimb on\bibnamedelimb the\bibnamedelimb Sexualization\bibnamedelimb of\bibnamedelimb Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=7069367d4a4f37ffb0377e3830e98ed0}{{American\bibnamedelimb Psychological\bibnamedelimb Association,\bibnamedelimb Task\bibnamedelimb Force\bibnamedelimb on\bibnamedelimb the\bibnamedelimb Sexualization\bibnamedelimb of\bibnamedelimb Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
       \strng{namehash}{7069367d4a4f37ffb0377e3830e98ed0}
       \strng{fullhash}{7069367d4a4f37ffb0377e3830e98ed0}
-      \field{sortinit}{A}
+      \field{original}{default}{sortinit}{A}
     \endentry
 |;
 
 my $l26 = q|    \entry{L26}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=d176a8af5ce1c45cb06875c4433f2fe2}{{Sci-Art\bibnamedelimb Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=d176a8af5ce1c45cb06875c4433f2fe2}{{Sci-Art\bibnamedelimb Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
       }
       \strng{namehash}{d176a8af5ce1c45cb06875c4433f2fe2}
       \strng{fullhash}{d176a8af5ce1c45cb06875c4433f2fe2}
-      \field{sortinit}{S}
+      \field{original}{default}{sortinit}{S}
     \endentry
 |;
 
 # Malformed anyway but a decent test
 my $l28 = q|    \entry{L28}{book}{}
-      \field{sortinit}{0}
+      \field{original}{default}{sortinit}{0}
       \warn{\item Name "Deux et al.,, O." is malformed (consecutive commas): skipping name}
     \endentry
 |;
 
 
 my $l29 = q|    \entry{L29}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=59a5e43a502767d00e589eb29f863728}{{U.S.\bibnamedelimi Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=59a5e43a502767d00e589eb29f863728}{{U.S.\bibnamedelimi Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
       }
       \strng{namehash}{59a5e43a502767d00e589eb29f863728}
       \strng{fullhash}{59a5e43a502767d00e589eb29f863728}
-      \field{sortinit}{U}
+      \field{original}{default}{sortinit}{U}
     \endentry
 |;
 
 my $l31 = q|    \entry{L31}{book}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=81e45a75845feb42db453500b815e139}{{\~ Z}elly}{{\~ Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=81e45a75845feb42db453500b815e139}{{\~ Z}elly}{{\~ Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{1}{}{%
+      \name{original}{default}{editor}{1}{}{%
         {{hash=3282f5aed38860e7c19e0c37df41de6c}{{\~Z}elly}{{\~Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{translator}{1}{}{%
+      \name{original}{default}{translator}{1}{}{%
         {{hash=6193c0af691bd23c24b8d29b02323a7a}{{\~{Z}}elly}{{\~{Z}}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{81e45a75845feb42db453500b815e139}
       \strng{fullhash}{81e45a75845feb42db453500b815e139}
-      \field{sortinit}{Z}
+      \field{original}{default}{sortinit}{Z}
     \endentry
 |;
 

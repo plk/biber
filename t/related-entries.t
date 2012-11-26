@@ -44,180 +44,180 @@ my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 my $k1 = q|    \entry{key1}{article}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{labelyear}{1998}
-      \field{labeltitle}{Original Title}
-      \field{journaltitle}{Journal Title}
-      \field{number}{5}
-      \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290,caf8e34be07426ae7127c1b4829983c1}
-      \field{relatedtype}{reprintas}
-      \field{shorthand}{RK1}
-      \field{title}{Original Title}
-      \field{volume}{12}
-      \field{year}{1998}
-      \field{pages}{125\bibrangedash 150}
+      \field{original}{default}{sortinit}{0}
+      \field{original}{default}{labelyear}{1998}
+      \field{original}{default}{labeltitle}{Original Title}
+      \field{original}{default}{journaltitle}{Journal Title}
+      \field{original}{default}{number}{5}
+      \field{original}{default}{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290,caf8e34be07426ae7127c1b4829983c1}
+      \field{original}{default}{relatedtype}{reprintas}
+      \field{original}{default}{shorthand}{RK1}
+      \field{original}{default}{title}{Original Title}
+      \field{original}{default}{volume}{12}
+      \field{original}{default}{year}{1998}
+      \field{original}{default}{pages}{125\bibrangedash 150}
     \endentry
 |;
 
 my $k2 = q|    \entry{key2}{inbook}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \list{location}{1}{%
+      \list{original}{default}{location}{1}{%
         {Location}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Publisher}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{labelyear}{2009}
-      \field{labeltitle}{Reprint Title}
-      \field{booktitle}{Booktitle}
-      \field{related}{c2add694bf942dc77b376592d9c862cd}
-      \field{relatedstring}{First}
-      \field{relatedtype}{reprintof}
-      \field{shorthand}{RK2}
-      \field{title}{Reprint Title}
-      \field{year}{2009}
-      \field{pages}{34\bibrangedash 60}
+      \field{original}{default}{sortinit}{0}
+      \field{original}{default}{labelyear}{2009}
+      \field{original}{default}{labeltitle}{Reprint Title}
+      \field{original}{default}{booktitle}{Booktitle}
+      \field{original}{default}{related}{c2add694bf942dc77b376592d9c862cd}
+      \field{original}{default}{relatedstring}{First}
+      \field{original}{default}{relatedtype}{reprintof}
+      \field{original}{default}{shorthand}{RK2}
+      \field{original}{default}{title}{Reprint Title}
+      \field{original}{default}{year}{2009}
+      \field{original}{default}{pages}{34\bibrangedash 60}
     \endentry
 |;
 
 my $k3 = q|    \entry{key3}{inbook}{}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \list{location}{1}{%
+      \list{original}{default}{location}{1}{%
         {Location}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Publisher2}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{labelyear}{2010}
-      \field{labeltitle}{Reprint Title}
-      \field{booktitle}{Booktitle}
-      \field{related}{c2add694bf942dc77b376592d9c862cd}
-      \field{relatedstring}{Second}
-      \field{relatedtype}{reprintof}
-      \field{shorthand}{RK3}
-      \field{title}{Reprint Title}
-      \field{year}{2010}
-      \field{pages}{33\bibrangedash 57}
+      \field{original}{default}{sortinit}{0}
+      \field{original}{default}{labelyear}{2010}
+      \field{original}{default}{labeltitle}{Reprint Title}
+      \field{original}{default}{booktitle}{Booktitle}
+      \field{original}{default}{related}{c2add694bf942dc77b376592d9c862cd}
+      \field{original}{default}{relatedstring}{Second}
+      \field{original}{default}{relatedtype}{reprintof}
+      \field{original}{default}{shorthand}{RK3}
+      \field{original}{default}{title}{Reprint Title}
+      \field{original}{default}{year}{2010}
+      \field{original}{default}{pages}{33\bibrangedash 57}
     \endentry
 |;
 
 my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{labeltitle}{Original Title}
-      \field{journaltitle}{Journal Title}
-      \field{number}{5}
-      \field{shorthand}{RK1}
-      \field{title}{Original Title}
-      \field{volume}{12}
-      \field{year}{1998}
-      \field{pages}{125\bibrangedash 150}
+      \field{original}{default}{sortinit}{0}
+      \field{original}{default}{labeltitle}{Original Title}
+      \field{original}{default}{journaltitle}{Journal Title}
+      \field{original}{default}{number}{5}
+      \field{original}{default}{shorthand}{RK1}
+      \field{original}{default}{title}{Original Title}
+      \field{original}{default}{volume}{12}
+      \field{original}{default}{year}{1998}
+      \field{original}{default}{pages}{125\bibrangedash 150}
     \endentry
 |;
 
 my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \list{location}{1}{%
+      \list{original}{default}{location}{1}{%
         {Location}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Publisher}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{labeltitle}{Reprint Title}
-      \field{booktitle}{Booktitle}
-      \field{shorthand}{RK2}
-      \field{title}{Reprint Title}
-      \field{year}{2009}
-      \field{pages}{34\bibrangedash 60}
+      \field{original}{default}{sortinit}{0}
+      \field{original}{default}{labeltitle}{Reprint Title}
+      \field{original}{default}{booktitle}{Booktitle}
+      \field{original}{default}{shorthand}{RK2}
+      \field{original}{default}{title}{Reprint Title}
+      \field{original}{default}{year}{2009}
+      \field{original}{default}{pages}{34\bibrangedash 60}
     \endentry
 |;
 
 my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \list{location}{1}{%
+      \list{original}{default}{location}{1}{%
         {Location}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Publisher2}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{labeltitle}{Reprint Title}
-      \field{booktitle}{Booktitle}
-      \field{shorthand}{RK3}
-      \field{title}{Reprint Title}
-      \field{year}{2010}
-      \field{pages}{33\bibrangedash 57}
+      \field{original}{default}{sortinit}{0}
+      \field{original}{default}{labeltitle}{Reprint Title}
+      \field{original}{default}{booktitle}{Booktitle}
+      \field{original}{default}{shorthand}{RK3}
+      \field{original}{default}{title}{Reprint Title}
+      \field{original}{default}{year}{2010}
+      \field{original}{default}{pages}{33\bibrangedash 57}
     \endentry
 |;
 
 my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
-      \name{labelname}{1}{}{%
+      \name{original}{default}{labelname}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name{original}{default}{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \list{location}{1}{%
+      \list{original}{default}{location}{1}{%
         {Location}%
       }
-      \list{publisher}{1}{%
+      \list{original}{default}{publisher}{1}{%
         {Publisher2}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{labeltitle}{Reprint Title}
-      \field{booktitle}{Booktitle}
-      \field{shorthand}{RK4}
-      \field{title}{Reprint Title}
-      \field{year}{2011}
-      \field{pages}{33\bibrangedash 57}
+      \field{original}{default}{sortinit}{0}
+      \field{original}{default}{labeltitle}{Reprint Title}
+      \field{original}{default}{booktitle}{Booktitle}
+      \field{original}{default}{shorthand}{RK4}
+      \field{original}{default}{title}{Reprint Title}
+      \field{original}{default}{year}{2011}
+      \field{original}{default}{pages}{33\bibrangedash 57}
     \endentry
 |;
 
