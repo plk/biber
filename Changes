@@ -1,11 +1,16 @@
 Revision history for Biber
 
-1.4    ()
+1.4    (2012-11-28)
+       * Support for biblatex 2.4 style sourcemaps (See \DeclareStyleSourcemap in biblatex docs)
+       * entrykey is now a possible read-only pseudo field in sourcemaps
        * Reencode data interface completely re-written. New user option
          --recodedata allows users to specify a new data file for defining
          reencoding sets.
-       * Major internal changes to allow multiple script/lang variants of
-         fields.    
+       * Internal changes to allow multiple script/lang variants of
+         fields in biblatex in the future.
+       * Citation key aliases now supported more comprehensively, in crossrefs etc.
+       * Support for new RELATEDOPTIONS field (see biblatex docs)
+       * Misc bug fixes
 1.3    (01-11-2012)
        * New "append" mode for sourcemap to allow combining of fields
        * map_final now possible for map_set_field steps which causes map to
