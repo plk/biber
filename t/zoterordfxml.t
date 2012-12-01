@@ -45,28 +45,28 @@ my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 my $l1 = q|    \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/theory_and_event/v005/5.3ranciere.html}{article}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=2d6c91380dc6798fd8219e73cf91f468}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=2d6c91380dc6798fd8219e73cf91f468}{Rancière}{R\bibinitperiod}{Jacques}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{translator}{2}{}{%
+      \name{form=original,lang=default}{translator}{2}{}{%
         {{hash=c95c30a625fdc9f3e9339afb92cf7161}{Panagia}{P\bibinitperiod}{Davide}{D\bibinitperiod}{}{}{}{}}%
         {{hash=2e68c1ae590a37eeceab55f5594589f7}{Bowlby}{B\bibinitperiod}{Rachel}{R\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{2d6c91380dc6798fd8219e73cf91f468}
       \strng{fullhash}{2d6c91380dc6798fd8219e73cf91f468}
-      \field{original}{default}{sortinit}{R}
-      \field{original}{default}{labelyear}{2001}
-      \field{original}{default}{labeltitle}{ten theses on politics}
-      \field{original}{default}{journaltitle}{Theory \& Event}
-      \field{original}{default}{library}{Project MUSE}
-      \field{original}{default}{note}{Volume 5, Issue 3, 2001}
-      \field{original}{default}{number}{3}
-      \field{original}{default}{title}{ten theses on politics}
-      \field{original}{default}{volume}{5}
-      \field{original}{default}{year}{2001}
+      \field{form=original,lang=default}{sortinit}{R}
+      \field{form=original,lang=default}{labelyear}{2001}
+      \field{form=original,lang=default}{labeltitle}{ten theses on politics}
+      \field{form=original,lang=default}{journaltitle}{Theory \& Event}
+      \field{form=original,lang=default}{library}{Project MUSE}
+      \field{form=original,lang=default}{note}{Volume 5, Issue 3, 2001}
+      \field{form=original,lang=default}{number}{3}
+      \field{form=original,lang=default}{title}{ten theses on politics}
+      \field{form=original,lang=default}{volume}{5}
+      \field{form=original,lang=default}{year}{2001}
       \verb{url}
       \verb http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/theory_and_event/v005/5.3ranciere.html
       \endverb
@@ -74,65 +74,65 @@ my $l1 = q|    \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journal
 |;
 
 my $l2 = q|    \entry{urn:isbn:0713990023}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=984e5967448051538555a64aac11ed21}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=984e5967448051538555a64aac11ed21}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{location}{1}{%
+      \list{form=original,lang=default}{location}{1}{%
         {London}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {Allen Lane}%
       }
       \strng{namehash}{984e5967448051538555a64aac11ed21}
       \strng{fullhash}{984e5967448051538555a64aac11ed21}
-      \field{original}{default}{sortinit}{F}
-      \field{original}{default}{labelyear}{1988}
-      \field{original}{default}{labeltitle}{The History of Sexuality volume 3: The Care of the Self}
-      \field{original}{default}{isbn}{0713990023}
-      \field{original}{default}{library}{webcat.warwick.ac.uk Library Catalog}
-      \field{original}{default}{pagetotal}{279}
-      \field{original}{default}{title}{The History of Sexuality volume 3: The Care of the Self}
-      \field{original}{default}{year}{1988}
+      \field{form=original,lang=default}{sortinit}{F}
+      \field{form=original,lang=default}{labelyear}{1988}
+      \field{form=original,lang=default}{labeltitle}{The History of Sexuality volume 3: The Care of the Self}
+      \field{form=original,lang=default}{isbn}{0713990023}
+      \field{form=original,lang=default}{library}{webcat.warwick.ac.uk Library Catalog}
+      \field{form=original,lang=default}{pagetotal}{279}
+      \field{form=original,lang=default}{title}{The History of Sexuality volume 3: The Care of the Self}
+      \field{form=original,lang=default}{year}{1988}
     \endentry
 |;
 
 my $l3 = q|    \entry{item_54}{inbook}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=984e5967448051538555a64aac11ed21}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=984e5967448051538555a64aac11ed21}{Foucault}{F\bibinitperiod}{Michel}{M\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{editor}{1}{}{%
+      \name{form=original,lang=default}{editor}{1}{}{%
         {{hash=59e41b906187fcc9bff2bddd24f99eca}{Lotringer}{L\bibinitperiod}{Sylvère}{S\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{translator}{2}{}{%
+      \name{form=original,lang=default}{translator}{2}{}{%
         {{hash=0826582066ef5e3af124decf97f18d39}{Hochroth}{H\bibinitperiod}{Lysa}{L\bibinitperiod}{}{}{}{}}%
         {{hash=d3cb970ad9fd48a90099fc50aec54981}{Johnston}{J\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{location}{1}{%
+      \list{form=original,lang=default}{location}{1}{%
         {New York}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {Semiotext(e)}%
       }
       \strng{namehash}{984e5967448051538555a64aac11ed21}
       \strng{fullhash}{984e5967448051538555a64aac11ed21}
-      \field{original}{default}{sortinit}{F}
-      \field{original}{default}{labelyear}{1996}
-      \field{original}{default}{labeltitle}{The Ethics of the Concern for Self as a Practice of Freedom}
-      \field{original}{default}{booktitle}{Foucault Live: Interviews, 1961-1984}
-      \field{original}{default}{day}{04}
-      \field{original}{default}{endday}{07}
-      \field{original}{default}{endmonth}{04}
-      \field{original}{default}{endyear}{1996}
-      \field{original}{default}{month}{03}
-      \field{original}{default}{title}{The Ethics of the Concern for Self as a Practice of Freedom}
-      \field{original}{default}{year}{1996}
-      \field{original}{default}{pages}{432\bibrangedash 449}
+      \field{form=original,lang=default}{sortinit}{F}
+      \field{form=original,lang=default}{labelyear}{1996}
+      \field{form=original,lang=default}{labeltitle}{The Ethics of the Concern for Self as a Practice of Freedom}
+      \field{form=original,lang=default}{booktitle}{Foucault Live: Interviews, 1961-1984}
+      \field{form=original,lang=default}{day}{04}
+      \field{form=original,lang=default}{endday}{07}
+      \field{form=original,lang=default}{endmonth}{04}
+      \field{form=original,lang=default}{endyear}{1996}
+      \field{form=original,lang=default}{month}{03}
+      \field{form=original,lang=default}{title}{The Ethics of the Concern for Self as a Practice of Freedom}
+      \field{form=original,lang=default}{year}{1996}
+      \field{form=original,lang=default}{pages}{432\bibrangedash 449}
     \endentry
 |;
 

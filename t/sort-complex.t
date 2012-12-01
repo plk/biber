@@ -99,125 +99,125 @@ my $ss = [
 
 my $l4 = q|    \entry{L4}{book}{}
       \true{morelabelname}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \true{moreauthor}
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{location}{1}{%
+      \list{form=original,lang=default}{location}{1}{%
         {Cambridge}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {Another press}%
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
-      \field{original}{default}{labelalpha}{Doe\textbf{+}95}
-      \field{original}{default}{sortinit}{D}
-      \field{original}{default}{labeltitle}{Some title about sorting}
-      \field{original}{default}{extraalpha}{2}
-      \field{original}{default}{title}{Some title about sorting}
-      \field{original}{default}{year}{1995}
+      \field{form=original,lang=default}{labelalpha}{Doe\textbf{+}95}
+      \field{form=original,lang=default}{sortinit}{D}
+      \field{form=original,lang=default}{labeltitle}{Some title about sorting}
+      \field{form=original,lang=default}{extraalpha}{2}
+      \field{form=original,lang=default}{title}{Some title about sorting}
+      \field{form=original,lang=default}{year}{1995}
     \endentry
 |;
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{location}{1}{%
+      \list{form=original,lang=default}{location}{1}{%
         {Cambridge}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{original}{default}{labelalpha}{Doe95}
-      \field{original}{default}{sortinit}{D}
-      \field{original}{default}{labeltitle}{Algorithms For Sorting}
-      \field{original}{default}{extraalpha}{1}
-      \field{original}{default}{title}{Algorithms For Sorting}
-      \field{original}{default}{year}{1995}
+      \field{form=original,lang=default}{labelalpha}{Doe95}
+      \field{form=original,lang=default}{sortinit}{D}
+      \field{form=original,lang=default}{labeltitle}{Algorithms For Sorting}
+      \field{form=original,lang=default}{extraalpha}{1}
+      \field{form=original,lang=default}{title}{Algorithms For Sorting}
+      \field{form=original,lang=default}{year}{1995}
     \endentry
 |;
 
 my $l2 = q|    \entry{L2}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{location}{1}{%
+      \list{form=original,lang=default}{location}{1}{%
         {Cambridge}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{original}{default}{labelalpha}{Doe95}
-      \field{original}{default}{sortinit}{D}
-      \field{original}{default}{labeltitle}{Sorting Algorithms}
-      \field{original}{default}{extraalpha}{3}
-      \field{original}{default}{title}{Sorting Algorithms}
-      \field{original}{default}{year}{1995}
+      \field{form=original,lang=default}{labelalpha}{Doe95}
+      \field{form=original,lang=default}{sortinit}{D}
+      \field{form=original,lang=default}{labeltitle}{Sorting Algorithms}
+      \field{form=original,lang=default}{extraalpha}{3}
+      \field{form=original,lang=default}{title}{Sorting Algorithms}
+      \field{form=original,lang=default}{year}{1995}
     \endentry
 |;
 
 my $l3 = q|    \entry{L3}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{location}{1}{%
+      \list{form=original,lang=default}{location}{1}{%
         {Cambridge}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{original}{default}{labelalpha}{Doe95}
-      \field{original}{default}{sortinit}{D}
-      \field{original}{default}{labeltitle}{More and More Algorithms}
-      \field{original}{default}{extraalpha}{2}
-      \field{original}{default}{title}{More and More Algorithms}
-      \field{original}{default}{year}{1995}
+      \field{form=original,lang=default}{labelalpha}{Doe95}
+      \field{form=original,lang=default}{sortinit}{D}
+      \field{form=original,lang=default}{labeltitle}{More and More Algorithms}
+      \field{form=original,lang=default}{extraalpha}{2}
+      \field{form=original,lang=default}{title}{More and More Algorithms}
+      \field{form=original,lang=default}{year}{1995}
     \endentry
 |;
 
 my $l5 = q|    \entry{L5}{book}{}
       \true{morelabelname}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \true{moreauthor}
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{location}{1}{%
+      \list{form=original,lang=default}{location}{1}{%
         {Cambridge}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {Another press}%
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
-      \field{original}{default}{labelalpha}{Doe\textbf{+}95}
-      \field{original}{default}{sortinit}{D}
-      \field{original}{default}{labeltitle}{Some other title about sorting}
-      \field{original}{default}{extraalpha}{1}
-      \field{original}{default}{title}{Some other title about sorting}
-      \field{original}{default}{year}{1995}
+      \field{form=original,lang=default}{labelalpha}{Doe\textbf{+}95}
+      \field{form=original,lang=default}{sortinit}{D}
+      \field{form=original,lang=default}{labeltitle}{Some other title about sorting}
+      \field{form=original,lang=default}{extraalpha}{1}
+      \field{form=original,lang=default}{title}{Some other title about sorting}
+      \field{form=original,lang=default}{year}{1995}
     \endentry
 |;
 

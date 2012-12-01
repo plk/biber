@@ -146,17 +146,17 @@ sub _printfield {
         if (Biber::Config->getoption('wraplines')) {
           ## 20 is the length of '      \field{}{}{}{}'
           if ( 20 + length($form) + length($lang) + length($field) + length($str) > 2*$Text::Wrap::columns ) {
-            $acc .= "      \\field{$form}{$lang}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
+            $acc .= "      \\field{form=$form,lang=$lang}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
           }
           elsif ( 20 + length($form) + length($lang) + length($field) + length($str) > $Text::Wrap::columns ) {
-            $acc .= wrap('      ', '      ', "\\field{$form}{$lang}{$field}{$str}" ) . "\n";
+            $acc .= wrap('      ', '      ', "\\field{form=$form,lang=$lang}{$field}{$str}" ) . "\n";
           }
           else {
-            $acc .= "      \\field{$form}{$lang}{$field}{$str}\n";
+            $acc .= "      \\field{form=$form,lang=$lang}{$field}{$str}\n";
           }
         }
         else {
-          $acc .= "      \\field{$form}{$lang}{$field}{$str}\n";
+          $acc .= "      \\field{form=$form,lang=$lang}{$field}{$str}\n";
         }
 
       }
@@ -271,7 +271,7 @@ sub set_output_entry {
     my $total = $ln->count_names;
     # labelname has a pseudo form and lang because it is resolved to a real name
     # plus form and lang but is also a name field
-    $acc .= "      \\name{original}{default}{labelname}{$total}{$plo}{%\n";
+    $acc .= "      \\name{form=original,lang=default}{labelname}{$total}{$plo}{%\n";
     foreach my $n (@{$ln->names}) {
       $acc .= $n->name_to_bbl;
     }
@@ -298,7 +298,7 @@ sub set_output_entry {
           # Copy per-list options to the actual labelname too
           $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
 
-          $acc .= "      \\name{$form}{$lang}{$namefield}{$total}{$plo}{%\n";
+          $acc .= "      \\name{form=$form,lang=$lang}{$namefield}{$total}{$plo}{%\n";
           foreach my $n (@{$nf->names}) {
             $acc .= $n->name_to_bbl;
           }
@@ -328,7 +328,7 @@ sub set_output_entry {
           }
           my $total = $#$lf + 1;
 
-          $acc .= "      \\list{$form}{$lang}{$listfield}{$total}{%\n";
+          $acc .= "      \\list{form=$form,lang=$lang}{$listfield}{$total}{%\n";
           foreach my $f (@$lf) {
             $acc .= "        {$f}%\n";
           }
@@ -346,7 +346,7 @@ sub set_output_entry {
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
     # Might not have been set due to skiplab/dataonly
     if (my $label = $be->get_field('labelalpha')) {
-      $acc .= "      \\field{original}{default}{labelalpha}{$label}\n";
+      $acc .= "      \\field{form=original,lang=default}{labelalpha}{$label}\n";
     }
   }
 
@@ -363,7 +363,7 @@ sub set_output_entry {
       }
     }
     if (my $ly = $be->get_field('labelyear')) {
-      $acc .= "      \\field{original}{default}{labelyear}{$ly}\n";
+      $acc .= "      \\field{form=original,lang=default}{labelyear}{$ly}\n";
     }
   }
 
@@ -389,7 +389,7 @@ sub set_output_entry {
 
   # labeltitle is always output
   if (my $lt = $be->get_field('labeltitle')) {
-    $acc .= "      \\field{original}{default}{labeltitle}{$lt}\n";
+    $acc .= "      \\field{form=original,lang=default}{labeltitle}{$lt}\n";
   }
 
   # The labelalpha option determines whether "extraalpha" is output
@@ -404,10 +404,10 @@ sub set_output_entry {
 
   if ( Biber::Config->getblxoption('labelnumber', $bee) ) {
     if (my $sh = $be->get_field('shorthand')) {
-      $acc .= "      \\field{original}{default}{labelnumber}{$sh}\n";
+      $acc .= "      \\field{form=original,lang=default}{labelnumber}{$sh}\n";
     }
     elsif (my $lnum = $be->get_field('labelnumber')) {
-      $acc .= "      \\field{original}{default}{labelnumber}{$lnum}\n";
+      $acc .= "      \\field{form=original,lang=default}{labelnumber}{$lnum}\n";
     }
   }
 
@@ -452,7 +452,7 @@ sub set_output_entry {
         }
       }
       my $bbl_rf = join('\bibrangessep ', @pr);
-      $acc .= "      \\field{original}{default}{$rfield}{$bbl_rf}\n";
+      $acc .= "      \\field{form=original,lang=default}{$rfield}{$bbl_rf}\n";
     }
   }
 

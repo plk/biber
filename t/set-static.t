@@ -43,92 +43,92 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Static1}{set}{}
       \set{Static2,Static3,Static4}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{original}{default}{sortinit}{0}
-      \field{original}{default}{labelyear}{2001}
-      \field{original}{default}{labeltitle}{Blessed Brains}
-      \field{original}{default}{annotation}{Some notes}
-      \field{original}{default}{title}{Blessed Brains}
-      \field{original}{default}{year}{2001}
+      \field{form=original,lang=default}{sortinit}{0}
+      \field{form=original,lang=default}{labelyear}{2001}
+      \field{form=original,lang=default}{labeltitle}{Blessed Brains}
+      \field{form=original,lang=default}{annotation}{Some notes}
+      \field{form=original,lang=default}{title}{Blessed Brains}
+      \field{form=original,lang=default}{year}{2001}
     \endentry
 |;
 
 my $string2 = q|    \entry{Static2}{book}{}
       \inset{Static1}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{original}{default}{sortinit}{0}
-      \field{original}{default}{labeltitle}{Blessed Brains}
-      \field{original}{default}{annotation}{Some Blessed Note}
-      \field{original}{default}{title}{Blessed Brains}
-      \field{original}{default}{year}{2001}
+      \field{form=original,lang=default}{sortinit}{0}
+      \field{form=original,lang=default}{labeltitle}{Blessed Brains}
+      \field{form=original,lang=default}{annotation}{Some Blessed Note}
+      \field{form=original,lang=default}{title}{Blessed Brains}
+      \field{form=original,lang=default}{year}{2001}
     \endentry
 |;
 
 my $string3 = q|    \entry{Static3}{book}{}
       \inset{Static1}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
-      \field{original}{default}{sortinit}{0}
-      \field{original}{default}{labeltitle}{Castles and Crime}
-      \field{original}{default}{title}{Castles and Crime}
-      \field{original}{default}{year}{2002}
+      \field{form=original,lang=default}{sortinit}{0}
+      \field{form=original,lang=default}{labeltitle}{Castles and Crime}
+      \field{form=original,lang=default}{title}{Castles and Crime}
+      \field{form=original,lang=default}{year}{2002}
     \endentry
 |;
 
 my $string4 = q|    \entry{Static4}{book}{}
       \inset{Static1}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
-      \field{original}{default}{sortinit}{0}
-      \field{original}{default}{labeltitle}{Dungeons, Dark and Dangerous}
-      \field{original}{default}{title}{Dungeons, Dark and Dangerous}
-      \field{original}{default}{year}{2005}
+      \field{form=original,lang=default}{sortinit}{0}
+      \field{form=original,lang=default}{labeltitle}{Dungeons, Dark and Dangerous}
+      \field{form=original,lang=default}{title}{Dungeons, Dark and Dangerous}
+      \field{form=original,lang=default}{year}{2005}
     \endentry
 |;
 
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
 my $string5 = q|    \entry{Static2}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{original}{default}{sortinit}{0}
-      \field{original}{default}{labelyear}{2001}
-      \field{original}{default}{labeltitle}{Blessed Brains}
-      \field{original}{default}{annotation}{Some Blessed Note}
-      \field{original}{default}{title}{Blessed Brains}
-      \field{original}{default}{year}{2001}
+      \field{form=original,lang=default}{sortinit}{0}
+      \field{form=original,lang=default}{labelyear}{2001}
+      \field{form=original,lang=default}{labeltitle}{Blessed Brains}
+      \field{form=original,lang=default}{annotation}{Some Blessed Note}
+      \field{form=original,lang=default}{title}{Blessed Brains}
+      \field{form=original,lang=default}{year}{2001}
     \endentry
 |;
 

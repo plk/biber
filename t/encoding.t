@@ -31,134 +31,134 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 my $encode1 = q|    \entry{testŠ}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
-      \field{original}{default}{labelalpha}{Enc99}
-      \field{original}{default}{sortinit}{E}
-      \field{original}{default}{labelyear}{1999}
-      \field{original}{default}{labeltitle}{Šome title}
+      \field{form=original,lang=default}{labelalpha}{Enc99}
+      \field{form=original,lang=default}{sortinit}{E}
+      \field{form=original,lang=default}{labelyear}{1999}
+      \field{form=original,lang=default}{labeltitle}{Šome title}
       \true{singletitle}
-      \field{original}{default}{title}{Šome title}
-      \field{original}{default}{year}{1999}
+      \field{form=original,lang=default}{title}{Šome title}
+      \field{form=original,lang=default}{year}{1999}
     \endentry
 |;
 
 my $encode2 = q|    \entry{test1}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
-      \field{original}{default}{labelalpha}{Enc99}
-      \field{original}{default}{sortinit}{E}
-      \field{original}{default}{labelyear}{1999}
-      \field{original}{default}{labeltitle}{Söme title}
+      \field{form=original,lang=default}{labelalpha}{Enc99}
+      \field{form=original,lang=default}{sortinit}{E}
+      \field{form=original,lang=default}{labelyear}{1999}
+      \field{form=original,lang=default}{labeltitle}{Söme title}
       \true{singletitle}
-      \field{original}{default}{title}{Söme title}
-      \field{original}{default}{year}{1999}
+      \field{form=original,lang=default}{title}{Söme title}
+      \field{form=original,lang=default}{year}{1999}
     \endentry
 |;
 
 my $encode3 = q|    \entry{test1}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
-      \field{original}{default}{labelalpha}{Enc99}
-      \field{original}{default}{sortinit}{E}
-      \field{original}{default}{labelyear}{1999}
-      \field{original}{default}{labeltitle}{Żome title}
+      \field{form=original,lang=default}{labelalpha}{Enc99}
+      \field{form=original,lang=default}{sortinit}{E}
+      \field{form=original,lang=default}{labelyear}{1999}
+      \field{form=original,lang=default}{labeltitle}{Żome title}
       \true{singletitle}
-      \field{original}{default}{title}{Żome title}
-      \field{original}{default}{year}{1999}
+      \field{form=original,lang=default}{title}{Żome title}
+      \field{form=original,lang=default}{year}{1999}
     \endentry
 |;
 
 my $encode5 = q|    \entry{test}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
-      \field{original}{default}{labelalpha}{Enc99}
-      \field{original}{default}{sortinit}{E}
-      \field{original}{default}{labelyear}{1999}
-      \field{original}{default}{labeltitle}{à titlé}
+      \field{form=original,lang=default}{labelalpha}{Enc99}
+      \field{form=original,lang=default}{sortinit}{E}
+      \field{form=original,lang=default}{labelyear}{1999}
+      \field{form=original,lang=default}{labeltitle}{à titlé}
       \true{singletitle}
-      \field{original}{default}{title}{à titlé}
-      \field{original}{default}{year}{1999}
+      \field{form=original,lang=default}{title}{à titlé}
+      \field{form=original,lang=default}{year}{1999}
     \endentry
 |;
 
 my $encode6 = q|    \entry{test}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
-      \field{original}{default}{labelalpha}{Enc99}
-      \field{original}{default}{sortinit}{E}
-      \field{original}{default}{labelyear}{1999}
-      \field{original}{default}{labeltitle}{↑\`{a} titl\'{e}}
+      \field{form=original,lang=default}{labelalpha}{Enc99}
+      \field{form=original,lang=default}{sortinit}{E}
+      \field{form=original,lang=default}{labelyear}{1999}
+      \field{form=original,lang=default}{labeltitle}{↑\`{a} titl\'{e}}
       \true{singletitle}
-      \field{original}{default}{title}{↑\`{a} titl\'{e}}
-      \field{original}{default}{year}{1999}
+      \field{form=original,lang=default}{title}{↑\`{a} titl\'{e}}
+      \field{form=original,lang=default}{year}{1999}
     \endentry
 |;
 
 my $encode7 = q|    \entry{test}{book}{}
-      \name{original}{default}{labelname}{1}{}{%
+      \name{form=original,lang=default}{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name{original}{default}{author}{1}{}{%
+      \name{form=original,lang=default}{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list{original}{default}{publisher}{1}{%
+      \list{form=original,lang=default}{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
-      \field{original}{default}{labelalpha}{Enc99}
-      \field{original}{default}{sortinit}{E}
-      \field{original}{default}{labelyear}{1999}
-      \field{original}{default}{labeltitle}{{$\uparrow$}\`{a} titl\'{e}}
+      \field{form=original,lang=default}{labelalpha}{Enc99}
+      \field{form=original,lang=default}{sortinit}{E}
+      \field{form=original,lang=default}{labelyear}{1999}
+      \field{form=original,lang=default}{labeltitle}{{$\uparrow$}\`{a} titl\'{e}}
       \true{singletitle}
-      \field{original}{default}{title}{{$\uparrow$}\`{a} titl\'{e}}
-      \field{original}{default}{year}{1999}
+      \field{form=original,lang=default}{title}{{$\uparrow$}\`{a} titl\'{e}}
+      \field{form=original,lang=default}{year}{1999}
     \endentry
 |;
 

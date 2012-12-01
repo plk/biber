@@ -461,35 +461,35 @@ sub instantiate_entry {
   # sortinit
   my $sid = $self->get_sortinitdata($key);
   if (defined($sid)) {
-    my $si = "\\field{original}{default}{sortinit}{$sid}";
+    my $si = "\\field{form=original,lang=default}{sortinit}{$sid}";
     $entry_string =~ s|<BDS>SORTINIT</BDS>|$si|gxms;
   }
 
   # extrayear
   my $eys;
   if (my $e = $self->get_extrayeardata($key)) {
-    $eys = "      \\field{original}{default}{extrayear}{$e}\n";
+    $eys = "      \\field{form=original,lang=default}{extrayear}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
   }
 
   # extratitle
   my $ets;
   if (my $e = $self->get_extratitledata($key)) {
-    $ets = "      \\field{original}{default}{extratitle}{$e}\n";
+    $ets = "      \\field{form=original,lang=default}{extratitle}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRATITLE</BDS>\n|$ets|gxms;
   }
 
   # extratitleyear
   my $etys;
   if (my $e = $self->get_extratitleyeardata($key)) {
-    $etys = "      \\field{original}{default}{extratitleyear}{$e}\n";
+    $etys = "      \\field{form=original,lang=default}{extratitleyear}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRATITLEYEAR</BDS>\n|$etys|gxms;
   }
 
   # extraalpha
   my $eas;
   if (my $e = $self->get_extraalphadata($key)) {
-    $eas = "      \\field{original}{default}{extraalpha}{$e}\n";
+    $eas = "      \\field{form=original,lang=default}{extraalpha}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
   }
 
