@@ -1688,6 +1688,46 @@ xref     & Show XREF relationships\\
   \label{fig:graphkey}
 \end{figure}
 \bigskip
+\subsection{Extended \bibtex\ Datasource Field Format}
+\biber\ implements an extended \bibtex\ datasource format which allows
+users to specify the script form and language for a field. In this
+way, it is possible to include several variants of a field in an entry
+which give the field in different script forms (translated, romanised
+etc.) with an option in cases of forms like translated forms, to
+specify the language. This allows users within \biblatex\ to access
+such data when formatting entries. The extended field format looks
+like this:
+
+\begin{verbatim}
+<field>_<form>_<lang>
+\end{verbatim}
+%
+Both \texttt{<form>} and \texttt{<lang>} are optional, naturally and
+if they are not present, default to «default» and «original».
+respectively. \texttt{<lang>}, if specified, should be a known
+\sty{babel} language identifier. \texttt{<form>} can be one of:
+\begin{itemize}
+\item original (default if ommitted)
+\item translated
+\item romanised
+\item uniform
+\end{itemize}
+
+For example:
+\begin{lstlisting}[style=bibtex]{}
+@BOOK{example1,
+  AUTHOR                    = { Булгаков, Павел and Розенфельд, Борис },
+  AUTHOR_translated_english = { Bulgakov, Pavel and Rosenfeld, Boris },
+  TITLE                     = { Славься, Отечество наше свободное },
+  TITLE_romanised           = { Slavʹsâ, Otečestvo naše svobodnoe },
+}
+\end{lstlisting}
+%
+This example has an \bibfield{AUTHOR} field in Russian Cyrillic script
+and a variant the «translated» form with and language setting of
+«english». There is also a Russian Cyrillic \bibfield{TITLE} with an
+ISO 9 romanised variant.
+\bigskip
 \section{Binaries}\label{binaries}
 
 \biber\ is a Perl application which relies heavily on quite a few
