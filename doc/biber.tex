@@ -206,6 +206,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
+1.5 & 2.5\\
 1.4 & 2.4\\
 1.3 & 2.3\\
 1.2 & 2.1, 2.2\\
@@ -538,7 +539,9 @@ an example config file which displays the \biber\ defaults:
   <decodecharsset>base</decodecharsset>
   <fastsort>0</fastsort>
   <graph>0</graph>
+  <listsep>and</listsep>
   <mincrossrefs>0</mincrossrefs>
+  <namesep>and</namesep>
   <nodieonerror>0</nodieonerror>
   <noinit>
     <!-- strip lowercase prefices like 'al-' when generating initials -->
@@ -1513,6 +1516,26 @@ macros to UTF-8.
 
 \noindent Shortcut alias for \opt{biber --bblencoding=UTF-8}
 
+\subsection{List and Name Separators}
+
+With traditional \bibtex, the name and list field separator «and» is
+hard-coded. The \texttt{btparse} C library and therefore \biber\ allows the
+use of any fixed string, subject to the same rules as «and» (not at the
+beginning or end of the name/list, whitespace must surround the string
+etc.). This is settable using the options \opt{listsep} and \opt{namesep}, both
+of which default to the usual «and». Don't try to put any whitespace in
+these strings, this is ignored by \texttt{btparse} anyway. Perhaps you
+prefer your \file{.bib} in more obvious German---set \opt{--namespec=und} and
+then you can do:
+\begin{verbatim}
+@BOOK{key,
+  AUTHOR = {Hans Harman und Barbara Blaupunkt},
+}
+\end{verbatim}
+
+\noindent Bear in mind that this is a global setting and applies to all
+entries in the \bibtex\ data format read by \biber.
+\bigskip
 \subsection{Editor Integration}
 
 Here is some information on how to integrate \biber\ into some of the
@@ -1989,7 +2012,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 1.4
+INFO - This is Biber 1.5
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

@@ -1,5 +1,7 @@
 Revision history for Biber
 
+1.5    ()
+       * Support for customisable BibTeX data source list and name separators
 1.4    (2012-11-28)
        * Support for biblatex 2.4 style sourcemaps (See \DeclareStyleSourcemap in biblatex docs)
        * entrykey is now a possible read-only pseudo field in sourcemaps

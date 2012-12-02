@@ -39,8 +39,10 @@ GetOptions(
            'fastsort|f',
            'fixinits',
            'help|h|?',
+           'listsep=s',
            'mincrossrefs|m=s',
            'logfile=s',
+           'namesep=s',
            'noconf',
            'nodieonerror',
            'nolog',
@@ -356,9 +358,19 @@ Show this help message.
 
 Use F<file.blg> as the name of the logfile.
 
+=item B<--listsep=[sep]>
+
+Use F<sep> as the separator for BibTeX data source list fields. Defaults to BibTeX's usual
+'and'.
+
 =item B<--mincrossrefs|-m [number]>
 
 Set threshold for crossrefs.
+
+=item B<--namesep=[sep]>
+
+Use F<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
+'and'.
 
 =item B<--noconf>
 

@@ -586,7 +586,7 @@ sub _name {
   my $value = decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
-  my @tmp = Text::BibTeX::split_list($value, 'and');
+  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
 
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
@@ -696,7 +696,7 @@ sub _list {
   my $value = decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
-  my @tmp = Text::BibTeX::split_list($value, 'and');
+  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
   @tmp = map { decode_utf8($_) } @tmp;
   @tmp = map { remove_outer($_) } @tmp;
   $bibentry->set_datafield($field, [ @tmp ], $form, $lang);

@@ -100,7 +100,7 @@ our %DM_DATATYPES = (
 );
 
 # Biber option defaults. Many not really needed since they are always passed by .bcf
-# Useful here for options not yet passed in .bcf by biblatex
+# but nice to be safe.
 
 our $CONFIG_DEFAULT_BIBER = {
   bblencoding        => { content => 'UTF-8' },
@@ -115,7 +115,9 @@ our $CONFIG_DEFAULT_BIBER = {
   dot_include        => { option => {section => 1, xdata => 1, crossref => 1, xref => 1 }},
   fastsort           => { content => 0 },
   fixinits           => { content => 0 },
+  listsep            => { content => 'and' },
   mincrossrefs       => { content => 2 },
+  namesep            => { content => 'and' },
   nodieonerror       => { content => 0 },
   noinit             => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/} ,
                                       {value => q/[\x{2bf}\x{2018}]/} ] },
