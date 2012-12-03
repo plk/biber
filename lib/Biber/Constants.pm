@@ -125,6 +125,7 @@ our $CONFIG_DEFAULT_BIBER = {
   nosort             => { option => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
                                       { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
   onlylog            => { content => 0 },
+  others_string      => { content => 'others' },
   outformat          => { content => 'bbl' },
   quiet              => { content => 0 },
   sortcase           => { content => 1 },

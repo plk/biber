@@ -48,6 +48,7 @@ GetOptions(
            'nolog',
            'nostdmacros',
            'onlylog',
+           'others_string=s',
            'outfile|O=s',
            'outformat=s',
            'output_directory=s',
@@ -395,6 +396,11 @@ macro redefinition warnings.
 =item B<--onlylog>
 
 Do not write any message to screen.
+
+=item B<--others_string=[string]>
+
+Use F<string> as the final name in a name field which implies "et al". Defaults to BibTeX's usual
+'others'.
 
 =item B<--outfile|-O [file]>
 

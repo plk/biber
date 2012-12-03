@@ -558,6 +558,7 @@ an example config file which displays the \biber\ defaults:
     <option name="type_name" value="[\x{2bf}\x{2018}]"/>
   </nosort>
   <onlylog>0</onlylog>
+  <others_string>others</others_string>
   <quiet>0</quiet>
   <sortcase>true</sortcase>
   <sortlocale>en_US.utf8</sortlocale>
@@ -1522,19 +1523,25 @@ With traditional \bibtex, the name and list field separator «and» is
 hard-coded. The \texttt{btparse} C library and therefore \biber\ allows the
 use of any fixed string, subject to the same rules as «and» (not at the
 beginning or end of the name/list, whitespace must surround the string
-etc.). This is settable using the options \opt{listsep} and \opt{namesep}, both
-of which default to the usual «and». Don't try to put any whitespace in
-these strings, this is ignored by \texttt{btparse} anyway. Perhaps you
-prefer your \file{.bib} in more obvious German---set \opt{--namespec=und} and
-then you can do:
+etc.). This is settable using the options \opt{listsep} and \opt{namesep},
+both of which default to the usual «and». You can also change the default
+final name in a list which implies «et al». In \bibtex, this is by default
+the English «others» which is the \biber\ default also. Don't try to put
+any whitespace in these strings, this is ignored by \texttt{btparse}
+anyway. Perhaps you prefer your \file{.bib} in more obvious German---set
+\opt{--namespec=und} and then you can do:
 \begin{verbatim}
 @BOOK{key,
-  AUTHOR = {Hans Harman und Barbara Blaupunkt},
+  AUTHOR = {Hans Harman und Barbara Blaupunkt und andere},
 }
 \end{verbatim}
 
-\noindent Bear in mind that this is a global setting and applies to all
-entries in the \bibtex\ data format read by \biber.
+\noindent Bear in mind that these are global settings and apply to all
+entries in the \bibtex\ data format read by \biber. Also bear in mind that
+this is very unportable as all \bibtex\ input/output programs rely on the
+hard-coded «and» and «others». Hopefully this will change as these two
+hard-coded English terms look really rather bad in the context of
+multilingual bibliographies.
 \bigskip
 \subsection{Editor Integration}
 

@@ -33,6 +33,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('namesep', 'und'); # Testing custom name splitting string
+Biber::Config->setoption('others_string', 'andere'); # Testing custom implied "et al"
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setblxoption('mincitenames', 3);

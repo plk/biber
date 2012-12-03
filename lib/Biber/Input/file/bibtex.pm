@@ -623,8 +623,8 @@ sub _name {
     # Skip names that don't parse for some reason (like no lastname found - see parsename())
     next unless my $no = parsename($name, $f, {useprefix => $useprefix});
 
-    # Deal with "and others" in data source
-    if (lc($no->get_namestring) eq 'others') {
+    # Deal with implied "et al" in data source
+    if (lc($no->get_namestring) eq Biber::Config->getoption('others_string')) {
       $names->set_morenames;
     }
     else {

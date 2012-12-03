@@ -157,7 +157,7 @@ sub set_output_entry {
   foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
     if ( my $lf = $be->get_field($listfield) ) {
-      if ( lc($be->get_field($listfield)->[-1]) eq 'others' ) {
+      if ( lc($be->get_field($listfield)->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$listfield}\n";
         pop @$lf; # remove the last element in the array
       };
