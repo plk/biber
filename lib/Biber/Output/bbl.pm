@@ -315,7 +315,7 @@ sub set_output_entry {
 
     # Don't need a per-form/lang more<list> field
     if ( $be->get_field($listfield) and
-         lc($be->get_field($listfield)->[-1]) eq 'others' ) {
+         lc($be->get_field($listfield)->[-1]) eq Biber::Config->getoption('others_string') ) {
       $acc .= "      \\true{more$listfield}\n";
     }
 
