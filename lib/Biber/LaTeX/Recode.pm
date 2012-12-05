@@ -99,7 +99,14 @@ sub init_schemes {
   }
 
   # Read driver config file
-  my $dataxml = XML::LibXML::Simple::XMLin($mapdata, 'ForceContent' => 1);
+  my $dataxml = XML::LibXML::Simple::XMLin($mapdata,
+                                           'ForceContent' => 1,
+                                           'ForceArray' => [
+                                                            qr/\Amaps\z/,
+                                                            qr/\Amap\z/,
+                                                            qr/\Achar\z/,
+                                                           ]
+                                                           );
   foreach my $map (@{$dataxml->{maps}}) {
     my @set = split(/\s*,\s*/, $map->{set});
     my $type = $map->{type};
