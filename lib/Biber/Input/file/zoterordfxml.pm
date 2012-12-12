@@ -90,6 +90,7 @@ sub extract_entries {
 
   # Get a reference to the correct sourcemap sections, if they exist
   my $smaps = [];
+  # Maps are applied in order USER->STYLE->DRIVER
   if (defined(Biber::Config->getoption('sourcemap'))) {
     # User maps
     if (my $m = first {$_->{datatype} eq 'zoterordfxml' and $_->{level} eq 'user' } @{Biber::Config->getoption('sourcemap')} ) {
@@ -255,14 +256,17 @@ sub create_entry {
 
   $bibentry->set_field('citekey', $key);
 
-  # Datasource mapping. We process driver defaults first and then user
-  # (see code which creates $smaps above)
+  # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
   foreach my $smap (@$smaps) {
+    my $level = $smap->{level};
 
   # DATASOURCE MAPPING DEFINED BY USER IN CONFIG FILE OR .bcf
   MAP:    foreach my $map (@{$smap->{map}}) {
       my $last_field = undef;
       my $last_fieldval = undef;
+
+      my @imatches; # For persising parenthetical matches over several steps
+
       my $itype = $entry->findvalue('./z:itemType') || $entry->nodeName;
       my $last_type = $itype; # defaults to the entrytype unless changed below
 
@@ -286,29 +290,34 @@ sub create_entry {
         if (my $source = $step->{map_type_source}) {
 
           unless ($itype eq $source) {
-            # Skip the rest of the map if this step doesn't match
+            # Skip the rest of the map if this step doesn't match and match is final
             if ($step->{map_final}) {
+              $logger->debug("Source mapping (type=$level, key=$key): Entry type is '$itype' but map wants '$source' and step has 'final' set ... skipping rest of map ...");
               next MAP;
             }
             else {
               # just ignore this step
+              $logger->debug("Source mapping (type=$level, key=$key): Entry type is '$itype' but map wants '$source' ... skipping step ...");
               next;
             }
           }
           # Change entrytype if requested
           $last_type = $itype;
+          $logger->debug("Source mapping (type=$level, key=$key): Changing entry type from '$last_type' to " . $step->{map_type_target});
           $entry->findnodes('./z:itemType/text()')->get_node(1)->setData($step->{map_type_target});
         }
 
         # Field map
         if (my $source = $step->{map_field_source}) {
           unless ($entry->exists($source)) {
-            # Skip the rest of the map if this step doesn't match
+            # Skip the rest of the map if this step doesn't match and match is final
             if ($step->{map_final}) {
+              $logger->debug("Source mapping (type=$level, key=$key): No field '$source' and step has 'final' set, skipping rest of map ...");
               next MAP;
             }
             else {
               # just ignore this step
+              $logger->debug("Source mapping (type=$level, key=$key): No field '$source', skipping step ...");
               next;
             }
           }
@@ -319,17 +328,20 @@ sub create_entry {
           if (my $m = $step->{map_match}) {
             if (defined($step->{map_replace})) { # replace can be null
               my $r = $step->{map_replace};
+              $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field '$source'");
               my $text = ireplace($last_fieldval, $m, $r);
               $entry->findnodes($source . '/text()')->get_node(1)->setData($text);
             }
             else {
-              unless (imatch($last_fieldval, $m)) {
-                # Skip the rest of the map if this step doesn't match
+              unless (@imatches = imatch($last_fieldval, $m)) {
+                # Skip the rest of the map if this step doesn't match and match is final
                 if ($step->{map_final}) {
+                  $logger->debug("Source mapping (type=$level, key=$key): Field '$source' does not match '$m' and step has 'final' set, skipping rest of map ...");
                   next MAP;
                 }
                 else {
                   # just ignore this step
+                  $logger->debug("Source mapping (type=$level, key=$key): Field '$source' does not match '$m', skipping step ...");
                   next;
                 }
               }
@@ -340,12 +352,12 @@ sub create_entry {
           if (my $target = $step->{map_field_target}) {
             if (my @t = $entry->findnodes($target)) {
               if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                $logger->debug("Overwriting existing field '$target' while processing entry '$key'");
+                $logger->debug("Source mapping (type=$level, key=$key): Overwriting existing field '$target'");
                 # Have to do this otherwise XML::LibXML will merge the nodes
                 map {$_->unbindNode} @t;
               }
               else {
-                $logger->debug("Not overwriting existing field '$target' while processing entry '$key'");
+                $logger->debug("Source mapping (type=$level, key=$key): Field '$source' is aliased to field '$target' but both are defined, skipping ...");
                 next;
               }
             }
@@ -358,22 +370,20 @@ sub create_entry {
 
           # Deal with special tokens
           if ($step->{map_null}) {
+            $logger->debug("Source mapping (type=$level, key=$key): Deleting field '$field'");
             map {$_->unbindNode} $entry->findnodes($field);
           }
           else {
             if ($entry->exists($field)) {
-              if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                $logger->debug("Overwriting existing field '$field' while processing entry '$key'");
-              }
-              else {
+              unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
                 if ($step->{map_final}) {
                   # map_final is set, ignore and skip rest of step
-                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key' and skipping rest of map");
+                    $logger->debug("Source mapping (type=$level, key=$key): Field '$field' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
                   next MAP;
                 }
                 else {
                   # just ignore this step
-                  $logger->debug("Not overwriting existing field '$field' while processing entry '$key'");
+                    $logger->debug("Source mapping (type=$level, key=$key): Field '$field' exists and overwrite is not set, skipping step ...");
                   next;
                 }
               }
@@ -384,18 +394,27 @@ sub create_entry {
 
             if ($step->{map_origentrytype}) {
               next unless $last_type;
+              $logger->debug("Source mapping (type=$level, key=$key): Setting field '$field' to '${orig}${last_type}'");
               $entry->appendTextChild($field, $orig . $last_type);
             }
             elsif ($step->{map_origfieldval}) {
+              $logger->debug("Source mapping (type=$level, key=$key): Setting field '$field' to '${orig}${last_fieldval}'");
               next unless $last_fieldval;
               $entry->appendTextChild($field, $orig . $last_fieldval);
             }
             elsif ($step->{map_origfield}) {
+              $logger->debug("Source mapping (type=$level, key=$key): Setting field '$field' to '${orig}${last_field}'");
               next unless $last_field;
               $entry->appendTextChild($field, $orig . $last_field);
             }
             else {
-              $entry->appendTextChild($field, $orig . $step->{map_field_value});
+              my $fv = $step->{map_field_value};
+              # Now re-instate any unescaped $1 .. $9 to get round these being
+              # dynamically scoped and being null when we get here from any
+              # previous map_match
+              $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+              $logger->debug("Source mapping (type=$level, key=$key): Setting field '$field' to '${orig}${fv}'");
+              $entry->appendTextChild($field, $orig . $fv);
             }
           }
         }
