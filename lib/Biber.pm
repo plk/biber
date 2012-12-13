@@ -403,13 +403,19 @@ sub parse_ctrlfile {
   # We merge into the biber option
   # In biblatex you can set driver mappings but not in biber
   # user/style maps set via biblatex take preference for a given driver.
-  # The case we have to deal with is where there are driver defaults
-  # from biblatex and user settings in biber - we need to merge
+  # The special cases we have to deal with are:
+  # * Where there are driver defaults from biblatex and user settings in biber - we need to merge
+  # * Where 
   if (exists($bcfxml->{sourcemap})) {
     # Users maps are set in config file
     if (my $usms = Biber::Config->getoption('sourcemap')) {
       # Force "user" level for the maps
       @$usms = map {$_->{level} = 'user';$_} @$usms;
+
+      # Merge any user maps from the document set by \DeclareSourcemap into user
+      # maps set in the biber config file. These document user maps take precedence so go
+      # at the front of any other user maps
+      unshift(@$usms, grep {$_->{level} eq 'user'} @{$bcfxml->{sourcemap}{maps}});
 
       # Merge the driver/style maps with the user maps from the config file
       if (my @m = grep {$_->{level} eq 'driver' or
