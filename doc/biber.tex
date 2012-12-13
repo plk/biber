@@ -591,11 +591,15 @@ data source with non-standard entrytypes or fields and to have these
 automatically mapped into other entrytypes/fields without modifying
 your data source.  Essentially, this alters the source data stream
 which \biber\ uses to build the internal \biblatex\ data model and is an
-automatic way of editing the datasource as it is read by \biber. This
-option is completely equivalent to the \biblatex\
-\cmd{DeclareSourcemap} macro which is in fact a per-document \latex\
-macro-based interface to exactly the same functionality (see the
-\biblatex\ manual).
+automatic way of editing the datasource as it is read by \biber.
+
+Source mappings can de defined at different «levels» which are applied
+in a defined order. See the \biblatex\ manual regarding these macros:\\[2ex]
+
+\noindent \texttt{user}-level maps defined with \cmd{DeclareSourcemap}$\rightarrow$\\
+\hspace*{1em}\texttt{user}-level maps defined in the \biber\ config file (described below)$\rightarrow$\\
+\hspace*{2em}\texttt{style}-level maps defined with \cmd{DeclareStyleSourcemap}$\rightarrow$\\
+\hspace*{3em}\texttt{driver}-level maps defined with \cmd{DeclareDriverSourcemap}\\[2ex]
 
 Figure \ref{fig:biber-mdf} is a graphical overview of the data flow for
 data model information. See Figure \ref{fig:overview} for a more complete
