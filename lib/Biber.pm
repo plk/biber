@@ -402,10 +402,9 @@ sub parse_ctrlfile {
   # This is special as it's both a biblatex option and a biber option
   # We merge into the biber option
   # In biblatex you can set driver mappings but not in biber
-  # user/style maps set via biblatex take preference for a given driver.
-  # The special cases we have to deal with are:
-  # * Where there are driver defaults from biblatex and user settings in biber - we need to merge
-  # * Where 
+  # Order of application of maps is decided by the level and within 'user' level,
+  # which can come from two places (biber.conf and \DeclareSourcemap), order is
+  # \DeclareSourcemap, then biber.conf
   if (exists($bcfxml->{sourcemap})) {
     # Users maps are set in config file
     if (my $usms = Biber::Config->getoption('sourcemap')) {
