@@ -220,10 +220,10 @@ sub _initopts {
     elsif (lc($k) eq 'sourcemap') {
       my $sms;
       foreach my $sm (@{$v->{maps}}) {
-        if ($sm->{level} eq 'driver') {
+        if (defined($sm->{level}) and $sm->{level} eq 'driver') {
           carp("You can't set driver level sourcemaps via biber - use \\DeclareDriverSourcemap in biblatex. Ignoring map.");
         }
-        elsif ($sm->{level} eq 'style') {
+        elsif (defined($sm->{level}) and $sm->{level} eq 'style') {
           carp("You can't set style level sourcemaps via biber - use \\DeclareStyleSourcemap in biblatex. Ignoring map.");
         }
         else {
