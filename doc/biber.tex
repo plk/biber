@@ -1,5 +1,5 @@
 % To make this maximally compatible with older PDF readers, it uses
-% PDF 1.4 and TeXGyre fonts
+% PDF 1.4
 \pdfminorversion=4
 \documentclass{ltxdockit}
 \usepackage{btxdockit}
@@ -27,8 +27,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{1.4}    % BIBER VERSION
-\gdef\biblatexversion{2.4}   % BIBLATEX VERSION
+\gdef\biberversion{1.5}    % BIBER VERSION
+\gdef\biblatexversion{2.5}   % BIBLATEX VERSION
 
 % Set up tikz things
 
@@ -1723,6 +1723,29 @@ xref     & Show XREF relationships\\
   \caption{Key to \texttt{.dot} output format}
   \label{fig:graphkey}
 \end{figure}
+\bigskip
+\subsection{Tool Mode}\label{tool}
+\biber\ can run in «tool» mode which is enabled with the \opt{--tool}
+option. In this mode, \biber is called like this: \opt{biber --tool
+  <datasource>}. It does not read any \file{.bcf} and does not output
+any \file{.bbl}. Instead, it reads all entries from the file
+«datasource», applies any changes specified in the command-line
+options and \biber\ config file and writes the resulting datasource
+out to a new file, defaulting to «datasource\_bibertool.bib» if the
+option \opt{outfile} is not specified. This is useful if you need to
+programatically change your datasource using the semantics provided by
+\biber. For example, you could choose to reencode your datasource by
+turning all UTF-8 characters into \latex\ macros:
+
+\begin{verbatim}
+biber --tool --output_encoding=ascii --output_safechars file.bib
+\end{verbatim}
+
+\noindent This would output a copy of \file{file.bib} called \file{file\_bibertool.bib} with all
+UTF-8 chars changed to \latex macros. If you utilise the \biber\
+config file, you can set up a complex set of mappings to transform
+your datasource however you like in a semantic manner much more robust
+than just textual search/replace.
 \bigskip
 \section{Binaries}\label{binaries}
 
