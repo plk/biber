@@ -283,9 +283,6 @@ sub create_entry {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
-  my $bibentry = new Biber::Entry;
-
-  $bibentry->set_field('citekey', $key);
 
   if ( $entry->metatype == BTE_REGULAR ) {
 
@@ -468,6 +465,16 @@ sub create_entry {
         }
       }
     }
+
+    # If in tool mode, write output
+    if (Biber::Config->getoption('tool')) {
+      $Biber::MASTER->add_tool_buffer(decode_utf8($entry->print_s));
+      return;
+    }
+
+    # Now create a biber internal entry object
+    my $bibentry = new Biber::Entry;
+    $bibentry->set_field('citekey', $key);
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
@@ -850,7 +857,7 @@ sub preprocess_file {
 
   # We read the file in the bib encoding and then output to UTF-8, even if it was already UTF-8,
   # just in case there was a BOM so we can delete it as it makes T::B complain
-  my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
+  my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('input_encoding'))
     or biber_error("Can't read $filename");
 
   # strip UTF-8 BOM if it exists - this just makes T::B complain about junk characters
@@ -860,7 +867,7 @@ sub preprocess_file {
       or biber_error("Can't write $ufilename");
 
   # Decode LaTeX to UTF8 if output is UTF-8
-  if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+  if (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
     my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
       or biber_error("Can't read $ufilename");
     $logger->info('Decoding LaTeX character macros into UTF-8');

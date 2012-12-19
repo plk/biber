@@ -526,10 +526,6 @@ an example config file which displays the \biber\ defaults:
 \begin{lstlisting}[language=xml]
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-  <bblencoding>UTF-8</bblencoding>
-  <bibencoding>UTF-8</bibencoding>
-  <bblsafechars>0</bblsafechars>
-  <bblsafecharsset>base</bblsafecharsset>
   <collate>1</collate>
   <collate_options>
     <option name="level" value="4"/>
@@ -539,6 +535,7 @@ an example config file which displays the \biber\ defaults:
   <decodecharsset>base</decodecharsset>
   <fastsort>0</fastsort>
   <graph>0</graph>
+  <input_encoding>UTF-8</input_encoding>
   <listsep>and</listsep>
   <mincrossrefs>0</mincrossrefs>
   <namesep>and</namesep>
@@ -559,10 +556,15 @@ an example config file which displays the \biber\ defaults:
   </nosort>
   <onlylog>0</onlylog>
   <others_string>others</others_string>
+  <output_encoding>UTF-8</output_encoding>
+  <output_safechars>0</output_safechars>
+  <output_safecharsset>base</output_safecharsset>
   <quiet>0</quiet>
   <sortcase>true</sortcase>
   <sortlocale>en_US.utf8</sortlocale>
   <sortupper>true</sortupper>
+  <tool>false</tool>
+  <tool_datatype>bibtex</tool_datatype>
   <trace>0</trace>
   <validate_config>0</validate_config>
   <validate_control>0</validate_control>
@@ -1335,9 +1337,9 @@ reverse order at UCA level 2.
 
 \biber\ takes care of re-encoding the data source data as
 necessary. In normal use, \biblatex\ passes its
-\opt{bibencoding} option value to \biber\ via the \verb+.bcf+
+\opt{input\_encoding} option value to \biber\ via the \verb+.bcf+
 file. It also passes the value of its \opt{texencoding} option (which
-maps to \biber's \opt{--bblencoding|-E} option) the default value
+maps to \biber's \opt{--output\_encoding|-E} option) the default value
 of which depends on which \TeX\ engine and encoding packages you are
 using (see \biblatex\ manual for details).
 
@@ -1345,13 +1347,13 @@ using (see \biblatex\ manual for details).
 
 \begin{enumerate}
 \item Decodes the data source into UTF-8 if it is not UTF-8 already
-\item Decodes \latex\ character macros into UTF-8 if \opt{--bblencoding|-E}
+\item Decodes \latex\ character macros into UTF-8 if \opt{--output\_encoding|-E}
   is UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
-  the encoding that \opt{--bblencoding|-E} specifies
+  the encoding that \opt{--output\_encoding|-E} specifies
 \item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
   decoded \latex\ character macros which are not in the
-  \opt{--bblencoding|-E} encoding. Replaces with a suitable \latex\ macro
+  \opt{--output\_encoding|-E} encoding. Replaces with a suitable \latex\ macro
 \end{enumerate}
 
 \noindent Normally, you do not need to set the encoding options on the
@@ -1361,7 +1363,7 @@ the \verb+.bcf+ settings with the command line. The resource chain for
 encoding settings is, in decreasing order
 of preference:\\[2ex]
 
-\noindent\opt{--bibencoding|-e} and \opt{--bblencoding|-E} $\rightarrow$\\
+\noindent\opt{--input\_encoding|-e} and \opt{--output\_encoding|-E} $\rightarrow$\\
 \hspace*{1em}\biber\ config file $\rightarrow$\\
 \hspace*{2em}\verb+.bcf+ control file
 
@@ -1372,7 +1374,7 @@ character macros into UTF-8. In fact there are two situations in which
 this occurs.
 
 \begin{enumerate}
-\item When \opt{--bblencoding|-E} is UTF-8
+\item When \opt{--output\_encoding|-E} is UTF-8
 \item Always for internal sorting purposes
 \end{enumerate}
 
@@ -1392,13 +1394,13 @@ An example--if you had \verb+\DJ+ in your \verb+.bib+ data source,
 because it doesn't understand that UTF-8 character. The real solution here
 is to switch to a \TeX\ engine with full UTF-8 support like \XeTeX\ or Lua\TeX\
 as these don't use or need \verb+inputenc+. However, you can also try the
-\opt{--bblsafechars} option which will try to convert any UTF-8 chars into
-\latex\ macros on output. For information on the \opt{--bblsafechars}
+\opt{--output\_safechars} option which will try to convert any UTF-8 chars into
+\latex\ macros on output. For information on the \opt{--output\_safechars}
 option, see section \ref{lencode}.
 \bigskip
 \minisec{Decoding for internal sorting}
 
-If your \opt{bblencoding} is not UTF-8, and you are using some UTF-8
+If your \opt{output\_encoding} is not UTF-8, and you are using some UTF-8
 equivalent \latex\ character macros in your \verb+.bib+ data source, then some
 \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might end up
 with invalid characters in them, according to the \verb+.bbl+
@@ -1420,7 +1422,7 @@ data source entry:
 \verb+{\v S}+ is decoded into «Š» and so with name-first sorting,
 \verb+\sortinit{}+ would be «Š». This is an invalid character in
 latin1 encoding and so the \verb+.bbl+ would be broken. In such cases
-when \verb+\sortinit{}+ is a char not valid in the \opt{bblencoding},
+when \verb+\sortinit{}+ is a char not valid in the \opt{output\_encoding},
 \biber\ tries to replace the character with a suitable \latex\
 macro. The solution is really to use UTF-8 \verb+.bbl+ encoding whenever
 possible. In extreme cases where even with UTF-8 encoding,
@@ -1431,7 +1433,7 @@ switching \TeX\ engines to one that supports full UTF-8 (like Xe\TeX\ or Lua\TeX
 \subsubsection{\latex\ macro encoding}\label{lencode}
 
 The opposite of decoding; converting UTF-8 characters into \latex\ macros.
-You can force this with the \opt{--bblsafechars} option which will do a
+You can force this with the \opt{--output\_safechars} option which will do a
 generally good job of making your \verb+.bbl+ plain ASCII. It can be useful
 in certain edge cases where your bibliography introduces characters which
 can't be handled by your main document. See section \ref{ldecode} above for
@@ -1440,12 +1442,12 @@ an example such case.
 A common use case for \latex\ macro encoding is when the bibliography
 data source is not ASCII but the \verb+.tex+ file is and so this case
 is automated for you: if the \biblatex\ option «\opt{texencoding}»
-(which corresponds to the \biber\ option «\opt{--bblencoding|-E}») is
+(which corresponds to the \biber\ option «\opt{--output\_encoding|-E}») is
 set to an ASCII encoding («\verb+ascii+» or «\verb+x-ascii+») and
-«\opt{--bibencoding|-e}» is not ASCII, \biber\ will automatically set
-\opt{--bblsafechars}.
+«\opt{--input\_encoding|-e}» is not ASCII, \biber\ will automatically set
+\opt{--output\_safechars}.
 
-See also the \opt{biber --help} output for the \opt{--bblsafecharsset}
+See also the \opt{biber --help} output for the \opt{--output\_safecharsset}
 and \linebreak[4]\opt{--decodecharsset} options which can customise the set
 of conversion rules to use. The builtin sets of characters and macros which \biber\
 maps during encoding and decoding are documented\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/\biberversion/documentation/utf8-macro-map.html}}.
@@ -1457,7 +1459,7 @@ same Perl install directory as \biber's \file{Recode.pm} module. Of course
 it is easier to find this in the \biber\ source tree. It is most likely
 that if you want to use a custom mapping file, you would copy the default
 file and edit it, removing some things and perhaps defining some custom
-recoding sets for use with \opt{--bblsafecharsset} and
+recoding sets for use with \opt{--output\_safecharsset} and
 \opt{--decodecharsset}.
 
 Be careful to classify the entries using the correct «type» attribute in
@@ -1474,35 +1476,35 @@ UTF-8 for a particular character. It's unlikely you will need to use this.
 
 \biberex{biber}
 
-\noindent Set \opt{bibencoding} and \opt{bblencoding} from the
+\noindent Set \opt{input\_encoding} and \opt{output\_encoding} from the
 config file or \verb+.bcf+
 
-\biberex{biber --bblencoding=latin2}
+\biberex{biber --output_encoding=latin2}
 
 \noindent Encode the \verb+.bbl+ as latin2, overriding the
 \verb+.bcf+
 
-\biberex{biber --bblsafechars}
+\biberex{biber --output_safechars}
 
-\noindent Set \opt{bibencoding} and \opt{bblencoding} from the
+\noindent Set \opt{input\_encoding} and \opt{output\_encoding} from the
 config file or \verb+.bcf+. Force encoding of UTF-8 chars to \latex\
 macros using default conversion set
 
-\biberex{biber --bblencoding=ascii}
+\biberex{biber --output_encoding=ascii}
 
 \noindent Encode the \verb+.bbl+ as ascii, overriding the
-\verb+.bcf+. Automatically sets \opt{--bblsafechars} to force UTF-8
+\verb+.bcf+. Automatically sets \opt{--output\_safechars} to force UTF-8
 to \latex\ macro conversion
 
-\biberex{biber --bblencoding=ascii --bblsafecharsset=full}
+\biberex{biber --output_encoding=ascii --output_safecharsset=full}
 
 \noindent Encode the \verb+.bbl+ as ascii, overriding the
-\verb+.bcf+. Automatically sets \opt{--bblsafechars} to force UTF-8
+\verb+.bcf+. Automatically sets \opt{--output\_safechars} to force UTF-8
 to \latex\ macro conversion using the full set of conversions
 
 \biberex{biber --decodecharsset=full}
 
-\noindent Set \opt{bibencoding} and \opt{bblencoding} from the
+\noindent Set \opt{input\_encoding} and \opt{output\_encoding} from the
 config file or \verb+.bcf+. Use the full \latex\ macro to UTF-8
 conversion set because you have some more obscure character macros in
 your \verb+.bib+ data source which you want to sort correctly
@@ -1515,11 +1517,11 @@ macros to UTF-8.
 
 \biberex{biber -u}
 
-\noindent Shortcut alias for \opt{biber --bibencoding=UTF-8}
+\noindent Shortcut alias for \opt{biber --input\_encoding=UTF-8}
 
 \biberex{biber -U}
 
-\noindent Shortcut alias for \opt{biber --bblencoding=UTF-8}
+\noindent Shortcut alias for \opt{biber --output\_encoding=UTF-8}
 
 \subsection{List and Name Separators}
 

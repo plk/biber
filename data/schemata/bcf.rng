@@ -22,8 +22,8 @@
         <attribute name="type">
           <value>global</value>
         </attribute>
-        <ref name="bblencoding"/>
-        <ref name="bibencoding"/>
+        <ref name="output_encoding"/>
+        <ref name="input_encoding"/>
         <ref name="debug"/>
         <ref name="mincrossrefs"/>
         <ref name="sortcase"/>
@@ -1419,26 +1419,26 @@
       </element>
     </element>
   </define>
-  <define name="bblencoding">
+  <define name="output_encoding">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>bblencoding</value>
+        <value>output_encoding</value>
       </element>
       <element name="bcf:value">
         <text/>
       </element>
     </element>
   </define>
-  <define name="bibencoding">
+  <define name="input_encoding">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>bibencoding</value>
+        <value>input_encoding</value>
       </element>
       <element name="bcf:value">
         <text/>

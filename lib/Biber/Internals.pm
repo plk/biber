@@ -926,9 +926,9 @@ sub _generatesortinfo {
     $ss =~ s/\A$pre$sorting_sep+//;
     my $init = substr normalise_string($ss), 0, 1;
 
-    # Now check if this sortinit is valid in the bblencoding. If not, warn
+    # Now check if this sortinit is valid in the output_encoding. If not, warn
     # and replace with a suitable value
-    my $bblenc = Biber::Config->getoption('bblencoding');
+    my $bblenc = Biber::Config->getoption('output_encoding');
     if ($bblenc ne 'UTF-8') {
       # Can this init be represented in the BBL encoding?
       if (encode($bblenc, $init) eq '?') { # Malformed data encoding char

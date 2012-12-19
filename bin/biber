@@ -24,10 +24,10 @@ use Getopt::Long qw/:config no_ignore_case/;
 my $opts = {};
 GetOptions(
            $opts,
-           'bibencoding|e=s',
-           'bblencoding|E=s',
-           'bblsafechars',
-           'bblsafecharsset=s',
+           'bibencoding=s', # alias for input_encoding
+           'bblencoding=s', # alias for output_encoding
+           'bblsafechars',  # alias for input_safechars
+           'bblsafecharsset', # alias for input_safecharsset
            'cache',
            'collate|C',
            'collate_options|c=s',
@@ -39,6 +39,7 @@ GetOptions(
            'fastsort|f',
            'fixinits',
            'help|h|?',
+           'input_encoding|e=s',
            'listsep=s',
            'mincrossrefs|m=s',
            'logfile=s',
@@ -52,6 +53,9 @@ GetOptions(
            'outfile|O=s',
            'outformat=s',
            'output_directory=s',
+           'output_encoding|E=s',
+           'output_safechars',
+           'output_safecharsset=s',
            'quiet|q+',
            'recodedata=s',
            'sortcase=s',
@@ -60,9 +64,11 @@ GetOptions(
            'sortupper=s',
            'ssl-nointernalca',
            'ssl-noverify-host',
+           'tool',
+           'tool_datatype=s',
            'trace|T',
-           'u',                   # alias for bibencoding=UTF-8
-           'U',                   # alias for bblencoding=UTF-8
+           'u',                   # alias for input_encoding=UTF-8
+           'U',                   # alias for output_encoding=UTF-8
            'validate_config',
            'validate_control',
            'validate_datamodel|V',
@@ -133,13 +139,29 @@ if ($opts->{fastsort}) {
   delete $opts->{collate};
 }
 
-# Resolve shortcut aliases for UTF-8ness
+# Resolve some option shortcuts and legacyaliases
+if (my $o = $opts->{bibencoding}) {
+  $opts->{input_encoding} = $o;
+  delete $opts->{bibencoding};
+}
+if (my $o = $opts->{bblencoding}) {
+  $opts->{output_encoding} = $o;
+  delete $opts->{bblencoding};
+}
+if (my $o = $opts->{bblsafechars}) {
+  $opts->{output_safechars} = $o;
+  delete $opts->{bblsafechars};
+}
+if (my $o = $opts->{bblsafecharsset}) {
+  $opts->{output_safecharsset} = $o;
+  delete $opts->{bblsafecharsset};
+}
 if ($opts->{u}) {
-  $opts->{bibencoding} = 'UTF-8';
+  $opts->{input_encoding} = 'UTF-8';
   delete $opts->{u};
 }
 if ($opts->{U}) {
-  $opts->{bblencoding} = 'UTF-8';
+  $opts->{output_encoding} = 'UTF-8';
   delete $opts->{U};
 }
 
@@ -165,6 +187,9 @@ else {
   if (Biber::Config->getoption('outformat') eq 'dot') { # .dot output
     $outfile = $bcf =~ s/bcf$/dot/r;
   }
+  elsif (Biber::Config->getoption('tool_datatype') eq 'bibtex') { # tool .bib output
+    $outfile = $ARGV[0] =~ s/.bib$/_bibertool.bib/r;
+  }
   else { # .bbl output
     $outfile = $bcf =~ s/bcf$/bbl/r;
   }
@@ -176,8 +201,23 @@ if (my $outdir = Biber::Config->getoption('output_directory')) {
   $outfile = File::Spec->catfile($outdir, $file)
 }
 
-# parse the .bcf control file
-$biber->parse_ctrlfile($bcf);
+# Fake some necessary .bcf parts if in tool mode
+if (Biber::Config->getoption('tool')) {
+  my $bib_sections = new Biber::Sections;
+  my $bib_section = new Biber::Section('number' => 0);
+  $bib_section->set_datasources([{type => 'file',
+                                 name => $ARGV[0],
+                                 datatype => Biber::Config->getoption('tool_datatype')}]);
+  $bib_section->set_allkeys(1);
+  $bib_sections->add_section($bib_section);
+
+  # Add the Biber::Sections object to the Biber object
+  $biber->add_sections($bib_sections);
+}
+else {
+  # parse the .bcf control file
+  $biber->parse_ctrlfile($bcf);
+}
 
 # Postprocess biber options now that they are all read from the various places
 Biber::Config->postprocess_biber_opts;
@@ -202,6 +242,10 @@ if (Biber::Config->getoption('outformat') eq 'dot') { # .dot output
   require Biber::Output::dot;
   $biber->set_output_obj(Biber::Output::dot->new());
 }
+elsif (Biber::Config->getoption('tool')) {
+  require Biber::Output::tool;
+  $biber->set_output_obj(Biber::Output::tool->new());
+}
 else { # .bbl output
   require Biber::Output::bbl;
   $biber->set_output_obj(Biber::Output::bbl->new());
@@ -218,6 +262,7 @@ if (Biber::Config->getoption('trace')) {
     $biber->_stringdump,
     "\n###########################################################")
 }
+
 
 # Get reference to output object
 my $biberoutput = $biber->get_output_obj;
@@ -260,37 +305,41 @@ C<biber> provides a replacement of the bibtex processor for users of biblatex.
 
 =over 4
 
-=item B<--bblencoding|-E [encoding]>
+=item B<--output_encoding|-E [encoding]>
 
 Specify the encoding of the output C<.bbl> file. Default is "UTF-8".
 Normally it's not necessary to set this as it's passed via biblatex
 from the inputenc package setting.
 See C<perldoc Encode::Supported> for a list of supported encodings.
+The legacy option B<--bblencoding> is supported as an alias.
 
-=item B<--bblsafechars>
+=item B<--output_safechars>
 
 Try to convert UTF-8 chars into LaTeX macros when writing the .bbl
 This can prevent unknown char errors when using PDFLaTeX and inputenc
 as this doesn't understand all of UTF-8. Note, it is better to switch
 to XeTeX or LuaTeX to avoid this situation. By default uses the
---bblsafecharsset "base" set of characters.
+--output_safecharsset "base" set of characters.
+The legacy option B<--bblsafechars> is supported as an alias.
 
-=item B<--bblsafecharsset=[recode set name]>
+=item B<--output_safecharsset=[recode set name]>
 
 The set of characters included in the conversion routine for
---bblsafechars. Set to "full" to try harder with a much
+--output_safechars. Set to "full" to try harder with a much
 larger set or "base" to use a basic set. Default is "base" which is
 fine for most use cases. You may need to load more macro packages to
 deal with the results of "full" (Dings, Greek characters, special
 symbols etc.). The recode sets are defined in the reencoding data file which
 can be customised. See the --recodedata option and the PDF manual.
+The legacy option B<--bblsafecharsset> is supported as an alias.
 
-=item B<--bibencoding|-e [encoding]>
+=item B<--input_encoding|-e [encoding]>
 
 Specify the encoding of the data source file(s). Default is "UTF-8"
 Normally it's not necessary to set this as it's passed via the
 .bcf file from biblatex's setting of the same name.
 See "perldoc Encode::Supported" for a list of supported encodings.
+The legacy option B<--bibencoding> is supported as an alias.
 
 =item B<--cache>
 
@@ -471,13 +520,28 @@ to find the CA certs.
 Turn off host verification when using HTTPS to fetch remote data sources.
 You may need this if the SSL certificate is self-signed for example.
 
+=item B<--tool>
+
+Run in tool mode. In this mode, biber takes a config file and a data source, applies the source
+mapping steps in the config file to the data source and writes a new datasource. Essentially,
+this allows you to change your data sources using biber's mapping semantics.
+
+=item B<--tool_datatype=[datatype]>
+
+Datatype of the data file to be processes in tool mode. Defaults to C<bibtex>.
+
+=item B<--trace|T>
+
+Turn on tracing. Also turns on B<--debug|d> and additionally provides a lot of low-level tracing
+information in the log.
+
 =item B<-u>
 
-Alias for B<--bibencoding=UTF-8>
+Alias for B<--input_encoding=UTF-8>
 
 =item B<-U>
 
-Alias for B<--bblencoding=UTF-8>
+Alias for B<--output_encoding=UTF-8>
 
 =item B<--validate_config>
 

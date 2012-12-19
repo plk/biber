@@ -4,17 +4,17 @@
     <element name="config">
       <interleave>
         <optional>
-          <element name="bibencoding">
+          <element name="input_encoding">
             <text/>
           </element>
         </optional>
         <optional>
-          <element name="bblencoding">
+          <element name="output_encoding">
             <text/>
           </element>
         </optional>
         <optional>
-          <element name="bblsafechars">
+          <element name="output_safechars">
             <choice>
               <value>0</value>
               <value>1</value>
@@ -22,7 +22,7 @@
           </element>
         </optional>
         <optional>
-          <element name="bblsafecharsset">
+          <element name="output_safecharsset">
             <choice>
               <value>base</value>
               <value>full</value>

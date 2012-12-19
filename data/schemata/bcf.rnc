@@ -11,8 +11,8 @@ start =
     element bcf:options {
       attribute component { "biber" },
       attribute type { "global" },
-      bblencoding,
-      bibencoding,
+      output_encoding,
+      input_encoding,
       debug,
       mincrossrefs,
       sortcase,
@@ -557,16 +557,16 @@ wrapline =
     element bcf:key { "wrapline" },
     element bcf:value { xsd:integer }
   }  
-bblencoding =
+output_encoding =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "bblencoding" },
+    element bcf:key { "output_encoding" },
     element bcf:value { text }
   }
-bibencoding =
+input_encoding =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "bibencoding" },
+    element bcf:key { "input_encoding" },
     element bcf:value { text }
   }
 sortcase =

@@ -50,8 +50,8 @@ sub set_output_target_file {
   my $file = shift;
   $self->{output_target_file} = $file;
   my $enc_out;
-  if (Biber::Config->getoption('bblencoding')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
+  if (Biber::Config->getoption('output_encoding')) {
+    $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
   }
   my $TARGET = IO::File->new($file, ">$enc_out");
   $self->set_output_target($TARGET);
@@ -354,7 +354,7 @@ sub output {
 
   $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
 
-  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
+  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
 
   print $target $data->{HEAD};
 

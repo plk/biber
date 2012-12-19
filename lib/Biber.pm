@@ -79,7 +79,7 @@ sub new {
 
   # Initialise recoding schemes
   Biber::LaTeX::Recode->init_schemes(Biber::Config->getoption('decodecharsset'),
-                                     Biber::Config->getoption('bblsafecharsset'));
+                                     Biber::Config->getoption('output_safecharsset'));
 
   $MASTER = $self;
 
@@ -139,6 +139,41 @@ sub sections {
   my $self = shift;
   return $self->{sections};
 }
+
+=head2 add_sections
+
+    Adds a Biber::Sections object. Used externally from, e.g. biber
+
+=cut
+
+sub add_sections {
+  my ($self, $sections) = @_;
+  $self->{sections} = $sections;
+  return;
+}
+
+=head2 add_tool_buffer
+
+    Appends to a buffer used to collect tool mode output
+
+=cut
+
+sub add_tool_buffer {
+  my ($self, $tooldata) = @_;
+  $self->{toolbuffer} .= $tooldata;
+}
+
+=head2 get_tool_buffer
+
+    Returns the buffer used to collect tool mode output
+
+=cut
+
+sub get_tool_buffer {
+  my $self = shift;
+  return $self->{toolbuffer};
+}
+
 
 =head2 sortlists
 
@@ -681,10 +716,10 @@ sub process_setup {
   # up data model defaults in Constants.pm in case there is nothing in the .bcf
   Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
-  # Force bblsafechars flag if output to ASCII and bibencoding is not ASCII
-  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)?ascii/xmsi and
-      Biber::Config->getoption('bibencoding') !~ /(?:x-)?ascii/xmsi) {
-    Biber::Config->setoption('bblsafechars', 1);
+  # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
+  if (Biber::Config->getoption('output_encoding') =~ /(?:x-)?ascii/xmsi and
+      Biber::Config->getoption('input_encoding') !~ /(?:x-)?ascii/xmsi) {
+    Biber::Config->setoption('output_safechars', 1);
   }
 }
 
@@ -2919,8 +2954,13 @@ sub sort_list {
 
 sub prepare {
   my $self = shift;
-  $self->process_setup;                  # Place to put global pre-processing things
-  my $out = $self->get_output_obj;       # Biber::Output object
+
+  # If not in tool mode
+  my $out;
+  unless (Biber::Config->getoption('tool')) {
+    $self->process_setup;                  # Place to put global pre-processing things
+    $out = $self->get_output_obj;       # Biber::Output object
+  }
 
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
@@ -2933,6 +2973,13 @@ sub prepare {
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
+
+    # Finish here if in tool mode
+    if (Biber::Config->getoption('tool')) {
+      $self->get_output_obj->set_output_head($self->get_tool_buffer);
+      return;
+    }
+
     $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->resolve_alias_refs;           # Resolve xref/crossref/xdata aliases to real keys
@@ -3031,6 +3078,11 @@ sub fetch_data {
     biber_warn("I didn't find a database entry for '$citekey' (section $secnum)");
     $section->del_citekey($citekey);
     $section->add_undef_citekey($citekey);
+  }
+
+  # Skip dependents detection if in tool mode
+  if (Biber::Config->getoption('tool')) {
+    return;
   }
 
   $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));

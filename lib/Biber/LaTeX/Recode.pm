@@ -72,7 +72,7 @@ sub init_schemes {
     if ( can_run('kpsewhich') ) {
       run3 [ 'kpsewhich', $rdata ], \undef, \$mapdata, \$err, { return_if_system_error => 1};
       if ($? == -1) {
-        biber_error("Error running kpsewhich to look for bblsafechars data file: $err");
+        biber_error("Error running kpsewhich to look for output_safechars data file: $err");
       }
 
       chomp $mapdata;
@@ -80,7 +80,7 @@ sub init_schemes {
       $mapdata = undef unless $mapdata; # sanitise just in case it's an empty string
     }
     else {
-      biber_error("Can't run kpsewhich to look for bblsafechars data file: $err");
+      biber_error("Can't run kpsewhich to look for output_safechars data file: $err");
     }
     $logger->info("Using user-defined recode data file '$mapdata'");
   }

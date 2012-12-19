@@ -321,7 +321,7 @@ sub create_output_misc {
   if (my $pa = $Biber::MASTER->get_preamble) {
     $pa = join("%\n", @$pa);
     # Decode UTF-8 -> LaTeX macros if asked to
-    if (Biber::Config->getoption('bblsafechars')) {
+    if (Biber::Config->getoption('output_safechars')) {
       $pa = Biber::LaTeX::Recode::latex_encode($pa);
     }
     $self->{output_data}{HEAD} .= "\\preamble{%\n$pa%\n}\n\n";
@@ -342,8 +342,8 @@ sub output {
   my $data = $self->{output_data};
   my $target = $self->{output_target};
 
-  $logger->info("Writing output with encoding '" . Biber::Config->getoption('bblencoding') . "'");
-  $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('bblsafechars');
+  $logger->info("Writing output with encoding '" . Biber::Config->getoption('output_encoding') . "'");
+  $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('output_safechars');
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     my $section = $self->get_output_section($secnum);
@@ -359,7 +359,7 @@ sub output {
           my $entry_string = $list->instantiate_entry($entry, $k);
 
           # If requested to convert UTF-8 to macros ...
-          if (Biber::Config->getoption('bblsafechars')) {
+          if (Biber::Config->getoption('output_safechars')) {
             $entry_string = latex_recode_output($entry_string);
           }
           print $target $entry_string;

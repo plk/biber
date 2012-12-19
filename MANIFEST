@@ -33,6 +33,7 @@ lib/Biber/Output/base.pm
 lib/Biber/Output/bbl.pm
 lib/Biber/Output/dot.pm
 lib/Biber/Output/test.pm
+lib/Biber/Output/tool.pm
 lib/Biber.pm
 lib/Biber/Section.pm
 lib/Biber/Sections.pm
