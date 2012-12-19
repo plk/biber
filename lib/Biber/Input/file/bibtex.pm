@@ -466,9 +466,9 @@ sub create_entry {
       }
     }
 
-    # If in tool mode, write output
+    # If in tool mode, just write output now
     if (Biber::Config->getoption('tool')) {
-      $Biber::MASTER->add_tool_buffer(decode_utf8($entry->print_s));
+      $Biber::MASTER->add_tool_buffer($key, decode_utf8($entry->print_s));
       return;
     }
 

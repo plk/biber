@@ -213,6 +213,14 @@ if (Biber::Config->getoption('tool')) {
 
   # Add the Biber::Sections object to the Biber object
   $biber->add_sections($bib_sections);
+
+  # User maps are set in config file and need some massaging which normally
+  # happend in parse_ctrlfile
+  if (my $usms = Biber::Config->getoption('sourcemap')) {
+    # Force "user" level for the maps
+    @$usms = map {$_->{level} = 'user';$_} @$usms;
+  }
+
 }
 else {
   # parse the .bcf control file
@@ -305,42 +313,6 @@ C<biber> provides a replacement of the bibtex processor for users of biblatex.
 
 =over 4
 
-=item B<--output_encoding|-E [encoding]>
-
-Specify the encoding of the output C<.bbl> file. Default is "UTF-8".
-Normally it's not necessary to set this as it's passed via biblatex
-from the inputenc package setting.
-See C<perldoc Encode::Supported> for a list of supported encodings.
-The legacy option B<--bblencoding> is supported as an alias.
-
-=item B<--output_safechars>
-
-Try to convert UTF-8 chars into LaTeX macros when writing the .bbl
-This can prevent unknown char errors when using PDFLaTeX and inputenc
-as this doesn't understand all of UTF-8. Note, it is better to switch
-to XeTeX or LuaTeX to avoid this situation. By default uses the
---output_safecharsset "base" set of characters.
-The legacy option B<--bblsafechars> is supported as an alias.
-
-=item B<--output_safecharsset=[recode set name]>
-
-The set of characters included in the conversion routine for
---output_safechars. Set to "full" to try harder with a much
-larger set or "base" to use a basic set. Default is "base" which is
-fine for most use cases. You may need to load more macro packages to
-deal with the results of "full" (Dings, Greek characters, special
-symbols etc.). The recode sets are defined in the reencoding data file which
-can be customised. See the --recodedata option and the PDF manual.
-The legacy option B<--bblsafecharsset> is supported as an alias.
-
-=item B<--input_encoding|-e [encoding]>
-
-Specify the encoding of the data source file(s). Default is "UTF-8"
-Normally it's not necessary to set this as it's passed via the
-.bcf file from biblatex's setting of the same name.
-See "perldoc Encode::Supported" for a list of supported encodings.
-The legacy option B<--bibencoding> is supported as an alias.
-
 =item B<--cache>
 
 If running as a PAR::Packer binary, show the cache location and exit.
@@ -403,6 +375,14 @@ This can slightly mess up things like "{U.K. Government}" and other esoteric cas
 =item B<--help|-h>
 
 Show this help message.
+
+=item B<--input_encoding|-e [encoding]>
+
+Specify the encoding of the data source file(s). Default is "UTF-8"
+Normally it's not necessary to set this as it's passed via the
+.bcf file from biblatex's setting of the same name.
+See "perldoc Encode::Supported" for a list of supported encodings.
+The legacy option B<--bibencoding> is supported as an alias.
 
 =item B<--logfile [file]>
 
@@ -472,6 +452,34 @@ the DOT output.
 Files (F<.bbl> and F<.blg>) are output to directory F<directory> instead
 of the current directory. Input files are also looked for in F<directory>
 before current directory.
+
+=item B<--output_encoding|-E [encoding]>
+
+Specify the encoding of the output C<.bbl> file. Default is "UTF-8".
+Normally it's not necessary to set this as it's passed via biblatex
+from the inputenc package setting.
+See C<perldoc Encode::Supported> for a list of supported encodings.
+The legacy option B<--bblencoding> is supported as an alias.
+
+=item B<--output_safechars>
+
+Try to convert UTF-8 chars into LaTeX macros when writing the output.
+This can prevent unknown char errors when using PDFLaTeX and inputenc
+as this doesn't understand all of UTF-8. Note, it is better to switch
+to XeTeX or LuaTeX to avoid this situation. By default uses the
+--output_safecharsset "base" set of characters.
+The legacy option B<--bblsafechars> is supported as an alias.
+
+=item B<--output_safecharsset=[recode set name]>
+
+The set of characters included in the conversion routine for
+--output_safechars. Set to "full" to try harder with a much
+larger set or "base" to use a basic set. Default is "base" which is
+fine for most use cases. You may need to load more macro packages to
+deal with the results of "full" (Dings, Greek characters, special
+symbols etc.). The recode sets are defined in the reencoding data file which
+can be customised. See the --recodedata option and the PDF manual.
+The legacy option B<--bblsafecharsset> is supported as an alias.
 
 =item B<--quiet|-q>
 

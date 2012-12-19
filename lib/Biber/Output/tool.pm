@@ -66,9 +66,16 @@ sub output {
   $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
 
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
-  $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('output_safechars');
+  $logger->info('Converting UTF-8 to TeX macros on output') if Biber::Config->getoption('output_safechars');
 
-  print $target $data->{HEAD};
+  my $output_string = $data->{HEAD};
+
+  # If requested to convert UTF-8 to macros ...
+  if (Biber::Config->getoption('output_safechars')) {
+    $output_string = latex_recode_output($data->{HEAD});
+  }
+
+  print $target $output_string;
 
   $logger->info("Output to $target_string");
   close $target;

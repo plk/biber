@@ -159,8 +159,8 @@ sub add_sections {
 =cut
 
 sub add_tool_buffer {
-  my ($self, $tooldata) = @_;
-  $self->{toolbuffer} .= $tooldata;
+  my ($self, $key, $tooldata) = @_;
+  $self->{toolbuffer}{$key} = $tooldata;
 }
 
 =head2 get_tool_buffer
@@ -441,7 +441,7 @@ sub parse_ctrlfile {
   # which can come from two places (biber.conf and \DeclareSourcemap), order is
   # \DeclareSourcemap, then biber.conf
   if (exists($bcfxml->{sourcemap})) {
-    # Users maps are set in config file
+    # User maps are set in config file
     if (my $usms = Biber::Config->getoption('sourcemap')) {
       # Force "user" level for the maps
       @$usms = map {$_->{level} = 'user';$_} @$usms;
@@ -2975,8 +2975,13 @@ sub prepare {
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
 
     # Finish here if in tool mode
+    # Output in original order
     if (Biber::Config->getoption('tool')) {
-      $self->get_output_obj->set_output_head($self->get_tool_buffer);
+      my $out_string;
+      foreach my $key ($section->get_orig_order_citekeys) {
+        $out_string .= $self->get_tool_buffer->{$key};
+      }
+      $self->get_output_obj->set_output_head($out_string);
       return;
     }
 
@@ -3068,7 +3073,15 @@ sub fetch_data {
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
     eval "require $package" or
       biber_error("Error loading data source package '$package': $@");
-    $logger->info("Looking for $datatype format $type '$name' for section $secnum");
+
+    # Slightly different message for tool mode
+    if (Biber::Config->getoption('tool')) {
+      $logger->info("Looking for $datatype format $type '$name'");
+    }
+    else {
+      $logger->info("Looking for $datatype format $type '$name' for section $secnum");
+    }
+
     @remaining_keys = &{"${package}::extract_entries"}($name, \@remaining_keys);
   }
 
