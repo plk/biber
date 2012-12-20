@@ -19,7 +19,7 @@ my $bbl = $tmpfile->filename;
 #print "File: $bbl\n";
 my $stdout;
 
-run3  [ $perl, 'bin/biber', '--noconf', '--nolog', "--outfile=$bbl", 't/tdata/full.bcf' ], \undef, \$stdout, \undef;
+run3  [ $perl, 'bin/biber', '--noconf', '--nolog', "--output_file=$bbl", 't/tdata/full.bcf' ], \undef, \$stdout, \undef;
 
 is($? >> 8, 0, 'Full test has zero exit status');
 ok(compare($bbl, 't/tdata/full1.bbl') == 0, 'Testing lossort case and sortinit for macros');

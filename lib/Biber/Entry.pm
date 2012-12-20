@@ -592,7 +592,7 @@ sub resolve_xdata {
           $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
 
           # Record graphing information if required
-          if (Biber::Config->getoption('outformat') eq 'dot') {
+          if (Biber::Config->getoption('output_format') eq 'dot') {
             Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
           }
 
@@ -684,7 +684,7 @@ sub inherit_from {
             $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
 
             # Record graphing information if required
-            if (Biber::Config->getoption('outformat') eq 'dot') {
+            if (Biber::Config->getoption('output_format') eq 'dot') {
               Biber::Config->set_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
             }
           }
@@ -703,7 +703,7 @@ sub inherit_from {
             $self->set_datafield_forms($field, $parent->get_field_forms($field));
 
             # Record graphing information if required
-            if (Biber::Config->getoption('outformat') eq 'dot') {
+            if (Biber::Config->getoption('output_format') eq 'dot') {
               Biber::Config->set_graph('crossref', $source_key, $target_key, $field, $field);
             }
       }

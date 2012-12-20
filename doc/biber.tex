@@ -99,8 +99,8 @@ The \opt{--validate\_structure} option is now called \opt{--validate\_datamodel}
 
 \minisec{0.9.9}
 The output format option \opt{--graph} has been moved to a
-new option \opt{--outformat}. The option \opt{--graph} should now be
-specified as \opt{--outformat=dot} and the \linebreak\opt{--dot\_include} option
+new option \opt{--output\_format}. The option \opt{--graph} should now be
+specified as \opt{--output\_format=dot} and the \linebreak\opt{--dot\_include} option
 should be used to specify the elements to include in the DOT output. For
 example:
 
@@ -111,7 +111,7 @@ example:
 \noindent is now:
 
 \begin{verbatim}
-  biber --outformat=dot --dot_include=section,field <file>
+  biber --output_format=dot --dot_include=section,field <file>
 \end{verbatim}
 
 \minisec{0.9.8}
@@ -557,6 +557,7 @@ an example config file which displays the \biber\ defaults:
   <onlylog>0</onlylog>
   <others_string>others</others_string>
   <output_encoding>UTF-8</output_encoding>
+  <output_format>bbl</output_format>
   <output_safechars>0</output_safechars>
   <output_safecharsset>base</output_safecharsset>
   <quiet>0</quiet>
@@ -1219,7 +1220,7 @@ write to directories which you don't have appropriate permissions to. This
 is more commonly an issue on non-Windows OSes. For example, if you rely on
 \verb+kpsewhich+ to find your database files which are in system \TeX\
 directories, you may well not have write permission there so \biber\
-will not be able to write the \verb+.bbl+. Use the \opt{--outfile|-O}
+will not be able to write the \verb+.bbl+. Use the \opt{--output\_file|-O}
 option to specify the location to write the \verb+.bbl+ to in such cases.
 
 \subsection{Collation and Localisation}\label{coll}
@@ -1630,7 +1631,7 @@ drivers are:
 
 \subsection{Visualising the Output}\label{vis}
 
-The option \opt{--outformat=dot} will cause \biber\ to write a
+The option \opt{--output\_format=dot} will cause \biber\ to write a
 GraphViz\footnote{\url{http://www.graphviz.org}} \verb+.dot+ file instead
 of a \verb+.bbl+. This file graphs the bibliographic data as it exists
 after all processing. You can transform this file using the \verb+dot+
@@ -1732,7 +1733,7 @@ any \file{.bbl}. Instead, it reads all entries from the file
 «datasource», applies any changes specified in the command-line
 options and \biber\ config file and writes the resulting datasource
 out to a new file, defaulting to «datasource\_bibertool.bib» if the
-option \opt{outfile} is not specified. This is useful if you need to
+option \opt{output\_file} is not specified. This is useful if you need to
 programatically change your datasource using the semantics provided by
 \biber. For example, you could choose to reencode your datasource by
 turning all UTF-8 characters into \latex\ macros:

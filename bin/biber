@@ -24,10 +24,10 @@ use Getopt::Long qw/:config no_ignore_case/;
 my $opts = {};
 GetOptions(
            $opts,
-           'bibencoding=s', # alias for input_encoding
-           'bblencoding=s', # alias for output_encoding
-           'bblsafechars',  # alias for input_safechars
-           'bblsafecharsset', # alias for input_safecharsset
+           'bibencoding=s', # legacy alias for input_encoding
+           'bblencoding=s', # legacy alias for output_encoding
+           'bblsafechars',  # legacy alias for output_safechars
+           'bblsafecharsset=s', # legacy alias for output_safecharsset
            'cache',
            'collate|C',
            'collate_options|c=s',
@@ -50,10 +50,12 @@ GetOptions(
            'nostdmacros',
            'onlylog',
            'others_string=s',
-           'outfile|O=s',
-           'outformat=s',
+           'outfile=s', # legacy alias for output_file
+           'outformat=s', # legacy alias for output_format
            'output_directory=s',
            'output_encoding|E=s',
+           'output_file|O=s',
+           'output_format=s',
            'output_safechars',
            'output_safecharsset=s',
            'quiet|q+',
@@ -107,33 +109,6 @@ unless (@ARGV) {
             -exitval => EXIT_ERROR);
 }
 
-# Check the outformat option
-if (my $of = $opts->{outformat}) {
-  unless ($opts->{outformat} =~ /\A(?:bbl|dot)\z/xms) {
-    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot'";
-    exit EXIT_ERROR;
-  }
-}
-
-# Check the dot_include option
-if (exists($opts->{dot_include}) and (not exists($opts->{outformat})
-                                      or (exists($opts->{outformat}) and
-                                          $opts->{outformat} ne 'dot'))) {
-  say STDERR "Biber: DOT output format specified but output format is not DOT!";
-  exit EXIT_ERROR;
-}
-
-if (exists($opts->{dot_include})) {
-  $opts->{dot_include} = {map {lc($_) => 1} split(/,/,join(',',@{$opts->{dot_include}}))};
-  my @suboptions = ( 'section', 'field', 'crossref', 'xref', 'xdata', 'related' );
-  foreach my $g (keys %{$opts->{dot_include}}) {
-    unless (first {$_ eq lc($g)} @suboptions) {
-      say STDERR "Biber: '$g' is an invalid output type for DOT output";
-      exit EXIT_ERROR;
-    }
-  }
-}
-
 # Sanitise collate option if fastsort is specified
 if ($opts->{fastsort}) {
   delete $opts->{collate};
@@ -156,6 +131,14 @@ if (my $o = $opts->{bblsafecharsset}) {
   $opts->{output_safecharsset} = $o;
   delete $opts->{bblsafecharsset};
 }
+if (my $o = $opts->{outfile}) {
+  $opts->{output_file} = $o;
+  delete $opts->{outfile};
+}
+if (my $o = $opts->{outformat}) {
+  $opts->{output_format} = $o;
+  delete $opts->{outformat};
+}
 if ($opts->{u}) {
   $opts->{input_encoding} = 'UTF-8';
   delete $opts->{u};
@@ -163,6 +146,34 @@ if ($opts->{u}) {
 if ($opts->{U}) {
   $opts->{output_encoding} = 'UTF-8';
   delete $opts->{U};
+}
+
+# Check the outformat option
+if (my $of = $opts->{output_format}) {
+  unless ($opts->{output_format} =~ /\A(?:bbl|dot)\z/xms) {
+    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot'";
+    exit EXIT_ERROR;
+  }
+}
+
+# Check the dot_include option
+if (exists($opts->{dot_include}) and (not exists($opts->{output_format})
+                                      or (exists($opts->{output_format}) and
+                                          $opts->{output_format} ne 'dot'))) {
+  say STDERR "Biber: DOT output format specified but output format is not DOT!";
+  exit EXIT_ERROR;
+}
+
+
+if (exists($opts->{dot_include})) {
+  $opts->{dot_include} = {map {lc($_) => 1} split(/,/,join(',',@{$opts->{dot_include}}))};
+  my @suboptions = ( 'section', 'field', 'crossref', 'xref', 'xdata', 'related' );
+  foreach my $g (keys %{$opts->{dot_include}}) {
+    unless (first {$_ eq lc($g)} @suboptions) {
+      say STDERR "Biber: '$g' is an invalid output type for DOT output";
+      exit EXIT_ERROR;
+    }
+  }
 }
 
 # Create Biber object, passing command-line options
@@ -180,11 +191,11 @@ $logfile->info("=== $time_string");
 
 my $bcf = Biber::Config->getoption('bcf');
 
-if (Biber::Config->getoption('outfile')) {
-  $outfile = Biber::Config->getoption('outfile')
+if (Biber::Config->getoption('output_file')) {
+  $outfile = Biber::Config->getoption('output_file')
 }
 else {
-  if (Biber::Config->getoption('outformat') eq 'dot') { # .dot output
+  if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
     $outfile = $bcf =~ s/bcf$/dot/r;
   }
   elsif (Biber::Config->getoption('tool_datatype') eq 'bibtex') { # tool .bib output
@@ -246,7 +257,7 @@ if (Biber::Config->getoption('trace')) {
 }
 
 # Set the output class. Should be a subclass of Biber::Output::Base
-if (Biber::Config->getoption('outformat') eq 'dot') { # .dot output
+if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
   require Biber::Output::dot;
   $biber->set_output_obj(Biber::Output::dot->new());
 }
@@ -431,14 +442,15 @@ Do not write any message to screen.
 Use F<string> as the final name in a name field which implies "et al". Defaults to BibTeX's usual
 'others'.
 
-=item B<--outfile|-O [file]>
+=item B<--output_file|-O [file]>
 
 Output to F<file> instead of F<basename.bbl>
 F<file> is relative to B<--output_directory>, if set (absolute
 paths in this case are stripped to filename only). F<file> can
 be absolute if B<--output_directory> is not set.
+The legacy option B<--outfile> is supported as an alias.
 
-=item B<--outformat=bbl|dot>
+=item B<--output_format=bbl|dot>
 
 Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
 to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of
@@ -446,6 +458,7 @@ the bibliography data showing entries and, as requested, sections and fields.
 You must process this file with C<dot>, e.g. C<dot -Tsvg test.dot -o test.svg> to
 render the graph. See the B<--dot_include> option to select what is included in
 the DOT output.
+The legacy option B<--outformat> is supported as an alias.
 
 =item B<--output_directory [directory]>
 

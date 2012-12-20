@@ -844,7 +844,7 @@ sub instantiate_dynamic {
     $section->bibentries->add_entry($dset, $be);
 
     # Save graph information if requested
-    if (Biber::Config->getoption('outformat') eq 'dot') {
+    if (Biber::Config->getoption('output_format') eq 'dot') {
       foreach my $m (@members) {
         Biber::Config->set_graph('set', $dset, $m);
       }
@@ -885,7 +885,7 @@ sub instantiate_dynamic {
         $section->bibentries->add_entry($clonekey, $relclone);
 
         # Save graph information if requested
-        if (Biber::Config->getoption('outformat') eq 'dot') {
+        if (Biber::Config->getoption('output_format') eq 'dot') {
           Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
         }
       }
@@ -957,7 +957,7 @@ sub cite_setmembers {
         $section->add_citekeys($inset_key);
 
         # Save graph information if requested
-        if (Biber::Config->getoption('outformat') eq 'dot') {
+        if (Biber::Config->getoption('output_format') eq 'dot') {
           Biber::Config->set_graph('set', $citekey, $inset_key);
         }
       }
@@ -1015,7 +1015,7 @@ sub process_interentry {
     }
 
     # Record xref inheritance for graphing if required
-    if (Biber::Config->getoption('outformat') eq 'dot' and my $xref = $be->get_field('xref')) {
+    if (Biber::Config->getoption('output_format') eq 'dot' and my $xref = $be->get_field('xref')) {
       Biber::Config->set_graph('xref', $citekey, $xref);
     }
 
