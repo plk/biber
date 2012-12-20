@@ -207,13 +207,13 @@ is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_label
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelyearname')), 'skiplab - no labelyear');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelalpha')), 'dataonly - no labelalpha');
-is($out->get_output_entry($main,'skip4'), $sk4, 'dataonly - checking output');
+is($out->get_output_entry('skip4', $main), $sk4, 'dataonly - checking output');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelyearname')), 'dataonly - no labelyear');
-is($out->get_output_entry($main,'seta'), $set1, 'Set parent - with labels');
-is($out->get_output_entry($main,'set:membera'), $set2, 'Set member - no labels 1');
-is($out->get_output_entry($main,'set:memberb'), $set3, 'Set member - no labels 2');
-is($out->get_output_entry($main,'set:memberc'), $set4, 'Set member - no labels 3');
-is($out->get_output_entry($main,'noseta'), $noset1, 'Not a set member - extrayear continues from set 1');
-is($out->get_output_entry($main,'nosetb'), $noset2, 'Not a set member - extrayear continues from set 2');
-is($out->get_output_entry($main,'nosetc'), $noset3, 'Not a set member - extrayear continues from set 3');
+is($out->get_output_entry('seta', $main), $set1, 'Set parent - with labels');
+is($out->get_output_entry('set:membera', $main), $set2, 'Set member - no labels 1');
+is($out->get_output_entry('set:memberb', $main), $set3, 'Set member - no labels 2');
+is($out->get_output_entry('set:memberc', $main), $set4, 'Set member - no labels 3');
+is($out->get_output_entry('noseta', $main), $noset1, 'Not a set member - extrayear continues from set 1');
+is($out->get_output_entry('nosetb', $main), $noset2, 'Not a set member - extrayear continues from set 2');
+is($out->get_output_entry('nosetc', $main), $noset3, 'Not a set member - extrayear continues from set 3');
 

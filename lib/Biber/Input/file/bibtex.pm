@@ -283,8 +283,14 @@ sub create_entry {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
+  my $bibentry = new Biber::Entry;
+
+  $bibentry->set_field('citekey', $key);
 
   if ( $entry->metatype == BTE_REGULAR ) {
+
+    # Save pre-mapping data. Might be useful somewhere
+    $bibentry->set_field('rawdata', decode_utf8($entry->print_s));
 
     # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
     foreach my $smap (@$smaps) {
@@ -466,15 +472,16 @@ sub create_entry {
       }
     }
 
-    # If in tool mode, just write output now
+    # Save post-mapping data. This will be the output for tool mode
+    $bibentry->set_field('cookeddata', decode_utf8($entry->print_s));
+
+    # Stop here if in tool mode - we don't need any more processing of the entry
     if (Biber::Config->getoption('tool')) {
-      $Biber::MASTER->add_tool_buffer($key, decode_utf8($entry->print_s));
+      $bibentry->set_field('entrytype', $entry->type);
+      $bibentry->set_field('datatype', 'bibtex');
+      $bibentries->add_entry($key, $bibentry);
       return;
     }
-
-    # Now create a biber internal entry object
-    my $bibentry = new Biber::Entry;
-    $bibentry->set_field('citekey', $key);
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent

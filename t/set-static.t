@@ -133,9 +133,9 @@ my $string5 = q|    \entry{Static2}{book}{}
 |;
 
 
-is($out->get_output_entry($main,'Static1'), $string1, 'Static set test 1');
-is($out->get_output_entry($main,'Static2'), $string2, 'Static set test 2');
-is($out->get_output_entry($main,'Static3'), $string3, 'Static set test 3');
-is($out->get_output_entry($main,'Static4'), $string4, 'Static set test 4');
-is($out->get_output_entry($main,'Static2', 1), $string5, 'Static set test 5');
+is($out->get_output_entry('Static1', $main), $string1, 'Static set test 1');
+is($out->get_output_entry('Static2', $main), $string2, 'Static set test 2');
+is($out->get_output_entry('Static3', $main), $string3, 'Static set test 3');
+is($out->get_output_entry('Static4', $main), $string4, 'Static set test 4');
+is($out->get_output_entry('Static2', $main, 1), $string5, 'Static set test 5');
 

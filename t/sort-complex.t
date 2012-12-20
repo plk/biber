@@ -223,11 +223,11 @@ my $l5 = q|    \entry{L5}{book}{}
 
 
 is_deeply( $main->get_sortscheme , $ss, 'sort scheme');
-is( $out->get_output_entry($main,'L4'), $l4, '\alphaothers set by "and others"');
-is( $out->get_output_entry($main,'L1'), $l1, 'bbl test 1');
-is( $out->get_output_entry($main,'L2'), $l2, 'bbl test 2');
-is( $out->get_output_entry($main,'L3'), $l3, 'bbl test 3');
-is( $out->get_output_entry($main,'L5'), $l5, 'bbl test 4');
+is( $out->get_output_entry('L4', $main), $l4, '\alphaothers set by "and others"');
+is( $out->get_output_entry('L1', $main), $l1, 'bbl test 1');
+is( $out->get_output_entry('L2', $main), $l2, 'bbl test 2');
+is( $out->get_output_entry('L3', $main), $l3, 'bbl test 3');
+is( $out->get_output_entry('L5', $main), $l5, 'bbl test 4');
 is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'sortorder - 1');
 
 # This would be the same as $main citeorder as both $main and $shs use same

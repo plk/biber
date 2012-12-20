@@ -68,19 +68,55 @@ sub output {
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
   $logger->info('Converting UTF-8 to TeX macros on output') if Biber::Config->getoption('output_safechars');
 
-  my $output_string = $data->{HEAD};
+  print $target $data->{HEAD};
 
-  # If requested to convert UTF-8 to macros ...
-  if (Biber::Config->getoption('output_safechars')) {
-    $output_string = latex_recode_output($data->{HEAD});
+  $logger->debug("Writing entries in tool mode");
+
+  foreach my $key (@{$self->{output_data}{ENTRIES_ORDER}}) {
+    # There is only a (pseudo) section "0" in tool mode
+    print $target $data->{ENTRIES}{0}{index}{$key};
   }
 
-  print $target $output_string;
+  print $target $data->{TAIL};
 
   $logger->info("Output to $target_string");
   close $target;
   return;
 }
+
+=head2 create_output_section
+
+    Create the output from the sections data and push it into the
+    output object.
+
+=cut
+
+sub create_output_section {
+  my $self = shift;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+
+  # We rely on the order of this array for the order of the output
+  foreach my $key ($section->get_orig_order_citekeys) {
+    my $be = $section->bibentry($key);
+    my $string = $be->get_field('cookeddata');
+
+    # If requested to convert UTF-8 to macros ...
+    if (Biber::Config->getoption('output_safechars')) {
+      $string = latex_recode_output($string);
+    }
+
+    $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = $string;
+    # Preserve order as we won't sort later in tool mode and we need original bib order
+    push @{$self->{output_data}{ENTRIES_ORDER}}, $key;
+  }
+
+  # Make sure the output object knows about the output section
+  $self->set_output_section($secnum, $section);
+
+  return;
+}
+
 
 1;
 

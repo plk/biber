@@ -98,11 +98,11 @@ my $xd2 = q|    \entry{xd2}{book}{}
     \endentry
 |;
 
-is($out->get_output_entry($main,'xd1'), $xd1, 'xdata test - 1');
-is($out->get_output_entry($main,'xd2'), $xd2, 'xdata test - 2');
+is($out->get_output_entry('xd1', $main), $xd1, 'xdata test - 1');
+is($out->get_output_entry('xd2', $main), $xd2, 'xdata test - 2');
 # XDATA entries should not be output at all
-is($out->get_output_entry($main,'macmillan'), undef, 'xdata test - 3');
-is($out->get_output_entry($main,'macmillan:pub'), undef, 'xdata test - 4');
+is($out->get_output_entry('macmillan', $main), undef, 'xdata test - 3');
+is($out->get_output_entry('macmillan:pub', $main), undef, 'xdata test - 4');
 chomp $stderr;
 is($stderr, "ERROR - Circular XDATA inheritance between 'loop'<->'loop:3'", 'Cyclic xdata error check');
 #print $stdout;

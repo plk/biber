@@ -90,7 +90,7 @@ my $u1 = q|    \entry{u1}{misc}{}
     \endentry
 |;
 
-is( $out->get_output_entry($main, 'u1'), $u1, 'uniquelist 1' ) ;
+is( $out->get_output_entry('u1', $main), $u1, 'uniquelist 1' ) ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 is_deeply( [ $biber->sortlists->get_list(0, 'shorthand', 'shorthand')->get_keys ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
@@ -336,17 +336,17 @@ my $url1 = q|    \entry{url1}{misc}{}
 my $Worman_N = [ 'Worman_N' ] ;
 my $Gennep = [ 'v_Gennep_A', 'v_Gennep_J' ] ;
 
-is( $out->get_output_entry($main,'t1'), $t1, 'bbl entry with maths in title 1' ) ;
+is( $out->get_output_entry('t1', $main), $t1, 'bbl entry with maths in title 1' ) ;
 is( $bibentries->entry('shore')->get_field('month'), '03', 'default bib month macros' ) ;
 ok( $bibentries->entry('t1')->has_keyword('primary'), 'Keywords test - 1' ) ;
 ok( $bibentries->entry('t1')->has_keyword('something'), 'Keywords test - 2' ) ;
 ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3' ) ;
-is( $out->get_output_entry($main,'t2'), $t2, 'bbl entry with maths in title 2' ) ;
+is( $out->get_output_entry('t2', $main), $t2, 'bbl entry with maths in title 2' ) ;
 is_deeply( Biber::Config->_get_uniquename('Worman_N', 'global'), $Worman_N, 'uniquename count 1') ;
 is_deeply( Biber::Config->_get_uniquename('Gennep', 'global'), $Gennep, 'uniquename count 2') ;
-is( $out->get_output_entry($main,'murray'), $murray1, 'bbl with > maxcitenames' ) ;
-is( $out->get_output_entry($main,'missing1'), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
-is( $out->get_output_entry($main,'missing2'), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
+is( $out->get_output_entry('murray', $main), $murray1, 'bbl with > maxcitenames' ) ;
+is( $out->get_output_entry('missing1', $main), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
+is( $out->get_output_entry('missing2', $main), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
 
 
 Biber::Config->setblxoption('alphaothers', '');
@@ -363,11 +363,11 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $out = $biber->get_output_obj;
 
-is( $out->get_output_entry($main,'murray'), $murray2, 'bbl with > maxcitenames, empty alphaothers' ) ;
+is( $out->get_output_entry('murray', $main), $murray2, 'bbl with > maxcitenames, empty alphaothers' ) ;
 
 # Make sure namehash and fullhash are seperately generated
-is( $out->get_output_entry($main,'anon1'), $anon1, 'namehash/fullhash 1' ) ;
-is( $out->get_output_entry($main,'anon2'), $anon2, 'namehash/fullhash 2' ) ;
+is( $out->get_output_entry('anon1', $main), $anon1, 'namehash/fullhash 1' ) ;
+is( $out->get_output_entry('anon2', $main), $anon2, 'namehash/fullhash 2' ) ;
 
 # Testing of user field map ignores
 ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'map 1' );
@@ -435,7 +435,7 @@ ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 # URL encoding testing
 is($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
 is($bibentries->entry('url2')->get_field('url'), 'http://www.something.com/q=one%20two', 'URL encoding - 2');
-is($out->get_output_entry($main,'url1'), $url1, 'URL encoding - 3' ) ;
+is($out->get_output_entry('url1', $main), $url1, 'URL encoding - 3' ) ;
 
 # map_final testing with map_field_set
 is($bibentries->entry('ol1')->get_field('note'), 'A note', 'map_final - 1');

@@ -140,11 +140,11 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
     \endentry
 |;
 
-is($out->get_output_entry($main0,'DynSet'), $string1, 'Dynamic set test 1');
-is($out->get_output_entry($main0,'Dynamic1'), $string2, 'Dynamic set test 2');
-is($out->get_output_entry($main0,'Dynamic2'), $string3, 'Dynamic set test 3');
-is($out->get_output_entry($main0,'Dynamic3'), $string4, 'Dynamic set test 4');
-is($out->get_output_entry($main0,'Dynamic3', 1), $string5, 'Dynamic set test 5');
+is($out->get_output_entry('DynSet', $main0), $string1, 'Dynamic set test 1');
+is($out->get_output_entry('Dynamic1', $main0), $string2, 'Dynamic set test 2');
+is($out->get_output_entry('Dynamic2', $main0), $string3, 'Dynamic set test 3');
+is($out->get_output_entry('Dynamic3', $main0), $string4, 'Dynamic set test 4');
+is($out->get_output_entry('Dynamic3', $main0, 1), $string5, 'Dynamic set test 5');
 is_deeply([$sh0->get_keys], ['DynSet'], 'Dynamic set skiplos 1');
 is_deeply([$sh1->get_keys], ['Dynamic3'], 'Dynamic set skiplos 2');
 

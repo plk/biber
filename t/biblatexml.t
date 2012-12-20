@@ -89,6 +89,6 @@ my $l1 = q|    \entry{origmode}{book}{}
     \endentry
 |;
 
-is( $out->get_output_entry($main, 'origmode'), $l1, 'BibLaTeXML displaymode test - 1');
+is( $out->get_output_entry('origmode', $main), $l1, 'BibLaTeXML displaymode test - 1');
 is($section->get_citekey_alias('origmodea1'), 'origmode', 'Citekey aliases - 1');
 is($section->get_citekey_alias('origmodea2'), 'origmode', 'Citekey aliases - 2');

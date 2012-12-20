@@ -152,29 +152,6 @@ sub add_sections {
   return;
 }
 
-=head2 add_tool_buffer
-
-    Appends to a buffer used to collect tool mode output
-
-=cut
-
-sub add_tool_buffer {
-  my ($self, $key, $tooldata) = @_;
-  $self->{toolbuffer}{$key} = $tooldata;
-}
-
-=head2 get_tool_buffer
-
-    Returns the buffer used to collect tool mode output
-
-=cut
-
-sub get_tool_buffer {
-  my $self = shift;
-  return $self->{toolbuffer};
-}
-
-
 =head2 sortlists
 
     my $sortlists= $biber->sortlists
@@ -251,6 +228,35 @@ sub set_current_section {
 sub get_current_section {
   my $self = shift;
   return $self->{current_section};
+}
+
+=head2 tool_mode_setup
+
+  Fakes parts of the control file for tool mode
+
+=cut
+
+sub tool_mode_setup {
+  my $self = shift;
+  my $bib_sections = new Biber::Sections;
+  # There are no sections in tool mode so create a pseudo-section
+  my $bib_section = new Biber::Section('number' => 0);
+  $bib_section->set_datasources([{type => 'file',
+                                  name => $ARGV[0],
+                                  datatype => Biber::Config->getoption('tool_datatype')}]);
+  $bib_section->set_allkeys(1);
+  $bib_sections->add_section($bib_section);
+
+  # Add the Biber::Sections object to the Biber object
+  $self->add_sections($bib_sections);
+
+  # User maps are set in config file and need some massaging which normally
+  # happend in parse_ctrlfile
+  if (my $usms = Biber::Config->getoption('sourcemap')) {
+    # Force "user" level for the maps
+    @$usms = map {$_->{level} = 'user';$_} @$usms;
+  }
+  return;
 }
 
 =head2 parse_ctrlfile
@@ -2956,32 +2962,30 @@ sub prepare {
   my $self = shift;
 
   # If not in tool mode
-  my $out;
-  unless (Biber::Config->getoption('tool')) {
-    $self->process_setup;                  # Place to put global pre-processing things
-    $out = $self->get_output_obj;       # Biber::Output object
-  }
+  my $out = $self->get_output_obj;          # Biber::Output object
+
+  # Place to put global pre-processing things, not needed in tool mode
+  $self->process_setup unless Biber::Config->getoption('tool');
 
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
     my $secnum = $section->number;
 
-    $logger->info("Processing section $secnum");
+    # Section numbers don't mean anything to the user in tool mode
+    $logger->info("Processing section $secnum") unless Biber::Config->getoption('tool');
 
     $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
 
-    # Finish here if in tool mode
-    # Output in original order
+    # Just do this and return if in tool mode
+    # There is only one (pseudo) section in tool mode so it's ok
+    # to return from this section loop
     if (Biber::Config->getoption('tool')) {
-      my $out_string;
-      foreach my $key ($section->get_orig_order_citekeys) {
-        $out_string .= $self->get_tool_buffer->{$key};
-      }
-      $self->get_output_obj->set_output_head($out_string);
+      $out->create_output_section;         # Generate and push the section output into the
+                                           # output object ready for writing
       return;
     }
 

@@ -34,6 +34,10 @@ sub new {
   else {
     $self = bless {}, $class;
   }
+
+  $self->{output_data}{HEAD} = '';
+  $self->{output_data}{TAIL} = '';
+
   return $self;
 }
 
@@ -209,8 +213,8 @@ sub get_output_entries {
 
 sub get_output_entry {
   my $self = shift;
-  my $list = shift;
   my $key = shift;
+  my $list = shift; # might not be set for, for example, tool mode tests
   my $section = shift;
   $section = '0' if not defined($section); # default - mainly for tests
   # Force a return of undef if there is no output for this key to avoid
@@ -218,7 +222,7 @@ sub get_output_entry {
   my $out = $self->{output_data}{ENTRIES}{$section}{index}{$key} ||
             $self->{output_data}{MISSING_ENTRIES}{$section}{index}{$key} ||
             $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$key};
-  my $out_string = $list->instantiate_entry($out, $key);
+  my $out_string = $list ? $list->instantiate_entry($out, $key) : $out;
   return $out ? $out_string : undef;
 }
 
