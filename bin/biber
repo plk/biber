@@ -198,8 +198,10 @@ else {
   if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
     $outfile = $bcf =~ s/bcf$/dot/r;
   }
-  elsif (Biber::Config->getoption('tool_datatype') eq 'bibtex') { # tool .bib output
-    $outfile = $ARGV[0] =~ s/.bib$/_bibertool.bib/r;
+  elsif (Biber::Config->getoption('tool')) {
+    if (Biber::Config->getoption('tool_datatype') eq 'bibtex') { # tool .bib output
+      $outfile = $ARGV[0] =~ s/.bib$/_bibertool.bib/r;
+    }
   }
   else { # .bbl output
     $outfile = $bcf =~ s/bcf$/bbl/r;
