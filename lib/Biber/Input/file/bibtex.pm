@@ -186,7 +186,10 @@ sub extract_entries {
     $logger->debug("All cached citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
     while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
-      create_entry($key, $entry, $source, $smaps);
+      unless (create_entry($key, $entry, $source, $smaps)) {
+        # if create entry returns false, remove the key from the cache
+        @{$cache->{orig_key_order}{$filename}} = grep {$key ne $_} @{$cache->{orig_key_order}{$filename}};
+      }
     }
 
     # Loop over all aliases, creating data in section object
@@ -320,6 +323,12 @@ sub create_entry {
         # loop over mapping steps
         foreach my $step (@{$map->{map_step}}) {
 
+          # entry deletion. Really only useful with allkeys or tool mode
+          if ($step->{map_entry_null}) {
+            $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
+            return 0; # don't create an entry at all
+          }
+
           # Entrytype map
           if (my $source = $step->{map_type_source}) {
             unless ($entry->type eq lc($source)) {
@@ -415,7 +424,7 @@ sub create_entry {
             }
           }
 
-          # field creation
+          # field changes
           if (my $field = $step->{map_field_set}) {
 
             # Deal with special tokens
@@ -480,7 +489,7 @@ sub create_entry {
       $bibentry->set_field('entrytype', $entry->type);
       $bibentry->set_field('datatype', 'bibtex');
       $bibentries->add_entry($key, $bibentry);
-      return;
+      return 1;
     }
 
     # We put all the fields we find modulo field aliases into the object
@@ -512,7 +521,7 @@ sub create_entry {
     $bibentries->add_entry($key, $bibentry);
   }
 
-  return;
+  return 1;
 }
 
 # HANDLERS

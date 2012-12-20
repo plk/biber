@@ -1566,6 +1566,9 @@
       <oneOrMore>
         <element name="bcf:map_step">
           <choice>
+            <attribute name="map_entry_null">
+              <value>1</value>
+            </attribute>
             <group>
               <attribute name="map_type_source">
                 <data type="string">

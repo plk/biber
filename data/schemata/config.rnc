@@ -64,6 +64,9 @@ map =
     element map_step {
       (
         (
+          attribute map_entry_null { "1" }
+        ) |
+        (
           attribute map_type_source { xsd:string {minLength="1"} },
           attribute map_type_target { xsd:string {minLength="1"} }?
         ) |

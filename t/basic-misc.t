@@ -53,6 +53,7 @@ my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my @keys = sort $section->get_citekeys;
 my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 };
 
+# entry "loh" is missing as the biber.conf map removes it with map_entry_null
 my @allkeys = sort map {lc()} qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
 gonzalez averroes/bland laufenberg westfahl:frontier knuth:ct:a kastenholz
 averroes/hannes iliad luzzatto malinowski sorace knuth:ct:d britannica
@@ -62,7 +63,7 @@ aristotle:physics massa aristotle:anima gillies set kowalik gaonkar springer
 geer hammond wormanx westfahl:space worman set:herrmann augustine gerhardt
 piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
-angenendt angenendtsk loh markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
+angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
 set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 us1 } ;
 

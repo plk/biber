@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use Biber;
 use Biber::Utils;
@@ -59,4 +59,5 @@ my $t1 = q|@unpublished{i1,
 |;
 
 is( $out->get_output_entry('i1'), $t1, 'tool mode 1' ) ;
+ok(is_undef($out->get_output_entry('loh')), 'tool mode 2' );
 

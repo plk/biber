@@ -735,6 +735,11 @@ examples. A \opt{map} element looks like this:
 datasource entry being processed. A \opt{map\_step} works like this:
 
 \begin{itemize}
+\item If \textcolor{blue}{\texttt{map\_entry\_null}} is set,
+  processing of the \opt{map} immediately terminates and the current
+  entry is not created. It is as if it did not exist in the
+  datasource. Obviously, you should select the entries which you want
+  to apply this to using prior mapping steps.
 \item Change the \textcolor{red}{\texttt{source-entrytype}} to
   \textcolor{red}{\texttt{target-entrytype}}, if defined. If
   \textcolor{blue}{\texttt{map\_final}} is set then if the entrytype of the
@@ -965,6 +970,16 @@ the changes from a previous match/replace are already committed.
 \bibfield{SHORTAUTHOR} and \bibfield{SORTNAME} fields, overwriting them if they
 already exist. Then, these two new fields are modified to canonicalise a
 particular name, which presumably has some variants in the datasource.
+
+\begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
+<map>
+  <map_step map_field_source="TITLE" map_match="A Title" map_final="1"/>
+  <map_step map_entry_null="1"/>
+</map>
+\end{lstlisting}
+
+\noindent Any entry with a \bibfield{TITLE} field matching «A Title»
+will be completely ignored.
 \bigskip
 \minisec{Other datasource types}
 For data sources other than \BibTeX, (e.g. \verb+ris+, \verb+endnotexml+
