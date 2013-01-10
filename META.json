@@ -4,7 +4,7 @@
       "Philip Kime <Philip@kime.org.uk>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110440",
+   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120630",
    "license" : [
       "perl_5"
    ],
@@ -27,31 +27,31 @@
       },
       "runtime" : {
          "recommends" : {
-            "Readonly::XS" : 0
+            "Readonly::XS" : "0"
          },
          "requires" : {
-            "Business::ISBN" : 0,
-            "Business::ISMN" : 0,
-            "Business::ISSN" : 0,
-            "Data::Compare" : 0,
-            "Data::Diver" : 0,
-            "Data::Dump" : 0,
-            "Date::Simple" : 0,
-            "File::Slurp::Unicode" : 0,
-            "IPC::Cmd" : 0,
-            "IPC::Run3" : 0,
-            "LWP::Protocol::https" : 0,
-            "LWP::Simple" : 0,
-            "List::AllUtils" : 0,
-            "List::MoreUtils" : 0,
-            "Log::Log4perl" : 0,
-            "Mozilla::CA" : 0,
-            "Regexp::Common" : 0,
+            "Business::ISBN" : "0",
+            "Business::ISMN" : "0",
+            "Business::ISSN" : "0",
+            "Data::Compare" : "0",
+            "Data::Diver" : "0",
+            "Data::Dump" : "0",
+            "Date::Simple" : "0",
+            "File::Slurp::Unicode" : "0",
+            "IPC::Cmd" : "0",
+            "IPC::Run3" : "0",
+            "LWP::Protocol::https" : "0",
+            "LWP::Simple" : "0",
+            "List::AllUtils" : "0",
+            "List::MoreUtils" : "0",
+            "Log::Log4perl" : "0",
+            "Mozilla::CA" : "0",
+            "Regexp::Common" : "0",
             "Text::BibTeX" : "0.66",
-            "URI" : 0,
+            "URI" : "0",
             "Unicode::Collate" : "0.90",
-            "XML::LibXML::Simple" : 0,
-            "XML::LibXSLT" : 0,
+            "XML::LibXML::Simple" : "0",
+            "XML::LibXSLT" : "0",
             "perl" : "v5.14.0"
          }
       }
@@ -63,7 +63,7 @@
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
-         "version" : "1.4"
+         "version" : "1.5"
       },
       "Biber::Constants" : {
          "file" : "lib/Biber/Constants.pm",
@@ -133,6 +133,10 @@
          "file" : "lib/Biber/Output/test.pm",
          "version" : 0
       },
+      "Biber::Output::tool" : {
+         "file" : "lib/Biber/Output/tool.pm",
+         "version" : 0
+      },
       "Biber::Section" : {
          "file" : "lib/Biber/Section.pm",
          "version" : 0
@@ -160,5 +164,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "1.4"
+   "version" : "1.5"
 }
