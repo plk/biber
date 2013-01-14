@@ -1,5 +1,7 @@
 Revision history for Biber
 
+1.6    ()
+       * 
 1.5    (2013-01-10)
        * Added new source mapping option "map_entry_null"
        * Renamed some options (old ones remain as aliases):
