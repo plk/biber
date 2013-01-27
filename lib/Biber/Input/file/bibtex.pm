@@ -972,6 +972,11 @@ sub parsename {
   # initials, we do so without certain things. This is easier than trying
   # hack robust initials code into btparse ...
   my $nd_namestr = strip_noinit($namestr);
+
+  # Make initials with ties in between work. btparse doesn't understand this so replace with
+  # spaces - this is fine as we are just generating initials
+  $nd_namestr =~ s/(\w)\.~(\w)/$1. $2/g;
+
   my $nd_name = new Text::BibTeX::Name($nd_namestr, $fieldname);
 
   # Initials formats

@@ -115,7 +115,7 @@ our $CONFIG_DEFAULT_BIBER = {
   mincrossrefs        => { content => 2 },
   namesep             => { content => 'and' },
   nodieonerror        => { content => 0 },
-  noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/} ,
+  noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},
                                        {value => q/[\x{2bf}\x{2018}]/} ] },
   nolog               => { content => 0 },
   nostdmacros         => { content => 0 },
