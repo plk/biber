@@ -487,13 +487,19 @@ sub check_data_constraints {
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
           require Business::ISBN;
-          my $isbn = Business::ISBN->new($fv);
-          if (not $isbn) {
-            push @warnings, "Invalid ISBN for value of field '$f' in '$key'";
+          # Treat as a list field just in case someone has made it so in a custom datamodel
+          unless ($self->get_fieldtype($f) eq 'list') {
+            $fv = [$fv];
           }
-          # Business::ISBN has an error() method so we might get more information
-          elsif (not $isbn->is_valid) {
-            push @warnings, "Invalid ISBN for value of field '$f' in '$key' (" . $isbn->error. ')';
+          foreach (@$fv) {
+            my $isbn = Business::ISBN->new($_);
+            if (not $isbn) {
+              push @warnings, "Invalid ISBN in value of field '$f' in '$key'";
+            }
+            # Business::ISBN has an error() method so we might get more information
+            elsif (not $isbn->is_valid) {
+              push @warnings, "Invalid ISBN in value of field '$f' in '$key' (" . $isbn->error. ')';
+            }
           }
         }
       }
@@ -502,9 +508,15 @@ sub check_data_constraints {
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
           require Business::ISSN;
-          my $issn = Business::ISSN->new($fv);
-          unless ($issn and $issn->is_valid) {
-            push @warnings, "Invalid ISSN for value of field '$f' in '$key'";
+          # Treat as a list field just in case someone has made it so in a custom datamodel
+          unless ($self->get_fieldtype($f) eq 'list') {
+            $fv = [$fv];
+          }
+          foreach (@$fv) {
+            my $issn = Business::ISSN->new($_);
+            unless ($issn and $issn->is_valid) {
+              push @warnings, "Invalid ISSN in value of field '$f' in '$key'";
+            }
           }
         }
       }
@@ -513,9 +525,15 @@ sub check_data_constraints {
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
           require Business::ISMN;
-          my $ismn = Business::ISMN->new($fv);
-          unless ($ismn and $ismn->is_valid) {
-            push @warnings, "Invalid ISMN for value of field '$f' in '$key'";
+          # Treat as a list field just in case someone has made it so in a custom datamodel
+          unless ($self->get_fieldtype($f) eq 'list') {
+            $fv = [$fv];
+          }
+          foreach (@$fv) {
+            my $ismn = Business::ISMN->new($_);
+            unless ($ismn and $ismn->is_valid) {
+              push @warnings, "Invalid ISMN in value of field '$f' in '$key'";
+            }
           }
         }
       }
