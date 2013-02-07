@@ -72,7 +72,7 @@ sub create_output_misc {
   if (my $pa = $Biber::MASTER->get_preamble) {
     $pa = join("%\n", @$pa);
     # Decode UTF-8 -> LaTeX macros if asked to
-    if (Biber::Config->getoption('bblsafechars')) {
+    if (Biber::Config->getoption('output_safechars')) {
       $pa = Biber::LaTeX::Recode::latex_encode($pa);
     }
     $self->{output_data}{HEAD} .= "\\preamble{%\n$pa%\n}\n\n";
@@ -94,8 +94,8 @@ sub set_output_target_file {
   my $bblfile = shift;
   $self->{output_target_file} = $bblfile;
   my $enc_out;
-  if (Biber::Config->getoption('bblencoding')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
+  if (Biber::Config->getoption('output_encoding')) {
+    $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
   }
   my $BBLFILE = IO::File->new($bblfile, ">$enc_out");
   $self->set_output_target($BBLFILE);
@@ -507,8 +507,8 @@ sub output {
 
   $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
 
-  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
-  $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('bblsafechars');
+  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
+  $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('output_safechars');
 
   print $target $data->{HEAD};
 
@@ -550,7 +550,7 @@ sub output {
           my $entry_string = $list->instantiate_entry($entry, $k);
 
           # If requested to convert UTF-8 to macros ...
-          if (Biber::Config->getoption('bblsafechars')) {
+          if (Biber::Config->getoption('output_safechars')) {
             $entry_string = latex_recode_output($entry_string);
           }
 
@@ -601,7 +601,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2013 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

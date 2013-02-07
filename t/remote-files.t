@@ -136,8 +136,8 @@ my $ssl = q|    \entry{jung_alchemical_????}{book}{}
 |;
 
 
-is( $out->get_output_entry($main,'citeulike:8283461'), $cu1, 'Fetch from citeulike') ;
-is( $out->get_output_entry($main,'AbdelbarH98'), $dl1, 'Fetch from plain bib download') ;
-is( $out->get_output_entry($main,'jung_alchemical_????'), $ssl, 'HTTPS test') ;
+is( $out->get_output_entry('citeulike:8283461', $main), $cu1, 'Fetch from citeulike') ;
+is( $out->get_output_entry('AbdelbarH98', $main), $dl1, 'Fetch from plain bib download') ;
+is( $out->get_output_entry('jung_alchemical_????', $main), $ssl, 'HTTPS test') ;
 
 }

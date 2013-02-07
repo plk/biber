@@ -15,7 +15,7 @@ use Log::Log4perl::Appender::File;
 use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
 
-our $VERSION = '1.5';
+our $VERSION = '1.6';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
@@ -220,8 +220,11 @@ sub _initopts {
     elsif (lc($k) eq 'sourcemap') {
       my $sms;
       foreach my $sm (@{$v->{maps}}) {
-        if ($sm->{driver_defaults}) {
-          carp("You can't set driver default sourcemaps via biber - use \\DeclareDefaultSourcemap in biblatex. Ignoring map.");
+        if (defined($sm->{level}) and $sm->{level} eq 'driver') {
+          carp("You can't set driver level sourcemaps via biber - use \\DeclareDriverSourcemap in biblatex. Ignoring map.");
+        }
+        elsif (defined($sm->{level}) and $sm->{level} eq 'style') {
+          carp("You can't set style level sourcemaps via biber - use \\DeclareStyleSourcemap in biblatex. Ignoring map.");
         }
         else {
           push @$sms, $sm;
@@ -353,8 +356,9 @@ sub _initopts {
 
   my $vn = $VERSION;
   $vn .= ' (beta)' if $BETA_VERSION;
+  my $tool = ' running in TOOL mode' if Biber::Config->getoption('tool');
 
-  $logger->info("This is Biber $vn") unless Biber::Config->getoption('nolog');
+  $logger->info("This is Biber $vn$tool") unless Biber::Config->getoption('nolog');
 
   $logger->info("Config file is '" . $opts->{configfile} . "'") if $opts->{configfile};
   $logger->info("Logfile is '$biberlog'") unless Biber::Config->getoption('nolog');
@@ -1700,7 +1704,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2013 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

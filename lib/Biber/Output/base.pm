@@ -34,6 +34,10 @@ sub new {
   else {
     $self = bless {}, $class;
   }
+
+  $self->{output_data}{HEAD} = '';
+  $self->{output_data}{TAIL} = '';
+
   return $self;
 }
 
@@ -50,8 +54,8 @@ sub set_output_target_file {
   my $file = shift;
   $self->{output_target_file} = $file;
   my $enc_out;
-  if (Biber::Config->getoption('bblencoding')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('bblencoding') . ')';
+  if (Biber::Config->getoption('output_encoding')) {
+    $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
   }
   my $TARGET = IO::File->new($file, ">$enc_out");
   $self->set_output_target($TARGET);
@@ -209,8 +213,8 @@ sub get_output_entries {
 
 sub get_output_entry {
   my $self = shift;
-  my $list = shift;
   my $key = shift;
+  my $list = shift; # might not be set for, for example, tool mode tests
   my $section = shift;
   $section = '0' if not defined($section); # default - mainly for tests
   # Force a return of undef if there is no output for this key to avoid
@@ -218,7 +222,7 @@ sub get_output_entry {
   my $out = $self->{output_data}{ENTRIES}{$section}{index}{$key} ||
             $self->{output_data}{MISSING_ENTRIES}{$section}{index}{$key} ||
             $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$key};
-  my $out_string = $list->instantiate_entry($out, $key);
+  my $out_string = $list ? $list->instantiate_entry($out, $key) : $out;
   return $out ? $out_string : undef;
 }
 
@@ -354,7 +358,7 @@ sub output {
 
   $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
 
-  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('bblencoding') . "'");
+  $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
 
   print $target $data->{HEAD};
 
@@ -401,7 +405,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2013 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

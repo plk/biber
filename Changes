@@ -1,6 +1,18 @@
 Revision history for Biber
 
-1.5    ()
+1.6    ()
+       * Bugfixes
+1.5    (2013-01-10)
+       * Added new source mapping option "map_entry_null"
+       * Renamed some options (old ones remain as aliases):
+         bibencoding     -> input_encoding
+         bblencoding     -> output_encoding
+         bblsafechars    -> output_safechars
+         bblsafecharsset -> output_safecharsset
+         outfile         -> output_file
+         outformat       -> output_format
+       * New "tool" mode with "--tool" option which takes a data source as argument
+         and just performs reencoding and source mappings etc. as per options and config file.
        * Support for customisable BibTeX data source list and name separators
        * Better debug output for source mapping
        * Better defined source mapping hierarchy with bugfixes

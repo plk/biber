@@ -55,11 +55,11 @@ is(File::Spec->canonpath(locate_biber_file('general1.bcf')), File::Spec->canonpa
 # String normalising
 is( normalise_string('"a, b–c: d" ', 1),  'a bc d', 'normalise_string' );
 
-Biber::Config->setoption('bblencoding', 'latin1');
+Biber::Config->setoption('output_encoding', 'latin1');
 is( normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
     $§+ :-)   ', 1), 'Secoka_Nino', 'normalise_string_underscore 1' );
 
-Biber::Config->setoption('bblencoding', 'UTF-8');
+Biber::Config->setoption('output_encoding', 'UTF-8');
 is( normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
     $§+ :-)   ', 0), 'Şecöka_Nìño', 'normalise_string_underscore 2' );
 

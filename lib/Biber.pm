@@ -79,7 +79,7 @@ sub new {
 
   # Initialise recoding schemes
   Biber::LaTeX::Recode->init_schemes(Biber::Config->getoption('decodecharsset'),
-                                     Biber::Config->getoption('bblsafecharsset'));
+                                     Biber::Config->getoption('output_safecharsset'));
 
   $MASTER = $self;
 
@@ -138,6 +138,18 @@ sub biber_tempdir {
 sub sections {
   my $self = shift;
   return $self->{sections};
+}
+
+=head2 add_sections
+
+    Adds a Biber::Sections object. Used externally from, e.g. biber
+
+=cut
+
+sub add_sections {
+  my ($self, $sections) = @_;
+  $self->{sections} = $sections;
+  return;
 }
 
 =head2 sortlists
@@ -216,6 +228,35 @@ sub set_current_section {
 sub get_current_section {
   my $self = shift;
   return $self->{current_section};
+}
+
+=head2 tool_mode_setup
+
+  Fakes parts of the control file for tool mode
+
+=cut
+
+sub tool_mode_setup {
+  my $self = shift;
+  my $bib_sections = new Biber::Sections;
+  # There are no sections in tool mode so create a pseudo-section
+  my $bib_section = new Biber::Section('number' => 0);
+  $bib_section->set_datasources([{type => 'file',
+                                  name => $ARGV[0],
+                                  datatype => Biber::Config->getoption('tool_datatype')}]);
+  $bib_section->set_allkeys(1);
+  $bib_sections->add_section($bib_section);
+
+  # Add the Biber::Sections object to the Biber object
+  $self->add_sections($bib_sections);
+
+  # User maps are set in config file and need some massaging which normally
+  # happend in parse_ctrlfile
+  if (my $usms = Biber::Config->getoption('sourcemap')) {
+    # Force "user" level for the maps
+    @$usms = map {$_->{level} = 'user';$_} @$usms;
+  }
+  return;
 }
 
 =head2 parse_ctrlfile
@@ -406,7 +447,7 @@ sub parse_ctrlfile {
   # which can come from two places (biber.conf and \DeclareSourcemap), order is
   # \DeclareSourcemap, then biber.conf
   if (exists($bcfxml->{sourcemap})) {
-    # Users maps are set in config file
+    # User maps are set in config file
     if (my $usms = Biber::Config->getoption('sourcemap')) {
       # Force "user" level for the maps
       @$usms = map {$_->{level} = 'user';$_} @$usms;
@@ -681,10 +722,10 @@ sub process_setup {
   # up data model defaults in Constants.pm in case there is nothing in the .bcf
   Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
-  # Force bblsafechars flag if output to ASCII and bibencoding is not ASCII
-  if (Biber::Config->getoption('bblencoding') =~ /(?:x-)?ascii/xmsi and
-      Biber::Config->getoption('bibencoding') !~ /(?:x-)?ascii/xmsi) {
-    Biber::Config->setoption('bblsafechars', 1);
+  # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
+  if (Biber::Config->getoption('output_encoding') =~ /(?:x-)?ascii/xmsi and
+      Biber::Config->getoption('input_encoding') !~ /(?:x-)?ascii/xmsi) {
+    Biber::Config->setoption('output_safechars', 1);
   }
 }
 
@@ -809,7 +850,7 @@ sub instantiate_dynamic {
     $section->bibentries->add_entry($dset, $be);
 
     # Save graph information if requested
-    if (Biber::Config->getoption('outformat') eq 'dot') {
+    if (Biber::Config->getoption('output_format') eq 'dot') {
       foreach my $m (@members) {
         Biber::Config->set_graph('set', $dset, $m);
       }
@@ -850,7 +891,7 @@ sub instantiate_dynamic {
         $section->bibentries->add_entry($clonekey, $relclone);
 
         # Save graph information if requested
-        if (Biber::Config->getoption('outformat') eq 'dot') {
+        if (Biber::Config->getoption('output_format') eq 'dot') {
           Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
         }
       }
@@ -922,7 +963,7 @@ sub cite_setmembers {
         $section->add_citekeys($inset_key);
 
         # Save graph information if requested
-        if (Biber::Config->getoption('outformat') eq 'dot') {
+        if (Biber::Config->getoption('output_format') eq 'dot') {
           Biber::Config->set_graph('set', $citekey, $inset_key);
         }
       }
@@ -980,7 +1021,7 @@ sub process_interentry {
     }
 
     # Record xref inheritance for graphing if required
-    if (Biber::Config->getoption('outformat') eq 'dot' and my $xref = $be->get_field('xref')) {
+    if (Biber::Config->getoption('output_format') eq 'dot' and my $xref = $be->get_field('xref')) {
       Biber::Config->set_graph('xref', $citekey, $xref);
     }
 
@@ -2919,20 +2960,35 @@ sub sort_list {
 
 sub prepare {
   my $self = shift;
-  $self->process_setup;                  # Place to put global pre-processing things
-  my $out = $self->get_output_obj;       # Biber::Output object
+
+  # If not in tool mode
+  my $out = $self->get_output_obj;          # Biber::Output object
+
+  # Place to put global pre-processing things, not needed in tool mode
+  $self->process_setup unless Biber::Config->getoption('tool');
 
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
     my $secnum = $section->number;
 
-    $logger->info("Processing section $secnum");
+    # Section numbers don't mean anything to the user in tool mode
+    $logger->info("Processing section $secnum") unless Biber::Config->getoption('tool');
 
     $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
+
+    # Just do this and return if in tool mode
+    # There is only one (pseudo) section in tool mode so it's ok
+    # to return from this section loop
+    if (Biber::Config->getoption('tool')) {
+      $out->create_output_section;         # Generate and push the section output into the
+                                           # output object ready for writing
+      return;
+    }
+
     $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->resolve_alias_refs;           # Resolve xref/crossref/xdata aliases to real keys
@@ -3021,7 +3077,15 @@ sub fetch_data {
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
     eval "require $package" or
       biber_error("Error loading data source package '$package': $@");
-    $logger->info("Looking for $datatype format $type '$name' for section $secnum");
+
+    # Slightly different message for tool mode
+    if (Biber::Config->getoption('tool')) {
+      $logger->info("Looking for $datatype format $type '$name'");
+    }
+    else {
+      $logger->info("Looking for $datatype format $type '$name' for section $secnum");
+    }
+
     @remaining_keys = &{"${package}::extract_entries"}($name, \@remaining_keys);
   }
 
@@ -3031,6 +3095,11 @@ sub fetch_data {
     biber_warn("I didn't find a database entry for '$citekey' (section $secnum)");
     $section->del_citekey($citekey);
     $section->add_undef_citekey($citekey);
+  }
+
+  # Skip dependents detection if in tool mode
+  if (Biber::Config->getoption('tool')) {
+    return;
   }
 
   $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
@@ -3342,7 +3411,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2013 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

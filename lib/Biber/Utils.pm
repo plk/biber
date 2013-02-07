@@ -304,7 +304,7 @@ sub normalise_string_label {
   # Replace LaTeX chars by Unicode for sorting
   # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
   # before we read the file (see Biber.pm)
-  unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+  unless (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
     $str = latex_decode($str, strip_outer_braces => 1,
                               scheme => Biber::Config->getoption('decodecharsset'));
   }
@@ -332,7 +332,7 @@ sub normalise_string_sort {
   # Replace LaTeX chars by Unicode for sorting
   # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
   # before we read the file (see Biber.pm)
-  unless (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+  unless (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
     $str = latex_decode($str, strip_outer_braces => 1,
                               scheme => Biber::Config->getoption('decodecharsset'));
   }
@@ -352,7 +352,7 @@ sub normalise_string {
   return '' unless $str; # Sanitise missing data
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-  if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+  if (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
     $str = latex_decode($str, strip_outer_braces => 1,
                               scheme => Biber::Config->getoption('decodecharsset'));
   }
@@ -668,13 +668,13 @@ sub stringify_hash {
 =cut
 
 sub normalise_utf8 {
-  if (defined(Biber::Config->getoption('bibencoding')) and
-      Biber::Config->getoption('bibencoding') =~ m/\Autf-?8\z/xmsi) {
-    Biber::Config->setoption('bibencoding', 'UTF-8');
+  if (defined(Biber::Config->getoption('input_encoding')) and
+      Biber::Config->getoption('input_encoding') =~ m/\Autf-?8\z/xmsi) {
+    Biber::Config->setoption('input_encoding', 'UTF-8');
   }
-  if (defined(Biber::Config->getoption('bblencoding')) and
-      Biber::Config->getoption('bblencoding') =~ m/\Autf-?8\z/xmsi) {
-    Biber::Config->setoption('bblencoding', 'UTF-8');
+  if (defined(Biber::Config->getoption('output_encoding')) and
+      Biber::Config->getoption('output_encoding') =~ m/\Autf-?8\z/xmsi) {
+    Biber::Config->setoption('output_encoding', 'UTF-8');
   }
 }
 
@@ -858,7 +858,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2013 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

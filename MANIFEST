@@ -33,6 +33,7 @@ lib/Biber/Output/base.pm
 lib/Biber/Output/bbl.pm
 lib/Biber/Output/dot.pm
 lib/Biber/Output/test.pm
+lib/Biber/Output/tool.pm
 lib/Biber.pm
 lib/Biber/Section.pm
 lib/Biber/Sections.pm
@@ -81,6 +82,7 @@ t/sorting.t
 t/sortlists.t
 t/sort-order.t
 t/sort-uc.t
+t/tool.t
 t/tdata/biber-test.conf
 t/tdata/biblatexml.bcf
 t/tdata/biblatexml.bltxml

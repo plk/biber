@@ -123,7 +123,7 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
     \endentry
 |;
 
-is($out->get_output_entry($main,'Elias1955'), $string1, 'Legacy set test 1');
-is($out->get_output_entry($main,'Elias1955a'), $string2, 'Legacy set test 2');
-is($out->get_output_entry($main,'Elias1955b'), $string3, 'Legacy set test 3');
+is($out->get_output_entry('Elias1955', $main), $string1, 'Legacy set test 1');
+is($out->get_output_entry('Elias1955a', $main), $string2, 'Legacy set test 2');
+is($out->get_output_entry('Elias1955b', $main), $string3, 'Legacy set test 3');
 

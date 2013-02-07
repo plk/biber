@@ -186,7 +186,10 @@ sub extract_entries {
     $logger->debug("All cached citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
     while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
-      create_entry($key, $entry, $source, $smaps);
+      unless (create_entry($key, $entry, $source, $smaps)) {
+        # if create entry returns false, remove the key from the cache
+        @{$cache->{orig_key_order}{$filename}} = grep {$key ne $_} @{$cache->{orig_key_order}{$filename}};
+      }
     }
 
     # Loop over all aliases, creating data in section object
@@ -289,6 +292,9 @@ sub create_entry {
 
   if ( $entry->metatype == BTE_REGULAR ) {
 
+    # Save pre-mapping data. Might be useful somewhere
+    $bibentry->set_field('rawdata', decode_utf8($entry->print_s));
+
     # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
     foreach my $smap (@$smaps) {
       my $level = $smap->{level};
@@ -316,6 +322,12 @@ sub create_entry {
 
         # loop over mapping steps
         foreach my $step (@{$map->{map_step}}) {
+
+          # entry deletion. Really only useful with allkeys or tool mode
+          if ($step->{map_entry_null}) {
+            $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
+            return 0; # don't create an entry at all
+          }
 
           # Entrytype map
           if (my $source = $step->{map_type_source}) {
@@ -412,7 +424,7 @@ sub create_entry {
             }
           }
 
-          # field creation
+          # field changes
           if (my $field = $step->{map_field_set}) {
 
             # Deal with special tokens
@@ -469,6 +481,17 @@ sub create_entry {
       }
     }
 
+    # Save post-mapping data. This will be the output for tool mode
+    $bibentry->set_field('cookeddata', decode_utf8($entry->print_s));
+
+    # Stop here if in tool mode - we don't need any more processing of the entry
+    if (Biber::Config->getoption('tool')) {
+      $bibentry->set_field('entrytype', $entry->type);
+      $bibentry->set_field('datatype', 'bibtex');
+      $bibentries->add_entry($key, $bibentry);
+      return 1;
+    }
+
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
     foreach my $f ($entry->fieldlist) {
@@ -498,7 +521,7 @@ sub create_entry {
     $bibentries->add_entry($key, $bibentry);
   }
 
-  return;
+  return 1;
 }
 
 # HANDLERS
@@ -850,7 +873,7 @@ sub preprocess_file {
 
   # We read the file in the bib encoding and then output to UTF-8, even if it was already UTF-8,
   # just in case there was a BOM so we can delete it as it makes T::B complain
-  my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('bibencoding'))
+  my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('input_encoding'))
     or biber_error("Can't read $filename");
 
   # strip UTF-8 BOM if it exists - this just makes T::B complain about junk characters
@@ -860,7 +883,7 @@ sub preprocess_file {
       or biber_error("Can't write $ufilename");
 
   # Decode LaTeX to UTF8 if output is UTF-8
-  if (Biber::Config->getoption('bblencoding') eq 'UTF-8') {
+  if (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
     my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
       or biber_error("Can't read $ufilename");
     $logger->info('Decoding LaTeX character macros into UTF-8');
@@ -949,6 +972,11 @@ sub parsename {
   # initials, we do so without certain things. This is easier than trying
   # hack robust initials code into btparse ...
   my $nd_namestr = strip_noinit($namestr);
+
+  # Make initials with ties in between work. btparse doesn't understand this so replace with
+  # spaces - this is fine as we are just generating initials
+  $nd_namestr =~ s/(\w)\.~(\w)/$1. $2/g;
+
   my $nd_name = new Text::BibTeX::Name($nd_namestr, $fieldname);
 
   # Initials formats
@@ -1118,7 +1146,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2013 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

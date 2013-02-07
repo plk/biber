@@ -40,6 +40,12 @@ my $sourcemap = [
     map => [
       {
         map_step => [
+          { map_field_source => "TITLE", map_match => "High-Resolution Micromachined Interferometric Accelerometer", map_final => 1, },
+          { map_entry_null => 1 },
+        ],
+      },
+      {
+        map_step => [
           { map_type_source => "ARTICLE", map_type_target => "CUSTOMB" },
         ],
         per_datasource => [{ content => "doesnotexist.bib" }],

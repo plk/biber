@@ -2,56 +2,25 @@
 abstract: 'Biber is a much-augmented bibtex replacement for biblatex users'
 author:
   - 'Philip Kime <Philip@kime.org.uk>'
+build_requires:
+  Config::AutoConf: 0.15
+  ExtUtils::LibBuilder: 0.02
+configure_requires:
+  Module::Build: 0.38
 dynamic_config: 1
-generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.110440'
-license:
-  - perl_5
+generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.120630'
+license: perl
 meta-spec:
-  url: http://search.cpan.org/perldoc?CPAN::Meta::Spec
-  version: 2
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
 name: biblatex-biber
-prereqs:
-  build:
-    requires:
-      Config::AutoConf: 0.15
-      ExtUtils::LibBuilder: 0.02
-  configure:
-    requires:
-      Module::Build: 0.38
-  runtime:
-    recommends:
-      Readonly::XS: 0
-    requires:
-      Business::ISBN: 0
-      Business::ISMN: 0
-      Business::ISSN: 0
-      Data::Compare: 0
-      Data::Diver: 0
-      Data::Dump: 0
-      Date::Simple: 0
-      File::Slurp::Unicode: 0
-      IPC::Cmd: 0
-      IPC::Run3: 0
-      LWP::Protocol::https: 0
-      LWP::Simple: 0
-      List::AllUtils: 0
-      List::MoreUtils: 0
-      Log::Log4perl: 0
-      Mozilla::CA: 0
-      Regexp::Common: 0
-      Text::BibTeX: 0.66
-      URI: 0
-      Unicode::Collate: 0.90
-      XML::LibXML::Simple: 0
-      XML::LibXSLT: 0
-      perl: v5.14.0
 provides:
   Biber:
     file: lib/Biber.pm
     version: 0
   Biber::Config:
     file: lib/Biber/Config.pm
-    version: 1.4
+    version: 1.5
   Biber::Constants:
     file: lib/Biber/Constants.pm
     version: 0
@@ -103,6 +72,9 @@ provides:
   Biber::Output::test:
     file: lib/Biber/Output/test.pm
     version: 0
+  Biber::Output::tool:
+    file: lib/Biber/Output/tool.pm
+    version: 0
   Biber::Section:
     file: lib/Biber/Section.pm
     version: 0
@@ -118,8 +90,32 @@ provides:
   Biber::Utils:
     file: lib/Biber/Utils.pm
     version: 0
-release_status: stable
+recommends:
+  Readonly::XS: 0
+requires:
+  Business::ISBN: 0
+  Business::ISMN: 0
+  Business::ISSN: 0
+  Data::Compare: 0
+  Data::Diver: 0
+  Data::Dump: 0
+  Date::Simple: 0
+  File::Slurp::Unicode: 0
+  IPC::Cmd: 0
+  IPC::Run3: 0
+  LWP::Protocol::https: 0
+  LWP::Simple: 0
+  List::AllUtils: 0
+  List::MoreUtils: 0
+  Log::Log4perl: 0
+  Mozilla::CA: 0
+  Regexp::Common: 0
+  Text::BibTeX: 0.66
+  URI: 0
+  Unicode::Collate: 0.90
+  XML::LibXML::Simple: 0
+  XML::LibXSLT: 0
+  perl: v5.14.0
 resources:
-  license:
-    - http://dev.perl.org/licenses/
-version: 1.4
+  license: http://dev.perl.org/licenses/
+version: 1.5

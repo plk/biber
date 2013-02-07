@@ -1,8 +1,8 @@
 start = element config {
-  element bibencoding         { text }? &
-  element bblencoding         { text }? &
-  element bblsafechars        { "0" | "1" }? &
-  element bblsafecharsset     { "base" | "full" }? &
+  element input_encoding      { text }? &
+  element output_encoding     { text }? &
+  element output_safechars    { "0" | "1" }? &
+  element output_safecharsset { "base" | "full" }? &
   element bltxml              { "0" | "1" }? &
   element collate             { "0" | "1" }? &
   element collate_options     {
@@ -63,6 +63,9 @@ map =
     element per_type { xsd:string {minLength="1"} }*,
     element map_step {
       (
+        (
+          attribute map_entry_null { "1" }
+        ) |
         (
           attribute map_type_source { xsd:string {minLength="1"} },
           attribute map_type_target { xsd:string {minLength="1"} }?

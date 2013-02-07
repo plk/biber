@@ -24,7 +24,7 @@ our @EXPORT = qw{
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '2.2';
+our $BCF_VERSION = '2.3';
 # Format version of the .bbl. Used when writing the .bbl
 our $BBL_VERSION = '2.2';
 
@@ -103,41 +103,43 @@ our %DM_DATATYPES = (
 # but nice to be safe.
 
 our $CONFIG_DEFAULT_BIBER = {
-  bblencoding        => { content => 'UTF-8' },
-  bibencoding        => { content => 'UTF-8' },
-  bblsafechars       => { content => 0 },
-  bblsafecharsset    => { content => 'base' },
-  collate            => { content => 1 },
-  collate_options    => { option => { level => 4, variable => 'non-ignorable' }},
-  graph              => { content => 0 },
-  debug              => { content => 0 },
-  decodecharsset     => { content => 'base' },
-  dot_include        => { option => {section => 1, xdata => 1, crossref => 1, xref => 1 }},
-  fastsort           => { content => 0 },
-  fixinits           => { content => 0 },
-  listsep            => { content => 'and' },
-  mincrossrefs       => { content => 2 },
-  namesep            => { content => 'and' },
-  nodieonerror       => { content => 0 },
-  noinit             => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/} ,
-                                      {value => q/[\x{2bf}\x{2018}]/} ] },
-  nolog              => { content => 0 },
-  nostdmacros        => { content => 0 },
-  nosort             => { option => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
-                                      { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
-  onlylog            => { content => 0 },
-  others_string      => { content => 'others' },
-  outformat          => { content => 'bbl' },
-  quiet              => { content => 0 },
-  sortcase           => { content => 1 },
-  sortfirstinits     => { content => 0 },
-  sortlocale         => { content => $locale },
-  sortupper          => { content => 1 },
-  trace              => { content => 0 },
-  validate_config    => { content => 0 },
-  validate_control   => { content => 0 },
-  validate_datamodel => { content => 0 },
-  wraplines          => { content => 0 },
+  collate             => { content => 1 },
+  collate_options     => { option => { level => 4, variable => 'non-ignorable' }},
+  graph               => { content => 0 },
+  debug               => { content => 0 },
+  decodecharsset      => { content => 'base' },
+  dot_include         => { option => {section => 1, xdata => 1, crossref => 1, xref => 1 }},
+  fastsort            => { content => 0 },
+  fixinits            => { content => 0 },
+  input_encoding      => { content => 'UTF-8' },
+  listsep             => { content => 'and' },
+  mincrossrefs        => { content => 2 },
+  namesep             => { content => 'and' },
+  nodieonerror        => { content => 0 },
+  noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},
+                                       {value => q/[\x{2bf}\x{2018}]/} ] },
+  nolog               => { content => 0 },
+  nostdmacros         => { content => 0 },
+  nosort              => { option => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
+                                       { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
+  onlylog             => { content => 0 },
+  others_string       => { content => 'others' },
+  output_format       => { content => 'bbl' },
+  output_encoding     => { content => 'UTF-8' },
+  output_safechars    => { content => 0 },
+  output_safecharsset => { content => 'base' },
+  quiet               => { content => 0 },
+  sortcase            => { content => 1 },
+  sortfirstinits      => { content => 0 },
+  sortlocale          => { content => $locale },
+  sortupper           => { content => 1 },
+  tool                => { content => 0 },
+  tool_datatype       => { content => 'bibtex' },
+  trace               => { content => 0 },
+  validate_config     => { content => 0 },
+  validate_control    => { content => 0 },
+  validate_datamodel  => { content => 0 },
+  wraplines           => { content => 0 },
 };
 
 # default global options for biblatex
@@ -268,7 +270,7 @@ L<https://sourceforge.net/tracker2/?func=browse&group_id=228270>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2013 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

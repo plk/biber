@@ -34,7 +34,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('bblsafechars', 1);
+Biber::Config->setoption('output_safechars', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -110,4 +110,4 @@ is_deeply([$section3->get_orig_order_citekeys], ['sect1', 'sect2', 'sectall1'], 
 is($out->get_output_section(0)->number, '0', 'Checking output sections - 1');
 is($out->get_output_section(1)->number, '1', 'Checking output sections - 2');
 is($out->get_output_section(2)->number, '2', 'Checking output sections - 3');
-is($out->get_output_head, $head, 'Preamble output check with bblsafechars');
+is($out->get_output_head, $head, 'Preamble output check with output_safechars');

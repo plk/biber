@@ -97,6 +97,6 @@ my $l2 = q|    \entry{test2}{inbook}{}
     \endentry
 |;
 
-is( $out->get_output_entry($main,'test1'), $l1, 'Basic RIS test - 1') ;
-is( $out->get_output_entry($main,'test2'), $l2, 'Basic RIS test - 2') ;
+is( $out->get_output_entry('test1', $main), $l1, 'Basic RIS test - 1') ;
+is( $out->get_output_entry('test2', $main), $l2, 'Basic RIS test - 2') ;
 

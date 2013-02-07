@@ -129,5 +129,5 @@ Am J Public Health. 2009 Sep;99(9):1567-75. Epub 2009 Jul 16.}
     \endentry
 |;
 
-is( $out->get_output_entry($main, 'fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42'), $l1, 'Basic Endnote XML test - 1') ;
-is( $out->get_output_entry($main, 'fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47'), $l2, 'Basic Endnote XML test - 2') ;
+is( $out->get_output_entry('fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42', $main), $l1, 'Basic Endnote XML test - 1') ;
+is( $out->get_output_entry('fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47', $main), $l2, 'Basic Endnote XML test - 2') ;

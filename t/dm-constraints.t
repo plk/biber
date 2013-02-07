@@ -64,8 +64,8 @@ my $c8 = [ "Constraint violation - none of fields (field4) must exist when none 
            "Constraint violation - one of fields (field10, field11) must exist when none of fields (field8, field9) exist",
            "Constraint violation - all of fields (field12, field13) must exist when none of fields (field6) exist" ];
 
-my $c10 = [ "Invalid ISBN for value of field 'isbn' in 'c10'",
-            "Invalid ISSN for value of field 'issn' in 'c10'" ];
+my $c10 = [ "Invalid ISBN in value of field 'isbn' in 'c10'",
+            "Invalid ISSN in value of field 'issn' in 'c10'" ];
 
 is_deeply($bibentries->entry('c1')->get_field('warnings'), $c1, 'Constraints test 1' );
 is_deeply($bibentries->entry('c2')->get_field('warnings'), $c2, 'Constraints test 2' );
