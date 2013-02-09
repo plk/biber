@@ -31,12 +31,7 @@ sub new {
   my $class = shift;
   my $dm = shift;
   my $self;
-  if (defined($dm) and ref($dm) eq 'HASH') {
-    $self = bless $dm, $class;
-  }
-  else {
-    $self = bless {}, $class;
-  }
+  $self = bless {}, $class;
 
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
