@@ -47,10 +47,10 @@ CALL pp ^
   --link=C:\WINDOWS\system32\libbtparse.dll ^
   --link=C:\strawberry\c\bin\libxslt-1_.dll ^
   --link=C:\strawberry\c\bin\libexslt-0_.dll ^
-  --link=C:\strawberry\c\bin\libz_.dll ^
+  --link=C:\strawberry\c\bin\zlib1_.dll ^
   --link=C:\strawberry\c\bin\libxml2-2_.dll ^
   --link=C:\strawberry\c\bin\libiconv-2_.dll ^
-  --link=C:\strawberry\c\bin\libssl32_.dll ^
+  --link=C:\strawberry\c\bin\ssleay32_.dll ^
   --link=C:\strawberry\c\bin\libeay32_.dll ^
   --addlist=biber.files ^
   --cachedeps=scancache ^
