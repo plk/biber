@@ -17,7 +17,7 @@
 :: Have to explicitly include the Input* modules as the names of these are dynamically
 :: constructed in the code so Par::Packer can't auto-detect them.
 
-COPY C:\strawberry\perl\bin\biber C:\WINDOWS\Temp\biber-MSWIN
+COPY C:\strawberry\perl\site\bin\biber C:\WINDOWS\Temp\biber-MSWIN
 
 CALL pp ^
   --compress=6 ^
