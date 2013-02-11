@@ -12,7 +12,8 @@
 ::
 ::     $config{DLEXT} = 'dll' if ($is_Win32);
 ::
-:: then build and install as usual.
+:: then build and install as usual (this seems ok with the included
+:: XML::LibXSLT with strawberry perl 5.16 for some reason)
 
 :: Have to explicitly include the Input* modules as the names of these are dynamically
 :: constructed in the code so Par::Packer can't auto-detect them.
