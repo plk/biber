@@ -18,7 +18,7 @@
 :: Have to explicitly include the Input* modules as the names of these are dynamically
 :: constructed in the code so Par::Packer can't auto-detect them.
 
-COPY C:\strawberry\perl\site\bin\biber C:\WINDOWS\Temp\biber-MSWIN
+COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN
 
 CALL pp ^
   --compress=6 ^
@@ -57,6 +57,6 @@ CALL pp ^
   --cachedeps=scancache ^
   --icon=biber.ico ^
   --output=biber-MSWIN.exe ^
-  C:\WINDOWS\Temp\biber-MSWIN
+  %TEMP%\biber-MSWIN
 
-DEL C:\WINDOWS\Temp\biber-MSWIN
+DEL %TEMP%\biber-MSWIN
