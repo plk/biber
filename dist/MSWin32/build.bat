@@ -45,6 +45,7 @@ CALL pp ^
   --module=Encode::Unicode ^
   --module=Encode::Unicode::UTF7 ^
   --module=IO::Socket::SSL ^
+  --module=File::Find::Rule ^
   --link=C:\WINDOWS\system32\libbtparse.dll ^
   --link=C:\strawberry\c\bin\libxslt-1_.dll ^
   --link=C:\strawberry\c\bin\libexslt-0_.dll ^
@@ -53,6 +54,7 @@ CALL pp ^
   --link=C:\strawberry\c\bin\libiconv-2_.dll ^
   --link=C:\strawberry\c\bin\ssleay32_.dll ^
   --link=C:\strawberry\c\bin\libeay32_.dll ^
+  --link=C:\strawberry\c\bin\liblzma-5_.dll ^
   --addlist=biber.files ^
   --cachedeps=scancache ^
   --icon=biber.ico ^
