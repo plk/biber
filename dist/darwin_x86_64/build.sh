@@ -13,7 +13,7 @@
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them.
 
-cp /opt/local/bin/biber /tmp/biber-darwin
+cp /opt/local/libexec/perl5.16/sitebin/biber /tmp/biber-darwin
 cp /opt/local/lib/libz.1.2.7.dylib /tmp/libz.1.dylib
 
 pp --compress=6 \
