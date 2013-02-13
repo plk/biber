@@ -42,6 +42,7 @@ pp --compress=6 \
   --module=Encode::Unicode \
   --module=Encode::Unicode::UTF7 \
   --module=IO::Socket::SSL \
+  --module=File::Find::Rule \
   --link=/tmp/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
   --link=/opt/local/lib/libbtparse.dylib \

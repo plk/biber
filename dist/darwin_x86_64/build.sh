@@ -39,6 +39,7 @@ pp --compress=6 \
   --module=Encode::TW \
   --module=Encode::Unicode \
   --module=Encode::Unicode::UTF7 \
+  --module=File::Find::Rule \
   --module=IO::Socket::SSL \
   --link=/tmp/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
