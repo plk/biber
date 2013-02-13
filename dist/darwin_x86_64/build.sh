@@ -49,6 +49,7 @@ pp --compress=6 \
   --link=/opt/local/lib/libexslt.0.dylib \
   --link=/opt/local/lib/libssl.1.0.0.dylib \
   --link=/opt/local/lib/libcrypto.1.0.0.dylib \
+  --link=/opt/local/lib/liblzma.5.dylib \
   --addlist=biber.files \
   --cachedeps=scancache \
   --output=biber-darwin_x86_64 \
