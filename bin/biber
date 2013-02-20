@@ -294,10 +294,15 @@ C<biber> - A bibtex replacement for users of biblatex
 =head1 SYNOPSIS
 
 biber [options] file[.bcf]
+biber [options] --tool <datasource>
 
   Creates "file.bbl" using control file "file.bcf" (".bcf" extension is
   optional). Normaly use with biblatex requires no options as they are
   all set in biblatex and passed via the ".bcf" file
+
+  In "tool" mode (see B<--tool> option), takes a datasource (defaults to
+  "bibtex" datasource) and outputs a copy of the datasource with any datasource
+   mappings/reencodings applied.
 
   Please run "biber --help" for option details
 

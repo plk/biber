@@ -861,8 +861,6 @@ sub cache_data {
 
 sub preprocess_file {
   my $filename = shift;
-  my $secnum = $Biber::MASTER->get_current_section;
-  my $section = $Biber::MASTER->sections->get_section($secnum);
 
   # Put the utf8 encoded file into the global biber tempdir
   # We have to do this in case we can't write to the location of the
