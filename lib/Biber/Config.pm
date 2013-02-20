@@ -1,5 +1,5 @@
 package Biber::Config;
-use 5.014000;
+use v5.16;
 
 use Biber::Constants;
 use IPC::Cmd qw( can_run );

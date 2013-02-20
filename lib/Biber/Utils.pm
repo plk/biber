@@ -1,5 +1,5 @@
 package Biber::Utils;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 use re 'eval';
@@ -266,7 +266,7 @@ sub strip_nosort {
   my $restrings;
   foreach my $nsopt (@$nosort) {
     # Specific fieldnames override types
-    if (lc($nsopt->{name}) eq lc($fieldname)) {
+    if (fc($nsopt->{name}) eq fc($fieldname)) {
       push @$restrings, $nsopt->{value};
     }
   }

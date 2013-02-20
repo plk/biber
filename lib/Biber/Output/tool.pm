@@ -1,5 +1,5 @@
 package Biber::Output::tool;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 use base 'Biber::Output::base';

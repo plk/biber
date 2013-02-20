@@ -1,5 +1,5 @@
 package Biber::Entries;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 

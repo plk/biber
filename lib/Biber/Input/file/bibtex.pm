@@ -1,5 +1,5 @@
 package Biber::Input::file::bibtex;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 use sigtrap qw(handler TBSIG SEGV);
