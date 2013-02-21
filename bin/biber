@@ -67,7 +67,10 @@ GetOptions(
            'ssl-nointernalca',
            'ssl-noverify-host',
            'tool',
+           'tool_align=s',
            'tool_datatype=s',
+           'tool_fieldcase=s',
+           'tool_indent=s',
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
@@ -114,7 +117,7 @@ if ($opts->{fastsort}) {
   delete $opts->{collate};
 }
 
-# Resolve some option shortcuts and legacyaliases
+# Resolve some option shortcuts and legacy aliases
 if (my $o = $opts->{bibencoding}) {
   $opts->{input_encoding} = $o;
   delete $opts->{bibencoding};
@@ -154,6 +157,16 @@ if (my $of = $opts->{output_format}) {
     say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot'";
     exit EXIT_ERROR;
   }
+}
+
+# Check the tool_* options
+if (exists($opts->{tool_indent}) and $opts->{tool_indent} !~ /^\d+$/) {
+  say STDERR "Biber: Invalid non-numeric argument for 'tool_indent' option!";
+  exit EXIT_ERROR;
+}
+if (exists($opts->{tool_fieldcase}) and $opts->{tool_fieldcase} !~ /^(?:upper|lower|title)$/i) {
+  say STDERR "Biber: Invalid argument for 'tool_fieldcase' option - must be one of 'upper', 'lower' or 'title'!";
+  exit EXIT_ERROR;
 }
 
 # Check the dot_include option
@@ -537,9 +550,21 @@ Run in tool mode. In this mode, biber takes a config file and a data source, app
 mapping steps in the config file to the data source and writes a new datasource. Essentially,
 this allows you to change your data sources using biber's mapping semantics.
 
+=item B<--tool_align=true|false>
+
+Align field values in neat columns in tool mode output. Default is true.
+
 =item B<--tool_datatype=[datatype]>
 
-Datatype of the data file to be processes in tool mode. Defaults to C<bibtex>.
+Datatype of the data file to be processed in tool mode. Defaults to C<bibtex>.
+
+=item B<--tool_fieldcase=upper|lower|title>
+
+Case for field names in tool mode output. Defaults to 'upper'.
+
+=item B<--tool_indent=[num]>
+
+Indentation for body of entries in tool mode output. Defaults to 2.
 
 =item B<--trace|T>
 

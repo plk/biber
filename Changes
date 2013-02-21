@@ -3,6 +3,7 @@ Revision history for Biber
 1.6    ()
        * Bugfixes
        * Now uses perl 5.16. Non-binary (unpacked) use requires perl 5.16+
+       * Improved tool mode with some formatting options
 1.5    (2013-01-10)
        * Added new source mapping option "map_entry_null"
        * Renamed some options (old ones remain as aliases):

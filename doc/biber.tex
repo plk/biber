@@ -28,7 +28,7 @@
 \MakeAutoQuote{«}{»}
 
 \gdef\biberversion{1.6}    % BIBER VERSION
-\gdef\biblatexversion{2.5}   % BIBLATEX VERSION
+\gdef\biblatexversion{2.6}   % BIBLATEX VERSION
 
 % Set up tikz things
 
@@ -566,7 +566,10 @@ an example config file which displays the \biber\ defaults:
   <sortlocale>en_US.utf8</sortlocale>
   <sortupper>true</sortupper>
   <tool>false</tool>
+  <tool_align>true</tool_align>
   <tool_datatype>bibtex</tool_datatype>
+  <tool_fieldcase>upper</tool_fieldcase>
+  <tool_indent>2</tool_indent>
   <trace>0</trace>
   <validate_config>0</validate_config>
   <validate_control>0</validate_control>
@@ -1763,6 +1766,47 @@ UTF-8 chars changed to \latex macros. If you utilise the \biber\
 config file, you can set up a complex set of mappings to transform
 your datasource however you like in a semantic manner much more robust
 than just textual search/replace.
+
+Tool mode also allows some reformatting of the \file{.bib} file. The
+option \opt{--tool\_fieldcase} can be used to force the entrytype and
+fieldnames to upper, lower or title case. The option
+\opt{--tool\_indent} can be used to customise the indentation of
+fields. The option \opt{tool\_align} can be used to align all field
+values neatly. See the \biber\ \opt{--help} output for documentation
+and defaults. For example, the command:
+
+\begin{verbatim}
+biber --tool --tool_fieldcase=title --tool_indent=4 \
+      --tool_align=true file.bib
+\end{verbatim}
+%
+results in \file{.bib} entries which look like this:
+
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@Entrytype{key,
+    Author    = {...},
+    Title     = {...},
+    Publisher = {...},
+    Year      = {...},
+}
+\end{lstlisting}
+%
+another example:
+\begin{verbatim}
+biber --tool --tool_fieldcase=upper --tool_indent=2 \
+      --tool_align=false file.bib
+\end{verbatim}
+%
+results in entries like this:
+
+\begin{lstlisting}[style=bibtex]{}
+@ENTRYTYPE{key,
+  AUTHOR = {...},
+  TITLE = {...},
+  PUBLISHER = {...},
+  YEAR = {...},
+}
+\end{lstlisting}
 \bigskip
 \section{Binaries}\label{binaries}
 
@@ -2025,7 +2069,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 1.5
+INFO - This is Biber 1.6
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
