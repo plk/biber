@@ -1807,6 +1807,68 @@ results in entries like this:
   YEAR = {...},
 }
 \end{lstlisting}
+%
+Here is an example using the \biber config file to specify all options.
+This example uses tool mode to reformat the \file{.bib} and also to do some
+transformations using the source map functionality. Suppose
+\file{test.bib} contains the following:
+
+\begin{lstlisting}[style=bibtex]{}
+@book{book1,
+  author = {Doe,J.P.},
+  title = {Ökologische Enterprises},
+  year = {2013}
+}
+\end{lstlisting}
+%
+Further suppose that the \file{biber-test.conf} contains the following:
+
+\begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <tool>true</tool>
+  <tool_fieldcase>title</tool_fieldcase>
+  <output_encoding>ascii</output_encoding>
+  <output_safechars>1</output_safechars>
+  <sourcemap>
+    <maps datatype="bibtex" map_overwrite="1">
+      <map map_overwrite="1">
+        <map_step map_field_source="AUTHOR" map_match="Doe," map_final="1"/>
+        <map_step map_field_source="AUTHOR"
+              map_match=";Doe,\textbackslash s*J(?:\textbackslash .|ohn)(?:[-]*)(?:P\textbackslash .|Paul)*;"
+              map_replace="Doe, John Paul"/>
+      </map>
+    </maps>
+  </sourcemap>
+</config>
+\end{lstlisting}
+%
+Now you can run \biber like this:
+
+\begin{verbatim}
+biber --configfile=biber-tool.conf test.bib
+\end{verbatim}
+%
+The result will be in \file{test\_bibertool.bib} and will look like this:
+
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@Book{book1,
+  Author = {Doe, John Paul},
+  Title  = {\"{O}kologische Enterprises},
+  Year   = {2013},
+}
+\end{lstlisting}
+%
+Note how this is a very powerful way of performing many different
+operations on a \file{.bib} file. By using the config file and tool mode, we have:
+
+\begin{itemize}
+\item Consistently indented and aligned the entry, normalising fields and
+  entrytype to title case
+\item Normalised the \bibfield{AUTHOR} field name using regular expressions
+\item Converted UTF-8 characters to \latex macros, and made the output
+  pure ASCII
+\end{itemize}
 \bigskip
 \section{Binaries}\label{binaries}
 
