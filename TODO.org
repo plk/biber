@@ -1,3 +1,7 @@
+* Make inheritance possible in config file so that it can be used in tool mode
+** This needs a default in biber matching biblatex default
+** Needs documenting properly for biber
+** Inheritance needs to run in tool mode if flag (tool_inherit) is set
 
 
 
