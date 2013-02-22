@@ -18,7 +18,7 @@ use IO::File;
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Biber::Config;
 use Biber::Constants;
-use List::AllUtils qw( first uniq );
+use List::AllUtils qw( first uniq max );
 use Digest::MD5 qw( md5_hex );
 use Biber::DataModel;
 use Biber::Internals;
@@ -738,6 +738,8 @@ sub process_setup {
 =cut
 
 sub resolve_alias_refs {
+  # In tool mode, only do this if resolving option is requested
+  return if (Biber::Config->getoption('tool') and not Biber::Config->getoption('tool_resolve'));
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -776,6 +778,7 @@ sub resolve_alias_refs {
 =cut
 
 sub process_citekey_aliases {
+  return if Biber::Config->getoption('tool'); # not needed in tool mode
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -824,6 +827,7 @@ sub nullable_check {
 =cut
 
 sub instantiate_dynamic {
+  return if Biber::Config->getoption('tool'); # not needed in tool mode
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -912,6 +916,8 @@ sub instantiate_dynamic {
 =cut
 
 sub resolve_xdata {
+  # In tool mode, only do this if resolving option is requested
+  return if (Biber::Config->getoption('tool') and not Biber::Config->getoption('tool_resolve'));
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -937,6 +943,7 @@ sub resolve_xdata {
 =cut
 
 sub cite_setmembers {
+  return if Biber::Config->getoption('tool'); # not needed in tool mode
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -991,6 +998,8 @@ sub cite_setmembers {
 =cut
 
 sub process_interentry {
+  # In tool mode, only do this if resolving option is requested
+  return if (Biber::Config->getoption('tool') and not Biber::Config->getoption('tool_resolve'));
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -2951,6 +2960,59 @@ sub sort_list {
   return;
 }
 
+=head2 tool_output
+
+  Generate tool mode information
+
+=cut
+
+sub tool_output {
+  return unless Biber::Config->getoption('tool'); # only tool mode
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+
+  foreach my $citekey ( $section->get_citekeys ) {
+    my $be = $section->bibentry($citekey);
+    my $bee = $be->get_field('entrytype');
+
+    # Make the right casing function
+    my $casing;
+    given (Biber::Config->getoption('tool_fieldcase')) {
+      when ('upper') {
+        $casing = sub {uc(shift)};
+      }
+      when ('lower') {
+        $casing = sub {lc(shift)};
+      }
+      when ('title') {
+        $casing = sub {ucfirst(shift)};
+      }
+    }
+
+    my $toolout = '@';
+    $toolout .= $casing->($bee);
+    $toolout .=  "\{$citekey,\n";
+
+    my $max_field_len;
+    if (Biber::Config->getoption('tool_align')) {
+      $max_field_len = max map {length} $be->datafields;
+    }
+
+    foreach my $f ($be->datafields) {
+      # Save post-mapping data for tool mode
+      my $value = decode_utf8($be->get_datafield($f));
+      $toolout .= ' ' x Biber::Config->getoption('tool_indent');
+      $toolout .= $casing->($f);
+      $toolout .= ' ' x ($max_field_len - length($f)) if Biber::Config->getoption('tool_align');
+      $toolout .= ' = ';
+      $toolout .= "\{$value\},\n";
+    }
+    $toolout .= "}\n\n";
+    $be->set_field('cookeddata', $toolout);
+  }
+}
+
 =head2 prepare
 
     Do the main work.
@@ -2979,22 +3041,23 @@ sub prepare {
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
+    $self->process_citekey_aliases;      # Remove citekey aliases from citekeys (NOT TOOL MODE)
+    $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related) (NOT TOOL MODE)
+    $self->resolve_alias_refs;           # Resolve xref/crossref/xdata aliases to real keys
+    $self->resolve_xdata;                # Resolve xdata entries
+    $self->cite_setmembers;              # Cite set members (NOT TOOL MODE)
+    $self->process_interentry;           # Process crossrefs/sets etc.
 
     # Just do this and return if in tool mode
     # There is only one (pseudo) section in tool mode so it's ok
     # to return from this section loop
     if (Biber::Config->getoption('tool')) {
+      $self->tool_output;                  # Create tool mode output
       $out->create_output_section;         # Generate and push the section output into the
                                            # output object ready for writing
       return;
     }
 
-    $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
-    $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
-    $self->resolve_alias_refs;           # Resolve xref/crossref/xdata aliases to real keys
-    $self->resolve_xdata;                # Resolve xdata entries
-    $self->cite_setmembers;              # Cite set members
-    $self->process_interentry;           # Process crossrefs/sets etc.
     $self->nullable_check;               # Check entries for nullable fields
     $self->validate_datamodel;           # Check against data model
     $self->process_entries_pre;          # Main entry processing loop, part 1

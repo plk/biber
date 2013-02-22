@@ -483,49 +483,6 @@ sub create_entry {
 
 
     my $entrytype = decode_utf8($entry->type);
-    # Tool mode
-    if (Biber::Config->getoption('tool')) {
-
-      # Make the right casing function
-      my $casing;
-      given (Biber::Config->getoption('tool_fieldcase')) {
-        when ('upper') {
-          $casing = sub {uc(shift)};
-        }
-        when ('lower') {
-          $casing = sub {lc(shift)};
-        }
-        when ('title') {
-          $casing = sub {ucfirst(shift)};
-        }
-      }
-
-      $bibentry->set_field('entrytype', $entrytype);
-      $bibentry->set_field('datatype', 'bibtex');
-      $bibentries->add_entry($key, $bibentry);
-      my $toolout = '@';
-      $toolout .= $casing->($entrytype);
-      $toolout .=  "\{$key,\n";
-
-      my $max_field_len;
-      if (Biber::Config->getoption('tool_align')) {
-        $max_field_len = max map {length} $entry->fieldlist;
-      }
-
-      foreach my $f ($entry->fieldlist) {
-        # Save post-mapping data for tool mode
-        my $value = decode_utf8($entry->get($f));
-        $toolout .= ' ' x Biber::Config->getoption('tool_indent');
-        $toolout .= $casing->($f);
-        $toolout .= ' ' x ($max_field_len - length($f)) if Biber::Config->getoption('tool_align');
-        $toolout .= ' = ';
-        $toolout .= "\{$value\},\n";
-      }
-      $toolout .= "}\n\n";
-      $bibentry->set_field('cookeddata', $toolout);
-      # Stop here if in tool mode - we don't need any more processing of the entry
-      return 1;
-    }
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
