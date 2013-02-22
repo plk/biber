@@ -475,7 +475,7 @@ sub postprocess_biber_opts {
   # They are not booleans on the command-line/config file so that they
   # mirror biblatex option syntax for users, for example
 
-  foreach my $opt ('sortfirstinits', 'sortcase', 'sortupper', 'tool_align') {
+  foreach my $opt ('sortfirstinits', 'sortcase', 'sortupper', 'tool_align', 'tool_resolve') {
     if (exists($CONFIG->{options}{biber}{$opt})) {
       if ($CONFIG->{options}{biber}{$opt} eq 'true') {
         $CONFIG->{options}{biber}{$opt} = 1;

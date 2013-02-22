@@ -1,7 +1,9 @@
 * Make inheritance possible in config file so that it can be used in tool mode
+** config.rnc/rng need enhancing with tool stuff (anything else?)
+** Order of fields for tool mode - optional re-order?
 ** This needs a default in biber matching biblatex default
 ** Needs documenting properly for biber
-** Inheritance needs to run in tool mode if flag (tool_inherit) is set
+
 
 
 

@@ -53,6 +53,9 @@ sub clone {
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = dclone($v);
   }
+  while (my ($k, $v) = each(%{$self->{rawfields}})) {
+    $new->{rawfields}{$k} = dclone($v);
+  }
   while (my ($k, $v) = each(%{$self->{origfields}})) {
     $new->{origfields}{$k} = dclone($v);
   }
@@ -365,6 +368,32 @@ sub set_datafield_forms {
 }
 
 
+=head2 set_rawfield
+
+    Save a copy of the raw field from the datasource
+
+=cut
+
+sub set_rawfield {
+  my $self = shift;
+  my ($key, $val) = @_;
+  $self->{rawfields}{$key} = $val;
+  return;
+}
+
+=head2 get_rawfield
+
+    Get a raw field
+
+=cut
+
+sub get_rawfield {
+  my $self = shift;
+  my $key = shift;
+  return Dive($self, 'rawfields', $key);
+}
+
+
 =head2 get_datafield
 
     Get a field that was in the original data file
@@ -446,6 +475,18 @@ sub datafields {
   my $self = shift;
   use locale;
   return sort keys %{$self->{datafields}};
+}
+
+=head2 rawfields
+
+    Returns a sorted array of the raw fields and contents
+
+=cut
+
+sub rawfields {
+  my $self = shift;
+  use locale;
+  return sort keys %{$self->{rawfields}};
 }
 
 =head2 count_datafields

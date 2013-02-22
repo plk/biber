@@ -481,12 +481,17 @@ sub create_entry {
       }
     }
 
-
     my $entrytype = decode_utf8($entry->type);
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
     foreach my $f ($entry->fieldlist) {
+
+      # In tool mode, just keep the raw data fields
+      if (Biber::Config->getoption('tool')) {
+        $bibentry->set_rawfield($f, decode_utf8($entry->get($f)));
+        next;
+      }
 
       # We have to process local options as early as possible in order
       # to make them available for things that need them like parsename()

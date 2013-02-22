@@ -71,6 +71,7 @@ GetOptions(
            'tool_datatype=s',
            'tool_fieldcase=s',
            'tool_indent=s',
+           'tool_resolve=s',
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
@@ -269,7 +270,7 @@ else { # .bbl output
 }
 
 # Do all the real work
-$biber->prepare;
+Biber::Config->getoption('tool') ? $biber->prepare_tool : $biber->prepare;
 
 if (Biber::Config->getoption('trace')) {
   $logger->trace("\n###########################################################\n",
@@ -565,6 +566,10 @@ Case for field names in tool mode output. Defaults to 'upper'.
 =item B<--tool_indent=[num]>
 
 Indentation for body of entries in tool mode output. Defaults to 2.
+
+=item B<--tool_resolve=true|false>
+
+Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
 
 =item B<--trace|T>
 

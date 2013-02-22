@@ -40,7 +40,7 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber program
 $biber->tool_mode_setup;
-$biber->prepare;
+$biber->prepare_tool;
 my $out = $biber->get_output_obj;
 
 my $t1 = q|@UNPUBLISHED{i3Š,
