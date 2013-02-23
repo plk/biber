@@ -340,8 +340,6 @@ sub field_is_skipout {
   return $self->{fieldsbyname}{$field}{skipout} // 0;
 }
 
-
-
 =head2 check_mandatory_constraints
 
     Checks constraints of type "mandatory" on entry and

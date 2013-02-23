@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Encode;
 use Biber;
 use Biber::Utils;
@@ -68,6 +68,17 @@ my $t2 = q|@BOOK{xd1,
 
 |;
 
+my $t3 = q|@BOOK{b1,
+  MAINSUBTITLE   = {Mainsubtitle},
+  MAINTITLE      = {Maintitle},
+  MAINTITLEADDON = {Maintitleaddon},
+  TITLE          = {Booktitle},
+}
+
+|;
+
+
 is($out->get_output_entry('i3Š',), $t1, 'tool mode 1');
 ok(is_undef($out->get_output_entry('loh')), 'tool mode 2');
 is($out->get_output_entry('xd1',), $t2, 'tool mode 3');
+is($out->get_output_entry('b1',), $t3, 'tool mode 4');

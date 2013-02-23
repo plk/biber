@@ -1,8 +1,5 @@
 * Make inheritance possible in config file so that it can be used in tool mode
-** This needs a default in biber matching biblatex default
 ** Needs documenting properly for biber
-** doc examples should work without --output_safechars
-** tool mode must be specified on command line as it dictates which default config file to load
-
+** Test with PAR to see if biber-tool.conf is found
 
 

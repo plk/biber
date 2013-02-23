@@ -84,9 +84,9 @@ sub set_output_entry {
   }
 
   foreach my $f ($be->rawfields) {
-    # If IDS and XDATA have been resolved, don't output them
+    # If IDS, CROSSREF and XDATA have been resolved, don't output them
     if (Biber::Config->getoption('tool_resolve')) {
-      next if lc($f) ~~ ['ids', 'xdata'];
+      next if lc($f) ~~ ['ids', 'xdata', 'crossref'];
     }
     # Save post-mapping data for tool mode
     my $value = decode_utf8($be->get_rawfield($f));
@@ -142,7 +142,7 @@ sub output {
 
   foreach my $key (@{$self->{output_data}{ENTRIES_ORDER}}) {
     # There is only a (pseudo) section "0" in tool mode
-    print $target $data->{ENTRIES}{0}{index}{$key};
+    print $target ${$data->{ENTRIES}{0}{index}{$key}};
   }
 
   print $target $data->{TAIL};

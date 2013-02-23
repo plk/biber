@@ -449,7 +449,8 @@ sub field_exists {
   my $self = shift;
   my $key = shift;
   return (Dive($self, 'datafields', $key) ||
-          Dive($self, 'derivedfields', $key)) ? 1 : 0;
+          Dive($self, 'derivedfields', $key) ||
+          Dive($self, 'rawfields', $key)) ? 1 : 0;
 }
 
 =head2 field_form_exists
@@ -693,7 +694,9 @@ sub inherit_from {
 
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
-  my $inheritance = Biber::Config->getblxoption('inheritance');
+  # Normall this is a biblatex option but in tool mode, it comes from the Biber conf file and so is
+  # a Biber option
+  my $inheritance = Biber::Config->getblxoption('inheritance') || Biber::Config->getoption('inheritance');
   my %processed;
   # get defaults
   my $defaults = $inheritance->{defaults};
@@ -713,8 +716,8 @@ sub inherit_from {
   foreach my $inherit (@{$inheritance->{inherit}}) {
     # Match for this combination of entry and crossref parent?
     foreach my $type_pair (@{$inherit->{type_pair}}) {
-    if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
-        ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
+      if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
+          ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
         foreach my $field (@{$inherit->{field}}) {
           next unless $parent->field_exists($field->{source});
           $processed{$field->{source}} = 1;
@@ -732,8 +735,13 @@ sub inherit_from {
                            "' as '" .
                            $field->{target} .
                            "' from entry '$source_key'");
-            $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
-
+            # For tool mode we need to copy the raw fields
+            if (Biber::Config->getoption('tool')) {
+              $self->set_rawfield($field->{target}, $parent->get_rawfield($field->{source}));
+            }
+            else {
+              $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
+            }
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
               Biber::Config->set_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
@@ -746,12 +754,25 @@ sub inherit_from {
 
   # Now process the rest of the (original data only) fields, if necessary
   if ($inherit_all eq 'true') {
-    foreach my $field ($parent->datafields) {
+    my @fields;
+    if (Biber::Config->getoption('tool')) {
+      @fields = $parent->rawfields;
+    }
+    else {
+      @fields = $parent->datafields;
+    }
+    foreach my $field (@fields) {
       next if $processed{$field}; # Skip if we have already dealt with this field above
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
             $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
-            $self->set_datafield_forms($field, $parent->get_field_forms($field));
+            # For tool mode we need to copy the raw fields
+            if (Biber::Config->getoption('tool')) {
+              $self->set_rawfield($field, $parent->get_rawfield($field));
+            }
+            else {
+              $self->set_datafield_forms($field, $parent->get_field_forms($field));
+            }
 
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
