@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Encode;
 use Biber;
 use Biber::Utils;
@@ -32,6 +32,7 @@ $biber->set_output_obj(Biber::Output::bibtex->new());
 
 # Biber options
 Biber::Config->setoption('tool', 1);
+Biber::Config->setoption('tool_resolve', 1);
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('fastsort', 1);
 
@@ -57,6 +58,16 @@ my $t1 = q|@UNPUBLISHED{i3Š,
 
 |;
 
+my $t2 = q|@BOOK{xd1,
+  AUTHOR    = {Edward Ellington},
+  DATE      = {2007},
+  LOCATION  = {New York and London},
+  NOTE      = {A Note},
+  PUBLISHER = {Macmillan},
+}
+
+|;
+
 is($out->get_output_entry('i3Š',), $t1, 'tool mode 1');
 ok(is_undef($out->get_output_entry('loh')), 'tool mode 2');
-
+is($out->get_output_entry('xd1',), $t2, 'tool mode 3');

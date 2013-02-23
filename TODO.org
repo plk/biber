@@ -1,10 +1,8 @@
 * Make inheritance possible in config file so that it can be used in tool mode
-** bibtex.pm and ouput into there
-** config.rnc/rng need enhancing with tool stuff (anything else?)
-** Order of fields for tool mode - optional re-order?
 ** This needs a default in biber matching biblatex default
 ** Needs documenting properly for biber
-
+** doc examples should work without --output_safechars
+** tool mode must be specified on command line as it dictates which default config file to load
 
 
 

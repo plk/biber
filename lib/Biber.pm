@@ -729,6 +729,29 @@ sub process_setup {
   }
 }
 
+=head2 process_setup_tool
+
+   Place to put misc pre-processing things needed later for tool mode
+
+=cut
+
+sub process_setup_tool {
+  my $self = shift;
+
+  # Break data model information up into more processing-friendly formats
+  # for use in verification checks later
+  # This has to be here as opposed to in parse_control() so that it can pick
+  # up data model defaults in Constants.pm in case there is nothing in the .bcf
+  Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getoption('datamodel')));
+
+  # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
+  if (Biber::Config->getoption('output_encoding') =~ /(?:x-)?ascii/xmsi and
+      Biber::Config->getoption('input_encoding') !~ /(?:x-)?ascii/xmsi) {
+    Biber::Config->setoption('output_safechars', 1);
+  }
+}
+
+
 =head2 resolve_alias_refs
 
   Resolve aliases in xref/crossref/xdata which take keys as values to their real keys
@@ -3008,6 +3031,9 @@ sub prepare {
 sub prepare_tool {
   my $self = shift;
   my $out = $self->get_output_obj;          # Biber::Output object
+
+  # Place to put global pre-processing things
+  $self->process_setup_tool;
 
   # tool mode only has a section 0
   my $secnum = 0;

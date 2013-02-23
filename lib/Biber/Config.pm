@@ -156,7 +156,12 @@ sub _initopts {
     # if a config file was given as cmd-line arg, it overrides all other
     # config file locations
     unless ( defined($opts->{configfile}) and -f $opts->{configfile} ) {
-      $opts->{configfile} = config_file();
+      # Default config file name is different for tool mode
+      if (Biber::Config->getoption('tool')) {
+        (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
+        $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+        $opts->{configfile} = File::Spec->catpath($vol, "$dir", 'biber-tool.conf');
+      }
     }
 
     # Can't use logcroak here because logging isn't initialised yet
@@ -172,6 +177,19 @@ sub _initopts {
                                                            qr/\Amap_step\z/,
                                                            qr/\Aper_type\z/,
                                                            qr/\Aper_datasource\z/,
+                                                           qr/\Atype_pair\z/,
+                                                           qr/\Ainherit\z/,
+                                                           qr/\Afieldor\z/,
+                                                           qr/\Afieldxor\z/,
+                                                           qr/\Afield\z/,
+                                                           qr/\Aalias\z/,
+                                                           qr/\Aalsoset\z/,
+                                                           qr/\Aconstraints\z/,
+                                                           qr/\Aconstraint\z/,
+                                                           qr/\Aentrytype\z/,
+                                                           qr/\Adatetype\z/,
+                                                           qr/\Acondition\z/,
+                                                           qr/\A(?:or)?filter\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []) or
@@ -231,6 +249,12 @@ sub _initopts {
         }
       }
       Biber::Config->setconfigfileoption($k, $sms);
+    }
+    elsif (lc($k) eq 'datamodel') {
+      Biber::Config->setconfigfileoption($k, $v);
+    }
+    elsif (lc($k) eq 'inheritance') {
+      Biber::Config->setconfigfileoption($k, $v);
     }
   }
 
@@ -397,6 +421,7 @@ If no file is found, it returns C<undef>.
 
 sub config_file {
   my $biberconf;
+
   if ( -f $BIBER_CONF_NAME ) {
     $biberconf = abs_path($BIBER_CONF_NAME);
   }

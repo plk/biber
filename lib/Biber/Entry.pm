@@ -290,7 +290,8 @@ sub get_field {
     $lang = 'default';
   }
   return Dive($self, 'datafields', $key, $form, $lang) //
-         Dive($self, 'derivedfields', $key, $form, $lang);
+         Dive($self, 'derivedfields', $key, $form, $lang) //
+         Dive($self, 'rawfields', $key);
 }
 
 
@@ -420,6 +421,7 @@ sub del_field {
   my $key = shift;
   delete $self->{datafields}{$key};
   delete $self->{derivedfields}{$key};
+  delete $self->{rawfields}{$key};
   return;
 }
 
@@ -629,15 +631,23 @@ sub resolve_xdata {
         if (my $recurse_xdata = $xdatum_entry->get_field('xdata')) { # recurse
           $xdatum_entry->resolve_xdata($recurse_xdata);
         }
-        foreach my $field ($xdatum_entry->datafields()) { # set fields
-          $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
-
-          # Record graphing information if required
-          if (Biber::Config->getoption('output_format') eq 'dot') {
-            Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
+        # For tool mode we need to copy the raw fields
+        if (Biber::Config->getoption('tool')) {
+          foreach my $field ($xdatum_entry->rawfields()) { # set raw fields
+            $self->set_rawfield($field, $xdatum_entry->get_rawfield($field));
+            $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
           }
+        }
+        else {
+          foreach my $field ($xdatum_entry->datafields()) { # set fields
+            $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
 
-          $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+            # Record graphing information if required
+            if (Biber::Config->getoption('output_format') eq 'dot') {
+              Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
+            }
+            $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+          }
         }
       }
       else {

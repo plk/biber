@@ -72,6 +72,7 @@ my $builder = $class->new(
                    'data/schemata/config.rng' => 'lib/Biber/config.rng',
                    'data/schemata/bcf.rnc' => 'lib/Biber/bcf.rnc',
                    'data/schemata/bcf.rng' => 'lib/Biber/bcf.rng',
+                   'data/biber-tool.conf' => 'lib/Biber/biber-tool.conf',
                    'lib/Biber/LaTeX/recode_data.xml' => 'lib/Biber/LaTeX/recode_data.xml',
                    'data/schemata/biblatexml.rnc' => 'lib/Biber/biblatexml.rnc',
                    'data/schemata/biblatexml.rng' => 'lib/Biber/biblatexml.rng',
