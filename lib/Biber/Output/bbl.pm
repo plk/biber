@@ -481,7 +481,7 @@ sub output {
     # biblatex requires the last list in the .bbl to be the global sort list
     # due to its sequential reading of the .bbl as the final list overrides the
     # previously read ones and the global list determines the order of labelnumber
-    # and sortcites etc. which not using defernumbers
+    # and sortcites etc. when not using defernumbers
     push @lists, $Biber::MASTER->sortlists->get_list($secnum, 'entry', Biber::Config->getblxoption('sortscheme'));
 
     foreach my $list (@lists) {

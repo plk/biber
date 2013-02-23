@@ -5,7 +5,7 @@ use Test::More tests => 2;
 use Encode;
 use Biber;
 use Biber::Utils;
-use Biber::Output::tool;
+use Biber::Output::bibtex;
 use Log::Log4perl;
 chdir("t/tdata");
 no warnings 'utf8';
@@ -25,7 +25,7 @@ my $l4pconf = qq|
 |;
 Log::Log4perl->init(\$l4pconf);
 
-$biber->set_output_obj(Biber::Output::tool->new());
+$biber->set_output_obj(Biber::Output::bibtex->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
@@ -46,17 +46,17 @@ my $out = $biber->get_output_obj;
 my $t1 = q|@UNPUBLISHED{i3Š,
   ABSTRACT    = {Some abstract %50 of which is useless},
   AUTHOR      = {AAA and BBB and CCC and DDD and EEE},
-  TITLE       = {Š title},
   DATE        = {2003},
-  USERB       = {test},
+  INSTITUTION = {REPlaCEDte and early},
   LISTA       = {list test},
   LISTB       = {late and early},
-  INSTITUTION = {REPlaCEDte and early},
   NOTE        = {i3Š},
+  TITLE       = {Š title},
+  USERB       = {test},
 }
 
 |;
 
-is($out->get_output_entry('i3Š'), $t1, 'tool mode 1');
+is($out->get_output_entry('i3Š',), $t1, 'tool mode 1');
 ok(is_undef($out->get_output_entry('loh')), 'tool mode 2');
 

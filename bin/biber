@@ -261,8 +261,8 @@ if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
   $biber->set_output_obj(Biber::Output::dot->new());
 }
 elsif (Biber::Config->getoption('tool')) {
-  require Biber::Output::tool;
-  $biber->set_output_obj(Biber::Output::tool->new());
+  require Biber::Output::bibtex;
+  $biber->set_output_obj(Biber::Output::bibtex->new());
 }
 else { # .bbl output
   require Biber::Output::bbl;

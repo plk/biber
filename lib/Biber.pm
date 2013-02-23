@@ -2951,59 +2951,6 @@ sub sort_list {
   return;
 }
 
-=head2 tool_output
-
-  Generate tool mode information
-
-=cut
-
-sub tool_output {
-  return unless Biber::Config->getoption('tool'); # only tool mode
-  my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-
-  foreach my $citekey ($section->get_citekeys) {
-    my $be = $section->bibentry($citekey);
-    my $bee = $be->get_field('entrytype');
-
-    # Make the right casing function
-    my $casing;
-    given (Biber::Config->getoption('tool_fieldcase')) {
-      when ('upper') {
-        $casing = sub {uc(shift)};
-      }
-      when ('lower') {
-        $casing = sub {lc(shift)};
-      }
-      when ('title') {
-        $casing = sub {ucfirst(shift)};
-      }
-    }
-
-    my $toolout = '@';
-    $toolout .= $casing->($bee);
-    $toolout .=  "\{$citekey,\n";
-
-    my $max_field_len;
-    if (Biber::Config->getoption('tool_align')) {
-      $max_field_len = max map {length} $be->rawfields;
-    }
-
-    foreach my $f ($be->rawfields) {
-      # Save post-mapping data for tool mode
-      my $value = decode_utf8($be->get_rawfield($f));
-      $toolout .= ' ' x Biber::Config->getoption('tool_indent');
-      $toolout .= $casing->($f);
-      $toolout .= ' ' x ($max_field_len - length($f)) if Biber::Config->getoption('tool_align');
-      $toolout .= ' = ';
-      $toolout .= "\{$value\},\n";
-    }
-    $toolout .= "}\n\n";
-    $be->set_field('cookeddata', $toolout);
-  }
-}
-
 =head2 prepare
 
     Do the main work.
@@ -3077,8 +3024,8 @@ sub prepare_tool {
     $self->process_interentry; # Process crossrefs/sets etc.
   }
 
-  $self->tool_output;            # Create tool mode output
   $out->create_output_section; # Generate and push the section output into the
+                               # into the output object ready for writing
   return;
 }
 
