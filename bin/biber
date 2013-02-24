@@ -67,11 +67,11 @@ GetOptions(
            'ssl-nointernalca',
            'ssl-noverify-host',
            'tool',
-           'tool_align=s',
+           'tool_align',
            'tool_datatype=s',
            'tool_fieldcase=s',
            'tool_indent=s',
-           'tool_resolve=s',
+           'tool_resolve',
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
@@ -553,7 +553,7 @@ Run in tool mode. In this mode, biber takes a config file and a data source, app
 mapping steps in the config file to the data source and writes a new datasource. Essentially,
 this allows you to change your data sources using biber's mapping semantics.
 
-=item B<--tool_align=true|false>
+=item B<--tool_align>
 
 Align field values in neat columns in tool mode output. Default is true.
 
@@ -569,7 +569,7 @@ Case for field names in tool mode output. Defaults to 'upper'.
 
 Indentation for body of entries in tool mode output. Defaults to 2.
 
-=item B<--tool_resolve=true|false>
+=item B<--tool_resolve>
 
 Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
 

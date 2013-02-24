@@ -1,6 +1,5 @@
 * Make inheritance possible in config file so that it can be used in tool mode
 ** Tool mode needs to be command-line (because it determines the default .conf to use)
 ** Needs documenting properly for biber
-** Test with PAR to see if biber-tool.conf is found
 
 

@@ -156,11 +156,16 @@ sub _initopts {
     # if a config file was given as cmd-line arg, it overrides all other
     # config file locations
     unless ( defined($opts->{configfile}) and -f $opts->{configfile} ) {
-      # Default config file name is different for tool mode
-      if (Biber::Config->getoption('tool')) {
-        (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
-        $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
-        $opts->{configfile} = File::Spec->catpath($vol, "$dir", 'biber-tool.conf');
+      $opts->{configfile} = config_file();
+
+      unless (defined($opts->{configfile})) {
+        # There is a special default config file for tool mode
+        # Referring to as yet unprocess cmd-line tool option as it isn't processed until below
+        if ($opts->{tool}) {
+          (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
+          $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+          $opts->{configfile} = File::Spec->catpath($vol, "$dir", 'biber-tool.conf');
+        }
       }
     }
 
@@ -235,7 +240,9 @@ sub _initopts {
       }
       Biber::Config->setconfigfileoption($k, $collopts);
     }
-    elsif (lc($k) eq 'sourcemap') {
+    # referring to unset tool cmd-line option here as we can allow driver/style defaults in
+    # config file in tool mode (that's the only place they could be as there is no .bcf)
+    elsif (lc($k) eq 'sourcemap' and not $opts->{tool}) {
       my $sms;
       foreach my $sm (@{$v->{maps}}) {
         if (defined($sm->{level}) and $sm->{level} eq 'driver') {
@@ -496,11 +503,11 @@ sub set_unul_changed {
 
 sub postprocess_biber_opts {
   shift; # class method so don't care about class name
-  # Turn sortcase, sortupper, sortfirstinits, tool_align into booleans if they are not already
+  # Turn sortcase, sortupper, sortfirstinits into booleans if they are not already
   # They are not booleans on the command-line/config file so that they
   # mirror biblatex option syntax for users, for example
 
-  foreach my $opt ('sortfirstinits', 'sortcase', 'sortupper', 'tool_align', 'tool_resolve') {
+  foreach my $opt ('sortfirstinits', 'sortcase', 'sortupper') {
     if (exists($CONFIG->{options}{biber}{$opt})) {
       if ($CONFIG->{options}{biber}{$opt} eq 'true') {
         $CONFIG->{options}{biber}{$opt} = 1;
