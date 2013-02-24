@@ -240,9 +240,7 @@ sub _initopts {
       }
       Biber::Config->setconfigfileoption($k, $collopts);
     }
-    # referring to unset tool cmd-line option here as we can allow driver/style defaults in
-    # config file in tool mode (that's the only place they could be as there is no .bcf)
-    elsif (lc($k) eq 'sourcemap' and not $opts->{tool}) {
+    elsif (lc($k) eq 'sourcemap') {
       my $sms;
       foreach my $sm (@{$v->{maps}}) {
         if (defined($sm->{level}) and $sm->{level} eq 'driver') {
@@ -256,9 +254,6 @@ sub _initopts {
         }
       }
       Biber::Config->setconfigfileoption($k, $sms);
-    }
-    elsif (lc($k) eq 'datamodel') {
-      Biber::Config->setconfigfileoption($k, $v);
     }
     elsif (lc($k) eq 'inheritance') {
       Biber::Config->setconfigfileoption($k, $v);

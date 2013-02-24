@@ -9,7 +9,6 @@ start = element config {
 # Can't specify the config file location in the config file ...
 #  element configfile          { text }? & 
   element convert_control     { "0" | "1" }? &
-  datamodel? &
   element graph               { text | "1" }? &
   element decodecharsset      { "base" | "full" }? &
   element debug               { "0" | "1" }? &
@@ -49,7 +48,7 @@ start = element config {
   element sourcemap            {
     element maps {
       attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
-      attribute map_overwrite { "0" | "1" },
+      attribute map_overwrite { "0" | "1" }?,
       map+
     }+
   }? &
@@ -69,102 +68,6 @@ start = element config {
 #  element version              { "0" | "1" }? &
   element wraplines            { "0" | "1" }?
 }
-
-datamodel =
-    # Data model specification
-    element datamodel {
-      # Valid entrytypes
-      element entrytypes {
-        element entrytype {
-          # Some entrytypes should be completely skipped on output (XDATA etc.)
-          attribute skip_output { "true" }?,
-          text
-        }+
-      },
-      # BibLaTeX field types. Biber uses this to determine how to output various types
-      # to the .bbl
-      element fields {
-        element field {
-          # fieldtype is "field" or "list"
-          attribute fieldtype { "field" | "list" },
-          # datatype of field content
-          attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" | "uri" },
-          # Are we allowed to output a null field value to the .bbl for this field?
-          attribute nullok { "true" }?,
-          # Should this field be skipped and not output to the .bbl?
-          attribute skip_output { "true" }?,
-          # limit this field definition to specific entrytypes?
-          # Is parsed as a csv list
-          attribute entrytypes { text }?,
-          text
-        }+
-      },
-      # Allowable fields for entrytypes
-      # Only one specification per entrytype: even though it might be nice to have several 
-      # so that one could share information, this would be hard to manage and confusing as it
-      # not be visible in one place which fields were valid for an entrytype.
-      element entryfields {
-         element entrytype { text }*,
-         element field { text }+
-      }+,
-      # Constraints on field (co-)existence and format
-      element constraints {
-        # Set of entrytypes that this constraint applies to
-        # An entrytype can be specified in multiple constraints
-        #
-        element entrytype { text }*,
-        # A constraint specification
-        element constraint {
-          (
-            # Conditional constraints have an antecedent and consequent
-            # both of which have a quantifier. This allows you to enforce
-            # constraints like:
-            #
-            # if field a,b,c are all present then one of x,y,z must be
-            # if one of field a,b,c are present then none of x,y,z must be
-            # etc.
-            (attribute type { "conditional" },
-              element antecedent {
-                attribute quant { "all" | "one" | "none"},
-                element field { text }+
-              },
-              element consequent {
-                attribute quant { "all" | "one" | "none"},
-                element field { text }+
-              }
-            ) |
-            # Datatype and format constraints
-            (attribute type { "data" },
-              # range* attributes are for limiting integer type range
-              attribute datatype { "integer" | "isbn" | "issn" | "ismn" | "date" | "pattern" }?,
-              attribute rangemin { xsd:int }?,
-              attribute rangemax { xsd:int }?,
-              attribute pattern { text }?,
-              element field { text }+
-            ) |
-            # Mandatoriness constraints which say which fields must appear
-            (attribute type { "mandatory" },
-              (element field { text } |
-                # An XOR set of fields so you can enforce:
-                #
-                # One (but not more) of fields a,b,c must exist
-                element fieldxor {
-                  element field { text }+
-                } |
-                # An OR set of fields so you can enforce:
-                #
-                # One (possibly more) of fields a,b,c must exist
-                element fieldor {
-                  element field { text }+
-                }
-                )+
-              )
-            )
-          }*
-        }+
-      }
-
-
 
 inheritance =
     # Cross-reference inheritance specifications
@@ -222,7 +125,8 @@ map =
         ) |
         (
           attribute map_type_source { xsd:string {minLength="1"} },
-          attribute map_type_target { xsd:string {minLength="1"} }?
+          attribute map_type_target { xsd:string {minLength="1"} }?,
+          attribute map_final { "1" }?
         ) |
         (
           attribute map_field_source { xsd:string {minLength="1"} },
@@ -233,12 +137,15 @@ map =
         ) |
         (
           attribute map_field_set { xsd:string {minLength="1"} },
+          attribute map_append { "1" }?,
           ( attribute map_null { "1" } |
             attribute map_origfield { "1" } |
             attribute map_origfieldval { "1" } |
+            attribute map_origentrytype { "1" } |
             attribute map_field_value { xsd:string {minLength="1"} } )
         )
       ),
       empty
     }+
   }
+

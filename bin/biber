@@ -68,6 +68,7 @@ GetOptions(
            'ssl-noverify-host',
            'tool',
            'tool_align',
+           'tool_config',
            'tool_datatype=s',
            'tool_fieldcase=s',
            'tool_indent=s',
@@ -96,6 +97,7 @@ if (exists $opts->{'version'}) {
   exit EXIT_OK;
 }
 
+# Show location of PAR::Packer cache
 if (exists $opts->{'cache'}) {
   if (my $cache = $ENV{PAR_TEMP}) {
     $cache =~ s|//|/|og; # Sanitise path in case it worries people
@@ -104,6 +106,14 @@ if (exists $opts->{'cache'}) {
   else {
     say "No cache - you are not running the PAR::Packer executable version of biber";
   }
+  exit EXIT_OK;
+}
+
+# Show location of default tool mode config file and exit
+if (exists $opts->{'tool_config'}) {
+  (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
+  $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+  say File::Spec->catpath($vol, "$dir", 'biber-tool.conf');
   exit EXIT_OK;
 }
 
@@ -556,6 +566,11 @@ this allows you to change your data sources using biber's mapping semantics.
 =item B<--tool_align>
 
 Align field values in neat columns in tool mode output. Default is true.
+
+=item B<--tool_config>
+
+Show the location of the default tool mode config file and exit. Useful when you need to
+copy this file and customise it.
 
 =item B<--tool_datatype=[datatype]>
 

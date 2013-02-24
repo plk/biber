@@ -738,12 +738,6 @@ sub process_setup {
 sub process_setup_tool {
   my $self = shift;
 
-  # Break data model information up into more processing-friendly formats
-  # for use in verification checks later
-  # This has to be here as opposed to in parse_control() so that it can pick
-  # up data model defaults in Constants.pm in case there is nothing in the .bcf
-  Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getoption('datamodel')));
-
   # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
   if (Biber::Config->getoption('output_encoding') =~ /(?:x-)?ascii/xmsi and
       Biber::Config->getoption('input_encoding') !~ /(?:x-)?ascii/xmsi) {

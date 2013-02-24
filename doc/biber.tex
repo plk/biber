@@ -441,7 +441,7 @@ biber test.bcf
 biber test
 \end{verbatim}
 
-\subsection{Options and config file}
+\subsection{Options and config file}\label{conffile}
 \biblatex\ options which \biber\ needs to know about are passed
 via the \verb+.bcf+ file. See Table \ref{tab:bltxopts} for the \biblatex\
 options which \biber\ uses and also for the scopes which are supported
@@ -483,7 +483,6 @@ sortalphaothers    & \checkmark & \checkmark &  \\
 sortexclusion      &   & \checkmark &  \\
 sortfirstinits     & \checkmark &   & \\
 sorting            & \checkmark &   &  \\
-structure          & \checkmark &   &  \\
 uniquelist         & \checkmark & \checkmark & \checkmark\\
 uniquename         & \checkmark & \checkmark & \checkmark\\
 useauthor          & \checkmark & \checkmark & \checkmark\\
@@ -566,7 +565,7 @@ an example config file which displays the \biber\ defaults:
   <sortlocale>en_US.utf8</sortlocale>
   <sortupper>true</sortupper>
   <tool>false</tool>
-  <tool_align>true</tool_align>
+  <tool_align>1</tool_align>
   <tool_datatype>bibtex</tool_datatype>
   <tool_fieldcase>upper</tool_fieldcase>
   <tool_indent>2</tool_indent>
@@ -1025,6 +1024,18 @@ datasources, which are commonly used for abstracts:
   </map>
 </maps>
 \end{lstlisting}
+\bigskip
+\subsubsection{The \texttt{inheritance} option}\label{inheritance}
+
+The \opt{inheritance} option defines the inheritance rules for data
+inheritance between entries using, for example, \bibtex's \field{CROSSREF}
+field. The default setup for this is defined by \biblatex and is
+passed in the \file{.bcf} file. Defining inheritance rules in the \biber
+configuration file is rarely something you would want to do with one
+notably exceptional case being when using \biber in tool mode where you
+might want to «materialise» special inheritance rules (see section
+\ref{tool}). 
+
 \bigskip
 \subsubsection{The \texttt{noinit} option}\label{noinit}
 
@@ -1746,7 +1757,7 @@ xref     & Show XREF relationships\\
 \bigskip
 \subsection{Tool Mode}\label{tool}
 \biber\ can run in «tool» mode which is enabled with the \opt{--tool}
-option. In this mode, \biber is called like this: \opt{biber --tool
+command-line only option. In this mode, \biber is called like this: \opt{biber --tool
   <datasource>}. It does not read any \file{.bcf} and does not output
 any \file{.bbl}. Instead, it reads all entries from the file
 «datasource», applies any changes specified in the command-line
@@ -1758,14 +1769,19 @@ programatically change your datasource using the semantics provided by
 turning all UTF-8 characters into \latex\ macros:
 
 \begin{verbatim}
-biber --tool --output_encoding=ascii --output_safechars file.bib
+biber --tool --output_encoding=ascii file.bib
 \end{verbatim}
 
 \noindent This would output a copy of \file{file.bib} called \file{file\_bibertool.bib} with all
-UTF-8 chars changed to \latex macros. If you utilise the \biber\
+UTF-8 chars changed to \latex macros (because when the output is ASCII and
+the input encoding is not (it is by default UTF-8), then the
+\opt{--output\_safechars} option is automatically enabled). If you utilise the \biber\
 config file, you can set up a complex set of mappings to transform
 your datasource however you like in a semantic manner much more robust
-than just textual search/replace.
+than just textual search/replace. You can also use the
+\opt{--tool\_resolve} option which will process any \bibfield{XDATA}
+fields/entries, entry aliases and inheritance rules mentioned in the config
+file (see below).
 
 Tool mode also allows some reformatting of the \file{.bib} file. The
 option \opt{--tool\_fieldcase} can be used to force the entrytype and
@@ -1826,7 +1842,6 @@ Further suppose that the \file{biber-test.conf} contains the following:
 \begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-  <tool>true</tool>
   <tool_fieldcase>title</tool_fieldcase>
   <output_encoding>ascii</output_encoding>
   <output_safechars>1</output_safechars>
@@ -1846,7 +1861,7 @@ Further suppose that the \file{biber-test.conf} contains the following:
 Now you can run \biber like this:
 
 \begin{verbatim}
-biber --configfile=biber-tool.conf test.bib
+biber --tool --configfile=biber-tool.conf test.bib
 \end{verbatim}
 %
 The result will be in \file{test\_bibertool.bib} and will look like this:
@@ -1869,6 +1884,125 @@ operations on a \file{.bib} file. By using the config file and tool mode, we hav
 \item Converted UTF-8 characters to \latex macros, and made the output
   pure ASCII
 \end{itemize}
+
+If you do not specify any configuration file to use in tool mode, \biber
+will by default look for a config file in the usual way (see section
+\ref{conffile}) with the only difference that if no config file is found,
+it will use the default \file{biber-tool.conf} which is located in the
+\biber install tree in the same location as the \file{Config.pm} file. This
+default config file contains the default \biblatex source mappings for
+\bibtex data sources and also the default inheritance rules for
+\bibfield{CROSSREF} processing. This means that when you use the
+\opt{--tool\_resolve} option, inheritance processing is performed on the
+entries and the results of this are «materialised» in the output. For
+example, consider a \file{test.bib} file:
+
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@BOOK{xd1,
+  AUTHOR = {Edward Ellington},
+  DATE   = {2007},
+  XDATA  = {macmillanalias}
+}
+
+@XDATA{macmillan,
+  IDS   = {macmillanalias},
+  XDATA = {macmillan:pubALIAS, macmillan:loc}
+}
+
+@XDATA{macmillan:pub,
+  IDS       = {macmillan:pubALIAS},
+  PUBLISHER = {Macmillan}
+}
+
+@XDATA{macmillan:loc,
+  LOCATION = {New York and London},
+  NOTE     = {A Note} 
+}
+
+@BOOK{b1,
+  TITLE = {Booktitle},
+  CROSSREF = {mvalias}
+}
+
+@MVBOOK{mv1,
+  IDS = {mvalias},
+  TITLE = {Maintitle},
+  SUBTITLE = {Mainsubtitle},
+  TITLEADDON = {Maintitleaddon}
+}
+\end{lstlisting}
+%
+Running \biber as:
+
+\begin{verbatim}
+biber --tool --tool_resolve test.bib
+\end{verbatim}
+%
+The result of this would be a file \file{test\_bibertool.bib} with contents:
+
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@BOOK{xd1,
+  AUTHOR    = {Edward Ellington},
+  DATE      = {2007},
+  LOCATION  = {New York and London},
+  NOTE      = {A Note},
+  PUBLISHER = {Macmillan},
+}
+
+@XDATA{macmillan,
+  LOCATION  = {New York and London},
+  NOTE      = {A Note},
+  PUBLISHER = {Macmillan},
+}
+
+@XDATA{macmillan:pub,
+  PUBLISHER = {Macmillan},
+}
+
+@XDATA{macmillan:loc,
+  LOCATION = {New York and London},
+  NOTE     = {A Note},
+}
+
+@BOOK{b1,
+  MAINSUBTITLE   = {Mainsubtitle},
+  MAINTITLE      = {Maintitle},
+  MAINTITLEADDON = {Maintitleaddon},
+  TITLE          = {Booktitle},
+}
+
+@MVBOOK{mv1,
+  SUBTITLE   = {Mainsubtitle},
+  TITLE      = {Maintitle},
+  TITLEADDON = {Maintitleaddon},
+}
+\end{lstlisting}
+%
+Notice here that:
+\begin{itemize}
+\item \bibfield{XDATA} references have been resolved completely for entry
+  \texttt{xd1}
+\item \bibfield{CROSSREF} inheritance has been resolved according to the
+  default \biblatex inheritance rules for entry \texttt{b1}
+\item Entry key aliases have been resolved as required in order to perform
+  these tasks
+\end{itemize}
+\bigskip
+\subsubsection{Customising Tool Mode Inheritance Resolution}
+The default \file{biber-tool.conf} contains, as mentioned above, the
+default \biblatex \bibfield{CROSSREF} inheritance setup and \bibtex source
+mappings so that tool mode resolution works as expected. Of course it is
+possible to customise these. In \biblatex, this is accomplished by the
+\cmd{DeclareDataInheritance} macros which write appropriate XML into the
+\file{.bcf} file. Since no \file{.bcf} file is used in tool mode, the
+desired configuration must be put into a \biber config file. The source
+mapping XML specification is given in section \ref{map}. The inheritance
+XML specification is given in section \ref{inheritance}. It is recommended
+to copy the default \file{biber-tool.conf} file, modify this and then use
+it as your own \file{biber.conf} file or pass it explicitly using the
+\opt{--configfile|-g} option. You can determine the location of the default
+tool mode config file by using the \opt{--tool\_config} option which will
+show you the location of the config file and exit.
 \bigskip
 \section{Binaries}\label{binaries}
 
