@@ -676,10 +676,6 @@ sub _date {
   my $date = decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
-  # Just in case we need to look at the original field later
-  # an "orig_field" is not counted as current data in the entry
-  $bibentry->set_orig_field($f, $f);
-
   # We are not validating dates here, just syntax parsing
   my $date_re = qr/(\d{4}) # year
                    (?:-(\d{2}))? # month

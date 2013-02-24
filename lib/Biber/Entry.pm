@@ -23,6 +23,25 @@ Biber::Entry
 
     Initialize a Biber::Entry object
 
+    There are three types of field possible in an entry:
+
+    * raw  - These are direct copies of input fields with no processing performed on them.
+             Such fields are used for tool mode where we don't want to alter the fields as they
+             need to go back into the output as they are
+    * data - These are fields which derive directly from or are themselves fields in the
+             data souce. Things like YEAR, MONTH, DAY etc. are such fields which are derived from,
+             for example, the DATE field (which is itself a "raw" field). They are part of the
+             original data implicitly, derived from a "raw" field.
+    * other - These are fields, often meta-information like labelname, labelalpha etc. which are
+              more removed from the data fields.
+
+    The reason for this division is largely the entry cloning required for the related entry and
+    inheritance features. When we clone an entry or copy some fields from one entry to another
+    we generally don't want the "other" category as such derived meta-fields will often need
+    to be re-created or ignored so we need to know which are the actual "data" fields to copy/clone.
+    "raw" fields are important when we are writing bibtex format output (in tool mode for example)
+    since in such cases, we don't want to derive implicit fields like YEAR/MONTH from DATE.
+
 =cut
 
 sub new {
@@ -203,42 +222,6 @@ sub get_labelyear_info {
 }
 
 
-
-
-=head2 set_orig_field
-
-    Set a field which came from the datasource which is then split/transformed
-    into other fields. Here we save the original in case we need to look at it again
-    but it is not treated as a real field any more. Such fields are of only historical
-    interest in the processing in case we lose information during processing but need
-    to refer back.
-
-=cut
-
-sub set_orig_field {
-  my $self = shift;
-  my ($key, $val, $form, $lang) = @_;
-  $form = $form || 'original';
-  $lang = $lang || 'default';
-  $self->{origfields}{$key}{$form}{$lang} = $val;
-  return;
-}
-
-=head2 get_orig_field
-
-    Get an original field which has been subsequently split/transformed.
-
-=cut
-
-sub get_orig_field {
-  my $self = shift;
-  my ($key, $form, $lang) = @_;
-  $form = $form || 'original';
-  $lang = $lang || 'default';
-  return Dive($self, 'origfields', $key, $form, $lang);
-}
-
-
 =head2 set_field
 
   Set a derived field for a Biber::Entry object, that is, a field
@@ -253,20 +236,6 @@ sub set_field {
   $lang = $lang || 'default';
   # All derived fields can be null
   $self->{derivedfields}{$key}{$form}{$lang} = $val;
-  return;
-}
-
-=head2 ref_field
-
-  Make a field a reference to another field
-
-=cut
-
-sub ref_field {
-  my $self = shift;
-  my ($ref, $field) = @_;
-  $self->{datafields}{$ref} = $self->{datafields}{$field};
-  $self->{derivedfields}{$ref} = $self->{derivedfields}{$field};
   return;
 }
 
@@ -342,7 +311,7 @@ sub get_field_form_lang_names {
 
 =head2 set_datafield
 
-    Set a field which is in the bib data file
+    Set a field which is in the .bib data file
 
 =cut
 
