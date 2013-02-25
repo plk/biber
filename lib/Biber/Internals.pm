@@ -1317,65 +1317,6 @@ sub _liststring {
   return $str;
 }
 
-=head2 process_entry_options
-
-    Set per-entry options
-
-=cut
-
-sub process_entry_options {
-  my $self = shift;
-  my $citekey = shift;
-  my $options = shift;
-  return unless $options;       # Just in case it's null
-  my @entryoptions = split /\s*,\s*/, $options;
-  foreach (@entryoptions) {
-    s/\s+=\s+/=/g; # get rid of spaces around any "="
-    m/^([^=]+)(=?)(.+)?$/;
-    my $val;
-    if ($2) {
-      given ($3) {
-        when ('true') {
-          $val = 1;
-        }
-        when ('false') {
-          $val = 0;
-        }
-        default {
-          $val = $3;
-        }
-      }
-      _expand_option($1, $val, $citekey);
-    }
-    else {
-      _expand_option($1, 1, $citekey);
-    }
-  }
-  return;
-}
-
-sub _expand_option {
-  my ($opt, $val, $citekey) = @_;
-  given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{INPUT}) {
-    # Standard option
-    when (not defined($_)) {
-      Biber::Config->setblxoption($opt, $val, 'PER_ENTRY', $citekey);
-    }
-    # Set all split options to same value as parent
-    when (ref($_) eq 'ARRAY') {
-      foreach my $k (@$_) {
-        Biber::Config->setblxoption($k, $val, 'PER_ENTRY', $citekey);
-      }
-    }
-    # Specify values per all splits
-    when (ref($_) eq 'HASH') {
-      foreach my $k (keys %$_) {
-        Biber::Config->setblxoption($k, $_->{$k}, 'PER_ENTRY', $citekey);
-      }
-    }
-  }
-  return;
-}
 
 1;
 

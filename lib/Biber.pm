@@ -19,7 +19,6 @@ use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Biber::Config;
 use Biber::Constants;
 use List::AllUtils qw( first uniq max );
-use Digest::MD5 qw( md5_hex );
 use Biber::DataModel;
 use Biber::Internals;
 use Biber::Entries;
@@ -878,46 +877,7 @@ sub instantiate_dynamic {
   # Instantiate any related entry clones we need
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
-    if (my $relkeys = $be->get_field('related')) {
-      $be->del_field('related'); # clear the related field
-      my @clonekeys;
-      foreach my $relkey (split /\s*,\s*/, $relkeys) {
-        # Resolve any alias
-        $relkey = $section->get_citekey_alias($relkey) // $relkey;
-
-        my $relentry = $section->bibentry($relkey);
-        my $clonekey = md5_hex($relkey);
-        push @clonekeys, $clonekey;
-        my $relclone = $relentry->clone($clonekey);
-        # clone doesn't need the related fields
-        $relclone->del_field('related');
-        $relclone->del_field('relatedtype');
-        $relclone->del_field('relatedstring');
-        $relclone->del_field('relatedoptions');
-
-        # Set related clone options
-        if (my $relopts = $be->get_field('relatedoptions')) {
-          $self->process_entry_options($clonekey, $relopts);
-          $relclone->set_datafield('options', $relopts);
-        }
-        else {
-          $self->process_entry_options($clonekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
-          $relclone->set_datafield('options', 'dataonly');
-        }
-
-        $section->bibentries->add_entry($clonekey, $relclone);
-
-        # Save graph information if requested
-        if (Biber::Config->getoption('output_format') eq 'dot') {
-          Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
-        }
-      }
-      # point to clone keys and add to citekeys
-      # We have to add the citekeys as we need these clones in the .bbl
-      # but the dataonly will cause biblatex not to print them in the bib
-      $section->add_citekeys(@clonekeys);
-      $be->set_datafield('related', join(',', @clonekeys));
-    }
+    $be->relclone;
   }
   return;
 }
@@ -1423,7 +1383,7 @@ sub process_sets {
     # Enforce Biber parts of virtual "dataonly" for set members
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
-      $self->process_entry_options($member, 'skiplab, skiplos, uniquename=0, uniquelist=0');
+      process_entry_options($member, 'skiplab, skiplos, uniquename=0, uniquelist=0');
 
       my $me = $section->bibentry($member);
       if ($me->get_field('entryset')) {
@@ -1442,7 +1402,7 @@ sub process_sets {
   # had skips set by being seen as a member of that set yet
   else {
     if (Biber::Config->get_set_parents($citekey)) {
-      $self->process_entry_options($citekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
+      process_entry_options($citekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
     }
   }
 }
@@ -3227,7 +3187,9 @@ sub get_dependents {
         my @rmems = split /\s*,\s*/, $relkeys;
         # skip looking for dependent if it's already there (loop suppression)
         foreach my $rm (@rmems) {
-          unless ($section->has_citekey($rm)) {
+          unless ($section->has_citekey($rm) or $section->is_related($rm)) {
+            # record that $rm is used as a related entry key
+            $section->add_related($rm);
             push @$new_deps, $rm;
             $dep_map->{$citekey} = 1;
           }

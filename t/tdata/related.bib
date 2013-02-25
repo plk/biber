@@ -1,6 +1,6 @@
 @ARTICLE{key1,
   IDS             = {key1alias},
-  RELATED         = {key2,key3,key4,missing1},
+  RELATED         = {key2,key3,missing1},
   RELATEDTYPE     = {reprintas},
   AUTHOR          = {Author},
   TITLE           = {Original Title},
@@ -13,7 +13,7 @@
 }
 
 @INBOOK{key2,
-  RELATED         = {key1},
+  RELATED         = {key1alias},
   RELATEDTYPE     = {reprintof},
   RELATEDSTRING   = {First},
   AUTHOR          = {Author},
@@ -27,9 +27,8 @@
 }
 
 @INBOOK{key3,
-  RELATED         = {key1alias},
-  RELATEDTYPE     = {reprintof},
-  RELATEDSTRING   = {Second},
+  RELATED         = {key4},
+  RELATEDTYPE     = {translationof},
   AUTHOR          = {Author},
   TITLE           = {Reprint Title},
   BOOKTITLE       = {Booktitle},
@@ -42,7 +41,7 @@
 
 @INBOOK{key4,
   AUTHOR          = {Author},
-  TITLE           = {Reprint Title},
+  TITLE           = {Orig Language Title},
   BOOKTITLE       = {Booktitle},
   LOCATION        = {Location},
   PUBLISHER       = {Publisher2},
@@ -51,3 +50,14 @@
   SHORTHAND       = {RK4}
 }
 
+@BOOK{c1,
+  RELATED = {c2},
+}
+
+@BOOK{c2,
+  RELATED = {c3},
+}
+
+@BOOK{c3,
+  RELATED = {c2},
+}

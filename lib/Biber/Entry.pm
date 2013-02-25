@@ -4,9 +4,11 @@ use strict;
 use warnings;
 
 use Biber::Utils;
+use Biber::Internals;
 use Biber::Constants;
 use Data::Diver qw( Dive );
 use Data::Dump qw( pp );
+use Digest::MD5 qw( md5_hex );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
 use Storable qw( dclone );
@@ -57,6 +59,66 @@ sub new {
   return $self;
 }
 
+=head2 relclone
+
+    Recursively create related entry clones starting with an entry
+
+=cut
+
+sub relclone {
+  my $self = shift;
+  my $citekey = $self->get_field('citekey');
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  if (my $relkeys = $self->get_field('related')) {
+    $logger->debug("Found RELATED field in '$citekey' with contents '$relkeys'");
+    my @clonekeys;
+    foreach my $relkey (split /\s*,\s*/, $relkeys) {
+      # Resolve any alias
+      $relkey = $section->get_citekey_alias($relkey) // $relkey;
+      $logger->debug("Looking at RELATED key '$relkey'");
+      if (my $ck = $section->get_keytorelclone($relkey)) {
+        $logger->debug("Found RELATED key '$relkey' already has clone '$ck'");
+        push @clonekeys, $ck;
+      }
+      else {
+      my $relentry = $section->bibentry($relkey);
+      my $clonekey = md5_hex($relkey);
+      push @clonekeys, $clonekey;
+      my $relclone = $relentry->clone($clonekey);
+      $logger->debug("Creating new related clone for '$relkey' with clone key '$clonekey'");
+
+      # Set related clone options
+      if (my $relopts = $self->get_field('relatedoptions')) {
+        process_entry_options($clonekey, $relopts);
+        $relclone->set_datafield('options', $relopts);
+      }
+      else {
+        process_entry_options($clonekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
+        $relclone->set_datafield('options', 'dataonly');
+      }
+
+      $section->bibentries->add_entry($clonekey, $relclone);
+      $section->keytorelclone($relkey, $clonekey);
+
+      # Save graph information if requested
+      if (Biber::Config->getoption('output_format') eq 'dot') {
+        Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
+      }
+
+      # recurse so we can do cascading related entries
+      $logger->debug("Related entries: Recursing into '$clonekey'");
+      $relclone->relclone;
+    }
+
+    }
+    # point to clone keys and add to citekeys
+    # We have to add the citekeys as we need these clones in the .bbl
+    # but the dataonly will cause biblatex not to print them in the bib
+    $section->add_citekeys(@clonekeys);
+    $self->set_datafield('related', join(',', @clonekeys));
+  }
+}
 
 =head2 clone
 
