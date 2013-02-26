@@ -640,7 +640,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $llabel = $list->{label};
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
     if (my $l = $sortlists->get_list($lsection, $ltype, $llabel)) {
-      $logger->info("Section '$ltype' list '$llabel' is repeated for section $lsection - ignoring subsequent mentions");
+      $logger->debug("Section '$ltype' list '$llabel' is repeated for section $lsection - ignoring");
       next;
     }
 
