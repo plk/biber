@@ -718,7 +718,7 @@ examples. A \opt{map} element looks like this:
               +\textcolor{blue}{map\_origentrytype="1"}+
               +\textcolor{blue}{map\_final="1"}+/>
 </map>
-\end{lstlisting}
+\end{lstlisting}%| <- sometimee emacs highlighting needs this
 
 \begin{itemize}
 \item If there are any \textcolor{red}{\texttt{datasource}}s named in
@@ -1846,12 +1846,12 @@ xref     & Show XREF relationships\\
 \bigskip
 \subsection{Tool Mode}\label{tool}
 \biber\ can run in «tool» mode which is enabled with the \opt{--tool}
-command-line only option. In this mode, \biber is called like this: \opt{biber --tool
+command-line only option. In this mode, \biber is called: \opt{biber --tool
   <datasource>}. It does not read any \file{.bcf} and does not output
 any \file{.bbl}. Instead, it reads all entries from the file
 «datasource», applies any changes specified in the command-line
 options and \biber\ config file and writes the resulting datasource
-out to a new file, defaulting to «datasource\_bibertool.bib» if the
+out to a new file, defaulting to «\file{<datasource>\_bibertool.bib}» if the
 option \opt{output\_file} is not specified. This is useful if you need to
 programatically change your datasource using the semantics provided by
 \biber. For example, you could choose to reencode your datasource by
@@ -1866,7 +1866,7 @@ UTF-8 chars changed to \latex macros (because when the output is ASCII and
 the input encoding is not (it is by default UTF-8), then the
 \opt{--output\_safechars} option is automatically enabled). If you utilise the \biber\
 config file, you can set up a complex set of mappings to transform
-your datasource however you like in a semantic manner much more robust
+your datasource however you wish in a semantic manner much more robust
 than just textual search/replace. You can also use the
 \opt{--tool\_resolve} option which will process any \bibfield{XDATA}
 fields/entries, entry aliases and inheritance rules mentioned in the config
@@ -2092,7 +2092,7 @@ it as your own \file{biber.conf} file or pass it explicitly using the
 \opt{--configfile|-g} option. You can determine the location of the default
 tool mode config file by using the \opt{--tool\_config} option which will
 show you the location of the config file and exit.
-\bigskip
+\bigskip%|<- stop confusing emacs highlighting
 \section{Binaries}\label{binaries}
 
 \biber\ is a Perl application which relies heavily on quite a few
