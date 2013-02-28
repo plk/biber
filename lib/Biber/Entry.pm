@@ -75,42 +75,51 @@ sub relclone {
     my @clonekeys;
     foreach my $relkey (split /\s*,\s*/, $relkeys) {
       # Resolve any alias
-      $relkey = $section->get_citekey_alias($relkey) // $relkey;
+      my $nrelkey = $section->get_citekey_alias($relkey) // $relkey;
+      $logger->debug("Resolved RELATED key alias '$relkey' to '$nrelkey'") if $relkey ne $nrelkey;
+      $relkey = $nrelkey;
       $logger->debug("Looking at RELATED key '$relkey'");
+
+      # Loop avoidance, in case we are back in an entry again in the guise of a clone
+      # We can record the related clone but don't create it again
       if (my $ck = $section->get_keytorelclone($relkey)) {
         $logger->debug("Found RELATED key '$relkey' already has clone '$ck'");
         push @clonekeys, $ck;
+
+        # Save graph information if requested
+        if (Biber::Config->getoption('output_format') eq 'dot') {
+          Biber::Config->set_graph('related', $ck, $relkey, $citekey);
+        }
       }
       else {
-      my $relentry = $section->bibentry($relkey);
-      my $clonekey = md5_hex($relkey);
-      push @clonekeys, $clonekey;
-      my $relclone = $relentry->clone($clonekey);
-      $logger->debug("Creating new related clone for '$relkey' with clone key '$clonekey'");
+        my $relentry = $section->bibentry($relkey);
+        my $clonekey = md5_hex($relkey);
+        push @clonekeys, $clonekey;
+        my $relclone = $relentry->clone($clonekey);
+        $logger->debug("Creating new related clone for '$relkey' with clone key '$clonekey'");
 
-      # Set related clone options
-      if (my $relopts = $self->get_field('relatedoptions')) {
-        process_entry_options($clonekey, $relopts);
-        $relclone->set_datafield('options', $relopts);
+        # Set related clone options
+        if (my $relopts = $self->get_field('relatedoptions')) {
+          process_entry_options($clonekey, $relopts);
+          $relclone->set_datafield('options', $relopts);
+        }
+        else {
+          process_entry_options($clonekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
+          $relclone->set_datafield('options', 'dataonly');
+        }
+
+        $section->bibentries->add_entry($clonekey, $relclone);
+        $section->keytorelclone($relkey, $clonekey);
+
+        # Save graph information if requested
+        if (Biber::Config->getoption('output_format') eq 'dot') {
+          Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
+        }
+
+        # recurse so we can do cascading related entries
+        $logger->debug("Recursing into RELATED entry '$clonekey'");
+        $relclone->relclone;
       }
-      else {
-        process_entry_options($clonekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
-        $relclone->set_datafield('options', 'dataonly');
-      }
-
-      $section->bibentries->add_entry($clonekey, $relclone);
-      $section->keytorelclone($relkey, $clonekey);
-
-      # Save graph information if requested
-      if (Biber::Config->getoption('output_format') eq 'dot') {
-        Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
-      }
-
-      # recurse so we can do cascading related entries
-      $logger->debug("Related entries: Recursing into '$clonekey'");
-      $relclone->relclone;
-    }
-
     }
     # point to clone keys and add to citekeys
     # We have to add the citekeys as we need these clones in the .bbl

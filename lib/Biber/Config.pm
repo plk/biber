@@ -730,9 +730,7 @@ sub getblxoption {
 
 =head2 set_graph
 
-    Record who inherited what fields from whom
-    Can be used for crossrefs and xdata. This records the actual fields
-    inherited from another entry, for tree generation.
+   Record node and arc connection types for .dot output
 
 =cut
 

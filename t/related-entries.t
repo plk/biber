@@ -13,7 +13,7 @@ chdir("t/tdata") ;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
-my $LEVEL = 'ERROR';
+my $LEVEL = 'DEBUG';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
     log4perl.category.screen                           = $LEVEL, Screen
@@ -96,33 +96,6 @@ my $k2 = q|    \entry{key2}{inbook}{}
     \endentry
 |;
 
-my $k3 = q|    \entry{key3}{inbook}{}
-      \name{labelname}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
-      }
-      \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
-      }
-      \list{location}{1}{%
-        {Location}%
-      }
-      \list{publisher}{1}{%
-        {Publisher2}%
-      }
-      \strng{namehash}{a517747c3d12f99244ae598910d979c5}
-      \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{labelyear}{2010}
-      \field{labeltitle}{Reprint Title}
-      \field{booktitle}{Booktitle}
-      \field{related}{caf8e34be07426ae7127c1b4829983c1}
-      \field{relatedtype}{translationof}
-      \field{shorthand}{RK3}
-      \field{title}{Reprint Title}
-      \field{year}{2010}
-      \field{pages}{33\bibrangedash 57}
-    \endentry
-|;
 
 my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \name{labelname}{1}{}{%
