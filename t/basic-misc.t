@@ -453,3 +453,4 @@ is_deeply($bibentries->entry('pages7')->get_field('pages'), [['\bibstring{number
 
 # Test for map levels, the user map makes this CUSTOMC and then style map makes it CUSTOMA
 is($bibentries->entry('us1')->get_field('entrytype'), 'customa', 'Map levels - 1');
+

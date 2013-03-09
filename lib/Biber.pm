@@ -1532,8 +1532,14 @@ sub process_labelyear {
     my $lyearspec = Biber::Config->getblxoption('labelyearspec', $bee);
     foreach my $h_ly (@$lyearspec) {
       my $ly = $h_ly->{content};
-      if ($be->get_field($ly)) {
-        $be->set_labelyear_info({'field' => $ly});
+      if ($h_ly->{'type'} eq 'field') { # labelyear field
+        if ($be->get_field($ly)) {
+          $be->set_labelyear_info({'field' => $ly});
+          last;
+        }
+      }
+      elsif ($h_ly->{'type'} eq 'string') { # labelyear fallback string
+        $be->set_labelyear_info({'string' => $ly});
         last;
       }
     }
@@ -1541,16 +1547,20 @@ sub process_labelyear {
     # Construct labelyear
     # Might not have been set due to skiplab/dataonly
     if (my $lyi = $be->get_labelyear_info) {
-      my $yf = $lyi->{field};
-      $be->set_field('labelyear', $be->get_field($yf));
-      # ignore endyear if it's the same as year
-      my ($ytype) = $yf =~ /\A(.*)year\z/xms;
-      $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
-      # endyear can be null
-      if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
-        and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
-        $be->set_field('labelyear',
-          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
+      if (my $yf = $lyi->{field}) { # set labelyear to a field value
+        $be->set_field('labelyear', $be->get_field($yf));
+        # ignore endyear if it's the same as year
+        my ($ytype) = $yf =~ /\A(.*)year\z/xms;
+        $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
+        # endyear can be null
+        if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
+            and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
+          $be->set_field('labelyear',
+                         $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
+        }
+      }
+      elsif (my $ys = $lyi->{string}) { # set labelyear to a fallback string
+        $be->set_field('labelyear', $ys);
       }
     }
     else {

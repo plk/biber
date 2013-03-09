@@ -1076,8 +1076,13 @@ sub _sort_labelyear {
   my $be = $section->bibentry($citekey);
   # re-direct to the right sorting routine for the labelyear
   if (my $lyi = $be->get_labelyear_info) {
-    # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($lyi->{field}, $citekey, $sortelementattributes);
+    if (my $lyf = $lyi->{field}) {
+      # Don't process attributes as they will be processed in the real sub
+      return $self->_dispatch_sorting($lyf, $citekey, $sortelementattributes);
+    }
+    elsif (exists($lyi->{string})) { # labelyear fallback string
+      return '';
+    }
   }
   else {
     return '';

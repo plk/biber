@@ -36,7 +36,7 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
+Biber::Config->setblxoption('labelyearspec', [ {content => 'year', type => 'field'} ]);
 
 # Now generate the information
 $biber->prepare;

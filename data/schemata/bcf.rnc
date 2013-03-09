@@ -425,6 +425,7 @@ labelyearspec =
     element bcf:key { "labelyearspec" },
     element bcf:value {
       attribute order { xsd:integer },
+      attribute type { "field" | "string" },
       text
     }+
   }

@@ -1108,6 +1108,12 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
+          <attribute name="type">
+            <choice>
+              <value>field</value>
+              <value>string</value>
+            </choice>
+          </attribute>
           <text/>
         </element>
       </oneOrMore>
