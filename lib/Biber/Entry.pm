@@ -262,34 +262,34 @@ sub get_labeltitle_info {
 }
 
 
-=head2 set_labelyear_info
+=head2 set_labeldate_info
 
-  Record the labelyear information. This is special
+  Record the labeldate information. This is special
   meta-information so we have a seperate method for this
   Takes a hash ref with the information.
 
 =cut
 
-sub set_labelyear_info {
+sub set_labeldate_info {
   my $self = shift;
   my $data = shift;
   $data->{form} = $data->{form} || 'original';
   $data->{lang} = $data->{lang} || 'default';
-  $self->{labelyearinfo} = $data;
+  $self->{labeldateinfo} = $data;
   return;
 }
 
-=head2 get_labelyear_info
+=head2 get_labeldate_info
 
-  Retrieve the labelyear information. This is special
+  Retrieve the labeldate information. This is special
   meta-information so we have a seperate method for this
   Returns a hash ref with the information.
 
 =cut
 
-sub get_labelyear_info {
+sub get_labeldate_info {
   my $self = shift;
-  return $self->{labelyearinfo};
+  return $self->{labeldateinfo};
 }
 
 
@@ -325,7 +325,7 @@ sub get_field {
   $form = $form || 'original';
   $lang = $lang || 'default';
   # Override for special fields whose form and langs are assumed to be already resolved.
-  if ($key ~~ [ 'labelname', 'labeltitle', 'labelyear' ]) {
+  if ($key ~~ [ 'labelname', 'labeltitle', 'labelyear', 'labelmonth', 'labelday' ]) {
     $form = 'original';
     $lang = 'default';
   }

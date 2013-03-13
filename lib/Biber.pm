@@ -1111,8 +1111,8 @@ sub process_entries_pre {
     # generate labelname name
     $self->process_labelname($citekey);
 
-    # generate labelyear name
-    $self->process_labelyear($citekey);
+    # generate labeldate name
+    $self->process_labeldate($citekey);
 
     # generate labeltitle name
     $self->process_labeltitle($citekey);
@@ -1240,7 +1240,7 @@ sub process_extrayear {
   #   (see code in incr_seen_nameyear method).
   # * Don't increment if skiplab is set
 
-  if (Biber::Config->getblxoption('labelyear', $bee)) {
+  if (Biber::Config->getblxoption('labeldate', $bee)) {
     if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
       return;
     }
@@ -1510,13 +1510,13 @@ sub process_labelname {
   }
 }
 
-=head2 process_labelyear
+=head2 process_labeldate
 
-    Generate labelyear
+    Generate labeldate information
 
 =cut
 
-sub process_labelyear {
+sub process_labeldate {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -1524,47 +1524,65 @@ sub process_labelyear {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  if (Biber::Config->getblxoption('labelyear', $bee)) {
+  if (Biber::Config->getblxoption('labeldate', $bee)) {
     if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
       return;
     }
 
-    my $lyearspec = Biber::Config->getblxoption('labelyearspec', $bee);
-    foreach my $h_ly (@$lyearspec) {
+    my $ldatespec = Biber::Config->getblxoption('labeldatespec', $bee);
+    foreach my $h_ly (@$ldatespec) {
       my $ly = $h_ly->{content};
-      if ($h_ly->{'type'} eq 'field') { # labelyear field
-        if ($be->get_field($ly)) {
-          $be->set_labelyear_info({'field' => $ly});
+      if ($h_ly->{'type'} eq 'field') { # labeldate field
+        my $datetype = $ly =~ s/date\z//xmsr;
+        my $ldy = $datetype . 'year';
+        my $ldm = $datetype . 'month';
+        my $ldd = $datetype . 'day';
+        if ($be->get_field($ldy)) { # did we find a labelydate (which must minimally be a year).
+          $be->set_labeldate_info({'field' => { 'year'  => $ldy,
+                                                'month' => $ldm,
+                                                'day'   => $ldd }});
           last;
         }
       }
       elsif ($h_ly->{'type'} eq 'string') { # labelyear fallback string
-        $be->set_labelyear_info({'string' => $ly});
+        $be->set_labeldate_info({'string' => $ly});
         last;
       }
     }
 
-    # Construct labelyear
+    # Construct labelyear, labelmonth, labelday
     # Might not have been set due to skiplab/dataonly
-    if (my $lyi = $be->get_labelyear_info) {
-      if (my $yf = $lyi->{field}) { # set labelyear to a field value
-        $be->set_field('labelyear', $be->get_field($yf));
+    if (my $ldi = $be->get_labeldate_info) {
+      if (my $df = $ldi->{field}) { # set labelyear to a field value
+        $be->set_field('labelyear', $be->get_field($df->{year}));
+        $be->set_field('labelmonth', $be->get_field($df->{month})) if $df->{month};
+        $be->set_field('labelday', $be->get_field($df->{day})) if $df->{day};
         # ignore endyear if it's the same as year
-        my ($ytype) = $yf =~ /\A(.*)year\z/xms;
+        my ($ytype) = $df->{year} =~ /\A(.*)year\z/xms;
         $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
         # endyear can be null
         if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
-            and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
+            and ($be->get_field($df->{year}) ne $be->get_field($ytype . 'endyear'))) {
           $be->set_field('labelyear',
                          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
         }
+        if ($be->get_field($ytype . 'endmonth')
+            and ($be->get_field($df->{month}) ne $be->get_field($ytype . 'endmonth'))) {
+          $be->set_field('labelmonth',
+                         $be->get_field('labelmonth') . '\bibdatedash ' . $be->get_field($ytype . 'endmonth'));
+        }
+        if ($be->get_field($ytype . 'endday')
+            and ($be->get_field($df->{day}) ne $be->get_field($ytype . 'endday'))) {
+          $be->set_field('labelday',
+                         $be->get_field('labelday') . '\bibdatedash ' . $be->get_field($ytype . 'endday'));
+        }
       }
-      elsif (my $ys = $lyi->{string}) { # set labelyear to a fallback string
+      elsif (my $ys = $ldi->{string}) { # set labelyear to a fallback string
         $be->set_field('labelyear', $ys);
       }
     }
     else {
-      $logger->debug("labelyear information of entry $citekey is unset");
+      $logger->debug("labeldate information of entry $citekey is unset");
     }
   }
 }
@@ -2622,7 +2640,7 @@ sub generate_extra {
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
       # extrayear
-      if (Biber::Config->getblxoption('labelyear', $bee)) {
+      if (Biber::Config->getblxoption('labeldate', $bee)) {
         my $nameyear = $be->get_field('nameyear');
         if (Biber::Config->get_seen_nameyear($nameyear) > 1) {
           $logger->trace("nameyear for '$nameyear': " . Biber::Config->get_seen_nameyear($nameyear));

@@ -36,7 +36,7 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year', type => 'field'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 
 # Now generate the information
 $biber->prepare;
@@ -91,6 +91,8 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{labelyear}{1998}
+      \field{labelmonth}{04}
+      \field{labelday}{05}
       \field{labeltitle}{Title 1}
       \field{day}{05}
       \field{month}{04}
@@ -116,6 +118,8 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
       \field{sortinit}{E}
       \field{labelyear}{1998}
+      \field{labelmonth}{04}
+      \field{labelday}{05}
       \field{labeltitle}{Title 2}
       \field{day}{05}
       \field{month}{04}
@@ -138,6 +142,8 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \strng{fullhash}{490250da1f3b92580d97563dc96c6c84}
       \field{sortinit}{B}
       \field{labelyear}{1999}
+      \field{labelmonth}{04}
+      \field{labelday}{05}
       \field{labeltitle}{Title 3}
       \field{day}{05}
       \field{month}{04}
@@ -151,7 +157,7 @@ is_deeply(Biber::Config->getblxoption('labelnamespec'), [ {content => 'author'} 
 ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
 ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valued options");
 is_deeply(Biber::Config->getblxoption('labelnamespec', 'book'), $bln, "Per-type multi-valued options");
-is($bibentries->entry('L1')->get_labelyear_info->{field}, 'year', 'Global labelyear setting' ) ;
+is($bibentries->entry('L1')->get_labeldate_info->{field}{year}, 'year', 'Global labelyear setting' ) ;
 is( $out->get_output_entry('L1', $main), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
 is( $out->get_output_entry('L2', $main), $l2, 'Entry-local biblatex option mappings - 1') ;
 is( $out->get_output_entry('L3', $main), $l3, 'Entry-local biblatex option mappings - 2') ;

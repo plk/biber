@@ -8,6 +8,7 @@ use Biber::Constants;
 use Biber::Utils;
 use Biber::DataModel;
 use Data::Compare;
+use Data::Diver qw( Dive );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Digest::MD5 qw( md5_hex );
@@ -230,6 +231,8 @@ my %internal_dispatch_label = (
                 'citekey'           =>  [\&_label_citekey,          []],
                 'labelname'         =>  [\&_label_name,             ['labelname']],
                 'labeltitle'        =>  [\&_label_basic,            ['labeltitle']],
+                'labelmonth'        =>  [\&_label_basic,            ['labelmonth']],
+                'labelday'          =>  [\&_label_basic,            ['labelday']],
                 'labelyear'         =>  [\&_label_basic,            ['labelyear']]);
 
 sub _dispatch_table_label {
@@ -821,7 +824,9 @@ my %internal_dispatch_sorting = (
                                  'labelalpha'      =>  [\&_sort_labelalpha,    []],
                                  'labelname'       =>  [\&_sort_labelname,     []],
                                  'labeltitle'      =>  [\&_sort_labeltitle,    []],
-                                 'labelyear'       =>  [\&_sort_labelyear,     []],
+                                 'labelyear'       =>  [\&_sort_labeldate,     ['year']],
+                                 'labelmonth'      =>  [\&_sort_labeldate,     ['month']],
+                                 'labelday'        =>  [\&_sort_labeldate,     ['day']],
                                  'presort'         =>  [\&_sort_presort,       []],
                                  'sortname'        =>  [\&_sort_sortname,      []],
                                  'entrykey'        =>  [\&_sort_entrykey,      []]);
@@ -1069,18 +1074,19 @@ sub _sort_labeltitle {
   }
 }
 
-sub _sort_labelyear {
+sub _sort_labeldate {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $ldc = $args->[0]; # labeldate component
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  # re-direct to the right sorting routine for the labelyear
-  if (my $lyi = $be->get_labelyear_info) {
-    if (my $lyf = $lyi->{field}) {
+  # re-direct to the right sorting routine for the labeldate component
+  if (my $ldi = $be->get_labeldate_info) {
+    if (my $ldf = Dive($ldi, 'field', $ldc)) {
       # Don't process attributes as they will be processed in the real sub
-      return $self->_dispatch_sorting($lyf, $citekey, $sortelementattributes);
+      return $self->_dispatch_sorting($ldf, $citekey, $sortelementattributes);
     }
-    elsif (exists($lyi->{string})) { # labelyear fallback string
+    elsif (exists($ldi->{string})) { # labelyear fallback string
       return '';
     }
   }

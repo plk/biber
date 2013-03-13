@@ -32,8 +32,8 @@ start =
       labeltitle,
       labeltitlespec,
       labeltitleyear,
-      labelyear,
-      labelyearspec,
+      labeldate,
+      labeldatespec,
       maxalphanames,
       maxbibnames,
       maxcitenames,
@@ -63,8 +63,8 @@ start =
       labeltitle?,
       labeltitlespec?,
       labeltitleyear?,
-      labelyear?,
-      labelyearspec?,
+      labeldate?,
+      labeldatespec?,
       maxalphanames?,
       maxbibnames?,
       maxcitenames?,
@@ -413,16 +413,16 @@ labeltitleyear =
     element bcf:key { "labeltitleyear" },
     element bcf:value { "0" | "1" }
   }
-labelyear =
+labeldate =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "labelyear" },
+    element bcf:key { "labeldate" },
     element bcf:value { "0" | "1" }
   }
-labelyearspec =
+labeldatespec =
   element bcf:option {
     attribute type { "multivalued" },
-    element bcf:key { "labelyearspec" },
+    element bcf:key { "labeldatespec" },
     element bcf:value {
       attribute order { xsd:integer },
       attribute type { "field" | "string" },

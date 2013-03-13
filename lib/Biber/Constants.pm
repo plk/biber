@@ -26,7 +26,7 @@ our @EXPORT = qw{
 # passed in control file. Used when checking the .bcf
 our $BCF_VERSION = '2.4';
 # Format version of the .bbl. Used when writing the .bbl
-our $BBL_VERSION = '2.1';
+our $BBL_VERSION = '2.2';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
@@ -190,8 +190,8 @@ our %CONFIG_SCOPE_BIBLATEX = (
   labeltitlelang     => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
   labeltitlespec     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labeltitleyear     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelyear          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelyearspec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labeldate          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labeldatespec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   maxalphanames      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   maxbibnames        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   maxcitenames       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},

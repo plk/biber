@@ -306,8 +306,8 @@ sub set_output_entry {
   # on output as it can vary between lists
   $acc .= "      <BDS>SORTINIT</BDS>\n";
 
-  # The labelyear option determines whether "extrayear" is output
-  if ( Biber::Config->getblxoption('labelyear', $bee)) {
+  # The labeldate option determines whether "extrayear" is output
+  if ( Biber::Config->getblxoption('labeldate', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear = $be->get_field('nameyear')) {
       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
@@ -316,6 +316,12 @@ sub set_output_entry {
     }
     if (my $ly = $be->get_field('labelyear')) {
       $acc .= "      \\field{labelyear}{$ly}\n";
+    }
+    if (my $lm = $be->get_field('labelmonth')) {
+      $acc .= "      \\field{labelmonth}{$lm}\n";
+    }
+    if (my $ld = $be->get_field('labelday')) {
+      $acc .= "      \\field{labelday}{$ld}\n";
     }
   }
 

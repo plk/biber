@@ -39,7 +39,7 @@ Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 1);
 Biber::Config->setblxoption('maxalphanames', 1);
-Biber::Config->setblxoption('labelyear', undef);
+Biber::Config->setblxoption('labeldate', undef);
 
 # Now generate the information
 $biber->prepare;

@@ -50,8 +50,8 @@
         <ref name="labeltitle"/>
         <ref name="labeltitlespec"/>
         <ref name="labeltitleyear"/>
-        <ref name="labelyear"/>
-        <ref name="labelyearspec"/>
+        <ref name="labeldate"/>
+        <ref name="labeldatespec"/>
         <ref name="maxalphanames"/>
         <ref name="maxbibnames"/>
         <ref name="maxcitenames"/>
@@ -98,10 +98,10 @@
             <ref name="labeltitleyear"/>
           </optional>
           <optional>
-            <ref name="labelyear"/>
+            <ref name="labeldate"/>
           </optional>
           <optional>
-            <ref name="labelyearspec"/>
+            <ref name="labeldatespec"/>
           </optional>
           <optional>
             <ref name="maxalphanames"/>
@@ -1079,13 +1079,13 @@
       </element>
     </element>
   </define>
-  <define name="labelyear">
+  <define name="labeldate">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>labelyear</value>
+        <value>labeldate</value>
       </element>
       <element name="bcf:value">
         <choice>
@@ -1095,13 +1095,13 @@
       </element>
     </element>
   </define>
-  <define name="labelyearspec">
+  <define name="labeldatespec">
     <element name="bcf:option">
       <attribute name="type">
         <value>multivalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>labelyearspec</value>
+        <value>labeldatespec</value>
       </element>
       <oneOrMore>
         <element name="bcf:value">

@@ -186,9 +186,9 @@ sub set_output_entry {
   # on output as it can vary between lists
   $acc .= "      <BDS>SORTINIT</BDS>\n";
 
-  # The labelyear option determines whether "extrayear" is output
+  # The labeldate option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
-  if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+  if ( Biber::Config->getblxoption('labeldate', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
     if (my $ey = $be->get_field('extrayear')) {
       my $nameyear_extra = $be->get_field('nameyear_extra');
@@ -198,6 +198,12 @@ sub set_output_entry {
     }
     if (my $ly = $be->get_field('labelyear')) {
       $acc .= "      \\field{labelyear}{$ly}\n";
+    }
+    if (my $lm = $be->get_field('labelmonth')) {
+      $acc .= "      \\field{labelmonth}{$lm}\n";
+    }
+    if (my $ld = $be->get_field('labelday')) {
+      $acc .= "      \\field{labelday}{$ld}\n";
     }
   }
 

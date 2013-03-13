@@ -37,7 +37,6 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('labelyear', [ 'year' ]);
 Biber::Config->setblxoption('maxcitenames', 1);
 Biber::Config->setblxoption('maxbibnames', 1);
 
@@ -68,5 +67,5 @@ ok(is_undef($main->get_extrayeardata('LY1')), 'Date range means no extrayear - 1
 ok(is_undef($main->get_extrayeardata('LY2')), 'Date range means no extrayear - 2');
 
 # Test for labelyearspec literal string
-is($bibentries->entry('nodate1')->get_field('labelyear'), 'n.d.', 'Labelyear string - 1');
-is($bibentries->entry('nodate2')->get_field('labelyear'), 'n.d.', 'Labelyear string - 2');
+is($bibentries->entry('nodate1')->get_field('labelyear'), 'nodate', 'Labelyear string - 1');
+is($bibentries->entry('nodate2')->get_field('labelyear'), 'nodate', 'Labelyear string - 2');

@@ -561,7 +561,7 @@ sub check_data_constraints {
       # Perform content validation checks on date components by trying to
       # instantiate a Date::Simple object.
       foreach my $f (@{$self->get_fields_of_type('field', 'date')}) {
-        my ($d) = $f =~ m/\A(.*)date\z/xms;
+        my $d = $f =~ s/date\z//xmsr;
         # Don't bother unless this type of date is defined (has a year)
         next unless $be->get_datafield($d . 'year');
 

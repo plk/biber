@@ -672,7 +672,7 @@ sub _name {
 # Date fields can't have script forms - they are just a(n ISO) standard format
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
-  my ($datetype) = $f =~ m/\A(.*)date\z/xms;
+  my $datetype = $f =~ s/date\z//xmsr;
   my $date = decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
