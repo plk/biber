@@ -1523,6 +1523,7 @@ sub process_labeldate {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
+  my $dm = Biber::Config->get_dm;
 
   if (Biber::Config->getblxoption('labeldate', $bee)) {
     if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
@@ -1533,11 +1534,19 @@ sub process_labeldate {
     foreach my $h_ly (@$ldatespec) {
       my $ly = $h_ly->{content};
       if ($h_ly->{'type'} eq 'field') { # labeldate field
-        my $datetype = $ly =~ s/date\z//xmsr;
-        my $ldy = $datetype . 'year';
-        my $ldm = $datetype . 'month';
-        my $ldd = $datetype . 'day';
-        if ($be->get_field($ldy)) { # did we find a labelydate (which must minimally be a year).
+        my $ldy;
+        my $ldm;
+        my $ldd;
+        if ($dm->field_is_datatype('date', $ly)) { # resolve dates
+          my $datetype = $ly =~ s/date\z//xmsr;
+          $ldy = $datetype . 'year';
+          $ldm = $datetype . 'month';
+          $ldd = $datetype . 'day';
+        }
+        else {
+          $ldy = $ly; # labelyear can be a non-date field so make a pseudo-year
+        }
+        if ($be->get_field($ldy)) { # did we find a labeldate?
           $be->set_labeldate_info({'field' => { 'year'  => $ldy,
                                                 'month' => $ldm,
                                                 'day'   => $ldd }});
