@@ -87,6 +87,8 @@ my $l2 = q|    \entry{test2}{inbook}{}
       \strng{fullhash}{f2574dc91f1242eb0e7507a71730631b}
       \field{form=original,lang=default}{sortinit}{S}
       \field{form=original,lang=default}{labelyear}{1996}
+      \field{form=original,lang=default}{labelmonth}{03}
+      \field{form=original,lang=default}{labelday}{12}
       \field{form=original,lang=default}{labeltitle}{Sometitle}
       \field{form=original,lang=default}{day}{12}
       \field{form=original,lang=default}{month}{03}

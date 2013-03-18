@@ -1,5 +1,5 @@
 package Biber::Input::file::bibtex;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 use sigtrap qw(handler TBSIG SEGV);
@@ -481,26 +481,23 @@ sub create_entry {
       }
     }
 
-    # Save post-mapping data. This will be the output for tool mode
-    $bibentry->set_field('cookeddata', decode_utf8($entry->print_s));
-
-    # Stop here if in tool mode - we don't need any more processing of the entry
-    if (Biber::Config->getoption('tool')) {
-      $bibentry->set_field('entrytype', $entry->type);
-      $bibentry->set_field('datatype', 'bibtex');
-      $bibentries->add_entry($key, $bibentry);
-      return 1;
-    }
+    my $entrytype = decode_utf8($entry->type);
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
     foreach my $f ($entry->fieldlist) {
 
+      # In tool mode, just keep the raw data fields
+      if (Biber::Config->getoption('tool')) {
+        $bibentry->set_rawfield($f, decode_utf8($entry->get($f)));
+        next;
+      }
+
       # We have to process local options as early as possible in order
       # to make them available for things that need them like parsename()
       if ($f eq 'options') {
         my $value = decode_utf8($entry->get($f));
-        $Biber::MASTER->process_entry_options($key, $value);
+        process_entry_options($key, $value);
         # Save the raw options in case we are to output another input format like
         # biblatexml
         $bibentry->set_field('rawoptions', $value);
@@ -516,9 +513,10 @@ sub create_entry {
       }
     }
 
-    $bibentry->set_field('entrytype', $entry->type);
+    $bibentry->set_field('entrytype', $entrytype);
     $bibentry->set_field('datatype', 'bibtex');
     $bibentries->add_entry($key, $bibentry);
+
   }
 
   return 1;
@@ -674,13 +672,9 @@ sub _name {
 # Date fields can't have script forms - they are just a(n ISO) standard format
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
-  my ($datetype) = $f =~ m/\A(.*)date\z/xms;
+  my $datetype = $f =~ s/date\z//xmsr;
   my $date = decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
-
-  # Just in case we need to look at the original field later
-  # an "orig_field" is not counted as current data in the entry
-  $bibentry->set_orig_field($f, $f);
 
   # We are not validating dates here, just syntax parsing
   my $date_re = qr/(\d{4}) # year
@@ -861,8 +855,6 @@ sub cache_data {
 
 sub preprocess_file {
   my $filename = shift;
-  my $secnum = $Biber::MASTER->get_current_section;
-  my $section = $Biber::MASTER->sections->get_section($secnum);
 
   # Put the utf8 encoded file into the global biber tempdir
   # We have to do this in case we can't write to the location of the

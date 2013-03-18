@@ -1,5 +1,5 @@
 package Biber::Section;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 
@@ -23,6 +23,9 @@ sub new {
   my ($class, %params) = @_;
   my $self = bless {%params}, $class;
   $self->{bibentries} = new Biber::Entries;
+  $self->{keytorelclone} = {};
+  $self->{relclonetokey} = {};
+  $self->{relkeys} = {};
   $self->{allkeys} = 0;
   $self->{citekeys} = [];
   $self->{citekeys_h} = {}; # For faster hash-based lookup of individual keys
@@ -68,6 +71,91 @@ sub has_badcasekey {
   return undef unless $ckey;
   return $ckey ne $key ? $ckey : undef;
 }
+
+
+=head2 add_related
+
+    Record that a key is used as a related entry
+
+=cut
+
+sub add_related {
+  my ($self, $key) = @_;
+  $self->{relkeys}{$key} = 1;
+  return;
+}
+
+=head2 is_related
+
+    Check if a key is used as a related entry key
+
+=cut
+
+sub is_related {
+  my ($self, $key) = @_;
+  return $self->{relkeys}{$key};
+}
+
+
+=head2 keytorelclone
+
+    Record a key<->clone key mapping.
+
+=cut
+
+sub keytorelclone {
+  my ($self, $key, $clonekey) = @_;
+  $self->{keytorelclone}{$key} = $clonekey;
+  $self->{relclonetokey}{$clonekey} = $key;
+  return;
+}
+
+
+=head2 get_keytorelclone
+
+    Fetch a related entry clone key, given a cite key
+
+=cut
+
+sub get_keytorelclone {
+  my ($self, $key) = @_;
+  return $self->{keytorelclone}{$key};
+}
+
+=head2 get_relclonetokey
+
+    Fetch a related entry key, given a clone key
+
+=cut
+
+sub get_relclonetokey {
+  my ($self, $key) = @_;
+  return $self->{relclonetokey}{$key};
+}
+
+
+=head2 has_keytorelclone
+
+    Return boolean saying if a cite key has a related entry clone in the current section
+
+=cut
+
+sub has_keytorelclone {
+  my ($self, $key) = @_;
+  return defined($self->{keytorelclone}{$key}) ? 1 : 0;
+}
+
+=head2 has_relclonetokey
+
+    Return boolean saying if a related clone key has a citekey in the current section
+
+=cut
+
+sub has_relclonetokey {
+  my ($self, $key) = @_;
+  return defined($self->{relclonetokey}{$key}) ? 1 : 0;
+}
+
 
 
 =head2 add_everykey

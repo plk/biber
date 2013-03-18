@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 
@@ -41,8 +41,8 @@ GetOptions(
            'help|h|?',
            'input_encoding|e=s',
            'listsep=s',
-           'mincrossrefs|m=s',
            'logfile=s',
+           'mincrossrefs|m=s',
            'namesep=s',
            'noconf',
            'nodieonerror',
@@ -67,7 +67,12 @@ GetOptions(
            'ssl-nointernalca',
            'ssl-noverify-host',
            'tool',
+           'tool_align',
+           'tool_config',
            'tool_datatype=s',
+           'tool_fieldcase=s',
+           'tool_indent=s',
+           'tool_resolve',
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
@@ -92,6 +97,7 @@ if (exists $opts->{'version'}) {
   exit EXIT_OK;
 }
 
+# Show location of PAR::Packer cache
 if (exists $opts->{'cache'}) {
   if (my $cache = $ENV{PAR_TEMP}) {
     $cache =~ s|//|/|og; # Sanitise path in case it worries people
@@ -100,6 +106,14 @@ if (exists $opts->{'cache'}) {
   else {
     say "No cache - you are not running the PAR::Packer executable version of biber";
   }
+  exit EXIT_OK;
+}
+
+# Show location of default tool mode config file and exit
+if (exists $opts->{'tool_config'}) {
+  (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
+  $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+  say File::Spec->catpath($vol, "$dir", 'biber-tool.conf');
   exit EXIT_OK;
 }
 
@@ -114,7 +128,7 @@ if ($opts->{fastsort}) {
   delete $opts->{collate};
 }
 
-# Resolve some option shortcuts and legacyaliases
+# Resolve some option shortcuts and legacy aliases
 if (my $o = $opts->{bibencoding}) {
   $opts->{input_encoding} = $o;
   delete $opts->{bibencoding};
@@ -154,6 +168,16 @@ if (my $of = $opts->{output_format}) {
     say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot'";
     exit EXIT_ERROR;
   }
+}
+
+# Check the tool_* options
+if (exists($opts->{tool_indent}) and $opts->{tool_indent} !~ /^\d+$/) {
+  say STDERR "Biber: Invalid non-numeric argument for 'tool_indent' option!";
+  exit EXIT_ERROR;
+}
+if (exists($opts->{tool_fieldcase}) and $opts->{tool_fieldcase} !~ /^(?:upper|lower|title)$/i) {
+  say STDERR "Biber: Invalid argument for 'tool_fieldcase' option - must be one of 'upper', 'lower' or 'title'!";
+  exit EXIT_ERROR;
 }
 
 # Check the dot_include option
@@ -247,8 +271,8 @@ if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
   $biber->set_output_obj(Biber::Output::dot->new());
 }
 elsif (Biber::Config->getoption('tool')) {
-  require Biber::Output::tool;
-  $biber->set_output_obj(Biber::Output::tool->new());
+  require Biber::Output::bibtex;
+  $biber->set_output_obj(Biber::Output::bibtex->new());
 }
 else { # .bbl output
   require Biber::Output::bbl;
@@ -256,7 +280,7 @@ else { # .bbl output
 }
 
 # Do all the real work
-$biber->prepare;
+Biber::Config->getoption('tool') ? $biber->prepare_tool : $biber->prepare;
 
 if (Biber::Config->getoption('trace')) {
   $logger->trace("\n###########################################################\n",
@@ -294,10 +318,15 @@ C<biber> - A bibtex replacement for users of biblatex
 =head1 SYNOPSIS
 
 biber [options] file[.bcf]
+biber [options] --tool <datasource>
 
   Creates "file.bbl" using control file "file.bcf" (".bcf" extension is
   optional). Normaly use with biblatex requires no options as they are
   all set in biblatex and passed via the ".bcf" file
+
+  In "tool" mode (see B<--tool> option), takes a datasource (defaults to
+  "bibtex" datasource) and outputs a copy of the datasource with any datasource
+   mappings/reencodings applied.
 
   Please run "biber --help" for option details
 
@@ -330,6 +359,8 @@ Use F<file> as configuration file for C<biber>.
 The default is the first file found among
 F<biber.conf> in the current directory, C<$HOME/.biber.conf>,
 or else the output of C<kpsewhich biber.conf>.
+In tool mode, (B<--tool>) the F<biber-tool.conf> installed with Biber is
+always used unless this option is used to select a user-defined config file.
 
 =item B<--convert_control>
 
@@ -532,9 +563,30 @@ Run in tool mode. In this mode, biber takes a config file and a data source, app
 mapping steps in the config file to the data source and writes a new datasource. Essentially,
 this allows you to change your data sources using biber's mapping semantics.
 
+=item B<--tool_align>
+
+Align field values in neat columns in tool mode output. Default is true.
+
+=item B<--tool_config>
+
+Show the location of the default tool mode config file and exit. Useful when you need to
+copy this file and customise it.
+
 =item B<--tool_datatype=[datatype]>
 
-Datatype of the data file to be processes in tool mode. Defaults to C<bibtex>.
+Datatype of the data file to be processed in tool mode. Defaults to C<bibtex>.
+
+=item B<--tool_fieldcase=upper|lower|title>
+
+Case for field names in tool mode output. Defaults to 'upper'.
+
+=item B<--tool_indent=[num]>
+
+Indentation for body of entries in tool mode output. Defaults to 2.
+
+=item B<--tool_resolve>
+
+Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
 
 =item B<--trace|T>
 

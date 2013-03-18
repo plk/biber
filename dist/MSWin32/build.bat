@@ -12,12 +12,13 @@
 ::
 ::     $config{DLEXT} = 'dll' if ($is_Win32);
 ::
-:: then build and install as usual.
+:: then build and install as usual (this seems ok with the included
+:: XML::LibXSLT with strawberry perl 5.16 for some reason)
 
 :: Have to explicitly include the Input* modules as the names of these are dynamically
 :: constructed in the code so Par::Packer can't auto-detect them.
 
-COPY C:\strawberry\perl\bin\biber C:\WINDOWS\Temp\biber-MSWIN
+COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN
 
 CALL pp ^
   --compress=6 ^
@@ -44,18 +45,20 @@ CALL pp ^
   --module=Encode::Unicode ^
   --module=Encode::Unicode::UTF7 ^
   --module=IO::Socket::SSL ^
+  --module=File::Find::Rule ^
   --link=C:\WINDOWS\system32\libbtparse.dll ^
   --link=C:\strawberry\c\bin\libxslt-1_.dll ^
   --link=C:\strawberry\c\bin\libexslt-0_.dll ^
-  --link=C:\strawberry\c\bin\libz_.dll ^
+  --link=C:\strawberry\c\bin\zlib1_.dll ^
   --link=C:\strawberry\c\bin\libxml2-2_.dll ^
   --link=C:\strawberry\c\bin\libiconv-2_.dll ^
-  --link=C:\strawberry\c\bin\libssl32_.dll ^
+  --link=C:\strawberry\c\bin\ssleay32_.dll ^
   --link=C:\strawberry\c\bin\libeay32_.dll ^
+  --link=C:\strawberry\c\bin\liblzma-5_.dll ^
   --addlist=biber.files ^
   --cachedeps=scancache ^
   --icon=biber.ico ^
   --output=biber-MSWIN.exe ^
-  C:\WINDOWS\Temp\biber-MSWIN
+  %TEMP%\biber-MSWIN
 
-DEL C:\WINDOWS\Temp\biber-MSWIN
+DEL %TEMP%\biber-MSWIN

@@ -1,12 +1,14 @@
 package Biber::Entry;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 
 use Biber::Utils;
+use Biber::Internals;
 use Biber::Constants;
 use Data::Diver qw( Dive );
 use Data::Dump qw( pp );
+use Digest::MD5 qw( md5_hex );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
 use Storable qw( dclone );
@@ -23,6 +25,25 @@ Biber::Entry
 
     Initialize a Biber::Entry object
 
+    There are three types of field possible in an entry:
+
+    * raw  - These are direct copies of input fields with no processing performed on them.
+             Such fields are used for tool mode where we don't want to alter the fields as they
+             need to go back into the output as they are
+    * data - These are fields which derive directly from or are themselves fields in the
+             data souce. Things like YEAR, MONTH, DAY etc. are such fields which are derived from,
+             for example, the DATE field (which is itself a "raw" field). They are part of the
+             original data implicitly, derived from a "raw" field.
+    * other - These are fields, often meta-information like labelname, labelalpha etc. which are
+              more removed from the data fields.
+
+    The reason for this division is largely the entry cloning required for the related entry and
+    inheritance features. When we clone an entry or copy some fields from one entry to another
+    we generally don't want the "other" category as such derived meta-fields will often need
+    to be re-created or ignored so we need to know which are the actual "data" fields to copy/clone.
+    "raw" fields are important when we are writing bibtex format output (in tool mode for example)
+    since in such cases, we don't want to derive implicit fields like YEAR/MONTH from DATE.
+
 =cut
 
 sub new {
@@ -38,6 +59,75 @@ sub new {
   return $self;
 }
 
+=head2 relclone
+
+    Recursively create related entry clones starting with an entry
+
+=cut
+
+sub relclone {
+  my $self = shift;
+  my $citekey = $self->get_field('citekey');
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  if (my $relkeys = $self->get_field('related')) {
+    $logger->debug("Found RELATED field in '$citekey' with contents '$relkeys'");
+    my @clonekeys;
+    foreach my $relkey (split /\s*,\s*/, $relkeys) {
+      # Resolve any alias
+      my $nrelkey = $section->get_citekey_alias($relkey) // $relkey;
+      $logger->debug("Resolved RELATED key alias '$relkey' to '$nrelkey'") if $relkey ne $nrelkey;
+      $relkey = $nrelkey;
+      $logger->debug("Looking at RELATED key '$relkey'");
+
+      # Loop avoidance, in case we are back in an entry again in the guise of a clone
+      # We can record the related clone but don't create it again
+      if (my $ck = $section->get_keytorelclone($relkey)) {
+        $logger->debug("Found RELATED key '$relkey' already has clone '$ck'");
+        push @clonekeys, $ck;
+
+        # Save graph information if requested
+        if (Biber::Config->getoption('output_format') eq 'dot') {
+          Biber::Config->set_graph('related', $ck, $relkey, $citekey);
+        }
+      }
+      else {
+        my $relentry = $section->bibentry($relkey);
+        my $clonekey = md5_hex($relkey);
+        push @clonekeys, $clonekey;
+        my $relclone = $relentry->clone($clonekey);
+        $logger->debug("Creating new related clone for '$relkey' with clone key '$clonekey'");
+
+        # Set related clone options
+        if (my $relopts = $self->get_field('relatedoptions')) {
+          process_entry_options($clonekey, $relopts);
+          $relclone->set_datafield('options', $relopts);
+        }
+        else {
+          process_entry_options($clonekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
+          $relclone->set_datafield('options', 'dataonly');
+        }
+
+        $section->bibentries->add_entry($clonekey, $relclone);
+        $section->keytorelclone($relkey, $clonekey);
+
+        # Save graph information if requested
+        if (Biber::Config->getoption('output_format') eq 'dot') {
+          Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
+        }
+
+        # recurse so we can do cascading related entries
+        $logger->debug("Recursing into RELATED entry '$clonekey'");
+        $relclone->relclone;
+      }
+    }
+    # point to clone keys and add to citekeys
+    # We have to add the citekeys as we need these clones in the .bbl
+    # but the dataonly will cause biblatex not to print them in the bib
+    $section->add_citekeys(@clonekeys);
+    $self->set_datafield('related', join(',', @clonekeys));
+  }
+}
 
 =head2 clone
 
@@ -52,6 +142,9 @@ sub clone {
   my $new = new Biber::Entry;
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = dclone($v);
+  }
+  while (my ($k, $v) = each(%{$self->{rawfields}})) {
+    $new->{rawfields}{$k} = dclone($v);
   }
   while (my ($k, $v) = each(%{$self->{origfields}})) {
     $new->{origfields}{$k} = dclone($v);
@@ -169,70 +262,34 @@ sub get_labeltitle_info {
 }
 
 
-=head2 set_labelyear_info
+=head2 set_labeldate_info
 
-  Record the labelyear information. This is special
+  Record the labeldate information. This is special
   meta-information so we have a seperate method for this
   Takes a hash ref with the information.
 
 =cut
 
-sub set_labelyear_info {
+sub set_labeldate_info {
   my $self = shift;
   my $data = shift;
   $data->{form} = $data->{form} || 'original';
   $data->{lang} = $data->{lang} || 'default';
-  $self->{labelyearinfo} = $data;
+  $self->{labeldateinfo} = $data;
   return;
 }
 
-=head2 get_labelyear_info
+=head2 get_labeldate_info
 
-  Retrieve the labelyear information. This is special
+  Retrieve the labeldate information. This is special
   meta-information so we have a seperate method for this
   Returns a hash ref with the information.
 
 =cut
 
-sub get_labelyear_info {
+sub get_labeldate_info {
   my $self = shift;
-  return $self->{labelyearinfo};
-}
-
-
-
-
-=head2 set_orig_field
-
-    Set a field which came from the datasource which is then split/transformed
-    into other fields. Here we save the original in case we need to look at it again
-    but it is not treated as a real field any more. Such fields are of only historical
-    interest in the processing in case we lose information during processing but need
-    to refer back.
-
-=cut
-
-sub set_orig_field {
-  my $self = shift;
-  my ($key, $val, $form, $lang) = @_;
-  $form = $form || 'original';
-  $lang = $lang || 'default';
-  $self->{origfields}{$key}{$form}{$lang} = $val;
-  return;
-}
-
-=head2 get_orig_field
-
-    Get an original field which has been subsequently split/transformed.
-
-=cut
-
-sub get_orig_field {
-  my $self = shift;
-  my ($key, $form, $lang) = @_;
-  $form = $form || 'original';
-  $lang = $lang || 'default';
-  return Dive($self, 'origfields', $key, $form, $lang);
+  return $self->{labeldateinfo};
 }
 
 
@@ -253,20 +310,6 @@ sub set_field {
   return;
 }
 
-=head2 ref_field
-
-  Make a field a reference to another field
-
-=cut
-
-sub ref_field {
-  my $self = shift;
-  my ($ref, $field) = @_;
-  $self->{datafields}{$ref} = $self->{datafields}{$field};
-  $self->{derivedfields}{$ref} = $self->{derivedfields}{$field};
-  return;
-}
-
 
 =head2 get_field
 
@@ -282,12 +325,13 @@ sub get_field {
   $form = $form || 'original';
   $lang = $lang || 'default';
   # Override for special fields whose form and langs are assumed to be already resolved.
-  if ($key ~~ [ 'labelname', 'labeltitle', 'labelyear' ]) {
+  if ($key ~~ [ 'labelname', 'labeltitle', 'labelyear', 'labelmonth', 'labelday' ]) {
     $form = 'original';
     $lang = 'default';
   }
   return Dive($self, 'datafields', $key, $form, $lang) //
-         Dive($self, 'derivedfields', $key, $form, $lang);
+         Dive($self, 'derivedfields', $key, $form, $lang) //
+         Dive($self, 'rawfields', $key);
 }
 
 
@@ -338,7 +382,7 @@ sub get_field_form_lang_names {
 
 =head2 set_datafield
 
-    Set a field which is in the bib data file
+    Set a field which is in the .bib data file
 
 =cut
 
@@ -362,6 +406,32 @@ sub set_datafield_forms {
   my ($key, $val) = @_;
   $self->{datafields}{$key} = $val;
   return;
+}
+
+
+=head2 set_rawfield
+
+    Save a copy of the raw field from the datasource
+
+=cut
+
+sub set_rawfield {
+  my $self = shift;
+  my ($key, $val) = @_;
+  $self->{rawfields}{$key} = $val;
+  return;
+}
+
+=head2 get_rawfield
+
+    Get a raw field
+
+=cut
+
+sub get_rawfield {
+  my $self = shift;
+  my $key = shift;
+  return Dive($self, 'rawfields', $key);
 }
 
 
@@ -391,6 +461,7 @@ sub del_field {
   my $key = shift;
   delete $self->{datafields}{$key};
   delete $self->{derivedfields}{$key};
+  delete $self->{rawfields}{$key};
   return;
 }
 
@@ -418,7 +489,8 @@ sub field_exists {
   my $self = shift;
   my $key = shift;
   return (Dive($self, 'datafields', $key) ||
-          Dive($self, 'derivedfields', $key)) ? 1 : 0;
+          Dive($self, 'derivedfields', $key) ||
+          Dive($self, 'rawfields', $key)) ? 1 : 0;
 }
 
 =head2 field_form_exists
@@ -446,6 +518,18 @@ sub datafields {
   my $self = shift;
   use locale;
   return sort keys %{$self->{datafields}};
+}
+
+=head2 rawfields
+
+    Returns a sorted array of the raw fields and contents
+
+=cut
+
+sub rawfields {
+  my $self = shift;
+  use locale;
+  return sort keys %{$self->{rawfields}};
 }
 
 =head2 count_datafields
@@ -588,15 +672,23 @@ sub resolve_xdata {
         if (my $recurse_xdata = $xdatum_entry->get_field('xdata')) { # recurse
           $xdatum_entry->resolve_xdata($recurse_xdata);
         }
-        foreach my $field ($xdatum_entry->datafields()) { # set fields
-          $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
-
-          # Record graphing information if required
-          if (Biber::Config->getoption('output_format') eq 'dot') {
-            Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
+        # For tool mode we need to copy the raw fields
+        if (Biber::Config->getoption('tool')) {
+          foreach my $field ($xdatum_entry->rawfields()) { # set raw fields
+            $self->set_rawfield($field, $xdatum_entry->get_rawfield($field));
+            $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
           }
+        }
+        else {
+          foreach my $field ($xdatum_entry->datafields()) { # set fields
+            $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
 
-          $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+            # Record graphing information if required
+            if (Biber::Config->getoption('output_format') eq 'dot') {
+              Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
+            }
+            $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+          }
         }
       }
       else {
@@ -642,7 +734,9 @@ sub inherit_from {
 
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
-  my $inheritance = Biber::Config->getblxoption('inheritance');
+  # Normall this is a biblatex option but in tool mode, it comes from the Biber conf file and so is
+  # a Biber option
+  my $inheritance = Biber::Config->getblxoption('inheritance') || Biber::Config->getoption('inheritance');
   my %processed;
   # get defaults
   my $defaults = $inheritance->{defaults};
@@ -662,8 +756,8 @@ sub inherit_from {
   foreach my $inherit (@{$inheritance->{inherit}}) {
     # Match for this combination of entry and crossref parent?
     foreach my $type_pair (@{$inherit->{type_pair}}) {
-    if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
-        ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
+      if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
+          ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
         foreach my $field (@{$inherit->{field}}) {
           next unless $parent->field_exists($field->{source});
           $processed{$field->{source}} = 1;
@@ -681,8 +775,13 @@ sub inherit_from {
                            "' as '" .
                            $field->{target} .
                            "' from entry '$source_key'");
-            $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
-
+            # For tool mode we need to copy the raw fields
+            if (Biber::Config->getoption('tool')) {
+              $self->set_rawfield($field->{target}, $parent->get_rawfield($field->{source}));
+            }
+            else {
+              $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
+            }
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
               Biber::Config->set_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
@@ -695,12 +794,25 @@ sub inherit_from {
 
   # Now process the rest of the (original data only) fields, if necessary
   if ($inherit_all eq 'true') {
-    foreach my $field ($parent->datafields) {
+    my @fields;
+    if (Biber::Config->getoption('tool')) {
+      @fields = $parent->rawfields;
+    }
+    else {
+      @fields = $parent->datafields;
+    }
+    foreach my $field (@fields) {
       next if $processed{$field}; # Skip if we have already dealt with this field above
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
             $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
-            $self->set_datafield_forms($field, $parent->get_field_forms($field));
+            # For tool mode we need to copy the raw fields
+            if (Biber::Config->getoption('tool')) {
+              $self->set_rawfield($field, $parent->get_rawfield($field));
+            }
+            else {
+              $self->set_datafield_forms($field, $parent->get_field_forms($field));
+            }
 
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {

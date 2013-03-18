@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 41;
+use Test::More tests => 42;
 
 use Biber;
 use Biber::Output::bbl;
@@ -74,6 +74,7 @@ my $dates1      = '1979,01,0200000,1980,04,08,1924,06,07,1924,07,09,1924,0002,05
 my $edtypeclass1 = 'redactor,Jaffé!Philipp,Loewenfeld!Samuel#Kaltenbrunner!Ferdinand#Ewald!Paul';
 my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
 my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,0000';
+my $labels      = '2005,03,02';
 
 # These have custom presort and also an exclusion on year and title set
 my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0000';
@@ -1372,4 +1373,26 @@ $main->set_sortscheme($S);
 $biber->prepare;
 
 is($main->get_sortdata('stdmodel')->[0], $citeorder, 'citeorder' );
+
+# citeorder sort
+$S = [
+      [
+       {},
+       {'labelyear'    => {}},
+      ],
+      [
+       {},
+       {'labelmonth'    => {}},
+      ],
+      [
+       {},
+       {'labelday'    => {}}
+      ]
+     ];
+$main->set_sortscheme($S);
+
+# regenerate information
+$biber->prepare;
+
+is($main->get_sortdata('labelstest')->[0], $labels, 'date labels' );
 

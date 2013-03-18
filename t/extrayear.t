@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 19;
+use Test::More tests => 21;
 
 use Biber;
 use Biber::Utils;
@@ -37,7 +37,6 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 # Biblatex options
-Biber::Config->setblxoption('labelyear', [ 'year' ]);
 Biber::Config->setblxoption('maxcitenames', 1);
 Biber::Config->setblxoption('maxbibnames', 1);
 
@@ -66,3 +65,7 @@ ok(is_undef($main->get_extrayeardata('vangennep')), 'Entry vangennep - prefix ma
 ok(is_undef($main->get_extrayeardata('gennep')), 'Entry gennep - different from prefix name');
 ok(is_undef($main->get_extrayeardata('LY1')), 'Date range means no extrayear - 1');
 ok(is_undef($main->get_extrayeardata('LY2')), 'Date range means no extrayear - 2');
+
+# Test for labelyearspec literal string
+is($bibentries->entry('nodate1')->get_field('labelyear'), 'nodate', 'Labelyear string - 1');
+is($bibentries->entry('nodate2')->get_field('labelyear'), 'nodate', 'Labelyear string - 2');

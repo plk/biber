@@ -123,6 +123,8 @@ my $l3 = q|    \entry{item_54}{inbook}{}
       \strng{fullhash}{984e5967448051538555a64aac11ed21}
       \field{form=original,lang=default}{sortinit}{F}
       \field{form=original,lang=default}{labelyear}{1996}
+      \field{form=original,lang=default}{labelmonth}{03\bibdatedash 04}
+      \field{form=original,lang=default}{labelday}{04\bibdatedash 07}
       \field{form=original,lang=default}{labeltitle}{The Ethics of the Concern for Self as a Practice of Freedom}
       \field{form=original,lang=default}{booktitle}{Foucault Live: Interviews, 1961-1984}
       \field{form=original,lang=default}{day}{04}

@@ -1,5 +1,5 @@
 package Biber::DataModel;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 
@@ -31,12 +31,7 @@ sub new {
   my $class = shift;
   my $dm = shift;
   my $self;
-  if (defined($dm) and ref($dm) eq 'HASH') {
-    $self = bless $dm, $class;
-  }
-  else {
-    $self = bless {}, $class;
-  }
+  $self = bless {}, $class;
 
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
@@ -346,8 +341,6 @@ sub field_is_skipout {
   return $self->{fieldsbyname}{$field}{skipout} // 0;
 }
 
-
-
 =head2 check_mandatory_constraints
 
     Checks constraints of type "mandatory" on entry and
@@ -569,7 +562,7 @@ sub check_data_constraints {
       # Perform content validation checks on date components by trying to
       # instantiate a Date::Simple object.
       foreach my $f (@{$self->get_fields_of_type('field', 'date')}) {
-        my ($d) = $f =~ m/\A(.*)date\z/xms;
+        my $d = $f =~ s/date\z//xmsr;
         # Don't bother unless this type of date is defined (has a year)
         next unless $be->get_datafield($d . 'year');
 

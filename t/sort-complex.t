@@ -46,7 +46,7 @@ Biber::Config->setoption('sourcemap', [
       }]}]);
 
 # Biblatex options
-Biber::Config->setblxoption('labelyear', undef);
+Biber::Config->setblxoption('labeldate', undef);
 
 # Now generate the information
 $biber->prepare;

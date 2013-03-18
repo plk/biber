@@ -1,5 +1,5 @@
-package Biber::Output::tool;
-use 5.014000;
+package Biber::Output::bibtex;
+use v5.16;
 use strict;
 use warnings;
 use base 'Biber::Output::base';
@@ -8,6 +8,7 @@ use Biber::Config;
 use Biber::Constants;
 use Biber::Utils;
 use List::AllUtils qw( :all );
+use Encode;
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Text::Wrap;
@@ -18,7 +19,7 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head1 NAME
 
-Biber::Output::tool - class for Biber output of tool mode
+Biber::Output::bibtex - class for bibtex output of tool mode
 
 =cut
 
@@ -42,6 +43,78 @@ sub set_output_target_file {
   my $TOOLFILE = IO::File->new($toolfile, ">$enc_out");
   $self->set_output_target($TOOLFILE);
 }
+
+=head2 set_output_entry
+
+  Set the output for an entry
+
+=cut
+
+sub set_output_entry {
+  my $self = shift;
+  my $be = shift; # Biber::Entry object
+  my $bee = $be->get_field('entrytype');
+  my $section = shift; # Section object the entry occurs in
+  my $dm = shift; # Data Model object
+  my $acc = '';
+  my $secnum = $section->number;
+  my $key = $be->get_field('citekey');
+
+  # Make the right casing function
+  my $casing;
+  given (Biber::Config->getoption('tool_fieldcase')) {
+    when ('upper') {
+      $casing = sub {uc(shift)};
+    }
+    when ('lower') {
+      $casing = sub {lc(shift)};
+    }
+    when ('title') {
+      $casing = sub {ucfirst(shift)};
+    }
+  }
+
+  $acc .= '@';
+  $acc .= $casing->($bee);
+  $acc .=  "\{$key,\n";
+
+  my $max_field_len;
+  if (Biber::Config->getoption('tool_align')) {
+    $max_field_len = max map {length} $be->rawfields;
+  }
+
+  foreach my $f ($be->rawfields) {
+    # If IDS, CROSSREF and XDATA have been resolved, don't output them
+    # We can't use the usual skipout test for fields not to be output
+    # as this only refers to .bbl output and not to bibtex ouput since this
+    # latter is not reall a "processed" output, it is supposed to be something
+    # which could be again used as input and so we don't want to resolve/skip
+    # fields like DATE etc.
+    if (Biber::Config->getoption('tool_resolve')) {
+      next if lc($f) ~~ ['ids', 'xdata', 'crossref'];
+    }
+    # Save post-mapping data for tool mode
+    my $value = decode_utf8($be->get_rawfield($f));
+    $acc .= ' ' x Biber::Config->getoption('tool_indent');
+    $acc .= $casing->($f);
+    $acc .= ' ' x ($max_field_len - length($f)) if Biber::Config->getoption('tool_align');
+    $acc .= ' = ';
+    $acc .= "\{$value\},\n";
+  }
+
+  $acc .= "}\n\n";
+
+  # If requested to convert UTF-8 to macros ...
+  if (Biber::Config->getoption('output_safechars')) {
+    $acc = latex_recode_output($acc);
+  }
+
+  # Create an index by keyname for easy retrieval
+  $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
+
+  return;
+}
+
 
 =head2 output
 
@@ -74,7 +147,7 @@ sub output {
 
   foreach my $key (@{$self->{output_data}{ENTRIES_ORDER}}) {
     # There is only a (pseudo) section "0" in tool mode
-    print $target $data->{ENTRIES}{0}{index}{$key};
+    print $target ${$data->{ENTRIES}{0}{index}{$key}};
   }
 
   print $target $data->{TAIL};
@@ -99,14 +172,8 @@ sub create_output_section {
   # We rely on the order of this array for the order of the output
   foreach my $key ($section->get_orig_order_citekeys) {
     my $be = $section->bibentry($key);
-    my $string = $be->get_field('cookeddata');
+    $self->set_output_entry($be, $section, Biber::Config->get_dm);
 
-    # If requested to convert UTF-8 to macros ...
-    if (Biber::Config->getoption('output_safechars')) {
-      $string = latex_recode_output($string);
-    }
-
-    $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = $string;
     # Preserve order as we won't sort later in tool mode and we need original bib order
     push @{$self->{output_data}{ENTRIES_ORDER}}, $key;
   }

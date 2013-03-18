@@ -1,5 +1,5 @@
 package Biber::Utils;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 use re 'eval';
@@ -42,7 +42,8 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   normalise_string_label reduce_array remove_outer add_outer ucinit strip_nosort strip_noinit
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml };
+  filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
+  process_entry_options };
 
 =head1 FUNCTIONS
 
@@ -266,7 +267,7 @@ sub strip_nosort {
   my $restrings;
   foreach my $nsopt (@$nosort) {
     # Specific fieldnames override types
-    if (lc($nsopt->{name}) eq lc($fieldname)) {
+    if (fc($nsopt->{name}) eq fc($fieldname)) {
       push @$restrings, $nsopt->{value};
     }
   }
@@ -841,6 +842,66 @@ sub validate_biber_xml {
   }
   undef $xmlparser;
 }
+
+=head2 process_entry_options
+
+    Set per-entry options
+
+=cut
+
+sub process_entry_options {
+  my $citekey = shift;
+  my $options = shift;
+  return unless $options;       # Just in case it's null
+  my @entryoptions = split /\s*,\s*/, $options;
+  foreach (@entryoptions) {
+    s/\s+=\s+/=/g; # get rid of spaces around any "="
+    m/^([^=]+)(=?)(.+)?$/;
+    my $val;
+    if ($2) {
+      given ($3) {
+        when ('true') {
+          $val = 1;
+        }
+        when ('false') {
+          $val = 0;
+        }
+        default {
+          $val = $3;
+        }
+      }
+      _expand_option($1, $val, $citekey);
+    }
+    else {
+      _expand_option($1, 1, $citekey);
+    }
+  }
+  return;
+}
+
+sub _expand_option {
+  my ($opt, $val, $citekey) = @_;
+  given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{INPUT}) {
+    # Standard option
+    when (not defined($_)) {
+      Biber::Config->setblxoption($opt, $val, 'PER_ENTRY', $citekey);
+    }
+    # Set all split options to same value as parent
+    when (ref($_) eq 'ARRAY') {
+      foreach my $k (@$_) {
+        Biber::Config->setblxoption($k, $val, 'PER_ENTRY', $citekey);
+      }
+    }
+    # Specify values per all splits
+    when (ref($_) eq 'HASH') {
+      foreach my $k (keys %$_) {
+        Biber::Config->setblxoption($k, $_->{$k}, 'PER_ENTRY', $citekey);
+      }
+    }
+  }
+  return;
+}
+
 
 1;
 

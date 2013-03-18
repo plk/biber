@@ -28,7 +28,7 @@
 \MakeAutoQuote{«}{»}
 
 \gdef\biberversion{1.6}    % BIBER VERSION
-\gdef\biblatexversion{2.5}   % BIBLATEX VERSION
+\gdef\biblatexversion{2.6}   % BIBLATEX VERSION
 
 % Set up tikz things
 
@@ -206,7 +206,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
-1.6 & 2.\\
+1.6 & 2.6\\
 1.5 & 2.5\\
 1.4 & 2.4\\
 1.3 & 2.3\\
@@ -441,7 +441,30 @@ biber test.bcf
 biber test
 \end{verbatim}
 
-\subsection{Options and config file}
+\noindent Figure \ref{fig:biber-mdf} is a graphical overview of the data flow for
+data model information. See Figure \ref{fig:overview} for a more complete
+overview of \biber's processing steps.
+
+\begin{figure}[!htpb]
+  \centering\small
+  \begin{tikzpicture}
+    \node[file] (dsfile) {datasource};
+    \node[funit] (remap) [below of=dsfile, node distance=8em] {remap} edge [<-,dashed] (dsfile);
+    \node[file] (docremap) [left of=dsfile, node distance=15em] {document data model mapping\\from \texttt{.bcf}} edge [->,dashed] (remap);
+    \node[file] (defaultremap) [left of=remap, node distance=15em] {default data model mapping\\from \texttt{.bcf}} edge [->,dashed] (remap);
+    \node[file] (conf) [below of=remap,  node distance=7em] {data model mapping\\from \biber\ config file} edge [->,dashed] (remap);
+    \node[funit] (parser) [right of=remap, node distance=8em] {parser} edge [<-,very thick] (remap);
+    \node[funit] (validation) [right of=parser, node distance=8em] {validation} edge [<-,very thick] (parser);
+    \node[file] (hard) [above of=validation, node distance=8em]
+    {\biblatex\ data\\model from \texttt{.bcf}} edge [->,dashed]
+    (parser) edge [->,dashed] (remap) edge [->,dashed] (validation);
+    \node[file] (bbl) [below of=validation, node distance=8em] {output file} edge [<-,very thick] (validation);
+  \end{tikzpicture}
+  \caption{Model data flow in \biber}
+  \label{fig:biber-mdf}
+\end{figure}
+\bigskip
+\subsection{Options and config file}\label{conffile}
 \biblatex\ options which \biber\ needs to know about are passed
 via the \verb+.bcf+ file. See Table \ref{tab:bltxopts} for the \biblatex\
 options which \biber\ uses and also for the scopes which are supported
@@ -460,12 +483,12 @@ dataonly           &   & \checkmark  & \checkmark\\
 inheritance        & \checkmark &   &  \\
 labelalpha         & \checkmark & \checkmark &  \\
 labelalphatemplate & \checkmark & \checkmark &  \\
+labeldate          & \checkmark & \checkmark &  \\
+labeldatespec      & \checkmark & \checkmark &  \\
 labelnamespec      & \checkmark & \checkmark &  \\
 labelnumber        & \checkmark & \checkmark &  \\
 labeltitle         & \checkmark & \checkmark &  \\
 labeltitleyear     & \checkmark & \checkmark &  \\
-labelyear          & \checkmark & \checkmark &  \\
-labelyearspec      & \checkmark & \checkmark &  \\
 maxalphanames      & \checkmark & \checkmark & \checkmark\\
 maxbibnames        & \checkmark & \checkmark & \checkmark\\
 maxcitenames       & \checkmark & \checkmark & \checkmark\\
@@ -483,7 +506,6 @@ sortalphaothers    & \checkmark & \checkmark &  \\
 sortexclusion      &   & \checkmark &  \\
 sortfirstinits     & \checkmark &   & \\
 sorting            & \checkmark &   &  \\
-structure          & \checkmark &   &  \\
 uniquelist         & \checkmark & \checkmark & \checkmark\\
 uniquename         & \checkmark & \checkmark & \checkmark\\
 useauthor          & \checkmark & \checkmark & \checkmark\\
@@ -566,7 +588,10 @@ an example config file which displays the \biber\ defaults:
   <sortlocale>en_US.utf8</sortlocale>
   <sortupper>true</sortupper>
   <tool>false</tool>
+  <tool_align>1</tool_align>
   <tool_datatype>bibtex</tool_datatype>
+  <tool_fieldcase>upper</tool_fieldcase>
+  <tool_indent>2</tool_indent>
   <trace>0</trace>
   <validate_config>0</validate_config>
   <validate_control>0</validate_control>
@@ -605,29 +630,6 @@ in a defined order. See the \biblatex\ manual regarding these macros:\\[2ex]
 \hspace*{2em}\texttt{style}-level maps defined with \cmd{DeclareStyleSourcemap}$\rightarrow$\\
 \hspace*{3em}\texttt{driver}-level maps defined with \cmd{DeclareDriverSourcemap}\\[2ex]
 
-Figure \ref{fig:biber-mdf} is a graphical overview of the data flow for
-data model information. See Figure \ref{fig:overview} for a more complete
-overview of \biber's processing steps.
-
-\begin{figure}[!htpb]
-  \centering\small
-  \begin{tikzpicture}
-    \node[file] (dsfile) {datasource};
-    \node[funit] (remap) [below of=dsfile, node distance=8em] {remap} edge [<-,dashed] (dsfile);
-    \node[file] (docremap) [left of=dsfile, node distance=15em] {document data model mapping\\from \texttt{.bcf}} edge [->,dashed] (remap);
-    \node[file] (defaultremap) [left of=remap, node distance=15em] {default data model mapping\\from \texttt{.bcf}} edge [->,dashed] (remap);
-    \node[file] (conf) [below of=remap,  node distance=7em] {data model mapping\\from \biber\ config file} edge [->,dashed] (remap);
-    \node[funit] (parser) [right of=remap, node distance=8em] {parser} edge [<-,very thick] (remap);
-    \node[funit] (validation) [right of=parser, node distance=8em] {validation} edge [<-,very thick] (parser);
-    \node[file] (hard) [above of=validation, node distance=8em]
-    {\biblatex\ data\\model from \texttt{.bcf}} edge [->,dashed]
-    (parser) edge [->,dashed] (remap) edge [->,dashed] (validation);
-    \node[file] (bbl) [below of=validation, node distance=8em] {output file} edge [<-,very thick] (validation);
-  \end{tikzpicture}
-  \caption{Model data flow in \biber}
-  \label{fig:biber-mdf}
-\end{figure}
-
 The \opt{sourcemap} option can only be set in the config file
 and not on the command line as it has a complex structure. This
 option allows you to perform various data source mapping
@@ -653,7 +655,7 @@ section in the config file is described below, followed by examples which
 will make things clearer. Items in \textcolor{red}{red} are not literal,
 they are descriptive meta-values which are explained in the accompanying
 text. Items in \textcolor{blue}{blue} are optional within their parent
-section. The general structure is:
+section or element. The general structure is:
 
 \lstset{showspaces=false}
 \lstset{showstringspaces=false}
@@ -716,7 +718,7 @@ examples. A \opt{map} element looks like this:
               +\textcolor{blue}{map\_origentrytype="1"}+
               +\textcolor{blue}{map\_final="1"}+/>
 </map>
-\end{lstlisting}
+\end{lstlisting}%| <- sometimee emacs highlighting needs this
 
 \begin{itemize}
 \item If there are any \textcolor{red}{\texttt{datasource}}s named in
@@ -1022,6 +1024,107 @@ datasources, which are commonly used for abstracts:
   </map>
 </maps>
 \end{lstlisting}
+\bigskip
+\subsubsection{The \texttt{inheritance} option}\label{inheritance}
+
+The \opt{inheritance} option defines the inheritance rules for data
+inheritance between entries using, for example, \bibtex's
+\bibfield{CROSSREF} field. The default setup for this is defined by
+\biblatex and is passed in the \file{.bcf} file. Defining inheritance rules
+in the \biber configuration file is rarely something you would want to do
+with one notably exceptional case being when using \biber in tool mode
+where you might want to «materialise» special inheritance rules (see
+section \ref{tool}). Here we define the format of the config file
+inheritance section, should you need to understand or modify it. Items in
+\textcolor{red}{red} are not literal, they are descriptive meta-values
+which are explained in the accompanying text. Items in
+\textcolor{blue}{blue} are optional within their parent section or element.
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<inheritance>
+  <defaults inherit_all="true|false" override_target="true|false">
+    <type_pair source="+\textcolor{red}{source}+" target="+\textcolor{red}{target}+"
+                +\textcolor{blue}{inherit\_all="true|false"}+
+                +\textcolor{blue}{override\_target="true|false"}+/>
+                           $\vdots$
+  </defaults>
+  <inherit>
+    <type_pair source="+\textcolor{red}{source}+" target="+\textcolor{red}{target}+"/>
+                $\vdots$
+    <field source="+\textcolor{red}{source}+"
+           +\textcolor{blue}{target="\textcolor{red}{target}"}+
+           +\textcolor{blue}{skip="true|false"}+
+           +\textcolor{blue}{override\_target="true|false"}+/>
+                           $\vdots$
+  </inherit>
+                           $\vdots$
+</inheritance>
+\end{lstlisting}
+
+\begin{itemize}
+\item The \texttt{defaults} section specifies the default inheritance rules
+  which are not otherwise covered by a specific \texttt{inherit} rule.
+  \texttt{inherit\_all} specifies that by default a
+  \textcolor{red}{\texttt{target}} inherits all fields from a
+  \textcolor{red}{\texttt{source}}. \texttt{override\_target} specifies
+  that by default an existing \textcolor{red}{\texttt{target}} field will
+  be overwritten by a \textcolor{red}{\texttt{source}} field it already
+  exists in the \textcolor{red}{\texttt{target}}. A \texttt{type\_pair}
+  element specifies the defaults for a particular
+  \textcolor{red}{\texttt{source}} and \textcolor{red}{\texttt{target}}
+  entrytype combination. \textcolor{red}{\texttt{source}} or
+  \textcolor{red}{\texttt{target}} can take the value «\texttt{*}» which
+  is a wildcard representing all possible entrytypes.
+\item An \texttt{inherit} element specifies how one or more
+  \textcolor{red}{\texttt{source}} fields are inherited by one more
+  \textcolor{red}{\texttt{source}}/\textcolor{red}{\texttt{target}}
+  pairs which are specified in one or more \texttt{type\_pair} elements
+  within the same \texttt{inherit} element.
+  \textcolor{blue}{\texttt{override\_target}} can be specified on a
+  per-field basis as can the \textcolor{blue}{\texttt{skip}} attribute
+  which indicates that a particular \texttt{field} is not to be inherited by
+  the \textcolor{red}{\texttt{target}}.
+\end{itemize}
+%
+Here is an example:
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<inheritance>
+  <defaults inherit_all="true" override_target="false">
+  </defaults>
+  <inherit>
+    <type_pair source="mvbook" target="inbook"/>
+    <type_pair source="mvbook" target="bookinbook"/>
+    <type_pair source="mvbook" target="suppbook"/>
+    <type_pair source="book" target="inbook"/>
+    <type_pair source="book" target="bookinbook"/>
+    <type_pair source="book" target="suppbook"/>
+    <field source="author" target="author"/>
+    <field source="author" target="bookauthor"/>
+  </inherit>
+  <inherit>
+    <type_pair source="*" target="inbook"/>
+    <type_pair source="*" target="incollection"/>
+    <field source="*" skip="true"/>
+  </inherit>
+</inheritance>
+\end{lstlisting}
+%
+Here we can see that the default is to inherit all fields from the
+\textcolor{red}{\texttt{source}} and not to override existing
+\textcolor{red}{\texttt{target}} fields if they already exist. Then we see
+that for some combinations of \textcolor{red}{\texttt{source}}s and
+\textcolor{red}{\texttt{target}}s, the \bibfield{AUTHOR} field is inherited
+from the \textcolor{red}{\texttt{source}} and also the \bibfield{AUTHOR}
+field in the \textcolor{red}{\texttt{source}} is inherited as the
+\bibfield{BOOKAUTHOR} field in the \textcolor{red}{\texttt{target}}.
+
+The second \texttt{inherit} element says that \bibfield{INBOOK} and
+\bibfield{INCOLLECTION} entries never inherit the \bibfield{INTRODUCTION}
+field from any \textcolor{red}{\texttt{source}}.
+
+In general, it is probably best to copy the default \biblatex inheritance
+rules and modify them to your needs. See section \ref{tool}.
 \bigskip
 \subsubsection{The \texttt{noinit} option}\label{noinit}
 
@@ -1741,69 +1844,255 @@ xref     & Show XREF relationships\\
   \label{fig:graphkey}
 \end{figure}
 \bigskip
-\subsection{Extended \bibtex\ Datasource Field Format}
-\biber\ implements an extended \bibtex\ datasource format which allows
-users to specify the script form and language for a field. In this
-way, it is possible to include several variants of a field in an entry
-which give the field in different script forms (translated, romanised
-etc.) with an option in cases of forms like translated forms, to
-specify the language. This allows users within \biblatex\ to access
-such data when formatting entries. The extended field format looks
-like this:
-
-\begin{verbatim}
-<field>_<form>_<lang>
-\end{verbatim}
-%
-Both \texttt{<form>} and \texttt{<lang>} are optional, naturally and
-if they are not present, default to «default» and «original».
-respectively. \texttt{<lang>}, if specified, should be a known
-\sty{babel} language identifier. \texttt{<form>} can be one of:
-\begin{itemize}
-\item original (default if ommitted)
-\item translated
-\item romanised
-\item uniform
-\end{itemize}
-
-For example:
-\begin{lstlisting}[style=bibtex]{}
-@BOOK{example1,
-  AUTHOR                    = { Булгаков, Павел and Розенфельд, Борис },
-  AUTHOR_translated_english = { Bulgakov, Pavel and Rosenfeld, Boris },
-  TITLE                     = { Славься, Отечество наше свободное },
-  TITLE_romanised           = { Slavʹsâ, Otečestvo naše svobodnoe },
-}
-\end{lstlisting}
-%
-This example has an \bibfield{AUTHOR} field in Russian Cyrillic script
-and a variant the «translated» form with and language setting of
-«english». There is also a Russian Cyrillic \bibfield{TITLE} with an
-ISO 9 romanised variant.
-\bigskip
 \subsection{Tool Mode}\label{tool}
 \biber\ can run in «tool» mode which is enabled with the \opt{--tool}
-option. In this mode, \biber is called like this: \opt{biber --tool
+command-line only option. In this mode, \biber is called: \opt{biber --tool
   <datasource>}. It does not read any \file{.bcf} and does not output
 any \file{.bbl}. Instead, it reads all entries from the file
 «datasource», applies any changes specified in the command-line
 options and \biber\ config file and writes the resulting datasource
-out to a new file, defaulting to «datasource\_bibertool.bib» if the
+out to a new file, defaulting to «\file{<datasource>\_bibertool.bib}» if the
 option \opt{output\_file} is not specified. This is useful if you need to
 programatically change your datasource using the semantics provided by
 \biber. For example, you could choose to reencode your datasource by
 turning all UTF-8 characters into \latex\ macros:
 
 \begin{verbatim}
-biber --tool --output_encoding=ascii --output_safechars file.bib
+biber --tool --output_encoding=ascii file.bib
 \end{verbatim}
 
 \noindent This would output a copy of \file{file.bib} called \file{file\_bibertool.bib} with all
-UTF-8 chars changed to \latex macros. If you utilise the \biber\
+UTF-8 chars changed to \latex macros (because when the output is ASCII and
+the input encoding is not (it is by default UTF-8), then the
+\opt{--output\_safechars} option is automatically enabled). If you utilise the \biber\
 config file, you can set up a complex set of mappings to transform
-your datasource however you like in a semantic manner much more robust
-than just textual search/replace.
+your datasource however you wish in a semantic manner much more robust
+than just textual search/replace. You can also use the
+\opt{--tool\_resolve} option which will process any \bibfield{XDATA}
+fields/entries, entry aliases and inheritance rules mentioned in the config
+file (see below).
+
+Tool mode also allows some reformatting of the \file{.bib} file. The
+option \opt{--tool\_fieldcase} can be used to force the entrytype and
+fieldnames to upper, lower or title case. The option
+\opt{--tool\_indent} can be used to customise the indentation of
+fields. The option \opt{tool\_align} can be used to align all field
+values neatly. See the \biber\ \opt{--help} output for documentation
+and defaults. For example, the command:
+
+\begin{verbatim}
+biber --tool --tool_fieldcase=title --tool_indent=4 \
+      --tool_align=true file.bib
+\end{verbatim}
+%
+results in \file{.bib} entries which look like this:
+
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@Entrytype{key,
+    Author    = {...},
+    Title     = {...},
+    Publisher = {...},
+    Year      = {...},
+}
+\end{lstlisting}
+%
+another example:
+\begin{verbatim}
+biber --tool --tool_fieldcase=upper --tool_indent=2 \
+      --tool_align=false file.bib
+\end{verbatim}
+%
+results in entries like this:
+
+\begin{lstlisting}[style=bibtex]{}
+@ENTRYTYPE{key,
+  AUTHOR = {...},
+  TITLE = {...},
+  PUBLISHER = {...},
+  YEAR = {...},
+}
+\end{lstlisting}
+%
+Here is an example using the \biber config file to specify all options.
+This example uses tool mode to reformat the \file{.bib} and also to do some
+transformations using the source map functionality. Suppose
+\file{test.bib} contains the following:
+
+\begin{lstlisting}[style=bibtex]{}
+@book{book1,
+  author = {Doe,J.P.},
+  title = {Ökologische Enterprises},
+  year = {2013}
+}
+\end{lstlisting}
+%
+Further suppose that the \file{biber-test.conf} contains the following:
+
+\begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <tool_fieldcase>title</tool_fieldcase>
+  <output_encoding>ascii</output_encoding>
+  <output_safechars>1</output_safechars>
+  <sourcemap>
+    <maps datatype="bibtex" map_overwrite="1">
+      <map map_overwrite="1">
+        <map_step map_field_source="AUTHOR" map_match="Doe," map_final="1"/>
+        <map_step map_field_source="AUTHOR"
+              map_match=";Doe,\textbackslash s*J(?:\textbackslash .|ohn)(?:[-]*)(?:P\textbackslash .|Paul)*;"
+              map_replace="Doe, John Paul"/>
+      </map>
+    </maps>
+  </sourcemap>
+</config>
+\end{lstlisting}
+%
+Now you can run \biber like this:
+
+\begin{verbatim}
+biber --tool --configfile=biber-tool.conf test.bib
+\end{verbatim}
+%
+The result will be in \file{test\_bibertool.bib} and will look like this:
+
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@Book{book1,
+  Author = {Doe, John Paul},
+  Title  = {\"{O}kologische Enterprises},
+  Year   = {2013},
+}
+\end{lstlisting}
+%
+Note how this is a very powerful way of performing many different
+operations on a \file{.bib} file. By using the config file and tool mode, we have:
+
+\begin{itemize}
+\item Consistently indented and aligned the entry, normalising fields and
+  entrytype to title case
+\item Normalised the \bibfield{AUTHOR} field name using regular expressions
+\item Converted UTF-8 characters to \latex macros, and made the output
+  pure ASCII
+\end{itemize}
+
+If you do not specify any configuration file to use in tool mode, \biber
+will by default look for a config file in the usual way (see section
+\ref{conffile}) with the only difference that if no config file is found,
+it will use the default \file{biber-tool.conf} which is located in the
+\biber install tree in the same location as the \file{Config.pm} file. This
+default config file contains the default \biblatex source mappings for
+\bibtex data sources and also the default inheritance rules for
+\bibfield{CROSSREF} processing. This means that when you use the
+\opt{--tool\_resolve} option, inheritance processing is performed on the
+entries and the results of this are «materialised» in the output. For
+example, consider a \file{test.bib} file:
+
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@BOOK{xd1,
+  AUTHOR = {Edward Ellington},
+  DATE   = {2007},
+  XDATA  = {macmillanalias}
+}
+
+@XDATA{macmillan,
+  IDS   = {macmillanalias},
+  XDATA = {macmillan:pubALIAS, macmillan:loc}
+}
+
+@XDATA{macmillan:pub,
+  IDS       = {macmillan:pubALIAS},
+  PUBLISHER = {Macmillan}
+}
+
+@XDATA{macmillan:loc,
+  LOCATION = {New York and London},
+  NOTE     = {A Note} 
+}
+
+@BOOK{b1,
+  TITLE = {Booktitle},
+  CROSSREF = {mvalias}
+}
+
+@MVBOOK{mv1,
+  IDS = {mvalias},
+  TITLE = {Maintitle},
+  SUBTITLE = {Mainsubtitle},
+  TITLEADDON = {Maintitleaddon}
+}
+\end{lstlisting}
+%
+Running \biber as:
+
+\begin{verbatim}
+biber --tool --tool_resolve test.bib
+\end{verbatim}
+%
+The result of this would be a file \file{test\_bibertool.bib} with contents:
+
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@BOOK{xd1,
+  AUTHOR    = {Edward Ellington},
+  DATE      = {2007},
+  LOCATION  = {New York and London},
+  NOTE      = {A Note},
+  PUBLISHER = {Macmillan},
+}
+
+@XDATA{macmillan,
+  LOCATION  = {New York and London},
+  NOTE      = {A Note},
+  PUBLISHER = {Macmillan},
+}
+
+@XDATA{macmillan:pub,
+  PUBLISHER = {Macmillan},
+}
+
+@XDATA{macmillan:loc,
+  LOCATION = {New York and London},
+  NOTE     = {A Note},
+}
+
+@BOOK{b1,
+  MAINSUBTITLE   = {Mainsubtitle},
+  MAINTITLE      = {Maintitle},
+  MAINTITLEADDON = {Maintitleaddon},
+  TITLE          = {Booktitle},
+}
+
+@MVBOOK{mv1,
+  SUBTITLE   = {Mainsubtitle},
+  TITLE      = {Maintitle},
+  TITLEADDON = {Maintitleaddon},
+}
+\end{lstlisting}
+%
+Notice here that:
+\begin{itemize}
+\item \bibfield{XDATA} references have been resolved completely for entry
+  \texttt{xd1}
+\item \bibfield{CROSSREF} inheritance has been resolved according to the
+  default \biblatex inheritance rules for entry \texttt{b1}
+\item Entry key aliases have been resolved as required in order to perform
+  these tasks
+\end{itemize}
 \bigskip
+\subsubsection{Customising Tool Mode Inheritance Resolution}
+The default \file{biber-tool.conf} contains, as mentioned above, the
+default \biblatex \bibfield{CROSSREF} inheritance setup and \bibtex source
+mappings so that tool mode resolution works as expected. Of course it is
+possible to customise these. In \biblatex, this is accomplished by the
+\cmd{DeclareDataInheritance} macros which write appropriate XML into the
+\file{.bcf} file. Since no \file{.bcf} file is used in tool mode, the
+desired configuration must be put into a \biber config file. The source
+mapping XML specification is given in section \ref{map}. The inheritance
+XML specification is given in section \ref{inheritance}. It is recommended
+to copy the default \file{biber-tool.conf} file, modify this and then use
+it as your own \file{biber.conf} file or pass it explicitly using the
+\opt{--configfile|-g} option. You can determine the location of the default
+tool mode config file by using the \opt{--tool\_config} option which will
+show you the location of the config file and exit.
+\bigskip%|<- stop confusing emacs highlighting
 \section{Binaries}\label{binaries}
 
 \biber\ is a Perl application which relies heavily on quite a few
@@ -1812,7 +2101,7 @@ modules. It is packaged as a stand-alone binary using the excellent
 dependencies into one file which acts as a stand-alone binary and is
 indistinguishable from such to the end user. You can also simply download
 the Perl source and run it as a normal Perl program which
-requires you to have a working Perl 5.14+ installation and the
+requires you to have a working Perl 5.16+ installation and the
 ability to install the pre-requisite modules. You would typically only do
 this if you wanted to keep up with all the bleeding-edge git commits before
 they had been packaged as a binary. Almost all users will not want to do
@@ -1949,7 +2238,7 @@ linux» if unsure about this. There are many pages about this, for example:
 \subsection{Building}
 
 Instructions for those who want/need to build an executable from the
-Perl version. For this, you will need to have Perl 5.14+ with
+Perl version. For this, you will need to have Perl 5.16+ with
 the following modules:
 
 \begin{itemize}
@@ -2065,7 +2354,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 1.5
+INFO - This is Biber 1.6
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

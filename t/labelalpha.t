@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 110;
+use Test::More tests => 111;
 
 use Biber;
 use Biber::Utils;
@@ -39,7 +39,7 @@ Biber::Config->setoption('sortlocale', 'C');
 # Biblatex options
 Biber::Config->setblxoption('maxalphanames', 1);
 Biber::Config->setblxoption('maxcitenames', 1);
-Biber::Config->setblxoption('labelyear', undef);
+Biber::Config->setblxoption('labeldate', undef);
 
 # Now generate the information
 $biber->prepare;
@@ -180,7 +180,7 @@ Biber::Config->setblxoption('minalphanames', 4);
 Biber::Config->setblxoption('maxcitenames', 4);
 Biber::Config->setblxoption('mincitenames', 4);
 Biber::Config->setblxoption('labelalpha', 1);
-Biber::Config->setblxoption('labelyear', 1);
+Biber::Config->setblxoption('labeldate', 1);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -368,6 +368,49 @@ $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'SCH', 'entrykey label 1');
+
+Biber::Config->setblxoption('labelalphatemplate', {
+  labelelement => [
+             {
+               labelpart => [
+                 {
+                  content         => "labelyear",
+                 }
+               ],
+              order => 1,
+             },
+             {
+               labelpart => [
+                 {
+                  content         => "labelmonth",
+                 }
+               ],
+              order => 2,
+             },
+             {
+               labelpart => [
+                 {
+                  content         => "labelday",
+                 }
+               ],
+              order => 3,
+             }
+           ],
+  type  => "global",
+});
+
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extraalphadata_for_key($k, undef);
+}
+
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$bibentries = $section->bibentries;
+
+is($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '20050302', 'labeldate test - 1');
 
 
 

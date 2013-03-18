@@ -53,6 +53,7 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{form=original,lang=default}{sortinit}{0}
       \field{form=original,lang=default}{labelyear}{1955}
+      \field{form=original,lang=default}{labelmonth}{03}
       \field{form=original,lang=default}{labeltitle}{Predictive coding--I}
       \field{form=original,lang=default}{issn}{0096-1000}
       \field{form=original,lang=default}{journaltitle}{IRE Transactions on Information Theory}

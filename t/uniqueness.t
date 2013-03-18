@@ -242,7 +242,7 @@ Biber::Config->setblxoption('mincitenames', 3);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -312,7 +312,7 @@ Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -352,7 +352,7 @@ Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -388,7 +388,7 @@ Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 2);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -417,7 +417,7 @@ Biber::Config->setblxoption('mincitenames', 2);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 2);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -444,7 +444,7 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 0);
 Biber::Config->setblxoption('singletitle', 1);
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -473,7 +473,7 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 1);
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -502,7 +502,7 @@ Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setblxoption('uniquename', 0);
 Biber::Config->setblxoption('uniquelist', 0);
 Biber::Config->setblxoption('singletitle', 1);
-Biber::Config->setblxoption('labelyearspec', [ {content => 'year'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);

@@ -1,5 +1,5 @@
 package Biber::Input::file::biblatexml;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 use base 'Exporter';
@@ -283,7 +283,7 @@ sub create_entry {
     # to make them available for things that need them like name parsing
     if (_norm($entry->nodeName) eq 'options') {
       if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
-        $Biber::MASTER->process_entry_options($key, $node->textContent());
+        process_entry_options($key, $node->textContent());
         # Save the raw options in case we are to output another input format like
         # biblatexml
         $bibentry->set_field('rawoptions', $node->textContent());

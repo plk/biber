@@ -1,5 +1,5 @@
 package Biber::Output::base;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 
@@ -223,7 +223,9 @@ sub get_output_entry {
             $self->{output_data}{MISSING_ENTRIES}{$section}{index}{$key} ||
             $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$key};
   my $out_string = $list ? $list->instantiate_entry($out, $key) : $out;
-  return $out ? $out_string : undef;
+  # Sometimes $out_string might still be a scalar ref (tool mode, for example which doesn't use
+  # sort lists)
+  return $out ? (ref($out_string) eq 'SCALAR' ? $$out_string : $out_string) : undef;
 }
 
 =head2 set_los

@@ -1,5 +1,5 @@
 package Biber::Internals;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 
@@ -8,6 +8,7 @@ use Biber::Constants;
 use Biber::Utils;
 use Biber::DataModel;
 use Data::Compare;
+use Data::Diver qw( Dive );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Digest::MD5 qw( md5_hex );
@@ -230,6 +231,8 @@ my %internal_dispatch_label = (
                 'citekey'           =>  [\&_label_citekey,          []],
                 'labelname'         =>  [\&_label_name,             ['labelname']],
                 'labeltitle'        =>  [\&_label_basic,            ['labeltitle']],
+                'labelmonth'        =>  [\&_label_basic,            ['labelmonth']],
+                'labelday'          =>  [\&_label_basic,            ['labelday']],
                 'labelyear'         =>  [\&_label_basic,            ['labelyear']]);
 
 sub _dispatch_table_label {
@@ -821,7 +824,9 @@ my %internal_dispatch_sorting = (
                                  'labelalpha'      =>  [\&_sort_labelalpha,    []],
                                  'labelname'       =>  [\&_sort_labelname,     []],
                                  'labeltitle'      =>  [\&_sort_labeltitle,    []],
-                                 'labelyear'       =>  [\&_sort_labelyear,     []],
+                                 'labelyear'       =>  [\&_sort_labeldate,     ['year']],
+                                 'labelmonth'      =>  [\&_sort_labeldate,     ['month']],
+                                 'labelday'        =>  [\&_sort_labeldate,     ['day']],
                                  'presort'         =>  [\&_sort_presort,       []],
                                  'sortname'        =>  [\&_sort_sortname,      []],
                                  'entrykey'        =>  [\&_sort_entrykey,      []]);
@@ -1069,15 +1074,21 @@ sub _sort_labeltitle {
   }
 }
 
-sub _sort_labelyear {
+sub _sort_labeldate {
   my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my $ldc = $args->[0]; # labeldate component
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  # re-direct to the right sorting routine for the labelyear
-  if (my $lyi = $be->get_labelyear_info) {
-    # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($lyi->{field}, $citekey, $sortelementattributes);
+  # re-direct to the right sorting routine for the labeldate component
+  if (my $ldi = $be->get_labeldate_info) {
+    if (my $ldf = Dive($ldi, 'field', $ldc)) {
+      # Don't process attributes as they will be processed in the real sub
+      return $self->_dispatch_sorting($ldf, $citekey, $sortelementattributes);
+    }
+    elsif (exists($ldi->{string})) { # labelyear fallback string
+      return '';
+    }
   }
   else {
     return '';
@@ -1317,65 +1328,6 @@ sub _liststring {
   return $str;
 }
 
-=head2 process_entry_options
-
-    Set per-entry options
-
-=cut
-
-sub process_entry_options {
-  my $self = shift;
-  my $citekey = shift;
-  my $options = shift;
-  return unless $options;       # Just in case it's null
-  my @entryoptions = split /\s*,\s*/, $options;
-  foreach (@entryoptions) {
-    s/\s+=\s+/=/g; # get rid of spaces around any "="
-    m/^([^=]+)(=?)(.+)?$/;
-    my $val;
-    if ($2) {
-      given ($3) {
-        when ('true') {
-          $val = 1;
-        }
-        when ('false') {
-          $val = 0;
-        }
-        default {
-          $val = $3;
-        }
-      }
-      _expand_option($1, $val, $citekey);
-    }
-    else {
-      _expand_option($1, 1, $citekey);
-    }
-  }
-  return;
-}
-
-sub _expand_option {
-  my ($opt, $val, $citekey) = @_;
-  given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{INPUT}) {
-    # Standard option
-    when (not defined($_)) {
-      Biber::Config->setblxoption($opt, $val, 'PER_ENTRY', $citekey);
-    }
-    # Set all split options to same value as parent
-    when (ref($_) eq 'ARRAY') {
-      foreach my $k (@$_) {
-        Biber::Config->setblxoption($k, $val, 'PER_ENTRY', $citekey);
-      }
-    }
-    # Specify values per all splits
-    when (ref($_) eq 'HASH') {
-      foreach my $k (keys %$_) {
-        Biber::Config->setblxoption($k, $_->{$k}, 'PER_ENTRY', $citekey);
-      }
-    }
-  }
-  return;
-}
 
 1;
 

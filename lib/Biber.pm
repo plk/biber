@@ -1,5 +1,5 @@
 package Biber;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 use base 'Biber::Internals';
@@ -18,8 +18,7 @@ use IO::File;
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Biber::Config;
 use Biber::Constants;
-use List::AllUtils qw( first uniq );
-use Digest::MD5 qw( md5_hex );
+use List::AllUtils qw( first uniq max );
 use Biber::DataModel;
 use Biber::Internals;
 use Biber::Entries;
@@ -641,7 +640,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $llabel = $list->{label};
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
     if (my $l = $sortlists->get_list($lsection, $ltype, $llabel)) {
-      $logger->info("Section '$ltype' list '$llabel' is repeated for section $lsection - ignoring subsequent mentions");
+      $logger->debug("Section '$ltype' list '$llabel' is repeated for section $lsection - ignoring");
       next;
     }
 
@@ -728,6 +727,23 @@ sub process_setup {
     Biber::Config->setoption('output_safechars', 1);
   }
 }
+
+=head2 process_setup_tool
+
+   Place to put misc pre-processing things needed later for tool mode
+
+=cut
+
+sub process_setup_tool {
+  my $self = shift;
+
+  # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
+  if (Biber::Config->getoption('output_encoding') =~ /(?:x-)?ascii/xmsi and
+      Biber::Config->getoption('input_encoding') !~ /(?:x-)?ascii/xmsi) {
+    Biber::Config->setoption('output_safechars', 1);
+  }
+}
+
 
 =head2 resolve_alias_refs
 
@@ -861,46 +877,7 @@ sub instantiate_dynamic {
   # Instantiate any related entry clones we need
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
-    if (my $relkeys = $be->get_field('related')) {
-      $be->del_field('related'); # clear the related field
-      my @clonekeys;
-      foreach my $relkey (split /\s*,\s*/, $relkeys) {
-        # Resolve any alias
-        $relkey = $section->get_citekey_alias($relkey) // $relkey;
-
-        my $relentry = $section->bibentry($relkey);
-        my $clonekey = md5_hex($relkey);
-        push @clonekeys, $clonekey;
-        my $relclone = $relentry->clone($clonekey);
-        # clone doesn't need the related fields
-        $relclone->del_field('related');
-        $relclone->del_field('relatedtype');
-        $relclone->del_field('relatedstring');
-        $relclone->del_field('relatedoptions');
-
-        # Set related clone options
-        if (my $relopts = $be->get_field('relatedoptions')) {
-          $self->process_entry_options($clonekey, $relopts);
-          $relclone->set_datafield('options', $relopts);
-        }
-        else {
-          $self->process_entry_options($clonekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
-          $relclone->set_datafield('options', 'dataonly');
-        }
-
-        $section->bibentries->add_entry($clonekey, $relclone);
-
-        # Save graph information if requested
-        if (Biber::Config->getoption('output_format') eq 'dot') {
-          Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
-        }
-      }
-      # point to clone keys and add to citekeys
-      # We have to add the citekeys as we need these clones in the .bbl
-      # but the dataonly will cause biblatex not to print them in the bib
-      $section->add_citekeys(@clonekeys);
-      $be->set_datafield('related', join(',', @clonekeys));
-    }
+    $be->relclone;
   }
   return;
 }
@@ -1134,8 +1111,8 @@ sub process_entries_pre {
     # generate labelname name
     $self->process_labelname($citekey);
 
-    # generate labelyear name
-    $self->process_labelyear($citekey);
+    # generate labeldate name
+    $self->process_labeldate($citekey);
 
     # generate labeltitle name
     $self->process_labeltitle($citekey);
@@ -1263,7 +1240,7 @@ sub process_extrayear {
   #   (see code in incr_seen_nameyear method).
   # * Don't increment if skiplab is set
 
-  if (Biber::Config->getblxoption('labelyear', $bee)) {
+  if (Biber::Config->getblxoption('labeldate', $bee)) {
     if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
       return;
     }
@@ -1406,7 +1383,7 @@ sub process_sets {
     # Enforce Biber parts of virtual "dataonly" for set members
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
-      $self->process_entry_options($member, 'skiplab, skiplos, uniquename=0, uniquelist=0');
+      process_entry_options($member, 'skiplab, skiplos, uniquename=0, uniquelist=0');
 
       my $me = $section->bibentry($member);
       if ($me->get_field('entryset')) {
@@ -1425,7 +1402,7 @@ sub process_sets {
   # had skips set by being seen as a member of that set yet
   else {
     if (Biber::Config->get_set_parents($citekey)) {
-      $self->process_entry_options($citekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
+      process_entry_options($citekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
     }
   }
 }
@@ -1533,51 +1510,88 @@ sub process_labelname {
   }
 }
 
-=head2 process_labelyear
+=head2 process_labeldate
 
-    Generate labelyear
+    Generate labeldate information
 
 =cut
 
-sub process_labelyear {
+sub process_labeldate {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
+  my $dm = Biber::Config->get_dm;
 
-  if (Biber::Config->getblxoption('labelyear', $bee)) {
+  if (Biber::Config->getblxoption('labeldate', $bee)) {
     if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
       return;
     }
 
-    my $lyearspec = Biber::Config->getblxoption('labelyearspec', $bee);
-    foreach my $h_ly (@$lyearspec) {
+    my $ldatespec = Biber::Config->getblxoption('labeldatespec', $bee);
+    foreach my $h_ly (@$ldatespec) {
       my $ly = $h_ly->{content};
-      if ($be->get_field($ly)) {
-        $be->set_labelyear_info({'field' => $ly});
+      if ($h_ly->{'type'} eq 'field') { # labeldate field
+        my $ldy;
+        my $ldm;
+        my $ldd;
+        if ($dm->field_is_datatype('date', $ly)) { # resolve dates
+          my $datetype = $ly =~ s/date\z//xmsr;
+          $ldy = $datetype . 'year';
+          $ldm = $datetype . 'month';
+          $ldd = $datetype . 'day';
+        }
+        else {
+          $ldy = $ly; # labelyear can be a non-date field so make a pseudo-year
+        }
+        if ($be->get_field($ldy)) { # did we find a labeldate?
+          $be->set_labeldate_info({'field' => { 'year'  => $ldy,
+                                                'month' => $ldm,
+                                                'day'   => $ldd }});
+          last;
+        }
+      }
+      elsif ($h_ly->{'type'} eq 'string') { # labelyear fallback string
+        $be->set_labeldate_info({'string' => $ly});
         last;
       }
     }
 
-    # Construct labelyear
+    # Construct labelyear, labelmonth, labelday
     # Might not have been set due to skiplab/dataonly
-    if (my $lyi = $be->get_labelyear_info) {
-      my $yf = $lyi->{field};
-      $be->set_field('labelyear', $be->get_field($yf));
-      # ignore endyear if it's the same as year
-      my ($ytype) = $yf =~ /\A(.*)year\z/xms;
-      $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
-      # endyear can be null
-      if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
-        and ($be->get_field($yf) ne $be->get_field($ytype . 'endyear'))) {
-        $be->set_field('labelyear',
-          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
+    if (my $ldi = $be->get_labeldate_info) {
+      if (my $df = $ldi->{field}) { # set labelyear to a field value
+        $be->set_field('labelyear', $be->get_field($df->{year}));
+        $be->set_field('labelmonth', $be->get_field($df->{month})) if $df->{month};
+        $be->set_field('labelday', $be->get_field($df->{day})) if $df->{day};
+        # ignore endyear if it's the same as year
+        my ($ytype) = $df->{year} =~ /\A(.*)year\z/xms;
+        $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
+        # endyear can be null
+        if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
+            and ($be->get_field($df->{year}) ne $be->get_field($ytype . 'endyear'))) {
+          $be->set_field('labelyear',
+                         $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
+        }
+        if ($be->get_field($ytype . 'endmonth')
+            and ($be->get_field($df->{month}) ne $be->get_field($ytype . 'endmonth'))) {
+          $be->set_field('labelmonth',
+                         $be->get_field('labelmonth') . '\bibdatedash ' . $be->get_field($ytype . 'endmonth'));
+        }
+        if ($be->get_field($ytype . 'endday')
+            and ($be->get_field($df->{day}) ne $be->get_field($ytype . 'endday'))) {
+          $be->set_field('labelday',
+                         $be->get_field('labelday') . '\bibdatedash ' . $be->get_field($ytype . 'endday'));
+        }
+      }
+      elsif (my $ys = $ldi->{string}) { # set labelyear to a fallback string
+        $be->set_field('labelyear', $ys);
       }
     }
     else {
-      $logger->debug("labelyear information of entry $citekey is unset");
+      $logger->debug("labeldate information of entry $citekey is unset");
     }
   }
 }
@@ -2635,7 +2649,7 @@ sub generate_extra {
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
       # extrayear
-      if (Biber::Config->getblxoption('labelyear', $bee)) {
+      if (Biber::Config->getblxoption('labeldate', $bee)) {
         my $nameyear = $be->get_field('nameyear');
         if (Biber::Config->get_seen_nameyear($nameyear) > 1) {
           $logger->trace("nameyear for '$nameyear': " . Biber::Config->get_seen_nameyear($nameyear));
@@ -2954,41 +2968,29 @@ sub sort_list {
 =head2 prepare
 
     Do the main work.
-    Process and sort all entries before writing the bbl output.
+    Process and sort all entries before writing the output.
 
 =cut
 
 sub prepare {
   my $self = shift;
 
-  # If not in tool mode
   my $out = $self->get_output_obj;          # Biber::Output object
 
-  # Place to put global pre-processing things, not needed in tool mode
-  $self->process_setup unless Biber::Config->getoption('tool');
+  # Place to put global pre-processing things
+  $self->process_setup;
 
   foreach my $section (@{$self->sections->get_sections}) {
     # shortcut - skip sections that don't have any keys
     next unless $section->get_citekeys or $section->is_allkeys;
     my $secnum = $section->number;
 
-    # Section numbers don't mean anything to the user in tool mode
-    $logger->info("Processing section $secnum") unless Biber::Config->getoption('tool');
+    $logger->info("Processing section $secnum");
 
     $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
-
-    # Just do this and return if in tool mode
-    # There is only one (pseudo) section in tool mode so it's ok
-    # to return from this section loop
-    if (Biber::Config->getoption('tool')) {
-      $out->create_output_section;         # Generate and push the section output into the
-                                           # output object ready for writing
-      return;
-    }
-
     $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->resolve_alias_refs;           # Resolve xref/crossref/xdata aliases to real keys
@@ -3010,6 +3012,40 @@ sub prepare {
                                          # into the output object ready for writing
   return;
 }
+
+=head2 prepare_tool
+
+    Do the main work for tool mode
+
+=cut
+
+sub prepare_tool {
+  my $self = shift;
+  my $out = $self->get_output_obj;          # Biber::Output object
+
+  # Place to put global pre-processing things
+  $self->process_setup_tool;
+
+  # tool mode only has a section 0
+  my $secnum = 0;
+  my $section = $self->sections->get_section($secnum);
+
+  $section->reset_caches; # Reset the the section caches (sorting, label etc.)
+  Biber::Config->_init;   # (re)initialise Config object
+  $self->set_current_section($secnum); # Set the section number we are working on
+  $self->fetch_data;      # Fetch cited key and dependent data from sources
+
+  if (Biber::Config->getoption('tool_resolve')) {
+    $self->resolve_alias_refs; # Resolve xref/crossref/xdata aliases to real keys
+    $self->resolve_xdata;      # Resolve xdata entries
+    $self->process_interentry; # Process crossrefs/sets etc.
+  }
+
+  $out->create_output_section; # Generate and push the section output into the
+                               # into the output object ready for writing
+  return;
+}
+
 
 =head2 fetch_data
 
@@ -3188,7 +3224,9 @@ sub get_dependents {
         my @rmems = split /\s*,\s*/, $relkeys;
         # skip looking for dependent if it's already there (loop suppression)
         foreach my $rm (@rmems) {
-          unless ($section->has_citekey($rm)) {
+          unless ($section->has_citekey($rm) or $section->is_related($rm)) {
+            # record that $rm is used as a related entry key
+            $section->add_related($rm);
             push @$new_deps, $rm;
             $dep_map->{$citekey} = 1;
           }

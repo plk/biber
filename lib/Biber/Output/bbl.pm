@@ -1,5 +1,5 @@
 package Biber::Output::bbl;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 use base 'Biber::Output::base';
@@ -354,8 +354,8 @@ sub set_output_entry {
   # on output as it can vary between lists
   $acc .= "      <BDS>SORTINIT</BDS>\n";
 
-  # The labelyear option determines whether "extrayear" is output
-  if ( Biber::Config->getblxoption('labelyear', $bee)) {
+  # The labeldate option determines whether "extrayear" is output
+  if ( Biber::Config->getblxoption('labeldate', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear = $be->get_field('nameyear')) {
       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
@@ -364,6 +364,12 @@ sub set_output_entry {
     }
     if (my $ly = $be->get_field('labelyear')) {
       $acc .= "      \\field{form=original,lang=default}{labelyear}{$ly}\n";
+    }
+    if (my $lm = $be->get_field('labelmonth')) {
+      $acc .= "      \\field{form=original,lang=default}{labelmonth}{$lm}\n";
+    }
+    if (my $ld = $be->get_field('labelday')) {
+      $acc .= "      \\field{form=original,lang=default}{labelday}{$ld}\n";
     }
   }
 
@@ -529,7 +535,7 @@ sub output {
     # biblatex requires the last list in the .bbl to be the global sort list
     # due to its sequential reading of the .bbl as the final list overrides the
     # previously read ones and the global list determines the order of labelnumber
-    # and sortcites etc. which not using defernumbers
+    # and sortcites etc. when not using defernumbers
     push @lists, $Biber::MASTER->sortlists->get_list($secnum, 'entry', Biber::Config->getblxoption('sortscheme'));
 
     foreach my $list (@lists) {

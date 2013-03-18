@@ -1,5 +1,5 @@
 package Biber::Output::test;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 use base 'Biber::Output::base';
@@ -232,9 +232,9 @@ sub set_output_entry {
   # on output as it can vary between lists
   $acc .= "      <BDS>SORTINIT</BDS>\n";
 
-  # The labelyear option determines whether "extrayear" is output
+  # The labeldate option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
-  if ( Biber::Config->getblxoption('labelyear', $be->get_field('entrytype'))) {
+  if ( Biber::Config->getblxoption('labeldate', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
     if (my $ey = $be->get_field('extrayear')) {
       my $nameyear_extra = $be->get_field('nameyear_extra');
@@ -244,6 +244,12 @@ sub set_output_entry {
     }
     if (my $ly = $be->get_field('labelyear')) {
       $acc .= "      \\field{form=original,lang=default}{labelyear}{$ly}\n";
+    }
+    if (my $lm = $be->get_field('labelmonth')) {
+      $acc .= "      \\field{form=original,lang=default}{labelmonth}{$lm}\n";
+    }
+    if (my $ld = $be->get_field('labelday')) {
+      $acc .= "      \\field{form=original,lang=default}{labelday}{$ld}\n";
     }
   }
 

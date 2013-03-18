@@ -188,4 +188,4 @@ my $forms1 = q|    \entry{forms1}{book}{}
     \endentry
 |;
 
-is($out->get_output_entry($main,'forms1'), $forms1, 'bbl entry - forms 1') ;
+is($out->get_output_entry('forms1', $main), $forms1, 'bbl entry - forms 1') ;

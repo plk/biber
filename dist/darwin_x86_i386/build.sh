@@ -15,8 +15,7 @@
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them.
 
-cp /opt/local/bin/biber /tmp/biber-darwin
-cp /opt/local/lib/libgdbm.3.0.0.dylib /tmp/libgdbm.3.dylib
+cp /opt/local/libexec/perl5.16/sitebin/biber /tmp/biber-darwin
 cp /opt/local/lib/libz.1.2.7.dylib /tmp/libz.1.dylib
 
 pp --compress=6 \
@@ -43,6 +42,7 @@ pp --compress=6 \
   --module=Encode::Unicode \
   --module=Encode::Unicode::UTF7 \
   --module=IO::Socket::SSL \
+  --module=File::Find::Rule \
   --link=/tmp/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
   --link=/opt/local/lib/libbtparse.dylib \
@@ -50,13 +50,14 @@ pp --compress=6 \
   --link=/opt/local/lib/libxslt.1.dylib \
   --link=/opt/local/lib/libssl.1.0.0.dylib \
   --link=/opt/local/lib/libcrypto.1.0.0.dylib \
-  --link=/tmp/libgdbm.3.dylib \
+  --link=/opt/local/lib/libgdbm.4.dylib \
   --link=/opt/local/lib/libexslt.0.dylib \
+  --link=/opt/local/lib/liblzma.5.dylib \
+  --link=/opt/local/lib/libintl.8.dylib \
   --addlist=biber.files \
   --cachedeps=scancache \
   --output=biber-darwin_x86_i386 \
   /tmp/biber-darwin
 
 \rm -f /tmp/biber-darwin
-\rm -f /tmp/libgdbm.3.dylib
 \rm -f /tmp/libz.1.dylib

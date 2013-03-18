@@ -1,5 +1,5 @@
 package Biber::Constants;
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 
@@ -24,7 +24,7 @@ our @EXPORT = qw{
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '2.3';
+our $BCF_VERSION = '2.4';
 # Format version of the .bbl. Used when writing the .bbl
 our $BBL_VERSION = '2.2';
 
@@ -134,7 +134,11 @@ our $CONFIG_DEFAULT_BIBER = {
   sortlocale          => { content => $locale },
   sortupper           => { content => 1 },
   tool                => { content => 0 },
+  tool_align          => { content => 1 },
   tool_datatype       => { content => 'bibtex' },
+  tool_fieldcase      => { content => 'upper' },
+  tool_indent         => { content => '2' },
+  tool_resolve        => { content => 0 },
   trace               => { content => 0 },
   validate_config     => { content => 0 },
   validate_control    => { content => 0 },
@@ -176,6 +180,8 @@ our %CONFIG_SCOPE_BIBLATEX = (
   inheritance        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   labelalpha         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelalphatemplate => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labeldate          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  labeldatespec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labelnamefield     => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
   labelnameform      => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
   labelnamelang      => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
@@ -187,8 +193,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   labeltitlelang     => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
   labeltitlespec     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   labeltitleyear     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelyear          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelyearspec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   maxalphanames      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   maxbibnames        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   maxcitenames       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},

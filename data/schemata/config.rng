@@ -4,40 +4,6 @@
     <element name="config">
       <interleave>
         <optional>
-          <element name="input_encoding">
-            <text/>
-          </element>
-        </optional>
-        <optional>
-          <element name="output_encoding">
-            <text/>
-          </element>
-        </optional>
-        <optional>
-          <element name="output_safechars">
-            <choice>
-              <value>0</value>
-              <value>1</value>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="output_safecharsset">
-            <choice>
-              <value>base</value>
-              <value>full</value>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="bltxml">
-            <choice>
-              <value>0</value>
-              <value>1</value>
-            </choice>
-          </element>
-        </optional>
-        <optional>
           <element name="collate">
             <choice>
               <value>0</value>
@@ -102,16 +68,42 @@
           </element>
         </optional>
         <optional>
+          <element name="fixinits">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <!--
             Would never want this in the config file
              element help                { "0" | "1" }? &
           -->
+          <ref name="inheritance"/>
+        </optional>
+        <optional>
+          <element name="input_encoding">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="listsep">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="logfile">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="mincrossrefs">
             <data type="unsignedByte"/>
           </element>
         </optional>
         <optional>
-          <element name="logfile">
+          <element name="namesep">
             <text/>
           </element>
         </optional>
@@ -164,7 +156,7 @@
           </element>
         </optional>
         <optional>
-          <element name="outfile">
+          <element name="others_string">
             <text/>
           </element>
         </optional>
@@ -174,11 +166,42 @@
           </element>
         </optional>
         <optional>
+          <element name="output_encoding">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_file">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_safechars">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_safecharsset">
+            <choice>
+              <value>base</value>
+              <value>full</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="quiet">
             <choice>
               <value>0</value>
               <value>1</value>
             </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="recodedata">
+            <text/>
           </element>
         </optional>
         <optional>
@@ -195,6 +218,14 @@
           </element>
         </optional>
         <optional>
+          <element name="sortupper">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="sourcemap">
             <oneOrMore>
               <element name="maps">
@@ -207,12 +238,14 @@
                     <value>endnotexml</value>
                   </choice>
                 </attribute>
-                <attribute name="map_overwrite">
-                  <choice>
-                    <value>0</value>
-                    <value>1</value>
-                  </choice>
-                </attribute>
+                <optional>
+                  <attribute name="map_overwrite">
+                    <choice>
+                      <value>0</value>
+                      <value>1</value>
+                    </choice>
+                  </attribute>
+                </optional>
                 <oneOrMore>
                   <ref name="map"/>
                 </oneOrMore>
@@ -221,7 +254,58 @@
           </element>
         </optional>
         <optional>
-          <element name="sortupper">
+          <element name="ssl-nointernalca">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="ssl-noverify-host">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="tool">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="tool_align">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="tool_datatype">
+            <value>bibtex</value>
+          </element>
+        </optional>
+        <optional>
+          <element name="tool_fieldcase">
+            <choice>
+              <value>upper</value>
+              <value>lower</value>
+              <value>title</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="tool_indent">
+            <data type="unsignedByte"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="tool_resolve">
             <choice>
               <value>0</value>
               <value>1</value>
@@ -275,6 +359,137 @@
       </interleave>
     </element>
   </start>
+  <define name="inheritance">
+    <!-- Cross-reference inheritance specifications -->
+    <element name="inheritance">
+      <!-- Defaults -->
+      <element name="defaults">
+        <!-- Whether to inherit all fields -->
+        <attribute name="inherit_all">
+          <choice>
+            <value>true</value>
+            <value>false</value>
+          </choice>
+        </attribute>
+        <!-- Should we overwrite the target field if it exists? -->
+        <attribute name="override_target">
+          <choice>
+            <value>true</value>
+            <value>false</value>
+          </choice>
+        </attribute>
+        <zeroOrMore>
+          <!-- Default inherit_all and override_target settings for entrytype source/target pairs -->
+          <element name="type_pair">
+            <attribute name="source">
+              <choice>
+                <value>*</value>
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
+              </choice>
+            </attribute>
+            <attribute name="target">
+              <choice>
+                <value>*</value>
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
+              </choice>
+            </attribute>
+            <optional>
+              <attribute name="inherit_all">
+                <choice>
+                  <value>true</value>
+                  <value>false</value>
+                </choice>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="override_target">
+                <choice>
+                  <value>true</value>
+                  <value>false</value>
+                </choice>
+              </attribute>
+            </optional>
+            <empty/>
+          </element>
+        </zeroOrMore>
+      </element>
+      <zeroOrMore>
+        <!-- An inheritance specification -->
+        <element name="inherit">
+          <oneOrMore>
+            <!-- applies to these pairs of source/target entrytypes -->
+            <element name="type_pair">
+              <attribute name="source">
+                <choice>
+                  <value>*</value>
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </choice>
+              </attribute>
+              <attribute name="target">
+                <choice>
+                  <value>*</value>
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </choice>
+              </attribute>
+              <empty/>
+            </element>
+          </oneOrMore>
+          <oneOrMore>
+            <!-- and here are the field specifications -->
+            <element name="field">
+              <choice>
+                <!--
+                  either a "skip this field" specification
+                  so we can say inherit all except certain fields OR ...
+                -->
+                <group>
+                  <attribute name="source">
+                    <data type="string"/>
+                  </attribute>
+                  <attribute name="skip">
+                    <choice>
+                      <value>true</value>
+                      <value>false</value>
+                    </choice>
+                  </attribute>
+                </group>
+                <!-- ... a source and target field with an optional override attribute -->
+                <group>
+                  <attribute name="source">
+                    <data type="string">
+                      <param name="minLength">1</param>
+                    </data>
+                  </attribute>
+                  <attribute name="target">
+                    <data type="string">
+                      <param name="minLength">1</param>
+                    </data>
+                  </attribute>
+                  <optional>
+                    <attribute name="override_target">
+                      <choice>
+                        <value>true</value>
+                        <value>false</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                </group>
+              </choice>
+              <empty/>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
   <define name="map">
     <element name="map">
       <optional>
@@ -318,6 +533,11 @@
                   </data>
                 </attribute>
               </optional>
+              <optional>
+                <attribute name="map_final">
+                  <value>1</value>
+                </attribute>
+              </optional>
             </group>
             <group>
               <attribute name="map_field_source">
@@ -358,6 +578,11 @@
                   <param name="minLength">1</param>
                 </data>
               </attribute>
+              <optional>
+                <attribute name="map_append">
+                  <value>1</value>
+                </attribute>
+              </optional>
               <choice>
                 <attribute name="map_null">
                   <value>1</value>
@@ -366,6 +591,9 @@
                   <value>1</value>
                 </attribute>
                 <attribute name="map_origfieldval">
+                  <value>1</value>
+                </attribute>
+                <attribute name="map_origentrytype">
                   <value>1</value>
                 </attribute>
                 <attribute name="map_field_value">

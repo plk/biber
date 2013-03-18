@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
-<bcf:controlfile version="2.2" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="2.4" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -64,12 +64,12 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>labelyear</bcf:key>
+      <bcf:key>labeldate</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
-      <bcf:key>labelyearspec</bcf:key>
-      <bcf:value order="1">year</bcf:value>
+      <bcf:key>labeldatespec</bcf:key>
+      <bcf:value order="1" type="field">date</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxalphanames</bcf:key>
@@ -1872,8 +1872,8 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">key1</bcf:citekey>
-    <bcf:citekey order="2">key2</bcf:citekey>
-    <bcf:citekey order="3">key3</bcf:citekey>
+    <bcf:citekey order="1">key2</bcf:citekey>
+    <bcf:citekey order="3">c1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

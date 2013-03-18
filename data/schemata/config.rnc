@@ -1,9 +1,4 @@
 start = element config {
-  element input_encoding      { text }? &
-  element output_encoding     { text }? &
-  element output_safechars    { "0" | "1" }? &
-  element output_safecharsset { "base" | "full" }? &
-  element bltxml              { "0" | "1" }? &
   element collate             { "0" | "1" }? &
   element collate_options     {
     element option {
@@ -18,10 +13,15 @@ start = element config {
   element decodecharsset      { "base" | "full" }? &
   element debug               { "0" | "1" }? &
   element fastsort            { "0" | "1" }? &
+  element fixinits            { "0" | "1" }? &
 # Would never want this in the config file
 #  element help                { "0" | "1" }? &
-  element mincrossrefs        { xsd:unsignedByte }? &
+  inheritance? &
+  element input_encoding      { text }? &
+  element listsep             { text }? &
   element logfile             { text }? &
+  element mincrossrefs        { xsd:unsignedByte }? &
+  element namesep             { text }? &
 # Can't specify not to use a config file in the config file ...
 #  element noconf              { "0" | "1" }? &
   element nodieonerror         { "0" | "1" }? &
@@ -34,19 +34,32 @@ start = element config {
   }? &
   element nostdmacros          { "0" | "1" }? &
   element onlylog              { "0" | "1" }? &
-  element outfile              { text }? &
+  element others_string        { text }? &
   element output_directory     { text }? &
+  element output_encoding      { text }? &
+  element output_file          { text }? &
+  element output_safechars     { "0" | "1" }? &
+  element output_safecharsset  { "base" | "full" }? &
   element quiet                { "0" | "1" }? &
+  element recodedata           { text }? &
   element sortcase             { "0" | "1" }? &
   element sortlocale           { text }? &
+  element sortupper            { "0" | "1" }? &
   element sourcemap            {
     element maps {
       attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
-      attribute map_overwrite { "0" | "1" },
+      attribute map_overwrite { "0" | "1" }?,
       map+
     }+
   }? &
-  element sortupper            { "0" | "1" }? &
+  element ssl-nointernalca     { "0" | "1" }? &
+  element ssl-noverify-host    { "0" | "1" }? &
+  element tool                 { "0" | "1" }? &
+  element tool_align           { "0" | "1" }? &
+  element tool_datatype        { "bibtex" }? &
+  element tool_fieldcase       { "upper" | "lower" | "title" }? &
+  element tool_indent          { xsd:unsignedByte }? &
+  element tool_resolve         { "0" | "1" }? &
   element trace                { "0" | "1" }? &
   element validate_config      { "0" | "1" }? &
   element validate_control     { "0" | "1" }? &
@@ -55,6 +68,50 @@ start = element config {
 #  element version              { "0" | "1" }? &
   element wraplines            { "0" | "1" }?
 }
+
+inheritance =
+    # Cross-reference inheritance specifications
+    element inheritance {
+      # Defaults
+      element defaults {
+        # Whether to inherit all fields
+        attribute inherit_all { "true" | "false" },
+        # Should we overwrite the target field if it exists?
+        attribute override_target { "true" | "false" },
+        # Default inherit_all and override_target settings for entrytype source/target pairs
+        element type_pair {
+          attribute source { "*" | xsd:string {minLength="1"}},
+          attribute target { "*" | xsd:string {minLength="1"}},
+          attribute inherit_all { "true" | "false" }?,
+          attribute override_target { "true" | "false" }?,
+          empty
+        }*
+      },
+      # An inheritance specification
+      element inherit {
+        # applies to these pairs of source/target entrytypes
+        element type_pair {
+          attribute source { "*" | xsd:string {minLength="1"}},
+          attribute target { "*" | xsd:string {minLength="1"}},
+          empty
+        }+,
+        # and here are the field specifications
+        element field {
+          (
+            # either a "skip this field" specification
+            # so we can say inherit all except certain fields OR ...
+            (attribute source { xsd:string },
+              attribute skip { "true" | "false" }) |
+            # ... a source and target field with an optional override attribute
+            (attribute source { xsd:string {minLength="1"}},
+              attribute target { xsd:string {minLength="1"}},
+              attribute override_target { "true" | "false" }?)
+          ),
+          empty
+        }+
+      }*
+    }
+
 
 map =
   element map {
@@ -68,7 +125,8 @@ map =
         ) |
         (
           attribute map_type_source { xsd:string {minLength="1"} },
-          attribute map_type_target { xsd:string {minLength="1"} }?
+          attribute map_type_target { xsd:string {minLength="1"} }?,
+          attribute map_final { "1" }?
         ) |
         (
           attribute map_field_source { xsd:string {minLength="1"} },
@@ -79,12 +137,15 @@ map =
         ) |
         (
           attribute map_field_set { xsd:string {minLength="1"} },
+          attribute map_append { "1" }?,
           ( attribute map_null { "1" } |
             attribute map_origfield { "1" } |
             attribute map_origfieldval { "1" } |
+            attribute map_origentrytype { "1" } |
             attribute map_field_value { xsd:string {minLength="1"} } )
         )
       ),
       empty
     }+
   }
+

@@ -2,6 +2,7 @@ bin/biber
 Build.PL
 Changes
 data/bcf.xsl
+data/biber-tool.conf
 data/latinkeys.txt
 data/schemata/bcf.rnc
 data/schemata/bcf.rng
@@ -30,10 +31,10 @@ lib/Biber/Internals.pm
 lib/Biber/LaTeX/recode_data.xml
 lib/Biber/LaTeX/Recode.pm
 lib/Biber/Output/base.pm
+lib/Biber/Output/bibtex.pm
 lib/Biber/Output/bbl.pm
 lib/Biber/Output/dot.pm
 lib/Biber/Output/test.pm
-lib/Biber/Output/tool.pm
 lib/Biber.pm
 lib/Biber/Section.pm
 lib/Biber/Sections.pm
@@ -162,6 +163,7 @@ t/tdata/sort-order.bib
 t/tdata/sort-order.bib
 t/tdata/sort-uc.bcf
 t/tdata/sort-uc.bib
+t/tdata/tool.bib
 t/tdata/uniqueness1.bcf
 t/tdata/uniqueness1.bib
 t/tdata/uniqueness2.bcf

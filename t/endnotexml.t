@@ -101,6 +101,8 @@ my $l2 = q|    \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47}{report}{}
       \strng{fullhash}{346ad1f92291bef45511d3eb23e3df34}
       \field{form=original,lang=default}{sortinit}{A}
       \field{form=original,lang=default}{labelyear}{2009}
+      \field{form=original,lang=default}{labelmonth}{03}
+      \field{form=original,lang=default}{labelday}{14}
       \field{form=original,lang=default}{labeltitle}{PTA}
       \field{form=original,lang=default}{day}{14}
       \field{form=original,lang=default}{edition}{2009/07/18}

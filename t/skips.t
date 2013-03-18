@@ -203,12 +203,12 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
 is_deeply([$shs->get_keys], ['skip1'], 'skiplos - not in LOS');
 is($bibentries->entry('skip1')->get_field('options'), 'skipbib', 'Passing skipbib through');
 is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
-is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labelyear_info->{field}), '1995', 'Normal labelyear');
+is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labeldate_info->{field}{year}), '1995', 'Normal labelyear');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');
-ok(is_undef($bibentries->entry('skip3')->get_field('labelyearname')), 'skiplab - no labelyear');
+ok(is_undef($bibentries->entry('skip3')->get_labeldate_info), 'skiplab - no labelyear');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelalpha')), 'dataonly - no labelalpha');
 is($out->get_output_entry('skip4', $main), $sk4, 'dataonly - checking output');
-ok(is_undef($bibentries->entry('skip4')->get_field('labelyearname')), 'dataonly - no labelyear');
+ok(is_undef($bibentries->entry('skip4')->get_labeldate_info), 'dataonly - no labelyear');
 is($out->get_output_entry('seta', $main), $set1, 'Set parent - with labels');
 is($out->get_output_entry('set:membera', $main), $set2, 'Set member - no labels 1');
 is($out->get_output_entry('set:memberb', $main), $set3, 'Set member - no labels 2');

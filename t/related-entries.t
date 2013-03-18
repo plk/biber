@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 9;
+use Test::More tests => 12;
 
 use Biber;
 use Biber::Output::bbl;
@@ -57,7 +57,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \field{form=original,lang=default}{labeltitle}{Original Title}
       \field{form=original,lang=default}{journaltitle}{Journal Title}
       \field{form=original,lang=default}{number}{5}
-      \field{form=original,lang=default}{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290,caf8e34be07426ae7127c1b4829983c1}
+      \field{form=original,lang=default}{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{form=original,lang=default}{relatedtype}{reprintas}
       \field{form=original,lang=default}{shorthand}{RK1}
       \field{form=original,lang=default}{title}{Original Title}
@@ -96,34 +96,6 @@ my $k2 = q|    \entry{key2}{inbook}{}
     \endentry
 |;
 
-my $k3 = q|    \entry{key3}{inbook}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
-      }
-      \name{form=original,lang=default}{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
-      }
-      \list{form=original,lang=default}{location}{1}{%
-        {Location}%
-      }
-      \list{form=original,lang=default}{publisher}{1}{%
-        {Publisher2}%
-      }
-      \strng{namehash}{a517747c3d12f99244ae598910d979c5}
-      \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labelyear}{2010}
-      \field{form=original,lang=default}{labeltitle}{Reprint Title}
-      \field{form=original,lang=default}{booktitle}{Booktitle}
-      \field{form=original,lang=default}{related}{c2add694bf942dc77b376592d9c862cd}
-      \field{form=original,lang=default}{relatedstring}{Second}
-      \field{form=original,lang=default}{relatedtype}{reprintof}
-      \field{form=original,lang=default}{shorthand}{RK3}
-      \field{form=original,lang=default}{title}{Reprint Title}
-      \field{form=original,lang=default}{year}{2010}
-      \field{form=original,lang=default}{pages}{33\bibrangedash 57}
-    \endentry
-|;
 
 my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \name{form=original,lang=default}{labelname}{1}{}{%
@@ -138,6 +110,8 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \field{form=original,lang=default}{labeltitle}{Original Title}
       \field{form=original,lang=default}{journaltitle}{Journal Title}
       \field{form=original,lang=default}{number}{5}
+      \field{form=original,lang=default}{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
+      \field{form=original,lang=default}{relatedtype}{reprintas}
       \field{form=original,lang=default}{shorthand}{RK1}
       \field{form=original,lang=default}{title}{Original Title}
       \field{form=original,lang=default}{volume}{12}
@@ -164,6 +138,9 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       \field{form=original,lang=default}{sortinit}{0}
       \field{form=original,lang=default}{labeltitle}{Reprint Title}
       \field{form=original,lang=default}{booktitle}{Booktitle}
+      \field{form=original,lang=default}{related}{c2add694bf942dc77b376592d9c862cd}
+      \field{form=original,lang=default}{relatedstring}{First}
+      \field{form=original,lang=default}{relatedtype}{reprintof}
       \field{form=original,lang=default}{shorthand}{RK2}
       \field{form=original,lang=default}{title}{Reprint Title}
       \field{form=original,lang=default}{year}{2009}
@@ -189,6 +166,8 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       \field{form=original,lang=default}{sortinit}{0}
       \field{form=original,lang=default}{labeltitle}{Reprint Title}
       \field{form=original,lang=default}{booktitle}{Booktitle}
+      \field{form=original,lang=default}{related}{caf8e34be07426ae7127c1b4829983c1}
+      \field{form=original,lang=default}{relatedtype}{translationof}
       \field{form=original,lang=default}{shorthand}{RK3}
       \field{form=original,lang=default}{title}{Reprint Title}
       \field{form=original,lang=default}{year}{2010}
@@ -212,18 +191,39 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labeltitle}{Reprint Title}
+      \field{form=original,lang=default}{labeltitle}{Orig Language Title}
       \field{form=original,lang=default}{booktitle}{Booktitle}
       \field{form=original,lang=default}{shorthand}{RK4}
-      \field{form=original,lang=default}{title}{Reprint Title}
+      \field{form=original,lang=default}{title}{Orig Language Title}
       \field{form=original,lang=default}{year}{2011}
       \field{form=original,lang=default}{pages}{33\bibrangedash 57}
     \endentry
 |;
 
+my $c1 = q|    \entry{c1}{book}{}
+      \field{form=original,lang=default}{sortinit}{0}
+      \field{form=original,lang=default}{related}{9ab62b5ef34a985438bfdf7ee0102229}
+    \endentry
+|;
+
+my $c2k = q|    \entry{9ab62b5ef34a985438bfdf7ee0102229}{book}{dataonly}
+      \field{form=original,lang=default}{sortinit}{0}
+      \field{form=original,lang=default}{related}{0a3d72134fb3d6c024db4c510bc1605b}
+    \endentry
+|;
+
+my $c3k = q|    \entry{0a3d72134fb3d6c024db4c510bc1605b}{book}{dataonly}
+      \field{form=original,lang=default}{sortinit}{0}
+      \field{form=original,lang=default}{related}{9ab62b5ef34a985438bfdf7ee0102229}
+    \endentry
+|;
+
+
 is( $out->get_output_entry('key1', $main), $k1, 'Related entry test 1' ) ;
 is( $out->get_output_entry('key2', $main), $k2, 'Related entry test 2' ) ;
-is( $out->get_output_entry('key3', $main), $k3, 'Related entry test 3' ) ;
+# Key k3 is used only to create a related entry clone but since it isn't cited itself
+# it shouldn't be in the .bbl
+is( $out->get_output_entry('key3', $main), undef, 'Related entry test 3' ) ;
 is( $out->get_output_entry('c2add694bf942dc77b376592d9c862cd', $main), $kck1, 'Related entry test 4' ) ;
 is( $out->get_output_entry('78f825aaa0103319aaa1a30bf4fe3ada', $main), $kck2, 'Related entry test 5' ) ;
 is( $out->get_output_entry('3631578538a2d6ba5879b31a9a42f290', $main), $kck3, 'Related entry test 6' ) ;
@@ -231,5 +231,8 @@ is( $out->get_output_entry('caf8e34be07426ae7127c1b4829983c1', $main), $kck4, 'R
 # Key k4 is used only to create a related entry clone but since it isn't cited itself
 # it shouldn't be in the .bbl
 is( $out->get_output_entry('key4', $main), undef, 'Related entry test 8' ) ;
-is_deeply([$shs->get_keys], ['key1', 'key2', 'key3'], 'Related entry test 9');
-
+is_deeply([$shs->get_keys], ['key1', 'key2'], 'Related entry test 9');
+# Testing circular dependencies
+is( $out->get_output_entry('c1', $main), $c1, 'Related entry test 10' ) ;
+is( $out->get_output_entry('9ab62b5ef34a985438bfdf7ee0102229', $main), $c2k, 'Related entry test 11' ) ;
+is( $out->get_output_entry('0a3d72134fb3d6c024db4c510bc1605b', $main), $c3k, 'Related entry test 12' ) ;
