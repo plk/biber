@@ -113,6 +113,7 @@ our $CONFIG_DEFAULT_BIBER = {
   input_encoding      => { content => 'UTF-8' },
   listsep             => { content => 'and' },
   mincrossrefs        => { content => 2 },
+  mssplit             => { content => '_' },
   namesep             => { content => 'and' },
   nodieonerror        => { content => 0 },
   noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},

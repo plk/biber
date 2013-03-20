@@ -524,8 +524,8 @@ sub create_entry {
 
 # HANDLERS
 # ========
-
-my $fl_re = qr/\A([^_]+)_?(original|translated|romanised|uniform)?_?(.+)?\z/;
+my $S = Biber::Config->getoption('mssplit');
+my $fl_re = qr/\A([^$S]+)$S?(original|translated|romanised|uniform)?$S?(.+)?\z/;
 
 # Literal fields
 sub _literal {
@@ -1098,7 +1098,8 @@ sub _hack_month {
 
 sub _get_handler {
   my $field = shift;
-  $field =~ s/_(?:original|translated|romanised|uniform)_?.*$//;
+  my $S = Biber::Config->getoption('mssplit');
+  $field =~ s/$S(?:original|translated|romanised|uniform)$S?.*$//;
   if (my $h = $handlers->{CUSTOM}{$field}) {
     return $h;
   }
