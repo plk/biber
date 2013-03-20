@@ -166,11 +166,12 @@ sub new {
 sub is_field {
   my $self = shift;
   my $field = shift;
+  my $S = Biber::Config->getoption('mssplit');
   my $forms = $DM_DATATYPES{'forms'};
   if ($field =~ m/^BIBERCUSTOM/o) {
     return 1;
   }
-  elsif ($field =~ m/^([^_]+)_(?:${forms})_?.*$/) {
+  elsif ($field =~ m/^([^$S]+)$S(?:${forms})$S?.*$/) {
     return $self->{fieldsbyname}{$1} ? 1 : 0;
   }
   else {

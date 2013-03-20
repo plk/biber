@@ -3,6 +3,10 @@ use strict;
 use warnings;
 use Test::More;
 
+# This is used at top-level in bibtex.pm and the tests moan if it's not set.
+use Biber::Config;
+Biber::Config->setoption('mssplit', '_');
+
 # Ensure a recent version of Test::Pod::Coverage
 my $min_tpc = 1.08;
 eval "use Test::Pod::Coverage $min_tpc";
