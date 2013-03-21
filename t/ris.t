@@ -66,7 +66,7 @@ my $l1 = q|    \entry{test1}{report}{}
       \field{labeltitle}{Blood-brain barrier breach following cortical contusion in the rat}
       \field[form=original,lang=default]{journaltitle}{J.Neurosurgery}
       \field[form=original,lang=default]{title}{Blood-brain barrier breach following cortical contusion in the rat}
-      \field[form=original,lang=default]{volume}{85}
+      \field{volume}{85}
       \field{year}{1996}
       \field{pages}{476\bibrangedash 481}
       \keyw{cortical contusion,blood-brain barrier,horseradish peroxidase,head trauma,hippocampus,rat}

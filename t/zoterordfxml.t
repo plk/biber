@@ -63,9 +63,9 @@ my $l1 = q|    \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journal
       \field[form=original,lang=default]{journaltitle}{Theory \& Event}
       \field[form=original,lang=default]{library}{Project MUSE}
       \field[form=original,lang=default]{note}{Volume 5, Issue 3, 2001}
-      \field[form=original,lang=default]{number}{3}
+      \field{number}{3}
       \field[form=original,lang=default]{title}{ten theses on politics}
-      \field[form=original,lang=default]{volume}{5}
+      \field{volume}{5}
       \field{year}{2001}
       \verb{url}
       \verb http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/theory_and_event/v005/5.3ranciere.html

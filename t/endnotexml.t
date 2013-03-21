@@ -77,10 +77,10 @@ Research Support, U.S. Gov't, P.H.S.
 United States
 Health affairs (Project Hope)
 Health Aff (Millwood). 2003 Sep-Oct;22(5):51-64.}
-      \field[form=original,lang=default]{number}{5}
+      \field{number}{5}
       \field[form=original,lang=default]{subtitle}{Health Aff (Millwood)}
       \field[form=original,lang=default]{title}{The role of public policies in reducing mental health status disparities for people of color}
-      \field[form=original,lang=default]{volume}{22}
+      \field{volume}{22}
       \field{pages}{51\bibrangedash 66}
       \keyw{{Adult},{Child},{Education, Special/economics/legislation & jurisprudence},{Health Policy/ legislation & jurisprudence},{Health Services Accessibility/statistics & numerical data},{Health Services Needs and Demand},{Housing/economics/legislation & jurisprudence},{Humans},{Income Tax/legislation & jurisprudence},{Mental Disorders/economics/ ethnology/therapy},{Mental Health Services/economics/ organization & administration},{Minority Groups/ statistics & numerical data},{Poverty},{Social Conditions},{Socioeconomic Factors},{Sociology, Medical},{United States/epidemiology}}
       \warn{\item Invalid format 'Sep-Oct' of date field 'date' in entry 'fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42' - ignoring}
@@ -114,11 +114,11 @@ Review
 United States
 American journal of public health
 Am J Public Health. 2009 Sep;99(9):1567-75. Epub 2009 Jul 16.}
-      \field[form=original,lang=default]{number}{9}
+      \field{number}{9}
       \field[form=original,lang=default]{shorttitle}{PTA}
       \field[form=original,lang=default]{subtitle}{Am J Public Health}
       \field[form=original,lang=default]{title}{Percent total attrition: a poor metric for study rigor in hosted intervention designs}
-      \field[form=original,lang=default]{volume}{99}
+      \field{volume}{99}
       \field{year}{2009}
       \field{pages}{1567\bibrangedash 75}
       \verb{eprint}

@@ -70,9 +70,9 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \field{issn}{0033-2917}
       \field[form=original,lang=default]{journaltitle}{Psychological medicine}
       \field{month}{05}
-      \field[form=original,lang=default]{number}{3}
+      \field{number}{3}
       \field[form=original,lang=default]{title}{Alteration of the platelet serotonin transporter in romantic love.}
-      \field[form=original,lang=default]{volume}{29}
+      \field{volume}{29}
       \field{year}{1999}
       \field{pages}{741\bibrangedash 745}
       \verb{url}
@@ -98,7 +98,7 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \field{labeltitle}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
       \field[form=original,lang=default]{journaltitle}{Artificial Intelligence}
       \field[form=original,lang=default]{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
-      \field[form=original,lang=default]{volume}{102}
+      \field{volume}{102}
       \field{year}{1998}
       \field{pages}{21\bibrangedash 38}
     \endentry
@@ -132,7 +132,7 @@ my $ssl = q|    \entry{jung_alchemical_????}{book}{}
       \field{labeltitle}{Alchemical Studies}
       \field[form=original,lang=default]{series}{Bollingen Series {XX}}
       \field[form=original,lang=default]{title}{Alchemical Studies}
-      \field[form=original,lang=default]{volume}{{XIII}}
+      \field{volume}{{XIII}}
     \endentry
 |;
 

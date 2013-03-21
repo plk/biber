@@ -159,11 +159,11 @@ my $murray1 = q|    \entry{murray}{article}{}
       \field{hyphenation}{american}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field[form=original,lang=default]{journaltitle}{Langmuir}
-      \field[form=original,lang=default]{number}{1}
+      \field{number}{1}
       \field[form=original,lang=default]{shorttitle}{Alkanethiolate gold cluster molecules}
       \field[form=original,lang=default]{subtitle}{Core and monolayer properties as a function of core size}
       \field[form=original,lang=default]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
-      \field[form=original,lang=default]{volume}{14}
+      \field{volume}{14}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
       \keyw{keyw1, keyw2}
@@ -213,11 +213,11 @@ my $murray2 = q|    \entry{murray}{article}{}
       \field{hyphenation}{american}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field[form=original,lang=default]{journaltitle}{Langmuir}
-      \field[form=original,lang=default]{number}{1}
+      \field{number}{1}
       \field[form=original,lang=default]{shorttitle}{Alkanethiolate gold cluster molecules}
       \field[form=original,lang=default]{subtitle}{Core and monolayer properties as a function of core size}
       \field[form=original,lang=default]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
-      \field[form=original,lang=default]{volume}{14}
+      \field{volume}{14}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
       \keyw{keyw1, keyw2}

@@ -690,7 +690,7 @@
       <bcf:field fieldtype="field" datatype="literal">month</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" multiscript="true">nameaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" multiscript="true">note</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">number</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">number</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" multiscript="true">origtitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">pagetotal</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" multiscript="true">part</bcf:field>
@@ -714,9 +714,9 @@
       <bcf:field fieldtype="field" datatype="literal">usere</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userf</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" multiscript="true">venue</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">version</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">volume</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">volumes</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">version</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">volume</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">volumes</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">year</bcf:field>
       <bcf:field fieldtype="field" datatype="integer" nullok="true">urlendyear</bcf:field>
       <bcf:field fieldtype="field" datatype="integer" nullok="true">endyear</bcf:field>

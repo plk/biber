@@ -56,12 +56,12 @@ my $k1 = q|    \entry{key1}{article}{}
       \field{labelyear}{1998}
       \field{labeltitle}{Original Title}
       \field[form=original,lang=default]{journaltitle}{Journal Title}
-      \field[form=original,lang=default]{number}{5}
+      \field{number}{5}
       \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{relatedtype}{reprintas}
       \field{shorthand}{RK1}
       \field[form=original,lang=default]{title}{Original Title}
-      \field[form=original,lang=default]{volume}{12}
+      \field{volume}{12}
       \field{year}{1998}
       \field{pages}{125\bibrangedash 150}
     \endentry
@@ -109,12 +109,12 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \field{sortinit}{0}
       \field{labeltitle}{Original Title}
       \field[form=original,lang=default]{journaltitle}{Journal Title}
-      \field[form=original,lang=default]{number}{5}
+      \field{number}{5}
       \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{relatedtype}{reprintas}
       \field{shorthand}{RK1}
       \field[form=original,lang=default]{title}{Original Title}
-      \field[form=original,lang=default]{volume}{12}
+      \field{volume}{12}
       \field{year}{1998}
       \field{pages}{125\bibrangedash 150}
     \endentry

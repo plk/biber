@@ -58,9 +58,9 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \field{issn}{0096-1000}
       \field[form=original,lang=default]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
-      \field[form=original,lang=default]{number}{1}
+      \field{number}{1}
       \field[form=original,lang=default]{title}{Predictive coding--I}
-      \field[form=original,lang=default]{volume}{1}
+      \field{volume}{1}
       \field{year}{1955}
       \field{pages}{16\bibrangedash 24}
       \verb{doi}
@@ -85,9 +85,9 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
       \field{issn}{0096-1000}
       \field[form=original,lang=default]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
-      \field[form=original,lang=default]{number}{1}
+      \field{number}{1}
       \field[form=original,lang=default]{title}{Predictive coding--I}
-      \field[form=original,lang=default]{volume}{1}
+      \field{volume}{1}
       \field{year}{1955}
       \field{pages}{16\bibrangedash 24}
       \verb{doi}
@@ -112,9 +112,9 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
       \field{issn}{0096-1000}
       \field[form=original,lang=default]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
-      \field[form=original,lang=default]{number}{1}
+      \field{number}{1}
       \field[form=original,lang=default]{title}{Predictive coding--II}
-      \field[form=original,lang=default]{volume}{1}
+      \field{volume}{1}
       \field{year}{1955}
       \field{pages}{24\bibrangedash 33}
       \verb{doi}
