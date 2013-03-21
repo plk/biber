@@ -1287,7 +1287,7 @@ sub _namestring {
   }
 
   $str =~ s/\s+\Q$nse\E/$nse/gxms;   # Remove any whitespace before external separator
-  $str =~ s/\Q$nse\E\z//xms;         # strip final external separator as we are finished
+  $str =~ s/\Q$nse\E\z//xms;         # strip final external separator as we have finished
 
   $str .= $trunc if $visible < $count; # name list was truncated
   return $str;
