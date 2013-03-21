@@ -65,20 +65,27 @@ sub _printfield {
           $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
         }
 
+        # Can the field have multiple script/lang variants?
+        my $dm = Biber::Config->get_dm;
+        my $fl = '';
+        if ($dm->field_is_multiscript($field)) {
+          $fl = "[form=$form,lang=$lang]";
+        }
+
         if (Biber::Config->getoption('wraplines')) {
-          ## 20 is the length of '      \field{}{}{}{}'
-          if ( 20 + length($form) + length($lang) + length($field) + length($str) > 2*$Text::Wrap::columns ) {
-            $acc .= "      \\field{form=$form,lang=$lang}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
+          ## 18 is the length of '      \field[]{}{}'
+          if ( 18 + length($form) + length($lang) + length($field) + length($str) > 2*$Text::Wrap::columns ) {
+            $acc .= "      \\field${fl}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
           }
-          elsif ( 20 + length($form) + length($lang) + length($field) + length($str) > $Text::Wrap::columns ) {
-            $acc .= wrap('      ', '      ', "\\field{form=$form,lang=$lang}{$field}{$str}" ) . "\n";
+          elsif ( 18 + length($form) + length($lang) + length($field) + length($str) > $Text::Wrap::columns ) {
+            $acc .= wrap('      ', '      ', "\\field${fl}{$field}{$str}" ) . "\n";
           }
           else {
-            $acc .= "      \\field{form=$form,lang=$lang}{$field}{$str}\n";
+            $acc .= "      \\field${fl}{$field}{$str}\n";
           }
         }
         else {
-          $acc .= "      \\field{form=$form,lang=$lang}{$field}{$str}\n";
+          $acc .= "      \\field${fl}{$field}{$str}\n";
         }
 
       }
@@ -150,7 +157,7 @@ sub set_output_entry {
     }
 
     my $total = $ln->count_names;
-    $acc .= "      \\name{form=original,lang=default}{labelname}{$total}{$plo}{%\n";
+    $acc .= "      \\name{labelname}{$total}{$plo}{%\n";
     foreach my $n (@{$ln->names}) {
       $acc .= $n->name_to_bbl;
     }
@@ -177,7 +184,7 @@ sub set_output_entry {
           # Copy per-list options to the actual labelname too
           $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
 
-          $acc .= "      \\name{form=$form,lang=$lang}{$namefield}{$total}{$plo}{%\n";
+          $acc .= "      \\name[form=$form,lang=$lang]{$namefield}{$total}{$plo}{%\n";
           foreach my $n (@{$nf->names}) {
             $acc .= $n->name_to_bbl;
           }
@@ -206,7 +213,14 @@ sub set_output_entry {
           }
           my $total = $#$lf + 1;
 
-          $acc .= "      \\list{form=$form,lang=$lang}{$listfield}{$total}{%\n";
+          # Can the field have multiple script/lang variants?
+          my $dm = Biber::Config->get_dm;
+          my $fl = '';
+          if ($dm->field_is_multiscript($listfield)) {
+            $fl = "[form=$form,lang=$lang]";
+          }
+
+          $acc .= "      \\list${fl}{$listfield}{$total}{%\n";
           foreach my $f (@$lf) {
             $acc .= "        {$f}%\n";
           }
@@ -224,7 +238,7 @@ sub set_output_entry {
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     # Might not have been set due to skiplab/dataonly
     if (my $label = $be->get_field('labelalpha')) {
-      $acc .= "      \\field{form=original,lang=default}{labelalpha}{$label}\n";
+      $acc .= "      \\field{labelalpha}{$label}\n";
     }
   }
 
@@ -243,13 +257,13 @@ sub set_output_entry {
       }
     }
     if (my $ly = $be->get_field('labelyear')) {
-      $acc .= "      \\field{form=original,lang=default}{labelyear}{$ly}\n";
+      $acc .= "      \\field{labelyear}{$ly}\n";
     }
     if (my $lm = $be->get_field('labelmonth')) {
-      $acc .= "      \\field{form=original,lang=default}{labelmonth}{$lm}\n";
+      $acc .= "      \\field{labelmonth}{$lm}\n";
     }
     if (my $ld = $be->get_field('labelday')) {
-      $acc .= "      \\field{form=original,lang=default}{labelday}{$ld}\n";
+      $acc .= "      \\field{labelday}{$ld}\n";
     }
   }
 
@@ -275,7 +289,7 @@ sub set_output_entry {
 
   # labeltitle is always output
   if (my $lt = $be->get_field('labeltitle')) {
-    $acc .= "      \\field{form=original,lang=default}{labeltitle}{$lt}\n";
+    $acc .= "      \\field{labeltitle}{$lt}\n";
   }
 
   # The labelalpha option determines whether "extraalpha" is output
@@ -292,10 +306,10 @@ sub set_output_entry {
 
   if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype')) ) {
     if (my $sh = $be->get_field('shorthand')) {
-      $acc .= "      \\field{form=original,lang=default}{labelnumber}{$sh}\n";
+      $acc .= "      \\field{labelnumber}{$sh}\n";
     }
     elsif (my $ln = $be->get_field('labelnumber')) {
-      $acc .= "      \\field{form=original,lang=default}{labelnumber}{$ln}\n";
+      $acc .= "      \\field{labelnumber}{$ln}\n";
     }
   }
 
@@ -330,7 +344,7 @@ sub set_output_entry {
   foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
     if ( my $rf = $be->get_field($rfield)) {
       $rf =~ s/[-–]+/\\bibrangedash /g;
-      $acc .= "      \\field{form=original,lang=default}{$rfield}{$rf}\n";
+      $acc .= "      \\field{$rfield}{$rf}\n";
     }
   }
 

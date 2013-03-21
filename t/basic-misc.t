@@ -68,13 +68,13 @@ vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsc
 set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 us1 labelstest } ;
 
 my $u1 = q|    \entry{u1}{misc}{}
-      \name{form=original,lang=default}{labelname}{4}{uniquelist=4}{%
+      \name{labelname}{4}{uniquelist=4}{%
         {{uniquename=0,hash=e1faffb3e614e6c2fba74296962386b7}{AAA}{A\bibinitperiod}{}{}{}{}{}{}}%
         {{uniquename=0,hash=2bb225f0ba9a58930757a868ed57d9a3}{BBB}{B\bibinitperiod}{}{}{}{}{}{}}%
         {{uniquename=0,hash=defb99e69a9f1f6e06f15006b1f166ae}{CCC}{C\bibinitperiod}{}{}{}{}{}{}}%
         {{uniquename=0,hash=45054f47ac3305a2a33e9bcceadff712}{DDD}{D\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{4}{uniquelist=4}{%
+      \name[form=original,lang=default]{author}{4}{uniquelist=4}{%
         {{uniquename=0,hash=e1faffb3e614e6c2fba74296962386b7}{AAA}{A\bibinitperiod}{}{}{}{}{}{}}%
         {{uniquename=0,hash=2bb225f0ba9a58930757a868ed57d9a3}{BBB}{B\bibinitperiod}{}{}{}{}{}{}}%
         {{uniquename=0,hash=defb99e69a9f1f6e06f15006b1f166ae}{CCC}{C\bibinitperiod}{}{}{}{}{}{}}%
@@ -82,12 +82,12 @@ my $u1 = q|    \entry{u1}{misc}{}
       }
       \strng{namehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
-      \field{form=original,lang=default}{labelalpha}{AAA\textbf{+}00}
-      \field{form=original,lang=default}{sortinit}{A}
-      \field{form=original,lang=default}{labeltitle}{A title}
+      \field{labelalpha}{AAA\textbf{+}00}
+      \field{sortinit}{A}
+      \field{labeltitle}{A title}
       \true{singletitle}
-      \field{form=original,lang=default}{title}{A title}
-      \field{form=original,lang=default}{year}{2000}
+      \field[form=original,lang=default]{title}{A title}
+      \field{year}{2000}
     \endentry
 |;
 
@@ -117,7 +117,7 @@ $out = $biber->get_output_obj;
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $murray1 = q|    \entry{murray}{article}{}
-      \name{form=original,lang=default}{labelname}{14}{}{%
+      \name{labelname}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
@@ -133,7 +133,7 @@ my $murray1 = q|    \entry{murray}{article}{}
         {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{14}{}{%
+      \name[form=original,lang=default]{author}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
@@ -151,27 +151,27 @@ my $murray1 = q|    \entry{murray}{article}{}
       }
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
-      \field{form=original,lang=default}{labelalpha}{Hos\textbf{+}98}
-      \field{form=original,lang=default}{sortinit}{H}
-      \field{form=original,lang=default}{labeltitle}{Alkanethiolate gold cluster molecules}
+      \field{labelalpha}{Hos\textbf{+}98}
+      \field{sortinit}{H}
+      \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
-      \field{form=original,lang=default}{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
-      \field{form=original,lang=default}{hyphenation}{american}
-      \field{form=original,lang=default}{indextitle}{Alkanethiolate gold cluster molecules}
-      \field{form=original,lang=default}{journaltitle}{Langmuir}
-      \field{form=original,lang=default}{number}{1}
-      \field{form=original,lang=default}{shorttitle}{Alkanethiolate gold cluster molecules}
-      \field{form=original,lang=default}{subtitle}{Core and monolayer properties as a function of core size}
-      \field{form=original,lang=default}{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
-      \field{form=original,lang=default}{volume}{14}
-      \field{form=original,lang=default}{year}{1998}
-      \field{form=original,lang=default}{pages}{17\bibrangedash 30}
+      \field[form=original,lang=default]{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
+      \field{hyphenation}{american}
+      \field{indextitle}{Alkanethiolate gold cluster molecules}
+      \field[form=original,lang=default]{journaltitle}{Langmuir}
+      \field[form=original,lang=default]{number}{1}
+      \field[form=original,lang=default]{shorttitle}{Alkanethiolate gold cluster molecules}
+      \field[form=original,lang=default]{subtitle}{Core and monolayer properties as a function of core size}
+      \field[form=original,lang=default]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
+      \field[form=original,lang=default]{volume}{14}
+      \field{year}{1998}
+      \field{pages}{17\bibrangedash 30}
       \keyw{keyw1, keyw2}
     \endentry
 |;
 
 my $murray2 = q|    \entry{murray}{article}{}
-      \name{form=original,lang=default}{labelname}{14}{}{%
+      \name{labelname}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
@@ -187,7 +187,7 @@ my $murray2 = q|    \entry{murray}{article}{}
         {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{14}{}{%
+      \name[form=original,lang=default]{author}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
@@ -205,128 +205,128 @@ my $murray2 = q|    \entry{murray}{article}{}
       }
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
-      \field{form=original,lang=default}{labelalpha}{Hos98}
-      \field{form=original,lang=default}{sortinit}{H}
-      \field{form=original,lang=default}{labeltitle}{Alkanethiolate gold cluster molecules}
+      \field{labelalpha}{Hos98}
+      \field{sortinit}{H}
+      \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
-      \field{form=original,lang=default}{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
-      \field{form=original,lang=default}{hyphenation}{american}
-      \field{form=original,lang=default}{indextitle}{Alkanethiolate gold cluster molecules}
-      \field{form=original,lang=default}{journaltitle}{Langmuir}
-      \field{form=original,lang=default}{number}{1}
-      \field{form=original,lang=default}{shorttitle}{Alkanethiolate gold cluster molecules}
-      \field{form=original,lang=default}{subtitle}{Core and monolayer properties as a function of core size}
-      \field{form=original,lang=default}{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
-      \field{form=original,lang=default}{volume}{14}
-      \field{form=original,lang=default}{year}{1998}
-      \field{form=original,lang=default}{pages}{17\bibrangedash 30}
+      \field[form=original,lang=default]{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
+      \field{hyphenation}{american}
+      \field{indextitle}{Alkanethiolate gold cluster molecules}
+      \field[form=original,lang=default]{journaltitle}{Langmuir}
+      \field[form=original,lang=default]{number}{1}
+      \field[form=original,lang=default]{shorttitle}{Alkanethiolate gold cluster molecules}
+      \field[form=original,lang=default]{subtitle}{Core and monolayer properties as a function of core size}
+      \field[form=original,lang=default]{title}{Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm}
+      \field[form=original,lang=default]{volume}{14}
+      \field{year}{1998}
+      \field{pages}{17\bibrangedash 30}
       \keyw{keyw1, keyw2}
     \endentry
 |;
 
 # This example wouldn't compile - it's just to test escaping
 my $t1 = q+    \entry{t1}{misc}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
-      \field{form=original,lang=default}{labelalpha}{Bro92}
-      \field{form=original,lang=default}{sortinit}{B}
-      \field{form=original,lang=default}{labeltitle}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
-      \field{form=original,lang=default}{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
-      \field{form=original,lang=default}{year}{1992}
-      \field{form=original,lang=default}{pages}{100\bibrangedash}
+      \field{labelalpha}{Bro92}
+      \field{sortinit}{B}
+      \field{labeltitle}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
+      \field[form=original,lang=default]{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
+      \field{year}{1992}
+      \field{pages}{100\bibrangedash}
       \keyw{primary, something,somethingelse}
     \endentry
 +;
 
 my $t2 = q|    \entry{t2}{misc}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
-      \field{form=original,lang=default}{labelalpha}{Bro94}
-      \field{form=original,lang=default}{sortinit}{B}
-      \field{form=original,lang=default}{labeltitle}{Signs of W$\frac{o}{a}$nder}
-      \field{form=original,lang=default}{title}{Signs of W$\frac{o}{a}$nder}
-      \field{form=original,lang=default}{year}{1994}
-      \field{form=original,lang=default}{pages}{100\bibrangedash 108}
+      \field{labelalpha}{Bro94}
+      \field{sortinit}{B}
+      \field{labeltitle}{Signs of W$\frac{o}{a}$nder}
+      \field[form=original,lang=default]{title}{Signs of W$\frac{o}{a}$nder}
+      \field{year}{1994}
+      \field{pages}{100\bibrangedash 108}
     \endentry
 |;
 
 my $anon1 = q|    \entry{anon1}{unpublished}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{uniquename=0,hash=9873a6cc65c553faa2b21aaad626fe4b}{XAnony}{X\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=a66f357fe2fd356fe49959173522a651}{AnonymousX}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{shortauthor}{1}{}{%
+      \name[form=original,lang=default]{shortauthor}{1}{}{%
         {{uniquename=0,hash=9873a6cc65c553faa2b21aaad626fe4b}{XAnony}{X\bibinitperiod}{}{}{}{}{}{}}%
       }
       \strng{namehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
-      \field{form=original,lang=default}{labelalpha}{XAn35}
-      \field{form=original,lang=default}{sortinit}{A}
-      \field{form=original,lang=default}{labeltitle}{Shorttitle}
+      \field{labelalpha}{XAn35}
+      \field{sortinit}{A}
+      \field{labeltitle}{Shorttitle}
       \true{singletitle}
-      \field{form=original,lang=default}{hyphenation}{USenglish}
-      \field{form=original,lang=default}{note}{anon1}
-      \field{form=original,lang=default}{shorttitle}{Shorttitle}
-      \field{form=original,lang=default}{title}{Title1}
-      \field{form=original,lang=default}{year}{1835}
-      \field{form=original,lang=default}{pages}{111\bibrangedash 118}
+      \field{hyphenation}{USenglish}
+      \field[form=original,lang=default]{note}{anon1}
+      \field[form=original,lang=default]{shorttitle}{Shorttitle}
+      \field[form=original,lang=default]{title}{Title1}
+      \field{year}{1835}
+      \field{pages}{111\bibrangedash 118}
       \keyw{arc}
     \endentry
 |;
 
 my $anon2 = q|    \entry{anon2}{unpublished}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{uniquename=0,hash=f64c29e89ea49402b997956610b58ef6}{YAnony}{Y\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=a0bccee4041bc840e14c06e5ba7f083c}{AnonymousY}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{shortauthor}{1}{}{%
+      \name[form=original,lang=default]{shortauthor}{1}{}{%
         {{uniquename=0,hash=f64c29e89ea49402b997956610b58ef6}{YAnony}{Y\bibinitperiod}{}{}{}{}{}{}}%
       }
       \strng{namehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
-      \field{form=original,lang=default}{labelalpha}{YAn39}
-      \field{form=original,lang=default}{sortinit}{A}
-      \field{form=original,lang=default}{labeltitle}{Shorttitle}
+      \field{labelalpha}{YAn39}
+      \field{sortinit}{A}
+      \field{labeltitle}{Shorttitle}
       \true{singletitle}
-      \field{form=original,lang=default}{hyphenation}{USenglish}
-      \field{form=original,lang=default}{note}{anon2}
-      \field{form=original,lang=default}{shorttitle}{Shorttitle}
-      \field{form=original,lang=default}{title}{Title2}
-      \field{form=original,lang=default}{year}{1839}
-      \field{form=original,lang=default}{pages}{1176\bibrangedash 1276}
+      \field{hyphenation}{USenglish}
+      \field[form=original,lang=default]{note}{anon2}
+      \field[form=original,lang=default]{shorttitle}{Shorttitle}
+      \field[form=original,lang=default]{title}{Title2}
+      \field{year}{1839}
+      \field{pages}{1176\bibrangedash 1276}
       \keyw{arc}
     \endentry
 |;
 
 my $url1 = q|    \entry{url1}{misc}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{uniquename=0,hash=b2106a3dda6c5a4879a0cab37e9cca55}{Alias}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{uniquename=0,hash=b2106a3dda6c5a4879a0cab37e9cca55}{Alias}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
-      \field{form=original,lang=default}{labelalpha}{Ali05}
-      \field{form=original,lang=default}{sortinit}{A}
-      \field{form=original,lang=default}{extraalpha}{4}
-      \field{form=original,lang=default}{year}{2005}
+      \field{labelalpha}{Ali05}
+      \field{sortinit}{A}
+      \field{extraalpha}{4}
+      \field{year}{2005}
       \verb{url}
       \verb http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0
       \endverb

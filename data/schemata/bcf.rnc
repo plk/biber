@@ -197,6 +197,8 @@ start =
           # limit this field definition to specific entrytypes?
           # Is parsed as a csv list
           attribute entrytypes { text }?,
+          # Can this field have multiple script/lang variants?
+          attribute multiscript { "true" }?,
           text
         }+
       },

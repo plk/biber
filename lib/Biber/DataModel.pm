@@ -60,6 +60,10 @@ sub new {
     if ($f->{skip_output}) {
       $self->{fieldsbyname}{$f->{content}}{skipout} = 1;
     }
+    # check multiscript - fields which can have multiple script/lang variants
+    if ($f->{multiscript}) {
+      $self->{fieldsbyname}{$f->{content}}{multiscript} = 1;
+    }
   }
 
   my $leg_ents;
@@ -340,6 +344,18 @@ sub field_is_nullok {
 sub field_is_skipout {
   my ($self, $field) = @_;
   return $self->{fieldsbyname}{$field}{skipout} // 0;
+}
+
+=head2 field_is_multiscript
+
+    Returns boolean depending on whether a field can have multiple script/lang
+    variants
+
+=cut
+
+sub field_is_multiscript {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{multiscript} // 0;
 }
 
 =head2 check_mandatory_constraints

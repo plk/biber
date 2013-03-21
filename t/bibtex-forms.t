@@ -140,51 +140,51 @@ is($bibentries->entry('forms5')->get_field('sortlabelalpha'), 'A t', 'labelalpha
 is($bibentries->entry('forms6')->get_field('sortlabelalpha'), 'Z t', 'labelalpha forms - 4');
 
 my $forms1 = q|    \entry{forms1}{book}{}
-      \name{form=original,lang=default}{labelname}{2}{}{%
+      \name{labelname}{2}{}{%
         {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=uniform,lang=default}{author}{2}{}{%
+      \name[form=uniform,lang=default]{author}{2}{}{%
         {{hash=d3e42eb37529f4d05f9646c333b5fd5f}{Bulgakov}{B\bibinitperiod}{Pavel}{P\bibinitperiod}{}{}{}{}}%
         {{hash=87d0ec74cbe7f9e39f5bbc25930f1474}{Rosenfeld}{R\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{2}{}{%
+      \name[form=original,lang=default]{author}{2}{}{%
         {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
       }
-      \list{form=original,lang=default}{institution}{1}{%
+      \list[form=original,lang=default]{institution}{1}{%
         {University of Life}%
       }
-      \list{form=uniform,lang=default}{location}{1}{%
+      \list[form=uniform,lang=default]{location}{1}{%
         {Moscow}%
       }
-      \list{form=original,lang=default}{location}{1}{%
+      \list[form=original,lang=default]{location}{1}{%
         {Москва}%
       }
-      \list{form=romanised,lang=default}{location}{1}{%
+      \list[form=romanised,lang=default]{location}{1}{%
         {Moskva}%
       }
-      \list{form=original,lang=default}{publisher}{1}{%
+      \list[form=original,lang=default]{publisher}{1}{%
         {Наука}%
       }
-      \list{form=romanised,lang=default}{publisher}{1}{%
+      \list[form=romanised,lang=default]{publisher}{1}{%
         {Nauka}%
       }
-      \list{form=translated,lang=default}{publisher}{1}{%
+      \list[form=translated,lang=default]{publisher}{1}{%
         {Science}%
       }
       \strng{namehash}{253fe13319a1daadcda3e2acce242883}
       \strng{fullhash}{253fe13319a1daadcda3e2acce242883}
-      \field{form=original,lang=default}{labelalpha}{БР02}
-      \field{form=original,lang=default}{sortinit}{Б}
-      \field{form=original,lang=default}{labeltitle}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field{labelalpha}{БР02}
+      \field{sortinit}{Б}
+      \field{labeltitle}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \true{singletitle}
-      \field{form=original,lang=default}{day}{01}
-      \field{form=original,lang=default}{month}{10}
-      \field{form=original,lang=default}{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
-      \field{form=romanised,lang=default}{title}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
-      \field{form=translated,lang=default}{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
-      \field{form=original,lang=default}{year}{2002}
+      \field{day}{01}
+      \field{month}{10}
+      \field[form=original,lang=default]{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field[form=romanised,lang=default]{title}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
+      \field[form=translated,lang=default]{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
+      \field{year}{2002}
     \endentry
 |;
 
