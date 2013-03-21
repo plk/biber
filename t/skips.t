@@ -45,158 +45,158 @@ my $bibentries = $section->bibentries;
 
 my $set1 = q|    \entry{seta}{set}{}
       \set{set:membera,set:memberb,set:memberc}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{form=original,lang=default}{labelalpha}{Doe10}
-      \field{form=original,lang=default}{sortinit}{D}
-      \field{form=original,lang=default}{extrayear}{1}
-      \field{form=original,lang=default}{labelyear}{2010}
-      \field{form=original,lang=default}{labeltitle}{Set Member A}
-      \field{form=original,lang=default}{extraalpha}{1}
-      \field{form=original,lang=default}{title}{Set Member A}
-      \field{form=original,lang=default}{year}{2010}
+      \field{labelalpha}{Doe10}
+      \field{sortinit}{D}
+      \field{extrayear}{1}
+      \field{labelyear}{2010}
+      \field{labeltitle}{Set Member A}
+      \field{extraalpha}{1}
+      \field[form=original,lang=default]{title}{Set Member A}
+      \field{year}{2010}
       \keyw{key1, key2}
     \endentry
 |;
 
 my $set2 = q|    \entry{set:membera}{book}{}
       \inset{seta}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{form=original,lang=default}{sortinit}{D}
-      \field{form=original,lang=default}{labeltitle}{Set Member A}
-      \field{form=original,lang=default}{title}{Set Member A}
-      \field{form=original,lang=default}{year}{2010}
+      \field{sortinit}{D}
+      \field{labeltitle}{Set Member A}
+      \field[form=original,lang=default]{title}{Set Member A}
+      \field{year}{2010}
       \keyw{key1, key2}
     \endentry
 |;
 
 my $set3 = q|    \entry{set:memberb}{book}{}
       \inset{seta}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{form=original,lang=default}{sortinit}{D}
-      \field{form=original,lang=default}{labeltitle}{Set Member B}
-      \field{form=original,lang=default}{title}{Set Member B}
-      \field{form=original,lang=default}{year}{2010}
+      \field{sortinit}{D}
+      \field{labeltitle}{Set Member B}
+      \field[form=original,lang=default]{title}{Set Member B}
+      \field{year}{2010}
     \endentry
 |;
 
 my $set4 = q|    \entry{set:memberc}{book}{}
       \inset{seta}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{form=original,lang=default}{sortinit}{D}
-      \field{form=original,lang=default}{labeltitle}{Set Member C}
-      \field{form=original,lang=default}{title}{Set Member C}
-      \field{form=original,lang=default}{year}{2010}
+      \field{sortinit}{D}
+      \field{labeltitle}{Set Member C}
+      \field[form=original,lang=default]{title}{Set Member C}
+      \field{year}{2010}
     \endentry
 |;
 
 my $noset1 = q|    \entry{noseta}{book}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{form=original,lang=default}{labelalpha}{Doe10}
-      \field{form=original,lang=default}{sortinit}{D}
-      \field{form=original,lang=default}{extrayear}{2}
-      \field{form=original,lang=default}{labelyear}{2010}
-      \field{form=original,lang=default}{labeltitle}{Stand-Alone A}
-      \field{form=original,lang=default}{extraalpha}{2}
-      \field{form=original,lang=default}{title}{Stand-Alone A}
-      \field{form=original,lang=default}{year}{2010}
+      \field{labelalpha}{Doe10}
+      \field{sortinit}{D}
+      \field{extrayear}{2}
+      \field{labelyear}{2010}
+      \field{labeltitle}{Stand-Alone A}
+      \field{extraalpha}{2}
+      \field[form=original,lang=default]{title}{Stand-Alone A}
+      \field{year}{2010}
     \endentry
 |;
 
 my $noset2 = q|    \entry{nosetb}{book}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{form=original,lang=default}{labelalpha}{Doe10}
-      \field{form=original,lang=default}{sortinit}{D}
-      \field{form=original,lang=default}{extrayear}{3}
-      \field{form=original,lang=default}{labelyear}{2010}
-      \field{form=original,lang=default}{labeltitle}{Stand-Alone B}
-      \field{form=original,lang=default}{extraalpha}{3}
-      \field{form=original,lang=default}{title}{Stand-Alone B}
-      \field{form=original,lang=default}{year}{2010}
+      \field{labelalpha}{Doe10}
+      \field{sortinit}{D}
+      \field{extrayear}{3}
+      \field{labelyear}{2010}
+      \field{labeltitle}{Stand-Alone B}
+      \field{extraalpha}{3}
+      \field[form=original,lang=default]{title}{Stand-Alone B}
+      \field{year}{2010}
     \endentry
 |;
 
 my $noset3 = q|    \entry{nosetc}{book}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{form=original,lang=default}{labelalpha}{Doe10}
-      \field{form=original,lang=default}{sortinit}{D}
-      \field{form=original,lang=default}{extrayear}{4}
-      \field{form=original,lang=default}{labelyear}{2010}
-      \field{form=original,lang=default}{labeltitle}{Stand-Alone C}
-      \field{form=original,lang=default}{extraalpha}{4}
-      \field{form=original,lang=default}{title}{Stand-Alone C}
-      \field{form=original,lang=default}{year}{2010}
+      \field{labelalpha}{Doe10}
+      \field{sortinit}{D}
+      \field{extrayear}{4}
+      \field{labelyear}{2010}
+      \field{labeltitle}{Stand-Alone C}
+      \field{extraalpha}{4}
+      \field[form=original,lang=default]{title}{Stand-Alone C}
+      \field{year}{2010}
     \endentry
 |;
 
 my $sk4 = q|    \entry{skip4}{article}{dataonly}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list{form=original,lang=default}{location}{1}{%
+      \list[form=original,lang=default]{location}{1}{%
         {Cambridge}%
       }
-      \list{form=original,lang=default}{publisher}{1}{%
+      \list[form=original,lang=default]{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{form=original,lang=default}{sortinit}{D}
-      \field{form=original,lang=default}{labeltitle}{Algorithms Which Sort}
-      \field{form=original,lang=default}{shorthand}{AWS}
-      \field{form=original,lang=default}{title}{Algorithms Which Sort}
-      \field{form=original,lang=default}{year}{1932}
+      \field{sortinit}{D}
+      \field{labeltitle}{Algorithms Which Sort}
+      \field{shorthand}{AWS}
+      \field[form=original,lang=default]{title}{Algorithms Which Sort}
+      \field{year}{1932}
     \endentry
 |;
 

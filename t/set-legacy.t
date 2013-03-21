@@ -43,26 +43,26 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Elias1955}{set}{}
       \set{Elias1955a,Elias1955b}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labelyear}{1955}
-      \field{form=original,lang=default}{labelmonth}{03}
-      \field{form=original,lang=default}{labeltitle}{Predictive coding--I}
-      \field{form=original,lang=default}{issn}{0096-1000}
-      \field{form=original,lang=default}{journaltitle}{IRE Transactions on Information Theory}
-      \field{form=original,lang=default}{month}{03}
-      \field{form=original,lang=default}{number}{1}
-      \field{form=original,lang=default}{title}{Predictive coding--I}
-      \field{form=original,lang=default}{volume}{1}
-      \field{form=original,lang=default}{year}{1955}
-      \field{form=original,lang=default}{pages}{16\bibrangedash 24}
+      \field{sortinit}{0}
+      \field{labelyear}{1955}
+      \field{labelmonth}{03}
+      \field{labeltitle}{Predictive coding--I}
+      \field{issn}{0096-1000}
+      \field[form=original,lang=default]{journaltitle}{IRE Transactions on Information Theory}
+      \field{month}{03}
+      \field[form=original,lang=default]{number}{1}
+      \field[form=original,lang=default]{title}{Predictive coding--I}
+      \field[form=original,lang=default]{volume}{1}
+      \field{year}{1955}
+      \field{pages}{16\bibrangedash 24}
       \verb{doi}
       \verb 10.1109/TIT.1955.1055126
       \endverb
@@ -72,24 +72,24 @@ my $string1 = q|    \entry{Elias1955}{set}{}
 
 my $string2 = q|    \entry{Elias1955a}{article}{}
       \inset{Elias1955}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labeltitle}{Predictive coding--I}
-      \field{form=original,lang=default}{issn}{0096-1000}
-      \field{form=original,lang=default}{journaltitle}{IRE Transactions on Information Theory}
-      \field{form=original,lang=default}{month}{03}
-      \field{form=original,lang=default}{number}{1}
-      \field{form=original,lang=default}{title}{Predictive coding--I}
-      \field{form=original,lang=default}{volume}{1}
-      \field{form=original,lang=default}{year}{1955}
-      \field{form=original,lang=default}{pages}{16\bibrangedash 24}
+      \field{sortinit}{0}
+      \field{labeltitle}{Predictive coding--I}
+      \field{issn}{0096-1000}
+      \field[form=original,lang=default]{journaltitle}{IRE Transactions on Information Theory}
+      \field{month}{03}
+      \field[form=original,lang=default]{number}{1}
+      \field[form=original,lang=default]{title}{Predictive coding--I}
+      \field[form=original,lang=default]{volume}{1}
+      \field{year}{1955}
+      \field{pages}{16\bibrangedash 24}
       \verb{doi}
       \verb 10.1109/TIT.1955.1055126
       \endverb
@@ -99,24 +99,24 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
 
 my $string3 = q|    \entry{Elias1955b}{article}{}
       \inset{Elias1955}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labeltitle}{Predictive coding--II}
-      \field{form=original,lang=default}{issn}{0096-1000}
-      \field{form=original,lang=default}{journaltitle}{IRE Transactions on Information Theory}
-      \field{form=original,lang=default}{month}{03}
-      \field{form=original,lang=default}{number}{1}
-      \field{form=original,lang=default}{title}{Predictive coding--II}
-      \field{form=original,lang=default}{volume}{1}
-      \field{form=original,lang=default}{year}{1955}
-      \field{form=original,lang=default}{pages}{24\bibrangedash 33}
+      \field{sortinit}{0}
+      \field{labeltitle}{Predictive coding--II}
+      \field{issn}{0096-1000}
+      \field[form=original,lang=default]{journaltitle}{IRE Transactions on Information Theory}
+      \field{month}{03}
+      \field[form=original,lang=default]{number}{1}
+      \field[form=original,lang=default]{title}{Predictive coding--II}
+      \field[form=original,lang=default]{volume}{1}
+      \field{year}{1955}
+      \field{pages}{24\bibrangedash 33}
       \verb{doi}
       \verb 10.1109/TIT.1955.1055116
       \endverb

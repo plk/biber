@@ -78,77 +78,77 @@ my $dmv =  [
 my $bln = [ {content => 'author'}, {content => 'editor'} ];
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list{form=original,lang=default}{publisher}{1}{%
+      \list[form=original,lang=default]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \field{form=original,lang=default}{sortinit}{D}
-      \field{form=original,lang=default}{labelyear}{1998}
-      \field{form=original,lang=default}{labelmonth}{04}
-      \field{form=original,lang=default}{labelday}{05}
-      \field{form=original,lang=default}{labeltitle}{Title 1}
-      \field{form=original,lang=default}{day}{05}
-      \field{form=original,lang=default}{month}{04}
-      \field{form=original,lang=default}{origday}{30}
-      \field{form=original,lang=default}{origmonth}{10}
-      \field{form=original,lang=default}{origyear}{1985}
-      \field{form=original,lang=default}{title}{Title 1}
-      \field{form=original,lang=default}{year}{1998}
+      \field{sortinit}{D}
+      \field{labelyear}{1998}
+      \field{labelmonth}{04}
+      \field{labelday}{05}
+      \field{labeltitle}{Title 1}
+      \field{day}{05}
+      \field{month}{04}
+      \field{origday}{30}
+      \field{origmonth}{10}
+      \field{origyear}{1985}
+      \field[form=original,lang=default]{title}{Title 1}
+      \field{year}{1998}
     \endentry
 |;
 
 my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list{form=original,lang=default}{publisher}{1}{%
+      \list[form=original,lang=default]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{fullhash}{19eec87c959944d6d9c72434a42856ba}
-      \field{form=original,lang=default}{sortinit}{E}
-      \field{form=original,lang=default}{labelyear}{1998}
-      \field{form=original,lang=default}{labelmonth}{04}
-      \field{form=original,lang=default}{labelday}{05}
-      \field{form=original,lang=default}{labeltitle}{Title 2}
-      \field{form=original,lang=default}{day}{05}
-      \field{form=original,lang=default}{month}{04}
-      \field{form=original,lang=default}{title}{Title 2}
-      \field{form=original,lang=default}{year}{1998}
+      \field{sortinit}{E}
+      \field{labelyear}{1998}
+      \field{labelmonth}{04}
+      \field{labelday}{05}
+      \field{labeltitle}{Title 2}
+      \field{day}{05}
+      \field{month}{04}
+      \field[form=original,lang=default]{title}{Title 2}
+      \field{year}{1998}
     \endentry
 |;
 
 my $l3 = q|    \entry{L3}{book}{blah=10}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
       }
-      \list{form=original,lang=default}{publisher}{1}{%
+      \list[form=original,lang=default]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{fullhash}{490250da1f3b92580d97563dc96c6c84}
-      \field{form=original,lang=default}{sortinit}{B}
-      \field{form=original,lang=default}{labelyear}{1999}
-      \field{form=original,lang=default}{labelmonth}{04}
-      \field{form=original,lang=default}{labelday}{05}
-      \field{form=original,lang=default}{labeltitle}{Title 3}
-      \field{form=original,lang=default}{day}{05}
-      \field{form=original,lang=default}{month}{04}
-      \field{form=original,lang=default}{title}{Title 3}
-      \field{form=original,lang=default}{year}{1999}
+      \field{sortinit}{B}
+      \field{labelyear}{1999}
+      \field{labelmonth}{04}
+      \field{labelday}{05}
+      \field{labeltitle}{Title 3}
+      \field{day}{05}
+      \field{month}{04}
+      \field[form=original,lang=default]{title}{Title 3}
+      \field{year}{1999}
     \endentry
 |;
 

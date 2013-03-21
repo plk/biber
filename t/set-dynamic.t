@@ -47,96 +47,96 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{DynSet}{set}{}
       \set{Dynamic1,Dynamic2,Dynamic3}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
-      \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labelyear}{2002}
-      \field{form=original,lang=default}{labeltitle}{Doing Daring Deeds}
-      \field{form=original,lang=default}{annotation}{Some Dynamic Note}
-      \field{form=original,lang=default}{shorthand}{d1}
-      \field{form=original,lang=default}{title}{Doing Daring Deeds}
-      \field{form=original,lang=default}{year}{2002}
+      \field{sortinit}{0}
+      \field{labelyear}{2002}
+      \field{labeltitle}{Doing Daring Deeds}
+      \field[form=original,lang=default]{annotation}{Some Dynamic Note}
+      \field{shorthand}{d1}
+      \field[form=original,lang=default]{title}{Doing Daring Deeds}
+      \field{year}{2002}
     \endentry
 |;
 
 my $string2 = q|    \entry{Dynamic1}{book}{}
       \inset{DynSet}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
-      \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labeltitle}{Doing Daring Deeds}
-      \field{form=original,lang=default}{annotation}{Some Dynamic Note}
-      \field{form=original,lang=default}{shorthand}{d1}
-      \field{form=original,lang=default}{title}{Doing Daring Deeds}
-      \field{form=original,lang=default}{year}{2002}
+      \field{sortinit}{0}
+      \field{labeltitle}{Doing Daring Deeds}
+      \field[form=original,lang=default]{annotation}{Some Dynamic Note}
+      \field{shorthand}{d1}
+      \field[form=original,lang=default]{title}{Doing Daring Deeds}
+      \field{year}{2002}
     \endentry
 |;
 
 my $string3 = q|    \entry{Dynamic2}{book}{}
       \inset{DynSet}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
-      \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labeltitle}{Beautiful Birthdays}
-      \field{form=original,lang=default}{shorthand}{d2}
-      \field{form=original,lang=default}{title}{Beautiful Birthdays}
-      \field{form=original,lang=default}{year}{2010}
+      \field{sortinit}{0}
+      \field{labeltitle}{Beautiful Birthdays}
+      \field{shorthand}{d2}
+      \field[form=original,lang=default]{title}{Beautiful Birthdays}
+      \field{year}{2010}
     \endentry
 |;
 
 my $string4 = q|    \entry{Dynamic3}{book}{}
       \inset{DynSet}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labeltitle}{Reckless Ravishings}
-      \field{form=original,lang=default}{shorthand}{d3}
-      \field{form=original,lang=default}{title}{Reckless Ravishings}
-      \field{form=original,lang=default}{year}{2000}
+      \field{sortinit}{0}
+      \field{labeltitle}{Reckless Ravishings}
+      \field{shorthand}{d3}
+      \field[form=original,lang=default]{title}{Reckless Ravishings}
+      \field{year}{2000}
     \endentry
 |;
 
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
 my $string5 = q|    \entry{Dynamic3}{book}{}
-      \name{form=original,lang=default}{labelname}{1}{}{%
+      \name{labelname}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
-      \name{form=original,lang=default}{author}{1}{}{%
+      \name[form=original,lang=default]{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \field{form=original,lang=default}{sortinit}{0}
-      \field{form=original,lang=default}{labelyear}{2000}
-      \field{form=original,lang=default}{labeltitle}{Reckless Ravishings}
-      \field{form=original,lang=default}{shorthand}{d3}
-      \field{form=original,lang=default}{title}{Reckless Ravishings}
-      \field{form=original,lang=default}{year}{2000}
+      \field{sortinit}{0}
+      \field{labelyear}{2000}
+      \field{labeltitle}{Reckless Ravishings}
+      \field{shorthand}{d3}
+      \field[form=original,lang=default]{title}{Reckless Ravishings}
+      \field{year}{2000}
     \endentry
 |;
 
