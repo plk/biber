@@ -552,9 +552,13 @@ sub parse_ctrlfile {
   my %bibdatasources = ();
   foreach my $data (@{$bcfxml->{bibdata}}) {
     foreach my $datasource (@{$data->{datasource}}) {
-      push @{$bibdatasources{$data->{section}[0]}}, { type     => $datasource->{type},
-                                                      name     => $datasource->{content},
-                                                      datatype => $datasource->{datatype} };
+      unless (first {$_->{type} eq $datasource->{type} and
+             $_->{datatype} eq $datasource->{datatype} and
+               $_->{name} eq $datasource->{content}} @{$bibdatasources{$data->{section}[0]}}) {
+        push @{$bibdatasources{$data->{section}[0]}}, { type     => $datasource->{type},
+                                                        name     => $datasource->{content},
+                                                        datatype => $datasource->{datatype} };
+      }
     }
   }
 
