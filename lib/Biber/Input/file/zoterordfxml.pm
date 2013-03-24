@@ -192,6 +192,9 @@ sub extract_entries {
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, $ek;
 
+      # Record a key->datasource name mapping for error reporting
+      $section->set_keytods($ek, $filename);
+
       create_entry($ek, $entry, $source, $smaps);
     }
 
@@ -228,6 +231,10 @@ sub extract_entries {
         $logger->debug('Parsing Zotero RDF/XML entry object ' . $entry->nodePath);
         # See comment above about the importance of the case of the key
         # passed to create_entry()
+
+        # Record a key->datasource name mapping for error reporting
+        $section->set_keytods($wanted_key, $filename);
+
         create_entry($wanted_key, $entry, $source, $smaps);
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
@@ -597,6 +604,10 @@ sub _range {
 # Date fields
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $ds = $section->get_keytods($key);
+
   my $date = $entry->findvalue($f);
   # We are not validating dates here, just syntax parsing
     my $date_re = qr/(\d{4}) # year
@@ -618,7 +629,7 @@ sub _date {
     }
   }
   else {
-    biber_warn("Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
+    biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
   }
   return;
 }

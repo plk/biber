@@ -187,6 +187,9 @@ sub extract_entries {
         $section->add_everykey($key);
       }
 
+      # Record a key->datasource name mapping for error reporting
+      $section->set_keytods($key, $filename);
+
       create_entry($key, $entry);
 
       # We do this as otherwise we have no way of determining the origing .bib entry order
@@ -224,6 +227,10 @@ sub extract_entries {
         # passed to create_entry()
         # Skip creation if it's already been done, for example, via a citekey alias
         unless ($section->bibentries->entry_exists($wanted_key)) {
+
+          # Record a key->datasource name mapping for error reporting
+          $section->set_keytods($wanted_key, $filename);
+
           create_entry($wanted_key, $entry);
         }
         # found a key, remove it from the list of keys we want
@@ -238,6 +245,10 @@ sub extract_entries {
         # just in case only the alias is cited
         unless ($section->bibentries->entry_exists($key)) {
           my $entry = $xpc->findnodes("//$NS:entry/[\@id='$key']");
+
+          # Record a key->datasource name mapping for error reporting
+          $section->set_keytods($key, $filename);
+
           create_entry($key, $entry);
           $section->add_citekeys($key);
         }
@@ -420,6 +431,9 @@ sub _range {
 # Can't have form/lang - they are a(n ISO) standard format
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $ds = $section->get_keytods($key);
   foreach my $node ($entry->findnodes("./$f")) {
     my $datetype = $node->getAttribute('datetype') // '';
     # We are not validating dates here, just syntax parsing
@@ -437,7 +451,7 @@ sub _date {
         $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
       }
       else {
-        biber_warn("Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start in entry '$key' - ignoring", $bibentry);
+        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start - ignoring", $bibentry);
       }
 
       # End of range
@@ -453,7 +467,7 @@ sub _date {
         }
       }
       else {
-        biber_warn("Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end in entry '$key' - ignoring", $bibentry);
+        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end - ignoring", $bibentry);
       }
     }
     else { # Simple date
@@ -469,7 +483,7 @@ sub _date {
         $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
       }
       else {
-        biber_warn("Invalid format '" . $node->textContent() . "' of date field '$f' in entry '$key' - ignoring", $bibentry);
+        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $node->textContent() . "' of date field '$f' - ignoring", $bibentry);
       }
     }
   }
