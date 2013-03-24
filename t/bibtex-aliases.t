@@ -47,16 +47,16 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $w1 = ["Field 'school' invalid in data model for entry 'alias2' - ignoring",
-          "Entry 'alias2' - invalid entry type 'thing' - defaulting to 'misc'",
-          "Entry 'alias2' - invalid field 'institution' for entrytype 'misc'",
+my $w1 = ["Datamodel: Entry 'alias2' (bibtex-aliases.bib): Field 'school' invalid in data model - ignoring",
+          "Datamodel: Entry 'alias2' (bibtex-aliases.bib): Invalid entry type 'thing' - defaulting to 'misc'",
+          "Datamodel: Entry 'alias2' (bibtex-aliases.bib): Invalid field 'institution' for entrytype 'misc'",
 ];
 
-my $w2 = ["Entry 'alias4' - invalid field 'author' for entrytype 'customa'",
-          "Entry 'alias4' - invalid field 'eprint' for entrytype 'customa'",
-          "Entry 'alias4' - invalid field 'eprinttype' for entrytype 'customa'",
-          "Entry 'alias4' - invalid field 'namea' for entrytype 'customa'",
-          "Entry 'alias4' - invalid field 'title' for entrytype 'customa'",
+my $w2 = ["Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'author' for entrytype 'customa'",
+          "Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'eprint' for entrytype 'customa'",
+          "Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'eprinttype' for entrytype 'customa'",
+          "Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'namea' for entrytype 'customa'",
+          "Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'title' for entrytype 'customa'",
 ];
 
 is($bibentries->entry('alias1')->get_field('entrytype'), 'thesis', 'Alias - 1' );

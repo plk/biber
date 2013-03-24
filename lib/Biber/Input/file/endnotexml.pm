@@ -170,6 +170,9 @@ sub extract_entries {
       my $dbdid = $entry->findvalue('./foreign-keys/key/@db-id');
       my $key = $ek;
 
+      # Record a key->datasource name mapping for error reporting
+      $section->set_keytods("$dbdid:$key", $filename);
+
       # We do this as otherwise we have no way of determining the origing .bib entry order
       # We need this in order to do sorting=none + allkeys because in this case, there is no
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
@@ -203,6 +206,10 @@ sub extract_entries {
 
         $logger->debug("Found key '$wanted_key' in Endnote XML file '$filename'");
         $logger->debug('Parsing Endnote XML entry object ' . $entry->nodePath);
+
+        # Record a key->datasource name mapping for error reporting
+        $section->set_keytods($wanted_key, $filename);
+
         # See comment above about the importance of the case of the key
         # passed to create_entry()
         create_entry($wanted_key, $entry, $source, $smaps);
@@ -492,6 +499,10 @@ sub _range {
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
   my $daten = $entry->findnodes("./dates/$f")->get_node(1);
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $ds = $section->get_keytods($key);
+
   # Use Endnote explicit date attributes, if present
   # It's not clear if Endnote actually uses these attributes
   if ($daten->hasAttribute('year')) {
@@ -527,7 +538,7 @@ sub _date {
       }
     }
     else {
-      biber_warn("Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
+      biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of date field '$f' - ignoring", $bibentry);
     }
     return;
   }

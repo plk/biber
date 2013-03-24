@@ -186,6 +186,10 @@ sub extract_entries {
     $logger->debug("All cached citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
     while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
+
+      # Record a key->datasource name mapping for error reporting
+      $section->set_keytods($key, $filename);
+
       unless (create_entry($key, $entry, $source, $smaps)) {
         # if create entry returns false, remove the key from the cache
         @{$cache->{orig_key_order}{$filename}} = grep {$key ne $_} @{$cache->{orig_key_order}{$filename}};
@@ -215,14 +219,20 @@ sub extract_entries {
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
       $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
+
+      # Record a key->datasource name mapping for error reporting
+      $section->set_keytods($wanted_key, $filename);
+
       if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
         $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
+
         # Skip creation if it's already been done, for example, via a citekey alias
         unless ($section->bibentries->entry_exists($wanted_key)) {
           create_entry($wanted_key, $entry, $source, $smaps);
         }
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
+
       }
       elsif (my $rk = $cache->{data}{citekey_aliases}{$wanted_key}) {
         $logger->debug("Citekey '${wanted_key}' is an alias for citekey '$rk'");
@@ -239,6 +249,7 @@ sub extract_entries {
 
         # found an alias key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
+
       }
       elsif (my $okey = $section->has_badcasekey($wanted_key)) {
         biber_warn("Possible typo (case mismatch) between citation and datasource keys: '$wanted_key' and '$okey' in file '$filename'");
@@ -289,6 +300,7 @@ sub create_entry {
   my $bibentry = new Biber::Entry;
 
   $bibentry->set_field('citekey', $key);
+  my $ds = $section->get_keytods($key);
 
   if ( $entry->metatype == BTE_REGULAR ) {
 
@@ -509,7 +521,7 @@ sub create_entry {
         &$handler($bibentry, $entry, $f, $key);
       }
       elsif (Biber::Config->getoption('validate_datamodel')) {
-        biber_warn("Field '$f' invalid in data model for entry '$key' - ignoring", $bibentry);
+        biber_warn("Datamodel: Entry '$key' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
       }
     }
 
@@ -675,6 +687,9 @@ sub _date {
   my $datetype = $f =~ s/date\z//xmsr;
   my $date = decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $ds = $section->get_keytods($key);
 
   # We are not validating dates here, just syntax parsing
   my $date_re = qr/(\d{4}) # year
@@ -713,7 +728,7 @@ sub _date {
     }
   }
   else {
-    biber_warn("Invalid format '$date' of date field '$f' in entry '$key' - ignoring", $bibentry);
+    biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of date field '$f' - ignoring", $bibentry);
   }
   return;
 }

@@ -43,29 +43,29 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 
-my $c1 = [ "Entry 'c1' - invalid entry type 'badtype' - defaulting to 'misc'" ];
-my $c2 = [ "Field 'badfield' invalid in data model for entry 'c2' - ignoring",
-           "Entry 'c2' - invalid field 'journaltitle' for entrytype 'eta'",
-           "Missing mandatory field 'author' in entry 'c2'" ];
-my $c3 = [ "Invalid format (integer) of field 'month' - ignoring field in entry 'c3'",
-           "Invalid value (pattern match fails) for field 'gender' in entry 'c3'" ];
-my $c4 = [ "Invalid value of field 'month' must be '<=12' - ignoring field in entry 'c4'",
-           "Invalid value of field 'field1' must be '>=5' - ignoring field in entry 'c4'" ];
+my $c1 = [ "Datamodel: Entry 'c1' (dm-constraints.bib): Invalid entry type 'badtype' - defaulting to 'misc'" ];
+my $c2 = [ "Datamodel: Entry 'c2' (dm-constraints.bib): Field 'badfield' invalid in data model - ignoring",
+           "Datamodel: Entry 'c2' (dm-constraints.bib): Invalid field 'journaltitle' for entrytype 'eta'",
+           "Datamodel: Entry 'c2' (dm-constraints.bib): Missing mandatory field 'author'" ];
+my $c3 = [ "Datamodel: Entry 'c3' (dm-constraints.bib): Invalid format (integer) of field 'month' - ignoring field",
+           "Datamodel: Entry 'c3' (dm-constraints.bib): Invalid value (pattern match fails) for field 'gender'" ];
+my $c4 = [ "Datamodel: Entry 'c4' (dm-constraints.bib): Invalid value of field 'month' must be '<=12' - ignoring field",
+           "Datamodel: Entry 'c4' (dm-constraints.bib): Invalid value of field 'field1' must be '>=5' - ignoring field" ];
 # There would also have been a date+year constraint violation in the next test if
 # it weren't for the fact that the date processing in bibtex.pm already deals with this
 # and removed the year field
 my $c5 = [ "Overwriting field 'year' with year value from field 'date' for entry 'c5'",
-           "Constraint violation - none of fields (field5, field6) must exist when all of fields (field2, field3, field4) exist. Ignoring them." ];
-my $c6 = [ "Constraint violation - one of fields (field7, field8) must exist when all of fields (field1, field2) exist",
-           "Constraint violation - all of fields (field9, field10) must exist when all of fields (field5, field6) exist" ];
-my $c7 = [ "Missing mandatory field - one of 'fielda, fieldb' must be defined in entry 'c7'",
-           "Constraint violation - none of fields (field7) must exist when one of fields (field5, field6) exist. Ignoring them."];
-my $c8 = [ "Constraint violation - none of fields (field4) must exist when none of fields (field2, field3) exist. Ignoring them.",
-           "Constraint violation - one of fields (field10, field11) must exist when none of fields (field8, field9) exist",
-           "Constraint violation - all of fields (field12, field13) must exist when none of fields (field6) exist" ];
+           "Datamodel: Entry 'c5' (dm-constraints.bib): Constraint violation - none of fields (field5, field6) must exist when all of fields (field2, field3, field4) exist. Ignoring them." ];
+my $c6 = [ "Datamodel: Entry 'c6' (dm-constraints.bib): Constraint violation - one of fields (field7, field8) must exist when all of fields (field1, field2) exist",
+           "Datamodel: Entry 'c6' (dm-constraints.bib): Constraint violation - all of fields (field9, field10) must exist when all of fields (field5, field6) exist" ];
+my $c7 = [ "Datamodel: Entry 'c7' (dm-constraints.bib): Missing mandatory field - one of 'fielda, fieldb' must be defined",
+           "Datamodel: Entry 'c7' (dm-constraints.bib): Constraint violation - none of fields (field7) must exist when one of fields (field5, field6) exist. Ignoring them."];
+my $c8 = [ "Datamodel: Entry 'c8' (dm-constraints.bib): Constraint violation - none of fields (field4) must exist when none of fields (field2, field3) exist. Ignoring them.",
+           "Datamodel: Entry 'c8' (dm-constraints.bib): Constraint violation - one of fields (field10, field11) must exist when none of fields (field8, field9) exist",
+           "Datamodel: Entry 'c8' (dm-constraints.bib): Constraint violation - all of fields (field12, field13) must exist when none of fields (field6) exist" ];
 
-my $c10 = [ "Invalid ISBN in value of field 'isbn' in 'c10'",
-            "Invalid ISSN in value of field 'issn' in 'c10'" ];
+my $c10 = [ "Datamodel: Entry 'c10' (dm-constraints.bib): Invalid ISBN in value of field 'isbn'",
+            "Datamodel: Entry 'c10' (dm-constraints.bib): Invalid ISSN in value of field 'issn'" ];
 
 is_deeply($bibentries->entry('c1')->get_field('warnings'), $c1, 'Constraints test 1' );
 is_deeply($bibentries->entry('c2')->get_field('warnings'), $c2, 'Constraints test 2' );

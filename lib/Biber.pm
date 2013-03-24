@@ -1055,10 +1055,11 @@ sub validate_datamodel {
       my $be = $section->bibentry($citekey);
       my $citekey = $be->get_field('citekey');
       my $et = $be->get_field('entrytype');
+      my $ds = $section->get_keytods($citekey);
 
       # default entrytype to MISC type if not a known type
       unless ($dm->is_entrytype($et)) {
-        biber_warn("Entry '$citekey' - invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
+        biber_warn("Datamodel: Entry '$citekey' ($ds): Invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
         $be->set_field('entrytype', 'misc');
         $et = 'misc';           # reset this too
       }
@@ -1070,7 +1071,7 @@ sub validate_datamodel {
       # * Valid because entrytype allows "ALL" fields
       foreach my $ef ($be->datafields) {
         unless ($dm->is_field_for_entrytype($et, $ef)) {
-          biber_warn("Entry '$citekey' - invalid field '$ef' for entrytype '$et'", $be);
+          biber_warn("Datamodel: Entry '$citekey' ($ds): Invalid field '$ef' for entrytype '$et'", $be);
         }
       }
 

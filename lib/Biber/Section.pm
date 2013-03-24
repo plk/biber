@@ -36,6 +36,7 @@ sub new {
   $self->{labelcache_v} = {};
   $self->{sortcache} = [];
   $self->{dkeys} = {};
+  $self->{keytods} = {};
   $self->{orig_order_citekeys} = [];
   $self->{undef_citekeys} = [];
   $self->{citekey_alias} = {};
@@ -55,6 +56,29 @@ sub reset_caches {
   $self->{labelcache_v} = {};
   $self->{bcfkeycache} = {};
   return;
+}
+
+=head2 set_keytods
+
+  Save information about citekey->datasource name mapping. Used for error reporting.
+
+=cut
+
+sub set_keytods {
+  my ($self, $key, $ds) = @_;
+  $self->{keytods}{$key} = $ds;
+  return;
+}
+
+=head2 get_keytods
+
+  Get information about citekey->datasource name mapping. Used for error reporting.
+
+=cut
+
+sub get_keytods {
+  my ($self, $key) = @_;
+  return $self->{keytods}{$key};
 }
 
 =head2 has_badcasekey
@@ -155,8 +179,6 @@ sub has_relclonetokey {
   my ($self, $key) = @_;
   return defined($self->{relclonetokey}{$key}) ? 1 : 0;
 }
-
-
 
 =head2 add_everykey
 

@@ -194,6 +194,9 @@ sub extract_entries {
       # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
       push @{$orig_key_order->{$filename}}, $ek;
 
+      # Record a key->datasource name mapping for error reporting
+      $section->set_keytods($ek, $filename);
+
       create_entry($ek, $entry, $source, $smaps);
     }
 
@@ -220,6 +223,10 @@ sub extract_entries {
 
         $logger->debug("Found key '$wanted_key' in RIS file '$filename'");
         $logger->debug('Parsing RIS entry object ' . $entry->{ID});
+
+        # Record a key->datasource name mapping for error reporting
+        $section->set_keytods($wanted_key, $filename);
+
         # See comment above about the importance of the case of the key
         # passed to create_entry()
         create_entry($wanted_key, $entry, $source, $smaps);
@@ -432,7 +439,7 @@ sub create_entry {
     # Now run any defined handler
     if ($dm->is_field($f)) {
       my $handler = _get_handler($f);
-      &$handler($bibentry, $entry, $f, );
+      &$handler($bibentry, $entry, $f);
     }
   }
 
@@ -488,6 +495,10 @@ sub _range {
 # Date fields
 sub _date {
   my ($bibentry, $entry, $f) = @_;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $key = $bibentry->get_field('citekey');
+  my $ds = $section->get_keytods($key);
   my $date = $entry->{$f};
   if ($date =~ m|\A([0-9]{4})/([0-9]{2})/([0-9]{2})\s*\z|xms) {
     $bibentry->set_datafield('year', $1);
@@ -498,7 +509,7 @@ sub _date {
     $bibentry->set_datafield('year', $1);
   }
   else {
-    biber_warn("Invalid RIS date format: '$date' - ignoring");
+    biber_warn("Datamodel: Entry '$key' ($ds): Invalid RIS date format: '$date' - ignoring");
   }
   return;
 }
@@ -508,6 +519,10 @@ sub _name {
   my ($bibentry, $entry, $f) = @_;
   my $names = $entry->{$f};
   my $names_obj = new Biber::Entry::Names;
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $key = $bibentry->get_field('citekey');
+  my $ds = $section->get_keytods($bibentry->get_field('citekey'));
   foreach my $name (@$names) {
     $logger->debug('Parsing RIS name');
     if ($name =~ m|\A([^,]+)\s*,?\s*([^,]+)?\s*,?\s*([^,]+)?\z|xms) {
@@ -565,7 +580,7 @@ sub _name {
       }
     }
     else {
-      biber_warn("Invalid RIS name format: '$name' - ignoring");
+      biber_warn("Datamodel: Entry '$key' ($ds): Invalid RIS name format: '$name' - ignoring");
     }
   }
   return;
