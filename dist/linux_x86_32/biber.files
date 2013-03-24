@@ -15,3 +15,4 @@
 /usr/local/perl/lib/site_perl/5.16.2/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem
 /usr/local/perl/lib/5.16.2/i686-linux-thread-multi/PerlIO;lib/PerlIO
 /usr/local/perl/lib/5.16.2/i686-linux-thread-multi/auto/PerlIO;lib/auto/PerlIO
+/usr/local/perl/lib/site_perl/5.16.2/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml
