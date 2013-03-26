@@ -492,6 +492,9 @@ sub check_data_constraints {
     if ($c->{datatype} eq 'isbn') {
       foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
+          (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+          $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+          $ENV{ISBN_RANGE_MESSAGE} = File::Spec->catpath($vol, "$dir/Business/ISBN/", 'RangeMessage.xml');
           require Business::ISBN;
           # Treat as a list field just in case someone has made it so in a custom datamodel
           unless ($self->get_fieldtype($f) eq 'list') {
