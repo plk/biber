@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 
 use Biber;
 use Biber::Utils;
@@ -43,6 +43,9 @@ my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 
+my $f7 = [ "The multiscript name field 'author' in entry 'forms7' has form/language variants with different numbers of items. This will almost certainly cause problems.",
+           "The multiscript list field 'location' in entry 'forms7' has form/language variants with different numbers of items. This will almost certainly cause problems." ];
+
 is($bibentries->entry('forms1')->get_field('title'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 1');
 is($bibentries->entry('forms1')->get_field('title', 'original'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 2');
 is($bibentries->entry('forms1')->get_field('title', 'romanised'), 'Mukhammad al-Khorezmi. Okolo 783 – okolo 850', 'forms - 3');
@@ -61,6 +64,7 @@ is($bibentries->entry('forms1')->get_field('labeltitle'), 'Мухаммад иб
 is($bibentries->entry('forms2')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Okolo 783 – okolo 850', 'labeltitle - 2');
 # per-entry labeltitle form
 is($bibentries->entry('forms3')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'labeltitle - 3');
+is_deeply($bibentries->entry('forms7')->get_field('warnings'), $f7, 'MS warnings - 1') ;
 
 my $S = [
          [
@@ -85,7 +89,7 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['forms5', 'forms4', 'forms6', 'forms3', 'forms1', 'forms2'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms5', 'forms4', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -188,4 +192,6 @@ my $forms1 = q|    \entry{forms1}{book}{}
     \endentry
 |;
 
+
 is($out->get_output_entry('forms1', $main), $forms1, 'bbl entry - forms 1') ;
+

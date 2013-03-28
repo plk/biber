@@ -832,6 +832,54 @@ sub nullable_check {
   }
 }
 
+=head2 ms_checks
+
+  Check for some multiscript field problems
+
+=cut
+
+sub ms_checks {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $dm = Biber::Config->get_dm;
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+    my $bee = $be->get_field('entrytype');
+    foreach my $f ($be->datafields) {
+      next unless $dm->field_is_multiscript($f);
+      # Check that ms list fields all have same number of items
+      if ($dm->field_is_fieldtype('list', $f) and not
+          $dm->field_is_datatype('name', $f)) { # name is a special list
+        my $lengths;
+        foreach my $form ($be->get_field_form_names($f)) {
+          foreach my $lang ($be->get_field_form_lang_names($f, $form)) {
+            if (my $lf = $be->get_field($f, $form, $lang)) {
+              push @$lengths, $#$lf;
+            }
+          }
+        }
+        unless (uniq(@$lengths) == 1) {
+          biber_warn("The multiscript list field '$f' in entry '$citekey' has form/language variants with different numbers of items. This will almost certainly cause problems.", $be);
+        }
+      }
+      # Check that ms name fields all have same number of items
+      if ($dm->field_is_datatype('name', $f)) {
+        my $lengths;
+        foreach my $form ($be->get_field_form_names($f)) {
+          foreach my $lang ($be->get_field_form_lang_names($f, $form)) {
+            if (my $nf = $be->get_field($f, $form, $lang)) {
+              push @$lengths, $nf->count_names;
+            }
+          }
+        }
+        unless (uniq(@$lengths) == 1) {
+          biber_warn("The multiscript name field '$f' in entry '$citekey' has form/language variants with different numbers of items. This will almost certainly cause problems.", $be);
+        }
+      }
+    }
+  }
+}
 
 =head2 instantiate_dynamic
 
@@ -3003,6 +3051,7 @@ sub prepare {
     $self->cite_setmembers;              # Cite set members
     $self->process_interentry;           # Process crossrefs/sets etc.
     $self->nullable_check;               # Check entries for nullable fields
+    $self->ms_checks;                    # Some sanity checking for multiscript field conflicts
     $self->validate_datamodel;           # Check against data model
     $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information

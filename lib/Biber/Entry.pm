@@ -324,11 +324,6 @@ sub get_field {
   return undef unless $key;
   $form = $form || 'original';
   $lang = $lang || 'default';
-  # Override for special fields whose form and langs are assumed to be already resolved.
-  if ($key ~~ [ 'labelname', 'labeltitle', 'labelyear', 'labelmonth', 'labelday' ]) {
-    $form = 'original';
-    $lang = 'default';
-  }
   return Dive($self, 'datafields', $key, $form, $lang) //
          Dive($self, 'derivedfields', $key, $form, $lang) //
          Dive($self, 'rawfields', $key);
