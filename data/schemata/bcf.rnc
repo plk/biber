@@ -103,6 +103,7 @@ start =
         attribute order { xsd:integer },
         element bcf:labelpart {          
           attribute final { "0" | "1" }?,
+          attribute padchar { xsd:string {minLength="1"}}?,
           attribute substring_width { xsd:integer | "v" | "vf" | "l" }?,
           attribute substring_fixed_threshold { xsd:integer }?,
           attribute substring_width_max { xsd:integer }?,

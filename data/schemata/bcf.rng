@@ -225,6 +225,13 @@
                     </attribute>
                   </optional>
                   <optional>
+                    <attribute name="padchar">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
+                    </attribute>
+                  </optional>
+                  <optional>
                     <attribute name="substring_width">
                       <choice>
                         <data type="integer"/>

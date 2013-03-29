@@ -606,11 +606,13 @@ sub _process_label_attributes {
       my $default_substring_side = 'left';
       my $subs_width = ($labelattrs->{substring_width} or $default_substring_width);
       my $subs_side = ($labelattrs->{substring_side} or $default_substring_side);
+      my $padchar = $labelattrs->{pad_char};
       if ($subs_side eq 'right') {
         $subs_offset = 0 - $subs_width;
       }
 
-      # If desired, do the substring on all part of compound strings (strings with internal spaces or hyphens)
+      # If desired, do the substring on all part of compound strings
+      # (strings with internal spaces or hyphens)
       if ($labelattrs->{substring_compound}) {
         my $tmpstring;
         foreach my $part (split(/[ -]+/, $field_string)) {
@@ -620,6 +622,20 @@ sub _process_label_attributes {
       }
       else {
         $field_string = substr( $field_string, $subs_offset, $subs_width );
+      }
+
+      # Padding
+      if ($padchar) {
+        my $pad_side = ($labelattrs->{pad_side} or 'right');
+        my $paddiff = $subs_width - length($field_string);
+        if ($paddiff) {
+          if ($pad_side eq 'right') {
+            $field_string .= $padchar x $paddiff;
+          }
+          elsif ($pad_side eq 'left') {
+            $field_string = $padchar x $paddiff . $field_string;
+          }
+        }
       }
     }
   }

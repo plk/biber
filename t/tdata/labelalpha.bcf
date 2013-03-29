@@ -487,6 +487,17 @@
       <bcf:labelpart substring_width="1">origday</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="customc">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="4" padchar="_" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart substring_width="3" padchar="-" pad_side="left" substring_side="left">title</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
   <bcf:labelalphatemplate type="misc">
     <bcf:labelelement order="1">
       <bcf:labelpart>label</bcf:labelpart>
@@ -2001,6 +2012,7 @@
     <bcf:citekey order="34">LDN2</bcf:citekey>
     <bcf:citekey order="35">title1</bcf:citekey>
     <bcf:citekey order="36">labelstest</bcf:citekey>
+    <bcf:citekey order="37">padtest</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>
