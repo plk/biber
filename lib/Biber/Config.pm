@@ -8,7 +8,7 @@ use Cwd qw( abs_path );
 use Data::Compare;
 use Data::Dump;
 use Carp;
-use List::AllUtils qw(first);
+use List::AllUtils qw(first max);
 use Log::Log4perl qw( :no_extra_logdie_message ); # To keep PAR::Packer happy, explicitly load these
 use Log::Log4perl::Appender::Screen;
 use Log::Log4perl::Appender::File;
@@ -968,6 +968,32 @@ sub get_keyorder {
   shift; # class method so don't care about class name
   my ($section, $key) = @_;
   return $CONFIG->{state}{keyorder}{$section}{$key};
+}
+
+
+=head2 get_keyorder_max
+
+  Get maximum key order number for a section
+
+=cut
+
+sub get_keyorder_max {
+  shift; # class method so don't care about class name
+  my $section = shift;
+  return (max values %{$CONFIG->{state}{keyorder}{$section}}) || 0;
+}
+
+=head2 reset_keyorder
+
+  Reset keyorder - for use in tests where we switch to allkeys
+
+=cut
+
+sub reset_keyorder {
+  shift; # class method so don't care about class name
+  my $section = shift;
+  delete $CONFIG->{state}{keyorder}{$section};
+  return;
 }
 
 

@@ -988,15 +988,24 @@ sub _sort_citeorder {
   # Pad the numbers so that they sort with "cmp" properly. Assume here max of
   # a million bib entries. Probably enough ...
   # Allkeys and sorting=none means use bib order which is in orig_order_citekeys
+  # However, someone might do:
+  # \cite{b,a}
+  # \nocite{*}
+  # in the same section which means we need to use the order attribute for those
+  # keys which have one (the \cited keys) and then an orig_order_citekey index based index
+  # for the nocite ones.
+  my $ko = Biber::Config->get_keyorder($secnum, $citekey);# only for \cited keys
   if ($section->is_allkeys) {
-    return sprintf('%.7d', (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1);
+    return sprintf('%.7d', $ko ||
+                   (Biber::Config->get_keyorder_max($secnum) +
+                    (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1));
   }
   # otherwise, we need to take account of citations with simulataneous order like
   # \cite{key1, key2} so this tied sorting order can be further sorted with other fields
   # Note the fallback of "0" - this is for auto-generated entries which are not cited
   # and so never have a keyorder entry
   else {
-    return sprintf('%.7d', Biber::Config->get_keyorder($secnum, $citekey) || 0);
+    return sprintf('%.7d', $ko || 0);
   }
 }
 

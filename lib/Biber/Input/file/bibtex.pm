@@ -206,7 +206,7 @@ sub extract_entries {
 
     # If allkeys, push all bibdata keys into citekeys (if they are not already there).
     # We are using the special "orig_key_order" array which is used to deal with the
-    # sitiation when sorting=none and allkeys is set. We need an array rather than the
+    # situation when sorting=none and allkeys is set. We need an array rather than the
     # keys from the bibentries hash because we need to preserve the original order of
     # the .bib as in this case the sorting sub "citeorder" means "bib order" as there are
     # no explicitly cited keys
