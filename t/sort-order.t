@@ -553,6 +553,7 @@ $main->set_sortscheme($S);
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;
+Biber::Config->reset_keyorder(0);
 $section->set_allkeys(1);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
