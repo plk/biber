@@ -30,7 +30,6 @@ use Biber::LaTeX::Recode;
 use Biber::SortLists;
 use Biber::SortList;
 use Biber::Utils;
-use Storable qw( dclone );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Data::Dump;
 use Data::Compare;

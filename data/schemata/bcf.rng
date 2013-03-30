@@ -225,6 +225,21 @@
                     </attribute>
                   </optional>
                   <optional>
+                    <attribute name="pad_char">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="pad_side">
+                      <choice>
+                        <value>left</value>
+                        <value>right</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
                     <attribute name="substring_width">
                       <choice>
                         <data type="integer"/>
@@ -510,12 +525,6 @@
                     Is parsed as a csv list
                   -->
                   <attribute name="entrytypes"/>
-                </optional>
-                <optional>
-                  <!-- Can this field have multiple script/lang variants? -->
-                  <attribute name="multiscript">
-                    <value>true</value>
-                  </attribute>
                 </optional>
                 <text/>
               </element>

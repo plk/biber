@@ -43,7 +43,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
-  process_entry_options };
+  process_entry_options escape_label unescape_label};
 
 =head1 FUNCTIONS
 
@@ -306,8 +306,7 @@ sub normalise_string_label {
   # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
   # before we read the file (see Biber.pm)
   unless (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
-    $str = latex_decode($str, strip_outer_braces => 1,
-                              scheme => Biber::Config->getoption('decodecharsset'));
+    $str = latex_decode($str, strip_outer_braces => 1);
   }
   return normalise_string_common($str);
 }
@@ -334,8 +333,7 @@ sub normalise_string_sort {
   # Don't bother if output is UTF-8 as in this case, we've already decoded everthing
   # before we read the file (see Biber.pm)
   unless (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
-    $str = latex_decode($str, strip_outer_braces => 1,
-                              scheme => Biber::Config->getoption('decodecharsset'));
+    $str = latex_decode($str, strip_outer_braces => 1);
   }
   return normalise_string_common($str);
 }
@@ -354,8 +352,7 @@ sub normalise_string {
   # First replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   if (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
-    $str = latex_decode($str, strip_outer_braces => 1,
-                              scheme => Biber::Config->getoption('decodecharsset'));
+    $str = latex_decode($str, strip_outer_braces => 1);
   }
   return normalise_string_common($str);
 }
@@ -402,7 +399,7 @@ sub normalise_string_hash {
 
 =head2 normalise_string_underscore
 
-Like normalise_string, but also substitutes ~ and whitespace with underscore.
+  Like normalise_string, but also substitutes ~ and whitespace with underscore.
 
 =cut
 
@@ -412,6 +409,39 @@ sub normalise_string_underscore {
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   $str = normalise_string($str);
   $str =~ s/\s+/_/g;
+  return $str;
+}
+
+=head2 escape_label
+
+  Escapes a few special character which might be used in labels
+
+=cut
+
+sub escape_label {
+  my $str = shift;
+  return '' unless $str; # Sanitise missing data
+  $str =~ s/([_\^\$\#\%\&])/\\$1/g;
+  $str =~ s/~/{\\textasciitilde}/g;
+  $str =~ s/>/{\\textgreater}/g;
+  $str =~ s/</{\\textless}/g;
+  return $str;
+}
+
+=head2 unescape_label
+
+  Unscapes a few special character which might be used in label but which need
+  sorting without escapes
+
+=cut
+
+sub unescape_label {
+  my $str = shift;
+  return '' unless $str; # Sanitise missing data
+  $str =~ s/\\([_\^\$\~\#\%\&])/$1/g;
+  $str =~ s/\{\\textasciitilde\}/~/g;
+  $str =~ s/\{\\textgreater\}/>/g;
+  $str =~ s/\{\\textless\}/</g;
   return $str;
 }
 

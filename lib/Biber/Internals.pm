@@ -364,7 +364,7 @@ sub _dispatch_label {
 sub _label_citekey {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $k = _process_label_attributes($self, $citekey, $citekey, $labelattrs, $args->[0]);
-  return [$k, $k];
+  return [$k, unescape_label($k)];
 }
 
 sub _label_basic {
@@ -383,7 +383,7 @@ sub _label_basic {
   }
   if ($f) {
     my $b = _process_label_attributes($self, $citekey, $f, $labelattrs, $e);
-    return [$b, $b];
+    return [$b, unescape_label($b)];
   }
   else {
     return ['', ''];
@@ -394,7 +394,7 @@ sub _label_basic {
 sub _label_literal {
   my ($self, $citekey, $args, $labelattrs) = @_;
   my $string = $args->[0];
-  return [$string, $string];
+  return [escape_label(unescape_label($string)), unescape_label($string)];
 }
 
 # names
@@ -472,7 +472,7 @@ sub _label_name {
       $sortacc .= $sortalphaothers // ''; # sortalphaothers can be undef
     }
 
-    return [$acc, $sortacc];
+    return [$acc, unescape_label($sortacc)];
   }
   else {
     return ['', ''];
@@ -606,11 +606,13 @@ sub _process_label_attributes {
       my $default_substring_side = 'left';
       my $subs_width = ($labelattrs->{substring_width} or $default_substring_width);
       my $subs_side = ($labelattrs->{substring_side} or $default_substring_side);
+      my $padchar = $labelattrs->{pad_char};
       if ($subs_side eq 'right') {
         $subs_offset = 0 - $subs_width;
       }
 
-      # If desired, do the substring on all part of compound strings (strings with internal spaces or hyphens)
+      # If desired, do the substring on all part of compound strings
+      # (strings with internal spaces or hyphens)
       if ($labelattrs->{substring_compound}) {
         my $tmpstring;
         foreach my $part (split(/[ -]+/, $field_string)) {
@@ -620,6 +622,22 @@ sub _process_label_attributes {
       }
       else {
         $field_string = substr( $field_string, $subs_offset, $subs_width );
+      }
+
+      # Padding
+      if ($padchar) {
+        $padchar = unescape_label($padchar);
+        my $pad_side = ($labelattrs->{pad_side} or 'right');
+        my $paddiff = $subs_width - length($field_string);
+        if ($paddiff) {
+          if ($pad_side eq 'right') {
+            $field_string .= $padchar x $paddiff;
+          }
+          elsif ($pad_side eq 'left') {
+            $field_string = $padchar x $paddiff . $field_string;
+          }
+        }
+        $field_string = escape_label($field_string);
       }
     }
   }

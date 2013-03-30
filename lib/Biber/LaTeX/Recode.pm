@@ -124,7 +124,7 @@ sub init_schemes {
       }
       # Things we don't want to change when encoding as this would break LaTeX
       foreach my $e (map {$_->{content}} @{$dataxml->{encode_exclude}{char}}) {
-        delete($r_remaps->{$set}{$type}{map}->{$e});
+        delete($r_remaps->{$set}{$type}{map}{$e});
       }
 
       # Now populate the regexps
