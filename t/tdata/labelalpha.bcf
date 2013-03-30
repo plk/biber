@@ -489,12 +489,15 @@
   </bcf:labelalphatemplate>
   <bcf:labelalphatemplate type="customc">
     <bcf:labelelement order="1">
-      <bcf:labelpart substring_width="4" padchar="_" substring_side="left">labelname</bcf:labelpart>
+      <bcf:labelpart>&amp;</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
-      <bcf:labelpart substring_width="3" padchar="-" pad_side="left" substring_side="left">title</bcf:labelpart>
+      <bcf:labelpart substring_width="4" pad_char="_" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="3" pad_char="~" pad_side="left" substring_side="left">title</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="4">
       <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>

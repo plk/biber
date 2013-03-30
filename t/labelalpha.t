@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 112;
+use Test::More tests => 113;
 
 use Biber;
 use Biber::Utils;
@@ -411,7 +411,8 @@ $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '20050302', 'labeldate test - 1');
-is($bibentries->entry('padtest')->get_field('sortlabelalpha'), 'Al__--T07', 'pad test - 1');
+is($bibentries->entry('padtest')->get_field('labelalpha'), '\&Al\_\_{\textasciitilde}{\textasciitilde}T07', 'pad test - 1');
+is($bibentries->entry('padtest')->get_field('sortlabelalpha'), '&Al__~~T07', 'pad test - 2');
 
 
 

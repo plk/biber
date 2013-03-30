@@ -225,10 +225,18 @@
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="padchar">
+                    <attribute name="pad_char">
                       <data type="string">
                         <param name="minLength">1</param>
                       </data>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="pad_side">
+                      <choice>
+                        <value>left</value>
+                        <value>right</value>
+                      </choice>
                     </attribute>
                   </optional>
                   <optional>
