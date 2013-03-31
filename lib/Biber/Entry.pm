@@ -96,7 +96,7 @@ sub relclone {
         my $clonekey = md5_hex($relkey);
         push @clonekeys, $clonekey;
         my $relclone = $relentry->clone($clonekey);
-        $logger->debug("Creating new related clone for '$relkey' with clone key '$clonekey'");
+        $logger->debug("Created new related clone for '$relkey' with clone key '$clonekey'");
 
         # Set related clone options
         if (my $relopts = $self->get_field('relatedoptions')) {
@@ -156,6 +156,9 @@ sub clone {
   if ($newkey) {
     $new->{derivedfields}{citekey}{original}{default} = $newkey;
   }
+  # Record the key of the source of the clone in the clone. Useful for loop detection etc.
+  # in biblatex
+    $new->{derivedfields}{clonesourcekey}{original}{default} = $self->get_field('citekey');
   return $new;
 }
 

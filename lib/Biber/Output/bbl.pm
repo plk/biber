@@ -373,6 +373,10 @@ sub set_output_entry {
     $acc .= "      \\true{singletitle}\n";
   }
 
+  if (my $ck = $be->get_field('clonesourcekey')) {
+    $acc .= "      \\field{clonesourcekey}{$ck}\n";
+  }
+
   foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
                            @{$dm->get_fields_of_type('field', 'key')},
                            @{$dm->get_fields_of_datatype('integer')},
