@@ -158,7 +158,7 @@ sub clone {
   }
   # Record the key of the source of the clone in the clone. Useful for loop detection etc.
   # in biblatex
-    $new->{derivedfields}{clonesourcekey}{original}{default} = $self->get_field('citekey');
+  $new->{derivedfields}{clonesourcekey}{original}{default} = $self->get_field('citekey');
   return $new;
 }
 
