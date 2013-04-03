@@ -328,7 +328,7 @@
     <map><from>texttoptiebar</from>              <to hex="361">͡</to></map>
     <map><from>sliding</from>                    <to hex="362">͢</to></map>
   </maps>
-  <maps type="punctuation" set="full">
+  <maps type="punctuation" set="base">
     <map><from>textendash</from>         <to hex="2013">–</to></map>
     <map><from>textemdash</from>         <to hex="2014">—</to></map>
     <map><from>textquoteleft</from>      <to hex="2018">‘</to></map>
