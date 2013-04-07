@@ -523,7 +523,7 @@ Log only errors. If this option is used more than once, don't even log errors.
 =item B<--recodedata=[file]>
 
 The data file to use for the reencoding between UTF-8 and LaTeX macros. It defines
-the sets specified with the --bblsafecharsset and --decodecharsset options.
+the sets specified with the --output_safecharsset and --decodecharsset options.
 It defaults to F<recode_data.xml> in the same directory as Biber's F<Recode.pm> module.
 See the PDF documentation for the format of this file. If this option is
 used, then F<file> should be somewhere C<kpsewhich> can find it.
