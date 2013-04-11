@@ -713,9 +713,9 @@
       <bcf:field fieldtype="list" datatype="name" multiscript="true">foreword</bcf:field>
       <bcf:field fieldtype="list" datatype="name" multiscript="true">holder</bcf:field>
       <bcf:field fieldtype="list" datatype="name" multiscript="true">introduction</bcf:field>
-      <bcf:field fieldtype="list" datatype="name">namea</bcf:field>
-      <bcf:field fieldtype="list" datatype="name">nameb</bcf:field>
-      <bcf:field fieldtype="list" datatype="name">namec</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" multiscript="true">namea</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" multiscript="true">nameb</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" multiscript="true">namec</bcf:field>
       <bcf:field fieldtype="list" datatype="name" multiscript="true">shortauthor</bcf:field>
       <bcf:field fieldtype="list" datatype="name" multiscript="true">shorteditor</bcf:field>
       <bcf:field fieldtype="list" datatype="name" multiscript="true">translator</bcf:field>
