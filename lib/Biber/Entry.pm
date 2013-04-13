@@ -316,20 +316,40 @@ sub set_field {
 
 =head2 get_field
 
-    Get a field for a Biber::Entry object
+    Get a specific field variants for a Biber::Entry object,
+    defaulting to form=original, lang=default
     Uses // as fields can be null (end dates etc).
 
 =cut
 
 sub get_field {
   my $self = shift;
-  my ($key, $form, $lang) = @_;
-  return undef unless $key;
+  my ($field, $form, $lang) = @_;
+  return undef unless $field;
   $form = $form || 'original';
   $lang = $lang || 'default';
-  return Dive($self, 'datafields', $key, $form, $lang) //
-         Dive($self, 'derivedfields', $key, $form, $lang) //
-         Dive($self, 'rawfields', $key);
+  return Dive($self, 'datafields', $field, $form, $lang) //
+         Dive($self, 'derivedfields', $field, $form, $lang) //
+         Dive($self, 'rawfields', $field);
+}
+
+=head2 get_field_variants
+
+    Get all field variants for a Biber::Entry object field
+
+=cut
+
+sub get_field_variants {
+  my $self = shift;
+  my $field = shift;
+  return undef unless $field;
+  my @nfs;
+  foreach my $form ($self->get_field_form_names($field)) {
+    foreach my $lang ($self->get_field_form_lang_names($field, $form)) {
+      push @nfs, $self->get_field($field, $form, $lang);
+    }
+  }
+  return @nfs;
 }
 
 
@@ -341,10 +361,10 @@ sub get_field {
 
 sub get_field_forms {
   my $self = shift;
-  my $key = shift;
-  return undef unless $key;
-  return Dive($self, 'datafields', $key) ||
-         Dive($self, 'derivedfields', $key);
+  my $field = shift;
+  return undef unless $field;
+  return Dive($self, 'datafields', $field) ||
+         Dive($self, 'derivedfields', $field);
 }
 
 =head2 get_field_form_names
@@ -355,10 +375,10 @@ sub get_field_forms {
 
 sub get_field_form_names {
   my $self = shift;
-  my $key = shift;
-  return undef unless $key;
-  return keys %{Dive($self, 'datafields', $key) ||
-                Dive($self, 'derivedfields', $key) ||
+  my $field = shift;
+  return undef unless $field;
+  return keys %{Dive($self, 'datafields', $field) ||
+                Dive($self, 'derivedfields', $field) ||
                 {}};
 }
 
@@ -370,11 +390,11 @@ sub get_field_form_names {
 
 sub get_field_form_lang_names {
   my $self = shift;
-  my ($key, $form) = @_;
-  return undef unless $key;
+  my ($field, $form) = @_;
+  return undef unless $field;
   return undef unless $form;
-  return keys %{Dive($self, 'datafields', $key, $form) ||
-                Dive($self, 'derivedfields', $key, $form) ||
+  return keys %{Dive($self, 'datafields', $field, $form) ||
+                Dive($self, 'derivedfields', $field, $form) ||
                 {}};
 }
 

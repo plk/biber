@@ -1862,9 +1862,8 @@ sub process_visible_names {
       $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
       $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
       $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
-      # Need to set these on all name forms
-      foreach my $form ($be->get_field_form_names($n)) {
-        my $ns = $be->get_field($n, $form);
+      # Need to set these on all name variants
+      foreach my $ns ($be->get_field_variants($n)) {
         $ns->set_visible_cite($visible_names_cite);
         $ns->set_visible_bib($visible_names_bib);
         $ns->set_visible_alpha($visible_names_alpha);
