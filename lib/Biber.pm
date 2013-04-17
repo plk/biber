@@ -606,6 +606,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         # Save dynamic key -> member keys mapping for set entry auto creation later
         if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
           $bib_section->set_dynamic_set($key, split /\s*,\s*/, $keyc->{members});
+          push @keys, $key;
         }
         else {
           # Set order information - there is no order on dynamic key defs above
@@ -682,7 +683,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   # Add the Biber::SortLists object to the Biber object
   $self->{sortlists} = $sortlists;
 
-  # Die if there are no citations in any section
+  # Warn if there are no citations in any section
   unless ($key_flag) {
     biber_warn("The file '$ctrl_file_path' does not contain any citations!");
   }
@@ -867,6 +868,7 @@ sub instantiate_dynamic {
     $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
+    $logger->debug("Created dynamic set entry '$dset' in section $secnum");
 
     # Save graph information if requested
     if (Biber::Config->getoption('output_format') eq 'dot') {
