@@ -572,7 +572,7 @@ sub set_dynamic_set {
 =head2 get_dynamic_set
 
     Retrieve member keys for a dynamic set key
-    Check on has reference returning anything stop spurious warnings
+    Check that reference returning anything to stop spurious warnings
     about empty dereference in return.
 
 =cut
