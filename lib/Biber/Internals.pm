@@ -529,7 +529,7 @@ sub _process_label_attributes {
         # This ends up as a flat list due to array interpolation
         my @strings = uniq keys %indices;
         # Look to the index of the longest string or the explicit max width if set
-        my $maxlen = $labelattrs->{substring_width_max} || max map {length($_)} @strings;
+        my $maxlen = $labelattrs->{substring_width_max} || max map {Unicode::GCString->new($_)->length} @strings;
         for (my $i = 1; $i <= $maxlen; $i++) {
           foreach my $map (map { my $s = Unicode::GCString->new($_)->substr(0, $i)->as_string; $substr_cache{$s}++; [$_, $s] } @strings) {
             # We construct a list of all substrings, up to the length of the longest string
@@ -540,7 +540,7 @@ sub _process_label_attributes {
             if (not exists($lcache->{$map->[0]}{index}) and
                 ($substr_cache{$map->[1]} == 1 or $i == $maxlen)) {
               # -1 to make it into a clean array index
-              $lcache->{$map->[0]}{index} = length($map->[1]) - 1;
+              $lcache->{$map->[0]}{index} = Unicode::GCString->new($map->[1])->length - 1;
             }
           }
         }
@@ -631,7 +631,7 @@ sub _process_label_attributes {
       if ($padchar) {
         $padchar = unescape_label($padchar);
         my $pad_side = ($labelattrs->{pad_side} or 'right');
-        my $paddiff = $subs_width - length($field_string);
+        my $paddiff = $subs_width - Unicode::GCString->new($field_string)->length;
         if ($paddiff) {
           if ($pad_side eq 'right') {
             $field_string .= $padchar x $paddiff;
@@ -1248,7 +1248,7 @@ sub _process_sort_attributes {
     my $pad_width = ($sortelementattributes->{pad_width} or $default_pad_width);
     my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
     my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
-    my $pad_length = $pad_width - length($field_string);
+    my $pad_length = $pad_width - Unicode::GCString->new($field_string)->length;
     if ($pad_side eq 'left') {
       $field_string = ($pad_char x $pad_length) . $field_string;
     }

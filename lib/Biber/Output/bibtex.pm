@@ -80,7 +80,7 @@ sub set_output_entry {
 
   my $max_field_len;
   if (Biber::Config->getoption('tool_align')) {
-    $max_field_len = max map {length} $be->rawfields;
+    $max_field_len = max map {Unicode::GCString->new($_)->length} $be->rawfields;
   }
 
   foreach my $f ($be->rawfields) {
@@ -97,7 +97,7 @@ sub set_output_entry {
     my $value = decode_utf8($be->get_rawfield($f));
     $acc .= ' ' x Biber::Config->getoption('tool_indent');
     $acc .= $casing->($f);
-    $acc .= ' ' x ($max_field_len - length($f)) if Biber::Config->getoption('tool_align');
+    $acc .= ' ' x ($max_field_len - Unicode::GCString->new($f)->length) if Biber::Config->getoption('tool_align');
     $acc .= ' = ';
     $acc .= "\{$value\},\n";
   }

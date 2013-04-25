@@ -125,10 +125,10 @@ sub _printfield {
 
   if (Biber::Config->getoption('wraplines')) {
     ## 16 is the length of '      \field{}{}' or '      \strng{}{}'
-    if ( 16 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
+    if ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
       return "      \\${field_type}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
     }
-    elsif ( 16 + length($field) + length($str) > $Text::Wrap::columns ) {
+    elsif ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > $Text::Wrap::columns ) {
       return wrap('      ', '      ', "\\${field_type}{$field}{$str}" ) . "\n";
     }
     else {

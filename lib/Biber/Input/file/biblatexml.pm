@@ -661,7 +661,7 @@ sub _join_name_parts {
     return $parts->[0] . '~' . $parts->[1];
   }
   my $namestring = $parts->[0];
-  $namestring .= length($parts->[0]) < 3 ? '~' : ' ';
+  $namestring .= Unicode::GCString->new($parts->[0])->length < 3 ? '~' : ' ';
   $namestring .= join(' ', @$parts[1 .. ($#{$parts} - 1)]);
   $namestring .= '~' . $parts->[$#{$parts}];
   return $namestring;
