@@ -9,6 +9,7 @@ use Test::More tests => 54;
 use Biber;
 use Biber::Output::bbl;
 use Log::Log4perl;
+use Unicode::Normalize;
 chdir("t/tdata");
 
 # Set up Biber object
@@ -735,9 +736,9 @@ is( $out->get_output_entry('L18', $main), $l18, 'Last, First F.{\bibinitdelim }F
 is( $out->get_output_entry('L19', $main), $l19, 'Firstname with hyphen');
 is( $out->get_output_entry('L19a', $main), $l19a, 'Short firstname with hyphen');
 is( $out->get_output_entry('L20', $main), $l20, 'Protected dual first name');
-is( $out->get_output_entry('L22', $main), $l22u, 'LaTeX encoded unicode lastname - 1');
-is( $out->get_output_entry('L23', $main), $l23, 'Unicode firstname');
-is( $out->get_output_entry('L24', $main), $l24, 'Unicode lastname');
+is( NFC($out->get_output_entry('L22', $main)), $l22u, 'LaTeX encoded unicode lastname - 1');
+is( NFC($out->get_output_entry('L23', $main)), $l23, 'Unicode firstname');
+is( NFC($out->get_output_entry('L24', $main)), $l24, 'Unicode lastname');
 is( $out->get_output_entry('L25', $main), $l25, 'Single string name');
 is( $out->get_output_entry('L26', $main), $l26, 'Hyphen at brace level <> 0');
 is($section->bibentry('L27')->get_field('author')->count_names, 1, 'Bad name with 3 commas');

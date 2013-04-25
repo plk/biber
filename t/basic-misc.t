@@ -10,6 +10,7 @@ use Biber;
 use Biber::Utils;
 use Biber::Output::bbl;
 use Log::Log4perl;
+use Unicode::Normalize;
 chdir("t/tdata");
 
 # Set up Biber object
@@ -374,7 +375,7 @@ is( $out->get_output_entry('anon2', $main), $anon2, 'namehash/fullhash 2' ) ;
 ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'map 1' );
 is($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
-is($bibentries->entry('i2')->get_field('usere'), 'a Štring', 'map 4' );
+is(NFC($bibentries->entry('i2')->get_field('usere')), 'a Štring', 'map 4' );
 # Testing of user field map match/replace
 is($biber->_liststring('i1', 'listb'), 'REPlacedte!early', 'map 5');
 is($biber->_liststring('i1', 'institution'), 'REPlaCEDte!early', 'map 6');

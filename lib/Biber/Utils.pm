@@ -21,6 +21,7 @@ use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
 use Log::Log4perl qw(:no_extra_logdie_message);
+use Unicode::Normalize;
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -43,7 +44,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
-  process_entry_options escape_label unescape_label};
+  process_entry_options escape_label unescape_label biber_decode_utf8 out};
 
 =head1 FUNCTIONS
 
@@ -907,6 +908,28 @@ sub process_entry_options {
     }
   }
   return;
+}
+
+=head2 biber_decode_utf8
+
+    Perform NFD form conversion as well as UTF-8 conversion. Used to normalize
+    bibtex input as the T::B interface doesn't allow a neat whole file slurping.
+
+=cut
+
+sub biber_decode_utf8 {
+  return NFD(decode_utf8(shift));# Unicode NFD boundary
+}
+
+=head2 out
+
+  Output to target. Outputs NFC UTF-8 if output is UTF-8
+
+=cut
+
+sub out {
+  my ($fh, $string) = @_;
+  print $fh NFC($string);# Unicode NFC boundary
 }
 
 sub _expand_option {

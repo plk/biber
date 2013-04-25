@@ -50,6 +50,9 @@
   --module=Encode::TW \
   --module=Encode::Unicode \
   --module=Encode::Unicode::UTF7 \
+  --module=Encode::EUCJPASCII \
+  --module=Encode::JIS2K \
+  --module=Encode::HanExtra \
   --module=File::Find::Rule \
   --module=IO::Socket::SSL \
   --link=/usr/local/perl/lib64/libbtparse.so \

@@ -472,12 +472,12 @@ sub output {
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
   $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('output_safechars');
 
-  print $target $data->{HEAD};
+  out($target, $data->{HEAD});
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     $logger->debug("Writing entries for section $secnum");
 
-    print $target "\n\\refsection{$secnum}\n";
+    out($target, "\n\\refsection{$secnum}\n");
     my $section = $self->get_output_section($secnum);
 
     my @lists; # Need to reshuffle list to put global sort order list at end, see below
@@ -500,7 +500,7 @@ sub output {
       my $listtype = $list->get_type;
       $logger->debug("Writing entries in '$listtype' list '$listlabel'");
 
-      print $target "  \\sortlist{$listtype}{$listlabel}\n";
+      out($target, "  \\sortlist{$listtype}{$listlabel}\n");
 
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
@@ -516,31 +516,31 @@ sub output {
             $entry_string = latex_recode_output($entry_string);
           }
 
-          print $target $entry_string;
+          out($target, $entry_string);
         }
         elsif ($listtype eq 'shorthand') {
-          print $target "    \\key{$k}\n";
+          out($target, "    \\key{$k}\n");
         }
       }
 
-      print $target "  \\endsortlist\n";
+      out($target, "  \\endsortlist\n");
 
     }
 
     # Aliases
     while (my ($k, $ks) = each %{$data->{ALIAS_ENTRIES}{$secnum}{index}}) {
-      print $target $$ks;
+      out($target, $$ks);
     }
 
     # Missing keys
     while (my ($k, $ks) = each %{$data->{MISSING_ENTRIES}{$secnum}{index}}) {
-      print $target $$ks;
+      out($target, $$ks);
     }
 
-    print $target "\\endrefsection\n"
+    out($target, "\\endrefsection\n");
   }
 
-  print $target $data->{TAIL};
+  out($target, $data->{TAIL});
 
   $logger->info("Output to $target_string");
   close $target;

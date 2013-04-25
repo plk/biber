@@ -9,6 +9,7 @@ use Biber;
 use Biber::Constants;
 use Biber::Utils;
 use Biber::Output::bbl;
+use Unicode::Normalize;
 use Log::Log4perl;
 chdir("t/tdata");
 
@@ -96,7 +97,7 @@ String for Preamble 4%
 
 my $tail = qq||;
 
-is_deeply($biber->get_preamble, $preamble, 'Preamble for all sections');
+is_deeply(NFC($biber->get_preamble), $preamble, 'Preamble for all sections');
 is($section0->bibentry('sect1')->get_field('note'), 'value1', 'Section 0 macro test');
 # If macros were not reset between sections, this would give a macro redef error
 is($section1->bibentry('sect4')->get_field('note'), 'value2', 'Section 1 macro test');

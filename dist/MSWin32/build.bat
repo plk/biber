@@ -44,6 +44,9 @@ CALL pp ^
   --module=Encode::TW ^
   --module=Encode::Unicode ^
   --module=Encode::Unicode::UTF7 ^
+  --module=Encode::EUCJPASCII ^
+  --module=Encode::JIS2K ^
+  --module=Encode::HanExtra ^
   --module=IO::Socket::SSL ^
   --module=File::Find::Rule ^
   --link=C:\WINDOWS\system32\libbtparse.dll ^

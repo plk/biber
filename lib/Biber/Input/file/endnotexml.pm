@@ -16,6 +16,7 @@ use Biber::Utils;
 use Biber::Config;
 use Digest::MD5 qw( md5_hex );
 use File::Spec;
+use File::Slurp::Unicode;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
@@ -25,6 +26,8 @@ use Data::Dump qw(dump);
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
+use Unicode::Normalize;
+use Unicode::GCString;
 use URI;
 
 ##### This is based on Endnote X4 #####
@@ -136,8 +139,8 @@ sub extract_entries {
 
   # Set up XML parser and namespaces
   my $parser = XML::LibXML->new();
-  my $enxml = $parser->parse_file($filename)
-    or biber_error("Can't parse file $filename");
+  my $xml = File::Slurp::Unicode::read_file($filename, encoding => 'UTF-8') or biber_error("Can't parse file $filename");
+  my $enxml = $parser->parse_string(NFD($xml));# Unicode NFD boundary
   my $xpc = XML::LibXML::XPathContext->new($enxml);
 
   if ($section->is_allkeys) {
@@ -848,10 +851,10 @@ sub _gen_initials {
       push @strings_out, join('-', _gen_initials(split(/\p{Dash}/, $str)));
     }
     else {
-      my $chr = substr($str, 0, 1);
+      my $chr = Unicode::GCString->new($str)->substr(0, 1)->as_string;
       # Keep diacritics with their following characters
       if ($chr =~ m/\p{Dia}/) {
-        push @strings_out, substr($str, 0, 2);
+        push @strings_out, Unicode::GCString->new($str)->substr(0, 2)->as_string;
       }
       else {
         push @strings_out, $chr;

@@ -368,11 +368,11 @@ sub output {
           if (Biber::Config->getoption('output_safechars')) {
             $entry_string = latex_recode_output($entry_string);
           }
-          print $target $entry_string;
+          out($target, $entry_string);
         }
         elsif ($listtype eq 'shorthand') {
           next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
-          print $target $k;
+          out($target, $k);
         }
       }
     }
