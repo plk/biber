@@ -435,7 +435,7 @@ sub _label_name {
 
   # Account for labelname set to short* when testing use* options
   my $lnameopt;
-  if ( $realname =~ /\Ashort(.+)\z/ ) {
+  if ( $realname =~ /\Ashort(\X+)\z/xms ) {
     $lnameopt = $1;
   }
   else {

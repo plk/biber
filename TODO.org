@@ -1,7 +1,2 @@
 Remove normalisation stuff from Recode.pm
-http://www.perl.com/pub/2012/05/perlunicook-extract-by-grapheme-instead-of-codepoint-substr.html
 
-Unicode::GCString
-Encode::EUCJPASCII
-Encode::JIS2K
-Encode::HanExtra

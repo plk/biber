@@ -1449,7 +1449,7 @@ sub process_labelname {
   foreach my $h_ln ( @$lnamespec ) {
     my $lnameopt;
     my $ln = $h_ln->{content};
-    if ( $ln =~ /\Ashort(.+)\z/ ) {
+    if ( $ln =~ /\Ashort(\X+)\z/xms ) {
       $lnameopt = $1;
     }
     else {
@@ -1480,7 +1480,7 @@ sub process_labelname {
   # manual)
   foreach my $h_ln ( @$lnamespec ) {
     my $ln = $h_ln->{content};
-    if ( $ln =~ /\Ashort(.+)\z/ ) {
+    if ( $ln =~ /\Ashort(.+)\z/xms ) {
       next;
     }
 
@@ -1574,7 +1574,7 @@ sub process_labeldate {
         $be->set_field('labelmonth', $be->get_field($df->{month})) if $df->{month};
         $be->set_field('labelday', $be->get_field($df->{day})) if $df->{day};
         # ignore endyear if it's the same as year
-        my ($ytype) = $df->{year} =~ /\A(.*)year\z/xms;
+        my ($ytype) = $df->{year} =~ /\A(\X*)year\z/xms;
         $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
         # endyear can be null
         if (is_def_and_notnull($be->get_field($ytype . 'endyear'))

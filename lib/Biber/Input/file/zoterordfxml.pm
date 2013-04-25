@@ -748,7 +748,7 @@ sub _gen_initials {
 # Syntactically get the leaf node of a node path
 sub _leaf_node {
   my $node_path = shift;
-  return $node_path =~ s|.+/([^/]+$)|$1|r;
+  return $node_path =~ s|\X+/([^/]+$)|$1|r;
 }
 
 # Strip interim bltx namespace

@@ -474,7 +474,7 @@ sub reduce_array {
 
 sub remove_outer {
   my $str = shift;
-  $str =~ s/^{(.+)}$/$1/;
+  $str =~ s/^{(\X+)}$/$1/;
   return $str;
 }
 
