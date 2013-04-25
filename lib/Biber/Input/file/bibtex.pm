@@ -899,7 +899,8 @@ sub preprocess_file {
     $logger->trace("Buffer before decoding -> '$buf'");
     $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1);
     $logger->trace("Buffer after decoding -> '$buf'");
-    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
+    # Even though we will just read this file again, let's treat it as a proper Unicode NFC boundary
+    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, NFC($buf))
         or biber_error("Can't write $ufilename");
   }
 

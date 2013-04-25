@@ -13,6 +13,7 @@ use Biber::LaTeX::Recode;
 use Log::Log4perl;
 use IPC::Cmd qw( can_run );
 use Cwd;
+use Unicode::Normalize;
 my $cwd = getcwd;
 
 my $biber = Biber->new(noconf => 1);
@@ -27,6 +28,9 @@ my $l4pconf = qq|
     log4perl.appender.Screen.layout                    = Log::Log4perl::Layout::SimpleLayout
 |;
 Log::Log4perl->init(\$l4pconf);
+
+# NFD/NFC calls below as we are accessing internal functions which assume NFD and results strings
+# which assume NFC.
 
 # File locating
 # Using File::Spec->canonpath() to normalise path separators so these tests work
@@ -60,24 +64,24 @@ is( normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
     $§+ :-)   ', 1), 'Secoka_Nino', 'normalise_string_underscore 1' );
 
 Biber::Config->setoption('output_encoding', 'UTF-8');
-is( normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
-    $§+ :-)   ', 0), 'Şecöka_Nìño', 'normalise_string_underscore 2' );
+is( NFC(normalise_string_underscore('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
+    $§+ :-)   ', 0)), 'Şecöka_Nìño', 'normalise_string_underscore 2' );
 
 is( normalise_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalise_string_underscore 3');
 
 # LaTeX decoding/encoding
-is( latex_decode('Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i} \r{a}'), 'Muḥammad ibn Mūsā al-Khwārizmī å', 'latex decode 1');
+is( NFC(latex_decode('Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i} \r{a}')), 'Muḥammad ibn Mūsā al-Khwārizmī å', 'latex decode 1');
 is( latex_decode('\alpha'), '\alpha', 'latex decode 2'); # no greek decoding by default
 is( latex_decode('\textless\textampersand'), '<&', 'Latex decode 3'); # checking XML encoding bits
-is( latex_encode('Muḥammad ibn Mūsā al-Khwārizmī'), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');
-is( latex_encode('α'), 'α', 'latex encode 1'); # no greek encoding by default
+is( latex_encode(NFD('Muḥammad ibn Mūsā al-Khwārizmī')), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');
+is( latex_encode(NFD('α')), 'α', 'latex encode 2'); # no greek encoding by default
 
 Biber::LaTeX::Recode->init_schemes('full', 'full'); # Need to do this to reset
 
 is( latex_decode('\alpha'), 'α', 'Latex decode 4'); # greek decoding with "full"
-is( latex_encode('α'), '{$\alpha$}', 'latex encode 2'); # greek encoding with "full"
-is( latex_encode('µ'), '{$\mu$}', 'latex encode 3'); # Testing symbols
-is( latex_encode('≄'), '{$\not\simeq$}', 'latex encode 4'); # Testing negated symbols
+is( latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
+is( latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols
+is( latex_encode(NFD('≄')), '{$\not\simeq$}', 'latex encode 5'); # Testing negated symbols
 
 my $names = bless {namelist => [
     (bless { namestring => '\"Askdjksdj, Bsadk Cklsjd', nameinitstring => '\"Askdjksdj, BC' }, 'Biber::Entry::Name'),
@@ -86,7 +90,7 @@ my $names = bless {namelist => [
     (bless { namestring => 'Maksjdakj, Nsjahdajsdhj', nameinitstring => 'Maksjdakj, N'  }, 'Biber::Entry::Name')
 ]}, 'Biber::Entry::Names';
 
-is( makenamesid($names), 'Äskdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wàsdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
+is( NFC(makenamesid($names)), 'Äskdjksdj_Bsadk_Cklsjd_von_Üsakdjskd_Vsajd_Wàsdjh_Xaskldjdd_Yajsdajks_Z_Maksjdakj_Nsjahdajsdhj', 'makenameid' );
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;

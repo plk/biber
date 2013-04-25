@@ -957,7 +957,7 @@ sub _generatesortinfo {
     my $outenc = Biber::Config->getoption('output_encoding');
     if ($outenc ne 'UTF-8') {
       # Can this init be represented in the BBL encoding?
-      if (encode($outenc, $init) eq '?') { # Malformed data encoding char
+      if (encode($outenc, NFC($init)) eq '?') { # Malformed data encoding char
         # So convert to macro
         my $initd = Biber::LaTeX::Recode::latex_encode($init);
         # Don't warn if output is ascii as it's fairly pointless since this warning may be
