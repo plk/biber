@@ -14,6 +14,7 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use Digest::MD5 qw( md5_hex );
 use POSIX qw( locale_h ); # for lc()
 use Unicode::GCString;
+use Unicode::Normalize;
 use Encode;
 
 =encoding utf-8
@@ -75,8 +76,8 @@ sub _getnamehash {
   }
 
   $logger->trace("Creating MD5 namehash using '$hashkey'");
-  # Digest::MD5 can't deal with straight UTF8 so encode it first
-  return md5_hex(encode_utf8($hashkey));
+  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
+  return md5_hex(encode_utf8(NFC($hashkey)));
 }
 
 # Same as _getnamehash but takes account of uniquename setting for firstname
@@ -132,8 +133,8 @@ sub _getnamehash_u {
   }
 
   $logger->trace("Creating MD5 namehash_u using '$hashkey'");
-  # Digest::MD5 can't deal with straight UTF8 so encode it first
-  return md5_hex(encode_utf8($hashkey));
+  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
+  return md5_hex(encode_utf8(NFC($hashkey)));
 }
 
 
@@ -176,8 +177,8 @@ sub _getfullhash {
   }
 
   $logger->trace("Creating MD5 fullhash using '$hashkey'");
-  # Digest::MD5 can't deal with straight UTF8 so encode it first
-  return md5_hex(encode_utf8($hashkey));
+  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
+  return md5_hex(encode_utf8(NFC($hashkey)));
 }
 
 
@@ -214,8 +215,8 @@ sub _genpnhash {
   }
 
   $logger->trace("Creating MD5 pnhash using '$hashkey'");
-  # Digest::MD5 can't deal with straight UTF8 so encode it first
-  return md5_hex(encode_utf8($hashkey));
+  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output") 
+  return md5_hex(encode_utf8(NFC($hashkey)));
 }
 
 
@@ -949,7 +950,7 @@ sub _generatesortinfo {
 
     # Strip off the prefix
     $ss =~ s/\A$pre$sorting_sep+//;
-    my $init = substr normalise_string($ss), 0, 1;
+    my $init = Unicode::GCString->new(normalise_string($ss))->substr(0, 1)->as_string;
 
     # Now check if this sortinit is valid in the output_encoding. If not, warn
     # and replace with a suitable value

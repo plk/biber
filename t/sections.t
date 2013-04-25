@@ -56,8 +56,9 @@ my $section3 = $biber->sections->get_section(3);
 my $main3 = $biber->sortlists->get_list(3, 'entry', 'nty');
 my $shs3 = $biber->sortlists->get_list(3, 'shorthand', 'shorthand');
 
+# Internal UTF-8 before output is always NFD so have to NFD bits of this
 my $preamble = [
-                'Štring for Preamble 1',
+                NFD('Štring for Preamble 1'),
                 'String for Preamble 2',
                 'String for Preamble 3',
                 'String for Preamble 4'
@@ -97,7 +98,7 @@ String for Preamble 4%
 
 my $tail = qq||;
 
-is_deeply(NFC($biber->get_preamble), $preamble, 'Preamble for all sections');
+is_deeply($biber->get_preamble, $preamble, 'Preamble for all sections');
 is($section0->bibentry('sect1')->get_field('note'), 'value1', 'Section 0 macro test');
 # If macros were not reset between sections, this would give a macro redef error
 is($section1->bibentry('sect4')->get_field('note'), 'value2', 'Section 1 macro test');

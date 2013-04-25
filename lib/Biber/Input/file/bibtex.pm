@@ -933,7 +933,7 @@ sub preprocess_file {
 =cut
 
 sub parsename {
-  my ($namestr, $fieldname, $opts) = @_;
+  my ($namestr, $fieldname, $opts, $testing) = @_;
   $logger->debug("Parsing namestring '$namestr'");
   my $usepre = $opts->{useprefix};
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
@@ -986,7 +986,8 @@ sub parsename {
   # spaces - this is fine as we are just generating initials
   $nd_namestr =~ s/(\w)\.~(\w)/$1. $2/g;
 
-  my $nd_name = new Text::BibTeX::Name($nd_namestr, $fieldname);
+  # We use NFC here as we are "outputting" to an external module
+  my $nd_name = new Text::BibTeX::Name(NFC($nd_namestr), $fieldname);
 
   # Initials formats
   my $li_f = new Text::BibTeX::NameFormat('l', 1);
@@ -1064,6 +1065,32 @@ sub parsename {
   $nameinitstr .= '_' . join('', @$firstname_i) if $firstname;
   $nameinitstr =~ s/\s+/_/g;
   $nameinitstr =~ s/~/_/g;
+
+  # output is always NFC and so when testing the output of this routine, need NFC
+  if ($testing) {
+    if ($firstname) {
+      $firstname_stripped = NFC($firstname_stripped);
+      $firstname_i        = [ map {NFC($_)} @$firstname_i ];
+    }
+    if ($lastname) {
+      $lastname_stripped  = NFC($lastname_stripped);
+      $lastname_i         = [ map {NFC($_)} @$lastname_i ];
+    }
+    if ($prefix) {
+      $prefix_stripped    = NFC($prefix_stripped);
+      $prefix_i           = [ map {NFC($_)} @$prefix_i ];
+    }
+    if ($suffix) {
+      $suffix_stripped    = NFC($suffix_stripped);
+      $suffix_i           = [ map {NFC($_)} @$suffix_i ];
+    }
+    if ($namestring) {
+      $namestring = NFC($namestring);
+    }
+    if ($nameinitstr) {
+      $nameinitstr = NFC($nameinitstr);
+    }
+  }
 
   # The "strip" entry tells us which of the name parts had outer braces
   # stripped during processing so we can add them back when printing the

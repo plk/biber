@@ -183,7 +183,7 @@ Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
 
-is($main->get_sortdata('jaffe')->[0], $edtypeclass1, 'Editor type/class' );
+is(NFC($main->get_sortdata('jaffe')->[0]), $edtypeclass1, 'Editor type/class' );
 
 
 # Testing sorting using various date fields
