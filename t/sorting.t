@@ -9,6 +9,7 @@ use Test::More tests => 42;
 use Biber;
 use Biber::Output::bbl;
 use Log::Log4perl;
+use Unicode::Normalize;
 chdir("t/tdata");
 
 # Set up Biber object
@@ -158,8 +159,8 @@ Biber::Config->setoption('sortcase', '1');
 # regenerate information
 $biber->prepare;
 
-is($main->get_sortdata('luzzatto')->[0], $prefix1, 'Title with nosort' );
-is($main->get_sortdata('hasan')->[0], $diacritic1, 'Name with nosort' );
+is(NFC($main->get_sortdata('luzzatto')->[0]), $prefix1, 'Title with nosort' );
+is(NFC($main->get_sortdata('hasan')->[0]), $diacritic1, 'Name with nosort' );
 
 # Testing editor roles
 $S = [
@@ -182,7 +183,7 @@ Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
 
-is($main->get_sortdata('jaffe')->[0], $edtypeclass1, 'Editor type/class' );
+is(NFC($main->get_sortdata('jaffe')->[0]), $edtypeclass1, 'Editor type/class' );
 
 
 # Testing sorting using various date fields

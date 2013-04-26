@@ -107,23 +107,24 @@ sub init_schemes {
                                                             qr/\Achar\z/,
                                                            ]
                                                            );
+  # Careful about converting to NFD on reading the file
   foreach my $map (@{$dataxml->{maps}}) {
     my @set = split(/\s*,\s*/, $map->{set});
     my $type = $map->{type};
     my $map = $map->{map};
     next unless $scheme_d ~~ @set or $scheme_e ~~ @set;
     foreach my $set (@set) {
-      $remaps->{$set}{$type}{map} = { map {$_->{from}{content} => $_->{to}{content}} @$map };
+      $remaps->{$set}{$type}{map} = { map {NFD($_->{from}{content}) => NFD($_->{to}{content})} @$map };
       $r_remaps->{$set}{$type}{map} = { reverse %{$remaps->{$set}{$type}{map}} };
       # There are some duplicates in the hash. reverse() doesn't predictably deal with this.
       # Force specific prefered reverse mapping to override unpredictable reverse()
       # We still use reverse() and just correct it afterwards as it's fast
       foreach my $r (@$map) {
         next unless exists($r->{from}{preferred});
-        $r_remaps->{$set}{$type}{map}{$r->{to}{content}} = $r->{from}{content};
+        $r_remaps->{$set}{$type}{map}{NFD($r->{to}{content})} = NFD($r->{from}{content});
       }
       # Things we don't want to change when encoding as this would break LaTeX
-      foreach my $e (map {$_->{content}} @{$dataxml->{encode_exclude}{char}}) {
+      foreach my $e (map {NFD($_->{content})} @{$dataxml->{encode_exclude}{char}}) {
         delete($r_remaps->{$set}{$type}{map}{$e});
       }
 
@@ -159,7 +160,7 @@ The function accepts a number of options:
     * normalize => $bool (default 1)
         whether the output string should be normalized with Unicode::Normalize
 
-    * normalization => <normalization form> (default 'NFC')
+    * normalization => <normalization form> (default 'NFD')
         and if yes, the normalization form to use (see the Unicode::Normalize documentation)
 
     * strip_outer_braces => $bool (default 0)
@@ -179,7 +180,7 @@ sub latex_decode {
 
     my %opts      = @_;
     my $norm      = exists $opts{normalize} ? $opts{normalize} : 1;
-    my $norm_form = exists $opts{normalization} ? $opts{normalization} : 'NFC';
+    my $norm_form = exists $opts{normalization} ? $opts{normalization} : 'NFD';
     my $strip_outer_braces =
       exists $opts{strip_outer_braces} ? $opts{strip_outer_braces} : 0;
 
@@ -263,7 +264,7 @@ sub latex_decode {
 
 =head2 latex_encode($text, @options)
 
-Converts LaTeX character macros to UTF-8
+Converts UTF-8 to LaTeX
 
 =cut
 
@@ -288,10 +289,6 @@ sub latex_encode {
       }
     }
   }
-
-  # Switch to NFD form for accents and diacritics. We need to be able to look for diacritics
-  # etc. as separate characters which is impossible in NFC form.
-  $text = NFD($text);
 
   foreach my $type (keys %{$r_remaps->{$scheme_e}}) {
     my $map = $r_remaps->{$scheme_e}{$type}{map};
@@ -324,9 +321,6 @@ sub latex_encode {
               }gex;
     }
   }
-
-  # Switch back to NFC form for symbols
-  $text = NFC($text);
 
   foreach my $type (keys %{$r_remaps->{$scheme_e}}) {
     my $map = $r_remaps->{$scheme_e}{$type}{map};

@@ -9,6 +9,7 @@ use Biber;
 use Biber::Constants;
 use Biber::Utils;
 use Biber::Output::bbl;
+use Unicode::Normalize;
 use Log::Log4perl;
 chdir("t/tdata");
 
@@ -55,8 +56,9 @@ my $section3 = $biber->sections->get_section(3);
 my $main3 = $biber->sortlists->get_list(3, 'entry', 'nty');
 my $shs3 = $biber->sortlists->get_list(3, 'shorthand', 'shorthand');
 
+# Internal UTF-8 before output is always NFD so have to NFD bits of this
 my $preamble = [
-                'Štring for Preamble 1',
+                NFD('Štring for Preamble 1'),
                 'String for Preamble 2',
                 'String for Preamble 3',
                 'String for Preamble 4'

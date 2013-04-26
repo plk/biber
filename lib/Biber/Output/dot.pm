@@ -119,7 +119,7 @@ sub output {
 
   $logger->info("Writing '$target_string' with encoding 'UTF-8'");
 
-  print $target $data->{HEAD};
+  out($target, $data->{HEAD});
 
   $in = 2; # indentation
   $i = ' '; # starting indentation
@@ -238,7 +238,7 @@ sub output {
 
   $graph .= "\n}\n";
 
-  print $target $graph;
+  out($target, $graph);
 
   $logger->info("Output to $target_string");
   close $target;

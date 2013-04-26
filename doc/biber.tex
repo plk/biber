@@ -1285,6 +1285,11 @@ here is an example of a config file setting:
 </collate_options>
 \end{lstlisting}
 \bigskip
+\subsection{Unicode}
+\biber uses NFD UTF-8 internally. All data is converted to NFD UTF-8
+when read. If UTF-8 output is requested (to \file{.bbl} for example),
+the UTF-8 will always be NFC.
+\bigskip
 \subsection{Input/Output File Locations}
 
 \subsubsection{Control file}\label{loc:cf}

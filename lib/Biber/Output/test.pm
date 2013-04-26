@@ -10,6 +10,7 @@ use Biber::Entry;
 use Biber::Utils;
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
+use Unicode::GCString;
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -38,10 +39,10 @@ sub _printfield {
     my $str = $be->get_field($field);
     if (Biber::Config->getoption('wraplines')) {
       ## 16 is the length of '      \strng{}{}'
-      if ( 16 + length($field) + length($str) > 2*$Text::Wrap::columns ) {
+      if ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
         $acc .= "      \\strng{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
       }
-      elsif ( 16 + length($field) + length($str) > $Text::Wrap::columns ) {
+      elsif ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > $Text::Wrap::columns ) {
         $acc .= wrap('      ', '      ', "\\strng{$field}{$str}" ) . "\n";
       }
       else {
@@ -74,10 +75,10 @@ sub _printfield {
 
         if (Biber::Config->getoption('wraplines')) {
           ## 18 is the length of '      \field[]{}{}'
-          if ( 18 + length($form) + length($lang) + length($field) + length($str) > 2*$Text::Wrap::columns ) {
+          if ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + length($field) + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
             $acc .= "      \\field${fl}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
           }
-          elsif ( 18 + length($form) + length($lang) + length($field) + length($str) > $Text::Wrap::columns ) {
+          elsif ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > $Text::Wrap::columns ) {
             $acc .= wrap('      ', '      ', "\\field${fl}{$field}{$str}" ) . "\n";
           }
           else {
@@ -428,11 +429,11 @@ sub output {
           if (Biber::Config->getoption('output_safechars')) {
             $entry_string = latex_recode_output($entry_string);
           }
-          print $target $entry_string;
+          out($target, $entry_string);
         }
         elsif ($listtype eq 'shorthand') {
           next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
-          print $target $k;
+          out($target, $k);
         }
       }
     }

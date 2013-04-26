@@ -9,6 +9,7 @@ use Test::More tests => 54;
 use Biber;
 use Biber::Output::bbl;
 use Log::Log4perl;
+use Unicode::Normalize;
 chdir("t/tdata");
 
 # Set up Biber object
@@ -701,15 +702,15 @@ is_deeply(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author'), $nam
 is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 1}), $name3, 'parsename 3') ;
 is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 0}), $name4, 'parsename 4') ;
 is_deeply(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author'), $name5, 'parsename 5') ;
-is_deeply(Biber::Input::file::bibtex::parsename('al-Ṣāliḥ, ʿAbdallāh', 'author'), $name6, 'parsename 6') ;
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1}), $name7, 'parsename 7');
-is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author'), $name8, 'parsename 8');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author'), $name9, 'parsename 9');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author'), $name10, 'parsename 10');
-is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la {Vallée Poussin}', 'author'), $name11, 'parsename 11');
+is_deeply(Biber::Input::file::bibtex::parsename('al-Ṣāliḥ, ʿAbdallāh', 'author', undef, 1), $name6, 'parsename 6') ;
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1}, 1), $name7, 'parsename 7');
+is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author', undef, 1), $name8, 'parsename 8');
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author', undef, 1), $name9, 'parsename 9');
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author', undef, 1), $name10, 'parsename 10');
+is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la {Vallée Poussin}', 'author', undef, 1), $name11, 'parsename 11');
 is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel Poussin', 'author'), $name12, 'parsename 12');
 is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles {Poussin Lecoq}', 'author'), $name13, 'parsename 13');
-is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}), $name14, 'parsename 14');
+is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}, 1), $name14, 'parsename 14');
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. El-{M}allah', 'author'), $name15, 'parsename 15');
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author'), $name16, 'parsename 16');
 is_deeply(Biber::Input::file::bibtex::parsename('Other, A.~N.', 'author'), $name17, 'parsename 17');
@@ -735,9 +736,9 @@ is( $out->get_output_entry('L18', $main), $l18, 'Last, First F.{\bibinitdelim }F
 is( $out->get_output_entry('L19', $main), $l19, 'Firstname with hyphen');
 is( $out->get_output_entry('L19a', $main), $l19a, 'Short firstname with hyphen');
 is( $out->get_output_entry('L20', $main), $l20, 'Protected dual first name');
-is( $out->get_output_entry('L22', $main), $l22u, 'LaTeX encoded unicode lastname - 1');
-is( $out->get_output_entry('L23', $main), $l23, 'Unicode firstname');
-is( $out->get_output_entry('L24', $main), $l24, 'Unicode lastname');
+is( NFC($out->get_output_entry('L22', $main)), $l22u, 'LaTeX encoded unicode lastname - 1');
+is( NFC($out->get_output_entry('L23', $main)), $l23, 'Unicode firstname');
+is( NFC($out->get_output_entry('L24', $main)), $l24, 'Unicode lastname');
 is( $out->get_output_entry('L25', $main), $l25, 'Single string name');
 is( $out->get_output_entry('L26', $main), $l26, 'Hyphen at brace level <> 0');
 is($section->bibentry('L27')->get_field('author')->count_names, 1, 'Bad name with 3 commas');

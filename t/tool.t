@@ -7,6 +7,7 @@ use Biber;
 use Biber::Utils;
 use Biber::Output::bibtex;
 use Log::Log4perl;
+use Unicode::Normalize;
 chdir("t/tdata");
 no warnings 'utf8';
 use utf8;
@@ -77,8 +78,8 @@ my $t3 = q|@BOOK{b1,
 
 |;
 
-
-is($out->get_output_entry('i3Š',), $t1, 'tool mode 1');
+# NFD here because we are testing internals here and all internals expect NFD
+is($out->get_output_entry(NFD('i3Š')), $t1, 'tool mode 1');
 ok(is_undef($out->get_output_entry('loh')), 'tool mode 2');
 is($out->get_output_entry('xd1',), $t2, 'tool mode 3');
 is($out->get_output_entry('b1',), $t3, 'tool mode 4');

@@ -80,7 +80,7 @@ sub set_output_entry {
 
   my $max_field_len;
   if (Biber::Config->getoption('tool_align')) {
-    $max_field_len = max map {length} $be->rawfields;
+    $max_field_len = max map {Unicode::GCString->new($_)->length} $be->rawfields;
   }
 
   foreach my $f ($be->rawfields) {
@@ -97,7 +97,7 @@ sub set_output_entry {
     my $value = decode_utf8($be->get_rawfield($f));
     $acc .= ' ' x Biber::Config->getoption('tool_indent');
     $acc .= $casing->($f);
-    $acc .= ' ' x ($max_field_len - length($f)) if Biber::Config->getoption('tool_align');
+    $acc .= ' ' x ($max_field_len - Unicode::GCString->new($f)->length) if Biber::Config->getoption('tool_align');
     $acc .= ' = ';
     $acc .= "\{$value\},\n";
   }
@@ -141,16 +141,16 @@ sub output {
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
   $logger->info('Converting UTF-8 to TeX macros on output') if Biber::Config->getoption('output_safechars');
 
-  print $target $data->{HEAD};
+  out($target, $data->{HEAD});
 
   $logger->debug("Writing entries in tool mode");
 
   foreach my $key (@{$self->{output_data}{ENTRIES_ORDER}}) {
     # There is only a (pseudo) section "0" in tool mode
-    print $target ${$data->{ENTRIES}{0}{index}{$key}};
+    out($target, ${$data->{ENTRIES}{0}{index}{$key}});
   }
 
-  print $target $data->{TAIL};
+  out($target, $data->{TAIL});
 
   $logger->info("Output to $target_string");
   close $target;

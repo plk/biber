@@ -10,7 +10,9 @@ use Biber;
 use Biber::Utils;
 use Biber::Output::bbl;
 use Log::Log4perl;
+use Unicode::Normalize;
 chdir("t/tdata");
+
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
@@ -284,7 +286,7 @@ is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCE', 'labelalpha li
 is($bibentries->entry('L24')->get_field('sortlabelalpha'), 'Z', 'labelalpha list disambiguation 6');
 is($bibentries->entry('L25')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 7');
 is($bibentries->entry('L26')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 8');
-is($bibentries->entry('title1')->get_field('sortlabelalpha'), 'Tït', 'Title in braces with UTF-8 char - 1');
+is(NFC($bibentries->entry('title1')->get_field('sortlabelalpha')), 'Tït', 'Title in braces with UTF-8 char - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 3);

@@ -11,6 +11,7 @@ use Biber::Utils;
 use Biber::Output::test;
 use Encode;
 use Log::Log4perl;
+use Unicode::Normalize;
 chdir("t/tdata");
 
 # Set up Biber object

@@ -23,6 +23,8 @@ use List::AllUtils qw( :all );
 use XML::LibXML::Simple;
 use Readonly;
 use Data::Dump qw(dump);
+use Unicode::Normalize;
+use Unicode::GCString;
 use URI;
 
 my $logger = Log::Log4perl::get_logger('main');
@@ -138,6 +140,9 @@ sub extract_entries {
   my @ris_entries;
   my $last_tag;
   while(<$ris>) {
+    if (Biber::Config->getoption('input_encoding') eq 'UTF-8') {
+      $_ = NFD($_);# Unicode NFD boundary
+    }
     if (m/\A([A-Z][A-Z0-9])\s\s\-\s*(.+)?\n\z/xms) {
       $last_tag = $1;
       given ($1) {
@@ -602,7 +607,7 @@ sub _join_name_parts {
     return $parts[0] . '~' . $parts[1];
   }
   my $namestring = $parts[0];
-  $namestring .= length($parts[0]) < 3 ? '~' : ' ';
+  $namestring .= Unicode::GCString->new($parts[0])->length < 3 ? '~' : ' ';
   $namestring .= join(' ', @parts[1 .. ($#parts - 1)]);
   $namestring .= '~' . $parts[$#parts];
   return $namestring;
@@ -622,10 +627,10 @@ sub _gen_initials {
       push @strings_out, _gen_initials(split(/\s+/, $str));
     }
     else {
-      my $chr = substr($str, 0, 1);
+      my $chr = Unicode::GCString->new($str)->substr(0, 1)->as_string;
       # Keep diacritics with their following characters
       if ($chr =~ m/\p{Dia}/) {
-        push @strings_out, substr($str, 0, 2);
+        push @strings_out, Unicode::GCString->new($str)->substr(0, 2)->as_string;
       }
       else {
         push @strings_out, $chr;
