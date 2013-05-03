@@ -26,7 +26,7 @@
 # Added libz as some linux distros like SUSE 11.3 have a slightly older zlib
 # which doesn't have gzopen64 in it.
 
-/usr/local/perl/bin/pp \
+PAR_VERBATIM=1 /usr/local/perl/bin/pp \
   --compress=6 \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \

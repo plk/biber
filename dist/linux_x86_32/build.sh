@@ -24,7 +24,7 @@
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them.
 
-/usr/local/perl/bin/pp \
+PAR_VERBATIM=1 /usr/local/perl/bin/pp \
   --compress=6 \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \

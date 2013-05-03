@@ -1,9 +1,14 @@
 Revision history for Biber
 
-1.6    ()
+1.6    (2013-04-30)
        * Bugfixes
        * Now uses perl 5.16. Non-binary (unpacked) use requires perl 5.16+
        * Improved tool mode with some formatting options
+       * Made Unicode NFD/NFC boundaries more robust
+       * labelyear is now labeldate to match biblatex 2.6
+       * Support for new CLONESOURCEKEY field (see biblatex 2.6 docs)
+       * New padding character option in labelalphatemplate (see biblatex
+         2.6 docs)
 1.5    (2013-01-10)
        * Added new source mapping option "map_entry_null"
        * Renamed some options (old ones remain as aliases):
