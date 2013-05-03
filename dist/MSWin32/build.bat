@@ -20,7 +20,7 @@
 
 COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN
 
-SET PAR_VERBATIM 1
+SET PAR_VERBATIM=1
 
 CALL pp ^
   --compress=6 ^
