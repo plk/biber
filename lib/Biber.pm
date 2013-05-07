@@ -18,7 +18,7 @@ use IO::File;
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Biber::Config;
 use Biber::Constants;
-use List::AllUtils qw( first uniq max );
+use List::AllUtils qw( first uniq max any );
 use Biber::DataModel;
 use Biber::Internals;
 use Biber::Entries;
@@ -823,7 +823,7 @@ sub nullable_check {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
     foreach my $f ($be->datafields) {
-      if (is_null($be->get_datafield($f))) {
+      if (any {is_null($_)} $be->get_field_variants($f)) {
         unless ($dm->field_is_nullok($f)) {
           biber_warn("The field '$f' in entry '$citekey' cannot be null, deleting it");
           $be->del_field($f);
