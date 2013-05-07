@@ -13,7 +13,7 @@
 
 cp /usr/local/bin/biber /tmp/biber-cygwin
 
-pp --compress=6 \
+PAR_VERBATIM=1 pp --compress=6 \
    --module=deprecate \
    --module=Biber::Input::file::bibtex \
    --module=Biber::Input::file::biblatexml \

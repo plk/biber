@@ -37,6 +37,9 @@
             "Data::Diver" : "0",
             "Data::Dump" : "0",
             "Date::Simple" : "0",
+            "Encode::EUCJPASCII" : "0",
+            "Encode::HanExtra" : "0",
+            "Encode::JIS2K" : "0",
             "File::Slurp::Unicode" : "0",
             "IPC::Cmd" : "0",
             "IPC::Run3" : "0",
@@ -49,10 +52,11 @@
             "Regexp::Common" : "0",
             "Text::BibTeX" : "0.66",
             "URI" : "0",
-            "Unicode::Collate" : "0.90",
+            "Unicode::Collate" : "0.97",
+            "Unicode::GCString" : "0",
             "XML::LibXML::Simple" : "0",
             "XML::LibXSLT" : "0",
-            "perl" : "v5.14.0"
+            "perl" : "v5.16.0"
          }
       }
    },
@@ -63,7 +67,7 @@
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
-         "version" : "1.5"
+         "version" : "1.6"
       },
       "Biber::Constants" : {
          "file" : "lib/Biber/Constants.pm",
@@ -125,16 +129,16 @@
          "file" : "lib/Biber/Output/bbl.pm",
          "version" : 0
       },
+      "Biber::Output::bibtex" : {
+         "file" : "lib/Biber/Output/bibtex.pm",
+         "version" : 0
+      },
       "Biber::Output::dot" : {
          "file" : "lib/Biber/Output/dot.pm",
          "version" : 0
       },
       "Biber::Output::test" : {
          "file" : "lib/Biber/Output/test.pm",
-         "version" : 0
-      },
-      "Biber::Output::tool" : {
-         "file" : "lib/Biber/Output/tool.pm",
          "version" : 0
       },
       "Biber::Section" : {
@@ -164,5 +168,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "1.5"
+   "version" : "1.6"
 }
