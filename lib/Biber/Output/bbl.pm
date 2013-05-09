@@ -304,7 +304,15 @@ sub set_output_entry {
           # Copy per-list options to the actual labelname too
           $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
 
-          $acc .= "      \\name[form=$form,lang=$lang]{$namefield}{$total}{$plo}{%\n";
+          # Names are not necessarily multiscript - for example, if a style
+          # defines a custom name field which isn't. This is guaranteed only in the
+          # default biblatex datamodel
+          my $fl = '';
+          if ($dm->field_is_multiscript($namefield)) {
+            $fl = "[form=$form,lang=$lang]";
+          }
+
+          $acc .= "      \\name${fl}{$namefield}{$total}{$plo}{%\n";
           foreach my $n (@{$nf->names}) {
             $acc .= $n->name_to_bbl;
           }
