@@ -779,15 +779,20 @@ sub filter_entry_options {
 
 =head2 imatch
 
-    Do an interpolating match using a match RE and a string passed in as variables
+    Do an interpolating (neg)match using a match RE and a string passed in as variables
 
 =cut
 
 sub imatch {
-  my ($value, $val_match) = @_;
+  my ($value, $val_match, $negmatch) = @_;
   return 0 unless $val_match;
   $val_match = qr/$val_match/;
-  return $value =~ m/$val_match/xms;
+  if ($negmatch) {# "!~" doesn't work here as we need an array returned
+    return $value =~ m/$val_match/xms ? () : (1);
+  }
+  else {
+    return $value =~ m/$val_match/xms;
+  }
 }
 
 

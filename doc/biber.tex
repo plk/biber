@@ -709,6 +709,7 @@ examples. A \opt{map} element looks like this:
               +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-entrytype}"}+
               +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
               +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
+              +\textcolor{blue}{map\_nomatch="\textcolor{red}{match-regexp}"}+
               +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
               +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
               +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
@@ -759,6 +760,8 @@ datasource entry being processed. A \opt{map\_step} works like this:
   step if the \textcolor{red}{\texttt{source-field}} matches
   \textcolor{blue}{\texttt{map\_match}}. You can use parentheses as usual
   to capture parts of the match and can then use these later when setting a \textcolor{blue}{\texttt{map\_field\_value}}.
+\item \textcolor{blue}{\texttt{map\_notmatch}} is the same as
+  \textcolor{blue}{\texttt{map\_match}} but with the logic reversed.
 \item Perform a Perl regular expression match and replace on the value of
   \textcolor{red}{\texttt{source-field}} if
   \textcolor{blue}{\texttt{map\_match}} and
