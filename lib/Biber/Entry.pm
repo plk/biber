@@ -333,6 +333,25 @@ sub get_field {
          Dive($self, 'rawfields', $field);
 }
 
+=head2 field_has_variants
+
+    Return boolean if field has any variants (other than original/default)
+
+=cut
+
+sub field_has_variants {
+  my $self = shift;
+  my $field = shift;
+  return undef unless $field;
+  foreach my $form ($self->get_field_form_names($field)) {
+    foreach my $lang ($self->get_field_form_lang_names($field, $form)) {
+      return 1 unless ($form eq 'original' and $lang eq 'default');
+    }
+  }
+  return 0;
+}
+
+
 =head2 get_field_variants
 
     Get all field variants for a Biber::Entry object field

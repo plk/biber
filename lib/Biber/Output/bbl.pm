@@ -148,7 +148,12 @@ sub _printfield {
         my $dm = Biber::Config->get_dm;
         my $fl = '';
         if ($dm->field_is_multiscript($field)) {
-          $fl = "[form=$form,lang=$lang]";
+          if ($form ne 'original' and $lang eq 'default') {
+            $fl = "[form=$form]";
+          }
+          elsif ($form ne 'original' and $lang ne 'default') {
+            $fl = "[form=$form,lang=$lang]";
+          }
         }
 
         if (Biber::Config->getoption('wraplines')) {
@@ -309,7 +314,12 @@ sub set_output_entry {
           # default biblatex datamodel
           my $fl = '';
           if ($dm->field_is_multiscript($namefield)) {
-            $fl = "[form=$form,lang=$lang]";
+            if ($form ne 'original' and $lang eq 'default') {
+              $fl = "[form=$form]";
+            }
+            elsif ($form ne 'original' and $lang ne 'default') {
+              $fl = "[form=$form,lang=$lang]";
+            }
           }
 
           $acc .= "      \\name${fl}{$namefield}{$total}{$plo}{%\n";
@@ -345,8 +355,14 @@ sub set_output_entry {
           # Can the field have multiple script/lang variants?
           my $dm = Biber::Config->get_dm;
           my $fl = '';
+
           if ($dm->field_is_multiscript($listfield)) {
-            $fl = "[form=$form,lang=$lang]";
+            if ($form ne 'original' and $lang eq 'default') {
+              $fl = "[form=$form]";
+            }
+            elsif ($form ne 'original' and $lang ne 'default') {
+              $fl = "[form=$form,lang=$lang]";
+            }
           }
 
           $acc .= "      \\list${fl}{$listfield}{$total}{%\n";
