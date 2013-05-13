@@ -365,7 +365,7 @@ sub create_entry {
 
           # Field map
           if (my $source = $step->{map_field_source}) {
-            # key is a psudo-field. It's guaranteed to exist so
+            # key is a pseudo-field. It's guaranteed to exist so
             # just check if that's what's being asked for
             unless (lc($source) eq 'entrykey' or
                     $entry->exists(lc($source))) {
