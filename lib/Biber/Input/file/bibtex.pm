@@ -384,6 +384,13 @@ sub create_entry {
             $last_field = $source;
             $last_fieldval = lc($source) eq 'entrykey' ? biber_decode_utf8($entry->key) : biber_decode_utf8($entry->get(lc($source)));
 
+            my $negmatch = 0;
+            # Negated matches are a normal match with a special flag
+            if (my $nm = $step->{map_notmatch}) {
+              $step->{map_match} = $nm;
+              $negmatch = 1;
+            }
+
             # map fields to targets
             if (my $m = $step->{map_match}) {
               if (defined($step->{map_replace})) { # replace can be null
@@ -400,7 +407,7 @@ sub create_entry {
                             ireplace($last_fieldval, $m, $r));
               }
               else {
-                unless (@imatches = imatch($last_fieldval, $m)) {
+                unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
                   # Skip the rest of the map if this step doesn't match and match is final
                   if ($step->{map_final}) {
                     $logger->debug("Source mapping (type=$level, key=$key): Field '" . lc($source) . "' does not match '$m' and step has 'final' set, skipping rest of map ...");
