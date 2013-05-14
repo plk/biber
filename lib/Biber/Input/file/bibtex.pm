@@ -504,6 +504,21 @@ sub create_entry {
 
     my $entrytype = biber_decode_utf8($entry->type);
 
+    # We have to process local options as early as possible in order
+    # to make them available for things that need them like parsename()
+    if (my $value = biber_decode_utf8($entry->get('options'))) {
+      process_entry_options($key, $value);
+      # Save the raw options in case we are to output another input format like
+      # biblatexml
+      $bibentry->set_field('rawoptions', $value);
+    }
+
+    # # Copy this into the per-entry mslang option unless it's already been set explicitly
+    # if (my $value = biber_decode_utf8($entry->get('hyphenation'))) {
+    #   Biber::Config->setblxoption('multiscriptlang', $value, 'PER_ENTRY', $key) unless
+    #       Biber::Config->issetblxentryoption('multiscriptlang', $key);
+    # }
+
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
     foreach my $f ($entry->fieldlist) {
@@ -512,16 +527,6 @@ sub create_entry {
       if (Biber::Config->getoption('tool')) {
         $bibentry->set_rawfield($f, biber_decode_utf8($entry->get($f)));
         next;
-      }
-
-      # We have to process local options as early as possible in order
-      # to make them available for things that need them like parsename()
-      if ($f eq 'options') {
-        my $value = biber_decode_utf8($entry->get($f));
-        process_entry_options($key, $value);
-        # Save the raw options in case we are to output another input format like
-        # biblatexml
-        $bibentry->set_field('rawoptions', $value);
       }
 
       # Now run any defined handler
@@ -537,7 +542,6 @@ sub create_entry {
     $bibentry->set_field('entrytype', $entrytype);
     $bibentry->set_field('datatype', 'bibtex');
     $bibentries->add_entry($key, $bibentry);
-
   }
 
   return 1;
@@ -554,6 +558,13 @@ sub _literal {
   my ($bibentry, $entry, $f, $key) = @_;
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  my $dm = Biber::Config->get_dm;
+
+  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+    return;
+  }
+
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
@@ -572,9 +583,14 @@ sub _literal {
 
 # URI fields
 sub _uri {
-  my ($bibentry, $entry, $f) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   my $value = NFC(decode_utf8($entry->get($f)));# Unicode NFC boundary (before hex encoding)
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+
+  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+    return;
+  }
 
   # If there are some escapes in the URI, unescape them
   if ($value =~ /\%/) {
@@ -592,9 +608,14 @@ sub _uri {
 
 # Verbatim fields
 sub _verbatim {
-  my ($bibentry, $entry, $f) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+
+  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+    return;
+  }
 
   $bibentry->set_datafield($field, $value, $form, $lang);
   return;
@@ -602,10 +623,15 @@ sub _verbatim {
 
 # Range fields
 sub _range {
-  my ($bibentry, $entry, $f) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   my $values_ref;
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+
+  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+    return;
+  }
 
   my @values = split(/\s*[;,]\s*/, $value);
   # Here the "-–" contains two different chars even though they might
@@ -639,6 +665,11 @@ sub _name {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+
+  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+    return;
+  }
 
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
 
@@ -697,6 +728,12 @@ sub _date {
   my $datetype = $f =~ s/date\z//xmsr;
   my $date = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+
+  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+    return;
+  }
+
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
@@ -745,9 +782,14 @@ sub _date {
 
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+
+  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+    return;
+  }
 
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
   @tmp = map { biber_decode_utf8($_) } @tmp;
