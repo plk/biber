@@ -1906,11 +1906,11 @@
     <bcf:citekey order="1">forms1</bcf:citekey>
     <bcf:citekey order="2">forms2</bcf:citekey>
     <bcf:citekey order="3">forms3</bcf:citekey>
-    <bcf:citekey order="1">forms4</bcf:citekey>
-    <bcf:citekey order="2">forms5</bcf:citekey>
-    <bcf:citekey order="3">forms6</bcf:citekey>
-    <bcf:citekey order="3">forms7</bcf:citekey>
-    <bcf:citekey order="3">forms8</bcf:citekey>
+    <bcf:citekey order="4">forms4</bcf:citekey>
+    <bcf:citekey order="5">forms5</bcf:citekey>
+    <bcf:citekey order="6">forms6</bcf:citekey>
+    <bcf:citekey order="7">forms7</bcf:citekey>
+    <bcf:citekey order="8">forms8</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

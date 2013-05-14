@@ -50,7 +50,7 @@ my $string1 = q|    \entry{DynSet}{set}{}
       \name{labelname}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
@@ -58,9 +58,9 @@ my $string1 = q|    \entry{DynSet}{set}{}
       \field{sortinit}{0}
       \field{labelyear}{2002}
       \field{labeltitle}{Doing Daring Deeds}
-      \field[form=original,lang=default]{annotation}{Some Dynamic Note}
+      \field{annotation}{Some Dynamic Note}
       \field{shorthand}{d1}
-      \field[form=original,lang=default]{title}{Doing Daring Deeds}
+      \field{title}{Doing Daring Deeds}
       \field{year}{2002}
     \endentry
 |;
@@ -70,16 +70,16 @@ my $string2 = q|    \entry{Dynamic1}{book}{}
       \name{labelname}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{0}
       \field{labeltitle}{Doing Daring Deeds}
-      \field[form=original,lang=default]{annotation}{Some Dynamic Note}
+      \field{annotation}{Some Dynamic Note}
       \field{shorthand}{d1}
-      \field[form=original,lang=default]{title}{Doing Daring Deeds}
+      \field{title}{Doing Daring Deeds}
       \field{year}{2002}
     \endentry
 |;
@@ -89,7 +89,7 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
       \name{labelname}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
@@ -97,7 +97,7 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
       \field{sortinit}{0}
       \field{labeltitle}{Beautiful Birthdays}
       \field{shorthand}{d2}
-      \field[form=original,lang=default]{title}{Beautiful Birthdays}
+      \field{title}{Beautiful Birthdays}
       \field{year}{2010}
     \endentry
 |;
@@ -107,7 +107,7 @@ my $string4 = q|    \entry{Dynamic3}{book}{}
       \name{labelname}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
@@ -115,7 +115,7 @@ my $string4 = q|    \entry{Dynamic3}{book}{}
       \field{sortinit}{0}
       \field{labeltitle}{Reckless Ravishings}
       \field{shorthand}{d3}
-      \field[form=original,lang=default]{title}{Reckless Ravishings}
+      \field{title}{Reckless Ravishings}
       \field{year}{2000}
     \endentry
 |;
@@ -126,7 +126,7 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \name{labelname}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
@@ -135,7 +135,7 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \field{labelyear}{2000}
       \field{labeltitle}{Reckless Ravishings}
       \field{shorthand}{d3}
-      \field[form=original,lang=default]{title}{Reckless Ravishings}
+      \field{title}{Reckless Ravishings}
       \field{year}{2000}
     \endentry
 |;

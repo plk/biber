@@ -81,10 +81,10 @@ my $l1 = q|    \entry{L1}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -99,7 +99,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{origday}{30}
       \field{origmonth}{10}
       \field{origyear}{1985}
-      \field[form=original,lang=default]{title}{Title 1}
+      \field{title}{Title 1}
       \field{year}{1998}
     \endentry
 |;
@@ -108,10 +108,10 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{19eec87c959944d6d9c72434a42856ba}
@@ -123,7 +123,7 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \field{labeltitle}{Title 2}
       \field{day}{05}
       \field{month}{04}
-      \field[form=original,lang=default]{title}{Title 2}
+      \field{title}{Title 2}
       \field{year}{1998}
     \endentry
 |;
@@ -132,10 +132,10 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{490250da1f3b92580d97563dc96c6c84}
@@ -147,7 +147,7 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \field{labeltitle}{Title 3}
       \field{day}{05}
       \field{month}{04}
-      \field[form=original,lang=default]{title}{Title 3}
+      \field{title}{Title 3}
       \field{year}{1999}
     \endentry
 |;

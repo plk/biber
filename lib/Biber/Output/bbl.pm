@@ -151,6 +151,9 @@ sub _printfield {
           if ($form ne 'original' and $lang eq 'default') {
             $fl = "[form=$form]";
           }
+          elsif ($form eq 'original' and $lang ne 'default') {
+            $fl = "[lang=$lang]";
+          }
           elsif ($form ne 'original' and $lang ne 'default') {
             $fl = "[form=$form,lang=$lang]";
           }
@@ -317,6 +320,9 @@ sub set_output_entry {
             if ($form ne 'original' and $lang eq 'default') {
               $fl = "[form=$form]";
             }
+            elsif ($form eq 'original' and $lang ne 'default') {
+              $fl = "[lang=$lang]";
+            }
             elsif ($form ne 'original' and $lang ne 'default') {
               $fl = "[form=$form,lang=$lang]";
             }
@@ -355,10 +361,12 @@ sub set_output_entry {
           # Can the field have multiple script/lang variants?
           my $dm = Biber::Config->get_dm;
           my $fl = '';
-
           if ($dm->field_is_multiscript($listfield)) {
             if ($form ne 'original' and $lang eq 'default') {
               $fl = "[form=$form]";
+            }
+            elsif ($form eq 'original' and $lang ne 'default') {
+              $fl = "[lang=$lang]";
             }
             elsif ($form ne 'original' and $lang ne 'default') {
               $fl = "[form=$form,lang=$lang]";

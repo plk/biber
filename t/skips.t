@@ -48,7 +48,7 @@ my $set1 = q|    \entry{seta}{set}{}
       \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -59,7 +59,7 @@ my $set1 = q|    \entry{seta}{set}{}
       \field{labelyear}{2010}
       \field{labeltitle}{Set Member A}
       \field{extraalpha}{1}
-      \field[form=original,lang=default]{title}{Set Member A}
+      \field{title}{Set Member A}
       \field{year}{2010}
       \keyw{key1, key2}
     \endentry
@@ -70,14 +70,14 @@ my $set2 = q|    \entry{set:membera}{book}{}
       \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{labeltitle}{Set Member A}
-      \field[form=original,lang=default]{title}{Set Member A}
+      \field{title}{Set Member A}
       \field{year}{2010}
       \keyw{key1, key2}
     \endentry
@@ -88,14 +88,14 @@ my $set3 = q|    \entry{set:memberb}{book}{}
       \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{labeltitle}{Set Member B}
-      \field[form=original,lang=default]{title}{Set Member B}
+      \field{title}{Set Member B}
       \field{year}{2010}
     \endentry
 |;
@@ -105,14 +105,14 @@ my $set4 = q|    \entry{set:memberc}{book}{}
       \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{labeltitle}{Set Member C}
-      \field[form=original,lang=default]{title}{Set Member C}
+      \field{title}{Set Member C}
       \field{year}{2010}
     \endentry
 |;
@@ -121,7 +121,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -132,7 +132,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{labelyear}{2010}
       \field{labeltitle}{Stand-Alone A}
       \field{extraalpha}{2}
-      \field[form=original,lang=default]{title}{Stand-Alone A}
+      \field{title}{Stand-Alone A}
       \field{year}{2010}
     \endentry
 |;
@@ -141,7 +141,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -152,7 +152,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{labelyear}{2010}
       \field{labeltitle}{Stand-Alone B}
       \field{extraalpha}{3}
-      \field[form=original,lang=default]{title}{Stand-Alone B}
+      \field{title}{Stand-Alone B}
       \field{year}{2010}
     \endentry
 |;
@@ -161,7 +161,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -172,7 +172,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{labelyear}{2010}
       \field{labeltitle}{Stand-Alone C}
       \field{extraalpha}{4}
-      \field[form=original,lang=default]{title}{Stand-Alone C}
+      \field{title}{Stand-Alone C}
       \field{year}{2010}
     \endentry
 |;
@@ -181,13 +181,13 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
       \name{labelname}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{location}{1}{%
+      \list{location}{1}{%
         {Cambridge}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -195,7 +195,7 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
       \field{sortinit}{D}
       \field{labeltitle}{Algorithms Which Sort}
       \field{shorthand}{AWS}
-      \field[form=original,lang=default]{title}{Algorithms Which Sort}
+      \field{title}{Algorithms Which Sort}
       \field{year}{1932}
     \endentry
 |;

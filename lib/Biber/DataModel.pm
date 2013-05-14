@@ -176,7 +176,7 @@ sub is_field {
   if ($field =~ m/^BIBERCUSTOM/o) {
     return 1;
   }
-  elsif ($field =~ m/^([^$S]+)$S(?:${forms})$S?.*$/) {
+  elsif ($field =~ m/^([^$S]+)$S/) {
     return $self->{fieldsbyname}{$1} ? 1 : 0;
   }
   else {

@@ -70,7 +70,15 @@ sub _printfield {
         my $dm = Biber::Config->get_dm;
         my $fl = '';
         if ($dm->field_is_multiscript($field)) {
-          $fl = "[form=$form,lang=$lang]";
+          if ($form ne 'original' and $lang eq 'default') {
+            $fl = "[form=$form]";
+          }
+          elsif ($form eq 'original' and $lang ne 'default') {
+            $fl = "[lang=$lang]";
+          }
+          elsif ($form ne 'original' and $lang ne 'default') {
+            $fl = "[form=$form,lang=$lang]";
+          }
         }
 
         if (Biber::Config->getoption('wraplines')) {
@@ -185,7 +193,23 @@ sub set_output_entry {
           # Copy per-list options to the actual labelname too
           $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
 
-          $acc .= "      \\name[form=$form,lang=$lang]{$namefield}{$total}{$plo}{%\n";
+          # Names are not necessarily multiscript - for example, if a style
+          # defines a custom name field which isn't. This is guaranteed only in the
+          # default biblatex datamodel
+          my $fl = '';
+          if ($dm->field_is_multiscript($namefield)) {
+            if ($form ne 'original' and $lang eq 'default') {
+              $fl = "[form=$form]";
+            }
+            elsif ($form eq 'original' and $lang ne 'default') {
+              $fl = "[lang=$lang]";
+            }
+            elsif ($form ne 'original' and $lang ne 'default') {
+              $fl = "[form=$form,lang=$lang]";
+            }
+          }
+
+          $acc .= "      \\name${fl}{$namefield}{$total}{$plo}{%\n";
           foreach my $n (@{$nf->names}) {
             $acc .= $n->name_to_bbl;
           }
@@ -218,7 +242,15 @@ sub set_output_entry {
           my $dm = Biber::Config->get_dm;
           my $fl = '';
           if ($dm->field_is_multiscript($listfield)) {
-            $fl = "[form=$form,lang=$lang]";
+            if ($form ne 'original' and $lang eq 'default') {
+              $fl = "[form=$form]";
+            }
+            elsif ($form eq 'original' and $lang ne 'default') {
+              $fl = "[lang=$lang]";
+            }
+            elsif ($form ne 'original' and $lang ne 'default') {
+              $fl = "[form=$form,lang=$lang]";
+            }
           }
 
           $acc .= "      \\list${fl}{$listfield}{$total}{%\n";

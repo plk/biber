@@ -55,25 +55,25 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=121b6dc164b5b619c81c670fbd823f12}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=121b6dc164b5b619c81c670fbd823f12}{Gullam}{G\bibinitperiod}{Graham}{G\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Grimble}%
       }
       \strng{namehash}{121b6dc164b5b619c81c670fbd823f12}
       \strng{fullhash}{121b6dc164b5b619c81c670fbd823f12}
       \field{sortinit}{G}
       \field{labeltitle}{Great and Good Graphs}
-      \field[form=original,lang=default]{booktitle}{Graphs of the Continent}
+      \field{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
       \field{eprintclass}{SOMECLASS}
       \field{eprinttype}{SomEPrFiX}
       \field{origyear}{1955}
-      \field[form=original,lang=default]{title}{Great and Good Graphs}
+      \field{title}{Great and Good Graphs}
       \field{year}{1974}
     \endentry
 |;
@@ -83,26 +83,26 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=2d51a96bc0a6804995b3a9ff350c3384}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=2d51a96bc0a6804995b3a9ff350c3384}{Fumble}{F\bibinitperiod}{Frederick}{F\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{institution}{1}{%
+      \list{institution}{1}{%
         {Institution}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Grimble}%
       }
       \strng{namehash}{2d51a96bc0a6804995b3a9ff350c3384}
       \strng{fullhash}{2d51a96bc0a6804995b3a9ff350c3384}
       \field{sortinit}{F}
       \field{labeltitle}{Fabulous Fourier Forms}
-      \field[form=original,lang=default]{booktitle}{Graphs of the Continent}
+      \field{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
       \field{origyear}{1943}
-      \field[form=original,lang=default]{title}{Fabulous Fourier Forms}
+      \field{title}{Fabulous Fourier Forms}
       \field{year}{1974}
     \endentry
 |;
@@ -110,15 +110,15 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
 # This is included as it is crossrefed >= mincrossrefs times
 # Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $cr_m = q|    \entry{cr_m}{book}{}
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Grimble}%
       }
       \field{sortinit}{G}
       \field{labeltitle}{Graphs of the Continent}
-      \field[form=original,lang=default]{title}{Graphs of the Continent}
+      \field{title}{Graphs of the Continent}
       \field{year}{1974}
     \endentry
 |;
@@ -128,39 +128,39 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=2baf676a220704f6914223aefccaaa88}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=2baf676a220704f6914223aefccaaa88}{Aptitude}{A\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Rancour}%
       }
       \strng{namehash}{2baf676a220704f6914223aefccaaa88}
       \strng{fullhash}{2baf676a220704f6914223aefccaaa88}
       \field{sortinit}{A}
       \field{labeltitle}{Arrangements of All Articles}
-      \field[form=original,lang=default]{booktitle}{Beasts of the Burbling Burns}
+      \field{booktitle}{Beasts of the Burbling Burns}
       \strng{crossref}{crt}
       \field{eprinttype}{sometype}
       \field{origyear}{1934}
-      \field[form=original,lang=default]{title}{Arrangements of All Articles}
+      \field{title}{Arrangements of All Articles}
       \field{year}{1996}
     \endentry
 |;
 
 # cited as normal
 my $crt = q|    \entry{crt}{book}{}
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Rancour}%
       }
       \field{sortinit}{B}
       \field{labeltitle}{Beasts of the Burbling Burns}
-      \field[form=original,lang=default]{title}{Beasts of the Burbling Burns}
+      \field{title}{Beasts of the Burbling Burns}
       \field{year}{1996}
     \endentry
 |;
@@ -170,29 +170,29 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \name{labelname}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=344a7f427fb765610ef96eb7bce95257}{Editor}{E\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{location}{1}{%
+      \list{location}{1}{%
         {Address}%
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
       \field{sortinit}{A}
       \field{labeltitle}{Title of inproceeding}
-      \field[form=original,lang=default]{booktitle}{Manual booktitle}
+      \field{booktitle}{Manual booktitle}
       \field{eventday}{21}
       \field{eventendday}{24}
       \field{eventendmonth}{08}
       \field{eventendyear}{2009}
       \field{eventmonth}{08}
-      \field[form=original,lang=default]{eventtitle}{Title of the event}
+      \field{eventtitle}{Title of the event}
       \field{eventyear}{2009}
-      \field[form=original,lang=default]{title}{Title of inproceeding}
-      \field[form=original,lang=default]{venue}{Location of event}
+      \field{title}{Title of inproceeding}
+      \field{venue}{Location of event}
       \field{year}{2009}
       \field{pages}{123\bibrangedash}
     \endentry
@@ -203,23 +203,23 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{Author}{A\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{bookauthor}{1}{}{%
+      \name{bookauthor}{1}{}{%
         {{hash=91a1dd4aeed3c4ec29ca74c4e778be5f}{Bookauthor}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Publisher of proceeding}%
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
       \field{sortinit}{A}
       \field{labeltitle}{Title of Book bit}
-      \field[form=original,lang=default]{booksubtitle}{Book Subtitle}
-      \field[form=original,lang=default]{booktitle}{Book Title}
-      \field[form=original,lang=default]{booktitleaddon}{Book Titleaddon}
-      \field[form=original,lang=default]{title}{Title of Book bit}
+      \field{booksubtitle}{Book Subtitle}
+      \field{booktitle}{Book Title}
+      \field{booktitleaddon}{Book Titleaddon}
+      \field{title}{Title of Book bit}
       \field{year}{2010}
       \field{pages}{123\bibrangedash 126}
       \verb{verbb}
@@ -233,15 +233,15 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \name{labelname}{1}{}{%
         {{hash=3d449e56eb3ca1ae80dc99a18d689795}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=3d449e56eb3ca1ae80dc99a18d689795}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{fullhash}{3d449e56eb3ca1ae80dc99a18d689795}
       \field{sortinit}{S}
       \field{labeltitle}{Title of Collection bit}
-      \field[form=original,lang=default]{booktitle}{Book Title}
-      \field[form=original,lang=default]{title}{Title of Collection bit}
+      \field{booktitle}{Book Title}
+      \field{title}{Title of Collection bit}
       \field{year}{2010}
       \field{pages}{1\bibrangedash 12}
     \endentry
@@ -252,7 +252,7 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=e0ecc4fc668ee499d1afba44e1ac064d}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=e0ecc4fc668ee499d1afba44e1ac064d}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{e0ecc4fc668ee499d1afba44e1ac064d}
@@ -260,7 +260,7 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \field{sortinit}{Z}
       \field{labeltitle}{Moods Mildly Modified}
       \field{origyear}{1921}
-      \field[form=original,lang=default]{title}{Moods Mildly Modified}
+      \field{title}{Moods Mildly Modified}
       \strng{xref}{xrm}
     \endentry
 |;
@@ -270,7 +270,7 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=6afa09374ecfd6b394ce714d2d9709c7}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=6afa09374ecfd6b394ce714d2d9709c7}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{6afa09374ecfd6b394ce714d2d9709c7}
@@ -278,7 +278,7 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \field{sortinit}{I}
       \field{labeltitle}{Migraines Multiplying Madly}
       \field{origyear}{1926}
-      \field[form=original,lang=default]{title}{Migraines Multiplying Madly}
+      \field{title}{Migraines Multiplying Madly}
       \strng{xref}{xrm}
     \endentry
 |;
@@ -286,15 +286,15 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
 # This is included as it is crossrefed >= mincrossrefs times
 # Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $xrm = q|    \entry{xrm}{book}{}
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=809950f9b59ae207092b909a19dcb27b}{Prendergast}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Mainstream}%
       }
       \field{sortinit}{C}
       \field{labeltitle}{Calligraphy, Calisthenics, Culture}
-      \field[form=original,lang=default]{title}{Calligraphy, Calisthenics, Culture}
+      \field{title}{Calligraphy, Calisthenics, Culture}
       \field{year}{1970}
     \endentry
 |;
@@ -304,7 +304,7 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=9788055665b9bb4b37c776c3f6b74f16}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=9788055665b9bb4b37c776c3f6b74f16}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{9788055665b9bb4b37c776c3f6b74f16}
@@ -312,22 +312,22 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \field{sortinit}{N}
       \field{labeltitle}{Russian Regalia Revisited}
       \field{origyear}{1923}
-      \field[form=original,lang=default]{title}{Russian Regalia Revisited}
+      \field{title}{Russian Regalia Revisited}
       \strng{xref}{xrt}
     \endentry
 |;
 
 # cited as normal
 my $xrt = q|    \entry{xrt}{book}{}
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=bf7d6b02f3e073913e5bfe5059508dd5}{Lunders}{L\bibinitperiod}{Lucy}{L\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Middling}%
       }
       \field{sortinit}{K}
       \field{labeltitle}{Kings, Cork and Calculation}
-      \field[form=original,lang=default]{title}{Kings, Cork and Calculation}
+      \field{title}{Kings, Cork and Calculation}
       \field{year}{1977}
     \endentry
 |;
@@ -337,22 +337,22 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=50ef7fd3a1be33bccc5de2768b013836}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=50ef7fd3a1be33bccc5de2768b013836}{Mumble}{M\bibinitperiod}{Morris}{M\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=6ea89bd4958743a20b70fe17647d6af5}{Jermain}{J\bibinitperiod}{Jeremy}{J\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {Pillsbury}%
       }
       \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
       \strng{fullhash}{50ef7fd3a1be33bccc5de2768b013836}
       \field{sortinit}{M}
       \field{labeltitle}{Enterprising Entities}
-      \field[form=original,lang=default]{booktitle}{Vanquished, Victor, Vandal}
+      \field{booktitle}{Vanquished, Victor, Vandal}
       \field{origyear}{1911}
-      \field[form=original,lang=default]{title}{Enterprising Entities}
+      \field{title}{Enterprising Entities}
       \field{year}{1945}
     \endentry
 |;
@@ -362,7 +362,7 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
@@ -370,7 +370,7 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \field{sortinit}{M}
       \field{labeltitle}{Lumbering Lunatics}
       \field{origyear}{1933}
-      \field[form=original,lang=default]{title}{Lumbering Lunatics}
+      \field{title}{Lumbering Lunatics}
     \endentry
 |;
 
@@ -380,7 +380,7 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
@@ -388,7 +388,7 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \field{sortinit}{M}
       \field{labeltitle}{Lumbering Lunatics}
       \field{origyear}{1933}
-      \field[form=original,lang=default]{title}{Lumbering Lunatics}
+      \field{title}{Lumbering Lunatics}
     \endentry
 |;
 
@@ -396,7 +396,7 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \name{labelname}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
@@ -404,7 +404,7 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \field{sortinit}{M}
       \field{labeltitle}{Lumbering Lunatics}
       \field{origyear}{1933}
-      \field[form=original,lang=default]{title}{Lumbering Lunatics}
+      \field{title}{Lumbering Lunatics}
     \endentry
 |;
 
@@ -412,10 +412,10 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \name{labelname}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{6268941b408d3263bddb208a54899ea9}
@@ -423,23 +423,23 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \field{sortinit}{V}
       \field{labeltitle}{Misc etc.}
       \strng{crossref}{ccr1}
-      \field[form=original,lang=default]{title}{Misc etc.}
+      \field{title}{Misc etc.}
       \field{year}{1923}
     \endentry
 |;
 
 my $ccr2 = q|    \entry{ccr3}{inbook}{}
-      \name[form=original,lang=default]{bookauthor}{1}{}{%
+      \name{bookauthor}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
       \field{sortinit}{P}
       \field{labeltitle}{Perhaps, Perchance, Possibilities?}
-      \field[form=original,lang=default]{booktitle}{Misc etc.}
+      \field{booktitle}{Misc etc.}
       \strng{crossref}{ccr2}
-      \field[form=original,lang=default]{title}{Perhaps, Perchance, Possibilities?}
+      \field{title}{Perhaps, Perchance, Possibilities?}
       \field{year}{1911}
     \endentry
 |;
@@ -447,16 +447,16 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
 # This is strange in what it gets from where but it shows information being inherited from two
 # sources
 my $ccr3 = q|    \entry{ccr4}{inbook}{}
-      \name[form=original,lang=default]{bookauthor}{1}{}{%
+      \name{bookauthor}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{Various}{V\bibinitperiod}{Vince}{V\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{editor}{1}{}{%
+      \name{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
       \field{sortinit}{S}
       \field{labeltitle}{Stuff Concerning Varia}
-      \field[form=original,lang=default]{booktitle}{Misc etc.}
-      \field[form=original,lang=default]{title}{Stuff Concerning Varia}
+      \field{booktitle}{Misc etc.}
+      \field{title}{Stuff Concerning Varia}
       \field{year}{1911}
     \endentry
 |;

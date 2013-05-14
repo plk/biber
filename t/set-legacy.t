@@ -46,7 +46,7 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \name{labelname}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
@@ -56,10 +56,10 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \field{labelmonth}{03}
       \field{labeltitle}{Predictive coding--I}
       \field{issn}{0096-1000}
-      \field[form=original,lang=default]{journaltitle}{IRE Transactions on Information Theory}
+      \field{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
       \field{number}{1}
-      \field[form=original,lang=default]{title}{Predictive coding--I}
+      \field{title}{Predictive coding--I}
       \field{volume}{1}
       \field{year}{1955}
       \field{pages}{16\bibrangedash 24}
@@ -75,7 +75,7 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
       \name{labelname}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
@@ -83,10 +83,10 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
       \field{sortinit}{0}
       \field{labeltitle}{Predictive coding--I}
       \field{issn}{0096-1000}
-      \field[form=original,lang=default]{journaltitle}{IRE Transactions on Information Theory}
+      \field{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
       \field{number}{1}
-      \field[form=original,lang=default]{title}{Predictive coding--I}
+      \field{title}{Predictive coding--I}
       \field{volume}{1}
       \field{year}{1955}
       \field{pages}{16\bibrangedash 24}
@@ -102,7 +102,7 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
       \name{labelname}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
@@ -110,10 +110,10 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
       \field{sortinit}{0}
       \field{labeltitle}{Predictive coding--II}
       \field{issn}{0096-1000}
-      \field[form=original,lang=default]{journaltitle}{IRE Transactions on Information Theory}
+      \field{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
       \field{number}{1}
-      \field[form=original,lang=default]{title}{Predictive coding--II}
+      \field{title}{Predictive coding--II}
       \field{volume}{1}
       \field{year}{1955}
       \field{pages}{24\bibrangedash 33}

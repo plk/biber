@@ -26,7 +26,7 @@
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -36,7 +36,7 @@
       \field{labeltitle}{The Fullness of Times}
       \true{singletitle}
       \field{shorthand}{\emph{A}}
-      \field[form=original,lang=default]{title}{The Fullness of Times}
+      \field{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
   \endsortlist

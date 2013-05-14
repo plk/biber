@@ -1153,7 +1153,7 @@ sub _get_handler {
   my $field = shift;
   my $forms = $DM_DATATYPES{'forms'};
   my $S = Biber::Config->getoption('mssplit');
-  $field =~ s/$S(?:$forms)$S?.*$//;
+  $field =~ s/$S(?:$forms)?$S?.*$//;
   if (my $h = $handlers->{CUSTOM}{$field}) {
     return $h;
   }

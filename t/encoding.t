@@ -35,10 +35,10 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -48,7 +48,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \field{labelyear}{1999}
       \field{labeltitle}{Šome title}
       \true{singletitle}
-      \field[form=original,lang=default]{title}{Šome title}
+      \field{title}{Šome title}
       \field{year}{1999}
     \endentry
 |;
@@ -57,10 +57,10 @@ my $encode2 = q|    \entry{test1}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -70,7 +70,7 @@ my $encode2 = q|    \entry{test1}{book}{}
       \field{labelyear}{1999}
       \field{labeltitle}{Söme title}
       \true{singletitle}
-      \field[form=original,lang=default]{title}{Söme title}
+      \field{title}{Söme title}
       \field{year}{1999}
     \endentry
 |;
@@ -79,10 +79,10 @@ my $encode3 = q|    \entry{test1}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -92,7 +92,7 @@ my $encode3 = q|    \entry{test1}{book}{}
       \field{labelyear}{1999}
       \field{labeltitle}{Żome title}
       \true{singletitle}
-      \field[form=original,lang=default]{title}{Żome title}
+      \field{title}{Żome title}
       \field{year}{1999}
     \endentry
 |;
@@ -101,10 +101,10 @@ my $encode5 = q|    \entry{test}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -114,7 +114,7 @@ my $encode5 = q|    \entry{test}{book}{}
       \field{labelyear}{1999}
       \field{labeltitle}{à titlé}
       \true{singletitle}
-      \field[form=original,lang=default]{title}{à titlé}
+      \field{title}{à titlé}
       \field{year}{1999}
     \endentry
 |;
@@ -123,10 +123,10 @@ my $encode6 = q|    \entry{test}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -136,7 +136,7 @@ my $encode6 = q|    \entry{test}{book}{}
       \field{labelyear}{1999}
       \field{labeltitle}{↑\`{a} titl\'{e}}
       \true{singletitle}
-      \field[form=original,lang=default]{title}{↑\`{a} titl\'{e}}
+      \field{title}{↑\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
 |;
@@ -145,10 +145,10 @@ my $encode7 = q|    \entry{test}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=original,lang=default]{author}{1}{}{%
+      \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list[form=original,lang=default]{publisher}{1}{%
+      \list{publisher}{1}{%
         {A press}%
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
@@ -158,7 +158,7 @@ my $encode7 = q|    \entry{test}{book}{}
       \field{labelyear}{1999}
       \field{labeltitle}{{$\uparrow$}\`{a} titl\'{e}}
       \true{singletitle}
-      \field[form=original,lang=default]{title}{{$\uparrow$}\`{a} titl\'{e}}
+      \field{title}{{$\uparrow$}\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
 |;
