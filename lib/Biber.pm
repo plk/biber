@@ -1450,6 +1450,7 @@ sub process_sets {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+
   if (my @entrysetkeys = Biber::Config->get_set_children($citekey)) {
     # Enforce Biber parts of virtual "dataonly" for set members
     # Also automatically create an "entryset" field for the members
@@ -1882,7 +1883,15 @@ sub process_visible_names {
       $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
       $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
       # Need to set these on all name variants
-      foreach my $ns ($be->get_field_variants($n)) {
+      if ($dm->field_is_multiscript($n)) {
+        foreach my $ns ($be->get_field_variants($n)) {
+          $ns->set_visible_cite($visible_names_cite);
+          $ns->set_visible_bib($visible_names_bib);
+          $ns->set_visible_alpha($visible_names_alpha);
+        }
+      }
+      else {
+        my $ns = $be->get_field($n);
         $ns->set_visible_cite($visible_names_cite);
         $ns->set_visible_bib($visible_names_bib);
         $ns->set_visible_alpha($visible_names_alpha);
@@ -1905,6 +1914,7 @@ sub process_labelalpha {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
+
   # Don't add a label if skiplab is set for entry
   if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
     return;
@@ -1954,6 +1964,7 @@ sub process_presort {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+
   # We are treating presort as an option as it can be set per-type and globally too
   if (my $ps = $be->get_field('presort')) {
     Biber::Config->setblxoption('presort', $ps, 'PER_ENTRY', $citekey);

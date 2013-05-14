@@ -368,7 +368,9 @@ sub set_output_entry {
     next if $dm->field_is_skipout($lfield);
     if ( ($dm->field_is_nullok($lfield) and
           $be->field_exists($lfield)) or
-         $be->get_field_variants($lfield) ) {
+         ($dm->field_is_multiscript($lfield) and
+          $be->get_field_variants($lfield)) or
+          $be->get_field($lfield)) {
       # we skip outputting the crossref or xref when the parent is not cited
       # (biblatex manual, section 2.2.3)
       # sets are a special case so always output crossref/xref for them since their
