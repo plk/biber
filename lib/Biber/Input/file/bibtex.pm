@@ -551,7 +551,7 @@ my $fl_re = qr/\A([^$S]+)$S?($forms)?$S?(.+)?\z/;
 
 # Literal fields
 sub _literal {
-  my ($bibentry, $entry, $f) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
   # If we have already split some date fields into literal fields

@@ -111,6 +111,7 @@ sub set_output_target_file {
 sub _printfield {
   my ($be, $field) = @_;
   my $acc;
+  my $key = $be->get_field('citekey');
 
   # crossref and xref are of type 'strng' in the .bbl
   if (lc($field) eq 'crossref' or lc($field) eq 'xref') {
@@ -148,16 +149,16 @@ sub _printfield {
         my $dm = Biber::Config->get_dm;
         my $fl = '';
         if ($dm->field_is_multiscript($field)) {
-          if ($form ne Biber::Config->getblxoption('multiscriptform') and
-              $lang eq Biber::Config->getblxoption('multiscriptlang')) {
+          if ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
+              $lang eq Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
             $fl = "[form=$form]";
           }
-          elsif ($form eq Biber::Config->getblxoption('multiscriptform') and
-                 $lang ne Biber::Config->getblxoption('multiscriptlang')) {
+          elsif ($form eq Biber::Config->getblxoption('multiscriptform', undef, $key) and
+                 $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
             $fl = "[lang=$lang]";
           }
-          elsif ($form ne Biber::Config->getblxoption('multiscriptform') and
-                 $lang ne Biber::Config->getblxoption('multiscriptlang')) {
+          elsif ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
+                 $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
             $fl = "[form=$form,lang=$lang]";
           }
         }
@@ -320,16 +321,16 @@ sub set_output_entry {
           # default biblatex datamodel
           my $fl = '';
           if ($dm->field_is_multiscript($namefield)) {
-            if ($form ne Biber::Config->getblxoption('multiscriptform') and
-                $lang eq Biber::Config->getblxoption('multiscriptlang')) {
+            if ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
+                $lang eq Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
               $fl = "[form=$form]";
             }
-            elsif ($form eq Biber::Config->getblxoption('multiscriptform') and
-                   $lang ne Biber::Config->getblxoption('multiscriptlang')) {
+            elsif ($form eq Biber::Config->getblxoption('multiscriptform', undef, $key) and
+                   $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
               $fl = "[lang=$lang]";
             }
-            elsif ($form ne Biber::Config->getblxoption('multiscriptform') and
-                   $lang ne Biber::Config->getblxoption('multiscriptlang')) {
+            elsif ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
+                   $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
               $fl = "[form=$form,lang=$lang]";
             }
           }
@@ -368,16 +369,16 @@ sub set_output_entry {
           my $dm = Biber::Config->get_dm;
           my $fl = '';
           if ($dm->field_is_multiscript($listfield)) {
-            if ($form ne Biber::Config->getblxoption('multiscriptform') and
-                $lang eq Biber::Config->getblxoption('multiscriptlang')) {
+            if ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
+                $lang eq Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
               $fl = "[form=$form]";
             }
-            elsif ($form eq Biber::Config->getblxoption('multiscriptform') and
-                   $lang ne Biber::Config->getblxoption('multiscriptlang')) {
+            elsif ($form eq Biber::Config->getblxoption('multiscriptform', undef, $key) and
+                   $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
               $fl = "[lang=$lang]";
             }
-            elsif ($form ne Biber::Config->getblxoption('multiscriptform') and
-                   $lang ne Biber::Config->getblxoption('multiscriptlang')) {
+            elsif ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
+                   $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
               $fl = "[form=$form,lang=$lang]";
             }
           }

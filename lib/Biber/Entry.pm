@@ -139,6 +139,7 @@ sub relclone {
 sub clone {
   my $self = shift;
   my $newkey = shift;
+  my $key = $self->get_field('citekey');
   my $new = new Biber::Entry;
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = dclone($v);
@@ -150,15 +151,15 @@ sub clone {
     $new->{origfields}{$k} = dclone($v);
   }
   # Need to add entrytype and datatype
-  $new->{derivedfields}{entrytype}{Biber::Config->getblxoption('multiscriptform')}{Biber::Config->getblxoption('multiscriptlang')} = $self->{derivedfields}{entrytype}{Biber::Config->getblxoption('multiscriptform')}{Biber::Config->getblxoption('multiscriptlang')};
-  $new->{derivedfields}{datatype}{Biber::Config->getblxoption('multiscriptform')}{Biber::Config->getblxoption('multiscriptlang')} = $self->{derivedfields}{datatype}{Biber::Config->getblxoption('multiscriptform')}{Biber::Config->getblxoption('multiscriptlang')};
+  $new->{derivedfields}{entrytype}{Biber::Config->getblxoption('multiscriptform', undef, $key)}{Biber::Config->getblxoption('multiscriptlang', undef, $key)} = $self->{derivedfields}{entrytype}{Biber::Config->getblxoption('multiscriptform', undef, $key)}{Biber::Config->getblxoption('multiscriptlang', undef, $key)};
+  $new->{derivedfields}{datatype}{Biber::Config->getblxoption('multiscriptform', undef, $key)}{Biber::Config->getblxoption('multiscriptlang', undef, $key)} = $self->{derivedfields}{datatype}{Biber::Config->getblxoption('multiscriptform', undef, $key)}{Biber::Config->getblxoption('multiscriptlang', undef, $key)};
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{citekey}{Biber::Config->getblxoption('multiscriptform')}{Biber::Config->getblxoption('multiscriptlang')} = $newkey;
+    $new->{derivedfields}{citekey}{Biber::Config->getblxoption('multiscriptform', undef, $key)}{Biber::Config->getblxoption('multiscriptlang', undef, $key)} = $newkey;
   }
   # Record the key of the source of the clone in the clone. Useful for loop detection etc.
   # in biblatex
-  $new->{derivedfields}{clonesourcekey}{Biber::Config->getblxoption('multiscriptform')}{Biber::Config->getblxoption('multiscriptlang')} = $self->get_field('citekey');
+  $new->{derivedfields}{clonesourcekey}{Biber::Config->getblxoption('multiscriptform', undef, $key)}{Biber::Config->getblxoption('multiscriptlang', undef, $key)} = $key;
   return $new;
 }
 
@@ -185,8 +186,9 @@ sub notnull {
 sub set_labelname_info {
   my $self = shift;
   my $data = shift;
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('multiscriptform');
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('multiscriptlang');
+  my $key = $self->get_field('citekey');
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('multiscriptlang', undef, $key);
   $self->{labelnameinfo} = $data;
   return;
 }
@@ -215,8 +217,9 @@ sub get_labelname_info {
 sub set_labelnamefh_info {
   my $self = shift;
   my $data = shift;
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('multiscriptform');
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('multiscriptlang');
+  my $key = $self->get_field('citekey');
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('multiscriptlang', undef, $key);
   $self->{labelnamefhinfo} = $data;
   return;
 }
@@ -245,8 +248,9 @@ sub get_labelnamefh_info {
 sub set_labeltitle_info {
   my $self = shift;
   my $data = shift;
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('multiscriptform');
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('multiscriptlang');
+  my $key = $self->get_field('citekey');
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('multiscriptlang', undef, $key);
   $self->{labeltitleinfo} = $data;
   return;
 }
@@ -276,8 +280,9 @@ sub get_labeltitle_info {
 sub set_labeldate_info {
   my $self = shift;
   my $data = shift;
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('multiscriptform');
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('multiscriptlang');
+  my $key = $self->get_field('citekey');
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('multiscriptlang', undef, $key);
   $self->{labeldateinfo} = $data;
   return;
 }
@@ -305,11 +310,12 @@ sub get_labeldate_info {
 
 sub set_field {
   my $self = shift;
-  my ($key, $val, $form, $lang) = @_;
-  $form = $form || Biber::Config->getblxoption('multiscriptform');
-  $lang = $lang || Biber::Config->getblxoption('multiscriptlang');
+  my ($field, $val, $form, $lang) = @_;
+  my $key = $self->get_field('citekey');
+  $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  $lang = $lang || Biber::Config->getblxoption('multiscriptlang', undef, $key);
   # All derived fields can be null
-  $self->{derivedfields}{$key}{$form}{$lang} = $val;
+  $self->{derivedfields}{$field}{$form}{$lang} = $val;
   return;
 }
 
@@ -317,7 +323,7 @@ sub set_field {
 =head2 get_field
 
     Get a specific field variants for a Biber::Entry object,
-    defaulting to form=Biber::Config->getblxoption('multiscriptform'), lang=Biber::Config->getblxoption('multiscriptlang')
+    defaulting to form=Biber::Config->getblxoption('multiscriptform', undef, $key), lang=Biber::Config->getblxoption('multiscriptlang', undef, $key)
     Uses // as fields can be null (end dates etc).
 
 =cut
@@ -326,8 +332,9 @@ sub get_field {
   my $self = shift;
   my ($field, $form, $lang) = @_;
   return undef unless $field;
-  $form = $form || Biber::Config->getblxoption('multiscriptform');
-  $lang = $lang || Biber::Config->getblxoption('multiscriptlang');
+  my $key = $self->{rawfields}{citekey};# can't use get_field due to recursion ...
+  $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  $lang = $lang || Biber::Config->getblxoption('multiscriptlang', undef, $key);
   return Dive($self, 'datafields', $field, $form, $lang) //
          Dive($self, 'derivedfields', $field, $form, $lang) //
          Dive($self, 'rawfields', $field);
@@ -343,10 +350,11 @@ sub field_has_variants {
   my $self = shift;
   my $field = shift;
   return undef unless $field;
+  my $key = $self->get_field('citekey');
   foreach my $form ($self->get_field_form_names($field)) {
     foreach my $lang ($self->get_field_form_lang_names($field, $form)) {
-      return 1 unless ($form eq Biber::Config->getblxoption('multiscriptform') and
-                       $lang eq Biber::Config->getblxoption('multiscriptlang'));
+      return 1 unless ($form eq Biber::Config->getblxoption('multiscriptform', undef, $key) and
+                       $lang eq Biber::Config->getblxoption('multiscriptlang', undef, $key));
     }
   }
   return 0;
@@ -426,10 +434,11 @@ sub get_field_form_lang_names {
 
 sub set_datafield {
   my $self = shift;
-  my ($key, $val, $form, $lang) = @_;
-  $form = $form || Biber::Config->getblxoption('multiscriptform');
-  $lang = $lang || Biber::Config->getblxoption('multiscriptlang');
-  $self->{datafields}{$key}{$form}{$lang} = $val;
+  my ($field, $val, $form, $lang) = @_;
+  my $key = $self->get_field('citekey');
+  $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  $lang = $lang || Biber::Config->getblxoption('multiscriptlang', undef, $key);
+  $self->{datafields}{$field}{$form}{$lang} = $val;
   return;
 }
 
@@ -481,10 +490,11 @@ sub get_rawfield {
 
 sub get_datafield {
   my $self = shift;
-  my ($key, $form, $lang) = @_;
-  $form = $form || Biber::Config->getblxoption('multiscriptform');
-  $lang = $lang || Biber::Config->getblxoption('multiscriptlang');
-  return Dive($self, 'datafields', $key, $form, $lang);
+  my ($field, $form, $lang) = @_;
+  my $key = $self->get_field('citekey');
+  $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  $lang = $lang || Biber::Config->getblxoption('multiscriptlang', undef, $key);
+  return Dive($self, 'datafields', $field, $form, $lang);
 }
 
 
@@ -496,10 +506,10 @@ sub get_datafield {
 
 sub del_field {
   my $self = shift;
-  my $key = shift;
-  delete $self->{datafields}{$key};
-  delete $self->{derivedfields}{$key};
-  delete $self->{rawfields}{$key};
+  my $field = shift;
+  delete $self->{datafields}{$field};
+  delete $self->{derivedfields}{$field};
+  delete $self->{rawfields}{$field};
   return;
 }
 
@@ -511,8 +521,8 @@ sub del_field {
 
 sub del_datafield {
   my $self = shift;
-  my $key = shift;
-  delete $self->{datafields}{$key};
+  my $field = shift;
+  delete $self->{datafields}{$field};
   return;
 }
 
@@ -525,10 +535,10 @@ sub del_datafield {
 
 sub field_exists {
   my $self = shift;
-  my $key = shift;
-  return (Dive($self, 'datafields', $key) ||
-          Dive($self, 'derivedfields', $key) ||
-          Dive($self, 'rawfields', $key)) ? 1 : 0;
+  my $field = shift;
+  return (Dive($self, 'datafields', $field) ||
+          Dive($self, 'derivedfields', $field) ||
+          Dive($self, 'rawfields', $field)) ? 1 : 0;
 }
 
 =head2 field_form_exists
@@ -539,10 +549,11 @@ sub field_exists {
 
 sub field_form_exists {
   my $self = shift;
-  my ($key, $form) = @_;
-  $form = $form || Biber::Config->getblxoption('multiscriptform');
-  return (Dive($self, 'datafields', $key, $form) ||
-          Dive($self, 'derivedfields', $key, $form)) ? 1 : 0;
+  my ($field, $form) = @_;
+  my $key = $self->get_field('citekey');
+  $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  return (Dive($self, 'datafields', $field, $form) ||
+          Dive($self, 'derivedfields', $field, $form)) ? 1 : 0;
 }
 
 
@@ -620,8 +631,9 @@ sub count_fields {
 sub has_keyword {
   my $self = shift;
   my ($keyword, $form, $lang) = @_;
-  $form = $form || Biber::Config->getblxoption('multiscriptform');
-  $lang = $lang || Biber::Config->getblxoption('multiscriptlang');
+  my $key = $self->get_field('citekey');
+  $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
+  $lang = $lang || Biber::Config->getblxoption('multiscriptlang', undef, $key);
   if (my $keywords = Dive($self, 'datafields', 'keywords', $form, $lang)) {
     return (first {$_ eq $keyword} split(/\s*,\s*/, $keywords)) ? 1 : 0;
   }
@@ -642,7 +654,8 @@ sub has_keyword {
 sub add_warning {
   my $self = shift;
   my $warning = shift;
-  push @{$self->{derivedfields}{warnings}{Biber::Config->getblxoption('multiscriptform')}{Biber::Config->getblxoption('multiscriptlang')}}, $warning;
+  my $key = $self->get_field('citekey');
+  push @{$self->{derivedfields}{warnings}{Biber::Config->getblxoption('multiscriptform', undef, $key)}{Biber::Config->getblxoption('multiscriptlang', undef, $key)}}, $warning;
   return;
 }
 

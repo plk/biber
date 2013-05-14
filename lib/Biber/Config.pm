@@ -6,6 +6,7 @@ use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Cwd qw( abs_path );
 use Data::Compare;
+use Data::Diver qw( Dive );
 use Data::Dump;
 use Carp;
 use List::AllUtils qw(first max);
@@ -37,7 +38,6 @@ Biber::Config - Configuration items which need to be saved across the
   * Biber options
   * Biblatex options
   * State information used by Biber as it processes entries
-  * displaymode date
 
 =cut
 
@@ -722,6 +722,17 @@ sub getblxoption {
   }
 }
 
+=head2 issetblxentryoption
+
+  Returns boolean depending on whether an option has already been set at entry level
+
+=cut
+
+sub issetblxentryoption {
+  shift; # class method so don't care about class name
+  my ($opt, $citekey) = @_;
+  return Dive($CONFIG, 'options', 'biblatex', 'PER_ENTRY', $citekey, $opt);
+}
 
 
 ##############################
@@ -1615,89 +1626,6 @@ sub incr_crossrefkey {
   my $k = shift;
   $CONFIG->{state}{crossrefkeys}{$k}++;
   return;
-}
-
-
-############################
-# Displaymode static methods
-############################
-
-=head2 set_displaymode
-
-    Set the display mode for a field.
-    setdisplaymode(['entrytype'], ['field'], ['citekey'], $value)
-
-    This sets the desired displaymode to use for some data in the bib.
-    Of course, this is entirey seperate semantically from the
-    displaymodes *defined* in the bib which just tell you what to return
-    for a particular displaymode request for some data.
-
-=cut
-
-sub set_displaymode {
-  shift; # class method so don't care about class name
-  my ($val, $entrytype, $fieldtype, $citekey) = @_;
-  if ($citekey) {
-    if ($fieldtype) {
-      $CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype} = $val;
-    }
-    else {
-      $CONFIG->{displaymodes}{PER_ENTRY}{$citekey} = $val;
-    }
-  }
-  elsif ($fieldtype) {
-    $CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype} = $val;
-  }
-  elsif ($entrytype) {
-    $CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype} = $val;
-  }
-  else {
-    $CONFIG->{displaymodes}{GLOBAL} = $val ;
-  }
-}
-
-=head2 get_displaymode
-
-    Get the display mode for a field.
-    getdisplaymode(['entrytype'], ['field'], ['citekey'])
-
-    Returns the displaymode. In order of decreasing preference, returns:
-    1. Mode defined for a specific field in a specific citekey
-    2. Mode defined for a citekey
-    3. Mode defined for a fieldtype (any citekey)
-    4. Mode defined for an entrytype (any citekey)
-    5. Mode defined globally (any citekey)
-
-=cut
-
-sub get_displaymode {
-  shift; # class method so don't care about class name
-  my ($entrytype, $fieldtype, $citekey) = @_;
-  my $dm;
-  if ($citekey) {
-    if ($fieldtype and
-      defined($CONFIG->{displaymodes}{PER_FIELD}) and
-      defined($CONFIG->{displaymodes}{PER_FIELD}{$citekey}) and
-      defined($CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype})) {
-      $dm = $CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype};
-    }
-    elsif (defined($CONFIG->{displaymodes}{PER_ENTRY}) and
-      defined($CONFIG->{displaymodes}{PER_ENTRY}{$citekey})) {
-      $dm = $CONFIG->{displaymodes}{PER_ENTRY}{$citekey};
-    }
-  }
-  elsif ($fieldtype and
-    defined($CONFIG->{displaymodes}{PER_FIELDTYPE}) and
-    defined($CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype})) {
-    $dm = $CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype};
-  }
-  elsif ($entrytype and
-    defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}) and
-    defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype})) {
-    $dm = $CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype};
-  }
-  $dm = $CONFIG->{displaymodes}{'*'} unless $dm; # Global if nothing else;
-  return $dm;
 }
 
 =head2 dump
