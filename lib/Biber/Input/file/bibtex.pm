@@ -777,6 +777,7 @@ sub _date {
   else {
     biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of date field '$f' - ignoring", $bibentry);
   }
+
   return;
 }
 

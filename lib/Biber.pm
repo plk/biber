@@ -805,6 +805,7 @@ sub process_citekey_aliases {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $citekey ($section->get_citekeys) {
+
     if ($section->get_citekey_alias($citekey)) {
       $logger->debug("Pruning citekey alias '$citekey' from citekeys");
       $section->del_citekey($citekey);
@@ -827,10 +828,21 @@ sub nullable_check {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
     foreach my $f ($be->datafields) {
-      if (any {is_null($_)} $be->get_field_variants($f)) {
-        unless ($dm->field_is_nullok($f)) {
-          biber_warn("The field '$f' in entry '$citekey' cannot be null, deleting it");
-          $be->del_field($f);
+      if ($dm->field_is_multiscript($f)) {
+        if (any {is_null($_)} $be->get_field_variants($f)) {
+          unless ($dm->field_is_nullok($f)) {
+            biber_warn("The field '$f' in entry '$citekey' cannot be null, deleting it");
+            $be->del_field($f);
+          }
+        }
+      }
+      else {
+        if (is_null($be->get_field($f))) {
+          unless ($dm->field_is_nullok($f)) {
+            biber_warn("The field '$f' in entry '$citekey' cannot be null, deleting it");
+            say("The field '$f' in entry '$citekey' cannot be null, deleting it");
+            $be->del_field($f);
+          }
         }
       }
     }
