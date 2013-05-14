@@ -248,6 +248,10 @@ sub tool_mode_setup {
   # Add the Biber::Sections object to the Biber object
   $self->add_sections($bib_sections);
 
+  # Add some things needed for ms
+  Biber::Config->setblxoption('multiscriptform', 'original');
+  Biber::Config->setblxoption('multiscriptlang', 'english');
+
   # User maps are set in config file and need some massaging which normally
   # happend in parse_ctrlfile
   if (my $usms = Biber::Config->getoption('sourcemap')) {

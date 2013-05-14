@@ -202,6 +202,8 @@ our %CONFIG_SCOPE_BIBLATEX = (
   minbibnames        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   mincitenames       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   minitems           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  multiscriptform    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
+  multiscriptlang    => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
   presort            => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   singletitle        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   skipbib            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},

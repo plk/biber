@@ -60,6 +60,8 @@
         <ref name="minbibnames"/>
         <ref name="mincitenames"/>
         <ref name="minitems"/>
+        <ref name="multiscriptform"/>
+        <ref name="multiscriptlang"/>
         <ref name="singletitle"/>
         <optional>
           <ref name="sortalphaothers"/>
@@ -1511,6 +1513,36 @@
       </attribute>
       <element name="bcf:key">
         <value>alphaothers</value>
+      </element>
+      <element name="bcf:value">
+        <data type="normalizedString">
+          <param name="pattern">\S+</param>
+        </data>
+      </element>
+    </element>
+  </define>
+  <define name="multiscriptform">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>multiscriptform</value>
+      </element>
+      <element name="bcf:value">
+        <data type="normalizedString">
+          <param name="pattern">\S+</param>
+        </data>
+      </element>
+    </element>
+  </define>
+  <define name="multiscriptlang">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>multiscriptlang</value>
       </element>
       <element name="bcf:value">
         <data type="normalizedString">

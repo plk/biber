@@ -42,6 +42,8 @@ start =
       minbibnames,
       mincitenames,
       minitems,
+      multiscriptform,
+      multiscriptlang,
       singletitle,
       sortalphaothers?,
       sortscheme,
@@ -590,6 +592,22 @@ alphaothers =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "alphaothers" },
+    element bcf:value {
+      xsd:normalizedString { pattern = "\S+" }
+    }
+  }
+multiscriptform =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "multiscriptform" },
+    element bcf:value {
+      xsd:normalizedString { pattern = "\S+" }
+    }
+  }
+multiscriptlang =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "multiscriptlang" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }
