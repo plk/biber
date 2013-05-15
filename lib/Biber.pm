@@ -900,7 +900,7 @@ sub ms_checks {
 =head2 instantiate_dynamic
 
     This instantiates any dynamic entries so that they are available
-    for processing later on. This has to be done before most all other
+    for processing later on. This has to be done before almost all other
     processing so that when we call $section->bibentry($key), as we
     do many times in the code, we don't die because there is a key but
     no Entry object.
@@ -927,9 +927,9 @@ sub instantiate_dynamic {
     $section->set_dynamic_set($dset, @realmems);
 
     my $be = new Biber::Entry;
+    $be->set_field('citekey', $dset);# always create citekey first (see set_field)
     $be->set_field('entrytype', 'set');
     $be->set_field('entryset', join(',', @members));
-    $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
     $logger->debug("Created dynamic set entry '$dset' in section $secnum");
@@ -1531,6 +1531,10 @@ sub process_labelname {
       next;
     }
 
+    unless ($dm->field_is_multiscript($ln)) {
+      biber_warn("Labelname candidate '$ln' is not a multiscript field - this is probably incorrect!");
+    }
+
     if ($be->get_field($ln, $h_ln->{form}, $h_ln->{lang})) {
       $be->set_labelname_info({'field' => $ln,
                                'form'  => $h_ln->{form},
@@ -1540,8 +1544,7 @@ sub process_labelname {
   }
 
   # Then we loop again to set the labelname name for the fullhash generation code
-  # This is because fullhash generation ignores SHORT* fields (section 4.2.4.1, BibLaTeX
-  # manual)
+  # This is because fullhash generation ignores SHORT* fields
   foreach my $h_ln ( @$lnamespec ) {
     my $ln = $h_ln->{content};
     if ( $ln =~ /\Ashort(.+)\z/xms ) {
@@ -1635,8 +1638,9 @@ sub process_labeldate {
     if (my $ldi = $be->get_labeldate_info) {
       if (my $df = $ldi->{field}) { # set labelyear to a field value
         $be->set_field('labelyear', $be->get_field($df->{year}));
-        $be->set_field('labelmonth', $be->get_field($df->{month})) if $df->{month};
-        $be->set_field('labelday', $be->get_field($df->{day})) if $df->{day};
+        $be->set_field('labelmonth', $be->get_field($df->{month})) if $be->get_field($df->{month});
+        $be->set_field('labelday', $be->get_field($df->{day})) if $be->get_field($df->{day});
+
         # ignore endyear if it's the same as year
         my ($ytype) = $df->{year} =~ /\A(\X*)year\z/xms;
         $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
@@ -3054,6 +3058,7 @@ sub sort_list {
 
 sub prepare {
   my $self = shift;
+  my $testing = shift; # for testing, there are certain things we don't want to do
 
   my $out = $self->get_output_obj;          # Biber::Output object
 
@@ -3068,7 +3073,7 @@ sub prepare {
     $logger->info("Processing section $secnum");
 
     $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
-    Biber::Config->_init;                # (re)initialise Config object
+    Biber::Config->_init($testing);      # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
     $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
