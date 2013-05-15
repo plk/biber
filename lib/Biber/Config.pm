@@ -113,6 +113,7 @@ $CONFIG->{state}{datafiles} = [];
 =cut
 
 sub _init {
+  shift; # called as class method
   my $testing = shift;# Special flag to indicate we are running this in a testing harness
   $CONFIG->{options}{biblatex}{PER_ENTRY} = {} unless $testing;
   $CONFIG->{state}{unulchanged} = 1;

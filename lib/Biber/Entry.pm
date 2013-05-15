@@ -317,15 +317,17 @@ sub set_field {
   my $self = shift;
   my ($field, $val, $form, $lang) = @_;
   my $dm = Biber::Config->get_dm;
+  my $key = ($field eq 'citekey' ) ? $field : $self->{derivedfields}{nonms}{citekey};
   if ($dm->field_is_multiscript($field)) {
-    my $key = $self->get_field('citekey');
     $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('multiscriptlang', undef, $key);
     # All derived fields can be null
     $self->{derivedfields}{ms}{$field}{$form}{$lang} = $val;
+    $logger->trace("Setting ms field in '$key': $field/$form/$lang=$val");
   }
   else {
     $self->{derivedfields}{nonms}{$field} = $val;
+    $logger->trace("Setting nonms field in '$key': $field=$val");
   }
   return;
 }
@@ -343,15 +345,17 @@ sub get_field {
   my ($field, $form, $lang) = @_;
   return undef unless $field;
   my $dm = Biber::Config->get_dm;
+  my $key = $self->{derivedfields}{nonms}{citekey};# can't use get_field due to recursion ...
   if ($dm->field_is_multiscript($field)) {
-    my $key = $self->{derivedfields}{citekey};# can't use get_field due to recursion ...
     $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('multiscriptlang', undef, $key);
+    $logger->trace("Getting ms field in '$key': $field/$form/$lang");
     return Dive($self, 'datafields', 'ms', $field, $form, $lang) //
            Dive($self, 'derivedfields', 'ms', $field, $form, $lang) //
            Dive($self, 'rawfields', 'ms', $field);
   }
   else {
+    $logger->trace("Getting nonms field in '$key': $field") if $key;
     return Dive($self, 'datafields', 'nonms', $field) //
            Dive($self, 'derivedfields', 'nonms', $field) //
            Dive($self, 'rawfields', 'nonms', $field);
@@ -467,9 +471,11 @@ sub set_datafield {
     $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('multiscriptlang', undef, $key);
     $self->{datafields}{ms}{$field}{$form}{$lang} = $val;
+    $logger->trace("Setting ms datafield in '$key': $field/$form/$lang=$val");
   }
   else {
     $self->{datafields}{nonms}{$field} = $val;
+    $logger->trace("Setting nonms datafield in '$key': $field=$val");
   }
   return;
 }

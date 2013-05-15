@@ -32,6 +32,12 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
 
+# For all but first ->prepare(), we call as ->prepare(1). This allows us to not do
+# certain things when testing. For example, we don't want to clear per_entry options
+# in these tests as the HYPHENATION field is copied to a per_entry field on datasource reading
+# and this reading does not happen again if we are just calling ->prepare().
+
+
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
@@ -94,7 +100,7 @@ is($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific preso
 Biber::Config->setblxoption('useprefix', 0);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('tvonb')->[0], $useprefix2, 'von with type-specific presort, exclusions and useprefix=false' );
 
@@ -157,7 +163,7 @@ Biber::Config->setoption('nosort', [ { name => 'author', value => q/\A\p{L}{2}\p
 Biber::Config->setoption('sortcase', '1');
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is(NFC($main->get_sortdata('luzzatto')->[0]), $prefix1, 'Title with nosort' );
 is(NFC($main->get_sortdata('hasan')->[0]), $diacritic1, 'Name with nosort' );
@@ -181,7 +187,7 @@ $main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 0);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is(NFC($main->get_sortdata('jaffe')->[0]), $edtypeclass1, 'Editor type/class' );
 
@@ -292,7 +298,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('moraux')->[0], $dates1, 'Very contrived but thorough test of date sorting' );
 
@@ -307,7 +313,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('augustine')->[0], $lists1, 'max/minitems test 1 (publisher)' );
 
@@ -321,7 +327,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('cotton')->[0], $lists2, 'max/minitems test 2 (location)' );
 
@@ -336,7 +342,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('chiu')->[0], $lists3, 'max/minitems test 3 (institution)' );
 
@@ -351,7 +357,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('chiu')->[0], $lists4, 'max/minitems test 4 (institution - minitems=2)' );
 
@@ -367,7 +373,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('chiu')->[0], $lists5, 'max/minitems test 5 (institution - maxitems=4/minitems=3)' );
 
@@ -411,7 +417,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff1, 'nty with default left offset, 4 digit year' );
 
@@ -454,7 +460,7 @@ $S = [
 $main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 1);
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff2, 'nty with left offset, 3 digit year, case sensitive' );
 
@@ -498,7 +504,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
 
@@ -541,7 +547,7 @@ $S = [
 $main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 0);
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff4, 'nty with right offset, 3 digit year' );
 
@@ -584,7 +590,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff5, 'nty with right offset, 4 digit year' );
 
@@ -628,7 +634,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff6, 'ntyd with left offset, 4 digit year' );
 
@@ -672,7 +678,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff7, 'ntyd with left offset, 3 digit year' );
 
@@ -716,7 +722,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff8, 'ntyd with right offset, 4 digit year' );
 
@@ -760,7 +766,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('knuth:ct')->[0], $yearoff9, 'ntyd with right offset, 3 digit year' );
 
@@ -803,7 +809,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $vol1, 'nty with right-padded vol' );
 
@@ -847,7 +853,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $vol2, 'nty with right-padded 7-char vol' );
 
@@ -893,7 +899,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $vol3, 'nty with left-padded 5-char "a" pad char vol' );
 
@@ -937,7 +943,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $nty, 'basic nty sort' );
 is($main->get_sortdata('angenendtsk')->[0], $sk1, 'basic sortkey sort' );
@@ -982,7 +988,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $nyt, 'basic nyt sort' );
 
@@ -1025,7 +1031,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $nyvt, 'basic nyvt sort' );
 
@@ -1073,7 +1079,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $anyt_la, 'anyt sort (with labelalpha)' );
 Biber::Config->setblxoption('labelalpha', 0);
@@ -1084,7 +1090,7 @@ $bibentries->entry('stdmodel:glashow')->del_field('sortlabelalpha');
 
 # anyt without labelalpha
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $anyt, 'anyt sort (without labelalpha)' );
 
@@ -1132,7 +1138,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $anyvt_la, 'anyvt sort (with labelalpha)' );
 is($main->get_sortdata('murray')->[0], $anyvt_la2, 'anyvt sort (> maxbibnames=3 minbibnames=1, with labelalpha and alphaothers)' );
@@ -1143,7 +1149,7 @@ Biber::Config->setblxoption('maxbibnames', 2);
 Biber::Config->setblxoption('minbibnames', 2);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('murray')->[0], $anyvt_la4, 'anyvt sort (> maxbibnames=2 minbibnames=2, with labelalpha and alphaothers)' );
 
@@ -1151,7 +1157,7 @@ Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('murray')->[0], $anyvt_la3, 'anyvt sort (> maxbibnames=2 minbibnames=2,with labelalpha and without alphaothers)' );
 
@@ -1166,7 +1172,7 @@ $bibentries->entry('murray')->del_field('sortlabelalpha');
 # anyvt without labelalpha
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $anyvt, 'anyvt sort (without labelalpha)' );
 
@@ -1205,7 +1211,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $ynt, 'basic ynt sort' );
 
@@ -1244,11 +1250,11 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
 Biber::Config->setoption('sortfirstinits', 1);
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 is($main->get_sortdata('stdmodel')->[0], $sortinits, 'sort first name inits only' );
 
 Biber::Config->setoption('sortfirstinits', 0);
@@ -1264,7 +1270,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $debug, 'basic debug sort' );
 
@@ -1310,7 +1316,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $noname, 'nty with use* all off' );
 
@@ -1356,7 +1362,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel:ps_sc')->[0], $ps_sc, 'nty with modified presort and short-circuit title' );
 
@@ -1371,7 +1377,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('stdmodel')->[0], $citeorder, 'citeorder' );
 
@@ -1393,7 +1399,7 @@ $S = [
 $main->set_sortscheme($S);
 
 # regenerate information
-$biber->prepare;
+$biber->prepare(1);# Pass special testing flag
 
 is($main->get_sortdata('labelstest')->[0], $labels, 'date labels' );
 

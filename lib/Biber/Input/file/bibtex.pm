@@ -514,11 +514,11 @@ sub create_entry {
       $bibentry->set_field('rawoptions', $value);
     }
 
-    # # Copy this into the per-entry mslang option unless it's already been set explicitly
-    # if (my $value = biber_decode_utf8($entry->get('hyphenation'))) {
-    #   Biber::Config->setblxoption('multiscriptlang', $value, 'PER_ENTRY', $key) unless
-    #       Biber::Config->issetblxentryoption('multiscriptlang', $key);
-    # }
+    # Copy this into the per-entry mslang option unless it's already been set explicitly
+    if (my $value = biber_decode_utf8($entry->get('hyphenation'))) {
+      Biber::Config->setblxoption('multiscriptlang', $value, 'PER_ENTRY', $key) unless
+          Biber::Config->issetblxentryoption('multiscriptlang', $key);
+    }
 
     # We put all the fields we find modulo field aliases into the object
     # validation happens later and is not datasource dependent
