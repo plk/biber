@@ -150,10 +150,10 @@ sub clone {
     $new->{rawfields}{ms}{$k} = dclone($v);
   }
   while (my ($k, $v) = each(%{$self->{datafields}{nonms}})) {
-    $new->{datafields}{nonms}{$k} = dclone($v);
+    $new->{datafields}{nonms}{$k} = $v;
   }
   while (my ($k, $v) = each(%{$self->{rawfields}{nonms}})) {
-    $new->{rawfields}{nonms}{$k} = dclone($v);
+    $new->{rawfields}{nonms}{$k} = $v;
   }
   # Need to add entrytype and datatype
   $new->{derivedfields}{nonms}{entrytype} = $self->{derivedfields}{nonms}{entrytype};
@@ -344,7 +344,7 @@ sub get_field {
   return undef unless $field;
   my $dm = Biber::Config->get_dm;
   if ($dm->field_is_multiscript($field)) {
-    my $key = $self->{rawfields}{citekey};# can't use get_field due to recursion ...
+    my $key = $self->{derivedfields}{citekey};# can't use get_field due to recursion ...
     $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('multiscriptlang', undef, $key);
     return Dive($self, 'datafields', 'ms', $field, $form, $lang) //
@@ -560,16 +560,10 @@ sub del_field {
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
-  if ($dm->field_is_multiscript($field)) {
-    delete $self->{datafields}{ms}{$field};
-    delete $self->{derivedfields}{ms}{$field};
-    delete $self->{rawfields}{ms}{$field};
-  }
-  else {
-    delete $self->{datafields}{nonms}{$field};
-    delete $self->{derivedfields}{nonms}{$field};
-    delete $self->{rawfields}{nonms}{$field};
-  }
+  my $type = $dm->field_is_multiscript($field) ? 'ms' : 'nonms';
+  delete $self->{datafields}{$type}{$field};
+  delete $self->{derivedfields}{$type}{$field};
+  delete $self->{rawfields}{$type}{$field};
   return;
 }
 
@@ -603,16 +597,10 @@ sub field_exists {
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
-  if ($dm->field_is_multiscript($field)) {
-    return (Dive($self, 'datafields', 'ms', $field) ||
-            Dive($self, 'derivedfields', 'ms', $field) ||
-            Dive($self, 'rawfields', 'ms', $field)) ? 1 : 0;
-  }
-  else {
-    return (Dive($self, 'datafields', 'nonms', $field) ||
-            Dive($self, 'derivedfields', 'nonms', $field) ||
-            Dive($self, 'rawfields', 'nonms', $field)) ? 1 : 0;
-  }
+  my $type = $dm->field_is_multiscript($field) ? 'ms' : 'nonms';
+  return (defined(Dive($self, 'datafields', $type, $field)) ||
+          defined(Dive($self, 'derivedfields', $type, $field)) ||
+          defined(Dive($self, 'rawfields', $type, $field))) ? 1 : 0;
 }
 
 =head2 field_form_exists
@@ -628,8 +616,8 @@ sub field_form_exists {
   return undef unless $dm->field_is_multiscript($field);
   my $key = $self->get_field('citekey');
   $form = $form || Biber::Config->getblxoption('multiscriptform', undef, $key);
-  return (Dive($self, 'datafields', 'ms', $field, $form) ||
-          Dive($self, 'derivedfields', 'ms', $field, $form)) ? 1 : 0;
+  return (defined(Dive($self, 'datafields', 'ms', $field, $form)) ||
+          defined(Dive($self, 'derivedfields', 'ms', $field, $form))) ? 1 : 0;
 }
 
 
@@ -757,8 +745,12 @@ sub set_inherit_from {
   # Data source fields
   foreach my $field ($parent->datafields) {
     next if $self->field_exists($field); # Don't overwrite existing fields
-    next unless $dm->field_is_multiscript($field);# Ignore non-ms fields for this
-    $self->set_datafield_forms($field, dclone($parent->get_field_forms($field)));
+    if ($dm->field_is_multiscript($field)) {
+      $self->set_datafield_forms($field, dclone($parent->get_field_forms($field)));
+    }
+    else {
+      $self->set_datafield($field, $parent->get_field($field));
+    }
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
@@ -781,6 +773,7 @@ sub resolve_xdata {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $entry_key = $self->get_field('citekey');
+  my $dm = Biber::Config->get_dm;
 
   foreach my $xdatum (split /\s*,\s*/, $xdata) {
     unless (my $xdatum_entry = $section->bibentry($xdatum)) {
@@ -811,8 +804,12 @@ sub resolve_xdata {
         }
         else {
           foreach my $field ($xdatum_entry->datafields()) { # set fields
-            $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
-
+            if ($dm->field_is_multiscript($field)) {
+              $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
+            }
+            else {
+              $self->set_datafield($field, $xdatum_entry->get_field($field));
+            }
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
               Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
@@ -847,6 +844,7 @@ sub inherit_from {
 
   my $target_key = $self->get_field('citekey'); # target/child key
   my $source_key = $parent->get_field('citekey'); # source/parent key
+  my $dm = Biber::Config->get_dm;
 
   # record the inheritance between these entries to prevent loops and repeats.
   Biber::Config->set_inheritance('crossref', $source_key, $target_key);
@@ -864,8 +862,8 @@ sub inherit_from {
 
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
-  # Normall this is a biblatex option but in tool mode, it comes from the Biber conf file and so is
-  # a Biber option
+  # Normall this is a biblatex option but in tool mode, it comes from the Biber conf file
+  # and so is a Biber option
   my $inheritance = Biber::Config->getblxoption('inheritance') || Biber::Config->getoption('inheritance');
   my %processed;
   # get defaults
@@ -910,7 +908,12 @@ sub inherit_from {
               $self->set_rawfield($field->{target}, $parent->get_rawfield($field->{source}));
             }
             else {
-              $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
+              if ($dm->field_is_multiscript($field->{source})) {
+                $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
+              }
+              else {
+                $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+              }
             }
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
@@ -941,7 +944,12 @@ sub inherit_from {
               $self->set_rawfield($field, $parent->get_rawfield($field));
             }
             else {
-              $self->set_datafield_forms($field, $parent->get_field_forms($field));
+              if ($dm->field_is_multiscript($field)) {
+                $self->set_datafield_forms($field, $parent->get_field_forms($field));
+              }
+              else {
+                $self->set_datafield($field, $parent->get_field($field));
+              }
             }
 
             # Record graphing information if required

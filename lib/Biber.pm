@@ -837,10 +837,9 @@ sub nullable_check {
         }
       }
       else {
-        if (is_null($be->get_field($f))) {
+        if (is_null($be->get_datafield($f))) {
           unless ($dm->field_is_nullok($f)) {
             biber_warn("The field '$f' in entry '$citekey' cannot be null, deleting it");
-            say("The field '$f' in entry '$citekey' cannot be null, deleting it");
             $be->del_field($f);
           }
         }

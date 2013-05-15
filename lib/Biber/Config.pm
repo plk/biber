@@ -160,7 +160,7 @@ sub _initopts {
 
       unless (defined($opts->{configfile})) {
         # There is a special default config file for tool mode
-        # Referring to as yet unprocess cmd-line tool option as it isn't processed until below
+        # Referring to as yet unprocessed cmd-line tool option as it isn't processed until below
         if ($opts->{tool}) {
           (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
           $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
@@ -257,6 +257,9 @@ sub _initopts {
     }
     elsif (lc($k) eq 'inheritance') {
       Biber::Config->setconfigfileoption($k, $v);
+    }
+    elsif (lc($k) eq 'datamodel') {# Usually will only find this in tool mode
+      Biber::Config->set_dm(Biber::DataModel->new($v));
     }
   }
 

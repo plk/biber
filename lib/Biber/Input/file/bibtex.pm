@@ -185,6 +185,7 @@ sub extract_entries {
   }
 
   if ($section->is_allkeys) {
+
     $logger->debug("All cached citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
     while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {

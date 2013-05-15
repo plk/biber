@@ -356,6 +356,242 @@
             </choice>
           </element>
         </optional>
+        <optional>
+          <!-- Data model specification (mainly for tool mode) -->
+          <element name="datamodel">
+            <!-- Valid entrytypes -->
+            <element name="entrytypes">
+              <oneOrMore>
+                <element name="entrytype">
+                  <optional>
+                    <!-- Some entrytypes should be completely skipped on output (XDATA etc.) -->
+                    <attribute name="skip_output">
+                      <value>true</value>
+                    </attribute>
+                  </optional>
+                  <text/>
+                </element>
+              </oneOrMore>
+            </element>
+            <!--
+              BibLaTeX field types. Biber uses this to determine how to output various types
+              to the .bbl
+            -->
+            <element name="fields">
+              <oneOrMore>
+                <element name="field">
+                  <!-- fieldtype is "field" or "list" -->
+                  <attribute name="fieldtype">
+                    <choice>
+                      <value>field</value>
+                      <value>list</value>
+                    </choice>
+                  </attribute>
+                  <!-- datatype of field content -->
+                  <attribute name="datatype">
+                    <choice>
+                      <value>literal</value>
+                      <value>name</value>
+                      <value>key</value>
+                      <value>entrykey</value>
+                      <value>date</value>
+                      <value>verbatim</value>
+                      <value>integer</value>
+                      <value>range</value>
+                      <value>csv</value>
+                      <value>code</value>
+                      <value>uri</value>
+                    </choice>
+                  </attribute>
+                  <optional>
+                    <!-- Are we allowed to output a null field value to the .bbl for this field? -->
+                    <attribute name="nullok">
+                      <value>true</value>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <!-- Should this field be skipped and not output to the .bbl? -->
+                    <attribute name="skip_output">
+                      <value>true</value>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <!--
+                      limit this field definition to specific entrytypes?
+                      Is parsed as a csv list
+                    -->
+                    <attribute name="entrytypes"/>
+                  </optional>
+                  <optional>
+                    <!-- Can this field have multiple script/lang variants? -->
+                    <attribute name="multiscript">
+                      <value>true</value>
+                    </attribute>
+                  </optional>
+                  <text/>
+                </element>
+              </oneOrMore>
+            </element>
+            <oneOrMore>
+              <!--
+                Allowable fields for entrytypes
+                Only one specification per entrytype: even though it might be nice to have several 
+                so that one could share information, this would be hard to manage and confusing as it
+                not be visible in one place which fields were valid for an entrytype.
+              -->
+              <element name="entryfields">
+                <zeroOrMore>
+                  <element name="entrytype">
+                    <text/>
+                  </element>
+                </zeroOrMore>
+                <oneOrMore>
+                  <element name="field">
+                    <text/>
+                  </element>
+                </oneOrMore>
+              </element>
+            </oneOrMore>
+            <oneOrMore>
+              <!-- Constraints on field (co-)existence and format -->
+              <element name="constraints">
+                <zeroOrMore>
+                  <!--
+                    Set of entrytypes that this constraint applies to
+                    An entrytype can be specified in multiple constraints
+                    
+                  -->
+                  <element name="entrytype">
+                    <text/>
+                  </element>
+                </zeroOrMore>
+                <zeroOrMore>
+                  <!-- A constraint specification -->
+                  <element name="constraint">
+                    <choice>
+                      <!--
+                        Conditional constraints have an antecedent and consequent
+                        both of which have a quantifier. This allows you to enforce
+                        constraints like:
+                        
+                        if field a,b,c are all present then one of x,y,z must be
+                        if one of field a,b,c are present then none of x,y,z must be
+                        etc.
+                      -->
+                      <group>
+                        <attribute name="type">
+                          <value>conditional</value>
+                        </attribute>
+                        <element name="antecedent">
+                          <attribute name="quant">
+                            <choice>
+                              <value>all</value>
+                              <value>one</value>
+                              <value>none</value>
+                            </choice>
+                          </attribute>
+                          <oneOrMore>
+                            <element name="field">
+                              <text/>
+                            </element>
+                          </oneOrMore>
+                        </element>
+                        <element name="consequent">
+                          <attribute name="quant">
+                            <choice>
+                              <value>all</value>
+                              <value>one</value>
+                              <value>none</value>
+                            </choice>
+                          </attribute>
+                          <oneOrMore>
+                            <element name="field">
+                              <text/>
+                            </element>
+                          </oneOrMore>
+                        </element>
+                      </group>
+                      <!-- Datatype and format constraints -->
+                      <group>
+                        <attribute name="type">
+                          <value>data</value>
+                        </attribute>
+                        <optional>
+                          <!-- range* attributes are for limiting integer type range -->
+                          <attribute name="datatype">
+                            <choice>
+                              <value>integer</value>
+                              <value>isbn</value>
+                              <value>issn</value>
+                              <value>ismn</value>
+                              <value>date</value>
+                              <value>pattern</value>
+                            </choice>
+                          </attribute>
+                        </optional>
+                        <optional>
+                          <attribute name="rangemin">
+                            <data type="int"/>
+                          </attribute>
+                        </optional>
+                        <optional>
+                          <attribute name="rangemax">
+                            <data type="int"/>
+                          </attribute>
+                        </optional>
+                        <optional>
+                          <attribute name="pattern"/>
+                        </optional>
+                        <oneOrMore>
+                          <element name="field">
+                            <text/>
+                          </element>
+                        </oneOrMore>
+                      </group>
+                      <!-- Mandatoriness constraints which say which fields must appear -->
+                      <group>
+                        <attribute name="type">
+                          <value>mandatory</value>
+                        </attribute>
+                        <oneOrMore>
+                          <choice>
+                            <element name="field">
+                              <text/>
+                            </element>
+                            <!--
+                              An XOR set of fields so you can enforce:
+                              
+                              One (but not more) of fields a,b,c must exist
+                            -->
+                            <element name="fieldxor">
+                              <oneOrMore>
+                                <element name="field">
+                                  <text/>
+                                </element>
+                              </oneOrMore>
+                            </element>
+                            <!--
+                              An OR set of fields so you can enforce:
+                              
+                              One (possibly more) of fields a,b,c must exist
+                            -->
+                            <element name="fieldor">
+                              <oneOrMore>
+                                <element name="field">
+                                  <text/>
+                                </element>
+                              </oneOrMore>
+                            </element>
+                          </choice>
+                        </oneOrMore>
+                      </group>
+                    </choice>
+                  </element>
+                </zeroOrMore>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
       </interleave>
     </element>
   </start>
