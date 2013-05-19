@@ -754,7 +754,7 @@ sub filter_entry_options {
   my @entryoptions = split /\s*,\s*/, $options;
   my @return_options;
   foreach (@entryoptions) {
-    m/^([^=]+)=?(.+)?$/;
+    m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
     given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT}) {
       # Standard option
       when (not defined($_) or $_ == 1) {
