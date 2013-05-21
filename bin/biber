@@ -73,6 +73,7 @@ GetOptions(
            'tool_datatype=s',
            'tool_fieldcase=s',
            'tool_indent=s',
+           'tool_macro_fields=s',
            'tool_resolve',
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
@@ -589,6 +590,11 @@ Case for field names in tool mode output. Defaults to 'upper'.
 =item B<--tool_indent=[num]>
 
 Indentation for body of entries in tool mode output. Defaults to 2.
+
+=item B<--tool_macro_fields=[field1, ... fieldn]>
+
+A comma-separated list of field names whose values are, on output, treated as BibTeX macros.
+Effectively this means that they are not wrapped in braces.
 
 =item B<--tool_resolve>
 

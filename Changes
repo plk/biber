@@ -2,6 +2,7 @@ Revision history for Biber
 
 1.7    (unreleased)
        * Added map_nomatch
+       * Added --tool_macro_fields option
 1.6    (2013-04-30)
        * Bugfixes
        * Now uses perl 5.16. Non-binary (unpacked) use requires perl 5.16+

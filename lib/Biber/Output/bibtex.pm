@@ -87,7 +87,7 @@ sub set_output_entry {
     # If IDS, CROSSREF and XDATA have been resolved, don't output them
     # We can't use the usual skipout test for fields not to be output
     # as this only refers to .bbl output and not to bibtex ouput since this
-    # latter is not reall a "processed" output, it is supposed to be something
+    # latter is not really a "processed" output, it is supposed to be something
     # which could be again used as input and so we don't want to resolve/skip
     # fields like DATE etc.
     if (Biber::Config->getoption('tool_resolve')) {
@@ -99,7 +99,15 @@ sub set_output_entry {
     $acc .= $casing->($f);
     $acc .= ' ' x ($max_field_len - Unicode::GCString->new($f)->length) if Biber::Config->getoption('tool_align');
     $acc .= ' = ';
-    $acc .= "\{$value\},\n";
+
+    # Don't wrap field which should be macros in braces
+    my $mfs = Biber::Config->getoption('tool_macro_fields');
+    if (defined($mfs) and lc($f) ~~ [ map {lc($_)} split(/\s*,\s*/, $mfs) ]) {
+      $acc .= "$value,\n";
+    }
+    else {
+      $acc .= "\{$value\},\n";
+    }
   }
 
   $acc .= "}\n\n";

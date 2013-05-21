@@ -1881,6 +1881,35 @@ than just textual search/replace. You can also use the
 fields/entries, entry aliases and inheritance rules mentioned in the config
 file (see below).
 
+Sometimes, you might wish to output fields which are \bibtex macros,
+that is, you might want this:
+
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@Entrytype{key,
+    Field = something,
+}
+\end{lstlisting}
+%
+instead of this:
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@Entrytype{key,
+    Field = {something},
+}
+\end{lstlisting}
+%
+That is, you might not want the output field in braces or quotes as
+this prevents \bibtex interpreting the field value as a macro. Use the
+\opt{--tool\_macro\_fields} option to specify a comma-separated list
+of fields whose values you wish to output without any \bibtex
+quoting. You can have spaces between the items in the field list but
+then you must enclose the whole option value in quotes. For example,
+these two will do the same thing:
+
+\begin{verbatim}
+biber --tool --tool_macro_fields=month,publisher
+biber --tool --tool_macro_fields='month, publisher'
+\end{verbatim}
+
 Tool mode also allows some reformatting of the \file{.bib} file. The
 option \opt{--tool\_fieldcase} can be used to force the entrytype and
 fieldnames to upper, lower or title case. The option
@@ -2363,7 +2392,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 1.6
+INFO - This is Biber 1.7
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
