@@ -588,7 +588,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
     my @keys = ();
     foreach my $keyc (@{$section->{citekey}}) {
-      my $key = $keyc->{content};
+      my $key = biber_decode_utf8($keyc->{content});# Unicode NFD boundary
       # Stop reading citekeys if we encounter "*" as a citation as this means
       # "all keys"
       if ($key eq '*') {
