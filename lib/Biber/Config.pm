@@ -727,18 +727,6 @@ sub getblxoption {
   }
 }
 
-=head2 issetblxentryoption
-
-  Returns boolean depending on whether an option has already been set at entry level
-
-=cut
-
-sub issetblxentryoption {
-  shift; # class method so don't care about class name
-  my ($opt, $citekey) = @_;
-  return Dive($CONFIG, 'options', 'biblatex', 'PER_ENTRY', $citekey, $opt);
-}
-
 
 ##############################
 # Inheritance state methods

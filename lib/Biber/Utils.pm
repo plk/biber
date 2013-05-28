@@ -928,7 +928,8 @@ sub biber_decode_utf8 {
 
 =head2 out
 
-  Output to target. Outputs NFC UTF-8 if output is UTF-8
+  Output to target. Outputs NFC UTF-8. Of course $fh may have an encoding filter applied
+  which means that the target isn't necessarily UTF-8.
 
 =cut
 

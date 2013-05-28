@@ -505,6 +505,13 @@ sub create_entry {
 
     my $entrytype = biber_decode_utf8($entry->type);
 
+    # Copy this into the per-entry mslang option unless it's already been set explicitly
+    if (my $value = biber_decode_utf8($entry->get('hyphenation'))) {
+      my $curopts = $entry->get('options');
+      $entry->set('options', ($curopts ? ',' : '' . "multiscriptlang=$value")) unless
+        $curopts =~ /multiscriptlang/i;
+    }
+
     # We have to process local options as early as possible in order
     # to make them available for things that need them like parsename()
     if (my $value = biber_decode_utf8($entry->get('options'))) {
@@ -512,12 +519,6 @@ sub create_entry {
       # Save the raw options in case we are to output another input format like
       # biblatexml
       $bibentry->set_field('rawoptions', $value);
-    }
-
-    # Copy this into the per-entry mslang option unless it's already been set explicitly
-    if (my $value = biber_decode_utf8($entry->get('hyphenation'))) {
-      Biber::Config->setblxoption('multiscriptlang', $value, 'PER_ENTRY', $key) unless
-          Biber::Config->issetblxentryoption('multiscriptlang', $key);
     }
 
     # We put all the fields we find modulo field aliases into the object
