@@ -612,8 +612,8 @@ sub _range {
   # If there is a range sep, then we set the end of the range even if it's null
   # If no  range sep, then the end of the range is undef
   foreach my $value (@values) {
-    $value =~ m/\A\s*([^-–]+)\s*\z/xms ||# Simple value without range
-      $value =~ m/\A\s*(\{[^\}]+\}|[^-– ]+)\s*([-–]+)\s*(\{[^\}]+\}|[^-–]*)\s*\z/xms;
+    $value =~ m/\A\s*([^\p{Pd}]+)\s*\z/xms ||# Simple value without range
+      $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*([\p{Pd}]+)\s*(\{[^\}]+\}|[^\p{Pd}]*)\s*\z/xms;
     my $start = $1;
     my $end;
     if ($2) {
