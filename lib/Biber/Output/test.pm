@@ -71,16 +71,16 @@ sub _printfield {
         my $dm = Biber::Config->get_dm;
         my $fl = '';
         if ($dm->field_is_multiscript($field)) {
-          if ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
-              $lang eq Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
+          if ($form ne Biber::Config->getblxoption('msform', undef, $key) and
+              $lang eq Biber::Config->getblxoption('mslang', undef, $key)) {
             $fl = "[form=$form]";
           }
-          elsif ($form eq Biber::Config->getblxoption('multiscriptform', undef, $key) and
-                 $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
+          elsif ($form eq Biber::Config->getblxoption('msform', undef, $key) and
+                 $lang ne Biber::Config->getblxoption('mslang', undef, $key)) {
             $fl = "[lang=$lang]";
           }
-          elsif ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
-                 $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
+          elsif ($form ne Biber::Config->getblxoption('msform', undef, $key) and
+                 $lang ne Biber::Config->getblxoption('mslang', undef, $key)) {
             $fl = "[form=$form,lang=$lang]";
           }
         }
@@ -202,16 +202,16 @@ sub set_output_entry {
           # default biblatex datamodel
           my $fl = '';
           if ($dm->field_is_multiscript($namefield)) {
-            if ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
-                $lang eq Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
+            if ($form ne Biber::Config->getblxoption('msform', undef, $key) and
+                $lang eq Biber::Config->getblxoption('mslang', undef, $key)) {
               $fl = "[form=$form]";
             }
-            elsif ($form eq Biber::Config->getblxoption('multiscriptform', undef, $key) and
-                   $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
+            elsif ($form eq Biber::Config->getblxoption('msform', undef, $key) and
+                   $lang ne Biber::Config->getblxoption('mslang', undef, $key)) {
               $fl = "[lang=$lang]";
             }
-            elsif ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
-                   $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
+            elsif ($form ne Biber::Config->getblxoption('msform', undef, $key) and
+                   $lang ne Biber::Config->getblxoption('mslang', undef, $key)) {
               $fl = "[form=$form,lang=$lang]";
             }
           }
@@ -249,16 +249,16 @@ sub set_output_entry {
           my $dm = Biber::Config->get_dm;
           my $fl = '';
           if ($dm->field_is_multiscript($listfield)) {
-            if ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
-                $lang eq Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
+            if ($form ne Biber::Config->getblxoption('msform', undef, $key) and
+                $lang eq Biber::Config->getblxoption('mslang', undef, $key)) {
               $fl = "[form=$form]";
             }
-            elsif ($form eq Biber::Config->getblxoption('multiscriptform', undef, $key) and
-                   $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
+            elsif ($form eq Biber::Config->getblxoption('msform', undef, $key) and
+                   $lang ne Biber::Config->getblxoption('mslang', undef, $key)) {
               $fl = "[lang=$lang]";
             }
-            elsif ($form ne Biber::Config->getblxoption('multiscriptform', undef, $key) and
-                   $lang ne Biber::Config->getblxoption('multiscriptlang', undef, $key)) {
+            elsif ($form ne Biber::Config->getblxoption('msform', undef, $key) and
+                   $lang ne Biber::Config->getblxoption('mslang', undef, $key)) {
               $fl = "[form=$form,lang=$lang]";
             }
           }

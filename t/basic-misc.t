@@ -117,7 +117,7 @@ $out = $biber->get_output_obj;
 
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
-my $murray1 = q|    \entry{murray}{article}{multiscriptlang=american}
+my $murray1 = q|    \entry{murray}{article}{mslang=american}
       \name{labelname}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
@@ -171,7 +171,7 @@ my $murray1 = q|    \entry{murray}{article}{multiscriptlang=american}
     \endentry
 |;
 
-my $murray2 = q|    \entry{murray}{article}{multiscriptlang=american}
+my $murray2 = q|    \entry{murray}{article}{mslang=american}
       \name{labelname}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
@@ -263,7 +263,7 @@ my $t2 = q|    \entry{t2}{misc}{}
     \endentry
 |;
 
-my $anon1 = q|    \entry{anon1}{unpublished}{multiscriptlang=USenglish}
+my $anon1 = q|    \entry{anon1}{unpublished}{mslang=USenglish}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=9873a6cc65c553faa2b21aaad626fe4b}{XAnony}{X\bibinitperiod}{}{}{}{}{}{}}%
       }
@@ -289,7 +289,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{multiscriptlang=USenglish}
     \endentry
 |;
 
-my $anon2 = q|    \entry{anon2}{unpublished}{multiscriptlang=USenglish}
+my $anon2 = q|    \entry{anon2}{unpublished}{mslang=USenglish}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=f64c29e89ea49402b997956610b58ef6}{YAnony}{Y\bibinitperiod}{}{}{}{}{}{}}%
       }

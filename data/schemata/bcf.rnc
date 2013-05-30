@@ -42,8 +42,8 @@ start =
       minbibnames,
       mincitenames,
       minitems,
-      multiscriptform,
-      multiscriptlang,
+      msform,
+      mslang,
       singletitle,
       sortalphaothers?,
       sortscheme,
@@ -596,18 +596,18 @@ alphaothers =
       xsd:normalizedString { pattern = "\S+" }
     }
   }
-multiscriptform =
+msform =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "multiscriptform" },
+    element bcf:key { "msform" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }
   }
-multiscriptlang =
+mslang =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "multiscriptlang" },
+    element bcf:key { "mslang" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }

@@ -508,8 +508,8 @@ sub create_entry {
     # Copy this into the per-entry mslang option unless it's already been set explicitly
     if (my $value = biber_decode_utf8($entry->get('hyphenation'))) {
       my $curopts = $entry->get('options');
-      $entry->set('options', ($curopts ? ',' : '' . "multiscriptlang=$value")) unless
-        $curopts =~ /multiscriptlang/i;
+      $entry->set('options', ($curopts ? ',' : '' . "mslang=$value")) unless
+        $curopts =~ /mslang/i;
     }
 
     # We have to process local options as early as possible in order

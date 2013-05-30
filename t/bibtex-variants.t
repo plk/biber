@@ -192,7 +192,7 @@ my $forms1 = q|    \entry{forms1}{book}{}
     \endentry
 |;
 
-my $forms9 = q|    \entry{forms9}{book}{multiscriptlang=french}
+my $forms9 = q|    \entry{forms9}{book}{mslang=french}
       \field{sortinit}{0}
       \field{labeltitle}{Un titel}
       \true{singletitle}

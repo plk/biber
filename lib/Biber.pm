@@ -249,8 +249,8 @@ sub tool_mode_setup {
   $self->add_sections($bib_sections);
 
   # Add some things needed for ms
-  Biber::Config->setblxoption('multiscriptform', 'original');
-  Biber::Config->setblxoption('multiscriptlang', 'english');
+  Biber::Config->setblxoption('msform', 'original');
+  Biber::Config->setblxoption('mslang', 'english');
 
   # User maps are set in config file and need some massaging which normally
   # happend in parse_ctrlfile

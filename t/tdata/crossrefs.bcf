@@ -104,11 +104,11 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>multiscriptform</bcf:key>
+      <bcf:key>msform</bcf:key>
       <bcf:value>original</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>multiscriptlang</bcf:key>
+      <bcf:key>mslang</bcf:key>
       <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
