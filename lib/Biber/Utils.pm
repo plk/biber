@@ -758,7 +758,11 @@ sub filter_entry_options {
     given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT}) {
       # Standard option
       when (not defined($_) or $_ == 1) {
-        push @return_options, $1 . ($2 ? "=$2" : '') ;
+        # Don't bother with mstranslang if it's the same as the global setting
+        unless (lc($1) eq 'mstranslang' and
+                Biber::Config->getblxoption('mstranslang') eq $2) {
+          push @return_options, $1 . ($2 ? "=$2" : '') ;
+        }
       }
       # Set all split options to same value as parent
       when (ref($_) eq 'ARRAY') {

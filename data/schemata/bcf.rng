@@ -62,6 +62,7 @@
         <ref name="minitems"/>
         <ref name="msform"/>
         <ref name="mslang"/>
+        <ref name="mstranslang"/>
         <ref name="singletitle"/>
         <optional>
           <ref name="sortalphaothers"/>
@@ -1543,6 +1544,21 @@
       </attribute>
       <element name="bcf:key">
         <value>mslang</value>
+      </element>
+      <element name="bcf:value">
+        <data type="normalizedString">
+          <param name="pattern">\S+</param>
+        </data>
+      </element>
+    </element>
+  </define>
+  <define name="mstranslang">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>mstranslang</value>
       </element>
       <element name="bcf:value">
         <data type="normalizedString">

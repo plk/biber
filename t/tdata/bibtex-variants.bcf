@@ -112,6 +112,10 @@
       <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>mstranslang</bcf:key>
+      <bcf:value>english</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
@@ -1920,6 +1924,7 @@
     <bcf:citekey order="7">forms7</bcf:citekey>
     <bcf:citekey order="8">forms8</bcf:citekey>
     <bcf:citekey order="9">forms9</bcf:citekey>
+    <bcf:citekey order="10">forms10</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>

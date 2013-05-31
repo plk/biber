@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 
 use Biber;
 use Biber::Utils;
@@ -89,7 +89,7 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['forms9', 'forms8', 'forms5', 'forms4', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms9', 'forms10', 'forms8', 'forms5', 'forms4', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -192,15 +192,24 @@ my $forms1 = q|    \entry{forms1}{book}{}
     \endentry
 |;
 
-my $forms9 = q|    \entry{forms9}{book}{mslang=french}
+my $forms9 = q|    \entry{forms9}{book}{mstranslang=german,mslang=french}
       \field{sortinit}{0}
       \field{labeltitle}{Un titel}
-      \true{singletitle}
       \field{hyphenation}{french}
       \field{title}{Un titel}
     \endentry
 |;
 
+my $forms10 = q|    \entry{forms10}{book}{mslang=french}
+      \field{sortinit}{0}
+      \field{labeltitle}{Un titel}
+      \field{hyphenation}{french}
+      \field{title}{Un titel}
+    \endentry
+|;
+
+
 is($out->get_output_entry('forms1', $main), $forms1, 'bbl entry - forms 1') ;
 is($bibentries->entry('forms8')->get_field('title', 'original', 'lang1'), 'L title', 'lang only');
 is($out->get_output_entry('forms9', $main), $forms9, 'bbl entry - hyphenation option') ;
+is($out->get_output_entry('forms10', $main), $forms10, 'bbl entry - mstranslang same as global') ;

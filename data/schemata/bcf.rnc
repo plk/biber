@@ -44,6 +44,7 @@ start =
       minitems,
       msform,
       mslang,
+      mstranslang,
       singletitle,
       sortalphaothers?,
       sortscheme,
@@ -608,6 +609,14 @@ mslang =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "mslang" },
+    element bcf:value {
+      xsd:normalizedString { pattern = "\S+" }
+    }
+  }
+mstranslang =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "mstranslang" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }
