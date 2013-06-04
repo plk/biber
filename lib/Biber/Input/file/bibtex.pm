@@ -637,8 +637,6 @@ sub _range {
   }
 
   my @values = split(/\s*[;,]\s*/, $value);
-  # Here the "-–" contains two different chars even though they might
-  # look the same in some fonts ...
   # If there is a range sep, then we set the end of the range even if it's null
   # If no  range sep, then the end of the range is undef
   foreach my $value (@values) {
