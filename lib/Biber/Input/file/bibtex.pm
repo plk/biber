@@ -505,14 +505,6 @@ sub create_entry {
 
     my $entrytype = biber_decode_utf8($entry->type);
 
-    # Copy hyphenation field into per-entry mslang option unless it's
-    # already been set explicitly
-    if (my $value = biber_decode_utf8($entry->get('hyphenation'))) {
-      my $curopts = $entry->get('options');
-      $entry->set('options', $curopts . ($curopts ? ',' : '') . "mslang=$value") unless
-        $curopts =~ /mslang/i;
-    }
-
     # We have to process local options as early as possible in order
     # to make them available for things that need them like parsename()
     if (my $value = biber_decode_utf8($entry->get('options'))) {
