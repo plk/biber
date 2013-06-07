@@ -304,7 +304,7 @@ sort =
     # order of this specification in the set of all sort specifications
     attribute order { xsd:integer },
     # Should we stop generating sorting information after this item?
-    attribute final { xsd:integer }?,
+    attribute final { "1" }?,
     # Sort ascending or descending
     attribute sort_direction { "ascending" | "descending" }?,
     # Sort case sensitive or not?
