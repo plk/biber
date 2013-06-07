@@ -196,9 +196,12 @@
       </bcf:map>
       <bcf:map map_overwrite="1">
         <bcf:map_step map_field_source="options" map_notmatch="mslang\s*=" map_final="1"/>
-        <bcf:map_step map_field_source="hyphenation" map_final="1"/>
-        <bcf:map_step map_field_set="options" map_field_value=",mslang=" map_append="1"/>
-        <bcf:map_step map_field_set="options" map_origfieldval="1" map_append="1"/>
+        <bcf:map_step map_field_source="hyphenation" map_match="(.+)" map_final="1"/>
+        <bcf:map_step map_field_set="options" map_field_value=",mslang=$1" map_append="1"/>
+      </bcf:map>
+      <bcf:map>
+        <bcf:map_step map_field_source="hyphenation" map_match="(.+)" map_final="1"/>
+        <bcf:map_step map_field_set="options" map_field_value="mslang=$1"/>
       </bcf:map>
     </bcf:maps>
     <bcf:maps datatype="endnotexml" level="driver">

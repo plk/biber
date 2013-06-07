@@ -89,7 +89,7 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['forms9', 'forms10', 'forms8', 'forms5', 'forms4', 'forms11', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms9', 'forms10', 'forms11', 'forms8', 'forms5', 'forms4', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
