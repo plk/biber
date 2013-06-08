@@ -32,6 +32,14 @@ start = element config {
       attribute value { text }
     }+
   }? &
+  # nosort specification
+  element nosorts {
+    element nosort {
+      attribute field { xsd:string },
+      attribute value { xsd:string },
+      empty
+    }+
+  }? &
   element nostdmacros          { "0" | "1" }? &
   element onlylog              { "0" | "1" }? &
   element others_string        { text }? &
@@ -43,6 +51,7 @@ start = element config {
   element quiet                { "0" | "1" }? &
   element recodedata           { text }? &
   element sortcase             { "0" | "1" }? &
+  sorting? &
   element sortlocale           { text }? &
   element sortupper            { "0" | "1" }? &
   element sourcemap            {
@@ -149,3 +158,46 @@ map =
     }+
   }
 
+sorting = 
+  element sorting {
+    # presort default strings for different entry types
+    element presort {
+      attribute type { text }?,
+      text
+    }+,
+    # excludes of certain fields for sorting for specified types
+    element sortexclusion {
+      attribute type { text },
+      element exclusion { text }+
+    }*,
+    sort+
+  }
+
+sort =
+  # sort specification
+  element sort {
+    # order of this specification in the set of all sort specifications
+    attribute order { xsd:integer },
+    # Should we stop generating sorting information after this item?
+    attribute final { "1" }?,
+    # Sort ascending or descending
+    attribute sort_direction { "ascending" | "descending" }?,
+    # Sort case sensitive or not?
+    attribute sortcase { "0" | "1" }?,
+    # Sort upper before lower?
+    attribute sortupper { "0" | "1" }?,
+    # A sort item specification - a field or pseudo-field to get sort information from
+    element sortitem {
+      # order of this item in the set of all other item specifications
+      attribute order { xsd:integer },
+      # Just use a part of the item information for sorting?
+      attribute substring_side { "left" | "right" }?,
+      attribute substring_width { xsd:integer }?,
+      # Pad the item information when sorting with it?
+      attribute pad_side { "left" | "right" }?,
+      attribute pad_width { xsd:integer }?,
+      attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
+      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+      text
+    }+
+  }+

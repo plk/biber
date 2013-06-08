@@ -140,6 +140,22 @@
           </element>
         </optional>
         <optional>
+          <!-- nosort specification -->
+          <element name="nosorts">
+            <oneOrMore>
+              <element name="nosort">
+                <attribute name="field">
+                  <data type="string"/>
+                </attribute>
+                <attribute name="value">
+                  <data type="string"/>
+                </attribute>
+                <empty/>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
+        <optional>
           <element name="nostdmacros">
             <choice>
               <value>0</value>
@@ -211,6 +227,9 @@
               <value>1</value>
             </choice>
           </element>
+        </optional>
+        <optional>
+          <ref name="sorting"/>
         </optional>
         <optional>
           <element name="sortlocale">
@@ -608,5 +627,132 @@
         </element>
       </oneOrMore>
     </element>
+  </define>
+  <define name="sorting">
+    <element name="sorting">
+      <oneOrMore>
+        <!-- presort default strings for different entry types -->
+        <element name="presort">
+          <optional>
+            <attribute name="type"/>
+          </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+      <zeroOrMore>
+        <!-- excludes of certain fields for sorting for specified types -->
+        <element name="sortexclusion">
+          <attribute name="type"/>
+          <oneOrMore>
+            <element name="exclusion">
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
+      <oneOrMore>
+        <ref name="sort"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="sort">
+    <oneOrMore>
+      <!-- sort specification -->
+      <element name="sort">
+        <!-- order of this specification in the set of all sort specifications -->
+        <attribute name="order">
+          <data type="integer"/>
+        </attribute>
+        <optional>
+          <!-- Should we stop generating sorting information after this item? -->
+          <attribute name="final">
+            <value>1</value>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Sort ascending or descending -->
+          <attribute name="sort_direction">
+            <choice>
+              <value>ascending</value>
+              <value>descending</value>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Sort case sensitive or not? -->
+          <attribute name="sortcase">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
+        <optional>
+          <!-- Sort upper before lower? -->
+          <attribute name="sortupper">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </attribute>
+        </optional>
+        <oneOrMore>
+          <!-- A sort item specification - a field or pseudo-field to get sort information from -->
+          <element name="sortitem">
+            <!-- order of this item in the set of all other item specifications -->
+            <attribute name="order">
+              <data type="integer"/>
+            </attribute>
+            <optional>
+              <!-- Just use a part of the item information for sorting? -->
+              <attribute name="substring_side">
+                <choice>
+                  <value>left</value>
+                  <value>right</value>
+                </choice>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="substring_width">
+                <data type="integer"/>
+              </attribute>
+            </optional>
+            <optional>
+              <!-- Pad the item information when sorting with it? -->
+              <attribute name="pad_side">
+                <choice>
+                  <value>left</value>
+                  <value>right</value>
+                </choice>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="pad_width">
+                <data type="integer"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="pad_char">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">1</param>
+                </data>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="form">
+                <choice>
+                  <value>original</value>
+                  <value>translated</value>
+                  <value>romanised</value>
+                  <value>uniform</value>
+                </choice>
+              </attribute>
+            </optional>
+            <text/>
+          </element>
+        </oneOrMore>
+      </element>
+    </oneOrMore>
   </define>
 </grammar>

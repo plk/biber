@@ -439,6 +439,7 @@
               <attribute name="value">
                 <data type="string"/>
               </attribute>
+              <empty/>
             </element>
           </oneOrMore>
         </element>
@@ -454,6 +455,7 @@
               <attribute name="value">
                 <data type="string"/>
               </attribute>
+              <empty/>
             </element>
           </oneOrMore>
         </element>

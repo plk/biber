@@ -14,6 +14,7 @@
 \usepackage{color}
 \usepackage{listings}
 \usepackage{metalogo}
+
 \usepackage[retainmissing]{MnSymbol}
 \setmainfont[Ligatures=TeX]{CMU Serif}
 \setsansfont[Ligatures=TeX]{CMU Sans Serif}
@@ -28,7 +29,7 @@
 \MakeAutoQuote{«}{»}
 
 \gdef\biberversion{1.7}    % BIBER VERSION
-\gdef\biblatexversion{2.6}   % BIBLATEX VERSION
+\gdef\biblatexversion{2.7}   % BIBLATEX VERSION
 
 % Set up tikz things
 
@@ -574,7 +575,7 @@ an example config file which displays the \biber\ defaults:
   <nosort>
     <!-- strip prefices like 'El-' when sorting name fields -->
     <option name="type_name" value="\A\p{L}{2}\p{Pd}"/>
-    <!-- strip diacritics when sorting name fields -->
+    <!-- strip some diacritics when sorting name fields -->
     <option name="type_name" value="[\x{2bf}\x{2018}]"/>
   </nosort>
   <onlylog>0</onlylog>
@@ -1130,6 +1131,47 @@ field from any \textcolor{red}{\texttt{source}}.
 In general, it is probably best to copy the default \biblatex inheritance
 rules and modify them to your needs. See section \ref{tool}.
 \bigskip
+\subsubsection{The \texttt{noinit} option}\label{noinit}
+
+The value of the \opt{noinit} option can only be set in the config file and
+not on the command line. This is because the values are Perl regular
+expressions and would need special quoting to set on the command line. This
+can get a bit tricky on some OSes (like Windows) so it's safer to set them
+in the config file. \opt{noinit} allows you to ignore parts of a name when
+generating initials. This is done using Perl regular expressions which
+specify what to ignore. You can specific multiple regular expressions and
+they will be removed from the name before it is passed to the initials
+generating system.
+
+For example, this option can be used to ignore diacritic marks and prefices
+in names which should not be considered when sorting. Given (the default):
+
+\begin{lstlisting}[language=xml]
+  <noinit>
+    <!-- strip lowercase prefices like 'al-' when generating initials -->
+    <option value="\b\p{Ll}{2}\p{Pd}"/>
+    <!-- strip diacritics when generating initials -->
+    <option value="[\x{2bf}\x{2018}]"/>
+  </noinit>
+\end{lstlisting}
+
+\noindent and the \BibTeX\ data source entry:
+
+\begin{verbatim}
+AUTHOR = {{al-Hasan}, ʿAlī},
+\end{verbatim}
+
+\noindent the initials for the last name will be «H» and not «a-H». The
+initial for the first name will be «A» as the diacritic is also ignored.
+This is tricky in general as you cannot often determine the difference
+between a name with a prefix and a hyphenated name with only, say, two
+chars in the first part such as «Ho-Pun». You can adjust this option for
+your individual cases. By default, only lowercased prefices are looked for
+so as to avoid breaking things like «Ho-Pun» where you want the initials to
+be «H.-P.», for example. See the Perl regular expression manual page for
+details of the regular expression
+syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
+\bigskip
 \subsubsection{The \texttt{sorting} option}\label{sorting}
 
 The \opt{sorting} option defines the sorting rules for the bibliography
@@ -1144,6 +1186,7 @@ documents the XML format of the sorting specification. Items in
 \textcolor{red}{red} are not literal, they are descriptive meta-values
 which are explained in the accompanying text. Items in
 \textcolor{blue}{blue} are optional within their parent section or element.
+See also the \texttt{nosort} option in section \ref{nosort}.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <sorting>
@@ -1332,7 +1375,7 @@ data representing a year, you could do:
 </sorting>
 \end{lstlisting}
 %
-It is much easier to see how in fact intuitive this all is if you look at a
+It is much easier to see how intuitive this all is if you look at a
 standard sorting scheme definition. Below is the default \biblatex sorting
 scheme which appears in the \file{.bcf} when you run \biblatex with no
 \opt{sorting} option. This is fully documented and described in the
@@ -1371,47 +1414,6 @@ the \file{.bcf}:
 </sorting>
 \end{lstlisting}
 \bigskip
-\subsubsection{The \texttt{noinit} option}\label{noinit}
-
-The value of the \opt{noinit} option can only be set in the config file and
-not on the command line. This is because the values are Perl regular
-expressions and would need special quoting to set on the command line. This
-can get a bit tricky on some OSes (like Windows) so it's safer to set them
-in the config file. \opt{noinit} allows you to ignore parts of a name when
-generating initials. This is done using Perl regular expressions which
-specify what to ignore. You can specific multiple regular expressions and
-they will be removed from the name before it is passed to the initials
-generating system.
-
-For example, this option can be used to ignore diacritic marks and prefices
-in names which should not be considered when sorting. Given (the default):
-
-\begin{lstlisting}[language=xml]
-  <noinit>
-    <!-- strip lowercase prefices like 'al-' when generating initials -->
-    <option value="\b\p{Ll}{2}\p{Pd}"/>
-    <!-- strip diacritics when generating initials -->
-    <option value="[\x{2bf}\x{2018}]"/>
-  </noinit>
-\end{lstlisting}
-
-\noindent and the \BibTeX\ data source entry:
-
-\begin{verbatim}
-AUTHOR = {{al-Hasan}, ʿAlī},
-\end{verbatim}
-
-\noindent the initials for the last name will be «H» and not «a-H». The
-initial for the first name will be «A» as the diacritic is also ignored.
-This is tricky in general as you cannot often determine the difference
-between a name with a prefix and a hyphenated name with only, say, two
-chars in the first part such as «Ho-Pun». You can adjust this option for
-your individual cases. By default, only lowercased prefices are looked for
-so as to avoid breaking things like «Ho-Pun» where you want the initials to
-be «H.-P.», for example. See the Perl regular expression manual page for
-details of the regular expression
-syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
-
 \subsubsection{The \texttt{nosort} option}\label{nosort}
 
 The value of the \opt{nosort} option can only be set in the config file
@@ -1468,7 +1470,7 @@ type\_title & booktitle\\
 \label{tab:nst}
 \end{table}
 
-For example, this option can be used to ignore diacritic marks and prefices
+For example, this option can be used to ignore some diacritic marks and prefices
 in names which should not be considered when sorting. Given (the default):
 
 \begin{lstlisting}[language=xml]
