@@ -894,6 +894,8 @@ sub preprocess_file {
   # strip UTF-8 BOM if it exists - this just makes T::B complain about junk characters
   $buf =~ s/\A\x{feff}//;
 
+  # use File::Slurp::Unicode;
+  # File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
   File::Slurp::write_file($ufilename, {binmode => ':encoding(UTF-8)'}, $buf)
       or biber_error("Can't write $ufilename");
 
