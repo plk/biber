@@ -75,6 +75,7 @@ GetOptions(
            'tool_indent=s',
            'tool_macro_fields=s',
            'tool_resolve',
+           'tool_sort',
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
@@ -599,6 +600,10 @@ Effectively this means that they are not wrapped in braces.
 =item B<--tool_resolve>
 
 Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
+
+=item B<--tool_sort>
+
+Whether to perform sorting when in tool mode. Defaults to 'false'.
 
 =item B<--trace|T>
 

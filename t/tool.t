@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Encode;
 use Biber;
 use Biber::Utils;
@@ -13,7 +13,7 @@ no warnings 'utf8';
 use utf8;
 
 # Set up Biber object
-my $biber = Biber->new( configfile => 'biber-test.conf');
+my $biber = Biber->new( configfile => 'tool-test.conf');
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -34,8 +34,8 @@ $biber->set_output_obj(Biber::Output::bibtex->new());
 # Biber options
 Biber::Config->setoption('tool', 1);
 Biber::Config->setoption('tool_resolve', 1);
+Biber::Config->setoption('tool_sort', 1);
 Biber::Config->setoption('sortlocale', 'C');
-Biber::Config->setoption('fastsort', 1);
 
 # THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
@@ -43,6 +43,7 @@ Biber::Config->setoption('fastsort', 1);
 $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber program
 $biber->tool_mode_setup;
 $biber->prepare_tool;
+my $main = $biber->sortlists->get_list(0, 'entry', 'tool');
 my $out = $biber->get_output_obj;
 
 my $t1 = q|@UNPUBLISHED{i3Š,
@@ -61,10 +62,10 @@ my $t1 = q|@UNPUBLISHED{i3Š,
 
 my $t2 = q|@BOOK{xd1,
   AUTHOR    = {Edward Ellington},
-  DATE      = {2007},
   LOCATION  = {New York and London},
   NOTE      = {A Note},
   PUBLISHER = {Macmillan},
+  YEAR      = {2001},
 }
 
 |;
@@ -74,6 +75,7 @@ my $t3 = q|@BOOK{b1,
   MAINTITLE      = {Maintitle},
   MAINTITLEADDON = {Maintitleaddon},
   TITLE          = {Booktitle},
+  YEAR           = {1999},
 }
 
 |;
@@ -83,3 +85,4 @@ is($out->get_output_entry(NFD('i3Š')), $t1, 'tool mode 1');
 ok(is_undef($out->get_output_entry('loh')), 'tool mode 2');
 is($out->get_output_entry('xd1',), $t2, 'tool mode 3');
 is($out->get_output_entry('b1',), $t3, 'tool mode 4');
+is_deeply([$main->get_keys], ['macmillan:pub', 'macmillan:loc', 'mv1', 'b1', 'xd1', 'macmillan', NFD('i3Š')], 'tool mode sorting');

@@ -1,6 +1,7 @@
 package Biber::Config;
 use v5.16;
 
+use Biber;
 use Biber::Constants;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
@@ -195,6 +196,11 @@ sub _initopts {
                                                            qr/\Adatetype\z/,
                                                            qr/\Acondition\z/,
                                                            qr/\A(?:or)?filter\z/,
+                                                           qr/\Asortexclusion\z/,
+                                                           qr/\Aexclusion\z/,
+                                                           qr/\Asort\z/,
+                                                           qr/\Asortitem\z/,
+                                                           qr/\Apresort\z/,
                                                           ],
                                           'NsStrip' => 1,
                                           'KeyAttr' => []) or
@@ -255,8 +261,40 @@ sub _initopts {
       }
       Biber::Config->setconfigfileoption($k, $sms);
     }
-    elsif (lc($k) eq 'inheritance') {
-      Biber::Config->setconfigfileoption($k, $v);
+    elsif (lc($k) eq 'inheritance') {# This is a biblatex option
+      Biber::Config->setblxoption($k, $v);
+    }
+    elsif (lc($k) eq 'sorting') {# This is a biblatex option
+      # sorting excludes
+      foreach my $sex (@{$v->{sortexclusion}}) {
+        my $excludes;
+        foreach my $ex (@{$sex->{exclusion}}) {
+          $excludes->{$ex->{content}} = 1;
+        }
+        Biber::Config->setblxoption('sortexclusion',
+                                    $excludes,
+                                    'PER_TYPE',
+                                    $sex->{type});
+      }
+
+      # presort defaults
+      foreach my $presort (@{$v->{presort}}) {
+        # Global presort default
+        unless (exists($presort->{type})) {
+          Biber::Config->setblxoption('presort', $presort->{content});
+        }
+        # Per-type default
+        else {
+          Biber::Config->setblxoption('presort',
+                                      $presort->{content},
+                                      'PER_TYPE',
+                                      $presort->{type});
+        }
+      }
+      Biber::Config->setblxoption('sorting', Biber::_parse_sort($v));
+    }
+    elsif (lc($k) eq 'datamodel') {# This is a biblatex option
+      Biber::Config->setblxoption('datamodel', $v);
     }
   }
 
