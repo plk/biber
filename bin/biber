@@ -227,6 +227,13 @@ if (exists($opts->{input_format}) and not exists($opts->{tool}) ) {
   exit EXIT_ERROR;
 }
 
+if (exists($opts->{input_format}) and
+    $opts->{input_format} !~ /^(?:bibtex|biblatexml|)$/i) {
+  say STDERR 'Biber: ' . $opts->{input_format} . ' is an invalid input format in tool mode';
+  exit EXIT_ERROR;
+}
+
+
 # Create Biber object, passing command-line options
 my $biber = Biber->new(%$opts);
 
