@@ -122,8 +122,9 @@ sub extract_entries {
 
   # Set up XML parser and namespace
   my $parser = XML::LibXML->new();
-  my $xml = File::Slurp::read_file($filename, binmode => ':encoding(UTF-8)') or biber_error("Can't parse file $filename");
-  my $bltxml = $parser->parse_string(NFD($xml));# Unicode NFD boundary
+  my $xml = File::Slurp::read_file($filename) or biber_error("Can't read file $filename");
+  $xml = NFD(decode('UTF-8', $xml));# Unicode NFD boundary
+  my $bltxml = $parser->parse_string($xml);
   my $xpc = XML::LibXML::XPathContext->new($bltxml);
   $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
 

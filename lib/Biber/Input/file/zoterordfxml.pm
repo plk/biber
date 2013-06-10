@@ -15,6 +15,7 @@ use Biber::Section;
 use Biber::Utils;
 use Biber::Config;
 use Digest::MD5 qw( md5_hex );
+use Encode;
 use File::Spec;
 use File::Slurp;
 use File::Temp;
@@ -152,8 +153,9 @@ sub extract_entries {
 
   # Set up XML parser and namespaces
   my $parser = XML::LibXML->new();
-  my $xml = File::Slurp::read_file($filename, binmode => ':encoding(UTF-8)') or biber_error("Can't parse file $filename");
-  my $rdfxml = $parser->parse_string(NFD($xml));# Unicode NFD boundary
+  my $xml = File::Slurp::read_file($filename) or biber_error("Can't read file $filename");
+  $xml = NFD(decode('UTF-8', $xml));# Unicode NFD boundary
+  my $rdfxml = $parser->parse_string($xml);
   my $xpc = XML::LibXML::XPathContext->new($rdfxml);
   foreach my $ns (keys %PREFICES) {
     $xpc->registerNs($ns, $PREFICES{$ns});
