@@ -98,8 +98,7 @@ our %DM_DATATYPES = (
                      integer => qr/\A\d+\z/xms
 );
 
-# Biber option defaults. Many not really needed since they are always passed by .bcf
-# but nice to be safe.
+# Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 
 our $CONFIG_DEFAULT_BIBER = {
   collate             => { content => 1 },
@@ -111,6 +110,7 @@ our $CONFIG_DEFAULT_BIBER = {
   fastsort            => { content => 0 },
   fixinits            => { content => 0 },
   input_encoding      => { content => 'UTF-8' },
+  input_format        => { content => 'bibtex' },
   listsep             => { content => 'and' },
   mincrossrefs        => { content => 2 },
   mssplit             => { content => '_' },
@@ -135,7 +135,6 @@ our $CONFIG_DEFAULT_BIBER = {
   sortupper           => { content => 1 },
   tool                => { content => 0 },
   tool_align          => { content => 1 },
-  tool_datatype       => { content => 'bibtex' },
   tool_fieldcase      => { content => 'upper' },
   tool_indent         => { content => '2' },
   tool_resolve        => { content => 0 },

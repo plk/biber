@@ -40,6 +40,7 @@ GetOptions(
            'fixinits',
            'help|h|?',
            'input_encoding|e=s',
+           'input_format=s',
            'listsep=s',
            'logfile=s',
            'mincrossrefs|m=s',
@@ -70,7 +71,6 @@ GetOptions(
            'tool',
            'tool_align',
            'tool_config',
-           'tool_datatype=s',
            'tool_fieldcase=s',
            'tool_indent=s',
            'tool_macro_fields=s',
@@ -164,12 +164,31 @@ if ($opts->{U}) {
   delete $opts->{U};
 }
 
-# Check the outformat option
+# Check the output_format option
 if (my $of = $opts->{output_format}) {
-  unless ($opts->{output_format} =~ /\A(?:bbl|dot)\z/xms) {
-    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot'";
+  unless ($opts->{output_format} =~ /\A(?:bbl|dot|bibtex|biblatexml)\z/xms) {
+    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot', 'bibtex', 'biblatexml'";
     exit EXIT_ERROR;
   }
+}
+
+if (exists($opts->{tool}) and
+    exists($opts->{output_format}) and
+    $opts->{output_format} !~ /\A(?:bibtex|biblatexml)\z/xms) {
+    say STDERR "Biber: Output format in tool mode must be one of 'bbl' or 'biblatexml'";
+    exit EXIT_ERROR;
+}
+
+if (not exists($opts->{tool}) and
+    exists($opts->{output_format}) and
+    $opts->{output_format} =~ /\A(bibtex|biblatexml)\z/xms) {
+  say STDERR "Biber: Output format '$1' is only valid in tool mode";
+  exit EXIT_ERROR;
+}
+
+if (exists($opts->{tool}) and
+    not exists($opts->{output_format})) {
+  $opts->{output_format} = 'bibtex'; # default for tool mode is different
 }
 
 # Check the tool_* options
@@ -202,6 +221,12 @@ if (exists($opts->{dot_include})) {
   }
 }
 
+# Check input_format option
+if (exists($opts->{input_format}) and not exists($opts->{tool}) ) {
+  say STDERR "Biber: 'input_format' option is only valid in tool mode";
+  exit EXIT_ERROR;
+}
+
 # Create Biber object, passing command-line options
 my $biber = Biber->new(%$opts);
 
@@ -225,8 +250,11 @@ else {
     $outfile = $bcf =~ s/bcf$/dot/r;
   }
   elsif (Biber::Config->getoption('tool')) {
-    if (Biber::Config->getoption('tool_datatype') eq 'bibtex') { # tool .bib output
-      $outfile = $ARGV[0] =~ s/.bib$/_bibertool.bib/r;
+    if (Biber::Config->getoption('output_format') eq 'bibtex') { # tool .bib output
+      $outfile = $ARGV[0] =~ s/\.bib$/_bibertool.bib/r;
+    }
+    elsif (Biber::Config->getoption('output_format') eq 'biblatexml') { # tool .blxtxml output
+      $outfile = $ARGV[0] =~ s/\.bltxml$/_bibertool.bltxml/r;
     }
   }
   else { # .bbl output
@@ -267,14 +295,15 @@ if (Biber::Config->getoption('trace')) {
     "\n###########################################################")
 }
 
-# Set the output class. Should be a subclass of Biber::Output::Base
+# Set the output class. Should be a subclass of Biber::Output::base
 if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
   require Biber::Output::dot;
   $biber->set_output_obj(Biber::Output::dot->new());
 }
 elsif (Biber::Config->getoption('tool')) {
-  require Biber::Output::bibtex;
-  $biber->set_output_obj(Biber::Output::bibtex->new());
+  my $package = 'Biber::Output::' . Biber::Config->getoption('output_format');
+  eval "require $package" or biber_error("Error loading data source package '$package': $@");
+  $biber->set_output_obj(eval "${package}->new()");
 }
 else { # .bbl output
   require Biber::Output::bbl;
@@ -413,6 +442,13 @@ Normally it's not necessary to set this as it's passed via the
 See "perldoc Encode::Supported" for a list of supported encodings.
 The legacy option B<--bibencoding> is supported as an alias.
 
+=item B<--input_format=bibtex|biblatexml>
+
+Biber input format. This option only means something in tool mode (see B<tool> option) since
+normally the input format of a data source is specified in the F<.bcf> file and
+therefore from the B<\addbibresouce> macro in BibLaTeX.
+The default value when in tool mode is 'bibtex'
+
 =item B<--logfile [file]>
 
 Use F<file.blg> as the name of the logfile.
@@ -473,7 +509,7 @@ paths in this case are stripped to filename only). F<file> can
 be absolute if B<--output_directory> is not set.
 The legacy option B<--outfile> is supported as an alias.
 
-=item B<--output_format=bbl|dot>
+=item B<--output_format=dot|bibtex|biblatexml|bbl>
 
 Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
 to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of
@@ -481,6 +517,8 @@ the bibliography data showing entries and, as requested, sections and fields.
 You must process this file with C<dot>, e.g. C<dot -Tsvg test.dot -o test.svg> to
 render the graph. See the B<--dot_include> option to select what is included in
 the DOT output.
+C<bibtex> and C<biblatexml> are only supported in (and only make sense in)
+C<tool> mode (see B<--tool> option)
 The legacy option B<--outformat> is supported as an alias.
 
 =item B<--output_directory [directory]>
@@ -578,10 +616,6 @@ Align field values in neat columns in tool mode output. Default is true.
 
 Show the location of the default tool mode config file and exit. Useful when you need to
 copy this file and customise it.
-
-=item B<--tool_datatype=[datatype]>
-
-Datatype of the data file to be processed in tool mode. Defaults to C<bibtex>.
 
 =item B<--tool_fieldcase=upper|lower|title>
 
