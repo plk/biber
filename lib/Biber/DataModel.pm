@@ -33,7 +33,6 @@ sub new {
   my $dm = shift;
   my $self;
   $self = bless {}, $class;
-
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
   foreach my $f (@{$dm->{fields}{field}}) {

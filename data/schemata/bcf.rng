@@ -442,6 +442,7 @@
               <attribute name="value">
                 <data type="string"/>
               </attribute>
+              <empty/>
             </element>
           </oneOrMore>
         </element>
@@ -457,6 +458,7 @@
               <attribute name="value">
                 <data type="string"/>
               </attribute>
+              <empty/>
             </element>
           </oneOrMore>
         </element>
@@ -780,7 +782,7 @@
         <optional>
           <!-- Should we stop generating sorting information after this item? -->
           <attribute name="final">
-            <data type="integer"/>
+            <value>1</value>
           </attribute>
         </optional>
         <optional>

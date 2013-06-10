@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base 'Biber::Output::base';
 
+use Biber;
 use Biber::Config;
 use Biber::Constants;
 use Biber::Utils;
@@ -153,8 +154,8 @@ sub output {
 
   $logger->debug("Writing entries in tool mode");
 
-  foreach my $key (@{$self->{output_data}{ENTRIES_ORDER}}) {
-    # There is only a (pseudo) section "0" in tool mode
+  # There is only a (pseudo) section "0" in tool mode
+  foreach my $key ($Biber::MASTER->sortlists->get_list(0, 'entry', 'tool')->get_keys) {
     out($target, ${$data->{ENTRIES}{0}{index}{$key}});
   }
 
@@ -177,14 +178,22 @@ sub create_output_section {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
 
-  # We rely on the order of this array for the order of the output
-  foreach my $key ($section->get_orig_order_citekeys) {
-    my $be = $section->bibentry($key);
-    $self->set_output_entry($be, $section, Biber::Config->get_dm);
 
-    # Preserve order as we won't sort later in tool mode and we need original bib order
-    push @{$self->{output_data}{ENTRIES_ORDER}}, $key;
+  # We rely on the order of this array for the order of the .bbl
+  foreach my $k ($section->get_citekeys) {
+    # Regular entry
+    my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
+    $self->set_output_entry($be, $section, Biber::Config->get_dm);
   }
+
+  # # We rely on the order of this array for the order of the output
+  # foreach my $key ($section->get_orig_order_citekeys) {
+  #   my $be = $section->bibentry($key);
+  #   $self->set_output_entry($be, $section, Biber::Config->get_dm);
+
+  #   # Preserve order as we won't sort later in tool mode and we need original bib order
+  #   push @{$self->{output_data}{ENTRIES_ORDER}}, $key;
+  # }
 
   # Make sure the output object knows about the output section
   $self->set_output_section($secnum, $section);

@@ -17,7 +17,7 @@ use Biber::Utils;
 use Biber::Config;
 use Encode;
 use File::Spec;
-use File::Slurp::Unicode;
+use File::Slurp;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( uniq );
@@ -122,8 +122,9 @@ sub extract_entries {
 
   # Set up XML parser and namespace
   my $parser = XML::LibXML->new();
-  my $xml = File::Slurp::Unicode::read_file($filename, encoding => 'UTF-8') or biber_error("Can't parse file $filename");
-  my $bltxml = $parser->parse_string(NFD($xml));# Unicode NFD boundary
+  my $xml = File::Slurp::read_file($filename) or biber_error("Can't read file $filename");
+  $xml = NFD(decode('UTF-8', $xml));# Unicode NFD boundary
+  my $bltxml = $parser->parse_string($xml);
   my $xpc = XML::LibXML::XPathContext->new($bltxml);
   $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
 

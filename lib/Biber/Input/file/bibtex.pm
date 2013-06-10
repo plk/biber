@@ -21,7 +21,7 @@ use Biber::Utils;
 use Biber::Config;
 use Encode;
 use File::Spec;
-use File::Slurp::Unicode;
+use File::Slurp;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
@@ -518,10 +518,9 @@ sub create_entry {
     # validation happens later and is not datasource dependent
     foreach my $f ($entry->fieldlist) {
 
-      # In tool mode, just keep the raw data fields
+      # In tool mode, keep the raw data fields
       if (Biber::Config->getoption('tool')) {
         $bibentry->set_rawfield($f, biber_decode_utf8($entry->get($f)));
-        next;
       }
 
       # Now run any defined handler
@@ -926,26 +925,28 @@ sub preprocess_file {
 
   # We read the file in the bib encoding and then output to UTF-8, even if it was already UTF-8,
   # just in case there was a BOM so we can delete it as it makes T::B complain
-  my $buf = File::Slurp::Unicode::read_file($filename, encoding => Biber::Config->getoption('input_encoding'))
-    or biber_error("Can't read $filename");
+  # Don't use File::Slurp binmode option - it's completely broken - see module RT queue
+  my $buf = File::Slurp::read_file($filename) or biber_error("Can't read $filename");
+  $buf = NFD(decode(Biber::Config->getoption('input_encoding'), $buf));# Unicode NFD boundary
 
   # strip UTF-8 BOM if it exists - this just makes T::B complain about junk characters
   $buf =~ s/\A\x{feff}//;
 
-  File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, $buf)
-      or biber_error("Can't write $ufilename");
+  File::Slurp::write_file($ufilename, NFC(encode('UTF-8', $buf))) or
+      biber_error("Can't write $ufilename");# Unicode NFC boundary
 
   # Decode LaTeX to UTF8 if output is UTF-8
   if (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
-    my $buf = File::Slurp::Unicode::read_file($ufilename, encoding => 'UTF-8')
-      or biber_error("Can't read $ufilename");
+    my $buf = File::Slurp::read_file($ufilename) or biber_error("Can't read $ufilename");
+    $buf = NFD(decode('UTF-8', $buf));# Unicode NFD boundary
+
     $logger->info('Decoding LaTeX character macros into UTF-8');
     $logger->trace("Buffer before decoding -> '$buf'");
     $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1);
     $logger->trace("Buffer after decoding -> '$buf'");
-    # Even though we will just read this file again, let's treat it as a proper Unicode NFC boundary
-    File::Slurp::Unicode::write_file($ufilename, {encoding => 'UTF-8'}, NFC($buf))
-        or biber_error("Can't write $ufilename");
+
+    File::Slurp::write_file($ufilename, NFC(encode('UTF-8', $buf))) or
+        biber_error("Can't write $ufilename");# Unicode NFC boundary
   }
 
   return $ufilename;

@@ -868,9 +868,7 @@ sub inherit_from {
 
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
-  # Normall this is a biblatex option but in tool mode, it comes from the Biber conf file
-  # and so is a Biber option
-  my $inheritance = Biber::Config->getblxoption('inheritance') || Biber::Config->getoption('inheritance');
+  my $inheritance = Biber::Config->getblxoption('inheritance');
   my %processed;
   # get defaults
   my $defaults = $inheritance->{defaults};

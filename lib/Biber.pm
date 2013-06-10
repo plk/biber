@@ -251,6 +251,13 @@ sub tool_mode_setup {
   # Add some things needed for ms
   Biber::Config->setblxoption('msform', 'original');
   Biber::Config->setblxoption('mslang', 'english');
+  my $sortlists = new Biber::SortLists;
+  my $seclist = Biber::SortList->new(section => 0, label => 'tool');
+  $seclist->set_type('entry');
+  $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+  $logger->debug("Adding 'entry' list 'tool' for pseudo-section 0");
+  $sortlists->add_list($seclist);
+  $self->{sortlists} = $sortlists;
 
   # User maps are set in config file and need some massaging which normally
   # happend in parse_ctrlfile
@@ -342,7 +349,6 @@ sub parse_ctrlfile {
                                                            qr/\Abibdata\z/,
                                                            qr/\Adatasource\z/,
                                                            qr/\Asection\z/,
-                                                           qr/\Adtarget\z/,
                                                            qr/\Asortexclusion\z/,
                                                            qr/\Aexclusion\z/,
                                                            qr/\Asort\z/,
@@ -727,7 +733,7 @@ sub process_setup {
   # Break data model information up into more processing-friendly formats
   # for use in verification checks later
   # This has to be here as opposed to in parse_control() so that it can pick
-  # up data model defaults in Constants.pm in case there is nothing in the .bcf
+  # up use config dm settings (for tool mode) in case there is nothing in the .bcf
   Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
   # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
@@ -745,6 +751,8 @@ sub process_setup {
 
 sub process_setup_tool {
   my $self = shift;
+
+  Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
   # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
   if (Biber::Config->getoption('output_encoding') =~ /(?:x-)?ascii/xmsi and
@@ -1987,7 +1995,6 @@ sub process_lists {
   foreach my $list (@{$self->sortlists->get_lists_for_section($secnum)}) {
     my $llabel = $list->get_label;
     my $ltype = $list->get_type;
-
     # Last-ditch fallback in case we still don't have a sorting spec
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
 
@@ -2025,7 +2032,7 @@ sub process_lists {
       # Sorting
       $self->generate_sortinfo($list);       # generate the sort information
       $self->sort_list($list);               # sort the list
-      $self->generate_extra($list);          # generate the extra* fields
+      $self->generate_extra($list) unless Biber::Config->getoption('tool'); # generate the extra* fields
 
       # Cache the results
       $logger->debug("Adding sorting cache entry for '$llabel'");
@@ -2827,7 +2834,7 @@ sub sort_list {
   }
   $logger->debug("Keys before sort:\n");
   foreach my $k (@keys) {
-    $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
+    $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
   }
 
   $logger->trace("Sorting '$ltype' list '$llabel' with scheme\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
@@ -3042,7 +3049,7 @@ sub sort_list {
 
   $logger->debug("Keys after sort:\n");
   foreach my $k (@keys) {
-    $logger->debug("$k => " . $list->get_sortdata($k)->[0] . "\n");
+    $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
   }
   $list->set_keys([ @keys ]);
 
@@ -3127,6 +3134,7 @@ sub prepare_tool {
     $self->process_interentry; # Process crossrefs/sets etc.
   }
 
+  $self->process_lists;                # process the output lists (sort and filtering)
   $out->create_output_section; # Generate and push the section output into the
                                # into the output object ready for writing
   return;

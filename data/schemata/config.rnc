@@ -10,6 +10,98 @@ start = element config {
 #  element configfile          { text }? & 
   element convert_control     { "0" | "1" }? &
   element graph               { text | "1" }? &
+  # Data model specification
+  element datamodel {
+    # Valid entrytypes
+    element entrytypes {
+      element entrytype {
+        # Some entrytypes should be completely skipped on output (XDATA etc.)
+        attribute skip_output { "true" }?,
+        text
+      }+
+    },
+    # BibLaTeX field types. Biber uses this to determine how to output various types
+    # to the .bbl
+    element fields {
+      element field {
+        # fieldtype is "field" or "list"
+        attribute fieldtype { "field" | "list" },
+        # datatype of field content
+        attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" | "uri" },
+        # Are we allowed to output a null field value to the .bbl for this field?
+        attribute nullok { "true" }?,
+        # Should this field be skipped and not output to the .bbl?
+        attribute skip_output { "true" }?,
+        # limit this field definition to specific entrytypes?
+        # Is parsed as a csv list
+        attribute entrytypes { text }?,
+        text
+      }+
+    },
+    # Allowable fields for entrytypes
+    # Only one specification per entrytype: even though it might be nice to have several 
+    # so that one could share information, this would be hard to manage and confusing as it
+    # not be visible in one place which fields were valid for an entrytype.
+    element entryfields {
+      element entrytype { text }*,
+      element field { text }+
+    }+,
+    # Constraints on field (co-)existence and format
+    element constraints {
+      # Set of entrytypes that this constraint applies to
+      # An entrytype can be specified in multiple constraints
+      #
+      element entrytype { text }*,
+      # A constraint specification
+      element constraint {
+        (
+          # Conditional constraints have an antecedent and consequent
+          # both of which have a quantifier. This allows you to enforce
+          # constraints like:
+          #
+          # if field a,b,c are all present then one of x,y,z must be
+          # if one of field a,b,c are present then none of x,y,z must be
+          # etc.
+          (attribute type { "conditional" },
+            element antecedent {
+              attribute quant { "all" | "one" | "none"},
+              element field { text }+
+            },
+            element consequent {
+              attribute quant { "all" | "one" | "none"},
+              element field { text }+
+            }
+          ) |
+          # Datatype and format constraints
+          (attribute type { "data" },
+            # range* attributes are for limiting integer type range
+            attribute datatype { "integer" | "isbn" | "issn" | "ismn" | "date" | "pattern" }?,
+            attribute rangemin { xsd:int }?,
+            attribute rangemax { xsd:int }?,
+            attribute pattern { text }?,
+            element field { text }+
+          ) |
+          # Mandatoriness constraints which say which fields must appear
+          (attribute type { "mandatory" },
+            (element field { text } |
+              # An XOR set of fields so you can enforce:
+              #
+              # One (but not more) of fields a,b,c must exist
+              element fieldxor {
+                element field { text }+
+              } |
+              # An OR set of fields so you can enforce:
+              #
+              # One (possibly more) of fields a,b,c must exist
+              element fieldor {
+                element field { text }+
+              }
+            )+
+          )
+        )
+      }*
+    }+
+  }? &
   element decodecharsset      { "base" | "full" }? &
   element debug               { "0" | "1" }? &
   element fastsort            { "0" | "1" }? &
@@ -32,6 +124,14 @@ start = element config {
       attribute value { text }
     }+
   }? &
+  # nosort specification
+  element nosorts {
+    element nosort {
+      attribute field { xsd:string },
+      attribute value { xsd:string },
+      empty
+    }+
+  }? &
   element nostdmacros          { "0" | "1" }? &
   element onlylog              { "0" | "1" }? &
   element others_string        { text }? &
@@ -43,6 +143,7 @@ start = element config {
   element quiet                { "0" | "1" }? &
   element recodedata           { text }? &
   element sortcase             { "0" | "1" }? &
+  sorting? &
   element sortlocale           { text }? &
   element sortupper            { "0" | "1" }? &
   element sourcemap            {
@@ -243,3 +344,46 @@ map =
     }+
   }
 
+sorting = 
+  element sorting {
+    # presort default strings for different entry types
+    element presort {
+      attribute type { text }?,
+      text
+    }+,
+    # excludes of certain fields for sorting for specified types
+    element sortexclusion {
+      attribute type { text },
+      element exclusion { text }+
+    }*,
+    sort+
+  }
+
+sort =
+  # sort specification
+  element sort {
+    # order of this specification in the set of all sort specifications
+    attribute order { xsd:integer },
+    # Should we stop generating sorting information after this item?
+    attribute final { "1" }?,
+    # Sort ascending or descending
+    attribute sort_direction { "ascending" | "descending" }?,
+    # Sort case sensitive or not?
+    attribute sortcase { "0" | "1" }?,
+    # Sort upper before lower?
+    attribute sortupper { "0" | "1" }?,
+    # A sort item specification - a field or pseudo-field to get sort information from
+    element sortitem {
+      # order of this item in the set of all other item specifications
+      attribute order { xsd:integer },
+      # Just use a part of the item information for sorting?
+      attribute substring_side { "left" | "right" }?,
+      attribute substring_width { xsd:integer }?,
+      # Pad the item information when sorting with it?
+      attribute pad_side { "left" | "right" }?,
+      attribute pad_width { xsd:integer }?,
+      attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
+      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+      text
+    }+
+  }+

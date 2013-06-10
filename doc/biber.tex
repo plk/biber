@@ -14,6 +14,7 @@
 \usepackage{color}
 \usepackage{listings}
 \usepackage{metalogo}
+
 \usepackage[retainmissing]{MnSymbol}
 \setmainfont[Ligatures=TeX]{CMU Serif}
 \setsansfont[Ligatures=TeX]{CMU Sans Serif}
@@ -575,7 +576,7 @@ an example config file which displays the \biber\ defaults:
   <nosort>
     <!-- strip prefices like 'El-' when sorting name fields -->
     <option name="type_name" value="\A\p{L}{2}\p{Pd}"/>
-    <!-- strip diacritics when sorting name fields -->
+    <!-- strip some diacritics when sorting name fields -->
     <option name="type_name" value="[\x{2bf}\x{2018}]"/>
   </nosort>
   <onlylog>0</onlylog>
@@ -705,21 +706,21 @@ examples. A \opt{map} element looks like this:
   +\textcolor{blue}{<per\_datasource>\textcolor{red}{datasource}</per\_datasource>}+
   +\textcolor{blue}{<per\_type>\textcolor{red}{entrytype}</per\_type>}+
   <map_step +\textcolor{blue}{map\_type\_source="\textcolor{red}{source-entrytype}"}+
-              +\textcolor{blue}{map\_field\_source="\textcolor{red}{source-field}"}+
-              +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-entrytype}"}+
-              +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
-              +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
-              +\textcolor{blue}{map\_nomatch="\textcolor{red}{match-regexp}"}+
-              +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
-              +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
-              +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
-              +\textcolor{blue}{map\_append="1"}+
-              +\textcolor{blue}{map\_null="1"}+
-              +\textcolor{blue}{map\_entry\_null="1"}+
-              +\textcolor{blue}{map\_origfield="1"}+
-              +\textcolor{blue}{map\_origfieldval="1"}+
-              +\textcolor{blue}{map\_origentrytype="1"}+
-              +\textcolor{blue}{map\_final="1"}+/>
+             +\textcolor{blue}{map\_field\_source="\textcolor{red}{source-field}"}+
+             +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-entrytype}"}+
+             +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
+             +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
+             +\textcolor{blue}{map\_nomatch="\textcolor{red}{match-regexp}"}+
+             +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
+             +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
+             +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
+             +\textcolor{blue}{map\_append="1"}+
+             +\textcolor{blue}{map\_null="1"}+
+             +\textcolor{blue}{map\_entry\_null="1"}+
+             +\textcolor{blue}{map\_origfield="1"}+
+             +\textcolor{blue}{map\_origfieldval="1"}+
+             +\textcolor{blue}{map\_origentrytype="1"}+
+             +\textcolor{blue}{map\_final="1"}+/>
 </map>
 \end{lstlisting}%| <- sometimes emacs highlighting needs this
 
@@ -1171,7 +1172,249 @@ so as to avoid breaking things like «Ho-Pun» where you want the initials to
 be «H.-P.», for example. See the Perl regular expression manual page for
 details of the regular expression
 syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
+\bigskip
+\subsubsection{The \texttt{sorting} option}\label{sorting}
 
+The \opt{sorting} option defines the sorting rules for the bibliography
+lists. \biblatex allows multiple sorting specifications referenced by name
+as it can print bibliography information as many times as the user wishes
+with different filtering and sorting. This is normally handled by macros in
+\biblatex which write the XML sorting specification(s) to the \file{.bcf}
+file for \biber to read but there may be occasions (usually when using
+\biber in «tool» mode (see section\ref{tool}) when you need to specify the
+global sorting specification directly in a \biber config file. This section
+documents the XML format of the sorting specification. Items in
+\textcolor{red}{red} are not literal, they are descriptive meta-values
+which are explained in the accompanying text. Items in
+\textcolor{blue}{blue} are optional within their parent section or element.
+See also the \texttt{nosort} option in section \ref{nosort}.
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<sorting>
+  <presort +\textcolor{blue}{type=\textcolor{red}{type}}+>+\textcolor{red}{string}+</presort>
+  +\textcolor{blue}{<sortexclusion type=\textcolor{red}{type}>}+
+      +\textcolor{blue}{<exclusion>\textcolor{red}{field}</exclusion>}+
+                 $\vdots$
+  +\textcolor{blue}{</sortexclusion>}+
+  <sort order="+\textcolor{red}{n}+"
+        +\textcolor{blue}{final=1}+
+        +\textcolor{blue}{sort\_direction="ascending|descending"}+
+        +\textcolor{blue}{sort\_case="1|0"}+
+        +\textcolor{blue}{sort\_upper="1|0"}+>
+    <sortitem order="+\textcolor{red}{m}+"
+              +\textcolor{blue}{substring\_side="left|right"}+
+              +\textcolor{blue}{substring\_width="\textcolor{red}{int}"}+
+              +\textcolor{blue}{pad\_side="left|right"}+
+              +\textcolor{blue}{pad\_width="\textcolor{red}{int}"}+
+              +\textcolor{blue}{pad\_char="\textcolor{red}{string}"}+>+\textcolor{red}{field|literal|citeorder}+</sortitem>
+              $\vdots$
+  </sort>
+     $\vdots$
+</sorting>
+\end{lstlisting}
+
+Sorting in \biber is a sophisticated procedure of building up a sorting
+object for an entry based on a sorting scheme template, the general form of
+which is shown above. The sorting routine first traverses every entry in
+the bibliography list and generates a sorting object based on the sorting
+scheme. When this is done, it sorts the entries according to the sorting
+objects it has generated for each entry.
+
+A sorting specification is comprised of a number of \texttt{sort} elements.
+Sorting is essentially a process of comparing whatever information the \textcolor{red}{n}th
+\texttt{sort} element collected for every entry (otherwise known as
+«multi-field» sorting). Within a \texttt{sort} element, there can be any
+number of \texttt{sortitem} elements which describe what information to
+look for in the entry in order to construct this part of the sorting
+object; either a field, a literal string or the special «citeorder»
+pseudo-field.
+
+When generating the sorting information for an entry, within each
+\texttt{sort} element, the first \texttt{sortitem} to return a non-empty
+value for the bibliography entry is used and the rest of the
+\texttt{sortitem}s in the \texttt{sort} are skipped. A \texttt{sortitem}
+essentially looks for a piece of information in the entry and adds this to
+the sorting object. If it is looking for a \textcolor{red}{\texttt{field}},
+then the field must exist in the entry. If it does not, the
+\texttt{sortitem} is skipped. If the \textcolor{red}{\texttt{field}} does
+exist, it is added to the sorting object for the entry after being modified
+by the attributes of the \texttt{sortitem}.
+
+Once a \texttt{sortitem} has returned the contents of a
+\textcolor{red}{\texttt{field}}, you can use the
+\textcolor{blue}{substring\_side} (default «left» if any other
+\textcolor{blue}{substring} attributes are set) and
+\textcolor{blue}{substring\_width} (default «4» if any other
+\textcolor{blue}{substring} attributes are set) attributes to truncate the
+contents of the \textcolor{red}{\texttt{field}} by reducing it to a
+substring taken from the left or right side of the string and of a number
+of (UTF-8) characters of your choice. You can also pad the
+\textcolor{red}{\texttt{field}} with repeated arbitrary characters on
+either side using the \textcolor{blue}{pad\_side} (default «left» if any other
+\textcolor{blue}{pad} attributes are set),
+\textcolor{blue}{pad\_width} (default «4» if any other
+\textcolor{blue}{pad} attributes are set) and \textcolor{blue}{pad\_char}
+(default «0»---the digit zero if any other
+\textcolor{blue}{pad} attributes are set) attributes.
+
+A \texttt{sortitem} which is neither a known bibliography sorting field nor
+the special «citeorder» string is treated as a literal string to add to the
+sorting object. Naturally, such a \texttt{sortitem} always «finds»
+something to add to the sorting object and so it should never have any
+other \texttt{sortitem}s after it within the \texttt{sort} section as they
+will never be considered. The «citeorder» \texttt{sortitem} value has a
+special meaning. It requests a sort based on the lexical order of the
+actual citations. For entries cited in \biblatex within the same citation
+command like:
+
+\begin{lstlisting}[style=latex]{}
+\cite{one,two}
+\end{lstlisting}
+%
+there is a distinction between the lexical order and the semantic order.
+Here «one» and «two» have the same semantic order but a unique lexical
+order. The semantic order only matters if you specify further sorting to
+disambiguate entries with the same semantic order. For example, this is the
+definition of the \biblatex \opt{none} sorting scheme: 
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<sorting>
+  <presort>mm</presort>
+  <sort order="1">
+    <sortitem order="1">citeorder</sortitem>
+  </sort>
+</sorting>
+\end{lstlisting}
+%
+This sorts the bibliography purely lexically by the order of the keys in
+the citation commands. In the example above, it sorts entry «one» before «two».
+However, suppose that you consider «one» and «two» to have the same order
+(semantic order) since they are cited at the same time and want to further
+sort these by year. Suppose «two» has an earlier \bibfield{YEAR} than
+«one»:
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<sorting>
+  <presort>mm</presort>
+  <sort order="1">
+    <sortitem order="1">citeorder</sortitem>
+  </sort>
+  <sort order="2">
+    <sortitem order="1">year</sortitem>
+  </sort>
+</sorting>
+\end{lstlisting}
+%
+This sorts «two» before «one», even though lexically, «one» would sort
+before «two». This is possible because the semantic order can be
+disambiguated by the further sorting on year. With the standard \biblatex
+\opt{none} sorting scheme, the lexical order and semantic order are identical because
+there is nothing further to disambiguate them. This means that you can use
+«citeorder» just like any other \texttt{sortitem} value, choosing
+how to further sort entries cited at the same time (in the same citation
+command).
+
+Both \texttt{sort} and \texttt{sortitem} elements have a mandatory \texttt{order}
+attribute which should start at «1» and increase for each further element.
+Order numbers for \texttt{sortitem} elements within a \texttt{sort} element
+always begin with «1» and don't increase between \texttt{sort} elements.
+
+Once a \texttt{sortitem} element has added something to the sorting object
+(or all \texttt{sortitem} elements within a \texttt{sort} have been
+processed, regardless of whether anything was added to the sort object for
+the entry), some attributes are applied to the information added and the
+next \texttt{sort} element is processed. These attributes on the
+\texttt{sort} element further determine how any sorting specification added
+by the \texttt{sortitem} elements will be used in the sorting.
+
+If the \texttt{sort} element has the \textcolor{blue}{\texttt{final}}
+attribute set to «1», then if any \texttt{sortitem} within the
+\texttt{sort} returned a non-empty string to add to the sorting object, the
+construction of the sorting object for the entry ceases at this point and
+no more \texttt{sort} elements are processed. This is used typically to
+make sure that master sorting keys such as those specified with the
+\bibfield{SORTKEY} field, if found, are the only thing used to construct
+the sorting object. The \texttt{sort} element may further specify that the
+information at \texttt{order} «\textcolor{red}{n}» should be sorted in ascending order or
+descending order (default «ascending»), whether case
+should be considered when sorting (default depends on the \biber\
+\opt{sortcase} option which defaults to true)
+and whether uppercase characters should be sorted before lower
+(default depends on the \biber\ «sortupper» option which defaults to true).
+
+Finally, there are two special sorting section elements to consider. The
+\texttt{presort} element is mandatory and specifies a literal \textcolor{red}{string} to add
+to the very beginning of all sorting objects for all entries. This is useful
+when combined with the fact that you may specify an optional
+\textcolor{blue}{\texttt{type}} attribute which specifies a particular
+entry type for the presort \textcolor{red}{string} specified. Using this
+mechanism, you can sort, for example, all \bibfield{ARTICLE} entries before
+all \bibfield{BOOK} entries and then all other types of entry:
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<sorting>
+  <presort type="article">aa</presort>
+  <presort type="book">bb</presort>
+  <presort>mm</presort>
+     $\vdots$
+</sorting>
+\end{lstlisting}
+%
+This makes it easy to divide a bibliography by type of entry.
+
+The optional \textcolor{blue}{\texttt{sortexclusion}} element allows you to
+exclude fields from consideration by \texttt{sortitem} on a per-type basis.
+For example, if you wanted to ignore the \bibfield{YEAR} field of any
+\bibfield{REPORT} entry types because they are not reliably populated with
+data representing a year, you could do:
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<sorting>
+     $\vdots$
+  <sortexclusion type="report">year</sortexclusion>
+     $\vdots$
+</sorting>
+\end{lstlisting}
+%
+It is much easier to see how intuitive this all is if you look at a
+standard sorting scheme definition. Below is the default \biblatex sorting
+scheme which appears in the \file{.bcf} when you run \biblatex with no
+\opt{sorting} option. This is fully documented and described in the
+\biblatex manual along with the \latex macros which generate this XML in
+the \file{.bcf}:
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<sorting>
+  <presort>mm</presort>
+  <sort order="1">
+    <sortitem order="1">presort</sortitem>
+  </sort>
+  <sort order="2" final="1">
+    <sortitem order="1">sortkey</sortitem>
+  </sort>
+  <sort order="3">
+    <sortitem order="1">sortname</sortitem>
+    <sortitem order="2">author</sortitem>
+    <sortitem order="3">editor</sortitem>
+    <sortitem order="4">translator</sortitem>
+    <sortitem order="5">sorttitle</sortitem>
+    <sortitem order="6">title</sortitem>
+  </sort>
+  <sort order="4">
+    <sortitem order="1">sortyear</sortitem>
+    <sortitem order="2">year</sortitem>
+  </sort>
+  <sort order="5">
+    <sortitem order="1">sorttitle</sortitem>
+    <sortitem order="2">title</sortitem>
+  </sort>
+  <sort order="6">
+    <sortitem order="1" pad_side="left" pad_width="4" pad_char="0">volume</sortitem>
+    <sortitem order="2">0000</sortitem>
+  </sort>
+</sorting>
+\end{lstlisting}
+\bigskip
 \subsubsection{The \texttt{nosort} option}\label{nosort}
 
 The value of the \opt{nosort} option can only be set in the config file
@@ -1228,7 +1471,7 @@ type\_title & booktitle\\
 \label{tab:nst}
 \end{table}
 
-For example, this option can be used to ignore diacritic marks and prefices
+For example, this option can be used to ignore some diacritic marks and prefices
 in names which should not be considered when sorting. Given (the default):
 
 \begin{lstlisting}[language=xml]
@@ -2002,8 +2245,9 @@ The result will be in \file{test\_bibertool.bib} and will look like this:
 }
 \end{lstlisting}
 %
-Note how this is a very powerful way of performing many different
-operations on a \file{.bib} file. By using the config file and tool mode, we have:
+Tool mode is a versatile way of performing many different operations
+on a \file{.bib} file. By using the config file and tool mode, we
+have:
 
 \begin{itemize}
 \item Consistently indented and aligned the entry, normalising fields and
@@ -2131,6 +2375,13 @@ it as your own \file{biber.conf} file or pass it explicitly using the
 \opt{--configfile|-g} option. You can determine the location of the default
 tool mode config file by using the \opt{--tool\_config} option which will
 show you the location of the config file and exit.
+
+\subsubsection{Customising Tool Mode Sorting}
+A global sorting scheme can be defined in the config file in order to
+sort the entries in tool mode output. See section \ref{sorting} for
+the format of the config file sorting specification. By default, if
+sorting is enabled in tool mode, the sorting scheme is the same as the
+\biblatex \texttt{none} scheme, that is, no sorting is performed.
 \bigskip%|<- stop confusing emacs highlighting
 \section{Binaries}\label{binaries}
 
