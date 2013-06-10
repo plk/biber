@@ -14,6 +14,7 @@
 #
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them.
+# Same with some of the output modules.
 
 cp /opt/local/libexec/perl5.16/sitebin/biber /tmp/biber-darwin
 cp /opt/local/lib/libz.1.2.7.dylib /tmp/libz.1.dylib
@@ -25,6 +26,8 @@ PAR_VERBATIM=1 pp --compress=6 \
   --module=Biber::Input::file::ris \
   --module=Biber::Input::file::zoterordfxml \
   --module=Biber::Input::file::endnotexml \
+  --module=Biber::Output::bibtex \
+  --module=Biber::Output::biblatexml \
   --module=Pod::Simple::TranscodeSmart \
   --module=Pod::Simple::TranscodeDumb \
   --module=Encode::Byte \

@@ -3,7 +3,7 @@
 ** Inidividual name hashes are different between variants - does this matter?
 ** Get rid of origtitle, origpublisher, origlocation?
 * New tool mode option for output type
-* Not all tool mode options are relevant for all output types, table in docs saying which does what
 * Biblatexml output
+* Docs - not all tool mode options are relevant for all output types, table in docs saying which does what
 * Sample XSLT transform but not in biber
 

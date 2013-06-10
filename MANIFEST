@@ -31,6 +31,7 @@ lib/Biber/Internals.pm
 lib/Biber/LaTeX/recode_data.xml
 lib/Biber/LaTeX/Recode.pm
 lib/Biber/Output/base.pm
+lib/Biber/Output/biblatexml.pm
 lib/Biber/Output/bibtex.pm
 lib/Biber/Output/bbl.pm
 lib/Biber/Output/dot.pm

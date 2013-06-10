@@ -17,6 +17,7 @@
 
 :: Have to explicitly include the Input* modules as the names of these are dynamically
 :: constructed in the code so Par::Packer can't auto-detect them.
+:: Same with some of the output modules.
 
 COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN
 
@@ -30,6 +31,8 @@ CALL pp ^
   --module=Biber::Input::file::ris ^
   --module=Biber::Input::file::zoterordfxml ^
   --module=Biber::Input::file::endnotexml ^
+  --module=Biber::Output::bibtex ^
+  --module=Biber::Output::biblatexml ^
   --module=Pod::Simple::TranscodeSmart ^
   --module=Pod::Simple::TranscodeDumb ^
   --module=Encode::Byte ^

@@ -58,6 +58,7 @@ my $builder = $class->new(
         'Encode::HanExtra' => 0,
         'XML::LibXML::Simple' => 0,
         'XML::LibXSLT' => 0,
+        'XML::Writer' => 0,
         'URI' => 0,
         'Text::BibTeX' => '0.66',
         'LWP::Simple' => 0,

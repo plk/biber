@@ -1,4 +1,4 @@
-package Biber::Output::bibtex;
+package Biber::Output::biblatexml;
 use v5.16;
 use strict;
 use warnings;
@@ -13,6 +13,7 @@ use Encode;
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Text::Wrap;
+use XML::Writer;
 $Text::Wrap::columns = 80;
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -20,14 +21,14 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head1 NAME
 
-Biber::Output::bibtex - class for bibtex output of tool mode
+Biber::Output::biblatexml - class for biblatexml output of tool mode
 
 =cut
 
 
 =head2 set_output_target_file
 
-    Set the output target file of a Biber::Output::bibtex object
+    Set the output target file of a Biber::Output::biblatexml object
     A convenience around set_output_target so we can keep track of the
     filename
 
@@ -37,11 +38,7 @@ sub set_output_target_file {
   my $self = shift;
   my $toolfile = shift;
   $self->{output_target_file} = $toolfile;
-  my $enc_out;
-  if (Biber::Config->getoption('output_encoding')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
-  }
-  my $TOOLFILE = IO::File->new($toolfile, ">$enc_out");
+  my $TOOLFILE = IO::File->new($toolfile, '>:encoding(UTF-8)');
   $self->set_output_target($TOOLFILE);
 }
 
