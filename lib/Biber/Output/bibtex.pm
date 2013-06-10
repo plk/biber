@@ -186,15 +186,6 @@ sub create_output_section {
     $self->set_output_entry($be, $section, Biber::Config->get_dm);
   }
 
-  # # We rely on the order of this array for the order of the output
-  # foreach my $key ($section->get_orig_order_citekeys) {
-  #   my $be = $section->bibentry($key);
-  #   $self->set_output_entry($be, $section, Biber::Config->get_dm);
-
-  #   # Preserve order as we won't sort later in tool mode and we need original bib order
-  #   push @{$self->{output_data}{ENTRIES_ORDER}}, $key;
-  # }
-
   # Make sure the output object knows about the output section
   $self->set_output_section($secnum, $section);
 
