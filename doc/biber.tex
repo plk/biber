@@ -2244,8 +2244,9 @@ The result will be in \file{test\_bibertool.bib} and will look like this:
 }
 \end{lstlisting}
 %
-Note how this is a very powerful way of performing many different
-operations on a \file{.bib} file. By using the config file and tool mode, we have:
+Tool mode is a versatile way of performing many different operations
+on a \file{.bib} file. By using the config file and tool mode, we
+have:
 
 \begin{itemize}
 \item Consistently indented and aligned the entry, normalising fields and
@@ -2373,6 +2374,13 @@ it as your own \file{biber.conf} file or pass it explicitly using the
 \opt{--configfile|-g} option. You can determine the location of the default
 tool mode config file by using the \opt{--tool\_config} option which will
 show you the location of the config file and exit.
+
+\subsubsection{Customising Tool Mode Sorting}
+A global sorting scheme can be defined in the config file in order to
+sort the entries in tool mode output. See section \ref{sorting} for
+the format of the config file sorting specification. By default, if
+sorting is enabled in tool mode, the sorting scheme is the same as the
+\biblatex \texttt{none} scheme, that is, no sorting is performed.
 \bigskip%|<- stop confusing emacs highlighting
 \section{Binaries}\label{binaries}
 

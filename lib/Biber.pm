@@ -248,15 +248,13 @@ sub tool_mode_setup {
   # Add the Biber::Sections object to the Biber object
   $self->add_sections($bib_sections);
 
-  if (Biber::Config->getoption('tool_sort')) {
-    my $sortlists = new Biber::SortLists;
-    my $seclist = Biber::SortList->new(section => 0, label => 'tool');
-    $seclist->set_type('entry');
-    $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-    $logger->debug("Adding 'entry' list 'tool' for pseudo-section 0");
-    $sortlists->add_list($seclist);
-    $self->{sortlists} = $sortlists;
-  }
+  my $sortlists = new Biber::SortLists;
+  my $seclist = Biber::SortList->new(section => 0, label => 'tool');
+  $seclist->set_type('entry');
+  $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+  $logger->debug("Adding 'entry' list 'tool' for pseudo-section 0");
+  $sortlists->add_list($seclist);
+  $self->{sortlists} = $sortlists;
 
   # User maps are set in config file and need some massaging which normally
   # happend in parse_ctrlfile
@@ -3058,10 +3056,7 @@ sub prepare_tool {
     $self->process_interentry; # Process crossrefs/sets etc.
   }
 
-  if (Biber::Config->getoption('tool_sort')) {
-    $self->process_lists;                # process the output lists (sort and filtering)
-  }
-
+  $self->process_lists;                # process the output lists (sort and filtering)
   $out->create_output_section; # Generate and push the section output into the
                                # into the output object ready for writing
   return;

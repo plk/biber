@@ -314,7 +314,6 @@ sub create_output_section {
   }
 
   # alias citekeys are global to a section
-  # alias citekeys
   foreach my $k ($section->get_citekey_aliases) {
     my $realkey = $section->get_citekey_alias($k);
     $self->set_output_keyalias($k, $realkey, $section)

@@ -139,7 +139,6 @@ our $CONFIG_DEFAULT_BIBER = {
   tool_fieldcase      => { content => 'upper' },
   tool_indent         => { content => '2' },
   tool_resolve        => { content => 0 },
-  tool_sort           => { content => 0 },
   trace               => { content => 0 },
   validate_config     => { content => 0 },
   validate_control    => { content => 0 },
