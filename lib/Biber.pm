@@ -241,7 +241,7 @@ sub tool_mode_setup {
   my $bib_section = new Biber::Section('number' => 0);
   $bib_section->set_datasources([{type => 'file',
                                   name => $ARGV[0],
-                                  datatype => Biber::Config->getoption('tool_datatype')}]);
+                                  datatype => Biber::Config->getoption('input_format')}]);
   $bib_section->set_allkeys(1);
   $bib_sections->add_section($bib_section);
 
