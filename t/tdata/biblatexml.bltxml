@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/biblatexml.rnc" type="compact"?>
-<bib:entries xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml">
-  <bib:entry id="origmode" entrytype="book">
-    <bib:id>origmodea1</bib:id>
-    <bib:id>origmodea2</bib:id>
-    <bib:author morenames="1">
-      <bib:person gender="sm">
-        <bib:first>
-          <bib:namepart initial="П">Павел</bib:namepart>
-          <bib:namepart initial="Г">Георгиевич</bib:namepart>
-        </bib:first>
-        <bib:last>Булгаков</bib:last>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart>Борис-ZZ</bib:namepart>
-          <bib:namepart>Aбрамович</bib:namepart>
-        </bib:first>
-        <bib:last>Розенфельд</bib:last>
-        <bib:middle initial="Б">Билл</bib:middle>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart initial="A">Ашраф</bib:namepart>
-          <bib:namepart>Ахмедович</bib:namepart>
-        </bib:first>
-        <bib:last>Aхмедов</bib:last>
-      </bib:person>
-    </bib:author>
-    <bib:author form="uniform" morenames="1">
-      <bib:person>
-        <bib:first>
-          <bib:namepart initial="P">Pavel</bib:namepart>
-          <bib:namepart initial="G">G.</bib:namepart>
-        </bib:first>
-        <bib:last>Bulgakov</bib:last>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart>Boris</bib:namepart>
-          <bib:namepart>A.</bib:namepart>
-        </bib:first>
-        <bib:last>Rozenfeld</bib:last>
-        <bib:middle initial="B">Bill</bib:middle>
-      </bib:person>
-      <bib:person>
-        <bib:first>
-          <bib:namepart initial="A">Ashraf</bib:namepart>
-          <bib:namepart>A.</bib:namepart>
-        </bib:first>
-        <bib:last>Akhmedov</bib:last>
-      </bib:person>
-    </bib:author>
-    <bib:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bib:title>
-    <bib:title form="romanised">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bib:title>
-    <bib:title form="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bib:title>
-    <bib:location>Москва</bib:location>
-    <bib:location form="romanised">Moskva</bib:location>
-    <bib:location form="uniform">Moscow</bib:location>
-    <bib:publisher>Наука</bib:publisher>
-    <bib:publisher form="romanised">Nauka</bib:publisher>
-    <bib:publisher form="translated" xml:lang="en">Science</bib:publisher>
-    <bib:language>Russian</bib:language>
-    <bib:series>Научно-биографическая литература</bib:series>
-    <bib:series form="romanised">Nauchno-biograficheskaya literatura</bib:series>
-    <bib:date>1983</bib:date>
-    <bib:date datetype="orig">1985-04-02</bib:date>
-    <bib:date datetype ="event">
-      <bib:start>1990-05-16</bib:start>
-      <bib:end>1990-05-17</bib:end>
-    </bib:date>
-    <bib:date datetype="url">
-      <bib:start>1991-07-01</bib:start>
-      <bib:end></bib:end>
-    </bib:date>
-    <bib:pagetotal>240</bib:pagetotal>
-    <bib:related>
-      <bib:item type="reprint" string="Somestring" ids="rel1,rel2"/>
-    </bib:related>
-  </bib:entry>
-</bib:entries>
+<bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
+  <bltx:entry id="origmode" entrytype="book">
+    <bltx:id>origmodea1</bltx:id>
+    <bltx:id>origmodea2</bltx:id>
+    <bltx:author morenames="1">
+      <bltx:person gender="sm">
+        <bltx:first>
+          <bltx:namepart initial="П">Павел</bltx:namepart>
+          <bltx:namepart initial="Г">Георгиевич</bltx:namepart>
+        </bltx:first>
+        <bltx:last>Булгаков</bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:first>
+          <bltx:namepart>Борис-ZZ</bltx:namepart>
+          <bltx:namepart>Aбрамович</bltx:namepart>
+        </bltx:first>
+        <bltx:last>Розенфельд</bltx:last>
+        <bltx:middle initial="Б">Билл</bltx:middle>
+      </bltx:person>
+      <bltx:person>
+        <bltx:first>
+          <bltx:namepart initial="A">Ашраф</bltx:namepart>
+          <bltx:namepart>Ахмедович</bltx:namepart>
+        </bltx:first>
+        <bltx:last>Aхмедов</bltx:last>
+      </bltx:person>
+    </bltx:author>
+    <bltx:author form="uniform" morenames="1">
+      <bltx:person>
+        <bltx:first>
+          <bltx:namepart initial="P">Pavel</bltx:namepart>
+          <bltx:namepart initial="G">G.</bltx:namepart>
+        </bltx:first>
+        <bltx:last>Bulgakov</bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:first>
+          <bltx:namepart>Boris</bltx:namepart>
+          <bltx:namepart>A.</bltx:namepart>
+        </bltx:first>
+        <bltx:last>Rozenfeld</bltx:last>
+        <bltx:middle initial="B">Bill</bltx:middle>
+      </bltx:person>
+      <bltx:person>
+        <bltx:first>
+          <bltx:namepart initial="A">Ashraf</bltx:namepart>
+          <bltx:namepart>A.</bltx:namepart>
+        </bltx:first>
+        <bltx:last>Akhmedov</bltx:last>
+      </bltx:person>
+    </bltx:author>
+    <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
+    <bltx:title form="romanised">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bltx:title>
+    <bltx:title form="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bltx:title>
+    <bltx:location>Москва</bltx:location>
+    <bltx:location form="romanised">Moskva</bltx:location>
+    <bltx:location form="uniform">Moscow</bltx:location>
+    <bltx:publisher>Наука</bltx:publisher>
+    <bltx:publisher form="romanised">Nauka</bltx:publisher>
+    <bltx:publisher form="translated" xml:lang="en">Science</bltx:publisher>
+    <bltx:language>Russian</bltx:language>
+    <bltx:series>Научно-биографическая литература</bltx:series>
+    <bltx:series form="romanised">Nauchno-biograficheskaya literatura</bltx:series>
+    <bltx:date>1983</bltx:date>
+    <bltx:date datetype="orig">1985-04-02</bltx:date>
+    <bltx:date datetype ="event">
+      <bltx:start>1990-05-16</bltx:start>
+      <bltx:end>1990-05-17</bltx:end>
+    </bltx:date>
+    <bltx:date datetype="url">
+      <bltx:start>1991-07-01</bltx:start>
+      <bltx:end></bltx:end>
+    </bltx:date>
+    <bltx:pagetotal>240</bltx:pagetotal>
+    <bltx:related>
+      <bltx:item type="reprint" string="Somestring" ids="rel1,rel2"/>
+    </bltx:related>
+  </bltx:entry>
+</bltx:entries>
