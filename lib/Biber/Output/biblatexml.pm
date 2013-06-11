@@ -14,6 +14,7 @@ use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Text::Wrap;
 use XML::Writer;
+use Unicode::Normalize;
 $Text::Wrap::columns = 80;
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -92,201 +93,104 @@ sub set_output_entry {
   my $xml = $self->{output_target};
   my $xml_prefix = $self->{xml_prefix};
 
-  $xml->startTag([$xml_prefix, 'entry'], id => $key, entrytype => $bee);
+  $xml->startTag([$xml_prefix, 'entry'], id => NFC($key), entrytype => NFC($bee));
 
-  foreach my $f ($be->rawfields) {
-    # If IDS, CROSSREF and XDATA have been resolved, don't output them
-    # We can't use the usual skipout test for fields not to be output
-    # as this only refers to .bbl output and not to biblatexml ouput since this
-    # latter is not really a "processed" output, it is supposed to be something
-    # which could be again used as input and so we don't want to resolve/skip
-    # fields like DATE etc.
-    if (Biber::Config->getoption('tool_resolve')) {
-      next if lc($f) ~~ ['ids', 'xdata', 'crossref'];
-    }
-    my $value = decode_utf8($be->get_rawfield($f));
-
+  # If IDS, CROSSREF and XDATA have been resolved, don't output them
+  # We can't use the usual skipout test for fields not to be output
+  # as this only refers to .bbl output and not to biblatexml output since this
+  # latter is not really a "processed" output, it is supposed to be something
+  # which could be again used as input and so we don't want to resolve/skip
+  # fields like DATE etc.
+  unless (Biber::Config->getoption('tool_resolve')) {
+    #      next if lc($f) ~~ ['ids', 'xdata', 'crossref'];
     # TODO - ALIASES
-    # TODO - XDATA (also in bltxml)
+    # TODO - XDATA, CROSSREF
+  }
 
-    # Output name fields
-    foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
-      next unless my $nf = $be->get_field($namefield);
+  # Output name fields
+  foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
+    next unless my $nf = $be->get_field($namefield);
 
-      # Did we have "and others" in the data?
-      if ( $nf->get_morenames ) {
-        $xml->startTag([$xml_prefix, $namefield], morenames => 1);
+    # Did we have "and others" in the data?
+    if ( $nf->get_morenames ) {
+      $xml->startTag([$xml_prefix, $namefield], morenames => 1);
+    }
+    else {
+      $xml->startTag([$xml_prefix, $namefield]);
+    }
+
+    # Name loop
+    foreach my $n (@{$nf->names}) {
+      $n->name_to_biblatexml($xml, $self);
+    }
+
+    $xml->endTag(); # Names
+  }
+
+  # Output list fields
+  foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
+    next if $dm->field_is_datatype('name', $listfield); # name is a special list
+    next if $listfield eq 'ids'; # IDS is a special list
+    next if $listfield eq 'xdata'; # XDATA is a special list
+    if (my $lf = $be->get_field($listfield)) {
+      # Did we have a "more" list?
+      if (lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
+        $xml->startTag([$xml_prefix, $listfield], morelist => 1);
+        pop @$lf; # remove the last element in the array
       }
       else {
-        $xml->startTag([$xml_prefix, $namefield]);
+        $xml->startTag([$xml_prefix, $listfield]);
       }
 
-      # Name loop
-      foreach my $n (@{$nf->names}) {
-        $n->name_to_biblatexml($xml, $self);
+      # List loop
+      foreach my $f (@$lf) {
+        $xml->dataElement([$xml_prefix, 'item'], NFC($f));
       }
-
-      $xml->endTag();# Names
+      $xml->endTag();# List
     }
-
-  #   # Output list fields
-  #   foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
-  #     next if $dm->field_is_datatype('name', $listfield); # name is a special list
-  #     next if $dm->field_is_skipout($listfield);
-  #     if (my $lf = $be->get_field($listfield)) {
-  #       if ( lc($be->get_field($listfield)->[-1]) eq Biber::Config->getoption('others_string') ) {
-  #         $acc .= "      \\true{more$listfield}\n";
-  #         pop @$lf;             # remove the last element in the array
-  #       }
-  #       my $total = $#$lf + 1;
-  #       $acc .= "      \\list{$listfield}{$total}{%\n";
-  #       foreach my $f (@$lf) {
-  #         $acc .= "        {$f}%\n";
-  #       }
-  #       $acc .= "      }\n";
-  #     }
-  #   }
-
-  #   my $namehash = $be->get_field('namehash');
-  #   $acc .= "      \\strng{namehash}{$namehash}\n" if $namehash;
-  #   my $fullhash = $be->get_field('fullhash');
-  #   $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
-
-  #   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
-  #     # Might not have been set due to skiplab/dataonly
-  #     if (my $label = $be->get_field('labelalpha')) {
-  #       $acc .= "      \\field{labelalpha}{$label}\n";
-  #     }
-  #   }
-
-  #   # This is special, we have to put a marker for sortinit and then replace this string
-  #   # on output as it can vary between lists
-  #   $acc .= "      <BDS>SORTINIT</BDS>\n";
-
-  #   # The labeldate option determines whether "extrayear" is output
-  #   if ( Biber::Config->getblxoption('labeldate', $bee)) {
-  #     # Might not have been set due to skiplab/dataonly
-  #     if (my $nameyear = $be->get_field('nameyear')) {
-  #       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
-  #         $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
-  #       }
-  #     }
-  #     if (my $ly = $be->get_field('labelyear')) {
-  #       $acc .= "      \\field{labelyear}{$ly}\n";
-  #     }
-  #     if (my $lm = $be->get_field('labelmonth')) {
-  #       $acc .= "      \\field{labelmonth}{$lm}\n";
-  #     }
-  #     if (my $ld = $be->get_field('labelday')) {
-  #       $acc .= "      \\field{labelday}{$ld}\n";
-  #     }
-  #   }
-
-  #   # The labeltitle option determines whether "extratitle" is output
-  #   if ( Biber::Config->getblxoption('labeltitle', $bee)) {
-  #     # Might not have been set due to skiplab/dataonly
-  #     if (my $nametitle = $be->get_field('nametitle')) {
-  #       if ( Biber::Config->get_seen_nametitle($nametitle) > 1) {
-  #         $acc .= "      <BDS>EXTRATITLE</BDS>\n";
-  #       }
-  #     }
-  #   }
-
-  #   # The labeltitleyear option determines whether "extratitleyear" is output
-  #   if ( Biber::Config->getblxoption('labeltitleyear', $bee)) {
-  #     # Might not have been set due to skiplab/dataonly
-  #     if (my $titleyear = $be->get_field('titleyear')) {
-  #       if ( Biber::Config->get_seen_titleyear($titleyear) > 1) {
-  #         $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
-  #       }
-  #     }
-  #   }
-
-  #   # labeltitle is always output
-  #   if (my $lt = $be->get_field('labeltitle')) {
-  #     $acc .= "      \\field{labeltitle}{$lt}\n";
-  #   }
-
-  #   # The labelalpha option determines whether "extraalpha" is output
-  #   if ( Biber::Config->getblxoption('labelalpha', $bee)) {
-  #     # Might not have been set due to skiplab/dataonly
-  #     if (my $la = $be->get_field('labelalpha')) {
-  #       if (Biber::Config->get_la_disambiguation($la) > 1) {
-  #         $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
-  #       }
-  #     }
-  #   }
-
-  #   if ( Biber::Config->getblxoption('labelnumber', $bee) ) {
-  #     if (my $sh = $be->get_field('shorthand')) {
-  #       $acc .= "      \\field{labelnumber}{$sh}\n";
-  #     }
-  #     elsif (my $lnum = $be->get_field('labelnumber')) {
-  #       $acc .= "      \\field{labelnumber}{$lnum}\n";
-  #     }
-  #   }
-
-  #   if (defined($be->get_field('singletitle'))) {
-  #     $acc .= "      \\true{singletitle}\n";
-  #   }
-
-  #   if (my $ck = $be->get_field('clonesourcekey')) {
-  #     $acc .= "      \\field{clonesourcekey}{$ck}\n";
-  #   }
-
-  #   foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
-  #                       @{$dm->get_fields_of_type('field', 'key')},
-  #                       @{$dm->get_fields_of_datatype('integer')},
-  #                       @{$dm->get_fields_of_type('field', 'literal')},
-  #                       @{$dm->get_fields_of_type('field', 'code')}) {
-  #     next if $dm->field_is_skipout($lfield);
-  #     if ( ($dm->field_is_nullok($lfield) and
-  #           $be->field_exists($lfield)) or
-  #          $be->get_field($lfield) ) {
-  #       # we skip outputting the crossref or xref when the parent is not cited
-  #       # (biblatex manual, section 2.2.3)
-  #       # sets are a special case so always output crossref/xref for them since their
-  #       # children will always be in the .bbl otherwise they make no sense.
-  #       unless ($bee eq 'set') {
-  #         next if ($lfield eq 'crossref' and
-  #                  not $section->has_citekey($be->get_field('crossref')));
-  #         next if ($lfield eq 'xref' and
-  #                  not $section->has_citekey($be->get_field('xref')));
-  #       }
-  #       $acc .= _printfield($be, $lfield, $be->get_field($lfield) );
-  #     }
-  #   }
-
-  #   foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
-  #     if ( my $rf = $be->get_field($rfield) ) {
-  #       # range fields are an array ref of two-element array refs [range_start, range_end]
-  #       # range_end can be be empty for open-ended range or undef
-  #       my @pr;
-  #       foreach my $f (@$rf) {
-  #         if (defined($f->[1])) {
-  #           push @pr, $f->[0] . '\bibrangedash' . ($f->[1] ? ' ' . $f->[1] : '');
-  #         }
-  #         else {
-  #           push @pr, $f->[0];
-  #         }
-  #       }
-  #       my $bbl_rf = join('\bibrangessep ', @pr);
-  #       $acc .= "      \\field{$rfield}{$bbl_rf}\n";
-  #     }
-  #   }
-
-  #   foreach my $vfield ((@{$dm->get_fields_of_datatype('verbatim')},
-  #                        @{$dm->get_fields_of_datatype('uri')})) {
-  #     next if $dm->field_is_skipout($vfield);
-  #     if ( my $vf = $be->get_field($vfield) ) {
-  #       $acc .= "      \\verb{$vfield}\n";
-  #       $acc .= "      \\verb $vf\n      \\endverb\n";
-  #     }
-  #   }
-  #   if ( my $k = $be->get_field('keywords') ) {
-  #     $acc .= "      \\keyw{$k}\n";
-  #   }
   }
+
+  # Standard fields
+  foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
+                      @{$dm->get_fields_of_type('field', 'key')},
+                      @{$dm->get_fields_of_datatype('integer')},
+                      @{$dm->get_fields_of_type('field', 'literal')},
+                      @{$dm->get_fields_of_type('field', 'code')},
+                      @{$dm->get_fields_of_datatype('verbatim')},
+                      @{$dm->get_fields_of_datatype('uri')}) {
+    if ( ($dm->field_is_nullok($lfield) and
+          $be->field_exists($lfield)) or
+         $be->get_field($lfield) ) {
+      my $f = $be->get_field($lfield);
+      $xml->dataElement([$xml_prefix, $lfield], NFC($f));
+    }
+  }
+
+  # Range fields
+  foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
+    if ( my $rf = $be->get_field($rfield) ) {
+      # range fields are an array ref of two-element array refs [range_start, range_end]
+      # range_end can be be empty for open-ended range or undef
+      $xml->startTag([$xml_prefix, $rfield]);
+      $xml->startTag([$xml_prefix, 'list']);
+
+      foreach my $f (@$rf) {
+        $xml->startTag([$xml_prefix, 'item']);
+        if (defined($f->[1])) {
+          $xml->dataElement([$xml_prefix, 'start'], NFC($f->[0]));
+          $xml->dataElement([$xml_prefix, 'end'], NFC($f->[1]));
+        }
+        else {
+          $xml->characters(NFC($f->[0]));
+        }
+        $xml->endTag();# item
+      }
+      $xml->endTag();# list
+      $xml->endTag();# range
+    }
+  }
+
+
 
   $xml->endTag();
 

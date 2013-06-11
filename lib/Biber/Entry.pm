@@ -675,8 +675,9 @@ sub resolve_xdata {
         if (my $recurse_xdata = $xdatum_entry->get_field('xdata')) { # recurse
           $xdatum_entry->resolve_xdata($recurse_xdata);
         }
-        # For tool mode we need to copy the raw fields
-        if (Biber::Config->getoption('tool')) {
+        # For tool mode with bibtex output we need to copy the raw fields
+        if (Biber::Config->getoption('tool') and
+            Biber::Config->getoption('output_format') eq 'bibtex') {
           foreach my $field ($xdatum_entry->rawfields()) { # set raw fields
             $self->set_rawfield($field, $xdatum_entry->get_rawfield($field));
             $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
@@ -776,8 +777,9 @@ sub inherit_from {
                            "' as '" .
                            $field->{target} .
                            "' from entry '$source_key'");
-            # For tool mode we need to copy the raw fields
-            if (Biber::Config->getoption('tool')) {
+            # For tool mode with bibtex output we need to copy the raw fields
+            if (Biber::Config->getoption('tool') and
+                Biber::Config->getoption('output_format') eq 'bibtex') {
               $self->set_rawfield($field->{target}, $parent->get_rawfield($field->{source}));
             }
             else {
@@ -807,8 +809,9 @@ sub inherit_from {
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
             $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
-            # For tool mode we need to copy the raw fields
-            if (Biber::Config->getoption('tool')) {
+            # For tool mode with bibtex output we need to copy the raw fields
+            if (Biber::Config->getoption('tool') and
+                Biber::Config->getoption('output_format') eq 'bibtex') {
               $self->set_rawfield($field, $parent->get_rawfield($field));
             }
             else {

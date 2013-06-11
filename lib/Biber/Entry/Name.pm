@@ -8,6 +8,7 @@ use Biber::Config;
 use Data::Dump qw( pp );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
+use Unicode::Normalize;
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -558,7 +559,7 @@ sub _name_part_to_bltxml {
       else {
         $xml->startTag([$xml_prefix, 'namepart']);
       }
-      $xml->characters($parts->[$i]);
+      $xml->characters(NFC($parts->[$i]));
       $xml->endTag();
     }
     $xml->endTag();
