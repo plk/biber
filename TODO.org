@@ -2,6 +2,7 @@
 ** Document that maps must specify form/lang, there is no auto mapping of all field variants. This would be messy at best.
 ** Inidividual name hashes are different between variants - does this matter?
 ** Get rid of origtitle, origpublisher, origlocation?
+** Tool mode stuff - does it account for ms?
 * New tool mode option for output type
 * Biblatexml output
 * Docs - not all tool mode options are relevant for all output types, table in docs saying which does what
