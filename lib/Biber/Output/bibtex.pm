@@ -87,7 +87,7 @@ sub set_output_entry {
   foreach my $f ($be->rawfields) {
     # If IDS, CROSSREF and XDATA have been resolved, don't output them
     # We can't use the usual skipout test for fields not to be output
-    # as this only refers to .bbl output and not to bibtex ouput since this
+    # as this only refers to .bbl output and not to bibtex output since this
     # latter is not really a "processed" output, it is supposed to be something
     # which could be again used as input and so we don't want to resolve/skip
     # fields like DATE etc.
@@ -185,15 +185,6 @@ sub create_output_section {
     my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
     $self->set_output_entry($be, $section, Biber::Config->get_dm);
   }
-
-  # # We rely on the order of this array for the order of the output
-  # foreach my $key ($section->get_orig_order_citekeys) {
-  #   my $be = $section->bibentry($key);
-  #   $self->set_output_entry($be, $section, Biber::Config->get_dm);
-
-  #   # Preserve order as we won't sort later in tool mode and we need original bib order
-  #   push @{$self->{output_data}{ENTRIES_ORDER}}, $key;
-  # }
 
   # Make sure the output object knows about the output section
   $self->set_output_section($secnum, $section);

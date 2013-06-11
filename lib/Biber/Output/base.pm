@@ -15,13 +15,13 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head1 NAME
 
-Biber::Output::Base - base class for Biber output modules.
+Biber::Output::base - base class for Biber output modules.
 
 =cut
 
 =head2 new
 
-    Initialize a Biber::Output::Base object
+    Initialize a Biber::Output::base object
 
 =cut
 
@@ -44,7 +44,7 @@ sub new {
 
 =head2 set_output_target_file
 
-    Set the output target file of a Biber::Output::Base object
+    Set the output target file of a Biber::Output::base object
     A convenience around set_output_target so we can keep track of the
     filename
 
@@ -65,7 +65,7 @@ sub set_output_target_file {
 
 =head2 set_output_target
 
-    Set the output target of a Biber::Output::Base object
+    Set the output target of a Biber::Output::base object
 
 =cut
 
@@ -78,7 +78,7 @@ sub set_output_target {
 
 =head2 set_output_head
 
-    Set the output head of a Biber::Output::Base object
+    Set the output head of a Biber::Output::base object
     $data could be anything - the caller is expected to know.
 
 =cut
@@ -92,7 +92,7 @@ sub set_output_head {
 
 =head2 set_output_tail
 
-    Set the output tail of a Biber::Output::Base object
+    Set the output tail of a Biber::Output::base object
     $data could be anything - the caller is expected to know.
 
 =cut
@@ -134,7 +134,7 @@ sub get_output_tail {
 
 =head2 add_output_head
 
-    Add to the head output data of a Biber::Output::Base object
+    Add to the head output data of a Biber::Output::base object
     The base class method just does a string append
 
 =cut
@@ -148,7 +148,7 @@ sub add_output_head {
 
 =head2 add_output_tail
 
-    Add to the tail output data of a Biber::Output::Base object
+    Add to the tail output data of a Biber::Output::base object
     The base class method just does a string append
 
 =cut
@@ -259,7 +259,7 @@ sub get_los {
 
 =head2 set_output_entry
 
-    Add an entry output to a Biber::Output::Base object
+    Add an entry output to a Biber::Output::base object
     The base class method just does a dump
 
 =cut
