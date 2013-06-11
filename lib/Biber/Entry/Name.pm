@@ -495,6 +495,76 @@ sub get_nameinitstring {
   return $self->{nameinitstring};
 }
 
+=head2 name_to_biblatexml {
+
+    Create biblatexml data for a name
+
+=cut
+
+sub name_to_biblatexml {
+  my $self = shift;
+  my $xml = shift;
+  my $out = shift;
+  my $xml_prefix = $out->{xml_prefix};
+  $xml->startTag([$xml_prefix, 'person']);
+
+  # lastname
+  _name_part_to_bltxml($xml,
+                       $xml_prefix,
+                       $self->get_lastname,
+                       $self->get_lastname_i,
+                       'last');
+
+  # firstname
+  _name_part_to_bltxml($xml,
+                       $xml_prefix,
+                       $self->get_firstname,
+                       $self->get_firstname_i,
+                       'first');
+
+  # middlename
+  _name_part_to_bltxml($xml,
+                       $xml_prefix,
+                       $self->get_middlename,
+                       $self->get_middlename_i,
+                       'middle');
+
+  # prefix
+  _name_part_to_bltxml($xml,
+                       $xml_prefix,
+                       $self->get_prefix,
+                       $self->get_prefix_i,
+                       'prefix');
+
+  # suffix
+  _name_part_to_bltxml($xml,
+                       $xml_prefix,
+                       $self->get_suffix,
+                       $self->get_suffix_i,
+                       'suffix');
+
+  $xml->endTag(); # Name
+}
+
+sub _name_part_to_bltxml {
+  my ($xml, $xml_prefix, $np, $nip, $npn) = @_;
+  if ($np) {
+    $xml->startTag([$xml_prefix, $npn]);
+    my $parts = [split(/[\s~]/, $np)];
+    for (my $i=0;$i <= $#$parts;$i++) {
+      if (my $init = $nip->[$i]) {
+        $xml->startTag([$xml_prefix, 'namepart'], initial => $init);
+      }
+      else {
+        $xml->startTag([$xml_prefix, 'namepart']);
+      }
+      $xml->characters($parts->[$i]);
+      $xml->endTag();
+    }
+    $xml->endTag();
+  }
+}
+
 =head2 name_to_bbl {
 
     Return bbl data for a name

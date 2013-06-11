@@ -258,10 +258,10 @@ else {
   }
   elsif (Biber::Config->getoption('tool')) {
     if (Biber::Config->getoption('output_format') eq 'bibtex') { # tool .bib output
-      $outfile = $ARGV[0] =~ s/\.bib$/_bibertool.bib/r;
+      $outfile = $ARGV[0] =~ s/\..+$/_bibertool.bib/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'biblatexml') { # tool .blxtxml output
-      $outfile = $ARGV[0] =~ s/\.bltxml$/_bibertool.bltxml/r;
+      $outfile = $ARGV[0] =~ s/\..+$/_bibertool.bltxml/r;
     }
   }
   else { # .bbl output
@@ -317,6 +317,12 @@ else { # .bbl output
   $biber->set_output_obj(Biber::Output::bbl->new());
 }
 
+# Get reference to output object
+my $biberoutput = $biber->get_output_obj;
+
+# Set the output target
+$biberoutput->set_output_target_file($outfile);
+
 # Do all the real work
 Biber::Config->getoption('tool') ? $biber->prepare_tool : $biber->prepare;
 
@@ -328,13 +334,6 @@ if (Biber::Config->getoption('trace')) {
     $biber->_stringdump,
     "\n###########################################################")
 }
-
-
-# Get reference to output object
-my $biberoutput = $biber->get_output_obj;
-
-# Set the output target
-$biberoutput->set_output_target_file($outfile);
 
 # Write the output to the target
 $biberoutput->output;

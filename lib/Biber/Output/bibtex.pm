@@ -87,7 +87,7 @@ sub set_output_entry {
   foreach my $f ($be->rawfields) {
     # If IDS, CROSSREF and XDATA have been resolved, don't output them
     # We can't use the usual skipout test for fields not to be output
-    # as this only refers to .bbl output and not to bibtex ouput since this
+    # as this only refers to .bbl output and not to bibtex output since this
     # latter is not really a "processed" output, it is supposed to be something
     # which could be again used as input and so we don't want to resolve/skip
     # fields like DATE etc.
