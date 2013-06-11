@@ -33,7 +33,7 @@ my $logger = Log::Log4perl::get_logger('main');
 my $orig_key_order = {};
 
 Readonly::Scalar our $BIBLATEXML_NAMESPACE_URI => 'http://biblatex-biber.sourceforge.net/biblatexml';
-Readonly::Scalar our $NS => 'bib';
+Readonly::Scalar our $NS => 'bltx';
 
 # Determine handlers from data model
 my $dm = Biber::Config->get_dm;
