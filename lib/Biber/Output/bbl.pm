@@ -351,16 +351,17 @@ sub set_output_entry {
     next if $dm->field_is_skipout($listfield);
 
     # Don't need a per-form/lang more<list> field
-    if ( $be->get_field($listfield) and
-         lc($be->get_field($listfield)->[-1]) eq Biber::Config->getoption('others_string') ) {
-      $acc .= "      \\true{more$listfield}\n";
+    if (my $lf = $be->get_field($listfield)) {
+      if (lc($lf->[-1]) eq Biber::Config->getoption('others_string')) {
+        $acc .= "      \\true{more$listfield}\n";
+      }
     }
 
     # loop over all list forms and langs
     foreach my $form ($be->get_field_form_names($listfield)) {
       foreach my $lang ($be->get_field_form_lang_names($listfield, $form)) {
         if (my $lf = $be->get_field($listfield, $form, $lang)) {
-          if ( lc($be->get_field($listfield, $form, $lang)->[-1]) eq 'others' ) {
+          if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
             pop @$lf;           # remove the last element in the array
           }
           my $total = $#$lf + 1;

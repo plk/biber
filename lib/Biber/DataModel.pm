@@ -40,17 +40,27 @@ sub new {
     # In case of conflicts, we need to remove the previous definitions since
     # later overrides earlier
     if (my $previous = $self->{fieldsbyname}{$f->{content}}) {
-      @{$self->{fieldsbytype}{$previous->{'fieldtype'}}{$previous->{'datatype'}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbytype}{$previous->{'fieldtype'}}{$previous->{'datatype'}}};
+
+      if ($f->{contenttype}) {
+        @{$self->{fieldsbytype}{$previous->{'fieldtype'}}{$previous->{'datatype'}}{$previous->{'contenttype'}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbytype}{$previous->{'fieldtype'}}{$previous->{'datatype'}}{$previous->{'contenttype'}}};
+      }
+      @{$self->{fieldsbytype}{$previous->{'fieldtype'}}{$previous->{'datatype'}}{'*'}} = grep {$_ ne $f->{content}} @{$self->{fieldsbytype}{$previous->{'fieldtype'}}{$previous->{'datatype'}}{'*'}};
       @{$self->{fieldsbyfieldtype}{$previous->{'fieldtype'}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbyfieldtype}{$previous->{'fieldtype'}}};
       @{$self->{fieldsbydatatype}{$previous->{'datatype'}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbydatatype}{$previous->{'datatype'}}};
+      @{$self->{fieldsbycontenttype}{$previous->{'contenttype'}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbycontenttype}{$previous->{'contenttype'}}};
       delete $self->{fieldsbyname}{$f->{content}};
     }
 
-    $self->{fieldsbyname}{$f->{content}} = {'fieldtype' => $f->{fieldtype},
-                                            'datatype'  => $f->{datatype}};
-    push @{$self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}}, $f->{content};
+    $self->{fieldsbyname}{$f->{content}} = {'fieldtype'   => $f->{fieldtype},
+                                            'datatype'    => $f->{datatype},
+                                            'contenttype' => $f->{contenttype} || 'default'};
+    if ($f->{contenttype}) {
+      push @{$self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}{$f->{contenttype}}}, $f->{content};
+    }
+    push @{$self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}{'*'}}, $f->{content};
     push @{$self->{fieldsbyfieldtype}{$f->{fieldtype}}}, $f->{content};
     push @{$self->{fieldsbydatatype}{$f->{datatype}}}, $f->{content};
+    push @{$self->{fieldsbycontenttype}{$f->{contenttype} || 'default'}}, $f->{content};
 
     # check null_ok
     if ($f->{nullok}) {
@@ -239,6 +249,21 @@ sub get_fields_of_fieldtype {
   return $f ? [ sort @$f ] : [];
 }
 
+=head2 get_fields_of_contenttype
+
+    Retrieve fields of a certain biblatex contenttype from data model
+    Return in sorted order so that bbl order doesn't change when changing
+    .bcf. This really messes up tests otherwise.
+
+=cut
+
+sub get_fields_of_contenttype {
+  my ($self, $contenttype) = @_;
+  my $f = $self->{fieldsbycontenttype}{$contenttype};
+  return $f ? [ sort @$f ] : [];
+}
+
+
 =head2 get_fields_of_datatype
 
     Retrieve fields of a certain biblatex datatype from data model
@@ -263,8 +288,15 @@ sub get_fields_of_datatype {
 =cut
 
 sub get_fields_of_type {
-  my ($self, $fieldtype, $datatype) = @_;
-  my $f = $self->{fieldsbytype}{$fieldtype}{$datatype};
+  my ($self, $fieldtype, $datatype, $contenttype) = @_;
+  my $f;
+  if ($contenttype) {
+    $f = $self->{fieldsbytype}{$fieldtype}{$datatype}{$contenttype};
+  }
+  else {
+    $f = $self->{fieldsbytype}{$fieldtype}{$datatype}{'*'};
+  }
+
   return $f ? [ sort @$f ] : [];
 }
 
@@ -289,6 +321,18 @@ sub get_datatype {
   my ($self, $field) = @_;
   return $self->{fieldsbyname}{$field}{datatype};
 }
+
+=head2 get_contenttype
+
+    Returns the contenttype of a field
+
+=cut
+
+sub get_contenttype {
+  my ($self, $field) = @_;
+  return $self->{fieldsbyname}{$field}{contenttype};
+}
+
 
 =head2 get_dm_for_field
 

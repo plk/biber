@@ -496,6 +496,15 @@
                     <value>list</value>
                   </choice>
                 </attribute>
+                <optional>
+                  <!--
+                    contenttype is a semantic specification of the field contents used to further
+                    fields from one another on the basis of type
+                  -->
+                  <attribute name="contenttype">
+                    <value>datepart</value>
+                  </attribute>
+                </optional>
                 <!-- datatype of field content -->
                 <attribute name="datatype">
                   <choice>

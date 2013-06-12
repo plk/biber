@@ -44,7 +44,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
-  process_entry_options escape_label unescape_label biber_decode_utf8 out};
+  process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date};
 
 =head1 FUNCTIONS
 
@@ -917,6 +917,23 @@ sub process_entry_options {
     }
   }
   return;
+}
+
+=head2 parse_date
+
+  Simple parse of ISO8601 dates because not decent module exists for this that
+  doesn't default the missing components
+
+=cut
+
+sub parse_date {
+  my $date = shift;
+  # We are not validating dates here, just syntax parsing
+  my $date_re = qr/(\d{4}) # year
+                   (?:-(\d{2}))? # month
+                   (?:-(\d{2}))? # day
+                  /xms;
+  return $date =~ m|\A$date_re(/)?(?:$date_re)?\z|xms;
 }
 
 =head2 biber_decode_utf8

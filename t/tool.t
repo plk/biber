@@ -34,6 +34,7 @@ $biber->set_output_obj(Biber::Output::bibtex->new());
 # Biber options
 Biber::Config->setoption('tool', 1);
 Biber::Config->setoption('tool_resolve', 1);
+Biber::Config->setoption('output_format', 'bibtex');
 Biber::Config->setoption('sortlocale', 'C');
 
 # THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
