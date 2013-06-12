@@ -151,25 +151,22 @@ sub set_output_entry {
   }
 
   # Standard fields
-  foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
+  foreach my $field (sort @{$dm->get_fields_of_type('field', 'entrykey')},
                       @{$dm->get_fields_of_type('field', 'key')},
                       @{$dm->get_fields_of_type('field', 'literal')},
                       @{$dm->get_fields_of_type('field', 'code')},
                       @{$dm->get_fields_of_datatype('integer')},
                       @{$dm->get_fields_of_datatype('verbatim')},
                       @{$dm->get_fields_of_datatype('uri')}) {
-    if ( ($dm->field_is_nullok($lfield) and
-          $be->field_exists($lfield)) or
-         $be->get_field($lfield) ) {
-      my $f = $be->get_field($lfield);
+    if ( ($dm->field_is_nullok($field) and
+          $be->field_exists($field)) or
+         $be->get_field($field) ) {
+      my $f = $be->get_field($field);
 
-      # These can have come from splitting DATE in which case we ignore them as *DATE
-      # fields are dealt with elsewhere
-      if ($lfield ~~ ['year', 'month']) {
-        next if $be->get_field('datesplit');
-      }
+      # date related fields need special handling
+      next if $field =~ m/(?:year|month|day)\z/xms;
 
-      $xml->dataElement([$xml_prefix, $lfield], NFC($f));
+      $xml->dataElement([$xml_prefix, $field], NFC($f));
     }
   }
 
@@ -199,7 +196,20 @@ sub set_output_entry {
 
   # Date fields
   foreach my $dfield (@{$dm->get_fields_of_type('field', 'date')}) {
-    
+    if ( my $df = $be->get_field($dfield) ) {
+      if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) = parse_date($df)) {
+        if ($dfield =~ m/\A(.+)date\z/xms;) {
+          $xml->startTag([$xml_prefix, 'date'], datetype => $1);
+        }
+        else {
+          $xml->startTag([$xml_prefix, 'date']);
+        }
+
+        $xml->dataElement([$xml_prefix, 'start'], NFC());
+        $xml->dataElement([$xml_prefix, 'end'], NFC());
+
+    }
+      $xml->endTag();# date
   }
 
   $xml->endTag();
