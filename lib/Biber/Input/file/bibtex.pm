@@ -699,17 +699,10 @@ sub _date {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
 
-  # We are not validating dates here, just syntax parsing
-  my $date_re = qr/(\d{4}) # year
-                   (?:-(\d{2}))? # month
-                   (?:-(\d{2}))? # day
-                  /xms;
-  if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) =
-      $date =~ m|\A$date_re(/)?(?:$date_re)?\z|xms) {
-    # did this entry get its year/month fields from splitting an ISO8601 date field?
+  if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) = parse_date($date)) {
+    # Did this entry get its year/month fields from splitting an ISO8601 date field?
     # We only need to know this for date, year/month as year/month can also
-    # be explicitly set. It makes a difference on how we do any potential future
-    # date validation
+    # be explicitly set. This is useful to know in various places.
     $bibentry->set_field('datesplit', 1) if $datetype eq '';
     # Some warnings for overwriting YEAR and MONTH from DATE
     if ($byear and

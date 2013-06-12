@@ -153,15 +153,22 @@ sub set_output_entry {
   # Standard fields
   foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
                       @{$dm->get_fields_of_type('field', 'key')},
-                      @{$dm->get_fields_of_datatype('integer')},
                       @{$dm->get_fields_of_type('field', 'literal')},
                       @{$dm->get_fields_of_type('field', 'code')},
+                      @{$dm->get_fields_of_datatype('integer')},
                       @{$dm->get_fields_of_datatype('verbatim')},
                       @{$dm->get_fields_of_datatype('uri')}) {
     if ( ($dm->field_is_nullok($lfield) and
           $be->field_exists($lfield)) or
          $be->get_field($lfield) ) {
       my $f = $be->get_field($lfield);
+
+      # These can have come from splitting DATE in which case we ignore them as *DATE
+      # fields are dealt with elsewhere
+      if ($lfield ~~ ['year', 'month']) {
+        next if $be->get_field('datesplit');
+      }
+
       $xml->dataElement([$xml_prefix, $lfield], NFC($f));
     }
   }
@@ -190,7 +197,10 @@ sub set_output_entry {
     }
   }
 
-
+  # Date fields
+  foreach my $dfield (@{$dm->get_fields_of_type('field', 'date')}) {
+    
+  }
 
   $xml->endTag();
 
