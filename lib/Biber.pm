@@ -3092,10 +3092,11 @@ sub fetch_data {
   my @citekeys = $section->get_static_citekeys;
   no strict 'refs'; # symbolic references below ...
 
-  # Clear all T::B macro definitions between sections
-  # T::B never clears these
-  $logger->debug('Clearing Text::BibTeX macros definitions');
-  Text::BibTeX::delete_all_macros();
+  # Clear all T::B macro definitions between sections if asked as T::B never clears these
+  if (Biber::Config->getoption('clrmacros')) {
+    $logger->debug('Clearing Text::BibTeX macros definitions');
+    Text::BibTeX::delete_all_macros();
+  }
 
   # (Re-)define the old BibTeX month macros to what biblatex wants unless user stops this
   unless (Biber::Config->getoption('nostdmacros')) {
@@ -3113,6 +3114,7 @@ sub fetch_data {
                   'dec' => '12');
 
     foreach my $mon (keys %months) {
+      Text::BibTeX::delete_macro($mon);
       Text::BibTeX::add_macro_text($mon, $months{$mon});
     }
   }
