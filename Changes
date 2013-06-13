@@ -1,6 +1,7 @@
 Revision history for Biber
 
 1.7    (unreleased)
+       * Added clrmacros option
        * Added map_nomatch
        * Added --tool_macro_fields option
        * Exposed sorting option to user-level config file (so sorting in tool mode is possible)

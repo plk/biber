@@ -102,6 +102,7 @@ our %DM_DATATYPES = (
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 
 our $CONFIG_DEFAULT_BIBER = {
+  clrmacros           => { content => 0 },
   collate             => { content => 1 },
   collate_options     => { option => { level => 4, variable => 'non-ignorable' }},
   graph               => { content => 0 },

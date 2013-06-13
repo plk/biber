@@ -164,7 +164,7 @@ sub set_output_entry {
       my $f = $be->get_field($field);
 
       # date related fields need special handling
-      next if $field =~ m/(?:year|month|day)\z/xms;
+      next if $dm->get_contenttype($field) eq 'datepart';
 
       $xml->dataElement([$xml_prefix, $field], NFC($f));
     }
@@ -195,21 +195,40 @@ sub set_output_entry {
   }
 
   # Date fields
-  foreach my $dfield (@{$dm->get_fields_of_type('field', 'date')}) {
+  foreach my $dfield (@{$dm->get_fields_of_contenttype('datepart')}) {
+    my %dinfo;
     if ( my $df = $be->get_field($dfield) ) {
-      if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) = parse_date($df)) {
-        if ($dfield =~ m/\A(.+)date\z/xms;) {
-          $xml->startTag([$xml_prefix, 'date'], datetype => $1);
+      # There are some assumptions here about field names which is not nice but
+      # they are part of the default biblatex data model which is unlikely to be
+      # changed by users
+
+      if ($dfield =~ /^(url|orig|event)(end)?(.+)$/) {
+        my $dt = $1 || 'MAIN'; # Normal data has no qualifier prefix like "url" etc.
+        if ($2) {
+          $dinfo{$1}{end}{$3} = $df;
         }
         else {
-          $xml->startTag([$xml_prefix, 'date']);
+          $dinfo{$1}{begin}{$4} = $df; # beginning of ranges have no qualifier like "end"
         }
-
-        $xml->dataElement([$xml_prefix, 'start'], NFC());
-        $xml->dataElement([$xml_prefix, 'end'], NFC());
-
+      }
     }
-      $xml->endTag();# date
+  }
+
+  foreach my $dp (keys %dinfo) {
+    if ($dp eq 'MAIN') {
+      $xml->startTag([$xml_prefix, 'date']);
+    }
+    else {
+      $xml->startTag([$xml_prefix, 'date'], datetype => $dp);
+    }
+
+    my $s = ;
+    my $e = ;
+
+    $xml->dataElement([$xml_prefix, 'start'], NFC($s));
+    $xml->dataElement([$xml_prefix, 'end'], NFC($e));
+
+    $xml->endTag();# date
   }
 
   $xml->endTag();

@@ -29,6 +29,7 @@ GetOptions(
            'bblsafechars',  # legacy alias for output_safechars
            'bblsafecharsset=s', # legacy alias for output_safecharsset
            'cache',
+           'clrmacros',
            'collate|C',
            'collate_options|c=s',
            'configfile|g=s',
@@ -378,6 +379,12 @@ C<biber> provides a replacement of the bibtex processor for users of biblatex.
 =item B<--cache>
 
 If running as a PAR::Packer binary, show the cache location and exit.
+
+=item B<--clrmacros>
+
+Clears any BibTeX macros (@STRING) between BibLaTeX refsections. This prevents
+BibTeX warnings about macro redefinitions if you are using the same datasource
+several times for different refsections.
 
 =item B<--collate|-C>
 
