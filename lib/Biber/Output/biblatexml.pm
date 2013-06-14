@@ -201,14 +201,13 @@ sub set_output_entry {
       # There are some assumptions here about field names which is not nice but
       # they are part of the default biblatex data model which is unlikely to be
       # changed by users
-
-      if ($dfield =~ /^(url|orig|event)(end)?(.+)$/) {
+      if ($dfield =~ /^(url|orig|event)?(end)?(.+)$/) {
         my $dt = $1 || 'MAIN'; # Normal data has no qualifier prefix like "url" etc.
         if ($2) {
-          $dinfo{$1}{end}{$3} = $df;
+          $dinfo{$dt}{end}{$3} = $df;
         }
         else {
-          $dinfo{$1}{begin}{$3} = $df; # beginning of ranges have no qualifier like "end"
+          $dinfo{$dt}{begin}{$3} = $df; # beginning of ranges have no qualifier like "end"
         }
       }
     }
