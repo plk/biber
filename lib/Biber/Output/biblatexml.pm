@@ -195,8 +195,8 @@ sub set_output_entry {
   }
 
   # Date fields
+  my %dinfo;
   foreach my $dfield (@{$dm->get_fields_of_contenttype('datepart')}) {
-    my %dinfo;
     if ( my $df = $be->get_field($dfield) ) {
       # There are some assumptions here about field names which is not nice but
       # they are part of the default biblatex data model which is unlikely to be
@@ -208,7 +208,7 @@ sub set_output_entry {
           $dinfo{$1}{end}{$3} = $df;
         }
         else {
-          $dinfo{$1}{begin}{$4} = $df; # beginning of ranges have no qualifier like "end"
+          $dinfo{$1}{begin}{$3} = $df; # beginning of ranges have no qualifier like "end"
         }
       }
     }
@@ -222,11 +222,19 @@ sub set_output_entry {
       $xml->startTag([$xml_prefix, 'date'], datetype => $dp);
     }
 
-    my $s = ;
-    my $e = ;
+    my @s;
+    my @e;
 
-    $xml->dataElement([$xml_prefix, 'start'], NFC($s));
-    $xml->dataElement([$xml_prefix, 'end'], NFC($e));
+    push @s, $dinfo{$dp}{begin}{year} if exists($dinfo{$dp}{begin}{year});
+    push @s, $dinfo{$dp}{begin}{month} if exists($dinfo{$dp}{begin}{month});
+    push @s, $dinfo{$dp}{begin}{day} if exists($dinfo{$dp}{begin}{day});
+
+    push @e, $dinfo{$dp}{end}{year} if exists($dinfo{$dp}{end}{year});
+    push @e, $dinfo{$dp}{end}{month} if exists($dinfo{$dp}{end}{month});
+    push @e, $dinfo{$dp}{end}{day} if exists($dinfo{$dp}{end}{day});
+
+    $xml->dataElement([$xml_prefix, 'start'], NFC(join('-', @s)));
+    $xml->dataElement([$xml_prefix, 'end'], NFC(join('-', @e)));
 
     $xml->endTag();# date
   }
