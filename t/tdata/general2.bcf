@@ -485,14 +485,29 @@
       <bcf:field source="title" target="maintitle"/>
       <bcf:field source="subtitle" target="mainsubtitle"/>
       <bcf:field source="titleaddon" target="maintitleaddon"/>
+      <bcf:field source="shorttitle" skip="true"/>
+      <bcf:field source="sorttitle" skip="true"/>
+      <bcf:field source="indextitle" skip="true"/>
+      <bcf:field source="indexsorttitle" skip="true"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="mvcollection" target="collection"/>
+      <bcf:type_pair source="mvcollection" target="reference"/>
       <bcf:type_pair source="mvcollection" target="incollection"/>
+      <bcf:type_pair source="mvcollection" target="inreference"/>
       <bcf:type_pair source="mvcollection" target="suppcollection"/>
+      <bcf:type_pair source="mvreference" target="collection"/>
+      <bcf:type_pair source="mvreference" target="reference"/>
+      <bcf:type_pair source="mvreference" target="incollection"/>
+      <bcf:type_pair source="mvreference" target="inreference"/>
+      <bcf:type_pair source="mvreference" target="suppcollection"/>
       <bcf:field source="title" target="maintitle"/>
       <bcf:field source="subtitle" target="mainsubtitle"/>
       <bcf:field source="titleaddon" target="maintitleaddon"/>
+      <bcf:field source="shorttitle" skip="true"/>
+      <bcf:field source="sorttitle" skip="true"/>
+      <bcf:field source="indextitle" skip="true"/>
+      <bcf:field source="indexsorttitle" skip="true"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="mvproceedings" target="proceedings"/>
@@ -500,13 +515,10 @@
       <bcf:field source="title" target="maintitle"/>
       <bcf:field source="subtitle" target="mainsubtitle"/>
       <bcf:field source="titleaddon" target="maintitleaddon"/>
-    </bcf:inherit>
-    <bcf:inherit>
-      <bcf:type_pair source="mvreference" target="reference"/>
-      <bcf:type_pair source="mvreference" target="inreference"/>
-      <bcf:field source="title" target="maintitle"/>
-      <bcf:field source="subtitle" target="mainsubtitle"/>
-      <bcf:field source="titleaddon" target="maintitleaddon"/>
+      <bcf:field source="shorttitle" skip="true"/>
+      <bcf:field source="sorttitle" skip="true"/>
+      <bcf:field source="indextitle" skip="true"/>
+      <bcf:field source="indexsorttitle" skip="true"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="book" target="inbook"/>
@@ -515,31 +527,64 @@
       <bcf:field source="title" target="booktitle"/>
       <bcf:field source="subtitle" target="booksubtitle"/>
       <bcf:field source="titleaddon" target="booktitleaddon"/>
+      <bcf:field source="shorttitle" skip="true"/>
+      <bcf:field source="sorttitle" skip="true"/>
+      <bcf:field source="indextitle" skip="true"/>
+      <bcf:field source="indexsorttitle" skip="true"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="collection" target="incollection"/>
+      <bcf:type_pair source="collection" target="inreference"/>
       <bcf:type_pair source="collection" target="suppcollection"/>
-      <bcf:field source="title" target="booktitle"/>
-      <bcf:field source="subtitle" target="booksubtitle"/>
-      <bcf:field source="titleaddon" target="booktitleaddon"/>
-    </bcf:inherit>
-    <bcf:inherit>
+      <bcf:type_pair source="reference" target="incollection"/>
       <bcf:type_pair source="reference" target="inreference"/>
+      <bcf:type_pair source="reference" target="suppcollection"/>
       <bcf:field source="title" target="booktitle"/>
       <bcf:field source="subtitle" target="booksubtitle"/>
       <bcf:field source="titleaddon" target="booktitleaddon"/>
+      <bcf:field source="shorttitle" skip="true"/>
+      <bcf:field source="sorttitle" skip="true"/>
+      <bcf:field source="indextitle" skip="true"/>
+      <bcf:field source="indexsorttitle" skip="true"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="proceedings" target="inproceedings"/>
       <bcf:field source="title" target="booktitle"/>
       <bcf:field source="subtitle" target="booksubtitle"/>
       <bcf:field source="titleaddon" target="booktitleaddon"/>
+      <bcf:field source="shorttitle" skip="true"/>
+      <bcf:field source="sorttitle" skip="true"/>
+      <bcf:field source="indextitle" skip="true"/>
+      <bcf:field source="indexsorttitle" skip="true"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="periodical" target="article"/>
       <bcf:type_pair source="periodical" target="suppperiodical"/>
       <bcf:field source="title" target="journaltitle"/>
       <bcf:field source="subtitle" target="journalsubtitle"/>
+      <bcf:field source="shorttitle" skip="true"/>
+      <bcf:field source="sorttitle" skip="true"/>
+      <bcf:field source="indextitle" skip="true"/>
+      <bcf:field source="indexsorttitle" skip="true"/>
+    </bcf:inherit>
+    <bcf:inherit>
+      <bcf:type_pair source="*" target="*"/>
+      <bcf:field source="ids" skip="true"/>
+      <bcf:field source="crossref" skip="true"/>
+      <bcf:field source="xref" skip="true"/>
+      <bcf:field source="entryset" skip="true"/>
+      <bcf:field source="entrysubtype" skip="true"/>
+      <bcf:field source="execute" skip="true"/>
+      <bcf:field source="label" skip="true"/>
+      <bcf:field source="options" skip="true"/>
+      <bcf:field source="presort" skip="true"/>
+      <bcf:field source="related" skip="true"/>
+      <bcf:field source="relatedoptions" skip="true"/>
+      <bcf:field source="relatedstring" skip="true"/>
+      <bcf:field source="relatedtype" skip="true"/>
+      <bcf:field source="shorthand" skip="true"/>
+      <bcf:field source="shorthandintro" skip="true"/>
+      <bcf:field source="sortkey" skip="true"/>
     </bcf:inherit>
   </bcf:inheritance>
   <bcf:sorting>

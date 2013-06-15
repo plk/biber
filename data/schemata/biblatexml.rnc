@@ -4,6 +4,7 @@ datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
 namespace user = "http://localhost/biblatexml/user"
 ## TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript
 ##        to db = "http://docbook.org/ns/docbook"
+## XDATA, IDS are not in here
 
 start = element entries {
      (article |

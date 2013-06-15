@@ -52,7 +52,7 @@ my $handlers = {
                             'uri'      => \&_uri,
                            },
                 'list' => {
-                           'entrykey' => \&_literal,
+                           'entrykey' => \&_list,
                            'key'      => \&_list,
                            'literal'  => \&_list,
                            'name'     => \&_name,
@@ -153,7 +153,7 @@ sub extract_entries {
       # We can't do this with a driver entry for the IDS field as this needs
       # an entry object creating first and the whole point of aliases is that
       # there is no entry object
-      foreach my $id ($entry->findnodes("./$NS:id")) {
+      foreach my $id ($entry->findnodes("./$NS:ids/$NS:item")) {
         my $ids = $id->textContent();
 
         # Skip aliases which are also real entry keys

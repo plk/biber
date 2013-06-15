@@ -788,12 +788,12 @@ sub resolve_alias_refs {
     }
     # XDATA
     if (my $xdata = $be->get_field('xdata')) {
-      my @resolved_keys;
-      foreach my $refkey (split /\s*,\s*/, $xdata) {
+      my $resolved_keys;
+      foreach my $refkey (@$xdata) {
         $refkey = $section->get_citekey_alias($refkey) // $refkey;
-        push @resolved_keys, $refkey;
+        push @$resolved_keys, $refkey;
       }
-      $be->set_datafield('xdata', join(',', @resolved_keys));
+      $be->set_datafield('xdata', @$resolved_keys);
     }
   }
 }
@@ -3206,7 +3206,7 @@ sub get_dependents {
 
       # xdata
       if (my $xdata = $be->get_field('xdata')) {
-        foreach my $xdatum (split /\s*,\s*/, $xdata) {
+        foreach my $xdatum (@$xdata) {
           # skip looking for dependent if it's already there (loop suppression)
           push @$new_deps, $xdatum unless $section->bibentry($xdatum);
           $logger->debug("Entry '$citekey' has xdata '$xdatum'");
@@ -3340,9 +3340,8 @@ sub remove_undef_dependent {
 
     # remove xdata
     if (my $xdata = $be->get_field('xdata')) {
-      my @xdatum = split /\s*,\s*/, $xdata;
-      if ($missing_key ~~ @xdatum) {
-        $be->set_datafield('xdata', join(',', grep {$_ ne $missing_key} @xdatum));
+      if ($missing_key ~~ @$xdata) {
+        $be->set_datafield('xdata', [ grep {$_ ne $missing_key} @$xdata ]) ;
         biber_warn("I didn't find a database entry for xdata entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
     }
