@@ -95,16 +95,33 @@ sub set_output_entry {
 
   $xml->startTag([$xml_prefix, 'entry'], id => NFC($key), entrytype => NFC($bee));
 
-  # If IDS, CROSSREF and XDATA have been resolved, don't output them
+  # Id field
+  if (my $ids = $be->get_field('ids')) {
+    $xml->startTag([$xml_prefix, 'id']);
+    foreach my $id (@$ids)) {
+      $xml->dataElement([$xml_prefix, 'item'], NFC($id));
+    }
+  $xml->endtTag;
+  }
+
+  # If CROSSREF and XDATA have been resolved, don't output them
   # We can't use the usual skipout test for fields not to be output
   # as this only refers to .bbl output and not to biblatexml output since this
   # latter is not really a "processed" output, it is supposed to be something
   # which could be again used as input and so we don't want to resolve/skip
   # fields like DATE etc.
   unless (Biber::Config->getoption('tool_resolve')) {
-    #      next if lc($f) ~~ ['ids', 'xdata', 'crossref'];
-    # TODO - ALIASES
-    # TODO - XDATA, CROSSREF
+    if (my $xdata = $be->get_field('xdata')) {
+      $xml->startTag([$xml_prefix, 'xdata']);
+      foreach my $xd (@$xdata)) {
+        $xml->dataElement([$xml_prefix, 'item'], NFC($xd));
+      }
+      $xml->endtTag;
+    }
+    if (my $crossref = $be->get_field('crossref')) {
+        $xml->dataElement([$xml_prefix, 'crossref'], NFC($crossref));
+      }
+    }
   }
 
   # Output name fields
@@ -166,7 +183,7 @@ sub set_output_entry {
       # date related fields need special handling
       next if $dm->get_contenttype($field) eq 'datepart';
 
-      $xml->dataElement([$xml_prefix, $field], NFC($f));
+      $xml->dataElement([$xml_prefix, $field], NFC($f)); 
     }
   }
 
@@ -232,9 +249,17 @@ sub set_output_entry {
     push @e, $dinfo{$dp}{end}{month} if exists($dinfo{$dp}{end}{month});
     push @e, $dinfo{$dp}{end}{day} if exists($dinfo{$dp}{end}{day});
 
-    $xml->dataElement([$xml_prefix, 'start'], NFC(join('-', @s)));
-    $xml->dataElement([$xml_prefix, 'end'], NFC(join('-', @e)));
+    my $end = join('-', @e);
 
+    # date range
+    if ($end or $dm->field_is_nullok("${dp}enddate")) {
+      $xml->dataElement([$xml_prefix, 'start'], NFC(join('-', @s)));
+      $xml->dataElement([$xml_prefix, 'end'], NFC(join('-', @e)));
+
+    }
+    else { # simple date
+      $xml->characters(NFC(join('-', @s)));
+    }
     $xml->endTag();# date
   }
 
