@@ -64,7 +64,7 @@ my $handlers = {
                             'uri'      => \&_uri,
                            },
                 'list' => {
-                           'entrykey' => \&_literal,
+                           'entrykey' => \&_csvlist,
                            'key'      => \&_list,
                            'literal'  => \&_list,
                            'name'     => \&_name,
@@ -766,7 +766,7 @@ sub _date {
   return;
 }
 
-# List fields
+# Bibtex list fields with listsep separator
 sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
   my $value = biber_decode_utf8($entry->get($f));
@@ -784,7 +784,14 @@ sub _list {
   return;
 }
 
-
+# CSV lists
+# These contain citekey lists and so form/lang is never relevant
+sub _csvlist {
+  my ($bibentry, $entry, $f) = @_;
+  my $vals = [ split(/\s*,\s*/, biber_decode_utf8($entry->get($f))) ];
+  $bibentry->set_datafield($f, $vals);
+  return;
+}
 
 =head2 cache_data
 

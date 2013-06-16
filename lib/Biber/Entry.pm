@@ -781,7 +781,7 @@ sub resolve_xdata {
   my $entry_key = $self->get_field('citekey');
   my $dm = Biber::Config->get_dm;
 
-  foreach my $xdatum (split /\s*,\s*/, $xdata) {
+  foreach my $xdatum (@$xdata) {
     unless (my $xdatum_entry = $section->bibentry($xdatum)) {
       biber_warn("Entry '$entry_key' references XDATA entry '$xdatum' which does not exist in section $secnum");
       next;
@@ -805,12 +805,14 @@ sub resolve_xdata {
         if (Biber::Config->getoption('tool') and
             Biber::Config->getoption('output_format') eq 'bibtex') {
           foreach my $field ($xdatum_entry->rawfields()) { # set raw fields
+            next if $field eq 'ids'; # Never inherit aliases
             $self->set_rawfield($field, $xdatum_entry->get_rawfield($field));
             $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
           }
         }
         else {
           foreach my $field ($xdatum_entry->datafields()) { # set fields
+            next if $field eq 'ids'; # Never inherit aliases
             if ($dm->field_is_multiscript($field)) {
               $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
             }

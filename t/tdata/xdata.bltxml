@@ -3,9 +3,15 @@
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
   <bltx:entry id="bltxxd1" entrytype="xdata">
     <bltx:addendum>Москва</bltx:addendum>
-    <bltx:xdata>bltxxd2</bltx:xdata>
+    <bltx:xdata>
+      <bltx:item>bltxxd2</bltx:item>
+      <bltx:item>bltxxd3</bltx:item>
+    </bltx:xdata>
   </bltx:entry>
   <bltx:entry id="bltxxd2" entrytype="xdata">
     <bltx:abstract>An abstract</bltx:abstract>
+  </bltx:entry>
+  <bltx:entry id="bltxxd3" entrytype="xdata">
+    <bltx:venue>venue</bltx:venue>
   </bltx:entry>
 </bltx:entries>

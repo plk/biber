@@ -597,6 +597,7 @@
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="*" target="*"/>
+      <bcf:field source="ids" skip="true"/>
       <bcf:field source="crossref" skip="true"/>
       <bcf:field source="xref" skip="true"/>
       <bcf:field source="entryset" skip="true"/>
@@ -606,6 +607,7 @@
       <bcf:field source="options" skip="true"/>
       <bcf:field source="presort" skip="true"/>
       <bcf:field source="related" skip="true"/>
+      <bcf:field source="relatedoptions" skip="true"/>
       <bcf:field source="relatedstring" skip="true"/>
       <bcf:field source="relatedtype" skip="true"/>
       <bcf:field source="shorthand" skip="true"/>

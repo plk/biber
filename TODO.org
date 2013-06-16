@@ -5,6 +5,7 @@
 ** Tool mode stuff - does it account for ms?
 * New tool mode option for output type
 * Biblatexml output
+** set, entryset, related - should be csv lists?
 * Docs - not all tool mode options are relevant for all output types, table in docs saying which does what
 * Sample XSLT transform but not in biber
 * bltxml either should have no schema or it should be dynamically created from the data model. A static schema is pointless
