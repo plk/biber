@@ -94,6 +94,7 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \field{abstract}{An abstract}
       \field{addendum}{Москва}
       \field{note}{A Note}
+      \field{venue}{venue}
       \field{year}{2003}
     \endentry
 |;
@@ -106,5 +107,6 @@ is($out->get_output_entry('macmillan:pub', $main), undef, 'xdata test - 4');
 chomp $stderr;
 is($stderr, "ERROR - Circular XDATA inheritance between 'loop'<->'loop:3'", 'Cyclic xdata error check');
 #print $stdout;
+#print $stderr;
 
 

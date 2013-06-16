@@ -793,7 +793,7 @@ sub resolve_alias_refs {
         $refkey = $section->get_citekey_alias($refkey) // $refkey;
         push @$resolved_keys, $refkey;
       }
-      $be->set_datafield('xdata', @$resolved_keys);
+      $be->set_datafield('xdata', $resolved_keys);
     }
   }
 }

@@ -12,6 +12,6 @@
     <bltx:abstract>An abstract</bltx:abstract>
   </bltx:entry>
   <bltx:entry id="bltxxd3" entrytype="xdata">
-    <bltx:note>note</bltx:note>
+    <bltx:venue>venue</bltx:venue>
   </bltx:entry>
 </bltx:entries>
