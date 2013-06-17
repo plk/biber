@@ -145,20 +145,18 @@ sub extract_entries {
     }
     if (m/\A([A-Z][A-Z0-9])\s\s\-\s*(.+)?\n\z/xms) {
       $last_tag = $1;
-      given ($1) {
-        when ('TY')              { $e = {'TY' => $2} }
-        when ('KW')              { push @{$e->{KW}}, $2 } # amalgamate keywords
-        when ('SP')              { $e->{SPEP}{SP} = $2 }  # amalgamate page range
-        when ('EP')              { $e->{SPEP}{EP} = $2 }  # amalgamate page range
-        when ('A1')              { push @{$e->{A1}}, $2 } # amalgamate names
-        when ('A2')              { push @{$e->{A2}}, $2 } # amalgamate names
-        when ('A3')              { push @{$e->{A3}}, $2 } # amalgamate names
-        when ('AU')              { push @{$e->{AU}}, $2 } # amalgamate names
-        when ('ED')              { push @{$e->{ED}}, $2 } # amalgamate names
-        when ('ER')              { if (exists($e->{KW})) {$e->{KW} = join(',', @{$e->{KW}})}
+      if ($1 eq 'TY')     { $e = {'TY' => $2} }
+      elsif ($1 eq 'KW')  { push @{$e->{KW}}, $2 } # amalgamate keywords
+      elsif ($1 eq 'SP')  { $e->{SPEP}{SP} = $2 }  # amalgamate page range
+      elsif ($1 eq 'EP')  { $e->{SPEP}{EP} = $2 }  # amalgamate page range
+      elsif ($1 eq 'A1')  { push @{$e->{A1}}, $2 } # amalgamate names
+      elsif ($1 eq 'A2')  { push @{$e->{A2}}, $2 } # amalgamate names
+      elsif ($1 eq 'A3')  { push @{$e->{A3}}, $2 } # amalgamate names
+      elsif ($1 eq 'AU')  { push @{$e->{AU}}, $2 } # amalgamate names
+      elsif ($1 eq 'ED')  { push @{$e->{ED}}, $2 } # amalgamate names
+      elsif ($1 eq 'ER')  { if (exists($e->{KW})) {$e->{KW} = join(',', @{$e->{KW}})}
                                    push @ris_entries, $e }
-        default                  { $e->{$1} = $2 }
-      }
+      else                { $e->{$1} = $2 }
     }
     elsif (m/\A(.+)\n\z/xms) { # Deal with stupid line continuations
       $e->{$last_tag} .= " $1";

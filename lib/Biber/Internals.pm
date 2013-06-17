@@ -104,14 +104,12 @@ sub _getnamehash_u {
       $hashkey .= $n->get_suffix;
     }
 
-    if ( $n->get_firstname ) {
-      given ($n->get_uniquename) {
-        when (2) {
-          $hashkey .= $n->get_firstname;
-        }
-        when (1) {
-          $hashkey .= join('', @{$n->get_firstname_i});
-        }
+    if ( $n->get_firstname and defined($n->get_uniquename)) {
+      if ($n->get_uniquename eq '2') {
+        $hashkey .= $n->get_firstname;
+      }
+      elsif ($n->get_uniquename eq '1') {
+        $hashkey .= join('', @{$n->get_firstname_i});
       }
     }
 
@@ -303,7 +301,7 @@ sub _labelpart {
     # length
     if (my $ic = $part->{ifnamecount}) {
       my $f = $part->{content};
-      if ( $f ~~ $dm->get_fields_of_type('list', 'name') or
+      if ( first {$f eq $_} @{$dm->get_fields_of_type('list', 'name')} or
           $f eq 'labelname') {
         # get-field doesn't need form/lang here as we are just counting names
         # and we assume that the name count is the same for all forms/langs
@@ -719,7 +717,7 @@ sub _label_listdisambiguation {
   _do_substr($lcache, $cache, $strings);
 
   # loop until the entire disambiguation cache is filled.
-  while (undef ~~ $lcache->{data}) {
+  while (grep { !defined } @{$lcache->{data}}) {
     _check_counts($lcache, $cache);
     foreach my $ambiguous_indices (@{$cache->{ambiguity}}) {
       my $ambiguous_strings = [@$strings[@$ambiguous_indices]]; # slice

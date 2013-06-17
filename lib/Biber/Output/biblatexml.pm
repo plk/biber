@@ -59,13 +59,15 @@ sub new {
 sub set_output_target_file {
   my $self = shift;
   my $toolfile = shift;
-  # Make the right casing function and store it
 
   $self->{output_target_file} = $toolfile;
   my $bltxml = 'http://biblatex-biber.sourceforge.net/biblatexml';
   $self->{xml_prefix} = $bltxml;
 
-  my $xml = XML::Writer->new(OUTPUT      => IO::File->new($toolfile, '>:encoding(UTF-8)'),
+  my $of = IO::File->new($toolfile, '>:encoding(UTF-8)');
+  $of->autoflush;# Needed for running tests to string refs
+
+  my $xml = XML::Writer->new(OUTPUT      => $of,
                              DATA_MODE   => 1,
                              DATA_INDENT => Biber::Config->getoption('tool_indent'),
                              NAMESPACES  => 1,
@@ -98,10 +100,10 @@ sub set_output_entry {
   # Id field
   if (my $ids = $be->get_field('ids')) {
     $xml->startTag([$xml_prefix, 'id']);
-    foreach my $id (@$ids)) {
+    foreach my $id (@$ids) {
       $xml->dataElement([$xml_prefix, 'item'], NFC($id));
     }
-  $xml->endtTag;
+  $xml->endTag;
   }
 
   # If CROSSREF and XDATA have been resolved, don't output them
@@ -113,14 +115,13 @@ sub set_output_entry {
   unless (Biber::Config->getoption('tool_resolve')) {
     if (my $xdata = $be->get_field('xdata')) {
       $xml->startTag([$xml_prefix, 'xdata']);
-      foreach my $xd (@$xdata)) {
+      foreach my $xd (@$xdata) {
         $xml->dataElement([$xml_prefix, 'item'], NFC($xd));
       }
-      $xml->endtTag;
+      $xml->endTag();
     }
     if (my $crossref = $be->get_field('crossref')) {
-        $xml->dataElement([$xml_prefix, 'crossref'], NFC($crossref));
-      }
+      $xml->dataElement([$xml_prefix, 'crossref'], NFC($crossref));
     }
   }
 
@@ -265,9 +266,6 @@ sub set_output_entry {
 
   $xml->endTag();
 
-  # Create an index by keyname for easy retrieval
-#  $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;
-
   return;
 }
 
@@ -287,19 +285,8 @@ sub output {
     $target_string = $self->{output_target_file};
   }
 
-  # for debugging mainly
-  # unless ($target) {
-  #   $target = new IO::File '>-';
-  # }
-
   $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
   $logger->debug("Writing entries in tool mode");
-
-  # There is only a (pseudo) section "0" in tool mode
-  # foreach my $key ($Biber::MASTER->sortlists->get_list(0, 'entry', 'tool')->get_keys) {
-  #   out($xml, ${$data->{ENTRIES}{0}{index}{$key}});
-  # }
-
   $xml->endTag();
   $xml->end();
 

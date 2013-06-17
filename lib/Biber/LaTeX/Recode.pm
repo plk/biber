@@ -112,7 +112,7 @@ sub init_schemes {
     my @set = split(/\s*,\s*/, $map->{set});
     my $type = $map->{type};
     my $map = $map->{map};
-    next unless $scheme_d ~~ @set or $scheme_e ~~ @set;
+    next unless first {$scheme_d eq @_} @set or first {$scheme_e eq $_} @set;
     foreach my $set (@set) {
       $remaps->{$set}{$type}{map} = { map {NFD($_->{from}{content}) => NFD($_->{to}{content})} @$map };
       $r_remaps->{$set}{$type}{map} = { reverse %{$remaps->{$set}{$type}{map}} };
@@ -195,19 +195,17 @@ sub latex_decode {
     foreach my $type (keys %{$remaps->{$scheme_d}}) {
       my $map = $remaps->{$scheme_d}{$type}{map};
       my $re = $remaps->{$scheme_d}{$type}{re};
-      given ($type) {
-        when ('negatedsymbols') {
-          $text =~ s/\\not\\($re)/$map->{$1}/ge if $re;
-        }
-        when ('superscripts') {
-          $text =~ s/\\textsuperscript{($re)}/$map->{$1}/ge if $re;
-        }
-        when ('cmdsuperscripts') {
-          $text =~ s/\\textsuperscript{\\($re)}/$map->{$1}/ge if $re;
-        }
-        when ('dings') {
-          $text =~ s/\\ding{([2-9AF][0-9A-F])}/$map->{$1}/ge;
-        }
+      if ($type eq 'negatedsymbols') {
+        $text =~ s/\\not\\($re)/$map->{$1}/ge if $re;
+      }
+      elsif ($type eq 'superscripts') {
+        $text =~ s/\\textsuperscript{($re)}/$map->{$1}/ge if $re;
+      }
+      elsif ($type eq 'cmssuperscripts') {
+        $text =~ s/\\textsuperscript{\\($re)}/$map->{$1}/ge if $re;
+      }
+      elsif ($type eq 'dings') {
+        $text =~ s/\\ding{([2-9AF][0-9A-F])}/$map->{$1}/ge;
       }
     }
 
@@ -224,7 +222,7 @@ sub latex_decode {
       my $re = $remaps->{$scheme_d}{$type}{re};
       next unless $re;
 
-      if ($type ~~ ['wordmacros', 'punctuation', 'symbols', 'greek']) {
+      if (first {$type eq $_} ('wordmacros', 'punctuation', 'symbols', 'greek')) {
         ## remove {} around macros that print one character
         ## by default we skip that, as it would break constructions like \foo{\i}
         if ($strip_outer_braces) {
@@ -274,19 +272,17 @@ sub latex_encode {
   foreach my $type (keys %{$r_remaps->{$scheme_e}}) {
     my $map = $r_remaps->{$scheme_e}{$type}{map};
     my $re = $r_remaps->{$scheme_e}{$type}{re};
-    given ($type) {
-      when ('negatedsymbols') {
+      if ($type eq 'negatedsymbols') {
         $text =~ s/($re)/"{\$\\not\\" . $map->{$1} . '$}'/ge;
       }
-      when ('superscripts') {
-        $text =~ s/($re)/"\\textsuperscript{" . $map->{$1} . "}"/ge;
-      }
-      when ('cmdsuperscripts') {
-        $text =~ s/($re)/"\\textsuperscript{\\" . $map->{$1} . "}"/ge;
-      }
-      when ('dings') {
-        $text =~ s/($re)/"\\ding{" . $map->{$1} . "}"/ge;
-      }
+    elsif ($type eq 'superscripts') {
+      $text =~ s/($re)/"\\textsuperscript{" . $map->{$1} . "}"/ge;
+    }
+    elsif ($type eq 'cmdsuperscripts') {
+      $text =~ s/($re)/"\\textsuperscript{\\" . $map->{$1} . "}"/ge;
+    }
+    elsif ($type eq 'dings') {
+      $text =~ s/($re)/"\\ding{" . $map->{$1} . "}"/ge;
     }
   }
 
@@ -329,7 +325,7 @@ sub latex_encode {
       # General macros (excluding special encoding excludes)
       $text =~ s/($re)/"{\\" . $map->{$1} . '}'/ge;
     }
-    if ($type ~~ ['punctuation', 'symbols', 'greek']) {
+    if (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
       # Math mode macros (excluding special encoding excludes)
       $text =~ s/($re)/"{\$\\" . $map->{$1} . '$}'/ge;
     }

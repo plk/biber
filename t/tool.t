@@ -37,7 +37,7 @@ Biber::Config->setoption('tool_resolve', 1);
 Biber::Config->setoption('output_format', 'bibtex');
 Biber::Config->setoption('sortlocale', 'C');
 
-# THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
+# THERE IS A CONFIG FILE BEING READ!
 
 # Now generate the information
 $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber program
@@ -47,15 +47,16 @@ my $main = $biber->sortlists->get_list(0, 'entry', 'tool');
 my $out = $biber->get_output_obj;
 
 my $t1 = q|@UNPUBLISHED{i3Š,
-  ABSTRACT    = {Some abstract %50 of which is useless},
-  AUTHOR      = {AAA and BBB and CCC and DDD and EEE},
-  DATE        = {2003},
-  INSTITUTION = {REPlaCEDte and early},
-  LISTA       = {list test},
-  LISTB       = {late and early},
-  NOTE        = {i3Š},
-  TITLE       = {Š title},
-  USERB       = {test},
+  ABSTRACT                = {Some abstract %50 of which is useless},
+  AUTHOR                  = {AAA and BBB and CCC and DDD and EEE},
+  DATE                    = {2003},
+  INSTITUTION             = {REPlaCEDte and early},
+  LISTA                   = {list test},
+  LISTB                   = {late and early},
+  NOTE                    = {i3Š},
+  TITLE                   = {Š title},
+  TITLE_TRANSLATED_FRENCH = {Le title},
+  USERB                   = {test},
 }
 
 |;

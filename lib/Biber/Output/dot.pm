@@ -311,13 +311,11 @@ sub _graph_inheritance {
   my ($type, $secnum) = @_;
   my $edgecolor;
 
-  given ($type) {
-    when ('crossref') {
-      $edgecolor = '#7d7879';
-    }
-    when ('xdata') {
-      $edgecolor = '#2ca314';
-    }
+  if ($type eq 'crossref') {
+    $edgecolor = '#7d7879';
+  }
+  elsif ($type eq 'xdata') {
+    $edgecolor = '#2ca314';
   }
 
   if (my $gr = Biber::Config->get_graph($type)) {

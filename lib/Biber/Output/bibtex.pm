@@ -63,16 +63,14 @@ sub set_output_entry {
 
   # Make the right casing function
   my $casing;
-  given (Biber::Config->getoption('tool_fieldcase')) {
-    when ('upper') {
-      $casing = sub {uc(shift)};
-    }
-    when ('lower') {
-      $casing = sub {lc(shift)};
-    }
-    when ('title') {
-      $casing = sub {ucfirst(shift)};
-    }
+  if (Biber::Config->getoption('tool_fieldcase') eq 'upper') {
+    $casing = sub {uc(shift)};
+  }
+  elsif (Biber::Config->getoption('tool_fieldcase') eq 'lower') {
+    $casing = sub {lc(shift)};
+  }
+  elsif (Biber::Config->getoption('tool_fieldcase') eq 'title') {
+    $casing = sub {ucfirst(shift)};
   }
 
   $acc .= '@';
@@ -92,7 +90,7 @@ sub set_output_entry {
     # which could be again used as input and so we don't want to resolve/skip
     # fields like DATE etc.
     if (Biber::Config->getoption('tool_resolve')) {
-      next if lc($f) ~~ ['xdata', 'crossref'];
+      next if first {lc($f) eq $_}  ('xdata', 'crossref');
     }
     # Save post-mapping data for tool mode
     my $value = decode_utf8($be->get_rawfield($f));
@@ -103,7 +101,7 @@ sub set_output_entry {
 
     # Don't wrap field which should be macros in braces
     my $mfs = Biber::Config->getoption('tool_macro_fields');
-    if (defined($mfs) and lc($f) ~~ [ map {lc($_)} split(/\s*,\s*/, $mfs) ]) {
+    if (defined($mfs) and first {lc($f) eq $_} map {lc($_)} split(/\s*,\s*/, $mfs) ) {
       $acc .= "$value,\n";
     }
     else {
