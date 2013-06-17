@@ -47,16 +47,19 @@ my $main = $biber->sortlists->get_list(0, 'entry', 'tool');
 my $out = $biber->get_output_obj;
 
 my $t1 = q|@UNPUBLISHED{i3Š,
-  ABSTRACT                = {Some abstract %50 of which is useless},
-  AUTHOR                  = {AAA and BBB and CCC and DDD and EEE},
-  DATE                    = {2003},
-  INSTITUTION             = {REPlaCEDte and early},
-  LISTA                   = {list test},
-  LISTB                   = {late and early},
-  NOTE                    = {i3Š},
-  TITLE                   = {Š title},
-  TITLE_TRANSLATED_FRENCH = {Le title},
-  USERB                   = {test},
+  ABSTRACT                   = {Some abstract %50 of which is useless},
+  AUTHOR                     = {AAA and BBB and CCC and DDD and EEE},
+  AUTHOR_uniform_lang        = {aaa and bbb and ccc and ddd and eee},
+  DATE                       = {2003},
+  INSTITUTION                = {REPlaCEDte and early},
+  LISTA                      = {list test},
+  LISTB                      = {late and early},
+  LOCATION                   = {one and two},
+  LOCATION_translated_french = {un and deux},
+  NOTE                       = {i3Š},
+  TITLE                      = {Š title},
+  TITLE_translated_french    = {Le title},
+  USERB                      = {test},
 }
 
 |;
