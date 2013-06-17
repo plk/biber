@@ -85,6 +85,7 @@ t/sortlists.t
 t/sort-order.t
 t/sort-uc.t
 t/tool.t
+t/tool-bltxml.t
 t/tdata/biber-test.conf
 t/tdata/tool-test.conf
 t/tdata/biblatexml.bcf
