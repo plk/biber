@@ -135,7 +135,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:title>Š title</bltx:title>
     <bltx:title form="translated" lang="french">Le title</bltx:title>
     <bltx:userb>test</bltx:userb>
-    <bltx:year>2003</bltx:year>
+    <bltx:date>2003</bltx:date>
   </bltx:entry>
   <bltx:entry id="xd1" entrytype="book">
     <bltx:author>
@@ -156,7 +156,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:item>Macmillan</bltx:item>
     </bltx:publisher>
     <bltx:note>A Note</bltx:note>
-    <bltx:year>2001</bltx:year>
+    <bltx:date>2001</bltx:date>
   </bltx:entry>
   <bltx:entry id="macmillan" entrytype="xdata">
     <bltx:id>
@@ -170,7 +170,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:item>Macmillan</bltx:item>
     </bltx:publisher>
     <bltx:note>A Note</bltx:note>
-    <bltx:year>2001</bltx:year>
+    <bltx:date>2001</bltx:date>
   </bltx:entry>
   <bltx:entry id="macmillan:pub" entrytype="xdata">
     <bltx:id>
@@ -193,7 +193,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:maintitle>Maintitle</bltx:maintitle>
     <bltx:maintitleaddon>Maintitleaddon</bltx:maintitleaddon>
     <bltx:title>Booktitle</bltx:title>
-    <bltx:year>1999</bltx:year>
+    <bltx:date>1999</bltx:date>
   </bltx:entry>
   <bltx:entry id="mv1" entrytype="mvbook">
     <bltx:id>
