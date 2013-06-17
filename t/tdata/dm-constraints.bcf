@@ -649,6 +649,7 @@
       <bcf:field fieldtype="field" datatype="literal">eprintclass</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprinttype</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">eventtitleaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">gender</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">howpublished</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">hyphenation</bcf:field>

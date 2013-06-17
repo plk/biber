@@ -697,6 +697,7 @@
       <bcf:field fieldtype="field" datatype="literal">eprintclass</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprinttype</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">eventtitleaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">gender</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">howpublished</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">hyphenation</bcf:field>
@@ -1531,6 +1532,7 @@
       <bcf:field>eventmonth</bcf:field>
       <bcf:field>eventyear</bcf:field>
       <bcf:field>eventtitle</bcf:field>
+      <bcf:field>eventtitleaddon</bcf:field>
       <bcf:field>isbn</bcf:field>
       <bcf:field>language</bcf:field>
       <bcf:field>location</bcf:field>
@@ -1576,6 +1578,7 @@
       <bcf:field>eventmonth</bcf:field>
       <bcf:field>eventyear</bcf:field>
       <bcf:field>eventtitle</bcf:field>
+      <bcf:field>eventtitleaddon</bcf:field>
       <bcf:field>isbn</bcf:field>
       <bcf:field>language</bcf:field>
       <bcf:field>location</bcf:field>
@@ -1631,6 +1634,7 @@
       <bcf:field>eventmonth</bcf:field>
       <bcf:field>eventyear</bcf:field>
       <bcf:field>eventtitle</bcf:field>
+      <bcf:field>eventtitleaddon</bcf:field>
       <bcf:field>isbn</bcf:field>
       <bcf:field>language</bcf:field>
       <bcf:field>location</bcf:field>
