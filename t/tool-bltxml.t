@@ -57,6 +57,33 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
 
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
   <bltx:entry id="i3Š" entrytype="unpublished">
+    <bltx:author form="uniform" lang="lang">
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="a">aaa</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="b">bbb</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="c">ccc</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="d">ddd</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="e">eee</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+    </bltx:author>
     <bltx:author>
       <bltx:person>
         <bltx:last>
@@ -95,9 +122,18 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:item>late</bltx:item>
       <bltx:item>early</bltx:item>
     </bltx:listb>
+    <bltx:location>
+      <bltx:item>one</bltx:item>
+      <bltx:item>two</bltx:item>
+    </bltx:location>
+    <bltx:location form="translated" lang="french">
+      <bltx:item>un</bltx:item>
+      <bltx:item>deux</bltx:item>
+    </bltx:location>
     <bltx:abstract>Some abstract %50 of which is useless</bltx:abstract>
     <bltx:note>i3Š</bltx:note>
     <bltx:title>Š title</bltx:title>
+    <bltx:title form="translated" lang="french">Le title</bltx:title>
     <bltx:userb>test</bltx:userb>
     <bltx:year>2003</bltx:year>
   </bltx:entry>

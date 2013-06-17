@@ -127,22 +127,35 @@ sub set_output_entry {
 
   # Output name fields
   foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
-    next unless my $nf = $be->get_field($namefield);
-
-    # Did we have "and others" in the data?
-    if ( $nf->get_morenames ) {
-      $xml->startTag([$xml_prefix, $namefield], morenames => 1);
-    }
-    else {
-      $xml->startTag([$xml_prefix, $namefield]);
-    }
 
     # Name loop
-    foreach my $n (@{$nf->names}) {
-      $n->name_to_biblatexml($xml, $self);
-    }
+    foreach my $form ($be->get_field_form_names($namefield)) {
+      foreach my $lang ($be->get_field_form_lang_names($namefield, $form)) {
+        if (my $nf = $be->get_field($namefield, $form, $lang)) {
 
-    $xml->endTag(); # Names
+          my @attrs;
+
+          # Did we have "and others" in the data?
+          if ( $nf->get_morenames ) {
+            push @attrs, (morenames => 1);
+          }
+          # form/lang
+          unless ($form eq 'original') {
+            push @attrs, (form => $form);
+          }
+          unless ($lang eq 'default') {
+            push @attrs, (lang => $lang);
+          }
+
+          $xml->startTag([$xml_prefix, $namefield], @attrs);
+
+          foreach my $n (@{$nf->names}) {
+            $n->name_to_biblatexml($xml, $self);
+          }
+          $xml->endTag(); # Names
+        }
+      }
+    }
   }
 
   # Output list fields
@@ -150,21 +163,35 @@ sub set_output_entry {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
     next if $listfield eq 'ids'; # IDS is a special list
     next if $listfield eq 'xdata'; # XDATA is a special list
-    if (my $lf = $be->get_field($listfield)) {
-      # Did we have a "more" list?
-      if (lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
-        $xml->startTag([$xml_prefix, $listfield], morelist => 1);
-        pop @$lf; # remove the last element in the array
-      }
-      else {
-        $xml->startTag([$xml_prefix, $listfield]);
-      }
 
-      # List loop
-      foreach my $f (@$lf) {
-        $xml->dataElement([$xml_prefix, 'item'], NFC($f));
+    # List loop
+    foreach my $form ($be->get_field_form_names($listfield)) {
+      foreach my $lang ($be->get_field_form_lang_names($listfield, $form)) {
+        if (my $lf = $be->get_field($listfield, $form, $lang)) {
+
+          my @attrs;
+          # Did we have a "more" list?
+          if (lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
+            push @attrs, (morelist => 1);
+            pop @$lf;           # remove the last element in the array
+          }
+          # form/lang
+          unless ($form eq 'original') {
+            push @attrs, (form => $form);
+          }
+          unless ($lang eq 'default') {
+            push @attrs, (lang => $lang);
+          }
+
+          $xml->startTag([$xml_prefix, $listfield], @attrs);
+
+          # List loop
+          foreach my $f (@$lf) {
+            $xml->dataElement([$xml_prefix, 'item'], NFC($f));
+          }
+          $xml->endTag();# List
+        }
       }
-      $xml->endTag();# List
     }
   }
 
@@ -179,12 +206,25 @@ sub set_output_entry {
     if ( ($dm->field_is_nullok($field) and
           $be->field_exists($field)) or
          $be->get_field($field) ) {
-      my $f = $be->get_field($field);
-
       # date related fields need special handling
       next if $dm->get_contenttype($field) eq 'datepart';
 
-      $xml->dataElement([$xml_prefix, $field], NFC($f)); 
+      foreach my $form ($be->get_field_form_names($field)) {
+        foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
+          if (my $f = $be->get_field($field, $form, $lang)) {
+
+            my @attrs;
+            # form/lang
+            unless ($form eq 'original') {
+              push @attrs, (form => $form);
+            }
+            unless ($lang eq 'default') {
+              push @attrs, (lang => $lang);
+            }
+            $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs); 
+          }
+        }
+      }
     }
   }
 

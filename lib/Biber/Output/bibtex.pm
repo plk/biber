@@ -63,14 +63,21 @@ sub set_output_entry {
 
   # Make the right casing function
   my $casing;
+  my $mss = Biber::Config->getoption('mssplit');
   if (Biber::Config->getoption('tool_fieldcase') eq 'upper') {
-    $casing = sub {uc(shift)};
+    $casing = sub {my $s = shift;
+                   my @s = split(/$mss/, $s);
+                   join($mss, uc(shift(@s)), @s)};
   }
   elsif (Biber::Config->getoption('tool_fieldcase') eq 'lower') {
-    $casing = sub {lc(shift)};
+    $casing = sub {my $s = shift;
+                   my @s = split(/$mss/, $s);
+                   join($mss, lc(shift(@s)), @s)};
   }
   elsif (Biber::Config->getoption('tool_fieldcase') eq 'title') {
-    $casing = sub {ucfirst(shift)};
+    $casing = sub {my $s = shift;
+                   my @s = split(/$mss/, $s);
+                   join($mss, ucfirst(shift(@s)), @s)};
   }
 
   $acc .= '@';
