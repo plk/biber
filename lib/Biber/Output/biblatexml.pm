@@ -139,12 +139,15 @@ sub set_output_entry {
           if ( $nf->get_morenames ) {
             push @attrs, (morenames => 1);
           }
-          # form/lang
-          unless ($form eq 'original') {
-            push @attrs, (form => $form);
-          }
-          unless ($lang eq 'default') {
-            push @attrs, (lang => $lang);
+
+          if ($dm->field_is_multiscript($namefield)) {
+            # form/lang
+            unless ($form eq Biber::Config->getblxoption('msform', undef, $key)) {
+              push @attrs, (form => $form);
+            }
+            unless ($lang eq Biber::Config->getblxoption('mslang', undef, $key)) {
+              push @attrs, (lang => $lang);
+            }
           }
 
           $xml->startTag([$xml_prefix, $namefield], @attrs);
@@ -175,12 +178,15 @@ sub set_output_entry {
             push @attrs, (morelist => 1);
             pop @$lf;           # remove the last element in the array
           }
+
           # form/lang
-          unless ($form eq 'original') {
-            push @attrs, (form => $form);
-          }
-          unless ($lang eq 'default') {
-            push @attrs, (lang => $lang);
+          if ($dm->field_is_multiscript($listfield)) {
+            unless ($form eq Biber::Config->getblxoption('msform', undef, $key)) {
+              push @attrs, (form => $form);
+            }
+            unless ($lang eq Biber::Config->getblxoption('mslang', undef, $key)) {
+              push @attrs, (lang => $lang);
+            }
           }
 
           $xml->startTag([$xml_prefix, $listfield], @attrs);
@@ -214,14 +220,16 @@ sub set_output_entry {
           if (my $f = $be->get_field($field, $form, $lang)) {
 
             my @attrs;
-            # form/lang
-            unless ($form eq 'original') {
-              push @attrs, (form => $form);
+            if ($dm->field_is_multiscript($field)) {
+              # form/lang
+              unless ($form eq Biber::Config->getblxoption('msform', undef, $key)) {
+                push @attrs, (form => $form);
+              }
+              unless ($lang eq Biber::Config->getblxoption('mslang', undef, $key)) {
+                push @attrs, (lang => $lang);
+              }
             }
-            unless ($lang eq 'default') {
-              push @attrs, (lang => $lang);
-            }
-            $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs); 
+            $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs);
           }
         }
       }
