@@ -775,25 +775,23 @@ sub getblxoption {
 sub set_graph {
   shift; # class method so don't care about class name
   my $type = shift;
-  given ($type) {
-    when ('set') {
-      my ($source_key, $target_key) = @_;
-      $CONFIG->{state}{graph}{$type}{settomem}{$source_key}{$target_key} = 1;
-      $CONFIG->{state}{graph}{$type}{memtoset}{$target_key} = $source_key;
-    }
-    when ('xref') {
-      my ($source_key, $target_key) = @_;
-      $CONFIG->{state}{graph}{$type}{$source_key} = $target_key;
-    }
-    when ('related') {
-      my ($clone_key, $related_key, $target_key) = @_;
-      $CONFIG->{state}{graph}{$type}{reltoclone}{$related_key}{$clone_key} = 1;
-      $CONFIG->{state}{graph}{$type}{clonetotarget}{$clone_key}{$target_key} = 1;
-    }
-    default {
-      my ($source_key, $target_key, $source_field, $target_field) = @_;
-      $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key} = $target_field;
-    }
+  if ($type eq 'set') {
+    my ($source_key, $target_key) = @_;
+    $CONFIG->{state}{graph}{$type}{settomem}{$source_key}{$target_key} = 1;
+    $CONFIG->{state}{graph}{$type}{memtoset}{$target_key} = $source_key;
+  }
+  elsif ($type eq 'xref') {
+    my ($source_key, $target_key) = @_;
+    $CONFIG->{state}{graph}{$type}{$source_key} = $target_key;
+  }
+  elsif ($type eq 'related') {
+    my ($clone_key, $related_key, $target_key) = @_;
+    $CONFIG->{state}{graph}{$type}{reltoclone}{$related_key}{$clone_key} = 1;
+    $CONFIG->{state}{graph}{$type}{clonetotarget}{$clone_key}{$target_key} = 1;
+  }
+  else {
+    my ($source_key, $target_key, $source_field, $target_field) = @_;
+    $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key} = $target_field;
   }
   return;
 }

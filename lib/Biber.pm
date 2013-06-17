@@ -1465,7 +1465,7 @@ sub process_labelname {
       $lnameopt = $ln;
     }
 
-    unless ($ln ~~ $dm->get_fields_of_type('list', 'name')) {
+    unless (first {$ln eq $_} @{$dm->get_fields_of_type('list', 'name')}) {
       biber_warn("Labelname candidate '$ln' is not a name field - skipping");
       next;
     }
@@ -1494,7 +1494,7 @@ sub process_labelname {
     }
 
     # We have already warned about this above
-    unless ($ln ~~ $dm->get_fields_of_type('list', 'name')) {
+    unless (first {$ln eq $_} @{$dm->get_fields_of_type('list', 'name')}) {
       next;
     }
 
@@ -2276,25 +2276,23 @@ sub create_uniquename_info {
         my $key;
 
         # Context and key depend on the uniquename setting
-        given ($un) {
-          when ([1,3]) {
-            $namecontext = 'global';
-            $key = $nameinitstring;
-          }
-          when ([2,4]) {
-            $namecontext = 'global';
-            $key = $namestring;
-          }
-          when (5) {
-            $namecontext = $lastnames_string;
-            $key = $initnames_string;
-            $name->set_minimal_info($lastnames_string);
-          }
-          when (6) {
-            $namecontext = $lastnames_string;
-            $key = $fullnames_string;
-            $name->set_minimal_info($lastnames_string);
-          }
+        if ($un == 1 or $un == 3) {
+          $namecontext = 'global';
+          $key = $nameinitstring;
+        }
+        elsif ($un == 2 or $un == 4) {
+          $namecontext = 'global';
+          $key = $namestring;
+        }
+        elsif ($un == 5) {
+          $namecontext = $lastnames_string;
+          $key = $initnames_string;
+          $name->set_minimal_info($lastnames_string);
+        }
+        elsif ($un == 6) {
+          $namecontext = $lastnames_string;
+          $key = $fullnames_string;
+          $name->set_minimal_info($lastnames_string);
         }
         if (first {Compare($_, $name)} @truncnames) {
           # Record a uniqueness information entry for the lastname showing that
@@ -2415,14 +2413,12 @@ sub generate_uniquename {
           # But restrict to uniquename biblatex option maximum
           elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) == 1) {
             my $run;
-            given ($un) {
-              when (1) {$run = 1}   # init
-              when (2) {$run = 2}   # full
-              when (3) {$run = 1}   # allinit
-              when (4) {$run = 2}   # allfull
-              when (5) {$run = 1}   # mininit
-              when (6) {$run = 2}   # minfull
-            }
+            if ($un == 1)    {$run = 1}   # init
+            elsif ($un == 2) {$run = 2}   # full
+            elsif ($un == 3) {$run = 1}   # allinit
+            elsif ($un == 4) {$run = 2}   # allfull
+            elsif ($un == 5) {$run = 1}   # mininit
+            elsif ($un == 6) {$run = 2}   # minfull
             $name->set_uniquename($run)
           }
           # Otherwise, there must be more than one key for the full name,
@@ -2443,14 +2439,12 @@ sub generate_uniquename {
           }
           elsif (Biber::Config->get_numofuniquenames_all($namestring, $namecontext) == 1) {
             my $run;
-            given ($un) {
-              when (1) {$run = 1}   # init
-              when (2) {$run = 2}   # full
-              when (3) {$run = 1}   # allinit
-              when (4) {$run = 2}   # allfull
-              when (5) {$run = 1}   # mininit
-              when (6) {$run = 2}   # minfull
-            }
+            if ($un == 1) {$run = 1}   # init
+            elsif ($un == 2) {$run = 2}   # full
+            elsif ($un == 3) {$run = 1}   # allinit
+            elsif ($un == 4) {$run = 2}   # allfull
+            elsif ($un == 5) {$run = 1}   # mininit
+            elsif ($un == 6) {$run = 2}   # minfull
             $name->set_uniquename_all($run)
           }
           else {
@@ -3317,7 +3311,7 @@ sub remove_undef_dependent {
 
   # remove from any dynamic keys
   if (my @dmems = $section->get_dynamic_set($citekey)){
-    if ($missing_key ~~ @dmems) {
+    if (first {$missing_key eq $_} @dmems) {
       $section->set_dynamic_set($citekey, grep {$_ ne $missing_key} @dmems);
     }
     else {
@@ -3340,7 +3334,7 @@ sub remove_undef_dependent {
 
     # remove xdata
     if (my $xdata = $be->get_field('xdata')) {
-      if ($missing_key ~~ @$xdata) {
+      if (first {$missing_key eq $_} @$xdata) {
         $be->set_datafield('xdata', [ grep {$_ ne $missing_key} @$xdata ]) ;
         biber_warn("I didn't find a database entry for xdata entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
@@ -3349,7 +3343,7 @@ sub remove_undef_dependent {
     # remove static sets
     if ($be->get_field('entrytype') eq 'set') {
       my @smems = split /\s*,\s*/, $be->get_field('entryset');
-      if ($missing_key ~~ @smems) {
+      if (first {$missing_key eq $_} @smems) {
         $be->set_datafield('entryset', join(',', grep {$_ ne $missing_key} @smems));
         biber_warn("I didn't find a database entry for static set member '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
@@ -3358,7 +3352,7 @@ sub remove_undef_dependent {
     # remove related entries
     if (my $relkeys = $be->get_field('related')) {
       my @rmems = split /\s*,\s*/, $relkeys;
-      if ($missing_key ~~ @rmems) {
+      if (first {$missing_key eq $_} @rmems) {
         $be->set_datafield('related', join(',', grep {$_ ne $missing_key} @rmems));
         # If no more related entries, remove the other related fields
         unless ($be->get_field('related')) {

@@ -328,7 +328,7 @@ sub get_field {
   $form = $form || 'original';
   $lang = $lang || 'default';
   # Override for special fields whose form and langs are assumed to be already resolved.
-  if ($key ~~ [ 'labelname', 'labeltitle', 'labelyear', 'labelmonth', 'labelday' ]) {
+  if ( first {$key eq $_} ( 'labelname', 'labeltitle', 'labelyear', 'labelmonth', 'labelday' )) {
     $form = 'original';
     $lang = 'default';
   }

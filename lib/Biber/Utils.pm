@@ -755,22 +755,21 @@ sub filter_entry_options {
   my @return_options;
   foreach (@entryoptions) {
     m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
-    given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT}) {
-      # Standard option
-      when (not defined($_) or $_ == 1) {
-        push @return_options, $1 . ($2 ? "=$2" : '') ;
+    my $cfopt = $CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT};
+    # Standard option
+    if (not defined($cfopt) or $cfopt == 1) {
+      push @return_options, $1 . ($2 ? "=$2" : '') ;
+    }
+    # Set all split options to same value as parent
+    elsif (ref($cfopt) eq 'ARRAY') {
+      foreach my $map (@$cfopt) {
+        push @return_options, "$map=$2";
       }
-      # Set all split options to same value as parent
-      when (ref($_) eq 'ARRAY') {
-        foreach my $map (@$_) {
-          push @return_options, "$map=$2";
-        }
-      }
-      # Set all splits to specific values
-      when (ref($_) eq 'HASH') {
-        foreach my $map (keys %$_) {
-          push @return_options, "$map=" . $_->{$map};
-        }
+    }
+    # Set all splits to specific values
+    elsif (ref($cfopt) eq 'HASH') {
+      foreach my $map (keys %$cfopt) {
+        push @return_options, "$map=" . $_->{$map};
       }
     }
   }
@@ -895,16 +894,14 @@ sub process_entry_options {
     m/^([^=]+)(=?)(.+)?$/;
     my $val;
     if ($2) {
-      given ($3) {
-        when ('true') {
-          $val = 1;
-        }
-        when ('false') {
-          $val = 0;
-        }
-        default {
-          $val = $3;
-        }
+      if ($3 eq 'true') {
+        $val = 1;
+      }
+      elsif ($3 eq 'false') {
+        $val = 0;
+      }
+      else {
+        $val = $3;
       }
       _expand_option($1, $val, $citekey);
     }
@@ -956,22 +953,21 @@ sub out {
 
 sub _expand_option {
   my ($opt, $val, $citekey) = @_;
-  given ($CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{INPUT}) {
-    # Standard option
-    when (not defined($_)) {
-      Biber::Config->setblxoption($opt, $val, 'PER_ENTRY', $citekey);
+  my $cfopt = $CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($opt)}{INPUT};
+  # Standard option
+  if (not defined($cfopt)) {
+    Biber::Config->setblxoption($opt, $val, 'PER_ENTRY', $citekey);
+  }
+  # Set all split options to same value as parent
+  elsif (ref($cfopt) eq 'ARRAY') {
+    foreach my $k (@$cfopt) {
+      Biber::Config->setblxoption($k, $val, 'PER_ENTRY', $citekey);
     }
-    # Set all split options to same value as parent
-    when (ref($_) eq 'ARRAY') {
-      foreach my $k (@$_) {
-        Biber::Config->setblxoption($k, $val, 'PER_ENTRY', $citekey);
-      }
-    }
-    # Specify values per all splits
-    when (ref($_) eq 'HASH') {
-      foreach my $k (keys %$_) {
-        Biber::Config->setblxoption($k, $_->{$k}, 'PER_ENTRY', $citekey);
-      }
+  }
+  # Specify values per all splits
+  elsif (ref($cfopt) eq 'HASH') {
+    foreach my $k (keys %$cfopt) {
+      Biber::Config->setblxoption($k, $cfopt->{$k}, 'PER_ENTRY', $citekey);
     }
   }
   return;
