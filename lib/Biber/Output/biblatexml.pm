@@ -198,9 +198,10 @@ sub set_output_entry {
                      @{$dm->get_fields_of_type('field', 'key')},
                      @{$dm->get_fields_of_type('field', 'literal')},
                      @{$dm->get_fields_of_type('field', 'code')},
-                     @{$dm->get_fields_of_datatype('integer')},
-                     @{$dm->get_fields_of_datatype('verbatim')},
-                     @{$dm->get_fields_of_datatype('uri')}) {
+                     @{$dm->get_fields_of_type('field', 'integer')},
+                     @{$dm->get_fields_of_type('field', 'verbatim')},
+                     @{$dm->get_fields_of_type('field', 'uri')}) {
+    next if $dm->get_fieldformat($field) eq 'csv';
     if ( ($dm->field_is_nullok($field) and
           $be->field_exists($field)) or
          $be->get_field($field) ) {
