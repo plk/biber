@@ -499,7 +499,11 @@
                     fields from one another on the basis of type
                   -->
                   <attribute name="contenttype">
-                    <value>datepart</value>
+                    <choice>
+                      <value>datepart</value>
+                      <value>keyword</value>
+                      <value>entrykey</value>
+                    </choice>
                   </attribute>
                 </optional>
                 <!-- datatype of field content -->

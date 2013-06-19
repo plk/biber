@@ -377,26 +377,28 @@ sub set_output_entry {
     $acc .= "      \\field{clonesourcekey}{$ck}\n";
   }
 
-  foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
-                           @{$dm->get_fields_of_type('field', 'key')},
-                           @{$dm->get_fields_of_datatype('integer')},
-                           @{$dm->get_fields_of_type('field', 'literal')},
-                           @{$dm->get_fields_of_type('field', 'code')}) {
-    next if $dm->field_is_skipout($lfield);
-    if ( ($dm->field_is_nullok($lfield) and
-          $be->field_exists($lfield)) or
-         $be->get_field($lfield) ) {
+  foreach my $field (sort @{$dm->get_fields_of_type('field', 'entrykey')},
+                          @{$dm->get_fields_of_type('field', 'key')},
+                          @{$dm->get_fields_of_datatype('integer')},
+                          @{$dm->get_fields_of_type('field', 'literal')},
+                          @{$dm->get_fields_of_type('field', 'csv')},
+                          @{$dm->get_fields_of_type('field', 'code')}) {
+    next if $dm->field_is_skipout($field);
+    next if $dm->get_contenttype($field) eq 'keyword';# This is special in .bbl
+    if ( ($dm->field_is_nullok($field) and
+          $be->field_exists($field)) or
+         $be->get_field($field) ) {
       # we skip outputting the crossref or xref when the parent is not cited
       # (biblatex manual, section 2.2.3)
       # sets are a special case so always output crossref/xref for them since their
       # children will always be in the .bbl otherwise they make no sense.
       unless ($bee eq 'set') {
-        next if ($lfield eq 'crossref' and
+        next if ($field eq 'crossref' and
                  not $section->has_citekey($be->get_field('crossref')));
-        next if ($lfield eq 'xref' and
+        next if ($field eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
-      $acc .= _printfield($be, $lfield, $be->get_field($lfield) );
+      $acc .= _printfield($be, $field, $be->get_field($field) );
     }
   }
 

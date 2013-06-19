@@ -194,7 +194,7 @@ start =
           attribute fieldtype { "field" | "list" },
           # contenttype is a semantic specification of the field contents used to further
           # fields from one another on the basis of type
-          attribute contenttype { "datepart" }?,
+          attribute contenttype { "datepart" | "keyword" | "entrykey" }?,
           # datatype of field content
           attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" | "uri" },
           # Are we allowed to output a null field value to the .bbl for this field?

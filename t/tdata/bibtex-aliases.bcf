@@ -783,7 +783,6 @@
       <bcf:field fieldtype="field" datatype="literal">origtitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">pagetotal</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">part</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">related</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">relatedstring</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">relatedtype</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">reprinttitle</bcf:field>
@@ -878,7 +877,8 @@
       <bcf:field fieldtype="field" datatype="verbatim">verbb</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verbc</bcf:field>
       <bcf:field fieldtype="field" datatype="uri">url</bcf:field>
-      <bcf:field fieldtype="field" datatype="csv">keywords</bcf:field>
+      <bcf:field fieldtype="field" contenttype="keyword" datatype="csv">keywords</bcf:field>
+      <bcf:field fieldtype="field" datatype="csv">related</bcf:field>
       <bcf:field fieldtype="field" datatype="csv" skip_output="true">options</bcf:field>
       <bcf:field fieldtype="field" datatype="csv" skip_output="true">relatedoptions</bcf:field>
       <bcf:field fieldtype="field" datatype="range">pages</bcf:field>
