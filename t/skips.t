@@ -61,7 +61,7 @@ my $set1 = q|    \entry{seta}{set}{}
       \field{extraalpha}{1}
       \field{title}{Set Member A}
       \field{year}{2010}
-      \keyw{key1, key2}
+      \keyw{key1,key2}
     \endentry
 |;
 
@@ -79,7 +79,7 @@ my $set2 = q|    \entry{set:membera}{book}{}
       \field{labeltitle}{Set Member A}
       \field{title}{Set Member A}
       \field{year}{2010}
-      \keyw{key1, key2}
+      \keyw{key1,key2}
     \endentry
 |;
 
@@ -201,7 +201,7 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
 |;
 
 is_deeply([$shs->get_keys], ['skip1'], 'skiplos - not in LOS');
-is($bibentries->entry('skip1')->get_field('options'), 'skipbib', 'Passing skipbib through');
+is_deeply($bibentries->entry('skip1')->get_field('options'), ['skipbib'], 'Passing skipbib through');
 is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
 is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labeldate_info->{field}{year}), '1995', 'Normal labelyear');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');

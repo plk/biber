@@ -688,24 +688,24 @@
       <bcf:entrytype skip_output="true">xdata</bcf:entrytype>
     </bcf:entrytypes>
     <bcf:fields>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">day</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">endday</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">endmonth</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">eventday</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">eventendday</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">eventendmonth</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">eventmonth</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">eventyear</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">origday</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">origendday</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">origendmonth</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">origmonth</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">origyear</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">urlday</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">urlendday</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">urlendmonth</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">urlmonth</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer">urlyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">day</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">endday</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">endmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">eventday</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">eventendday</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">eventendmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">eventmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">eventyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">origday</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">origendday</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">origendmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">origmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">origyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">urlday</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">urlendday</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">urlendmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">urlmonth</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">urlyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">abstract</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">addendum</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">annotation</bcf:field>
@@ -769,18 +769,18 @@
       <bcf:field fieldtype="field" datatype="literal">version</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">volume</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">volumes</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="literal">month</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="literal">year</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer" nullok="true">urlendyear</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer" nullok="true">endyear</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer" nullok="true">eventendyear</bcf:field>
-      <bcf:field fieldtype="field" contenttype="datepart" datatype="integer" nullok="true">origendyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">month</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart">year</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart" nullok="true">urlendyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart" nullok="true">endyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart" nullok="true">eventendyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart" nullok="true">origendyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sorttitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortshorthand</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortkey</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">presort</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" skip_output="true">entryset</bcf:field>
+      <bcf:field fieldtype="field" format="csv" datatype="entrykey" skip_output="true">entryset</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">institution</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">lista</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">listb</bcf:field>
@@ -828,8 +828,8 @@
       <bcf:field fieldtype="list" datatype="key">language</bcf:field>
       <bcf:field fieldtype="field" datatype="entrykey">crossref</bcf:field>
       <bcf:field fieldtype="field" datatype="entrykey">xref</bcf:field>
-      <bcf:field fieldtype="list" datatype="entrykey" skip_output="true">xdata</bcf:field>
-      <bcf:field fieldtype="list" datatype="entrykey" skip_output="true">ids</bcf:field>
+      <bcf:field fieldtype="field" format="csv" datatype="entrykey" skip_output="true">xdata</bcf:field>
+      <bcf:field fieldtype="field" format="csv" datatype="entrykey" skip_output="true">ids</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">date</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">eventdate</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">origdate</bcf:field>
@@ -841,10 +841,10 @@
       <bcf:field fieldtype="field" datatype="verbatim">verbb</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verbc</bcf:field>
       <bcf:field fieldtype="field" datatype="uri">url</bcf:field>
-      <bcf:field fieldtype="field" contenttype="keyword" datatype="csv">keywords</bcf:field>
-      <bcf:field fieldtype="field" datatype="csv">related</bcf:field>
-      <bcf:field fieldtype="field" datatype="csv" skip_output="true">options</bcf:field>
-      <bcf:field fieldtype="field" datatype="csv" skip_output="true">relatedoptions</bcf:field>
+      <bcf:field fieldtype="field" format="csv" datatype="keyword">keywords</bcf:field>
+      <bcf:field fieldtype="field" format="csv" datatype="entrykey">related</bcf:field>
+      <bcf:field fieldtype="field" format="csv" datatype="option" skip_output="true">options</bcf:field>
+      <bcf:field fieldtype="field" format="csv" datatype="option" skip_output="true">relatedoptions</bcf:field>
       <bcf:field fieldtype="field" datatype="range">pages</bcf:field>
       <bcf:field fieldtype="field" datatype="code">execute</bcf:field>
       <bcf:field fieldtype="list" datatype="name">with</bcf:field>

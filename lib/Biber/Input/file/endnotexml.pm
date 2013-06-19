@@ -40,22 +40,31 @@ my $orig_key_order = {};
 my $dm = Biber::Config->get_dm;
 my $handlers = {
                 'field' => {
-                            'csv'      => \&_csv,
-                            'code'     => \&_literal,
-                            'date'     => \&_date,
-                            'entrykey' => \&_literal,
-                            'integer'  => \&_literal,
-                            'key'      => \&_literal,
-                            'literal'  => \&_literal,
-                            'range'    => \&_range,
-                            'verbatim' => \&_verbatim,
-                            'uri'      => \&_uri,
+                            'default' => {
+                                          'csv'      => \&_csv,
+                                          'code'     => \&_literal,
+                                          'date'     => \&_date,
+                                          'entrykey' => \&_literal,
+                                          'integer'  => \&_literal,
+                                          'key'      => \&_literal,
+                                          'literal'  => \&_literal,
+                                          'range'    => \&_range,
+                                          'verbatim' => \&_verbatim,
+                                          'uri'      => \&_uri
+                                         },
+                            'csv'     => {
+                                          'entrykey' => \&_csv,
+                                          'keyword'  => \&_csv,
+                                          'option'   => \&_csv,
+                                         }
                            },
                 'list' => {
-                           'entrykey' => \&_literal,
-                           'key'      => \&_list,
-                           'literal'  => \&_list,
-                           'name'     => \&_name,
+                           'default' => {
+                                         'entrykey' => \&_literal,
+                                         'key'      => \&_list,
+                                         'literal'  => \&_list,
+                                         'name'     => \&_name
+                                        }
                           }
 };
 
@@ -565,11 +574,11 @@ sub _csv {
   my ($bibentry, $entry, $f) = @_;
   # Keywords
   if (my @s = $entry->findnodes("./$f/keyword")) {
-    my @kws;
+    my $kws;
     foreach my $s (@s) {
-      push @kws, '{'._norm($s->textContent()).'}';
+      push @$kws, '{'._norm($s->textContent()).'}';
     }
-    $bibentry->set_datafield('keywords', join(',', @kws));
+    $bibentry->set_datafield($f, $kws);
   }
   return;
 }
@@ -886,7 +895,7 @@ sub _get_handler {
     return $h;
   }
   else {
-    return $handlers->{$dm->get_fieldtype($field)}{$dm->get_datatype($field)};
+    return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field) || 'default'}{$dm->get_datatype($field)};
   }
 }
 

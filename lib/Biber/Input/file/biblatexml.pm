@@ -40,22 +40,31 @@ my $dm = Biber::Config->get_dm;
 my $handlers = {
                 'CUSTOM' => {'related' => \&_related},
                 'field' => {
-                            'csv'      => \&_literal,
-                            'code'     => \&_literal,
-                            'date'     => \&_date,
-                            'entrykey' => \&_literal,
-                            'integer'  => \&_literal,
-                            'key'      => \&_literal,
-                            'literal'  => \&_literal,
-                            'range'    => \&_range,
-                            'verbatim' => \&_literal,
-                            'uri'      => \&_uri,
+                            'default' => {
+                                          'csv'      => \&_literal,
+                                          'code'     => \&_literal,
+                                          'date'     => \&_date,
+                                          'entrykey' => \&_literal,
+                                          'integer'  => \&_literal,
+                                          'key'      => \&_literal,
+                                          'literal'  => \&_literal,
+                                          'range'    => \&_range,
+                                          'verbatim' => \&_literal,
+                                          'uri'      => \&_uri
+                                         },
+                            'csv'     => {
+                                           'entrykey' => \&_csv,
+                                           'keyword'  => \&_csv,
+                                           'option'   => \&_csv,
+                                         }
                            },
                 'list' => {
-                           'entrykey' => \&_list,
-                           'key'      => \&_list,
-                           'literal'  => \&_list,
-                           'name'     => \&_name,
+                           'default' => {
+                                         'entrykey' => \&_list,
+                                         'key'      => \&_list,
+                                         'literal'  => \&_list,
+                                         'name'     => \&_name
+                                        }
                           }
 };
 
@@ -298,7 +307,7 @@ sub create_entry {
     # to make them available for things that need them like name parsing
     if (_norm($entry->nodeName) eq 'options') {
       if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
-        process_entry_options($key, $node->textContent());
+        process_entry_options($key, [ split(/\s*,\s*/, $node->textContent()) ]);
         # Save the raw options in case we are to output another input format like
         # biblatexml
         $bibentry->set_field('rawoptions', $node->textContent());
@@ -323,10 +332,8 @@ sub create_entry {
 sub _related {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
-  # TODO
-  # Current biblatex data model doesn't allow for multiple items here
   foreach my $item ($node->findnodes("./$NS:item")) {
-    $bibentry->set_datafield('related', $item->getAttribute('ids'));
+    $bibentry->set_datafield('related', [ split(/\s*,\s*/, $item->getAttribute('ids')) ]);
     $bibentry->set_datafield('relatedtype', $item->getAttribute('type'));
     if (my $string = $item->getAttribute('string')) {
       $bibentry->set_datafield('relatedstring', $string);
@@ -355,6 +362,16 @@ sub _literal {
   }
   return;
 }
+
+# CSV field form
+sub _csv {
+  my ($bibentry, $entry, $f) = @_;
+  foreach my $node ($entry->findnodes("./$f")) {
+    $bibentry->set_datafield(_norm($f), _split_list($node));
+  }
+  return;
+}
+
 
 # uri fields
 # No script form or language - makes no sense in a URI
@@ -732,7 +749,7 @@ sub _get_handler {
     return $h;
   }
   else {
-    return $handlers->{$dm->get_fieldtype(_norm($field))}{$dm->get_datatype(_norm($field))};
+    return $handlers->{$dm->get_fieldtype(_norm($field))}{$dm->get_fieldformat(_norm($field)) || 'default'}{$dm->get_datatype(_norm($field))};
   }
 }
 

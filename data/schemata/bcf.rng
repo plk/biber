@@ -495,15 +495,11 @@
                 </attribute>
                 <optional>
                   <!--
-                    contenttype is a semantic specification of the field contents used to further
-                    fields from one another on the basis of type
+                    format is a specification of the format of the field. If not specified, field contents
+                    are just as is. 
                   -->
-                  <attribute name="contenttype">
-                    <choice>
-                      <value>datepart</value>
-                      <value>keyword</value>
-                      <value>entrykey</value>
-                    </choice>
+                  <attribute name="format">
+                    <value>csv</value>
                   </attribute>
                 </optional>
                 <!-- datatype of field content -->
@@ -520,6 +516,9 @@
                     <value>csv</value>
                     <value>code</value>
                     <value>uri</value>
+                    <value>datepart</value>
+                    <value>keyword</value>
+                    <value>option</value>
                   </choice>
                 </attribute>
                 <optional>

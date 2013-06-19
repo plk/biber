@@ -167,7 +167,7 @@ my $murray1 = q|    \entry{murray}{article}{}
       \field{volume}{14}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
-      \keyw{keyw1, keyw2}
+      \keyw{keyw1,keyw2}
     \endentry
 |;
 
@@ -221,7 +221,7 @@ my $murray2 = q|    \entry{murray}{article}{}
       \field{volume}{14}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
-      \keyw{keyw1, keyw2}
+      \keyw{keyw1,keyw2}
     \endentry
 |;
 
@@ -241,7 +241,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \field{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
-      \keyw{primary, something,somethingelse}
+      \keyw{primary,something,somethingelse}
     \endentry
 +;
 

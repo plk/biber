@@ -79,6 +79,8 @@ my $l1 = q|    \entry{origmode}{book}{}
       \field{origmonth}{04}
       \field{origyear}{1985}
       \field{pagetotal}{240}
+      \field{relatedstring}{Somestring}
+      \field{relatedtype}{reprint}
       \field{series}{Научно-биографическая литература}
       \field{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \field{urlday}{01}

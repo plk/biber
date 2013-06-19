@@ -95,7 +95,8 @@ our %NOSORT_TYPES = (
 
 # datatypes for data model validation
 our %DM_DATATYPES = (
-                     integer => qr/\A\d+\z/xms
+                     integer => qr/\A\d+\z/xms,
+                     datepart => qr/\A\d+\z/xms
 );
 
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf

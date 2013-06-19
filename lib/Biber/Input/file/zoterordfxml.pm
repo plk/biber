@@ -43,22 +43,30 @@ my $handlers = {
                              'BIBERCUSTOMsubject'     => \&_subject,
                             },
                 'field' => {
-                            'csv'      => \&_csv,
-                            'code'     => \&_literal,
-                            'date'     => \&_date,
-                            'entrykey' => \&_literal,
-                            'integer'  => \&_literal,
-                            'key'      => \&_literal,
-                            'literal'  => \&_literal,
-                            'range'    => \&_range,
-                            'verbatim' => \&_literal,
-                            'uri'      => \&_uri,
+                            'default' => {
+                                          'code'     => \&_literal,
+                                          'date'     => \&_date,
+                                          'entrykey' => \&_literal,
+                                          'integer'  => \&_literal,
+                                          'key'      => \&_literal,
+                                          'literal'  => \&_literal,
+                                          'range'    => \&_range,
+                                          'verbatim' => \&_literal,
+                                          'uri'      => \&_uri
+                                         },
+                            'csv'     => {
+                                          'entrykey' => \&_csv,
+                                          'keyword'  => \&_csv,
+                                          'option'   => \&_csv,
+                                         }
                            },
                 'list' => {
-                           'entrykey' => \&_literal,
-                           'key'      => \&_list,
-                           'literal'  => \&_list,
-                           'name'     => \&_name,
+                           'default' => {
+                                         'entrykey' => \&_literal,
+                                         'key'      => \&_list,
+                                         'literal'  => \&_list,
+                                         'name'     => \&_name
+                                        }
                           }
 };
 
@@ -766,7 +774,7 @@ sub _get_handler {
     return $h;
   }
   else {
-    return $handlers->{$dm->get_fieldtype(_strip_ns($field))}{$dm->get_datatype(_strip_ns($field))};
+    return $handlers->{$dm->get_fieldtype(_strip_ns($field))}{$dm->get_fieldformat(_strip_ns($field)) || 'default'}{$dm->get_datatype(_strip_ns($field))};
   }
 }
 

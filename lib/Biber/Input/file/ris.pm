@@ -34,22 +34,32 @@ my $orig_key_order = {};
 my $dm = Biber::Config->get_dm;
 my $handlers = {
                 'field' => {
-                            'csv'      => \&_verbatim,
-                            'code'     => \&_literal,
-                            'date'     => \&_date,
-                            'entrykey' => \&_verbatim,
-                            'integer'  => \&_verbatim,
-                            'key'      => \&_verbatim,
-                            'literal'  => \&_verbatim,
-                            'range'    => \&_range,
-                            'verbatim' => \&_verbatim,
-                            'uri'      => \&_uri,
+                            'default' => {
+                                          'csv'      => \&_verbatim,
+                                          'code'     => \&_literal,
+                                          'date'     => \&_date,
+                                          'datepart' => \&_verbatim,
+                                          'entrykey' => \&_verbatim,
+                                          'integer'  => \&_verbatim,
+                                          'key'      => \&_verbatim,
+                                          'literal'  => \&_verbatim,
+                                          'range'    => \&_range,
+                                          'verbatim' => \&_verbatim,
+                                          'uri'      => \&_uri
+                                         },
+                            'csv'     => {
+                                          'entrykey' => \&_csv,
+                                          'keyword'  => \&_csv,
+                                          'option'   => \&_csv,
+                                         }
                            },
                 'list' => {
-                           'entrykey' => \&_list,
-                           'key'      => \&_list,
-                           'literal'  => \&_list,
-                           'name'     => \&_name,
+                           'default' => {
+                                         'entrykey' => \&_list,
+                                         'key'      => \&_list,
+                                         'literal'  => \&_list,
+                                         'name'     => \&_name,
+                                        }
                           }
 };
 
@@ -470,6 +480,13 @@ sub _verbatim {
   return;
 }
 
+# CSV field forms
+sub _csv {
+  my ($bibentry, $entry, $f) = @_;
+  $bibentry->set_datafield($f, [ split(/\s*,\s*/, $entry->{$f}) ]);
+  return;
+}
+
 # URI fields
 sub _uri {
   my ($bibentry, $entry, $f) = @_;
@@ -660,7 +677,7 @@ sub _get_handler {
     return $h;
   }
   else {
-    return $handlers->{$dm->get_fieldtype($field)}{$dm->get_datatype($field)};
+    return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field)}{$dm->get_datatype($field)};
   }
 }
 
