@@ -201,9 +201,6 @@ start =
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?
           attribute skip_output { "true" }?,
-          # limit this field definition to specific entrytypes?
-          # Is parsed as a csv list
-          attribute entrytypes { text }?,
           text
         }+
       },
