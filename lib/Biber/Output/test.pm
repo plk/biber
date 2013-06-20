@@ -383,6 +383,14 @@ sub set_output_entry {
     }
   }
 
+  foreach my $field (sort @{$dm->get_fields_of_fieldformat('csv')}) {
+    next if $dm->field_is_skipout($field);
+    next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
+    if (my $f = $be->get_field($field)) {
+      $acc .= _printfield($be, $field, join(',', @$f) );
+    }
+  }
+
   foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
     if ( my $rf = $be->get_field($rfield)) {
       $rf =~ s/[-–]+/\\bibrangedash /g;

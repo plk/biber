@@ -343,6 +343,7 @@ map =
         (
           attribute map_field_set { xsd:string {minLength="1"} },
           attribute map_append { "1" }?,
+          attribute map_final { "1" }?,
           ( attribute map_null { "1" } |
             attribute map_origfield { "1" } |
             attribute map_origfieldval { "1" } |
