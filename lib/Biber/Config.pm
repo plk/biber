@@ -777,20 +777,24 @@ sub set_graph {
   my $type = shift;
   if ($type eq 'set') {
     my ($source_key, $target_key) = @_;
+    $logger->debug("Saving DOT graph information type 'set' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
     $CONFIG->{state}{graph}{$type}{settomem}{$source_key}{$target_key} = 1;
     $CONFIG->{state}{graph}{$type}{memtoset}{$target_key} = $source_key;
   }
   elsif ($type eq 'xref') {
     my ($source_key, $target_key) = @_;
+    $logger->debug("Saving DOT graph information type 'xref' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
     $CONFIG->{state}{graph}{$type}{$source_key} = $target_key;
   }
   elsif ($type eq 'related') {
     my ($clone_key, $related_key, $target_key) = @_;
+    $logger->debug("Saving DOT graph information type 'related' with CLONEKEY=$clone_key, RELATEDKEY=$related_key, TARGETKEY=$target_key");
     $CONFIG->{state}{graph}{$type}{reltoclone}{$related_key}{$clone_key} = 1;
     $CONFIG->{state}{graph}{$type}{clonetotarget}{$clone_key}{$target_key} = 1;
   }
   else {
     my ($source_key, $target_key, $source_field, $target_field) = @_;
+    $logger->debug("Saving DOT graph information type '$type' with SOURCEKEY=$source_key, TARGETKEY=$target_key, SOURCEFIELD=$source_field, TARGETFIELD=$target_field");
     $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key} = $target_field;
   }
   return;
