@@ -295,46 +295,12 @@
             </tbody>
           </table>
         </xsl:for-each>
-        <!-- DISPLAY MODES -->
-        <xsl:if test="/bcf:controlfile/bcf:displaymodes">
-          <hr/>
-          <h3>Display Modes</h3>
-          <table>
-            <thead>
-              <tr><td>Fields</td><td>Mode Order</td></tr>
-            </thead>
-            <tbody>
-              <xsl:for-each select="/bcf:controlfile/bcf:displaymodes/bcf:displaymode">
-                <tr>
-                  <td>
-                    <ul>
-                      <xsl:for-each select="./bcf:dtarget">
-                        <li>
-                          <xsl:value-of select="./text()"/>
-                        </li>
-                      </xsl:for-each>
-                    </ul>
-                  </td>
-                  <td><xsl:for-each select="./bcf:dmode">
-                    <xsl:value-of select="./text()"/>
-                    <xsl:if test="not(position()=last())">
-                      <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
-                    </xsl:if>
-                  </xsl:for-each></td>
-                </tr>
-              </xsl:for-each>
-            </tbody>
-          </table>
-        </xsl:if>
         <!-- DATASOURCE MAPPINGS -->
         <xsl:if test="/bcf:controlfile/bcf:sourcemap">
           <hr/>
           <h3>Datasource Mappings</h3>
           <xsl:for-each select="/bcf:controlfile/bcf:sourcemap/bcf:maps">
-            <h4><xsl:choose>
-              <xsl:when test="./@driver_defaults">Driver default</xsl:when>
-              <xsl:otherwise>User</xsl:otherwise>
-              </xsl:choose> Mappings for datatype <xsl:value-of select="./@datatype"/> (default overwrite = 
+            <h4><xsl:value-of select="./@level"/> Mappings for datatype <xsl:value-of select="./@datatype"/> (default overwrite = 
             <xsl:choose>
               <xsl:when test="./@map_overwrite">1</xsl:when>
               <xsl:otherwise>0</xsl:otherwise>
@@ -724,17 +690,6 @@
         <xsl:if test="/bcf:controlfile/bcf:datamodel">
           <hr/>
           <h3>Data Model</h3>
-          <h4>Legal datetypes</h4>
-          <table>
-            <thead>
-              <tr><td>Datetypes</td></tr>
-            </thead>
-            <tbody>
-              <xsl:for-each select="/bcf:controlfile/bcf:datamodel/bcf:datetypes/bcf:datetype">
-              <tr><td><xsl:value-of select="./text()"/></td></tr>
-              </xsl:for-each>
-            </tbody>
-          </table>
           <h4>Legal entrytypes</h4>
           <table>
             <thead>
@@ -745,7 +700,7 @@
                 <td>GLOBAL</td>
                 <td>
                   <div class="global_entrytype_fields">
-                    <xsl:for-each select="/bcf:controlfile/bcf:datamodel/bcf:entryfields/bcf:entrytype[text()='ALL']/../bcf:field">
+                    <xsl:for-each select="/bcf:controlfile/bcf:datamodel/bcf:entryfields[not(bcf:entrytype)]/bcf:field">
                       <xsl:sort select="./text()"/>
                       <xsl:value-of select="./text()"/>
                       <xsl:if test="not(position()=last())">, </xsl:if>
@@ -798,7 +753,7 @@
           <h4>Field Types</h4>
           <table>
             <thead>
-              <tr><td>Field</td><td>Data type</td><td>Entrytypes</td></tr>
+              <tr><td>Field</td><td>Field Format</td><td>Data type</td><td>Entrytypes</td></tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:datamodel/bcf:fields/bcf:field">
@@ -807,6 +762,12 @@
                     <xsl:value-of select="./text()"/>
                     <xsl:if test="./@nullok='true'"><xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text></xsl:if>
                     <xsl:if test="./@skip_output='true'"><xsl:text disable-output-escaping="yes">&amp;loz;</xsl:text></xsl:if>
+                  </td>
+                  <td>
+                    <xsl:choose>
+                      <xsl:when test="./@format"><xsl:value-of select="./@format"/></xsl:when>
+                      <xsl:otherwise>standard</xsl:otherwise>
+                    </xsl:choose>
                   </td>
                   <td>
                     <xsl:value-of select="./@datatype"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./@fieldtype"/>
