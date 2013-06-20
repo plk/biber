@@ -722,27 +722,13 @@
                     <xsl:for-each select="/bcf:controlfile/bcf:datamodel/bcf:entryfields">
                       <!-- fields valid just for this entrytype -->
                       <xsl:if test="./bcf:entrytype[text()=$entrynode/text()]">
-                        <xsl:choose>
-                          <!-- Value "ALL" lists every valid field which is a superset
-                               of the global fields -->
-                          <xsl:when test="./bcf:field[text()='ALL']">
-                            <xsl:for-each select="/bcf:controlfile/bcf:datamodel/bcf:fields/bcf:field">
-                              <xsl:sort select="./text()"/>
-                              <xsl:value-of select="./text()"/>
-                              <xsl:if test="not(position()=last())">, </xsl:if>
-                            </xsl:for-each>
-                          </xsl:when>
-                          <!-- Normal type-specific fields -->
-                          <xsl:otherwise>
-                            <!-- List global fields for all entrytypes first -->
-                            <div class="global_entrytype_fields">GLOBAL fields</div>
-                            <xsl:for-each select="./bcf:field">
-                              <xsl:sort select="./text()"/>
-                              <xsl:value-of select="./text()"/>
-                              <xsl:if test="not(position()=last())">, </xsl:if>
-                            </xsl:for-each>
-                          </xsl:otherwise>
-                        </xsl:choose>
+                        <!-- List global fields for all entrytypes first -->
+                        <div class="global_entrytype_fields">GLOBAL fields</div>
+                        <xsl:for-each select="./bcf:field">
+                          <xsl:sort select="./text()"/>
+                          <xsl:value-of select="./text()"/>
+                          <xsl:if test="not(position()=last())">, </xsl:if>
+                        </xsl:for-each>
                       </xsl:if>
                     </xsl:for-each>
                   </td>                  
