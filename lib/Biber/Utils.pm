@@ -750,10 +750,9 @@ sub join_name {
 
 sub filter_entry_options {
   my $options = shift;
-  return '' unless $options;
-  my @entryoptions = split /\s*,\s*/, $options;
-  my @return_options;
-  foreach (@entryoptions) {
+  return [] unless $options;
+  my $roptions = [];
+  foreach (@$options) {
     m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
     my $cfopt = $CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT};
     # Standard option
@@ -761,23 +760,23 @@ sub filter_entry_options {
       # Don't bother with mstranslang if it's the same as the global setting
       unless (lc($1) eq 'mstranslang' and
               Biber::Config->getblxoption('mstranslang') eq $2) {
-        push @return_options, $1 . ($2 ? "=$2" : '') ;
+        push @$roptions, $1 . ($2 ? "=$2" : '') ;
       }
     }
     # Set all split options to same value as parent
     elsif (ref($cfopt) eq 'ARRAY') {
       foreach my $map (@$cfopt) {
-        push @return_options, "$map=$2";
+        push @$roptions, "$map=$2";
       }
     }
     # Set all splits to specific values
     elsif (ref($cfopt) eq 'HASH') {
       foreach my $map (keys %$cfopt) {
-        push @return_options, "$map=" . $cfopt->{$map};
+        push @$roptions, "$map=" . $cfopt->{$map};
       }
     }
   }
-  return join(',', @return_options);
+  return $roptions;
 }
 
 =head2 imatch
@@ -892,8 +891,7 @@ sub process_entry_options {
   my $citekey = shift;
   my $options = shift;
   return unless $options;       # Just in case it's null
-  my @entryoptions = split /\s*,\s*/, $options;
-  foreach (@entryoptions) {
+  foreach (@$options) {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)(=?)(.+)?$/;
     my $val;

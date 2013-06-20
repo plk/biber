@@ -52,22 +52,31 @@ sub init_cache {
 my $dm = Biber::Config->get_dm;
 my $handlers = {
                 'field' => {
-                            'csv'      => \&_verbatim,
-                            'code'     => \&_literal,
-                            'date'     => \&_date,
-                            'entrykey' => \&_literal,
-                            'integer'  => \&_literal,
-                            'key'      => \&_literal,
-                            'literal'  => \&_literal,
-                            'range'    => \&_range,
-                            'verbatim' => \&_verbatim,
-                            'uri'      => \&_uri,
+                            'default'  => {
+                                           'csv'      => \&_verbatim,
+                                           'code'     => \&_literal,
+                                           'date'     => \&_date,
+                                           'datepart' => \&_literal,
+                                           'entrykey' => \&_literal,
+                                           'integer'  => \&_literal,
+                                           'key'      => \&_literal,
+                                           'literal'  => \&_literal,
+                                           'range'    => \&_range,
+                                           'verbatim' => \&_verbatim,
+                                           'uri'      => \&_uri
+                                          },
+                            'csv'      => {
+                                           'entrykey' => \&_csv,
+                                           'keyword'  => \&_csv,
+                                           'option'   => \&_csv,
+                                          }
                            },
                 'list' => {
-                           'entrykey' => \&_csvlist,
-                           'key'      => \&_list,
-                           'literal'  => \&_list,
-                           'name'     => \&_name,
+                           'default'   => {
+                                           'key'      => \&_list,
+                                           'literal'  => \&_list,
+                                           'name'     => \&_name
+                                          }
                           }
 };
 
@@ -508,7 +517,7 @@ sub create_entry {
     # We have to process local options as early as possible in order
     # to make them available for things that need them like parsename()
     if (my $value = biber_decode_utf8($entry->get('options'))) {
-      process_entry_options($key, $value);
+      process_entry_options($key, [ split(/\s*,\s*/, $value) ]);
       # Save the raw options in case we are to output another input format like
       # biblatexml
       $bibentry->set_field('rawoptions', $value);
@@ -600,12 +609,18 @@ sub _uri {
   return;
 }
 
+# CSV field form
+sub _csv {
+  my ($bibentry, $entry, $f) = @_;
+  $bibentry->set_datafield($f, [ split(/\s*,\s*/, biber_decode_utf8($entry->get($f))) ]);
+  return;
+}
+
 # Verbatim fields
 sub _verbatim {
   my ($bibentry, $entry, $f, $key) = @_;
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
-
   if (($form or $lang) and not $dm->field_is_multiscript($field)) {
     biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
     return;
@@ -781,15 +796,6 @@ sub _list {
   @tmp = map { biber_decode_utf8($_) } @tmp;
   @tmp = map { remove_outer($_) } @tmp;
   $bibentry->set_datafield($field, [ @tmp ], $form, $lang);
-  return;
-}
-
-# CSV lists
-# These contain citekey lists and so form/lang is never relevant
-sub _csvlist {
-  my ($bibentry, $entry, $f) = @_;
-  my $vals = [ split(/\s*,\s*/, biber_decode_utf8($entry->get($f))) ];
-  $bibentry->set_datafield($f, $vals);
   return;
 }
 
@@ -1195,7 +1201,7 @@ sub _get_handler {
     return $h;
   }
   else {
-    return $handlers->{$dm->get_fieldtype($field)}{$dm->get_datatype($field)};
+    return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field) || 'default'}{$dm->get_datatype($field)};
   }
 }
 

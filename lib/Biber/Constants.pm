@@ -96,6 +96,7 @@ our %NOSORT_TYPES = (
 # datatypes for data model validation
 our %DM_DATATYPES = (
                      integer => qr/\A\d+\z/xms,
+                     datepart => qr/\A\d+\z/xms,
                      forms   => qr/original|translated|romanised|uniform/xms
 );
 

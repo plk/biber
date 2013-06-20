@@ -164,8 +164,6 @@ sub set_output_entry {
   # Output list fields
   foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
-    next if $listfield eq 'ids'; # IDS is a special list
-    next if $listfield eq 'xdata'; # XDATA is a special list
 
     # List loop
     foreach my $form ($be->get_field_form_names($listfield)) {
@@ -203,17 +201,16 @@ sub set_output_entry {
 
   # Standard fields
   foreach my $field (sort @{$dm->get_fields_of_type('field', 'entrykey')},
-                      @{$dm->get_fields_of_type('field', 'key')},
-                      @{$dm->get_fields_of_type('field', 'literal')},
-                      @{$dm->get_fields_of_type('field', 'code')},
-                      @{$dm->get_fields_of_datatype('integer')},
-                      @{$dm->get_fields_of_datatype('verbatim')},
-                      @{$dm->get_fields_of_datatype('uri')}) {
+                     @{$dm->get_fields_of_type('field', 'key')},
+                     @{$dm->get_fields_of_type('field', 'literal')},
+                     @{$dm->get_fields_of_type('field', 'code')},
+                     @{$dm->get_fields_of_type('field', 'integer')},
+                     @{$dm->get_fields_of_type('field', 'verbatim')},
+                     @{$dm->get_fields_of_type('field', 'uri')}) {
+    next if $dm->get_fieldformat($field) eq 'csv';
     if ( ($dm->field_is_nullok($field) and
           $be->field_exists($field)) or
          $be->get_field($field) ) {
-      # date related fields need special handling
-      next if $dm->get_contenttype($field) eq 'datepart';
 
       foreach my $form ($be->get_field_form_names($field)) {
         foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
@@ -233,6 +230,17 @@ sub set_output_entry {
           }
         }
       }
+    }
+  }
+
+  # csv fields
+  foreach my $csvf (@{$dm->get_fields_of_type('field', 'csv')}) {
+    next if $csvf eq 'ids'; # IDS is special
+    next if $csvf eq 'xdata'; # XDATA is special
+
+    # csv fields don't have form/lang
+    if (my $f = $be->get_field($csvf)) {
+      $xml->dataElement([$xml_prefix, $csvf], NFC(join(',',@$f)));
     }
   }
 
@@ -262,7 +270,7 @@ sub set_output_entry {
 
   # Date fields
   my %dinfo;
-  foreach my $dfield (@{$dm->get_fields_of_contenttype('datepart')}) {
+  foreach my $dfield (@{$dm->get_fields_of_datatype('datepart')}) {
     if ( my $df = $be->get_field($dfield) ) {
       # There are some assumptions here about field names which is not nice but
       # they are part of the default biblatex data model which is unlikely to be

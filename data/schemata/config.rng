@@ -4,6 +4,14 @@
     <element name="config">
       <interleave>
         <optional>
+          <element name="clrmacros">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="collate">
             <choice>
               <value>0</value>
@@ -36,11 +44,8 @@
           </element>
         </optional>
         <optional>
-          <element name="graph">
-            <choice>
-              <text/>
-              <value>1</value>
-            </choice>
+          <element name="dot_include">
+            <text/>
           </element>
         </optional>
         <optional>
@@ -74,6 +79,15 @@
                       <value>list</value>
                     </choice>
                   </attribute>
+                  <optional>
+                    <!--
+                      format is a specification of the format of the field. If not specified, field contents
+                      are just as is. 
+                    -->
+                    <attribute name="format">
+                      <value>csv</value>
+                    </attribute>
+                  </optional>
                   <!-- datatype of field content -->
                   <attribute name="datatype">
                     <choice>
@@ -88,6 +102,9 @@
                       <value>csv</value>
                       <value>code</value>
                       <value>uri</value>
+                      <value>datepart</value>
+                      <value>keyword</value>
+                      <value>option</value>
                     </choice>
                   </attribute>
                   <optional>
@@ -275,10 +292,7 @@
         </optional>
         <optional>
           <element name="decodecharsset">
-            <choice>
-              <value>base</value>
-              <value>full</value>
-            </choice>
+            <text/>
           </element>
         </optional>
         <optional>
@@ -333,6 +347,11 @@
           </element>
         </optional>
         <optional>
+          <element name="mssplit">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="namesep">
             <text/>
           </element>
@@ -358,6 +377,20 @@
           </element>
         </optional>
         <optional>
+          <!-- noinit specification -->
+          <element name="noinit">
+            <oneOrMore>
+              <element name="option">
+                <attribute name="value">
+                  <data type="string"/>
+                </attribute>
+                <empty/>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
+        <optional>
+          <!-- nosort specification -->
           <element name="nosort">
             <oneOrMore>
               <element name="option">
@@ -365,22 +398,6 @@
                   <attribute name="name"/>
                   <attribute name="value"/>
                 </interleave>
-              </element>
-            </oneOrMore>
-          </element>
-        </optional>
-        <optional>
-          <!-- nosort specification -->
-          <element name="nosorts">
-            <oneOrMore>
-              <element name="nosort">
-                <attribute name="field">
-                  <data type="string"/>
-                </attribute>
-                <attribute name="value">
-                  <data type="string"/>
-                </attribute>
-                <empty/>
               </element>
             </oneOrMore>
           </element>
@@ -422,6 +439,16 @@
           </element>
         </optional>
         <optional>
+          <element name="output_format">
+            <choice>
+              <value>bibtex</value>
+              <value>bbl</value>
+              <value>biblatexml</value>
+              <value>dot</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="output_safechars">
             <choice>
               <value>0</value>
@@ -452,6 +479,14 @@
         </optional>
         <optional>
           <element name="sortcase">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="sortfirstinits">
             <choice>
               <value>0</value>
               <value>1</value>
@@ -535,8 +570,8 @@
           </element>
         </optional>
         <optional>
-          <element name="tool_datatype">
-            <value>bibtex</value>
+          <element name="tool_config">
+            <text/>
           </element>
         </optional>
         <optional>
@@ -551,6 +586,11 @@
         <optional>
           <element name="tool_indent">
             <data type="unsignedByte"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="tool_macro_fields">
+            <text/>
           </element>
         </optional>
         <optional>
@@ -586,7 +626,7 @@
           </element>
         </optional>
         <optional>
-          <element name="validate_structure">
+          <element name="validate_datamodel">
             <choice>
               <value>0</value>
               <value>1</value>
@@ -1044,6 +1084,13 @@
               </optional>
               <optional>
                 <attribute name="map_match">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_notmatch">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>

@@ -57,12 +57,12 @@ my $k1 = q|    \entry{key1}{article}{}
       \field{labeltitle}{Original Title}
       \field{journaltitle}{Journal Title}
       \field{number}{5}
-      \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{relatedtype}{reprintas}
       \field{shorthand}{RK1}
       \field{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
+      \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{pages}{125\bibrangedash 150}
     \endentry
 |;
@@ -86,12 +86,12 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \field{labelyear}{2009}
       \field{labeltitle}{Reprint Title}
       \field{booktitle}{Booktitle}
-      \field{related}{c2add694bf942dc77b376592d9c862cd}
       \field{relatedstring}{First}
       \field{relatedtype}{reprintof}
       \field{shorthand}{RK2}
       \field{title}{Reprint Title}
       \field{year}{2009}
+      \field{related}{c2add694bf942dc77b376592d9c862cd}
       \field{pages}{34\bibrangedash 60}
     \endentry
 |;
@@ -111,12 +111,12 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \field{clonesourcekey}{key1}
       \field{journaltitle}{Journal Title}
       \field{number}{5}
-      \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{relatedtype}{reprintas}
       \field{shorthand}{RK1}
       \field{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
+      \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{pages}{125\bibrangedash 150}
     \endentry
 |;
@@ -140,12 +140,12 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       \field{labeltitle}{Reprint Title}
       \field{clonesourcekey}{key2}
       \field{booktitle}{Booktitle}
-      \field{related}{c2add694bf942dc77b376592d9c862cd}
       \field{relatedstring}{First}
       \field{relatedtype}{reprintof}
       \field{shorthand}{RK2}
       \field{title}{Reprint Title}
       \field{year}{2009}
+      \field{related}{c2add694bf942dc77b376592d9c862cd}
       \field{pages}{34\bibrangedash 60}
     \endentry
 |;
@@ -169,11 +169,11 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       \field{labeltitle}{Reprint Title}
       \field{clonesourcekey}{key3}
       \field{booktitle}{Booktitle}
-      \field{related}{caf8e34be07426ae7127c1b4829983c1}
       \field{relatedtype}{translationof}
       \field{shorthand}{RK3}
       \field{title}{Reprint Title}
       \field{year}{2010}
+      \field{related}{caf8e34be07426ae7127c1b4829983c1}
       \field{pages}{33\bibrangedash 57}
     \endentry
 |;

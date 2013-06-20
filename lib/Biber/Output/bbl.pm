@@ -115,38 +115,43 @@ sub _printfield {
 
   # crossref and xref are of type 'strng' in the .bbl
   if (lc($field) eq 'crossref' or lc($field) eq 'xref') {
-    my $str = $be->get_field($field);
+    my $f = $be->get_field($field);
     if (Biber::Config->getoption('wraplines')) {
       ## 16 is the length of '      \strng{}{}'
-      if ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
-        $acc .= "      \\strng{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
+      if ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($f)->length > 2*$Text::Wrap::columns ) {
+        $acc .= "      \\strng{$field}{%\n" . wrap('      ', '      ', $f) . "%\n      }\n";
       }
-      elsif ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > $Text::Wrap::columns ) {
-        $acc .= wrap('      ', '      ', "\\strng{$field}{$str}" ) . "\n";
+      elsif ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($f)->length > $Text::Wrap::columns ) {
+        $acc .= wrap('      ', '      ', "\\strng{$field}{$f}" ) . "\n";
       }
       else {
-        $acc .= "      \\strng{$field}{$str}\n";
+        $acc .= "      \\strng{$field}{$f}\n";
       }
     }
     else {
-      $acc .= "      \\strng{$field}{$str}\n";
+      $acc .= "      \\strng{$field}{$f}\n";
     }
   }
   else {
     # loop over all field forms and langs
     foreach my $form ($be->get_field_form_names($field)) {
       foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
-        my $str = $be->get_field($field, $form, $lang);
+        my $dm = Biber::Config->get_dm;
+        my $f = $be->get_field($field, $form, $lang);
+
+        # CSV fields are not strings yet
+        if ($dm->get_fieldformat($field) eq 'csv') {
+          $f = join(',', @$f);
+        }
 
         # auto-escape TeX special chars if:
         # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
         # * It's not a \\strng field
         if ($be->get_field('datatype') ne 'bibtex') {
-          $str =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
+          $f =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
         }
 
         # Can the field have multiple script/lang variants?
-        my $dm = Biber::Config->get_dm;
         my $fl = '';
         if ($dm->field_is_multiscript($field)) {
           if ($form ne Biber::Config->getblxoption('msform', undef, $key) and
@@ -165,18 +170,18 @@ sub _printfield {
 
         if (Biber::Config->getoption('wraplines')) {
           ## 18 is the length of '      \field[]{}{}'
-          if ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + length($field) + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
-            $acc .= "      \\field${fl}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
+          if ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + length($field) + Unicode::GCString->new($f)->length > 2*$Text::Wrap::columns ) {
+            $acc .= "      \\field${fl}{$field}{%\n" . wrap('      ', '      ', $f) . "%\n      }\n";
           }
-          elsif ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > $Text::Wrap::columns ) {
-            $acc .= wrap('      ', '      ', "\\field${fl}{$field}{$str}" ) . "\n";
+          elsif ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + Unicode::GCString->new($field)->length + Unicode::GCString->new($f)->length > $Text::Wrap::columns ) {
+            $acc .= wrap('      ', '      ', "\\field${fl}{$field}{$f}" ) . "\n";
           }
           else {
-            $acc .= "      \\field${fl}{$field}{$str}\n";
+            $acc .= "      \\field${fl}{$field}{$f}\n";
           }
         }
         else {
-          $acc .= "      \\field${fl}{$field}{$str}\n";
+          $acc .= "      \\field${fl}{$field}{$f}\n";
         }
 
       }
@@ -244,26 +249,21 @@ sub set_output_entry {
   my $section = shift; # Section object the entry occurs in
   my $dm = shift; # Data Model object
   my $acc = '';
-  my $opts = '';
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
 
-  if ($be->field_exists('options')) {
-    $opts = filter_entry_options($be->get_field('options'));
-  }
-
-  $acc .= "    \\entry{$key}{$bee}{$opts}\n";
+  $acc .= "    \\entry{$key}{$bee}{" . join(',', @{filter_entry_options($be->get_field('options'))}) . "}\n";
 
   # Generate set information
   if ( $bee eq 'set' ) {   # Set parents get \set entry ...
-    $acc .= "      \\set{" . $be->get_field('entryset') . "}\n";
+    $acc .= "      \\set{" . join(',', @{$be->get_field('entryset')}) . "}\n";
   }
   else { # Everything else that isn't a set parent ...
     if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
-      $acc .= "      \\inset{$es}\n";
+      $acc .= "      \\inset{" . join(',', @$es) . "}\n";
     }
   }
 
@@ -481,31 +481,42 @@ sub set_output_entry {
     $acc .= "      \\field{clonesourcekey}{$ck}\n";
   }
 
-  foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
-                           @{$dm->get_fields_of_type('field', 'key')},
-                           @{$dm->get_fields_of_datatype('integer')},
-                           @{$dm->get_fields_of_type('field', 'literal')},
-                           @{$dm->get_fields_of_type('field', 'code')}) {
-    next if $dm->field_is_skipout($lfield);
-    if ( ($dm->field_is_nullok($lfield) and
-          $be->field_exists($lfield)) or
-         ($dm->field_is_multiscript($lfield) and
-          $be->get_field_variants($lfield)) or
-          $be->get_field($lfield)) {
+  foreach my $field (sort @{$dm->get_fields_of_type('field', 'entrykey')},
+                          @{$dm->get_fields_of_type('field', 'key')},
+                          @{$dm->get_fields_of_type('field', 'integer')},
+                          @{$dm->get_fields_of_type('field', 'datepart')},
+                          @{$dm->get_fields_of_type('field', 'literal')},
+                          @{$dm->get_fields_of_type('field', 'code')}) {
+    next if $dm->field_is_skipout($field);
+    next if $dm->get_fieldformat($field) eq 'csv';
+    if ( ($dm->field_is_nullok($field) and
+          $be->field_exists($field)) or
+         ($dm->field_is_multiscript($field) and
+          $be->get_field_variants($field)) or
+          $be->get_field($field)) {
       # We skip outputting the crossref or xref when the parent is not cited.
       # Sets are a special case so always output crossref/xref for them since their
       # children will always be in the .bbl otherwise they make no sense.
       unless ($bee eq 'set') {
-        next if ($lfield eq 'crossref' and
+        next if ($field eq 'crossref' and
                  not $section->has_citekey($be->get_field('crossref')));
-        next if ($lfield eq 'xref' and
+        next if ($field eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
-      $acc .= _printfield($be, $lfield);
+      $acc .= _printfield($be, $field);
+    }
+  }
+
+  foreach my $field (sort @{$dm->get_fields_of_fieldformat('csv')}) {
+    next if $dm->field_is_skipout($field);
+    next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
+    if (my $f = $be->get_field($field)) {
+      $acc .= _printfield($be, $field, join(',', @$f) );
     }
   }
 
   foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
+    next if $dm->field_is_skipout($rfield);
     if ( my $rf = $be->get_field($rfield) ) {
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
@@ -532,6 +543,7 @@ sub set_output_entry {
     }
   }
   if ( my $k = $be->get_field('keywords') ) {
+    $k = join(',', @$k);
     $acc .= "      \\keyw{$k}\n";
   }
 

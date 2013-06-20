@@ -1,4 +1,5 @@
 start = element config {
+  element clrmacros           { "0" | "1" }? &
   element collate             { "0" | "1" }? &
   element collate_options     {
     element option {
@@ -9,7 +10,7 @@ start = element config {
 # Can't specify the config file location in the config file ...
 #  element configfile          { text }? & 
   element convert_control     { "0" | "1" }? &
-  element graph               { text | "1" }? &
+  element dot_include         { text }? &
   # Data model specification
   element datamodel {
     # Valid entrytypes
@@ -26,8 +27,11 @@ start = element config {
       element field {
         # fieldtype is "field" or "list"
         attribute fieldtype { "field" | "list" },
+        # format is a specification of the format of the field. If not specified, field contents
+        # are just as is. 
+        attribute format { "csv" }?,
         # datatype of field content
-        attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" | "uri" },
+        attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" | "uri" | "datepart" | "keyword" | "option" },
         # Are we allowed to output a null field value to the .bbl for this field?
         attribute nullok { "true" }?,
         # Should this field be skipped and not output to the .bbl?
@@ -102,7 +106,7 @@ start = element config {
       }*
     }+
   }? &
-  element decodecharsset      { "base" | "full" }? &
+  element decodecharsset      { text }? &
   element debug               { "0" | "1" }? &
   element fastsort            { "0" | "1" }? &
   element fixinits            { "0" | "1" }? &
@@ -113,23 +117,24 @@ start = element config {
   element listsep             { text }? &
   element logfile             { text }? &
   element mincrossrefs        { xsd:unsignedByte }? &
+  element mssplit             { text }? &
   element namesep             { text }? &
 # Can't specify not to use a config file in the config file ...
 #  element noconf              { "0" | "1" }? &
   element nodieonerror         { "0" | "1" }? &
   element nolog                { "0" | "1" }? &
+  # noinit specification
+  element noinit {
+    element option {
+      attribute value { xsd:string },
+      empty
+    }+
+  }? &
+  # nosort specification
   element nosort     {
     element option {
       attribute name { text } &
       attribute value { text }
-    }+
-  }? &
-  # nosort specification
-  element nosorts {
-    element nosort {
-      attribute field { xsd:string },
-      attribute value { xsd:string },
-      empty
     }+
   }? &
   element nostdmacros          { "0" | "1" }? &
@@ -138,11 +143,13 @@ start = element config {
   element output_directory     { text }? &
   element output_encoding      { text }? &
   element output_file          { text }? &
+  element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
   element output_safechars     { "0" | "1" }? &
   element output_safecharsset  { "base" | "full" }? &
   element quiet                { "0" | "1" }? &
   element recodedata           { text }? &
   element sortcase             { "0" | "1" }? &
+  element sortfirstinits       { "0" | "1" }? &
   sorting? &
   element sortlocale           { text }? &
   element sortupper            { "0" | "1" }? &
@@ -157,14 +164,15 @@ start = element config {
   element ssl-noverify-host    { "0" | "1" }? &
   element tool                 { "0" | "1" }? &
   element tool_align           { "0" | "1" }? &
-  element tool_datatype        { "bibtex" }? &
+  element tool_config          { text }? &
   element tool_fieldcase       { "upper" | "lower" | "title" }? &
   element tool_indent          { xsd:unsignedByte }? &
+  element tool_macro_fields    { text }? &
   element tool_resolve         { "0" | "1" }? &
   element trace                { "0" | "1" }? &
   element validate_config      { "0" | "1" }? &
   element validate_control     { "0" | "1" }? &
-  element validate_structure   { "0" | "1" }? &
+  element validate_datamodel   { "0" | "1" }? &
 # Meaningless in the config file
 #  element version              { "0" | "1" }? &
   element wraplines            { "0" | "1" }? &
@@ -308,6 +316,7 @@ inheritance =
     }
 
 
+
 map =
   element map {
     attribute map_overwrite { "0" | "1" }?,
@@ -328,6 +337,7 @@ map =
           attribute map_field_target { xsd:string {minLength="1"} }?,
           attribute map_final { "1" }?,
           attribute map_match { xsd:string {minLength="1"} }?,
+          attribute map_notmatch { xsd:string {minLength="1"} }?,
           attribute map_replace { xsd:string {minLength="1"} }?
         ) |
         (

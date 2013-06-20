@@ -122,27 +122,22 @@ sub set_output_entry {
   my $section = shift; # Section the entry occurs in
   my $dm = shift; # Structure object
   my $acc = '';
-  my $opts = '';
   my $secnum = $section->number;
 
   my $key = $be->get_field('citekey');
 
-  if ( $be->field_exists('options') ) {
-    $opts = filter_entry_options($be->get_field('options'));
-  }
-
   $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
-  $acc .= "    \\entry{$key}{" . $be->get_field('entrytype') . "}{$opts}\n";
+  $acc .= "    \\entry{$key}{$bee}{" . join(',', @{filter_entry_options($be->get_field('options'))}) . "}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
-    $acc .= "      \\set{" . $be->get_field('entryset') . "}\n";
+    $acc .= "      \\set{" . join(',', @{$be->get_field('entryset')}) . "}\n";
   }
   else { # Everything else that isn't a set parent ...
     if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
-      $acc .= "      \\inset{$es}\n";
+      $acc .= "      \\inset{" . join(',', @$es) . "}\n";
     }
   }
 
@@ -360,29 +355,31 @@ sub set_output_entry {
     $acc .= "      \\true{singletitle}\n";
   }
 
-  foreach my $lfield (sort @{$dm->get_fields_of_type('field', 'entrykey')},
-                           @{$dm->get_fields_of_type('field', 'key')},
-                           @{$dm->get_fields_of_datatype('integer')},
-                           @{$dm->get_fields_of_type('field', 'literal')},
-                           @{$dm->get_fields_of_type('field', 'code')}) {
-    next if $dm->field_is_skipout($lfield);
-    if ( ($dm->field_is_nullok($lfield) and
-          $be->field_exists($lfield)) or
-         ($dm->field_is_multiscript($lfield) and
-          $be->get_field_variants($lfield)) or
-          $be->get_field($lfield)) {
+  foreach my $field (sort @{$dm->get_fields_of_type('field', 'entrykey')},
+                          @{$dm->get_fields_of_type('field', 'key')},
+                          @{$dm->get_fields_of_type('field', 'integer')},
+                          @{$dm->get_fields_of_type('field', 'datepart')},
+                          @{$dm->get_fields_of_type('field', 'literal')},
+                          @{$dm->get_fields_of_type('field', 'code')}) {
+    next if $dm->field_is_skipout($field);
+    next if $dm->get_fieldformat($field) eq 'csv';
+    if ( ($dm->field_is_nullok($field) and
+          $be->field_exists($field)) or
+         ($dm->field_is_multiscript($field) and
+          $be->get_field_variants($field)) or
+          $be->get_field($field)) {
       # we skip outputting the crossref or xref when the parent is not cited
       # (biblatex manual, section 2.2.3)
       # sets are a special case so always output crossref/xref for them since their
       # children will always be in the .bbl otherwise they make no sense.
       unless ( $be->get_field('entrytype') eq 'set') {
-        next if ($lfield eq 'crossref' and
+        next if ($field eq 'crossref' and
                  not $section->has_citekey($be->get_field('crossref')));
-        next if ($lfield eq 'xref' and
+        next if ($field eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
 
-      $acc .= _printfield($be, $lfield);
+      $acc .= _printfield($be, $field);
     }
   }
 

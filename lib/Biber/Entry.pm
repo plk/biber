@@ -73,9 +73,9 @@ sub relclone {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   if (my $relkeys = $self->get_field('related')) {
-    $logger->debug("Found RELATED field in '$citekey' with contents '$relkeys'");
+    $logger->debug("Found RELATED field in '$citekey' with contents " . join(',', @$relkeys));
     my @clonekeys;
-    foreach my $relkey (split /\s*,\s*/, $relkeys) {
+    foreach my $relkey (@$relkeys) {
       # Resolve any alias
       my $nrelkey = $section->get_citekey_alias($relkey) // $relkey;
       $logger->debug("Resolved RELATED key alias '$relkey' to '$nrelkey'") if $relkey ne $nrelkey;
@@ -106,8 +106,8 @@ sub relclone {
           $relclone->set_datafield('options', $relopts);
         }
         else {
-          process_entry_options($clonekey, 'skiplab, skiplos, uniquename=0, uniquelist=0');
-          $relclone->set_datafield('options', 'dataonly');
+          process_entry_options($clonekey, [ 'skiplab', 'skiplos', 'uniquename=0', 'uniquelist=0' ]);
+          $relclone->set_datafield('options', [ 'dataonly' ]);
         }
 
         $section->bibentries->add_entry($clonekey, $relclone);
@@ -127,7 +127,7 @@ sub relclone {
     # We have to add the citekeys as we need these clones in the .bbl
     # but the dataonly will cause biblatex not to print them in the bib
     $section->add_citekeys(@clonekeys);
-    $self->set_datafield('related', join(',', @clonekeys));
+    $self->set_datafield('related', [ @clonekeys ]);
   }
 }
 
@@ -707,7 +707,7 @@ sub count_fields {
 sub has_keyword {
   my ($self, $keyword) = @_;
   if (my $keywords = Dive($self, 'datafields', 'nonms', 'keywords')) {
-    return (first {$_ eq $keyword} split(/\s*,\s*/, $keywords)) ? 1 : 0;
+    return (first {$_ eq $keyword} @$keywords) ? 1 : 0;
   }
   else {
     return 0;

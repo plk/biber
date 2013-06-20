@@ -871,7 +871,8 @@ sub _dispatch_table_sorting {
   elsif ($t eq 'field' and $dt eq 'literal') {
     return [\&_sort_literal, [$field]];
   }
-  elsif ($t eq 'field' and $dt eq 'integer') {
+  elsif ($t eq 'field' and
+         ($dt eq 'integer' or $dt eq 'datepart')) {
     return [\&_sort_integer, [$field]];
   }
   elsif ($t eq 'list' and
