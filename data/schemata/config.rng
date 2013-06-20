@@ -119,13 +119,6 @@
                       <value>true</value>
                     </attribute>
                   </optional>
-                  <optional>
-                    <!--
-                      limit this field definition to specific entrytypes?
-                      Is parsed as a csv list
-                    -->
-                    <attribute name="entrytypes"/>
-                  </optional>
                   <text/>
                 </element>
               </oneOrMore>
@@ -1112,6 +1105,11 @@
               </attribute>
               <optional>
                 <attribute name="map_append">
+                  <value>1</value>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_final">
                   <value>1</value>
                 </attribute>
               </optional>

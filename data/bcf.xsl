@@ -179,6 +179,9 @@
           .sort_final {
             background-color: #FFAAAA;
           }
+          .ms_field {
+            background-color: #FFAAAA;
+          }
           .map_final {
             color: #FF0000;
           }
@@ -753,11 +756,14 @@
           <h4>Field Types</h4>
           <table>
             <thead>
-              <tr><td>Field</td><td>Field Format</td><td>Data type</td><td>Entrytypes</td></tr>
+              <tr><td>Field</td><td>Field Format</td><td>Data type</td></tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:datamodel/bcf:fields/bcf:field">
                 <tr>
+                  <xsl:if test="./@multiscript='true'">
+                    <xsl:attribute name="class">ms_field</xsl:attribute>
+                  </xsl:if>
                   <td>
                     <xsl:value-of select="./text()"/>
                     <xsl:if test="./@nullok='true'"><xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text></xsl:if>
@@ -772,19 +778,13 @@
                   <td>
                     <xsl:value-of select="./@datatype"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./@fieldtype"/>
                   </td>
-                  <td>
-                    <xsl:choose>
-                      <xsl:when test="./@entrytypes"><xsl:value-of select="./@entrytypes"/></xsl:when>
-                      <xsl:otherwise>ALL</xsl:otherwise>
-                    </xsl:choose>
-                  </td>
                 </tr>
               </xsl:for-each>
             </tbody>
           </table>
           <div class="key"><u>Key</u>
             <ul>
-              <li><xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text> = field can null in <tt>.bbl</tt>, <xsl:text disable-output-escaping="yes">&amp;loz;</xsl:text> = field is not output to <tt>.bbl</tt></li>
+              <li><xsl:text disable-output-escaping="yes">&amp;empty;</xsl:text> = field can null in <tt>.bbl</tt>, <xsl:text disable-output-escaping="yes">&amp;loz;</xsl:text> = field is not output to <tt>.bbl</tt>, <span class="ms_field">field is a multiscript field</span></li>
             </ul>
           </div>
           <xsl:if test="/bcf:controlfile/bcf:datamodel/bcf:constraints">
