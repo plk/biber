@@ -166,7 +166,7 @@ with standard \verb+.bst+ styles. \biber's role is to support
 \biblatex\ by performing the following tasks:
 
 \begin{itemize}
-\item Parsing data from data sources
+\item Parsing data from datasources
 \item Processing cross-references, entry sets, related entries
 \item Generating data for name, name list and name/year disambiguation
 \item Structural validation according to \biblatex\ data model
@@ -284,11 +284,11 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 \item Handles complex auto-expansion and contraction of names and
   namelists (See section 4.11.4 of the \biblatex\ manual for an excellent
   explanation with examples, this is quite an impressive feature \ldots)
-\item Extensible modular data sources architecture for ease of adding
-  more data source types
-\item Support for remote data sources
+\item Extensible modular datasource architecture for ease of adding
+  more datasource types
+\item Support for remote datasources
 \item User-definable mapping and suppression of fields and entrytypes in
-  data sources. You can use this to, for example, ignore all
+  datasources. You can use this to, for example, ignore all
   \bibfield{ABSTRACT} fields completely. See section \ref{map}
 \item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of»
@@ -397,12 +397,12 @@ the development in 2009 and is largely responsible for making it what it is toda
 \section{Use}
 
 Firstly, please note that \biber\ will \emph{not} attempt to sanitise
-the content of \BibTeX\ data sources. That is, don't expect it to
+the content of \BibTeX\ datasources. That is, don't expect it to
 auto-escape any \TeX\ special characters like «\verb+&+» or «\verb+%+» which
 it finds in, for example, your \bibfield{TITLE} fields. It used to do this in
 earlier versions in some cases but as of version 0.9, it doesn't because
 it's fraught with problems and leads to inconsistent expectations and
-behaviour between different data source types. In your \BibTeX\ data
+behaviour between different datasource types. In your \BibTeX\ data
 sources, please make sure your entries are legal \TeX\ code.
 
 Running \opt{biber --help} will display all options and a brief
@@ -614,13 +614,13 @@ which is described in section \ref{map}.
 
 \subsubsection{The \texttt{sourcemap} option}\label{map}
 
-The data source drivers implement a mapping from data source
+The datasource drivers implement a mapping from datasource
 entrytypes and fields into the \biblatex\ data model. If you want to
 override or augment the driver mappings you can use the
 \opt{sourcemap} option which makes it possible to, for example, have a
-data source with non-standard entrytypes or fields and to have these
+datasource with non-standard entrytypes or fields and to have these
 automatically mapped into other entrytypes/fields without modifying
-your data source.  Essentially, this alters the source data stream
+your datasource.  Essentially, this alters the source data stream
 which \biber\ uses to build the internal \biblatex\ data model and is an
 automatic way of editing the datasource as it is read by \biber.
 
@@ -634,12 +634,12 @@ in a defined order. See the \biblatex\ manual regarding these macros:\\[2ex]
 
 The \opt{sourcemap} option can only be set in the config file
 and not on the command line as it has a complex structure. This
-option allows you to perform various data source mapping
+option allows you to perform various datasource mapping
 tasks which can be useful for pre-processing data which you do not
 generate yourself:
 
 \begin{itemize}
-\item Map data source entrytypes to different entrytypes.
+\item Map datasource entrytypes to different entrytypes.
 \item Map datasource fields to different fields.
 \item Add new fields to an entry
 \item Remove fields from an entry
@@ -991,7 +991,7 @@ particular name, which presumably has some variants in the datasource.
 will be completely ignored.
 \bigskip
 \minisec{Other datasource types}
-For data sources other than \BibTeX, (e.g. \verb+ris+, \verb+endnotexml+
+For datasources other than \BibTeX, (e.g. \verb+ris+, \verb+endnotexml+
 and \verb+zoterordfxml+), the source entrytypes and fields are usually very
 differently modelled and named. For example, here is how to drop
 \verb+dc:subject+ fields from various entrytypes in Zotero XML RDF format data
@@ -1009,7 +1009,7 @@ sources:
 \end{lstlisting}
 
 \noindent Or here, mapping journal articles into \bibtype{Report} entries for
-Endnote XML format data sources within a particular data source.
+Endnote XML format datasources within a particular datasource.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
 <maps datatype="endnotexml" map_overwrite="1">
@@ -1156,7 +1156,7 @@ in names which should not be considered when sorting. Given (the default):
   </noinit>
 \end{lstlisting}
 
-\noindent and the \BibTeX\ data source entry:
+\noindent and the \BibTeX\ datasource entry:
 
 \begin{verbatim}
 AUTHOR = {{al-Hasan}, ʿAlī},
@@ -1483,7 +1483,7 @@ in names which should not be considered when sorting. Given (the default):
 </nosort>
 \end{lstlisting}
 
-\noindent and the \BibTeX\ data source entry:
+\noindent and the \BibTeX\ datasource entry:
 
 \begin{verbatim}
 AUTHOR = {{al-Hasan}, ʿAlī},
@@ -1552,7 +1552,7 @@ priority:\\[2ex]
 
 \subsubsection{Data sources}
 
-Local data sources of type «file» are searched for in the following
+Local datasources of type «file» are searched for in the following
 locations, in decreasing order of priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
@@ -1561,7 +1561,7 @@ locations, in decreasing order of priority:\\[2ex]
 \hspace*{3em}In the same directory as the control file$\rightarrow$\\
 \hspace*{4em}Using \verb+kpsewhich+ for supported formats, if available\\[2ex]
 
-\noindent Remote file data sources (beginning with \verb+http://+ or
+\noindent Remote file datasources (beginning with \verb+http://+ or
 \verb+ftp://+) are retrieved to a temp file and processed as normal. Users
 do not specify explicitly the bibliography database files; they are passed
 in the \verb+.bcf+ control file, which is constructed from the
@@ -1708,7 +1708,7 @@ reverse order at UCA level 2.
 
 \subsection{Encoding of files}
 
-\biber\ takes care of re-encoding the data source data as
+\biber\ takes care of re-encoding the datasource data as
 necessary. In normal use, \biblatex\ passes its
 \opt{input\_encoding} option value to \biber\ via the \verb+.bcf+
 file. It also passes the value of its \opt{texencoding} option (which
@@ -1719,7 +1719,7 @@ using (see \biblatex\ manual for details).
 \noindent \biber\ performs the following tasks:
 
 \begin{enumerate}
-\item Decodes the data source into UTF-8 if it is not UTF-8 already
+\item Decodes the datasource into UTF-8 if it is not UTF-8 already
 \item Decodes \latex\ character macros into UTF-8 if \opt{--output\_encoding|-E}
   is UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
@@ -1762,7 +1762,7 @@ internal \latex\ character macro decoding break \verb+inputenc+. This is
 because \verb+inputenc+ does not implement all of UTF-8, only a
 commonly used subset.
 
-An example--if you had \verb+\DJ+ in your \verb+.bib+ data source,
+An example--if you had \verb+\DJ+ in your \verb+.bib+ datasource,
 \biber\ decodes this correctly to «Đ» and this breaks \verb+inputenc+
 because it doesn't understand that UTF-8 character. The real solution here
 is to switch to a \TeX\ engine with full UTF-8 support like \XeTeX\ or Lua\TeX\
@@ -1774,7 +1774,7 @@ option, see section \ref{lencode}.
 \minisec{Decoding for internal sorting}
 
 If your \opt{output\_encoding} is not UTF-8, and you are using some UTF-8
-equivalent \latex\ character macros in your \verb+.bib+ data source, then some
+equivalent \latex\ character macros in your \verb+.bib+ datasource, then some
 \verb+.bbl+ fields (currently only \verb+\sortinit{}+) might end up
 with invalid characters in them, according to the \verb+.bbl+
 encoding. This is because some fields must be generated from the final
@@ -1783,7 +1783,7 @@ decoding step.
 
 For example, suppose you are using PDF\latex\ with\\
 \verb+\usepackage[latin1]{inputenc}+ and the following \BibTeX\
-data source entry:
+datasource entry:
 
 \begin{verbatim}
 @BOOK{citekey1,
@@ -1813,7 +1813,7 @@ can't be handled by your main document. See section \ref{ldecode} above for
 an example such case.
 
 A common use case for \latex\ macro encoding is when the bibliography
-data source is not ASCII but the \verb+.tex+ file is and so this case
+datasource is not ASCII but the \verb+.tex+ file is and so this case
 is automated for you: if the \biblatex\ option «\opt{texencoding}»
 (which corresponds to the \biber\ option «\opt{--output\_encoding|-E}») is
 set to an ASCII encoding («\verb+ascii+» or «\verb+x-ascii+») and
@@ -1880,7 +1880,7 @@ to \latex\ macro conversion using the full set of conversions
 \noindent Set \opt{input\_encoding} and \opt{output\_encoding} from the
 config file or \verb+.bcf+. Use the full \latex\ macro to UTF-8
 conversion set because you have some more obscure character macros in
-your \verb+.bib+ data source which you want to sort correctly
+your \verb+.bib+ datasource which you want to sort correctly
 
 \biberex{biber --recodedata=/tmp/recode.xml --decodecharsset=special}
 
@@ -1936,7 +1936,7 @@ following features relevant to \biblatex/\biber:
 \begin{itemize}
 \item Adds font-lock support for most \biblatex\ macros
 \item Auto-detects whether you are using \biber\ with \biblatex\
-\item Can detect whether dependencies like data sources have changed without
+\item Can detect whether dependencies like datasources have changed without
   them being open in Emacs
 \item Understands \biblatex\ and \biber\ messages so that
   AUC\TeX\ will prompt you with the best default command to run next
@@ -1972,26 +1972,26 @@ source and if it's not a number as \biblatex\ expects (because it
 wasn't one of the macros as mentioned above or these macros were disabled
 by \opt{--nostdmacros}), it will try to turn it into the right number in
 the \verb+.bbl+. If you only use \biblatex\ with your \BibTeX\
-data source files, you should probably make any \bibfield{MONTH} fields be the
+datasource files, you should probably make any \bibfield{MONTH} fields be the
 numbers which \biblatex\ expects.
 
-\subsection{\biber\ data source drivers}\label{dsd}
+\subsection{\biber\ datasource drivers}\label{dsd}
 
-\biber\ uses a modular data source driver model to provide access
-to supported data sources. The drivers are responsible for mapping
+\biber\ uses a modular datasource driver model to provide access
+to supported datasources. The drivers are responsible for mapping
 driver entrytypes and fields to the \biblatex\ data model according to a
 data model specification in the \biblatex\ file \file{blx-dm.def}. The
 data model can be changed using \biblatex\ macros in case you would
 like to, for example, use your own entrytype or field names or perhaps
-have \biber\ do some validation on your data sources (see the \biblatex\
+have \biber\ do some validation on your datasources (see the \biblatex\
 manual). 
 
 Data model mapping is an imprecise art and the drivers are the
-necessarily the most messy parts of \biber. Most data source models are
+necessarily the most messy parts of \biber. Most datasource models are
 not designed with typesetting in mind and are usually not fine-grained
 enough to provide the sorts of information that \biblatex\
 needs. \biber\ does its best to obtain as much meaningful information
-from a data source as possible. Currently supported data sources
+from a datasource as possible. Currently supported datasources
 drivers are:
 
 \begin{itemize}
@@ -2099,16 +2099,20 @@ xref     & Show XREF relationships\\
 \bigskip
 \subsection{Tool Mode}\label{tool}
 \biber\ can run in «tool» mode which is enabled with the \opt{--tool}
-command-line only option. In this mode, \biber is called: \opt{biber --tool
-  <datasource>}. It does not read any \file{.bcf} and does not output
-any \file{.bbl}. Instead, it reads all entries from the file
+command-line only option. In this mode, \biber is called: \opt{biber
+  --tool <datasource>}. It does not read any \file{.bcf} and does not
+output any \file{.bbl}. Instead, it reads all entries from the file
 «datasource», applies any changes specified in the command-line
 options and \biber\ config file and writes the resulting datasource
-out to a new file, defaulting to «\file{<datasource>\_bibertool.bib}» if the
-option \opt{output\_file} is not specified. This is useful if you need to
-programatically change your datasource using the semantics provided by
-\biber. For example, you could choose to reencode your datasource by
-turning all UTF-8 characters into \latex\ macros:
+out to a new file, defaulting to a \bibtex file called
+«\file{<datasource>\_bibertool.bib}» if the options \opt{output\_file}
+and \opt{output\_format} are not specified.
+
+Tool mode is useful if you need to programatically change your
+datasource using the semantics provided by \biber or if you would like
+to convert your data to a different format. For example, you
+could choose to reencode your datasource by turning all UTF-8
+characters into \latex\ macros:
 
 \begin{verbatim}
 biber --tool --output_encoding=ascii file.bib
@@ -2263,7 +2267,7 @@ will by default look for a config file in the usual way (see section
 it will use the default \file{biber-tool.conf} which is located in the
 \biber install tree in the same location as the \file{Config.pm} file. This
 default config file contains the default \biblatex source mappings for
-\bibtex data sources and also the default inheritance rules for
+\bibtex datasources and also the default inheritance rules for
 \bibfield{CROSSREF} processing. This means that when you use the
 \opt{--tool\_resolve} option, inheritance processing is performed on the
 entries and the results of this are «materialised» in the output. For
@@ -2359,6 +2363,39 @@ Notice here that:
 \item Entry key aliases have been resolved as required in order to perform
   these tasks
 \end{itemize}
+
+Tool mode can also be used to convert between datasource
+formats\footnote{This is currently rather experimental}. For example,
+if you wish to covert a \bibtex format data file to the experimental
+\texttt{biblatexml} XML format, you can do:
+
+\begin{verbatim}
+biber --tool --output_format=biblatexml file.bib
+\end{verbatim}
+
+\noindent This will output a file \file{file\_bibertool.bltxml} by
+default. The applicability of the various tool mode options depend on
+the output format as shown in table \ref{tab:toolopts}.
+
+\begin{table}
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+& \multicolumn{2}{c}{\emph{Output format}}\\
+\emph{Option} & bibtex & biblatexml\\
+\midrule
+tool\_align & \checkmark &  \\
+tool\_indent & \checkmark & \checkmark\\
+tool\_fieldcase & \checkmark & \\
+tool\_macro\_fields & \checkmark & \\
+tool\_resolve & \checkmark & \checkmark\\
+\bottomrule
+\end{tabular}
+\end{center}
+\caption{Applicability of the tool mode options}
+\label{tab:toolopts}
+\end{table}
 \bigskip
 \subsubsection{Customising Tool Mode Inheritance Resolution}
 The default \file{biber-tool.conf} contains, as mentioned above, the
