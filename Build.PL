@@ -51,7 +51,7 @@ my $builder = $class->new(
         'List::MoreUtils' => 0,
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
-        'Unicode::Collate' => '0.97',
+        'Unicode::Collate' => '0.98',
         'Unicode::GCString' => 0,
         'Encode::EUCJPASCII' => 0,
         'Encode::JIS2K' => 0,
@@ -66,7 +66,7 @@ my $builder = $class->new(
         'Business::ISBN' => 0,
         'Business::ISSN' => 0,
         'Business::ISMN' => 0,
-        'Mozilla::CA' => 0,
+        'Mozilla::CA' =>  0,
         'perl' => '5.16.0'
     },
     recommends => {
