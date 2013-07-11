@@ -362,9 +362,9 @@ sub get_field_form_names {
   my $self = shift;
   my $key = shift;
   return undef unless $key;
-  return keys %{Dive($self, 'datafields', $key) ||
-                Dive($self, 'derivedfields', $key) ||
-                {}};
+  return sort keys %{Dive($self, 'datafields', $key) ||
+                     Dive($self, 'derivedfields', $key) ||
+                     {}};
 }
 
 =head2 get_field_form_lang_names
@@ -378,9 +378,9 @@ sub get_field_form_lang_names {
   my ($key, $form) = @_;
   return undef unless $key;
   return undef unless $form;
-  return keys %{Dive($self, 'datafields', $key, $form) ||
-                Dive($self, 'derivedfields', $key, $form) ||
-                {}};
+  return sort keys %{Dive($self, 'datafields', $key, $form) ||
+                     Dive($self, 'derivedfields', $key, $form) ||
+                     {}};
 }
 
 =head2 set_datafield
