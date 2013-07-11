@@ -31,3 +31,4 @@ like($stdout, qr|WARN - Duplicate entry key: 'F1' in file 't/tdata/full\.bib', s
 like($stdout, qr|WARN - Possible typo \(case mismatch\) between datasource keys: 'f1' and 'F1' in file 't/tdata/full\.bib'|ms, 'Testing duplicate/case key warnings - 2');
 like($stdout, qr|WARN - Possible typo \(case mismatch\) between citation and datasource keys: 'C1' and 'c1' in file 't/tdata/full\.bib'|ms, 'Testing duplicate/case key warnings - 3');
 
+}
