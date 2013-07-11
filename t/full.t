@@ -11,6 +11,10 @@ use File::Temp;
 use File::Compare;
 use File::Which;
 
+SKIP: {
+        skip "BIBER_SKIP_DEV_TESTS env var is set, skipping external tests", 5 if $ENV{BIBER_SKIP_DEV_TESTS};
+
+
 my $perl = which('perl');
 
 my $tmpfile = File::Temp->new();
