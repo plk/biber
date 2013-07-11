@@ -4,15 +4,19 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 3;
+use Test::More;
+
+if ($ENV{BIBER_DEV_TESTS}) {
+  plan tests => 3;
+}
+else {
+  plan skip_all => 'BIBER_DEV_TESTS not set';
+}
 
 use Biber;
 use Biber::Output::bbl;
 use Log::Log4perl;
 chdir("t/tdata") ;
-
-SKIP: {
-        skip "BIBER_SKIP_DEV_TESTS env var is set, skipping remote tests", 3 if $ENV{BIBER_SKIP_DEV_TESTS};
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
@@ -140,5 +144,3 @@ my $ssl = q|    \entry{jung_alchemical_????}{book}{}
 is( $out->get_output_entry('citeulike:8283461', $main), $cu1, 'Fetch from citeulike') ;
 is( $out->get_output_entry('AbdelbarH98', $main), $dl1, 'Fetch from plain bib download') ;
 is( $out->get_output_entry('jung_alchemical_????', $main), $ssl, 'HTTPS test') ;
-
-}
