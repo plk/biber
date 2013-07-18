@@ -433,7 +433,7 @@ sub get_field_form_names {
   return undef unless $field;
   my $dm = Biber::Config->get_dm;
   return undef unless $dm->field_is_multiscript($field);
-  return keys %{Dive($self, 'datafields', 'ms', $field) ||
+  return sort keys %{Dive($self, 'datafields', 'ms', $field) ||
                 Dive($self, 'derivedfields', 'ms', $field) ||
                 {}};
 }
@@ -451,7 +451,7 @@ sub get_field_form_lang_names {
   return undef unless $form;
   my $dm = Biber::Config->get_dm;
   return undef unless $dm->field_is_multiscript($field);
-  return keys %{Dive($self, 'datafields', 'ms', $field, $form) ||
+  return sort keys %{Dive($self, 'datafields', 'ms', $field, $form) ||
                 Dive($self, 'derivedfields', 'ms', $field, $form) ||
                 {}};
 }
