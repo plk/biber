@@ -1,6 +1,6 @@
 Revision history for Biber
 
-1.7    (unreleased)
+1.7    (2013-07-07)
        * Added clrmacros option
        * Added map_nomatch
        * Added --tool_macro_fields option

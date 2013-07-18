@@ -6,7 +6,7 @@ Things to remember when releasing new version:
 * Update main html page 
 * Update "TODO" file
 * Change version string and beta flag in "Config.pm"
-* Change $BBL_VERSION in Constants.pm if necessary
+* Change $BCF_VERSION/$BBL_VERSION in Constants.pm if necessary
 * "perl Build.PL" and "Build dist" to update YAML/JSON
 * Run test suite and make sure it passes cleanly
 * Commit and tag with version number

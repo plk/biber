@@ -57,33 +57,6 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
 
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
   <bltx:entry id="i3Š" entrytype="unpublished">
-    <bltx:author form="uniform" lang="lang">
-      <bltx:person>
-        <bltx:last>
-          <bltx:namepart initial="a">aaa</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:last>
-          <bltx:namepart initial="b">bbb</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:last>
-          <bltx:namepart initial="c">ccc</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:last>
-          <bltx:namepart initial="d">ddd</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:last>
-          <bltx:namepart initial="e">eee</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-    </bltx:author>
     <bltx:author>
       <bltx:person>
         <bltx:last>
@@ -108,6 +81,33 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:person>
         <bltx:last>
           <bltx:namepart initial="E">EEE</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+    </bltx:author>
+    <bltx:author form="uniform" lang="lang">
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="a">aaa</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="b">bbb</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="c">ccc</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="d">ddd</bltx:namepart>
+        </bltx:last>
+      </bltx:person>
+      <bltx:person>
+        <bltx:last>
+          <bltx:namepart initial="e">eee</bltx:namepart>
         </bltx:last>
       </bltx:person>
     </bltx:author>

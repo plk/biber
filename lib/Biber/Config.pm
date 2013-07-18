@@ -160,53 +160,6 @@ sub _initopts {
     # config file locations
     unless ( defined($opts->{configfile}) and -f $opts->{configfile} ) {
       $opts->{configfile} = config_file();
-
-      unless (defined($opts->{configfile})) {
-        # There is a special default config file for tool mode
-        # Referring to as yet unprocessed cmd-line tool option as it isn't processed until below
-        if ($opts->{tool}) {
-          (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
-          $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
-          $opts->{configfile} = File::Spec->catpath($vol, "$dir", 'biber-tool.conf');
-        }
-      }
-    }
-
-    # Can't use logcroak here because logging isn't initialised yet
-    if (defined($opts->{configfile})) {
-      require XML::LibXML::Simple;
-
-      $userconf = XML::LibXML::Simple::XMLin($opts->{configfile},
-                                          'ForceContent' => 1,
-                                          'ForceArray' => [
-                                                           qr/\Aoption\z/,
-                                                           qr/\Amaps\z/,
-                                                           qr/\Amap\z/,
-                                                           qr/\Amap_step\z/,
-                                                           qr/\Aper_type\z/,
-                                                           qr/\Aper_datasource\z/,
-                                                           qr/\Atype_pair\z/,
-                                                           qr/\Ainherit\z/,
-                                                           qr/\Afieldor\z/,
-                                                           qr/\Afieldxor\z/,
-                                                           qr/\Afield\z/,
-                                                           qr/\Aalias\z/,
-                                                           qr/\Aalsoset\z/,
-                                                           qr/\Aconstraints\z/,
-                                                           qr/\Aconstraint\z/,
-                                                           qr/\Aentrytype\z/,
-                                                           qr/\Adatetype\z/,
-                                                           qr/\Acondition\z/,
-                                                           qr/\A(?:or)?filter\z/,
-                                                           qr/\Asortexclusion\z/,
-                                                           qr/\Aexclusion\z/,
-                                                           qr/\Asort\z/,
-                                                           qr/\Asortitem\z/,
-                                                           qr/\Apresort\z/,
-                                                          ],
-                                          'NsStrip' => 1,
-                                          'KeyAttr' => []) or
-           croak("Failed to read biber config file '" . $opts->{configfile} . "'\n $@");
     }
   }
 
@@ -229,79 +182,16 @@ sub _initopts {
     Biber::Config->setblxoption($_, $CONFIG_DEFAULT_BIBLATEX{$_});
   }
 
-  # Set options from config file.
-  while (my ($k, $v) = each %$userconf) {
-    if (exists($v->{content})) { # simple option
-      Biber::Config->setconfigfileoption($k, $v->{content});
-    }
-    # mildly complex options - nosort/collate_options
-    elsif (lc($k) eq 'nosort' or
-           lc($k) eq 'noinit' ) {
-      Biber::Config->setconfigfileoption($k, $v->{option});
-    }
-    # rather complex options
-    elsif (lc($k) eq 'collate_options') {
-      my $collopts = Biber::Config->getoption('collate_options');
-      # Override defaults with any user settings
-      foreach my $co (@{$v->{option}}) {
-        $collopts->{$co->{name}} = $co->{value};
-      }
-      Biber::Config->setconfigfileoption($k, $collopts);
-    }
-    elsif (lc($k) eq 'sourcemap') {
-      my $sms;
-      foreach my $sm (@{$v->{maps}}) {
-        if (defined($sm->{level}) and $sm->{level} eq 'driver') {
-          carp("You can't set driver level sourcemaps via biber - use \\DeclareDriverSourcemap in biblatex. Ignoring map.");
-        }
-        elsif (defined($sm->{level}) and $sm->{level} eq 'style') {
-          carp("You can't set style level sourcemaps via biber - use \\DeclareStyleSourcemap in biblatex. Ignoring map.");
-        }
-        else {
-          push @$sms, $sm;
-        }
-      }
-      Biber::Config->setconfigfileoption($k, $sms);
-    }
-    elsif (lc($k) eq 'inheritance') {# This is a biblatex option
-      Biber::Config->setblxoption($k, $v);
-    }
-    elsif (lc($k) eq 'sorting') {# This is a biblatex option
-      # sorting excludes
-      foreach my $sex (@{$v->{sortexclusion}}) {
-        my $excludes;
-        foreach my $ex (@{$sex->{exclusion}}) {
-          $excludes->{$ex->{content}} = 1;
-        }
-        Biber::Config->setblxoption('sortexclusion',
-                                    $excludes,
-                                    'PER_TYPE',
-                                    $sex->{type});
-      }
-
-      # presort defaults
-      foreach my $presort (@{$v->{presort}}) {
-        # Global presort default
-        unless (exists($presort->{type})) {
-          Biber::Config->setblxoption('presort', $presort->{content});
-        }
-        # Per-type default
-        else {
-          Biber::Config->setblxoption('presort',
-                                      $presort->{content},
-                                      'PER_TYPE',
-                                      $presort->{type});
-        }
-      }
-      Biber::Config->setblxoption('sorting', Biber::_parse_sort($v));
-    }
-    elsif (lc($k) eq 'datamodel') {# This is a biblatex option
-      Biber::Config->setblxoption('datamodel', $v);
-    }
-    elsif (lc($k) eq 'datamodel') {# Usually will only find this in tool mode
-      Biber::Config->set_dm(Biber::DataModel->new($v));
-    }
+  # There is a special default config file for tool mode
+  # Referring to as yet unprocessed cmd-line tool option as it isn't processed until below
+  if ($opts->{tool}) {
+    (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
+    $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+    _config_file_set(File::Spec->catpath($vol, "$dir", 'biber-tool.conf'));
   }
+
+  # Normal user config file - overrides tool mode defaults, if any
+  _config_file_set($opts->{configfile});
 
   # Command-line overrides everything else
   foreach my $copt (keys %$opts) {
@@ -437,6 +327,120 @@ sub _initopts {
   }
 
   return;
+}
+
+# read a config file and set options from it
+sub _config_file_set {
+  my $conf = shift;
+  my $userconf;
+
+  # Can't use logcroak here because logging isn't initialised yet
+  if (defined($conf)) {
+    require XML::LibXML::Simple;
+
+    $userconf = XML::LibXML::Simple::XMLin($conf,
+                                           'ForceContent' => 1,
+                                           'ForceArray' => [
+                                                            qr/\Aoption\z/,
+                                                            qr/\Amaps\z/,
+                                                            qr/\Amap\z/,
+                                                            qr/\Amap_step\z/,
+                                                            qr/\Aper_type\z/,
+                                                            qr/\Aper_datasource\z/,
+                                                            qr/\Atype_pair\z/,
+                                                            qr/\Ainherit\z/,
+                                                            qr/\Afieldor\z/,
+                                                            qr/\Afieldxor\z/,
+                                                            qr/\Afield\z/,
+                                                            qr/\Aalias\z/,
+                                                            qr/\Aalsoset\z/,
+                                                            qr/\Aconstraints\z/,
+                                                            qr/\Aconstraint\z/,
+                                                            qr/\Aentrytype\z/,
+                                                            qr/\Adatetype\z/,
+                                                            qr/\Acondition\z/,
+                                                            qr/\A(?:or)?filter\z/,
+                                                            qr/\Asortexclusion\z/,
+                                                            qr/\Aexclusion\z/,
+                                                            qr/\Asort\z/,
+                                                            qr/\Asortitem\z/,
+                                                            qr/\Apresort\z/,
+                                                           ],
+                                           'NsStrip' => 1,
+                                           'KeyAttr' => []) or
+                                             croak("Failed to read biber config file '$conf'\n $@");
+  }
+
+  # Set options from config file.
+  while (my ($k, $v) = each %$userconf) {
+    if (exists($v->{content})) { # simple option
+      Biber::Config->setconfigfileoption($k, $v->{content});
+    }
+    # mildly complex options - nosort/collate_options
+    elsif (lc($k) eq 'nosort' or
+           lc($k) eq 'noinit' ) {
+      Biber::Config->setconfigfileoption($k, $v->{option});
+    }
+    # rather complex options
+    elsif (lc($k) eq 'collate_options') {
+      my $collopts = Biber::Config->getoption('collate_options');
+      # Override defaults with any user settings
+      foreach my $co (@{$v->{option}}) {
+        $collopts->{$co->{name}} = $co->{value};
+      }
+      Biber::Config->setconfigfileoption($k, $collopts);
+    }
+    elsif (lc($k) eq 'sourcemap') {
+      my $sms;
+      foreach my $sm (@{$v->{maps}}) {
+        if (defined($sm->{level}) and $sm->{level} eq 'driver') {
+          carp("You can't set driver level sourcemaps via biber - use \\DeclareDriverSourcemap in biblatex. Ignoring map.");
+        }
+        elsif (defined($sm->{level}) and $sm->{level} eq 'style') {
+          carp("You can't set style level sourcemaps via biber - use \\DeclareStyleSourcemap in biblatex. Ignoring map.");
+        }
+        else {
+          push @$sms, $sm;
+        }
+      }
+      Biber::Config->setconfigfileoption($k, $sms);
+    }
+    elsif (lc($k) eq 'inheritance') {# This is a biblatex option
+      Biber::Config->setblxoption($k, $v);
+    }
+    elsif (lc($k) eq 'sorting') {# This is a biblatex option
+      # sorting excludes
+      foreach my $sex (@{$v->{sortexclusion}}) {
+        my $excludes;
+        foreach my $ex (@{$sex->{exclusion}}) {
+          $excludes->{$ex->{content}} = 1;
+        }
+        Biber::Config->setblxoption('sortexclusion',
+                                    $excludes,
+                                    'PER_TYPE',
+                                    $sex->{type});
+      }
+
+      # presort defaults
+      foreach my $presort (@{$v->{presort}}) {
+        # Global presort default
+        unless (exists($presort->{type})) {
+          Biber::Config->setblxoption('presort', $presort->{content});
+        }
+        # Per-type default
+        else {
+          Biber::Config->setblxoption('presort',
+                                      $presort->{content},
+                                      'PER_TYPE',
+                                      $presort->{type});
+        }
+      }
+      Biber::Config->setblxoption('sorting', Biber::_parse_sort($v));
+    }
+    elsif (lc($k) eq 'datamodel') {# This is a biblatex option
+      Biber::Config->setblxoption('datamodel', $v);
+    }
+  }
 }
 
 =head2 config_file
