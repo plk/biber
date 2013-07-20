@@ -3179,7 +3179,10 @@ sub fetch_data {
     $section->add_undef_citekey($citekey);
   }
 
-  # Skip dependents detection if in real tool mode
+  # Don't need to do dependent detection if running in (real) tool mode since this is always
+  # allkeys=1 and we don't care about missing dependents which get_dependents() might prune
+  # pseudo_tool mode is bibtex output when not in tool mode. Internally, it's essentially
+  # the same but without allkeys.
   if (Biber::Config->getoption('tool') and not
       Biber::Config->getoption('pseudo_tool')) {
     return;
