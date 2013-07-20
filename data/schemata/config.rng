@@ -417,6 +417,14 @@
           </element>
         </optional>
         <optional>
+          <element name="output_align">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
           <element name="output_directory">
             <text/>
           </element>
@@ -424,6 +432,15 @@
         <optional>
           <element name="output_encoding">
             <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_fieldcase">
+            <choice>
+              <value>upper</value>
+              <value>lower</value>
+              <value>title</value>
+            </choice>
           </element>
         </optional>
         <optional>
@@ -438,6 +455,24 @@
               <value>bbl</value>
               <value>biblatexml</value>
               <value>dot</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_indent">
+            <data type="unsignedByte"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_macro_fields">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_resolve">
+            <choice>
+              <value>0</value>
+              <value>1</value>
             </choice>
           </element>
         </optional>
@@ -555,43 +590,8 @@
           </element>
         </optional>
         <optional>
-          <element name="tool_align">
-            <choice>
-              <value>0</value>
-              <value>1</value>
-            </choice>
-          </element>
-        </optional>
-        <optional>
           <element name="tool_config">
             <text/>
-          </element>
-        </optional>
-        <optional>
-          <element name="tool_fieldcase">
-            <choice>
-              <value>upper</value>
-              <value>lower</value>
-              <value>title</value>
-            </choice>
-          </element>
-        </optional>
-        <optional>
-          <element name="tool_indent">
-            <data type="unsignedByte"/>
-          </element>
-        </optional>
-        <optional>
-          <element name="tool_macro_fields">
-            <text/>
-          </element>
-        </optional>
-        <optional>
-          <element name="tool_resolve">
-            <choice>
-              <value>0</value>
-              <value>1</value>
-            </choice>
           </element>
         </optional>
         <optional>

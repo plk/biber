@@ -51,6 +51,7 @@ t/bcfvalidation.t
 t/biblatexml.t
 t/bibtex-aliases.t
 t/bibtex-forms.t
+t/bibtex-output.t
 t/configfile.t
 t/crossrefs.t
 t/dm-constraints.t
@@ -94,6 +95,7 @@ t/tdata/bibtex-aliases.bcf
 t/tdata/bibtex-aliases.bib
 t/tdata/bibtex-forms.bcf
 t/tdata/bibtex-forms.bib
+t/tdata/bibtex-output.bcf
 t/tdata/crossrefs.bcf
 t/tdata/crossrefs.bib
 t/tdata/dm-constraints.bcf

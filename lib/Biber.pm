@@ -238,7 +238,7 @@ sub tool_mode_setup {
   my $self = shift;
   my $bib_sections = new Biber::Sections;
   # There are no sections in tool mode so create a pseudo-section
-  my $bib_section = new Biber::Section('number' => 0);
+  my $bib_section = new Biber::Section('number' => 99999);
   $bib_section->set_datasources([{type => 'file',
                                   name => $ARGV[0],
                                   datatype => Biber::Config->getoption('input_format')}]);
@@ -249,10 +249,10 @@ sub tool_mode_setup {
   $self->add_sections($bib_sections);
 
   my $sortlists = new Biber::SortLists;
-  my $seclist = Biber::SortList->new(section => 0, label => 'tool');
+  my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sorting'));
   $seclist->set_type('entry');
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-  $logger->debug("Adding 'entry' list 'tool' for pseudo-section 0");
+  $logger->debug("Adding 'entry' list 'tool' for pseudo-section 99999");
   $sortlists->add_list($seclist);
   $self->{sortlists} = $sortlists;
 
@@ -700,6 +700,40 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   # We want the strict perl utf8 "UTF-8"
   normalise_utf8();
 
+  # bibtex output when not in tool mode, is essentially entering tool mode but
+  # without allkeys. We are not in tool mode if we are here. We fake tool mode
+  # and then add a special section which contains all cited keys from all sections
+  if (Biber::Config->getoption('output_format') eq 'bibtex') {
+    Biber::Config->setoption('tool' ,1);
+    Biber::Config->setoption('pseudo_tool' ,1);
+
+    my $bib_section = new Biber::Section('number' => 99999);
+
+    foreach my $section (@{$self->sections->get_sections}) {
+      $bib_section->add_citekeys($section->get_citekeys);
+      foreach my $ds (@{$section->get_datasources}) {
+        $bib_section->add_datasource($ds);
+      }
+    }
+
+    $self->sections->add_section($bib_section);
+
+    # Global sorting in non tool mode bibtex output is citeorder
+    Biber::Config->setblxoption('sortscheme', 'none');
+
+    my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'));
+    $seclist->set_type('entry');
+    # bibtex output in non-tool mode is just citeorder
+    $seclist->set_sortscheme([
+                              [
+                               {},
+                               {'citeorder'    => {}}
+                              ]
+                             ]);
+    $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
+    $self->{sortlists}->add_list($seclist);
+  }
+
   return;
 }
 
@@ -730,7 +764,7 @@ sub process_setup {
   # Break data model information up into more processing-friendly formats
   # for use in verification checks later
   # This has to be here as opposed to in parse_control() so that it can pick
-  # up use config dm settings (for tool mode) in case there is nothing in the .bcf
+  # up user config dm settings
   Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
   # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
@@ -3035,8 +3069,8 @@ sub prepare_tool {
   # Place to put global pre-processing things
   $self->process_setup_tool;
 
-  # tool mode only has a section 0
-  my $secnum = 0;
+  # tool mode only has a section '99999'
+  my $secnum = 99999;
   my $section = $self->sections->get_section($secnum);
 
   $section->reset_caches; # Reset the the section caches (sorting, label etc.)
@@ -3044,13 +3078,13 @@ sub prepare_tool {
   $self->set_current_section($secnum); # Set the section number we are working on
   $self->fetch_data;      # Fetch cited key and dependent data from sources
 
-  if (Biber::Config->getoption('tool_resolve')) {
+  if (Biber::Config->getoption('output_resolve')) {
     $self->resolve_alias_refs; # Resolve xref/crossref/xdata aliases to real keys
     $self->resolve_xdata;      # Resolve xdata entries
     $self->process_interentry; # Process crossrefs/sets etc.
   }
 
-  $self->process_lists;                # process the output lists (sort and filtering)
+  $self->process_lists;        # process the output lists (sort and filtering)
   $out->create_output_section; # Generate and push the section output into the
                                # into the output object ready for writing
   return;
@@ -3145,8 +3179,9 @@ sub fetch_data {
     $section->add_undef_citekey($citekey);
   }
 
-  # Skip dependents detection if in tool mode
-  if (Biber::Config->getoption('tool')) {
+  # Skip dependents detection if in real tool mode
+  if (Biber::Config->getoption('tool') and not
+      Biber::Config->getoption('pseudo_tool')) {
     return;
   }
 
