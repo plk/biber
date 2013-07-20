@@ -290,7 +290,7 @@ else {
       $outfile = $bcf =~ s/bcf$/dot/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'bibtex') { # bibtex output
-      $outfile = $ARGV[0] =~ s/\..+$/_biber.bib/r;
+      $outfile = $bcf =~ s/\..+$/_biber.bib/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'bbl') { # bbl output
       $outfile = $bcf =~ s/bcf$/bbl/r;
