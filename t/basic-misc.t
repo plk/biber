@@ -14,7 +14,7 @@ use Unicode::Normalize;
 chdir("t/tdata");
 
 # Set up Biber object
-my $biber = Biber->new( configfile => 'biber-test.conf');
+my $biber = Biber->new(configfile => 'biber-test.conf');
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -27,7 +27,7 @@ my $l4pconf = qq|
 |;
 Log::Log4perl->init(\$l4pconf);
 
-$biber->parse_ctrlfile("general2.bcf");
+$biber->parse_ctrlfile('general2.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're

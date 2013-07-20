@@ -148,25 +148,25 @@ my $forms1 = q|    \entry{forms1}{book}{}
         {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=uniform]{author}{2}{}{%
-        {{hash=d3e42eb37529f4d05f9646c333b5fd5f}{Bulgakov}{B\bibinitperiod}{Pavel}{P\bibinitperiod}{}{}{}{}}%
-        {{hash=87d0ec74cbe7f9e39f5bbc25930f1474}{Rosenfeld}{R\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{2}{}{%
         {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
       }
+      \name[form=uniform]{author}{2}{}{%
+        {{hash=d3e42eb37529f4d05f9646c333b5fd5f}{Bulgakov}{B\bibinitperiod}{Pavel}{P\bibinitperiod}{}{}{}{}}%
+        {{hash=87d0ec74cbe7f9e39f5bbc25930f1474}{Rosenfeld}{R\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
+      }
       \list{institution}{1}{%
         {University of Life}%
-      }
-      \list[form=uniform]{location}{1}{%
-        {Moscow}%
       }
       \list{location}{1}{%
         {Москва}%
       }
       \list[form=romanised]{location}{1}{%
         {Moskva}%
+      }
+      \list[form=uniform]{location}{1}{%
+        {Moscow}%
       }
       \list{publisher}{1}{%
         {Наука}%

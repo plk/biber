@@ -53,12 +53,17 @@ GetOptions(
            'nostdmacros',
            'onlylog',
            'others_string=s',
-           'outfile=s', # legacy alias for output_file
-           'outformat=s', # legacy alias for output_format
+           'outfile=s',           # legacy alias for output_file
+           'outformat=s',         # legacy alias for output_format
+           'output_align',
            'output_directory=s',
            'output_encoding|E=s',
+           'output_fieldcase=s',
            'output_file|O=s',
            'output_format=s',
+           'output_indent=s',
+           'output_macro_fields=s',
+           'output_resolve',
            'output_safechars',
            'output_safecharsset=s',
            'quiet|q+',
@@ -70,12 +75,12 @@ GetOptions(
            'ssl-nointernalca',
            'ssl-noverify-host',
            'tool',
-           'tool_align',
+           'tool_align',          # legacy alias for output_align
            'tool_config',
-           'tool_fieldcase=s',
-           'tool_indent=s',
-           'tool_macro_fields=s',
-           'tool_resolve',
+           'tool_fieldcase=s',    # legacy alias for output_fieldcase
+           'tool_indent=s',       # legacy alias for output_indent
+           'tool_macro_fields=s', # legacy alias for output_macro_fields
+           'tool_resolve',        # legacy alias for output_resolve
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
@@ -132,6 +137,26 @@ if ($opts->{fastsort}) {
 }
 
 # Resolve some option shortcuts and legacy aliases
+if (my $o = $opts->{tool_align}) {
+  $opts->{output_align} = $o;
+  delete $opts->{tool_align};
+}
+if (my $o = $opts->{tool_fieldcase}) {
+  $opts->{output_fieldcase} = $o;
+  delete $opts->{tool_fieldcase};
+}
+if (my $o = $opts->{tool_indent}) {
+  $opts->{output_indent} = $o;
+  delete $opts->{tool_indent};
+}
+if (my $o = $opts->{tool_macro_fields}) {
+  $opts->{output_macro_fields} = $o;
+  delete $opts->{tool_macro_fields};
+}
+if (my $o = $opts->{tool_resolve}) {
+  $opts->{output_resolve} = $o;
+  delete $opts->{tool_resolve};
+}
 if (my $o = $opts->{bibencoding}) {
   $opts->{input_encoding} = $o;
   delete $opts->{bibencoding};
@@ -180,25 +205,23 @@ if (exists($opts->{tool}) and
     exit EXIT_ERROR;
 }
 
-if (not exists($opts->{tool}) and
-    exists($opts->{output_format}) and
-    $opts->{output_format} =~ /\A(bibtex|biblatexml)\z/xms) {
-  say STDERR "Biber: Output format '$1' is only valid in tool mode";
-  exit EXIT_ERROR;
-}
-
-if (exists($opts->{tool}) and
-    not exists($opts->{output_format})) {
-  $opts->{output_format} = 'bibtex'; # default for tool mode is different
+# Set default output format
+if (not exists($opts->{output_format})) {
+  if (exists($opts->{tool})) {
+    $opts->{output_format} = 'bibtex'; # default for tool mode is different
+  }
+  else {
+    $opts->{output_format} = 'bbl'; # default for normal use
+  }
 }
 
 # Check the tool_* options
-if (exists($opts->{tool_indent}) and $opts->{tool_indent} !~ /^\d+$/) {
-  say STDERR "Biber: Invalid non-numeric argument for 'tool_indent' option!";
+if (exists($opts->{output_indent}) and $opts->{output_indent} !~ /^\d+$/) {
+  say STDERR "Biber: Invalid non-numeric argument for 'output_indent' option!";
   exit EXIT_ERROR;
 }
-if (exists($opts->{tool_fieldcase}) and $opts->{tool_fieldcase} !~ /^(?:upper|lower|title)$/i) {
-  say STDERR "Biber: Invalid argument for 'tool_fieldcase' option - must be one of 'upper', 'lower' or 'title'!";
+if (exists($opts->{output_fieldcase}) and $opts->{output_fieldcase} !~ /^(?:upper|lower|title)$/i) {
+  say STDERR "Biber: Invalid argument for 'output_fieldcase' option - must be one of 'upper', 'lower' or 'title'!";
   exit EXIT_ERROR;
 }
 
@@ -254,10 +277,7 @@ if (Biber::Config->getoption('output_file')) {
   $outfile = Biber::Config->getoption('output_file')
 }
 else {
-  if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
-    $outfile = $bcf =~ s/bcf$/dot/r;
-  }
-  elsif (Biber::Config->getoption('tool')) {
+  if (Biber::Config->getoption('tool')) {
     if (Biber::Config->getoption('output_format') eq 'bibtex') { # tool .bib output
       $outfile = $ARGV[0] =~ s/\..+$/_bibertool.bib/r;
     }
@@ -265,8 +285,16 @@ else {
       $outfile = $ARGV[0] =~ s/\..+$/_bibertool.bltxml/r;
     }
   }
-  else { # .bbl output
-    $outfile = $bcf =~ s/bcf$/bbl/r;
+  else {
+    if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
+      $outfile = $bcf =~ s/bcf$/dot/r;
+    }
+    elsif (Biber::Config->getoption('output_format') eq 'bibtex') { # bibtex output
+      $outfile = $bcf =~ s/\..+$/_biber.bib/r;
+    }
+    elsif (Biber::Config->getoption('output_format') eq 'bbl') { # bbl output
+      $outfile = $bcf =~ s/bcf$/bbl/r;
+    }
   }
 }
 
@@ -308,14 +336,10 @@ if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
   require Biber::Output::dot;
   $biber->set_output_obj(Biber::Output::dot->new());
 }
-elsif (Biber::Config->getoption('tool')) {
+else {
   my $package = 'Biber::Output::' . Biber::Config->getoption('output_format');
   eval "require $package" or biber_error("Error loading data source package '$package': $@");
   $biber->set_output_obj(eval "${package}->new()");
-}
-else { # .bbl output
-  require Biber::Output::bbl;
-  $biber->set_output_obj(Biber::Output::bbl->new());
 }
 
 # Get reference to output object
@@ -363,8 +387,8 @@ biber [options] --tool <datasource>
   all set in biblatex and passed via the ".bcf" file
 
   In "tool" mode (see B<--tool> option), takes a datasource (defaults to
-  "bibtex" datasource) and outputs a copy of the datasource with any datasource
-   mappings/reencodings applied.
+  "bibtex" datasource) and outputs a copy of the datasource with any command-line
+  or config file options applied.
 
   Please run "biber --help" for option details
 
@@ -404,7 +428,9 @@ The default is the first file found among
 F<biber.conf> in the current directory, C<$HOME/.biber.conf>,
 or else the output of C<kpsewhich biber.conf>.
 In tool mode, (B<--tool>) the F<biber-tool.conf> installed with Biber is
-always used unless this option is used to select a user-defined config file.
+always used to set defaults before potentially overriding the defaults with a user-defined
+config specified with this option. Use the B<--tool-config> option to view the location of
+the default tool mode config file.
 
 =item B<--convert_control>
 
@@ -514,6 +540,35 @@ Do not write any message to screen.
 Use F<string> as the final name in a name field which implies "et al". Defaults to BibTeX's usual
 'others'.
 
+=item B<--output_align>
+
+Align field values in neat columns in output. Effect depends on the output format. Default is true.
+The legacy option B<--tool_align> is supported as an alias.
+
+=item B<--output_directory [directory]>
+
+Files (F<.bbl> and F<.blg>) are output to directory F<directory> instead
+of the current directory. Input files are also looked for in F<directory>
+before current directory.
+
+=item B<--output_encoding|-E [encoding]>
+
+Specify the encoding of the output C<.bbl> file. Default is "UTF-8".
+Normally it's not necessary to set this as it's passed via biblatex
+from the inputenc package setting.
+See C<perldoc Encode::Supported> for a list of supported encodings.
+The legacy option B<--bblencoding> is supported as an alias.
+
+=item B<--output_indent=[num]>
+
+Indentation for body of entries in output. Effect depends on the output format. Defaults to 2.
+The legacy option B<--tool_indent> is supported as an alias.
+
+=item B<--output_fieldcase=upper|lower|title>
+
+Case for field names output. Effect depends on the output format. Defaults to 'upper'.
+The legacy option B<--tool_fieldcase> is supported as an alias.
+
 =item B<--output_file|-O [file]>
 
 Output to F<file> instead of F<basename.bbl>
@@ -534,19 +589,16 @@ C<bibtex> and C<biblatexml> are only supported in (and only make sense in)
 C<tool> mode (see B<--tool> option)
 The legacy option B<--outformat> is supported as an alias.
 
-=item B<--output_directory [directory]>
+=item B<--output_macro_fields=[field1, ... fieldn]>
 
-Files (F<.bbl> and F<.blg>) are output to directory F<directory> instead
-of the current directory. Input files are also looked for in F<directory>
-before current directory.
+A comma-separated list of field names whose values are, on output, treated as BibTeX macros.
+Effectively this means that they are not wrapped in braces. Effect depends on the output format.
+The legacy option B<--tool_macro_fields> is supported as an alias.
 
-=item B<--output_encoding|-E [encoding]>
+=item B<--output_resolve>
 
-Specify the encoding of the output C<.bbl> file. Default is "UTF-8".
-Normally it's not necessary to set this as it's passed via biblatex
-from the inputenc package setting.
-See C<perldoc Encode::Supported> for a list of supported encodings.
-The legacy option B<--bblencoding> is supported as an alias.
+Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
+The legacy option B<--tool_resolve> is supported as an alias.
 
 =item B<--output_safechars>
 
@@ -617,35 +669,16 @@ You may need this if the SSL certificate is self-signed for example.
 
 =item B<--tool>
 
-Run in tool mode. In this mode, biber takes a config file and a data source, applies the source
-mapping steps in the config file to the data source and writes a new datasource. Essentially,
-this allows you to change your data sources using biber's mapping semantics.
-
-=item B<--tool_align>
-
-Align field values in neat columns in tool mode output. Default is true.
+Run in tool mode. This mode is datasource centric rather than document centrix. biber
+reads a datasource (and a config file if specified), applies the command-line and config
+file options to the datasource and writes a new datasource. Essentially,
+this allows you to change your data sources using biber's transformation options (such as
+source mapping, sorting etc.)
 
 =item B<--tool_config>
 
 Show the location of the default tool mode config file and exit. Useful when you need to
 copy this file and customise it.
-
-=item B<--tool_fieldcase=upper|lower|title>
-
-Case for field names in tool mode output. Defaults to 'upper'.
-
-=item B<--tool_indent=[num]>
-
-Indentation for body of entries in tool mode output. Defaults to 2.
-
-=item B<--tool_macro_fields=[field1, ... fieldn]>
-
-A comma-separated list of field names whose values are, on output, treated as BibTeX macros.
-Effectively this means that they are not wrapped in braces.
-
-=item B<--tool_resolve>
-
-Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
 
 =item B<--trace|T>
 

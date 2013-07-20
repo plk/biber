@@ -137,10 +137,15 @@ start = element config {
   element nostdmacros          { "0" | "1" }? &
   element onlylog              { "0" | "1" }? &
   element others_string        { text }? &
+  element output_align         { "0" | "1" }? &
   element output_directory     { text }? &
   element output_encoding      { text }? &
+  element output_fieldcase     { "upper" | "lower" | "title" }? &
   element output_file          { text }? &
   element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
+  element output_indent        { xsd:unsignedByte }? &
+  element output_macro_fields  { text }? &
+  element output_resolve       { "0" | "1" }? &
   element output_safechars     { "0" | "1" }? &
   element output_safecharsset  { "base" | "full" }? &
   element quiet                { "0" | "1" }? &
@@ -160,12 +165,7 @@ start = element config {
   element ssl-nointernalca     { "0" | "1" }? &
   element ssl-noverify-host    { "0" | "1" }? &
   element tool                 { "0" | "1" }? &
-  element tool_align           { "0" | "1" }? &
   element tool_config          { text }? &
-  element tool_fieldcase       { "upper" | "lower" | "title" }? &
-  element tool_indent          { xsd:unsignedByte }? &
-  element tool_macro_fields    { text }? &
-  element tool_resolve         { "0" | "1" }? &
   element trace                { "0" | "1" }? &
   element validate_config      { "0" | "1" }? &
   element validate_control     { "0" | "1" }? &

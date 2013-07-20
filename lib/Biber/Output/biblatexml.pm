@@ -69,7 +69,7 @@ sub set_output_target_file {
 
   my $xml = XML::Writer->new(OUTPUT      => $of,
                              DATA_MODE   => 1,
-                             DATA_INDENT => Biber::Config->getoption('tool_indent'),
+                             DATA_INDENT => Biber::Config->getoption('output_indent'),
                              NAMESPACES  => 1,
                              PREFIX_MAP  => {$bltxml => 'bltx'});
   $xml->xmlDecl("UTF-8");
@@ -112,7 +112,7 @@ sub set_output_entry {
   # latter is not really a "processed" output, it is supposed to be something
   # which could be again used as input and so we don't want to resolve/skip
   # fields like DATE etc.
-  unless (Biber::Config->getoption('tool_resolve')) {
+  unless (Biber::Config->getoption('output_resolve')) {
     if (my $xdata = $be->get_field('xdata')) {
       $xml->startTag([$xml_prefix, 'xdata']);
       foreach my $xd (@$xdata) {

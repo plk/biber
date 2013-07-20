@@ -82,7 +82,7 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \verb{url}
       \verb http://www.biomedexperts.com/Abstract.bme/10405096
       \endverb
-      \keyw{love, romantic}
+      \keyw{love,romantic}
     \endentry
 |;
 
@@ -108,39 +108,39 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
     \endentry
 |;
 
-my $ssl = q|    \entry{jung_alchemical_????}{book}{}
+my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       \name{labelname}{1}{}{%
-        {{uniquename=0,hash=c6e712b3aef74e9dabcb8d7a074952ba}{Jung}{J\bibinitperiod}{Carl\bibnamedelima Gustav}{C\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=83d062f99d033839537243075d75bad2}{Merleau-Ponty}{M\bibinithyphendelim P\bibinitperiod}{Maurice}{M\bibinitperiod}{}{}{}{}}%
       }
       \name{author}{1}{}{%
-        {{uniquename=0,hash=c6e712b3aef74e9dabcb8d7a074952ba}{Jung}{J\bibinitperiod}{Carl\bibnamedelima Gustav}{C\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=83d062f99d033839537243075d75bad2}{Merleau-Ponty}{M\bibinithyphendelim P\bibinitperiod}{Maurice}{M\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{4}{}{%
-        {{hash=78e9cfd427143d50e6fb3c72d6529fd4}{Read}{R\bibinitperiod}{Herbert}{H\bibinitperiod}{}{}{}{}}%
-        {{hash=47ed09185c6dabbd5a9868d756f5fe6d}{Fordham}{F\bibinitperiod}{Michael}{M\bibinitperiod}{}{}{}{}}%
-        {{hash=fe82f0d25dcaecad96556b92f0fa6c2e}{Adler}{A\bibinitperiod}{Gerhard}{G\bibinitperiod}{}{}{}{}}%
-        {{hash=6028fc97827ed51ce0fcb78439bd4d4b}{{McGuire}}{M\bibinitperiod}{William}{W\bibinitperiod}{}{}{}{}}%
+      \name{editor}{1}{}{%
+        {{hash=ff5f90046157eecef0c22da4dac6486e}{Lefort}{L\bibinitperiod}{Claude}{C\bibinitperiod}{}{}{}{}}%
       }
-      \name{translator}{1}{}{%
-        {{hash=79d3c54975451a4e16baf4ff6f7066f2}{Hull}{H\bibinitperiod}{R.\bibnamedelimi F.\bibnamedelimi C.}{R\bibinitperiod\bibinitdelim F\bibinitperiod\bibinitdelim C\bibinitperiod}{}{}{}{}}%
+      \list{language}{1}{%
+        {Fransk}%
       }
       \list{location}{1}{%
-        {Princeton, {NJ}}%
+        {Paris}%
       }
       \list{publisher}{1}{%
-        {Princeton University Press}%
+        {Éditions Gallimard}%
       }
-      \strng{namehash}{c6e712b3aef74e9dabcb8d7a074952ba}
-      \strng{fullhash}{c6e712b3aef74e9dabcb8d7a074952ba}
-      \field{sortinit}{J}
-      \field{labeltitle}{Alchemical Studies}
-      \field{series}{Bollingen Series {XX}}
-      \field{title}{Alchemical Studies}
-      \field{volume}{{XIII}}
+      \strng{namehash}{83d062f99d033839537243075d75bad2}
+      \strng{fullhash}{83d062f99d033839537243075d75bad2}
+      \field{sortinit}{M}
+      \field{labelyear}{2010}
+      \field{labeltitle}{Le philosophe et son ombre}
+      \field{booktitle}{Œuvres}
+      \field{title}{Le philosophe et son ombre}
+      \field{year}{2010}
+      \field{pages}{1267\bibrangedash 1289}
+      \keyw{Husserl,Edmund,autrui,chair,constitution,intercorporéité,l'impensé,ouverture}
     \endentry
 |;
 
 
 is( $out->get_output_entry('citeulike:8283461', $main), $cu1, 'Fetch from citeulike') ;
 is( $out->get_output_entry('AbdelbarH98', $main), $dl1, 'Fetch from plain bib download') ;
-is( $out->get_output_entry('jung_alchemical_????', $main), $ssl, 'HTTPS test') ;
+is( $out->get_output_entry('merleau-ponty_philosophe_2010', $main), $ssl, 'HTTPS test') ;

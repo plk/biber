@@ -20,7 +20,7 @@ my $logger = Log::Log4perl::get_logger('main');
 
 =head1 NAME
 
-Biber::Output::bibtex - class for bibtex output of tool mode
+Biber::Output::bibtex - class for bibtex output
 
 =cut
 
@@ -35,13 +35,13 @@ Biber::Output::bibtex - class for bibtex output of tool mode
 
 sub set_output_target_file {
   my $self = shift;
-  my $toolfile = shift;
-  $self->{output_target_file} = $toolfile;
+  my $outfile = shift;
+  $self->{output_target_file} = $outfile;
   my $enc_out;
   if (Biber::Config->getoption('output_encoding')) {
     $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
   }
-  my $TOOLFILE = IO::File->new($toolfile, ">$enc_out");
+  my $TOOLFILE = IO::File->new($outfile, ">$enc_out");
   $self->set_output_target($TOOLFILE);
 }
 
@@ -64,17 +64,17 @@ sub set_output_entry {
   # Make the right casing function
   my $casing;
   my $mss = Biber::Config->getoption('mssplit');
-  if (Biber::Config->getoption('tool_fieldcase') eq 'upper') {
+  if (Biber::Config->getoption('output_fieldcase') eq 'upper') {
     $casing = sub {my $s = shift;
                    my @s = split(/$mss/, $s);
                    join($mss, uc(shift(@s)), @s)};
   }
-  elsif (Biber::Config->getoption('tool_fieldcase') eq 'lower') {
+  elsif (Biber::Config->getoption('output_fieldcase') eq 'lower') {
     $casing = sub {my $s = shift;
                    my @s = split(/$mss/, $s);
                    join($mss, lc(shift(@s)), @s)};
   }
-  elsif (Biber::Config->getoption('tool_fieldcase') eq 'title') {
+  elsif (Biber::Config->getoption('output_fieldcase') eq 'title') {
     $casing = sub {my $s = shift;
                    my @s = split(/$mss/, $s);
                    join($mss, ucfirst(shift(@s)), @s)};
@@ -85,7 +85,7 @@ sub set_output_entry {
   $acc .=  "\{$key,\n";
 
   my $max_field_len;
-  if (Biber::Config->getoption('tool_align')) {
+  if (Biber::Config->getoption('output_align')) {
     $max_field_len = max map {Unicode::GCString->new($_)->length} $be->rawfields;
   }
 
@@ -96,18 +96,18 @@ sub set_output_entry {
     # latter is not really a "processed" output, it is supposed to be something
     # which could be again used as input and so we don't want to resolve/skip
     # fields like DATE etc.
-    if (Biber::Config->getoption('tool_resolve')) {
+    if (Biber::Config->getoption('output_resolve')) {
       next if first {lc($f) eq $_}  ('xdata', 'crossref');
     }
-    # Save post-mapping data for tool mode
+
     my $value = decode_utf8($be->get_rawfield($f));
-    $acc .= ' ' x Biber::Config->getoption('tool_indent');
+    $acc .= ' ' x Biber::Config->getoption('output_indent');
     $acc .= $casing->($f);
-    $acc .= ' ' x ($max_field_len - Unicode::GCString->new($f)->length) if Biber::Config->getoption('tool_align');
+    $acc .= ' ' x ($max_field_len - Unicode::GCString->new($f)->length) if Biber::Config->getoption('output_align');
     $acc .= ' = ';
 
     # Don't wrap field which should be macros in braces
-    my $mfs = Biber::Config->getoption('tool_macro_fields');
+    my $mfs = Biber::Config->getoption('output_macro_fields');
     if (defined($mfs) and first {lc($f) eq $_} map {lc($_)} split(/\s*,\s*/, $mfs) ) {
       $acc .= "$value,\n";
     }
@@ -157,11 +157,11 @@ sub output {
 
   out($target, $data->{HEAD});
 
-  $logger->debug("Writing entries in tool mode");
+  $logger->debug("Writing entries in bibtex format");
 
-  # There is only a (pseudo) section "0" in tool mode
-  foreach my $key ($Biber::MASTER->sortlists->get_list(0, 'entry', 'tool')->get_keys) {
-    out($target, ${$data->{ENTRIES}{0}{index}{$key}});
+  # Bibtex output uses just one special section, always sorted by global sorting spec
+  foreach my $key ($Biber::MASTER->sortlists->get_list(99999, 'entry', Biber::Config->getblxoption('sortscheme'))->get_keys) {
+    out($target, ${$data->{ENTRIES}{99999}{index}{$key}});
   }
 
   out($target, $data->{TAIL});

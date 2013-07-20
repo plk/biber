@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/biblatexml.rnc" type="compact"?>
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
-  <bltx:entry id="origmode" entrytype="book">
+  <bltx:entry id="bltx1" entrytype="book">
     <bltx:ids>
-      <bltx:item>origmodea1</bltx:item>
-      <bltx:item>origmodea2</bltx:item>
+      <bltx:item>bltx1a1</bltx:item>
+      <bltx:item>bltx1a2</bltx:item>
     </bltx:ids>
     <bltx:author morenames="1">
       <bltx:person gender="sm">

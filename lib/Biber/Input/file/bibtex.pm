@@ -173,7 +173,7 @@ sub extract_entries {
   # The Log4Perl setup outputs only to STDOUT so redirecting all STDERR like this is
   # ok since only libbtparse will be writing there
   my $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
-                               DIR => $Biber::MASTER->biber_tempdir);
+                              DIR      => $Biber::MASTER->biber_tempdir);
   my $tberr_name = $tberr->filename;
   open OLDERR, '>&', \*STDERR;
   open STDERR, '>', $tberr_name;

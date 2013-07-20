@@ -13,7 +13,7 @@ no warnings 'utf8';
 use utf8;
 
 # Set up Biber object
-my $biber = Biber->new( configfile => 'tool-test.conf');
+my $biber = Biber->new(configfile => 'tool-test.conf');
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -33,7 +33,7 @@ $biber->set_output_obj(Biber::Output::bibtex->new());
 
 # Biber options
 Biber::Config->setoption('tool', 1);
-Biber::Config->setoption('tool_resolve', 1);
+Biber::Config->setoption('output_resolve', 1);
 Biber::Config->setoption('output_format', 'bibtex');
 Biber::Config->setoption('sortlocale', 'C');
 
@@ -43,7 +43,7 @@ Biber::Config->setoption('sortlocale', 'C');
 $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber program
 $biber->tool_mode_setup;
 $biber->prepare_tool;
-my $main = $biber->sortlists->get_list(0, 'entry', 'tool');
+my $main = $biber->sortlists->get_list(99999, 'entry', Biber::Config->getblxoption('sorting'));
 my $out = $biber->get_output_obj;
 
 my $t1 = q|@UNPUBLISHED{i3Š,

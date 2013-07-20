@@ -115,6 +115,12 @@ example:
   biber --output_format=dot --dot_include=section,field <file>
 \end{verbatim}
 
+\minisec{1.8}
+\textcolor{red}{Several option names have changed}. Several options have
+changed names to facilitate better semantic classification of options. The
+previous names are supported as legacy aliases. See the \verb+--help+
+output of the \biber command.
+
 \minisec{0.9.8}
 \textcolor{red}{The \opt{sourcemap} option syntax has changed}.The syntax
 was too confusing. It is now simplified and more powerful. It is uses a
@@ -2100,14 +2106,14 @@ xref     & Show XREF relationships\\
 \bigskip
 \subsection{Tool Mode}\label{tool}
 \biber\ can run in «tool» mode which is enabled with the \opt{--tool}
-command-line only option. In this mode, \biber is called: \opt{biber
-  --tool <datasource>}. It does not read any \file{.bcf} and does not
-output any \file{.bbl}. Instead, it reads all entries from the file
-«datasource», applies any changes specified in the command-line
-options and \biber\ config file and writes the resulting datasource
-out to a new file, defaulting to a \bibtex file called
-«\file{<datasource>\_bibertool.bib}» if the options \opt{output\_file}
-and \opt{output\_format} are not specified.
+command-line only option. In this mode, \biber is called: \opt{biber --tool
+  <datasource>}. Tool mode is a datasource rather than document oriented
+mode intended for transformations and modifications of datasources. It does
+not read a \file{.bcf} but instead, it reads all entries from the file
+«datasource», applies any changes specified in the command-line options and
+\biber\ config file and writes the resulting datasource out to a new file,
+defaulting to a \bibtex file called «\file{<datasource>\_bibertool.bib}» if
+the options \opt{output\_file} and \opt{output\_format} are not specified.
 
 Tool mode is useful if you need to programatically change your
 datasource using the semantics provided by \biber or if you would like
@@ -2126,7 +2132,7 @@ the input encoding is not (it is by default UTF-8), then the
 config file, you can set up a complex set of mappings to transform
 your datasource however you wish in a semantic manner much more robust
 than just textual search/replace. You can also use the
-\opt{--tool\_resolve} option which will process any \bibfield{XDATA}
+\opt{--output\_resolve} option which will process any \bibfield{XDATA}
 fields/entries, entry aliases and inheritance rules mentioned in the config
 file (see below).
 
@@ -2148,15 +2154,15 @@ instead of this:
 %
 That is, you might not want the output field in braces or quotes as
 this prevents \bibtex interpreting the field value as a macro. Use the
-\opt{--tool\_macro\_fields} option to specify a comma-separated list
+\opt{--output\_macro\_fields} option to specify a comma-separated list
 of fields whose values you wish to output without any \bibtex
 quoting. You can have spaces between the items in the field list but
 then you must enclose the whole option value in quotes. For example,
 these two will do the same thing:
 
 \begin{verbatim}
-biber --tool --tool_macro_fields=month,publisher
-biber --tool --tool_macro_fields='month, publisher'
+biber --tool --output_macro_fields=month,publisher
+biber --tool --output_macro_fields='month, publisher'
 \end{verbatim}
 
 Tool mode also allows some reformatting of the \file{.bib} file. The
@@ -2168,8 +2174,8 @@ values neatly. See the \biber\ \opt{--help} output for documentation
 and defaults. For example, the command:
 
 \begin{verbatim}
-biber --tool --tool_fieldcase=title --tool_indent=4 \
-      --tool_align=true file.bib
+biber --tool --output_fieldcase=title --output_indent=4 \
+      --output_align=true file.bib
 \end{verbatim}
 %
 results in \file{.bib} entries which look like this:
@@ -2185,8 +2191,8 @@ results in \file{.bib} entries which look like this:
 %
 another example:
 \begin{verbatim}
-biber --tool --tool_fieldcase=upper --tool_indent=2 \
-      --tool_align=false file.bib
+biber --tool --output_fieldcase=upper --output_indent=2 \
+      --output_align=false file.bib
 \end{verbatim}
 %
 results in entries like this:
@@ -2218,7 +2224,7 @@ Further suppose that the \file{biber-test.conf} contains the following:
 \begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-  <tool_fieldcase>title</tool_fieldcase>
+  <output_fieldcase>title</output_fieldcase>
   <output_encoding>ascii</output_encoding>
   <output_safechars>1</output_safechars>
   <sourcemap>
@@ -2312,7 +2318,7 @@ example, consider a \file{test.bib} file:
 Running \biber as:
 
 \begin{verbatim}
-biber --tool --tool_resolve test.bib
+biber --tool --output_resolve test.bib
 \end{verbatim}
 %
 The result of this would be a file \file{test\_bibertool.bib} with contents:
@@ -2375,27 +2381,28 @@ biber --tool --output_format=biblatexml file.bib
 \end{verbatim}
 
 \noindent This will output a file \file{file\_bibertool.bltxml} by
-default. The applicability of the various tool mode options depend on
-the output format as shown in table \ref{tab:toolopts}.
+default. The applicability of the various output options depends on
+the output format as shown in table \ref{tab:outopts} where dash means that
+the options has no relevance for the output format.
 
 \begin{table}
 \begin{center}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{lllll}
 \toprule
-& \multicolumn{2}{c}{\emph{Output format}}\\
-\emph{Option} & bibtex & biblatexml\\
+& \multicolumn{4}{c}{\emph{Output format}}\\
+\emph{Option} & bibtex & biblatexml & bbl & dot\\
 \midrule
-tool\_align & \checkmark &  \\
-tool\_indent & \checkmark & \checkmark\\
-tool\_fieldcase & \checkmark & \\
-tool\_macro\_fields & \checkmark & \\
-tool\_resolve & \checkmark & \checkmark\\
+output\_align & \checkmark & - & - & -\\
+output\_indent & \checkmark & \checkmark & - & -\\
+output\_fieldcase & \checkmark & - & - & -\\
+output\_macro\_fields & \checkmark & - & - & -\\
+output\_resolve & \checkmark & \checkmark & - & -\\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{Applicability of the tool mode options}
-\label{tab:toolopts}
+\caption{Applicability of the output options}
+\label{tab:outopts}
 \end{table}
 \bigskip
 \subsubsection{Customising Tool Mode Inheritance Resolution}

@@ -218,7 +218,16 @@ sub get_output_entry {
   my $key = shift;
   my $list = shift; # might not be set for, for example, tool mode tests
   my $section = shift;
-  $section = '0' if not defined($section); # default - mainly for tests
+  # defaults - mainly for tests
+  if (not defined($section)) {
+    if (Biber::Config->getoption('tool') or
+        Biber::Config->getoption('output_format') eq 'bibtex') {
+      $section = 99999;
+    }
+    else {
+      $section = 0;
+    }
+  }
   # Force a return of undef if there is no output for this key to avoid
   # dereferencing errors in tests
   my $out = $self->{output_data}{ENTRIES}{$section}{index}{$key} ||
