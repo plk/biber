@@ -28,8 +28,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{1.7}    % BIBER VERSION
-\gdef\biblatexversion{2.7}   % BIBLATEX VERSION
+\gdef\biberversion{1.8}    % BIBER VERSION
+\gdef\biblatexversion{2.8}   % BIBLATEX VERSION
 
 % Set up tikz things
 
@@ -95,6 +95,10 @@ Please see the \verb+Changes+ file which accompanies \biber\ for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
 
+\minisec{1.8}
+Various option name changes. Old names are retained for backwards
+compatibility. See the output of the \opt{--help} option.
+
 \minisec{1.0}
 The \opt{--validate\_structure} option is now called \opt{--validate\_datamodel}
 
@@ -125,7 +129,7 @@ output of the \biber command.
 \textcolor{red}{The \opt{sourcemap} option syntax has changed}.The syntax
 was too confusing. It is now simplified and more powerful. It is uses a
 sequential processing model to apply mappings to an entry. See section
-\ref{map}.
+\ref{ref:map}.
 
 \minisec{0.9.7}
 \textcolor{red}{The user config file has a completely new format}.The
@@ -135,7 +139,7 @@ sequential processing model to apply mappings to an entry. See section
   fact easier to understand. The old format of the \opt{map} option
   (now called \opt{sourcemap}) was rather confusing because
   of limitations in the old config file format. Please see section
-  \ref{map} and convert your config files to the new format.
+  \ref{ref:map} and convert your config files to the new format.
 
 \minisec{0.9.6}
 \textcolor{red}{Matching of citation keys and datasource entry keys is now
@@ -168,7 +172,7 @@ are provided for many operating systems via the main \TeX\
 distributions (\TeX Live, Mac\TeX, MiK\TeX) and also via download from SourceForge.
 Functionally, \biber\ offers a superset of \BibTeX's capabilities but is
 tightly coupled with \biblatex\ and cannot be used as a stand-alone tool
-with standard \verb+.bst+ styles. \biber's role is to support
+with standard \verb+.bst+ styles. \biber's primary role is to support
 \biblatex\ by performing the following tasks:
 
 \begin{itemize}
@@ -180,6 +184,13 @@ with standard \verb+.bst+ styles. \biber's role is to support
 \item Outputting data to a \verb+.bbl+ for \biblatex\ to consume
 \end{itemize}
 
+\biber\ also has the ability to output different formats than \file{.bbl}
+and can, for example, output a new \bibtex\ file which contains only
+cited entries from the datasources (using the \opt{--output\_format=bibtex}
+option). There is also a «<tool» mode which operates on datasources instead
+of individual documents, allowing you to transform, convert, reformat and
+generally change the contents of a datasource (see \ref{ref:tool}).
+
 \subsection{Requirements}\label{ref:req}
 
 \biber\ is distributed primarily as a stand-alone binary and is
@@ -190,13 +201,11 @@ the binary distribution of \biber\footnote{If you prefer, you can run
 \biber\ as a normal Perl program and doing this \emph{does} require
 you to have a Perl interpreter installed. See section \ref{binaries}.}.
 
-\biber's git repository is on
+\biber's git repository and bug/feature tracker is on
 github\footnote{\url{https://github.com/plk/biber}}. \biber's documentation,
 binary downloads and supporting files are on
 SourceForge\footnote{\url{http://sourceforge.net/projects/biblatex-biber/}}
-and this is the primary location for development releases, forums and
-bugfixes etc. \biber\ is included into \TeX Live, the binaries coming from
-SourceForge.
+\biber\ is included into \TeX Live, the binaries coming from SourceForge.
 
 \subsection{Compatibility Matrix}
 
@@ -213,6 +222,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
+1.8 & 2.8\\
 1.7 & 2.7\\
 1.6 & 2.6\\
 1.5 & 2.5\\
@@ -275,7 +285,7 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
     Perl \texttt{Encode} module}
 \item Processes all bibliography sections in one pass of the tool
 \item Output to GraphViz instead of \verb+.bbl+ in order to help visualise
-  complex bibliographies with many crossrefs etc. (see section \ref{vis})
+  complex bibliographies with many crossrefs etc. (see section \ref{ref:vis})
 \item Handles UTF-8 citekeys and filenames (given a suitable fully
   UTF-8 compliant \TeX\ engine)
 \item Creates entry sets dynamically and allows easily defined static entry sets,
@@ -296,7 +306,7 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 \item Support for remote datasources
 \item User-definable mapping and suppression of fields and entrytypes in
   datasources. You can use this to, for example, ignore all
-  \bibfield{ABSTRACT} fields completely. See section \ref{map}
+  \bibfield{ABSTRACT} fields completely. See section \ref{ref:map}
 \item Support for related entries, to enable generic treatment of things
   like «translated as», «reprinted as», «reprint of»
   etc.
@@ -307,6 +317,7 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   entrytypes
 \item Structural validation of the data against the data model with a
   customisable validation model
+\item Tool mode for operations on datasources directly
 \end{itemize}
 
 \noindent Figure \ref{fig:overview} shows the main functional units of
@@ -588,8 +599,12 @@ an example config file which displays the \biber\ defaults:
   </nosort>
   <onlylog>0</onlylog>
   <others_string>others</others_string>
+  <ouput_align>1</output_align>
   <output_encoding>UTF-8</output_encoding>
+  <output_fieldcase>upper</output_fieldcase>
   <output_format>bbl</output_format>
+  <output_indent>2</output_indent>
+  <output_resolve>0</output_resolve>
   <output_safechars>0</output_safechars>
   <output_safecharsset>base</output_safecharsset>
   <quiet>0</quiet>
@@ -597,10 +612,6 @@ an example config file which displays the \biber\ defaults:
   <sortlocale>en_US.utf8</sortlocale>
   <sortupper>true</sortupper>
   <tool>false</tool>
-  <tool_align>1</tool_align>
-  <tool_datatype>bibtex</tool_datatype>
-  <tool_fieldcase>upper</tool_fieldcase>
-  <tool_indent>2</tool_indent>
   <trace>0</trace>
   <validate_config>0</validate_config>
   <validate_control>0</validate_control>
@@ -617,9 +628,34 @@ options. Most options are simple tags. Exceptions are the
 \opt{nosort}, \opt{noinit} and \opt{collate\_options} options which are slightly
 more complex and can have sub-options as shown. A much more complex
 option is the \opt{sourcemap} option which is not set by default and
-which is described in section \ref{map}.
+which is described in section \ref{ref:map}.
 
-\subsubsection{The \texttt{sourcemap} option}\label{map}
+\subsubsection{The \texttt{output\_format} option}\label{ref:of}
+
+\biber\ is able to output formats other than \file{.bbl} files for \biblatex\
+to consume. It is also able to output other formats such as \file{DOT} for
+visualisation of entry dependencies (see section \ref{ref:vis}), the
+experimental \verb+biblatexml+ XML format and also \bibtex\ \file{.bib} files.
+\file{.bib} output is possible in tool mode, when you are converting an
+entire datasource file independently of any particular document (see
+section \ref{ref:tool}). It is also useful when you want, instead of a
+\file{.bbl}, a new \file{.bib} file containing only the cited entries from
+a document so that you can, for example, send a minimally complete package
+for typesetting to someone. To do this, you would, after the first \latex
+run, call \biber like this:
+
+\begin{verbatim}
+  biber --output_format=bibtex test.bcf
+\end{verbatim}
+
+\noindent This would result in a new \file{.bib} file called
+\file{test\_biber.bib} containing all cited entries in \file{test.tex}, in
+citation order, formatted according to the various \opt{ouput\_*} options.
+You could of course also perform more processing like source mapping
+(see section \ref{ref:map}), reencoding (see section \ref{ref:enc}) etc. using more
+command line options or a config file.
+
+\subsubsection{The \texttt{sourcemap} option}\label{ref:map}
 
 The datasource drivers implement a mapping from datasource
 entrytypes and fields into the \biblatex\ data model. If you want to
@@ -1047,7 +1083,7 @@ inheritance between entries using, for example, \bibtex's
 in the \biber configuration file is rarely something you would want to do
 with one notably exceptional case being when using \biber in tool mode
 where you might want to «materialise» special inheritance rules (see
-section \ref{tool}). Here we define the format of the config file
+section \ref{ref:tool}). Here we define the format of the config file
 inheritance section, should you need to understand or modify it. Items in
 \textcolor{red}{red} are not literal, they are descriptive meta-values
 which are explained in the accompanying text. Items in
@@ -1137,7 +1173,7 @@ The second \texttt{inherit} element says that \bibfield{INBOOK} and
 field from any \textcolor{red}{\texttt{source}}.
 
 In general, it is probably best to copy the default \biblatex inheritance
-rules and modify them to your needs. See section \ref{tool}.
+rules and modify them to your needs. See section \ref{ref:tool}.
 \bigskip
 \subsubsection{The \texttt{noinit} option}\label{noinit}
 
@@ -1188,7 +1224,7 @@ as it can print bibliography information as many times as the user wishes
 with different filtering and sorting. This is normally handled by macros in
 \biblatex which write the XML sorting specification(s) to the \file{.bcf}
 file for \biber to read but there may be occasions (usually when using
-\biber in «tool» mode (see section\ref{tool}) when you need to specify the
+\biber in «tool» mode (see section\ref{ref:tool}) when you need to specify the
 global sorting specification directly in a \biber config file. This section
 documents the XML format of the sorting specification. Items in
 \textcolor{red}{red} are not literal, they are descriptive meta-values
@@ -1713,7 +1749,7 @@ reverse order at UCA level 2.
 \noindent Use the UCA default setting for variable weight punctuation
 (which is to ignore it for sorting, effectively).
 
-\subsection{Encoding of files}
+\subsection{Encoding of files}\label{ref:enc}
 
 \biber\ takes care of re-encoding the datasource data as
 necessary. In normal use, \biblatex\ passes its
@@ -2008,7 +2044,7 @@ drivers are:
 \item \verb+zoterordfxml+ --- Zotero RDF XML format, version 2.0.9
 \end{itemize}
 
-\subsection{Visualising the Output}\label{vis}
+\subsection{Visualising the Output}\label{ref:vis}
 
 The option \opt{--output\_format=dot} will cause \biber\ to write a
 GraphViz\footnote{\url{http://www.graphviz.org}} \verb+.dot+ file instead
@@ -2104,7 +2140,7 @@ xref     & Show XREF relationships\\
   \label{fig:graphkey}
 \end{figure}
 \bigskip
-\subsection{Tool Mode}\label{tool}
+\subsection{Tool Mode}\label{ref:tool}
 \biber\ can run in «tool» mode which is enabled with the \opt{--tool}
 command-line only option. In this mode, \biber is called: \opt{biber --tool
   <datasource>}. Tool mode is a datasource rather than document oriented
@@ -2413,7 +2449,7 @@ possible to customise these. In \biblatex, this is accomplished by the
 \cmd{DeclareDataInheritance} macros which write appropriate XML into the
 \file{.bcf} file. Since no \file{.bcf} file is used in tool mode, the
 desired configuration must be put into a \biber config file. The source
-mapping XML specification is given in section \ref{map}. The inheritance
+mapping XML specification is given in section \ref{ref:map}. The inheritance
 XML specification is given in section \ref{inheritance}. It is recommended
 to copy the default \file{biber-tool.conf} file, modify this and then use
 it as your own \file{biber.conf} file or pass it explicitly using the
