@@ -249,7 +249,7 @@ sub tool_mode_setup {
   $self->add_sections($bib_sections);
 
   my $sortlists = new Biber::SortLists;
-  my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sorting'));
+  my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'));
   $seclist->set_type('entry');
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
   $logger->debug("Adding 'entry' list 'tool' for pseudo-section 99999");
@@ -718,7 +718,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
     $self->sections->add_section($bib_section);
 
-    # Global sorting in non tool mode bibtex output is citeorder
+    # Global sorting in non tool mode bibtex output is citeorder so override the .bcf here
     Biber::Config->setblxoption('sortscheme', 'none');
 
     my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'));

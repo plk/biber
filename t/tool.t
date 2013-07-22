@@ -43,7 +43,7 @@ Biber::Config->setoption('sortlocale', 'C');
 $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber program
 $biber->tool_mode_setup;
 $biber->prepare_tool;
-my $main = $biber->sortlists->get_list(99999, 'entry', Biber::Config->getblxoption('sorting'));
+my $main = $biber->sortlists->get_list(99999, 'entry', Biber::Config->getblxoption('sortscheme'));
 my $out = $biber->get_output_obj;
 
 my $t1 = q|@UNPUBLISHED{i3Š,
