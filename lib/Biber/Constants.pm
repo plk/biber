@@ -149,9 +149,12 @@ our $CONFIG_DEFAULT_BIBER = {
 };
 
 # default global options for biblatex
-# in practice these will be obtained from the control file,
-# but we need this for things not yet implemented by biblatex but expected by biber
-our %CONFIG_DEFAULT_BIBLATEX = ();
+# Used to set:
+# * Some tool-mode defaults (as there is no .bcf and some biblatex options
+#   cannot be set in a biber config file)
+our %CONFIG_DEFAULT_BIBLATEX = (
+  sortscheme => 'none',
+);
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
