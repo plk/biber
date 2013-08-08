@@ -103,6 +103,7 @@ my $l2 = q|    \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47}{report}{}
       \field{labelyear}{2009}
       \field{labelmonth}{03}
       \field{labelday}{14}
+      \field{datelabelsource}{}
       \field{labeltitle}{PTA}
       \field{day}{14}
       \field{edition}{2009/07/18}

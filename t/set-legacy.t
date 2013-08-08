@@ -54,6 +54,7 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \field{sortinit}{0}
       \field{labelyear}{1955}
       \field{labelmonth}{03}
+      \field{datelabelsource}{}
       \field{labeltitle}{Predictive coding--I}
       \field{issn}{0096-1000}
       \field{journaltitle}{IRE Transactions on Information Theory}
