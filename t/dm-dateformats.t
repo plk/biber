@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 31;
+use Test::More tests => 33;
 
 use Biber;
 use Biber::Output::bbl;
@@ -209,6 +209,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{origendyear}{1998}
       \field{origmonth}{12}
       \field{origyear}{1998}
+      \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
     \endentry
@@ -251,6 +252,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{origendyear}{1998}
       \field{origmonth}{12}
       \field{origyear}{1998}
+      \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
     \endentry
@@ -293,6 +295,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{origendyear}{1998}
       \field{origmonth}{12}
       \field{origyear}{1998}
+      \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
     \endentry
@@ -357,5 +360,13 @@ $biber->prepare;
 $out = $biber->get_output_obj;
 
 is($bibentries->entry('L17')->get_labeldate_info->{field}{year}, 'eventyear', 'Date values test 17d - labelyear = EVENTYEAR' ) ;
+is($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'event', 'Date values test 17d - source = event' ) ;
 is($out->get_output_entry('L17', $main), $l17e, 'Date values test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 
+# reset options and regenerate information
+Biber::Config->setblxoption('labeldatespec', [ {content => 'pubstate', type => 'field'} ], 'PER_TYPE', 'proceedings');
+
+$bibentries->del_entry('L17');
+$biber->prepare;
+$out = $biber->get_output_obj;
+is($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubstate', 'Source is non-date field' );

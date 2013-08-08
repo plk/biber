@@ -1646,6 +1646,7 @@ sub process_labeldate {
       return;
     }
 
+    my $pseudodate;
     my $ldatespec = Biber::Config->getblxoption('labeldatespec', $bee);
     foreach my $h_ly (@$ldatespec) {
       my $ly = $h_ly->{content};
@@ -1662,12 +1663,14 @@ sub process_labeldate {
         }
         else {
           $ldy = $ly; # labelyear can be a non-date field so make a pseudo-year
+          $pseudodate = 1;
         }
         if ($be->get_field($ldy)) { # did we find a labeldate?
+          # set source to field or date field prefix for a real date field
           $be->set_labeldate_info({'field' => { 'year'  => $ldy,
                                                 'month' => $ldm,
                                                 'day'   => $ldd,
-                                                'source' => $datetype }});
+                                                'source' => $pseudodate ? $ldy : $datetype }});
           last;
         }
       }
@@ -1694,12 +1697,16 @@ sub process_labeldate {
           $be->set_field('labelyear',
                          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
         }
-        if ($be->get_field($ytype . 'endmonth')
+        # pseudodates (field which are not really dates per se) are just years
+        if (not $pseudodate and
+            $be->get_field($ytype . 'endmonth')
             and ($be->get_field($df->{month}) ne $be->get_field($ytype . 'endmonth'))) {
           $be->set_field('labelmonth',
                          $be->get_field('labelmonth') . '\bibdatedash ' . $be->get_field($ytype . 'endmonth'));
         }
-        if ($be->get_field($ytype . 'endday')
+        # pseudodates (field which are not really dates per se) are just years
+        if (not $pseudodate and
+            $be->get_field($ytype . 'endday')
             and ($be->get_field($df->{day}) ne $be->get_field($ytype . 'endday'))) {
           $be->set_field('labelday',
                          $be->get_field('labelday') . '\bibdatedash ' . $be->get_field($ytype . 'endday'));
