@@ -63,6 +63,7 @@ my $l1 = q|    \entry{test1}{report}{}
       \strng{fullhash}{bde87bef9bb3834837786f78acfebc54}
       \field{sortinit}{B}
       \field{labelyear}{1996}
+      \field{datelabelsource}{}
       \field{labeltitle}{Blood-brain barrier breach following cortical contusion in the rat}
       \field{journaltitle}{J.Neurosurgery}
       \field{title}{Blood-brain barrier breach following cortical contusion in the rat}
@@ -89,6 +90,7 @@ my $l2 = q|    \entry{test2}{inbook}{}
       \field{labelyear}{1996}
       \field{labelmonth}{03}
       \field{labelday}{12}
+      \field{datelabelsource}{}
       \field{labeltitle}{Sometitle}
       \field{day}{12}
       \field{month}{03}

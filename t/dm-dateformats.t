@@ -79,6 +79,7 @@ my $l13c = q|    \entry{L13}{book}{}
       \field{labelyear}{1996}
       \field{labelmonth}{01}
       \field{labelday}{01}
+      \field{datelabelsource}{}
       \field{labeltitle}{Title 2}
       \field{day}{01}
       \field{endyear}{}
@@ -107,6 +108,7 @@ my $l14 = q|    \entry{L14}{book}{}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
+      \field{datelabelsource}{}
       \field{labeltitle}{Title 2}
       \field{day}{10}
       \field{endday}{12}
@@ -159,6 +161,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{labelyear}{1996}
       \field{labelmonth}{01}
       \field{labelday}{01}
+      \field{datelabelsource}{event}
       \field{labeltitle}{Title 2}
       \field{eventday}{01}
       \field{eventmonth}{01}
@@ -187,6 +190,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
+      \field{datelabelsource}{}
       \field{labeltitle}{Title 2}
       \field{day}{10}
       \field{endday}{12}
@@ -228,6 +232,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{labelyear}{1998}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
+      \field{datelabelsource}{orig}
       \field{labeltitle}{Title 2}
       \field{day}{10}
       \field{endday}{12}
@@ -269,6 +274,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{labelyear}{1998\bibdatedash 2004}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
+      \field{datelabelsource}{event}
       \field{labeltitle}{Title 2}
       \field{day}{10}
       \field{endday}{12}

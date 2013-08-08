@@ -93,6 +93,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{labelyear}{1998}
       \field{labelmonth}{04}
       \field{labelday}{05}
+      \field{datelabelsource}{}
       \field{labeltitle}{Title 1}
       \field{day}{05}
       \field{month}{04}
@@ -120,6 +121,7 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \field{labelyear}{1998}
       \field{labelmonth}{04}
       \field{labelday}{05}
+      \field{datelabelsource}{}
       \field{labeltitle}{Title 2}
       \field{day}{05}
       \field{month}{04}
@@ -144,6 +146,7 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \field{labelyear}{1999}
       \field{labelmonth}{04}
       \field{labelday}{05}
+      \field{datelabelsource}{}
       \field{labeltitle}{Title 3}
       \field{day}{05}
       \field{month}{04}

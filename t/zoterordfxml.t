@@ -59,6 +59,7 @@ my $l1 = q|    \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journal
       \strng{fullhash}{2d6c91380dc6798fd8219e73cf91f468}
       \field{sortinit}{R}
       \field{labelyear}{2001}
+      \field{datelabelsource}{}
       \field{labeltitle}{ten theses on politics}
       \field{journaltitle}{Theory \& Event}
       \field{library}{Project MUSE}
@@ -90,6 +91,7 @@ my $l2 = q|    \entry{urn:isbn:0713990023}{book}{}
       \strng{fullhash}{984e5967448051538555a64aac11ed21}
       \field{sortinit}{F}
       \field{labelyear}{1988}
+      \field{datelabelsource}{}
       \field{labeltitle}{The History of Sexuality volume 3: The Care of the Self}
       \field{isbn}{0713990023}
       \field{library}{webcat.warwick.ac.uk Library Catalog}
@@ -125,6 +127,7 @@ my $l3 = q|    \entry{item_54}{inbook}{}
       \field{labelyear}{1996}
       \field{labelmonth}{03\bibdatedash 04}
       \field{labelday}{04\bibdatedash 07}
+      \field{datelabelsource}{}
       \field{labeltitle}{The Ethics of the Concern for Self as a Practice of Freedom}
       \field{booktitle}{Foucault Live: Interviews, 1961-1984}
       \field{day}{04}

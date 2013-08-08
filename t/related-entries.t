@@ -54,6 +54,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{0}
       \field{labelyear}{1998}
+      \field{datelabelsource}{}
       \field{labeltitle}{Original Title}
       \field{journaltitle}{Journal Title}
       \field{number}{5}
@@ -84,6 +85,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{0}
       \field{labelyear}{2009}
+      \field{datelabelsource}{}
       \field{labeltitle}{Reprint Title}
       \field{booktitle}{Booktitle}
       \field{relatedstring}{First}

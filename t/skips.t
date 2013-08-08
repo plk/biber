@@ -57,6 +57,7 @@ my $set1 = q|    \entry{seta}{set}{}
       \field{sortinit}{D}
       \field{extrayear}{1}
       \field{labelyear}{2010}
+      \field{datelabelsource}{}
       \field{labeltitle}{Set Member A}
       \field{extraalpha}{1}
       \field{title}{Set Member A}
@@ -130,6 +131,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{sortinit}{D}
       \field{extrayear}{2}
       \field{labelyear}{2010}
+      \field{datelabelsource}{}
       \field{labeltitle}{Stand-Alone A}
       \field{extraalpha}{2}
       \field{title}{Stand-Alone A}
@@ -150,6 +152,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{sortinit}{D}
       \field{extrayear}{3}
       \field{labelyear}{2010}
+      \field{datelabelsource}{}
       \field{labeltitle}{Stand-Alone B}
       \field{extraalpha}{3}
       \field{title}{Stand-Alone B}
@@ -170,6 +173,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{sortinit}{D}
       \field{extrayear}{4}
       \field{labelyear}{2010}
+      \field{datelabelsource}{}
       \field{labeltitle}{Stand-Alone C}
       \field{extraalpha}{4}
       \field{title}{Stand-Alone C}

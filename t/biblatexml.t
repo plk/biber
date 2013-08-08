@@ -68,6 +68,7 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \strng{fullhash}{afcf3a11058ba0a3fc7609c2a29ae6da}
       \field{sortinit}{Б}
       \field{labelyear}{1983}
+      \field{datelabelsource}{}
       \field{labeltitle}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \field{eventday}{16}
       \field{eventendday}{17}

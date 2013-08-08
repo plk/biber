@@ -318,6 +318,9 @@ sub set_output_entry {
     if (my $ld = $be->get_field('labelday')) {
       $acc .= "      \\field{labelday}{$ld}\n";
     }
+    if ($be->field_exists('datelabelsource')) {
+      $acc .= "      \\field{datelabelsource}{" . $be->get_field('datelabelsource') .  "}\n";
+    }
   }
 
   # The labeltitle option determines whether "extratitle" is output
