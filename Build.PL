@@ -66,11 +66,11 @@ my $builder = $class->new(
         'Business::ISBN' => 0,
         'Business::ISSN' => 0,
         'Business::ISMN' => 0,
-        'Mozilla::CA' =>  '20130114',
         'perl' => '5.16.0'
     },
     recommends => {
-        'Readonly::XS' => 0
+        'Readonly::XS' => 0,
+        'Mozilla::CA' =>  '20130114'
     },
     script_files => [ glob( "bin/*" ) ],
     data_files => {'data/schemata/config.rnc' => 'lib/Biber/config.rnc',
