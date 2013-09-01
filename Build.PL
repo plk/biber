@@ -49,6 +49,7 @@ my $builder = $class->new(
         'IPC::Run3' => 0,
         'List::AllUtils' => 0,
         'List::MoreUtils' => 0,
+        'Mozilla::CA' =>  '20130114',
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Unicode::Collate' => '0.98',
@@ -70,7 +71,6 @@ my $builder = $class->new(
     },
     recommends => {
         'Readonly::XS' => 0,
-        'Mozilla::CA' =>  '20130114'
     },
     script_files => [ glob( "bin/*" ) ],
     data_files => {'data/schemata/config.rnc' => 'lib/Biber/config.rnc',
