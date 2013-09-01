@@ -40,9 +40,9 @@ my $builder = $class->new(
         'ExtUtils::LibBuilder' => '0.02'
     },
     requires => {
+        'autovivification' => 0,
         'Data::Dump' => 0,
         'Data::Compare' => 0,
-        'Data::Diver' => 0,
         'Date::Simple' => 0,
         'File::Slurp'  => 0,
         'IPC::Cmd' => 0,

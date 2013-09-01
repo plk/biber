@@ -8,7 +8,6 @@ use Biber::Constants;
 use Biber::Utils;
 use Biber::DataModel;
 use Data::Compare;
-use Data::Diver qw( Dive );
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Digest::MD5 qw( md5_hex );
@@ -1104,6 +1103,7 @@ sub _sort_labeltitle {
 }
 
 sub _sort_labeldate {
+  no autovivification;
   my ($self, $citekey, $sortelementattributes, $args) = @_;
   my $ldc = $args->[0]; # labeldate component
   my $secnum = $self->get_current_section;
@@ -1111,7 +1111,7 @@ sub _sort_labeldate {
   my $be = $section->bibentry($citekey);
   # re-direct to the right sorting routine for the labeldate component
   if (my $ldi = $be->get_labeldate_info) {
-    if (my $ldf = Dive($ldi, 'field', $ldc)) {
+    if (my $ldf = $ldi->{field}{$ldc}) {
       # Don't process attributes as they will be processed in the real sub
       return $self->_dispatch_sorting($ldf, $citekey, $sortelementattributes);
     }

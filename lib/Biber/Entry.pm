@@ -6,7 +6,6 @@ use warnings;
 use Biber::Utils;
 use Biber::Internals;
 use Biber::Constants;
-use Data::Diver qw( Dive );
 use Data::Dump qw( pp );
 use Digest::MD5 qw( md5_hex );
 use Log::Log4perl qw( :no_extra_logdie_message );
@@ -322,6 +321,7 @@ sub set_field {
 =cut
 
 sub get_field {
+  no autovivification;
   my $self = shift;
   my ($key, $form, $lang) = @_;
   return undef unless $key;
@@ -332,9 +332,9 @@ sub get_field {
     $form = 'original';
     $lang = 'default';
   }
-  return Dive($self, 'datafields', $key, $form, $lang) //
-         Dive($self, 'derivedfields', $key, $form, $lang) //
-         Dive($self, 'rawfields', $key);
+  return $self->{datafields}{$key}{$form}{$lang} //
+         $self->{derivedfields}{$key}{$form}{$lang} //
+         $self->{rawfields}{$key};
 }
 
 
@@ -345,11 +345,12 @@ sub get_field {
 =cut
 
 sub get_field_forms {
+  no autovivification;
   my $self = shift;
   my $key = shift;
   return undef unless $key;
-  return Dive($self, 'datafields', $key) ||
-         Dive($self, 'derivedfields', $key);
+  return $self->{datafields}{$key} ||
+         $self->{derivedfields}{$key};
 }
 
 =head2 get_field_form_names
@@ -359,11 +360,12 @@ sub get_field_forms {
 =cut
 
 sub get_field_form_names {
+  no autovivification;
   my $self = shift;
   my $key = shift;
   return undef unless $key;
-  return sort keys %{Dive($self, 'datafields', $key) ||
-                     Dive($self, 'derivedfields', $key) ||
+  return sort keys %{$self->{datafields}{$key} ||
+                     $self->{derivedfields}{$key} ||
                      {}};
 }
 
@@ -374,12 +376,13 @@ sub get_field_form_names {
 =cut
 
 sub get_field_form_lang_names {
+  no autovivification;
   my $self = shift;
   my ($key, $form) = @_;
   return undef unless $key;
   return undef unless $form;
-  return sort keys %{Dive($self, 'datafields', $key, $form) ||
-                     Dive($self, 'derivedfields', $key, $form) ||
+  return sort keys %{$self->{datafields}{$key}{$form} ||
+                     $self->{derivedfields}{$key}{$form} ||
                      {}};
 }
 
@@ -432,9 +435,10 @@ sub set_rawfield {
 =cut
 
 sub get_rawfield {
+  no autovivification;
   my $self = shift;
   my $key = shift;
-  return Dive($self, 'rawfields', $key);
+  return $self->{rawfields}{$key};
 }
 
 
@@ -445,11 +449,12 @@ sub get_rawfield {
 =cut
 
 sub get_datafield {
+  no autovivification;
   my $self = shift;
   my ($key, $form, $lang) = @_;
   $form = $form || 'original';
   $lang = $lang || 'default';
-  return Dive($self, 'datafields', $key, $form, $lang);
+  return $self->{datafields}{$key}{$form}{$lang};
 }
 
 
@@ -489,11 +494,12 @@ sub del_datafield {
 =cut
 
 sub field_exists {
+  no autovivification;
   my $self = shift;
   my $key = shift;
-  return (Dive($self, 'datafields', $key) ||
-          Dive($self, 'derivedfields', $key) ||
-          Dive($self, 'rawfields', $key)) ? 1 : 0;
+  return ($self->{datafields}{$key} ||
+          $self->{derivedfields}{$key} ||
+          $self->{rawfields}{$key}) ? 1 : 0;
 }
 
 =head2 field_form_exists
@@ -503,11 +509,12 @@ sub field_exists {
 =cut
 
 sub field_form_exists {
+  no autovivification;
   my $self = shift;
   my ($key, $form) = @_;
   $form = $form || 'original';
-  return (Dive($self, 'datafields', $key, $form) ||
-          Dive($self, 'derivedfields', $key, $form)) ? 1 : 0;
+  return ($self->{datafields}{$key}{$form} ||
+          $self->{derivedfields}{$key}{$form}) ? 1 : 0;
 }
 
 
@@ -583,11 +590,12 @@ sub count_fields {
 =cut
 
 sub has_keyword {
+  no autovivification;
   my $self = shift;
   my ($keyword, $form, $lang) = @_;
   $form = $form || 'original';
   $lang = $lang || 'default';
-  if (my $keywords = Dive($self, 'datafields', 'keywords', $form, $lang)) {
+  if (my $keywords = $self->{datafields}{keywords}{$form}{$lang}) {
     return (first {$_ eq $keyword} @$keywords) ? 1 : 0;
   }
   else {
