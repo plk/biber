@@ -6,7 +6,6 @@ use warnings;
 use Biber::Utils;
 use Biber::Internals;
 use Biber::Constants;
-use Data::Diver qw( Dive );
 use Data::Dump qw( pp );
 use Digest::MD5 qw( md5_hex );
 use Log::Log4perl qw( :no_extra_logdie_message );
@@ -341,6 +340,7 @@ sub set_field {
 =cut
 
 sub get_field {
+  no autovivification;
   my $self = shift;
   my ($field, $form, $lang) = @_;
   return undef unless $field;
@@ -350,15 +350,15 @@ sub get_field {
     $form = $form || Biber::Config->getblxoption('msform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('mslang', undef, $key);
     $logger->trace("Getting ms field in '$key': $field/$form/$lang");
-    return Dive($self, 'datafields', 'ms', $field, $form, $lang) //
-           Dive($self, 'derivedfields', 'ms', $field, $form, $lang) //
-           Dive($self, 'rawfields', 'ms', $field);
+    return $self->{datafields}{ms}{$field}{$form}{$lang} //
+           $self->{derivedfields}{ms}{$field}{$form}{$lang} //
+           $self->{rawfields}{ms}{$field};
   }
   else {
     $logger->trace("Getting nonms field in '$key': $field") if $key;
-    return Dive($self, 'datafields', 'nonms', $field) //
-           Dive($self, 'derivedfields', 'nonms', $field) //
-           Dive($self, 'rawfields', 'nonms', $field);
+    return $self->{datafields}{nonms}{$field} //
+           $self->{derivedfields}{nonms}{$field} //
+           $self->{rawfields}{nonms}{$field};
   }
 }
 
@@ -414,11 +414,12 @@ sub get_field_variants {
 =cut
 
 sub get_field_forms {
+  no autovivification;
   my $self = shift;
   my $field = shift;
   return undef unless $field;
-  return Dive($self, 'datafields', 'ms', $field) ||
-         Dive($self, 'derivedfields', 'ms', $field);
+  return $self->{datafields}{ms}{$field} ||
+         $self->{derivedfields}{ms}{$field};
 }
 
 =head2 get_field_form_names
@@ -428,13 +429,14 @@ sub get_field_forms {
 =cut
 
 sub get_field_form_names {
+  no autovivification;
   my $self = shift;
   my $field = shift;
   return undef unless $field;
   my $dm = Biber::Config->get_dm;
   return undef unless $dm->field_is_multiscript($field);
-  return sort keys %{Dive($self, 'datafields', 'ms', $field) ||
-                Dive($self, 'derivedfields', 'ms', $field) ||
+  return sort keys %{$self->{datafields}{ms}{$field} ||
+                $self->{derivedfields}{ms}{$field} ||
                 {}};
 }
 
@@ -445,14 +447,15 @@ sub get_field_form_names {
 =cut
 
 sub get_field_form_lang_names {
+  no autovivification;
   my $self = shift;
   my ($field, $form) = @_;
   return undef unless $field;
   return undef unless $form;
   my $dm = Biber::Config->get_dm;
   return undef unless $dm->field_is_multiscript($field);
-  return sort keys %{Dive($self, 'datafields', 'ms', $field, $form) ||
-                Dive($self, 'derivedfields', 'ms', $field, $form) ||
+  return sort keys %{$self->{datafields}{ms}{$field}{$form} ||
+                $self->{derivedfields}{ms}{$field}{$form} ||
                 {}};
 }
 
@@ -522,14 +525,15 @@ sub set_rawfield {
 =cut
 
 sub get_rawfield {
+  no autovivification;
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
   if ($dm->field_is_multiscript($field)) {
-    return Dive($self, 'rawfields', 'ms', $field);
+    return $self->{rawfields}{ms}{$field};
   }
   else {
-    return Dive($self, 'rawfields', 'nonms', $field);
+    return $self->{rawfields}{nonms}{$field};
   }
 }
 
@@ -541,6 +545,7 @@ sub get_rawfield {
 =cut
 
 sub get_datafield {
+  no autovivification;
   my $self = shift;
   my ($field, $form, $lang) = @_;
   my $dm = Biber::Config->get_dm;
@@ -548,10 +553,10 @@ sub get_datafield {
     my $key = $self->get_field('citekey');
     $form = $form || Biber::Config->getblxoption('msform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('mslang', undef, $key);
-    return Dive($self, 'datafields', 'ms', $field, $form, $lang);
+    return $self->{datafields}{ms}{$field}{$form}{$lang};
   }
   else {
-    return Dive($self, 'datafields', 'nonms', $field)
+    return $self->{datafields}{nonms}{$field};
   }
 }
 
@@ -600,13 +605,14 @@ sub del_datafield {
 =cut
 
 sub field_exists {
+  no autovivification;
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
   my $type = $dm->field_is_multiscript($field) ? 'ms' : 'nonms';
-  return (defined(Dive($self, 'datafields', $type, $field)) ||
-          defined(Dive($self, 'derivedfields', $type, $field)) ||
-          defined(Dive($self, 'rawfields', $type, $field))) ? 1 : 0;
+  return (defined($self->{datafields}{$type}{$field}) ||
+          defined($self->{derivedfields}{$type}{$field}) ||
+          defined($self->{rawfields}{$type}{$field})) ? 1 : 0;
 }
 
 =head2 field_form_exists
@@ -616,14 +622,15 @@ sub field_exists {
 =cut
 
 sub field_form_exists {
+  no autovivification;
   my $self = shift;
   my ($field, $form) = @_;
   my $dm = Biber::Config->get_dm;
   return undef unless $dm->field_is_multiscript($field);
   my $key = $self->get_field('citekey');
   $form = $form || Biber::Config->getblxoption('msform', undef, $key);
-  return (defined(Dive($self, 'datafields', 'ms', $field, $form)) ||
-          defined(Dive($self, 'derivedfields', 'ms', $field, $form))) ? 1 : 0;
+  return (defined($self->{datafields}{ms}{$field}{$form}) ||
+          defined($self->{derivedfields}{ms}{$field}{$form})) ? 1 : 0;
 }
 
 
@@ -706,7 +713,7 @@ sub count_fields {
 
 sub has_keyword {
   my ($self, $keyword) = @_;
-  if (my $keywords = Dive($self, 'datafields', 'nonms', 'keywords')) {
+  if (my $keywords = $self->{datafields}{nonms}{keywords}) {
     return (first {$_ eq $keyword} @$keywords) ? 1 : 0;
   }
   else {

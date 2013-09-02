@@ -40,15 +40,16 @@ my $builder = $class->new(
         'ExtUtils::LibBuilder' => '0.02'
     },
     requires => {
+        'autovivification' => 0,
         'Data::Dump' => 0,
         'Data::Compare' => 0,
-        'Data::Diver' => 0,
         'Date::Simple' => 0,
         'File::Slurp'  => 0,
         'IPC::Cmd' => 0,
         'IPC::Run3' => 0,
         'List::AllUtils' => 0,
         'List::MoreUtils' => 0,
+        'Mozilla::CA' =>  '20130114',
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Unicode::Collate' => '0.98',
@@ -66,11 +67,10 @@ my $builder = $class->new(
         'Business::ISBN' => 0,
         'Business::ISSN' => 0,
         'Business::ISMN' => 0,
-        'Mozilla::CA' =>  '20130114',
         'perl' => '5.16.0'
     },
     recommends => {
-        'Readonly::XS' => 0
+        'Readonly::XS' => 0,
     },
     script_files => [ glob( "bin/*" ) ],
     data_files => {'data/schemata/config.rnc' => 'lib/Biber/config.rnc',

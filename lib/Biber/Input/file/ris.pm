@@ -106,17 +106,42 @@ sub extract_entries {
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
     $logger->info("Data source '$source' is a remote RIS data source - fetching ...");
     if ($1) { # HTTPS
-      # use IO::Socket::SSL qw(debug4); # useful for debugging SSL issues
+      # use IO::Socket::SSL qw(debug99); # useful for debugging SSL issues
       # We have to explicitly set the cert path because otherwise the https module
       # can't find the .pem when PAR::Packer'ed
+      # Have to explicitly try to require Mozilla::CA here to get it into %INC below
+      # It may, however, have been removed by some biber unpacked dists
       if (not exists($ENV{PERL_LWP_SSL_CA_FILE}) and
-          not defined(Biber::Config->getoption('ssl-nointernalca'))) {
-        require Mozilla::CA; # Have to explicitly require this here to get it into %INC below
+          not exists($ENV{PERL_LWP_SSL_CA_PATH}) and
+          not defined(Biber::Config->getoption('ssl-nointernalca')) and
+          eval {require Mozilla::CA}) {
         # we assume that the default CA file is in .../Mozilla/CA/cacert.pem
         (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );
         $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
         $ENV{PERL_LWP_SSL_CA_FILE} = File::Spec->catpath($vol, "$dir/CA", 'cacert.pem');
       }
+
+      # fallbacks for, e.g., linux
+      unless (exists($ENV{PERL_LWP_SSL_CA_FILE})) {
+        foreach my $ca_bundle (qw{
+                                   /etc/ssl/certs/ca-certificates.crt
+                                   /etc/pki/tls/certs/ca-bundle.crt
+                                   /etc/ssl/ca-bundle.pem
+                               }) {
+          next if ! -e $ca_bundle;
+          $ENV{PERL_LWP_SSL_CA_FILE} = $ca_bundle;
+          last;
+        }
+        foreach my $ca_path (qw{
+                                 /etc/ssl/certs/
+                                 /etc/pki/tls/
+                             }) {
+          next if ! -d $ca_path;
+          $ENV{PERL_LWP_SSL_CA_PATH} = $ca_path;
+          last;
+        }
+      }
+
       if (defined(Biber::Config->getoption('ssl-noverify-host'))) {
           $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;
       }
