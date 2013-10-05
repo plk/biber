@@ -1532,8 +1532,7 @@ sub list_differs_superset {
 
 sub get_numofuniquenames {
   shift; # class method so don't care about class name
-  my ($name, $namecontext, $key) = @_;
-  $key = '' unless $key; # default for the tracing so we don't get an undef string warning
+  my ($name, $namecontext) = @_;
   my $return = scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
   $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
   return $return;
@@ -1547,8 +1546,7 @@ sub get_numofuniquenames {
 
 sub get_numofuniquenames_all {
   shift; # class method so don't care about class name
-  my ($name, $namecontext, $key) = @_;
-  $key = '' unless $key; # default for the tracing so we don't get an undef string warning
+  my ($name, $namecontext) = @_;
   my $return = scalar keys %{$CONFIG->{state}{uniquenamecount_all}{$name}{$namecontext}};
   $logger->trace("get_numofuniquenames_all() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
   return $return;

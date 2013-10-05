@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 184;
+use Test::More tests => 193;
 
 use Biber;
 use Biber::Utils;
@@ -14,7 +14,7 @@ chdir("t/tdata");
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
-my $LEVEL = 'ERROR';
+my $LEVEL = 'TRACE';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
     log4perl.category.screen                           = $LEVEL, Screen
@@ -64,6 +64,16 @@ is($bibentries->entry('test1')->get_field('fullhash'), '637292dd2997a74c91847f1e
 is($bibentries->entry('untf1')->get_field($bibentries->entry('untf1')->get_labelname_info->{field})->nth_name(2)->get_uniquename, '2', 'Uniquename with full and repeat - 1');
 is($bibentries->entry('untf2')->get_field($bibentries->entry('untf2')->get_labelname_info->{field})->nth_name(2)->get_uniquename, '2', 'Uniquename with full and repeat - 2');
 is($bibentries->entry('untf3')->get_field($bibentries->entry('untf3')->get_labelname_info->{field})->nth_name(2)->get_uniquename, '2', 'Uniquename with full and repeat - 3');
+# Prefix/suffix
+is($bibentries->entry('sp1')->get_field($bibentries->entry('sp1')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '0', 'Prefix/Suffix - 1');
+is($bibentries->entry('sp2')->get_field($bibentries->entry('sp2')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '0', 'Prefix/Suffix - 2');
+is($bibentries->entry('sp3')->get_field($bibentries->entry('sp3')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '0', 'Prefix/Suffix - 3');
+is($bibentries->entry('sp4')->get_field($bibentries->entry('sp4')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '0', 'Prefix/Suffix - 4');
+is($bibentries->entry('sp5')->get_field($bibentries->entry('sp5')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '0', 'Prefix/Suffix - 5');
+is($bibentries->entry('sp6')->get_field($bibentries->entry('sp6')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '2', 'Prefix/Suffix - 6');
+is($bibentries->entry('sp7')->get_field($bibentries->entry('sp7')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '2', 'Prefix/Suffix - 7');
+is($bibentries->entry('sp8')->get_field($bibentries->entry('sp8')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '0', 'Prefix/Suffix - 8');
+is($bibentries->entry('sp9')->get_field($bibentries->entry('sp9')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '0', 'Prefix/Suffix - 9');
 
 #############################################################################
 
