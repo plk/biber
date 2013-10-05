@@ -354,7 +354,7 @@ ok( $bibentries->entry('t1')->has_keyword('something'), 'Keywords test - 2' ) ;
 ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3' ) ;
 is( $out->get_output_entry('t2', $main), $t2, 'bbl entry with maths in title 2' ) ;
 is_deeply( Biber::Config->_get_uniquename('Worman_N', 'global'), $Worman_N, 'uniquename count 1') ;
-is_deeply( Biber::Config->_get_uniquename('Gennep', 'global'), $Gennep, 'uniquename count 2') ;
+is_deeply( Biber::Config->_get_uniquename('vanGennep', 'global'), $Gennep, 'uniquename count 2') ;
 is( $out->get_output_entry('murray', $main), $murray1, 'bbl with > maxcitenames' ) ;
 is( $out->get_output_entry('missing1', $main), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
 is( $out->get_output_entry('missing2', $main), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
