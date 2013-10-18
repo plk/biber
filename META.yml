@@ -100,7 +100,6 @@ requires:
   Business::ISMN: 0
   Business::ISSN: 0
   Data::Compare: 0
-  Data::Diver: 0
   Data::Dump: 0
   Date::Simple: 0
   Encode::EUCJPASCII: 0
@@ -123,6 +122,7 @@ requires:
   XML::LibXML::Simple: 0
   XML::LibXSLT: 0
   XML::Writer: 0
+  autovivification: 0
   perl: v5.16.0
 resources:
   license: http://dev.perl.org/licenses/
