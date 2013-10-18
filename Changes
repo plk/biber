@@ -1,5 +1,9 @@
 Revision history for Biber
 
+1.8    (2013-10-21)
+       * Perl 5.18 compatibility (hash order randomisation)
+       * Removed Data::Diver module due to linux licensing restrictions
+       * Misc Bug Fixes
 1.7    (2013-07-07)
        * Added clrmacros option
        * Added map_nomatch
