@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 21;
+use Test::More tests => 22;
 
 use Biber;
 use Biber::Utils;
@@ -65,6 +65,7 @@ ok(is_undef($main->get_extrayeardata('vangennep')), 'Entry vangennep - prefix ma
 ok(is_undef($main->get_extrayeardata('gennep')), 'Entry gennep - different from prefix name');
 ok(is_undef($main->get_extrayeardata('LY1')), 'Date range means no extrayear - 1');
 ok(is_undef($main->get_extrayeardata('LY2')), 'Date range means no extrayear - 2');
+ok(is_undef($main->get_extrayeardata('LY3')), 'Date range means no extrayear - 3');
 
 # Test for labelyearspec literal string
 is($bibentries->entry('nodate1')->get_field('labelyear'), 'nodate', 'Labelyear string - 1');

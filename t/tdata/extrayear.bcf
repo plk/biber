@@ -2005,13 +2005,14 @@
     <bcf:citekey order="10">L10</bcf:citekey>
     <bcf:citekey order="11">LY1</bcf:citekey>
     <bcf:citekey order="12">LY2</bcf:citekey>
-    <bcf:citekey order="13">companion1</bcf:citekey>
-    <bcf:citekey order="14">companion2</bcf:citekey>
-    <bcf:citekey order="15">companion3</bcf:citekey>
-    <bcf:citekey order="16">vangennep</bcf:citekey>
-    <bcf:citekey order="17">gennep</bcf:citekey>
-    <bcf:citekey order="18">nodate1</bcf:citekey>
-    <bcf:citekey order="19">nodate2</bcf:citekey>
+    <bcf:citekey order="13">LY3</bcf:citekey>
+    <bcf:citekey order="14">companion1</bcf:citekey>
+    <bcf:citekey order="15">companion2</bcf:citekey>
+    <bcf:citekey order="16">companion3</bcf:citekey>
+    <bcf:citekey order="17">vangennep</bcf:citekey>
+    <bcf:citekey order="18">gennep</bcf:citekey>
+    <bcf:citekey order="19">nodate1</bcf:citekey>
+    <bcf:citekey order="20">nodate2</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="nty" type="entry"/>
