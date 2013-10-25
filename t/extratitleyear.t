@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 5;
+use Test::More tests => 8;
 
 use Biber;
 use Biber::Utils;
@@ -48,3 +48,8 @@ is($main->get_extratitleyeardata('L2'), '2', 'Same title, same year');
 ok(is_undef($main->get_extratitledata('L3')), 'No title,  same year');
 ok(is_undef($main->get_extratitleyeardata('L4')), 'Same title,  different year');
 ok(is_undef($main->get_extratitleyeardata('L5')), 'Different labeltitle,  same year');
+ok(is_undef($main->get_extratitleyeardata('LY1')), 'Different years due to range ends - 1');
+ok(is_undef($main->get_extratitleyeardata('LY2')), 'Different years due to range ends - 1');
+ok(is_undef($main->get_extratitleyeardata('LY3')), 'Different years due to range ends - 1');
+
+

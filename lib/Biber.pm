@@ -1625,8 +1625,8 @@ sub process_labeldate {
         # ignore endyear if it's the same as year
         my ($ytype) = $df->{year} =~ /\A(\X*)year\z/xms;
         $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
-        # endyear can be null
-        if (is_def_and_notnull($be->get_field($ytype . 'endyear'))
+        # endyear can be null which makes labelyear different to plain year
+        if ($be->field_exists($ytype . 'endyear')
             and ($be->get_field($df->{year}) ne $be->get_field($ytype . 'endyear'))) {
           $be->set_field('labelyear',
                          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
