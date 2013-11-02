@@ -106,7 +106,17 @@ sub relclone {
         }
         else {
           process_entry_options($clonekey, [ 'skiplab', 'skiplos', 'uniquename=0', 'uniquelist=0' ]);
+          # Set options field as this is passed through to biblatex
           $relclone->set_datafield('options', [ 'dataonly' ]);
+        }
+
+        # mslang is a special option that should be copied to related clones and made
+        # visible in the options list for biblatex
+        if (my $lid = $relclone->get_field('langid')) {
+          my $opts = $relclone->get_field('options');
+          push @$opts, "mslang=$lid";
+          $relclone->set_datafield('options', $opts);
+          Biber::Config->setblxoption('mslang', $lid, 'PER_ENTRY', $clonekey);
         }
 
         $section->bibentries->add_entry($clonekey, $relclone);
