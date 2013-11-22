@@ -173,6 +173,7 @@
         <bcf:map_step map_field_set="type" map_field_value="techreport"/>
       </bcf:map>
       <bcf:map>
+        <bcf:map_step map_field_source="hyphenation" map_field_target="langid"/>
         <bcf:map_step map_field_source="address" map_field_target="location"/>
         <bcf:map_step map_field_source="school" map_field_target="institution"/>
         <bcf:map_step map_field_source="annote" map_field_target="annotation"/>
@@ -779,7 +780,8 @@
       <bcf:field fieldtype="field" datatype="literal">eventtitleaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">gender</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">howpublished</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">hyphenation</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">langid</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal">langidopts</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">indexsorttitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">indextitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">isan</bcf:field>
@@ -928,7 +930,6 @@
       <bcf:field>execute</bcf:field>
       <bcf:field>file</bcf:field>
       <bcf:field>gender</bcf:field>
-      <bcf:field>hyphenation</bcf:field>
       <bcf:field>ids</bcf:field>
       <bcf:field>indextitle</bcf:field>
       <bcf:field>indexsorttitle</bcf:field>
@@ -937,6 +938,8 @@
       <bcf:field>iswc</bcf:field>
       <bcf:field>keywords</bcf:field>
       <bcf:field>label</bcf:field>
+      <bcf:field>langid</bcf:field>
+      <bcf:field>langidopts</bcf:field>
       <bcf:field>library</bcf:field>
       <bcf:field>lista</bcf:field>
       <bcf:field>listb</bcf:field>

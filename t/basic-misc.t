@@ -157,9 +157,10 @@ my $murray1 = q|    \entry{murray}{article}{}
       \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
-      \field{hyphenation}{american}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field{journaltitle}{Langmuir}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
       \field{number}{1}
       \field{shorttitle}{Alkanethiolate gold cluster molecules}
       \field{subtitle}{Core and monolayer properties as a function of core size}
@@ -211,9 +212,10 @@ my $murray2 = q|    \entry{murray}{article}{}
       \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
-      \field{hyphenation}{american}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field{journaltitle}{Langmuir}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
       \field{number}{1}
       \field{shorttitle}{Alkanethiolate gold cluster molecules}
       \field{subtitle}{Core and monolayer properties as a function of core size}
@@ -279,7 +281,8 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \field{sortinit}{A}
       \field{labeltitle}{Shorttitle}
       \true{singletitle}
-      \field{hyphenation}{USenglish}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
       \field{note}{anon1}
       \field{shorttitle}{Shorttitle}
       \field{title}{Title1}
@@ -305,7 +308,8 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \field{sortinit}{A}
       \field{labeltitle}{Shorttitle}
       \true{singletitle}
-      \field{hyphenation}{USenglish}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
       \field{note}{anon2}
       \field{shorttitle}{Shorttitle}
       \field{title}{Title2}

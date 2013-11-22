@@ -298,6 +298,7 @@ my $sourcemap = [
       },
       {
         map_step => [
+          { map_field_source => "hyphenation", map_field_target => "langid" },
           { map_field_source => "address", map_field_target => "location" },
           { map_field_source => "school", map_field_target => "institution" },
           { map_field_source => "annote", map_field_target => "annotation" },
