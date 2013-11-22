@@ -298,6 +298,7 @@ my $sourcemap = [
       },
       {
         map_step => [
+          { map_field_source => "hyphenation", map_field_target => "langid" },
           { map_field_source => "address", map_field_target => "location" },
           { map_field_source => "school", map_field_target => "institution" },
           { map_field_source => "annote", map_field_target => "annotation" },
@@ -317,14 +318,14 @@ my $sourcemap = [
       {
         map_step => [
                      {map_field_source => 'options', map_notmatch => "mslang\\s*=", map_final => 1},
-                     {map_field_source => 'hyphenation', map_match => "(.+)", map_final => 1},
+                     {map_field_source => 'langid', map_match => "(.+)", map_final => 1},
                      {map_field_set => 'options', map_field_value => ",mslang=\$1", map_append => 1},
         ],
        map_overwrite => 1,
       },
       {
         map_step => [
-                     {map_field_source => 'hyphenation', map_match => "(.+)", map_final => 1},
+                     {map_field_source => 'langid', map_match => "(.+)", map_final => 1},
                      {map_field_set => 'options', map_field_value => "mslang=\$1"},
         ],
       },

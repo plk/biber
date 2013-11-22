@@ -195,7 +195,7 @@ my $forms1 = q|    \entry{forms1}{book}{}
 my $forms9 = q|    \entry{forms9}{book}{mstranslang=german,mslang=french}
       \field{sortinit}{0}
       \field{labeltitle}{Un titel}
-      \field{hyphenation}{french}
+      \field{langid}{french}
       \field{title}{Un titel}
     \endentry
 |;
@@ -203,7 +203,7 @@ my $forms9 = q|    \entry{forms9}{book}{mstranslang=german,mslang=french}
 my $forms10 = q|    \entry{forms10}{book}{mslang=french}
       \field{sortinit}{0}
       \field{labeltitle}{Un titel}
-      \field{hyphenation}{french}
+      \field{langid}{french}
       \field{title}{Un titel}
     \endentry
 |;
@@ -211,7 +211,7 @@ my $forms10 = q|    \entry{forms10}{book}{mslang=french}
 my $forms11 = q|    \entry{forms11}{book}{mslang=french}
       \field{sortinit}{0}
       \field{labeltitle}{Un titel}
-      \field{hyphenation}{french}
+      \field{langid}{french}
       \field{title}{Un titel}
     \endentry
 |;
@@ -220,6 +220,6 @@ my $forms11 = q|    \entry{forms11}{book}{mslang=french}
 
 is($out->get_output_entry('forms1', $main), $forms1, 'bbl entry - forms 1') ;
 is($bibentries->entry('forms8')->get_field('title', 'original', 'lang1'), 'L title', 'lang only');
-is($out->get_output_entry('forms9', $main), $forms9, 'bbl entry - hyphenation option') ;
+is($out->get_output_entry('forms9', $main), $forms9, 'bbl entry - langid option') ;
 is($out->get_output_entry('forms10', $main), $forms10, 'bbl entry - mstranslang same as global') ;
 is($out->get_output_entry('forms11', $main), $forms11, 'bbl entry - mslang with unset options') ;

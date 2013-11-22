@@ -117,7 +117,7 @@ $out = $biber->get_output_obj;
 
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
-my $murray1 = q|    \entry{murray}{article}{mslang=american}
+my $murray1 = q|    \entry{murray}{article}{mslang=english}
       \name{labelname}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
@@ -157,9 +157,10 @@ my $murray1 = q|    \entry{murray}{article}{mslang=american}
       \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
-      \field{hyphenation}{american}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field{journaltitle}{Langmuir}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
       \field{number}{1}
       \field{shorttitle}{Alkanethiolate gold cluster molecules}
       \field{subtitle}{Core and monolayer properties as a function of core size}
@@ -171,7 +172,7 @@ my $murray1 = q|    \entry{murray}{article}{mslang=american}
     \endentry
 |;
 
-my $murray2 = q|    \entry{murray}{article}{mslang=american}
+my $murray2 = q|    \entry{murray}{article}{mslang=english}
       \name{labelname}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
@@ -211,9 +212,10 @@ my $murray2 = q|    \entry{murray}{article}{mslang=american}
       \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
-      \field{hyphenation}{american}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field{journaltitle}{Langmuir}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
       \field{number}{1}
       \field{shorttitle}{Alkanethiolate gold cluster molecules}
       \field{subtitle}{Core and monolayer properties as a function of core size}
@@ -263,7 +265,7 @@ my $t2 = q|    \entry{t2}{misc}{}
     \endentry
 |;
 
-my $anon1 = q|    \entry{anon1}{unpublished}{mslang=USenglish}
+my $anon1 = q|    \entry{anon1}{unpublished}{mslang=english}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=9873a6cc65c553faa2b21aaad626fe4b}{XAnony}{X\bibinitperiod}{}{}{}{}{}{}}%
       }
@@ -279,7 +281,8 @@ my $anon1 = q|    \entry{anon1}{unpublished}{mslang=USenglish}
       \field{sortinit}{A}
       \field{labeltitle}{Shorttitle}
       \true{singletitle}
-      \field{hyphenation}{USenglish}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
       \field{note}{anon1}
       \field{shorttitle}{Shorttitle}
       \field{title}{Title1}
@@ -289,7 +292,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{mslang=USenglish}
     \endentry
 |;
 
-my $anon2 = q|    \entry{anon2}{unpublished}{mslang=USenglish}
+my $anon2 = q|    \entry{anon2}{unpublished}{mslang=english}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=f64c29e89ea49402b997956610b58ef6}{YAnony}{Y\bibinitperiod}{}{}{}{}{}{}}%
       }
@@ -305,7 +308,8 @@ my $anon2 = q|    \entry{anon2}{unpublished}{mslang=USenglish}
       \field{sortinit}{A}
       \field{labeltitle}{Shorttitle}
       \true{singletitle}
-      \field{hyphenation}{USenglish}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
       \field{note}{anon2}
       \field{shorttitle}{Shorttitle}
       \field{title}{Title2}
