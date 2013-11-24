@@ -35,12 +35,12 @@ fi
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
 if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
-  ssh root@wood "VBoxHeadless --startvm bbf-osx10.6 </dev/null >/dev/null 2>&1 &"
+  ssh vbox@wood "VBoxHeadless --startvm bbf-osx10.6 </dev/null >/dev/null 2>&1 &"
   sleep 10
   ssh bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-osx10.6:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
-  ssh root@wood "VBoxManage controlvm bbf-osx10.6 savestate"
+  ssh vbox@wood "VBoxManage controlvm bbf-osx10.6 savestate"
   cd $DIR
   mv biber-darwin_x86_64 biber
   chmod +x biber
@@ -54,12 +54,12 @@ fi
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
 if [ ! -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
-  ssh root@wood "VBoxHeadless --startvm bbf-osx10.5 </dev/null >/dev/null 2>&1 &"
+  ssh vbox@wood "VBoxHeadless --startvm bbf-osx10.5 </dev/null >/dev/null 2>&1 &"
   sleep 10
   ssh bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_i386;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-osx10.5:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
   ssh bbf-osx10.5 "\\rm -f biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386"
-  ssh root@wood "VBoxManage controlvm bbf-osx10.5 savestate"
+  ssh vbox@wood "VBoxManage controlvm bbf-osx10.5 savestate"
   cd $DIR
   mv biber-darwin_x86_i386 biber
   chmod +x biber
@@ -76,12 +76,12 @@ fi
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
 if [ ! -e $DIR/biber-MSWIN.zip ]; then
-  ssh root@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
+  ssh vbox@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
   sleep 20
   ssh bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN.exe $DIR/
   ssh bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWin32/biber-MSWIN.exe"
-  ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
+  ssh vbox@wood "VBoxManage controlvm bbf-wxp32 savestate"
   cd $DIR
   mv biber-MSWIN.exe biber.exe
   chmod +x biber.exe
@@ -94,13 +94,13 @@ fi
 # We run "Build realclean" at the end as we are using the same tree for
 # win and cygwin builds
 if [ ! -e $DIR/biber-cygwin32.tar.gz ]; then
-  ssh root@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
+  ssh vbox@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
   sleep 20
   # We have to move aside the windows libbtparse.dll otherwise it's picked up by cygwin
   ssh bbf-wxp32 ". bin/set-biber-cyg-build-env.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build installdeps;./Build install;cd dist/cygwin32;./build.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS /cygdrive/c/WINDOWS/system32/libbtparse.dll;cd ~/biblatex-biber;./Build realclean"
   scp bbf-wxp32:biblatex-biber/dist/cygwin32/biber-cygwin32.exe $DIR/
   ssh bbf-wxp32 "\\rm -f biblatex-biber/dist/cygwin32/biber-cygwin32.exe"
-  ssh root@wood "VBoxManage controlvm bbf-wxp32 savestate"
+  ssh vbox@wood "VBoxManage controlvm bbf-wxp32 savestate"
   cd $DIR
   mv biber-cygwin32.exe biber.exe
   chmod +x biber.exe
@@ -112,12 +112,12 @@ fi
 
 # Build farm Linux 32
 if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
-  ssh root@wood "VBoxHeadless --startvm bbf-jj32 </dev/null >/dev/null 2>&1 &"
+  ssh vbox@wood "VBoxHeadless --startvm bbf-jj32 </dev/null >/dev/null 2>&1 &"
   sleep 20
   ssh bbf-jj32 "cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-jj32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
   ssh bbf-jj32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
-  ssh root@wood "VBoxManage controlvm bbf-jj32 savestate"
+  ssh vbox@wood "VBoxManage controlvm bbf-jj32 savestate"
   cd $DIR
   mv biber-linux_x86_32 biber
   chmod +x biber
@@ -129,12 +129,12 @@ fi
 
 # Build farm Linux 64
 if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
-  ssh root@wood "VBoxHeadless --startvm bbf-jj64 </dev/null >/dev/null 2>&1 &"
+  ssh vbox@wood "VBoxHeadless --startvm bbf-jj64 </dev/null >/dev/null 2>&1 &"
   sleep 20
   ssh bbf-jj64 "cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_64;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-jj64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
   ssh bbf-jj64 "\\rm -f biblatex-biber/dist/linux_x86_64/biber-linux_x86_64"
-  ssh root@wood "VBoxManage controlvm bbf-jj64 savestate"
+  ssh vbox@wood "VBoxManage controlvm bbf-jj64 savestate"
   cd $DIR
   mv biber-linux_x86_64 biber
   chmod +x biber
