@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 23;
+use Test::More tests => 26;
 
 use Biber;
 use Biber::Utils;
@@ -13,7 +13,7 @@ use Log::Log4perl;
 chdir("t/tdata");
 
 # Set up Biber object
-my $biber = Biber->new(noconf => 1);
+my $biber = Biber->new(configfile => 'biber-test-variants.conf');
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -35,6 +35,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('fastsort', 1);
+
+# THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
 # Now generate the information
 $biber->prepare;
@@ -89,7 +91,7 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['forms9', 'forms10', 'forms11', 'forms8', 'forms5', 'forms4', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms9', 'forms10', 'forms11', 'forms13', 'forms14', 'forms8', 'forms5', 'forms4', 'forms12', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -216,10 +218,39 @@ my $forms11 = q|    \entry{forms11}{book}{mslang=french}
     \endentry
 |;
 
+my $forms12 = q|    \entry{forms12}{unpublished}{}
+      \field{sortinit}{T}
+      \field{labeltitle}{TITLE}
+      \true{singletitle}
+      \field[form=translated,lang=french]{maintitle}{Maintitle translated FRENCH}
+      \field[form=uniform,lang=german]{subtitle}{Subtitle uniform GERMAN}
+      \field{title}{TITLE}
+      \field[form=translated,lang=french]{title}{Title translated FRENCH}
+    \endentry
+|;
 
+my $forms13 = q|    \entry{forms13}{unpublished}{}
+      \field{sortinit}{0}
+      \field[form=translated,lang=french]{journaltitle}{Jtitle translated french}
+      \field[form=uniform,lang=french]{journaltitle}{Jtitle uniform french}
+      \field[form=translated,lang=french]{note}{Note translated french}
+      \field[form=translated,lang=german]{note}{Note translated german}
+    \endentry
+|;
+
+my $forms14 = q|    \entry{forms14}{unpublished}{}
+      \field{sortinit}{0}
+      \field[lang=french]{journaltitle}{JTITLE french}
+      \field[form=translated]{note}{NOTE translated}
+    \endentry
+|;
 
 is($out->get_output_entry('forms1', $main), $forms1, 'bbl entry - forms 1') ;
 is($bibentries->entry('forms8')->get_field('title', 'original', 'lang1'), 'L title', 'lang only');
 is($out->get_output_entry('forms9', $main), $forms9, 'bbl entry - langid option') ;
 is($out->get_output_entry('forms10', $main), $forms10, 'bbl entry - mstranslang same as global') ;
 is($out->get_output_entry('forms11', $main), $forms11, 'bbl entry - mslang with unset options') ;
+is($out->get_output_entry('forms12', $main), $forms12, 'bbl entry - mapping with forms/langs - 1') ;
+is($out->get_output_entry('forms13', $main), $forms13, 'bbl entry - mapping with forms/langs - 2') ;
+is($out->get_output_entry('forms14', $main), $forms14, 'bbl entry - mapping with forms/langs - 3') ;
+

@@ -28,8 +28,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{1.8}    % BIBER VERSION
-\gdef\biblatexversion{2.8}   % BIBLATEX VERSION
+\gdef\biberversion{2.0}    % BIBER VERSION
+\gdef\biblatexversion{3.0}   % BIBLATEX VERSION
 
 % Set up tikz things
 
@@ -750,6 +750,8 @@ examples. A \opt{map} element looks like this:
   +\textcolor{blue}{<per\_type>\textcolor{red}{entrytype}</per\_type>}+
   <map_step +\textcolor{blue}{map\_type\_source="\textcolor{red}{source-entrytype}"}+
              +\textcolor{blue}{map\_field\_source="\textcolor{red}{source-field}"}+
+             +\textcolor{blue}{map\_field\_source\_form="\textcolor{red}{source-field-form}"}+
+             +\textcolor{blue}{map\_field\_source\_lang="\textcolor{red}{source-field-lang}"}+
              +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-entrytype}"}+
              +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
              +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
@@ -800,6 +802,19 @@ datasource entry being processed. A \opt{map\_step} works like this:
   \textcolor{blue}{\texttt{map\_final}} is set, then if there is no
   \textcolor{red}{\texttt{source-field}} field in the entry, processing of
   this \opt{map} immediately terminates.
+  \textcolor{red}{\texttt{source-field-form}} and
+  \textcolor{red}{\texttt{source-field-lang}} can be used to select
+  specific variants of a multiscript field. If only
+  \textcolor{red}{\texttt{source-field-form}} is specified, the mapping
+  will select the variant of the field with the specified form, whatever
+  the language of the field variant. If there is more than one field variant with
+  the same \textcolor{red}{\texttt{source-field-form}} and different lang,
+  the \textcolor{red}{\texttt{source-field}} will not be selected. If only
+  \textcolor{red}{\texttt{source-field-lang}} is specified, the mapping
+  will select the variant of the field with the specified lang, whatever
+  the form of the field variant. If there is more than one field variant with
+  the same \textcolor{red}{\texttt{source-field-lang}} and different form,
+  the \textcolor{red}{\texttt{source-field}} will not be selected.
 \item If \textcolor{blue}{\texttt{map\_match}} is defined but
   \textcolor{blue}{\texttt{map\_replace}} is not, only apply the
   step if the \textcolor{red}{\texttt{source-field}} matches
@@ -1021,7 +1036,36 @@ the changes from a previous match/replace are already committed.
 «Doe,». First the \bibfield{AUTHOR} field is copied to both the
 \bibfield{SHORTAUTHOR} and \bibfield{SORTNAME} fields, overwriting them if they
 already exist. Then, these two new fields are modified to canonicalise a
-particular name, which presumably has some variants in the datasource.
+particular name, which presumably has some variation in the datasource.
+
+\begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
+<maps>
+  <map map_overwrite="1">
+    <map_step map_field_source="TITLE" map_field_source_form="translated"
+              map_final="1"/>
+    <map_step map_entry_null="1"/>
+  </map>
+  <map map_overwrite="1">
+    <map_step map_field_source="SUBTITLE" map_field_source_lang="french"
+              map_final="1"/>
+    <map_step map_entry_null="1"/>
+  </map>
+  <map map_overwrite="1">
+    <map_step map_field_source="NOTE" map_field_source_form="translated"
+              map_field_source_lang="german" map_final="1"/>
+    <map_step map_entry_null="1"/>
+  </map>
+</maps>
+\end{lstlisting}
+
+\noindent Removes a translated \bibfield{TITLE} variant without having to
+know the language of the variant (the language will be found, assuming that
+there is only one translated variant. If there is more than one, this step
+will be skipped). Removes a french language variant of the
+\bibfield{SUBTITLE} field without having to know the form of the variant
+(the form will be found, assuming that there is only one french variant. If
+there is more than one, this step will be skipped). Removes any
+\bibfield{NOTE} fields with translated form and german language.
 
 \begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
 <map>
@@ -2464,6 +2508,46 @@ the format of the config file sorting specification. By default, if
 sorting is enabled in tool mode, the sorting scheme is the same as the
 \biblatex \texttt{none} scheme, that is, no sorting is performed.
 \bigskip%|<- stop confusing emacs highlighting
+\subsection{Extended \bibtex\ Datasource Field Format}
+\biber\ implements an extended \bibtex\ datasource format which allows
+users to specify the script form and language for a field. In this
+way, it is possible to include several variants of a field in an entry
+which give the field in different script forms (translated, romanised
+etc.) with an option in cases of forms like translated forms, to
+specify the language. This allows users within \biblatex\ to access
+such data when formatting entries. The extended field format looks
+like this:
+
+\begin{verbatim}
+<field>_<form>_<lang>
+\end{verbatim}
+%
+Both \texttt{<form>} and \texttt{<lang>} are optional and if they are not
+present, default to «default» and «original» respectively. \texttt{<lang>},
+if specified, should be a known \sty{babel}/\sty{polyglossia} language
+identifier. \texttt{<form>} can be one of:
+\begin{itemize}
+\item original (default if ommitted)
+\item translated
+\item romanised
+\item uniform
+\end{itemize}
+
+For example:
+\begin{lstlisting}[style=bibtex]{}
+@BOOK{example1,
+  AUTHOR                    = { Булгаков, Павел and Розенфельд, Борис },
+  AUTHOR_translated_english = { Bulgakov, Pavel and Rosenfeld, Boris },
+  TITLE                     = { Славься, Отечество наше свободное },
+  TITLE_romanised           = { Slavʹsâ, Otečestvo naše svobodnoe },
+}
+\end{lstlisting}
+%
+This example has an \bibfield{AUTHOR} field in Russian Cyrillic script
+and a variant the «translated» form with and language setting of
+«english». There is also a Russian Cyrillic \bibfield{TITLE} with an
+ISO 9 romanised variant.
+\bigskip
 \section{Binaries}\label{binaries}
 
 \biber\ is a Perl application which relies heavily on quite a few

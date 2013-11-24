@@ -68,17 +68,43 @@
 
 @BOOK{forms9,
   OPTIONS                = {mstranslang=german},
-  HYPHENATION            = {french},
+  LANGID                 = {french},
   TITLE                  = {Un titel},
 }
 
 @BOOK{forms10,
   OPTIONS                = {mstranslang=english},
-  HYPHENATION            = {french},
+  LANGID                 = {french},
   TITLE                  = {Un titel},
 }
 
 @BOOK{forms11,
-  HYPHENATION            = {french},
+  LANGID                 = {french},
   TITLE                  = {Un titel},
 }
+
+@UNPUBLISHED{forms12,
+  TITLE                         = {Title},
+  TITLE_translated_french       = {Title translated french},
+  SUBTITLE_uniform_german       = {Subtitle uniform german},
+  MAINTITLE_translated_french   = {Maintitle translated french}
+}
+
+% fieldsource map with translated form and no lang should not match
+% as there are two langs for the same form
+% fieldsource map with french lang and no form should not match
+% as there are two forms for the same lang
+@UNPUBLISHED{forms13,
+  NOTE_translated_french         = {Note translated french},
+  NOTE_translated_german         = {Note translated german},
+  JOURNALTITLE_translated_french = {Jtitle translated french},
+  JOURNALTITLE_uniform_french = {Jtitle uniform french}
+}
+
+% Implied lang and implied form should work regardless of what is implied
+% These default are not set during sourcemapping and so we assume an empty string
+@UNPUBLISHED{forms14,
+  JOURNALTITLE__french           = {Jtitle french},
+  NOTE_translated                = {Note translated},
+}
+

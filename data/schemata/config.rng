@@ -828,6 +828,20 @@
                 </data>
               </attribute>
               <optional>
+                <attribute name="map_field_source_form">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_field_source_lang">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
                 <attribute name="map_field_target">
                   <data type="string">
                     <param name="minLength">1</param>

@@ -21,6 +21,7 @@ use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
 use Log::Log4perl qw(:no_extra_logdie_message);
+use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Unicode::Normalize;
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -44,7 +45,8 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
-  process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date};
+  process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
+  find_ms_field};
 
 =head1 FUNCTIONS
 
@@ -974,6 +976,97 @@ sub _expand_option {
     }
   }
   return;
+}
+
+=head2 find_ms_field
+
+  Check for the existence of a field with particular lang/form.
+  This is needed during sourcemap processing before we have the usual Biber internals
+  for doing this.
+
+=cut
+
+sub find_ms_field {
+  # $source is a ref so we can modify it in the calling context
+  my ($entry, $step, $source) = @_;
+  my $sform = $step->{map_field_source_form};
+  my $slang = $step->{map_field_source_lang};
+
+  my $forms = $DM_DATATYPES{forms};
+  my $S = Biber::Config->getoption('mssplit');
+  my $fl_re = qr/\A([^$S]+)$S?($forms)?$S?(.+)?\z/;
+
+  # Simple field, check and return
+  if (not $sform and not $slang) {
+    return $entry->exists(lc($$source)) ? 1 : 0;
+  }
+
+  # form and lang are specified
+  if ($sform and $slang) {
+    my $realsource = lc($$source) . $S . lc($sform) . $S . lc($slang);
+    if ($entry->exists(lc($realsource))) {
+      $$source = $realsource;
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+
+  # sform xor slang must be specified by here
+  my $field_variants;
+
+  # form
+  if ($sform) {
+    foreach my $f (map {lc} $entry->fieldlist) {
+      my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+      next unless lc($field) eq lc($$source);
+      next unless (lc($form) eq lc($sform));
+      $field_variants->{lc($field)}{langs}++;
+      $field_variants->{lc($field)}{$form ? lc($form): ''} = ($lang ? lc($lang) : '');
+    }
+
+    if ($field_variants->{lc($$source)}{langs} > 1) {
+      return 0; # More than one lang for form, we can't tell which one is wanted
+    }
+    else {
+      # Have to drop final mssplit char if there is no lang in .bib
+      my $LANGS = $field_variants->{lc($$source)}{lc($sform)} ? $S : '';
+      my $realsource = lc($$source) . $S . lc($sform) . $LANGS . $field_variants->{lc($$source)}{lc($sform)};
+      if ($entry->exists(lc($realsource))) {
+        $$source = $realsource;
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }
+  }
+  # lang
+  elsif ($slang) {
+    foreach my $f (map {lc} $entry->fieldlist) {
+      my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+      next unless lc($field) eq lc($$source);
+      next unless (lc($lang) eq lc($slang));
+      $field_variants->{lc($field)}{forms}++;
+      $field_variants->{lc($field)}{$lang ? lc($lang): ''} = ($form ? lc($form) : '');
+    }
+
+    if ($field_variants->{lc($$source)}{forms} > 1) {
+      return 0; # More than one form for lang, we can't tell which one is wanted
+    }
+    else {
+      my $realsource = lc($$source) . $S . $field_variants->{lc($$source)}{lc($slang)} . $S . lc($slang);
+      if ($entry->exists(lc($realsource))) {
+        $$source = $realsource;
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }
+  }
+  return 0;
 }
 
 
