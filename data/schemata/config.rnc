@@ -11,8 +11,82 @@ start = element config {
 #  element configfile          { text }? & 
   element convert_control     { "0" | "1" }? &
   element dot_include         { text }? &
-  # Data model specification
-  element datamodel {
+  # Data model specification (mainly for tool mode)
+   datamodel? &
+  element decodecharsset      { text }? &
+  element debug               { "0" | "1" }? &
+  element fastsort            { "0" | "1" }? &
+  element fixinits            { "0" | "1" }? &
+# Would never want this in the config file
+#  element help                { "0" | "1" }? &
+  inheritance? &
+  element input_encoding      { text }? &
+  element listsep             { text }? &
+  element logfile             { text }? &
+  element mincrossrefs        { xsd:unsignedByte }? &
+  element mssplit             { text }? &
+  element namesep             { text }? &
+# Can't specify not to use a config file in the config file ...
+#  element noconf              { "0" | "1" }? &
+  element nodieonerror         { "0" | "1" }? &
+  element nolog                { "0" | "1" }? &
+  # noinit specification
+  element noinit {
+    element option {
+      attribute value { xsd:string },
+      empty
+    }+
+  }? &
+  # nosort specification
+  element nosort     {
+    element option {
+      attribute name { text } &
+      attribute value { text }
+    }+
+  }? &
+  element nostdmacros          { "0" | "1" }? &
+  element onlylog              { "0" | "1" }? &
+  element others_string        { text }? &
+  element output_align         { "0" | "1" }? &
+  element output_directory     { text }? &
+  element output_encoding      { text }? &
+  element output_fieldcase     { "upper" | "lower" | "title" }? &
+  element output_file          { text }? &
+  element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
+  element output_indent        { xsd:unsignedByte }? &
+  element output_macro_fields  { text }? &
+  element output_resolve       { "0" | "1" }? &
+  element output_safechars     { "0" | "1" }? &
+  element output_safecharsset  { "base" | "full" }? &
+  element quiet                { "0" | "1" }? &
+  element recodedata           { text }? &
+  element sortcase             { "0" | "1" }? &
+  element sortfirstinits       { "0" | "1" }? &
+  sorting? &
+  element sortlocale           { text }? &
+  element sortupper            { "0" | "1" }? &
+  element sourcemap            {
+    element maps {
+      attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
+      attribute map_overwrite { "0" | "1" }?,
+      map+
+    }+
+  }? &
+  element ssl-nointernalca     { "0" | "1" }? &
+  element ssl-noverify-host    { "0" | "1" }? &
+  element tool                 { "0" | "1" }? &
+  element tool_config          { text }? &
+  element trace                { "0" | "1" }? &
+  element validate_config      { "0" | "1" }? &
+  element validate_control     { "0" | "1" }? &
+  element validate_datamodel   { "0" | "1" }? &
+# Meaningless in the config file
+#  element version              { "0" | "1" }? &
+  element wraplines            { "0" | "1" }?
+}
+
+datamodel =
+ element datamodel {
     # Valid entrytypes
     element entrytypes {
       element entrytype {
@@ -102,79 +176,7 @@ start = element config {
         )
       }*
     }+
-  }? &
-  element decodecharsset      { text }? &
-  element debug               { "0" | "1" }? &
-  element fastsort            { "0" | "1" }? &
-  element fixinits            { "0" | "1" }? &
-# Would never want this in the config file
-#  element help                { "0" | "1" }? &
-  inheritance? &
-  element input_encoding      { text }? &
-  element listsep             { text }? &
-  element logfile             { text }? &
-  element mincrossrefs        { xsd:unsignedByte }? &
-  element mssplit             { text }? &
-  element namesep             { text }? &
-# Can't specify not to use a config file in the config file ...
-#  element noconf              { "0" | "1" }? &
-  element nodieonerror         { "0" | "1" }? &
-  element nolog                { "0" | "1" }? &
-  # noinit specification
-  element noinit {
-    element option {
-      attribute value { xsd:string },
-      empty
-    }+
-  }? &
-  # nosort specification
-  element nosort     {
-    element option {
-      attribute name { text } &
-      attribute value { text }
-    }+
-  }? &
-  element nostdmacros          { "0" | "1" }? &
-  element onlylog              { "0" | "1" }? &
-  element others_string        { text }? &
-  element output_align         { "0" | "1" }? &
-  element output_directory     { text }? &
-  element output_encoding      { text }? &
-  element output_fieldcase     { "upper" | "lower" | "title" }? &
-  element output_file          { text }? &
-  element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
-  element output_indent        { xsd:unsignedByte }? &
-  element output_macro_fields  { text }? &
-  element output_resolve       { "0" | "1" }? &
-  element output_safechars     { "0" | "1" }? &
-  element output_safecharsset  { "base" | "full" }? &
-  element quiet                { "0" | "1" }? &
-  element recodedata           { text }? &
-  element sortcase             { "0" | "1" }? &
-  element sortfirstinits       { "0" | "1" }? &
-  sorting? &
-  element sortlocale           { text }? &
-  element sortupper            { "0" | "1" }? &
-  element sourcemap            {
-    element maps {
-      attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
-      attribute map_overwrite { "0" | "1" }?,
-      map+
-    }+
-  }? &
-  element ssl-nointernalca     { "0" | "1" }? &
-  element ssl-noverify-host    { "0" | "1" }? &
-  element tool                 { "0" | "1" }? &
-  element tool_config          { text }? &
-  element trace                { "0" | "1" }? &
-  element validate_config      { "0" | "1" }? &
-  element validate_control     { "0" | "1" }? &
-  element validate_datamodel   { "0" | "1" }? &
-# Meaningless in the config file
-#  element version              { "0" | "1" }? &
-  element wraplines            { "0" | "1" }?
-}
-
+  }
 inheritance =
     # Cross-reference inheritance specifications
     element inheritance {
