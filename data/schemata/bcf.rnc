@@ -132,11 +132,7 @@ start =
         # Default inherit_all and override_target settings for entrytype source/target pairs
         element bcf:type_pair {
           attribute source { "*" | xsd:string {minLength="1"}},
-          attribute source_form { xsd:string {minLength="1"}}?,
-          attribute source_lang { xsd:string {minLength="1"}}?,
           attribute target { "*" | xsd:string {minLength="1"}},
-          attribute target_form { xsd:string {minLength="1"}}?,
-          attribute target_lang { xsd:string {minLength="1"}}?,
           attribute inherit_all { "true" | "false" }?,
           attribute override_target { "true" | "false" }?,
           empty
