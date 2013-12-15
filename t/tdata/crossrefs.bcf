@@ -496,7 +496,7 @@
     <bcf:inherit>
       <bcf:type_pair source="book" target="inbook"/>
       <bcf:field source="title" target="booktitle" override_target="true"/>
-      <bcf:field source="titleaddon" target="booktitleaddon"  override_target="true"/>
+      <bcf:field source="titleaddon" target="booktitleaddon" override_target="true"/>
       <bcf:field source="subtitle" target="booksubtitle" override_target="true"/>
     </bcf:inherit>
     <bcf:inherit>

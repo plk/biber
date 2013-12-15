@@ -334,6 +334,20 @@
                   </data>
                 </choice>
               </attribute>
+              <optional>
+                <attribute name="source_form">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="source_lang">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
               <attribute name="target">
                 <choice>
                   <value>*</value>
@@ -342,6 +356,20 @@
                   </data>
                 </choice>
               </attribute>
+              <optional>
+                <attribute name="target_form">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="target_lang">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
               <optional>
                 <attribute name="inherit_all">
                   <choice>
