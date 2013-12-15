@@ -768,6 +768,20 @@
                   <attribute name="source">
                     <data type="string"/>
                   </attribute>
+                  <optional>
+                    <attribute name="form">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="lang">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
+                    </attribute>
+                  </optional>
                   <attribute name="skip">
                     <choice>
                       <value>true</value>
@@ -782,11 +796,39 @@
                       <param name="minLength">1</param>
                     </data>
                   </attribute>
+                  <optional>
+                    <attribute name="source_form">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="source_lang">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
+                    </attribute>
+                  </optional>
                   <attribute name="target">
                     <data type="string">
                       <param name="minLength">1</param>
                     </data>
                   </attribute>
+                  <optional>
+                    <attribute name="target_form">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="target_lang">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                      </data>
+                    </attribute>
+                  </optional>
                   <optional>
                     <attribute name="override_target">
                       <choice>
