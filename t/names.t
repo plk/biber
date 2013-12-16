@@ -334,7 +334,7 @@ my $l5 = q|    \entry{L5}{book}{}
       }
       \strng{namehash}{c2d41bb75b01ec2339c1050981f9c2cc}
       \strng{fullhash}{c2d41bb75b01ec2339c1050981f9c2cc}
-      \field{sortinit}{v}
+      \field{sortinit}{V}
     \endentry
 |;
 
@@ -347,7 +347,7 @@ my $l6 = q|    \entry{L6}{book}{}
       }
       \strng{namehash}{68e9105aa98379a85ef6cd2e7ac29c00}
       \strng{fullhash}{68e9105aa98379a85ef6cd2e7ac29c00}
-      \field{sortinit}{v}
+      \field{sortinit}{V}
     \endentry
 |;
 
@@ -360,7 +360,7 @@ my $l7 = q|    \entry{L7}{book}{}
       }
       \strng{namehash}{4dbef3c5464f951b537a49ba93676a9a}
       \strng{fullhash}{4dbef3c5464f951b537a49ba93676a9a}
-      \field{sortinit}{v}
+      \field{sortinit}{V}
     \endentry
 |;
 
@@ -373,7 +373,7 @@ my $l8 = q|    \entry{L8}{book}{}
       }
       \strng{namehash}{9fb4d242b62f047e4255282864eedb97}
       \strng{fullhash}{9fb4d242b62f047e4255282864eedb97}
-      \field{sortinit}{v}
+      \field{sortinit}{V}
     \endentry
 |;
 
@@ -428,7 +428,7 @@ my $l11 = q|    \entry{L11}{book}{}
       }
       \strng{namehash}{ef4ab7eba5cd140b54ba4329e1dda90b}
       \strng{fullhash}{ef4ab7eba5cd140b54ba4329e1dda90b}
-      \field{sortinit}{v}
+      \field{sortinit}{V}
     \endentry
 |;
 
@@ -441,7 +441,7 @@ my $l12 = q|    \entry{L12}{book}{}
       }
       \strng{namehash}{87634072c9c157a0b9ca250bd6914a65}
       \strng{fullhash}{87634072c9c157a0b9ca250bd6914a65}
-      \field{sortinit}{d}
+      \field{sortinit}{D}
     \endentry
 |;
 
@@ -480,7 +480,7 @@ my $l15 = q|    \entry{L15}{book}{}
       }
       \strng{namehash}{379b415d869a4751678a5eee23b07e48}
       \strng{fullhash}{379b415d869a4751678a5eee23b07e48}
-      \field{sortinit}{v}
+      \field{sortinit}{V}
     \endentry
 |;
 
@@ -493,7 +493,7 @@ my $l16 = q|    \entry{L16}{book}{}
       }
       \strng{namehash}{0a9532fa161f6305ec403c1c85951bdf}
       \strng{fullhash}{0a9532fa161f6305ec403c1c85951bdf}
-      \field{sortinit}{v}
+      \field{sortinit}{V}
     \endentry
 |;
 

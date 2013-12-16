@@ -948,7 +948,8 @@ sub _generatesortinfo {
 
     # Strip off the prefix
     $ss =~ s/\A$pre$sorting_sep+//;
-    my $init = Unicode::GCString->new(normalise_string($ss))->substr(0, 1)->as_string;
+    # Always uppercase sortinit
+    my $init = uc(Unicode::GCString->new(normalise_string($ss))->substr(0, 1)->as_string);
 
     # Now check if this sortinit is valid in the output_encoding. If not, warn
     # and replace with a suitable value
