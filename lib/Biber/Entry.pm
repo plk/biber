@@ -878,6 +878,11 @@ sub resolve_xdata {
     Takes a second Biber::Entry object as argument
     Uses the crossref inheritance specifications from the .bcf
 
+    Rather verbose because we have to deal with all combinations of ms/non-ms
+    fields. It could be more parameterised but it would be horrible to debug.
+    At least this is relatively clear and the conditional branches are mutally
+    exclusive.
+
 =cut
 
 sub inherit_from {

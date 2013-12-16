@@ -53,7 +53,6 @@ t/bibtex-aliases.t
 t/bibtex-variants.t
 t/bibtex-output.t
 t/configfile.t
-t/crossrefs.t
 t/dm-constraints.t
 t/dm-dateformats.t
 t/encoding.t
@@ -62,6 +61,8 @@ t/extratitle.t
 t/extratitleyear.t
 t/extrayear.t
 t/full.t
+t/inheritance.t
+t/inheritance-ms.t
 THANKS
 t/labelalpha.t
 t/labelname.t
@@ -96,8 +97,6 @@ t/tdata/bibtex-aliases.bib
 t/tdata/bibtex-variants.bcf
 t/tdata/bibtex-variants.bib
 t/tdata/bibtex-output.bcf
-t/tdata/crossrefs.bcf
-t/tdata/crossrefs.bib
 t/tdata/dm-constraints.bcf
 t/tdata/dm-constraints.bib
 t/tdata/dm-dateformats.bcf
@@ -129,6 +128,10 @@ t/tdata/full.bcf
 t/tdata/full.bib
 t/tdata/general1.bcf
 t/tdata/general2.bcf
+t/tdata/inheritance.bcf
+t/tdata/inheritance.bib
+t/tdata/inheritance-ms.bcf
+t/tdata/inheritance-ms.bib
 t/tdata/labelalpha.bcf
 t/tdata/labelalpha.bib
 t/tdata/labelalpha.bib

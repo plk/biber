@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 32;
+use Test::More tests => 31;
 
 use Biber;
 use Biber::Output::bbl;
@@ -31,7 +31,7 @@ my $l4pconf = qq|
 
 Log::Log4perl->init(\$l4pconf);
 
-$biber->parse_ctrlfile('crossrefs.bcf');
+$biber->parse_ctrlfile('inheritance.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
@@ -461,35 +461,6 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
     \endentry
 |;
 
-my $ms1 = q|    \entry{ms1}{inbook}{}
-      \name{labelname}{1}{}{%
-        {{hash=ab072d2d4322ee1d27823c8adefeca0a}{Multiscript}{M\bibinitperiod}{Miranda}{M\bibinitperiod}{}{}{}{}}%
-      }
-      \name{author}{1}{}{%
-        {{hash=ab072d2d4322ee1d27823c8adefeca0a}{Multiscript}{M\bibinitperiod}{Miranda}{M\bibinitperiod}{}{}{}{}}%
-      }
-      \name{editor}{1}{}{%
-        {{hash=e9e9cd902ec07bab151d805c0716e7b0}{Ink}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
-      }
-      \name[form=translated,lang=german]{editor}{1}{}{%
-        {{hash=972f0ee3a5f949259f3b471a2a314e54}{Tinte}{T\bibinitperiod}{Jan}{J\bibinitperiod}{}{}{}{}}%
-      }
-      \list{publisher}{2}{%
-        {Rumble}%
-        {Slush}%
-      }
-      \strng{namehash}{ab072d2d4322ee1d27823c8adefeca0a}
-      \strng{fullhash}{ab072d2d4322ee1d27823c8adefeca0a}
-      \field{sortinit}{M}
-      \field{labeltitle}{Miraculous, Meticulous, Moody}
-      \field{booktitle}{Indelible, Infelicitous Idiosyncracies}
-      \strng{crossref}{ms}
-      \field{title}{Miraculous, Meticulous, Moody}
-      \field{year}{1955}
-    \endentry
-|;
-
-
 is($out->get_output_entry('cr1', $main0), $cr1, 'crossref test 1');
 is($out->get_output_entry('cr2', $main0), $cr2, 'crossref test 2');
 is($out->get_output_entry('cr_m', $main0), $cr_m, 'crossref test 3');
@@ -522,6 +493,4 @@ is($section0->has_citekey('r3'), 0,'Recursive crossref test 5');
 ok(defined($section0->bibentry('r3')),'Recursive crossref test 6');
 is($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
 ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
-# MS tests
-is($out->get_output_entry('ms1', $main0), $ms1, 'Multiscript test - 1');
 
