@@ -488,7 +488,7 @@ sub set_datafield {
   }
   else {
     $self->{datafields}{nonms}{$field} = $val;
-    $logger->trace("Setting nonms datafield in '$key': $field=$val");
+    $logger->trace("Setting non-ms datafield in '$key': $field=$val");
   }
   return;
 }
@@ -894,6 +894,10 @@ sub inherit_from {
   my $target_key = $self->get_field('citekey'); # target/child key
   my $source_key = $parent->get_field('citekey'); # source/parent key
   my $dm = Biber::Config->get_dm;
+  my $msform_s = Biber::Config->getblxoption('msform', undef, $source_key);
+  my $mslang_s = Biber::Config->getblxoption('mslang', undef, $source_key);
+  my $msform_t = Biber::Config->getblxoption('msform', undef, $target_key);
+  my $mslang_t = Biber::Config->getblxoption('mslang', undef, $target_key);
 
   # record the inheritance between these entries to prevent loops and repeats.
   Biber::Config->set_inheritance('crossref', $source_key, $target_key);
@@ -935,19 +939,30 @@ sub inherit_from {
       if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
           ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
         foreach my $field (@{$inherit->{field}}) {
+          # Skip this field if requested
+          if ($field->{skip}) {
+            if ($dm->field_is_multiscript($field->{source})) {
+              $processed->{$field->{source}}
+                          {$field->{form} || $msform_s}
+                          {$field->{lang} || $mslang_s} = 1;
+            }
+            else {
+              $processed->{$field->{source}} = 1;
+            }
+            next;
+          }
+
           # Ignore inheritance for fields which don't exist in the source
           if ($dm->field_is_multiscript($field->{source})) {
             next unless $parent->field_variant_exists($field->{source},
-                                                      $field->{sourceform},
-                                                      $field->{sourcelang});
+                                                      $field->{source_form},
+                                                      $field->{source_lang});
             $processed->{$field->{source}}
-                        {$field->{sourceform} ||
-                           Biber::Config->getblxoption('msform', undef, $source_key)}
-                        {$field->{sourcelang} ||
-                           Biber::Config->getblxoption('mslang', undef, $source_key)} = 1;
+                        {$field->{source_form} || $msform_s}
+                        {$field->{source_lang} || $mslang_s} = 1;
           }
           else {
-            if ($field->{sourceform} or $field->{sourcelang}) {
+            if ($field->{source_form} or $field->{source_lang}) {
               $logger->warn("Inheritance - variant specified for non-multiscript field '" .
                             $field->{source} . "'");
             }
@@ -957,164 +972,158 @@ sub inherit_from {
 
           # localise defaults according to field, if specified
           my $field_override_target = $field->{override_target} // 'false';
-          # Skip this field if requested
-          if ($field->{skip}) {
+
+          # For tool mode with bibtex output we need to copy the raw fields
+          if (Biber::Config->getoption('tool') and
+              Biber::Config->getoption('output_format') eq 'bibtex') {
+            $self->set_rawfield($field->{target}, $parent->get_rawfield($field->{source}));
+            next;
+          }
+
+          # Target is ms
+          if ($dm->field_is_multiscript($field->{target})) {
+            # Target and source are ms
             if ($dm->field_is_multiscript($field->{source})) {
-              $processed->{$field->{source}}
-                          {$field->{sourceform} ||
-                             Biber::Config->getblxoption('msform', undef, $source_key)}
-                          {$field->{sourcelang} ||
-                             Biber::Config->getblxoption('mslang', undef, $source_key)} = 1;
+              # If no specific variants of a the ms fields specified, inherit all
+              if (not $field->{source_form} and
+                  not $field->{target_form} and
+                  not $field->{source_lang} and
+                  not $field->{target_lang} and
+                  (not $self->field_variant_exists($field->{target},
+                                                   $field->{target_form},
+                                                   $field->{target_lang}) or
+                   $field_override_target eq 'true')) {
+                $logger->debug("Entry '$target_key' is inheriting field '" .
+                               $field->{source} .
+                               ' (all variants) ' .
+                               "' as '" .
+                               $field->{target} .
+                               ' (all variants) ' .
+                               "' from entry '$source_key'");
+                $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
+                # Record graphing information if required
+                if (Biber::Config->getoption('output_format') eq 'dot') {
+                  Biber::Config->set_graph('crossref',
+                                           $source_key,
+                                           $target_key,
+                                           $field->{source},
+                                           $field->{target});
+                }
+              }
+              # Set the field if it doesn't exist or override is requested
+              elsif (not $self->field_variant_exists($field->{target},
+                                                     $field->{target_form},
+                                                     $field->{target_lang}) or
+                     $field_override_target eq 'true') {
+                $logger->debug("Entry '$target_key' is inheriting field '" .
+                               $field->{source} .
+                               ' (form=' .
+                               ($field->{source_form} || $msform_s) .
+                               ',' .
+                               ' (lang=' .
+                               ($field->{source_lang} || $mslang_s) .
+                               ') ' .
+                               "' as '" .
+                               $field->{target} .
+                               ' (form=' .
+                               ($field->{target_form} || $msform_t) .
+                               ',' .
+                               ' (lang=' .
+                               ($field->{target_lang} || $mslang_t) .
+                               ') ' .
+                               "' from entry '$source_key'");
+                $self->set_datafield($field->{target},
+                                     $parent->get_field($field->{source},
+                                                        $field->{source_form},
+                                                        $field->{source_lang}),
+                                     $field->{target_form},
+                                     $field->{target_lang});
+                # Record graphing information if required
+                if (Biber::Config->getoption('output_format') eq 'dot') {
+                  Biber::Config->set_graph('crossref',
+                                           $source_key,
+                                           $target_key,
+                                           $field->{source} . $mssplit . ($field->{source_form} || $msform_s) . $mssplit . ($field->{source_lang} || $mslang_s),
+                                           $field->{target} . $mssplit . ($field->{target_form} || $msform_t) . $mssplit . ($field->{target_lang} || $mslang_t));
+                }
+              }
             }
+            # Target is ms, source is not ms
             else {
-              $processed->{$field->{source}} = 1;
+              # Set the field if it doesn't exist or override is requested
+              if (not $self->field_variant_exists($field->{target},
+                                                  $field->{target_form},
+                                                  $field->{target_lang}) or
+                  $field_override_target eq 'true') {
+                $logger->debug("Entry '$target_key' is inheriting field '" .
+                               $field->{source} . "' as '" .
+                               $field->{target} .
+                               ' (form=' . ($field->{target_form} || $msform_t) . ',' .
+                               ' (lang=' . ($field->{target_lang} || $mslang_t) . ') ' .
+                               "' from entry '$source_key'");
+                $self->set_datafield($field->{target},
+                                     $parent->get_field($field->{source}),
+                                     $field->{target_form},
+                                     $field->{target_lang});
+
+                # Record graphing information if required
+                if (Biber::Config->getoption('output_format') eq 'dot') {
+                  Biber::Config->set_graph('crossref',
+                                           $source_key,
+                                           $target_key,
+                                           $field->{source},
+                                           $field->{target} . $mssplit . ($field->{target_form} || $msform_t) . $mssplit . ($field->{target_lang} || $mslang_t));
+                }
+              }
             }
           }
+          # Target is not ms
           else {
-            # For tool mode with bibtex output we need to copy the raw fields
-            if (Biber::Config->getoption('tool') and
-                Biber::Config->getoption('output_format') eq 'bibtex') {
-              $self->set_rawfield($field->{target}, $parent->get_rawfield($field->{source}));
-              next;
-            }
+            # Target is not ms, source is ms
+            if ($dm->field_is_multiscript($field->{source})) {
+              # Set the field if it doesn't exist or override is requested
+              if (not $self->field_exists($field->{target}) or
+                  $field_override_target eq 'true') {
+                $logger->debug("Entry '$target_key' is inheriting field '" .
+                               $field->{source} .
+                               ' (form=' . ($field->{source_form} || $msform_s) . ',' .
+                               ' (lang=' . ($field->{source_lang} || $mslang_s) . ') ' .
+                               "' as '" .
+                               $field->{target} .
+                               "' from entry '$source_key'");
+                $self->set_datafield($field->{target},
+                                     $parent->get_field($field->{source},
+                                                        $field->{source_form},
+                                                        $field->{source_lang}));
 
-            # Target is ms
-            if ($dm->field_is_multiscript($field->{target})) {
-              # Target and source are ms
-              if ($dm->field_is_multiscript($field->{source})) {
-                # If no specific variants of a the ms fields specified, inherit all
-                if (not $field->{sourceform} and
-                    not $field->{targetform} and
-                    not $field->{sourcelang} and
-                    not $field->{targetlang} and
-                    (not $self->field_variant_exists($field->{target},
-                                                     $field->{targetform},
-                                                     $field->{targetlang}) or
-                       $field_override_target eq 'true')) {
-                  $logger->debug("Entry '$target_key' is inheriting field '" .
-                                 $field->{source} .
-                                 ' (all variants) ' .
-                                 "' as '" .
-                                 $field->{target} .
-                                 ' (all variants) ' .
-                                 "' from entry '$source_key'");
-                  $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
-                  # Record graphing information if required
-                  if (Biber::Config->getoption('output_format') eq 'dot') {
-                    Biber::Config->set_graph('crossref',
-                                             $source_key,
-                                             $target_key,
-                                             $field->{source},
-                                             $field->{target});
-                  }
-                }
-                # Set the field if it doesn't exist or override is requested
-                elsif (not $self->field_variant_exists($field->{target},
-                                                       $field->{targetform},
-                                                       $field->{targetlang}) or
-                       $field_override_target eq 'true') {
-                  $logger->debug("Entry '$target_key' is inheriting field '" .
-                                 $field->{source} .
-                                 ' (form=' . $field->{sourceform} . ',' .
-                                 ' (lang=' . $field->{sourcelang} . ') ' .
-                                 "' as '" .
-                                 $field->{target} .
-                                 ' (form=' . $field->{targetform} . ',' .
-                                 ' (lang=' . $field->{targetlang} . ') ' .
-                                 "' from entry '$source_key'");
-                  $self->set_datafield($field->{target},
-                                       $parent->get_field($field->{source},
-                                                          $field->{sourceform},
-                                                          $field->{sourcelang}),
-                                       $field->{targetform},
-                                       $field->{targetlang});
-                  # Record graphing information if required
-                  if (Biber::Config->getoption('output_format') eq 'dot') {
-                    Biber::Config->set_graph('crossref',
-                                             $source_key,
-                                             $target_key,
-                                             $field->{source} . $mssplit . $field->{sourceform} . $mssplit . $field->{sourcelang},
-                                             $field->{target} . $mssplit . $field->{targetform} . $mssplit . $field->{targetlang});
-                  }
-                }
-              }
-              # Target is ms, source is not ms
-              else {
-                # Set the field if it doesn't exist or override is requested
-                if (not $self->field_variant_exists($field->{target},
-                                                    $field->{targetform},
-                                                    $field->{targetlang}) or
-                    $field_override_target eq 'true') {
-                  $logger->debug("Entry '$target_key' is inheriting field '" .
-                                 $field->{source} . "' as '" .
-                                 $field->{target} .
-                                 ' (form=' . $field->{targetform} . ',' .
-                                 ' (lang=' . $field->{targetlang} . ') ' .
-                                 "' from entry '$source_key'");
-                  $self->set_datafield($field->{target},
-                                       $parent->get_field($field->{source}),
-                                       $field->{targetform},
-                                       $field->{targetlang});
-                  if (Biber::Config->getoption('output_format') eq 'dot') {
-                    Biber::Config->set_graph('crossref',
-                                             $source_key,
-                                             $target_key,
-                                             $field->{source},
-                                             $field->{target} . $mssplit . $field->{targetform} . $mssplit . $field->{targetlang});
-                  }
+                # Record graphing information if required
+                if (Biber::Config->getoption('output_format') eq 'dot') {
+                  Biber::Config->set_graph('crossref',
+                                           $source_key,
+                                           $target_key,
+                                           $field->{source} . $mssplit . ($field->{source_form} || $msform_s) . $mssplit . ($field->{source_lang} || $mslang_s),
+                                           $field->{target});
                 }
               }
             }
-            # Target is not ms
+            # Target is not ms, source is not ms
             else {
-              # Target is not ms, source is ms
-              if ($dm->field_is_multiscript($field->{source})) {
-                # Set the field if it doesn't exist or override is requested
-                if (not $self->field_exists($field->{target}) or
-                    $field_override_target eq 'true') {
-                  $self->set_datafield($field->{target},
-                                       $parent->get_field($field->{source}),
-                                       $field->{targetform},
-                                       $field->{targetlang});
-                  $logger->debug("Entry '$target_key' is inheriting field '" .
-                                 $field->{source} .
-                                 ' (form=' . $field->{sourceform} . ',' .
-                                 ' (lang=' . $field->{sourcelang} . ') ' .
-                                 "' as '" .
-                                 $field->{target} .
-                                 "' from entry '$source_key'");
-                  $self->set_datafield($field->{target},
-                                       $parent->get_field($field->{source},
-                                                          $field->{sourceform},
-                                                          $field->{sourcelang}));
-                  if (Biber::Config->getoption('output_format') eq 'dot') {
-                    Biber::Config->set_graph('crossref',
-                                             $source_key,
-                                             $target_key,
-                                             $field->{source} . $mssplit . $field->{sourceform} . $mssplit . $field->{sourcelang},
-                                             $field->{target});
-                  }
-                }
-              }
-              # Target is not ms, source is not ms
-              else {
-                # Set the field if it doesn't exist or override is requested
-                if (not $self->field_exists($field->{target}) or
-                    $field_override_target eq 'true') {
-                  $logger->debug("Entry '$target_key' is inheriting field '" .
-                                 $field->{source} .
-                                 "' as '" .
-                                 $field->{target} .
-                                 "' from entry '$source_key'");
-                  $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
-                  # Record graphing information if required
-                  if (Biber::Config->getoption('output_format') eq 'dot') {
-                    Biber::Config->set_graph('crossref',
-                                             $source_key,
-                                             $target_key,
-                                             $field->{source},
-                                             $field->{target});
-                  }
+              # Set the field if it doesn't exist or override is requested
+              if (not $self->field_exists($field->{target}) or
+                  $field_override_target eq 'true') {
+                $logger->debug("Entry '$target_key' is inheriting field '" .
+                               $field->{source} .
+                               "' as '" .
+                               $field->{target} .
+                               "' from entry '$source_key'");
+                $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+                # Record graphing information if required
+                if (Biber::Config->getoption('output_format') eq 'dot') {
+                  Biber::Config->set_graph('crossref',
+                                           $source_key,
+                                           $target_key,
+                                           $field->{source},
+                                           $field->{target});
                 }
               }
             }

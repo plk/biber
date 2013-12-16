@@ -487,20 +487,16 @@
     </bcf:defaults>
     <bcf:inherit>
       <bcf:type_pair source="*" target="*"/>
-      <bcf:field source="usera" target="userb" override_target="true"/>
+      <bcf:field source="usera" target="userb"/>
     </bcf:inherit>
     <bcf:inherit>
       <bcf:type_pair source="book" target="inbook"/>
-      <bcf:field source="title" sourceform="translated" sourcelang="german"
-                 target="booktitle" targetform="original"
-                 override_target="true"/>
-      <bcf:field source="indextitle" target="booktitle" targetform="translated"
-                 override_target="true"/>
-      <bcf:field source="edition" sourceform="translated" sourcelang="german"
-                 target="number" override_target="true"/>
-      <bcf:field source="publisher" sourceform="translated"
-                 sourcelang="german" skip="true"/>
-      <bcf:field source="chapter" sourceform="translated" skip="true"/>
+      <bcf:field source="title" target="booktitle" override_target="true"
+                 source_form="translated" source_lang="german" target_form="original"/>
+      <bcf:field source="indextitle" target="booktitle" target_form="translated"/>
+      <bcf:field source="edition" target="number" source_form="translated" source_lang="german"/>
+      <bcf:field source="publisher" form="translated" lang="german" skip="true"/>
+      <bcf:field source="chapter" form="translated" skip="true"/>
     </bcf:inherit>
   </bcf:inheritance>
   <!-- SORTING -->

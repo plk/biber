@@ -109,6 +109,8 @@ sub output {
   if ($self->{output_target_file}) {
     $target_string = $self->{output_target_file};
   }
+  my $dm = Biber::Config->get_dm;
+  my $mssplit     = Biber::Config->getoption('mssplit');
 
   # for debugging mainly
   unless ($target) {
@@ -187,7 +189,16 @@ sub output {
         $graph .= $i x $in . "fillcolor=\"$c\";\n";
         $graph .= "\n";
         foreach my $field ($be->datafields) {
-          $graph .= $i x $in . "\"section${secnum}/${citekey}/${field}\" [ label=\"" . uc($field) . "\" ]\n";
+          if ($dm->field_is_multiscript($field)) {
+            foreach my $form ($be->get_field_form_names($field)) {
+              foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
+                $graph .= $i x $in . "\"section${secnum}/${citekey}/${field}${mssplit}${form}${mssplit}${lang}\" [ label=\"" . uc("$field$mssplit$form$mssplit$lang") . "\" ]\n";
+              }
+            }
+          }
+          else {
+            $graph .= $i x $in . "\"section${secnum}/${citekey}/${field}\" [ label=\"" . uc($field) . "\" ]\n";
+          }
         }
         $in -= 2;
         $graph .= $i x $in . "}\n\n";
@@ -323,6 +334,7 @@ sub _graph_inheritance {
     if ($gopts->{field}) {
       while (my ($f_entry, $v) = each %$gr) {
         while (my ($f_field, $w) = each %$v) {
+          say "FROM FIELD: $f_field";
           while (my ($t_entry, $t_field) = each %$w) {
             next unless $state->{$secnum}{"${secnum}/${f_entry}"};
             next unless $state->{$secnum}{"${secnum}/${t_entry}"};
