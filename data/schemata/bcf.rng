@@ -912,6 +912,9 @@
                 </choice>
               </attribute>
             </optional>
+            <optional>
+              <attribute name="lang"/>
+            </optional>
             <text/>
           </element>
         </oneOrMore>

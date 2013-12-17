@@ -83,6 +83,7 @@ t/skips.t
 t/sort-case.t
 t/sort-complex.t
 t/sorting.t
+t/sorting-ms.t
 t/sortlists.t
 t/sort-order.t
 t/sort-uc.t
@@ -163,6 +164,8 @@ t/tdata/sort.bib
 t/tdata/sort-case.bcf
 t/tdata/sort-case.bib
 t/tdata/sort-complex.bcf
+t/tdata/sorting-ms.bcf
+t/tdata/sorting-ms.bib
 t/tdata/sortlists.bcf
 t/tdata/sortlists.bib
 t/tdata/sort-order.bcf

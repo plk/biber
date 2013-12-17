@@ -1879,6 +1879,8 @@ sub process_visible_names {
     my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
     my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
 
+    # Here we are assuming that any variants of a name list have the same number of members.
+    # We must assume this otherwise nothing really makes sense.
     foreach my $n (@{$dm->get_fields_of_type('list', 'name')}) {
       next unless my $names = $be->get_field($n);
 
