@@ -1020,7 +1020,7 @@ sub inherit_from {
                                ' (form=' .
                                ($field->{source_form} || $msform_s) .
                                ',' .
-                               ' (lang=' .
+                               'lang=' .
                                ($field->{source_lang} || $mslang_s) .
                                ') ' .
                                "' as '" .
@@ -1028,7 +1028,7 @@ sub inherit_from {
                                ' (form=' .
                                ($field->{target_form} || $msform_t) .
                                ',' .
-                               ' (lang=' .
+                               'lang=' .
                                ($field->{target_lang} || $mslang_t) .
                                ') ' .
                                "' from entry '$source_key'");
@@ -1059,7 +1059,7 @@ sub inherit_from {
                                $field->{source} . "' as '" .
                                $field->{target} .
                                ' (form=' . ($field->{target_form} || $msform_t) . ',' .
-                               ' (lang=' . ($field->{target_lang} || $mslang_t) . ') ' .
+                               'lang=' . ($field->{target_lang} || $mslang_t) . ') ' .
                                "' from entry '$source_key'");
                 $self->set_datafield($field->{target},
                                      $parent->get_field($field->{source}),
@@ -1087,7 +1087,7 @@ sub inherit_from {
                 $logger->debug("Entry '$target_key' is inheriting field '" .
                                $field->{source} .
                                ' (form=' . ($field->{source_form} || $msform_s) . ',' .
-                               ' (lang=' . ($field->{source_lang} || $mslang_s) . ') ' .
+                               'lang=' . ($field->{source_lang} || $mslang_s) . ') ' .
                                "' as '" .
                                $field->{target} .
                                "' from entry '$source_key'");
