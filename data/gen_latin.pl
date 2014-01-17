@@ -1,5 +1,5 @@
 #!/opt/local/bin/perl
-use 5.014000;
+use v5.16;
 use strict;
 use warnings;
 
@@ -22,7 +22,6 @@ my $latin_ranges = [
                     ['2C60', '2C7F'], # Latin Extended-C
                     ['A720', 'A7FF'], # Latin Extended-D
                     ['FB00', 'FB4F'], # Latin Ligatures
-                    ['FB00', 'FB4F'], # Fullwidth Latin Letters
                     ['1D400', '1D7FF'], # Mathematical Alphanumeric Symbols
                     ['1F100', '1F1FF'], # Enclosed Alphanumeric Supplement
                    ];
