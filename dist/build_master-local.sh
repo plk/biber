@@ -10,6 +10,12 @@
 # <branch> is a git branch to checkout on the build farm servers
 # <justbuild> is a boolean which says to just build and stop without uploading
 
+me=$(whoami)
+if [ "$me"="root" ]; then
+  echo "You should be logged on as the vbox user to do this!"
+  exit 1
+fi
+
 function vmon {
   VM=$(pgrep -f -- "-startvm bbf-$1")
   if [ ! -z "$VM" ]; then
