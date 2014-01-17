@@ -11,7 +11,7 @@
 # <justbuild> is a boolean which says to just build and stop without uploading
 
 me=$(whoami)
-if [ "$me"="root" ]; then
+if [[ "$me"="root" ]]; then
   echo "You should be logged on as the vbox user to do this!"
   exit 1
 fi
