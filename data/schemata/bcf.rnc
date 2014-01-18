@@ -17,7 +17,6 @@ start =
       mincrossrefs,
       sortcase,
       sortfirstinits,
-      sortlocale?,
       sortupper
     },
 
@@ -44,7 +43,7 @@ start =
       minitems,
       singletitle,
       sortalphaothers?,
-      bltxsortlocale,
+      sortlocale,
       sortscheme,
       uniquelist,
       uniquename,
@@ -529,7 +528,7 @@ mincitenames =
     element bcf:key { "mincitenames" },
     element bcf:value { xsd:integer }
   }
-bltxsortlocale =
+sortlocale =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "sortlocale" },
@@ -600,16 +599,6 @@ alphaothers =
     element bcf:key { "alphaothers" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
-    }
-  }
-# This is xsd:language but also allows underscore separators
-sortlocale = 
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "sortlocale" },
-    element bcf:value {
-      xsd:normalizedString { pattern = "([a-zA-Z]{2}|[iI][\-_][a-zA-Z]+|[xX][\-_][a-zA-Z]{1,10})([\-_][a-zA-Z]{1,10})*"
-      }
     }
   }
 sortupper = 

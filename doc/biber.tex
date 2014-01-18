@@ -100,6 +100,16 @@ Please see the \verb+Changes+ file which accompanies \biber\ for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
 
+\minisec{1.9}
+\biber no longer checks the environment for locales to use for sorting. This
+was always rather against the spirit of \tex since it means that the same
+document might look different when compiled by different people. However,
+\biblatex now passes Babel/Polyglossia language identifiers (or real locale
+identifiers if you prefer) in the \file{.bcf} and \biber can use these to
+set the sorting locale globally or on a per-sortlist basis. This is better
+than using environment variables since Babel/Polyglossia are more \latex
+relevant language environments anyway.
+
 \minisec{1.8}
 Various option name changes. Old names are retained for backwards
 compatibility. See the output of the \opt{--help} option.
@@ -2475,11 +2485,12 @@ tool mode config file by using the \opt{--tool\_config} option which will
 show you the location of the config file and exit.
 
 \subsubsection{Customising Tool Mode Sorting}
-A global sorting scheme can be defined in the config file in order to
-sort the entries in tool mode output. See section \ref{sorting} for
-the format of the config file sorting specification. By default, if
-sorting is enabled in tool mode, the sorting scheme is the same as the
-\biblatex \texttt{none} scheme, that is, no sorting is performed.
+A global sorting scheme can be defined in the config file in order to sort
+the entries in tool mode output. See section \ref{sorting} for the format
+of the config file sorting specification. By default, in tool mode the
+sorting scheme is the same as the \biblatex \texttt{none} scheme, that is,
+no sorting is performed. The sorting locale in tool mode defaults to
+«\texttt{en\_US}» if you do not use \biber's \opt{sortlocale} option.
 \bigskip%|<- stop confusing emacs highlighting
 \section{Binaries}\label{binaries}
 
