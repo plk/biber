@@ -258,7 +258,7 @@ sub tool_mode_setup {
   $self->{sortlists} = $sortlists;
 
   # User maps are set in config file and need some massaging which normally
-  # happend in parse_ctrlfile
+  # happens in parse_ctrlfile
   if (my $usms = Biber::Config->getoption('sourcemap')) {
     # Force "user" level for the maps
     @$usms = map {$_->{level} = 'user';$_} @$usms;
@@ -2829,7 +2829,7 @@ sub sort_list {
   # 2. Biber sortlocale option
   # 3. List 'locale' option (which falls back to global biblatex sortlocale option in biblatex)
 
-  my $thislocale = map_locale(Biber::Config->getoption('sortlocale')) || $llocale;
+  my $thislocale = Biber::Config->getoption('sortlocale') || $llocale;
   $logger->debug("Locale for sorting is '$thislocale'");
 
   if ( Biber::Config->getoption('fastsort') ) {
