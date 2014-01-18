@@ -52,8 +52,8 @@ Biber::Config->setblxoption('labeldate', undef);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
-my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
+my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand', 'en_US');
 my $out = $biber->get_output_obj;
 
 my $ss = [
@@ -258,7 +258,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
+$shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand', 'en_US');
 
 # Sort by shorthand
 is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');

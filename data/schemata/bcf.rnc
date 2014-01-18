@@ -44,6 +44,7 @@ start =
       minitems,
       singletitle,
       sortalphaothers?,
+      bltxsortlocale,
       sortscheme,
       uniquelist,
       uniquename,
@@ -278,6 +279,7 @@ listspec =
       attribute section { xsd:integer },
       attribute type { "entry" | "key" | "shorthand" },
       attribute label { xsd:string {minLength="1"}},
+      attribute locale { xsd:string {minLength="1"}},
       (filter | orfilter )*,
       element bcf:sorting {
         sort+
@@ -526,6 +528,12 @@ mincitenames =
     attribute type { "singlevalued" },
     element bcf:key { "mincitenames" },
     element bcf:value { xsd:integer }
+  }
+bltxsortlocale =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "sortlocale" },
+    element bcf:value { text }
   }
 sortscheme =
   element bcf:option {

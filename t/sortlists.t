@@ -39,12 +39,12 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
-is_deeply([$biber->sortlists->get_list(0, 'entry', 'lname')->get_keys], ['K1', 'K2', 'K4', 'K3'], 'List - name order');
-is_deeply([$biber->sortlists->get_list(0, 'entry', 'lyear')->get_keys], ['K4', 'K1', 'K2', 'K3'], 'List - year order');
-is_deeply([$biber->sortlists->get_list(0, 'entry', 'ltitle')->get_keys], ['K1', 'K4', 'K2', 'K3'], 'List - title order');
-is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef1')->get_keys], ['K2', 'K4'], 'List - name order (filtered) - 1');
-is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef2')->get_keys], ['K4'], 'List - name order (filtered) - 2');
-is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef3')->get_keys], ['K1', 'K2'], 'List - name order (filtered) - 3');
-is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef4')->get_keys], ['K3'], 'List - name order (filtered) - 4');
-is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef5')->get_keys], ['K1', 'K3'], 'List - name order (filtered) - 5');
+is_deeply([$biber->sortlists->get_list(0, 'entry', 'lname', 'en_US')->get_keys], ['K1', 'K2', 'K4', 'K3'], 'List - name order');
+is_deeply([$biber->sortlists->get_list(0, 'entry', 'lyear', 'en_US')->get_keys], ['K4', 'K1', 'K2', 'K3'], 'List - year order');
+is_deeply([$biber->sortlists->get_list(0, 'entry', 'ltitle', 'en_US')->get_keys], ['K1', 'K4', 'K2', 'K3'], 'List - title order');
+is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef1', 'en_US')->get_keys], ['K2', 'K4'], 'List - name order (filtered) - 1');
+is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef2', 'en_US')->get_keys], ['K4'], 'List - name order (filtered) - 2');
+is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef3', 'en_US')->get_keys], ['K1', 'K2'], 'List - name order (filtered) - 3');
+is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef4', 'en_US')->get_keys], ['K3'], 'List - name order (filtered) - 4');
+is_deeply([$biber->sortlists->get_list(0, 'entry', 'lnamef5', 'en_US')->get_keys], ['K1', 'K3'], 'List - name order (filtered) - 5');
 

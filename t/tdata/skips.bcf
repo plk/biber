@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../data/schemata/bcf.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
-<bcf:controlfile version="2.5" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="2.6" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -110,6 +110,10 @@
     <bcf:option type="singlevalued">
       <bcf:key>sortalphaothers</bcf:key>
       <bcf:value>+</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortlocale</bcf:key>
+      <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortscheme</bcf:key>
@@ -1984,8 +1988,8 @@
     <bcf:citekey order="8">nosetc</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist section="0" label="nty" type="entry"/>
-  <bcf:sortlist section="0" label="shorthand" type="shorthand">
+  <bcf:sortlist section="0" label="nty" type="entry" locale="english"/>
+  <bcf:sortlist section="0" label="shorthand" type="shorthand" locale="english">
     <bcf:filter type="field">shorthand</bcf:filter>
   </bcf:sortlist>
 </bcf:controlfile>

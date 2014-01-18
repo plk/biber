@@ -48,7 +48,7 @@ Biber::Config->setoption('nodieonerror', 1); # because the remote bibs might be 
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
 my $bibentries = $section->bibentries;
 
 my $cu1 = q|    \entry{citeulike:8283461}{article}{}

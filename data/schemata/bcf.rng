@@ -64,6 +64,7 @@
         <optional>
           <ref name="sortalphaothers"/>
         </optional>
+        <ref name="bltxsortlocale"/>
         <ref name="sortscheme"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
@@ -724,6 +725,11 @@
             <param name="minLength">1</param>
           </data>
         </attribute>
+        <attribute name="locale">
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </attribute>
         <zeroOrMore>
           <choice>
             <ref name="filter"/>
@@ -1358,6 +1364,19 @@
       </element>
       <element name="bcf:value">
         <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="bltxsortlocale">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>sortlocale</value>
+      </element>
+      <element name="bcf:value">
+        <text/>
       </element>
     </element>
   </define>

@@ -8,23 +8,24 @@ use Encode::Alias;
 use base 'Exporter';
 
 our @EXPORT = qw{
-  $CONFIG_DEFAULT_BIBER
-  %CONFIG_DEFAULT_BIBLATEX
-  %CONFIG_SCOPE_BIBLATEX
-  %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS
-  %NOSORT_TYPES
-  %DM_DATATYPES
-  $BIBER_CONF_NAME
-  $BCF_VERSION
-  $BBL_VERSION
-  $BIBER_SORT_FINAL
-  $BIBER_SORT_NULL
-  $LABEL_FINAL
-  };
+                  $CONFIG_DEFAULT_BIBER
+                  %CONFIG_DEFAULT_BIBLATEX
+                  %CONFIG_SCOPE_BIBLATEX
+                  %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS
+                  %NOSORT_TYPES
+                  %DM_DATATYPES
+                  %LOCALE_MAP
+                  $BIBER_CONF_NAME
+                  $BCF_VERSION
+                  $BBL_VERSION
+                  $BIBER_SORT_FINAL
+                  $BIBER_SORT_NULL
+                  $LABEL_FINAL
+              };
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '2.5';
+our $BCF_VERSION = '2.6';
 # Format version of the .bbl. Used when writing the .bbl
 our $BBL_VERSION = '2.3';
 
@@ -38,19 +39,8 @@ our $BIBER_CONF_NAME = 'biber.conf';
 
 ## Biber CONFIGURATION DEFAULTS
 
-# Locale - first try environment ...
+# Locale -  if nothing, set a default
 my $locale;
-if ($ENV{LC_COLLATE}) {
-  $locale = $ENV{LC_COLLATE};
-}
-elsif ($ENV{LANG}) {
-  $locale = $ENV{LANG};
-}
-elsif ($ENV{LC_ALL}) {
-  $locale = $ENV{LC_ALL};
-}
-
-# ... if nothing, set a default
 unless ($locale) {
   if ( $^O =~ /Win/) {
     $locale = 'English_United States.1252';
@@ -137,7 +127,7 @@ our $CONFIG_DEFAULT_BIBER = {
   quiet               => { content => 0 },
   sortcase            => { content => 1 },
   sortfirstinits      => { content => 0 },
-  sortlocale          => { content => $locale },
+#  sortlocale          => { }, # no default here
   sortupper           => { content => 1 },
   tool                => { content => 0 },
   trace               => { content => 0 },
@@ -171,7 +161,7 @@ define_alias('lutf8'          => 'UTF-8'); # Luatex
 define_alias('utf8x'          => 'UTF-8'); # UCS (old)
 
 # Defines sensible defaults for setting sort locale from babel/polyglossia language names
-our $LOCALE_MAP = {
+our %LOCALE_MAP = (
                    'acadian'         => 'fr_CA',
                    'american'        => 'en_US',
                    'australian'      => 'en_US',
@@ -281,7 +271,7 @@ our $LOCALE_MAP = {
                    'usorbian'        => 'hsb_DE',
                    'vietnamese'      => 'vi_VN',
                    'welsh'           => 'cy_GB',
-                  };
+                  );
 
 # Defines the scope of each of the BibLaTeX configuration options
 #
@@ -326,6 +316,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   sortalphaothers    => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sortexclusion      => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
   sorting            => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  sortlocale         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   sortscheme         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   uniquelist         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   uniquename         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},

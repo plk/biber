@@ -41,20 +41,20 @@ Biber::Config->setoption('output_safechars', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $biber->sortlists->get_list(0, 'entry', 'nty');
-my $shs0 = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
+my $main0 = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
+my $shs0 = $biber->sortlists->get_list(0, 'shorthand', 'shorthand', 'en_US');
 
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->sortlists->get_list(1, 'entry', 'nty');
-my $shs1 = $biber->sortlists->get_list(1, 'shorthand', 'shorthand');
+my $main1 = $biber->sortlists->get_list(1, 'entry', 'nty', 'en_US');
+my $shs1 = $biber->sortlists->get_list(1, 'shorthand', 'shorthand', 'en_US');
 
 my $section2 = $biber->sections->get_section(2);
-my $main2 = $biber->sortlists->get_list(2, 'entry', 'nty');
-my $shs2 = $biber->sortlists->get_list(2, 'shorthand', 'shorthand');
+my $main2 = $biber->sortlists->get_list(2, 'entry', 'nty', 'en_US');
+my $shs2 = $biber->sortlists->get_list(2, 'shorthand', 'shorthand', 'en_US');
 
 my $section3 = $biber->sections->get_section(3);
-my $main3 = $biber->sortlists->get_list(3, 'entry', 'nty');
-my $shs3 = $biber->sortlists->get_list(3, 'shorthand', 'shorthand');
+my $main3 = $biber->sortlists->get_list(3, 'entry', 'nty', 'en_US');
+my $shs3 = $biber->sortlists->get_list(3, 'shorthand', 'shorthand', 'en_US');
 
 # Internal UTF-8 before output is always NFD so have to NFD bits of this
 my $preamble = [
