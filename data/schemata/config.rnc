@@ -262,6 +262,8 @@ map =
 
 sorting = 
   element sorting {
+    # locale for entire sorting specification
+    attribute locale { xsd:string {minLength="1"}}?,
     # presort default strings for different entry types
     element presort {
       attribute type { text }?,

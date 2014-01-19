@@ -36,8 +36,8 @@ Biber::Config->setoption('sortlocale', 'sv_SE');
 # U::C Swedish tailoring
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
-my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand', 'en_US');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
 
 # Shorthands are sorted by shorthand (as per bcf)
 is_deeply([$main->get_keys], ['LS6','LS5','LS2','LS1','LS3','LS4'], 'U::C tailoring - 1');
@@ -52,7 +52,7 @@ is_deeply([$shs->get_keys], ['LS2', 'LS1','LS3','LS4'], 'U::C tailoring - 3');
 
 
 # Descending name in Swedish collation
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -70,7 +70,7 @@ $S = [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -80,12 +80,12 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['LS3','LS4','LS1','LS2','LS5','LS6'], 'U::C tailoring descending - 1');
 
 # Local lower before upper setting
-$S = [
+$S = { spec => [
                                                     [
                                                      {sortupper => 0},
                                                      {'title'   => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -99,15 +99,15 @@ is_deeply([$main->get_keys], ['LS5', 'LS6', 'LS4', 'LS3','LS2','LS1'], 'upper_be
 # test is kept for things that are not sort distinguishable
 $biber->parse_ctrlfile('sort-uc.bcf');
 $section = $biber->sections->get_section(0);
-$main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $biber->set_output_obj(Biber::Output::bbl->new());
-$S = [
+$S = { spec => [
                                                     [
                                                      {sortupper => 0,
                                                       sortcase  => 0},
                                                      {'title'   => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 $biber->prepare;

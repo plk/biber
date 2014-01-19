@@ -722,11 +722,6 @@
             <param name="minLength">1</param>
           </data>
         </attribute>
-        <attribute name="locale">
-          <data type="string">
-            <param name="minLength">1</param>
-          </data>
-        </attribute>
         <zeroOrMore>
           <choice>
             <ref name="filter"/>
@@ -735,6 +730,14 @@
         </zeroOrMore>
         <optional>
           <element name="bcf:sorting">
+            <optional>
+              <!-- locale for entire sorting specification -->
+              <attribute name="locale">
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
+              </attribute>
+            </optional>
             <oneOrMore>
               <ref name="sort"/>
             </oneOrMore>
@@ -745,6 +748,14 @@
   </define>
   <define name="sorting">
     <element name="bcf:sorting">
+      <optional>
+        <!-- locale for entire sorting specification -->
+        <attribute name="locale">
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </attribute>
+      </optional>
       <oneOrMore>
         <!-- presort default strings for different entry types -->
         <element name="bcf:presort">

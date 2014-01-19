@@ -41,7 +41,7 @@ $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 
 is($bibentries->entry('forms1')->get_field('title'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 1');
 is($bibentries->entry('forms1')->get_field('title', 'original'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 2');
@@ -62,7 +62,7 @@ is($bibentries->entry('forms2')->get_field('labeltitle'), 'Mukhammad al-Khorezmi
 # per-entry labeltitle form
 is($bibentries->entry('forms3')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'labeltitle - 3');
 
-my $S = [
+my $S = { spec => [
          [
           {},
           {'author'     => {'form' => 'uniform'}},
@@ -78,7 +78,7 @@ my $S = [
           {},
           {'year'  => {}},
          ],
-        ];
+        ]};
 
 $main->set_sortscheme($S);
 
@@ -131,7 +131,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
+$main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('forms1')->get_field('sortlabelalpha'), 'BulRosМух', 'labelalpha forms - 1');

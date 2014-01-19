@@ -39,8 +39,8 @@ Biber::Config->setoption('fastsort', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand', 'en_US');
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
+my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 my $set1 = q|    \entry{seta}{set}{}

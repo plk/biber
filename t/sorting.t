@@ -87,7 +87,7 @@ Biber::Config->setblxoption('useprefix', 1);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 
 is($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 
@@ -101,7 +101,7 @@ is($main->get_sortdata('tvonb')->[0], $useprefix2, 'von with type-specific preso
 my $S;
 
 # Testing nosort
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -142,7 +142,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 Biber::Config->setoption('nosort', [ { name => 'author', value => q/\A\p{L}{2}\p{Pd}/ },
                                      { name => 'author', value => q/[\x{2bf}\x{2018}]/ },
@@ -163,7 +163,7 @@ is(NFC($main->get_sortdata('luzzatto')->[0]), $prefix1, 'Title with nosort' );
 is(NFC($main->get_sortdata('hasan')->[0]), $diacritic1, 'Name with nosort' );
 
 # Testing editor roles
-$S = [
+$S = {spec => [
       [
        {},
        {'editoratype'     => {}},
@@ -176,7 +176,7 @@ $S = [
        {},
        {'editora'     => {}},
       ],
-     ];
+     ]};
 $main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 0);
 
@@ -187,7 +187,7 @@ is(NFC($main->get_sortdata('jaffe')->[0]), $edtypeclass1, 'Editor type/class' );
 
 
 # Testing sorting using various date fields
-$S = [
+$S = {spec => [
       [
        {},
        {'year'       => {}},
@@ -288,7 +288,7 @@ $S = [
        {},
        {'urlday'   => {}}
       ],
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -298,12 +298,12 @@ is($main->get_sortdata('moraux')->[0], $dates1, 'Very contrived but thorough tes
 
 # Testing max/minITEMS with sorting using list fields
 # publisher
-$S = [
+$S = {spec => [
       [
        {},
        {'publisher'    => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -312,12 +312,12 @@ $biber->prepare;
 is($main->get_sortdata('augustine')->[0], $lists1, 'max/minitems test 1 (publisher)' );
 
 # location
-$S = [
+$S = {spec => [
       [
        {},
        {'location'    => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -327,12 +327,12 @@ is($main->get_sortdata('cotton')->[0], $lists2, 'max/minitems test 2 (location)'
 
 
 # institution
-$S = [
+$S = {spec => [
       [
        {},
        {'institution'    => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -342,12 +342,12 @@ is($main->get_sortdata('chiu')->[0], $lists3, 'max/minitems test 3 (institution)
 
 # institution with minitems=2
 Biber::Config->setblxoption('minitems', 2);
-$S = [
+$S = {spec => [
       [
        {},
        {'institution'    => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -358,12 +358,12 @@ is($main->get_sortdata('chiu')->[0], $lists4, 'max/minitems test 4 (institution 
 # institution with maxitems=4, minitems=3
 Biber::Config->setblxoption('maxitems', 4);
 Biber::Config->setblxoption('minitems', 3);
-$S = [
+$S = {spec => [
       [
        {},
        {'institution'    => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -374,7 +374,7 @@ is($main->get_sortdata('chiu')->[0], $lists5, 'max/minitems test 5 (institution 
 
 
 # nty with implicit default left, 4-digit year sort
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -407,7 +407,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -416,7 +416,7 @@ $biber->prepare;
 is($main->get_sortdata('knuth:ct')->[0], $yearoff1, 'nty with default left offset, 4 digit year' );
 
 # nty with left, 3-digit year sort, case sensitive
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -450,7 +450,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 1);
 # regenerate information
@@ -460,7 +460,7 @@ is($main->get_sortdata('knuth:ct')->[0], $yearoff2, 'nty with left offset, 3 dig
 
 
 # nty with left, 4-digit year sort, case sensitive
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -494,7 +494,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -503,7 +503,7 @@ $biber->prepare;
 is($main->get_sortdata('knuth:ct')->[0], $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
 
 # nty with right, 3-digit year sort
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -537,7 +537,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 Biber::Config->setoption('sortcase', 0);
 # regenerate information
@@ -546,7 +546,7 @@ $biber->prepare;
 is($main->get_sortdata('knuth:ct')->[0], $yearoff4, 'nty with right offset, 3 digit year' );
 
 # nty with right, 4-digit year sort
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -580,7 +580,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -589,7 +589,7 @@ $biber->prepare;
 is($main->get_sortdata('knuth:ct')->[0], $yearoff5, 'nty with right offset, 4 digit year' );
 
 # ntyd with left, 4-digit year sort
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -624,7 +624,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -633,7 +633,7 @@ $biber->prepare;
 is($main->get_sortdata('knuth:ct')->[0], $yearoff6, 'ntyd with left offset, 4 digit year' );
 
 # ntyd with left, 3-digit year sort
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -668,7 +668,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -677,7 +677,7 @@ $biber->prepare;
 is($main->get_sortdata('knuth:ct')->[0], $yearoff7, 'ntyd with left offset, 3 digit year' );
 
 # ntyd with right, 4-digit year sort
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -712,7 +712,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -721,7 +721,7 @@ $biber->prepare;
 is($main->get_sortdata('knuth:ct')->[0], $yearoff8, 'ntyd with right offset, 4 digit year' );
 
 # ntyd with right, 3-digit year sort
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -756,7 +756,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -765,7 +765,7 @@ $biber->prepare;
 is($main->get_sortdata('knuth:ct')->[0], $yearoff9, 'ntyd with right offset, 3 digit year' );
 
 # nty with right-padded vol
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -799,7 +799,7 @@ $S = [
        {'volume'     => {pad_side => 'right'}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -808,7 +808,7 @@ $biber->prepare;
 is($main->get_sortdata('stdmodel')->[0], $vol1, 'nty with right-padded vol' );
 
 # nty with right-padded 7-char vol
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -843,7 +843,7 @@ $S = [
                          pad_width => 7}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -853,7 +853,7 @@ is($main->get_sortdata('stdmodel')->[0], $vol2, 'nty with right-padded 7-char vo
 
 # nty with left-padded 5-char using Unicode "Đ" as pad_char vol
 # Unicode char will be lowercase "đ" in sortstring
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -889,7 +889,7 @@ $S = [
                          pad_char => 'Đ'}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -899,7 +899,7 @@ is($main->get_sortdata('stdmodel')->[0], $vol3, 'nty with left-padded 5-char "a"
 
 
 # nty
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -933,7 +933,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -943,7 +943,7 @@ is($main->get_sortdata('stdmodel')->[0], $nty, 'basic nty sort' );
 is($main->get_sortdata('angenendtsk')->[0], $sk1, 'basic sortkey sort' );
 
 # nyt
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -978,7 +978,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -987,7 +987,7 @@ $biber->prepare;
 is($main->get_sortdata('stdmodel')->[0], $nyt, 'basic nyt sort' );
 
 # nyvt
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -1021,7 +1021,7 @@ $S = [
        {'sorttitle'  => {}},
        {'title'      => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1031,7 +1031,7 @@ is($main->get_sortdata('stdmodel')->[0], $nyvt, 'basic nyvt sort' );
 
 # anyt with labelalpha
 Biber::Config->setblxoption('labelalpha', 1);
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -1069,7 +1069,7 @@ $S = [
        {'sorttitle'  => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1090,7 +1090,7 @@ is($main->get_sortdata('stdmodel')->[0], $anyt, 'anyt sort (without labelalpha)'
 
 # anyvt with labelalpha
 Biber::Config->setblxoption('labelalpha',1);
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -1128,7 +1128,7 @@ $S = [
        {'sorttitle'  => {}},
        {'title'      => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1171,7 +1171,7 @@ $biber->prepare;
 is($main->get_sortdata('stdmodel')->[0], $anyvt, 'anyvt sort (without labelalpha)' );
 
 # ynt
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -1201,7 +1201,7 @@ $S = [
        {'sorttitle'  => {}},
        {'title'      => {}}
       ],
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1210,7 +1210,7 @@ $biber->prepare;
 is($main->get_sortdata('stdmodel')->[0], $ynt, 'basic ynt sort' );
 
 # ydnt
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -1240,7 +1240,7 @@ $S = [
        {'sorttitle'  => {}},
        {'title'      => {}}
       ],
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1255,12 +1255,12 @@ Biber::Config->setoption('sortfirstinits', 0);
 Biber::Config->setblxoption('labelalpha', 0);
 
 # debug
-$S = [
+$S = {spec => [
       [
        {},
        {'entrykey'    => {}},
       ],
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1272,7 +1272,7 @@ is($main->get_sortdata('stdmodel')->[0], $debug, 'basic debug sort' );
 Biber::Config->setblxoption('useauthor', 0);
 Biber::Config->setblxoption('useeditor', 0);
 Biber::Config->setblxoption('usetranslator', 0);
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -1306,7 +1306,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1316,7 +1316,7 @@ is($main->get_sortdata('stdmodel')->[0], $noname, 'nty with use* all off' );
 
 
 # nty with modified presort and short_circuit at title
-$S = [
+$S = {spec => [
       [
        {},
        {'presort'    => {}}
@@ -1351,7 +1351,7 @@ $S = [
        {'volume'     => {}},
        {'0000'       => {}}
       ]
-     ];
+     ]};
 
 $main->set_sortscheme($S);
 
@@ -1362,12 +1362,12 @@ is($main->get_sortdata('stdmodel:ps_sc')->[0], $ps_sc, 'nty with modified presor
 
 
 # citeorder sort
-$S = [
+$S = {spec => [
       [
        {},
        {'citeorder'    => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -1376,7 +1376,7 @@ $biber->prepare;
 is($main->get_sortdata('stdmodel')->[0], $citeorder, 'citeorder' );
 
 # citeorder sort
-$S = [
+$S = {spec => [
       [
        {},
        {'labelyear'    => {}},
@@ -1389,7 +1389,7 @@ $S = [
        {},
        {'labelday'    => {}}
       ]
-     ];
+     ]};
 $main->set_sortscheme($S);
 
 # regenerate information

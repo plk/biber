@@ -908,6 +908,14 @@
   </define>
   <define name="sorting">
     <element name="sorting">
+      <optional>
+        <!-- locale for entire sorting specification -->
+        <attribute name="locale">
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </attribute>
+      </optional>
       <oneOrMore>
         <!-- presort default strings for different entry types -->
         <element name="presort">

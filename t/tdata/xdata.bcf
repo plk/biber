@@ -1969,8 +1969,8 @@
     <bcf:citekey order="3">xd3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist section="0" label="nty" type="entry" locale="english"/>
-  <bcf:sortlist section="0" label="shorthand" type="shorthand" locale="english">
+  <bcf:sortlist section="0" label="nty" type="entry"/>
+  <bcf:sortlist section="0" label="shorthand" type="shorthand">
     <bcf:filter type="field">shorthand</bcf:filter>
   </bcf:sortlist>
 </bcf:controlfile>

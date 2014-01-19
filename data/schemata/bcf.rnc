@@ -278,9 +278,10 @@ listspec =
       attribute section { xsd:integer },
       attribute type { "entry" | "key" | "shorthand" },
       attribute label { xsd:string {minLength="1"}},
-      attribute locale { xsd:string {minLength="1"}},
       (filter | orfilter )*,
       element bcf:sorting {
+        # locale for entire sorting specification
+        attribute locale { xsd:string {minLength="1"}}?,
         sort+
       }?
     }*
@@ -288,6 +289,8 @@ listspec =
 
 sorting = 
   element bcf:sorting {
+    # locale for entire sorting specification
+    attribute locale { xsd:string {minLength="1"}}?,
     # presort default strings for different entry types
     element bcf:presort {
       attribute type { text }?,

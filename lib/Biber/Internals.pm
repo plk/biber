@@ -921,7 +921,7 @@ sub _generatesortinfo {
   my $sortobj;
   $BIBER_SORT_FINAL = 0;
   $BIBER_SORT_FINAL = '';
-  foreach my $sortset (@{$sortscheme}) {
+  foreach my $sortset (@{$sortscheme->{spec}}) {
     my $s = $self->_sortset($sortset, $citekey);
     # We have already found a "final" item so if this item returns null,
     # copy in the "final" item string as it's the master key for this entry now

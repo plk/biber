@@ -490,29 +490,27 @@ sub output {
     out($target, "\n\\refsection{$secnum}\n");
     my $section = $self->get_output_section($secnum);
 
-    my @lists; # Need to reshuffle list to put global sort order/sort locale list at end, see below
+    my @lists; # Need to reshuffle list to put global sort order list at end, see below
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     foreach my $list (sort {$a->get_label cmp $b->get_label} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
-      if ($list->get_label eq Biber::Config->getblxoption('sortscheme') and
-          $list->get_locale eq map_locale(Biber::Config->getblxoption('sortlocale'))) {
+      if ($list->get_label eq Biber::Config->getblxoption('sortscheme')) {
         next;
       }
       push @lists, $list;
     }
 
-    # biblatex requires the last list in the .bbl to be the global sort/locale list
+    # biblatex requires the last list in the .bbl to be the global sort  list
     # due to its sequential reading of the .bbl as the final list overrides the
     # previously read ones and the global list determines the order of labelnumber
     # and sortcites etc. when not using defernumbers
-    push @lists, $Biber::MASTER->sortlists->get_list($secnum, 'entry', Biber::Config->getblxoption('sortscheme'), map_locale(Biber::Config->getblxoption('sortlocale')));
+    push @lists, $Biber::MASTER->sortlists->get_list($secnum, 'entry', Biber::Config->getblxoption('sortscheme'));
 
     foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
-      my $listlocale = $list->get_locale;
-      $logger->debug("Writing entries in '$listtype' list '$listlabel' with locale '$listlocale'");
+      $logger->debug("Writing entries in '$listtype' list '$listlabel'");
 
       out($target, "  \\sortlist{$listtype}{$listlabel}\n");
 

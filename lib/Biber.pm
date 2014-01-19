@@ -249,10 +249,11 @@ sub tool_mode_setup {
   $self->add_sections($bib_sections);
 
   my $sortlists = new Biber::SortLists;
-  # Locale just needs a default here - there is no biblatex option to take it from
-  my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'), locale => 'en_US');
+  my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'));
   $seclist->set_type('entry');
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+  # Locale just needs a default here - there is no biblatex option to take it from
+  Biber::Config->setblxoption('sortlocale', 'en_US');
   $logger->debug("Adding 'entry' list 'tool' for pseudo-section 99999");
   $sortlists->add_list($seclist);
   $self->{sortlists} = $sortlists;
@@ -648,21 +649,18 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
   # Read sortlists
   my $sortlists = new Biber::SortLists;
+
   foreach my $list (@{$bcfxml->{sortlist}}) {
     my $ltype  = $list->{type};
     my $llabel = $list->{label};
-    my $llocale = $list->{locale};
-
-    # Set up locale for this list, mapping babel/polyglossia langs to real locales
-    my $locale = map_locale($llocale);
 
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
-    if (my $l = $sortlists->get_list($lsection, $ltype, $llabel, $locale)) {
-      $logger->debug("Section '$ltype' list '$llabel' with locale '$locale' is repeated for section $lsection - ignoring");
+    if (my $l = $sortlists->get_list($lsection, $ltype, $llabel)) {
+      $logger->debug("Section '$ltype' list '$llabel' is repeated for section $lsection - ignoring");
       next;
     }
 
-    my $seclist = Biber::SortList->new(section => $lsection, label => $llabel, locale => $locale);
+    my $seclist = Biber::SortList->new(section => $lsection, label => $llabel);
     $seclist->set_type($ltype || 'entry'); # lists are entry lists by default
     foreach my $filter (@{$list->{filter}}) {
       $seclist->add_filter($filter->{type}, $filter->{content});
@@ -678,7 +676,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     else {
       $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
     }
-    $logger->debug("Adding '$ltype' list '$llabel' with locale '$locale' for section $lsection");
+    $logger->debug("Adding '$ltype' list '$llabel' for section $lsection");
     $sortlists->add_list($seclist);
   }
 
@@ -686,10 +684,9 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   # We have to make sure in case sortcites is used which uses the global order.
   foreach my $section (@{$bcfxml->{section}}) {
     my $globalss = Biber::Config->getblxoption('sortscheme');
-    my $globall = map_locale(Biber::Config->getblxoption('sortlocale'));
     my $secnum = $section->{number};
-    unless ($sortlists->get_list($secnum, 'entry', $globalss, $globall)) {
-      my $seclist = Biber::SortList->new(section => $secnum, type => 'entry', label => $globalss, locale => $globall);
+    unless ($sortlists->get_list($secnum, 'entry', $globalss)) {
+      my $seclist = Biber::SortList->new(section => $secnum, type => 'entry', label => $globalss);
       $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $sortlists->add_list($seclist);
     }
@@ -730,15 +727,17 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # Global locale in non tool mode bibtex output is default
     Biber::Config->setblxoption('sortlocale', 'english');
 
-    my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'), locale => map_locale(Biber::Config->getblxoption('sortlocale')));
+    my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'));
     $seclist->set_type('entry');
     # bibtex output in non-tool mode is just citeorder
-    $seclist->set_sortscheme([
+    $seclist->set_sortscheme({locale => map_locale(Biber::Config->getblxoption('sortlocale')),
+                              spec   =>
+                             [
                               [
                                {},
                                {'citeorder'    => {}}
                               ]
-                             ]);
+                             ]});
     $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
     $self->{sortlists}->add_list($seclist);
   }
@@ -762,7 +761,7 @@ sub process_setup {
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
     unless ($self->sortlists->has_lists_of_type_for_section($secnum, 'entry')) {
-      my $dlist = Biber::SortList->new(label => Biber::Config->getblxoption('sortscheme'), locale => map_locale(Biber::Config->getblxoption('sortlocale')));
+      my $dlist = Biber::SortList->new(label => Biber::Config->getblxoption('sortscheme'));
       $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $dlist->set_type('entry');
       $dlist->set_section($secnum);
@@ -1972,7 +1971,6 @@ sub process_lists {
   foreach my $list (@{$self->sortlists->get_lists_for_section($secnum)}) {
     my $llabel = $list->get_label;
     my $ltype = $list->get_type;
-    my $llocale = $list->get_locale;
     # Last-ditch fallback in case we still don't have a sorting spec
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
 
@@ -1991,12 +1989,11 @@ sub process_lists {
     # * extra* data
 
     my $cache_flag = 0;
-    $logger->debug("Checking sorting cache for list '$llabel' with locale '$llocale'");
+    $logger->debug("Checking sorting cache for list '$llabel'");
     foreach my $cacheitem (@{$section->get_sort_cache}) {
-      if (Compare($list->get_sortscheme, $cacheitem->[0]) and
-          $list->get_locale eq $cacheitem->[5]) {
-        $logger->debug("Found sorting cache entry for '$llabel' with locale '$llocale'");
-        $logger->trace("Sorting list cache for list '$llabel' with locale '$llocale':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
+      if (Compare($list->get_sortscheme, $cacheitem->[0])) {
+        $logger->debug("Found sorting cache entry for '$llabel'");
+        $logger->trace("Sorting list cache for list '$llabel':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
         $list->set_keys($cacheitem->[1]);
         $list->set_sortinitdata($cacheitem->[2]);
         $list->set_extrayeardata($cacheitem->[3]);
@@ -2007,14 +2004,14 @@ sub process_lists {
     }
 
     unless ($cache_flag) {
-      $logger->debug("No sorting cache entry for '$llabel' with locale '$llocale'");
+      $logger->debug("No sorting cache entry for '$llabel'");
       # Sorting
       $self->generate_sortinfo($list);       # generate the sort information
       $self->sort_list($list);               # sort the list
       $self->generate_extra($list) unless Biber::Config->getoption('tool'); # generate the extra* fields
 
       # Cache the results
-      $logger->debug("Adding sorting cache entry for '$llabel' with locale '$llocale'");
+      $logger->debug("Adding sorting cache entry for '$llabel'");
       $section->add_sort_cache($list->get_listdata);
     }
 
@@ -2030,7 +2027,7 @@ KEYLOOP: foreach my $k ($list->get_keys) {
           next if Biber::Config->getblxoption('skiplos', $section->bibentry($k)->get_field('entrytype'), $k);
         }
 
-        $logger->debug("Checking key '$k' in list '$llabel' with locale '$llocale' against list filters");
+        $logger->debug("Checking key '$k' in list '$llabel' against list filters");
         my $be = $section->bibentry($k);
         foreach my $t (keys %$filters) {
           my $fs = $filters->{$t};
@@ -2044,7 +2041,7 @@ KEYLOOP: foreach my $k ($list->get_keys) {
         }
         push @$flist, $k;
       }
-      $logger->debug("Keys after filtering list '$llabel' with locale '$llocale' in section $secnum: " . join(', ', @$flist));
+      $logger->debug("Keys after filtering list '$llabel' in section $secnum: " . join(', ', @$flist));
       $list->set_keys($flist); # Now save the sorted list in the list object
     }
   }
@@ -2807,7 +2804,7 @@ sub sort_list {
   my @keys = $list->get_keys;
   my $llabel = $list->get_label;
   my $ltype = $list->get_type;
-  my $llocale = $list->get_locale;
+  my $llocale = map_locale($sortscheme->{locale} || Biber::Config->getblxoption('sortlocale'));
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
@@ -2827,14 +2824,15 @@ sub sort_list {
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
   # 2. Biber sortlocale option
-  # 3. List 'locale' option (which falls back to global biblatex sortlocale option in biblatex)
+  # 3. Sorting 'locale' option
+  # 4. Global biblatex 'sortlocale' option
 
   my $thislocale = Biber::Config->getoption('sortlocale') || $llocale;
   $logger->debug("Locale for sorting is '$thislocale'");
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->info("Sorting '$ltype' list '$llabel' with locale '$llocale'");
+    $logger->info("Sorting '$ltype' list '$llabel'");
     $logger->debug("Sorting with fastsort (locale $thislocale)");
     unless (setlocale(LC_ALL, $thislocale)) {
       biber_warn("Unavailable locale $thislocale");
@@ -2849,7 +2847,7 @@ sub sort_list {
     # Global lowercase setting
     my $glc = Biber::Config->getoption('sortcase') ? '' : 'lc ';
 
-    foreach my $sortset (@{$sortscheme}) {
+    foreach my $sortset (@{$sortscheme->{spec}}) {
       $data_extractor .= '$list->get_sortdata($_)->[1][' . $num_sorts . '],';
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
       my $lc = $glc; # Casing defaults to global default ...
@@ -2964,7 +2962,7 @@ sub sort_list {
     my $data_extractor = '[';
     my $sorter;
     my $sort_extractor;
-    foreach my $sortset (@{$sortscheme}) {
+    foreach my $sortset (@{$sortscheme->{spec}}) {
       my $fc = '';
       my @fc;
       # If the case or upper option on a field is not the global default
@@ -3471,9 +3469,7 @@ sub _parse_sort {
       push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
     }
 
-    # Only push a sortitem if defined. If the item has a conditional "pass"
-    # attribute, it may be ommitted in which case we don't want an empty array ref
-    # pushing
+    # Only push a sortitem if defined.
     # Also, we only push the sort attributes if there are any sortitems otherwise
     # we end up with a blank sort
     my $sopts;
@@ -3486,7 +3482,9 @@ sub _parse_sort {
       push @{$sorting}, $sortingitems;
     }
   }
-  return $sorting;
+
+  return {locale => map_locale($root_obj->{locale} || Biber::Config->getblxoption('sortlocale')),
+          spec   => $sorting};
 }
 
 =head2 _filedump and _stringdump

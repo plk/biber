@@ -52,11 +52,12 @@ Biber::Config->setblxoption('labeldate', undef);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
-my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand', 'en_US');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
 my $out = $biber->get_output_obj;
 
-my $ss = [
+my $ss = { locale => 'en_US',
+           spec => [
            [
             {},
             {'presort'    => {}}
@@ -95,7 +96,7 @@ my $ss = [
                               pad_width => '4'}},
             {'0000'       => {}}
            ],
-          ];
+          ]};
 
 my $l4 = q|    \entry{L4}{book}{}
       \true{morelabelname}
@@ -237,18 +238,6 @@ is_deeply([ $shs->get_keys ], [], 'sortorder - 2');
 
 # reset options and regenerate information
 Biber::Config->setoption('sourcemap', undef); # no longer ignore shorthand*
-# Have to set the sortscheme for the shorthand list explicitly as the sortlos option is processed
-# during control file parsing so it won't be done automatically here. This is only a problem
-# in tests where we want to change sortlos and re-run
-$shs->set_sortscheme([
-                      [ {'final' => 1},
-                        {'sortshorthand'    => {}}
-                      ],
-                      [ {}, {'shorthand'     => {}} ] ]);
-$main->set_sortscheme([
-                       [ {'final' => 1},
-                         {'shorthand'    => {}}
-                       ]]);
 
 # Need to reset all entries due to "skip if already in Entries"
 # clause in bibtex.pm. Need to clear the cache as we've modified the T::B objects
@@ -258,7 +247,7 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand', 'en_US');
+$shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
 
 # Sort by shorthand
 is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');

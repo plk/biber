@@ -41,7 +41,7 @@ Biber::Config->setoption('sortlocale', 'C');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 my $l1 = q|    \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journals/theory_and_event/v005/5.3ranciere.html}{article}{}

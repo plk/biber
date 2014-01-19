@@ -67,16 +67,15 @@ sub get_lists_for_section {
 
 =head2 get_list
 
-    Returns a specific list by section, type, label and locale
+    Returns a specific list by section, type, label
 
 =cut
 
 sub get_list {
-  my ($self, $section, $type, $label, $locale) = @_;
+  my ($self, $section, $type, $label) = @_;
   foreach my $list (@{$self->{lists}}) {
     return $list if ($list->get_label eq $label and
                      $list->get_type eq $type and
-                     $list->get_locale eq $locale and
                      $list->get_section == $section);
   }
   return undef;

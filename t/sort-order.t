@@ -39,12 +39,12 @@ Biber::Config->setblxoption('labelalpha', 0);
 # (re)generate informtion based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty', 'en_US');
+my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 
 is_deeply([ $main->get_keys ], ['L2','L3','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'citeorder');
 
 # nty
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -79,7 +79,7 @@ $S = [
                                                      {'volume'     => {}},
                                                      {'0000'       => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -89,7 +89,7 @@ $section = $biber->sections->get_section(0);
 is_deeply([ $main->get_keys ], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nty');
 
 # nyt
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -124,7 +124,7 @@ $S = [
                                                      {'volume'     => {}},
                                                      {'0000'       => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -134,7 +134,7 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyt');
 
 # nyvt
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -169,7 +169,7 @@ $S = [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 
 $main->set_sortscheme($S);
@@ -180,7 +180,7 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt');
 
 # nyvt with volume padding
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -215,7 +215,7 @@ $S = [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 
 $main->set_sortscheme($S);
@@ -226,7 +226,7 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt with volume padding');
 
 # ynt
-$S = [
+$S = { spec => [
                                						      [
                                                      {},
                                                      {'presort'    => {}}
@@ -256,7 +256,7 @@ $S = [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ],
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -266,7 +266,7 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
 
 # ynt with year substring
-$S = [
+$S = { spec => [
 						      [
                                                      {},
                                                      {'presort'    => {}}
@@ -297,7 +297,7 @@ $S = [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ],
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -307,7 +307,7 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5'], 'ynt with year substring');
 
 # ydnt
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -337,7 +337,7 @@ $S = [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ],
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -348,7 +348,7 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
 
 # anyt
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -387,7 +387,7 @@ $S = [
                                                      {'sorttitle'  => {}},
                                                      {'0000'       => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 Biber::Config->setblxoption('labelalpha', 1);
@@ -400,7 +400,7 @@ is_deeply([$main->get_keys], ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6
 Biber::Config->setblxoption('labelalpha', 0);
 
 # anyvt
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -439,7 +439,7 @@ $S = [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 Biber::Config->setblxoption('labelalpha', 1);
@@ -451,7 +451,7 @@ is_deeply([$main->get_keys], ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6
 
 
 # nty with descending n
-$S = [
+$S = { spec => [
                                                     [
                                                      {sort_direction => 'descending'},
                                                      {'sortname'   => {}},
@@ -472,7 +472,7 @@ $S = [
                                                      {'year'       => {}},
                                                      {'0000'       => {}}
                                                     ],
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -486,12 +486,12 @@ is_deeply([$main->get_keys], ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A
 # In alphabetic, all uppercase comes before lower so the
 # "sortcase => 1" on location means that "edinburgh" sorts at the end after "London"
 # Take this out of the location sorting spec and it fails as it should
-$S = [
+$S = { spec => [
                                                     [
                                                      {sortcase => 1},
                                                      {'location'     => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -504,12 +504,12 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L1B','L1','L1A','L2','L3','L4','L5','L7','L8','L9','L6'], 'location - sortcase=1');
 
 # Test nosort option
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'title'     => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 # Set nosort for tests, skipping "The " in titles so L7 should sort before L6
@@ -522,7 +522,7 @@ is_deeply([$main->get_keys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9
 
 # Testing sorting keys which have the same order as they were cited in the same \cite*{} cmd.
 # In this case, they will be tied on sorting=none and can be further sorted by other fields
-$S =  [
+$S = { spec => [
                                                       [
                                                        {},
                                                        {'citeorder'    => {}}
@@ -531,7 +531,7 @@ $S =  [
                                                        {},
                                                        {'year'    => {}}
                                                       ],
-                                                     ];
+                                                     ]};
 $main->set_sortscheme($S);
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
@@ -542,12 +542,12 @@ is_deeply([ $main->get_keys ], ['L3','L2','L1B','L1','L4','L5','L1A','L7','L8','
 
 # Testing special case of sorting=none and allkeys because in this case "citeorder" means
 # bib order
-$S =  [
+$S = { spec => [
                                                       [
                                                        {},
                                                        {'citeorder'    => {}}
                                                       ],
-                                                     ];
+                                                     ]};
 
 $main->set_sortscheme($S);
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us

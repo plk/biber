@@ -981,6 +981,7 @@ sub _expand_option {
 
 sub map_locale {
   my $localestr = shift;
+  return $localestr unless $localestr;
   return $LOCALE_MAP{$localestr} || $localestr;
 }
 

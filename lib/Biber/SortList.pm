@@ -146,8 +146,7 @@ sub get_listdata {
            $self->{keys},
            $self->{sortinitdata},
            $self->{extrayeardata},
-           $self->{extraalphadata},
-           $self->{locale} ];
+           $self->{extraalphadata} ];
 }
 
 =head2 set_extrayeardata_for_key
@@ -434,31 +433,6 @@ sub get_filters {
   my $self = shift;
   return $self->{filters};
 }
-
-=head2 set_locale
-
-    Sets the sorting locale of a sort list
-
-=cut
-
-sub set_locale {
-  my $self = shift;
-  my $locale = shift;
-  $self->{locale} = $locale;
-  return;
-}
-
-=head2 get_locale
-
-    Gets the sorting locale of a sort list
-
-=cut
-
-sub get_locale {
-  my $self = shift;
-  return $self->{locale};
-}
-
 
 =head2 instantiate_entry
 
