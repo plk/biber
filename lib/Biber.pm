@@ -2948,7 +2948,7 @@ sub sort_list {
     }
 
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting '$ltype' list '$llabel' with locale '$llocale'");
+    $logger->info("Sorting '$ltype' list '$llabel' with locale '$thislocale'");
     $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion, Locale: " . $Collator->getlocale . ")");
 
     # Log if U::C::L currently has no tailoring for used locale
@@ -2975,6 +2975,7 @@ sub sort_list {
       if (defined($su) and $su != Biber::Config->getoption('sortupper')) {
         push @fc, $su ? 'upper_before_lower => 1' : 'upper_before_lower => 0';
       }
+
       if (@fc) {
         # This field has custom collation options
         $fc = '->change(' . join(',', @fc) . ')';
