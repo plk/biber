@@ -2910,42 +2910,8 @@ sub sort_list {
     # Add upper_before_lower option
     $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
 
-    # Add tailoring locale for Unicode::Collate
-    if ($thislocale and not $collopts->{locale}) {
-      $collopts->{locale} = $thislocale;
-      if ($collopts->{table}) {
-        my $t = delete $collopts->{table};
-        $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
-      }
-    }
-
-    # Remove locale from options as we need this to make the object
-    my $coll_locale = delete $collopts->{locale};
-    # Now create the collator object
-    my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale)
-      or $logger->logcarp("Problem creating Unicode::Collate::Locale object: $@");
-
-    # Fix the old "alternate" alias otherwise we have problems as U::C->change() always
-    # returns the new "variable" option and we get confused.
-    if (my $alt = delete $collopts->{alternate}) {
-      $collopts->{variable} = $alt;
-    }
-
-    #Show the collation options when debugging
-    $logger->debug('Collation options: ' . Data::Dump::pp($collopts));
-
-    # Tailor the collation object and report differences from defaults for locale
-    # Have to do this in ->change method as ->new can croak with conflicting tailoring
-    # for locales which enforce certain tailorings
-    my %coll_changed = $Collator->change( %{$collopts} );
-    while (my ($k, $v) = each %coll_changed) {
-      # If we are changing something that has no override tailoring in the locale, it
-      # is undef in this hash and we don't care about such things
-      next unless defined($coll_changed{$k});
-      if ($coll_changed{$k} ne $collopts->{$k}) {
-        $logger->info("Overriding locale '$coll_locale' default tailoring '$k = $v' with '$k = " . $collopts->{$k} . "'");
-      }
-    }
+    # Create collation object
+    my $Collator = _create_co($thislocale, $collopts);
 
     my $UCAversion = $Collator->version();
     $logger->info("Sorting '$ltype' list '$llabel' with locale '$thislocale'");
@@ -2965,6 +2931,7 @@ sub sort_list {
     foreach my $sortset (@{$sortscheme->{spec}}) {
       my $fc = '';
       my @fc;
+
       # If the case or upper option on a field is not the global default
       # set it locally on the $Collator by constructing a change() method call
       my $sc = $sortset->[0]{sortcase};
@@ -3035,6 +3002,56 @@ sub sort_list {
   $list->set_keys([ @keys ]);
 
   return;
+}
+
+=head2 _create_co
+
+    Create a U::C object
+
+=cut
+
+sub _create_co {
+  my ($thislocale, $collopts) = @_;
+
+  # Add tailoring locale for Unicode::Collate
+  if ($thislocale and not $collopts->{locale}) {
+    $collopts->{locale} = $thislocale;
+    if ($collopts->{table}) {
+      my $t = delete $collopts->{table};
+      $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
+    }
+  }
+
+  # Remove locale from options as we need this to make the object
+  my $coll_locale = delete $collopts->{locale};
+
+  # Now create the collator object
+  my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale)
+    or $logger->logcarp("Problem creating Unicode::Collate::Locale object: $@");
+
+  # Fix the old "alternate" alias otherwise we have problems as U::C->change() always
+  # returns the new "variable" option and we get confused.
+  if (my $alt = delete $collopts->{alternate}) {
+    $collopts->{variable} = $alt;
+  }
+
+  #Show the collation options when debugging
+  $logger->debug('Collation options: ' . Data::Dump::pp($collopts));
+
+  # Tailor the collation object and report differences from defaults for locale
+  # Have to do this in ->change method as ->new can croak with conflicting tailoring
+  # for locales which enforce certain tailorings
+  my %coll_changed = $Collator->change( %{$collopts} );
+  while (my ($k, $v) = each %coll_changed) {
+    # If we are changing something that has no override tailoring in the locale, it
+    # is undef in this hash and we don't care about such things
+    next unless defined($coll_changed{$k});
+    if ($coll_changed{$k} ne $collopts->{$k}) {
+      $logger->info("Overriding locale '$coll_locale' defaults '$k = $v' with '$k = " . $collopts->{$k} . "'");
+    }
+  }
+
+  return $Collator;
 }
 
 =head2 prepare
