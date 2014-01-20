@@ -1677,13 +1677,15 @@ collation:\\[2ex]
   before 'ä' in the Swedish (\verb+sv_SE+) locale. If you are using a
   common latin alphabet, then this is probably not a problem for you.\\[2ex]
 
-\noindent The locale used for collation is determined by the following resource
-chain which is given in decreasing precedence order:\\[2ex]
+\noindent The locale used for collating a particular field in the
+bibliography is determined by the following resource chain which is given
+in decreasing precedence order:\\[2ex]
 
 \noindent\opt{--collate\_options|-c} (e.g. \opt{-c 'locale => "de\_DE"'}) $\rightarrow$\\
 \hspace*{1em}\opt{--sortlocale|-l} $\rightarrow$\\
-\hspace*{2em}\biblatex per-sortscheme \opt{locale} option\\
-\hspace*{3em}\biblatex global sortlocale option\\
+\hspace*{2em}\biblatex per-sortset \opt{locale} option $\rightarrow$\\
+\hspace*{3em}\biblatex per-sortscheme \opt{locale} option$\rightarrow$\\
+\hspace*{4em}\biblatex global sortlocale option\\
 
 \noindent With the default \opt{--collate|-C} option, the locale will be
 used to look for a collation tailoring for that locale. It will generate an
@@ -1691,20 +1693,22 @@ informational warning if it finds none. This is not a problem as most
 standard collation cases are covered by the standard UCA and many locales
 neither have nor need any special collation tailoring.
 
-\biblatex passes sorscheme-specific sorting locales and its global sorting
+\biblatex passes sortscheme-specific sorting locales and its global sorting
 locale in the \file{.bcf}. \biber uses these locales automatically to
-tailor each sort list individually. \biblatex can be configured to
+tailor sorting at various levels of granularity (see \biblatex docs for the
+\cmd{DeclareSortingScheme} macro). \biblatex can be configured to
 automatically pass as locale the language setting from Babel or Polyglossia
 in which case \biber tries to match this to a sensible locale. See the
 Appendix, section \ref{localemap} for the mapping. If you want to sort
 using a specific locale not listed in \ref{localemap}, specify this locale
-exactly in your \latex source as the \biblatex \opt{sortlocale} option or
-using the \cmd{locale} macro within a \cmd{DeclareSortingScheme} macro. For example,
-if you want to use traditional Spanish for sorting a reference list, you
-need to specify \verb+es_ES_trad+ directly instead of using the «spanish»
-string because the Babel/Polyglossia «spanish» language identifier by
-default maps to the modern \verb+es_ES+ locale (which doesn't include sort
-tailoring for «ch» in Spanish).
+exactly in your \latex source as the \biblatex \opt{sortlocale} option, as
+the optional argument to \cmd{DeclareSortingScheme} macro or as an optional
+argument to the \biblatex \cmd{sort} macro according to the desired
+granularity. For example, if you want to use traditional Spanish for
+sorting a reference list, you need to specify \verb+es_ES_trad+ directly
+instead of using the «spanish» string because the Babel/Polyglossia
+«spanish» language identifier by default maps to the modern \verb+es_ES+
+locale (which doesn't include sort tailoring for «ch» in Spanish).
 
 With the \opt{--fastsort|-f} option, the locale will be
 used to locate an OS locale definition to use for the collation. This
