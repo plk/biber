@@ -1968,6 +1968,9 @@
     <bcf:citekey order="5">K5</bcf:citekey>
     <bcf:citekey order="6">K6</bcf:citekey>
     <bcf:citekey order="7">K7</bcf:citekey>
+    <bcf:citekey order="8">K8</bcf:citekey>
+    <bcf:citekey order="9">K9</bcf:citekey>
+    <bcf:citekey order="10">K10</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="lname" type="entry">
@@ -2049,6 +2052,16 @@
     <bcf:sorting locale="es_ES_trad">
       <bcf:sort order="1">
         <bcf:sortitem order="1">title</bcf:sortitem>
+      </bcf:sort>
+    </bcf:sorting>
+  </bcf:sortlist>
+  <bcf:sortlist section="0" label="ltitleset" type="entry">
+    <bcf:sorting>
+      <bcf:sort order="1">
+        <bcf:sortitem order="1">title</bcf:sortitem>
+      </bcf:sort>
+      <bcf:sort order="2" locale="es_ES_trad">
+        <bcf:sortitem order="1">note</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>

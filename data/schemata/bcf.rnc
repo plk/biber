@@ -328,6 +328,8 @@ sort =
     attribute sortcase { "0" | "1" }?,
     # Sort upper before lower?
     attribute sortupper { "0" | "1" }?,
+    # sortset specific override for locale
+    attribute locale { xsd:string {minLength="1"}}?,
     # A sort item specification - a field or pseudo-field to get sort information from
     element bcf:sortitem {
       # order of this item in the set of all other item specifications

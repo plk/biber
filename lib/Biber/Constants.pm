@@ -95,7 +95,7 @@ our %DM_DATATYPES = (
 our $CONFIG_DEFAULT_BIBER = {
   clrmacros           => { content => 0 },
   collate             => { content => 1 },
-  collate_options     => { option => { level => 4, variable => 'non-ignorable' }},
+  collate_options     => { option => { level => 4, variable => 'non-ignorable', normalization => 'prenormalized' }},
   graph               => { content => 0 },
   debug               => { content => 0 },
   decodecharsset      => { content => 'base' },

@@ -588,6 +588,7 @@ an example config file which displays the \biber\ defaults:
   <collate_options>
     <option name="level" value="4"/>
     <option name="variable" value="non-ignorable"/>
+    <option name="normalization" value="prenormalized"/>
   </collate_options>
   <debug>0</debug>
   <decodecharsset>base</decodecharsset>
@@ -1781,12 +1782,15 @@ Options are passed using the \opt{--collate\_options|-c} option as a
 single quoted string, each option separated by comma, each key and
 value separated by «\verb+=>+». See examples.
 
-\textbf{Note:} \biber\ sets the Unicode collation tailoring
+\textbf{Note:} \biber\ sets the Unicode collation option
 «variable» to «non-ignorable». Effectively, this means that punctuation is
 not ignored when sorting. The default setting is to ignore such «variable
 weight» elements. Sorting bibliographies is slightly more specialised than
 collating general text and punctuation often matters. In case you want the
-UCA default behaviour, see examples.
+UCA default behaviour, see examples. Since \biber always normalises into
+NFD when reading data in, no normalisation is requested with Unicode
+collation («normalization» option is set to «prenormalized» by default) as
+this saves some time.
 
 \subsubsection{Examples}
 

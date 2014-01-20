@@ -41,6 +41,7 @@ lib/Biber/Section.pm
 lib/Biber/Sections.pm
 lib/Biber/SortList.pm
 lib/Biber/SortLists.pm
+lib/Biber/UCollate.pm
 lib/Biber/Utils.pm
 MANIFEST
 META.json
