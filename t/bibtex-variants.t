@@ -68,7 +68,7 @@ is($bibentries->entry('forms2')->get_field('labeltitle'), 'Mukhammad al-Khorezmi
 is($bibentries->entry('forms3')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'labeltitle - 3');
 is_deeply($bibentries->entry('forms7')->get_field('warnings'), $f7, 'MS warnings - 1') ;
 
-my $S = [
+my $S = { spec => [
          [
           {},
           {'author'     => {'form' => 'uniform'}},
@@ -84,7 +84,7 @@ my $S = [
           {},
           {'year'  => {}},
          ],
-        ];
+        ]};
 
 $main->set_sortscheme($S);
 

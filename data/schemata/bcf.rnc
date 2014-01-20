@@ -17,7 +17,6 @@ start =
       mincrossrefs,
       sortcase,
       sortfirstinits,
-      sortlocale?,
       sortupper
     },
 
@@ -47,6 +46,7 @@ start =
       mstranslang,
       singletitle,
       sortalphaothers?,
+      sortlocale,
       sortscheme,
       uniquelist,
       uniquename,
@@ -291,6 +291,8 @@ listspec =
       attribute label { xsd:string {minLength="1"}},
       (filter | orfilter )*,
       element bcf:sorting {
+        # locale for entire sorting specification
+        attribute locale { xsd:string {minLength="1"}}?,
         sort+
       }?
     }*
@@ -298,6 +300,8 @@ listspec =
 
 sorting = 
   element bcf:sorting {
+    # locale for entire sorting specification
+    attribute locale { xsd:string {minLength="1"}}?,
     # presort default strings for different entry types
     element bcf:presort {
       attribute type { text }?,
@@ -539,6 +543,12 @@ mincitenames =
     element bcf:key { "mincitenames" },
     element bcf:value { xsd:integer }
   }
+sortlocale =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "sortlocale" },
+    element bcf:value { text }
+  }
 sortscheme =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -628,16 +638,6 @@ mstranslang =
     element bcf:key { "mstranslang" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
-    }
-  }
-# This is xsd:language but also allows underscore separators
-sortlocale = 
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "sortlocale" },
-    element bcf:value {
-      xsd:normalizedString { pattern = "([a-zA-Z]{2}|[iI][\-_][a-zA-Z]+|[xX][\-_][a-zA-Z]{1,10})([\-_][a-zA-Z]{1,10})*"
-      }
     }
   }
 sortupper = 

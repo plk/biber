@@ -604,11 +604,13 @@ sub output {
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     foreach my $list (sort {$a->get_label cmp $b->get_label} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
-      next if $list->get_label eq Biber::Config->getblxoption('sortscheme');
+      if ($list->get_label eq Biber::Config->getblxoption('sortscheme')) {
+        next;
+      }
       push @lists, $list;
     }
 
-    # biblatex requires the last list in the .bbl to be the global sort list
+    # biblatex requires the last list in the .bbl to be the global sort  list
     # due to its sequential reading of the .bbl as the final list overrides the
     # previously read ones and the global list determines the order of labelnumber
     # and sortcites etc. when not using defernumbers

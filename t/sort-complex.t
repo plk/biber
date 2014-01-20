@@ -56,7 +56,8 @@ my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $shs = $biber->sortlists->get_list(0, 'shorthand', 'shorthand');
 my $out = $biber->get_output_obj;
 
-my $ss = [
+my $ss = { locale => 'en_US',
+           spec => [
            [
             {},
             {'presort'    => {}}
@@ -95,7 +96,7 @@ my $ss = [
                               pad_width => '4'}},
             {'0000'       => {}}
            ],
-          ];
+          ]};
 
 my $l4 = q|    \entry{L4}{book}{}
       \true{morelabelname}
@@ -237,18 +238,6 @@ is_deeply([ $shs->get_keys ], [], 'sortorder - 2');
 
 # reset options and regenerate information
 Biber::Config->setoption('sourcemap', undef); # no longer ignore shorthand*
-# Have to set the sortscheme for the shorthand list explicitly as the sortlos option is processed
-# during control file parsing so it won't be done automatically here. This is only a problem
-# in tests where we want to change sortlos and re-run
-$shs->set_sortscheme([
-                      [ {'final' => 1},
-                        {'sortshorthand'    => {}}
-                      ],
-                      [ {}, {'shorthand'     => {}} ] ]);
-$main->set_sortscheme([
-                       [ {'final' => 1},
-                         {'shorthand'    => {}}
-                       ]]);
 
 # Need to reset all entries due to "skip if already in Entries"
 # clause in bibtex.pm. Need to clear the cache as we've modified the T::B objects

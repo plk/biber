@@ -14,6 +14,7 @@
 \usepackage{color}
 \usepackage{listings}
 \usepackage{metalogo}
+\usepackage{colortbl}
 
 \usepackage[retainmissing]{MnSymbol}
 \setmainfont[Ligatures=TeX]{CMU Serif}
@@ -31,8 +32,12 @@
 \gdef\biberversion{2.0}    % BIBER VERSION
 \gdef\biblatexversion{3.0}   % BIBLATEX VERSION
 
-% Set up tikz things
+% colour for tables
+\definecolor{Gray}{gray}{0.85}
 
+\newcolumntype{a}{>{\columncolor{Gray}}l}
+
+% Set up tikz things
 \usetikzlibrary{shapes.geometric}
 \usetikzlibrary{arrows}
 \usetikzlibrary{fit}
@@ -94,6 +99,16 @@
 Please see the \verb+Changes+ file which accompanies \biber\ for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
+
+\minisec{1.9}
+\biber no longer checks the environment for locales to use for sorting. This
+was always rather against the spirit of \tex since it means that the same
+document might look different when compiled by different people. However,
+\biblatex now passes Babel/Polyglossia language identifiers (or real locale
+identifiers if you prefer) in the \file{.bcf} and \biber can use these to
+set the sorting locale globally or on a per-sortscheme basis. This is better
+than using environment variables since Babel/Polyglossia are more \latex
+relevant language environments anyway.
 
 \minisec{1.8}
 Various option name changes. Old names are retained for backwards
@@ -609,7 +624,6 @@ an example config file which displays the \biber\ defaults:
   <output_safecharsset>base</output_safecharsset>
   <quiet>0</quiet>
   <sortcase>true</sortcase>
-  <sortlocale>en_US.utf8</sortlocale>
   <sortupper>true</sortupper>
   <tool>false</tool>
   <trace>0</trace>
@@ -1711,15 +1725,29 @@ chain which is given in decreasing precedence order:\\[2ex]
 
 \noindent\opt{--collate\_options|-c} (e.g. \opt{-c 'locale => "de\_DE"'}) $\rightarrow$\\
 \hspace*{1em}\opt{--sortlocale|-l} $\rightarrow$\\
-\hspace*{2em}\verb+LC_COLLATE+ environment variable $\rightarrow$\\
-\hspace*{3em}\verb+LANG+ environment variable $\rightarrow$\\
-\hspace*{4em}\verb+LC_ALL+ environment variable\\[2ex]
+\hspace*{2em}\biblatex per-sortscheme \opt{locale} option\\
+\hspace*{3em}\biblatex global sortlocale option\\
 
-\noindent With the default \opt{--collate|-C} option, the locale will
-be used to look for a collation tailoring for that locale. It will generate an
-informational warning if it finds none. This is not a problem as the vast
-majority of collation cases are covered by the standard UCA and many
-locales neither have nor need any special collation tailoring.
+\noindent With the default \opt{--collate|-C} option, the locale will be
+used to look for a collation tailoring for that locale. It will generate an
+informational warning if it finds none. This is not a problem as most
+standard collation cases are covered by the standard UCA and many locales
+neither have nor need any special collation tailoring.
+
+\biblatex passes sorscheme-specific sorting locales and its global sorting
+locale in the \file{.bcf}. \biber uses these locales automatically to
+tailor each sort list individually. \biblatex can be configured to
+automatically pass as locale the language setting from Babel or Polyglossia
+in which case \biber tries to match this to a sensible locale. See the
+Appendix, section \ref{localemap} for the mapping. If you want to sort
+using a specific locale not listed in \ref{localemap}, specify this locale
+exactly in your \latex source as the \biblatex \opt{sortlocale} option or
+using the \cmd{locale} macro within a \cmd{DeclareSortingScheme} macro. For example,
+if you want to use traditional Spanish for sorting a reference list, you
+need to specify \verb+es_ES_trad+ directly instead of using the «spanish»
+string because the Babel/Polyglossia «spanish» language identifier by
+default maps to the modern \verb+es_ES+ locale (which doesn't include sort
+tailoring for «ch» in Spanish).
 
 With the \opt{--fastsort|-f} option, the locale will be
 used to locate an OS locale definition to use for the collation. This
@@ -1766,13 +1794,12 @@ UCA default behaviour, see examples.
 
 \noindent Call \biber\ using all settings from the \verb+.bcf+ generated from the
 \latex\ run. Case sensitive UCA sorting is performed taking the locale
-for tailoring from the environment if no \opt{sortlocale} is defined in
-the \verb+.bcf+
+for tailoring from the \file{.bcf} if \biber's \opt{sortlocale} option is
+not used to override the \verb+.bcf+
 
-\biberex{biber --sortlocale=de_DE}
+\biberex{biber --sortlocale=de_DE_phonebook}
 
-\noindent Override any locale setting in the \verb+.bcf+ or
-the environment.
+\noindent Override any locale setting in the \verb+.bcf+
 
 \biberex{biber --fastsort}
 
@@ -2502,11 +2529,12 @@ tool mode config file by using the \opt{--tool\_config} option which will
 show you the location of the config file and exit.
 
 \subsubsection{Customising Tool Mode Sorting}
-A global sorting scheme can be defined in the config file in order to
-sort the entries in tool mode output. See section \ref{sorting} for
-the format of the config file sorting specification. By default, if
-sorting is enabled in tool mode, the sorting scheme is the same as the
-\biblatex \texttt{none} scheme, that is, no sorting is performed.
+A global sorting scheme can be defined in the config file in order to sort
+the entries in tool mode output. See section \ref{sorting} for the format
+of the config file sorting specification. By default, in tool mode the
+sorting scheme is the same as the \biblatex \texttt{none} scheme, that is,
+no sorting is performed. The sorting locale in tool mode defaults to
+«\texttt{en\_US}» if you do not use \biber's \opt{sortlocale} option.
 \bigskip%|<- stop confusing emacs highlighting
 \subsection{Extended \bibtex\ Datasource Field Format}
 \biber\ implements an extended \bibtex\ datasource format which allows
@@ -2835,5 +2863,45 @@ test.blg
 test.bbl
 \end{verbatim}
 
+\appendix
+\section{Appendix}
+\subsection{Babel/Polyglossia language to Locale mapping}\label{localemap}
 
+\begin{center}
+\footnotesize
+\begin{tabular}{alalalal}
+\toprule
+Language & Locale & Language & Locale & Language & Locale & Language & Locale\\
+\midrule
+acadian    & \texttt{fr\_CA}  & divehi      & \texttt{dv\_MV}  & latin           & \texttt{sr\_Latn} & sanskrit        & \texttt{sa\_IN}\\
+american   & \texttt{en\_US}  & dutch       & \texttt{nl\_NL}  & latvian         & \texttt{lv\_LV} &   scottish        & \texttt{gd\_GB}\\
+australian & \texttt{en\_US}  & english     & \texttt{en\_US}  & lithuanian      & \texttt{lt\_LT} &   serbian         & \texttt{sr\_Cyrl}\\ 
+afrikaans  & \texttt{af\_ZA}  & esperanto   & \texttt{eo\_001} & lowersorbian    & \texttt{dsb\_DE} &  serbianc        & \texttt{sr\_Cyrl}\\ 
+albanian   & \texttt{sq\_AL}  & estonian    & \texttt{et\_EE}  & lsorbian        & \texttt{dsb\_DE} &  slovak          & \texttt{sk\_SK}\\
+amharic    & \texttt{am\_ET}  & ethiopia    & \texttt{am\_ET}  & magyar          & \texttt{hu\_HU} &   slovene         & \texttt{sl\_SI}\\
+arabic     & \texttt{ar\_001} & farsi       & \texttt{fa\_IR}  & malay           & \texttt{id\_ID} &   slovenian       & \texttt{sl\_SI}\\
+armenian   & \texttt{hy\_AM}  & finnish     & \texttt{fi\_FI}  & malayalam       & \texttt{ml\_IN} &   spanish         & \texttt{es\_ES}\\
+asturian   & \texttt{ast\_ES} & francais    & \texttt{fr\_FR}  & marathi         & \texttt{mr\_IN} &   swedish         & \texttt{sv\_SE}\\
+austrian   & \texttt{de\_AT}  & french      & \texttt{fr\_FR}  & meyalu          & \texttt{id\_ID} &   syriac          & \texttt{syc}\\
+bahasa     & \texttt{id\_ID}  & frenchle    & \texttt{fr\_FR}  & mongolian       & \texttt{mn\_Cyrl} & tamil           & \texttt{ta\_IN}\\
+bahasai    & \texttt{id\_ID}  & friulan     & \texttt{fur\_IT} & naustrian       & \texttt{de\_AT} &   telugu          & \texttt{te\_IN}\\
+bahasam    & \texttt{id\_ID}  & galician    & \texttt{gl\_ES}  & newzealand      & \texttt{en\_US} &   thai            & \texttt{th\_TH}\\
+basque     & \texttt{eu\_ES}  & german      & \texttt{de\_DE}  & ngerman         & \texttt{de\_DE} &   thaicjk         & \texttt{th\_TH}\\
+bengali    & \texttt{bn\_BD}  & germanb     & \texttt{de\_DE}  & nko             & \texttt{ha\_NG} &   tibetan         & \texttt{bo\_CN}\\
+bgreek     & \texttt{el\_GR}  & greek       & \texttt{el\_GR}  & norsk           & \texttt{nn\_NO} &   turkish         & \texttt{tr\_TR}\\
+brazil     & \texttt{pt\_BR}  & hebrew      & \texttt{he\_IL}  & nynorsk         & \texttt{nn\_NO} &   turkmen         & \texttt{tk\_TM}\\
+brazilian  & \texttt{pt\_BR}  & hindi       & \texttt{hi\_IN}  & occitan         & \texttt{oc\_FR} &   ukrainian       & \texttt{uk\_UA}\\
+breton     & \texttt{br\_FR}  & ibygreek    & \texttt{el\_CY}  & piedmontese     & \texttt{pms\_IT} &  urdu            & \texttt{ur\_IN}\\
+british    & \texttt{en\_GB}  & icelandic   & \texttt{is\_IS}  & pinyin          & \texttt{pny} &      UKenglish       & \texttt{en\_GB}\\
+bulgarian  & \texttt{bg\_BG}  & indon       & \texttt{id\_ID}  & polish          & \texttt{pl\_PL} &   uppersorbian    & \texttt{hsb\_DE}\\
+canadian   & \texttt{en\_US}  & indonesia   & \texttt{id\_ID}  & polutonikogreek & \texttt{el\_GR} &   USenglish       & \texttt{en\_US}\\
+canadien   & \texttt{fr\_CA}  & interlingua & \texttt{ia\_FR}  & portuges        & \texttt{pt\_PT} &   usorbian        & \texttt{hsb\_DE}\\
+catalan    & \texttt{ca\_ES}  & irish       & \texttt{ga\_IE}  & portuguese      & \texttt{pt\_PT} &   vietnamese      & \texttt{vi\_VN}\\
+coptic     & \texttt{cop}     & italian     & \texttt{it\_IT}  & romanian        & \texttt{ro\_RO} &   welsh           & \texttt{cy\_GB}\\
+croatian   & \texttt{hr\_HR}  & japanese    & \texttt{ja\_JP}  & romansh         & \texttt{rm\_CH}\\
+czech      & \texttt{cs\_CZ}  & kannada     & \texttt{kn\_IN}  & russian         & \texttt{ru\_RU}\\
+danish     & \texttt{da\_DK}  & lao         & \texttt{lo\_LA}  & samin           & \texttt{se\_NO}\\
+\bottomrule
+\end{tabular}
+\end{center}
 \end{document}

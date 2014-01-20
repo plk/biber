@@ -46,7 +46,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  find_ms_field};
+  find_ms_field map_locale};
 
 =head1 FUNCTIONS
 
@@ -1069,6 +1069,18 @@ sub find_ms_field {
   return 0;
 }
 
+=head2 map_locale
+
+  Map babel/polyglossia language options to a sensible CLDR locale default
+  Return input string if there is no mapping
+
+=cut
+
+sub map_locale {
+  my $localestr = shift;
+  return $localestr unless $localestr;
+  return $LOCALE_MAP{$localestr} || $localestr;
+}
 
 1;
 

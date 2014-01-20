@@ -52,7 +52,7 @@ is_deeply([$shs->get_keys], ['LS2', 'LS1','LS3','LS4'], 'U::C tailoring - 3');
 
 
 # Descending name in Swedish collation
-$S = [
+$S = { spec => [
                                                     [
                                                      {},
                                                      {'presort'    => {}}
@@ -70,7 +70,7 @@ $S = [
                                                      {'sorttitle'  => {}},
                                                      {'title'      => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -80,12 +80,12 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['LS3','LS4','LS1','LS2','LS5','LS6'], 'U::C tailoring descending - 1');
 
 # Local lower before upper setting
-$S = [
+$S = { spec => [
                                                     [
                                                      {sortupper => 0},
                                                      {'title'   => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 
@@ -101,13 +101,13 @@ $biber->parse_ctrlfile('sort-uc.bcf');
 $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $biber->set_output_obj(Biber::Output::bbl->new());
-$S = [
+$S = { spec => [
                                                     [
                                                      {sortupper => 0,
                                                       sortcase  => 0},
                                                      {'title'   => {}}
                                                     ]
-                                                   ];
+                                                   ]};
 
 $main->set_sortscheme($S);
 $biber->prepare;

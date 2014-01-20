@@ -67,7 +67,7 @@ sub get_lists_for_section {
 
 =head2 get_list
 
-    Returns a specific list by section, type and label
+    Returns a specific list by section, type, label
 
 =cut
 

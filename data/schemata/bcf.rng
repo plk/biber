@@ -28,9 +28,6 @@
         <ref name="mincrossrefs"/>
         <ref name="sortcase"/>
         <ref name="sortfirstinits"/>
-        <optional>
-          <ref name="sortlocale"/>
-        </optional>
         <ref name="sortupper"/>
       </element>
       <!--
@@ -67,6 +64,7 @@
         <optional>
           <ref name="sortalphaothers"/>
         </optional>
+        <ref name="sortlocale"/>
         <ref name="sortscheme"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
@@ -783,6 +781,14 @@
         </zeroOrMore>
         <optional>
           <element name="bcf:sorting">
+            <optional>
+              <!-- locale for entire sorting specification -->
+              <attribute name="locale">
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
+              </attribute>
+            </optional>
             <oneOrMore>
               <ref name="sort"/>
             </oneOrMore>
@@ -793,6 +799,14 @@
   </define>
   <define name="sorting">
     <element name="bcf:sorting">
+      <optional>
+        <!-- locale for entire sorting specification -->
+        <attribute name="locale">
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </attribute>
+      </optional>
       <oneOrMore>
         <!-- presort default strings for different entry types -->
         <element name="bcf:presort">
@@ -1415,6 +1429,19 @@
       </element>
     </element>
   </define>
+  <define name="sortlocale">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>sortlocale</value>
+      </element>
+      <element name="bcf:value">
+        <text/>
+      </element>
+    </element>
+  </define>
   <define name="sortscheme">
     <element name="bcf:option">
       <attribute name="type">
@@ -1615,22 +1642,6 @@
       <element name="bcf:value">
         <data type="normalizedString">
           <param name="pattern">\S+</param>
-        </data>
-      </element>
-    </element>
-  </define>
-  <!-- This is xsd:language but also allows underscore separators -->
-  <define name="sortlocale">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>sortlocale</value>
-      </element>
-      <element name="bcf:value">
-        <data type="normalizedString">
-          <param name="pattern">([a-zA-Z]{2}|[iI][\-_][a-zA-Z]+|[xX][\-_][a-zA-Z]{1,10})([\-_][a-zA-Z]{1,10})*</param>
         </data>
       </element>
     </element>

@@ -22,7 +22,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortcase</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortfirstinits</bcf:key>
@@ -122,6 +122,10 @@
     <bcf:option type="singlevalued">
       <bcf:key>sortalphaothers</bcf:key>
       <bcf:value>+</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>sortlocale</bcf:key>
+      <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortscheme</bcf:key>
@@ -1961,10 +1965,20 @@
     <bcf:citekey order="2">K2</bcf:citekey>
     <bcf:citekey order="3">K3</bcf:citekey>
     <bcf:citekey order="4">K4</bcf:citekey>
+    <bcf:citekey order="5">K5</bcf:citekey>
+    <bcf:citekey order="6">K6</bcf:citekey>
+    <bcf:citekey order="7">K7</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" label="lname" type="entry">
     <bcf:sorting>
+      <bcf:sort order="1">
+        <bcf:sortitem order="1">author</bcf:sortitem>
+      </bcf:sort>
+    </bcf:sorting>
+  </bcf:sortlist>
+  <bcf:sortlist section="0" label="lnameswe" type="entry">
+    <bcf:sorting locale="swedish">
       <bcf:sort order="1">
         <bcf:sortitem order="1">author</bcf:sortitem>
       </bcf:sort>
@@ -2031,6 +2045,14 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
+  <bcf:sortlist section="0" label="ltitlespan" type="entry">
+    <bcf:sorting locale="es_ES_trad">
+      <bcf:sort order="1">
+        <bcf:sortitem order="1">title</bcf:sortitem>
+      </bcf:sort>
+    </bcf:sorting>
+  </bcf:sortlist>
+  <!-- This should be ignored as it's a repeat -->
   <bcf:sortlist section="0" label="ltitle" type="entry">
     <bcf:sorting>
       <bcf:sort order="1">

@@ -8,19 +8,20 @@ use Encode::Alias;
 use base 'Exporter';
 
 our @EXPORT = qw{
-  $CONFIG_DEFAULT_BIBER
-  %CONFIG_DEFAULT_BIBLATEX
-  %CONFIG_SCOPE_BIBLATEX
-  %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS
-  %NOSORT_TYPES
-  %DM_DATATYPES
-  $BIBER_CONF_NAME
-  $BCF_VERSION
-  $BBL_VERSION
-  $BIBER_SORT_FINAL
-  $BIBER_SORT_NULL
-  $LABEL_FINAL
-  };
+                  $CONFIG_DEFAULT_BIBER
+                  %CONFIG_DEFAULT_BIBLATEX
+                  %CONFIG_SCOPE_BIBLATEX
+                  %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS
+                  %NOSORT_TYPES
+                  %DM_DATATYPES
+                  %LOCALE_MAP
+                  $BIBER_CONF_NAME
+                  $BCF_VERSION
+                  $BBL_VERSION
+                  $BIBER_SORT_FINAL
+                  $BIBER_SORT_NULL
+                  $LABEL_FINAL
+              };
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
@@ -38,19 +39,8 @@ our $BIBER_CONF_NAME = 'biber.conf';
 
 ## Biber CONFIGURATION DEFAULTS
 
-# Locale - first try environment ...
+# Locale -  if nothing, set a default
 my $locale;
-if ($ENV{LC_COLLATE}) {
-  $locale = $ENV{LC_COLLATE};
-}
-elsif ($ENV{LANG}) {
-  $locale = $ENV{LANG};
-}
-elsif ($ENV{LC_ALL}) {
-  $locale = $ENV{LC_ALL};
-}
-
-# ... if nothing, set a default
 unless ($locale) {
   if ( $^O =~ /Win/) {
     $locale = 'English_United States.1252';
@@ -138,7 +128,6 @@ our $CONFIG_DEFAULT_BIBER = {
   quiet               => { content => 0 },
   sortcase            => { content => 1 },
   sortfirstinits      => { content => 0 },
-  sortlocale          => { content => $locale },
   sortupper           => { content => 1 },
   tool                => { content => 0 },
   trace               => { content => 0 },
@@ -170,6 +159,119 @@ define_alias('x-nextstep'     => 'MacRoman');
 define_alias('x-ascii'        => 'ascii'); # Encode doesn't resolve this one by default
 define_alias('lutf8'          => 'UTF-8'); # Luatex
 define_alias('utf8x'          => 'UTF-8'); # UCS (old)
+
+# Defines sensible defaults for setting sort locale from babel/polyglossia language names
+our %LOCALE_MAP = (
+                   'acadian'         => 'fr_CA',
+                   'american'        => 'en_US',
+                   'australian'      => 'en_US',
+                   'afrikaans'       => 'af_ZA',
+                   'albanian'        => 'sq_AL',
+                   'amharic'         => 'am_ET',
+                   'arabic'          => 'ar_001',
+                   'armenian'        => 'hy_AM',
+                   'asturian'        => 'ast_ES',
+                   'austrian'        => 'de_AT',
+                   'bahasa'          => 'id_ID',
+                   'bahasai'         => 'id_ID',
+                   'bahasam'         => 'id_ID',
+                   'basque'          => 'eu_ES',
+                   'bengali'         => 'bn_BD',
+                   'bgreek'          => 'el_GR',
+                   'brazil'          => 'pt_BR',
+                   'brazilian'       => 'pt_BR',
+                   'breton'          => 'br_FR',
+                   'british'         => 'en_GB',
+                   'bulgarian'       => 'bg_BG',
+                   'canadian'        => 'en_US',
+                   'canadien'        => 'fr_CA',
+                   'catalan'         => 'ca_ES',
+                   'coptic'          => 'cop',
+                   'croatian'        => 'hr_HR',
+                   'czech'           => 'cs_CZ',
+                   'danish'          => 'da_DK',
+                   'divehi'          => 'dv_MV',
+                   'dutch'           => 'nl_NL',
+                   'english'         => 'en_US',
+                   'esperanto'       => 'eo_001',
+                   'estonian'        => 'et_EE',
+                   'ethiopia'        => 'am_ET',
+                   'farsi'           => 'fa_IR',
+                   'finnish'         => 'fi_FI',
+                   'francais'        => 'fr_FR',
+                   'french'          => 'fr_FR',
+                   'frenchle'        => 'fr_FR',
+                   'friulan'         => 'fur_IT',
+                   'galician'        => 'gl_ES',
+                   'german'          => 'de_DE',
+                   'germanb'         => 'de_DE',
+                   'greek'           => 'el_GR',
+                   'hebrew'          => 'he_IL',
+                   'hindi'           => 'hi_IN',
+                   'ibygreek'        => 'el_CY',
+                   'icelandic'       => 'is_IS',
+                   'indon'           => 'id_ID',
+                   'indonesia'       => 'id_ID',
+                   'interlingua'     => 'ia_FR',
+                   'irish'           => 'ga_IE',
+                   'italian'         => 'it_IT',
+                   'japanese'        => 'ja_JP',
+                   'kannada'         => 'kn_IN',
+                   'lao'             => 'lo_LA',
+                   'latin'           => 'sr_Latn',
+                   'latvian'         => 'lv_LV',
+                   'lithuanian'      => 'lt_LT',
+                   'lowersorbian'    => 'dsb_DE',
+                   'lsorbian'        => 'dsb_DE',
+                   'magyar'          => 'hu_HU',
+                   'malay'           => 'id_ID',
+                   'malayalam'       => 'ml_IN',
+                   'marathi'         => 'mr_IN',
+                   'meyalu'          => 'id_ID',
+                   'mongolian'       => 'mn_Cyrl',
+                   'naustrian'       => 'de_AT',
+                   'newzealand'      => 'en_US',
+                   'ngerman'         => 'de_DE',
+                   'nko'             => 'ha_NG',
+                   'norsk'           => 'nn_NO',
+                   'nynorsk'         => 'nn_NO',
+                   'occitan'         => 'oc_FR',
+                   'piedmontese'     => 'pms_IT',
+                   'pinyin'          => 'pny',
+                   'polish'          => 'pl_PL',
+                   'polutonikogreek' => 'el_GR',
+                   'portuges'        => 'pt_PT',
+                   'portuguese'      => 'pt_PT',
+                   'romanian'        => 'ro_RO',
+                   'romansh'         => 'rm_CH',
+                   'russian'         => 'ru_RU',
+                   'samin'           => 'se_NO',
+                   'sanskrit'        => 'sa_IN',
+                   'scottish'        => 'gd_GB',
+                   'serbian'         => 'sr_Cyrl',
+                   'serbianc'        => 'sr_Cyrl',
+                   'slovak'          => 'sk_SK',
+                   'slovene'         => 'sl_SI',
+                   'slovenian'       => 'sl_SI',
+                   'spanish'         => 'es_ES',
+                   'swedish'         => 'sv_SE',
+                   'syriac'          => 'syc',
+                   'tamil'           => 'ta_IN',
+                   'telugu'          => 'te_IN',
+                   'thai'            => 'th_TH',
+                   'thaicjk'         => 'th_TH',
+                   'tibetan'         => 'bo_CN',
+                   'turkish'         => 'tr_TR',
+                   'turkmen'         => 'tk_TM',
+                   'ukrainian'       => 'uk_UA',
+                   'urdu'            => 'ur_IN',
+                   'UKenglish'       => 'en_GB',
+                   'uppersorbian'    => 'hsb_DE',
+                   'USenglish'       => 'en_US',
+                   'usorbian'        => 'hsb_DE',
+                   'vietnamese'      => 'vi_VN',
+                   'welsh'           => 'cy_GB',
+                  );
 
 # Defines the scope of each of the BibLaTeX configuration options
 #
@@ -217,6 +319,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   sortalphaothers    => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sortexclusion      => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
   sorting            => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
+  sortlocale         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   sortscheme         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   uniquelist         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   uniquename         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},

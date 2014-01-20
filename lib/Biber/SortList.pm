@@ -50,6 +50,7 @@ sub get_section {
   return $self->{section};
 }
 
+
 =head2 set_label
 
     Sets the label of a sort list
