@@ -982,6 +982,14 @@
             </choice>
           </attribute>
         </optional>
+        <optional>
+          <!-- sortset specific override for locale -->
+          <attribute name="locale">
+            <data type="string">
+              <param name="minLength">1</param>
+            </data>
+          </attribute>
+        </optional>
         <oneOrMore>
           <!-- A sort item specification - a field or pseudo-field to get sort information from -->
           <element name="sortitem">

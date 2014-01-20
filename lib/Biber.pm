@@ -2899,7 +2899,7 @@ sub sort_list {
             map  { eval $data_extractor } @keys;
   }
   else {
-    require Unicode::Collate::Locale;
+    require Biber::UCollate;
     my $collopts = Biber::Config->getoption('collate_options');
 
     # UCA level 2 if case insensitive sorting is requested
@@ -2911,7 +2911,7 @@ sub sort_list {
     $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
 
     # Create collation object
-    my $Collator = _create_co($thislocale, $collopts);
+    my $Collator = Biber::UCollate->new($thislocale, %$collopts);
 
     my $UCAversion = $Collator->version();
     $logger->info("Sorting '$ltype' list '$llabel' with locale '$thislocale'");
@@ -2931,6 +2931,17 @@ sub sort_list {
     foreach my $sortset (@{$sortscheme->{spec}}) {
       my $fc = '';
       my @fc;
+
+      # Re-instantiate collation object if a different locale is required for this sort item.
+      # This can't be done in a ->change() method, has to be a new object.
+      my $cobj;
+      my $sl = $sortset->[0]{locale};
+      if (defined($sl) and $sl ne $thislocale) {
+        $cobj = 'Biber::UCollate->new(' . "'$sl'" . ",'" . join("','", %$collopts) . "')";
+      }
+      else {
+        $cobj = '$Collator';
+      }
 
       # If the case or upper option on a field is not the global default
       # set it locally on the $Collator by constructing a change() method call
@@ -2963,7 +2974,7 @@ sub sort_list {
       my $sd = $sortset->[0]{sort_direction};
       if (defined($sd) and $sd eq 'descending') {
         # descending field
-        $sorter .= '$Collator'
+        $sorter .= $cobj
           . $fc
             . '->cmp($b->['
               . $num_sorts
@@ -2973,7 +2984,7 @@ sub sort_list {
       }
       else {
         # ascending field
-        $sorter .= '$Collator'
+        $sorter .= $cobj
           . $fc
             . '->cmp($a->['
               . $num_sorts
@@ -2987,7 +2998,9 @@ sub sort_list {
     # Handily, $num_sorts is now one larger than the number of fields which is the
     # correct index for the actual data in the sort array
     $sort_extractor = '$_->[' . $num_sorts . ']';
+    $logger->trace("Sorting extractor is: $sort_extractor");
     $logger->trace("Sorting structure is: $sorter");
+    $logger->trace("Data extractor is: $data_extractor");
 
     # Schwartzian transform multi-field sort
     @keys = map  { eval $sort_extractor }
@@ -3002,56 +3015,6 @@ sub sort_list {
   $list->set_keys([ @keys ]);
 
   return;
-}
-
-=head2 _create_co
-
-    Create a U::C object
-
-=cut
-
-sub _create_co {
-  my ($thislocale, $collopts) = @_;
-
-  # Add tailoring locale for Unicode::Collate
-  if ($thislocale and not $collopts->{locale}) {
-    $collopts->{locale} = $thislocale;
-    if ($collopts->{table}) {
-      my $t = delete $collopts->{table};
-      $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
-    }
-  }
-
-  # Remove locale from options as we need this to make the object
-  my $coll_locale = delete $collopts->{locale};
-
-  # Now create the collator object
-  my $Collator = Unicode::Collate::Locale->new( locale => $coll_locale)
-    or $logger->logcarp("Problem creating Unicode::Collate::Locale object: $@");
-
-  # Fix the old "alternate" alias otherwise we have problems as U::C->change() always
-  # returns the new "variable" option and we get confused.
-  if (my $alt = delete $collopts->{alternate}) {
-    $collopts->{variable} = $alt;
-  }
-
-  #Show the collation options when debugging
-  $logger->debug('Collation options: ' . Data::Dump::pp($collopts));
-
-  # Tailor the collation object and report differences from defaults for locale
-  # Have to do this in ->change method as ->new can croak with conflicting tailoring
-  # for locales which enforce certain tailorings
-  my %coll_changed = $Collator->change( %{$collopts} );
-  while (my ($k, $v) = each %coll_changed) {
-    # If we are changing something that has no override tailoring in the locale, it
-    # is undef in this hash and we don't care about such things
-    next unless defined($coll_changed{$k});
-    if ($coll_changed{$k} ne $collopts->{$k}) {
-      $logger->info("Overriding locale '$coll_locale' defaults '$k = $v' with '$k = " . $collopts->{$k} . "'");
-    }
-  }
-
-  return $Collator;
 }
 
 =head2 prepare
@@ -3495,6 +3458,7 @@ sub _parse_sort {
     $sopts->{sort_direction} = $sort->{sort_direction} if defined($sort->{sort_direction});
     $sopts->{sortcase}       = $sort->{sortcase}       if defined($sort->{sortcase});
     $sopts->{sortupper}      = $sort->{sortupper}      if defined($sort->{sortupper});
+    $sopts->{locale}         = $sort->{locale}         if defined($sort->{locale});
     if (defined($sortingitems)) {
       unshift @{$sortingitems}, $sopts;
       push @{$sorting}, $sortingitems;
