@@ -3012,7 +3012,7 @@ sub sort_list {
       # Re-instantiate collation object if a different locale is required for this sort item.
       # This can't be done in a ->change() method, has to be a new object.
       my $cobj;
-      my $sl = $sortset->[0]{locale};
+      my $sl = map_locale($sortset->[0]{locale});
       if (defined($sl) and $sl ne $thislocale) {
         $cobj = 'Biber::UCollate->new(' . "'$sl'" . ",'" . join("','", %$collopts) . "')";
       }
