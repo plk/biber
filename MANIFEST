@@ -14,7 +14,6 @@ data/schemata/texmap.rnc
 data/texmap.xsl
 doc/biber.pdf
 doc/biber.tex
-doc/biber-texworks.png
 lib/Biber/Config.pm
 lib/Biber/Constants.pm
 lib/Biber/DataModel.pm
