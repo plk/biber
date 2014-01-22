@@ -91,32 +91,25 @@ if [ ! -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
 fi
 
 
-# Build farm WinXP
+# Build farm WinXP+cygwin
 # We run "Build realclean" at the end as we are using the same tree for
 # win and cygwin builds
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
-if [ ! -e $DIR/biber-MSWIN.zip ]; then
+if [ ! -e $DIR/biber-MSWIN.zip -o ! -e $DIR/biber-cygwin32.tar.gz ]; then
   vmon wxp32
   sleep 20
   ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp philkime@bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN.exe $DIR/
   ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWin32/biber-MSWIN.exe"
-  vmoff wxp32  
+#  vmoff wxp32  # leave this on - we always build both win32 and cygwin
   cd $DIR
   mv biber-MSWIN.exe biber.exe
   chmod +x biber.exe
   /usr/bin/zip biber-MSWIN.zip biber.exe
   \rm -f biber.exe
   cd $BASE
-fi
-
-# Build farm cygwin
-# We run "Build realclean" at the end as we are using the same tree for
-# win and cygwin builds
-if [ ! -e $DIR/biber-cygwin32.tar.gz ]; then
-  vmon wxp32
-  sleep 20
+  # Build farm cygwin
   # We have to move aside the windows libbtparse.dll otherwise it's picked up by cygwin
   ssh philkime@bbf-wxp32 ". bin/set-biber-cyg-build-env.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build installdeps;./Build install;cd dist/cygwin32;./build.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS /cygdrive/c/WINDOWS/system32/libbtparse.dll;cd ~/biblatex-biber;./Build realclean"
   scp philkime@bbf-wxp32:biblatex-biber/dist/cygwin32/biber-cygwin32.exe $DIR/
