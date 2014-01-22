@@ -102,7 +102,6 @@ if [ ! -e $DIR/biber-MSWIN.zip -o ! -e $DIR/biber-cygwin32.tar.gz ]; then
   ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp philkime@bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN.exe $DIR/
   ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWin32/biber-MSWIN.exe"
-#  vmoff wxp32  # leave this on - we always build both win32 and cygwin
   cd $DIR
   mv biber-MSWIN.exe biber.exe
   chmod +x biber.exe
