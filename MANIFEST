@@ -23,9 +23,7 @@ lib/Biber/Entry/Names.pm
 lib/Biber/Entry.pm
 lib/Biber/Input/file/biblatexml.pm
 lib/Biber/Input/file/bibtex.pm
-lib/Biber/Input/file/endnotexml.pm
 lib/Biber/Input/file/ris.pm
-lib/Biber/Input/file/zoterordfxml.pm
 lib/Biber/Internals.pm
 lib/Biber/LaTeX/recode_data.xml
 lib/Biber/LaTeX/Recode.pm
@@ -56,7 +54,6 @@ t/configfile.t
 t/dm-constraints.t
 t/dm-dateformats.t
 t/encoding.t
-t/endnotexml.t
 t/extratitle.t
 t/extratitleyear.t
 t/extrayear.t
@@ -114,8 +111,6 @@ t/tdata/encoding5.bcf
 t/tdata/encoding5.bib
 t/tdata/encoding6.bcf
 t/tdata/encoding6.bib
-t/tdata/endnote.xml
-t/tdata/endnotexml.bcf
 t/tdata/examples.bib
 t/tdata/extratitle.bcf
 t/tdata/extratitle.bib
@@ -187,10 +182,7 @@ t/tdata/uniqueness5.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
-t/tdata/zotero.rdf
-t/tdata/zoterordfxml.bcf
 t/uniqueness.t
 t/utils.t
 t/xdata.t
-t/zoterordfxml.t
 visual.pl

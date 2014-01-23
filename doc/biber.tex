@@ -880,10 +880,9 @@ be changed (used as \textcolor{red}{\texttt{set-field}},
 \textcolor{red}{\texttt{target-field}} or changed using
 \textcolor{blue}{\texttt{map\_replace}}).
 
-Note that for XML datasources (Endnote, Zotero RDF/XML etc.), the names of
-fields and entrytypes are matched in a case sensitive manner. For all other
-datasource types (\BibTeX, RIS etc.) entrytype and field name matching is
-case insensitive.
+Note that for XML datasources, the names of fields and entrytypes are
+matched in a case sensitive manner. For all other datasource types
+(\BibTeX, RIS etc.) entrytype and field name matching is case insensitive.
 
 \noindent Here are some examples:
 
@@ -1093,36 +1092,9 @@ there is more than one, this step will be skipped). Removes any
 will be completely ignored.
 \bigskip
 \minisec{Other datasource types}
-For datasources other than \BibTeX, (e.g. \verb+ris+, \verb+endnotexml+
-and \verb+zoterordfxml+), the source entrytypes and fields are usually very
-differently modelled and named. For example, here is how to drop
-\verb+dc:subject+ fields from various entrytypes in Zotero XML RDF format data
-sources:
-
-\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<maps datatype="zoterordfxml" map_overwrite="1">
-  <map>
-    <per_type>journalArticle</per_type>
-    <per_type>book</per_type>
-    <per_type>bookSection</per_type>
-    <map_step map_field_set="dc:subject" map_null="1"/>
-  </map>
-</maps>
-\end{lstlisting}
-
-\noindent Or here, mapping journal articles into \bibtype{Report} entries for
-Endnote XML format datasources within a particular datasource.
-
-\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<maps datatype="endnotexml" map_overwrite="1">
-  <map>
-    <per_datasource>endnote.xml</per_datasource>
-    <map_step map_type_source="Journal Article" map_type_target="Report"/>
-  </map>
-</maps>
-\end{lstlisting}
-
-\noindent Or here, dropping the \bibfield{N2} field from \verb+RIS+
+For datasources other than \BibTeX, (e.g. \verb+ris+), the source
+entrytypes and fields are usually very differently modelled and named. For
+example, here is how to drop the \bibfield{N2} field from \verb+RIS+
 datasources, which are commonly used for abstracts:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
@@ -2088,10 +2060,9 @@ from a datasource as possible. Currently supported datasources
 drivers are:
 
 \begin{itemize}
-\item \BibTeX\ --- \BibTeX\ data files
-\item \verb+endnotexml+ --- Endnote XML export format, version $\geq$ Endnote X1
-\item \verb+ris+ --- Research Information Systems format
-\item \verb+zoterordfxml+ --- Zotero RDF XML format, version 2.0.9
+\item \BibTeX\---\BibTeX\ data files
+\item \verb+ris+---Research Information Systems format
+\item \verb+biblatexml+---Experimental \biblatex XML format
 \end{itemize}
 
 \subsection{Visualising the Output}\label{ref:vis}
