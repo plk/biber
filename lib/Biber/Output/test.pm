@@ -70,7 +70,7 @@ sub _printfield {
         # Can the field have multiple script/lang variants?
         my $dm = Biber::Config->get_dm;
         my $fl = '';
-        if ($dm->field_is_multiscript($field)) {
+        if ($dm->field_is_variant_enabled($field)) {
           if ($form ne Biber::Config->getblxoption('vform', undef, $key) and
               $lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
             $fl = "[form=$form]";
@@ -192,11 +192,11 @@ sub set_output_entry {
           # Copy per-list options to the actual labelname too
           $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
 
-          # Names are not necessarily multiscript - for example, if a style
+          # Names are not necessarily variant enabled - for example, if a style
           # defines a custom name field which isn't. This is guaranteed only in the
           # default biblatex datamodel
           my $fl = '';
-          if ($dm->field_is_multiscript($namefield)) {
+          if ($dm->field_is_variant_enabled($namefield)) {
             if ($form ne Biber::Config->getblxoption('vform', undef, $key) and
                 $lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
               $fl = "[form=$form]";
@@ -243,7 +243,7 @@ sub set_output_entry {
           # Can the field have multiple script/lang variants?
           my $dm = Biber::Config->get_dm;
           my $fl = '';
-          if ($dm->field_is_multiscript($listfield)) {
+          if ($dm->field_is_variant_enabled($listfield)) {
             if ($form ne Biber::Config->getblxoption('vform', undef, $key) and
                 $lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
               $fl = "[form=$form]";
@@ -368,7 +368,7 @@ sub set_output_entry {
     next if $dm->get_fieldformat($field) eq 'csv';
     if ( ($dm->field_is_nullok($field) and
           $be->field_exists($field)) or
-         ($dm->field_is_multiscript($field) and
+         ($dm->field_is_variant_enabled($field) and
           $be->get_field_variants($field)) or
           $be->get_field($field)) {
       # we skip outputting the crossref or xref when the parent is not cited

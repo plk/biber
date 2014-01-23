@@ -110,8 +110,8 @@ datamodel =
         # limit this field definition to specific entrytypes?
         # Is parsed as a csv list
         attribute entrytypes { text }?,
-        # Can this field have multiple script/lang variants?
-        attribute multiscript { "true" }?,
+        # Can this field have variants?
+        attribute variants { "true" }?,
         text
       }+
     },

@@ -70,9 +70,9 @@ sub new {
     if ($f->{skip_output}) {
       $self->{fieldsbyname}{$f->{content}}{skipout} = 1;
     }
-    # check multiscript - fields which can have multiple script/lang variants
-    if ($f->{multiscript}) {
-      $self->{fieldsbyname}{$f->{content}}{multiscript} = 1;
+    # check variants - fields which can have multiple script/lang variants
+    if ($f->{variants}) {
+      $self->{fieldsbyname}{$f->{content}}{variants} = 1;
     }
   }
 
@@ -390,16 +390,16 @@ sub field_is_skipout {
   return $self->{fieldsbyname}{$field}{skipout} // 0;
 }
 
-=head2 field_is_multiscript
+=head2 field_is_variant_enabled
 
     Returns boolean depending on whether a field can have multiple script/lang
     variants
 
 =cut
 
-sub field_is_multiscript {
+sub field_is_variant_enabled {
   my ($self, $field) = @_;
-  return $self->{fieldsbyname}{$field}{multiscript} // 0;
+  return $self->{fieldsbyname}{$field}{variants} // 0;
 }
 
 =head2 check_mandatory_constraints

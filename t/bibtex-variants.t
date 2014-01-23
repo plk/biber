@@ -45,8 +45,8 @@ my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
 my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 
-my $f7 = [ "The multiscript name field 'author' in entry 'forms7' has form/language variants with different numbers of items. This will almost certainly cause problems.",
-           "The multiscript list field 'location' in entry 'forms7' has form/language variants with different numbers of items. This will almost certainly cause problems." ];
+my $f7 = [ "The variant enabled name field 'author' in entry 'forms7' has variants with different numbers of items. This will almost certainly cause problems.",
+           "The variant enabled list field 'location' in entry 'forms7' has variants with different numbers of items. This will almost certainly cause problems." ];
 
 is($bibentries->entry('forms1')->get_field('title'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 1');
 is($bibentries->entry('forms1')->get_field('title', 'original'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 2');

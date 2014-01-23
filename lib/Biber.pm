@@ -878,7 +878,7 @@ sub nullable_check {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
     foreach my $f ($be->datafields) {
-      if ($dm->field_is_multiscript($f)) {
+      if ($dm->field_is_variant_enabled($f)) {
         if (any {is_null($_)} $be->get_field_variants($f)) {
           unless ($dm->field_is_nullok($f)) {
             biber_warn("The field '$f' in entry '$citekey' cannot be null, deleting it");
@@ -898,13 +898,13 @@ sub nullable_check {
   }
 }
 
-=head2 ms_checks
+=head2 v_checks
 
-  Check for some multiscript field problems
+  Check for some variant enabled field problems
 
 =cut
 
-sub ms_checks {
+sub v_checks {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -913,7 +913,7 @@ sub ms_checks {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
     foreach my $f ($be->datafields) {
-      next unless $dm->field_is_multiscript($f);
+      next unless $dm->field_is_variant_enabled($f);
       # Check that ms list fields all have same number of items
       if ($dm->field_is_fieldtype('list', $f) and not
           $dm->field_is_datatype('name', $f)) { # name is a special list
@@ -926,7 +926,7 @@ sub ms_checks {
           }
         }
         unless (uniq(@$lengths) == 1) {
-          biber_warn("The multiscript list field '$f' in entry '$citekey' has form/language variants with different numbers of items. This will almost certainly cause problems.", $be);
+          biber_warn("The variant enabled list field '$f' in entry '$citekey' has variants with different numbers of items. This will almost certainly cause problems.", $be);
         }
       }
       # Check that ms name fields all have same number of items
@@ -940,7 +940,7 @@ sub ms_checks {
           }
         }
         unless (uniq(@$lengths) == 1) {
-          biber_warn("The multiscript name field '$f' in entry '$citekey' has form/language variants with different numbers of items. This will almost certainly cause problems.", $be);
+          biber_warn("The variant enabled name field '$f' in entry '$citekey' has variants with different numbers of items. This will almost certainly cause problems.", $be);
         }
       }
     }
@@ -1581,8 +1581,8 @@ sub process_labelname {
       next;
     }
 
-    unless ($dm->field_is_multiscript($ln)) {
-      biber_warn("Labelname candidate '$ln' is not a multiscript field - this is probably incorrect!");
+    unless ($dm->field_is_variant_enabled($ln)) {
+      biber_warn("Labelname candidate '$ln' is not a variant enabled field - this is probably incorrect!");
     }
 
     if ($be->get_field($ln, $h_ln->{form}, $h_ln->{lang})) {
@@ -1947,7 +1947,7 @@ sub process_visible_names {
       $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
       $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
       # Need to set these on all name variants
-      if ($dm->field_is_multiscript($n)) {
+      if ($dm->field_is_variant_enabled($n)) {
         foreach my $ns ($be->get_field_variants($n)) {
           $ns->set_visible_cite($visible_names_cite);
           $ns->set_visible_bib($visible_names_bib);
@@ -3128,7 +3128,7 @@ sub prepare {
     $self->cite_setmembers;              # Cite set members
     $self->process_interentry;           # Process crossrefs/sets etc.
     $self->nullable_check;               # Check entries for nullable fields
-    $self->ms_checks;                    # Some sanity checking for multiscript field conflicts
+    $self->v_checks;                     # Some sanity checking for variant enabled field conflicts
     $self->validate_datamodel;           # Check against data model
     $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information

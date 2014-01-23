@@ -210,8 +210,8 @@ start =
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?
           attribute skip_output { "true" }?,
-          # Can this field have multiple script/lang variants?
-          attribute multiscript { "true" }?,
+          # Can this field have variants?
+          attribute variants { "true" }?,
           text
         }+
       },

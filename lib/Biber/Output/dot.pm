@@ -189,7 +189,7 @@ sub output {
         $graph .= $i x $in . "fillcolor=\"$c\";\n";
         $graph .= "\n";
         foreach my $field ($be->datafields) {
-          if ($dm->field_is_multiscript($field)) {
+          if ($dm->field_is_variant_enabled($field)) {
             foreach my $form ($be->get_field_form_names($field)) {
               foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
                 $graph .= $i x $in . "\"section${secnum}/${citekey}/${field}${vsplit}${form}${vsplit}${lang}\" [ label=\"" . uc("$field$vsplit$form$vsplit$lang") . "\" ]\n";

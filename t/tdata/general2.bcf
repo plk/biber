@@ -497,22 +497,22 @@
       <bcf:field fieldtype="field" datatype="datepart">urlendmonth</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">urlmonth</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">urlyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">abstract</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">addendum</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">annotation</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">booksubtitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">booktitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">booktitleaddon</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">chapter</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">edition</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">abstract</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">addendum</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">annotation</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">booksubtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">booktitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">booktitleaddon</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">chapter</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">edition</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eid</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">entrysubtype</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprintclass</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eprinttype</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">eventtitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">eventtitleaddon</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">eventtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">eventtitleaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">gender</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">howpublished</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">howpublished</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">langid</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">langidopts</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">indexsorttitle</bcf:field>
@@ -522,43 +522,43 @@
       <bcf:field fieldtype="field" datatype="literal">ismn</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">isrn</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">issn</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">issue</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">issuesubtitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">issuetitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">issue</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">issuesubtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">issuetitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">iswc</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">journalsubtitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">journaltitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">journalsubtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">journaltitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">label</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">library</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">mainsubtitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">maintitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">maintitleaddon</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">nameaddon</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">note</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">library</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">mainsubtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">maintitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">maintitleaddon</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">nameaddon</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">note</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">number</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">origtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">origtitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">pagetotal</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">part</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">part</bcf:field>
       <bcf:field fieldtype="field" format="csv" datatype="entrykey">related</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">relatedstring</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">relatedtype</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">reprinttitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">series</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">reprinttitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">series</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">shorthand</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">shorthandintro</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">shortjournal</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">shortseries</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">shorttitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">subtitle</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">title</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">titleaddon</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">shorthandintro</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">shortjournal</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">shortseries</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">shorttitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">subtitle</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">title</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">titleaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">usera</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userb</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userc</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userd</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">usere</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">userf</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">venue</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">venue</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">version</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">volume</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">volumes</bcf:field>
@@ -574,36 +574,36 @@
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortkey</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">presort</bcf:field>
       <bcf:field fieldtype="field" format="csv" datatype="entrykey" skip_output="true">entryset</bcf:field>
-      <bcf:field fieldtype="list" datatype="literal" multiscript="true">institution</bcf:field>
+      <bcf:field fieldtype="list" datatype="literal" variants="true">institution</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">lista</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">listb</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">listc</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">listd</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">liste</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">listf</bcf:field>
-      <bcf:field fieldtype="list" datatype="literal" multiscript="true">location</bcf:field>
-      <bcf:field fieldtype="list" datatype="literal" multiscript="true">organization</bcf:field>
-      <bcf:field fieldtype="list" datatype="literal" multiscript="true">origlocation</bcf:field>
-      <bcf:field fieldtype="list" datatype="literal" multiscript="true">origpublisher</bcf:field>
-      <bcf:field fieldtype="list" datatype="literal" multiscript="true">publisher</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">afterword</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">annotator</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">author</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">bookauthor</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">commentator</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">editor</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">editora</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">editorb</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">editorc</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">foreword</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">holder</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">introduction</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">namea</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">nameb</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">namec</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">shortauthor</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">shorteditor</bcf:field>
-      <bcf:field fieldtype="list" datatype="name" multiscript="true">translator</bcf:field>
+      <bcf:field fieldtype="list" datatype="literal" variants="true">location</bcf:field>
+      <bcf:field fieldtype="list" datatype="literal" variants="true">organization</bcf:field>
+      <bcf:field fieldtype="list" datatype="literal" variants="true">origlocation</bcf:field>
+      <bcf:field fieldtype="list" datatype="literal" variants="true">origpublisher</bcf:field>
+      <bcf:field fieldtype="list" datatype="literal" variants="true">publisher</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">afterword</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">annotator</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">author</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">bookauthor</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">commentator</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">editor</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">editora</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">editorb</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">editorc</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">foreword</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">holder</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">introduction</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">namea</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">nameb</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">namec</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">shortauthor</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">shorteditor</bcf:field>
+      <bcf:field fieldtype="list" datatype="name" variants="true">translator</bcf:field>
       <bcf:field fieldtype="list" datatype="name" skip_output="true">sortname</bcf:field>
       <bcf:field fieldtype="field" datatype="key">authortype</bcf:field>
       <bcf:field fieldtype="field" datatype="key">editoratype</bcf:field>

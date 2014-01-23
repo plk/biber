@@ -592,8 +592,8 @@ sub _literal {
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
   my $dm = Biber::Config->get_dm;
 
-  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
-    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+  if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
   }
 
@@ -619,8 +619,8 @@ sub _uri {
   my $value = NFC(decode_utf8($entry->get($f)));# Unicode NFC boundary (before hex encoding)
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
-  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
-    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+  if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
   }
 
@@ -650,8 +650,8 @@ sub _verbatim {
   my ($bibentry, $entry, $f, $key) = @_;
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
-  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
-    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+  if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
   }
 
@@ -666,8 +666,8 @@ sub _range {
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
-  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
-    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+  if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
   }
 
@@ -702,8 +702,8 @@ sub _name {
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
-  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
-    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+  if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
   }
 
@@ -765,8 +765,8 @@ sub _date {
   my $date = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
-  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
-    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+  if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
   }
 
@@ -816,8 +816,8 @@ sub _list {
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
-  if (($form or $lang) and not $dm->field_is_multiscript($field)) {
-    biber_warn("Field '$field' in entry '$key' is not a multiscript field but has multiscript varians, skipping", $bibentry);
+  if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
+    biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
   }
 

@@ -140,7 +140,7 @@ sub set_output_entry {
             push @attrs, (morenames => 1);
           }
 
-          if ($dm->field_is_multiscript($namefield)) {
+          if ($dm->field_is_variant_enabled($namefield)) {
             # form/lang
             unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
               push @attrs, (form => $form);
@@ -178,7 +178,7 @@ sub set_output_entry {
           }
 
           # form/lang
-          if ($dm->field_is_multiscript($listfield)) {
+          if ($dm->field_is_variant_enabled($listfield)) {
             unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
               push @attrs, (form => $form);
             }
@@ -217,7 +217,7 @@ sub set_output_entry {
           if (my $f = $be->get_field($field, $form, $lang)) {
 
             my @attrs;
-            if ($dm->field_is_multiscript($field)) {
+            if ($dm->field_is_variant_enabled($field)) {
               # form/lang
               unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
                 push @attrs, (form => $form);

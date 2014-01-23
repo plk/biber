@@ -476,8 +476,8 @@
               <attribute name="entrytypes"/>
             </optional>
             <optional>
-              <!-- Can this field have multiple script/lang variants? -->
-              <attribute name="multiscript">
+              <!-- Can this field have variants? -->
+              <attribute name="variants">
                 <value>true</value>
               </attribute>
             </optional>

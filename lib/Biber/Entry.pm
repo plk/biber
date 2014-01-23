@@ -327,7 +327,7 @@ sub set_field {
   my ($field, $val, $form, $lang) = @_;
   my $dm = Biber::Config->get_dm;
   my $key = ($field eq 'citekey' ) ? $field : $self->{derivedfields}{nonms}{citekey};
-  if ($dm->field_is_multiscript($field)) {
+  if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
     # All derived fields can be null
@@ -356,7 +356,7 @@ sub get_field {
   return undef unless $field;
   my $dm = Biber::Config->get_dm;
   my $key = $self->{derivedfields}{nonms}{citekey};# can't use get_field due to recursion ...
-  if ($dm->field_is_multiscript($field)) {
+  if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
     $logger->trace("Getting ms field in '$key': $field/$form/$lang");
@@ -383,7 +383,7 @@ sub field_has_variants {
   my $field = shift;
   return undef unless $field;
   my $dm = Biber::Config->get_dm;
-  return undef unless $dm->field_is_multiscript($field);
+  return undef unless $dm->field_is_variant_enabled($field);
   my $key = $self->get_field('citekey');
   foreach my $form ($self->get_field_form_names($field)) {
     foreach my $lang ($self->get_field_form_lang_names($field, $form)) {
@@ -407,7 +407,7 @@ sub get_field_variants {
   return undef unless $field;
   my @nfs;
   my $dm = Biber::Config->get_dm;
-  return undef unless $dm->field_is_multiscript($field);
+  return undef unless $dm->field_is_variant_enabled($field);
   foreach my $form ($self->get_field_form_names($field)) {
     foreach my $lang ($self->get_field_form_lang_names($field, $form)) {
       push @nfs, $self->get_field($field, $form, $lang);
@@ -444,7 +444,7 @@ sub get_field_form_names {
   my $field = shift;
   return undef unless $field;
   my $dm = Biber::Config->get_dm;
-  return undef unless $dm->field_is_multiscript($field);
+  return undef unless $dm->field_is_variant_enabled($field);
   return sort keys %{$self->{datafields}{ms}{$field} ||
                 $self->{derivedfields}{ms}{$field} ||
                 {}};
@@ -463,7 +463,7 @@ sub get_field_form_lang_names {
   return undef unless $field;
   return undef unless $form;
   my $dm = Biber::Config->get_dm;
-  return undef unless $dm->field_is_multiscript($field);
+  return undef unless $dm->field_is_variant_enabled($field);
   return sort keys %{$self->{datafields}{ms}{$field}{$form} ||
                 $self->{derivedfields}{ms}{$field}{$form} ||
                 {}};
@@ -480,7 +480,7 @@ sub set_datafield {
   my ($field, $val, $form, $lang) = @_;
   my $key = $self->get_field('citekey');
   my $dm = Biber::Config->get_dm;
-  if ($dm->field_is_multiscript($field)) {
+  if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
     $self->{datafields}{ms}{$field}{$form}{$lang} = $val;
@@ -503,7 +503,7 @@ sub set_datafield_forms {
   my $self = shift;
   my ($field, $val) = @_;
   my $dm = Biber::Config->get_dm;
-  return undef unless $dm->field_is_multiscript($field);
+  return undef unless $dm->field_is_variant_enabled($field);
   $self->{datafields}{ms}{$field} = $val;
   return;
 }
@@ -519,7 +519,7 @@ sub set_rawfield {
   my $self = shift;
   my ($field, $val) = @_;
   my $dm = Biber::Config->get_dm;
-  if ($dm->field_is_multiscript($field)) {
+  if ($dm->field_is_variant_enabled($field)) {
     $self->{rawfields}{ms}{$field} = $val;
   }
   else {
@@ -539,7 +539,7 @@ sub get_rawfield {
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
-  if ($dm->field_is_multiscript($field)) {
+  if ($dm->field_is_variant_enabled($field)) {
     return $self->{rawfields}{ms}{$field};
   }
   else {
@@ -559,7 +559,7 @@ sub get_datafield {
   my $self = shift;
   my ($field, $form, $lang) = @_;
   my $dm = Biber::Config->get_dm;
-  if ($dm->field_is_multiscript($field)) {
+  if ($dm->field_is_variant_enabled($field)) {
     my $key = $self->get_field('citekey');
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
@@ -581,7 +581,7 @@ sub del_field {
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
-  my $type = $dm->field_is_multiscript($field) ? 'ms' : 'nonms';
+  my $type = $dm->field_is_variant_enabled($field) ? 'ms' : 'nonms';
   delete $self->{datafields}{$type}{$field};
   delete $self->{derivedfields}{$type}{$field};
   delete $self->{rawfields}{$type}{$field};
@@ -598,7 +598,7 @@ sub del_datafield {
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
-  if ($dm->field_is_multiscript($field)) {
+  if ($dm->field_is_variant_enabled($field)) {
     delete $self->{datafields}{ms}{$field};
   }
   else {
@@ -619,7 +619,7 @@ sub field_exists {
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
-  my $type = $dm->field_is_multiscript($field) ? 'ms' : 'nonms';
+  my $type = $dm->field_is_variant_enabled($field) ? 'ms' : 'nonms';
   return (defined($self->{datafields}{$type}{$field}) ||
           defined($self->{derivedfields}{$type}{$field}) ||
           defined($self->{rawfields}{$type}{$field})) ? 1 : 0;
@@ -636,7 +636,7 @@ sub field_form_exists {
   my $self = shift;
   my ($field, $form) = @_;
   my $dm = Biber::Config->get_dm;
-  return undef unless $dm->field_is_multiscript($field);
+  return undef unless $dm->field_is_variant_enabled($field);
   my $key = $self->get_field('citekey');
   $form = $form || Biber::Config->getblxoption('vform', undef, $key);
   return (defined($self->{datafields}{ms}{$field}{$form}) ||
@@ -655,7 +655,7 @@ sub field_variant_exists {
   my ($field, $form, $lang) = @_;
   my $key = $self->get_field('citekey');
   my $dm = Biber::Config->get_dm;
-  my $type = $dm->field_is_multiscript($field) ? 'ms' : 'nonms';
+  my $type = $dm->field_is_variant_enabled($field) ? 'ms' : 'nonms';
   $form = $form || Biber::Config->getblxoption('vform', undef, $key);
   $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
   return (defined($self->{datafields}{$type}{$field}{$form}{$lang}) ||
@@ -786,7 +786,7 @@ sub set_inherit_from {
   # Data source fields
   foreach my $field ($parent->datafields) {
     next if $self->field_exists($field); # Don't overwrite existing fields
-    if ($dm->field_is_multiscript($field)) {
+    if ($dm->field_is_variant_enabled($field)) {
       $self->set_datafield_forms($field, dclone($parent->get_field_forms($field)));
     }
     else {
@@ -848,7 +848,7 @@ sub resolve_xdata {
         else {
           foreach my $field ($xdatum_entry->datafields()) { # set fields
             next if $field eq 'ids'; # Never inherit aliases
-            if ($dm->field_is_multiscript($field)) {
+            if ($dm->field_is_variant_enabled($field)) {
               $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
             }
             else {
@@ -941,7 +941,7 @@ sub inherit_from {
         foreach my $field (@{$inherit->{field}}) {
           # Skip this field if requested
           if ($field->{skip}) {
-            if ($dm->field_is_multiscript($field->{source})) {
+            if ($dm->field_is_variant_enabled($field->{source})) {
               $processed->{$field->{source}}
                           {$field->{form} || $vform_s}
                           {$field->{lang} || $vlang_s} = 1;
@@ -953,7 +953,7 @@ sub inherit_from {
           }
 
           # Ignore inheritance for fields which don't exist in the source
-          if ($dm->field_is_multiscript($field->{source})) {
+          if ($dm->field_is_variant_enabled($field->{source})) {
             next unless $parent->field_variant_exists($field->{source},
                                                       $field->{source_form},
                                                       $field->{source_lang});
@@ -963,7 +963,7 @@ sub inherit_from {
           }
           else {
             if ($field->{source_form} or $field->{source_lang}) {
-              $logger->warn("Inheritance - variant specified for non-multiscript field '" .
+              $logger->warn("Inheritance - variant specified for non-variant field '" .
                             $field->{source} . "'");
             }
             next unless $parent->field_exists($field->{source});
@@ -981,9 +981,9 @@ sub inherit_from {
           }
 
           # Target is ms
-          if ($dm->field_is_multiscript($field->{target})) {
+          if ($dm->field_is_variant_enabled($field->{target})) {
             # Target and source are ms
-            if ($dm->field_is_multiscript($field->{source})) {
+            if ($dm->field_is_variant_enabled($field->{source})) {
               # If no specific variants of a the ms fields specified, inherit all
               if (not $field->{source_form} and
                   not $field->{target_form} and
@@ -1080,7 +1080,7 @@ sub inherit_from {
           # Target is not ms
           else {
             # Target is not ms, source is ms
-            if ($dm->field_is_multiscript($field->{source})) {
+            if ($dm->field_is_variant_enabled($field->{source})) {
               # Set the field if it doesn't exist or override is requested
               if (not $self->field_exists($field->{target}) or
                   $field_override_target eq 'true') {
@@ -1144,10 +1144,10 @@ sub inherit_from {
     }
     foreach my $field (@fields) {
     # ms
-      if ($dm->field_is_multiscript($field)) {
+      if ($dm->field_is_variant_enabled($field)) {
         my $field_ms;
         foreach my $field ($parent->datafields) {
-          if ($dm->field_is_multiscript($field)) {
+          if ($dm->field_is_variant_enabled($field)) {
             foreach my $form ($parent->get_field_form_names($field)) {
               foreach my $lang ($parent->get_field_form_lang_names($field, $form)) {
                 # Skip if we have already dealt with this field above

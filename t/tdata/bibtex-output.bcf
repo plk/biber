@@ -503,7 +503,7 @@
       <bcf:field fieldtype="field" datatype="literal">eventtitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">eventtitleaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">gender</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal" multiscript="true">howpublished</bcf:field>
+      <bcf:field fieldtype="field" datatype="literal" variants="true">howpublished</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">langid</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">langidopts</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">indexsorttitle</bcf:field>
