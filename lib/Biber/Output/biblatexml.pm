@@ -142,10 +142,10 @@ sub set_output_entry {
 
           if ($dm->field_is_multiscript($namefield)) {
             # form/lang
-            unless ($form eq Biber::Config->getblxoption('msform', undef, $key)) {
+            unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
               push @attrs, (form => $form);
             }
-            unless ($lang eq Biber::Config->getblxoption('mslang', undef, $key)) {
+            unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
               push @attrs, (lang => $lang);
             }
           }
@@ -179,10 +179,10 @@ sub set_output_entry {
 
           # form/lang
           if ($dm->field_is_multiscript($listfield)) {
-            unless ($form eq Biber::Config->getblxoption('msform', undef, $key)) {
+            unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
               push @attrs, (form => $form);
             }
-            unless ($lang eq Biber::Config->getblxoption('mslang', undef, $key)) {
+            unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
               push @attrs, (lang => $lang);
             }
           }
@@ -219,10 +219,10 @@ sub set_output_entry {
             my @attrs;
             if ($dm->field_is_multiscript($field)) {
               # form/lang
-              unless ($form eq Biber::Config->getblxoption('msform', undef, $key)) {
+              unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
                 push @attrs, (form => $form);
               }
-              unless ($lang eq Biber::Config->getblxoption('mslang', undef, $key)) {
+              unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
                 push @attrs, (lang => $lang);
               }
             }

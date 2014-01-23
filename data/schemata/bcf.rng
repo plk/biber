@@ -57,9 +57,9 @@
         <ref name="minbibnames"/>
         <ref name="mincitenames"/>
         <ref name="minitems"/>
-        <ref name="msform"/>
-        <ref name="mslang"/>
-        <ref name="mstranslang"/>
+        <ref name="vform"/>
+        <ref name="vlang"/>
+        <ref name="vtranslang"/>
         <ref name="singletitle"/>
         <optional>
           <ref name="sortalphaothers"/>
@@ -1609,13 +1609,13 @@
       </element>
     </element>
   </define>
-  <define name="msform">
+  <define name="vform">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>msform</value>
+        <value>vform</value>
       </element>
       <element name="bcf:value">
         <data type="normalizedString">
@@ -1624,13 +1624,13 @@
       </element>
     </element>
   </define>
-  <define name="mslang">
+  <define name="vlang">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>mslang</value>
+        <value>vlang</value>
       </element>
       <element name="bcf:value">
         <data type="normalizedString">
@@ -1639,13 +1639,13 @@
       </element>
     </element>
   </define>
-  <define name="mstranslang">
+  <define name="vtranslang">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>mstranslang</value>
+        <value>vtranslang</value>
       </element>
       <element name="bcf:value">
         <data type="normalizedString">

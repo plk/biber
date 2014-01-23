@@ -249,8 +249,8 @@ sub tool_mode_setup {
   $self->add_sections($bib_sections);
 
   # Add some things needed for ms
-  Biber::Config->setblxoption('msform', 'original');
-  Biber::Config->setblxoption('mslang', 'english');
+  Biber::Config->setblxoption('vform', 'original');
+  Biber::Config->setblxoption('vlang', 'english');
   my $sortlists = new Biber::SortLists;
   my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'));
   $seclist->set_type('entry');

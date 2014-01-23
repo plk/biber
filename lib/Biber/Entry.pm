@@ -110,13 +110,13 @@ sub relclone {
           $relclone->set_datafield('options', [ 'dataonly' ]);
         }
 
-        # mslang is a special option that should be copied to related clones and made
+        # vlang is a special option that should be copied to related clones and made
         # visible in the options list for biblatex
         if (my $lid = $relclone->get_field('langid')) {
           my $opts = $relclone->get_field('options');
-          push @$opts, "mslang=$lid";
+          push @$opts, "vlang=$lid";
           $relclone->set_datafield('options', $opts);
-          Biber::Config->setblxoption('mslang', $lid, 'PER_ENTRY', $clonekey);
+          Biber::Config->setblxoption('vlang', $lid, 'PER_ENTRY', $clonekey);
         }
 
         $section->bibentries->add_entry($clonekey, $relclone);
@@ -201,8 +201,8 @@ sub set_labelname_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('msform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('mslang', undef, $key);
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
   $self->{labelnameinfo} = $data;
   return;
 }
@@ -232,8 +232,8 @@ sub set_labelnamefh_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('msform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('mslang', undef, $key);
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
   $self->{labelnamefhinfo} = $data;
   return;
 }
@@ -263,8 +263,8 @@ sub set_labeltitle_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('msform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('mslang', undef, $key);
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
   $self->{labeltitleinfo} = $data;
   return;
 }
@@ -295,8 +295,8 @@ sub set_labeldate_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('msform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('mslang', undef, $key);
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
   $self->{labeldateinfo} = $data;
   return;
 }
@@ -328,8 +328,8 @@ sub set_field {
   my $dm = Biber::Config->get_dm;
   my $key = ($field eq 'citekey' ) ? $field : $self->{derivedfields}{nonms}{citekey};
   if ($dm->field_is_multiscript($field)) {
-    $form = $form || Biber::Config->getblxoption('msform', undef, $key);
-    $lang = $lang || Biber::Config->getblxoption('mslang', undef, $key);
+    $form = $form || Biber::Config->getblxoption('vform', undef, $key);
+    $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
     # All derived fields can be null
     $self->{derivedfields}{ms}{$field}{$form}{$lang} = $val;
     $logger->trace("Setting ms field in '$key': $field/$form/$lang=$val");
@@ -357,8 +357,8 @@ sub get_field {
   my $dm = Biber::Config->get_dm;
   my $key = $self->{derivedfields}{nonms}{citekey};# can't use get_field due to recursion ...
   if ($dm->field_is_multiscript($field)) {
-    $form = $form || Biber::Config->getblxoption('msform', undef, $key);
-    $lang = $lang || Biber::Config->getblxoption('mslang', undef, $key);
+    $form = $form || Biber::Config->getblxoption('vform', undef, $key);
+    $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
     $logger->trace("Getting ms field in '$key': $field/$form/$lang");
     return $self->{datafields}{ms}{$field}{$form}{$lang} //
            $self->{derivedfields}{ms}{$field}{$form}{$lang} //
@@ -387,8 +387,8 @@ sub field_has_variants {
   my $key = $self->get_field('citekey');
   foreach my $form ($self->get_field_form_names($field)) {
     foreach my $lang ($self->get_field_form_lang_names($field, $form)) {
-      return 1 unless ($form eq Biber::Config->getblxoption('msform', undef, $key) and
-                       $lang eq Biber::Config->getblxoption('mslang', undef, $key));
+      return 1 unless ($form eq Biber::Config->getblxoption('vform', undef, $key) and
+                       $lang eq Biber::Config->getblxoption('vlang', undef, $key));
     }
   }
   return 0;
@@ -481,8 +481,8 @@ sub set_datafield {
   my $key = $self->get_field('citekey');
   my $dm = Biber::Config->get_dm;
   if ($dm->field_is_multiscript($field)) {
-    $form = $form || Biber::Config->getblxoption('msform', undef, $key);
-    $lang = $lang || Biber::Config->getblxoption('mslang', undef, $key);
+    $form = $form || Biber::Config->getblxoption('vform', undef, $key);
+    $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
     $self->{datafields}{ms}{$field}{$form}{$lang} = $val;
     $logger->trace("Setting ms datafield in '$key': $field/$form/$lang=$val");
   }
@@ -561,8 +561,8 @@ sub get_datafield {
   my $dm = Biber::Config->get_dm;
   if ($dm->field_is_multiscript($field)) {
     my $key = $self->get_field('citekey');
-    $form = $form || Biber::Config->getblxoption('msform', undef, $key);
-    $lang = $lang || Biber::Config->getblxoption('mslang', undef, $key);
+    $form = $form || Biber::Config->getblxoption('vform', undef, $key);
+    $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
     return $self->{datafields}{ms}{$field}{$form}{$lang};
   }
   else {
@@ -638,7 +638,7 @@ sub field_form_exists {
   my $dm = Biber::Config->get_dm;
   return undef unless $dm->field_is_multiscript($field);
   my $key = $self->get_field('citekey');
-  $form = $form || Biber::Config->getblxoption('msform', undef, $key);
+  $form = $form || Biber::Config->getblxoption('vform', undef, $key);
   return (defined($self->{datafields}{ms}{$field}{$form}) ||
           defined($self->{derivedfields}{ms}{$field}{$form})) ? 1 : 0;
 }
@@ -656,8 +656,8 @@ sub field_variant_exists {
   my $key = $self->get_field('citekey');
   my $dm = Biber::Config->get_dm;
   my $type = $dm->field_is_multiscript($field) ? 'ms' : 'nonms';
-  $form = $form || Biber::Config->getblxoption('msform', undef, $key);
-  $lang = $lang || Biber::Config->getblxoption('mslang', undef, $key);
+  $form = $form || Biber::Config->getblxoption('vform', undef, $key);
+  $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
   return (defined($self->{datafields}{$type}{$field}{$form}{$lang}) ||
           defined($self->{derivedfields}{$type}{$field}{$form}{$lang})) ? 1 : 0;
 }
@@ -894,10 +894,10 @@ sub inherit_from {
   my $target_key = $self->get_field('citekey'); # target/child key
   my $source_key = $parent->get_field('citekey'); # source/parent key
   my $dm = Biber::Config->get_dm;
-  my $msform_s = Biber::Config->getblxoption('msform', undef, $source_key);
-  my $mslang_s = Biber::Config->getblxoption('mslang', undef, $source_key);
-  my $msform_t = Biber::Config->getblxoption('msform', undef, $target_key);
-  my $mslang_t = Biber::Config->getblxoption('mslang', undef, $target_key);
+  my $vform_s = Biber::Config->getblxoption('vform', undef, $source_key);
+  my $vlang_s = Biber::Config->getblxoption('vlang', undef, $source_key);
+  my $vform_t = Biber::Config->getblxoption('vform', undef, $target_key);
+  my $vlang_t = Biber::Config->getblxoption('vlang', undef, $target_key);
 
   # record the inheritance between these entries to prevent loops and repeats.
   Biber::Config->set_inheritance('crossref', $source_key, $target_key);
@@ -916,7 +916,7 @@ sub inherit_from {
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
   my $inheritance = Biber::Config->getblxoption('inheritance');
-  my $mssplit     = Biber::Config->getoption('mssplit');
+  my $vsplit     = Biber::Config->getoption('vsplit');
   my $processed;
   # get defaults
   my $defaults = $inheritance->{defaults};
@@ -943,8 +943,8 @@ sub inherit_from {
           if ($field->{skip}) {
             if ($dm->field_is_multiscript($field->{source})) {
               $processed->{$field->{source}}
-                          {$field->{form} || $msform_s}
-                          {$field->{lang} || $mslang_s} = 1;
+                          {$field->{form} || $vform_s}
+                          {$field->{lang} || $vlang_s} = 1;
             }
             else {
               $processed->{$field->{source}} = 1;
@@ -958,8 +958,8 @@ sub inherit_from {
                                                       $field->{source_form},
                                                       $field->{source_lang});
             $processed->{$field->{source}}
-                        {$field->{source_form} || $msform_s}
-                        {$field->{source_lang} || $mslang_s} = 1;
+                        {$field->{source_form} || $vform_s}
+                        {$field->{source_lang} || $vlang_s} = 1;
           }
           else {
             if ($field->{source_form} or $field->{source_lang}) {
@@ -1018,18 +1018,18 @@ sub inherit_from {
                 $logger->debug("Entry '$target_key' is inheriting field '" .
                                $field->{source} .
                                ' (form=' .
-                               ($field->{source_form} || $msform_s) .
+                               ($field->{source_form} || $vform_s) .
                                ',' .
                                'lang=' .
-                               ($field->{source_lang} || $mslang_s) .
+                               ($field->{source_lang} || $vlang_s) .
                                ') ' .
                                "' as '" .
                                $field->{target} .
                                ' (form=' .
-                               ($field->{target_form} || $msform_t) .
+                               ($field->{target_form} || $vform_t) .
                                ',' .
                                'lang=' .
-                               ($field->{target_lang} || $mslang_t) .
+                               ($field->{target_lang} || $vlang_t) .
                                ') ' .
                                "' from entry '$source_key'");
                 $self->set_datafield($field->{target},
@@ -1043,8 +1043,8 @@ sub inherit_from {
                   Biber::Config->set_graph('crossref',
                                            $source_key,
                                            $target_key,
-                                           $field->{source} . $mssplit . ($field->{source_form} || $msform_s) . $mssplit . ($field->{source_lang} || $mslang_s),
-                                           $field->{target} . $mssplit . ($field->{target_form} || $msform_t) . $mssplit . ($field->{target_lang} || $mslang_t));
+                                           $field->{source} . $vsplit . ($field->{source_form} || $vform_s) . $vsplit . ($field->{source_lang} || $vlang_s),
+                                           $field->{target} . $vsplit . ($field->{target_form} || $vform_t) . $vsplit . ($field->{target_lang} || $vlang_t));
                 }
               }
             }
@@ -1058,8 +1058,8 @@ sub inherit_from {
                 $logger->debug("Entry '$target_key' is inheriting field '" .
                                $field->{source} . "' as '" .
                                $field->{target} .
-                               ' (form=' . ($field->{target_form} || $msform_t) . ',' .
-                               'lang=' . ($field->{target_lang} || $mslang_t) . ') ' .
+                               ' (form=' . ($field->{target_form} || $vform_t) . ',' .
+                               'lang=' . ($field->{target_lang} || $vlang_t) . ') ' .
                                "' from entry '$source_key'");
                 $self->set_datafield($field->{target},
                                      $parent->get_field($field->{source}),
@@ -1072,7 +1072,7 @@ sub inherit_from {
                                            $source_key,
                                            $target_key,
                                            $field->{source},
-                                           $field->{target} . $mssplit . ($field->{target_form} || $msform_t) . $mssplit . ($field->{target_lang} || $mslang_t));
+                                           $field->{target} . $vsplit . ($field->{target_form} || $vform_t) . $vsplit . ($field->{target_lang} || $vlang_t));
                 }
               }
             }
@@ -1086,8 +1086,8 @@ sub inherit_from {
                   $field_override_target eq 'true') {
                 $logger->debug("Entry '$target_key' is inheriting field '" .
                                $field->{source} .
-                               ' (form=' . ($field->{source_form} || $msform_s) . ',' .
-                               'lang=' . ($field->{source_lang} || $mslang_s) . ') ' .
+                               ' (form=' . ($field->{source_form} || $vform_s) . ',' .
+                               'lang=' . ($field->{source_lang} || $vlang_s) . ') ' .
                                "' as '" .
                                $field->{target} .
                                "' from entry '$source_key'");
@@ -1101,7 +1101,7 @@ sub inherit_from {
                   Biber::Config->set_graph('crossref',
                                            $source_key,
                                            $target_key,
-                                           $field->{source} . $mssplit . ($field->{source_form} || $msform_s) . $mssplit . ($field->{source_lang} || $mslang_s),
+                                           $field->{source} . $vsplit . ($field->{source_form} || $vform_s) . $vsplit . ($field->{source_lang} || $vlang_s),
                                            $field->{target});
                 }
               }
@@ -1174,8 +1174,8 @@ sub inherit_from {
                     Biber::Config->set_graph('crossref',
                                              $source_key,
                                              $target_key,
-                                             "$field$mssplit$form$mssplit$lang",
-                                             "$field$mssplit$form$mssplit$lang");
+                                             "$field$vsplit$form$vsplit$lang",
+                                             "$field$vsplit$form$vsplit$lang");
                   }
                 }
               }

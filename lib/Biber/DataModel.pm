@@ -180,7 +180,7 @@ sub new {
 sub is_field {
   my $self = shift;
   my $field = shift;
-  my $S = Biber::Config->getoption('mssplit');
+  my $S = Biber::Config->getoption('vsplit');
   my $forms = $DM_DATATYPES{'forms'};
   if ($field =~ m/^BIBERCUSTOM/o) {
     return 1;

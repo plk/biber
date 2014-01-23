@@ -5,7 +5,7 @@ use Test::More;
 
 # This is used at top-level in bibtex.pm and the tests moan if it's not set.
 use Biber::Config;
-Biber::Config->setoption('mssplit', '_');
+Biber::Config->setoption('vsplit', '_');
 
 # Ensure a recent version of Test::Pod::Coverage
 my $min_tpc = 1.08;

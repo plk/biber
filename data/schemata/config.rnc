@@ -24,7 +24,7 @@ start = element config {
   element listsep             { text }? &
   element logfile             { text }? &
   element mincrossrefs        { xsd:unsignedByte }? &
-  element mssplit             { text }? &
+  element vsplit              { text }? &
   element namesep             { text }? &
 # Can't specify not to use a config file in the config file ...
 #  element noconf              { "0" | "1" }? &

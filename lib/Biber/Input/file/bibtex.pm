@@ -582,7 +582,7 @@ sub create_entry {
 # HANDLERS
 # ========
 my $forms = $DM_DATATYPES{'forms'};
-my $S = Biber::Config->getoption('mssplit');
+my $S = Biber::Config->getoption('vsplit');
 my $fl_re = qr/\A([^$S]+)$S?($forms)?$S?(.+)?\z/;
 
 # Literal fields
@@ -1224,7 +1224,7 @@ sub _hack_month {
 sub _get_handler {
   my $field = shift;
   my $forms = $DM_DATATYPES{'forms'};
-  my $S = Biber::Config->getoption('mssplit');
+  my $S = Biber::Config->getoption('vsplit');
   $field =~ s/$S(?:$forms)?$S?.*$//;
   if (my $h = $handlers->{CUSTOM}{$field}) {
     return $h;

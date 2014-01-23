@@ -372,7 +372,7 @@ sub _literal {
   my ($bibentry, $entry, $f, $key) = @_;
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
-    my $form = $node->getAttribute('form') || Biber::Config->getblxoption('msform', undef, $key);
+    my $form = $node->getAttribute('form') || Biber::Config->getblxoption('vform', undef, $key);
     my $lang = $node->getAttribute('xml.lang');
     # eprint is special case
     if ($f eq "$NS:eprint") {
@@ -421,7 +421,7 @@ sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
-    my $form = $node->getAttribute('form') || Biber::Config->getblxoption('msform', undef, $key);
+    my $form = $node->getAttribute('form') || Biber::Config->getblxoption('vform', undef, $key);
     my $lang = $node->getAttribute('xml.lang');
     $bibentry->set_datafield(_norm($f), _split_list($node), $form, $lang);
   }
@@ -433,7 +433,7 @@ sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
-    my $form = $node->getAttribute('form') || Biber::Config->getblxoption('msform', undef, $key);
+    my $form = $node->getAttribute('form') || Biber::Config->getblxoption('vform', undef, $key);
     my $lang = $node->getAttribute('xml.lang');
 
     # List of ranges/values
@@ -541,7 +541,7 @@ sub _name {
   my ($bibentry, $entry, $f, $key) = @_;
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
-    my $form = $node->getAttribute('form') || Biber::Config->getblxoption('msform', undef, $key);
+    my $form = $node->getAttribute('form') || Biber::Config->getblxoption('vform', undef, $key);
     my $lang = $node->getAttribute('xml.lang');
 
     my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);

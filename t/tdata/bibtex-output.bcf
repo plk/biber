@@ -104,15 +104,15 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>msform</bcf:key>
+      <bcf:key>vform</bcf:key>
       <bcf:value>original</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>mslang</bcf:key>
+      <bcf:key>vlang</bcf:key>
       <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>mstranslang</bcf:key>
+      <bcf:key>vtranslang</bcf:key>
       <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">

@@ -49,7 +49,7 @@ my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 my $out = $biber->get_output_obj;
 
 
-my $ms1 = q|    \entry{ms1}{inbook}{mslang=english}
+my $ms1 = q|    \entry{ms1}{inbook}{vlang=english}
       \name{labelname}{1}{}{%
         {{hash=ab072d2d4322ee1d27823c8adefeca0a}{Multiscript}{M\bibinitperiod}{Miranda}{M\bibinitperiod}{}{}{}{}}%
       }

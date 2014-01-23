@@ -109,7 +109,7 @@
           </element>
         </optional>
         <optional>
-          <element name="mssplit">
+          <element name="vsplit">
             <text/>
           </element>
         </optional>

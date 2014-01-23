@@ -100,15 +100,15 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>msform</bcf:key>
+      <bcf:key>vform</bcf:key>
       <bcf:value>original</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>mslang</bcf:key>
+      <bcf:key>vlang</bcf:key>
       <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>mstranslang</bcf:key>
+      <bcf:key>vtranslang</bcf:key>
       <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
@@ -195,13 +195,13 @@
         <bcf:map_step map_field_source="pdf" map_field_target="file"/>
       </bcf:map>
       <bcf:map map_overwrite="1">
-        <bcf:map_step map_field_source="options" map_notmatch="mslang\s*=" map_final="1"/>
+        <bcf:map_step map_field_source="options" map_notmatch="vlang\s*=" map_final="1"/>
         <bcf:map_step map_field_source="langid" map_match="(.+)" map_final="1"/>
-        <bcf:map_step map_field_set="options" map_field_value=",mslang=$1" map_append="1"/>
+        <bcf:map_step map_field_set="options" map_field_value=",vlang=$1" map_append="1"/>
       </bcf:map>
       <bcf:map>
         <bcf:map_step map_field_source="langid" map_match="(.+)" map_final="1"/>
-        <bcf:map_step map_field_set="options" map_field_value="mslang=$1"/>
+        <bcf:map_step map_field_set="options" map_field_value="vlang=$1"/>
       </bcf:map>
     </bcf:maps>
     <bcf:maps datatype="ris" level="driver">

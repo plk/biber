@@ -41,9 +41,9 @@ start =
       minbibnames,
       mincitenames,
       minitems,
-      msform,
-      mslang,
-      mstranslang,
+      vform,
+      vlang,
+      vtranslang,
       singletitle,
       sortalphaothers?,
       sortlocale,
@@ -618,26 +618,26 @@ alphaothers =
       xsd:normalizedString { pattern = "\S+" }
     }
   }
-msform =
+vform =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "msform" },
+    element bcf:key { "vform" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }
   }
-mslang =
+vlang =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "mslang" },
+    element bcf:key { "vlang" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }
   }
-mstranslang =
+vtranslang =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "mstranslang" },
+    element bcf:key { "vtranslang" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }

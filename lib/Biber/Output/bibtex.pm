@@ -63,7 +63,7 @@ sub set_output_entry {
 
   # Make the right casing function
   my $casing;
-  my $mss = Biber::Config->getoption('mssplit');
+  my $mss = Biber::Config->getoption('vsplit');
   if (Biber::Config->getoption('output_fieldcase') eq 'upper') {
     $casing = sub {my $s = shift;
                    my @s = split(/$mss/, $s);

@@ -106,7 +106,7 @@ our $CONFIG_DEFAULT_BIBER = {
   input_format        => { content => 'bibtex' },
   listsep             => { content => 'and' },
   mincrossrefs        => { content => 2 },
-  mssplit             => { content => '_' },
+  vsplit              => { content => '_' },
   namesep             => { content => 'and' },
   nodieonerror        => { content => 0 },
   noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},
@@ -308,9 +308,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   minbibnames        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   mincitenames       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   minitems           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  msform             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
-  mslang             => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
-  mstranslang        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
   presort            => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   singletitle        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   skipbib            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
@@ -327,6 +324,9 @@ our %CONFIG_SCOPE_BIBLATEX = (
   useeditor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useprefix          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   usetranslator      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  vform              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
+  vlang              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
+  vtranslang         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
 );
 
 # For per-entry options, what should be set when we find them and
@@ -349,9 +349,6 @@ our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
   minalphanames   => {OUTPUT => 0},
   maxnames        => {OUTPUT => ['maxcitenames', 'maxbibnames'], INPUT  => ['maxcitenames', 'maxbibnames']},
   minnames        => {OUTPUT => ['mincitenames', 'minbibnames'], INPUT  => ['mincitenames', 'minbibnames']},
-  msform          => {OUTPUT => 1},
-  mslang          => {OUTPUT => 1},
-  mstranslang     => {OUTPUT => 1},
   presort         => {OUTPUT => 0},
   skipbib         => {OUTPUT => 1},
   skiplab         => {OUTPUT => 1},
@@ -361,6 +358,9 @@ our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
   useeditor       => {OUTPUT => 1},
   useprefix       => {OUTPUT => 1},
   usetranslator   => {OUTPUT => 1},
+  vform           => {OUTPUT => 1},
+  vlang           => {OUTPUT => 1},
+  vtranslang      => {OUTPUT => 1},
 );
 
 

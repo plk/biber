@@ -110,7 +110,7 @@ sub output {
     $target_string = $self->{output_target_file};
   }
   my $dm = Biber::Config->get_dm;
-  my $mssplit     = Biber::Config->getoption('mssplit');
+  my $vsplit     = Biber::Config->getoption('vsplit');
 
   # for debugging mainly
   unless ($target) {
@@ -192,7 +192,7 @@ sub output {
           if ($dm->field_is_multiscript($field)) {
             foreach my $form ($be->get_field_form_names($field)) {
               foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
-                $graph .= $i x $in . "\"section${secnum}/${citekey}/${field}${mssplit}${form}${mssplit}${lang}\" [ label=\"" . uc("$field$mssplit$form$mssplit$lang") . "\" ]\n";
+                $graph .= $i x $in . "\"section${secnum}/${citekey}/${field}${vsplit}${form}${vsplit}${lang}\" [ label=\"" . uc("$field$vsplit$form$vsplit$lang") . "\" ]\n";
               }
             }
           }

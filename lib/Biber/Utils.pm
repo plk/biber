@@ -759,9 +759,9 @@ sub filter_entry_options {
     my $cfopt = $CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT};
     # Standard option
     if (not defined($cfopt) or $cfopt == 1) {
-      # Don't bother with mstranslang if it's the same as the global setting
-      unless (lc($1) eq 'mstranslang' and
-              Biber::Config->getblxoption('mstranslang') eq $2) {
+      # Don't bother with vtranslang if it's the same as the global setting
+      unless (lc($1) eq 'vtranslang' and
+              Biber::Config->getblxoption('vtranslang') eq $2) {
         push @$roptions, $1 . ($2 ? "=$2" : '') ;
       }
     }
@@ -993,7 +993,7 @@ sub find_ms_field {
   my $slang = $step->{map_field_source_lang};
 
   my $forms = $DM_DATATYPES{forms};
-  my $S = Biber::Config->getoption('mssplit');
+  my $S = Biber::Config->getoption('vsplit');
   my $fl_re = qr/\A([^$S]+)$S?($forms)?$S?(.+)?\z/;
 
   # Simple field, check and return
@@ -1030,7 +1030,7 @@ sub find_ms_field {
       return 0; # More than one lang for form, we can't tell which one is wanted
     }
     else {
-      # Have to drop final mssplit char if there is no lang in .bib
+      # Have to drop final vsplit char if there is no lang in .bib
       my $LANGS = $field_variants->{lc($$source)}{lc($sform)} ? $S : '';
       my $realsource = lc($$source) . $S . lc($sform) . $LANGS . $field_variants->{lc($$source)}{lc($sform)};
       if ($entry->exists(lc($realsource))) {
