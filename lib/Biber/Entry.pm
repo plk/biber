@@ -53,9 +53,9 @@ sub new {
     $self = bless $obj, $class;
   }
   else {
-    $self = bless { 'datafields' => {'ms' => {}, nonms => {} },
-                    'derivedfields' => {'ms' => {}, nonms => {} },
-                    'rawfields' => {'ms' => {}, nonms => {} } }, $class;
+    $self = bless { datafields    => {variant => {}, nonvariant => {} },
+                    derivedfields => {variant => {}, nonvariant => {} },
+                    rawfields     => {variant => {}, nonvariant => {} } }, $class;
   }
   return $self;
 }
@@ -152,28 +152,28 @@ sub clone {
   my $newkey = shift;
   my $key = $self->get_field('citekey');
   my $new = new Biber::Entry;
-  while (my ($k, $v) = each(%{$self->{datafields}{ms}})) {
-    $new->{datafields}{ms}{$k} = dclone($v);
+  while (my ($k, $v) = each(%{$self->{datafields}{variant}})) {
+    $new->{datafields}{variant}{$k} = dclone($v);
   }
-  while (my ($k, $v) = each(%{$self->{rawfields}{ms}})) {
-    $new->{rawfields}{ms}{$k} = dclone($v);
+  while (my ($k, $v) = each(%{$self->{rawfields}{variant}})) {
+    $new->{rawfields}{variant}{$k} = dclone($v);
   }
-  while (my ($k, $v) = each(%{$self->{datafields}{nonms}})) {
-    $new->{datafields}{nonms}{$k} = $v;
+  while (my ($k, $v) = each(%{$self->{datafields}{nonvariant}})) {
+    $new->{datafields}{nonvariant}{$k} = $v;
   }
-  while (my ($k, $v) = each(%{$self->{rawfields}{nonms}})) {
-    $new->{rawfields}{nonms}{$k} = $v;
+  while (my ($k, $v) = each(%{$self->{rawfields}{nonvariant}})) {
+    $new->{rawfields}{nonvariant}{$k} = $v;
   }
   # Need to add entrytype and datatype
-  $new->{derivedfields}{nonms}{entrytype} = $self->{derivedfields}{nonms}{entrytype};
-  $new->{derivedfields}{nonms}{datatype} = $self->{derivedfields}{nonms}{datatype};
+  $new->{derivedfields}{nonvariant}{entrytype} = $self->{derivedfields}{nonvariant}{entrytype};
+  $new->{derivedfields}{nonvariant}{datatype} = $self->{derivedfields}{nonvariant}{datatype};
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{nonms}{citekey} = $newkey;
+    $new->{derivedfields}{nonvariant}{citekey} = $newkey;
   }
   # Record the key of the source of the clone in the clone. Useful for loop detection etc.
   # in biblatex
-  $new->{derivedfields}{nonms}{clonesourcekey} = $key;
+  $new->{derivedfields}{nonvariant}{clonesourcekey} = $key;
   return $new;
 }
 
@@ -326,17 +326,17 @@ sub set_field {
   my $self = shift;
   my ($field, $val, $form, $lang) = @_;
   my $dm = Biber::Config->get_dm;
-  my $key = ($field eq 'citekey' ) ? $field : $self->{derivedfields}{nonms}{citekey};
+  my $key = ($field eq 'citekey' ) ? $field : $self->{derivedfields}{nonvariant}{citekey};
   if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
     # All derived fields can be null
-    $self->{derivedfields}{ms}{$field}{$form}{$lang} = $val;
-    $logger->trace("Setting ms field in '$key': $field/$form/$lang=$val");
+    $self->{derivedfields}{variant}{$field}{$form}{$lang} = $val;
+    $logger->trace("Setting variant enabled field in '$key': $field/$form/$lang=$val");
   }
   else {
-    $self->{derivedfields}{nonms}{$field} = $val;
-    $logger->trace("Setting nonms field in '$key': $field=$val");
+    $self->{derivedfields}{nonvariant}{$field} = $val;
+    $logger->trace("Setting field in '$key': $field=$val");
   }
   return;
 }
@@ -355,20 +355,20 @@ sub get_field {
   my ($field, $form, $lang) = @_;
   return undef unless $field;
   my $dm = Biber::Config->get_dm;
-  my $key = $self->{derivedfields}{nonms}{citekey};# can't use get_field due to recursion ...
+  my $key = $self->{derivedfields}{nonvariant}{citekey};# can't use get_field due to recursion ...
   if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
-    $logger->trace("Getting ms field in '$key': $field/$form/$lang");
-    return $self->{datafields}{ms}{$field}{$form}{$lang} //
-           $self->{derivedfields}{ms}{$field}{$form}{$lang} //
-           $self->{rawfields}{ms}{$field};
+    $logger->trace("Getting variant enabled field in '$key': $field/$form/$lang");
+    return $self->{datafields}{variant}{$field}{$form}{$lang} //
+           $self->{derivedfields}{variant}{$field}{$form}{$lang} //
+           $self->{rawfields}{variant}{$field};
   }
   else {
-    $logger->trace("Getting nonms field in '$key': $field") if $key;
-    return $self->{datafields}{nonms}{$field} //
-           $self->{derivedfields}{nonms}{$field} //
-           $self->{rawfields}{nonms}{$field};
+    $logger->trace("Getting field in '$key': $field") if $key;
+    return $self->{datafields}{nonvariant}{$field} //
+           $self->{derivedfields}{nonvariant}{$field} //
+           $self->{rawfields}{nonvariant}{$field};
   }
 }
 
@@ -428,8 +428,8 @@ sub get_field_forms {
   my $self = shift;
   my $field = shift;
   return undef unless $field;
-  return $self->{datafields}{ms}{$field} ||
-         $self->{derivedfields}{ms}{$field};
+  return $self->{datafields}{variant}{$field} ||
+         $self->{derivedfields}{variant}{$field};
 }
 
 =head2 get_field_form_names
@@ -445,8 +445,8 @@ sub get_field_form_names {
   return undef unless $field;
   my $dm = Biber::Config->get_dm;
   return undef unless $dm->field_is_variant_enabled($field);
-  return sort keys %{$self->{datafields}{ms}{$field} ||
-                $self->{derivedfields}{ms}{$field} ||
+  return sort keys %{$self->{datafields}{variant}{$field} ||
+                $self->{derivedfields}{variant}{$field} ||
                 {}};
 }
 
@@ -464,8 +464,8 @@ sub get_field_form_lang_names {
   return undef unless $form;
   my $dm = Biber::Config->get_dm;
   return undef unless $dm->field_is_variant_enabled($field);
-  return sort keys %{$self->{datafields}{ms}{$field}{$form} ||
-                $self->{derivedfields}{ms}{$field}{$form} ||
+  return sort keys %{$self->{datafields}{variant}{$field}{$form} ||
+                $self->{derivedfields}{variant}{$field}{$form} ||
                 {}};
 }
 
@@ -483,12 +483,12 @@ sub set_datafield {
   if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
-    $self->{datafields}{ms}{$field}{$form}{$lang} = $val;
-    $logger->trace("Setting ms datafield in '$key': $field/$form/$lang=$val");
+    $self->{datafields}{variant}{$field}{$form}{$lang} = $val;
+    $logger->trace("Setting variant enabled datafield in '$key': $field/$form/$lang=$val");
   }
   else {
-    $self->{datafields}{nonms}{$field} = $val;
-    $logger->trace("Setting non-ms datafield in '$key': $field=$val");
+    $self->{datafields}{nonvariant}{$field} = $val;
+    $logger->trace("Setting datafield in '$key': $field=$val");
   }
   return;
 }
@@ -504,7 +504,7 @@ sub set_datafield_forms {
   my ($field, $val) = @_;
   my $dm = Biber::Config->get_dm;
   return undef unless $dm->field_is_variant_enabled($field);
-  $self->{datafields}{ms}{$field} = $val;
+  $self->{datafields}{variant}{$field} = $val;
   return;
 }
 
@@ -520,10 +520,10 @@ sub set_rawfield {
   my ($field, $val) = @_;
   my $dm = Biber::Config->get_dm;
   if ($dm->field_is_variant_enabled($field)) {
-    $self->{rawfields}{ms}{$field} = $val;
+    $self->{rawfields}{variant}{$field} = $val;
   }
   else {
-    $self->{rawfields}{nonms}{$field} = $val;
+    $self->{rawfields}{nonvariant}{$field} = $val;
   }
   return;
 }
@@ -540,10 +540,10 @@ sub get_rawfield {
   my $field = shift;
   my $dm = Biber::Config->get_dm;
   if ($dm->field_is_variant_enabled($field)) {
-    return $self->{rawfields}{ms}{$field};
+    return $self->{rawfields}{variant}{$field};
   }
   else {
-    return $self->{rawfields}{nonms}{$field};
+    return $self->{rawfields}{nonvariant}{$field};
   }
 }
 
@@ -563,10 +563,10 @@ sub get_datafield {
     my $key = $self->get_field('citekey');
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
-    return $self->{datafields}{ms}{$field}{$form}{$lang};
+    return $self->{datafields}{variant}{$field}{$form}{$lang};
   }
   else {
-    return $self->{datafields}{nonms}{$field};
+    return $self->{datafields}{nonvariant}{$field};
   }
 }
 
@@ -581,7 +581,7 @@ sub del_field {
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
-  my $type = $dm->field_is_variant_enabled($field) ? 'ms' : 'nonms';
+  my $type = $dm->field_is_variant_enabled($field) ? 'variant' : 'nonvariant';
   delete $self->{datafields}{$type}{$field};
   delete $self->{derivedfields}{$type}{$field};
   delete $self->{rawfields}{$type}{$field};
@@ -599,10 +599,10 @@ sub del_datafield {
   my $field = shift;
   my $dm = Biber::Config->get_dm;
   if ($dm->field_is_variant_enabled($field)) {
-    delete $self->{datafields}{ms}{$field};
+    delete $self->{datafields}{variant}{$field};
   }
   else {
-    delete $self->{datafields}{nonms}{$field};
+    delete $self->{datafields}{nonvariant}{$field};
   }
   return;
 }
@@ -619,7 +619,7 @@ sub field_exists {
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
-  my $type = $dm->field_is_variant_enabled($field) ? 'ms' : 'nonms';
+  my $type = $dm->field_is_variant_enabled($field) ? 'variant' : 'nonvariant';
   return (defined($self->{datafields}{$type}{$field}) ||
           defined($self->{derivedfields}{$type}{$field}) ||
           defined($self->{rawfields}{$type}{$field})) ? 1 : 0;
@@ -639,8 +639,8 @@ sub field_form_exists {
   return undef unless $dm->field_is_variant_enabled($field);
   my $key = $self->get_field('citekey');
   $form = $form || Biber::Config->getblxoption('vform', undef, $key);
-  return (defined($self->{datafields}{ms}{$field}{$form}) ||
-          defined($self->{derivedfields}{ms}{$field}{$form})) ? 1 : 0;
+  return (defined($self->{datafields}{variant}{$field}{$form}) ||
+          defined($self->{derivedfields}{variant}{$field}{$form})) ? 1 : 0;
 }
 
 =head2 field_variant_exists
@@ -655,7 +655,7 @@ sub field_variant_exists {
   my ($field, $form, $lang) = @_;
   my $key = $self->get_field('citekey');
   my $dm = Biber::Config->get_dm;
-  my $type = $dm->field_is_variant_enabled($field) ? 'ms' : 'nonms';
+  my $type = $dm->field_is_variant_enabled($field) ? 'variant' : 'nonvariant';
   $form = $form || Biber::Config->getblxoption('vform', undef, $key);
   $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
   return (defined($self->{datafields}{$type}{$field}{$form}{$lang}) ||
@@ -671,7 +671,7 @@ sub field_variant_exists {
 sub datafields {
   my $self = shift;
   use locale;
-  return sort keys {%{$self->{datafields}{ms}}, %{$self->{datafields}{nonms}}};
+  return sort keys {%{$self->{datafields}{variant}}, %{$self->{datafields}{nonvariant}}};
 }
 
 =head2 rawfields
@@ -683,7 +683,7 @@ sub datafields {
 sub rawfields {
   my $self = shift;
   use locale;
-  return sort keys {%{$self->{rawfields}{ms}}, %{$self->{rawfields}{nonms}}};
+  return sort keys {%{$self->{rawfields}{variant}}, %{$self->{rawfields}{nonvariant}}};
 }
 
 =head2 count_datafields
@@ -694,7 +694,7 @@ sub rawfields {
 
 sub count_datafields {
   my $self = shift;
-  return keys {%{$self->{datafields}{ms}}, %{$self->{datafields}{nonms}}};
+  return keys {%{$self->{datafields}{variant}}, %{$self->{datafields}{nonvariant}}};
 }
 
 
@@ -709,10 +709,10 @@ sub count_datafields {
 sub fields {
   my $self = shift;
   use locale;
-  my %keys = (%{$self->{derivedfields}{ms}},
-              %{$self->{datafields}{ms}},
-              %{$self->{derivedfields}{nonms}},
-              %{$self->{datafields}{nonms}});
+  my %keys = (%{$self->{derivedfields}{variant}},
+              %{$self->{datafields}{variant}},
+              %{$self->{derivedfields}{nonvariant}},
+              %{$self->{datafields}{nonvariant}});
   return sort keys %keys;
 }
 
@@ -724,10 +724,10 @@ sub fields {
 
 sub count_fields {
   my $self = shift;
-  my %keys = (%{$self->{derivedfields}{ms}},
-              %{$self->{datafields}{ms}},
-              %{$self->{derivedfields}{nonms}},
-              %{$self->{datafields}{nonms}});
+  my %keys = (%{$self->{derivedfields}{variant}},
+              %{$self->{datafields}{variant}},
+              %{$self->{derivedfields}{nonvariant}},
+              %{$self->{datafields}{nonvariant}});
   return keys %keys;
 }
 
@@ -741,7 +741,7 @@ sub count_fields {
 
 sub has_keyword {
   my ($self, $keyword) = @_;
-  if (my $keywords = $self->{datafields}{nonms}{keywords}) {
+  if (my $keywords = $self->{datafields}{nonvariant}{keywords}) {
     return (first {$_ eq $keyword} @$keywords) ? 1 : 0;
   }
   else {
@@ -761,7 +761,7 @@ sub add_warning {
   my $self = shift;
   my $warning = shift;
   my $key = $self->get_field('citekey');
-  push @{$self->{derivedfields}{nonms}{warnings}}, $warning;
+  push @{$self->{derivedfields}{nonvariant}{warnings}}, $warning;
   return;
 }
 
@@ -878,7 +878,7 @@ sub resolve_xdata {
     Takes a second Biber::Entry object as argument
     Uses the crossref inheritance specifications from the .bcf
 
-    Rather verbose because we have to deal with all combinations of ms/non-ms
+    Rather verbose because we have to deal with all combinations of variant/non-variant
     fields. It could be more parameterised but it would be horrible to debug.
     At least this is relatively clear and the conditional branches are mutally
     exclusive.
@@ -963,7 +963,7 @@ sub inherit_from {
           }
           else {
             if ($field->{source_form} or $field->{source_lang}) {
-              $logger->warn("Inheritance - variant specified for non-variant field '" .
+              $logger->warn("Inheritance - variant specified for non-variant enbaled field '" .
                             $field->{source} . "'");
             }
             next unless $parent->field_exists($field->{source});
@@ -980,11 +980,11 @@ sub inherit_from {
             next;
           }
 
-          # Target is ms
+          # Target is variant
           if ($dm->field_is_variant_enabled($field->{target})) {
-            # Target and source are ms
+            # Target and source are variant
             if ($dm->field_is_variant_enabled($field->{source})) {
-              # If no specific variants of a the ms fields specified, inherit all
+              # If no specific variants of a the variant fields specified, inherit all
               if (not $field->{source_form} and
                   not $field->{target_form} and
                   not $field->{source_lang} and
@@ -1048,7 +1048,7 @@ sub inherit_from {
                 }
               }
             }
-            # Target is ms, source is not ms
+            # Target is variant, source is not variant
             else {
               # Set the field if it doesn't exist or override is requested
               if (not $self->field_variant_exists($field->{target},
@@ -1077,9 +1077,9 @@ sub inherit_from {
               }
             }
           }
-          # Target is not ms
+          # Target is not variant
           else {
-            # Target is not ms, source is ms
+            # Target is not variant, source is variant
             if ($dm->field_is_variant_enabled($field->{source})) {
               # Set the field if it doesn't exist or override is requested
               if (not $self->field_exists($field->{target}) or
@@ -1106,7 +1106,7 @@ sub inherit_from {
                 }
               }
             }
-            # Target is not ms, source is not ms
+            # Target is not variant, source is not variant
             else {
               # Set the field if it doesn't exist or override is requested
               if (not $self->field_exists($field->{target}) or
@@ -1143,9 +1143,8 @@ sub inherit_from {
       @fields = $parent->datafields;
     }
     foreach my $field (@fields) {
-    # ms
+    # variant
       if ($dm->field_is_variant_enabled($field)) {
-        my $field_ms;
         foreach my $field ($parent->datafields) {
           if ($dm->field_is_variant_enabled($field)) {
             foreach my $form ($parent->get_field_form_names($field)) {
@@ -1183,7 +1182,7 @@ sub inherit_from {
           }
         }
       }
-      else { # non-ms
+      else { # non-variant
         # Skip if we have already dealt with this field above
         next if $processed->{$field};
 
