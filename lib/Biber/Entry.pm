@@ -328,8 +328,9 @@ sub set_field {
   my $dm = Biber::Config->get_dm;
   my $key = ($field eq 'citekey' ) ? $field : $self->{derivedfields}{nonvariant}{citekey};
   if ($dm->field_is_variant_enabled($field)) {
+    my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
-    $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
+    $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
     # All derived fields can be null
     $self->{derivedfields}{variant}{$field}{$form}{$lang} = $val;
     $logger->trace("Setting variant enabled field in '$key': $field/$form/$lang=$val");
@@ -358,7 +359,8 @@ sub get_field {
   my $key = $self->{derivedfields}{nonvariant}{citekey};# can't use get_field due to recursion ...
   if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
-    $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
+    my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
+    $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
     $logger->trace("Getting variant enabled field in '$key': $field/$form/$lang");
     return $self->{datafields}{variant}{$field}{$form}{$lang} //
            $self->{derivedfields}{variant}{$field}{$form}{$lang} //
@@ -386,9 +388,10 @@ sub field_has_variants {
   return undef unless $dm->field_is_variant_enabled($field);
   my $key = $self->get_field('citekey');
   foreach my $form ($self->get_field_form_names($field)) {
+    my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
     foreach my $lang ($self->get_field_form_lang_names($field, $form)) {
       return 1 unless ($form eq Biber::Config->getblxoption('vform', undef, $key) and
-                       $lang eq Biber::Config->getblxoption('vlang', undef, $key));
+                       $lang eq Biber::Config->getblxoption($langfield, undef, $key));
     }
   }
   return 0;
@@ -482,7 +485,8 @@ sub set_datafield {
   my $dm = Biber::Config->get_dm;
   if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
-    $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
+    my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
+    $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
     $self->{datafields}{variant}{$field}{$form}{$lang} = $val;
     $logger->trace("Setting variant enabled datafield in '$key': $field/$form/$lang=$val");
   }
@@ -562,7 +566,8 @@ sub get_datafield {
   if ($dm->field_is_variant_enabled($field)) {
     my $key = $self->get_field('citekey');
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
-    $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
+    my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
+    $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
     return $self->{datafields}{variant}{$field}{$form}{$lang};
   }
   else {
@@ -657,7 +662,8 @@ sub field_variant_exists {
   my $dm = Biber::Config->get_dm;
   my $type = $dm->field_is_variant_enabled($field) ? 'variant' : 'nonvariant';
   $form = $form || Biber::Config->getblxoption('vform', undef, $key);
-  $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
+  my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
+  $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
   return (defined($self->{datafields}{$type}{$field}{$form}{$lang}) ||
           defined($self->{derivedfields}{$type}{$field}{$form}{$lang})) ? 1 : 0;
 }

@@ -142,10 +142,11 @@ sub set_output_entry {
 
           if ($dm->field_is_variant_enabled($namefield)) {
             # form/lang
+            my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
             unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
               push @attrs, (form => $form);
             }
-            unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
+            unless ($lang eq Biber::Config->getblxoption($langfield, undef, $key)) {
               push @attrs, (lang => $lang);
             }
           }
@@ -179,10 +180,11 @@ sub set_output_entry {
 
           # form/lang
           if ($dm->field_is_variant_enabled($listfield)) {
+            my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
             unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
               push @attrs, (form => $form);
             }
-            unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
+            unless ($lang eq Biber::Config->getblxoption($langfield, undef, $key)) {
               push @attrs, (lang => $lang);
             }
           }
@@ -218,11 +220,12 @@ sub set_output_entry {
 
             my @attrs;
             if ($dm->field_is_variant_enabled($field)) {
+              my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
               # form/lang
               unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
                 push @attrs, (form => $form);
               }
-              unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
+              unless ($lang eq Biber::Config->getblxoption($langfield, undef, $key)) {
                 push @attrs, (lang => $lang);
               }
             }
