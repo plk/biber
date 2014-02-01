@@ -542,7 +542,7 @@
                     are just as is. 
                   -->
                   <attribute name="format">
-                    <value>csv</value>
+                    <value>xsv</value>
                   </attribute>
                 </optional>
                 <!-- datatype of field content -->
@@ -556,7 +556,6 @@
                     <value>verbatim</value>
                     <value>integer</value>
                     <value>range</value>
-                    <value>csv</value>
                     <value>code</value>
                     <value>uri</value>
                     <value>datepart</value>

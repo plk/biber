@@ -59,7 +59,7 @@ t/extratitleyear.t
 t/extrayear.t
 t/full.t
 t/inheritance.t
-t/inheritance-ms.t
+t/inheritance-variants.t
 THANKS
 t/labelalpha.t
 t/labelname.t
@@ -80,7 +80,7 @@ t/skips.t
 t/sort-case.t
 t/sort-complex.t
 t/sorting.t
-t/sorting-ms.t
+t/sorting-variants.t
 t/sortlists.t
 t/sort-order.t
 t/sort-uc.t
@@ -126,8 +126,8 @@ t/tdata/general1.bcf
 t/tdata/general2.bcf
 t/tdata/inheritance.bcf
 t/tdata/inheritance.bib
-t/tdata/inheritance-ms.bcf
-t/tdata/inheritance-ms.bib
+t/tdata/inheritance-variants.bcf
+t/tdata/inheritance-variants.bib
 t/tdata/labelalpha.bcf
 t/tdata/labelalpha.bib
 t/tdata/labelalpha.bib
@@ -159,8 +159,8 @@ t/tdata/sort.bib
 t/tdata/sort-case.bcf
 t/tdata/sort-case.bib
 t/tdata/sort-complex.bcf
-t/tdata/sorting-ms.bcf
-t/tdata/sorting-ms.bib
+t/tdata/sorting-variants.bcf
+t/tdata/sorting-variants.bib
 t/tdata/sortlists.bcf
 t/tdata/sortlists.bib
 t/tdata/sort-order.bcf

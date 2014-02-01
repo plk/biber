@@ -139,8 +139,8 @@ sub _printfield {
         my $dm = Biber::Config->get_dm;
         my $f = $be->get_field($field, $form, $lang);
 
-        # CSV fields are not strings yet
-        if ($dm->get_fieldformat($field) eq 'csv') {
+        # xSV fields are not strings yet
+        if ($dm->get_fieldformat($field) eq 'xsv') {
           $f = join(',', @$f);
         }
 
@@ -494,7 +494,7 @@ sub set_output_entry {
                           @{$dm->get_fields_of_type('field', 'literal')},
                           @{$dm->get_fields_of_type('field', 'code')}) {
     next if $dm->field_is_skipout($field);
-    next if $dm->get_fieldformat($field) eq 'csv';
+    next if $dm->get_fieldformat($field) eq 'xsv';
     if ( ($dm->field_is_nullok($field) and
           $be->field_exists($field)) or
          ($dm->field_is_variant_enabled($field) and
@@ -513,7 +513,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $field (sort @{$dm->get_fields_of_fieldformat('csv')}) {
+  foreach my $field (sort @{$dm->get_fields_of_fieldformat('xsv')}) {
     next if $dm->field_is_skipout($field);
     next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
     if (my $f = $be->get_field($field)) {

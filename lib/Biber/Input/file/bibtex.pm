@@ -53,7 +53,6 @@ my $dm = Biber::Config->get_dm;
 my $handlers = {
                 'field' => {
                             'default'  => {
-                                           'csv'      => \&_verbatim,
                                            'code'     => \&_literal,
                                            'date'     => \&_date,
                                            'datepart' => \&_literal,
@@ -65,10 +64,10 @@ my $handlers = {
                                            'verbatim' => \&_verbatim,
                                            'uri'      => \&_uri
                                           },
-                            'csv'      => {
-                                           'entrykey' => \&_csv,
-                                           'keyword'  => \&_csv,
-                                           'option'   => \&_csv,
+                            'xsv'      => {
+                                           'entrykey' => \&_xsv,
+                                           'keyword'  => \&_xsv,
+                                           'option'   => \&_xsv,
                                           }
                            },
                 'list' => {
@@ -546,7 +545,9 @@ sub create_entry {
     # We have to process local options as early as possible in order
     # to make them available for things that need them like parsename()
     if (my $value = biber_decode_utf8($entry->get('options'))) {
-      process_entry_options($key, [ split(/\s*,\s*/, $value) ]);
+      my $Srx = Biber::Config->getoption('xsvsep');
+      my $S = qr/$Srx/;
+      process_entry_options($key, [ split(/$S/, $value) ]);
       # Save the raw options in case we are to output another input format like
       # biblatexml
       $bibentry->set_field('rawoptions', $value);
@@ -638,10 +639,12 @@ sub _uri {
   return;
 }
 
-# CSV field form
-sub _csv {
+# xSV field form
+sub _xsv {
+  my $Srx = Biber::Config->getoption('xsvsep');
+  my $S = qr/$Srx/;
   my ($bibentry, $entry, $f) = @_;
-  $bibentry->set_datafield($f, [ split(/\s*,\s*/, biber_decode_utf8($entry->get($f))) ]);
+  $bibentry->set_datafield($f, [ split(/$S/, biber_decode_utf8($entry->get($f))) ]);
   return;
 }
 
@@ -884,7 +887,9 @@ sub cache_data {
     # an entry object creating first and the whole point of aliases is that
     # there is no entry object
     if (my $ids = biber_decode_utf8($entry->get('ids'))) {
-      foreach my $id (split(/\s*,\s*/, $ids)) {
+      my $Srx = Biber::Config->getoption('xsvsep');
+      my $S = qr/$Srx/;
+      foreach my $id (split(/$S/, $ids)) {
 
         # Skip aliases which are also real entry keys
         if ($section->has_everykey($id)) {

@@ -88,7 +88,8 @@ GetOptions(
            'validate_control',
            'validate_datamodel|V',
            'version|v',
-           'wraplines|w'
+           'wraplines|w',
+           'xsvsep=s',
           ) or pod2usage(-verbose => 0,
                          -exitval => EXIT_ERROR);
 
@@ -712,6 +713,10 @@ Display version number.
 =item B<--wraplines|-w>
 
 Wrap lines in the F<.bbl> file.
+
+=item B<--xsvsep=[sep]>
+
+Use F<sep> as the separator for fields of format type "xsv" in the data model. A Perl regexp can be specified. Defaults to a single comma surround by optional whitespace (\s*,\s*).
 
 =back
 

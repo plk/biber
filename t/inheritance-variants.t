@@ -31,7 +31,7 @@ my $l4pconf = qq|
 
 Log::Log4perl->init(\$l4pconf);
 
-$biber->parse_ctrlfile('inheritance-ms.bcf');
+$biber->parse_ctrlfile('inheritance-variants.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
