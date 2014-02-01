@@ -35,7 +35,6 @@ my $dm = Biber::Config->get_dm;
 my $handlers = {
                 'field' => {
                             'default' => {
-                                          'csv'      => \&_verbatim,
                                           'code'     => \&_literal,
                                           'date'     => \&_date,
                                           'datepart' => \&_verbatim,
@@ -47,10 +46,10 @@ my $handlers = {
                                           'verbatim' => \&_verbatim,
                                           'uri'      => \&_uri
                                          },
-                            'csv'     => {
-                                          'entrykey' => \&_csv,
-                                          'keyword'  => \&_csv,
-                                          'option'   => \&_csv,
+                            'xsv'     => {
+                                          'entrykey' => \&_xsv,
+                                          'keyword'  => \&_xsv,
+                                          'option'   => \&_xsv,
                                          }
                            },
                 'list' => {
@@ -505,10 +504,12 @@ sub _verbatim {
   return;
 }
 
-# CSV field forms
-sub _csv {
+# xSV field forms
+sub _xsv {
+  my $Srx = Biber::Config->getoption('xsvsep');
+  my $S = qr/$Srx/;
   my ($bibentry, $entry, $f) = @_;
-  $bibentry->set_datafield($f, [ split(/\s*,\s*/, $entry->{$f}) ]);
+  $bibentry->set_datafield($f, [ split(/$S/, $entry->{$f}) ]);
   return;
 }
 

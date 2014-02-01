@@ -34,6 +34,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
+# Testing customg xsv format sep
+Biber::Config->setoption('xsvsep', '\s*:\s*');
 
 # Biblatex options
 Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);

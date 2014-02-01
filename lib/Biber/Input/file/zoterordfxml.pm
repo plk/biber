@@ -54,10 +54,10 @@ my $handlers = {
                                           'verbatim' => \&_literal,
                                           'uri'      => \&_uri
                                          },
-                            'csv'     => {
-                                          'entrykey' => \&_csv,
-                                          'keyword'  => \&_csv,
-                                          'option'   => \&_csv,
+                            'xsv'     => {
+                                          'entrykey' => \&_xsv,
+                                          'keyword'  => \&_xsv,
+                                          'option'   => \&_xsv,
                                          }
                            },
                 'list' => {

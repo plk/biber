@@ -41,7 +41,6 @@ my $handlers = {
                 'CUSTOM' => {'related' => \&_related},
                 'field' => {
                             'default' => {
-                                          'csv'      => \&_literal,
                                           'code'     => \&_literal,
                                           'date'     => \&_date,
                                           'entrykey' => \&_literal,
@@ -52,10 +51,10 @@ my $handlers = {
                                           'verbatim' => \&_literal,
                                           'uri'      => \&_uri
                                          },
-                            'csv'     => {
-                                           'entrykey' => \&_csv,
-                                           'keyword'  => \&_csv,
-                                           'option'   => \&_csv,
+                            'xsv'     => {
+                                           'entrykey' => \&_xsv,
+                                           'keyword'  => \&_xsv,
+                                           'option'   => \&_xsv,
                                          }
                            },
                 'list' => {
@@ -388,8 +387,8 @@ sub _literal {
   return;
 }
 
-# CSV field form
-sub _csv {
+# xSV field form
+sub _xsv {
   my ($bibentry, $entry, $f) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
     $bibentry->set_datafield(_norm($f), _split_list($node));

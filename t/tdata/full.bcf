@@ -764,7 +764,7 @@
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortkey</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">presort</bcf:field>
-      <bcf:field fieldtype="field" format="csv" datatype="entrykey" skip_output="true">entryset</bcf:field>
+      <bcf:field fieldtype="field" format="xsv" datatype="entrykey" skip_output="true">entryset</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">institution</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">lista</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">listb</bcf:field>
@@ -812,8 +812,8 @@
       <bcf:field fieldtype="list" datatype="key">language</bcf:field>
       <bcf:field fieldtype="field" datatype="entrykey">crossref</bcf:field>
       <bcf:field fieldtype="field" datatype="entrykey">xref</bcf:field>
-      <bcf:field fieldtype="field" format="csv" datatype="entrykey" skip_output="true">xdata</bcf:field>
-      <bcf:field fieldtype="field" format="csv" datatype="entrykey" skip_output="true">ids</bcf:field>
+      <bcf:field fieldtype="field" format="xsv" datatype="entrykey" skip_output="true">xdata</bcf:field>
+      <bcf:field fieldtype="field" format="xsv" datatype="entrykey" skip_output="true">ids</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">date</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">eventdate</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">origdate</bcf:field>
@@ -825,10 +825,10 @@
       <bcf:field fieldtype="field" datatype="verbatim">verbb</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">verbc</bcf:field>
       <bcf:field fieldtype="field" datatype="uri">url</bcf:field>
-      <bcf:field fieldtype="field" format="csv" datatype="keyword">keywords</bcf:field>
-      <bcf:field fieldtype="field" format="csv" datatype="entrykey">related</bcf:field>
-      <bcf:field fieldtype="field" format="csv" datatype="option" skip_output="true">options</bcf:field>
-      <bcf:field fieldtype="field" format="csv" datatype="option" skip_output="true">relatedoptions</bcf:field>
+      <bcf:field fieldtype="field" format="xsv" datatype="keyword">keywords</bcf:field>
+      <bcf:field fieldtype="field" format="xsv" datatype="entrykey">related</bcf:field>
+      <bcf:field fieldtype="field" format="xsv" datatype="option" skip_output="true">options</bcf:field>
+      <bcf:field fieldtype="field" format="xsv" datatype="option" skip_output="true">relatedoptions</bcf:field>
       <bcf:field fieldtype="field" datatype="range">pages</bcf:field>
       <bcf:field fieldtype="field" datatype="code">execute</bcf:field>
       <bcf:field fieldtype="list" datatype="name">with</bcf:field>

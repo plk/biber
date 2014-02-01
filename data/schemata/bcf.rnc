@@ -194,9 +194,9 @@ start =
           attribute fieldtype { "field" | "list" },
           # format is a specification of the format of the field. If not specified, field contents
           # are just as is. 
-          attribute format { "csv" }?,
+          attribute format { "xsv" }?,
           # datatype of field content
-          attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" | "uri" | "datepart" | "keyword" | "option" },
+          attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "code" | "uri" | "datepart" | "keyword" | "option" },
           # Are we allowed to output a null field value to the .bbl for this field?
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?

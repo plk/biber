@@ -382,7 +382,7 @@ sub set_output_entry {
                           @{$dm->get_fields_of_type('field', 'literal')},
                           @{$dm->get_fields_of_type('field', 'code')}) {
     next if $dm->field_is_skipout($field);
-    next if $dm->get_fieldformat($field) eq 'csv';
+    next if $dm->get_fieldformat($field) eq 'xsv';
     if ( ($dm->field_is_nullok($field) and
           $be->field_exists($field)) or
          $be->get_field($field) ) {
@@ -400,7 +400,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $field (sort @{$dm->get_fields_of_fieldformat('csv')}) {
+  foreach my $field (sort @{$dm->get_fields_of_fieldformat('xsv')}) {
     next if $dm->field_is_skipout($field);
     next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
     if (my $f = $be->get_field($field)) {
