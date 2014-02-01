@@ -35,7 +35,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 # Testing customg xsv format sep
-Biber::Config->setoption('xsvsep', '\s*:\s*');
+Biber::Config->setoption('xsvsep', '\s*\|\s*');
 
 # Biblatex options
 Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
@@ -104,6 +104,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{origyear}{1985}
       \field{title}{Title 1}
       \field{year}{1998}
+      \keyw{one,two,three}
     \endentry
 |;
 
