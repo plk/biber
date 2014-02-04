@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 26;
+use Test::More tests => 27;
 
 use Biber;
 use Biber::Utils;
@@ -91,7 +91,7 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['forms9', 'forms10', 'forms11', 'forms13', 'forms14', 'forms8', 'forms5', 'forms4', 'forms12', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms9', 'forms10', 'forms11', 'forms13', 'forms14', 'forms15', 'forms8', 'forms5', 'forms4', 'forms12', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -245,6 +245,12 @@ my $forms14 = q|    \entry{forms14}{unpublished}{}
     \endentry
 |;
 
+my $forms15 = q|    \entry{forms15}{unpublished}{}
+      \field{sortinit}{0}
+      \field[form=romanised]{booktitle}{German title}
+    \endentry
+|;
+
 is($out->get_output_entry('forms1', $main), $forms1, 'bbl entry - forms 1') ;
 is($bibentries->entry('forms8')->get_field('title', 'original', 'lang1'), 'L title', 'lang only');
 is($out->get_output_entry('forms9', $main), $forms9, 'bbl entry - langid option') ;
@@ -253,4 +259,4 @@ is($out->get_output_entry('forms11', $main), $forms11, 'bbl entry - vlang with u
 is($out->get_output_entry('forms12', $main), $forms12, 'bbl entry - mapping with forms/langs - 1') ;
 is($out->get_output_entry('forms13', $main), $forms13, 'bbl entry - mapping with forms/langs - 2') ;
 is($out->get_output_entry('forms14', $main), $forms14, 'bbl entry - mapping with forms/langs - 3') ;
-
+is($out->get_output_entry('forms15', $main), $forms15, 'bbl entry - mapping with forms/langs - 4') ;

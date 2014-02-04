@@ -463,6 +463,14 @@ sub create_entry {
             # Set to a different target if there is one
             if (my $target = $step->{map_field_target}) {
 
+              # Is a variant specified?
+              my $tf = $step->{map_field_target_form};
+              my $tl = $step->{map_field_target_lang};
+              if ($tf or $tl) {
+                my $S = Biber::Config->getoption('vsplit');
+                $target = $target . $S . $tf . ($tl ? "$S$tl" : '');
+              }
+
               # Can't remap entry key pseudo-field
               if (lc($source) eq 'entrykey') {
                 $logger->debug("Source mapping (type=$level, key=$key): Field '$source' is 'entrykey'- cannot map this to a new field as you must have an entrykey, skipping ...");
