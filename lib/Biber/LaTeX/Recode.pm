@@ -112,7 +112,8 @@ sub init_schemes {
     my @set = split(/\s*,\s*/, $map->{set});
     my $type = $map->{type};
     my $map = $map->{map};
-    next unless first {$scheme_d eq @_} @set or first {$scheme_e eq $_} @set;
+    next unless first {$scheme_d eq $_} @set or
+                first {$scheme_e eq $_} @set;
     foreach my $set (@set) {
       $remaps->{$set}{$type}{map} = { map {NFD($_->{from}{content}) => NFD($_->{to}{content})} @$map };
       $r_remaps->{$set}{$type}{map} = { reverse %{$remaps->{$set}{$type}{map}} };
@@ -189,7 +190,16 @@ sub latex_decode {
     $text =~ s/\\char'(\d+)/"chr(0$1)"/gee;  # octal chars
     $text =~ s/\\char(\d+)/"chr($1)"/gee;    # decimal chars
 
-    my $mainmap;
+    # Some tricky cases
+    my $d_re = $remaps->{$scheme_d}{diacritics}{re} || '';
+    my $a_re = $remaps->{$scheme_d}{accents}{re} || '';
+    # Change dotless i to normal i when applying accents
+    $text =~ s/(\\(?:$d_re|$a_re)){\\i}/$1i/g;     # \={\i}    -> \=i
+    $text =~ s/(\\(?:$d_re|$a_re))\\i/$1i/g;       # \=\i      -> \=i
+
+    $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
+    $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
+
 
     foreach my $type (sort keys %{$remaps->{$scheme_d}}) {
       my $map = $remaps->{$scheme_d}{$type}{map};
@@ -200,34 +210,29 @@ sub latex_decode {
       elsif ($type eq 'superscripts') {
         $text =~ s/\\textsuperscript{($re)}/$map->{$1}/ge if $re;
       }
-      elsif ($type eq 'cmssuperscripts') {
+      elsif ($type eq 'cmdsuperscripts') {
         $text =~ s/\\textsuperscript{\\($re)}/$map->{$1}/ge if $re;
       }
       elsif ($type eq 'dings') {
         $text =~ s/\\ding{([2-9AF][0-9A-F])}/$map->{$1}/ge;
       }
+      elsif ($type eq 'letters') {
+        $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/gxe;
+      }
     }
-
-    $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
-    $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o, -> Aaaa\o{},
-    my $d_re = $remaps->{$scheme_d}{diacritics}{re} || '';
-    my $a_re = $remaps->{$scheme_d}{accents}{re} || '';
-
-    # special cases such as '\={\i}' -> '\={i}' -> "i\x{304}"
-    $text =~ s/(\\(?:$d_re|$a_re)){\\i}/$1\{i\}/g;
 
     foreach my $type (sort keys %{$remaps->{$scheme_d}}) {
       my $map = $remaps->{$scheme_d}{$type}{map};
       my $re = $remaps->{$scheme_d}{$type}{re};
       next unless $re;
 
-      if (first {$type eq $_} ('wordmacros', 'punctuation', 'symbols', 'greek')) {
+      if (first {$type eq $_} ('punctuation', 'symbols', 'greek')) {
         ## remove {} around macros that print one character
         ## by default we skip that, as it would break constructions like \foo{\i}
         if ($strip_outer_braces) {
-          $text =~ s/ \{\\($re)\} / $map->{$1} /gxe;
+          $text =~ s/\{\\($re)\} / $map->{$1}/gxe;
         }
-        $text =~ s/\\($re)(?: \{\} | \s+ | \b) / $map->{$1} /gxe;
+        $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/gxe;
       }
       if ($type eq 'accents') {
         $text =~ s/\\($re)\{(\p{L}\p{M}*)\}/$2 . $map->{$1}/ge;
@@ -275,13 +280,13 @@ sub latex_encode {
         $text =~ s/($re)/"{\$\\not\\" . $map->{$1} . '$}'/ge;
       }
     elsif ($type eq 'superscripts') {
-      $text =~ s/($re)/"\\textsuperscript{" . $map->{$1} . "}"/ge;
+      $text =~ s/($re)/'\textsuperscript{' . $map->{$1} . '}'/ge;
     }
     elsif ($type eq 'cmdsuperscripts') {
       $text =~ s/($re)/"\\textsuperscript{\\" . $map->{$1} . "}"/ge;
     }
     elsif ($type eq 'dings') {
-      $text =~ s/($re)/"\\ding{" . $map->{$1} . "}"/ge;
+      $text =~ s/($re)/'\ding{' . $map->{$1} . '}'/ge;
     }
   }
 
@@ -290,8 +295,8 @@ sub latex_encode {
     my $re = $r_remaps->{$scheme_e}{$type}{re};
     if ($type eq 'accents') {
       # Accents
-      # special case such as "i\x{304}" -> '\={\i}' - "i" needs the dot removing for accents
-      $text =~ s/i($re)/"\\" . $map->{$1} . "{\\i}"/ge;
+      # special case such as "i\x{304}" -> '\={\i}' -> "i" needs the dot removing for accents
+      $text =~ s/i($re)/"\\" . $map->{$1} . '{\i}'/ge;
 
       $text =~ s/\{(\p{L}\p{M}*)\}($re)/"\\" . $map->{$2} . "{$1}"/ge;
       $text =~ s/(\p{L}\p{M}*)($re)/"\\" . $map->{$2} . "{$1}"/ge;
@@ -320,7 +325,7 @@ sub latex_encode {
   foreach my $type (sort keys %{$r_remaps->{$scheme_e}}) {
     my $map = $r_remaps->{$scheme_e}{$type}{map};
     my $re = $r_remaps->{$scheme_e}{$type}{re};
-    if ($type eq 'wordmacros') {
+    if ($type eq 'letters') {
       # General macros (excluding special encoding excludes)
       $text =~ s/($re)/"{\\" . $map->{$1} . '}'/ge;
     }
@@ -341,7 +346,7 @@ sub _get_diac_last_r {
     my $re = $r_remaps->{$scheme_e}{accents}{re};
 
     if ( $b =~ /$re/) {
-        return $a eq 'i' ? '{\\i}' : $a
+        return $a eq 'i' ? '{\i}' : $a
     }
     else {
         return "{$a}"
