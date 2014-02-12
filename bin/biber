@@ -478,7 +478,7 @@ Show this help message.
 
 Specify the encoding of the data source file(s). Default is "UTF-8"
 Normally it's not necessary to set this as it's passed via the
-.bcf file from biblatex's setting of the same name.
+.bcf file from biblatex's C<bibencoding> option.
 See "perldoc Encode::Supported" for a list of supported encodings.
 The legacy option B<--bibencoding> is supported as an alias.
 
@@ -555,8 +555,8 @@ before current directory.
 =item B<--output_encoding|-E [encoding]>
 
 Specify the encoding of the output C<.bbl> file. Default is "UTF-8".
-Normally it's not necessary to set this as it's passed via biblatex
-from the inputenc package setting.
+Normally it's not necessary to set this as it's passed via the
+.bcf file from biblatex's C<texencoding> option.
 See C<perldoc Encode::Supported> for a list of supported encodings.
 The legacy option B<--bblencoding> is supported as an alias.
 
