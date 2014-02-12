@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use base qw(Exporter);
 use Biber::Config;
+use Encode;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Unicode::Normalize;
@@ -64,6 +65,7 @@ use vars qw( $remaps $r_remaps $scheme_d $scheme_e );
 sub init_schemes {
   shift; # class method
   ($scheme_d, $scheme_e) = @_;
+  no autovivification;
 
   my $mapdata;
   # User-defined recode data file
@@ -99,55 +101,61 @@ sub init_schemes {
   }
 
   # Read driver config file
-  my $dataxml = XML::LibXML::Simple::XMLin($mapdata,
-                                           'ForceContent' => 1,
-                                           'ForceArray' => [
-                                                            qr/\Amaps\z/,
-                                                            qr/\Amap\z/,
-                                                            qr/\Achar\z/,
-                                                           ]
-                                                           );
-  # Careful about converting to NFD on reading the file
-  foreach my $map (@{$dataxml->{maps}}) {
-    my @set = split(/\s*,\s*/, $map->{set});
-    my $type = $map->{type};
-    my $map = $map->{map};
-    next unless first {$scheme_d eq $_} @set or
-                first {$scheme_e eq $_} @set;
-    foreach my $set (@set) {
-      $remaps->{$set}{$type}{map} = { map {NFD($_->{from}{content}) => NFD($_->{to}{content})} @$map };
-      $r_remaps->{$set}{$type}{map} = { reverse %{$remaps->{$set}{$type}{map}} };
-      # There are some duplicates in the hash. reverse() doesn't predictably deal with this.
-      # Force specific prefered reverse mapping to override unpredictable reverse()
-      # We still use reverse() and just correct it afterwards as it's fast
-      foreach my $r (@$map) {
-        next unless exists($r->{from}{preferred});
-        $r_remaps->{$set}{$type}{map}{NFD($r->{to}{content})} = NFD($r->{from}{content});
-      }
-      # Things we don't want to change when encoding as this would break LaTeX
-      foreach my $e (map {NFD($_->{content})} @{$dataxml->{encode_exclude}{char}}) {
-        delete($r_remaps->{$set}{$type}{map}{$e});
-      }
+  my $parser = XML::LibXML->new();
+  my $xml = File::Slurp::read_file($mapdata) or biber_error("Can't read file $mapdata");
+  my $recodexml = $parser->parse_string(decode('UTF-8', $xml));
+  my $xpc = XML::LibXML::XPathContext->new($recodexml);
 
-      # Now populate the regexps
-      if ($type eq 'accents') {
-        $remaps->{$set}{$type}{re} = '[' . join('', sort keys %{$remaps->{$set}{$type}{map}}) . ']';
-        $remaps->{$set}{$type}{re} = qr/$remaps->{$set}{$type}{re}/;
-        $r_remaps->{$set}{$type}{re} = '[' . join('', sort keys %{$r_remaps->{$set}{$type}{map}}) . ']';
-        $r_remaps->{$set}{$type}{re} = qr/$r_remaps->{$set}{$type}{re}/;
+  my @types = qw(accents letters diacritics punctuation symbols negatedsymbols superscripts cmdsuperscripts dings greek);
+
+  foreach my $type (@types) {
+    foreach my $maps ($xpc->findnodes("/texmap/maps[\@type='$type']")) {
+      my @set = split(/\s*,\s*/, $maps->getAttribute('set'));
+      next unless first {$scheme_d eq $_} @set or
+                  first {$scheme_e eq $_} @set;
+      foreach my $map ($maps->findnodes('map')) {
+        my $from = $map->findnodes('from')->shift();
+        my $to = $map->findnodes('to')->shift();
+        $remaps->{$type}{map}{NFD($from->textContent())} = NFD($to->textContent());
+        $r_remaps->{$type}{map} = { reverse %{$remaps->{$type}{map}} };
       }
-      elsif ($type eq 'superscripts') {
-        $remaps->{$set}{$type}{re} = join('|', map { /[\+\-\)\(]/ ? '\\' . $_ : $_ } sort keys %{$remaps->{$set}{$type}{map}});
-        $remaps->{$set}{$type}{re} = qr|$remaps->{$set}{$type}{re}|;
-        $r_remaps->{$set}{$type}{re} = join('|', map { /[\+\-\)\(]/ ? '\\' . $_ : $_ } sort keys %{$r_remaps->{$set}{$type}{map}});
-        $r_remaps->{$set}{$type}{re} = qr|$r_remaps->{$set}{$type}{re}|;
+      # There are some duplicates in the hash. reverse() doesn't predictably deal with this.
+      # Force specific preferred reverse mapping to override unpredictable reverse()
+      # We still use reverse() and just correct it afterwards as it's fast
+      foreach my $map ($maps->findnodes('map')) {
+        my $from = $map->findnodes('from')->shift();
+        my $to = $map->findnodes('to')->shift();
+        if ($from->getAttribute('preferred')) {
+          $r_remaps->{$type}{map}{NFD($to->textContent())} = NFD($from->textContent());
+        }
       }
-      else {
-        $remaps->{$set}{$type}{re} = join('|', sort keys %{$remaps->{$set}{$type}{map}});
-        $remaps->{$set}{$type}{re} = qr|$remaps->{$set}{$type}{re}|;
-        $r_remaps->{$set}{$type}{re} = join('|', sort keys %{$r_remaps->{$set}{$type}{map}});
-        $r_remaps->{$set}{$type}{re} = qr|$r_remaps->{$set}{$type}{re}|;
-      }
+    }
+    # Things we don't want to change when encoding as this would break LaTeX
+    foreach my $e ($xpc->findnodes('/texmap/encode_exclude/char')) {
+      delete($r_remaps->{$type}{map}{NFD($e->textContent())});
+    }
+  }
+
+  # Now populate the regexps
+  foreach my $type (@types) {
+    next unless exists $remaps->{$type};
+    if ($type eq 'accents') {
+      $remaps->{$type}{re} = '[' . join('', sort keys %{$remaps->{$type}{map}}) . ']';
+      $remaps->{$type}{re} = qr/$remaps->{$type}{re}/;
+      $r_remaps->{$type}{re} = '[' . join('', sort keys %{$r_remaps->{$type}{map}}) . ']';
+      $r_remaps->{$type}{re} = qr/$r_remaps->{$type}{re}/;
+    }
+    elsif ($type eq 'superscripts') {
+      $remaps->{$type}{re} = join('|', map { /[\+\-\)\(]/ ? '\\' . $_ : $_ } sort keys %{$remaps->{$type}{map}});
+      $remaps->{$type}{re} = qr|$remaps->{$type}{re}|;
+      $r_remaps->{$type}{re} = join('|', map { /[\+\-\)\(]/ ? '\\' . $_ : $_ } sort keys %{$r_remaps->{$type}{map}});
+      $r_remaps->{$type}{re} = qr|$r_remaps->{$type}{re}|;
+    }
+    else {
+      $remaps->{$type}{re} = join('|', sort keys %{$remaps->{$type}{map}});
+      $remaps->{$type}{re} = qr|$remaps->{$type}{re}|;
+      $r_remaps->{$type}{re} = join('|', sort keys %{$r_remaps->{$type}{map}});
+      $r_remaps->{$type}{re} = qr|$r_remaps->{$type}{re}|;
     }
   }
 }
@@ -191,8 +199,8 @@ sub latex_decode {
     $text =~ s/\\char(\d+)/"chr($1)"/gee;    # decimal chars
 
     # Some tricky cases
-    my $d_re = $remaps->{$scheme_d}{diacritics}{re} || '';
-    my $a_re = $remaps->{$scheme_d}{accents}{re} || '';
+    my $d_re = $remaps->{diacritics}{re} || '';
+    my $a_re = $remaps->{accents}{re} || '';
     # Change dotless i to normal i when applying accents
     $text =~ s/(\\(?:$d_re|$a_re)){\\i}/$1i/g;     # \={\i}    -> \=i
     $text =~ s/(\\(?:$d_re|$a_re))\\i/$1i/g;       # \=\i      -> \=i
@@ -201,9 +209,9 @@ sub latex_decode {
     $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
 
 
-    foreach my $type (sort keys %{$remaps->{$scheme_d}}) {
-      my $map = $remaps->{$scheme_d}{$type}{map};
-      my $re = $remaps->{$scheme_d}{$type}{re};
+    foreach my $type (sort keys %$remaps) {
+      my $map = $remaps->{$type}{map};
+      my $re = $remaps->{$type}{re};
       if ($type eq 'negatedsymbols') {
         $text =~ s/\\not\\($re)/$map->{$1}/ge if $re;
       }
@@ -221,10 +229,9 @@ sub latex_decode {
       }
     }
 
-    foreach my $type (sort keys %{$remaps->{$scheme_d}}) {
-      my $map = $remaps->{$scheme_d}{$type}{map};
-      my $re = $remaps->{$scheme_d}{$type}{re};
-      next unless $re;
+    foreach my $type (sort keys %$remaps) {
+      my $map = $remaps->{$type}{map};
+      my $re = $remaps->{$type}{re};
 
       if (first {$type eq $_} ('punctuation', 'symbols', 'greek')) {
         ## remove {} around macros that print one character
@@ -273,9 +280,9 @@ Converts UTF-8 to LaTeX
 sub latex_encode {
   my $text = shift;
 
-  foreach my $type (sort keys %{$r_remaps->{$scheme_e}}) {
-    my $map = $r_remaps->{$scheme_e}{$type}{map};
-    my $re = $r_remaps->{$scheme_e}{$type}{re};
+  foreach my $type (sort keys %$r_remaps) {
+    my $map = $r_remaps->{$type}{map};
+    my $re = $r_remaps->{$type}{re};
       if ($type eq 'negatedsymbols') {
         $text =~ s/($re)/"{\$\\not\\" . $map->{$1} . '$}'/ge;
       }
@@ -290,9 +297,9 @@ sub latex_encode {
     }
   }
 
-  foreach my $type (sort keys %{$r_remaps->{$scheme_e}}) {
-    my $map = $r_remaps->{$scheme_e}{$type}{map};
-    my $re = $r_remaps->{$scheme_e}{$type}{re};
+  foreach my $type (sort keys %$r_remaps) {
+    my $map = $r_remaps->{$type}{map};
+    my $re = $r_remaps->{$type}{re};
     if ($type eq 'accents') {
       # Accents
       # special case such as "i\x{304}" -> '\={\i}' -> "i" needs the dot removing for accents
@@ -322,9 +329,9 @@ sub latex_encode {
     }
   }
 
-  foreach my $type (sort keys %{$r_remaps->{$scheme_e}}) {
-    my $map = $r_remaps->{$scheme_e}{$type}{map};
-    my $re = $r_remaps->{$scheme_e}{$type}{re};
+  foreach my $type (sort keys %$r_remaps) {
+    my $map = $r_remaps->{$type}{map};
+    my $re = $r_remaps->{$type}{re};
     if ($type eq 'letters') {
       # General macros (excluding special encoding excludes)
       $text =~ s/($re)/"{\\" . $map->{$1} . '}'/ge;
@@ -343,7 +350,7 @@ sub latex_encode {
 
 sub _get_diac_last_r {
     my ($a,$b) = @_;
-    my $re = $r_remaps->{$scheme_e}{accents}{re};
+    my $re = $r_remaps->{accents}{re};
 
     if ( $b =~ /$re/) {
         return $a eq 'i' ? '{\i}' : $a
