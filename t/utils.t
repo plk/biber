@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 29;
+use Test::More tests => 30;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -80,10 +80,11 @@ Biber::LaTeX::Recode->init_schemes('full', 'full'); # Need to do this to reset
 
 is( latex_decode('\alpha'), 'α', 'latex decode 4'); # greek decoding with "full"
 is( NFC(latex_decode("\\'\\i")), 'í', 'latex decode 5'); # checking i with accents
-is( NFC(latex_decode("\\'{\\i}")), 'í', 'latex decode 6'); # checking i with accents
-is( latex_decode('\i'), 'ı', 'latex decode 7'); # checking i with accents
-is( latex_decode('\textdiv'), '÷', 'latex decode 8'); # checking multiple set for types
-is( latex_decode('\textbackslash'), "\\", 'latex decode 9'); # checking multiple set for types
+is( NFC(latex_decode("\\^{\\j}")), 'ĵ', 'latex decode 6'); # checking j with accents
+is( latex_decode('\i'), 'ı', 'latex decode 7'); # checking dotless i
+is( latex_decode('\j'), 'ȷ', 'latex decode 8'); # checking dotless j
+is( latex_decode('\textdiv'), '÷', 'latex decode 9'); # checking multiple set for types
+is( latex_decode('\textbackslash'), "\\", 'latex decode 10'); # checking multiple set for types
 is( latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 is( latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols
 is( latex_encode(NFD('≄')), '{$\not\simeq$}', 'latex encode 5'); # Testing negated symbols

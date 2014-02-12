@@ -201,9 +201,9 @@ sub latex_decode {
     # Some tricky cases
     my $d_re = $remaps->{diacritics}{re} || '';
     my $a_re = $remaps->{accents}{re} || '';
-    # Change dotless i to normal i when applying accents
-    $text =~ s/(\\(?:$d_re|$a_re)){\\i}/$1i/g;     # \={\i}    -> \=i
-    $text =~ s/(\\(?:$d_re|$a_re))\\i/$1i/g;       # \=\i      -> \=i
+    # Change dotless i/j to normal i/j when applying accents
+    $text =~ s/(\\(?:$d_re|$a_re)){\\(i|j)}/$1$2/g;     # \={\i}    -> \=i
+    $text =~ s/(\\(?:$d_re|$a_re))\\(i|j)/$1$2/g;       # \=\i      -> \=i
 
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
     $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},

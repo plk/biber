@@ -36,6 +36,7 @@
     <map><from>textcrh</from>                          <to hex="127">ħ</to></map>
     <map><from preferred="1">texthbar</from>           <to hex="127">ħ</to></map>
     <map><from>i</from>                                <to hex="131">ı</to></map>
+    <map><from>j</from>                                <to hex="237">ȷ</to></map>
     <map><from>IJ</from>                               <to hex="132">Ĳ</to></map>
     <map><from>ij</from>                               <to hex="133">ĳ</to></map>
     <map><from>textkra</from>                          <to hex="138">ĸ</to></map>
