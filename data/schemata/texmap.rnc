@@ -3,7 +3,7 @@ start =
     element maps {
       # CSV list of sets
       attribute set { text },
-      attribute type { "accents" | "wordmacros" | "diacritics" | "punctuation" | "symbols" | "negatedsymbols" | "superscripts" | "cmdsuperscripts" | "dings" | "greek"  },
+      attribute type { "accents" | "letters" | "diacritics" | "punctuation" | "symbols" | "negatedsymbols" | "superscripts" | "cmdsuperscripts" | "dings" | "greek"  },
       map+
     }+,
     element encode_exclude {

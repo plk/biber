@@ -11,59 +11,7 @@
     <map><from>.</from><to hex="307">̇</to></map>
     <map><from>"</from><to hex="308">̈</to></map>
   </maps>
-  <maps type="wordmacros" set="base,full">
-    <map><from>textquotedbl</from>                     <to hex="22">"</to></map>
-    <map><from>textdollar</from>                       <to hex="24">$</to></map>
-    <map><from>textpercent</from>                      <to hex="25">%</to></map>
-    <map><from>textampersand</from>                    <to hex="26">&amp;</to></map>
-    <map><from>textquotesingle</from>                  <to hex="27">'</to></map>
-    <map><from>textasteriskcentered</from>             <to hex="2A">*</to></map>
-    <map><from>textless</from>                         <to hex="3C">&lt;</to></map>
-    <map><from>textequals</from>                       <to hex="3D">=</to></map>
-    <map><from>textgreater</from>                      <to hex="3E">&gt;</to></map>
-    <map><from>textbackslash</from>                    <to hex="5C">\</to></map>
-    <map><from>textasciicircum</from>                  <to hex="5E">^</to></map>
-    <map><from>textunderscore</from>                   <to hex="5F">_</to></map>
-    <map><from>textasciigrave</from>                   <to hex="60">`</to></map>
-    <map><from>textg</from>                            <to hex="67">g</to></map>
-    <map><from>textbraceleft</from>                    <to hex="7B">{</to></map>
-    <map><from>textbar</from>                          <to hex="7C">|</to></map>
-    <map><from>textbraceright</from>                   <to hex="7D">}</to></map>
-    <map><from>textasciitilde</from>                   <to hex="7E">~</to></map>
-    <map><from>nobreakspace</from>                     <to hex="A0"> </to></map>
-    <map><from>textexclamdown</from>                   <to hex="A1">¡</to></map>
-    <map><from>textcent</from>                         <to hex="A2">¢</to></map>
-    <map><from>textsterling</from>                     <to hex="A3">£</to></map>
-    <map><from preferred="1">pounds</from>             <to hex="A3">£</to></map>
-    <map><from>textcurrency</from>                     <to hex="A4">¤</to></map>
-    <map><from>textyen</from>                          <to hex="A5">¥</to></map>
-    <map><from>textbrokenbar</from>                    <to hex="A6">¦</to></map>
-    <map><from>textsection</from>                      <to hex="A7">§</to></map>
-    <map><from preferred="1">S</from>                  <to hex="A7">§</to></map>
-    <map><from>textasciidieresis</from>                <to hex="A8">¨</to></map>
-    <map><from>textcopyright</from>                    <to hex="A9">©</to></map>
-    <map><from preferred='1'>copyright</from>          <to hex="A9">©</to></map>
-    <map><from>textordfeminine</from>                  <to hex="AA">ª</to></map>
-    <map><from>guillemotleft</from>                    <to hex="AB">«</to></map>
-    <map><from>textminus</from>                        <to hex="2212">−</to></map>
-    <map><from>textregistered</from>                   <to hex="AE">®</to></map>
-    <map><from>textasciimacron</from>                  <to hex="AF">¯</to></map>
-    <map><from>textdegree</from>                       <to hex="B0">°</to></map>
-    <map><from>texttwosuperior</from>                  <to hex="B2">²</to></map>
-    <map><from>textthreesuperior</from>                <to hex="B3">³</to></map>
-    <map><from>textasciiacute</from>                   <to hex="B4">´</to></map>
-    <map><from>textparagraph</from>                    <to hex="B6">¶</to></map>
-    <map><from preferred="1">P</from>                  <to hex="B6">¶</to></map>
-    <map><from>textcentereddot</from>                  <to hex="B7">·</to></map>
-    <map><from preferred="1">textperiodcentered</from> <to hex="B7">·</to></map>
-    <map><from>textasciicedilla</from>                 <to hex="B8">¸</to></map>
-    <map><from>textonesuperior</from>                  <to hex="B9">¹</to></map>
-    <map><from>textordmasculine</from>                 <to hex="BA">º</to></map>
-    <map><from>guillemotright</from>                   <to hex="BB">»</to></map>
-    <map><from>textonequarter</from>                   <to hex="BC">¼</to></map>
-    <map><from>textonehalf</from>                      <to hex="BD">½</to></map>
-    <map><from>textthreequarters</from>                <to hex="BE">¾</to></map>
-    <map><from>textquestiondown</from>                 <to hex="BF">¿</to></map>
+  <maps type="letters" set="base,full">
     <map><from>AA</from>                               <to hex="C5">Å</to></map>
     <map><from>AE</from>                               <to hex="C6">Æ</to></map>
     <map><from>DH</from>                               <to hex="D0">Ð</to></map>
@@ -350,6 +298,60 @@
     <map><from>textoverline</from>       <to hex="203E">‾</to></map>
     <map><from>langle</from>             <to hex="27E8">⟨</to></map>
     <map><from>rangle</from>             <to hex="27E9">⟩</to></map>
+  </maps>
+  <maps type="symbols" set ="base,full">
+    <map><from>textquotedbl</from>                     <to hex="22">"</to></map>
+    <map><from>textdollar</from>                       <to hex="24">$</to></map>
+    <map><from>textpercent</from>                      <to hex="25">%</to></map>
+    <map><from>textampersand</from>                    <to hex="26">&amp;</to></map>
+    <map><from>textquotesingle</from>                  <to hex="27">'</to></map>
+    <map><from>textasteriskcentered</from>             <to hex="2A">*</to></map>
+    <map><from>textless</from>                         <to hex="3C">&lt;</to></map>
+    <map><from>textequals</from>                       <to hex="3D">=</to></map>
+    <map><from>textgreater</from>                      <to hex="3E">&gt;</to></map>
+    <map><from>textbackslash</from>                    <to hex="5C">\</to></map>
+    <map><from>textasciicircum</from>                  <to hex="5E">^</to></map>
+    <map><from>textunderscore</from>                   <to hex="5F">_</to></map>
+    <map><from>textasciigrave</from>                   <to hex="60">`</to></map>
+    <map><from>textg</from>                            <to hex="67">g</to></map>
+    <map><from>textbraceleft</from>                    <to hex="7B">{</to></map>
+    <map><from>textbar</from>                          <to hex="7C">|</to></map>
+    <map><from>textbraceright</from>                   <to hex="7D">}</to></map>
+    <map><from>textasciitilde</from>                   <to hex="7E">~</to></map>
+    <map><from>nobreakspace</from>                     <to hex="A0"> </to></map>
+    <map><from>textexclamdown</from>                   <to hex="A1">¡</to></map>
+    <map><from>textcent</from>                         <to hex="A2">¢</to></map>
+    <map><from>textsterling</from>                     <to hex="A3">£</to></map>
+    <map><from preferred="1">pounds</from>             <to hex="A3">£</to></map>
+    <map><from>textcurrency</from>                     <to hex="A4">¤</to></map>
+    <map><from>textyen</from>                          <to hex="A5">¥</to></map>
+    <map><from>textbrokenbar</from>                    <to hex="A6">¦</to></map>
+    <map><from>textsection</from>                      <to hex="A7">§</to></map>
+    <map><from preferred="1">S</from>                  <to hex="A7">§</to></map>
+    <map><from>textasciidieresis</from>                <to hex="A8">¨</to></map>
+    <map><from>textcopyright</from>                    <to hex="A9">©</to></map>
+    <map><from preferred='1'>copyright</from>          <to hex="A9">©</to></map>
+    <map><from>textordfeminine</from>                  <to hex="AA">ª</to></map>
+    <map><from>guillemotleft</from>                    <to hex="AB">«</to></map>
+    <map><from>textminus</from>                        <to hex="2212">−</to></map>
+    <map><from>textregistered</from>                   <to hex="AE">®</to></map>
+    <map><from>textasciimacron</from>                  <to hex="AF">¯</to></map>
+    <map><from>textdegree</from>                       <to hex="B0">°</to></map>
+    <map><from>texttwosuperior</from>                  <to hex="B2">²</to></map>
+    <map><from>textthreesuperior</from>                <to hex="B3">³</to></map>
+    <map><from>textasciiacute</from>                   <to hex="B4">´</to></map>
+    <map><from>textparagraph</from>                    <to hex="B6">¶</to></map>
+    <map><from preferred="1">P</from>                  <to hex="B6">¶</to></map>
+    <map><from>textcentereddot</from>                  <to hex="B7">·</to></map>
+    <map><from preferred="1">textperiodcentered</from> <to hex="B7">·</to></map>
+    <map><from>textasciicedilla</from>                 <to hex="B8">¸</to></map>
+    <map><from>textonesuperior</from>                  <to hex="B9">¹</to></map>
+    <map><from>textordmasculine</from>                 <to hex="BA">º</to></map>
+    <map><from>guillemotright</from>                   <to hex="BB">»</to></map>
+    <map><from>textonequarter</from>                   <to hex="BC">¼</to></map>
+    <map><from>textonehalf</from>                      <to hex="BD">½</to></map>
+    <map><from>textthreequarters</from>                <to hex="BE">¾</to></map>
+    <map><from>textquestiondown</from>                 <to hex="BF">¿</to></map>
   </maps>
   <maps type="symbols" set ="full">
     <map><from>textdiv</from>             <to hex="F7">÷</to></map>
