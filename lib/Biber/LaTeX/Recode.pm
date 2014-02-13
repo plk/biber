@@ -242,14 +242,10 @@ sub latex_decode {
         $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/gxe;
       }
       if ($type eq 'accents') {
-        $text =~ s/\\($re)\{(\p{L}\p{M}*)\}/$2 . $map->{$1}/ge;
-        $text =~ s/\\($re)(\p{L}\p{M}*)/$2 . $map->{$1}/ge;
-        $text =~ s/\\($re)\{(\p{L}\p{M}*)\}/$2 . $map->{$1}/ge;
-        $text =~ s/\\($re)(\p{L}\p{M}*)/$2 . $map->{$1}/ge;
+        $text =~ s/\\($re)\s*\{(\p{L}\p{M}*)\}/$2 . $map->{$1}/ge;
+        $text =~ s/\\($re)\s*(\p{L}\p{M}*)/$2 . $map->{$1}/ge;
       }
       if ($type eq 'diacritics') {
-        $text =~ s/\\($re)\s*\{(\p{L}\p{M}*)\}/$2 . $map->{$1}/ge;
-        $text =~ s/\\($re)\s+(\p{L}\p{M}*)/$2 . $map->{$1}/ge;
         $text =~ s/\\($re)\s*\{(\p{L}\p{M}*)\}/$2 . $map->{$1}/ge;
         $text =~ s/\\($re)\s+(\p{L}\p{M}*)/$2 . $map->{$1}/ge;
       }

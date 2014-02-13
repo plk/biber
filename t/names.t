@@ -434,13 +434,13 @@ my $l11 = q|    \entry{L11}{book}{}
 
 my $l12 = q|    \entry{L12}{book}{}
       \name{labelname}{1}{}{%
-        {{hash=87634072c9c157a0b9ca250bd6914a65}{Vall{\'e}e\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
+        {{hash=5bb094a9232384acc478f1aa54e8cf3c}{Vallée\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
       }
       \name{author}{1}{}{%
-        {{hash=87634072c9c157a0b9ca250bd6914a65}{Vall{\'e}e\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
+        {{hash=5bb094a9232384acc478f1aa54e8cf3c}{Vallée\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
       }
-      \strng{namehash}{87634072c9c157a0b9ca250bd6914a65}
-      \strng{fullhash}{87634072c9c157a0b9ca250bd6914a65}
+      \strng{namehash}{5bb094a9232384acc478f1aa54e8cf3c}
+      \strng{fullhash}{5bb094a9232384acc478f1aa54e8cf3c}
       \field{sortinit}{D}
     \endentry
 |;
@@ -565,13 +565,13 @@ my $l20 = q|    \entry{L20}{book}{}
 
 my $l21 = q|    \entry{L21}{book}{}
       \name{labelname}{1}{}{%
-        {{hash=386636fcff8e45365739b90e4986cd7b}{Smith}{S\bibinitperiod}{{\v S}omeone}{{\v S}\bibinitperiod}{}{}{}{}}%
+        {{hash=4389a3c0dc7da74487b50808ba9436ad}{Smith}{S\bibinitperiod}{Šomeone}{Š\bibinitperiod}{}{}{}{}}%
       }
       \name{author}{1}{}{%
-        {{hash=386636fcff8e45365739b90e4986cd7b}{Smith}{S\bibinitperiod}{{\v S}omeone}{{\v S}\bibinitperiod}{}{}{}{}}%
+        {{hash=4389a3c0dc7da74487b50808ba9436ad}{Smith}{S\bibinitperiod}{Šomeone}{Š\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{386636fcff8e45365739b90e4986cd7b}
-      \strng{fullhash}{386636fcff8e45365739b90e4986cd7b}
+      \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
+      \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
       \field{sortinit}{S}
     \endentry
 |;
@@ -592,13 +592,13 @@ my $l22u = q|    \entry{L22}{book}{}
 
 my $l22 = q|    \entry{L22}{book}{}
       \name{labelname}{1}{}{%
-        {{hash=940a7383a6d76d516f02cf790a468362}{{\v S}mith}{{\v S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
       \name{author}{1}{}{%
-        {{hash=940a7383a6d76d516f02cf790a468362}{{\v S}mith}{{\v S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{940a7383a6d76d516f02cf790a468362}
-      \strng{fullhash}{940a7383a6d76d516f02cf790a468362}
+      \strng{namehash}{e58b861545799d0eaf883402a882126e}
+      \strng{fullhash}{e58b861545799d0eaf883402a882126e}
       \field{sortinit}{\v{S}}
       \warn{\item The character 'Š' cannot be encoded in 'latin1'. sortinit will be set to macro '\v{S}' for entry 'L22'}
     \endentry
@@ -770,7 +770,7 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is_deeply($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info->{field})->nth_name(1)->get_firstname_i, ['{\v S}'], 'Terseinitials 1');
+is(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info->{field})->nth_name(1)->get_firstname_i->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
 is( $out->get_output_entry('L12', $main), $l12, 'First First First First prefix prefix Last Last') ;
 is( $out->get_output_entry('L21', $main), $l21, 'LaTeX encoded unicode firstname');
 is( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode lastname - 2');

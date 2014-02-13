@@ -936,19 +936,17 @@ sub preprocess_file {
   File::Slurp::write_file($ufilename, NFC(encode('UTF-8', $buf))) or
       biber_error("Can't write $ufilename");# Unicode NFC boundary
 
-  # Decode LaTeX to UTF8 if output is UTF-8
-  if (Biber::Config->getoption('output_encoding') eq 'UTF-8') {
-    my $buf = File::Slurp::read_file($ufilename) or biber_error("Can't read $ufilename");
-    $buf = NFD(decode('UTF-8', $buf));# Unicode NFD boundary
+  # Always decode LaTeX to UTF8
+  my $lbuf = File::Slurp::read_file($ufilename) or biber_error("Can't read $ufilename");
+  $lbuf = NFD(decode('UTF-8', $lbuf));# Unicode NFD boundary
 
-    $logger->info('Decoding LaTeX character macros into UTF-8');
-    $logger->trace("Buffer before decoding -> '$buf'");
-    $buf = Biber::LaTeX::Recode::latex_decode($buf, strip_outer_braces => 1);
-    $logger->trace("Buffer after decoding -> '$buf'");
+  $logger->info('Decoding LaTeX character macros into UTF-8');
+  $logger->trace("Buffer before decoding -> '$lbuf'");
+  $lbuf = Biber::LaTeX::Recode::latex_decode($lbuf, strip_outer_braces => 1);
+  $logger->trace("Buffer after decoding -> '$lbuf'");
 
-    File::Slurp::write_file($ufilename, NFC(encode('UTF-8', $buf))) or
-        biber_error("Can't write $ufilename");# Unicode NFC boundary
-  }
+  File::Slurp::write_file($ufilename, NFC(encode('UTF-8', $lbuf))) or
+      biber_error("Can't write $ufilename");# Unicode NFC boundary
 
   return $ufilename;
 }
@@ -993,7 +991,8 @@ sub parsename {
   # btparse can't do this so we do it before name parsing
   $namestr =~ s/(\w)\.(\w)/$1. $2/g if Biber::Config->getoption('fixinits');
 
-  my $name = new Text::BibTeX::Name($namestr);
+  # We use NFC here as we are "outputting" to an external module
+  my $name = new Text::BibTeX::Name(NFC($namestr));
 
   # Formats so we can get BibTeX compatible nbsp inserted
   my $l_f = new Text::BibTeX::NameFormat('l', 0);
