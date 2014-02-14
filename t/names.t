@@ -680,20 +680,20 @@ my $l29 = q|    \entry{L29}{book}{}
 
 my $l31 = q|    \entry{L31}{book}{}
       \name{labelname}{1}{}{%
-        {{hash=81e45a75845feb42db453500b815e139}{{\~ Z}elly}{{\~ Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{Z̃elly}{Z̃\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name{author}{1}{}{%
-        {{hash=81e45a75845feb42db453500b815e139}{{\~ Z}elly}{{\~ Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{Z̃elly}{Z̃\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name{editor}{1}{}{%
-        {{hash=3282f5aed38860e7c19e0c37df41de6c}{{\~Z}elly}{{\~Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{Z̃elly}{Z̃\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name{translator}{1}{}{%
-        {{hash=6193c0af691bd23c24b8d29b02323a7a}{{\~{Z}}elly}{{\~{Z}}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{Z̃elly}{Z̃\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{81e45a75845feb42db453500b815e139}
-      \strng{fullhash}{81e45a75845feb42db453500b815e139}
-      \field{sortinit}{Z}
+      \strng{namehash}{29c3ff92fff79d09a8b44d2f775de0b1}
+      \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
+      \field{sortinit}{Z̃}
     \endentry
 |;
 
