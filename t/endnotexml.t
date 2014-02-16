@@ -63,6 +63,7 @@ my $l1 = q|    \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42}{report}{}
       \strng{namehash}{bb7cc58ecd32f38238f8c0ee2107e097}
       \strng{fullhash}{bb7cc58ecd32f38238f8c0ee2107e097}
       \field{sortinit}{A}
+      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{The role of public policies in reducing mental health status disparities for people of color}
       \field{edition}{2003/10/01}
       \field{isbn}{0278-2715 (Print)}
@@ -100,6 +101,7 @@ my $l2 = q|    \entry{fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:47}{report}{}
       \strng{namehash}{346ad1f92291bef45511d3eb23e3df34}
       \strng{fullhash}{346ad1f92291bef45511d3eb23e3df34}
       \field{sortinit}{A}
+      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labelyear}{2009}
       \field{labelmonth}{03}
       \field{labelday}{14}

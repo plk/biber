@@ -85,6 +85,7 @@ my $u1 = q|    \entry{u1}{misc}{}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
       \field{labelalpha}{AAA\textbf{+}00}
       \field{sortinit}{A}
+      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{A title}
       \true{singletitle}
       \field{title}{A title}
@@ -154,6 +155,7 @@ my $murray1 = q|    \entry{murray}{article}{}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos\textbf{+}98}
       \field{sortinit}{H}
+      \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
       \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
@@ -209,6 +211,7 @@ my $murray2 = q|    \entry{murray}{article}{}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos98}
       \field{sortinit}{H}
+      \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
       \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
@@ -239,6 +242,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
+      \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
       \field{labeltitle}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
       \field{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
       \field{year}{1992}
@@ -258,6 +262,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
+      \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
       \field{labeltitle}{Signs of W$\frac{o}{a}$nder}
       \field{title}{Signs of W$\frac{o}{a}$nder}
       \field{year}{1994}
@@ -279,6 +284,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
       \field{labelalpha}{XAn35}
       \field{sortinit}{A}
+      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{Shorttitle}
       \true{singletitle}
       \field{langid}{english}
@@ -306,6 +312,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
       \field{labelalpha}{YAn39}
       \field{sortinit}{A}
+      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{Shorttitle}
       \true{singletitle}
       \field{langid}{english}
@@ -330,6 +337,7 @@ my $url1 = q|    \entry{url1}{misc}{}
       \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \field{labelalpha}{Ali05}
       \field{sortinit}{A}
+      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{extraalpha}{4}
       \field{year}{2005}
       \verb{url}
@@ -345,6 +353,7 @@ my $list1 = q|    \entry{list1}{book}{}
         {BBB}%
       }
       \field{sortinit}{0}
+      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
     \endentry
 |;
 

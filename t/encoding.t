@@ -45,6 +45,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
+      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{Šome title}
@@ -68,6 +69,7 @@ my $encode2 = q|    \entry{test1}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
+      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{Söme title}
@@ -91,6 +93,7 @@ my $encode3 = q|    \entry{test1}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
+      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{Żome title}
@@ -114,6 +117,7 @@ my $encode5 = q|    \entry{test}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
+      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{à titlé}
@@ -137,6 +141,7 @@ my $encode6 = q|    \entry{test}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
+      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{↑\`{a} titl\'{e}}
@@ -160,6 +165,7 @@ my $encode7 = q|    \entry{test}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
+      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{{$\uparrow$}\`{a} titl\'{e}}

@@ -2911,6 +2911,7 @@ sub sort_list {
     $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
 
     # Create collation object
+
     my $Collator = Biber::UCollate->new($thislocale, %$collopts);
 
     my $UCAversion = $Collator->version();

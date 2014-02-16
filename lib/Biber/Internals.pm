@@ -13,6 +13,7 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use Digest::MD5 qw( md5_hex );
 use POSIX qw( locale_h ); # for lc()
 use Unicode::GCString;
+use Unicode::Collate::Locale;
 use Unicode::Normalize;
 use Encode;
 
@@ -444,7 +445,7 @@ sub _label_name {
     my $numnames  = $nameval->count_names;
     my $visibility = $nameval->get_visible_alpha;
 
-    my @lastnames = map { strip_nosort(normalise_string($_->get_lastname), $namename) } @{$nameval->names};
+    my @lastnames = map { normalise_string_sort($_->get_lastname, $namename) } @{$nameval->names};
     my @prefices  = map { $_->get_prefix } @{$nameval->names};
     my $loopnames;
 
@@ -514,7 +515,7 @@ sub _process_label_attributes {
               foreach my $n (@{$f->first_n_names($f->get_visible_alpha)}) {
                 # Do strip/nosort here as that's what we also do to the field contents
                 # we will use to look up in this hash later
-                $indices{strip_nosort(normalise_string($n->get_namepart($namepart)), $field)} = $n->get_index;
+                $indices{normalise_string_sort($n->get_namepart($namepart), $field)} = $n->get_index;
               }
             }
             else {
@@ -940,7 +941,7 @@ sub _generatesortinfo {
   $list->set_sortdata($citekey, [$ss, $sortobj]);
   $logger->debug("Sorting object for key '$citekey' -> " . Data::Dump::pp($sortobj));
 
-  # Generate sortinit - the initial letter of the sortstring. Skip
+  # Generate sortinit and sortinithash - the initial letter of the sortstring. Skip
   # if there is no sortstring, which is possible in tests
   if ($ss) {
   # This must ignore the presort characters, naturally
@@ -950,6 +951,12 @@ sub _generatesortinfo {
     $ss =~ s/\A$pre$sorting_sep+//;
     # Always uppercase sortinit
     my $init = uc(Unicode::GCString->new(normalise_string($ss))->substr(0, 1)->as_string);
+
+    # Collator for determining primary weight hash for sortinithash
+    # Using the global sort locale because we only want the sortinit of the first sorting field
+    # and if this was locally different to the global sorting, something would be very strange.
+    my $Collator = Unicode::Collate::Locale->new(locale => Biber::Config->getoption('sortlocale'), level => 1);
+    my $inithash = md5_hex($Collator->viewSortKey($init));
 
     # Now check if this sortinit is valid in the output_encoding. If not, warn
     # and replace with a suitable value
@@ -967,7 +974,7 @@ sub _generatesortinfo {
         $init = $initd;
       }
     }
-    $list->set_sortinitdata_for_key($citekey, $init);
+    $list->set_sortinitdata_for_key($citekey, $init, $inithash);
   }
   return;
 }
