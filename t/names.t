@@ -282,8 +282,7 @@ my $l1 = q|    \entry{L1}{book}{}
       }
       \strng{namehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{fullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
-      \field{sortinit}{A}
-      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinit}{c8a29dea43e9d2645817723335a4dbe8}
     \endentry
 |;
 
@@ -296,8 +295,7 @@ my $l2 = q|    \entry{L2}{book}{}
       }
       \strng{namehash}{1c867a2b5ceb243bab70afb18702dc04}
       \strng{fullhash}{1c867a2b5ceb243bab70afb18702dc04}
-      \field{sortinit}{B}
-      \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
+      \field{sortinit}{1a3a21dbed09540af12d49a0b14f4751}
     \endentry
 |;
 
@@ -310,8 +308,7 @@ my $l3 = q|    \entry{L3}{book}{}
       }
       \strng{namehash}{cecd18116c43ee86e5a136b6e0362948}
       \strng{fullhash}{cecd18116c43ee86e5a136b6e0362948}
-      \field{sortinit}{C}
-      \field{sortinithash}{dd0e4ddd17488a6ebf12cd6de2f2c237}
+      \field{sortinit}{dd0e4ddd17488a6ebf12cd6de2f2c237}
     \endentry
 |;
 
@@ -324,8 +321,7 @@ my $l4 = q|    \entry{L4}{book}{}
       }
       \strng{namehash}{675883f3aca7c6069c0b154d47af4c86}
       \strng{fullhash}{675883f3aca7c6069c0b154d47af4c86}
-      \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinit}{a01c54d1737685bc6dbf0ea0673fa44c}
     \endentry
 |;
 
@@ -338,8 +334,7 @@ my $l5 = q|    \entry{L5}{book}{}
       }
       \strng{namehash}{c2d41bb75b01ec2339c1050981f9c2cc}
       \strng{fullhash}{c2d41bb75b01ec2339c1050981f9c2cc}
-      \field{sortinit}{V}
-      \field{sortinithash}{63562d1af2cd68fb37e2e14e0c6d5c96}
+      \field{sortinit}{63562d1af2cd68fb37e2e14e0c6d5c96}
     \endentry
 |;
 
@@ -352,8 +347,7 @@ my $l6 = q|    \entry{L6}{book}{}
       }
       \strng{namehash}{68e9105aa98379a85ef6cd2e7ac29c00}
       \strng{fullhash}{68e9105aa98379a85ef6cd2e7ac29c00}
-      \field{sortinit}{V}
-      \field{sortinithash}{63562d1af2cd68fb37e2e14e0c6d5c96}
+      \field{sortinit}{63562d1af2cd68fb37e2e14e0c6d5c96}
     \endentry
 |;
 
@@ -366,8 +360,7 @@ my $l7 = q|    \entry{L7}{book}{}
       }
       \strng{namehash}{4dbef3c5464f951b537a49ba93676a9a}
       \strng{fullhash}{4dbef3c5464f951b537a49ba93676a9a}
-      \field{sortinit}{V}
-      \field{sortinithash}{63562d1af2cd68fb37e2e14e0c6d5c96}
+      \field{sortinit}{63562d1af2cd68fb37e2e14e0c6d5c96}
     \endentry
 |;
 
@@ -380,8 +373,7 @@ my $l8 = q|    \entry{L8}{book}{}
       }
       \strng{namehash}{9fb4d242b62f047e4255282864eedb97}
       \strng{fullhash}{9fb4d242b62f047e4255282864eedb97}
-      \field{sortinit}{V}
-      \field{sortinithash}{63562d1af2cd68fb37e2e14e0c6d5c96}
+      \field{sortinit}{63562d1af2cd68fb37e2e14e0c6d5c96}
     \endentry
 |;
 
@@ -394,8 +386,7 @@ my $l9 = q|    \entry{L9}{book}{}
       }
       \strng{namehash}{1734924c4c55de5bb18d020c34a5249e}
       \strng{fullhash}{1734924c4c55de5bb18d020c34a5249e}
-      \field{sortinit}{I}
-      \field{sortinithash}{b2e302e575c74beffcc96ef7059003aa}
+      \field{sortinit}{b2e302e575c74beffcc96ef7059003aa}
     \endentry
 |;
 
@@ -409,8 +400,7 @@ my $l10 = q|    \entry{L10}{book}{}
       }
       \strng{namehash}{758a11cc45860d7635b1f6091b2d95a9}
       \strng{fullhash}{758a11cc45860d7635b1f6091b2d95a9}
-      \field{sortinit}{J}
-      \field{sortinithash}{f75b22df8c340a961dce37019e29107f}
+      \field{sortinit}{f75b22df8c340a961dce37019e29107f}
     \endentry
 |;
 
@@ -424,8 +414,7 @@ my $l10a = q|    \entry{L10a}{book}{}
       }
       \strng{namehash}{5e60d697e6432558eab7dccf9890eb79}
       \strng{fullhash}{5e60d697e6432558eab7dccf9890eb79}
-      \field{sortinit}{P}
-      \field{sortinithash}{b8af9282ac256b81613dc9012a0ac921}
+      \field{sortinit}{b8af9282ac256b81613dc9012a0ac921}
     \endentry
 |;
 
@@ -439,8 +428,7 @@ my $l11 = q|    \entry{L11}{book}{}
       }
       \strng{namehash}{ef4ab7eba5cd140b54ba4329e1dda90b}
       \strng{fullhash}{ef4ab7eba5cd140b54ba4329e1dda90b}
-      \field{sortinit}{V}
-      \field{sortinithash}{63562d1af2cd68fb37e2e14e0c6d5c96}
+      \field{sortinit}{63562d1af2cd68fb37e2e14e0c6d5c96}
     \endentry
 |;
 
@@ -453,8 +441,7 @@ my $l12 = q|    \entry{L12}{book}{}
       }
       \strng{namehash}{5bb094a9232384acc478f1aa54e8cf3c}
       \strng{fullhash}{5bb094a9232384acc478f1aa54e8cf3c}
-      \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinit}{a01c54d1737685bc6dbf0ea0673fa44c}
     \endentry
 |;
 
@@ -467,8 +454,7 @@ my $l13 = q|    \entry{L13}{book}{}
       }
       \strng{namehash}{5e79da6869afaf0d38e01285b494d555}
       \strng{fullhash}{5e79da6869afaf0d38e01285b494d555}
-      \field{sortinit}{V}
-      \field{sortinithash}{63562d1af2cd68fb37e2e14e0c6d5c96}
+      \field{sortinit}{63562d1af2cd68fb37e2e14e0c6d5c96}
     \endentry
 |;
 
@@ -481,8 +467,7 @@ my $l14 = q|    \entry{L14}{book}{}
       }
       \strng{namehash}{2319907d9a5d5dd46da77879bdb7e609}
       \strng{fullhash}{2319907d9a5d5dd46da77879bdb7e609}
-      \field{sortinit}{S}
-      \field{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
+      \field{sortinit}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
     \endentry
 |;
 
@@ -495,8 +480,7 @@ my $l15 = q|    \entry{L15}{book}{}
       }
       \strng{namehash}{379b415d869a4751678a5eee23b07e48}
       \strng{fullhash}{379b415d869a4751678a5eee23b07e48}
-      \field{sortinit}{V}
-      \field{sortinithash}{63562d1af2cd68fb37e2e14e0c6d5c96}
+      \field{sortinit}{63562d1af2cd68fb37e2e14e0c6d5c96}
     \endentry
 |;
 
@@ -509,8 +493,7 @@ my $l16 = q|    \entry{L16}{book}{}
       }
       \strng{namehash}{0a9532fa161f6305ec403c1c85951bdf}
       \strng{fullhash}{0a9532fa161f6305ec403c1c85951bdf}
-      \field{sortinit}{V}
-      \field{sortinithash}{63562d1af2cd68fb37e2e14e0c6d5c96}
+      \field{sortinit}{63562d1af2cd68fb37e2e14e0c6d5c96}
     \endentry
 |;
 
@@ -523,8 +506,7 @@ my $l17 = q|    \entry{L17}{book}{}
       }
       \strng{namehash}{766d5329cf995fcc7c1cef19de2a2ae8}
       \strng{fullhash}{766d5329cf995fcc7c1cef19de2a2ae8}
-      \field{sortinit}{L}
-      \field{sortinithash}{c41a2b5886eeae464e75d1a9df4cd13e}
+      \field{sortinit}{c41a2b5886eeae464e75d1a9df4cd13e}
     \endentry
 |;
 
@@ -537,8 +519,7 @@ my $l18 = q|    \entry{L18}{book}{}
       }
       \strng{namehash}{58620d2c7d6839bac23306c732c563fb}
       \strng{fullhash}{58620d2c7d6839bac23306c732c563fb}
-      \field{sortinit}{L}
-      \field{sortinithash}{c41a2b5886eeae464e75d1a9df4cd13e}
+      \field{sortinit}{c41a2b5886eeae464e75d1a9df4cd13e}
     \endentry
 |;
 
@@ -551,8 +532,7 @@ my $l19 = q|    \entry{L19}{book}{}
       }
       \strng{namehash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{fullhash}{83caa52f21f97e572dd3267bdf62978a}
-      \field{sortinit}{M}
-      \field{sortinithash}{4203d16473bc940d4ac780773cb7c5dd}
+      \field{sortinit}{4203d16473bc940d4ac780773cb7c5dd}
     \endentry
 |;
 
@@ -565,8 +545,7 @@ my $l19a = q|    \entry{L19a}{book}{}
       }
       \strng{namehash}{0963f6904ccfeaac2770c5882a587001}
       \strng{fullhash}{0963f6904ccfeaac2770c5882a587001}
-      \field{sortinit}{L}
-      \field{sortinithash}{c41a2b5886eeae464e75d1a9df4cd13e}
+      \field{sortinit}{c41a2b5886eeae464e75d1a9df4cd13e}
     \endentry
 |;
 
@@ -580,8 +559,7 @@ my $l20 = q|    \entry{L20}{book}{}
       }
       \strng{namehash}{fdaa0936724be89ef8bd16cf02e08c74}
       \strng{fullhash}{fdaa0936724be89ef8bd16cf02e08c74}
-      \field{sortinit}{F}
-      \field{sortinithash}{9661cce5f16ac30b6b0c804d4583ed99}
+      \field{sortinit}{9661cce5f16ac30b6b0c804d4583ed99}
     \endentry
 |;
 
@@ -594,8 +572,7 @@ my $l21 = q|    \entry{L21}{book}{}
       }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
-      \field{sortinit}{S}
-      \field{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
+      \field{sortinit}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
     \endentry
 |;
 
@@ -608,8 +585,7 @@ my $l22u = q|    \entry{L22}{book}{}
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
-      \field{sortinit}{Š}
-      \field{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
+      \field{sortinit}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
     \endentry
 |;
 
@@ -623,9 +599,7 @@ my $l22 = q|    \entry{L22}{book}{}
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
-      \field{sortinit}{\v{S}}
-      \field{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
-      \warn{\item The character 'Š' cannot be encoded in 'latin1'. sortinit will be set to macro '\v{S}' for entry 'L22'}
+      \field{sortinit}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
     \endentry
 |;
 
@@ -639,8 +613,7 @@ my $l23 = q|    \entry{L23}{book}{}
       }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
-      \field{sortinit}{S}
-      \field{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
+      \field{sortinit}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
     \endentry
 |;
 
@@ -653,8 +626,7 @@ my $l24 = q|    \entry{L24}{book}{}
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
-      \field{sortinit}{Š}
-      \field{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
+      \field{sortinit}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
     \endentry
 |;
 
@@ -667,8 +639,7 @@ my $l25 = q|    \entry{L25}{book}{}
       }
       \strng{namehash}{7069367d4a4f37ffb0377e3830e98ed0}
       \strng{fullhash}{7069367d4a4f37ffb0377e3830e98ed0}
-      \field{sortinit}{A}
-      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinit}{c8a29dea43e9d2645817723335a4dbe8}
     \endentry
 |;
 
@@ -681,15 +652,13 @@ my $l26 = q|    \entry{L26}{book}{}
       }
       \strng{namehash}{d176a8af5ce1c45cb06875c4433f2fe2}
       \strng{fullhash}{d176a8af5ce1c45cb06875c4433f2fe2}
-      \field{sortinit}{S}
-      \field{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
+      \field{sortinit}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
     \endentry
 |;
 
 # Malformed anyway but a decent test
 my $l28 = q|    \entry{L28}{book}{}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \warn{\item Name "Deux et al.,, O." is malformed (consecutive commas): skipping name}
     \endentry
 |;
@@ -704,8 +673,7 @@ my $l29 = q|    \entry{L29}{book}{}
       }
       \strng{namehash}{59a5e43a502767d00e589eb29f863728}
       \strng{fullhash}{59a5e43a502767d00e589eb29f863728}
-      \field{sortinit}{U}
-      \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
+      \field{sortinit}{311bb924dfb84a64dcdd01c5b07d40b0}
     \endentry
 |;
 
@@ -724,8 +692,7 @@ my $l31 = q|    \entry{L31}{book}{}
       }
       \strng{namehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
-      \field{sortinit}{Z̃}
-      \field{sortinithash}{9cca09897f0dfd9ed260e065f6d82cd6}
+      \field{sortinit}{9cca09897f0dfd9ed260e065f6d82cd6}
     \endentry
 |;
 

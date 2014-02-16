@@ -76,8 +76,8 @@ sub new {
   $self->{TEMPDIR} = File::Temp->newdir();
 
   # Initialise recoding schemes
-  Biber::LaTeX::Recode->init_schemes(Biber::Config->getoption('decodecharsset'),
-                                     Biber::Config->getoption('output_safecharsset'));
+  Biber::LaTeX::Recode->init_sets(Biber::Config->getoption('decodecharsset'),
+                                  Biber::Config->getoption('output_safecharsset'));
 
   $MASTER = $self;
 

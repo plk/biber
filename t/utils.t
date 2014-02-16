@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 28;
+use Test::More tests => 32;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -72,7 +72,7 @@ is( latex_decode('\textless\textampersand'), '<&', 'latex decode 3'); # checking
 is( latex_encode(NFD('Muḥammad ibn Mūsā al-Khwārizmī')), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');
 is( latex_encode(NFD('α')), 'α', 'latex encode 2'); # no greek encoding by default
 
-Biber::LaTeX::Recode->init_schemes('full', 'full'); # Need to do this to reset
+Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
 
 is( latex_decode('\alpha'), 'α', 'latex decode 4'); # greek decoding with "full"
 is( NFC(latex_decode("\\'\\i")), 'í', 'latex decode 5'); # checking i with accents
@@ -97,3 +97,12 @@ is_deeply(\@AminusB, \@AminusBexpected, 'reduce_array') ;
 is(remove_outer('{Some string}'), 'Some string', 'remove_outer') ;
 
 is( normalise_string_hash('Ä.~{\c{C}}.~{\c S}.'), 'Äc:Cc:S', 'normalise_string_lite' ) ;
+
+Biber::LaTeX::Recode->init_sets('base', 'full'); # Need to do this to reset
+is( latex_decode('\textdiv'), '\textdiv', 'latex different encode/decode sets 1');
+is( latex_encode(NFD('÷')), '{$\div$}', 'latex different encode/decode sets 2');
+
+Biber::LaTeX::Recode->init_sets('null', 'full'); # Need to do this to reset
+is( latex_decode('\i'), '\i', 'latex null decode 1');
+is( latex_encode(NFD('ı')), '{\i}', 'latex null encode 2');
+

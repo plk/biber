@@ -55,8 +55,7 @@ my $string1 = q|    \entry{DynSet}{set}{}
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labelyear}{2002}
       \field{datelabelsource}{}
       \field{labeltitle}{Doing Daring Deeds}
@@ -77,8 +76,7 @@ my $string2 = q|    \entry{Dynamic1}{book}{}
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Doing Daring Deeds}
       \field{annotation}{Some Dynamic Note}
       \field{shorthand}{d1}
@@ -97,8 +95,7 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
       }
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Beautiful Birthdays}
       \field{shorthand}{d2}
       \field{title}{Beautiful Birthdays}
@@ -116,8 +113,7 @@ my $string4 = q|    \entry{Dynamic3}{book}{}
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Reckless Ravishings}
       \field{shorthand}{d3}
       \field{title}{Reckless Ravishings}
@@ -136,8 +132,7 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labelyear}{2000}
       \field{datelabelsource}{}
       \field{labeltitle}{Reckless Ravishings}

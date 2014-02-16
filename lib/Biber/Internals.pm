@@ -941,8 +941,7 @@ sub _generatesortinfo {
   $list->set_sortdata($citekey, [$ss, $sortobj]);
   $logger->debug("Sorting object for key '$citekey' -> " . Data::Dump::pp($sortobj));
 
-  # Generate sortinit and sortinithash - the initial letter of the sortstring. Skip
-  # if there is no sortstring, which is possible in tests
+  # Generate sortinit. Skip if there is no sortstring, which is possible in tests
   if ($ss) {
   # This must ignore the presort characters, naturally
     my $pre = Biber::Config->getblxoption('presort', $be->get_field('entrytype'), $citekey);
@@ -952,29 +951,12 @@ sub _generatesortinfo {
     # Always uppercase sortinit
     my $init = uc(Unicode::GCString->new(normalise_string($ss))->substr(0, 1)->as_string);
 
-    # Collator for determining primary weight hash for sortinithash
+    # Collator for determining primary weight hash for sortinit
     # Using the global sort locale because we only want the sortinit of the first sorting field
     # and if this was locally different to the global sorting, something would be very strange.
     my $Collator = Unicode::Collate::Locale->new(locale => Biber::Config->getoption('sortlocale'), level => 1);
-    my $inithash = md5_hex($Collator->viewSortKey($init));
-
-    # Now check if this sortinit is valid in the output_encoding. If not, warn
-    # and replace with a suitable value
-    my $outenc = Biber::Config->getoption('output_encoding');
-    if ($outenc ne 'UTF-8') {
-      # Can this init be represented in the BBL encoding?
-      if (encode($outenc, NFC($init)) eq '?') { # Malformed data encoding char
-        # So convert to macro
-        my $initd = Biber::LaTeX::Recode::latex_encode($init);
-        # Don't warn if output is ascii as it's fairly pointless since this warning may be
-        # true of a lot of data and drawing attention to just sortinit might be confusing
-        unless ($outenc =~ /(?:x-)?ascii/xmsi) {
-          biber_warn("The character '$init' cannot be encoded in '$outenc'. sortinit will be set to macro '$initd' for entry '$citekey'", $be);
-        }
-        $init = $initd;
-      }
-    }
-    $list->set_sortinitdata_for_key($citekey, $init, $inithash);
+    $init = md5_hex($Collator->viewSortKey($init));
+    $list->set_sortinitdata_for_key($citekey, $init);
   }
   return;
 }

@@ -51,8 +51,7 @@ my $string1 = q|    \entry{Static1}{set}{}
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
       \field{labeltitle}{Blessed Brains}
@@ -72,8 +71,7 @@ my $string2 = q|    \entry{Static2}{book}{}
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Blessed Brains}
       \field{annotation}{Some Blessed Note}
       \field{title}{Blessed Brains}
@@ -91,8 +89,7 @@ my $string3 = q|    \entry{Static3}{book}{}
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Castles and Crime}
       \field{title}{Castles and Crime}
       \field{year}{2002}
@@ -109,8 +106,7 @@ my $string4 = q|    \entry{Static4}{book}{}
       }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Dungeons, Dark and Dangerous}
       \field{title}{Dungeons, Dark and Dangerous}
       \field{year}{2005}
@@ -128,8 +124,7 @@ my $string5 = q|    \entry{Static2}{book}{}
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
       \field{labeltitle}{Blessed Brains}

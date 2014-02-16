@@ -447,7 +447,8 @@ UTF-8). Set to "full" to try harder with a much larger set or "base" to
 use a smaller basic set. Default is "base". You may want to try "full"
 if you have less common UTF-8 characters in your data source. The recode
 sets are defined in the reencoding data file which can be customised.
-See the --recodedata option and the PDF manual.
+See the --recodedata option and the PDF manual. The virtual set name "null"
+may be specified which effectively turns off macro decoding.
 
 =item B<--debug|-D>
 
@@ -619,7 +620,8 @@ fine for most use cases. You may need to load more macro packages to
 deal with the results of "full" (Dings, Greek characters, special
 symbols etc.). The recode sets are defined in the reencoding data file which
 can be customised. See the --recodedata option and the PDF manual.
-The legacy option B<--bblsafecharsset> is supported as an alias.
+The legacy option B<--bblsafecharsset> is supported as an alias. The
+virtual set name "null" may be specified which effectively turns off macro encoding.
 
 =item B<--quiet|-q>
 
