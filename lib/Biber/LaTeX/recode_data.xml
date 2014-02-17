@@ -314,7 +314,6 @@
     <map><from>textasciicircum</from>                  <to hex="5E">^</to></map>
     <map><from>textunderscore</from>                   <to hex="5F">_</to></map>
     <map><from>textasciigrave</from>                   <to hex="60">`</to></map>
-    <map><from>textg</from>                            <to hex="67">g</to></map>
     <map><from>textbraceleft</from>                    <to hex="7B">{</to></map>
     <map><from>textbar</from>                          <to hex="7C">|</to></map>
     <map><from>textbraceright</from>                   <to hex="7D">}</to></map>
@@ -355,6 +354,7 @@
     <map><from>textquestiondown</from>                 <to hex="BF">¿</to></map>
   </maps>
   <maps type="symbols" set ="full">
+    <map><from>textg</from>               <to hex="67">g</to></map>
     <map><from>textdiv</from>             <to hex="F7">÷</to></map>
     <map><from preferred="1">div</from>   <to hex="F7">÷</to></map>
     <map><from>texttimes</from>           <to hex="D7">×</to></map>
