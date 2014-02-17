@@ -122,6 +122,17 @@ sub set_output_entry {
   if (Biber::Config->getoption('output_safechars')) {
     $acc = latex_recode_output($acc);
   }
+  else {             # ... or, check for encoding problems and force macros
+    my $outenc = Biber::Config->getoption('output_encoding');
+    if ($outenc ne 'UTF-8') {
+      # Can this entry be represented in the output encoding?
+      if (encode($outenc, NFC($acc)) =~ /\?/) { # Malformed data encoding char
+        # So convert to macro
+        $acc = latex_recode_output($acc);
+        biber_warn("The entry '$key' has characters which cannot be encoded in '$outenc'. Recoding problematic characters into macros.");
+      }
+    }
+  }
 
   # Create an index by keyname for easy retrieval
   $self->{output_data}{ENTRIES}{$secnum}{index}{$key} = \$acc;

@@ -8,11 +8,13 @@ use Biber::Config;
 use Biber::Constants;
 use Biber::Entry;
 use Biber::Utils;
+use Encode;
 use List::AllUtils qw( :all );
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Text::Wrap;
 use Unicode::GCString;
+use Unicode::Normalize;
 $Text::Wrap::columns = 80;
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -409,7 +411,7 @@ sub set_output_entry {
     }
   }
 
-  # This is special, we have to put a marker for sortinit and then replace this string
+  # This is special, we have to put a marker for sortinit{hash} and then replace this string
   # on output as it can vary between lists
   $acc .= "      <BDS>SORTINIT</BDS>\n";
 
@@ -640,7 +642,19 @@ sub output {
           if (Biber::Config->getoption('output_safechars')) {
             $entry_string = latex_recode_output($entry_string);
           }
+          else { # ... or, check for encoding problems and force macros
+            my $outenc = Biber::Config->getoption('output_encoding');
+            if ($outenc ne 'UTF-8') {
+              # Can this entry be represented in the output encoding?
+              if (encode($outenc, NFC($entry_string)) =~ /\?/) { # Malformed data encoding char
+                # So convert to macro
+                $entry_string = latex_recode_output($entry_string);
+                biber_warn("The entry '$k' has characters which cannot be encoded in '$outenc'. Recoding problematic characters into macros.");
+              }
+            }
+          }
 
+          # Now output
           out($target, $entry_string);
         }
         elsif ($listtype eq 'shorthand') {

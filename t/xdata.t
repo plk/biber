@@ -66,7 +66,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
       }
       \strng{namehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{fullhash}{51db4bfd331cba22959ce2d224c517cd}
-      \field{sortinit}{E}
+      \field{sortinit}{655e26c7438ff123e5c69c6c3f702107}
       \field{labelyear}{2007}
       \field{datelabelsource}{}
       \field{note}{A Note}
@@ -90,7 +90,7 @@ my $xd2 = q|    \entry{xd2}{book}{}
       }
       \strng{namehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{fullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
-      \field{sortinit}{P}
+      \field{sortinit}{b8af9282ac256b81613dc9012a0ac921}
       \field{labelyear}{2003}
       \field{datelabelsource}{}
       \field{abstract}{An abstract}

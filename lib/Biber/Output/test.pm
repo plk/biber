@@ -283,7 +283,7 @@ sub set_output_entry {
     }
   }
 
-  # This is special, we have to put a marker for sortinit and then replace this string
+  # This is special, we have to put a marker for sortinit{hash} and then replace this string
   # on output as it can vary between lists
   $acc .= "      <BDS>SORTINIT</BDS>\n";
 

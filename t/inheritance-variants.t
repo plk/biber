@@ -68,7 +68,7 @@ my $ms1 = q|    \entry{ms1}{inbook}{vlang=english}
       }
       \strng{namehash}{ab072d2d4322ee1d27823c8adefeca0a}
       \strng{fullhash}{ab072d2d4322ee1d27823c8adefeca0a}
-      \field{sortinit}{M}
+      \field{sortinit}{4203d16473bc940d4ac780773cb7c5dd}
       \field{labeltitle}{Miraculous, Meticulous, Moody}
       \field{booktitle}{Indelible, unglückliche Eigenheiten}
       \field[form=translated]{booktitle}{Indextitle}

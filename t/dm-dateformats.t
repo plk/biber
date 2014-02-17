@@ -74,7 +74,7 @@ my $l13c = q|    \entry{L13}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
+      \field{sortinit}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labelyear}{1996\bibdatedash }
       \field{labelmonth}{01}
       \field{labelday}{01}
@@ -102,7 +102,7 @@ my $l14 = q|    \entry{L14}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
+      \field{sortinit}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{extrayear}{3}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
@@ -133,7 +133,7 @@ my $l15 = q|    \entry{L15}{book}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
+      \field{sortinit}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{extrayear}{4}
       \field{labeltitle}{Title 2}
       \field{title}{Title 2}
@@ -155,7 +155,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
+      \field{sortinit}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{extrayear}{5}
       \field{labelyear}{1996}
       \field{labelmonth}{01}
@@ -184,7 +184,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
+      \field{sortinit}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{extrayear}{4}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
@@ -228,7 +228,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
+      \field{sortinit}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labelyear}{1998}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
@@ -271,7 +271,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
-      \field{sortinit}{D}
+      \field{sortinit}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labelyear}{1998\bibdatedash 2004}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}

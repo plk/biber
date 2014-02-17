@@ -1802,20 +1802,20 @@ reverse order at UCA level 2.
 
 \subsection{Encoding of files}\label{ref:enc}
 
-\biber\ takes care of re-encoding the datasource data as
-necessary. In normal use, \biblatex\ passes its
-\opt{input\_encoding} option value to \biber\ via the \verb+.bcf+
-file. It also passes the value of its \opt{texencoding} option (which
-maps to \biber's \opt{--output\_encoding|-E} option) the default value
-of which depends on which \TeX\ engine and encoding packages you are
-using (see \biblatex\ manual for details).
+\biber\ takes care of re-encoding the datasource data as necessary. In
+normal use, \biblatex\ passes its \opt{bibencoding} option value to \biber\
+via the \verb+.bcf+ file and this corresponds to the \biber
+\opt{--input\_encoding|e} option. \biblatex also passes the value of its
+\opt{texencoding} option (which maps to \biber's
+\opt{--output\_encoding|-E} option) the default value of which depends on
+which \TeX\ engine and encoding packages you are using (see \biblatex\
+manual for details).
 
 \noindent \biber\ performs the following tasks:
 
 \begin{enumerate}
 \item Decodes the datasource into UTF-8 if it is not UTF-8 already
-\item Decodes \latex\ character macros into UTF-8 if \opt{--output\_encoding|-E}
-  is UTF-8
+\item Decodes \latex\ character macros in the datasource into UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
   the encoding that \opt{--output\_encoding|-E} specifies
 \item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
@@ -1836,20 +1836,30 @@ of preference:\\[2ex]
 
 \subsubsection{\latex\ macro decoding}\label{ldecode}
 
-\noindent As mentioned above, \biber\ sometimes converts \latex\
-character macros into UTF-8. In fact there are two situations in which
-this occurs.
+\noindent As mentioned above, \biber\ always converts as much as possible,
+including \latex\ character macros, into UTF-8. This is important for two
+main reasons. Firstly, this allows you to have, for example:
 
-\begin{enumerate}
-\item When \opt{--output\_encoding|-E} is UTF-8
-\item Always for internal sorting purposes
-\end{enumerate}
+\begin{lstlisting}[style=bibtex, columns=fixed]{}
+@BOOK{key1,
+    Author = {\"{O}leg Smith}
+}
+@BOOK{key2,
+    Author = {Öleg Smith}
+}
+\end{lstlisting}
+%
+Here, because \biber decodes the macros into UTF-8, it knows that both
+books are by the same author because it's clear that the names are now the
+same. Secondly, this allows \biber to output normalised latex macros when a
+user selects \opt{--output\_encoding=ascii} etc. This means that the many
+\biblatex comparison macros used in styles can deal with comparisons of
+fields containing macros reliably. The macro to UTF-8 conversion uses the
+decoding set specified with the \opt{--decodecharsset}, see below. To
+disable all macro to UTF-8 conversion, you can specify the virtual «null»
+set as a value for \opt{--decodecharsset} or \opt{output\_safecharsset}.
+This effectively turns off macro to UTF-8 decoding or encoding respectively.
 
-\noindent This decoding is very useful but take note of the following
-two scenarios, which relate to each of the two situations in which
-\latex\ macro decoding occurs:
-\bigskip
-\minisec{Decoding when output is UTF-8}
 If you are using PDF\latex\ and \verb+\usepackage[utf8]{inputenc}+, it
 is possible that the UTF-8 characters resulting from \biber's
 internal \latex\ character macro decoding break \verb+inputenc+. This is
@@ -1865,38 +1875,6 @@ as these don't use or need \verb+inputenc+. However, you can also try the
 \latex\ macros on output. For information on the \opt{--output\_safechars}
 option, see section \ref{lencode}.
 \bigskip
-\minisec{Decoding for internal sorting}
-
-If your \opt{output\_encoding} is not UTF-8, and you are using some UTF-8
-equivalent \latex\ character macros in your \verb+.bib+ datasource, then some
-\verb+.bbl+ fields (currently only \verb+\sortinit{}+) might end up
-with invalid characters in them, according to the \verb+.bbl+
-encoding. This is because some fields must be generated from the final
-sorting data which is only available after the \latex\ character macro
-decoding step.
-
-For example, suppose you are using PDF\latex\ with\\
-\verb+\usepackage[latin1]{inputenc}+ and the following \BibTeX\
-datasource entry:
-
-\begin{verbatim}
-@BOOK{citekey1,
-  AUTHOR = {{\v S}imple, Simon},
-}
-\end{verbatim}
-
-\noindent With normal \latex\ character macro decoding, the
-\verb+{\v S}+ is decoded into «Š» and so with name-first sorting,
-\verb+\sortinit{}+ would be «Š». This is an invalid character in
-latin1 encoding and so the \verb+.bbl+ would be broken. In such cases
-when \verb+\sortinit{}+ is a char not valid in the \opt{output\_encoding},
-\biber\ tries to replace the character with a suitable \latex\
-macro. The solution is really to use UTF-8 \verb+.bbl+ encoding whenever
-possible. In extreme cases where even with UTF-8 encoding,
-the char is not recognised by \latex\ due to an incomplete UTF-8
-implementation (as with \verb+inputenc+), this might also mean
-switching \TeX\ engines to one that supports full UTF-8 (like Xe\TeX\ or Lua\TeX).
-
 \subsubsection{\latex\ macro encoding}\label{lencode}
 
 The opposite of decoding; converting UTF-8 characters into \latex\ macros.
@@ -1913,6 +1891,12 @@ is automated for you: if the \biblatex\ option «\opt{texencoding}»
 set to an ASCII encoding («\verb+ascii+» or «\verb+x-ascii+») and
 «\opt{--input\_encoding|-e}» is not ASCII, \biber\ will automatically set
 \opt{--output\_safechars}.
+
+Since \biber always decodes into UTF-8 internally, if the
+\opt{--output\_encoding|-E} option is not set to UTF-8, \biber will
+automatically replace any characters which will not encode in the output
+encoding with equivalent \tex macros. You will also receive a warning about
+this.
 
 See also the \opt{biber --help} output for the \opt{--output\_safecharsset}
 and \linebreak[4]\opt{--decodecharsset} options which can customise the set
