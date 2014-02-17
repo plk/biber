@@ -1264,18 +1264,21 @@ which are explained in the accompanying text. Items in
 See also the \texttt{nosort} option in section \ref{nosort}.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<sorting>
+<sorting +\textcolor{blue}{locale=\textcolor{red}{locale}}+>
   <presort +\textcolor{blue}{type=\textcolor{red}{type}}+>+\textcolor{red}{string}+</presort>
   +\textcolor{blue}{<sortexclusion type=\textcolor{red}{type}>}+
       +\textcolor{blue}{<exclusion>\textcolor{red}{field}</exclusion>}+
                  $\vdots$
   +\textcolor{blue}{</sortexclusion>}+
   <sort order="+\textcolor{red}{n}+"
+        +\textcolor{blue}{locale=\textcolor{red}{locale}}+
         +\textcolor{blue}{final=1}+
         +\textcolor{blue}{sort\_direction="ascending|descending"}+
         +\textcolor{blue}{sort\_case="1|0"}+
         +\textcolor{blue}{sort\_upper="1|0"}+>
     <sortitem order="+\textcolor{red}{m}+"
+              +\textcolor{blue}{form="\textcolor{red}{form}"}+
+              +\textcolor{blue}{lang="\textcolor{red}{lang}"}+
               +\textcolor{blue}{substring\_side="left|right"}+
               +\textcolor{blue}{substring\_width="\textcolor{red}{int}"}+
               +\textcolor{blue}{pad\_side="left|right"}+
@@ -1315,7 +1318,9 @@ exist, it is added to the sorting object for the entry after being modified
 by the attributes of the \texttt{sortitem}.
 
 Once a \texttt{sortitem} has returned the contents of a
-\textcolor{red}{\texttt{field}}, you can use the
+\textcolor{red}{\texttt{field}} (optionally a particular variant of a field
+specified by the \textcolor{blue}{form} and \textcolor{blue}{lang}
+attributes, see the \biblatex documentation), you can use the
 \textcolor{blue}{substring\_side} (default «left» if any other
 \textcolor{blue}{substring} attributes are set) and
 \textcolor{blue}{substring\_width} (default «4» if any other
@@ -1330,6 +1335,12 @@ either side using the \textcolor{blue}{pad\_side} (default «left» if any other
 \textcolor{blue}{pad} attributes are set) and \textcolor{blue}{pad\_char}
 (default «0»---the digit zero if any other
 \textcolor{blue}{pad} attributes are set) attributes.
+
+The locale for sorting is specified globally via the \biblatex
+\opt{sortlocale} option but this can be overriden on a per-sortscheme or
+even per \texttt{sort} element level using the \textcolor{blue}{locale}
+attribute. See examples in the \biblatex documentation for
+\cmd{DeclareSortingScheme}.
 
 A \texttt{sortitem} which is neither a known bibliography sorting field nor
 the special «citeorder» string is treated as a literal string to add to the
