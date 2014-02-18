@@ -2537,7 +2537,8 @@ like this:
 \end{verbatim}
 %
 Both \texttt{<form>} and \texttt{<lang>} are optional and if they are not
-present, default to «default» and «original» respectively. \texttt{<lang>},
+present, default to the values of the \biblatex options \opt{vform} and
+\opt{vlang} respectively. \texttt{<lang>},
 if specified, should be a known \sty{babel}/\sty{polyglossia} language
 identifier. \texttt{<form>} can be one of:
 \begin{itemize}
@@ -2560,7 +2561,11 @@ For example:
 This example has an \bibfield{AUTHOR} field in Russian Cyrillic script
 and a variant the «translated» form with and language setting of
 «english». There is also a Russian Cyrillic \bibfield{TITLE} with an
-ISO 9 romanised variant.
+ISO 9 romanised variant. \biblatex has been modified so that all data
+accessing and comparison macros have an option keyval argument which can be
+used to select a particular form/lang variant, if desired. The separator
+between the field, form and lang can be customised with the \biber
+\opt{vsplit} option and defaults to an underscore (ASCII 95).
 \bigskip
 \section{Binaries}\label{binaries}
 
