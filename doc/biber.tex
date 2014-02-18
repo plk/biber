@@ -1132,7 +1132,11 @@ which are explained in the accompanying text. Items in
     <type_pair source="+\textcolor{red}{source}+" target="+\textcolor{red}{target}+"/>
                 $\vdots$
     <field source="+\textcolor{red}{source}+"
+           +\textcolor{blue}{source\_form="\textcolor{red}{sform}"}+
+           +\textcolor{blue}{source\_lang="\textcolor{red}{slang}"}+
            +\textcolor{blue}{target="\textcolor{red}{target}"}+
+           +\textcolor{blue}{target\_form="\textcolor{red}{tform}"}+
+           +\textcolor{blue}{target\_lang="\textcolor{red}{tlang}"}+
            +\textcolor{blue}{skip="true|false"}+
            +\textcolor{blue}{override\_target="true|false"}+/>
                            $\vdots$
@@ -1160,6 +1164,11 @@ which are explained in the accompanying text. Items in
   \textcolor{red}{\texttt{source}}/\textcolor{red}{\texttt{target}}
   pairs which are specified in one or more \texttt{type\_pair} elements
   within the same \texttt{inherit} element.
+  Specific variants can be specified using the
+  \textcolor{blue}{\texttt{source\_form}},
+  \textcolor{blue}{\texttt{source\_lang}},
+  \textcolor{blue}{\texttt{target\_form}} and
+  \textcolor{blue}{\texttt{target\_lang}} optional attributes.
   \textcolor{blue}{\texttt{override\_target}} can be specified on a
   per-field basis as can the \textcolor{blue}{\texttt{skip}} attribute
   which indicates that a particular \texttt{field} is not to be inherited by
@@ -1496,6 +1505,26 @@ the \file{.bcf}:
   <sort order="6">
     <sortitem order="1" pad_side="left" pad_width="4" pad_char="0">volume</sortitem>
     <sortitem order="2">0000</sortitem>
+  </sort>
+</sorting>
+\end{lstlisting}
+%
+Here is a scheme which by default sorts with the «de\_DE» locale. It first looks
+for a translated Danish name or a name with no variant specified and sorts
+the name found in the «da\_DK» locale. Then it
+looks for a translated german title, 
+translated Danish title or a title with no variant specified:
+
+\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
+<sorting locale="de_DE">
+  <sort locale="da_DK" order="2">
+    <sortitem form="translated" lang="danish" order="1">author</sortitem>
+    <sortitem order="2">author</sortitem>
+  </sort>
+  <sort order="2">
+    <sortitem form="translated" lang="german" order="1">title</sortitem>
+    <sortitem form="translated" lang="danish" order="2">title</sortitem>
+    <sortitem order="3">title</sortitem>
   </sort>
 </sorting>
 \end{lstlisting}
@@ -2782,7 +2811,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 1.8
+INFO - This is Biber 2.0
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
