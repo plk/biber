@@ -237,6 +237,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
+2.0 & 3.0\\
 1.9 & 2.9\\
 1.8 & 2.8x\\
 1.7 & 2.7\\
@@ -334,6 +335,8 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
 \item Structural validation of the data against the data model with a
   customisable validation model
 \item Tool mode for operations on datasources directly
+\item Support for multiple language/form variants of fields within the same
+  bibliography database entry.
 \end{itemize}
 
 \noindent Figure \ref{fig:overview} shows the main functional units of
@@ -520,9 +523,13 @@ labelalpha         & \checkmark & \checkmark &  \\
 labelalphatemplate & \checkmark & \checkmark &  \\
 labeldate          & \checkmark & \checkmark &  \\
 labeldatespec      & \checkmark & \checkmark &  \\
+labelnameform      & & &  \checkmark\\
+labelnamelang      & & &  \checkmark\\
 labelnamespec      & \checkmark & \checkmark &  \\
 labelnumber        & \checkmark & \checkmark &  \\
 labeltitle         & \checkmark & \checkmark &  \\
+labeltitleform      & & &  \checkmark\\
+labeltitlelang      & & &  \checkmark\\
 labeltitleyear     & \checkmark & \checkmark &  \\
 maxalphanames      & \checkmark & \checkmark & \checkmark\\
 maxbibnames        & \checkmark & \checkmark & \checkmark\\
@@ -547,6 +554,9 @@ useauthor          & \checkmark & \checkmark & \checkmark\\
 useeditor          & \checkmark & \checkmark & \checkmark\\
 useprefix          & \checkmark & \checkmark & \checkmark\\
 usetranslator      & \checkmark & \checkmark & \checkmark\\
+vform              & \checkmark &  & \checkmark\\
+vlang              & \checkmark &  & \checkmark\\
+vtranslang         & \checkmark &  & \checkmark\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -594,7 +604,6 @@ an example config file which displays the \biber\ defaults:
   <debug>0</debug>
   <decodecharsset>base</decodecharsset>
   <fastsort>0</fastsort>
-  <graph>0</graph>
   <input_encoding>UTF-8</input_encoding>
   <listsep>and</listsep>
   <mincrossrefs>0</mincrossrefs>
@@ -628,10 +637,11 @@ an example config file which displays the \biber\ defaults:
   <sortcase>true</sortcase>
   <sortupper>true</sortupper>
   <tool>false</tool>
-  <trace>0</trace>
+  <trace>false</trace>
   <validate_config>0</validate_config>
   <validate_control>0</validate_control>
   <validate_structure>0</validate_structure>
+  <vsplit>_</vsplit>
   <wraplines>0</wraplines>
 </config>
 \end{lstlisting}
