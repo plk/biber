@@ -202,7 +202,8 @@ sub set_labelname_info {
   my $data = shift;
   my $key = $self->get_field('citekey');
   $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
+  my $langfield = (($data->{form} eq 'translated') ? 'vtranslang' : 'vlang');
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption($langfield, undef, $key);
   $self->{labelnameinfo} = $data;
   return;
 }
@@ -233,7 +234,8 @@ sub set_labelnamefh_info {
   my $data = shift;
   my $key = $self->get_field('citekey');
   $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
+  my $langfield = (($data->{form} eq 'translated') ? 'vtranslang' : 'vlang');
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption($langfield, undef, $key);
   $self->{labelnamefhinfo} = $data;
   return;
 }
@@ -264,7 +266,8 @@ sub set_labeltitle_info {
   my $data = shift;
   my $key = $self->get_field('citekey');
   $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
+  my $langfield = (($data->{form} eq 'translated') ? 'vtranslang' : 'vlang');
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption($langfield, undef, $key);
   $self->{labeltitleinfo} = $data;
   return;
 }
@@ -296,7 +299,8 @@ sub set_labeldate_info {
   my $data = shift;
   my $key = $self->get_field('citekey');
   $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
+  my $langfield = (($data->{form} eq 'translated') ? 'vtranslang' : 'vlang');
+  $data->{lang} = $data->{lang} || Biber::Config->getblxoption($langfield, undef, $key);
   $self->{labeldateinfo} = $data;
   return;
 }
@@ -328,8 +332,8 @@ sub set_field {
   my $dm = Biber::Config->get_dm;
   my $key = ($field eq 'citekey' ) ? $field : $self->{derivedfields}{nonvariant}{citekey};
   if ($dm->field_is_variant_enabled($field)) {
-    my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
+    my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
     $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
     # All derived fields can be null
     $self->{derivedfields}{variant}{$field}{$form}{$lang} = $val;
@@ -345,7 +349,7 @@ sub set_field {
 
 =head2 get_field
 
-    Get a specific field variants for a Biber::Entry object,
+    Get a specific field variant for a Biber::Entry object,
     Uses // as fields can be null (end dates etc).
 
 =cut
