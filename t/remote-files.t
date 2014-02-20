@@ -66,7 +66,8 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       }
       \strng{namehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
       \strng{fullhash}{ee363ce5e21ebe022f83aae896dd47f9}
-      \field{sortinit}{4203d16473bc940d4ac780773cb7c5dd}
+      \field{sortinit}{M}
+      \field{sortinithash}{4203d16473bc940d4ac780773cb7c5dd}
       \field{labelyear}{1999}
       \field{labelmonth}{05}
       \field{datelabelsource}{}
@@ -98,7 +99,8 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       }
       \strng{namehash}{01599a4cb58316d64208b12a07741765}
       \strng{fullhash}{01599a4cb58316d64208b12a07741765}
-      \field{sortinit}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinit}{A}
+      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labelyear}{1998}
       \field{datelabelsource}{}
       \field{labeltitle}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
@@ -131,7 +133,8 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       }
       \strng{namehash}{83d062f99d033839537243075d75bad2}
       \strng{fullhash}{83d062f99d033839537243075d75bad2}
-      \field{sortinit}{4203d16473bc940d4ac780773cb7c5dd}
+      \field{sortinit}{M}
+      \field{sortinithash}{4203d16473bc940d4ac780773cb7c5dd}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
       \field{labeltitle}{Le philosophe et son ombre}
