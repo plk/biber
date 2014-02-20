@@ -51,7 +51,7 @@
             "Regexp::Common" : "0",
             "Text::BibTeX" : "0.66",
             "URI" : "0",
-            "Unicode::Collate" : "0.98",
+            "Unicode::Collate" : "1.04",
             "Unicode::GCString" : "0",
             "XML::LibXML::Simple" : "0",
             "XML::LibXSLT" : "0",
@@ -68,7 +68,7 @@
       },
       "Biber::Config" : {
          "file" : "lib/Biber/Config.pm",
-         "version" : "1.8"
+         "version" : "2.0"
       },
       "Biber::Constants" : {
          "file" : "lib/Biber/Constants.pm",
@@ -102,16 +102,8 @@
          "file" : "lib/Biber/Input/file/bibtex.pm",
          "version" : 0
       },
-      "Biber::Input::file::endnotexml" : {
-         "file" : "lib/Biber/Input/file/endnotexml.pm",
-         "version" : 0
-      },
       "Biber::Input::file::ris" : {
          "file" : "lib/Biber/Input/file/ris.pm",
-         "version" : 0
-      },
-      "Biber::Input::file::zoterordfxml" : {
-         "file" : "lib/Biber/Input/file/zoterordfxml.pm",
          "version" : 0
       },
       "Biber::Internals" : {
@@ -162,6 +154,10 @@
          "file" : "lib/Biber/SortLists.pm",
          "version" : 0
       },
+      "Biber::UCollate" : {
+         "file" : "lib/Biber/UCollate.pm",
+         "version" : 0
+      },
       "Biber::Utils" : {
          "file" : "lib/Biber/Utils.pm",
          "version" : 0
@@ -173,5 +169,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "1.8"
+   "version" : "2.0"
 }

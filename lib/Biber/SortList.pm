@@ -335,9 +335,10 @@ sub get_sortdata {
 =cut
 
 sub set_sortinitdata_for_key {
-  my ($self, $key, $init) = @_;
+  my ($self, $key, $init, $inithash) = @_;
   return unless defined($key);
-  $self->{sortinitdata}{$key} = $init;
+  $self->{sortinitdata}{$key} = {init     => $init,
+                                 inithash => $inithash};
   return;
 }
 
@@ -356,14 +357,26 @@ sub set_sortinitdata {
 
 =head2 get_sortinit_for_key
 
-    Gets the sortint in a list for a key
+    Gets the sortinit in a list for a key
 
 =cut
 
 sub get_sortinit_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{sortinitdata}{$key};
+  return $self->{sortinitdata}{$key}{init};
+}
+
+=head2 get_sortinithash_for_key
+
+    Gets the sortinit hash in a list for a key
+
+=cut
+
+sub get_sortinithash_for_key {
+  my ($self, $key) = @_;
+  return unless defined($key);
+  return $self->{sortinitdata}{$key}{inithash};
 }
 
 =head2 set_sortscheme
@@ -463,6 +476,13 @@ sub instantiate_entry {
   if (defined($sinit)) {
     my $str = "\\field{sortinit}{$sinit}";
     $entry_string =~ s|<BDS>SORTINIT</BDS>|$str|gxms;
+  }
+
+  # sortinithash
+  my $sinithash = $self->get_sortinithash_for_key($key);
+  if (defined($sinithash)) {
+    my $str = "\\field{sortinithash}{$sinithash}";
+    $entry_string =~ s|<BDS>SORTINITHASH</BDS>|$str|gxms;
   }
 
   # extrayear

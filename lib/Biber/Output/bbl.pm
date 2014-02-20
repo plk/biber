@@ -73,9 +73,20 @@ sub create_output_misc {
 
   if (my $pa = $Biber::MASTER->get_preamble) {
     $pa = join("%\n", @$pa);
-    # Decode UTF-8 -> LaTeX macros if asked to
+
+    # If requested to convert UTF-8 to macros ...
     if (Biber::Config->getoption('output_safechars')) {
-      $pa = Biber::LaTeX::Recode::latex_encode($pa);
+      $pa = latex_recode_output($pa);
+    }
+    else {           # ... or, check for encoding problems and force macros
+      my $outenc = Biber::Config->getoption('output_encoding');
+      if ($outenc ne 'UTF-8') {
+        # Can this entry be represented in the output encoding?
+        if (encode($outenc, NFC($pa)) =~ /\?/) { # Malformed data encoding char
+          # So convert to macro
+          $pa = latex_recode_output($pa);
+        }
+      }
     }
     $self->{output_data}{HEAD} .= "\\preamble{%\n$pa%\n}\n\n";
   }
@@ -302,6 +313,7 @@ sub set_output_entry {
   # This is special, we have to put a marker for sortinit{hash} and then replace this string
   # on output as it can vary between lists
   $acc .= "      <BDS>SORTINIT</BDS>\n";
+  $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
   # The labeldate option determines whether "extrayear" is output
   if ( Biber::Config->getblxoption('labeldate', $bee)) {
