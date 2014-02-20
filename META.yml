@@ -20,7 +20,7 @@ provides:
     version: 0
   Biber::Config:
     file: lib/Biber/Config.pm
-    version: 2.0
+    version: 1.9
   Biber::Constants:
     file: lib/Biber/Constants.pm
     version: 0
@@ -45,8 +45,14 @@ provides:
   Biber::Input::file::bibtex:
     file: lib/Biber/Input/file/bibtex.pm
     version: 0
+  Biber::Input::file::endnotexml:
+    file: lib/Biber/Input/file/endnotexml.pm
+    version: 0
   Biber::Input::file::ris:
     file: lib/Biber/Input/file/ris.pm
+    version: 0
+  Biber::Input::file::zoterordfxml:
+    file: lib/Biber/Input/file/zoterordfxml.pm
     version: 0
   Biber::Internals:
     file: lib/Biber/Internals.pm
@@ -112,7 +118,7 @@ requires:
   Log::Log4perl: 0
   Mozilla::CA: 20130114
   Regexp::Common: 0
-  Text::BibTeX: 0.66
+  Text::BibTeX: 0.67
   URI: 0
   Unicode::Collate: 1.04
   Unicode::GCString: 0
@@ -123,4 +129,4 @@ requires:
   perl: v5.16.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 2.0
+version: 1.9

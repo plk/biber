@@ -182,7 +182,8 @@ my $forms1 = q|    \entry{forms1}{book}{}
       \strng{namehash}{253fe13319a1daadcda3e2acce242883}
       \strng{fullhash}{253fe13319a1daadcda3e2acce242883}
       \field{labelalpha}{БР02}
-      \field{sortinit}{8f918f8686258589a227d5aaf265a9bb}
+      \field{sortinit}{Б}
+      \field{sortinithash}{8f918f8686258589a227d5aaf265a9bb}
       \field{labeltitle}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \true{singletitle}
       \field{day}{01}
@@ -195,7 +196,8 @@ my $forms1 = q|    \entry{forms1}{book}{}
 |;
 
 my $forms9 = q|    \entry{forms9}{book}{vtranslang=german,vlang=french}
-      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{0}
+      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Un titel}
       \field{langid}{french}
       \field{title}{Un titel}
@@ -203,7 +205,8 @@ my $forms9 = q|    \entry{forms9}{book}{vtranslang=german,vlang=french}
 |;
 
 my $forms10 = q|    \entry{forms10}{book}{vlang=french}
-      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{0}
+      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Un titel}
       \field{langid}{french}
       \field{title}{Un titel}
@@ -211,7 +214,8 @@ my $forms10 = q|    \entry{forms10}{book}{vlang=french}
 |;
 
 my $forms11 = q|    \entry{forms11}{book}{vlang=french}
-      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{0}
+      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Un titel}
       \field{langid}{french}
       \field{title}{Un titel}
@@ -219,7 +223,8 @@ my $forms11 = q|    \entry{forms11}{book}{vlang=french}
 |;
 
 my $forms12 = q|    \entry{forms12}{unpublished}{}
-      \field{sortinit}{9378dd666f3c24d81538df53aa99e23d}
+      \field{sortinit}{T}
+      \field{sortinithash}{9378dd666f3c24d81538df53aa99e23d}
       \field{labeltitle}{TITLE}
       \true{singletitle}
       \field[form=translated,lang=french]{maintitle}{Maintitle translated FRENCH}
@@ -230,7 +235,8 @@ my $forms12 = q|    \entry{forms12}{unpublished}{}
 |;
 
 my $forms13 = q|    \entry{forms13}{unpublished}{}
-      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{0}
+      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field[form=translated,lang=french]{journaltitle}{Jtitle translated french}
       \field[form=uniform,lang=french]{journaltitle}{Jtitle uniform french}
       \field[form=translated,lang=french]{note}{Note translated french}
@@ -239,14 +245,16 @@ my $forms13 = q|    \entry{forms13}{unpublished}{}
 |;
 
 my $forms14 = q|    \entry{forms14}{unpublished}{}
-      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{0}
+      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field[lang=french]{journaltitle}{JTITLE french}
       \field[form=translated]{note}{NOTE translated}
     \endentry
 |;
 
 my $forms15 = q|    \entry{forms15}{unpublished}{}
-      \field{sortinit}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{0}
+      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field[form=romanised]{booktitle}{German title}
     \endentry
 |;
