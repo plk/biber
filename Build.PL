@@ -69,9 +69,6 @@ my $builder = $class->new(
         'Business::ISMN' => 0,
         'perl' => '5.16.0'
     },
-    recommends => {
-        'Readonly::XS' => 0,
-    },
     script_files => [ glob( "bin/*" ) ],
     data_files => {'data/schemata/config.rnc' => 'lib/Biber/config.rnc',
                    'data/schemata/config.rng' => 'lib/Biber/config.rng',
