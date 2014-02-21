@@ -23,7 +23,6 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( uniq );
 use XML::LibXML;
 use XML::LibXML::Simple;
-use Readonly;
 use Data::Dump qw(dump);
 use Unicode::Normalize;
 use Unicode::GCString;
@@ -32,8 +31,8 @@ use URI;
 my $logger = Log::Log4perl::get_logger('main');
 my $orig_key_order = {};
 
-Readonly::Scalar our $BIBLATEXML_NAMESPACE_URI => 'http://biblatex-biber.sourceforge.net/biblatexml';
-Readonly::Scalar our $NS => 'bltx';
+our $BIBLATEXML_NAMESPACE_URI = 'http://biblatex-biber.sourceforge.net/biblatexml';
+our $NS = 'bltx';
 
 # Determine handlers from data model
 my $dm = Biber::Config->get_dm;
