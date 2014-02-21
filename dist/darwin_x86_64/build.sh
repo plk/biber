@@ -49,7 +49,7 @@ PAR_VERBATIM=1 pp --compress=6 \
   --module=IO::Socket::SSL \
   --link=/tmp/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
-  --link=/opt/local/lib/libbtparse.dylib \
+  --link=/opt/local/libexec/perl5.16/sitebin/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
   --link=/opt/local/lib/libxslt.1.dylib \
   --link=/opt/local/lib/libgdbm.4.dylib \
