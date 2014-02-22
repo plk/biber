@@ -31,8 +31,8 @@ use URI;
 my $logger = Log::Log4perl::get_logger('main');
 my $orig_key_order = {};
 
-our $BIBLATEXML_NAMESPACE_URI = 'http://biblatex-biber.sourceforge.net/biblatexml';
-our $NS = 'bltx';
+my $BIBLATEXML_NAMESPACE_URI = 'http://biblatex-biber.sourceforge.net/biblatexml';
+my $NS = 'bltx';
 
 # Determine handlers from data model
 my $dm = Biber::Config->get_dm;

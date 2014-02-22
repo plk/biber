@@ -832,7 +832,7 @@ sub _gen_first_disambiguating_name_map {
 # Sorting
 #########
 
-our $sorting_sep = ',';
+my $sorting_sep = ',';
 
 # special sorting routines - not part of the dm but special fields for biblatex
 my %internal_dispatch_sorting = (
