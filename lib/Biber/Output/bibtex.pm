@@ -100,7 +100,7 @@ sub set_output_entry {
       next if first {lc($f) eq $_}  ('xdata', 'crossref');
     }
 
-    my $value = decode_utf8($be->get_rawfield($f));
+    my $value = $be->get_rawfield($f);
     $acc .= ' ' x Biber::Config->getoption('output_indent');
     $acc .= $casing->($f);
     $acc .= ' ' x ($max_field_len - Unicode::GCString->new($f)->length) if Biber::Config->getoption('output_align');
