@@ -326,6 +326,9 @@ sub extract_entries {
 =head2 create_entry
 
    Create a Biber::Entry object from a Text::BibTeX object
+   Be careful in here, all T::B set methods are UTF-8/NFC boundaries
+   so be careful to encode(NFC()) on calls. Windows won't handle UTF-8
+   in T::B btparse gracefully and will die.
 
 =cut
 
@@ -395,7 +398,7 @@ sub create_entry {
             # Change entrytype if requested
             $last_type = $entry->type;
             $logger->debug("Source mapping (type=$level, key=$key): Changing entry type from '$last_type' to " . lc($step->{map_type_target}));
-            $entry->set_type(lc($step->{map_type_target}));
+            $entry->set_type(encode('UTF-8', NFC(lc($step->{map_type_target}))));
           }
 
           # Field map
@@ -438,7 +441,7 @@ sub create_entry {
                 my $r = $step->{map_replace};
                 $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field '" . lc($source) . "'");
                 $entry->set(lc($source),
-                            ireplace($last_fieldval, $m, $r));
+                            encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
               }
               else {
                 # Now re-instate any unescaped $1 .. $9 to get round these being
@@ -486,7 +489,7 @@ sub create_entry {
                   next;
                 }
               }
-              $entry->set(lc($target), biber_decode_utf8($entry->get(lc($source))));
+              $entry->set(lc($target), encode('UTF-8', NFC(biber_decode_utf8($entry->get(lc($source))))));
               $entry->delete(lc($source));
             }
           }
@@ -521,17 +524,17 @@ sub create_entry {
               if ($step->{map_origentrytype}) {
                 next unless $last_type;
                 $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${last_type}'");
-                $entry->set(lc($field), $orig . $last_type);
+                $entry->set(lc($field), encode('UTF-8', NFC($orig . $last_type)));
               }
               elsif ($step->{map_origfieldval}) {
                 next unless $last_fieldval;
                 $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${last_fieldval}'");
-                $entry->set(lc($field), $orig . $last_fieldval);
+                $entry->set(lc($field), encode('UTF-8', NFC($orig . $last_fieldval)));
               }
               elsif ($step->{map_origfield}) {
                 next unless $last_field;
                 $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${last_field}'");
-                $entry->set(lc($field), $orig . $last_field);
+                $entry->set(lc($field), encode('UTF-8', NFC($orig . $last_field)));
               }
               else {
                 my $fv = $step->{map_field_value};
@@ -540,7 +543,7 @@ sub create_entry {
                 # previous map_match
                 $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
                 $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${fv}'");
-                $entry->set(lc($field), $orig . $fv);
+                $entry->set(lc($field), encode('UTF-8', NFC($orig . $fv)));
               }
             }
           }
@@ -980,7 +983,7 @@ sub preprocess_file {
   # strip UTF-8 BOM if it exists - this just makes T::B complain about junk characters
   $buf =~ s/\A\x{feff}//;
 
-  File::Slurp::write_file($ufilename, NFC(encode('UTF-8', $buf))) or
+  File::Slurp::write_file($ufilename, encode('UTF-8', NFC($buf))) or
       biber_error("Can't write $ufilename");# Unicode NFC boundary
 
   # Always decode LaTeX to UTF8
@@ -992,7 +995,7 @@ sub preprocess_file {
   $lbuf = Biber::LaTeX::Recode::latex_decode($lbuf, strip_outer_braces => 1);
   $logger->trace("Buffer after decoding -> '$lbuf'");
 
-  File::Slurp::write_file($ufilename, NFC(encode('UTF-8', $lbuf))) or
+  File::Slurp::write_file($ufilename, encode('UTF-8', NFC($lbuf))) or
       biber_error("Can't write $ufilename");# Unicode NFC boundary
 
   return $ufilename;
