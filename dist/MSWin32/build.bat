@@ -65,7 +65,6 @@ CALL pp ^
   --link=C:\strawberry\c\bin\liblzma-5_.dll ^
   --addlist=biber.files ^
   --cachedeps=scancache ^
-  --icon=biber.ico ^
   --output=biber-MSWIN.exe ^
   %TEMP%\biber-MSWIN
 
