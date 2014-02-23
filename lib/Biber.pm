@@ -34,6 +34,7 @@ use Log::Log4perl qw( :no_extra_logdie_message );
 use Data::Dump;
 use Data::Compare;
 use Text::BibTeX qw(:macrosubs);
+use Unicode::Normalize;
 
 =encoding utf-8
 
@@ -597,7 +598,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
     my @keys = ();
     foreach my $keyc (@{$section->{citekey}}) {
-      my $key = biber_decode_utf8($keyc->{content});# Unicode NFD boundary
+      my $key = NFD($keyc->{content});# Key is already UTF-8 - it comes from UTF-8 XML
       # Stop reading citekeys if we encounter "*" as a citation as this means
       # "all keys"
       if ($key eq '*') {

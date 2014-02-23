@@ -621,7 +621,6 @@ sub _uri {
     $value =~ s/\\%/%/g; # just in case someone BibTeX escaped the "%"
     # This is what uri_unescape() does but it's faster
     $value =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
-    $value = NFC(decode_utf8($value));# Unicode NFC boundary (before hex encoding)
   }
 
   $value = URI->new($value)->as_string;
@@ -686,6 +685,7 @@ sub _name {
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
 
+  # @tmp is bytes again now
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
 
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
