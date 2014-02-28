@@ -5,5 +5,7 @@
 auto
 MYMETA.yml
 MYMETA.json
+META.yml
+META.json
 dist/darwin_x86_64/biber-darwin_x86_64
 dist/darwin_x86_64/scancache
