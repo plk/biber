@@ -40,19 +40,13 @@ SUPPORT AND DOCUMENTATION
 
   More information, bugfix releases, forums and bug tracker are available at:
 
-      http://biblatex-biber.sourceforge.net
-
-BUGS
-
-  Please report any bugs or feature requests on our sourceforge tracker at
-    https://sourceforge.net/tracker2/?func=browse&group_id=228270
-
+      https://github.com/plk/biber
 
 ==========================
 
 COPYRIGHT AND LICENCE
 
-  Copyright (C) 2009--2013 François Charette and Philip Kime
+  Copyright (C) 2009--2014 François Charette and Philip Kime
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of either:
