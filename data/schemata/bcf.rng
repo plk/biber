@@ -530,6 +530,12 @@
                     <value>true</value>
                   </attribute>
                 </optional>
+                <optional>
+                  <!-- Field can be used as a label? This auto-generates some defaults in biblatex -->
+                  <attribute name="label">
+                    <value>true</value>
+                  </attribute>
+                </optional>
                 <text/>
               </element>
             </oneOrMore>

@@ -201,6 +201,8 @@ start =
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?
           attribute skip_output { "true" }?,
+          # Field can be used as a label? This auto-generates some defaults in biblatex
+          attribute label { "true" }?,
           text
         }+
       },
