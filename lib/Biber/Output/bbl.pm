@@ -507,8 +507,8 @@ sub output {
     my @lists; # Need to reshuffle list to put global sort order list at end, see below
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
-    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
-      if ($list->get_label eq Biber::Config->getblxoption('sortscheme')) {
+    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
+      if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme')) {
         next;
       }
       push @lists, $list;
@@ -518,15 +518,16 @@ sub output {
     # due to its sequential reading of the .bbl as the final list overrides the
     # previously read ones and the global list determines the order of labelnumber
     # and sortcites etc. when not using defernumbers
-    push @lists, $Biber::MASTER->sortlists->get_list($secnum, 'entry', Biber::Config->getblxoption('sortscheme'));
+    push @lists, $Biber::MASTER->sortlists->get_list($secnum, Biber::Config->getblxoption('sortscheme'), 'entry', Biber::Config->getblxoption('sortscheme'));
 
     foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists
-      my $listlabel = $list->get_label;
+      my $listssn = $list->get_sortschemename;
       my $listtype = $list->get_type;
-      $logger->debug("Writing entries in '$listtype' list '$listlabel'");
+      my $listname = $list->get_name;
+      $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn'");
 
-      out($target, "  \\sortlist{$listtype}{$listlabel}\n");
+      out($target, "  \\sortlist{$listname}{$listssn}\n");
 
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
@@ -556,7 +557,7 @@ sub output {
           # Now output
           out($target, $entry_string);
         }
-        elsif ($listtype eq 'shorthand') {
+        elsif ($listtype eq 'list') {
           out($target, "    \\key{$k}\n");
         }
       }

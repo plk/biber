@@ -276,8 +276,10 @@ start =
 listspec = 
     element bcf:sortlist {
       attribute section { xsd:integer },
-      attribute type { "entry" | "key" | "shorthand" },
-      attribute label { xsd:string {minLength="1"}},
+      attribute type { "entry" | "list" },
+      attribute sortscheme { xsd:string {minLength="1"}},
+      # name is only needed for list types
+      attribute name { xsd:string {minLength="1"}},
       (filter | orfilter )*,
       element bcf:sorting {
         # locale for entire sorting specification

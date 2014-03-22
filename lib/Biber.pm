@@ -250,7 +250,7 @@ sub tool_mode_setup {
   $self->add_sections($bib_sections);
 
   my $sortlists = new Biber::SortLists;
-  my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'));
+  my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'));
   $seclist->set_type('entry');
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
   # Locale just needs a default here - there is no biblatex option to take it from
@@ -653,16 +653,18 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
   foreach my $list (@{$bcfxml->{sortlist}}) {
     my $ltype  = $list->{type};
-    my $llabel = $list->{label};
+    my $lssn = $list->{sortscheme};
+    my $lname = $list->{name};
 
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
-    if (my $l = $sortlists->get_list($lsection, $ltype, $llabel)) {
-      $logger->debug("Section '$ltype' list '$llabel' is repeated for section $lsection - ignoring");
+    if (my $l = $sortlists->get_list($lsection, $lname, $ltype, $lssn)) {
+      $logger->debug("Section sortlist '$lname' of type '$ltype' with sortscheme '$lssn' is repeated for section $lsection - ignoring");
       next;
     }
 
-    my $seclist = Biber::SortList->new(section => $lsection, label => $llabel);
+    my $seclist = Biber::SortList->new(section => $lsection, sortschemename => $lssn, name => $lname);
     $seclist->set_type($ltype || 'entry'); # lists are entry lists by default
+    $seclist->set_name($lname || $lssn); # name is only relevelant for "list" type, default to ss
     foreach my $filter (@{$list->{filter}}) {
       $seclist->add_filter($filter->{type}, $filter->{content});
     }
@@ -677,7 +679,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     else {
       $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
     }
-    $logger->debug("Adding '$ltype' list '$llabel' for section $lsection");
+    $logger->debug("Adding sortlist of type '$ltype' with sortscheme '$lssn' and name '$lname' for section $lsection");
     $sortlists->add_list($seclist);
   }
 
@@ -686,8 +688,8 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   foreach my $section (@{$bcfxml->{section}}) {
     my $globalss = Biber::Config->getblxoption('sortscheme');
     my $secnum = $section->{number};
-    unless ($sortlists->get_list($secnum, 'entry', $globalss)) {
-      my $seclist = Biber::SortList->new(section => $secnum, type => 'entry', label => $globalss);
+    unless ($sortlists->get_list($secnum, $globalss, 'entry', $globalss)) {
+      my $seclist = Biber::SortList->new(section => $secnum, type => 'entry', sortschemename => $globalss, name => $globalss);
       $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $sortlists->add_list($seclist);
     }
@@ -728,7 +730,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # Global locale in non tool mode bibtex output is default
     Biber::Config->setblxoption('sortlocale', 'english');
 
-    my $seclist = Biber::SortList->new(section => 99999, label => Biber::Config->getblxoption('sortscheme'));
+    my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'), type => 'entry');
     $seclist->set_type('entry');
     # bibtex output in non-tool mode is just citeorder
     $seclist->set_sortscheme({locale => map_locale(Biber::Config->getblxoption('sortlocale')),
@@ -762,7 +764,7 @@ sub process_setup {
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
     unless ($self->sortlists->has_lists_of_type_for_section($secnum, 'entry')) {
-      my $dlist = Biber::SortList->new(label => Biber::Config->getblxoption('sortscheme'));
+      my $dlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'));
       $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $dlist->set_type('entry');
       $dlist->set_section($secnum);
@@ -1970,13 +1972,14 @@ sub process_lists {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $list (@{$self->sortlists->get_lists_for_section($secnum)}) {
-    my $llabel = $list->get_label;
+    my $lssn = $list->get_sortschemename;
     my $ltype = $list->get_type;
+    my $lname = $list->get_name;
     # Last-ditch fallback in case we still don't have a sorting spec
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
 
     $list->set_keys([ $section->get_citekeys ]);
-    $logger->debug("Populated '$ltype' list '$llabel' in section $secnum with keys: " . join(', ', $list->get_keys));
+    $logger->debug("Populated sortlist '$lname' of type '$ltype' with sortscheme '$lssn' in section $secnum with keys: " . join(', ', $list->get_keys));
 
     # Now we check the sorting cache to see if we already have results
     # for this scheme since sorting is computationally expensive.
@@ -1990,11 +1993,11 @@ sub process_lists {
     # * extra* data
 
     my $cache_flag = 0;
-    $logger->debug("Checking sorting cache for list '$llabel'");
+    $logger->debug("Checking sorting cache for scheme '$lssn'");
     foreach my $cacheitem (@{$section->get_sort_cache}) {
       if (Compare($list->get_sortscheme, $cacheitem->[0])) {
-        $logger->debug("Found sorting cache entry for '$llabel'");
-        $logger->trace("Sorting list cache for list '$llabel':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
+        $logger->debug("Found sorting cache entry for scheme '$lssn'");
+        $logger->trace("Sorting list cache for scheme '$lssn':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
         $list->set_keys($cacheitem->[1]);
         $list->set_sortinitdata($cacheitem->[2]);
         $list->set_extrayeardata($cacheitem->[3]);
@@ -2005,30 +2008,30 @@ sub process_lists {
     }
 
     unless ($cache_flag) {
-      $logger->debug("No sorting cache entry for '$llabel'");
+      $logger->debug("No sorting cache entry for scheme '$lssn'");
       # Sorting
       $self->generate_sortinfo($list);       # generate the sort information
       $self->sort_list($list);               # sort the list
       $self->generate_extra($list) unless Biber::Config->getoption('tool'); # generate the extra* fields
 
       # Cache the results
-      $logger->debug("Adding sorting cache entry for '$llabel'");
+      $logger->debug("Adding sorting cache entry for scheme '$lssn'");
       $section->add_sort_cache($list->get_listdata);
     }
 
     # Filtering
     # This is not really used - filtering is more efficient to do on the biblatex
-    # side since we are filtering afer sorting anyway. It is used to provide
+    # side since we are filtering after sorting anyway. It is used to provide
     # a field=shorthand filter for type=shorthand lists though.
     if (my $filters = $list->get_filters) {
       my $flist = [];
 KEYLOOP: foreach my $k ($list->get_keys) {
         # Filter out skiplos entries as a special case in 'shorthand' type lists
-        if ($list->get_type eq 'shorthand') {
+        if ($list->get_type eq 'list') {
           next if Biber::Config->getblxoption('skiplos', $section->bibentry($k)->get_field('entrytype'), $k);
         }
 
-        $logger->debug("Checking key '$k' in list '$llabel' against list filters");
+        $logger->debug("Checking key '$k' in list '$lname' against list filters");
         my $be = $section->bibentry($k);
         foreach my $t (keys %$filters) {
           my $fs = $filters->{$t};
@@ -2042,7 +2045,7 @@ KEYLOOP: foreach my $k ($list->get_keys) {
         }
         push @$flist, $k;
       }
-      $logger->debug("Keys after filtering list '$llabel' in section $secnum: " . join(', ', @$flist));
+      $logger->debug("Keys after filtering list '$lname' in section $secnum: " . join(', ', @$flist));
       $list->set_keys($flist); # Now save the sorted list in the list object
     }
   }
@@ -2803,8 +2806,9 @@ sub sort_list {
   my $list = shift;
   my $sortscheme = $list->get_sortscheme;
   my @keys = $list->get_keys;
-  my $llabel = $list->get_label;
+  my $lssn = $list->get_sortschemename;
   my $ltype = $list->get_type;
+  my $lname = $list->get_name;
   my $llocale = map_locale($sortscheme->{locale} || Biber::Config->getblxoption('sortlocale'));
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -2820,7 +2824,7 @@ sub sort_list {
     $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
   }
 
-  $logger->trace("Sorting '$ltype' list '$llabel' with scheme\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
+  $logger->trace("Sorting sortlist '$lname' of type '$ltype' with sortscheme '$lssn'. Scheme is\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
 
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
@@ -2833,7 +2837,7 @@ sub sort_list {
 
   if ( Biber::Config->getoption('fastsort') ) {
     use locale;
-    $logger->info("Sorting '$ltype' list '$llabel'");
+    $logger->info("Sorting list '$lname' of type '$ltype' with scheme '$lssn'");
     $logger->debug("Sorting with fastsort (locale $thislocale)");
     unless (setlocale(LC_ALL, $thislocale)) {
       biber_warn("Unavailable locale $thislocale");
@@ -2916,7 +2920,7 @@ sub sort_list {
     my $Collator = Biber::UCollate->new($thislocale, %$collopts);
 
     my $UCAversion = $Collator->version();
-    $logger->info("Sorting '$ltype' list '$llabel' with locale '$thislocale'");
+    $logger->info("Sorting list '$lname' of type '$ltype' with scheme '$lssn' and locale '$thislocale'");
     $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion, Locale: " . $Collator->getlocale . ")");
 
     # Log if U::C::L currently has no tailoring for used locale

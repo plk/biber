@@ -1,5 +1,5 @@
 % $ biblatex auxiliary file $
-% $ biblatex bbl format version 2.3 $
+% $ biblatex bbl format version 2.4 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -18,10 +18,10 @@
 
 
 \refsection{0}
-  \sortlist{shorthand}{shorthand}
+  \sortlist{shorthands}{shorthands}
     \key{F1}
   \endsortlist
-  \sortlist{entry}{nty}
+  \sortlist{nty}{nty}
     \entry{F1}{book}{}
       \name{labelname}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%

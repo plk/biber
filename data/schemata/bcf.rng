@@ -712,11 +712,16 @@
         <attribute name="type">
           <choice>
             <value>entry</value>
-            <value>key</value>
-            <value>shorthand</value>
+            <value>list</value>
           </choice>
         </attribute>
-        <attribute name="label">
+        <attribute name="sortscheme">
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </attribute>
+        <!-- name is only needed for list types -->
+        <attribute name="name">
           <data type="string">
             <param name="minLength">1</param>
           </data>

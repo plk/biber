@@ -45,9 +45,9 @@ Biber::Config->setoption('nodieonerror', 1); # because there is a failing cyclic
 # Now generate the information
 my (undef, $stderr) = capture { $biber->prepare };
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $main0 = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->sortlists->get_list(1, 'entry', 'nty');
+my $main1 = $biber->sortlists->get_list(1, 'nty', 'entry', 'nty');
 my $out = $biber->get_output_obj;
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
