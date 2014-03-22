@@ -212,7 +212,7 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
     \endentry
 |;
 
-is_deeply([$shs->get_keys], ['skip1'], 'skiplos - not in LOS');
+is_deeply([$shs->get_keys], ['skip1'], 'skipbiblist - not in biblist for shorthands');
 is_deeply($bibentries->entry('skip1')->get_field('options'), ['skipbib'], 'Passing skipbib through');
 is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
 is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labeldate_info->{field}{year}), '1995', 'Normal labelyear');

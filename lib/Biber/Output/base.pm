@@ -407,7 +407,7 @@ sub output {
           out($target, $entry_string);
         }
         elsif ($listtype eq 'shorthand') {
-          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+          next if Biber::Config->getblxoption('skipbiblist', $section->bibentry($k), $k);
           out($target, $k);
         }
       }

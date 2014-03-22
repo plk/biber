@@ -311,8 +311,8 @@ our %CONFIG_SCOPE_BIBLATEX = (
   presort            => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   singletitle        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   skipbib            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
+  skipbiblist        => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
   skiplab            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
-  skiplos            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
   sortalphaothers    => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   sortexclusion      => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
   sorting            => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
@@ -333,7 +333,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
 # options like max/mincitenames which are not passed in the .bcf
 our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
   dataonly       => {OUTPUT => 1, INPUT => {'skiplab' => 1,
-                                            'skiplos' => 1,
+                                            'skipbiblist' => 1,
                                             'uniquename' => 0,
                                             'uniquelist' => 0}},
   maxitems       => {OUTPUT => 1},
@@ -348,8 +348,8 @@ our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
   minnames       => {OUTPUT => ['mincitenames', 'minbibnames'], INPUT  => ['mincitenames', 'minbibnames']},
   presort        => {OUTPUT => 0},
   skipbib        => {OUTPUT => 1},
+  skipbiblist    => {OUTPUT => 1},
   skiplab        => {OUTPUT => 1},
-  skiplos        => {OUTPUT => 1},
   uniquelist     => {OUTPUT => 0},
   useauthor      => {OUTPUT => 1},
   useeditor      => {OUTPUT => 1},

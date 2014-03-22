@@ -508,7 +508,7 @@ sub _partof {
   my $cref = create_entry($crkey, $partof->findnodes('*')->get_node(1), $smaps);
   $cref->set_datafield('options', 'dataonly');
   Biber::Config->setblxoption('skiplab', 1, 'PER_ENTRY', $crkey);
-  Biber::Config->setblxoption('skiplos', 1, 'PER_ENTRY', $crkey);
+  Biber::Config->setblxoption('skipbiblist', 1, 'PER_ENTRY', $crkey);
   $bibentry->set_datafield('crossref', $crkey);
   return;
 }

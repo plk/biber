@@ -103,7 +103,7 @@ sub relclone {
           $relclone->set_datafield('options', $relopts);
         }
         else {
-          process_entry_options($clonekey, [ 'skiplab', 'skiplos', 'uniquename=0', 'uniquelist=0' ]);
+          process_entry_options($clonekey, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
           $relclone->set_datafield('options', [ 'dataonly' ]);
         }
 
