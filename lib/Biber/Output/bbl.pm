@@ -508,7 +508,8 @@ sub output {
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
-      if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme')) {
+      if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
+          $list->get_type eq 'entry') {
         next;
       }
       push @lists, $list;
