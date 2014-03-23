@@ -45,9 +45,9 @@ Biber::Config->setblxoption('labeldate', undef);
 $biber->prepare;
 my $section0 = $biber->sections->get_section(0);
 my $bibentries0 = $section0->bibentries;
-my $main0 = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $main0 = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->sortlists->get_list(1, 'entry', 'nty');
+my $main1 = $biber->sortlists->get_list(1, 'nty', 'entry', 'nty');
 my $bibentries1 = $section1->bibentries;
 
 is($bibentries0->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=1 minalphanames=1 entry L1 labelalpha');
@@ -86,9 +86,9 @@ for (my $i=5; $i<9; $i++) {
 $biber->prepare;
 $section0 = $biber->sections->get_section(0);
 $bibentries0 = $section0->bibentries;
-$main0 = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main0 = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $section1 = $biber->sections->get_section(1);
-$main1 = $biber->sortlists->get_list(1, 'entry', 'nty');
+$main1 = $biber->sortlists->get_list(1, 'nty', 'entry', 'nty');
 $bibentries1 = $section1->bibentries;
 
 is($bibentries0->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=1 entry L1 labelalpha');
@@ -127,9 +127,9 @@ for (my $i=5; $i<9; $i++) {
 $biber->prepare;
 $section0 = $biber->sections->get_section(0);
 $bibentries0 = $section0->bibentries;
-$main0 = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main0 = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $section1 = $biber->sections->get_section(1);
-$main1 = $biber->sortlists->get_list(1, 'entry', 'nty');
+$main1 = $biber->sortlists->get_list(1, 'nty', 'entry', 'nty');
 $bibentries1 = $section1->bibentries;
 
 is($bibentries0->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=2 entry L1 labelalpha');
@@ -169,9 +169,9 @@ for (my $i=5; $i<9; $i++) {
 $biber->prepare;
 $section0 = $biber->sections->get_section(0);
 $bibentries0 = $section0->bibentries;
-$main0 = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main0 = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $section1 = $biber->sections->get_section(1);
-$main1 = $biber->sortlists->get_list(1, 'entry', 'nty');
+$main1 = $biber->sortlists->get_list(1, 'nty', 'entry', 'nty');
 $bibentries1 = $section1->bibentries;
 
 is($bibentries0->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=3 minalphanames=1 entry L1 labelalpha');

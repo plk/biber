@@ -43,7 +43,7 @@ $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 my $f7 = [ "The variant enabled name field 'author' in entry 'forms7' has variants with different numbers of items. This will almost certainly cause problems.",
            "The variant enabled list field 'location' in entry 'forms7' has variants with different numbers of items. This will almost certainly cause problems." ];
@@ -137,7 +137,7 @@ foreach my $k ($section->get_citekeys) {
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 is($bibentries->entry('forms1')->get_field('sortlabelalpha'), 'BulRosМух', 'labelalpha forms - 1');

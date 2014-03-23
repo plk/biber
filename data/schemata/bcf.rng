@@ -576,6 +576,12 @@
                   </attribute>
                 </optional>
                 <optional>
+                  <!-- Field can be used as a label? This auto-generates some defaults in biblatex -->
+                  <attribute name="label">
+                    <value>true</value>
+                  </attribute>
+                </optional>
+                <optional>
                   <!-- Can this field have variants? -->
                   <attribute name="variants">
                     <value>true</value>
@@ -763,11 +769,16 @@
         <attribute name="type">
           <choice>
             <value>entry</value>
-            <value>key</value>
-            <value>shorthand</value>
+            <value>list</value>
           </choice>
         </attribute>
-        <attribute name="label">
+        <attribute name="sortscheme">
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </attribute>
+        <!-- name is only needed for list types -->
+        <attribute name="name">
           <data type="string">
             <param name="minLength">1</param>
           </data>

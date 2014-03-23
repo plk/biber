@@ -45,7 +45,7 @@ Biber::Config->setblxoption('sorting', $S);
 
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 is_deeply([$main->get_keys], ['CS1','CS3','CS2'], 'U::C case - 1');
 
@@ -60,6 +60,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $section = $biber->sections->get_section(0);
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 is_deeply([$main->get_keys], ['CS3','CS2','CS1'], 'U::C case - 2');
 

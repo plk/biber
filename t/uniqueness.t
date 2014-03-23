@@ -46,7 +46,7 @@ Biber::Config->setblxoption('uniquelist', 1);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 # Basic uniquename and hash testing
 is($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '2', 'Uniquename requiring full name expansion - 1');
@@ -94,7 +94,7 @@ Biber::Config->setblxoption('uniquelist', 1);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 is($bibentries->entry('unt1')->get_field($bibentries->entry('unt1')->get_labelname_info->{field})->nth_name(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 1');
 is($bibentries->entry('unt2')->get_field($bibentries->entry('unt2')->get_labelname_info->{field})->nth_name(2)->get_uniquename, '1', 'Uniquename with inits and repeat - 2');
@@ -121,7 +121,7 @@ Biber::Config->setblxoption('uniquelist', 1);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 # Hashes the same as uniquelist expansion expands to the whole list
 is($bibentries->entry('unall3')->get_field('namehash'), 'f1c5973adbc2e674fa4d98164c9ba5d5', 'Namehash and fullhash - 5');
@@ -257,7 +257,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 is($bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '0', 'Uniquename sparse - 1');
 is($bibentries->entry('us1')->get_field($bibentries->entry('us1')->get_labelname_info->{field})->nth_name(2)->get_uniquename, '0', 'Uniquename sparse - 2');
@@ -327,7 +327,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 
 # maxcitenames/mincitenames = 3/1 so these will not truncate to the same list (since
@@ -367,7 +367,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 # maxcitenames/mincitenames = 2/1 so list are the same and need disambiguating but only in the first
 # name as the others are not visible
@@ -403,7 +403,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 ok(is_undef($bibentries->entry('uls1')->get_field($bibentries->entry('uls1')->get_labelname_info->{field})->get_uniquelist), 'Uniquelist strict - 1');
 ok(is_undef($bibentries->entry('uls2')->get_field($bibentries->entry('uls2')->get_labelname_info->{field})->get_uniquelist), 'Uniquelist strict - 2');
@@ -432,7 +432,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 ok(is_undef($bibentries->entry('uls8')->get_field($bibentries->entry('uls8')->get_labelname_info->{field})->get_uniquelist), 'Uniquelist strict - 8');
 ok(is_undef($bibentries->entry('uls9')->get_field($bibentries->entry('uls9')->get_labelname_info->{field})->get_uniquelist),'Uniquelist strict - 9');
@@ -459,7 +459,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 is($main->get_extrayeardata('ey1'), '1', 'Extrayear - 1');
 is($main->get_extrayeardata('ey2'), '2', 'Extrayear - 2');
@@ -488,7 +488,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 ok(is_undef($main->get_extrayeardata('ey1')), 'Extrayear - 7');
 ok(is_undef($main->get_extrayeardata('ey2')), 'Extrayear - 8');
@@ -517,7 +517,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 is($main->get_extrayeardata('ey1'), '1', 'Extrayear - 13');
 is($main->get_extrayeardata('ey2'), '2', 'Extrayear - 14');
@@ -544,7 +544,7 @@ Biber::Config->setblxoption('uniquelist', 1);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '0', 'Forced init expansion - 1');
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info->{field})->nth_name(2)->get_uniquename, '0', 'Forced init expansion - 2');
@@ -571,7 +571,7 @@ Biber::Config->setblxoption('uniquelist', 1);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'entry', 'nty');
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info->{field})->nth_name(1)->get_uniquename, '2', 'Forced name expansion - 1');
 is($bibentries->entry('un8')->get_field($bibentries->entry('un8')->get_labelname_info->{field})->nth_name(2)->get_uniquename, '0', 'Forced name expansion - 2');

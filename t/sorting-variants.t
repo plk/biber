@@ -42,7 +42,7 @@ my $yearoff1    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'entry', 'nty');
+my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 is_deeply([ $main->get_keys ], ['MSS1', 'MSS2', 'MSS4', 'MSS3', 'MSS6', 'MSS5'], 'MS sorting test - 1');
 

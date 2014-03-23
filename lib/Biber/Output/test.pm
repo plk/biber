@@ -470,10 +470,11 @@ sub output {
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
     my $section = $self->get_output_section($secnum);
-    foreach my $list (sort {$a->get_label cmp $b->get_label} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
+    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
       next unless $list->count_keys; # skip empty lists
-      my $listlabel = $list->get_label;
+      my $listssn = $list->get_sortschemename;
       my $listtype = $list->get_type;
+      my $listname = $list->get_name;
       foreach my $k ($list->get_keys) {
         if ($listtype eq 'entry') {
           my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
@@ -488,7 +489,7 @@ sub output {
           out($target, $entry_string);
         }
         elsif ($listtype eq 'shorthand') {
-          next if Biber::Config->getblxoption('skiplos', $section->bibentry($k), $k);
+          next if Biber::Config->getblxoption('skipbiblist', $section->bibentry($k), $k);
           out($target, $k);
         }
       }

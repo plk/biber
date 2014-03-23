@@ -51,29 +51,54 @@ sub get_section {
 }
 
 
-=head2 set_label
+=head2 set_sortschemename
 
-    Sets the label of a sort list
+    Sets the sortscheme name of a sort list
 
 =cut
 
-sub set_label {
+sub set_sortschemename {
   my $self = shift;
-  my $label = shift;
-  $self->{label} = lc($label);
+  my $ssn = shift;
+  $self->{sortschemename} = lc($ssn);
   return;
 }
 
-=head2 get_label
+=head2 get_sortschemename
 
-    Gets the label of a sort list
+    Gets the sortschemename of a sort list
 
 =cut
 
-sub get_label {
+sub get_sortschemename {
   my $self = shift;
-  return $self->{label};
+  return $self->{sortschemename};
 }
+
+=head2 set_name
+
+    Sets the name of a sort list
+
+=cut
+
+sub set_name {
+  my $self = shift;
+  my $name = shift;
+  $self->{name} = lc($name);
+  return;
+}
+
+=head2 get_name
+
+    Gets the name of a sort list
+
+=cut
+
+sub get_name {
+  my $self = shift;
+  return $self->{name};
+}
+
 
 =head2 set_type
 
