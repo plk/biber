@@ -677,7 +677,11 @@ sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   my $values_ref;
   my $value = biber_decode_utf8($entry->get($f));
-  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  # Because there is another match below and we dont' want bleed of $1,$2 etc.
+  my $field;
+  my $form;
+  my $lang;
+  {($field, $form, $lang) = $f =~ m/$fl_re/xms;}
 
   if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
     biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
@@ -688,8 +692,8 @@ sub _range {
   # If there is a range sep, then we set the end of the range even if it's null
   # If no  range sep, then the end of the range is undef
   foreach my $value (@values) {
-    $value =~ m/\A\s*([^\p{Pd}]+)\s*\z/xms ||# Simple value without range
-      $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*([\p{Pd}]+)\s*(\{[^\}]+\}|[^\p{Pd}]*)\s*\z/xms;
+    $value =~ m/\A\s*(\P{Pd}+)\s*\z/xms ||# Simple value without range
+      $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*)\s*\z/xms;
     my $start = $1;
     my $end;
     if ($2) {
@@ -700,6 +704,7 @@ sub _range {
     }
     $start =~ s/\A\{([^\}]+)\}\z/$1/;
     $end =~ s/\A\{([^\}]+)\}\z/$1/;
+    biber_warn("Range field '$field' in entry '$key' is malformed, skipping", $bibentry) unless $start;
     push @$values_ref, [$start || '', $end];
   }
   $bibentry->set_datafield($field, $values_ref, $form, $lang);
