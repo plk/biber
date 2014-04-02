@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 33;
+use Test::More tests => 34;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -81,12 +81,14 @@ is( latex_decode('\i'), 'ı', 'latex decode 7'); # checking dotless i
 is( latex_decode('\j'), 'ȷ', 'latex decode 8'); # checking dotless j
 is( latex_decode('\textdiv'), '÷', 'latex decode 9'); # checking multiple set for types
 is( latex_decode('\textbackslash'), "\\", 'latex decode 10'); # checking multiple set for types
+is( latex_decode('--'), '--', 'latex decode 11'); # Testing raw
 is( latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 is( latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols
 is( latex_encode(NFD('≄')), '{$\not\simeq$}', 'latex encode 5'); # Testing negated symbols
 is( latex_encode(NFD('Þ')), '{\TH}', 'latex encode 6'); # Testing preferred
 is( latex_encode('$'), '$', 'latex encode 7'); # Testing exclude
 is( latex_encode(NFD('–')), '--', 'latex encode 8'); # Testing raw
+
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
