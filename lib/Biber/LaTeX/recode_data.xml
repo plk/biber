@@ -277,28 +277,34 @@
     <map><from>texttoptiebar</from>              <to hex="361">͡</to></map>
     <map><from>sliding</from>                    <to hex="362">͢</to></map>
   </maps>
-  <maps type="punctuation" set="base">
-    <map><from>textendash</from>         <to hex="2013">–</to></map>
-    <map><from>textemdash</from>         <to hex="2014">—</to></map>
-    <map><from>textquoteleft</from>      <to hex="2018">‘</to></map>
-    <map><from>textquoteright</from>     <to hex="2019">’</to></map>
-    <map><from>quotesinglbase</from>     <to hex="201A">‚</to></map>
-    <map><from>textquotedblleft</from>   <to hex="201C">“</to></map>
-    <map><from>textquotedblright</from>  <to hex="201D">”</to></map>
-    <map><from>quotedblbase</from>       <to hex="201E">„</to></map>
-    <map><from>dag</from>                <to hex="2020">†</to></map>
-    <map><from>ddag</from>               <to hex="2021">‡</to></map>
-    <map><from>textbullet</from>         <to hex="2022">•</to></map>
-    <map><from>dots</from>               <to hex="2026">…</to></map>
-    <map><from>textperthousand</from>    <to hex="2030">‰</to></map>
-    <map><from>textpertenthousand</from> <to hex="2031">‱</to></map>
-    <map><from>guilsinglleft</from>      <to hex="2039">‹</to></map>
-    <map><from>guilsinglright</from>     <to hex="203A">›</to></map>
-    <map><from>textreferencemark</from>  <to hex="203B">※</to></map>
-    <map><from>textinterrobang</from>    <to hex="203D">‽</to></map>
-    <map><from>textoverline</from>       <to hex="203E">‾</to></map>
-    <map><from>langle</from>             <to hex="27E8">⟨</to></map>
-    <map><from>rangle</from>             <to hex="27E9">⟩</to></map>
+  <maps type="punctuation" set="base,full">
+    <map><from raw="1">-</from>                 <to hex="2010">‐</to></map>
+    <map><from raw="1">-</from>                 <to hex="2011">‑</to></map>
+    <map><from>textendash</from>                <to hex="2012">‒</to></map>
+    <map><from preferred="1" raw="1">--</from>  <to hex="2012">‒</to></map>
+    <map><from>textendash</from>                <to hex="2013">–</to></map>
+    <map><from preferred="1" raw="1">--</from>  <to hex="2013">–</to></map>
+    <map><from>textemdash</from>                <to hex="2014">—</to></map>
+    <map><from preferred="1" raw="1">---</from> <to hex="2014">—</to></map>
+    <map><from>textquoteleft</from>             <to hex="2018">‘</to></map>
+    <map><from>textquoteright</from>            <to hex="2019">’</to></map>
+    <map><from>quotesinglbase</from>            <to hex="201A">‚</to></map>
+    <map><from>textquotedblleft</from>          <to hex="201C">“</to></map>
+    <map><from>textquotedblright</from>         <to hex="201D">”</to></map>
+    <map><from>quotedblbase</from>              <to hex="201E">„</to></map>
+    <map><from>dag</from>                       <to hex="2020">†</to></map>
+    <map><from>ddag</from>                      <to hex="2021">‡</to></map>
+    <map><from>textbullet</from>                <to hex="2022">•</to></map>
+    <map><from>dots</from>                      <to hex="2026">…</to></map>
+    <map><from>textperthousand</from>           <to hex="2030">‰</to></map>
+    <map><from>textpertenthousand</from>        <to hex="2031">‱</to></map>
+    <map><from>guilsinglleft</from>             <to hex="2039">‹</to></map>
+    <map><from>guilsinglright</from>            <to hex="203A">›</to></map>
+    <map><from>textreferencemark</from>         <to hex="203B">※</to></map>
+    <map><from>textinterrobang</from>           <to hex="203D">‽</to></map>
+    <map><from>textoverline</from>              <to hex="203E">‾</to></map>
+    <map><from>langle</from>                    <to hex="27E8">⟨</to></map>
+    <map><from>rangle</from>                    <to hex="27E9">⟩</to></map>
   </maps>
   <maps type="symbols" set ="base,full">
     <map><from>textquotedbl</from>                     <to hex="22">"</to></map>

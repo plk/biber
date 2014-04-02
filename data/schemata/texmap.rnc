@@ -14,7 +14,8 @@ start =
 
 map = element map {
   element from {
-    attribute preferred {"1"}?,
+    attribute preferred {"1"}?,# preferred encoding form if more than one
+    attribute raw {"1"}?,# use the encoding form "as is" in replacement - no extra envs/braces etc.
     text
   },
   element to {
