@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 32;
+use Test::More tests => 33;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -86,6 +86,7 @@ is( latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols
 is( latex_encode(NFD('≄')), '{$\not\simeq$}', 'latex encode 5'); # Testing negated symbols
 is( latex_encode(NFD('Þ')), '{\TH}', 'latex encode 6'); # Testing preferred
 is( latex_encode('$'), '$', 'latex encode 7'); # Testing exclude
+is( latex_encode(NFD('–')), '--', 'latex encode 8'); # Testing raw
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
