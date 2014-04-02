@@ -268,6 +268,7 @@ sub latex_decode {
       }
     }
 
+    # Things that don't begin with backslash are ignored for decoding, which is good (like '--')
     foreach my $type (sort keys %$remap_d) {
       my $map = $remap_d->{$type}{map};
       my $re = $remap_d->{$type}{re};
