@@ -55,7 +55,7 @@ full  => Also converts punctuation, larger range of diacritics and macros
 
 =cut
 
-use vars qw( $remap_d $remap_e $set_d $set_e );
+use vars qw( $remap_d $remap_e $remap_e_raw $set_d $set_e );
 
 =head2 init_sets(<decode set>, <encode_set>)
 
@@ -72,6 +72,7 @@ sub init_sets {
   # Reset these, mostly for tests which call init_sets more than once
   $remap_d = {};
   $remap_e = {};
+  $remap_e_raw = {};
 
   my $mapdata;
   # User-defined recode data file
@@ -146,6 +147,13 @@ sub init_sets {
         my $to = $map->findnodes('to')->shift();
         $remap_e->{$type}{map}{NFD($to->textContent())} = NFD($from->textContent());
       }
+      # Some things might need to be inserted as is rather than wrappen in some macro/braces
+      foreach my $map ($maps->findnodes('map[from[@raw]]')) {
+        my $from = $map->findnodes('from')->shift();
+        my $to = $map->findnodes('to')->shift();
+        $remap_e_raw->{NFD($to->textContent())} = 1;
+      }
+
     }
     # Things we don't want to change when encoding as this would break LaTeX
     foreach my $e ($xpc->findnodes('/texmap/encode_exclude/char')) {
@@ -260,6 +268,7 @@ sub latex_decode {
       }
     }
 
+    # Things that don't begin with backslash are ignored for decoding, which is good (like '--')
     foreach my $type (sort keys %$remap_d) {
       my $map = $remap_d->{$type}{map};
       my $re = $remap_d->{$type}{re};
@@ -364,11 +373,11 @@ sub latex_encode {
     my $re = $remap_e->{$type}{re};
     if ($type eq 'letters') {
       # General macros (excluding special encoding excludes)
-      $text =~ s/($re)/"{\\" . $map->{$1} . '}'/ge;
+      $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "{\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '}')/ge;
     }
     if (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
       # Math mode macros (excluding special encoding excludes)
-      $text =~ s/($re)/"{\$\\" . $map->{$1} . '$}'/ge;
+      $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "{\$\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '$}')/ge;
     }
   }
 
