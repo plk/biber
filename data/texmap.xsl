@@ -41,6 +41,10 @@
             color: #FF0000;
             font-family: "Courier New", Courier, monospace ;
           }
+          .raw {
+            color: #DD0000;
+            font-family: "Courier New", Courier, monospace ;
+          }
           ul {
             list-style-type: none;
             margin-left: 0;
@@ -86,6 +90,8 @@
           <div class="key"><u>Key</u>
           <ul>
             <li><span class="preferred">In encoding mapping (UTF-8 <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> LaTeX macros), when there are multiple possible mappings, red highlighted macro is the preferred mapping</span></li>
+            <li><span class="raw">In encoding mapping, insert the encoded
+            form as-is with no wrapping braces or escaping etc.</span></li>
           </ul>
           </div>
         <hr/>
@@ -114,6 +120,9 @@
               <tr>
                 <xsl:if test="./from/@preferred='1'">
                   <xsl:attribute name="class">preferred</xsl:attribute>
+                </xsl:if>
+                <xsl:if test="./from/@raw='1'">
+                  <xsl:attribute name="class">raw</xsl:attribute>
                 </xsl:if>
                 <td><span class="macro">\<xsl:value-of select="./from/text()"/></span></td>
                 <td><span class="utf8"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text><xsl:value-of select="./to/text()"/></span></td>
