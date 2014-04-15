@@ -5,7 +5,7 @@ use strict;
 use Carp;
 use Data::Dump;
 
-use base 'Unicode::Collate::Locale';
+use parent 'Unicode::Collate::Locale';
 
 my $logger = Log::Log4perl::get_logger('main');
 

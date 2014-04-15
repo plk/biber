@@ -749,7 +749,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
     $self->{sortlists}->add_list($seclist);
   }
-
   return;
 }
 
@@ -762,8 +761,6 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
 sub process_setup {
   my $self = shift;
-
-  # Validate variant forms passed via various biblatex macros here
 
   # Make sure there is a default entry list with global sorting for each refsection
   # Needed in case someone cites entries which are included in no

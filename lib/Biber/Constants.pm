@@ -5,7 +5,7 @@ use warnings;
 
 use Encode::Alias;
 
-use base 'Exporter';
+use parent 'Exporter';
 
 our @EXPORT = qw{
                   $CONFIG_DEFAULT_BIBER
@@ -86,8 +86,7 @@ our %NOSORT_TYPES = (
 # datatypes for data model validation
 our %DM_DATATYPES = (
                      integer => qr/\A\d+\z/xms,
-                     datepart => qr/\A\d+\z/xms,
-                     forms   => qr/original|translated|romanised|uniform/xms
+                     datepart => qr/\A\d+\z/xms
 );
 
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf

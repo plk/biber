@@ -3,7 +3,7 @@ use v5.16;
 use strict;
 use warnings;
 use re 'eval';
-use base 'Exporter';
+use parent 'Exporter';
 
 use constant {
   EXIT_OK => 0,
@@ -21,6 +21,7 @@ use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
 use Log::Log4perl qw(:no_extra_logdie_message);
+use List::Util qw( first );
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Unicode::Normalize;
 my $logger = Log::Log4perl::get_logger('main');
@@ -46,7 +47,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  find_ms_field map_locale};
+  find_ms_field map_locale check_vform};
 
 =head1 FUNCTIONS
 
@@ -977,7 +978,7 @@ sub find_ms_field {
   my $sform = $step->{map_field_source_form};
   my $slang = $step->{map_field_source_lang};
 
-  my $forms = $DM_DATATYPES{forms};
+  my $forms = join('|', map {$_->{content}} @{Biber::Config->getblxoption('variantforms')});
   my $S = Biber::Config->getoption('vsplit');
   my $fl_re = qr/\A([^$S]+)$S?($forms)?$S?(.+)?\z/;
 
@@ -1066,6 +1067,24 @@ sub map_locale {
   return $localestr unless $localestr;
   return $LOCALE_MAP{$localestr} || $localestr;
 }
+
+=head2 check_vform
+
+  Check a variant form to see if it is one of the forms allowed by
+  \DeclareVariantforms passed from biblatex
+
+=cut
+
+sub check_vform {
+  my $vform = shift;
+  if (first {$vform eq $_->{content}} @{Biber::Config->getblxoption('variantforms')} ) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 
 1;
 

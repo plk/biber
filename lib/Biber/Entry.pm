@@ -335,9 +335,9 @@ sub set_field {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
     $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
+    $logger->trace("Setting variant enabled field in '$key': $field/$form/$lang=$val");
     # All derived fields can be null
     $self->{derivedfields}{variant}{$field}{$form}{$lang} = $val;
-    $logger->trace("Setting variant enabled field in '$key': $field/$form/$lang=$val");
   }
   else {
     $self->{derivedfields}{nonvariant}{$field} = $val;
@@ -491,8 +491,8 @@ sub set_datafield {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
     $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
-    $self->{datafields}{variant}{$field}{$form}{$lang} = $val;
     $logger->trace("Setting variant enabled datafield in '$key': $field/$form/$lang=$val");
+    $self->{datafields}{variant}{$field}{$form}{$lang} = $val;
   }
   else {
     $self->{datafields}{nonvariant}{$field} = $val;
@@ -973,7 +973,7 @@ sub inherit_from {
           }
           else {
             if ($field->{source_form} or $field->{source_lang}) {
-              $logger->warn("Inheritance - variant specified for non-variant enbaled field '" .
+              $logger->warn("Inheritance - variant specified for non-variant enabled field '" .
                             $field->{source} . "'");
             }
             next unless $parent->field_exists($field->{source});

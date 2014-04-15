@@ -3,7 +3,7 @@ use v5.16;
 use strict;
 use warnings;
 use sigtrap qw(handler TBSIG SEGV);
-use base 'Exporter';
+use parent 'Exporter';
 
 use Carp;
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
@@ -592,8 +592,7 @@ sub create_entry {
 }
 
 # HANDLERS
-# ========
-my $forms = $DM_DATATYPES{'forms'};
+my $forms = join('|', map {$_->{content}} @{Biber::Config->getblxoption('variantforms')});
 my $S = Biber::Config->getoption('vsplit');
 my $fl_re = qr/\A([^$S]+)$S?($forms)?$S?(.+)?\z/;
 
@@ -603,7 +602,6 @@ sub _literal {
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
   my $dm = Biber::Config->get_dm;
-
   if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
     biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
@@ -719,7 +717,6 @@ sub _name {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $value = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
-
   if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
     biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
@@ -783,7 +780,6 @@ sub _date {
   my $datetype = $f =~ s/date\z//xmsr;
   my $date = biber_decode_utf8($entry->get($f));
   my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
-
   if (($form or $lang) and not $dm->field_is_variant_enabled($field)) {
     biber_warn("Field '$field' in entry '$key' is not a variant enabled field but has variants, skipping", $bibentry);
     return;
@@ -1243,7 +1239,7 @@ sub _hack_month {
 
 sub _get_handler {
   my $field = shift;
-  my $forms = $DM_DATATYPES{'forms'};
+  my $forms = join('|', map {$_->{content}} @{Biber::Config->getblxoption('variantforms')});
   my $S = Biber::Config->getoption('vsplit');
   $field =~ s/$S(?:$forms)?$S?.*$//;
   if (my $h = $handlers->{CUSTOM}{$field}) {
@@ -1253,7 +1249,6 @@ sub _get_handler {
     return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field) || 'default'}{$dm->get_datatype($field)};
   }
 }
-
 
 1;
 

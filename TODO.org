@@ -1,12 +1,2 @@
 * Sample XSLT transform but not in biber
 * bltxml either should have no schema or it should be dynamically created from the data model. A static schema is pointless
-* Forms
-** biber can check when it parses:
-*** labelalphaspec
-*** labeltitlespec
-*** labelnamespec
-*** sort spec
-*** inherit source/target form
-*** source map source form
-*** Check .bib for valid forms
-*** Config file

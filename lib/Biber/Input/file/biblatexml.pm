@@ -2,7 +2,7 @@ package Biber::Input::file::biblatexml;
 use v5.16;
 use strict;
 use warnings;
-use base 'Exporter';
+use parent 'Exporter';
 
 use Carp;
 use Biber::Constants;
@@ -782,6 +782,7 @@ sub _get_handler {
 __END__
 
 =pod
+
 
 =encoding utf-8
 

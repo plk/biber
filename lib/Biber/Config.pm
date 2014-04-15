@@ -374,9 +374,14 @@ sub _config_file_set {
   # Set options from config file.
   while (my ($k, $v) = each %$userconf) {
     if (exists($v->{content})) { # simple option
-      Biber::Config->setconfigfileoption($k, $v->{content});
+      if (lc($k) eq 'variantforms') { # force into .bcf format
+        Biber::Config->setblxoption($k, [map {{content => $_}} split(/\s*,\s*/, $v->{content})]);
+      }
+      else {
+        Biber::Config->setconfigfileoption($k, $v->{content});
+      }
     }
-    # mildly complex options - nosort/collate_options
+    # mildly complex options
     elsif (lc($k) eq 'nosort' or
            lc($k) eq 'noinit' ) {
       Biber::Config->setconfigfileoption($k, $v->{option});
