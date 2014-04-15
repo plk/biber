@@ -8,3 +8,5 @@
 *** sort spec
 *** inherit source/target form
 *** source map source form
+*** Check .bib for valid forms
+*** Config file

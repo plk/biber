@@ -2,7 +2,7 @@ package Biber;
 use v5.16;
 use strict;
 use warnings;
-use base 'Biber::Internals';
+use parent 'Biber::Internals';
 
 use constant {
   EXIT_OK => 0,
@@ -407,8 +407,9 @@ sub parse_ctrlfile {
               Biber::Config->setoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
             }
             elsif ($bcfopt->{type} eq 'multivalued') {
+              # sort on order attribute (unless there is no order attribute)
               Biber::Config->setoption($bcfopt->{key}{content},
-                [ map {$_->{content}} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
+                [ map {$_->{content}} sort {($a->{order} || 0) <=> ($b->{order} || 0)} @{$bcfopt->{value}} ]);
             }
           }
         }
@@ -425,9 +426,9 @@ sub parse_ctrlfile {
             Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
           }
           elsif ($bcfopt->{type} eq 'multivalued') {
-            # sort on order attribute and then remove it
+            # sort on order attribute and then remove it (unless there is no order attribute)
             Biber::Config->setblxoption($bcfopt->{key}{content},
-              [ map {delete($_->{order}); $_} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ]);
+              [ map {delete($_->{order}); $_} sort {($a->{order} || 0) <=> ($b->{order} || 0)} @{$bcfopt->{value}} ]);
           }
         }
       }
@@ -440,9 +441,9 @@ sub parse_ctrlfile {
             Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content}, 'PER_TYPE', $entrytype);
           }
           elsif ($bcfopt->{type} eq 'multivalued') {
-            # sort on order attribute and then remove it
+            # sort on order attribute and then remove it (unless there is no order attribute)
             Biber::Config->setblxoption($bcfopt->{key}{content},
-              [ map {delete($_->{order}); $_} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ],
+              [ map {delete($_->{order}); $_} sort {($a->{order} || 0) <=> ($b->{order} || 0)} @{$bcfopt->{value}} ],
               'PER_TYPE',
               $entrytype);
           }
@@ -761,6 +762,8 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
 sub process_setup {
   my $self = shift;
+
+  # Validate variant forms passed via various biblatex macros here
 
   # Make sure there is a default entry list with global sorting for each refsection
   # Needed in case someone cites entries which are included in no

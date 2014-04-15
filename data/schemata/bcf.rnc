@@ -50,6 +50,7 @@ start =
       sortscheme,
       uniquelist,
       uniquename,
+      variantforms,
       useauthor,
       useeditor,
       useprefix,
@@ -629,6 +630,14 @@ vform =
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }
+  }
+variantforms =
+  element bcf:option {
+    attribute type { "multivalued" },
+    element bcf:key { "variantforms" },
+    element bcf:value {
+      xsd:normalizedString { pattern = "\S+" }
+    }+
   }
 vlang =
   element bcf:option {

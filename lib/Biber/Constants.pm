@@ -325,6 +325,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   useeditor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useprefix          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   usetranslator      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  variantforms       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   vform              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
   vlang              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
   vtranslang         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},

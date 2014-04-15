@@ -68,6 +68,7 @@
         <ref name="sortscheme"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
+        <ref name="variantforms"/>
         <ref name="useauthor"/>
         <ref name="useeditor"/>
         <ref name="useprefix"/>
@@ -1578,6 +1579,23 @@
           <param name="pattern">\S+</param>
         </data>
       </element>
+    </element>
+  </define>
+  <define name="variantforms">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>multivalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>variantforms</value>
+      </element>
+      <oneOrMore>
+        <element name="bcf:value">
+          <data type="normalizedString">
+            <param name="pattern">\S+</param>
+          </data>
+        </element>
+      </oneOrMore>
     </element>
   </define>
   <define name="vlang">

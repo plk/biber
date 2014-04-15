@@ -139,6 +139,13 @@
       <bcf:key>uniquename</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>variantforms</bcf:key>
+      <bcf:value>original</bcf:value>
+      <bcf:value>translated</bcf:value>
+      <bcf:value>romanised</bcf:value>
+      <bcf:value>uniform</bcf:value>
+    </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useauthor</bcf:key>
       <bcf:value>1</bcf:value>
