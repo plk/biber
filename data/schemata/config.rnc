@@ -212,16 +212,16 @@ inheritance =
             # either a "skip this field" specification
             # so we can say inherit all except certain fields OR ...
             (attribute source { xsd:string },
-             attribute form { xsd:string {minLength="1"}}?,
-             attribute lang { xsd:string {minLength="1"}}?,
+             attribute form { text }?,
+             attribute lang { text }?,
              attribute skip { "true" | "false" }) |
             # ... a source and target field with an optional override attribute
             (attribute source { xsd:string {minLength="1"}},
-             attribute source_form { xsd:string {minLength="1"}}?,
-             attribute source_lang { xsd:string {minLength="1"}}?,
+             attribute source_form { text }?,
+             attribute source_lang { text }?,
              attribute target { xsd:string {minLength="1"}},
-             attribute target_form { xsd:string {minLength="1"}}?,
-             attribute target_lang { xsd:string {minLength="1"}}?,
+             attribute target_form { text }?,
+             attribute target_lang { text }?,
              attribute override_target { "true" | "false" }?)
           ),
           empty
@@ -248,11 +248,11 @@ map =
         ) |
         (
           attribute map_field_source { xsd:string {minLength="1"} },
-          attribute map_field_source_form { xsd:string {minLength="1"} }?,
-          attribute map_field_source_lang { xsd:string {minLength="1"} }?,
+          attribute map_field_source_form { text }?,
+          attribute map_field_source_lang { text }?,
           attribute map_field_target { xsd:string {minLength="1"} }?,
-          attribute map_field_target_form { xsd:string {minLength="1"} }?,
-          attribute map_field_target_lang { xsd:string {minLength="1"} }?,
+          attribute map_field_target_form { text }?,
+          attribute map_field_target_lang { text }?,
           attribute map_final { "1" }?,
           attribute map_match { xsd:string {minLength="1"} }?,
           attribute map_notmatch { xsd:string {minLength="1"} }?,
@@ -316,7 +316,7 @@ sort =
       attribute pad_side { "left" | "right" }?,
       attribute pad_width { xsd:integer }?,
       attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
-      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+      attribute form { text }?,
       attribute lang { text }?,
       text
     }+

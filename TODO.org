@@ -1,11 +1,10 @@
-* Multiscript
-** Document that maps must specify form/lang, there is no auto mapping of all field variants. This would be messy at best.
-** Inidividual name hashes are different between variants - does this matter?
-** Get rid of origtitle, origpublisher, origlocation?
-** Tool mode stuff - does it account for ms?
-* New tool mode option for output type
-* Biblatexml output
-** form/lang should be output (in bibtex tool mode too)
-* Docs - not all tool mode options are relevant for all output types, table in docs saying which does what
 * Sample XSLT transform but not in biber
 * bltxml either should have no schema or it should be dynamically created from the data model. A static schema is pointless
+* Forms
+** biber can check when it parses:
+*** labelalphaspec
+*** labeltitlespec
+*** labelnamespec
+*** sort spec
+*** inherit source/target form
+*** source map source form

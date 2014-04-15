@@ -287,14 +287,7 @@
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="form">
-                      <choice>
-                        <value>original</value>
-                        <value>translated</value>
-                        <value>romanised</value>
-                        <value>uniform</value>
-                      </choice>
-                    </attribute>
+                    <attribute name="form"/>
                   </optional>
                   <data type="string"/>
                 </element>
@@ -398,18 +391,10 @@
                       <data type="string"/>
                     </attribute>
                     <optional>
-                      <attribute name="form">
-                        <data type="string">
-                          <param name="minLength">1</param>
-                        </data>
-                      </attribute>
+                      <attribute name="form"/>
                     </optional>
                     <optional>
-                      <attribute name="lang">
-                        <data type="string">
-                          <param name="minLength">1</param>
-                        </data>
-                      </attribute>
+                      <attribute name="lang"/>
                     </optional>
                     <attribute name="skip">
                       <choice>
@@ -426,18 +411,10 @@
                       </data>
                     </attribute>
                     <optional>
-                      <attribute name="source_form">
-                        <data type="string">
-                          <param name="minLength">1</param>
-                        </data>
-                      </attribute>
+                      <attribute name="source_form"/>
                     </optional>
                     <optional>
-                      <attribute name="source_lang">
-                        <data type="string">
-                          <param name="minLength">1</param>
-                        </data>
-                      </attribute>
+                      <attribute name="source_lang"/>
                     </optional>
                     <attribute name="target">
                       <data type="string">
@@ -445,18 +422,10 @@
                       </data>
                     </attribute>
                     <optional>
-                      <attribute name="target_form">
-                        <data type="string">
-                          <param name="minLength">1</param>
-                        </data>
-                      </attribute>
+                      <attribute name="target_form"/>
                     </optional>
                     <optional>
-                      <attribute name="target_lang">
-                        <data type="string">
-                          <param name="minLength">1</param>
-                        </data>
-                      </attribute>
+                      <attribute name="target_lang"/>
                     </optional>
                     <optional>
                       <attribute name="override_target">
@@ -935,14 +904,7 @@
               </attribute>
             </optional>
             <optional>
-              <attribute name="form">
-                <choice>
-                  <value>original</value>
-                  <value>translated</value>
-                  <value>romanised</value>
-                  <value>uniform</value>
-                </choice>
-              </attribute>
+              <attribute name="form"/>
             </optional>
             <optional>
               <attribute name="lang"/>
@@ -973,8 +935,6 @@
                   <value>bibtex</value>
                   <value>biblatexml</value>
                   <value>ris</value>
-                  <value>zoterordfxml</value>
-                  <value>endnotexml</value>
                 </choice>
               </attribute>
             </optional>
@@ -1154,14 +1114,7 @@
             <data type="integer"/>
           </attribute>
           <optional>
-            <attribute name="form">
-              <choice>
-                <value>original</value>
-                <value>translated</value>
-                <value>romanised</value>
-                <value>uniform</value>
-              </choice>
-            </attribute>
+            <attribute name="form"/>
           </optional>
           <optional>
             <attribute name="lang"/>
@@ -1487,14 +1440,7 @@
             <data type="integer"/>
           </attribute>
           <optional>
-            <attribute name="form">
-              <choice>
-                <value>original</value>
-                <value>translated</value>
-                <value>romanised</value>
-                <value>uniform</value>
-              </choice>
-            </attribute>
+            <attribute name="form"/>
           </optional>
           <optional>
             <attribute name="lang"/>
@@ -1751,18 +1697,10 @@
                 </data>
               </attribute>
               <optional>
-                <attribute name="map_field_source_form">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </attribute>
+                <attribute name="map_field_source_form"/>
               </optional>
               <optional>
-                <attribute name="map_field_source_lang">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </attribute>
+                <attribute name="map_field_source_lang"/>
               </optional>
               <optional>
                 <attribute name="map_field_target">

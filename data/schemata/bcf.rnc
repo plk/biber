@@ -106,7 +106,7 @@ start =
         attribute order { xsd:integer },
         element bcf:labelpart {          
           attribute final { "0" | "1" }?,
-          attribute pad_char { xsd:string {minLength="1"}}?,
+          attribute pad_char { xsd:string {minLength="1"} }?,
           attribute pad_side { "left" | "right" }?,
           attribute substring_width { xsd:integer | "v" | "vf" | "l" }?,
           attribute substring_fixed_threshold { xsd:integer }?,
@@ -115,7 +115,7 @@ start =
           attribute substring_compound { "0" | "1" }?,
           attribute ifnamecount { xsd:integer }?,
           attribute namecount { xsd:integer }?,
-          attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+          attribute form { text }?,
           xsd:string
         }+
       }+
@@ -152,16 +152,16 @@ start =
             # either a "skip this field" specification
             # so we can say inherit all except certain fields OR ...
             (attribute source { xsd:string },
-             attribute form { xsd:string {minLength="1"}}?,
-             attribute lang { xsd:string {minLength="1"}}?,
+             attribute form { text }?,
+             attribute lang { text }?,
              attribute skip { "true" | "false" }) |
             # ... a source and target field with an optional override attribute
             (attribute source { xsd:string {minLength="1"}},
-             attribute source_form { xsd:string {minLength="1"}}?,
-             attribute source_lang { xsd:string {minLength="1"}}?,
+             attribute source_form { text }?,
+             attribute source_lang { text }?,
              attribute target { xsd:string {minLength="1"}},
-             attribute target_form { xsd:string {minLength="1"}}?,
-             attribute target_lang { xsd:string {minLength="1"}}?,
+             attribute target_form { text }?,
+             attribute target_lang { text }?,
              attribute override_target { "true" | "false" }?)
           ),
           empty
@@ -345,7 +345,7 @@ sort =
       attribute pad_side { "left" | "right" }?,
       attribute pad_width { xsd:integer }?,
       attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
-      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+      attribute form { text }?,
       attribute lang { text }?,
       text
     }+
@@ -359,7 +359,7 @@ secspec =
     attribute section { xsd:integer },
     element bcf:datasource {
       attribute type { "file" },
-      attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" }?,
+      attribute datatype { "bibtex" | "biblatexml" | "ris" }?,
       xsd:anyURI
     }*
   }?,
@@ -428,7 +428,7 @@ labeltitlespec =
     element bcf:key { "labeltitlespec" },
     element bcf:value {
       attribute order { xsd:integer },
-      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+      attribute form { text }?,
       attribute lang { text }?,
       text
     }+
@@ -567,7 +567,7 @@ labelnamespec =
     element bcf:key { "labelnamespec" },
     element bcf:value {
       attribute order { xsd:integer },
-      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+      attribute form { text }?,
       attribute lang { text }?,
       text
     }+
@@ -678,8 +678,8 @@ map =
         ) |
         (
           attribute map_field_source { xsd:string {minLength="1"} },
-          attribute map_field_source_form { xsd:string {minLength="1"} }?,
-          attribute map_field_source_lang { xsd:string {minLength="1"} }?,
+          attribute map_field_source_form { text }?,
+          attribute map_field_source_lang { text }?,
           attribute map_field_target { xsd:string {minLength="1"} }?,
           attribute map_final { "1" }?,
           attribute map_match { xsd:string {minLength="1"} }?,
