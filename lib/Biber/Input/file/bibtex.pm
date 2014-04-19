@@ -248,6 +248,12 @@ sub extract_entries {
     # no explicitly cited keys
     $section->add_citekeys(@{$cache->{orig_key_order}{$filename}});
     $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
+    # Special case when allkeys but also some dynamic set entries. These keys must also be
+    # in the section or they will be missed on output.
+    if ($section->has_dynamic_sets) {
+      $section->add_citekeys(@{$section->dynamic_set_keys});
+      $logger->debug("Added dynamic sets to section '$secnum': " . join(', ', @{$section->dynamic_set_keys}));
+    }
   }
   else {
     # loop over all keys we're looking for and create objects
