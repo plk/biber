@@ -483,6 +483,7 @@ sub get_field_form_lang_names {
 =cut
 
 sub set_datafield {
+  no autovivification;
   my $self = shift;
   my ($field, $val, $form, $lang) = @_;
   my $key = $self->get_field('citekey');
@@ -492,6 +493,12 @@ sub set_datafield {
     my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
     $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
     $logger->trace("Setting variant enabled datafield in '$key': $field/$form/$lang=$val");
+
+    # Can happen in cases where "x_y" and "x" are in the same entry with vform=y
+    if ($self->{datafields}{variant}{$field}{$form}{$lang}) {
+      $logger->warn("Variant enabled datafield $field/$form/$lang in key '$key' already has a value  - overwriting");
+    }
+
     $self->{datafields}{variant}{$field}{$form}{$lang} = $val;
   }
   else {
