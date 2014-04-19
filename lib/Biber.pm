@@ -608,23 +608,19 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       # "all keys"
       if ($key eq '*') {
         $bib_section->set_allkeys(1);
-        # Normalise - when allkeys is true don't need citekeys - just in case someone
-        # lists "*" and also some other citekeys
-        $bib_section->del_citekeys;
         $key_flag = 1; # There is at least one key, used for error reporting below
-        $logger->info("Using all citekeys in bib section " . $secnum);
-        $bib_sections->add_section($bib_section);
-        next SECTION;
       }
       elsif (not Biber::Config->get_seenkey($key, $secnum)) {
         # Dynamic set definition
         # Save dynamic key -> member keys mapping for set entry auto creation later
+        # We still need to find these even if allkeys is set
         if (exists($keyc->{type}) and $keyc->{type} eq 'set') {
           $bib_section->set_dynamic_set($key, split /\s*,\s*/, $keyc->{members});
           push @keys, $key;
           $key_flag = 1; # There is at least one key, used for error reporting below
         }
         else {
+          next if $bib_section->is_allkeys; # Skip if we have already encountered '*'
           # Set order information - there is no order on dynamic key defs above
           # as they are a definition, not a cite
           Biber::Config->set_keyorder($secnum, $key, $keyc->{order});
@@ -635,18 +631,23 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       }
     }
 
-    unless ($bib_section->is_allkeys) {
-      $logger->info('Found ', $#keys+1 , " citekeys in bib section $secnum")
+    if ($bib_section->is_allkeys) {
+      # Normalise - when allkeys is true don't need citekeys - just in case someone
+      # lists "*" and also some other citekeys
+      $bib_section->del_citekeys;
+      $logger->info("Using all citekeys in bib section " . $secnum);
+    }
+    else {
+      $logger->info('Found ', $#keys+1 , " citekeys in bib section $secnum");
     }
 
     if (Biber::Config->getoption('debug')) {
-      my @debug_keys = sort @keys;
       unless ($bib_section->is_allkeys) {
-        $logger->debug("The citekeys for section $secnum are: ", join(', ', @debug_keys), "\n");
+        $logger->debug("The citekeys for section $secnum are: ", join(', ', sort @keys), "\n");
       }
     }
 
-    $bib_section->add_citekeys(@keys);
+    $bib_section->add_citekeys(@keys) unless $bib_section->is_allkeys;
     $bib_sections->add_section($bib_section);
   }
 

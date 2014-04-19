@@ -900,7 +900,7 @@
         <h4>Section 0</h4>
         <table>
           <thead>
-            <tr><td>Data sources</td><td>Citekeys</td></tr>
+            <tr><td>Data sources</td><td>Citekeys</td><td>Dynamic sets</td></tr>
           </thead>
           <tbody>
             <tr>
@@ -917,43 +917,23 @@
               </td>
               <td>
                 <ul>
-                  <xsl:for-each select="/bcf:controlfile/bcf:section[@number='0' and *]/bcf:citekey">
+                  <xsl:for-each
+                      select="/bcf:controlfile/bcf:section[@number='0']/bcf:citekey[not(@type='set')]">
                     <li><tt><xsl:value-of select="./text()"/></tt></li>
+                  </xsl:for-each>
+                </ul>
+              </td>
+              <td>
+                <ul>
+                  <xsl:for-each
+                      select="/bcf:controlfile/bcf:section[@number='0']/bcf:citekey[@type='set']">
+                    <li><tt><xsl:value-of select="./text()"/><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>(<xsl:value-of select="./@members"/>)</tt></li>
                   </xsl:for-each>
                 </ul>
               </td>
             </tr>
           </tbody>
         </table>
-        <xsl:for-each select="/bcf:controlfile/bcf:section[@number='0' and *]/bcf:sectionlist">
-          <h5><u>Output list &quot;<xsl:value-of select="./@label"/>&quot;</u></h5>
-          <div>
-            <h6>Filters</h6>
-            <table>
-              <thead>
-                <tr><td>Filter type</td><td>Filter value</td></tr>
-              </thead>
-              <tbody>
-                <xsl:for-each select="./bcf:filter">
-                  <tr><td><xsl:value-of select="./@type"/></td><td><xsl:value-of select="./text()"/></td></tr>
-                </xsl:for-each>
-              </tbody>
-            </table>
-          </div>
-          <div>
-            <h6>Sorting Specification</h6>
-            <xsl:choose>
-              <xsl:when test="./bcf:sorting">
-                <xsl:call-template name="sorting-spec">
-                  <xsl:with-param name="spec" select="./bcf:sorting"/>
-                </xsl:call-template>
-              </xsl:when>
-              <xsl:otherwise>
-                (global default)
-              </xsl:otherwise>
-            </xsl:choose>
-          </div>
-        </xsl:for-each>
         <xsl:for-each select="/bcf:controlfile/bcf:section[@number != '0']">
           <!-- Save a varible pointing to the section number -->
           <xsl:variable name="secnum" select="./@number"/>
@@ -988,7 +968,7 @@
         </xsl:for-each>
         <h3>Sorting Lists</h3>
         <xsl:for-each select="/bcf:controlfile/bcf:sortlist">
-          <h4><u>Sorting list &quot;<xsl:value-of select="./@label"/>&quot;</u></h4>
+          <h4><u>Sorting list &quot;<xsl:value-of select="./@name"/>&quot;</u></h4>
           <div>
             <h6>Filters</h6>
             <table>

@@ -599,6 +599,17 @@ sub dynamic_set_keys {
   return [keys %{$self->{dkeys}}];
 }
 
+=head2 has_dynamic_sets
+
+    Returns true of false depending on whether the section has any dynamic set keys
+
+=cut
+
+sub has_dynamic_sets {
+  my $self = shift;
+  return defined($self->{dkeys}) ? 1 : 0;
+}
+
 
 =head2 add_datasource
 
