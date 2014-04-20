@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use Biber;
 use Biber::Output::bbl;
@@ -146,6 +146,11 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \field{year}{2000}
     \endentry
 |;
+
+# Make sure allkeys works with dynamic sets
+my @allkeys = qw(dynamic1 dynamic2 dynamic3 dynset elias1955 elias1955a elias1955b static1 static2 static3 static4);
+my @keys = sort map {lc()} $section0->get_citekeys;
+is_deeply( \@keys, \@allkeys, 'citekeys') ;
 
 is($out->get_output_entry('DynSet', $main0), $string1, 'Dynamic set test 1');
 is($out->get_output_entry('Dynamic1', $main0), $string2, 'Dynamic set test 2');
