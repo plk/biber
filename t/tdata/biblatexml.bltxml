@@ -59,7 +59,7 @@
     <bltx:title form="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bltx:title>
     <bltx:location>Москва</bltx:location>
     <bltx:location form="romanised">Moskva</bltx:location>
-    <bltx:location form="uniform">Moscow</bltx:location>
+    <bltx:location form="translated" xml:lang="en">Moscow</bltx:location>
     <bltx:publisher>Наука</bltx:publisher>
     <bltx:publisher form="romanised">Nauka</bltx:publisher>
     <bltx:publisher form="translated" xml:lang="en">Science</bltx:publisher>

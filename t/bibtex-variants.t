@@ -89,9 +89,9 @@ my $S = { spec => [
 $main->set_sortscheme($S);
 
 $biber->set_output_obj(Biber::Output::bbl->new());
-$biber->prepare;
+$biber->prepare(1);
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['forms9', 'forms10', 'forms11', 'forms13', 'forms14', 'forms15', 'forms8', 'forms5', 'forms4', 'forms12', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms13', 'forms14', 'forms15', 'forms8', 'forms5', 'forms4', 'forms12', 'forms9', 'forms10', 'forms11', 'forms6', 'forms3', 'forms1', 'forms2', 'forms7'], 'Forms sorting - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -135,7 +135,7 @@ foreach my $k ($section->get_citekeys) {
   $main->set_extraalphadata_for_key($k, undef);
 }
 
-$biber->prepare;
+$biber->prepare(1);
 $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
@@ -145,38 +145,38 @@ is($bibentries->entry('forms4')->get_field('sortlabelalpha'), 'F t', 'labelalpha
 is($bibentries->entry('forms5')->get_field('sortlabelalpha'), 'A t', 'labelalpha forms - 3');
 is($bibentries->entry('forms6')->get_field('sortlabelalpha'), 'Z t', 'labelalpha forms - 4');
 
-my $forms1 = q|    \entry{forms1}{book}{}
+my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
       \name{labelname}{2}{}{%
         {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{2}{}{%
+      \name[form=original,lang=russian]{author}{2}{}{%
         {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=uniform]{author}{2}{}{%
+      \name[form=uniform,lang=russian]{author}{2}{}{%
         {{hash=d3e42eb37529f4d05f9646c333b5fd5f}{Bulgakov}{B\bibinitperiod}{Pavel}{P\bibinitperiod}{}{}{}{}}%
         {{hash=87d0ec74cbe7f9e39f5bbc25930f1474}{Rosenfeld}{R\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
       }
-      \list{institution}{1}{%
+      \list[form=original,lang=russian]{institution}{1}{%
         {University of Life}%
       }
-      \list{location}{1}{%
+      \list[form=original,lang=russian]{location}{1}{%
         {Москва}%
       }
-      \list[form=romanised]{location}{1}{%
+      \list[form=romanised,lang=russian]{location}{1}{%
         {Moskva}%
       }
-      \list[form=uniform]{location}{1}{%
+      \list[form=translated,lang=english]{location}{1}{%
         {Moscow}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=russian]{publisher}{1}{%
         {Наука}%
       }
-      \list[form=romanised]{publisher}{1}{%
+      \list[form=romanised,lang=russian]{publisher}{1}{%
         {Nauka}%
       }
-      \list[form=translated]{publisher}{1}{%
+      \list[form=translated,lang=english]{publisher}{1}{%
         {Science}%
       }
       \strng{namehash}{253fe13319a1daadcda3e2acce242883}
@@ -187,38 +187,39 @@ my $forms1 = q|    \entry{forms1}{book}{}
       \field{labeltitle}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \true{singletitle}
       \field{day}{01}
+      \field{langid}{russian}
       \field{month}{10}
-      \field{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
-      \field[form=romanised]{title}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
-      \field[form=translated]{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
+      \field[form=original,lang=russian]{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field[form=romanised,lang=russian]{title}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
+      \field[form=translated,lang=english]{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
       \field{year}{2002}
     \endentry
 |;
 
 my $forms9 = q|    \entry{forms9}{book}{vtranslang=german,vlang=french}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{U}
+      \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
       \field{labeltitle}{Un titel}
       \field{langid}{french}
-      \field{title}{Un titel}
+      \field[form=original,lang=french]{title}{Un titel}
     \endentry
 |;
 
 my $forms10 = q|    \entry{forms10}{book}{vlang=french}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{U}
+      \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
       \field{labeltitle}{Un titel}
       \field{langid}{french}
-      \field{title}{Un titel}
+      \field[form=original,lang=french]{title}{Un titel}
     \endentry
 |;
 
 my $forms11 = q|    \entry{forms11}{book}{vlang=french}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{U}
+      \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
       \field{labeltitle}{Un titel}
       \field{langid}{french}
-      \field{title}{Un titel}
+      \field[form=original,lang=french]{title}{Un titel}
     \endentry
 |;
 
@@ -229,7 +230,7 @@ my $forms12 = q|    \entry{forms12}{unpublished}{}
       \true{singletitle}
       \field[form=translated,lang=french]{maintitle}{Maintitle translated FRENCH}
       \field[form=uniform,lang=german]{subtitle}{Subtitle uniform GERMAN}
-      \field{title}{TITLE}
+      \field[form=original,lang=english]{title}{TITLE}
       \field[form=translated,lang=french]{title}{Title translated FRENCH}
     \endentry
 |;
@@ -247,15 +248,15 @@ my $forms13 = q|    \entry{forms13}{unpublished}{}
 my $forms14 = q|    \entry{forms14}{unpublished}{}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field[lang=french]{journaltitle}{JTITLE french}
-      \field[form=translated]{note}{NOTE translated}
+      \field[form=original,lang=french]{journaltitle}{JTITLE french}
+      \field[form=translated,lang=english]{note}{NOTE translated}
     \endentry
 |;
 
 my $forms15 = q|    \entry{forms15}{unpublished}{}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field[form=romanised]{booktitle}{German title}
+      \field[form=romanised,lang=english]{booktitle}{German title}
     \endentry
 |;
 

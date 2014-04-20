@@ -54,14 +54,14 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \name{labelname}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{Ellington}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name[form=original,lang=english]{author}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{Ellington}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \list{location}{2}{%
+      \list[form=original,lang=english]{location}{2}{%
         {New York}%
         {London}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=english]{publisher}{1}{%
         {Macmillan}%
       }
       \strng{namehash}{51db4bfd331cba22959ce2d224c517cd}
@@ -70,7 +70,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
       \field{labelyear}{2007}
       \field{datelabelsource}{}
-      \field{note}{A Note}
+      \field[form=original,lang=english]{note}{A Note}
       \field{year}{2007}
     \endentry
 |;
@@ -79,14 +79,14 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \name{labelname}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{Pillington}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name[form=original,lang=english]{author}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{Pillington}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
       }
-      \list{location}{2}{%
+      \list[form=original,lang=english]{location}{2}{%
         {New York}%
         {London}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=english]{publisher}{1}{%
         {Routledge}%
       }
       \strng{namehash}{68539e0ce4922cc4957c6cabf35e6fc8}
@@ -95,10 +95,10 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \field{sortinithash}{b8af9282ac256b81613dc9012a0ac921}
       \field{labelyear}{2003}
       \field{datelabelsource}{}
-      \field{abstract}{An abstract}
-      \field{addendum}{Москва}
-      \field{note}{A Note}
-      \field{venue}{venue}
+      \field[form=original,lang=english]{abstract}{An abstract}
+      \field[form=original,lang=english]{addendum}{Москва}
+      \field[form=original,lang=english]{note}{A Note}
+      \field[form=original,lang=english]{venue}{venue}
       \field{year}{2003}
     \endentry
 |;

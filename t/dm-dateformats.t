@@ -65,11 +65,11 @@ my $l13c = q|    \entry{L13}{book}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{2}{}{%
+      \name[form=original,lang=english]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -84,7 +84,7 @@ my $l13c = q|    \entry{L13}{book}{}
       \field{day}{01}
       \field{endyear}{}
       \field{month}{01}
-      \field{title}{Title 2}
+      \field[form=original,lang=english]{title}{Title 2}
       \field{year}{1996}
     \endentry
 |;
@@ -94,11 +94,11 @@ my $l14 = q|    \entry{L14}{book}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{2}{}{%
+      \name[form=original,lang=english]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -116,7 +116,7 @@ my $l14 = q|    \entry{L14}{book}{}
       \field{endmonth}{12}
       \field{endyear}{1996}
       \field{month}{12}
-      \field{title}{Title 2}
+      \field[form=original,lang=english]{title}{Title 2}
       \field{year}{1996}
     \endentry
 |;
@@ -126,11 +126,11 @@ my $l15 = q|    \entry{L15}{book}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{2}{}{%
+      \name[form=original,lang=english]{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -139,7 +139,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{extrayear}{4}
       \field{labeltitle}{Title 2}
-      \field{title}{Title 2}
+      \field[form=original,lang=english]{title}{Title 2}
       \warn{\item Datamodel: Entry 'L15' (dm-dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;
@@ -149,11 +149,11 @@ my $l16 = q|    \entry{L16}{proceedings}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{2}{}{%
+      \name[form=original,lang=english]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -169,7 +169,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{eventday}{01}
       \field{eventmonth}{01}
       \field{eventyear}{1996}
-      \field{title}{Title 2}
+      \field[form=original,lang=english]{title}{Title 2}
       \warn{\item Datamodel: Entry 'L16' (dm-dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;
@@ -179,11 +179,11 @@ my $l17 = q|    \entry{L17}{proceedings}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{2}{}{%
+      \name[form=original,lang=english]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -214,7 +214,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{origmonth}{12}
       \field{origyear}{1998}
       \field{pubstate}{inpress}
-      \field{title}{Title 2}
+      \field[form=original,lang=english]{title}{Title 2}
       \field{year}{1996}
     \endentry
 |;
@@ -224,11 +224,11 @@ my $l17c = q|    \entry{L17}{proceedings}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{2}{}{%
+      \name[form=original,lang=english]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -258,7 +258,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{origmonth}{12}
       \field{origyear}{1998}
       \field{pubstate}{inpress}
-      \field{title}{Title 2}
+      \field[form=original,lang=english]{title}{Title 2}
       \field{year}{1996}
     \endentry
 |;
@@ -268,11 +268,11 @@ my $l17e = q|    \entry{L17}{proceedings}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \name{editor}{2}{}{%
+      \name[form=original,lang=english]{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
@@ -302,7 +302,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{origmonth}{12}
       \field{origyear}{1998}
       \field{pubstate}{inpress}
-      \field{title}{Title 2}
+      \field[form=original,lang=english]{title}{Title 2}
       \field{year}{1996}
     \endentry
 |;

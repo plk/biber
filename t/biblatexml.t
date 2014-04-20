@@ -50,12 +50,12 @@ my $l1 = q|    \entry{bltx1}{book}{}
         {{hash=e708d5a31534e937578abf161c867a25}{Aхмедов}{A\bibinitperiod}{Ашраф\bibnamedelima Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
       }
       \true{moreauthor}
-      \name{author}{3}{}{%
+      \name[form=original,lang=russian]{author}{3}{}{%
         {{hash=7b4da3df896da456361ae44dc651770a}{Булгаков}{Б\bibinitperiod}{Павел\bibnamedelima Георгиевич}{П\bibinitperiod\bibinitdelim Г\bibinitperiod}{}{}{}{}}%
         {{hash=ee55ff3b0e4268cfb193143e86c283a9}{Розенфельд}{Р\bibinitperiod}{Борис-ZZ\bibnamedelima Aбрамович}{Б\bibinithyphendelim Z\bibinitperiod\bibinitdelim A\bibinitperiod}{Билл}{Б\bibinitperiod}{}{}{}{}}%
         {{hash=e708d5a31534e937578abf161c867a25}{Aхмедов}{A\bibinitperiod}{Ашраф\bibnamedelima Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
       }
-      \name[form=uniform]{author}{3}{}{%
+      \name[form=uniform,lang=russian]{author}{3}{}{%
         {{hash=eebdb6e8831004ef71d26f7c2b77f3d1}{Bulgakov}{B\bibinitperiod}{Pavel\bibnamedelima G.}{P\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
         {{hash=aa7443826b696f2ac320d278f0fe5f5a}{Rozenfeld}{R\bibinitperiod}{Boris\bibnamedelima A.}{B\bibinitperiod\bibinitdelim A\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
         {{hash=7d83f818351bce3d953d5056ee449a81}{Akhmedov}{A\bibinitperiod}{Ashraf\bibnamedelima A.}{A\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
@@ -63,22 +63,22 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \list{language}{1}{%
         {Russian}%
       }
-      \list{location}{1}{%
+      \list[form=original,lang=russian]{location}{1}{%
         {Москва}%
       }
-      \list[form=romanised]{location}{1}{%
+      \list[form=romanised,lang=russian]{location}{1}{%
         {Moskva}%
       }
-      \list[form=uniform]{location}{1}{%
+      \list[form=translated,lang=english]{location}{1}{%
         {Moscow}%
       }
-      \list{publisher}{1}{%
+      \list[form=original,lang=russian]{publisher}{1}{%
         {Наука}%
       }
-      \list[form=romanised]{publisher}{1}{%
+      \list[form=romanised,lang=russian]{publisher}{1}{%
         {Nauka}%
       }
-      \list[form=translated]{publisher}{1}{%
+      \list[form=translated,lang=english]{publisher}{1}{%
         {Science}%
       }
       \strng{namehash}{80e524d8402a5619e59ea67ea2d937a5}
@@ -100,11 +100,11 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \field{pagetotal}{240}
       \field{relatedstring}{Somestring}
       \field{relatedtype}{reprint}
-      \field{series}{Научно-биографическая литература}
-      \field[form=romanised]{series}{Nauchno-biograficheskaya literatura}
-      \field{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
-      \field[form=romanised]{title}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
-      \field[form=translated]{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
+      \field[form=original,lang=russian]{series}{Научно-биографическая литература}
+      \field[form=romanised,lang=russian]{series}{Nauchno-biograficheskaya literatura}
+      \field[form=original,lang=russian]{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field[form=romanised,lang=russian]{title}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
+      \field[form=translated,lang=english]{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
       \field{urlday}{01}
       \field{urlendyear}{}
       \field{urlmonth}{07}

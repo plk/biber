@@ -46,7 +46,7 @@ my $string1 = q|    \entry{Static1}{set}{}
       \name{labelname}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name[form=original,lang=english]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
@@ -56,8 +56,8 @@ my $string1 = q|    \entry{Static1}{set}{}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
       \field{labeltitle}{Blessed Brains}
-      \field{annotation}{Some notes}
-      \field{title}{Blessed Brains}
+      \field[form=original,lang=english]{annotation}{Some notes}
+      \field[form=original,lang=english]{title}{Blessed Brains}
       \field{year}{2001}
     \endentry
 |;
@@ -67,7 +67,7 @@ my $string2 = q|    \entry{Static2}{book}{}
       \name{labelname}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name[form=original,lang=english]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
@@ -75,8 +75,8 @@ my $string2 = q|    \entry{Static2}{book}{}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Blessed Brains}
-      \field{annotation}{Some Blessed Note}
-      \field{title}{Blessed Brains}
+      \field[form=original,lang=english]{annotation}{Some Blessed Note}
+      \field[form=original,lang=english]{title}{Blessed Brains}
       \field{year}{2001}
     \endentry
 |;
@@ -86,7 +86,7 @@ my $string3 = q|    \entry{Static3}{book}{}
       \name{labelname}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name[form=original,lang=english]{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
@@ -94,7 +94,7 @@ my $string3 = q|    \entry{Static3}{book}{}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Castles and Crime}
-      \field{title}{Castles and Crime}
+      \field[form=original,lang=english]{title}{Castles and Crime}
       \field{year}{2002}
     \endentry
 |;
@@ -104,7 +104,7 @@ my $string4 = q|    \entry{Static4}{book}{}
       \name{labelname}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name[form=original,lang=english]{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
@@ -112,7 +112,7 @@ my $string4 = q|    \entry{Static4}{book}{}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Dungeons, Dark and Dangerous}
-      \field{title}{Dungeons, Dark and Dangerous}
+      \field[form=original,lang=english]{title}{Dungeons, Dark and Dangerous}
       \field{year}{2005}
     \endentry
 |;
@@ -123,7 +123,7 @@ my $string5 = q|    \entry{Static2}{book}{}
       \name{labelname}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \name{author}{1}{}{%
+      \name[form=original,lang=english]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
@@ -133,8 +133,8 @@ my $string5 = q|    \entry{Static2}{book}{}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
       \field{labeltitle}{Blessed Brains}
-      \field{annotation}{Some Blessed Note}
-      \field{title}{Blessed Brains}
+      \field[form=original,lang=english]{annotation}{Some Blessed Note}
+      \field[form=original,lang=english]{title}{Blessed Brains}
       \field{year}{2001}
     \endentry
 |;

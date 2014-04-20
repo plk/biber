@@ -69,22 +69,7 @@ sub _printfield {
 
         # Can the field have multiple script/lang variants?
         my $dm = Biber::Config->get_dm;
-        my $fl = '';
-        if ($dm->field_is_variant_enabled($field)) {
-          my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
-          if ($form ne Biber::Config->getblxoption('vform', undef, $key) and
-              $lang eq Biber::Config->getblxoption($langfield, undef, $key)) {
-            $fl = "[form=$form]";
-          }
-          elsif ($form eq Biber::Config->getblxoption('vform', undef, $key) and
-                 $lang ne Biber::Config->getblxoption($langfield, undef, $key)) {
-            $fl = "[lang=$lang]";
-          }
-          elsif ($form ne Biber::Config->getblxoption('vform', undef, $key) and
-                 $lang ne Biber::Config->getblxoption($langfield, undef, $key)) {
-            $fl = "[form=$form,lang=$lang]";
-          }
-        }
+        my $fl = $dm->field_is_variant_enabled($field) ? "[form=$form,lang=$lang]" : '';
 
         if (Biber::Config->getoption('wraplines')) {
           ## 18 is the length of '      \field[]{}{}'
@@ -196,22 +181,7 @@ sub set_output_entry {
           # Names are not necessarily variant enabled - for example, if a style
           # defines a custom name field which isn't. This is guaranteed only in the
           # default biblatex datamodel
-          my $fl = '';
-          if ($dm->field_is_variant_enabled($namefield)) {
-            my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
-            if ($form ne Biber::Config->getblxoption('vform', undef, $key) and
-                $lang eq Biber::Config->getblxoption($langfield, undef, $key)) {
-              $fl = "[form=$form]";
-            }
-            elsif ($form eq Biber::Config->getblxoption('vform', undef, $key) and
-                   $lang ne Biber::Config->getblxoption($langfield, undef, $key)) {
-              $fl = "[lang=$lang]";
-            }
-            elsif ($form ne Biber::Config->getblxoption('vform', undef, $key) and
-                   $lang ne Biber::Config->getblxoption($langfield, undef, $key)) {
-              $fl = "[form=$form,lang=$lang]";
-            }
-          }
+          my $fl = $dm->field_is_variant_enabled($namefield) ? "[form=$form,lang=$lang]" : '';
 
           $acc .= "      \\name${fl}{$namefield}{$total}{$plo}{%\n";
           foreach my $n (@{$nf->names}) {
@@ -244,22 +214,7 @@ sub set_output_entry {
 
           # Can the field have multiple script/lang variants?
           my $dm = Biber::Config->get_dm;
-          my $fl = '';
-          if ($dm->field_is_variant_enabled($listfield)) {
-            my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
-            if ($form ne Biber::Config->getblxoption('vform', undef, $key) and
-                $lang eq Biber::Config->getblxoption($langfield, undef, $key)) {
-              $fl = "[form=$form]";
-            }
-            elsif ($form eq Biber::Config->getblxoption('vform', undef, $key) and
-                   $lang ne Biber::Config->getblxoption($langfield, undef, $key)) {
-              $fl = "[lang=$lang]";
-            }
-            elsif ($form ne Biber::Config->getblxoption('vform', undef, $key) and
-                   $lang ne Biber::Config->getblxoption($langfield, undef, $key)) {
-              $fl = "[form=$form,lang=$lang]";
-            }
-          }
+          my $fl = $dm->field_is_variant_enabled($listfield) ? "[form=$form,lang=$lang]" : '';
 
           $acc .= "      \\list${fl}{$listfield}{$total}{%\n";
           foreach my $f (@$lf) {

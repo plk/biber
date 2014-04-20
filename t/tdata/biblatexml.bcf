@@ -109,7 +109,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>vlang</bcf:key>
-      <bcf:value>english</bcf:value>
+      <bcf:value>russian</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>vtranslang</bcf:key>

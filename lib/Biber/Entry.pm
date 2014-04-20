@@ -330,7 +330,7 @@ sub set_field {
   my $self = shift;
   my ($field, $val, $form, $lang) = @_;
   my $dm = Biber::Config->get_dm;
-  my $key = ($field eq 'citekey' ) ? $field : $self->{derivedfields}{nonvariant}{citekey};
+  my $key = ($field eq 'citekey' ) ? $val : $self->{derivedfields}{nonvariant}{citekey};
   if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
