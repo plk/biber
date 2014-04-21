@@ -45,7 +45,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  map_locale};
+  locale2bcp47 bcp472locale};
 
 =head1 FUNCTIONS
 
@@ -957,17 +957,30 @@ sub _expand_option {
   return;
 }
 
-=head2 map_locale
+=head2 locale2bcp47
 
-  Map babel/polyglossia language options to a sensible CLDR locale default
+  Map babel/polyglossia language options to a sensible CLDR (bcp47) locale default
   Return input string if there is no mapping
 
 =cut
 
-sub map_locale {
+sub locale2bcp47 {
   my $localestr = shift;
   return $localestr unless $localestr;
-  return $LOCALE_MAP{$localestr} || $localestr;
+  return $LOCALE_MAP{$localestr}{locale} || $localestr;
+}
+
+=head2 bcp472locale
+
+  Map CLDR (bcp47) locale to a babel/polyglossia locale
+  Return input string if there is no mapping
+
+=cut
+
+sub bcp472locale {
+  my $localestr = shift;
+  return $localestr unless $localestr;
+  return $LOCALE_MAP_R{$localestr} || $localestr;
 }
 
 
