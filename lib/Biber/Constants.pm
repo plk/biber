@@ -279,10 +279,12 @@ while (my ($k,$v) = each %LOCALE_MAP) {
   if (defined($LOCALE_MAP_R{$v->{locale}})) {
     if ($v->{preferred}) {
       $LOCALE_MAP_R{$v->{locale}} = $k;
+      $LOCALE_MAP_R{$v->{locale} =~ s/\_.+$//r} = $k;
     }
   }
   else {
     $LOCALE_MAP_R{$v->{locale}} = $k;
+    $LOCALE_MAP_R{$v->{locale} =~ s/\_.+$//r} = $k;
   }
 }
 
