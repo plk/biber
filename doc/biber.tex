@@ -831,7 +831,9 @@ datasource entry being processed. A \opt{map\_step} works like this:
   this \opt{map} immediately terminates.
   \textcolor{red}{\texttt{source-field-form}} and
   \textcolor{red}{\texttt{source-field-lang}} can be used to select
-  specific variants of a multiscript field. If only
+  specific variants of a multiscript field. If neither are specified, all
+  variants of \textcolor{red}{\texttt{source-field}} will be mapped to
+  corresponding variants of \textcolor{red}{\texttt{target-field}}. If only
   \textcolor{red}{\texttt{source-field-form}} is specified, the mapping
   will select the variant of the field with the specified form, whatever
   the language of the field variant. If there is more than one field variant with
