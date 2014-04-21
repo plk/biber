@@ -25,6 +25,7 @@ use File::Slurp;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
+use Storable qw( dclone );
 use URI;
 use Unicode::Normalize;
 use Unicode::GCString;
@@ -353,8 +354,46 @@ sub create_entry {
     # Save pre-mapping data. Might be useful somewhere
     $bibentry->set_field('rawdata', biber_decode_utf8($entry->print_s));
 
+    # Pre-process maps to cover variant source->target field mappings
+    # When a field is specified with no variants and it's a simple mapping
+    # from source->target, map all variants.
+    # It's much simpler to materialise these mappings here than try to do them implicitly
+    # during the mapping process.
+    # DON'T FORGET that we're doing this syntactically here as we don't have access to
+    # any of the semantic biber variant checking methods at this stage of processing
+    my $ppsmaps = dclone($smaps);
+    my $forms = join('|', map {$_->{content}} @{Biber::Config->getblxoption('variantforms')});
+    my $S = Biber::Config->getoption('vsplit');
+    my $fl_re = qr/\A([^$S]+)$S?($forms)?$S?(.+)?\z/;
+
+    foreach my $smap (@$ppsmaps) {
+      foreach my $map (@{$smap->{map}}) {
+        my $nsteps = [];
+        my $nstep;
+        foreach my $step (@{$map->{map_step}}) {
+          # If it's a simple source->target mapping and the source has no variant specified
+          if (my $source = $step->{map_field_source} and
+              my $target = $step->{map_field_target} and
+             $source !~ m/$S/) {
+            foreach my $f (map {lc} $entry->fieldlist) {
+              my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+              next unless lc($field) eq lc($source);
+              if ($form or $lang) { # ignores orginal field which triggered this
+                $nstep = dclone($step);
+                $nstep->{map_field_source} = $field;
+                $nstep->{map_field_source_form} = $nstep->{map_field_target_form} = $form if $form;
+                $nstep->{map_field_source_lang} = $nstep->{map_field_target_lang} = $lang if $lang;
+                push @$nsteps, $nstep;
+              }
+            }
+          }
+        }
+        push @{$map->{map_step}}, @$nsteps;
+      }
+    }
+
     # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
-    foreach my $smap (@$smaps) {
+    foreach my $smap (@$ppsmaps) {
       my $level = $smap->{level};
       $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
 

@@ -218,6 +218,8 @@ my $forms11 = q|    \entry{forms11}{book}{vlang=french}
       \field{sortinit}{U}
       \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
       \field{labeltitle}{Un titel}
+      \field[form=original,lang=french]{journaltitle}{FJ}
+      \field[form=translated,lang=english]{journaltitle}{TFJ}
       \field{langid}{french}
       \field[form=original,lang=french]{title}{Un titel}
     \endentry
