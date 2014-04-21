@@ -411,7 +411,7 @@ sub create_entry {
           if (my $source = $step->{map_field_source}) {
             # key is a pseudo-field. It's guaranteed to exist so
             # just check if that's what's being asked for
-            unless (lc($source) eq 'entrykey' or find_ms_field($entry, $step, \$source)) {
+            unless (lc($source) eq 'entrykey' or find_variant_field($entry, $step, \$source)) {
               # Skip the rest of the map if this step doesn't match and match is final
               if ($step->{map_final}) {
                 $logger->debug("Source mapping (type=$level, key=$key): No field '" . lc($source) . "' and step has 'final' set, skipping rest of map ...");

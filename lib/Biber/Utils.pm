@@ -47,7 +47,7 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  bcp472locale locale2bcp47 find_ms_field check_vform};
+  bcp472locale locale2bcp47 find_variant_field check_vform};
 
 =head1 FUNCTIONS
 
@@ -964,7 +964,7 @@ sub _expand_option {
   return;
 }
 
-=head2 find_ms_field
+=head2 find_variant_field
 
   Check for the existence of a field with particular lang/form.
   This is needed during sourcemap processing before we have the usual Biber internals
@@ -972,7 +972,7 @@ sub _expand_option {
 
 =cut
 
-sub find_ms_field {
+sub find_variant_field {
   # $source is a ref so we can modify it in the calling context
   my ($entry, $step, $source) = @_;
   my $sform = $step->{map_field_source_form};
