@@ -967,7 +967,7 @@ sub _expand_option {
 sub locale2bcp47 {
   my $localestr = shift;
   return $localestr unless $localestr;
-  return $LOCALE_MAP{$localestr}{locale} || $localestr;
+  return $LOCALE_MAP{$localestr} || $localestr;
 }
 
 =head2 bcp472locale
