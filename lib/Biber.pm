@@ -739,7 +739,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'), type => 'entry');
     $seclist->set_type('entry');
     # bibtex output in non-tool mode is just citeorder
-    $seclist->set_sortscheme({locale => map_locale(Biber::Config->getblxoption('sortlocale')),
+    $seclist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
                               spec   =>
                              [
                               [
@@ -2888,7 +2888,7 @@ sub sort_list {
   my $lssn = $list->get_sortschemename;
   my $ltype = $list->get_type;
   my $lname = $list->get_name;
-  my $llocale = map_locale($sortscheme->{locale} || Biber::Config->getblxoption('sortlocale'));
+  my $llocale = locale2bcp47($sortscheme->{locale} || Biber::Config->getblxoption('sortlocale'));
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
@@ -3020,7 +3020,7 @@ sub sort_list {
       # Re-instantiate collation object if a different locale is required for this sort item.
       # This can't be done in a ->change() method, has to be a new object.
       my $cobj;
-      my $sl = map_locale($sortset->[0]{locale});
+      my $sl = locale2bcp47($sortset->[0]{locale});
       if (defined($sl) and $sl ne $thislocale) {
         $cobj = 'Biber::UCollate->new(' . "'$sl'" . ",'" . join("','", %$collopts) . "')";
       }
@@ -3552,7 +3552,7 @@ sub _parse_sort {
     }
   }
 
-  return {locale => map_locale($root_obj->{locale} || Biber::Config->getblxoption('sortlocale')),
+  return {locale => locale2bcp47($root_obj->{locale} || Biber::Config->getblxoption('sortlocale')),
           spec   => $sorting};
 }
 
