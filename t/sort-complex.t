@@ -56,7 +56,7 @@ my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $shs = $biber->sortlists->get_list(0, 'shorthands', 'list', 'shorthands');
 my $out = $biber->get_output_obj;
 
-my $ss = { locale => 'en_US',
+my $ss = { locale => 'en-US',
            spec => [
            [
             {},
