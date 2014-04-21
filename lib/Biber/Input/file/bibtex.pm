@@ -371,6 +371,7 @@ sub create_entry {
         my $nsteps = [];
         my $nstep;
         foreach my $step (@{$map->{map_step}}) {
+          push @$nsteps, $step;
           # If it's a simple source->target mapping and the source has no variant specified
           if (my $source = $step->{map_field_source} and
               my $target = $step->{map_field_target} and
@@ -378,17 +379,17 @@ sub create_entry {
             foreach my $f (map {lc} $entry->fieldlist) {
               my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
               next unless lc($field) eq lc($source);
-              if ($form or $lang) { # ignores orginal field which triggered this
+              if ($form or $lang) { # ignores original field which triggered this
                 $nstep = dclone($step);
                 $nstep->{map_field_source} = $field;
                 $nstep->{map_field_source_form} = $nstep->{map_field_target_form} = $form if $form;
                 $nstep->{map_field_source_lang} = $nstep->{map_field_target_lang} = $lang if $lang;
-                push @$nsteps, $nstep;
+                push @$nsteps, $nstep; # Insert new mapping step into the map
               }
             }
           }
         }
-        push @{$map->{map_step}}, @$nsteps;
+        $map->{map_step} = $nsteps;
       }
     }
 
