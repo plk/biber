@@ -372,18 +372,55 @@ sub create_entry {
         my $nstep;
         foreach my $step (@{$map->{map_step}}) {
           push @$nsteps, $step;
-          # If it's a simple source->target mapping and the source has no variant specified
-          if (my $source = $step->{map_field_source} and
-              my $target = $step->{map_field_target} and
-             $source !~ m/$S/) {
+          next if $step->{map_nogeneralise_variants}; # Don't generalise to variants for step
+          # Simple source->target mapping
+          if ($step->{map_field_source} and
+              $step->{map_field_target} and
+              not $step->{map_field_source_form} and
+              not $step->{map_field_source_lang}) {
             foreach my $f (map {lc} $entry->fieldlist) {
               my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
-              next unless lc($field) eq lc($source);
+              next unless lc($field) eq lc($step->{map_field_source});
               if ($form or $lang) { # ignores original field which triggered this
                 $nstep = dclone($step);
                 $nstep->{map_field_source} = $field;
                 $nstep->{map_field_source_form} = $nstep->{map_field_target_form} = $form if $form;
                 $nstep->{map_field_source_lang} = $nstep->{map_field_target_lang} = $lang if $lang;
+                push @$nsteps, $nstep; # Insert new mapping step into the map
+              }
+            }
+          }
+          # Setting field to null or a value
+          elsif ($step->{map_field_set} and
+                 ($step->{map_null} or $step->{map_field_value}) and
+                 not $step->{map_field_set_form} and
+                 not $step->{map_field_set_lang}) {
+            foreach my $f (map {lc} $entry->fieldlist) {
+              my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+              next unless lc($field) eq lc($step->{map_field_set});
+              if ($form or $lang) { # ignores original field which triggered this
+                $nstep = dclone($step);
+                $nstep->{map_field_set} = $field;
+                $nstep->{map_field_set_form} = $form if $form;
+                $nstep->{map_field_set_lang} = $lang if $lang;
+                push @$nsteps, $nstep; # Insert new mapping step into the map
+              }
+            }
+          }
+          # match/replace on source
+          elsif ($step->{map_field_source} and
+                 $step->{map_match} and
+                 $step->{map_replace} and
+                 not $step->{map_field_source_form} and
+                 not $step->{map_field_source_lang}) {
+            foreach my $f (map {lc} $entry->fieldlist) {
+              my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+              next unless lc($field) eq lc($step->{map_field_source});
+              if ($form or $lang) { # ignores original field which triggered this
+                $nstep = dclone($step);
+                $nstep->{map_field_source} = $field;
+                $nstep->{map_field_source_form} = $form if $form;
+                $nstep->{map_field_source_lang} = $lang if $lang;
                 push @$nsteps, $nstep; # Insert new mapping step into the map
               }
             }
@@ -542,6 +579,14 @@ sub create_entry {
 
           # field changes
           if (my $field = $step->{map_field_set}) {
+
+            # Is a variant specified?
+            my $sf = $step->{map_field_set_form};
+            my $sl = $step->{map_field_set_lang};
+            if ($sf or $sl) {
+              my $S = Biber::Config->getoption('vsplit');
+              $field = $field . $S . $sf . ($sl ? "$S$sl" : '');
+            }
 
             # Deal with special tokens
             if ($step->{map_null}) {

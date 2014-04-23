@@ -683,22 +683,29 @@ map =
         (
           attribute map_type_source { xsd:string {minLength="1"} },
           attribute map_type_target { xsd:string {minLength="1"} }?,
-          attribute map_final { "1" }?
+          attribute map_final { "1" }?,
+          attribute map_nogeneralise_variants { "1" }?
         ) |
         (
           attribute map_field_source { xsd:string {minLength="1"} },
           attribute map_field_source_form { text }?,
           attribute map_field_source_lang { text }?,
           attribute map_field_target { xsd:string {minLength="1"} }?,
+          attribute map_field_target_form { text }?,
+          attribute map_field_target_lang { text }?,
           attribute map_final { "1" }?,
+          attribute map_nogeneralise_variants { "1" }?,
           attribute map_match { xsd:string {minLength="1"} }?,
           attribute map_notmatch { xsd:string {minLength="1"} }?,
           attribute map_replace { xsd:string {minLength="1"} }?
         ) |
         (
           attribute map_field_set { xsd:string {minLength="1"} },
+          attribute map_field_set_form { text }?,
+          attribute map_field_set_lang { text }?,
           attribute map_append { "1" }?,
           attribute map_final { "1" }?,
+          attribute map_nogeneralise_variants { "1" }?,
           ( attribute map_null { "1" } |
             attribute map_origfield { "1" } |
             attribute map_origfieldval { "1" } |

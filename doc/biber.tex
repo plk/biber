@@ -781,10 +781,14 @@ examples. A \opt{map} element looks like this:
              +\textcolor{blue}{map\_field\_source\_lang="\textcolor{red}{source-field-lang}"}+
              +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-entrytype}"}+
              +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
+             +\textcolor{blue}{map\_field\_target\_form="\textcolor{red}{target-field-form}"}+
+             +\textcolor{blue}{map\_field\_target\_lang="\textcolor{red}{target-field-lang}"}+
              +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
              +\textcolor{blue}{map\_nomatch="\textcolor{red}{match-regexp}"}+
              +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
              +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
+             +\textcolor{blue}{map\_field\_set\_form="\textcolor{red}{set-field-form}"}+
+             +\textcolor{blue}{map\_field\_set\_lang="\textcolor{red}{set-field-lang}"}+
              +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
              +\textcolor{blue}{map\_append="1"}+
              +\textcolor{blue}{map\_null="1"}+
@@ -792,7 +796,8 @@ examples. A \opt{map} element looks like this:
              +\textcolor{blue}{map\_origfield="1"}+
              +\textcolor{blue}{map\_origfieldval="1"}+
              +\textcolor{blue}{map\_origentrytype="1"}+
-             +\textcolor{blue}{map\_final="1"}+/>
+             +\textcolor{blue}{map\_final="1"}+
+             +\textcolor{blue}{map\_nogeneralise\_variants="1"}+/>
 </map>
 \end{lstlisting}%| <- sometimes emacs highlighting needs this
 
@@ -827,48 +832,69 @@ datasource entry being processed. A \opt{map\_step} works like this:
 \item Change the \textcolor{red}{\texttt{source-field}} to
   \textcolor{red}{\texttt{target-field}}, if defined. If
   \textcolor{blue}{\texttt{map\_final}} is set, then if there is no
-  \textcolor{red}{\texttt{source-field}} field in the entry, processing of
-  this \opt{map} immediately terminates.
-  \textcolor{red}{\texttt{source-field-form}} and
-  \textcolor{red}{\texttt{source-field-lang}} can be used to select
-  specific variants of a multiscript field. If neither are specified, all
-  variants of \textcolor{red}{\texttt{source-field}} will be mapped to
-  corresponding variants of \textcolor{red}{\texttt{target-field}}. If only
-  \textcolor{red}{\texttt{source-field-form}} is specified, the mapping
-  will select the variant of the field with the specified form, whatever
-  the language of the field variant. If there is more than one field variant with
-  the same \textcolor{red}{\texttt{source-field-form}} and different lang,
-  the \textcolor{red}{\texttt{source-field}} will not be selected. If only
-  \textcolor{red}{\texttt{source-field-lang}} is specified, the mapping
-  will select the variant of the field with the specified lang, whatever
-  the form of the field variant. If there is more than one field variant with
-  the same \textcolor{red}{\texttt{source-field-lang}} and different form,
-  the \textcolor{red}{\texttt{source-field}} will not be selected.
+  \textcolor{red}{\texttt{source-field}} field in the entry,
+  processing of this \opt{map} immediately terminates.
+  \textcolor{red}{\texttt{source-field-form}},
+  \textcolor{red}{\texttt{source-field-lang}},
+  \textcolor{red}{\texttt{target-field-form}} and
+  \textcolor{red}{\texttt{target-field-lang}} can be used to select
+  specific variants of sources/targets for a multiscript field. If
+  neither are specified, all variants of
+  \textcolor{red}{\texttt{source-field}} will be mapped to
+  corresponding variants of \textcolor{red}{\texttt{target-field}}
+  (unless \textcolor{blue}{\texttt{map\_nogeneralise\_variants}} is
+  defined for this step). If
+  only \textcolor{red}{\texttt{source-field-form}} is specified, the
+  mapping will select the variant of the field with the specified
+  form, whatever the language of the field variant. If there is more
+  than one field variant with the same
+  \textcolor{red}{\texttt{source-field-form}} and different lang, the
+  \textcolor{red}{\texttt{source-field}} will not be selected. If only
+  \textcolor{red}{\texttt{source-field-lang}} is specified, the
+  mapping will select the variant of the field with the specified
+  lang, whatever the form of the field variant. If there is more than
+  one field variant with the same
+  \textcolor{red}{\texttt{source-field-lang}} and different form, the
+  \textcolor{red}{\texttt{source-field}} will not be selected.
 \item If \textcolor{blue}{\texttt{map\_match}} is defined but
-  \textcolor{blue}{\texttt{map\_replace}} is not, only apply the
-  step if the \textcolor{red}{\texttt{source-field}} matches
-  \textcolor{blue}{\texttt{map\_match}}. You can use parentheses as usual
-  to capture parts of the match and can then use these later when setting a \textcolor{blue}{\texttt{map\_field\_value}}.
+  \textcolor{blue}{\texttt{map\_replace}} is not, only apply the step
+  if the \textcolor{red}{\texttt{source-field}} matches
+  \textcolor{blue}{\texttt{map\_match}}. You can use parentheses as
+  usual to capture parts of the match and can then use these later
+  when setting a \textcolor{blue}{\texttt{map\_field\_value}}.
 \item \textcolor{blue}{\texttt{map\_notmatch}} is the same as
   \textcolor{blue}{\texttt{map\_match}} but with the logic reversed.
-\item Perform a Perl regular expression match and replace on the value of
-  \textcolor{red}{\texttt{source-field}} if
+\item Perform a Perl regular expression match and replace on the value
+  of \textcolor{red}{\texttt{source-field}} if
   \textcolor{blue}{\texttt{map\_match}} and
-  \textcolor{blue}{\texttt{map\_replace}} are defined. You may use (and almost certainly
-  will want to use) parentheses for back-references in \textcolor{blue}{\texttt{map\_replace}}.
-  Do not quote the regular expressions in any special (i.e. non-Perly) way---it's not
+  \textcolor{blue}{\texttt{map\_replace}} are defined. If
+  \textcolor{red}{\texttt{source-field-form}} and
+  \textcolor{red}{\texttt{source-field-lang}} are not specified,
+  operates on all variants of \textcolor{red}{\texttt{source-field}}
+  unless \textcolor{blue}{\texttt{map\_nogeneralise\_variants}} is
+  defined for this step. You may use (and almost certainly will want
+  to use) parentheses for back-references in
+  \textcolor{blue}{\texttt{map\_replace}}.  Do not quote the regular
+  expressions in any special (i.e. non-Perly) way---it's not
   necessary.
-\item If \textcolor{blue}{\texttt{map\_field\_set}} is defined, then its
-  value is \textcolor{red}{\texttt{set-field}} which will be set to a value
-  specified by further attributes. If
-  \textcolor{blue}{\texttt{map\_overwrite}} is false for this step and the
-  field to set already exists then the map step is ignored. If
-  \textcolor{blue}{\texttt{map\_final}} is also set on this step, then
-  processing of the parent map stops at this point. If
-  \textcolor{blue}{\texttt{map\_append}} is set, then the value to set is
-  appended to the current value of \textcolor{red}{\texttt{set-field}}. The
-  value to set is specified by a mandatory one and only one of the
-  following attributes:
+\item If \textcolor{blue}{\texttt{map\_field\_set}} is defined, then
+  its value is \textcolor{red}{\texttt{set-field}} which will be set
+  to a value specified by further
+  attributes. \textcolor{red}{\texttt{set-field-form}} and
+  \textcolor{red}{\texttt{set-field-lang}} can be specified to target
+  a specific field variant. If neither are specified, all variants of
+  \textcolor{red}{\texttt{set-field}} will be operated on when
+  specifying \textcolor{blue}{\texttt{map\_null}} or
+  \textcolor{blue}{\texttt{map\_field\_value}} (unless
+  \textcolor{blue}{\texttt{map\_nogeneralise\_variants}} is defined
+  for this step). If \textcolor{blue}{\texttt{map\_overwrite}} is
+  false for this step and the field to set already exists then the map
+  step is ignored. If \textcolor{blue}{\texttt{map\_final}} is also
+  set on this step, then processing of the parent map stops at this
+  point. If \textcolor{blue}{\texttt{map\_append}} is set, then the
+  value to set is appended to the current value of
+  \textcolor{red}{\texttt{set-field}}. The value to set is specified
+  by a mandatory one and only one of the following attributes:
   \begin{itemize}
     \item \textcolor{blue}{\texttt{map\_field\_value}} --- The
       \textcolor{red}{\texttt{set-field}} is set to
@@ -1071,17 +1097,21 @@ particular name, which presumably has some variation in the datasource.
   <map map_overwrite="1">
     <map_step map_field_source="TITLE" map_field_source_form="translated"
               map_final="1"/>
-    <map_step map_entry_null="1"/>
+    <map_step map_null="1"/>
   </map>
   <map map_overwrite="1">
     <map_step map_field_source="SUBTITLE" map_field_source_lang="french"
               map_final="1"/>
-    <map_step map_entry_null="1"/>
+    <map_step map_null="1"/>
   </map>
   <map map_overwrite="1">
     <map_step map_field_source="NOTE" map_field_source_form="translated"
               map_field_source_lang="german" map_final="1"/>
-    <map_step map_entry_null="1"/>
+    <map_step map_null="1"/>
+  </map>
+  <map map_overwrite="1">
+    <map_step map_field_set="ADDENDUM"/>
+    <map_step map_null="1"/>
   </map>
 </maps>
 \end{lstlisting}
@@ -1093,7 +1123,8 @@ will be skipped). Removes a french language variant of the
 \bibfield{SUBTITLE} field without having to know the form of the variant
 (the form will be found, assuming that there is only one french variant. If
 there is more than one, this step will be skipped). Removes any
-\bibfield{NOTE} fields with translated form and german language.
+\bibfield{NOTE} fields with translated form and german
+language. Removes all variants of the \bibfield{ADDENDUM} field.
 
 \begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
 <map>

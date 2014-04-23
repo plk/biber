@@ -1707,6 +1707,11 @@
                   <value>1</value>
                 </attribute>
               </optional>
+              <optional>
+                <attribute name="map_nogeneralise_variants">
+                  <value>1</value>
+                </attribute>
+              </optional>
             </group>
             <group>
               <attribute name="map_field_source">
@@ -1728,7 +1733,18 @@
                 </attribute>
               </optional>
               <optional>
+                <attribute name="map_field_target_form"/>
+              </optional>
+              <optional>
+                <attribute name="map_field_target_lang"/>
+              </optional>
+              <optional>
                 <attribute name="map_final">
+                  <value>1</value>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_nogeneralise_variants">
                   <value>1</value>
                 </attribute>
               </optional>
@@ -1761,12 +1777,23 @@
                 </data>
               </attribute>
               <optional>
+                <attribute name="map_field_set_form"/>
+              </optional>
+              <optional>
+                <attribute name="map_field_set_lang"/>
+              </optional>
+              <optional>
                 <attribute name="map_append">
                   <value>1</value>
                 </attribute>
               </optional>
               <optional>
                 <attribute name="map_final">
+                  <value>1</value>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_nogeneralise_variants">
                   <value>1</value>
                 </attribute>
               </optional>
