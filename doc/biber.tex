@@ -2143,11 +2143,10 @@ not read a \file{.bcf} but instead, it reads all entries from the file
 defaulting to a \bibtex file called «\file{<datasource>\_bibertool.bib}» if
 the options \opt{output\_file} and \opt{output\_format} are not specified.
 
-Tool mode is useful if you need to programatically change your
-datasource using the semantics provided by \biber or if you would like
-to convert your data to a different format. For example, you
-could choose to reencode your datasource by turning all UTF-8
-characters into \latex\ macros:
+Tool mode is useful if you need to programatically change your datasource
+using the semantics provided by \biber or if you would like to convert your
+data to a different format. For example, you could choose to reencode your
+datasource by turning all UTF-8 characters into \latex\ macros:
 
 \begin{verbatim}
 biber --tool --output_encoding=ascii file.bib
