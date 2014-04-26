@@ -2,7 +2,8 @@
 <grammar ns="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns:bib="http://biblatex-biber.sourceforge.net/biblatexml" xmlns:user="http://localhost/biblatexml/user" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <start>
     <a:documentation>TODO?  change namespace of bib:emphasis, bib:superscript, bib:subscript
-       to db = "http://docbook.org/ns/docbook"</a:documentation>
+       to db = "http://docbook.org/ns/docbook"
+XDATA, IDS are not in here</a:documentation>
     <element name="entries">
       <oneOrMore>
         <choice>
@@ -3334,3 +3335,13 @@ the optional attribute "text" gives a Unicode representation of the mathematical
     </element>
   </define>
 </grammar>
+<!-- Copyright 2009-2014 François Charette and Philip Kime, all rights reserved. -->
+<!--
+  This code is free software.  You can redistribute it and/or
+  modify it under the terms of the Artistic License 2.0.
+-->
+<!--
+  This program is distributed in the hope that it will be useful,
+  but without any warranty; without even the implied warranty of
+  merchantability or fitness for a particular purpose.
+-->
