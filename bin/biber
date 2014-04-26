@@ -672,7 +672,7 @@ You may need this if the SSL certificate is self-signed for example.
 
 =item B<--tool>
 
-Run in tool mode. This mode is datasource centric rather than document centrix. biber
+Run in tool mode. This mode is datasource centric rather than document centric. biber
 reads a datasource (and a config file if specified), applies the command-line and config
 file options to the datasource and writes a new datasource. Essentially,
 this allows you to change your data sources using biber's transformation options (such as
