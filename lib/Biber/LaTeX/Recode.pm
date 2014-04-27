@@ -277,17 +277,17 @@ sub latex_decode {
         ## remove {} around macros that print one character
         ## by default we skip that, as it would break constructions like \foo{\i}
         if ($strip_outer_braces) {
-          $text =~ s/\{\\($re)\} / $map->{$1}/gxe;
+          $text =~ s/\{\\($re)\}/$map->{$1}/gxe;
         }
         $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/gxe;
       }
       if ($type eq 'accents') {
-        $text =~ s/\\($re)\s*\{(\p{L}\p{M}*)\}/$2 . $map->{$1}/ge;
-        $text =~ s/\\($re)\s*(\p{L}\p{M}*)/$2 . $map->{$1}/ge;
+        $text =~ s/\\($re)\s*\{(\pL\pM*)\}/$2 . $map->{$1}/ge;
+        $text =~ s/\\($re)\s*(\pL\pM*)/$2 . $map->{$1}/ge;
       }
       if ($type eq 'diacritics') {
-        $text =~ s/\\($re)\s*\{(\p{L}\p{M}*)\}/$2 . $map->{$1}/ge;
-        $text =~ s/\\($re)\s+(\p{L}\p{M}*)/$2 . $map->{$1}/ge;
+        $text =~ s/\\($re)\s*\{(\pL\pM*)\}/$2 . $map->{$1}/ge;
+        $text =~ s/\\($re)\s+(\pL\pM*)/$2 . $map->{$1}/ge;
       }
     }
 

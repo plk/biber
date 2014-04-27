@@ -1084,7 +1084,7 @@ sub preprocess_file {
 
   $logger->info('Decoding LaTeX character macros into UTF-8');
   $logger->trace("Buffer before decoding -> '$lbuf'");
-  $lbuf = Biber::LaTeX::Recode::latex_decode($lbuf, strip_outer_braces => 1);
+  $lbuf = Biber::LaTeX::Recode::latex_decode($lbuf);
   $logger->trace("Buffer after decoding -> '$lbuf'");
 
   File::Slurp::write_file($ufilename, encode('UTF-8', NFC($lbuf))) or
