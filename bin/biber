@@ -587,8 +587,6 @@ the bibliography data showing entries and, as requested, sections and fields.
 You must process this file with C<dot>, e.g. C<dot -Tsvg test.dot -o test.svg> to
 render the graph. See the B<--dot_include> option to select what is included in
 the DOT output.
-C<bibtex> and C<biblatexml> are only supported in (and only make sense in)
-C<tool> mode (see B<--tool> option)
 The legacy option B<--outformat> is supported as an alias.
 
 =item B<--output_macro_fields=[field1, ... fieldn]>

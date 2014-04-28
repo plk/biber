@@ -723,7 +723,12 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $bib_section = new Biber::Section('number' => 99999);
 
     foreach my $section (@{$self->sections->get_sections}) {
-      $bib_section->add_citekeys($section->get_citekeys);
+      if ($section->is_allkeys) {
+        $bib_section->set_allkeys(1);
+      }
+      else {
+        $bib_section->add_citekeys($section->get_citekeys);
+      }
       foreach my $ds (@{$section->get_datasources}) {
         $bib_section->add_datasource($ds);
       }
@@ -736,7 +741,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # Global locale in non tool mode bibtex output is default
     Biber::Config->setblxoption('sortlocale', 'english');
 
-    my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'), type => 'entry');
+    my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'));
     $seclist->set_type('entry');
     # bibtex output in non-tool mode is just citeorder
     $seclist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
@@ -3277,7 +3282,7 @@ sub fetch_data {
   }
 
   # Don't need to do dependent detection if running in (real) tool mode since this is always
-  # allkeys=1 and we don't care about missing dependents which get_dependents() might prune
+  # allkeys=1 and we don't care about missing dependents which get_dependents() might prune.
   # pseudo_tool mode is bibtex output when not in tool mode. Internally, it's essentially
   # the same but without allkeys.
   if (Biber::Config->getoption('tool') and not
