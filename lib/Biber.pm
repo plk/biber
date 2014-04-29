@@ -784,7 +784,7 @@ sub process_setup {
 
   # Break data model information up into more processing-friendly formats
   # for use in verification checks later
-  # This has to be here as opposed to in parse_control() so that it can pick
+  # This has to be here as opposed to in parse_ctrlfile() so that it can pick
   # up user config dm settings
   Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
