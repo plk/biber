@@ -40,6 +40,7 @@ GetOptions(
            'fastsort|f',
            'fixinits',
            'help|h|?',
+           'input_directory=s',
            'input_encoding|e=s',
            'input_format=s',
            'listsep=s',
@@ -475,6 +476,12 @@ This can slightly mess up things like "{U.K. Government}" and other esoteric cas
 
 Show this help message.
 
+=item B<--input_directory [directory]>
+
+F<.bcf> and data files will be looked for first in the F<directory>. See the biber
+PDF documentation for the other possibilities and how this interacts with the
+C<--output_directory> option.
+
 =item B<--input_encoding|-e [encoding]>
 
 Specify the encoding of the data source file(s). Default is "UTF-8"
@@ -549,9 +556,9 @@ The legacy option B<--tool_align> is supported as an alias.
 
 =item B<--output_directory [directory]>
 
-Files (F<.bbl> and F<.blg>) are output to directory F<directory> instead
+Output files (including log files) are output to F<directory> instead
 of the current directory. Input files are also looked for in F<directory>
-before current directory.
+before current directory (but after C<--input_directory> if that is specified).
 
 =item B<--output_encoding|-E [encoding]>
 

@@ -1606,9 +1606,10 @@ searched for in the following locations, in decreasing order of
 priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
-\hspace*{1em}In the \opt{--output\_directory}, if specified$\rightarrow$\\
-\hspace*{2em}Relative to current directory$\rightarrow$\\
-\hspace*{3em}Using \verb+kpsewhich+, if available
+\hspace*{1em}In the \opt{--input\_directory}, if specified$\rightarrow$\\
+\hspace*{2em}In the \opt{--output\_directory}, if specified$\rightarrow$\\
+\hspace*{3em}Relative to current directory$\rightarrow$\\
+\hspace*{4em}Using \verb+kpsewhich+, if available
 
 \subsubsection{Data sources}
 
@@ -1616,10 +1617,11 @@ Local datasources of type «file» are searched for in the following
 locations, in decreasing order of priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
-\hspace*{1em}In the \opt{--output\_directory}, if specified$\rightarrow$\\
-\hspace*{2em}Relative to current directory$\rightarrow$\\
-\hspace*{3em}In the same directory as the control file$\rightarrow$\\
-\hspace*{4em}Using \verb+kpsewhich+ for supported formats, if available\\[2ex]
+\hspace*{1em}In the \opt{--input\_directory}, if specified$\rightarrow$\\
+\hspace*{2em}In the \opt{--output\_directory}, if specified$\rightarrow$\\
+\hspace*{3em}Relative to current directory$\rightarrow$\\
+\hspace*{4em}In the same directory as the control file$\rightarrow$\\
+\hspace*{5em}Using \verb+kpsewhich+ for supported formats, if available\\[2ex]
 
 \noindent Remote file datasources (beginning with \verb+http://+ or
 \verb+ftp://+) are retrieved to a temp file and processed as normal. Users

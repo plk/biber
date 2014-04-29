@@ -85,7 +85,8 @@ sub driver_config {
 
   Searches for a file by
 
-  For the exact path if the filename is absolute
+  The exact path if the filename is absolute
+  In the input_directory, if defined
   In the output_directory, if defined
   Relative to the current directory
   In the same directory as the control file
@@ -96,11 +97,16 @@ sub driver_config {
 sub locate_biber_file {
   my $filename = shift;
   my $filenamepath = $filename; # default if nothing else below applies
-  my $outfile;
+  my $foundfile;
+  # If input_directory is set, perhaps the file can be found there so
+  # construct a path to test later
+  if (my $indir = Biber::Config->getoption('input_directory')) {
+    $foundfile = File::Spec->catfile($indir, $filename);
+  }
   # If output_directory is set, perhaps the file can be found there so
   # construct a path to test later
-  if (my $outdir = Biber::Config->getoption('output_directory')) {
-    $outfile = File::Spec->catfile($outdir, $filename);
+  elsif (my $outdir = Biber::Config->getoption('output_directory')) {
+    $foundfile = File::Spec->catfile($outdir, $filename);
   }
 
   # Filename is absolute
@@ -108,9 +114,9 @@ sub locate_biber_file {
     return $filename;
   }
 
-  # File is output_directory
-  if (defined($outfile) and -e $outfile) {
-    return $outfile;
+  # File is input_directory or output_directory
+  if (defined($foundfile) and -e $foundfile) {
+    return $foundfile;
   }
 
   # File is relative to cwd
