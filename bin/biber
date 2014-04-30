@@ -31,18 +31,18 @@ GetOptions(
            'cache',
            'clrmacros',
            'collate|C',
-           'collate_options|c=s',
+           'collate_options|collate-options|c=s',
            'configfile|g=s',
-           'convert_control',
-           'dot_include:s@',
+           'convert_control|convert-control',
+           'dot_include|dot-include:s@',
            'decodecharsset=s',
            'debug|D',
            'fastsort|f',
            'fixinits',
            'help|h|?',
-           'input_directory=s',
-           'input_encoding|e=s',
-           'input_format=s',
+           'input_directory|input-directory=s',
+           'input_encoding|input-encodinge=s',
+           'input_format|input-format=s',
            'listsep=s',
            'logfile=s',
            'mincrossrefs|m=s',
@@ -53,20 +53,20 @@ GetOptions(
            'nolog',
            'nostdmacros',
            'onlylog',
-           'others_string=s',
+           'others_string|others-string=s',
            'outfile=s',           # legacy alias for output_file
            'outformat=s',         # legacy alias for output_format
-           'output_align',
-           'output_directory=s',
-           'output_encoding|E=s',
-           'output_fieldcase=s',
-           'output_file|O=s',
-           'output_format=s',
-           'output_indent=s',
-           'output_macro_fields=s',
-           'output_resolve',
-           'output_safechars',
-           'output_safecharsset=s',
+           'output_align|output-align',
+           'output_directory|output-directory=s',
+           'output_encoding|output-encoding|E=s',
+           'output_fieldcase|output-fieldcase=s',
+           'output_file|output-file|O=s',
+           'output_format|output-format=s',
+           'output_indent|output-indent=s',
+           'output_macro_fields|output-macro-fields=s',
+           'output_resolve|output-resolve',
+           'output_safechars|output-safechars',
+           'output_safecharsset|output-safecharsset=s',
            'quiet|q+',
            'recodedata=s',
            'sortcase=s',
@@ -76,18 +76,18 @@ GetOptions(
            'ssl-nointernalca',
            'ssl-noverify-host',
            'tool',
-           'tool_align',          # legacy alias for output_align
-           'tool_config',
-           'tool_fieldcase=s',    # legacy alias for output_fieldcase
-           'tool_indent=s',       # legacy alias for output_indent
-           'tool_macro_fields=s', # legacy alias for output_macro_fields
-           'tool_resolve',        # legacy alias for output_resolve
+           'tool_align|tool-align',                 # legacy alias for output_align
+           'tool_config|tool-config',
+           'tool_fieldcase|tool-fieldcase=s',       # legacy alias for output_fieldcase
+           'tool_indent|tool-indent=s',             # legacy alias for output_indent
+           'tool_macro_fields|tool-macro-fields=s', # legacy alias for output_macro_fields
+           'tool_resolve|tool-resolve',             # legacy alias for output_resolve
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
-           'validate_config',
-           'validate_control',
-           'validate_datamodel|V',
+           'validate_config|validate-config',
+           'validate_control|validate-control',
+           'validate_datamodel|validate-datamodel|V',
            'version|v',
            'wraplines|w',
            'xsvsep=s',
@@ -417,7 +417,7 @@ several times for different refsections.
 Sort with C<Unicode::Collate> instead of the built-in sort function.
 This is the default.
 
-=item B<--collate_options|-c [options]>
+=item B<--collate-options|-c [options]>
 
 Options to pass to the C<Unicode::Collate> object used for sorting
 (default is 'level => "4", variable => "non-ignorable"').
@@ -434,7 +434,7 @@ always used to set defaults before potentially overriding the defaults with a us
 config specified with this option. Use the B<--tool-config> option to view the location of
 the default tool mode config file.
 
-=item B<--convert_control>
+=item B<--convert-control>
 
 Converts the F<.bcf> control file into html using an XSLT transform. Can
 be useful for debugging. File is named by appending C<.html>
@@ -455,7 +455,7 @@ may be specified which effectively turns off macro decoding.
 
 Turn on debugging for C<biber>.
 
-=item B<--dot_include=section,field,xdata,crossref,xref,related>
+=item B<--dot-include=section,field,xdata,crossref,xref,related>
 
 Specifies the element to include in GraphViz DOT output format if the output format is 'dot'.
 You can also choose to display crossref, xref, xdata and/or related entry connections.
@@ -476,13 +476,13 @@ This can slightly mess up things like "{U.K. Government}" and other esoteric cas
 
 Show this help message.
 
-=item B<--input_directory [directory]>
+=item B<--input-directory [directory]>
 
 F<.bcf> and data files will be looked for first in the F<directory>. See the biber
 PDF documentation for the other possibilities and how this interacts with the
 C<--output_directory> option.
 
-=item B<--input_encoding|-e [encoding]>
+=item B<--input-encoding|-e [encoding]>
 
 Specify the encoding of the data source file(s). Default is "UTF-8"
 Normally it's not necessary to set this as it's passed via the
@@ -490,7 +490,7 @@ Normally it's not necessary to set this as it's passed via the
 See "perldoc Encode::Supported" for a list of supported encodings.
 The legacy option B<--bibencoding> is supported as an alias.
 
-=item B<--input_format=bibtex|biblatexml>
+=item B<--input-format=bibtex|biblatexml>
 
 Biber input format. This option only means something in tool mode (see B<tool> option) since
 normally the input format of a data source is specified in the F<.bcf> file and
@@ -544,23 +544,23 @@ macro redefinition warnings.
 
 Do not write any message to screen.
 
-=item B<--others_string=[string]>
+=item B<--others-string=[string]>
 
 Use F<string> as the final name in a name field which implies "et al". Defaults to BibTeX's usual
 'others'.
 
-=item B<--output_align>
+=item B<--output-align>
 
 Align field values in neat columns in output. Effect depends on the output format. Default is true.
 The legacy option B<--tool_align> is supported as an alias.
 
-=item B<--output_directory [directory]>
+=item B<--output-directory [directory]>
 
 Output files (including log files) are output to F<directory> instead
 of the current directory. Input files are also looked for in F<directory>
 before current directory (but after C<--input_directory> if that is specified).
 
-=item B<--output_encoding|-E [encoding]>
+=item B<--output-encoding|-E [encoding]>
 
 Specify the encoding of the output C<.bbl> file. Default is "UTF-8".
 Normally it's not necessary to set this as it's passed via the
@@ -568,17 +568,17 @@ Normally it's not necessary to set this as it's passed via the
 See C<perldoc Encode::Supported> for a list of supported encodings.
 The legacy option B<--bblencoding> is supported as an alias.
 
-=item B<--output_indent=[num]>
+=item B<--output-indent=[num]>
 
 Indentation for body of entries in output. Effect depends on the output format. Defaults to 2.
 The legacy option B<--tool_indent> is supported as an alias.
 
-=item B<--output_fieldcase=upper|lower|title>
+=item B<--output-fieldcase=upper|lower|title>
 
 Case for field names output. Effect depends on the output format. Defaults to 'upper'.
 The legacy option B<--tool_fieldcase> is supported as an alias.
 
-=item B<--output_file|-O [file]>
+=item B<--output-file|-O [file]>
 
 Output to F<file> instead of F<basename.bbl>
 F<file> is relative to B<--output_directory>, if set (absolute
@@ -586,7 +586,7 @@ paths in this case are stripped to filename only). F<file> can
 be absolute if B<--output_directory> is not set.
 The legacy option B<--outfile> is supported as an alias.
 
-=item B<--output_format=dot|bibtex|biblatexml|bbl>
+=item B<--output-format=dot|bibtex|biblatexml|bbl>
 
 Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
 to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of
@@ -596,18 +596,18 @@ render the graph. See the B<--dot_include> option to select what is included in
 the DOT output.
 The legacy option B<--outformat> is supported as an alias.
 
-=item B<--output_macro_fields=[field1, ... fieldn]>
+=item B<--output-macro-fields=[field1, ... fieldn]>
 
 A comma-separated list of field names whose values are, on output, treated as BibTeX macros.
 Effectively this means that they are not wrapped in braces. Effect depends on the output format.
 The legacy option B<--tool_macro_fields> is supported as an alias.
 
-=item B<--output_resolve>
+=item B<--output-resolve>
 
 Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
 The legacy option B<--tool_resolve> is supported as an alias.
 
-=item B<--output_safechars>
+=item B<--output-safechars>
 
 Try to convert UTF-8 chars into LaTeX macros when writing the output.
 This can prevent unknown char errors when using PDFLaTeX and inputenc
@@ -616,7 +616,7 @@ to XeTeX or LuaTeX to avoid this situation. By default uses the
 --output_safecharsset "base" set of characters.
 The legacy option B<--bblsafechars> is supported as an alias.
 
-=item B<--output_safecharsset=[recode set name]>
+=item B<--output-safecharsset=[recode set name]>
 
 The set of characters included in the conversion routine for
 --output_safechars. Set to "full" to try harder with a much
@@ -683,7 +683,7 @@ file options to the datasource and writes a new datasource. Essentially,
 this allows you to change your data sources using biber's transformation options (such as
 source mapping, sorting etc.)
 
-=item B<--tool_config>
+=item B<--tool-config>
 
 Show the location of the default tool mode config file and exit. Useful when you need to
 copy this file and customise it.
@@ -701,15 +701,15 @@ Alias for B<--input_encoding=UTF-8>
 
 Alias for B<--output_encoding=UTF-8>
 
-=item B<--validate_config>
+=item B<--validate-config>
 
 Schema validate the biber config file.
 
-=item B<--validate_control>
+=item B<--validate-control>
 
 Schema validate the F<.bcf> biblatex control file.
 
-=item B<--validate_datamodel|-V>
+=item B<--validate-datamodel|-V>
 
 Validate the data against a data model.
 

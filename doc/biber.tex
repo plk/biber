@@ -115,12 +115,12 @@ Various option name changes. Old names are retained for backwards
 compatibility. See the output of the \opt{--help} option.
 
 \minisec{1.0}
-The \opt{--validate\_structure} option is now called \opt{--validate\_datamodel}
+The \opt{--validate-structure} option is now called \opt{--validate-datamodel}
 
 \minisec{0.9.9}
 The output format option \opt{--graph} has been moved to a
-new option \opt{--output\_format}. The option \opt{--graph} should now be
-specified as \opt{--output\_format=dot} and the \linebreak\opt{--dot\_include} option
+new option \opt{--output-format}. The option \opt{--graph} should now be
+specified as \opt{--output-format=dot} and the \linebreak\opt{--dot-include} option
 should be used to specify the elements to include in the DOT output. For
 example:
 
@@ -201,7 +201,7 @@ with standard \verb+.bst+ styles. \biber's primary role is to support
 
 \biber\ also has the ability to output different formats than \file{.bbl}
 and can, for example, output a new \bibtex\ file which contains only
-cited entries from the datasources (using the \opt{--output\_format=bibtex}
+cited entries from the datasources (using the \opt{--output-format=bibtex}
 option). There is also a «<tool» mode which operates on datasources instead
 of individual documents, allowing you to transform, convert, reformat and
 generally change the contents of a datasource (see \ref{ref:tool}).
@@ -642,12 +642,12 @@ an example config file which displays the \biber\ defaults:
 via the \verb+.bcf+ file. Certain options apply only to \biber\ and can
 only be set in the config file, particularly the more complex
 options. Most options are simple tags. Exceptions are the
-\opt{nosort}, \opt{noinit} and \opt{collate\_options} options which are slightly
+\opt{nosort}, \opt{noinit} and \opt{collate-options} options which are slightly
 more complex and can have sub-options as shown. A much more complex
 option is the \opt{sourcemap} option which is not set by default and
 which is described in section \ref{ref:map}.
 
-\subsubsection{The \texttt{output\_format} option}\label{ref:of}
+\subsubsection{The \texttt{output-format} option}\label{ref:of}
 
 \biber\ is able to output formats other than \file{.bbl} files for \biblatex\
 to consume. It is also able to output other formats such as \file{DOT} for
@@ -667,7 +667,7 @@ run, call \biber like this:
 
 \noindent This would result in a new \file{.bib} file called
 \file{test\_biber.bib} containing all cited entries in \file{test.tex}, in
-citation order, formatted according to the various \opt{ouput\_*} options.
+citation order, formatted according to the various \opt{ouput-*} options.
 You could of course also perform more processing like source mapping
 (see section \ref{ref:map}), reencoding (see section \ref{ref:enc}) etc. using more
 command line options or a config file.
@@ -1579,9 +1579,9 @@ beginning of a \bibfield{TITLE} field when sorting, you could add this to your
 \noindent \textbf{Note:} \opt{nosort} can be specified for most fields but
 not for things like dates and special fields as that wouldn't make much sense.
 \bigskip
-\subsubsection{The \texttt{collate\_options} option}
+\subsubsection{The \texttt{collate-options} option}
 
-The \opt{collate\_options} option has format similar to
+The \opt{collate-options} option has format similar to
 \opt{nosort}. See Section \ref{coll} for details about the option,
 here is an example of a config file setting:
 
@@ -1606,8 +1606,8 @@ searched for in the following locations, in decreasing order of
 priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
-\hspace*{1em}In the \opt{--input\_directory}, if specified$\rightarrow$\\
-\hspace*{2em}In the \opt{--output\_directory}, if specified$\rightarrow$\\
+\hspace*{1em}In the \opt{--input-directory}, if specified$\rightarrow$\\
+\hspace*{2em}In the \opt{--output-directory}, if specified$\rightarrow$\\
 \hspace*{3em}Relative to current directory$\rightarrow$\\
 \hspace*{4em}Using \verb+kpsewhich+, if available
 
@@ -1617,8 +1617,8 @@ Local datasources of type «file» are searched for in the following
 locations, in decreasing order of priority:\\[2ex]
 
 \noindent Absolute filename $\rightarrow$\\
-\hspace*{1em}In the \opt{--input\_directory}, if specified$\rightarrow$\\
-\hspace*{2em}In the \opt{--output\_directory}, if specified$\rightarrow$\\
+\hspace*{1em}In the \opt{--input-directory}, if specified$\rightarrow$\\
+\hspace*{2em}In the \opt{--output-directory}, if specified$\rightarrow$\\
 \hspace*{3em}Relative to current directory$\rightarrow$\\
 \hspace*{4em}In the same directory as the control file$\rightarrow$\\
 \hspace*{5em}Using \verb+kpsewhich+ for supported formats, if available\\[2ex]
@@ -1640,7 +1640,7 @@ so, if you run
 
 \noindent then the logfile will be called «\verb+test.blg+». Like the
 \verb+.bbl+ output file, it will be created in the
-\opt{--output\_directory|-c}, if this option is defined. You can
+\opt{--output-directory|-c}, if this option is defined. You can
 override the logfile name by using the \opt{--logfile} option:
 
 \begin{verbatim}
@@ -1654,7 +1654,7 @@ write to directories which you don't have appropriate permissions to. This
 is more commonly an issue on non-Windows OSes. For example, if you rely on
 \verb+kpsewhich+ to find your database files which are in system \TeX\
 directories, you may well not have write permission there so \biber\
-will not be able to write the \verb+.bbl+. Use the \opt{--output\_file|-O}
+will not be able to write the \verb+.bbl+. Use the \opt{--output-file|-O}
 option to specify the location to write the \verb+.bbl+ to in such cases.
 
 \subsection{Collation and Localisation}\label{coll}
@@ -1685,7 +1685,7 @@ collation:\\[2ex]
 bibliography is determined by the following resource chain which is given
 in decreasing precedence order:\\[2ex]
 
-\noindent\opt{--collate\_options|-c} (e.g. \opt{-c 'locale => "de\_DE"'}) $\rightarrow$\\
+\noindent\opt{--collate-options|-c} (e.g. \opt{-c 'locale => "de\_DE"'}) $\rightarrow$\\
 \hspace*{1em}\opt{--sortlocale|-l} $\rightarrow$\\
 \hspace*{2em}\biblatex per-sortset \opt{locale} option $\rightarrow$\\
 \hspace*{3em}\biblatex per-sortscheme \opt{locale} option$\rightarrow$\\
@@ -1742,7 +1742,7 @@ Users should see the the documentation to the module for the various
 options, most of which the vast majority of users will never
 need\footnote{For details on the various options, see
   \url{http://search.cpan.org/search?query=Unicode\%3A\%3ACollate&mode=all}}.
-Options are passed using the \opt{--collate\_options|-c} option as a
+Options are passed using the \opt{--collate-options|-c} option as a
 single quoted string, each option separated by comma, each key and
 value separated by «\verb+=>+». See examples.
 
@@ -1793,9 +1793,9 @@ reverse order at UCA level 2.
 \biber\ takes care of re-encoding the datasource data as necessary. In
 normal use, \biblatex\ passes its \opt{bibencoding} option value to \biber\
 via the \verb+.bcf+ file and this corresponds to the \biber
-\opt{--input\_encoding|e} option. \biblatex also passes the value of its
+\opt{--input-encoding|e} option. \biblatex also passes the value of its
 \opt{texencoding} option (which maps to \biber's
-\opt{--output\_encoding|-E} option) the default value of which depends on
+\opt{--output-encoding|-E} option) the default value of which depends on
 which \TeX\ engine and encoding packages you are using (see \biblatex\
 manual for details).
 
@@ -1805,10 +1805,10 @@ manual for details).
 \item Decodes the datasource into UTF-8 if it is not UTF-8 already
 \item Decodes \latex\ character macros in the datasource into UTF-8
 \item Encodes the output so that the \verb+.bbl+ is in
-  the encoding that \opt{--output\_encoding|-E} specifies
+  the encoding that \opt{--output-encoding|-E} specifies
 \item Warns if it is asked to output to the \verb+.bbl+ any UTF-8
   decoded \latex\ character macros which are not in the
-  \opt{--output\_encoding|-E} encoding. Replaces with a suitable \latex\ macro
+  \opt{--output-encoding|-E} encoding. Replaces with a suitable \latex\ macro
 \end{enumerate}
 
 \noindent Normally, you do not need to set the encoding options on the
@@ -1818,7 +1818,7 @@ the \verb+.bcf+ settings with the command line. The resource chain for
 encoding settings is, in decreasing order
 of preference:\\[2ex]
 
-\noindent\opt{--input\_encoding|-e} and \opt{--output\_encoding|-E} $\rightarrow$\\
+\noindent\opt{--input-encoding|-e} and \opt{--output-encoding|-E} $\rightarrow$\\
 \hspace*{1em}\biber\ config file $\rightarrow$\\
 \hspace*{2em}\verb+.bcf+ control file
 
@@ -1840,12 +1840,12 @@ main reasons. Firstly, this allows you to have, for example:
 Here, because \biber decodes the macros into UTF-8, it knows that both
 books are by the same author because it's clear that the names are now the
 same. Secondly, this allows \biber to output normalised latex macros when a
-user selects \opt{--output\_encoding=ascii} etc. This means that the many
+user selects \opt{--output-encoding=ascii} etc. This means that the many
 \biblatex comparison macros used in styles can deal with comparisons of
 fields containing macros reliably. The macro to UTF-8 conversion uses the
 decoding set specified with the \opt{--decodecharsset}, see below. To
 disable all macro to UTF-8 conversion, you can specify the virtual «null»
-set as a value for \opt{--decodecharsset} or \opt{output\_safecharsset}.
+set as a value for \opt{--decodecharsset} or \opt{output-safecharsset}.
 This effectively turns off macro to UTF-8 decoding or encoding respectively.
 
 If you are using PDF\latex\ and \verb+\usepackage[utf8]{inputenc}+, it
@@ -1859,14 +1859,14 @@ An example--if you had \verb+\DJ+ in your \verb+.bib+ datasource,
 because it doesn't understand that UTF-8 character. The real solution here
 is to switch to a \TeX\ engine with full UTF-8 support like \XeTeX\ or Lua\TeX\
 as these don't use or need \verb+inputenc+. However, you can also try the
-\opt{--output\_safechars} option which will try to convert any UTF-8 chars into
-\latex\ macros on output. For information on the \opt{--output\_safechars}
+\opt{--output-safechars} option which will try to convert any UTF-8 chars into
+\latex\ macros on output. For information on the \opt{--output-safechars}
 option, see section \ref{lencode}.
 \bigskip
 \subsubsection{\latex\ macro encoding}\label{lencode}
 
 The opposite of decoding; converting UTF-8 characters into \latex\ macros.
-You can force this with the \opt{--output\_safechars} option which will do a
+You can force this with the \opt{--output-safechars} option which will do a
 generally good job of making your \verb+.bbl+ plain ASCII. It can be useful
 in certain edge cases where your bibliography introduces characters which
 can't be handled by your main document. See section \ref{ldecode} above for
@@ -1875,18 +1875,18 @@ an example such case.
 A common use case for \latex\ macro encoding is when the bibliography
 datasource is not ASCII but the \verb+.tex+ file is and so this case
 is automated for you: if the \biblatex\ option «\opt{texencoding}»
-(which corresponds to the \biber\ option «\opt{--output\_encoding|-E}») is
+(which corresponds to the \biber\ option «\opt{--output-encoding|-E}») is
 set to an ASCII encoding («\verb+ascii+» or «\verb+x-ascii+») and
-«\opt{--input\_encoding|-e}» is not ASCII, \biber\ will automatically set
-\opt{--output\_safechars}.
+«\opt{--input-encoding|-e}» is not ASCII, \biber\ will automatically set
+\opt{--output-safechars}.
 
 Since \biber always decodes into UTF-8 internally, if the
-\opt{--output\_encoding|-E} option is not set to UTF-8, \biber will
+\opt{--output-encoding|-E} option is not set to UTF-8, \biber will
 automatically replace any characters which will not encode in the output
 encoding with equivalent \tex macros. You will also receive a warning about
 this.
 
-See also the \opt{biber --help} output for the \opt{--output\_safecharsset}
+See also the \opt{biber --help} output for the \opt{--output-safecharsset}
 and \linebreak[4]\opt{--decodecharsset} options which can customise the set
 of conversion rules to use. The builtin sets of characters and macros which \biber\
 maps during encoding and decoding are documented\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/\biberversion/documentation/utf8-macro-map.html}}.
@@ -1898,7 +1898,7 @@ same Perl install directory as \biber's \file{Recode.pm} module. Of course
 it is easier to find this in the \biber\ source tree. It is most likely
 that if you want to use a custom mapping file, you would copy the default
 file and edit it, removing some things and perhaps defining some custom
-recoding sets for use with \opt{--output\_safecharsset} and
+recoding sets for use with \opt{--output-safecharsset} and
 \opt{--decodecharsset}.
 
 Be careful to classify the entries using the correct «type» attribute in
@@ -1915,7 +1915,7 @@ UTF-8 for a particular character. It's unlikely you will need to use this.
 
 \biberex{biber}
 
-\noindent Set \opt{input\_encoding} and \opt{output\_encoding} from the
+\noindent Set \opt{input-encoding} and \opt{output-encoding} from the
 config file or \verb+.bcf+
 
 \biberex{biber --output_encoding=latin2}
@@ -1925,25 +1925,25 @@ config file or \verb+.bcf+
 
 \biberex{biber --output_safechars}
 
-\noindent Set \opt{input\_encoding} and \opt{output\_encoding} from the
+\noindent Set \opt{input-encoding} and \opt{output-encoding} from the
 config file or \verb+.bcf+. Force encoding of UTF-8 chars to \latex\
 macros using default conversion set
 
 \biberex{biber --output_encoding=ascii}
 
 \noindent Encode the \verb+.bbl+ as ascii, overriding the
-\verb+.bcf+. Automatically sets \opt{--output\_safechars} to force UTF-8
+\verb+.bcf+. Automatically sets \opt{--output-safechars} to force UTF-8
 to \latex\ macro conversion
 
 \biberex{biber --output_encoding=ascii --output_safecharsset=full}
 
 \noindent Encode the \verb+.bbl+ as ascii, overriding the
-\verb+.bcf+. Automatically sets \opt{--output\_safechars} to force UTF-8
+\verb+.bcf+. Automatically sets \opt{--output-safechars} to force UTF-8
 to \latex\ macro conversion using the full set of conversions
 
 \biberex{biber --decodecharsset=full}
 
-\noindent Set \opt{input\_encoding} and \opt{output\_encoding} from the
+\noindent Set \opt{input-encoding} and \opt{output-encoding} from the
 config file or \verb+.bcf+. Use the full \latex\ macro to UTF-8
 conversion set because you have some more obscure character macros in
 your \verb+.bib+ datasource which you want to sort correctly
@@ -1956,11 +1956,11 @@ macros to UTF-8.
 
 \biberex{biber -u}
 
-\noindent Shortcut alias for \opt{biber --input\_encoding=UTF-8}
+\noindent Shortcut alias for \opt{biber --input-encoding=UTF-8}
 
 \biberex{biber -U}
 
-\noindent Shortcut alias for \opt{biber --output\_encoding=UTF-8}
+\noindent Shortcut alias for \opt{biber --output-encoding=UTF-8}
 
 \subsection{List and Name Separators}
 
@@ -1974,7 +1974,7 @@ final name in a list which implies «et al». In \bibtex, this is by default
 the English «others» which is the \biber\ default also. Don't try to put
 any whitespace in these strings, this is ignored by \texttt{btparse}
 anyway. Perhaps you prefer your \file{.bib} in more obvious German---set
-\opt{--namesep=und} and \opt{--others\_string=andere} and then you can do:
+\opt{--namesep=und} and \opt{--others-string=andere} and then you can do:
 \begin{verbatim}
 @BOOK{key,
   AUTHOR = {Hans Harman und Barbara Blaupunkt und andere},
@@ -2040,7 +2040,7 @@ drivers are:
 
 \subsection{Visualising the Output}\label{ref:vis}
 
-The option \opt{--output\_format=dot} will cause \biber\ to write a
+The option \opt{--output-format=dot} will cause \biber\ to write a
 GraphViz\footnote{\url{http://www.graphviz.org}} \verb+.dot+ file instead
 of a \verb+.bbl+. This file graphs the bibliographic data as it exists
 after all processing. You can transform this file using the \verb+dot+
@@ -2056,10 +2056,10 @@ means. To output in SVG, use this command after installing GraphViz:
 dot -Tsvg <file>.dot -o <file>.svg
 \end{verbatim}
 
-\noindent The \opt{--dot\_include} option takes a comma delimited string as
+\noindent The \opt{--dot-include} option takes a comma delimited string as
 argument. The elements of this string define the information to include in
 the \verb+.dot+ output graph. The valid sub-options are shown in Table
-\ref{tab:graphopts}. If the \opt{--dot\_include} option is not given
+\ref{tab:graphopts}. If the \opt{--dot-include} option is not given
 then the default setting is implicitly used, which is:
 
 \begin{verbatim}
@@ -2082,7 +2082,7 @@ xref     & Show XREF relationships\\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{Valid sub-options for the \texttt{dot\_include} option}
+\caption{Valid sub-options for the \texttt{dot-include} option}
 \label{tab:graphopts}
 \end{table}
 
@@ -2143,7 +2143,7 @@ not read a \file{.bcf} but instead, it reads all entries from the file
 «datasource», applies any changes specified in the command-line options and
 \biber\ config file and writes the resulting datasource out to a new file,
 defaulting to a \bibtex file called «\file{<datasource>\_bibertool.bib}» if
-the options \opt{output\_file} and \opt{output\_format} are not specified.
+the options \opt{output-file} and \opt{output-format} are not specified.
 
 Tool mode is useful if you need to programatically change your datasource
 using the semantics provided by \biber or if you would like to convert your
@@ -2157,11 +2157,11 @@ biber --tool --output_encoding=ascii file.bib
 \noindent This would output a copy of \file{file.bib} called \file{file\_bibertool.bib} with all
 UTF-8 chars changed to \latex macros (because when the output is ASCII and
 the input encoding is not (it is by default UTF-8), then the
-\opt{--output\_safechars} option is automatically enabled). If you utilise the \biber\
+\opt{--output-safechars} option is automatically enabled). If you utilise the \biber\
 config file, you can set up a complex set of mappings to transform
 your datasource however you wish in a semantic manner much more robust
 than just textual search/replace. You can also use the
-\opt{--output\_resolve} option which will process any \bibfield{XDATA}
+\opt{--output-resolve} option which will process any \bibfield{XDATA}
 fields/entries, entry aliases and inheritance rules mentioned in the config
 file (see below).
 
@@ -2183,7 +2183,7 @@ instead of this:
 %
 That is, you might not want the output field in braces or quotes as
 this prevents \bibtex interpreting the field value as a macro. Use the
-\opt{--output\_macro\_fields} option to specify a comma-separated list
+\opt{--output-macro-fields} option to specify a comma-separated list
 of fields whose values you wish to output without any \bibtex
 quoting. You can have spaces between the items in the field list but
 then you must enclose the whole option value in quotes. For example,
@@ -2195,10 +2195,10 @@ biber --tool --output_macro_fields='month, publisher'
 \end{verbatim}
 
 Tool mode also allows some reformatting of the \file{.bib} file. The
-option \opt{--tool\_fieldcase} can be used to force the entrytype and
+option \opt{--tool-fieldcase} can be used to force the entrytype and
 fieldnames to upper, lower or title case. The option
-\opt{--tool\_indent} can be used to customise the indentation of
-fields. The option \opt{tool\_align} can be used to align all field
+\opt{--tool-indent} can be used to customise the indentation of
+fields. The option \opt{tool-align} can be used to align all field
 values neatly. See the \biber\ \opt{--help} output for documentation
 and defaults. For example, the command:
 
@@ -2305,7 +2305,7 @@ it will use the default \file{biber-tool.conf} which is located in the
 default config file contains the default \biblatex source mappings for
 \bibtex datasources and also the default inheritance rules for
 \bibfield{CROSSREF} processing. This means that when you use the
-\opt{--tool\_resolve} option, inheritance processing is performed on the
+\opt{--tool-resolve} option, inheritance processing is performed on the
 entries and the results of this are «materialised» in the output. For
 example, consider a \file{test.bib} file:
 
@@ -2422,11 +2422,11 @@ the options has no relevance for the output format.
 & \multicolumn{4}{c}{\emph{Output format}}\\
 \emph{Option} & bibtex & biblatexml & bbl & dot\\
 \midrule
-output\_align & \checkmark & - & - & -\\
-output\_indent & \checkmark & \checkmark & - & -\\
-output\_fieldcase & \checkmark & - & - & -\\
-output\_macro\_fields & \checkmark & - & - & -\\
-output\_resolve & \checkmark & \checkmark & - & -\\
+output-align & \checkmark & - & - & -\\
+output-indent & \checkmark & \checkmark & - & -\\
+output-fieldcase & \checkmark & - & - & -\\
+output-macro-fields & \checkmark & - & - & -\\
+output-resolve & \checkmark & \checkmark & - & -\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2447,7 +2447,7 @@ XML specification is given in section \ref{inheritance}. It is recommended
 to copy the default \file{biber-tool.conf} file, modify this and then use
 it as your own \file{biber.conf} file or pass it explicitly using the
 \opt{--configfile|-g} option. You can determine the location of the default
-tool mode config file by using the \opt{--tool\_config} option which will
+tool mode config file by using the \opt{--tool-config} option which will
 show you the location of the config file and exit.
 
 \subsubsection{Customising Tool Mode Sorting}
