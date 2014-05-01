@@ -3,6 +3,7 @@ use v5.16;
 use strict;
 
 use warnings;
+no autovivification;
 
 use List::Util qw( first );
 use Biber::Utils;
