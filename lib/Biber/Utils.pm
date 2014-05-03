@@ -776,6 +776,7 @@ sub filter_entry_options {
 sub imatch {
   my ($value, $val_match, $negmatch) = @_;
   return 0 unless $val_match;
+  $val_match = NFD($val_match);# NFD boundary
   $val_match = qr/$val_match/;
   if ($negmatch) {# "!~" doesn't work here as we need an array returned
     return $value =~ m/$val_match/xms ? () : (1);
@@ -796,9 +797,10 @@ sub imatch {
 sub ireplace {
   my ($value, $val_match, $val_replace) = @_;
   return $value unless $val_match;
+  $val_match = NFD($val_match);# NFD boundary
   $val_match = qr/$val_match/;
   # Tricky quoting because of later evals
-  $val_replace = '"' . $val_replace . '"';
+  $val_replace = '"' . NFD($val_replace) . '"';
   $value =~ s/$val_match/$val_replace/eegxms;
   return $value;
 }

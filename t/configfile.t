@@ -136,6 +136,11 @@ my $sourcemap = [
                         map_replace      => "REP\$1CED",
                       },
                       {
+                        map_field_source => "LISTD",
+                        map_match        => "æøå",
+                        map_replace      => "abc",
+                      },
+                      {
                         map_field_set => "entrykey",
                         map_null         => 1
                       },
