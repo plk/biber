@@ -8,6 +8,8 @@ use Biber;
 use Cwd qw(getcwd);
 use File::Spec;
 use Log::Log4perl;
+use Unicode::Normalize;
+
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -82,7 +84,7 @@ my $sourcemap = [
         map_step       => [
                             { map_field_source => "USERB", map_final => 1 },
                             { map_field_set => "USERB", map_null => 1 },
-                            { map_field_set => "USERE", map_field_value => "a \x{160}tring" },
+                            { map_field_set => "USERE", map_field_value => NFD("a \x{160}tring") },
                             { map_field_set => "USERF", map_null => 1 },
                           ],
         per_datasource => [{ content => "examples.bib" }],
@@ -137,7 +139,7 @@ my $sourcemap = [
                       },
                       {
                         map_field_source => "LISTD",
-                        map_match        => "æøå",
+                        map_match        => NFD("æøå"),
                         map_replace      => "abc",
                       },
                       {

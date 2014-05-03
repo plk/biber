@@ -40,7 +40,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringify_hash
+our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
   normalise_string_label reduce_array remove_outer add_outer ucinit strip_nosort strip_noinit
   is_def is_undef is_def_and_notnull is_def_and_null
@@ -50,38 +50,6 @@ our @EXPORT = qw{ locate_biber_file driver_config makenamesid makenameid stringi
   bcp472locale locale2bcp47 find_variant_field check_vform};
 
 =head1 FUNCTIONS
-
-=head2 driver_config
-
-  Returns an XML::LibXML::Simple object for an input driver config file
-
-=cut
-
-sub driver_config {
-  my $driver_name = shift;
-  # we assume that the driver config file is in the same dir as the driver:
-  (my $vol, my $driver_path, undef) = File::Spec->splitpath( $INC{"Biber/Input/file/${driver_name}.pm"} );
-
-  # Deal with the strange world of Par::Packer paths, see similar code in Biber.pm
-  my $dcf;
-  if ($driver_path =~ m|/par\-| and $driver_path !~ m|/inc|) { # a mangled PAR @INC path
-    $dcf = File::Spec->catpath($vol, "$driver_path/inc/lib/Biber/Input/file", "${driver_name}.dcf");
-  }
-  else {
-    $dcf = File::Spec->catpath($vol, $driver_path, "${driver_name}.dcf");
-  }
-
-  # Read driver config file
-  my $dcfxml = XML::LibXML::Simple::XMLin($dcf,
-                                          'ForceContent' => 1,
-                                          'ForceArray' => [ qr/\Afield\z/,
-                                                            qr/\Aalias\z/,
-                                                            qr/\Aalsoset\z/],
-                                          'NsStrip' => 1);
-
-  return $dcfxml;
-}
-
 
 =head2 locate_biber_file
 
@@ -782,7 +750,6 @@ sub filter_entry_options {
 sub imatch {
   my ($value, $val_match, $negmatch) = @_;
   return 0 unless $val_match;
-  $val_match = NFD($val_match);# NFD boundary
   $val_match = qr/$val_match/;
   if ($negmatch) {# "!~" doesn't work here as we need an array returned
     return $value =~ m/$val_match/xms ? () : (1);
@@ -803,10 +770,9 @@ sub imatch {
 sub ireplace {
   my ($value, $val_match, $val_replace) = @_;
   return $value unless $val_match;
-  $val_match = NFD($val_match);# NFD boundary
   $val_match = qr/$val_match/;
   # Tricky quoting because of later evals
-  $val_replace = '"' . NFD($val_replace) . '"';
+  $val_replace = '"' . $val_replace . '"';
   $value =~ s/$val_match/$val_replace/eegxms;
   return $value;
 }

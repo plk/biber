@@ -334,15 +334,14 @@ sub parse_ctrlfile {
 
   # Open control file
  LOADCF:
-  my $ctrl = new IO::File "<$ctrl_file_path"
-    or biber_error("Cannot open $ctrl_file_path: $!");
-
   $logger->info("Reading '$ctrl_file_path'");
+  my $buf = File::Slurp::read_file($ctrl_file_path) or biber_error("Cannot open $ctrl_file_path: $!");
+  $buf = NFD(decode('UTF-8', $buf));# Unicode NFD boundary
 
   # Read control file
   require XML::LibXML::Simple;
 
-  my $bcfxml = XML::LibXML::Simple::XMLin($ctrl,
+  my $bcfxml = XML::LibXML::Simple::XMLin($buf,
                                           'ForceContent' => 1,
                                           'ForceArray' => [
                                                            qr/\Acitekey\z/,

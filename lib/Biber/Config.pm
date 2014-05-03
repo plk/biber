@@ -9,6 +9,7 @@ use Cwd qw( abs_path );
 use Data::Compare;
 use Data::Diver qw( Dive );
 use Data::Dump;
+use Encode;
 use Carp;
 use List::AllUtils qw(first max);
 use Log::Log4perl qw( :no_extra_logdie_message ); # To keep PAR::Packer happy, explicitly load these
@@ -16,6 +17,7 @@ use Log::Log4perl::Appender::Screen;
 use Log::Log4perl::Appender::File;
 use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
+use Unicode::Normalize;
 
 our $VERSION = '2.0';
 our $BETA_VERSION = 1; # Is this a beta version?
@@ -338,7 +340,10 @@ sub _config_file_set {
   if (defined($conf)) {
     require XML::LibXML::Simple;
 
-    $userconf = XML::LibXML::Simple::XMLin($conf,
+    my $buf = File::Slurp::read_file($conf);
+    $buf = NFD(decode('UTF-8', $buf));# Unicode NFD boundary
+
+    $userconf = XML::LibXML::Simple::XMLin($buf,
                                            'ForceContent' => 1,
                                            'ForceArray' => [
                                                             qr/\Aoption\z/,
