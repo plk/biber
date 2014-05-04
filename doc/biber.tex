@@ -2574,9 +2574,10 @@ Both \texttt{<form>} and \texttt{<lang>} are optional and if they are not
 present, default to the values of the \biblatex options \opt{vform} and
 \opt{vlang} respectively. \texttt{<lang>},
 if specified, should be a known \sty{babel}/\sty{polyglossia} language
-identifier. \texttt{<form>} can be one of:
+identifier. The \texttt{<form>} must be one of the forms declared by the
+\biblatex macro \cmd{DeclareVariantforms}. The default is:
 \begin{itemize}
-\item original (default if ommitted)
+\item original (default if omitted)
 \item translated
 \item romanised
 \item uniform
@@ -2586,20 +2587,20 @@ For example:
 \begin{lstlisting}[style=bibtex]{}
 @BOOK{example1,
   AUTHOR                    = { Булгаков, Павел and Розенфельд, Борис },
-  AUTHOR_translated_english = { Bulgakov, Pavel and Rosenfeld, Boris },
+  AUTHOR_uniform            = { Bulgakov, Pavel and Rosenfeld, Boris },
   TITLE                     = { Славься, Отечество наше свободное },
   TITLE_romanised           = { Slavʹsâ, Otečestvo naše svobodnoe },
 }
 \end{lstlisting}
 %
-This example has an \bibfield{AUTHOR} field in Russian Cyrillic script
-and a variant the «translated» form with and language setting of
-«english». There is also a Russian Cyrillic \bibfield{TITLE} with an
-ISO 9 romanised variant. \biblatex has been modified so that all data
-accessing and comparison macros have an option keyval argument which can be
-used to select a particular form/lang variant, if desired. The separator
-between the field, form and lang can be customised with the \biber
-\opt{vsplit} option and defaults to an underscore (ASCII 95).
+This example has an \bibfield{AUTHOR} field in Russian Cyrillic script and
+a variant the «uniform» form. There is also a Russian Cyrillic
+\bibfield{TITLE} with an ISO 9 romanised variant. \biblatex has been
+modified so that all data accessing and comparison macros have an option
+keyval argument which can be used to select a particular form/lang variant,
+if desired. The separator between the field, form and lang can be
+customised with the \biber \opt{vsplit} option and defaults to an
+underscore (ASCII 95).
 \bigskip
 \section{Binaries}\label{binaries}
 

@@ -355,8 +355,6 @@ sub create_entry {
     $bibentry->set_field('rawdata', biber_decode_utf8($entry->print_s));
 
     # Pre-process maps to cover variant source->target field mappings
-    # When a field is specified with no variants and it's a simple mapping
-    # from source->target, map all variants.
     # It's much simpler to materialise these mappings here than try to do them implicitly
     # during the mapping process.
     # DON'T FORGET that we're doing this syntactically here as we don't have access to
@@ -1214,10 +1212,20 @@ sub parsename {
   my $lastname_stripped;
   my $lastname_i;
   if ($lastname) {
-    $lastname_i        = $gen_lastname_i;
-    $lastname_stripped = remove_outer($lastname);
-    $ls = $lastname ne $lastname_stripped ? 1 : 0;
-    $namestring .= "$lastname_stripped, ";
+    # Regularise any variant null name marker from user-specific marker
+    # so that we know what to do in biblatex without knowing the user marker
+    if ($lastname eq Biber::Config->getoption('variant_null_name')) {
+      $lastname_i        = [''];
+      $lastname_stripped = '';
+      $ls = 0;
+      $namestring .= ', ';
+    }
+    else {
+      $lastname_i        = $gen_lastname_i;
+      $lastname_stripped = remove_outer($lastname);
+      $ls = $lastname ne $lastname_stripped ? 1 : 0;
+      $namestring .= "$lastname_stripped, ";
+    }
   }
   # suffix
   my $ss;

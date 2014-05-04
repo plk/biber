@@ -83,11 +83,12 @@ GetOptions(
            'tool_macro_fields|tool-macro-fields=s', # legacy alias for output_macro_fields
            'tool_resolve|tool-resolve',             # legacy alias for output_resolve
            'trace|T',
-           'u',                   # alias for input_encoding=UTF-8
-           'U',                   # alias for output_encoding=UTF-8
+           'u',                                     # alias for input_encoding=UTF-8
+           'U',                                     # alias for output_encoding=UTF-8
            'validate_config|validate-config',
            'validate_control|validate-control',
            'validate_datamodel|validate-datamodel|V',
+           'variant_null_name|variant-null-name=s',
            'version|v',
            'wraplines|w',
            'xsvsep=s',
@@ -713,6 +714,10 @@ Schema validate the F<.bcf> biblatex control file.
 
 Validate the data against a data model.
 
+=item B<--variant-null-name=[string]>
+
+F<string> is the string used in the datasource to denote a null name in a variant name list. Defaults to 'F<*>'.
+
 =item B<--version|-v>
 
 Display version number.
@@ -723,7 +728,7 @@ Wrap lines in the F<.bbl> file.
 
 =item B<--xsvsep=[sep]>
 
-Use F<sep> as the separator for fields of format type "xsv" in the data model. A Perl regexp can be specified. Defaults to a single comma surround by optional whitespace (\s*,\s*).
+Use F<sep> as the separator for fields of format type "xsv" in the data model. A Perl regexp can be specified. Defaults to a single comma surround by optional whitespace (F<\s*,\s*>).
 
 =back
 
