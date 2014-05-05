@@ -153,6 +153,7 @@ sub _getfullhash {
       $hashkey .= $n->get_suffix;
     }
 
+
     if ( $n->get_firstname ) {
       $hashkey .= $n->get_firstname;
     }
@@ -445,8 +446,24 @@ sub _label_name {
     my $numnames  = $nameval->count_names;
     my $visibility = $nameval->get_visible_alpha;
 
-    my @lastnames = map { normalise_string_sort($_->get_lastname, $namename) } @{$nameval->names};
-    my @prefices  = map { $_->get_prefix } @{$nameval->names};
+    # Generic variant in case we have any null names below
+    my $nvnames = $be->get_field($namename);
+    my @lastnames;
+    my @prefices;
+
+    foreach my $n (@{$nameval->names}) {
+      # null name
+      unless ($n->get_lastname) {
+        my $nindex = $n->get_index;
+        push @lastnames, normalise_string_sort($nvnames->nth_name($nindex)->get_lastname, $namename);
+        push @prefices, $nvnames->nth_name($nindex)->get_prefix;
+      }
+      else {
+        push @lastnames, normalise_string_sort($n->get_lastname, $namename);
+        push @prefices, $n->get_prefix;
+      }
+    }
+
     my $loopnames;
 
     # loopnames is the number of names to loop over in the name list when constructing the label
@@ -454,7 +471,7 @@ sub _label_name {
       if ($lc > $numnames) { # cap at numnames, of course
         $lc = $numnames;
       }
-      $loopnames = $lc; # Only look as many names as specified
+      $loopnames = $lc; # Only look at as many names as specified
     }
     else {
       $loopnames = $visibility; # Else use bib visibility

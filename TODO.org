@@ -1,3 +1,2 @@
-* label generation with nulls, like sorting+ tests
 * Sample XSLT transform but not in biber
 * bltxml either should have no schema or it should be dynamically created from the data model. A static schema is pointless

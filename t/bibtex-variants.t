@@ -147,7 +147,7 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('forms1')->get_field('sortlabelalpha'), 'BulRosМух', 'labelalpha forms - 1');
+is($bibentries->entry('forms1')->get_field('sortlabelalpha'), 'BulSmiRosМух', 'labelalpha forms - 1');
 is($bibentries->entry('forms4')->get_field('sortlabelalpha'), 'F t', 'labelalpha forms - 2');
 is($bibentries->entry('forms5')->get_field('sortlabelalpha'), 'A t', 'labelalpha forms - 3');
 is($bibentries->entry('forms6')->get_field('sortlabelalpha'), 'Z t', 'labelalpha forms - 4');
