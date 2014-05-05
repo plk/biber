@@ -4,12 +4,13 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 27;
+use Test::More tests => 28;
 
 use Biber;
 use Biber::Utils;
 use Biber::Output::bbl;
 use Log::Log4perl;
+use Unicode::Normalize;
 chdir("t/tdata");
 
 # Set up Biber object
@@ -82,6 +83,10 @@ my $S = { spec => [
          ],
          [
           {},
+          {'location'      => {'form' => 'romanised'}},
+         ],
+         [
+          {},
           {'year'  => {}},
          ],
         ]};
@@ -91,7 +96,9 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare(1);
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['forms13', 'forms14', 'forms15', 'forms8', 'forms5', 'forms4', 'forms12', 'forms9', 'forms10', 'forms11', 'forms6', 'forms1', 'forms3', 'forms2', 'forms7'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms13', 'forms14', 'forms15', 'forms8', 'forms5', 'forms4', 'forms12', 'forms9', 'forms10', 'forms11', 'forms6', 'forms3', 'forms2', 'forms1', 'forms7'], 'Forms sorting - 1');
+# Uses name from generic variant for sorting when a name in the sorting variant is null
+is(NFC($main->get_sortdata('forms1')->[0]), 'Bulgakov!Pavel#Smith!Jim#Rosenfeld!Boris,Мухаммад ибн муса алХорезми Около 783 около 850,Moskva!London,2002', 'Null name sortstring');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -164,14 +171,17 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
       \list[form=original,lang=russian]{institution}{1}{%
         {University of Life}%
       }
-      \list[form=original,lang=russian]{location}{1}{%
+      \list[form=original,lang=russian]{location}{2}{%
         {Москва}%
+        {London}%
       }
-      \list[form=romanised,lang=russian]{location}{1}{%
+      \list[form=romanised,lang=russian]{location}{2}{%
         {Moskva}%
+        {}%
       }
-      \list[form=translated,lang=english]{location}{1}{%
+      \list[form=translated,lang=english]{location}{2}{%
         {Moscow}%
+        {}%
       }
       \list[form=original,lang=russian]{publisher}{1}{%
         {Наука}%
@@ -280,3 +290,4 @@ is($out->get_output_entry('forms12', $main), $forms12, 'bbl entry - mapping with
 is($out->get_output_entry('forms13', $main), $forms13, 'bbl entry - mapping with forms/langs - 2') ;
 is($out->get_output_entry('forms14', $main), $forms14, 'bbl entry - mapping with forms/langs - 3') ;
 is($out->get_output_entry('forms15', $main), $forms15, 'bbl entry - mapping with forms/langs - 4') ;
+

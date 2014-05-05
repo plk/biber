@@ -134,7 +134,7 @@ our $CONFIG_DEFAULT_BIBER = {
   validate_config     => { content => 0 },
   validate_control    => { content => 0 },
   validate_datamodel  => { content => 0 },
-  variant_null_name   => { content => '*' },
+  variant_null_list   => { content => '*' },
   wraplines           => { content => 0 },
   xsvsep              => { content => q/\s*,\s*/ },
 };
