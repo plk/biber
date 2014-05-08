@@ -165,7 +165,7 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
       }
       \name[form=uniform,lang=russian]{author}{3}{}{%
         {{hash=d3e42eb37529f4d05f9646c333b5fd5f}{Bulgakov}{B\bibinitperiod}{Pavel}{P\bibinitperiod}{}{}{}{}}%
-        {{hash=d41d8cd98f00b204e9800998ecf8427e}{}{\bibinitperiod}{}{}{}{}{}{}}%
+        {{hash=24b7be5b577041e83bf3c4fe658111a5}{Smith}{S\bibinitperiod}{Jim}{J\bibinitperiod}{}{}{}{}}%
         {{hash=87d0ec74cbe7f9e39f5bbc25930f1474}{Rosenfeld}{R\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
       }
       \list[form=original,lang=russian]{institution}{1}{%
@@ -177,11 +177,11 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
       }
       \list[form=romanised,lang=russian]{location}{2}{%
         {Moskva}%
-        {}%
+        {London}%
       }
       \list[form=translated,lang=english]{location}{2}{%
         {Moscow}%
-        {}%
+        {London}%
       }
       \list[form=original,lang=russian]{publisher}{1}{%
         {Наука}%

@@ -1,2 +1,5 @@
-* Sample XSLT transform but not in biber
-* bltxml either should have no schema or it should be dynamically created from the data model. A static schema is pointless
+* DONE Infilling of nulls should come from a fallback chain
+* DONE Remove all null_names treatment in sorting/labels
+* TODO get should do fallback chain (vfallback should too) but not when form or lang is specified
+* TODO set should not use global vform so as not to loose data
+* TODO Document \DeclareVariantFallbacks

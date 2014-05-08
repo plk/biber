@@ -262,6 +262,18 @@ sub set_firstname {
   return;
 }
 
+=head2 set_firstname_i
+
+    Set firstname initials for a Biber::Entry::Name object
+
+=cut
+
+sub set_firstname_i {
+  my ($self, $val) = @_;
+  $self->{firstname_i} = $val;
+  return;
+}
+
 =head2 get_firstname
 
     Get firstname for a Biber::Entry::Name object
@@ -294,6 +306,18 @@ sub get_firstname_i {
 sub set_middlename {
   my ($self, $val) = @_;
   $self->{middlename} = $val;
+  return;
+}
+
+=head2 set_middlename_i
+
+    Set middlename initials for a Biber::Entry::Name object
+
+=cut
+
+sub set_middlename_i {
+  my ($self, $val) = @_;
+  $self->{middlename_i} = $val;
   return;
 }
 
@@ -332,6 +356,18 @@ sub set_lastname {
   return;
 }
 
+=head2 set_lastname_i
+
+    Set lastname initials for a Biber::Entry::Name object
+
+=cut
+
+sub set_lastname_i {
+  my ($self, $val) = @_;
+  $self->{lastname_i} = $val;
+  return;
+}
+
 =head2 get_lastname
 
     Get lastname for a Biber::Entry::Name object
@@ -367,6 +403,18 @@ sub set_suffix {
   return;
 }
 
+=head2 set_suffix_i
+
+    Set suffix initials for a Biber::Entry::Name object
+
+=cut
+
+sub set_suffix_i {
+  my ($self, $val) = @_;
+  $self->{suffix_i} = $val;
+  return;
+}
+
 =head2 get_suffix
 
     Get suffix for a Biber::Entry::Name object
@@ -399,6 +447,18 @@ sub get_suffix_i {
 sub set_prefix {
   my ($self, $val) = @_;
   $self->{prefix} = $val;
+  return;
+}
+
+=head2 set_prefix_i
+
+    Set prefix initials for a Biber::Entry::Name object
+
+=cut
+
+sub set_prefix_i {
+  my ($self, $val) = @_;
+  $self->{prefix_i} = $val;
   return;
 }
 

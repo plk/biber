@@ -441,9 +441,9 @@ our %LOCALE_MAP_R = (
 
 # Defines the scope of each of the BibLaTeX configuration options
 #
-# PRESORT is not a "real" biblatex option passed by biblatex. It is defined
-# by the biblatex \DeclarePresort macro and is stored in here as it
-# can be global/per-type or per-entry and therefore it's natural to store it here.
+# Several things in here are not "real" biblatex option passed by biblatex.
+# They are defined by the biblatex macros and are stored in here as they
+# can be global/per-type or per-entry and therefore it's natural to store them here.
 our %CONFIG_SCOPE_BIBLATEX = (
   alphaothers        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
   controlversion     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
@@ -490,6 +490,7 @@ our %CONFIG_SCOPE_BIBLATEX = (
   useeditor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   useprefix          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   usetranslator      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
+  variantfallbacks   => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   variantforms       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   vform              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
   vlang              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},

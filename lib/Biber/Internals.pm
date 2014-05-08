@@ -446,23 +446,8 @@ sub _label_name {
     my $numnames  = $nameval->count_names;
     my $visibility = $nameval->get_visible_alpha;
 
-    # Generic variant in case we have any null names below
-    my $nvnames = $be->get_field($namename);
-    my @lastnames;
-    my @prefices;
-
-    foreach my $n (@{$nameval->names}) {
-      # null name
-      unless ($n->get_lastname) {
-        my $nindex = $n->get_index;
-        push @lastnames, normalise_string_sort($nvnames->nth_name($nindex)->get_lastname, $namename);
-        push @prefices, $nvnames->nth_name($nindex)->get_prefix;
-      }
-      else {
-        push @lastnames, normalise_string_sort($n->get_lastname, $namename);
-        push @prefices, $n->get_prefix;
-      }
-    }
+    my @lastnames = map { normalise_string_sort($_->get_lastname, $namename) } @{$nameval->names};
+    my @prefices  = map { $_->get_prefix } @{$nameval->names};
 
     my $loopnames;
 
@@ -1292,48 +1277,36 @@ sub _namestring {
   # as name separators things which would otherwise be stripped. This way we
   # guarantee that the separators are never in names
   foreach my $n (@{$names->first_n_names($visible)}) {
-    # This is the generic form/lang of the name in case we need information from it
-    # when we have null names in a variant.
-    # Sort object for:
-    # AUTHOR_f_l = {name1 and * and name3}
-    # when
-    # AUTHOR = {name1 and name2 and name3}
-    #
-    # should use name2 from the generic variant
-
-    my $nvnames = $be->get_field($field);
-    my $nindex = $n->get_index;
-    my $nullname = $n->get_lastname ? 0 : 1; # If there is no lastname, it's a null name
 
     # If useprefix is true, use prefix at start of name for sorting
     if (Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      my $pre = $nullname ? $nvnames->nth_name($nindex)->get_prefix : $n->get_prefix;
+      my $pre = $n->get_prefix;
       if ($pre) {
         $str .= normalise_string_sort($pre, $field) . $nsi;
       }
     }
 
     # Append last name
-    my $ln = $nullname ? $nvnames->nth_name($nindex)->get_lastname : $n->get_lastname;
+    my $ln = $n->get_lastname;
     $str .= normalise_string_sort($ln, $field) . $nsi;
 
     # Append first name or inits if sortfirstinits is set
     if (Biber::Config->getoption('sortfirstinits')) {
-      my $fni = $nullname ? $nvnames->nth_name($nindex)->get_firstname_i : $n->get_firstname_i;
+      my $fni = $n->get_firstname_i;
       $str .=  normalise_string_sort(join('', @$fni), $field) . $nsi if $fni;
     }
     else {
-      my $fn = $nullname ? $nvnames->nth_name($nindex)->get_firstname : $n->get_firstname;
+      my $fn = $n->get_firstname;
       $str .= normalise_string_sort($fn, $field) . $nsi if $fn;
     }
 
     # Append suffix
-    my $suff = $nullname ? $nvnames->nth_name($nindex)->get_suffix : $n->get_suffix;
+    my $suff = $n->get_suffix;
     $str .= normalise_string_sort($suff, $field) . $nsi if $suff;
 
     # If useprefix is false, use prefix at end of name
     unless (Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      my $pre = $nullname ? $nvnames->nth_name($nindex)->get_prefix : $n->get_prefix;
+      my $pre = $n->get_prefix;
       if ($pre) {
         $str .= normalise_string_sort($pre, $field) . $nsi;
       }
@@ -1362,11 +1335,6 @@ sub _liststring {
   my $str = '';
   my $truncated = 0;
 
-  # In case we have null items in a list, we need to pick things from the generic variant
-  # of the list
-  my $nvlist = $be->get_field($field);
-  my @nvitems = @$nvlist;
-
   # These should be symbols which can't appear in lists and which sort before all alphanum
   # so that "Alan Smith" sorts after "Al Smth". This means, symbols which normalise_string_sort()
   # strips out. Unfortuately, this means using punctuation and these are by default variable
@@ -1380,17 +1348,10 @@ sub _liststring {
   if ( $#items + 1 > Biber::Config->getblxoption('maxitems', $bee, $citekey) ) {
     $truncated = 1;
     @items = splice(@items, 0, Biber::Config->getblxoption('minitems', $bee, $citekey) );
-    @nvitems = splice(@nvitems, 0, Biber::Config->getblxoption('minitems', $bee, $citekey) );
-  }
-
-  # Deal with null in lists
-  my @temp;
-  for (my $i=0;$i<=$#items;$i++) {
-    push @temp, ($items[$i] ? $items[$i] : $nvitems[$i]);
   }
 
   # separate the items by a string to give some structure
-  $str = join($lsi, map { normalise_string_sort($_, $field)} @temp);
+  $str = join($lsi, map { normalise_string_sort($_, $field)} @items);
 
   $str =~ s/\s+\z//xms;
   $str .= $trunc if $truncated;

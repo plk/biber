@@ -378,6 +378,7 @@ sub parse_ctrlfile {
                                                            qr/\Asortlist\z/,
                                                            qr/\Alabel(?:part|element|alphatemplate)\z/,
                                                            qr/\Acondition\z/,
+                                                           qr/\Avariantfallback\z/,
                                                            qr/\A(?:or)?filter\z/,
                                                           ],
                                           'NsStrip' => 1,
@@ -550,6 +551,10 @@ sub parse_ctrlfile {
                                   $presort->{type});
     }
   }
+
+  # variant fallbacks
+  Biber::Config->setblxoption('variantfallbacks',
+                              $bcfxml->{variantfallbacks}{variantfallback});
 
   my $sorting = _parse_sort($bcfxml->{sorting});
 
@@ -955,6 +960,86 @@ sub v_checks {
     }
   }
 }
+
+=head2 instantiate_listnulls
+
+    Instantiate any nulls in variant lists using a fallback list
+
+=cut
+
+sub instantiate_listnulls {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $dm = Biber::Config->get_dm;
+  my $fbs = Biber::Config->getblxoption('variantfallbacks');
+
+  foreach my $citekey ( $section->get_citekeys ) {
+    $logger->debug("Instantiating variant list nulls in entry '$citekey' from section $secnum");
+    my $be = $section->bibentry($citekey);
+
+    # Plain lists
+    foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
+      next if $dm->field_is_datatype('name', $listfield); # name is a special list
+      next unless $dm->field_is_variant_enabled($listfield);
+
+      # Find variant fallback
+      my $nvlist;
+      foreach my $fb (@$fbs) {
+        last if $nvlist = $be->get_field($listfield, $fb->{form}, $fb->{lang});
+      }
+      $logger->warn("No fallback found for plain list '$listfield' in entry '$citekey'") unless $nvlist;
+
+      foreach my $form ($be->get_field_form_names($listfield)) {
+        foreach my $lang ($be->get_field_form_lang_names($listfield, $form)) {
+          if (my $lf = $be->get_field($listfield, $form, $lang)) {
+            $logger->debug("Instantiating variant plain list nulls for field '$listfield/$form/$lang' in entry '$citekey' from section $secnum");
+            for (my $i=0;$i<=$#$lf;$i++) {
+              if ($lf->[$i]eq Biber::Config->getoption('variant_null_list')) {
+                $lf->[$i] = $nvlist->[$i];
+              }
+            }
+          }
+        }
+      }
+
+      # Names
+      foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
+        next unless $dm->field_is_variant_enabled($namefield);
+
+      # Find variant fallback
+      my $nvnames;
+      foreach my $fb (@$fbs) {
+        last if $nvnames = $be->get_field($namefield, $fb->{form}, $fb->{lang});
+      }
+      $logger->warn("No fallback found for name list '$namefield' in entry '$citekey'") unless $nvnames;
+
+        foreach my $form ($be->get_field_form_names($namefield)) {
+          foreach my $lang ($be->get_field_form_lang_names($namefield, $form)) {
+            if (my $nf = $be->get_field($namefield, $form, $lang)) {
+              $logger->debug("Instantiating variant name list nulls for field '$namefield/$form/$lang' in entry '$citekey' from section $secnum");
+              foreach my $n (@{$nf->names}) {
+                # null name
+                if ($n->get_lastname eq Biber::Config->getoption('variant_null_list')) {
+                  my $nindex = $n->get_index;
+                  $n->set_lastname($nvnames->nth_name($nindex)->get_lastname);
+                  $n->set_lastname_i($nvnames->nth_name($nindex)->get_lastname_i);
+                  $n->set_firstname($nvnames->nth_name($nindex)->get_firstname);
+                  $n->set_firstname_i($nvnames->nth_name($nindex)->get_firstname_i);
+                  $n->set_prefix($nvnames->nth_name($nindex)->get_prefix);
+                  $n->set_prefix_i($nvnames->nth_name($nindex)->get_prefix_i);
+                  $n->set_suffix($nvnames->nth_name($nindex)->get_suffix);
+                  $n->set_suffix_i($nvnames->nth_name($nindex)->get_suffix_i);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 
 =head2 instantiate_dynamic
 
@@ -3135,6 +3220,7 @@ sub prepare {
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
     $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
+    $self->instantiate_listnulls;        # Instantiate any variant list nulls
     $self->resolve_alias_refs;           # Resolve xref/crossref/xdata aliases to real keys
     $self->resolve_xdata;                # Resolve xdata entries
     $self->cite_setmembers;              # Cite set members

@@ -400,6 +400,12 @@
       <bcf:field source="sortkey" skip="true"/>
     </bcf:inherit>
   </bcf:inheritance>
+  <!-- VARIANT FALLBACKS -->
+  <bcf:variantfallbacks>
+    <bcf:variantfallback form="original"/>
+    <bcf:variantfallback form="romanised"/>
+  </bcf:variantfallbacks>
+  <!-- SORTING -->
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
     <bcf:sort order="1">

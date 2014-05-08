@@ -473,6 +473,22 @@
           </oneOrMore>
         </element>
       </optional>
+      <!-- variant fallbacks specification -->
+      <element name="bcf:variantfallbacks">
+        <oneOrMore>
+          <element name="bcf:variantfallback">
+            <attribute name="form">
+              <data type="string"/>
+            </attribute>
+            <optional>
+              <attribute name="lang">
+                <data type="string"/>
+              </attribute>
+            </optional>
+            <empty/>
+          </element>
+        </oneOrMore>
+      </element>
       <!-- Global sorting specification -->
       <ref name="sorting"/>
       <optional>

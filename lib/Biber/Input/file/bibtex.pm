@@ -928,8 +928,6 @@ sub _list {
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
   @tmp = map { biber_decode_utf8($_) } @tmp;
   @tmp = map { remove_outer($_) } @tmp;
-  # remove null list element markers
-  @tmp = map { (Biber::Config->getoption('variant_null_list') eq $_) ? '' : $_} @tmp;
   $bibentry->set_datafield($field, [ @tmp ], $form, $lang);
   return;
 }
@@ -1214,20 +1212,10 @@ sub parsename {
   my $lastname_stripped;
   my $lastname_i;
   if ($lastname) {
-    # Regularise any variant null name marker from user-specific marker
-    # so that we know what to do in biblatex without knowing the user marker
-    if ($lastname eq Biber::Config->getoption('variant_null_list')) {
-      $lastname_i        = [''];
-      $lastname_stripped = '';
-      $ls = 0;
-      $namestring .= ', ';
-    }
-    else {
-      $lastname_i        = $gen_lastname_i;
-      $lastname_stripped = remove_outer($lastname);
-      $ls = $lastname ne $lastname_stripped ? 1 : 0;
-      $namestring .= "$lastname_stripped, ";
-    }
+    $lastname_i        = $gen_lastname_i;
+    $lastname_stripped = remove_outer($lastname);
+    $ls = $lastname ne $lastname_stripped ? 1 : 0;
+    $namestring .= "$lastname_stripped, ";
   }
   # suffix
   my $ss;
