@@ -16,6 +16,7 @@ our @EXPORT = qw{
                   %DM_DATATYPES
                   %LOCALE_MAP
                   %LOCALE_MAP_R
+                  %REMOTE_MAP
                   $BIBER_CONF_NAME
                   $BCF_VERSION
                   $BBL_VERSION
