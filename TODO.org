@@ -1,5 +1,15 @@
 * DONE Infilling of nulls should come from a fallback chain
 * DONE Remove all null_names treatment in sorting/labels
-* TODO get should do fallback chain (vfallback should too) but not when form or lang is specified
-* TODO set should not use global vform so as not to loose data
-* TODO Document \DeclareVariantFallbacks
+* DONE get should do fallback chain but not when form or lang is specified
+* TODO set should not use global vform so as not to lose data
+* TODO Document \DeclareVariantFallbacks (it's not just fallbacks)
+* TODO vfallback fallbacks?
+
+Currently:
+\print*{} (biblatex) - vform/vlang/vtranslang
+get_field (biber) - \DeclareVariantFallbacks
+null filling (biber) - \DeclareVariantFallbacks
+fallbacks - vfallbacks (biblatex) if vform/vlang/vtranslang were fallbacks
+             instead, no longer needed
+
+\DeclareVariantFallbacks does two things:

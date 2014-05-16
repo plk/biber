@@ -49,6 +49,7 @@ t/bcfvalidation.t
 t/biblatexml.t
 t/bibtex-aliases.t
 t/bibtex-variants.t
+t/bibtex-variants-complex.t
 t/bibtex-output.t
 t/configfile.t
 t/dm-constraints.t
@@ -94,6 +95,8 @@ t/tdata/bibtex-aliases.bcf
 t/tdata/bibtex-aliases.bib
 t/tdata/bibtex-variants.bcf
 t/tdata/bibtex-variants.bib
+t/tdata/bibtex-variants-complex.bcf
+t/tdata/bibtex-variants-complex.bib
 t/tdata/bibtex-output.bcf
 t/tdata/dm-constraints.bcf
 t/tdata/dm-constraints.bib

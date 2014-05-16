@@ -974,50 +974,59 @@ sub instantiate_listnulls {
   my $dm = Biber::Config->get_dm;
   my $fbs = Biber::Config->getblxoption('variantfallbacks');
 
-  foreach my $citekey ( $section->get_citekeys ) {
+KEY:  foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Instantiating variant list nulls in entry '$citekey' from section $secnum");
     my $be = $section->bibentry($citekey);
 
-    # Plain lists
-    foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
-      next if $dm->field_is_datatype('name', $listfield); # name is a special list
-      next unless $dm->field_is_variant_enabled($listfield);
+    foreach my $f ($be->fields) {
+      # Plain lists
+      if ($dm->get_fieldtype($f) eq 'list' and
+          $dm->get_datatype($f) eq 'literal' and
+          $dm->field_is_variant_enabled($f)) {
 
-      # Find variant fallback
-      my $nvlist;
-      foreach my $fb (@$fbs) {
-        last if $nvlist = $be->get_field($listfield, $fb->{form}, $fb->{lang});
-      }
-      $logger->warn("No fallback found for plain list '$listfield' in entry '$citekey'") unless $nvlist;
+        # Find variant fallback
+        my $nvlist;
+        foreach my $fb (@$fbs) {
+          last if $nvlist = $be->_get_field($f, $fb->{form}, $fb->{lang});
+        }
+        unless ($nvlist) {
+          $logger->warn("No fallback found for plain list '$f' in entry '$citekey'");
+          next KEY;
+        }
 
-      foreach my $form ($be->get_field_form_names($listfield)) {
-        foreach my $lang ($be->get_field_form_lang_names($listfield, $form)) {
-          if (my $lf = $be->get_field($listfield, $form, $lang)) {
-            $logger->debug("Instantiating variant plain list nulls for field '$listfield/$form/$lang' in entry '$citekey' from section $secnum");
-            for (my $i=0;$i<=$#$lf;$i++) {
-              if ($lf->[$i]eq Biber::Config->getoption('variant_null_list')) {
-                $lf->[$i] = $nvlist->[$i];
+        foreach my $form ($be->get_field_form_names($f)) {
+          foreach my $lang ($be->get_field_form_lang_names($f, $form)) {
+            if (my $lf = $be->_get_field($f, $form, $lang)) {
+              $logger->debug("Instantiating variant plain list nulls for field '$f/$form/$lang' in entry '$citekey' from section $secnum");
+              for (my $i=0;$i<=$#$lf;$i++) {
+                if ($lf->[$i]eq Biber::Config->getoption('variant_null_list')) {
+                  $lf->[$i] = $nvlist->[$i];
+                }
               }
             }
           }
         }
       }
-
       # Names
-      foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
-        next unless $dm->field_is_variant_enabled($namefield);
+      elsif ($dm->get_fieldtype($f) eq 'list' and
+             $dm->get_datatype($f) eq 'name' and
+             $dm->field_is_variant_enabled($f)) {
 
-      # Find variant fallback
-      my $nvnames;
-      foreach my $fb (@$fbs) {
-        last if $nvnames = $be->get_field($namefield, $fb->{form}, $fb->{lang});
-      }
-      $logger->warn("No fallback found for name list '$namefield' in entry '$citekey'") unless $nvnames;
+        # Find variant fallback
+        my $nvnames;
+        foreach my $fb (@$fbs) {
+          last if $nvnames = $be->_get_field($f, $fb->{form}, $fb->{lang});
+        }
 
-        foreach my $form ($be->get_field_form_names($namefield)) {
-          foreach my $lang ($be->get_field_form_lang_names($namefield, $form)) {
-            if (my $nf = $be->get_field($namefield, $form, $lang)) {
-              $logger->debug("Instantiating variant name list nulls for field '$namefield/$form/$lang' in entry '$citekey' from section $secnum");
+        unless ($nvnames) {
+          $logger->warn("No fallback found for name list '$f' in entry '$citekey'");
+          next KEY;
+        }
+
+        foreach my $form ($be->get_field_form_names($f)) {
+          foreach my $lang ($be->get_field_form_lang_names($f, $form)) {
+            if (my $nf = $be->_get_field($f, $form, $lang)) {
+              $logger->debug("Instantiating variant name list nulls for field '$f/$form/$lang' in entry '$citekey' from section $secnum");
               foreach my $n (@{$nf->names}) {
                 # null name
                 if ($n->get_lastname eq Biber::Config->getoption('variant_null_list')) {
@@ -1039,7 +1048,6 @@ sub instantiate_listnulls {
     }
   }
 }
-
 
 =head2 instantiate_dynamic
 

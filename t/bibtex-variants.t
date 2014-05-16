@@ -96,7 +96,8 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare(1);
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['forms13', 'forms14', 'forms15', 'forms8', 'forms5', 'forms4', 'forms12', 'forms9', 'forms10', 'forms11', 'forms6', 'forms3', 'forms2', 'forms1', 'forms7'], 'Forms sorting - 1');
+# There is complex interaction here between the variant sorting scheme above and the fallback defaults for variants in the .bcf
+is_deeply([$main->get_keys], ['forms13', 'forms14', 'forms15', 'forms5', 'forms8', 'forms4', 'forms12', 'forms9', 'forms10', 'forms11', 'forms6', 'forms3', 'forms2', 'forms1', 'forms7'], 'Forms sorting - 1');
 # Uses name from generic variant for sorting when a name in the sorting variant is null
 is(NFC($main->get_sortdata('forms1')->[0]), 'Bulgakov!Pavel#Smith!Jim#Rosenfeld!Boris,Мухаммад ибн муса алХорезми Около 783 около 850,Moskva!London,2002', 'Null name sortstring');
 

@@ -308,7 +308,7 @@ sub get_fields_of_type {
 
 sub get_fieldtype {
   my ($self, $field) = @_;
-  return $self->{fieldsbyname}{$field}{fieldtype};
+  return $self->{fieldsbyname}{$field}{fieldtype} || '';
 }
 
 =head2 get_datatype
@@ -319,7 +319,7 @@ sub get_fieldtype {
 
 sub get_datatype {
   my ($self, $field) = @_;
-  return $self->{fieldsbyname}{$field}{datatype};
+  return $self->{fieldsbyname}{$field}{datatype} || '';
 }
 
 =head2 get_fieldformat
@@ -330,7 +330,7 @@ sub get_datatype {
 
 sub get_fieldformat {
   my ($self, $field) = @_;
-  return $self->{fieldsbyname}{$field}{format};
+  return $self->{fieldsbyname}{$field}{format} || '';
 }
 
 

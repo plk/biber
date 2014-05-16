@@ -153,7 +153,6 @@ sub _getfullhash {
       $hashkey .= $n->get_suffix;
     }
 
-
     if ( $n->get_firstname ) {
       $hashkey .= $n->get_firstname;
     }
