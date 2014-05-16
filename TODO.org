@@ -1,7 +1,7 @@
 * DONE Infilling of nulls should come from a fallback chain
 * DONE Remove all null_names treatment in sorting/labels
 * DONE get should do fallback chain but not when form or lang is specified
-* TODO set should not use global vform so as not to lose data
+* DONE set should not use global vform so as not to lose data
 * TODO Document \DeclareVariantFallbacks (it's not just fallbacks)
 * TODO vfallback fallbacks?
 
