@@ -27,6 +27,7 @@ my $l4pconf = qq|
 |;
 Log::Log4perl->init(\$l4pconf);
 
+# WARNING - the .bcf has special defs for URLS to test verbatim lists
 $biber->parse_ctrlfile('general2.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 
@@ -343,6 +344,10 @@ my $url1 = q|    \entry{url1}{misc}{}
       \verb{url}
       \verb http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0
       \endverb
+      \lverb{urls}{2}
+      \lverb http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0
+      \lverb http://www.sun.com
+      \endlverb
     \endentry
 |;
 

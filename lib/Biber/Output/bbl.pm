@@ -333,6 +333,8 @@ sub set_output_entry {
   # Output list fields
   foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
+    next if $dm->field_is_datatype('verbatim', $listfield); # special lists
+    next if $dm->field_is_datatype('uri', $listfield); # special lists
     next if $dm->field_is_skipout($listfield);
 
     # Don't need a per-form/lang more<list> field
@@ -509,14 +511,33 @@ sub set_output_entry {
     }
   }
 
-  foreach my $vfield ((@{$dm->get_fields_of_datatype('verbatim')},
-                       @{$dm->get_fields_of_datatype('uri')})) {
+  # verbatim fields
+  foreach my $vfield ((@{$dm->get_fields_of_type('field', 'verbatim')},
+                       @{$dm->get_fields_of_type('field', 'uri')})) {
     next if $dm->field_is_skipout($vfield);
     if ( my $vf = $be->get_field($vfield) ) {
       $acc .= "      \\verb{$vfield}\n";
       $acc .= "      \\verb $vf\n      \\endverb\n";
     }
   }
+  # verbatim lists
+  foreach my $vlist ((@{$dm->get_fields_of_type('list', 'verbatim')},
+                      @{$dm->get_fields_of_type('list', 'uri')})) {
+    next if $dm->field_is_skipout($vlist);
+    if ( my $vlf = $be->get_field($vlist) ) {
+      if ( lc($vlf->[-1]) eq Biber::Config->getoption('others_string') ) {
+        $acc .= "      \\true{more$vlist}\n";
+        pop @$vlf; # remove the last element in the array
+      }
+      my $total = $#$vlf + 1;
+      $acc .= "      \\lverb{$vlist}{$total}\n";
+      foreach my $f (@$vlf) {
+        $acc .= "      \\lverb $f\n";
+      }
+      $acc .= "      \\endlverb\n";
+    }
+  }
+
   if ( my $k = $be->get_field('keywords') ) {
     $k = join(',', @$k);
     $acc .= "      \\keyw{$k}\n";

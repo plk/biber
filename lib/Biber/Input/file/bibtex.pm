@@ -75,7 +75,9 @@ my $handlers = {
                            'default'   => {
                                            'key'      => \&_list,
                                            'literal'  => \&_list,
-                                           'name'     => \&_name
+                                           'name'     => \&_name,
+                                           'verbatim' => \&_list,
+                                           'uri'      => \&_urilist
                                           }
                           }
 };
@@ -939,6 +941,29 @@ sub _list {
   $bibentry->set_datafield($field, [ @tmp ], $form, $lang);
   return;
 }
+
+# Bibtex uri lists
+sub _urilist {
+  my ($bibentry, $entry, $f) = @_;
+  my $value = NFC(decode_utf8($entry->get($f)));# Unicode NFC boundary (before hex encoding)
+  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
+  @tmp = map {
+    # If there are some escapes in the URI, unescape them
+    if ($_ =~ /\%/) {
+      $_ =~ s/\\%/%/g; # just in case someone BibTeX escaped the "%"
+      # This is what uri_unescape() does but it's faster
+      $_ =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
+    }
+    $_;
+  } @tmp;
+
+  @tmp = map { URI->new($_)->as_string } @tmp;
+
+  $bibentry->set_datafield($field, [ @tmp ], $form, $lang);
+  return;
+}
+
 
 =head2 cache_data
 
