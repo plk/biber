@@ -845,6 +845,7 @@
       <bcf:field fieldtype="field" datatype="literal">newspaper</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">urldescription</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">abstracturl</bcf:field>
+      <bcf:field fieldtype="list" datatype="uri">urls</bcf:field>
     </bcf:fields>
     <bcf:entryfields>
       <bcf:field>abstract</bcf:field>
@@ -961,6 +962,7 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
       <bcf:field>url</bcf:field>
+      <bcf:field>urls</bcf:field>
       <bcf:field>urlday</bcf:field>
       <bcf:field>urlendday</bcf:field>
       <bcf:field>urlendmonth</bcf:field>
