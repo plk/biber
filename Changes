@@ -1,7 +1,20 @@
 Revision history for Biber
 
-1.9    (2013)
+1.9    (2014-05-25)
        * Misc bug fixes
+       * Option names accept dashes as well as underscores for general Tex
+         option compatibility.
+       * New "--input-directory" option
+       * Tool mode now also supports data validation
+       * Perl 5.18 is now used to build all biber binaries
+       * Locale-sensitive sorting now more granular (see biblatex
+         "sortlocale" documentation)
+       * Source mapping feature now interpolates from previous matches
+       * Now supports generalised separated values lists using new
+         "--xsvsep" option.
+       * Macro <-> UTF-8 conversion now more robust
+       * New Text::BibTeX library now supports generating initials from
+         general UTF-8 strings (for, e.g. Russian names)
 1.8    (2013-10-21)
        * Perl 5.18 compatibility (hash order randomisation)
        * Removed Data::Diver module due to linux licensing restrictions
