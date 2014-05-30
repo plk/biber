@@ -18,8 +18,8 @@ use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
 use Unicode::Normalize;
 
-our $VERSION = '1.9';
-our $BETA_VERSION = 0; # Is this a beta version?
+our $VERSION = '2.0';
+our $BETA_VERSION = 1; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
 our $screen  = Log::Log4perl::get_logger('screen');
