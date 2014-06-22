@@ -10,6 +10,8 @@ use Data::Compare;
 use Data::Diver qw( Dive );
 use Data::Dump;
 use Encode;
+use File::Slurp;
+use File::Spec;
 use Carp;
 use List::AllUtils qw(first max);
 use Log::Log4perl qw( :no_extra_logdie_message ); # To keep PAR::Packer happy, explicitly load these
