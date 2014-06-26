@@ -12,6 +12,7 @@ use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Unicode::GCString;
 my $logger = Log::Log4perl::get_logger('main');
+use Unicode::Normalize;
 
 =encoding utf-8
 
