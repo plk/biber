@@ -11,6 +11,7 @@ use Biber::Utils;
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
 my $logger = Log::Log4perl::get_logger('main');
+use Unicode::Normalize;
 
 =encoding utf-8
 
