@@ -5,6 +5,8 @@ use warnings;
 use base qw(Exporter);
 use Biber::Config;
 use Encode;
+use File::Slurp;
+use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Unicode::Normalize;
