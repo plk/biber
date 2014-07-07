@@ -716,9 +716,17 @@ sub _literal {
   if ($f eq 'month') {
     $bibentry->set_datafield($field, _hack_month($value), $form, $lang);
   }
+  # Rationalise any bcp47 style langids into babel/polyglossia names
+  # biblatex will convert these back again when loading .lbx files
+  # We need this until babel/polyglossia support proper bcp47 language/locales
+  elsif ($f eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
+    $bibentry->set_datafield($field, $map, $form, $lang);
+  }
   else {
     $bibentry->set_datafield($field, $value, $form, $lang);
   }
+
+
   return;
 }
 
