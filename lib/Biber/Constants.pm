@@ -162,7 +162,7 @@ define_alias('x-ascii'        => 'ascii'); # Encode doesn't resolve this one by 
 define_alias('lutf8'          => 'UTF-8'); # Luatex
 define_alias('utf8x'          => 'UTF-8'); # UCS (old)
 
-# Defines sensible defaults for setting sort locale (bcp47) from babel/polyglossia language names
+# maps between bcp47 lang/locales and babel/polyglossia language names
 our %LOCALE_MAP = (
                    'acadian'         => 'fr-CA',
                    'american'        => 'en-US',
