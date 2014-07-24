@@ -1687,6 +1687,7 @@ sub process_labelname {
       biber_warn("Labelname candidate '$ln' is not a variant enabled field - this is probably incorrect!");
     }
 
+    $logger->trace("Looking for labelname combination $ln/" . ($h_ln->{form} || '') . '/' . ($h_ln->{lang} || ''));
     if ($be->get_field($ln, $h_ln->{form}, $h_ln->{lang})) {
       $be->set_labelname_info({'field' => $ln,
                                'form'  => $h_ln->{form},

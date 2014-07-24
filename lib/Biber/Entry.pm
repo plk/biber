@@ -201,10 +201,11 @@ sub set_labelname_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || 'original';
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
   my $langfield = (($data->{form} eq 'translated') ? 'vtranslang' : 'vlang');
   $data->{lang} = $data->{lang} || Biber::Config->getblxoption($langfield, undef, $key);
   $self->{labelnameinfo} = $data;
+  $logger->trace("Set labelname for '$key' to " . $data->{field} . '/' . $data->{form} . '/' . $data->{lang});
   return;
 }
 
@@ -233,7 +234,7 @@ sub set_labelnamefh_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || 'original';
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
   my $langfield = (($data->{form} eq 'translated') ? 'vtranslang' : 'vlang');
   $data->{lang} = $data->{lang} || Biber::Config->getblxoption($langfield, undef, $key);
   $self->{labelnamefhinfo} = $data;
@@ -265,7 +266,7 @@ sub set_labeltitle_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || 'original';
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
   my $langfield = (($data->{form} eq 'translated') ? 'vtranslang' : 'vlang');
   $data->{lang} = $data->{lang} || Biber::Config->getblxoption($langfield, undef, $key);
   $self->{labeltitleinfo} = $data;
@@ -298,7 +299,7 @@ sub set_labeldate_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || 'original';
+  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
   my $langfield = (($data->{form} eq 'translated') ? 'vtranslang' : 'vlang');
   $data->{lang} = $data->{lang} || Biber::Config->getblxoption($langfield, undef, $key);
   $self->{labeldateinfo} = $data;
@@ -362,6 +363,7 @@ sub get_field {
   my $self = shift;
   my ($field, $form, $lang) = @_;
   return undef unless $field;
+  return undef unless $self->field_exists($field);
   my $dm = Biber::Config->get_dm;
   my $fbs = Biber::Config->getblxoption('variantfallbacks');
   my $key = $self->{derivedfields}{nonvariant}{citekey};# can't use get_field due to recursion ...
