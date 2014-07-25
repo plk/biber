@@ -1085,7 +1085,7 @@ sub parsename {
 
   # Make initials with ties in between work. btparse doesn't understand this so replace with
   # spaces - this is fine as we are just generating initials
-  $nd_namestr =~ s/\.~/. /g;
+  $nd_namestr =~ s/\.~\s*/. /g;
 
   # We use NFC here as we are "outputting" to an external module
   my $nd_name = new Text::BibTeX::Name(NFC($nd_namestr), $fieldname);
@@ -1156,7 +1156,7 @@ sub parsename {
   # Remove any trailing comma and space if, e.g. missing firstname
   # Replace any nbspes
   $namestring =~ s/,\s+\z//xms;
-  $namestring =~ s/~/ /gxms;
+  $namestring =~ s/\s*~\s*/ /gxms;
 
   # Construct $nameinitstring
   my $nameinitstr = '';
