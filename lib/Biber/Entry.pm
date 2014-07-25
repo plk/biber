@@ -402,16 +402,30 @@ sub _get_field {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
     $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
-    $logger->trace("Getting variant enabled field in '$key': $field/$form/$lang");
-    return $self->{datafields}{variant}{$field}{$form}{$lang} //
-           $self->{derivedfields}{variant}{$field}{$form}{$lang} //
-           $self->{rawfields}{variant}{$field};
+    $logger->trace("Looking for variant enabled field in '$key': $field/$form/$lang");
+    my $r = $self->{datafields}{variant}{$field}{$form}{$lang} //
+            $self->{derivedfields}{variant}{$field}{$form}{$lang} //
+              $self->{rawfields}{variant}{$field};
+    if ($r) {
+      $logger->trace("Found variant enabled field in '$key': $field/$form/$lang");
+    }
+    else {
+      $logger->trace("Did NOT find variant enabled field in '$key': $field/$form/$lang");
+    }
+    return $r;
   }
   else {
-    $logger->trace("Getting field in '$key': $field") if $key;
-    return $self->{datafields}{nonvariant}{$field} //
-           $self->{derivedfields}{nonvariant}{$field} //
-           $self->{rawfields}{nonvariant}{$field};
+    $logger->trace("Looking for field in '$key': $field") if $key;
+    my $r = $self->{datafields}{nonvariant}{$field} //
+            $self->{derivedfields}{nonvariant}{$field} //
+            $self->{rawfields}{nonvariant}{$field};
+    if ($r) {
+      $logger->trace("Found variant enabled field in '$key': $field");
+    }
+    else {
+      $logger->trace("Did NOT find variant enabled field in '$key': $field");
+    }
+    return $r;
   }
 }
 
