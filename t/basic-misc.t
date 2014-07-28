@@ -82,12 +82,18 @@ my $u1 = q|    \entry{u1}{misc}{}
         {{uniquename=0,hash=defb99e69a9f1f6e06f15006b1f166ae}{CCC}{C\bibinitperiod}{}{}{}{}{}{}}%
         {{uniquename=0,hash=45054f47ac3305a2a33e9bcceadff712}{DDD}{D\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
       \field{labelalpha}{AAA\textbf{+}00}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{A title}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \true{singletitle}
       \field[form=original,lang=english]{title}{A title}
       \field{year}{2000}
@@ -152,12 +158,18 @@ my $murray1 = q|    \entry{murray}{article}{vlang=english}
         {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos\textbf{+}98}
       \field{sortinit}{H}
       \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
       \field{labeltitle}{Alkanethiolate gold cluster molecules}
+      \field{labeltitlesourcefield}{shorttitle}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \true{singletitle}
       \field[form=original,lang=english]{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
@@ -208,12 +220,18 @@ my $murray2 = q|    \entry{murray}{article}{vlang=english}
         {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos98}
       \field{sortinit}{H}
       \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
       \field{labeltitle}{Alkanethiolate gold cluster molecules}
+      \field{labeltitlesourcefield}{shorttitle}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \true{singletitle}
       \field[form=original,lang=english]{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
@@ -239,12 +257,18 @@ my $t1 = q+    \entry{t1}{misc}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
       \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
       \field{labeltitle}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
@@ -259,12 +283,18 @@ my $t2 = q|    \entry{t2}{misc}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
       \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
       \field{labeltitle}{Signs of W$\frac{o}{a}$nder}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{Signs of W$\frac{o}{a}$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
@@ -281,12 +311,18 @@ my $anon1 = q|    \entry{anon1}{unpublished}{vlang=english}
       \name[form=original,lang=english]{shortauthor}{1}{}{%
         {{uniquename=0,hash=9873a6cc65c553faa2b21aaad626fe4b}{XAnony}{X\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{shortauthor}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
       \field{labelalpha}{XAn35}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{Shorttitle}
+      \field{labeltitlesourcefield}{shorttitle}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \true{singletitle}
       \field{langid}{english}
       \field{langidopts}{variant=american}
@@ -309,12 +345,18 @@ my $anon2 = q|    \entry{anon2}{unpublished}{vlang=english}
       \name[form=original,lang=english]{shortauthor}{1}{}{%
         {{uniquename=0,hash=f64c29e89ea49402b997956610b58ef6}{YAnony}{Y\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{shortauthor}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
       \field{labelalpha}{YAn39}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{Shorttitle}
+      \field{labeltitlesourcefield}{shorttitle}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \true{singletitle}
       \field{langid}{english}
       \field{langidopts}{variant=american}
@@ -334,6 +376,9 @@ my $url1 = q|    \entry{url1}{misc}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=b2106a3dda6c5a4879a0cab37e9cca55}{Alias}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \field{labelalpha}{Ali05}

@@ -107,6 +107,9 @@ my $l4 = q|    \entry{L4}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -119,6 +122,9 @@ my $l4 = q|    \entry{L4}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labeltitle}{Some title about sorting}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{extraalpha}{2}
       \field[form=original,lang=english]{title}{Some title about sorting}
       \field{year}{1995}
@@ -132,6 +138,9 @@ my $l1 = q|    \entry{L1}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -144,6 +153,9 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labeltitle}{Algorithms For Sorting}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{extraalpha}{1}
       \field[form=original,lang=english]{title}{Algorithms For Sorting}
       \field{year}{1995}
@@ -157,6 +169,9 @@ my $l2 = q|    \entry{L2}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -169,6 +184,9 @@ my $l2 = q|    \entry{L2}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labeltitle}{Sorting Algorithms}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{extraalpha}{3}
       \field[form=original,lang=english]{title}{Sorting Algorithms}
       \field{year}{1995}
@@ -182,6 +200,9 @@ my $l3 = q|    \entry{L3}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -194,6 +215,9 @@ my $l3 = q|    \entry{L3}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labeltitle}{More and More Algorithms}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{extraalpha}{2}
       \field[form=original,lang=english]{title}{More and More Algorithms}
       \field{year}{1995}
@@ -209,6 +233,9 @@ my $l5 = q|    \entry{L5}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -221,6 +248,9 @@ my $l5 = q|    \entry{L5}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labeltitle}{Some other title about sorting}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{extraalpha}{1}
       \field[form=original,lang=english]{title}{Some other title about sorting}
       \field{year}{1995}

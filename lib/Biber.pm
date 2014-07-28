@@ -33,6 +33,7 @@ use Biber::Utils;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Data::Dump;
 use Data::Compare;
+use Storable qw( dclone );
 use Text::BibTeX qw(:macrosubs);
 use Unicode::Normalize;
 
@@ -1643,7 +1644,8 @@ sub process_labelname {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $lnamespec = Biber::Config->getblxoption('labelnamespec', $bee);
+  # We modify this later so clone it
+  my $lnamespec = dclone(Biber::Config->getblxoption('labelnamespec', $bee));
   my $dm = Biber::Config->get_dm;
 
   # prepend any per-entry labelname specification to the labelnamespec
@@ -1731,6 +1733,11 @@ sub process_labelname {
                    $be->get_field($lni->{field},
                                   $lni->{form},
                                   $lni->{lang}));
+    # Set information about where labelname came from
+    # Use the return from get_labelname_info as this gets defaults
+    $be->set_field('labelnamesourcefield', $lni->{field});
+    $be->set_field('labelnamesourceform', $lni->{form});
+    $be->set_field('labelnamesourcelang', $lni->{lang});
   }
   else {
     $logger->debug("Could not determine the labelname of entry $citekey");
@@ -1851,8 +1858,7 @@ sub process_labeltitle {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-
-  my $ltitlespec = Biber::Config->getblxoption('labeltitlespec', $bee);
+  my $ltitlespec = dclone(Biber::Config->getblxoption('labeltitlespec', $bee));
 
   # prepend any per-entry labeltitle specification to the labeltitlespec
   my $tmp_lts;
@@ -1876,6 +1882,15 @@ sub process_labeltitle {
                                 'form'  => $h_ltn->{form},
                                 'lang'  => $h_ltn->{lang}});
       $be->set_field('labeltitle', $lt);
+
+      # Set information about where labeltitle came from
+      # Use the return from get_labeltitle_info as this gets defaults
+      if (my $lti = $be->get_labeltitle_info) {
+        $be->set_field('labeltitlesourcefield', $lti->{field});
+        $be->set_field('labeltitlesourceform', $lti->{form});
+        $be->set_field('labeltitlesourcelang', $lti->{lang});
+      }
+
       last;
     }
     $logger->debug("labeltitle information of entry $citekey is unset");

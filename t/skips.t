@@ -51,6 +51,9 @@ my $set1 = q|    \entry{seta}{set}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
@@ -60,6 +63,9 @@ my $set1 = q|    \entry{seta}{set}{}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
       \field{labeltitle}{Set Member A}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{extraalpha}{1}
       \field[form=original,lang=english]{title}{Set Member A}
       \field{year}{2010}
@@ -75,11 +81,17 @@ my $set2 = q|    \entry{set:membera}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labeltitle}{Set Member A}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{Set Member A}
       \field{year}{2010}
       \keyw{key1,key2}
@@ -94,11 +106,17 @@ my $set3 = q|    \entry{set:memberb}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labeltitle}{Set Member B}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{Set Member B}
       \field{year}{2010}
     \endentry
@@ -112,11 +130,17 @@ my $set4 = q|    \entry{set:memberc}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labeltitle}{Set Member C}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{Set Member C}
       \field{year}{2010}
     \endentry
@@ -129,6 +153,9 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
@@ -138,6 +165,9 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
       \field{labeltitle}{Stand-Alone A}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{extraalpha}{2}
       \field[form=original,lang=english]{title}{Stand-Alone A}
       \field{year}{2010}
@@ -151,6 +181,9 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
@@ -160,6 +193,9 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
       \field{labeltitle}{Stand-Alone B}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{extraalpha}{3}
       \field[form=original,lang=english]{title}{Stand-Alone B}
       \field{year}{2010}
@@ -173,6 +209,9 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
@@ -182,6 +221,9 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
       \field{labeltitle}{Stand-Alone C}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{extraalpha}{4}
       \field[form=original,lang=english]{title}{Stand-Alone C}
       \field{year}{2010}
@@ -195,6 +237,9 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -206,6 +251,9 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{labeltitle}{Algorithms Which Sort}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{shorthand}{AWS}
       \field[form=original,lang=english]{title}{Algorithms Which Sort}
       \field{year}{1932}

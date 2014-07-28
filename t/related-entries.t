@@ -50,6 +50,9 @@ my $k1 = q|    \entry{key1}{article}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{0}
@@ -57,6 +60,9 @@ my $k1 = q|    \entry{key1}{article}{}
       \field{labelyear}{1998}
       \field{datelabelsource}{}
       \field{labeltitle}{Original Title}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{journaltitle}{Journal Title}
       \field{number}{5}
       \field{relatedtype}{reprintas}
@@ -76,6 +82,9 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Location}%
       }
@@ -89,6 +98,9 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \field{labelyear}{2009}
       \field{datelabelsource}{}
       \field{labeltitle}{Reprint Title}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Booktitle}
       \field{relatedstring}{First}
       \field{relatedtype}{reprintof}
@@ -108,11 +120,17 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Original Title}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{clonesourcekey}{key1}
       \field[form=original,lang=english]{journaltitle}{Journal Title}
       \field{number}{5}
@@ -133,6 +151,9 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Location}%
       }
@@ -144,6 +165,9 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Reprint Title}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{clonesourcekey}{key2}
       \field[form=original,lang=english]{booktitle}{Booktitle}
       \field{relatedstring}{First}
@@ -163,6 +187,9 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Location}%
       }
@@ -174,6 +201,9 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Reprint Title}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{clonesourcekey}{key3}
       \field[form=original,lang=english]{booktitle}{Booktitle}
       \field{relatedtype}{translationof}
@@ -192,6 +222,9 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Location}%
       }
@@ -203,6 +236,9 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Orig Language Title}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{clonesourcekey}{key4}
       \field[form=original,lang=english]{booktitle}{Booktitle}
       \field{shorthand}{RK4}

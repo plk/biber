@@ -57,6 +57,9 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{Ellington}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{2}{%
         {New York}%
         {London}%
@@ -82,6 +85,9 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{Pillington}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{2}{%
         {New York}%
         {London}%

@@ -60,6 +60,9 @@ my $l1 = q|    \entry{bltx1}{book}{}
         {{hash=aa7443826b696f2ac320d278f0fe5f5a}{Rozenfeld}{R\bibinitperiod}{Boris\bibnamedelima A.}{B\bibinitperiod\bibinitdelim A\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
         {{hash=7d83f818351bce3d953d5056ee449a81}{Akhmedov}{A\bibinitperiod}{Ashraf\bibnamedelima A.}{A\bibinitperiod\bibinitdelim A\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{russian}
       \list{language}{1}{%
         {Russian}%
       }
@@ -88,6 +91,9 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \field{labelyear}{1983}
       \field{datelabelsource}{}
       \field{labeltitle}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{russian}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{05}

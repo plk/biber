@@ -86,6 +86,9 @@ my $l1 = q|    \entry{L1}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -98,6 +101,9 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{labelday}{05}
       \field{datelabelsource}{}
       \field{labeltitle}{Title 1}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{day}{05}
       \field{month}{04}
       \field{origday}{30}
@@ -116,6 +122,9 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -128,6 +137,9 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \field{labelday}{05}
       \field{datelabelsource}{}
       \field{labeltitle}{Title 2}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{day}{05}
       \field{month}{04}
       \field[form=original,lang=english]{title}{Title 2}
@@ -142,6 +154,9 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -154,6 +169,9 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \field{labelday}{05}
       \field{datelabelsource}{}
       \field{labeltitle}{Title 3}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{day}{05}
       \field{month}{04}
       \field[form=original,lang=english]{title}{Title 3}

@@ -62,6 +62,9 @@ my $ms1 = q|    \entry{ms1}{inbook}{vlang=english}
       \name[form=translated,lang=german]{editor}{1}{}{%
         {{hash=972f0ee3a5f949259f3b471a2a314e54}{Tinte}{T\bibinitperiod}{Jan}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{2}{%
         {Rumble}%
         {Slush}%
@@ -71,6 +74,9 @@ my $ms1 = q|    \entry{ms1}{inbook}{vlang=english}
       \field{sortinit}{M}
       \field{sortinithash}{4203d16473bc940d4ac780773cb7c5dd}
       \field{labeltitle}{Miraculous, Meticulous, Moody}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Indelible, unglückliche Eigenheiten}
       \field[form=translated,lang=english]{booktitle}{Indextitle}
       \strng{crossref}{ms2}

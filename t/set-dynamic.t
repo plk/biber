@@ -53,6 +53,9 @@ my $string1 = q|    \entry{DynSet}{set}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{0}
@@ -60,6 +63,9 @@ my $string1 = q|    \entry{DynSet}{set}{}
       \field{labelyear}{2002}
       \field{datelabelsource}{}
       \field{labeltitle}{Doing Daring Deeds}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{annotation}{Some Dynamic Note}
       \field{shorthand}{d1}
       \field[form=original,lang=english]{title}{Doing Daring Deeds}
@@ -75,11 +81,17 @@ my $string2 = q|    \entry{Dynamic1}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Doing Daring Deeds}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{annotation}{Some Dynamic Note}
       \field{shorthand}{d1}
       \field[form=original,lang=english]{title}{Doing Daring Deeds}
@@ -95,11 +107,17 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Beautiful Birthdays}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{shorthand}{d2}
       \field[form=original,lang=english]{title}{Beautiful Birthdays}
       \field{year}{2010}
@@ -114,11 +132,17 @@ my $string4 = q|    \entry{Dynamic3}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labeltitle}{Reckless Ravishings}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{shorthand}{d3}
       \field[form=original,lang=english]{title}{Reckless Ravishings}
       \field{year}{2000}
@@ -134,6 +158,9 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{0}
@@ -141,6 +168,9 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \field{labelyear}{2000}
       \field{datelabelsource}{}
       \field{labeltitle}{Reckless Ravishings}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{shorthand}{d3}
       \field[form=original,lang=english]{title}{Reckless Ravishings}
       \field{year}{2000}

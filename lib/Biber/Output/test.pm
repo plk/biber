@@ -194,6 +194,13 @@ sub set_output_entry {
     }
   }
 
+  # Set information about where labelname came from
+  if ($be->get_field('labelname')) {
+    $acc .= '      \field{labelnamesourcefield}{' . $be->get_field('labelnamesourcefield') . "}\n";
+    $acc .= '      \field{labelnamesourceform}{' . $be->get_field('labelnamesourceform') . "}\n";
+    $acc .= '      \field{labelnamesourcelang}{' . $be->get_field('labelnamesourcelang') . "}\n";
+  }
+
   foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
     next if $dm->field_is_skipout($listfield);
@@ -291,6 +298,16 @@ sub set_output_entry {
   # labeltitle is always output
   if (my $lt = $be->get_field('labeltitle')) {
     $acc .= "      \\field{labeltitle}{$lt}\n";
+    # Set information about where labeltitle came from
+    if (my $ltsf = $be->get_field('labeltitlesourcefield')) {
+      $acc .= "      \\field{labeltitlesourcefield}{$ltsf}\n";
+    }
+    if (my $ltsfo = $be->get_field('labeltitlesourceform')) {
+      $acc .= "      \\field{labeltitlesourceform}{$ltsfo}\n";
+    }
+    if (my $ltsl = $be->get_field('labeltitlesourcelang')) {
+      $acc .= "      \\field{labeltitlesourcelang}{$ltsl}\n";
+    }
   }
 
   # The labelalpha option determines whether "extraalpha" is output

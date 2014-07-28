@@ -61,6 +61,9 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \name[form=original,lang=english]{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Grimble}%
       }
@@ -69,6 +72,9 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \field{sortinit}{G}
       \field{sortinithash}{480ee01f9ffd559b3258d822f54a8ac2}
       \field{labeltitle}{Great and Good Graphs}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
       \field{eprintclass}{SOMECLASS}
@@ -90,6 +96,9 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \name[form=original,lang=english]{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{Erbriss}{E\bibinitperiod}{Edgar}{E\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{institution}{1}{%
         {Institution}%
       }
@@ -101,6 +110,9 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \field{sortinit}{F}
       \field{sortinithash}{9661cce5f16ac30b6b0c804d4583ed99}
       \field{labeltitle}{Fabulous Fourier Forms}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Graphs of the Continent}
       \strng{crossref}{cr_m}
       \field{origyear}{1943}
@@ -121,6 +133,9 @@ my $cr_m = q|    \entry{cr_m}{book}{}
       \field{sortinit}{G}
       \field{sortinithash}{480ee01f9ffd559b3258d822f54a8ac2}
       \field{labeltitle}{Graphs of the Continent}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{Graphs of the Continent}
       \field{year}{1974}
     \endentry
@@ -137,6 +152,9 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \name[form=original,lang=english]{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{Monkley}{M\bibinitperiod}{Mark}{M\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Rancour}%
       }
@@ -145,6 +163,9 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{Arrangements of All Articles}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Beasts of the Burbling Burns}
       \strng{crossref}{crt}
       \field{eprinttype}{sometype}
@@ -165,6 +186,9 @@ my $crt = q|    \entry{crt}{book}{}
       \field{sortinit}{B}
       \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
       \field{labeltitle}{Beasts of the Burbling Burns}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{Beasts of the Burbling Burns}
       \field{year}{1996}
     \endentry
@@ -181,6 +205,9 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \name[form=original,lang=english]{editor}{1}{}{%
         {{hash=344a7f427fb765610ef96eb7bce95257}{Editor}{E\bibinitperiod}{}{}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Address}%
       }
@@ -189,6 +216,9 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{Title of inproceeding}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Manual booktitle}
       \field{eventday}{21}
       \field{eventendday}{24}
@@ -215,6 +245,9 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \name[form=original,lang=english]{bookauthor}{1}{}{%
         {{hash=91a1dd4aeed3c4ec29ca74c4e778be5f}{Bookauthor}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Publisher of proceeding}%
       }
@@ -223,6 +256,9 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labeltitle}{Title of Book bit}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booksubtitle}{Book Subtitle}
       \field[form=original,lang=english]{booktitle}{Book Title}
       \field[form=original,lang=english]{booktitleaddon}{Book Titleaddon}
@@ -243,11 +279,17 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=3d449e56eb3ca1ae80dc99a18d689795}{Smith}{S\bibinitperiod}{Firstname}{F\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{fullhash}{3d449e56eb3ca1ae80dc99a18d689795}
       \field{sortinit}{S}
       \field{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
       \field{labeltitle}{Title of Collection bit}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Book Title}
       \field[form=original,lang=english]{title}{Title of Collection bit}
       \field{year}{2010}
@@ -263,11 +305,17 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=e0ecc4fc668ee499d1afba44e1ac064d}{Zentrum}{Z\bibinitperiod}{Zoe}{Z\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \strng{fullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \field{sortinit}{Z}
       \field{sortinithash}{9cca09897f0dfd9ed260e065f6d82cd6}
       \field{labeltitle}{Moods Mildly Modified}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{origyear}{1921}
       \field[form=original,lang=english]{title}{Moods Mildly Modified}
       \strng{xref}{xrm}
@@ -282,11 +330,17 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=6afa09374ecfd6b394ce714d2d9709c7}{Instant}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{6afa09374ecfd6b394ce714d2d9709c7}
       \strng{fullhash}{6afa09374ecfd6b394ce714d2d9709c7}
       \field{sortinit}{I}
       \field{sortinithash}{b2e302e575c74beffcc96ef7059003aa}
       \field{labeltitle}{Migraines Multiplying Madly}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{origyear}{1926}
       \field[form=original,lang=english]{title}{Migraines Multiplying Madly}
       \strng{xref}{xrm}
@@ -305,6 +359,9 @@ my $xrm = q|    \entry{xrm}{book}{}
       \field{sortinit}{C}
       \field{sortinithash}{dd0e4ddd17488a6ebf12cd6de2f2c237}
       \field{labeltitle}{Calligraphy, Calisthenics, Culture}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{Calligraphy, Calisthenics, Culture}
       \field{year}{1970}
     \endentry
@@ -318,11 +375,17 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=9788055665b9bb4b37c776c3f6b74f16}{Normal}{N\bibinitperiod}{Norman}{N\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{9788055665b9bb4b37c776c3f6b74f16}
       \strng{fullhash}{9788055665b9bb4b37c776c3f6b74f16}
       \field{sortinit}{N}
       \field{sortinithash}{a52ecf374d1aa02cdea5f29be4dad56c}
       \field{labeltitle}{Russian Regalia Revisited}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{origyear}{1923}
       \field[form=original,lang=english]{title}{Russian Regalia Revisited}
       \strng{xref}{xrt}
@@ -340,6 +403,9 @@ my $xrt = q|    \entry{xrt}{book}{}
       \field{sortinit}{K}
       \field{sortinithash}{33bf4c961fa093ee6a297ccbd88eacc0}
       \field{labeltitle}{Kings, Cork and Calculation}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{Kings, Cork and Calculation}
       \field{year}{1977}
     \endentry
@@ -356,6 +422,9 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       \name[form=original,lang=english]{editor}{1}{}{%
         {{hash=6ea89bd4958743a20b70fe17647d6af5}{Jermain}{J\bibinitperiod}{Jeremy}{J\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Pillsbury}%
       }
@@ -364,6 +433,9 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       \field{sortinit}{M}
       \field{sortinithash}{4203d16473bc940d4ac780773cb7c5dd}
       \field{labeltitle}{Enterprising Entities}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Vanquished, Victor, Vandal}
       \field{origyear}{1911}
       \field[form=original,lang=english]{title}{Enterprising Entities}
@@ -379,11 +451,17 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{sortinit}{M}
       \field{sortinithash}{4203d16473bc940d4ac780773cb7c5dd}
       \field{labeltitle}{Lumbering Lunatics}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{origyear}{1933}
       \field[form=original,lang=english]{title}{Lumbering Lunatics}
     \endentry
@@ -398,11 +476,17 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{sortinit}{M}
       \field{sortinithash}{4203d16473bc940d4ac780773cb7c5dd}
       \field{labeltitle}{Lumbering Lunatics}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{origyear}{1933}
       \field[form=original,lang=english]{title}{Lumbering Lunatics}
     \endentry
@@ -415,11 +499,17 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{Mistrel}{M\bibinitperiod}{Megan}{M\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{sortinit}{M}
       \field{sortinithash}{4203d16473bc940d4ac780773cb7c5dd}
       \field{labeltitle}{Lumbering Lunatics}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{origyear}{1933}
       \field[form=original,lang=english]{title}{Lumbering Lunatics}
     \endentry
@@ -435,11 +525,17 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \name[form=original,lang=english]{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{Editor}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \strng{namehash}{6268941b408d3263bddb208a54899ea9}
       \strng{fullhash}{6268941b408d3263bddb208a54899ea9}
       \field{sortinit}{V}
       \field{sortinithash}{63562d1af2cd68fb37e2e14e0c6d5c96}
       \field{labeltitle}{Misc etc.}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \strng{crossref}{ccr1}
       \field[form=original,lang=english]{title}{Misc etc.}
       \field{year}{1923}
@@ -456,6 +552,9 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
       \field{sortinit}{P}
       \field{sortinithash}{b8af9282ac256b81613dc9012a0ac921}
       \field{labeltitle}{Perhaps, Perchance, Possibilities?}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Misc etc.}
       \strng{crossref}{ccr2}
       \field[form=original,lang=english]{title}{Perhaps, Perchance, Possibilities?}
@@ -475,6 +574,9 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
       \field{sortinit}{V}
       \field{sortinithash}{4125bb4c3a0eb3eaee3ea6da32eb70c8}
       \field{labeltitle}{Stuff Concerning Varia}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{booktitle}{Misc etc.}
       \field[form=original,lang=english]{title}{Stuff Concerning Varia}
       \field{year}{1911}

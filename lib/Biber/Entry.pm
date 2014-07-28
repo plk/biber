@@ -270,6 +270,7 @@ sub set_labeltitle_info {
   my $langfield = (($data->{form} eq 'translated') ? 'vtranslang' : 'vlang');
   $data->{lang} = $data->{lang} || Biber::Config->getblxoption($langfield, undef, $key);
   $self->{labeltitleinfo} = $data;
+  $logger->trace("Set labeltitle for '$key' to " . $data->{field} . '/' . $data->{form} . '/' . $data->{lang});
   return;
 }
 
@@ -342,7 +343,7 @@ sub set_field {
   }
   else {
     $self->{derivedfields}{nonvariant}{$field} = $val;
-    $logger->trace("Setting field in '$key': $field=$val");
+    $logger->trace("Setting field in '$key': $field=" . ($val || ''));
   }
   return;
 }
@@ -374,9 +375,9 @@ sub get_field {
     # If vform/v*lang form not found, look into fallbacks
     unless ($f) {
       foreach my $fb (@$fbs) {
-        $logger->trace("Looking for variant fallback '$field/" . $fb->{form} || '' . '/' . $fb->{lang} || '' . "' in '$key'");
+        $logger->trace("Looking for variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang} || '') . "' in '$key'");
         if (my $rf = $self->_get_field($field, $fb->{form}, $fb->{lang})) {
-          $logger->trace("Found variant fallback '$field/" . $fb->{form} || '' . '/' . $fb->{lang}|| '' . "' in '$key'");
+          $logger->trace("Found variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang}|| '') . "' in '$key'");
           return $rf;
         }
       }

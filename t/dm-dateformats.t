@@ -69,6 +69,9 @@ my $l13c = q|    \entry{L13}{book}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -81,6 +84,9 @@ my $l13c = q|    \entry{L13}{book}{}
       \field{labelday}{01}
       \field{datelabelsource}{}
       \field{labeltitle}{Title 2}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{day}{01}
       \field{endyear}{}
       \field{month}{01}
@@ -98,6 +104,9 @@ my $l14 = q|    \entry{L14}{book}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -111,6 +120,9 @@ my $l14 = q|    \entry{L14}{book}{}
       \field{labelday}{10\bibdatedash 12}
       \field{datelabelsource}{}
       \field{labeltitle}{Title 2}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -130,6 +142,9 @@ my $l15 = q|    \entry{L15}{book}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{author}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -139,6 +154,9 @@ my $l15 = q|    \entry{L15}{book}{}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
       \field{extrayear}{4}
       \field{labeltitle}{Title 2}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field[form=original,lang=english]{title}{Title 2}
       \warn{\item Datamodel: Entry 'L15' (dm-dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
@@ -153,6 +171,9 @@ my $l16 = q|    \entry{L16}{proceedings}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{editor}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -166,6 +187,9 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{labelday}{01}
       \field{datelabelsource}{event}
       \field{labeltitle}{Title 2}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{eventday}{01}
       \field{eventmonth}{01}
       \field{eventyear}{1996}
@@ -183,6 +207,9 @@ my $l17 = q|    \entry{L17}{proceedings}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{editor}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -196,6 +223,9 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{labelday}{10\bibdatedash 12}
       \field{datelabelsource}{}
       \field{labeltitle}{Title 2}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -228,6 +258,9 @@ my $l17c = q|    \entry{L17}{proceedings}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{editor}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -240,6 +273,9 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{labelday}{10\bibdatedash 12}
       \field{datelabelsource}{orig}
       \field{labeltitle}{Title 2}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
@@ -272,6 +308,9 @@ my $l17e = q|    \entry{L17}{proceedings}{}
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{Abrahams}{A\bibinitperiod}{Albert}{A\bibinitperiod}{}{}{}{}}%
       }
+      \field{labelnamesourcefield}{editor}
+      \field{labelnamesourceform}{original}
+      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {Oxford}%
       }
@@ -284,6 +323,9 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{labelday}{10\bibdatedash 12}
       \field{datelabelsource}{event}
       \field{labeltitle}{Title 2}
+      \field{labeltitlesourcefield}{title}
+      \field{labeltitlesourceform}{original}
+      \field{labeltitlesourcelang}{english}
       \field{day}{10}
       \field{endday}{12}
       \field{endmonth}{12}
