@@ -192,10 +192,10 @@ $BINDIR/xsl-transform.pl $BASE/lib/Biber/LaTeX/recode_data.xml $XSLDIR/texmap.xs
 scp $BASE/lib/Biber/LaTeX/recode_data.xml.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html
 \rm -f $BASE/lib/Biber/LaTeX/recode_data.xml.html
 
-# source
-cd $BASE
-./Build dist
-scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
-\rm -f $BASE/biblatex-biber-*.tar.gz
+# source - no longer needed - get from github
+# cd $BASE
+# ./Build dist
+# scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz
+# \rm -f $BASE/biblatex-biber-*.tar.gz
 
 cd $BASE
