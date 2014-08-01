@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 34;
+use Test::More tests => 35;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -88,7 +88,7 @@ is( latex_encode(NFD('≄')), '{$\not\simeq$}', 'latex encode 5'); # Testing neg
 is( latex_encode(NFD('Þ')), '{\TH}', 'latex encode 6'); # Testing preferred
 is( latex_encode('$'), '$', 'latex encode 7'); # Testing exclude
 is( latex_encode(NFD('–')), '--', 'latex encode 8'); # Testing raw
-
+is( latex_decode('a\-a'), 'a\-a', 'discretionary hyphens');
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
