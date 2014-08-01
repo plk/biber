@@ -131,6 +131,10 @@ sub init_sets {
         $remap_d->{$type}{map}{NFD($from->textContent())} = NFD($to->textContent());
       }
     }
+    # Things we don't want to change when decoding as this breaks some things
+    foreach my $d ($xpc->findnodes('/texmap/decode_exclude/char')) {
+      delete($remap_d->{$type}{map}{NFD($d->textContent())});
+    }
   }
 
   # Construct encode set

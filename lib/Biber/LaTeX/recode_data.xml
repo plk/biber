@@ -856,6 +856,9 @@
     <map><from>Psi</from>        <to hex="3A8">Ψ</to></map>
     <map><from>Omega</from>      <to hex="3A9">Ω</to></map>
   </maps>
+  <decode_exclude>
+    <char>-</char>
+  </decode_exclude>
   <encode_exclude>
     <char>"</char>
     <char>#</char>
