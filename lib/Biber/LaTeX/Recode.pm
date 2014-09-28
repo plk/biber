@@ -252,7 +252,6 @@ sub latex_decode {
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
     $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
 
-
     foreach my $type (sort keys %$remap_d) {
       my $map = $remap_d->{$type}{map};
       my $re = $remap_d->{$type}{re};
@@ -308,7 +307,7 @@ sub latex_decode {
       return Unicode::Normalize::normalize( $norm_form, $text );
     }
     else {
-        return $text;
+      return $text;
     }
 }
 
@@ -378,7 +377,7 @@ sub latex_encode {
     my $re = $remap_e->{$type}{re};
     if ($type eq 'letters') {
       # General macros (excluding special encoding excludes)
-      $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "{\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '}')/ge;
+      $text =~ s/{?($re)}?/($remap_e_raw->{$1} ? '' : "{\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '}')/ge;
     }
     if (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
       # Math mode macros (excluding special encoding excludes)
@@ -393,14 +392,13 @@ sub latex_encode {
 # Helper subroutines
 
 sub _get_diac_last_r {
-    my ($a,$b) = @_;
+    my ($a, $b) = @_;
     my $re = $remap_e->{accents}{re};
-
-    if ( $b =~ /$re/) {
-        return ($a eq 'i') or ($a eq 'j') ? "{\\$a}" : $a;
+    if ($b =~ /$re/) {
+      return ($a eq 'i') or ($a eq 'j') ? "{\\$a}" : $a;
     }
     else {
-        return "{$a}"
+      return "{$a}";
     }
 }
 
