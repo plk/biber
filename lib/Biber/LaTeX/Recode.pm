@@ -244,11 +244,10 @@ sub latex_decode {
     $text =~ s/\\char(\d+)/"chr($1)"/gee;    # decimal chars
 
     # Some tricky cases
-    my $d_re = $remap_d->{diacritics}{re} || '';
     my $a_re = $remap_d->{accents}{re} || '';
     # Change dotless i/j to normal i/j when applying accents
-    $text =~ s/(\\(?:$d_re|$a_re)){\\(i|j)}/$1$2/g;     # \={\i}    -> \=i
-    $text =~ s/(\\(?:$d_re|$a_re))\\(i|j)/$1$2/g;       # \=\i      -> \=i
+    $text =~ s/(\\(?:$a_re)){\\(i|j)}/$1$2/g;     # \={\i}    -> \=i
+    $text =~ s/(\\(?:$a_re))\\(i|j)/$1$2/g;       # \=\i      -> \=i
 
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
     $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
