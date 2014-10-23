@@ -7,7 +7,6 @@ use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Cwd qw( abs_path );
 use Data::Compare;
-use Data::Diver qw( Dive );
 use Data::Dump;
 use Encode;
 use File::Slurp;
