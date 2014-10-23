@@ -395,7 +395,7 @@ sub _get_diac_last_r {
     my ($a, $b) = @_;
     my $re = $remap_e->{accents}{re};
     if ($b =~ /$re/) {
-      return ($a eq 'i') or ($a eq 'j') ? "{\\$a}" : $a;
+      return (($a eq 'i') || ($a eq 'j')) ? "{\\$a}" : $a;
     }
     else {
       return "{$a}";
