@@ -14,7 +14,6 @@ else {
 }
 
 use IPC::Run3;
-use IPC::Cmd qw( can_run );
 use File::Temp;
 use File::Compare;
 use File::Which;
