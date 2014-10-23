@@ -731,7 +731,7 @@ sub field_variant_exists {
 sub datafields {
   my $self = shift;
   use locale;
-  return sort keys {%{$self->{datafields}{variant}}, %{$self->{datafields}{nonvariant}}};
+  return sort keys %{$self->{datafields}{variant}}, keys %{$self->{datafields}{nonvariant}};
 }
 
 =head2 rawfields
@@ -743,7 +743,7 @@ sub datafields {
 sub rawfields {
   my $self = shift;
   use locale;
-  return sort keys {%{$self->{rawfields}{variant}}, %{$self->{rawfields}{nonvariant}}};
+  return sort keys %{$self->{rawfields}{variant}}, keys %{$self->{rawfields}{nonvariant}};
 }
 
 =head2 count_datafields
@@ -754,7 +754,7 @@ sub rawfields {
 
 sub count_datafields {
   my $self = shift;
-  return keys {%{$self->{datafields}{variant}}, %{$self->{datafields}{nonvariant}}};
+  return keys %{$self->{datafields}{variant}}, keys %{$self->{datafields}{nonvariant}};
 }
 
 
