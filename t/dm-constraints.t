@@ -12,6 +12,18 @@ use Biber::Utils;
 use Log::Log4perl;
 chdir("t/tdata");
 
+use IPC::Run3;
+use File::Spec;
+use File::Which;
+my $perl = which('perl');
+my $stdout;
+
+# This is needed so that this env var is set to the runtime location of the message file and not
+# the test runtime as this is altered by Module::Build which sets up $INC{} differently
+run3  [ $perl, '-MBusiness::ISBN', '-e', 'print $INC{"Business/ISBN.pm"}' ], \undef, \$stdout, \undef;
+(my $vol, my $dir, undef) = File::Spec->splitpath($stdout);
+$ENV{ISBN_RANGE_MESSAGE} = File::Spec->catpath($vol, "$dir/ISBN/", 'RangeMessage.xml');
+
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
 my $LEVEL = 'ERROR';
