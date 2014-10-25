@@ -104,16 +104,8 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>vform</bcf:key>
-      <bcf:value>original</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
-      <bcf:key>vlang</bcf:key>
-      <bcf:value>english</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
-      <bcf:key>vtranslang</bcf:key>
-      <bcf:value>english</bcf:value>
+      <bcf:key>msmode</bcf:key>
+      <bcf:value>db</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
@@ -139,13 +131,6 @@
       <bcf:key>uniquename</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
-    <bcf:option type="multivalued">
-      <bcf:key>variantforms</bcf:key>
-      <bcf:value>original</bcf:value>
-      <bcf:value>translated</bcf:value>
-      <bcf:value>romanised</bcf:value>
-      <bcf:value>uniform</bcf:value>
-    </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useauthor</bcf:key>
       <bcf:value>1</bcf:value>
@@ -161,6 +146,25 @@
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
       <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="multivalued">
+      <bcf:key>variantforms</bcf:key>
+      <bcf:value>original</bcf:value>
+      <bcf:value>translated</bcf:value>
+      <bcf:value>romanised</bcf:value>
+      <bcf:value>uniform</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>vform</bcf:key>
+      <bcf:value>original</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>vlang</bcf:key>
+      <bcf:value>english</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>vtranslang</bcf:key>
+      <bcf:value>english</bcf:value>
     </bcf:option>
   </bcf:options>
   <bcf:options component="biblatex" type="misc">
@@ -1806,6 +1810,7 @@
     <bcf:citekey order="13">forms13</bcf:citekey>
     <bcf:citekey order="14">forms14</bcf:citekey>
     <bcf:citekey order="15">forms15</bcf:citekey>
+    <bcf:citekey order="16">forms16</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry"/>

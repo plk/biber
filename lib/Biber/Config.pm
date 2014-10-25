@@ -380,6 +380,9 @@ sub _config_file_set {
   # Set options from config file.
   while (my ($k, $v) = each %$userconf) {
     if (exists($v->{content})) { # simple option
+      if (lc($k) eq 'msmode') {# This is a biblatex option
+        Biber::Config->setblxoption($k, $v->{content});
+      }
       if (lc($k) eq 'variantforms') { # force into .bcf format
         Biber::Config->setblxoption($k, [map {{content => $_}} split(/\s*,\s*/, $v->{content})]);
       }

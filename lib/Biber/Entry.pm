@@ -372,16 +372,21 @@ sub get_field {
   if ($dm->field_is_variant_enabled($field)) {
     my $f = $self->_get_field($field, $form, $lang);
 
-    # If vform/v*lang form not found, look into fallbacks
-    unless ($f) {
-      foreach my $fb (@$fbs) {
-        $logger->trace("Looking for variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang} || '') . "' in '$key'");
-        if (my $rf = $self->_get_field($field, $fb->{form}, $fb->{lang})) {
-          $logger->trace("Found variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang}|| '') . "' in '$key'");
-          return $rf;
+    # If vform/v*lang form not found, look into fallbacks if we are in msmode "db"
+    if (Biber::Config->getblxoption('msmode', undef, $key) eq 'db') {
+      unless ($f) {
+        foreach my $fb (@$fbs) {
+          $logger->trace("Looking for variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang} || '') . "' in '$key'");
+          if (my $rf = $self->_get_field($field, $fb->{form}, $fb->{lang})) {
+            $logger->trace("Found variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang}|| '') . "' in '$key'");
+            return $rf;
+          }
         }
+        return undef;
       }
-      return undef;
+      else {
+        return $f;
+      }
     }
     else {
       return $f;

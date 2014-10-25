@@ -41,20 +41,21 @@ start =
       minbibnames,
       mincitenames,
       minitems,
-      vform,
-      vlang,
-      vtranslang,
+      msmode,
       singletitle,
       sortalphaothers?,
       sortlocale,
       sortscheme,
       uniquelist,
       uniquename,
-      variantforms,
       useauthor,
       useeditor,
       useprefix,
-      usetranslator
+      usetranslator,
+      variantforms,
+      vform,
+      vlang,
+      vtranslang
     },
     
     # Per-entrytype BibLaTeX options
@@ -395,6 +396,12 @@ filter = element bcf:filter {
          }
 
 # option definitions
+msmode =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "msmode" },
+    element bcf:value { "entry" | "db" }
+  }
 useprefix =
   element bcf:option {
     attribute type { "singlevalued" },

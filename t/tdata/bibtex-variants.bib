@@ -1,3 +1,4 @@
+% Notice the test here of variant list nulls
 @BOOK{forms1,
   LANGID               = {russian},
   AUTHOR               = {Булгаков, Павел and Jim Smith and Розенфельд, Борис},
@@ -119,4 +120,15 @@
   BOOKTITLE_translated_german    = {German title},
   SERIES                         = {A},
   SERIES_translated_english      = {A},
+}
+
+% Testing msmode=entry. Note the single underscore in TITLE. This is legal and "french" should
+% be set as the language
+@BOOK{forms16,
+  OPTIONS = {msmode=entry},
+  LANGID = {ngerman},
+  AUTHOR = {Frank Masen},
+  TITLE_french = {Un titel},
+  PUBLISHER = {Publisher},
+  YEAR = {2000}
 }

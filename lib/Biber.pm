@@ -979,7 +979,10 @@ KEY:  foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Instantiating variant list nulls in entry '$citekey' from section $secnum");
     my $be = $section->bibentry($citekey);
 
-    foreach my $f ($be->fields) {
+    # Ony care about fallbacks in msmode 'db'
+    next if Biber::Config->getblxoption('msmode', undef, $citekey) eq 'entry';
+
+  foreach my $f ($be->fields) {
       # Plain lists
       if ($dm->get_fieldtype($f) eq 'list' and
           $dm->get_datatype($f) eq 'literal' and
@@ -1000,7 +1003,7 @@ KEY:  foreach my $citekey ( $section->get_citekeys ) {
             if (my $lf = $be->_get_field($f, $form, $lang)) {
               $logger->debug("Instantiating variant plain list nulls for field '$f/$form/$lang' in entry '$citekey' from section $secnum");
               for (my $i=0;$i<=$#$lf;$i++) {
-                if ($lf->[$i]eq Biber::Config->getoption('variant_null_list')) {
+                if ($lf->[$i] eq Biber::Config->getoption('variant_null_list')) {
                   $lf->[$i] = $nvlist->[$i];
                 }
               }

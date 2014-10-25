@@ -57,9 +57,7 @@
         <ref name="minbibnames"/>
         <ref name="mincitenames"/>
         <ref name="minitems"/>
-        <ref name="vform"/>
-        <ref name="vlang"/>
-        <ref name="vtranslang"/>
+        <ref name="msmode"/>
         <ref name="singletitle"/>
         <optional>
           <ref name="sortalphaothers"/>
@@ -68,11 +66,14 @@
         <ref name="sortscheme"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
-        <ref name="variantforms"/>
         <ref name="useauthor"/>
         <ref name="useeditor"/>
         <ref name="useprefix"/>
         <ref name="usetranslator"/>
+        <ref name="variantforms"/>
+        <ref name="vform"/>
+        <ref name="vlang"/>
+        <ref name="vtranslang"/>
       </element>
       <zeroOrMore>
         <!-- Per-entrytype BibLaTeX options -->
@@ -1021,6 +1022,22 @@
     </element>
   </define>
   <!-- option definitions -->
+  <define name="msmode">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>msmode</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>entry</value>
+          <value>db</value>
+        </choice>
+      </element>
+    </element>
+  </define>
   <define name="useprefix">
     <element name="bcf:option">
       <attribute name="type">
