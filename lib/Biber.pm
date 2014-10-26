@@ -978,9 +978,10 @@ sub instantiate_listnulls {
 KEY:  foreach my $citekey ( $section->get_citekeys ) {
     $logger->debug("Instantiating variant list nulls in entry '$citekey' from section $secnum");
     my $be = $section->bibentry($citekey);
+    my $bee = $be->get_field('entrytype');
 
     # Ony care about fallbacks in msmode 'db'
-    next if Biber::Config->getblxoption('msmode', undef, $citekey) eq 'entry';
+    next if Biber::Config->getblxoption('msmode', $bee, $citekey) eq 'entry';
 
   foreach my $f ($be->fields) {
       # Plain lists
