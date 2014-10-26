@@ -551,14 +551,24 @@ sub set_datafield {
     $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
     $logger->trace("Setting variant enabled datafield in '$key': $field/$form/$lang=$val");
 
-    # Can happen in cases where "x_y" and "x" are in the same entry with vform=y
-    if ($self->{datafields}{variant}{$field}{$form}{$lang}) {
-      $logger->warn("Variant enabled datafield $field/$form/$lang in key '$key' already has a value  - overwriting");
+    if (Biber::Config->getblxoption('msmode', undef, $key) eq 'entry') {
+      if (exists($self->{datafields}{variant}{$field})) {
+        $logger->warn("Variant enabled datafield '$field' in key '$key' already has a variant in msmode=entry - overwriting");
+      }
+      delete $self->{datafields}{variant}{$field};
     }
-
+    elsif (Biber::Config->getblxoption('msmode', undef, $key) eq 'db') {
+      # Can happen in cases where "x_y" and "x" are in the same entry with vform=y
+      if ($self->{datafields}{variant}{$field}{$form}{$lang}) {
+        $logger->warn("Variant enabled datafield $field/$form/$lang in key '$key' already has a value - overwriting");
+      }
+    }
     $self->{datafields}{variant}{$field}{$form}{$lang} = $val;
   }
   else {
+    if (exists($self->{datafields}{nonvariant}{$field})) {
+      $logger->warn("Non-variant enabled datafield '$field' in key '$key' already has a value - overwriting");
+    }
     $self->{datafields}{nonvariant}{$field} = $val;
     $logger->trace("Setting datafield in '$key': $field=$val");
   }
