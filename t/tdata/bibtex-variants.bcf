@@ -104,10 +104,6 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>msmode</bcf:key>
-      <bcf:value>db</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
@@ -1810,7 +1806,6 @@
     <bcf:citekey order="13">forms13</bcf:citekey>
     <bcf:citekey order="14">forms14</bcf:citekey>
     <bcf:citekey order="15">forms15</bcf:citekey>
-    <bcf:citekey order="16">forms16</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry"/>

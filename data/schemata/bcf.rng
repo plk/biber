@@ -57,7 +57,6 @@
         <ref name="minbibnames"/>
         <ref name="mincitenames"/>
         <ref name="minitems"/>
-        <ref name="msmode"/>
         <ref name="singletitle"/>
         <optional>
           <ref name="sortalphaothers"/>
@@ -1022,22 +1021,6 @@
     </element>
   </define>
   <!-- option definitions -->
-  <define name="msmode">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>msmode</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <value>entry</value>
-          <value>db</value>
-        </choice>
-      </element>
-    </element>
-  </define>
   <define name="useprefix">
     <element name="bcf:option">
       <attribute name="type">

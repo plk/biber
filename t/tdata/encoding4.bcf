@@ -104,10 +104,6 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>msmode</bcf:key>
-      <bcf:value>db</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>

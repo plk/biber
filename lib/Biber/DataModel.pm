@@ -10,6 +10,7 @@ use Biber::Utils;
 use Biber::Constants;
 use Data::Dump qw( pp );
 use Date::Simple;
+use Log::Log4perl qw( :no_extra_logdie_message );
 
 =encoding utf-8
 

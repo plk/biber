@@ -980,9 +980,6 @@ KEY:  foreach my $citekey ( $section->get_citekeys ) {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    # Ony care about fallbacks in msmode 'db'
-    next if Biber::Config->getblxoption('msmode', $bee, $citekey) eq 'entry';
-
   foreach my $f ($be->fields) {
       # Plain lists
       if ($dm->get_fieldtype($f) eq 'list' and

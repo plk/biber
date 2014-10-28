@@ -41,7 +41,6 @@ start =
       minbibnames,
       mincitenames,
       minitems,
-      msmode,
       singletitle,
       sortalphaothers?,
       sortlocale,
@@ -396,12 +395,6 @@ filter = element bcf:filter {
          }
 
 # option definitions
-msmode =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "msmode" },
-    element bcf:value { "entry" | "db" }
-  }
 useprefix =
   element bcf:option {
     attribute type { "singlevalued" },

@@ -368,26 +368,20 @@ sub get_field {
   my $dm = Biber::Config->get_dm;
   my $fbs = Biber::Config->getblxoption('variantfallbacks');
   my $key = $self->{derivedfields}{nonvariant}{citekey};# can't use get_field due to recursion ...
-  my $bee = $self->{derivedfields}{nonvariant}{entrytype};# can't use get_field due to recursion ...
 
   if ($dm->field_is_variant_enabled($field)) {
     my $f = $self->_get_field($field, $form, $lang);
 
-    # If vform/v*lang form not found, look into fallbacks if we are in msmode "db"
-    if (Biber::Config->getblxoption('msmode', $bee, $key) eq 'db') {
-      unless ($f) {
-        foreach my $fb (@$fbs) {
-          $logger->trace("Looking for variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang} || '') . "' in '$key'");
-          if (my $rf = $self->_get_field($field, $fb->{form}, $fb->{lang})) {
-            $logger->trace("Found variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang}|| '') . "' in '$key'");
-            return $rf;
-          }
+    # If vform/v*lang form not found, look into fallbacks
+    unless ($f) {
+      foreach my $fb (@$fbs) {
+        $logger->trace("Looking for variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang} || '') . "' in '$key'");
+        if (my $rf = $self->_get_field($field, $fb->{form}, $fb->{lang})) {
+          $logger->trace("Found variant fallback '$field/" . ($fb->{form} || '') . '/' . ($fb->{lang}|| '') . "' in '$key'");
+          return $rf;
         }
-        return undef;
       }
-      else {
-        return $f;
-      }
+      return undef;
     }
     else {
       return $f;
@@ -553,17 +547,9 @@ sub set_datafield {
     $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
     $logger->trace("Setting variant enabled datafield in '$key': $field/$form/$lang=$val");
 
-    if (Biber::Config->getblxoption('msmode', $bee, $key) eq 'entry') {
-      if (exists($self->{datafields}{variant}{$field})) {
-        $logger->warn("Variant enabled datafield '$field' in key '$key' already has a variant in msmode=entry - overwriting");
-      }
-      delete $self->{datafields}{variant}{$field};
-    }
-    elsif (Biber::Config->getblxoption('msmode', $bee, $key) eq 'db') {
-      # Can happen in cases where "x_y" and "x" are in the same entry with vform=y
-      if ($self->{datafields}{variant}{$field}{$form}{$lang}) {
-        $logger->warn("Variant enabled datafield $field/$form/$lang in key '$key' already has a value - overwriting");
-      }
+    # Can happen in cases where "x_y" and "x" are in the same entry with vform=y
+    if ($self->{datafields}{variant}{$field}{$form}{$lang}) {
+      $logger->warn("Variant enabled datafield $field/$form/$lang in key '$key' already has a value - overwriting");
     }
     $self->{datafields}{variant}{$field}{$form}{$lang} = $val;
   }
