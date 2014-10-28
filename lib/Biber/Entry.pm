@@ -402,7 +402,19 @@ sub _get_field {
   if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
-    $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
+
+    # Wildcard lang
+    if ($lang and ($lang eq '*')) {
+      my @langs = $self->get_field_form_lang_names($field, $form);
+      if (scalar(@langs) > 1) {
+        $logger->warn("Field '$field' has more than one language variant for form '$form': wildcard lang variant spec is therefore guaranteed to be behave well");
+      }
+      $lang = $langs[0];
+    }
+    else {
+      $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);
+    }
+
     $logger->trace("Looking for variant enabled field in '$key': $field/$form/$lang");
     my $r = $self->{datafields}{variant}{$field}{$form}{$lang} //
             $self->{derivedfields}{variant}{$field}{$form}{$lang} //
