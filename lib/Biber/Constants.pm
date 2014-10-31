@@ -449,6 +449,7 @@ our %LOCALE_MAP_R = (
 # can be global/per-type or per-entry and therefore it's natural to store them here.
 our %CONFIG_SCOPE_BIBLATEX = (
   alphaothers        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
+  autovlang          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
   controlversion     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   debug              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   datamodel          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
@@ -506,10 +507,11 @@ our %CONFIG_SCOPE_BIBLATEX = (
 # for local entry-specific options, note therefore the presence here of some
 # options like max/mincitenames which are not passed in the .bcf
 our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
-  dataonly       => {OUTPUT => 1, INPUT => {'skiplab' => 1,
-                                            'skipbiblist' => 1,
-                                            'uniquename' => 0,
-                                            'uniquelist' => 0}},
+ autovlang      => {OUTPUT => 1},
+ dataonly       => {OUTPUT => 1, INPUT => {'skiplab' => 1,
+                                           'skipbiblist' => 1,
+                                           'uniquename' => 0,
+                                           'uniquelist' => 0}},
   maxitems        => {OUTPUT => 1},
   minitems        => {OUTPUT => 1},
   maxbibnames     => {OUTPUT => 1},

@@ -39,6 +39,10 @@
       <bcf:value>\textbf{+}</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>autovlang</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>

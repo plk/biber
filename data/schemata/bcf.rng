@@ -42,6 +42,7 @@
           <value>global</value>
         </attribute>
         <ref name="alphaothers"/>
+        <ref name="autovlang"/>
         <ref name="labelalpha"/>
         <ref name="labelnamespec"/>
         <ref name="labeltitle"/>
@@ -83,6 +84,9 @@
           <attribute name="type"/>
           <optional>
             <ref name="alphaothers"/>
+          </optional>
+          <optional>
+            <ref name="autovlang"/>
           </optional>
           <optional>
             <ref name="labelalpha"/>
@@ -1641,6 +1645,22 @@
         <data type="normalizedString">
           <param name="pattern">\S+</param>
         </data>
+      </element>
+    </element>
+  </define>
+  <define name="autovlang">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>autovlang</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
       </element>
     </element>
   </define>

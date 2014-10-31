@@ -399,17 +399,18 @@ sub _get_field {
   my ($field, $form, $lang) = @_;
   my $dm = Biber::Config->get_dm;
   my $key = $self->{derivedfields}{nonvariant}{citekey};# can't use get_field due to recursion ...
+  my $bee = $self->{derivedfields}{nonvariant}{entrytype};# can't use get_field due to recursion ...
   if ($dm->field_is_variant_enabled($field)) {
     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     my $langfield = (($form eq 'translated') ? 'vtranslang' : 'vlang');
 
     # Wildcard lang
-    if ($lang and ($lang eq '*')) {
+    if (Biber::Config->getblxoption('autovlang', $bee, $key)) {
       my @langs = $self->get_field_form_lang_names($field, $form);
       if (scalar(@langs) > 1) {
         $logger->warn("Field '$field' has more than one language variant for form '$form': wildcard lang variant spec is therefore guaranteed to be behave well");
       }
-      $lang = $langs[0];
+      $lang = $langs[0] || Biber::Config->getblxoption($langfield, undef, $key);
     }
     else {
       $lang = $lang || Biber::Config->getblxoption($langfield, undef, $key);

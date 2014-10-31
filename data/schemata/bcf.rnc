@@ -26,6 +26,7 @@ start =
       attribute component { "biblatex" },
       attribute type { "global" },
       alphaothers,
+      autovlang,
       labelalpha,
       labelnamespec,
       labeltitle,
@@ -62,6 +63,7 @@ start =
       attribute component { "biblatex" },
       attribute type { text },
       alphaothers?,
+      autovlang?,
       labelalpha?,
       labelnamespec?,
       labeltitle?,
@@ -662,6 +664,12 @@ vtranslang =
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }
+  }
+autovlang =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "autovlang" },
+    element bcf:value { "0" | "1" }
   }
 sortupper = 
   element bcf:option {
