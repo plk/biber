@@ -672,6 +672,11 @@ sub _verbatim {
 }
 
 # Range fields
+# m-n -> [m, n]
+# m   -> [m, undef]
+# m-  -> [m, '']
+# -n  -> ['', n]
+# -   -> ['', undef]
 sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   my $values_ref;
@@ -684,7 +689,7 @@ sub _range {
 
   my @values = split(/\s*[;,]\s*/, $value);
   # If there is a range sep, then we set the end of the range even if it's null
-  # If no  range sep, then the end of the range is undef
+  # If no range sep, then the end of the range is undef
   foreach my $value (@values) {
     $value =~ m/\A\s*(\P{Pd}+)\s*\z/xms ||# Simple value without range
       $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*)\s*\z/xms;

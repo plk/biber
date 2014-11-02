@@ -295,6 +295,7 @@ sub set_output_entry {
     if ( my $rf = $be->get_field($rfield)) {
       $rf =~ s/[-–]+/\\bibrangedash /g;
       $acc .= "      \\field{$rfield}{$rf}\n";
+      $acc .= "      \\range{$rfield}{" . rangelen($rf) . "}\n";
     }
   }
 

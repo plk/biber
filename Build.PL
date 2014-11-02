@@ -60,6 +60,7 @@ my $builder = $class->new(
         'XML::LibXML::Simple' => 0,
         'XML::LibXSLT' => 0,
         'XML::Writer' => 0,
+        'Text::Roman' => 0,
         'URI' => 0,
         'Text::BibTeX' => '0.69',
         'LWP::Simple' => 0,

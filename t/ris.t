@@ -71,6 +71,7 @@ my $l1 = q|    \entry{test1}{report}{}
       \field{volume}{85}
       \field{year}{1996}
       \field{pages}{476\bibrangedash 481}
+      \range{pages}{6}
       \keyw{cortical contusion,blood-brain barrier,horseradish peroxidase,head trauma,hippocampus,rat}
     \endentry
 |;
@@ -99,6 +100,7 @@ my $l2 = q|    \entry{test2}{inbook}{}
       \field{title}{Sometitle}
       \field{year}{1996}
       \field{pages}{1\bibrangedash 20}
+      \range{pages}{20}
       \keyw{somevalue}
     \endentry
 |;

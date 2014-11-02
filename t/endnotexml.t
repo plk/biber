@@ -83,6 +83,7 @@ Health Aff (Millwood). 2003 Sep-Oct;22(5):51-64.}
       \field{title}{The role of public policies in reducing mental health status disparities for people of color}
       \field{volume}{22}
       \field{pages}{51\bibrangedash 66}
+      \range{pages}{16}
       \keyw{{Adult},{Child},{Education, Special/economics/legislation & jurisprudence},{Health Policy/ legislation & jurisprudence},{Health Services Accessibility/statistics & numerical data},{Health Services Needs and Demand},{Housing/economics/legislation & jurisprudence},{Humans},{Income Tax/legislation & jurisprudence},{Mental Disorders/economics/ ethnology/therapy},{Mental Health Services/economics/ organization & administration},{Minority Groups/ statistics & numerical data},{Poverty},{Social Conditions},{Socioeconomic Factors},{Sociology, Medical},{United States/epidemiology}}
       \warn{\item Datamodel: Entry 'fpvfswdz9sw5e0edvxix5z26vxadptrzxfwa:42' (endnote.xml): Invalid format 'Sep-Oct' of date field 'date' - ignoring}
     \endentry
@@ -124,6 +125,7 @@ Am J Public Health. 2009 Sep;99(9):1567-75. Epub 2009 Jul 16.}
       \field{volume}{99}
       \field{year}{2009}
       \field{pages}{1567\bibrangedash 75}
+      \range{pages}{9}
       \verb{eprint}
       \verb AJPH.2008.134767
       \endverb

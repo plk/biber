@@ -141,6 +141,7 @@ my $l3 = q|    \entry{item_54}{inbook}{}
       \field{title}{The Ethics of the Concern for Self as a Practice of Freedom}
       \field{year}{1996}
       \field{pages}{432\bibrangedash 449}
+      \range{pages}{18}
     \endentry
 |;
 

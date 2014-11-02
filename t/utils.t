@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
-use Test::More tests => 35;
+use Test::More tests => 45;
 use Biber;
 use Biber::Entry::Name;
 use Biber::Entry::Names;
@@ -108,4 +108,16 @@ is( latex_encode(NFD('÷')), '{$\div$}', 'latex different encode/decode sets 2')
 Biber::LaTeX::Recode->init_sets('null', 'full'); # Need to do this to reset
 is( latex_decode('\i'), '\i', 'latex null decode 1');
 is( latex_encode(NFD('ı')), '{\i}', 'latex null encode 2');
+
+is( rangelen([[10,15]]), 6, 'Rangelen test 1');
+is( rangelen([[10,15],[47, 53]]), 13, 'Rangelen test 2');
+is( rangelen([[10,15],[47, undef]]), 7, 'Rangelen test 3');
+is( rangelen([[10,15],[47, '']]), -1, 'Rangelen test 4');
+is( rangelen([[10,15],['', 35]]), -1, 'Rangelen test 5');
+is( rangelen([[10,15],['', undef]]), -1, 'Rangelen test 6');
+is( rangelen([[10,15],['XX', 'XXiv'],['i',10]]), 21, 'Rangelen test 7');
+# This is nasty - it's U+2165 U+2160, U+217B to test unicode decomp
+is( rangelen([[10,15],['ⅥⅠ', 'ⅻ']]), 12, 'Rangelen test 8');
+is( rangelen([['I-II', 'III-IV']]), -1, 'Rangelen test 9');
+is( rangelen([[22,4],[123,7],[113,15]]), 11, 'Rangelen test 10');
 

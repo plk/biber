@@ -29,7 +29,7 @@ our @EXPORT = qw{
 # passed in control file. Used when checking the .bcf
 our $BCF_VERSION = '2.6';
 # Format version of the .bbl. Used when writing the .bbl
-our $BBL_VERSION = '2.4';
+our $BBL_VERSION = '2.5';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL = 0;
