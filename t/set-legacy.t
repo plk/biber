@@ -71,6 +71,7 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \field{volume}{1}
       \field{year}{1955}
       \field{pages}{16\bibrangedash 24}
+      \range{pages}{9}
       \verb{doi}
       \verb 10.1109/TIT.1955.1055126
       \endverb
@@ -105,6 +106,7 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
       \field{volume}{1}
       \field{year}{1955}
       \field{pages}{16\bibrangedash 24}
+      \range{pages}{9}
       \verb{doi}
       \verb 10.1109/TIT.1955.1055126
       \endverb
@@ -139,6 +141,7 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
       \field{volume}{1}
       \field{year}{1955}
       \field{pages}{24\bibrangedash 33}
+      \range{pages}{10}
       \verb{doi}
       \verb 10.1109/TIT.1955.1055116
       \endverb

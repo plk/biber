@@ -23,6 +23,7 @@ use Regexp::Common qw( balanced );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::Util qw( first );
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
+use Text::Roman qw(isroman roman2int);
 use Unicode::Normalize;
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -47,7 +48,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  bcp472locale locale2bcp47 find_variant_field check_vform};
+  bcp472locale locale2bcp47 find_variant_field check_vform rangelen};
 
 =head1 FUNCTIONS
 
@@ -1070,6 +1071,68 @@ sub check_vform {
   else {
     return 0;
   }
+}
+
+=head2 rangelen
+
+  Calculate the length of a range field
+  Range fields are an array ref of two-element array refs [range_start, range_end]
+  range_end can be be empty for open-ended range or undef
+  Deals with Unicode and ASCII roman numerals via the magic of Unicode NFKD form
+
+  m-n -> [m, n]
+  m   -> [m, undef]
+  m-  -> [m, '']
+  -n  -> ['', n]
+  -   -> ['', undef]
+
+=cut
+
+sub rangelen {
+  my $rf = shift;
+  my $rl = 0;
+  foreach my $f (@$rf) {
+    my $m = $f->[0];
+    my $n = $f->[1];
+    # m is something that's just numerals (decimal Unicode roman or ASCII roman)
+    if ($m and $m =~ /^[\p{Nd}\p{Nl}iIvVxXlLcCdDmM]+$/) {
+      # This magically decomposes Unicode roman chars into ASCII compat
+      $m = NFKD($m);
+      # n is something that's just numerals (decimal Unicode roman or ASCII roman)
+      if ($n and $n =~ /^[\p{Nd}\p{Nl}iIvVxXlLcCdDmM]+$/) {
+        # This magically decomposes Unicode roman chars into ASCII compat
+        $n = NFKD($n);
+        $m = isroman($m) ? roman2int($m) : $m;
+        $n = isroman($n) ? roman2int($n) : $n;
+        # Deal with not so explicit ranges like 22-4 or 135-38
+        # Done by turning numbers into string arrays, reversing and then filling in blanks
+        if ($n < $m) {
+          my @m = reverse split(//,$m);
+          my @n = reverse split(//,$n);
+          for (my $i=0;$i<=$#m;$i++) {
+            next if $n[$i];
+            $n[$i] = $m[$i];
+          }
+          $n = join('', reverse @n);
+        }
+        $rl += (($n - $m) + 1);
+      }
+      # n is ''
+      elsif (defined($n)) {
+        # open-ended range can't be calculated, just return -1
+        return -1;
+      }
+      # n is undef, single item
+      else {
+        $rl += 1;
+      }
+    }
+    else {
+      # open-ended range can't be calculated, just return -1
+      return -1;
+    }
+  }
+  return $rl;
 }
 
 

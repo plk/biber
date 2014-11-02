@@ -87,6 +87,7 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \field{volume}{29}
       \field{year}{1999}
       \field{pages}{741\bibrangedash 745}
+      \range{pages}{5}
       \verb{url}
       \verb http://www.biomedexperts.com/Abstract.bme/10405096
       \endverb
@@ -121,6 +122,7 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \field{volume}{102}
       \field{year}{1998}
       \field{pages}{21\bibrangedash 38}
+      \range{pages}{18}
     \endentry
 |;
 
@@ -160,6 +162,7 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       \field[form=original,lang=english]{title}{Le philosophe et son ombre}
       \field{year}{2010}
       \field{pages}{1267\bibrangedash 1289}
+      \range{pages}{23}
       \keyw{Husserl,Edmund,autrui,chair,constitution,intercorporéité,l'impensé,ouverture}
     \endentry
 |;

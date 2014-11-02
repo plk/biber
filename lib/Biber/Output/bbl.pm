@@ -525,6 +525,7 @@ sub set_output_entry {
       }
       my $bbl_rf = join('\bibrangessep ', @pr);
       $acc .= "      \\field{$rfield}{$bbl_rf}\n";
+      $acc .= "      \\range{$rfield}{" . rangelen($rf) . "}\n";
     }
   }
 

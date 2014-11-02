@@ -231,6 +231,7 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \field[form=original,lang=english]{venue}{Location of event}
       \field{year}{2009}
       \field{pages}{123\bibrangedash}
+      \range{pages}{-1}
     \endentry
 |;
 
@@ -265,6 +266,7 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \field[form=original,lang=english]{title}{Title of Book bit}
       \field{year}{2010}
       \field{pages}{123\bibrangedash 126}
+      \range{pages}{4}
       \verb{verbb}
       \verb String
       \endverb
@@ -294,6 +296,7 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \field[form=original,lang=english]{title}{Title of Collection bit}
       \field{year}{2010}
       \field{pages}{1\bibrangedash 12}
+      \range{pages}{12}
     \endentry
 |;
 

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 56;
+use Test::More tests => 57;
 
 use Biber;
 use Biber::Utils;
@@ -67,7 +67,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 us1 labelstest list1 } ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 } ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{labelname}{4}{uniquelist=4}{%
@@ -183,6 +183,7 @@ my $murray1 = q|    \entry{murray}{article}{vlang=english}
       \field{volume}{14}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
+      \range{pages}{14}
       \keyw{keyw1,keyw2}
     \endentry
 |;
@@ -245,6 +246,7 @@ my $murray2 = q|    \entry{murray}{article}{vlang=english}
       \field{volume}{14}
       \field{year}{1998}
       \field{pages}{17\bibrangedash 30}
+      \range{pages}{14}
       \keyw{keyw1,keyw2}
     \endentry
 |;
@@ -272,6 +274,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \field[form=original,lang=english]{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
+      \range{pages}{-1}
       \keyw{primary,something,somethingelse}
     \endentry
 +;
@@ -298,6 +301,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \field[form=original,lang=english]{title}{Signs of W$\frac{o}{a}$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
+      \range{pages}{9}
     \endentry
 |;
 
@@ -331,6 +335,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{vlang=english}
       \field[form=original,lang=english]{title}{Title1}
       \field{year}{1835}
       \field{pages}{111\bibrangedash 118}
+      \range{pages}{8}
       \keyw{arc}
     \endentry
 |;
@@ -365,6 +370,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{vlang=english}
       \field[form=original,lang=english]{title}{Title2}
       \field{year}{1839}
       \field{pages}{1176\bibrangedash 1276}
+      \range{pages}{101}
       \keyw{arc}
     \endentry
 |;
@@ -525,6 +531,7 @@ is_deeply($bibentries->entry('pages4')->get_field('pages'), [[3,5]], 'pages - 4'
 is_deeply($bibentries->entry('pages5')->get_field('pages'), [[42, '']], 'pages - 5');
 is_deeply($bibentries->entry('pages6')->get_field('pages'), [['\bibstring{number} 42', undef]], 'pages - 6');
 is_deeply($bibentries->entry('pages7')->get_field('pages'), [['\bibstring{number} 42', undef], [3,6], ['I-II',5 ]], 'pages - 7');
+is_deeply($bibentries->entry('pages8')->get_field('pages'), [[10,15],['ⅥⅠ', 'ⅻ']], 'pages - 8');
 
 # Test for map levels, the user map makes this CUSTOMC and then style map makes it CUSTOMA
 is($bibentries->entry('us1')->get_field('entrytype'), 'customa', 'Map levels - 1');
