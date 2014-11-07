@@ -1808,8 +1808,8 @@
     <bcf:citekey order="20">labelstest</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry"/>
-  <bcf:sortlist section="0" name="shorthands" sortscheme="shorthands" type="list">
+  <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry" form="original" lang="english" translang="english"/>
+  <bcf:sortlist section="0" name="shorthands" sortscheme="shorthands" type="list" form="original" lang="english" translang="english">
     <bcf:filter type="field">shorthand</bcf:filter>
   </bcf:sortlist>
 </bcf:controlfile>

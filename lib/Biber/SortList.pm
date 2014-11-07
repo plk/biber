@@ -99,6 +99,77 @@ sub get_name {
   return $self->{name};
 }
 
+=head2 set_form
+
+    Sets the default vform of a sort list
+
+=cut
+
+sub set_form {
+  my $self = shift;
+  my $form = shift;
+  $self->{form} = lc($form);
+  return;
+}
+
+=head2 get_form
+
+    Gets the default vform of a sort list
+
+=cut
+
+sub get_form {
+  my $self = shift;
+  return $self->{form};
+}
+
+=head2 set_lang
+
+    Sets the default vlang of a sort list
+
+=cut
+
+sub set_lang {
+  my $self = shift;
+  my $lang = shift;
+  $self->{lang} = lc($lang);
+  return;
+}
+
+=head2 get_lang
+
+    Gets the default vlang of a sort list
+
+=cut
+
+sub get_lang {
+  my $self = shift;
+  return $self->{lang};
+}
+
+=head2 set_translang
+
+    Sets the default vtranslang of a sort list
+
+=cut
+
+sub set_translang {
+  my $self = shift;
+  my $translang = shift;
+  $self->{translang} = lc($translang);
+  return;
+}
+
+=head2 get_translang
+
+    Gets the default vtranslang of a sort list
+
+=cut
+
+sub get_translang {
+  my $self = shift;
+  return $self->{translang};
+}
 
 =head2 set_type
 

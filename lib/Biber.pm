@@ -666,6 +666,9 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $ltype  = $list->{type};
     my $lssn = $list->{sortscheme};
     my $lname = $list->{name};
+    my $lform = $list->{form};
+    my $llang = $list->{lang};
+    my $ltranslang = $list->{translang};
 
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
     if (my $l = $sortlists->get_list($lsection, $lname, $ltype, $lssn)) {
@@ -674,6 +677,9 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     }
 
     my $seclist = Biber::SortList->new(section => $lsection, sortschemename => $lssn, name => $lname);
+    $seclist->set_form($lform); # list default form
+    $seclist->set_lang($llang); # list default lang
+    $seclist->set_translang($ltranslang); # list default translang
     $seclist->set_type($ltype || 'entry'); # lists are entry lists by default
     $seclist->set_name($lname || $lssn); # name is only relevelant for "list" type, default to ss
     foreach my $filter (@{$list->{filter}}) {

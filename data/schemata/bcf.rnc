@@ -304,6 +304,10 @@ listspec =
       attribute sortscheme { xsd:string {minLength="1"}},
       # name is only needed for list types
       attribute name { xsd:string {minLength="1"}},
+      # override for variants from biblatex \vform, \vlang, \vtranslang macros
+      attribute form { xsd:normalizedString { pattern = "\S+" }},
+      attribute lang { xsd:normalizedString { pattern = "\S+" }},
+      attribute translang { xsd:normalizedString { pattern = "\S+" }},
       (filter | orfilter )*,
       element bcf:sorting {
         # locale for entire sorting specification

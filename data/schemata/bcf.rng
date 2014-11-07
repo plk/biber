@@ -773,6 +773,22 @@
             <param name="minLength">1</param>
           </data>
         </attribute>
+        <!-- override for variants from biblatex \vform, \vlang, \vtranslang macros -->
+        <attribute name="form">
+          <data type="normalizedString">
+            <param name="pattern">\S+</param>
+          </data>
+        </attribute>
+        <attribute name="lang">
+          <data type="normalizedString">
+            <param name="pattern">\S+</param>
+          </data>
+        </attribute>
+        <attribute name="translang">
+          <data type="normalizedString">
+            <param name="pattern">\S+</param>
+          </data>
+        </attribute>
         <zeroOrMore>
           <choice>
             <ref name="filter"/>

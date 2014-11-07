@@ -322,6 +322,7 @@ my $forms16 = q|    \entry{forms16}{book}{autovlang=true}
       \field{volume}{2.2}
       \field{year}{1903}
       \field{pages}{292\bibrangedash 302}
+      \range{pages}{11}
     \endentry
 |;
 

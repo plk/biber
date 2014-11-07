@@ -407,9 +407,6 @@ sub _get_field {
     # Wildcard lang
     if (Biber::Config->getblxoption('autovlang', $bee, $key)) {
       my @langs = $self->get_field_form_lang_names($field, $form);
-      if (scalar(@langs) > 1) {
-        $logger->warn("Field '$field' has more than one language variant for form '$form': wildcard lang variant spec is therefore guaranteed to be behave well");
-      }
       $lang = $langs[0] || Biber::Config->getblxoption($langfield, undef, $key);
     }
     else {
