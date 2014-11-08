@@ -2,14 +2,5 @@
 * DONE Remove all null_names treatment in sorting/labels
 * DONE get should do fallback chain but not when form or lang is specified
 * DONE set should not use global vform so as not to lose data
-* TODO Document \DeclareVariantFallbacks (it's not just fallbacks)
-* TODO vfallback fallbacks?
+* DONE Document \DeclareVariantFallbacks (it's not just fallbacks)
 
-Currently:
-\print*{} (biblatex) - vform/vlang/vtranslang
-get_field (biber) - \DeclareVariantFallbacks
-null filling (biber) - \DeclareVariantFallbacks
-fallbacks - vfallbacks (biblatex) if vform/vlang/vtranslang were fallbacks
-             instead, no longer needed
-
-\DeclareVariantFallbacks does two things:
