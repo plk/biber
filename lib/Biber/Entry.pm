@@ -559,13 +559,13 @@ sub set_datafield {
 
     # Can happen in cases where "x_y" and "x" are in the same entry with vform=y
     if ($self->{datafields}{variant}{$field}{$form}{$lang}) {
-      $logger->warn("Variant enabled datafield $field/$form/$lang in key '$key' already has a value - overwriting");
+      $logger->debug("Variant enabled datafield $field/$form/$lang in key '$key' already has a value - overwriting");
     }
     $self->{datafields}{variant}{$field}{$form}{$lang} = $val;
   }
   else {
     if (exists($self->{datafields}{nonvariant}{$field})) {
-      $logger->warn("Non-variant enabled datafield '$field' in key '$key' already has a value - overwriting");
+      $logger->debug("Non-variant enabled datafield '$field' in key '$key' already has a value - overwriting");
     }
     $self->{datafields}{nonvariant}{$field} = $val;
     $logger->trace("Setting datafield in '$key': $field=$val");
