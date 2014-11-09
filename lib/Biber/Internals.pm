@@ -832,6 +832,16 @@ sub _gen_first_disambiguating_name_map {
 # Sorting
 #########
 
+# None of these can be used to generate sorting information otherwise there
+# would be a circular dependency:
+
+# sortinit
+# sortinithash
+# extrayear
+# extratitle
+# extratitleyear
+# extraalpha
+
 my $sorting_sep = ',';
 
 # special sorting routines - not part of the dm but special fields for biblatex
