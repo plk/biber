@@ -936,10 +936,8 @@ sub _generatesortinfo {
   # Temporarily set variants globally to the list value
   my $orig_global_vform = Biber::Config->getblxoption('vform');
   my $orig_global_vlang = Biber::Config->getblxoption('vlang');
-  my $orig_global_vtranslang = Biber::Config->getblxoption('vtranslang');
   Biber::Config->setblxoption('vform', $list->get_form);
   Biber::Config->setblxoption('vlang', $list->get_lang);
-  Biber::Config->setblxoption('vtranslang', $list->get_translang);
 
   foreach my $sortset (@{$sortscheme->{spec}}) {
     my $s = $self->_sortset($sortset, $citekey);
@@ -980,7 +978,6 @@ sub _generatesortinfo {
   # Restore global variant spec
   Biber::Config->setblxoption('vform', $orig_global_vform);
   Biber::Config->setblxoption('vlang', $orig_global_vlang);
-  Biber::Config->setblxoption('vtranslang', $orig_global_vtranslang);
   return;
 }
 

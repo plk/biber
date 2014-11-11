@@ -147,30 +147,6 @@ sub get_lang {
   return $self->{lang};
 }
 
-=head2 set_translang
-
-    Sets the default vtranslang of a sort list
-
-=cut
-
-sub set_translang {
-  my $self = shift;
-  my $translang = shift;
-  $self->{translang} = lc($translang);
-  return;
-}
-
-=head2 get_translang
-
-    Gets the default vtranslang of a sort list
-
-=cut
-
-sub get_translang {
-  my $self = shift;
-  return $self->{translang};
-}
-
 =head2 set_type
 
     Sets the type of a sort list

@@ -73,7 +73,6 @@
         <ref name="variantforms"/>
         <ref name="vform"/>
         <ref name="vlang"/>
-        <ref name="vtranslang"/>
       </element>
       <zeroOrMore>
         <!-- Per-entrytype BibLaTeX options -->
@@ -773,18 +772,13 @@
             <param name="minLength">1</param>
           </data>
         </attribute>
-        <!-- override for variants from biblatex \vform, \vlang, \vtranslang macros -->
+        <!-- override for variants from biblatex \vform, \vlang macros -->
         <attribute name="form">
           <data type="normalizedString">
             <param name="pattern">\S+</param>
           </data>
         </attribute>
         <attribute name="lang">
-          <data type="normalizedString">
-            <param name="pattern">\S+</param>
-          </data>
-        </attribute>
-        <attribute name="translang">
           <data type="normalizedString">
             <param name="pattern">\S+</param>
           </data>
@@ -1641,21 +1635,6 @@
       </attribute>
       <element name="bcf:key">
         <value>vlang</value>
-      </element>
-      <element name="bcf:value">
-        <data type="normalizedString">
-          <param name="pattern">\S+</param>
-        </data>
-      </element>
-    </element>
-  </define>
-  <define name="vtranslang">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>vtranslang</value>
       </element>
       <element name="bcf:value">
         <data type="normalizedString">

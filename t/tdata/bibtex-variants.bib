@@ -69,26 +69,19 @@
 }
 
 @BOOK{forms9,
-  OPTIONS                = {vtranslang=german},
-  LANGID                 = {french},
-  TITLE                  = {Un titel},
-}
-
-@BOOK{forms10,
-  OPTIONS                = {vtranslang=english},
   LANGID                 = {french},
   TITLE                  = {Un titel},
 }
 
 % Testing mapping of all variants (JOURNAL->JOURNALTITLE)
-@BOOK{forms11,
+@BOOK{forms10,
   LANGID                 = {french},
   TITLE                  = {Un titel},
   JOURNAL                = {FJ},
   JOURNAL_translated     = {TFJ},
 }
 
-@UNPUBLISHED{forms12,
+@UNPUBLISHED{forms11,
   TITLE                         = {Title},
   TITLE_translated_french       = {Title translated french},
   SUBTITLE_uniform_german       = {Subtitle uniform german},
@@ -101,7 +94,7 @@
 % as there are two langs for the same form
 % fieldsource map with french lang and no form should not match
 % as there are two forms for the same lang
-@UNPUBLISHED{forms13,
+@UNPUBLISHED{forms12,
   NOTE_translated_french         = {Note translated french},
   NOTE_translated_german         = {Note translated german},
   JOURNALTITLE_translated_french = {Jtitle translated french},
@@ -110,20 +103,20 @@
 
 % Implied lang and implied form should work regardless of what is implied
 % These defaults are not set during sourcemapping and so we assume an empty string
-@UNPUBLISHED{forms14,
+@UNPUBLISHED{forms13,
   JOURNALTITLE__french           = {Jtitle french},
   NOTE_translated                = {Note translated},
 }
 
 % Mapping to variant target
-@UNPUBLISHED{forms15,
+@UNPUBLISHED{forms14,
   BOOKTITLE_translated_german    = {German title},
   SERIES                         = {A},
   SERIES_translated_english      = {A},
 }
 
 % Testing autovlang
-@BOOK{forms16,
+@BOOK{forms15,
   OPTIONS                 = {autovlang=true},
   BOOKTITLE_latin         = {Acta Apocryphorum Apostolorum},
   DATE                    = {1903},

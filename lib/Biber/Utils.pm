@@ -720,11 +720,7 @@ sub filter_entry_options {
     my $cfopt = $CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT};
     # Standard option
     if (not defined($cfopt) or $cfopt == 1) {
-      # Don't bother with vtranslang if it's the same as the global setting
-      unless (lc($1) eq 'vtranslang' and
-              Biber::Config->getblxoption('vtranslang') eq $2) {
-        push @$roptions, $1 . ($2 ? "=$2" : '') ;
-      }
+      push @$roptions, $1 . ($2 ? "=$2" : '') ;
     }
     # Set all split options to same value as parent
     elsif (ref($cfopt) eq 'ARRAY') {

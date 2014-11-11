@@ -54,8 +54,7 @@ start =
       usetranslator,
       variantforms,
       vform,
-      vlang,
-      vtranslang
+      vlang
     },
     
     # Per-entrytype BibLaTeX options
@@ -304,10 +303,9 @@ listspec =
       attribute sortscheme { xsd:string {minLength="1"}},
       # name is only needed for list types
       attribute name { xsd:string {minLength="1"}},
-      # override for variants from biblatex \vform, \vlang, \vtranslang macros
+      # override for variants from biblatex \vform, \vlang macros
       attribute form { xsd:normalizedString { pattern = "\S+" }},
       attribute lang { xsd:normalizedString { pattern = "\S+" }},
-      attribute translang { xsd:normalizedString { pattern = "\S+" }},
       (filter | orfilter )*,
       element bcf:sorting {
         # locale for entire sorting specification
@@ -657,14 +655,6 @@ vlang =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "vlang" },
-    element bcf:value {
-      xsd:normalizedString { pattern = "\S+" }
-    }
-  }
-vtranslang =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "vtranslang" },
     element bcf:value {
       xsd:normalizedString { pattern = "\S+" }
     }

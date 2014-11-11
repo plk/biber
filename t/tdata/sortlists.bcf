@@ -162,10 +162,6 @@
       <bcf:key>vlang</bcf:key>
       <bcf:value>english</bcf:value>
     </bcf:option>
-    <bcf:option type="singlevalued">
-      <bcf:key>vtranslang</bcf:key>
-      <bcf:value>english</bcf:value>
-    </bcf:option>
   </bcf:options>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
@@ -1775,21 +1771,21 @@
     <bcf:citekey order="11">K11</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist section="0" name="lname" sortscheme="lname" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="lname" sortscheme="lname" type="entry" form="original" lang="english">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">author</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="lnameswe" sortscheme="lnameswe" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="lnameswe" sortscheme="lnameswe" type="entry" form="original" lang="english">
     <bcf:sorting locale="swedish">
       <bcf:sort order="1">
         <bcf:sortitem order="1">author</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="lnamef1" sortscheme="lnamef1" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="lnamef1" sortscheme="lnamef1" type="entry" form="original" lang="english">
     <bcf:filter type="field">publisher</bcf:filter>
     <bcf:filter type="notfield">verba</bcf:filter>
     <bcf:sorting>
@@ -1798,7 +1794,7 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="lnamef2" sortscheme="lnamef2" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="lnamef2" sortscheme="lnamef2" type="entry" form="original" lang="english">
     <bcf:filter type="keyword">key2</bcf:filter>
     <bcf:sorting>
       <bcf:sort order="1">
@@ -1806,7 +1802,7 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="lnamef3" sortscheme="lnamef3" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="lnamef3" sortscheme="lnamef3" type="entry" form="original" lang="english">
     <bcf:filter type="nottype">thesis</bcf:filter>
     <bcf:filter type="notkeyword">key1</bcf:filter>
     <bcf:sorting>
@@ -1815,7 +1811,7 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="lnamef4" sortscheme="lnamef4" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="lnamef4" sortscheme="lnamef4" type="entry" form="original" lang="english">
     <bcf:filter type="notfield">verba</bcf:filter>
     <bcf:filter type="subtype">rubbish</bcf:filter>
     <bcf:sorting>
@@ -1824,7 +1820,7 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="lnamef5" sortscheme="lnamef5" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="lnamef5" sortscheme="lnamef5" type="entry" form="original" lang="english">
     <bcf:filter type="field">author</bcf:filter>
     <bcf:orfilter>
       <bcf:filter type="field">verba</bcf:filter>
@@ -1836,35 +1832,35 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="lyear" sortscheme="lyear" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="lyear" sortscheme="lyear" type="entry" form="original" lang="english">
     <bcf:sorting>
       <bcf:sort order="1" sort_direction="descending">
         <bcf:sortitem order="1">year</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="ltitle" sortscheme="ltitle" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="ltitle" sortscheme="ltitle" type="entry" form="original" lang="english">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">title</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="ltitlef" sortscheme="ltitlef" type="entry" form="uniform" lang="english" translang="english">
+  <bcf:sortlist section="0" name="ltitlef" sortscheme="ltitlef" type="entry" form="uniform" lang="english">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">title</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="ltitlespan" sortscheme="ltitlespan" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="ltitlespan" sortscheme="ltitlespan" type="entry" form="original" lang="english">
     <bcf:sorting locale="es_ES_trad">
       <bcf:sort order="1">
         <bcf:sortitem order="1">title</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist section="0" name="ltitleset" sortscheme="ltitleset" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="ltitleset" sortscheme="ltitleset" type="entry" form="original" lang="english">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">title</bcf:sortitem>
@@ -1875,7 +1871,7 @@
     </bcf:sorting>
   </bcf:sortlist>
   <!-- This should be ignored as it's a repeat -->
-  <bcf:sortlist section="0" name="ltitle" sortscheme="ltitle" type="entry" form="original" lang="english" translang="english">
+  <bcf:sortlist section="0" name="ltitle" sortscheme="ltitle" type="entry" form="original" lang="english">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">publisher</bcf:sortitem>

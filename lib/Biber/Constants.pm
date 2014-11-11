@@ -498,7 +498,6 @@ our %CONFIG_SCOPE_BIBLATEX = (
   variantforms       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
   vform              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
   vlang              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
-  vtranslang         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
 );
 
 # For per-entry options, what should be set when we find them and
@@ -533,7 +532,6 @@ our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
   usetranslator   => {OUTPUT => 1},
   vform           => {OUTPUT => 1},
   vlang           => {OUTPUT => 1},
-  vtranslang      => {OUTPUT => 1},
 );
 
 

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 29;
+use Test::More tests => 28;
 
 use Biber;
 use Biber::Utils;
@@ -97,7 +97,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare(1);
 $section = $biber->sections->get_section(0);
 # There is complex interaction here between the variant sorting scheme above and the fallback defaults for variants in the .bcf
-is_deeply([$main->get_keys], ['forms13', 'forms14', 'forms15', 'forms5', 'forms8', 'forms16', 'forms4', 'forms12', 'forms9', 'forms10', 'forms11', 'forms6', 'forms3', 'forms2', 'forms1', 'forms7'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms12', 'forms13', 'forms14', 'forms5', 'forms8', 'forms15', 'forms4', 'forms11', 'forms9', 'forms10', 'forms6', 'forms3', 'forms2', 'forms1', 'forms7'], 'Forms sorting - 1');
 # Uses name from generic variant for sorting when a name in the sorting variant is null
 is(NFC($main->get_sortdata('forms1')->[0]), 'Bulgakov!Pavel#Smith!Jim#Rosenfeld!Boris,Мухаммад ибн муса алХорезми Около 783 около 850,Moskva!London,2002', 'Null name sortstring');
 
@@ -183,7 +183,7 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
         {Moskva}%
         {London}%
       }
-      \list[form=translated,lang=english]{location}{2}{%
+      \list[form=translated,lang=russian]{location}{2}{%
         {Moscow}%
         {London}%
       }
@@ -193,7 +193,7 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
       \list[form=romanised,lang=russian]{publisher}{1}{%
         {Nauka}%
       }
-      \list[form=translated,lang=english]{publisher}{1}{%
+      \list[form=translated,lang=russian]{publisher}{1}{%
         {Science}%
       }
       \strng{namehash}{d56c0403019e70d45bafa420d2695fa9}
@@ -211,12 +211,12 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
       \field{month}{10}
       \field[form=original,lang=russian]{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \field[form=romanised,lang=russian]{title}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
-      \field[form=translated,lang=english]{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
+      \field[form=translated,lang=russian]{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
       \field{year}{2002}
     \endentry
 |;
 
-my $forms9 = q|    \entry{forms9}{book}{vtranslang=german,vlang=french}
+my $forms9 = q|    \entry{forms9}{book}{vlang=french}
       \field{sortinit}{U}
       \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
       \field{labeltitle}{Un titel}
@@ -235,26 +235,14 @@ my $forms10 = q|    \entry{forms10}{book}{vlang=french}
       \field{labeltitlesourcefield}{title}
       \field{labeltitlesourceform}{original}
       \field{labeltitlesourcelang}{french}
-      \field{langid}{french}
-      \field[form=original,lang=french]{title}{Un titel}
-    \endentry
-|;
-
-my $forms11 = q|    \entry{forms11}{book}{vlang=french}
-      \field{sortinit}{U}
-      \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
-      \field{labeltitle}{Un titel}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{french}
       \field[form=original,lang=french]{journaltitle}{FJ}
-      \field[form=translated,lang=english]{journaltitle}{TFJ}
+      \field[form=translated,lang=french]{journaltitle}{TFJ}
       \field{langid}{french}
       \field[form=original,lang=french]{title}{Un titel}
     \endentry
 |;
 
-my $forms12 = q|    \entry{forms12}{unpublished}{}
+my $forms11 = q|    \entry{forms11}{unpublished}{}
       \field{sortinit}{T}
       \field{sortinithash}{9378dd666f3c24d81538df53aa99e23d}
       \field{labeltitle}{TITLE}
@@ -270,7 +258,7 @@ my $forms12 = q|    \entry{forms12}{unpublished}{}
     \endentry
 |;
 
-my $forms13 = q|    \entry{forms13}{unpublished}{}
+my $forms12 = q|    \entry{forms12}{unpublished}{}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field[form=translated,lang=german]{edition}{Gedition}
@@ -281,7 +269,7 @@ my $forms13 = q|    \entry{forms13}{unpublished}{}
     \endentry
 |;
 
-my $forms14 = q|    \entry{forms14}{unpublished}{}
+my $forms13 = q|    \entry{forms13}{unpublished}{}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field[form=translated,lang=german]{edition}{Gedition}
@@ -290,7 +278,7 @@ my $forms14 = q|    \entry{forms14}{unpublished}{}
     \endentry
 |;
 
-my $forms15 = q|    \entry{forms15}{unpublished}{}
+my $forms14 = q|    \entry{forms14}{unpublished}{}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field[form=romanised,lang=english]{booktitle}{German title}
@@ -300,7 +288,7 @@ my $forms15 = q|    \entry{forms15}{unpublished}{}
     \endentry
 |;
 
-my $forms16 = q|    \entry{forms16}{book}{autovlang=true}
+my $forms15 = q|    \entry{forms15}{book}{autovlang=true}
       \list[form=original,lang=english]{location}{1}{%
         {Leipzig}%
       }
@@ -329,12 +317,11 @@ my $forms16 = q|    \entry{forms16}{book}{autovlang=true}
 is($out->get_output_entry('forms1', $main), $forms1, 'bbl entry - forms 1') ;
 is($bibentries->entry('forms8')->get_field('title', 'original', 'lang1'), 'L title', 'lang only');
 is($out->get_output_entry('forms9', $main), $forms9, 'bbl entry - langid option');
-is($out->get_output_entry('forms10', $main), $forms10, 'bbl entry - vtranslang same as global');
-is($out->get_output_entry('forms11', $main), $forms11, 'bbl entry - vlang with unset options');
-is($out->get_output_entry('forms12', $main), $forms12, 'bbl entry - mapping with forms/langs - 1');
-is($out->get_output_entry('forms13', $main), $forms13, 'bbl entry - mapping with forms/langs - 2');
-is($out->get_output_entry('forms14', $main), $forms14, 'bbl entry - mapping with forms/langs - 3');
-is($out->get_output_entry('forms15', $main), $forms15, 'bbl entry - mapping with forms/langs - 4');
+is($out->get_output_entry('forms10', $main), $forms10, 'bbl entry - vlang with unset options');
+is($out->get_output_entry('forms11', $main), $forms11, 'bbl entry - mapping with forms/langs - 1');
+is($out->get_output_entry('forms12', $main), $forms12, 'bbl entry - mapping with forms/langs - 2');
+is($out->get_output_entry('forms13', $main), $forms13, 'bbl entry - mapping with forms/langs - 3');
+is($out->get_output_entry('forms14', $main), $forms14, 'bbl entry - mapping with forms/langs - 4');
 
-is($out->get_output_entry('forms16', $main), $forms16, 'autovlang=true as entry option');
+is($out->get_output_entry('forms15', $main), $forms15, 'autovlang=true as entry option');
 

@@ -162,10 +162,6 @@
       <bcf:key>vlang</bcf:key>
       <bcf:value>russian</bcf:value>
     </bcf:option>
-    <bcf:option type="singlevalued">
-      <bcf:key>vtranslang</bcf:key>
-      <bcf:value>english</bcf:value>
-    </bcf:option>
   </bcf:options>
   <bcf:options component="biblatex" type="collection">
     <bcf:option type="multivalued">
@@ -1811,8 +1807,8 @@
     <bcf:citekey order="0">*</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry" form="original" lang="russian" translang="english"/>
-  <bcf:sortlist section="0" name="shorthands" sortscheme="shorthands" type="list" form="original" lang="russian" translang="english">
+  <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry" form="original" lang="russian"/>
+  <bcf:sortlist section="0" name="shorthands" sortscheme="shorthands" type="list" form="original" lang="russian">
     <bcf:filter type="field">shorthand</bcf:filter>
   </bcf:sortlist>
 </bcf:controlfile>
