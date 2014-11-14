@@ -1,6 +1,6 @@
-* DONE Infilling of nulls should come from a fallback chain
-* DONE Remove all null_names treatment in sorting/labels
-* DONE get should do fallback chain but not when form or lang is specified
-* DONE set should not use global vform so as not to lose data
-* DONE Document \DeclareVariantFallbacks (it's not just fallbacks)
+* TODO Variant chain should be nested macro which puts named chains into context for \printbibliography and \printlist, like with sorting. Global variant chain and custom, as with sorting
+* TODO Context should be checked for uniqueness (sorting scheme name + variant chain name)
+* TODO Biber should write one sortlist per context
+* TODO Loop over all contexts and gen data, then sort, then replace extra*
+* TODO Infilling of nulls?
 
