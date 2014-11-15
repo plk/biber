@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 17;
+use Test::More tests => 15;
 
 use Biber;
 use Biber::Utils;
@@ -53,14 +53,10 @@ is($bibentries->entry('forms1')->get_field('author')->nth_name(2)->get_firstname
 is($bibentries->entry('forms1')->get_field('labelname')->nth_name(2)->get_firstname, 'Борис', 'labelname - 1');
 # per-type labelname form
 is($bibentries->entry('forms2')->get_field('labelname')->nth_name(1)->get_firstname, 'Boris', 'labelname - 2');
-# per-entry labelname form
-is($bibentries->entry('forms3')->get_field('labelname')->nth_name(1)->get_firstname, 'Борис', 'labelname - 3');
 # global labeltitle form
 is($bibentries->entry('forms1')->get_field('labeltitle'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'labeltitle - 1');
 # per-type labeltitle form
 is($bibentries->entry('forms2')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Okolo 783 – okolo 850', 'labeltitle - 2');
-# per-entry labeltitle form
-is($bibentries->entry('forms3')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'labeltitle - 3');
 
 my $S = { spec => [
          [
@@ -85,7 +81,7 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['forms5', 'forms4', 'forms6', 'forms3', 'forms1', 'forms2'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms5', 'forms4', 'forms6', 'forms1', 'forms2'], 'Forms sorting - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {

@@ -3,6 +3,23 @@
   <start>
     <element name="config">
       <interleave>
+        <oneOrMore>
+          <!-- Option scope -->
+          <element name="optionscope">
+            <attribute name="type">
+              <choice>
+                <value>GLOBAL</value>
+                <value>PER_TYPE</value>
+                <value>PER_ENTRY</value>
+              </choice>
+            </attribute>
+            <oneOrMore>
+              <element name="option">
+                <data type="string"/>
+              </element>
+            </oneOrMore>
+          </element>
+        </oneOrMore>
         <optional>
           <element name="clrmacros">
             <choice>

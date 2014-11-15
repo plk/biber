@@ -179,11 +179,6 @@ sub _initopts {
     }
   }
 
-  # Set hard-coded biblatex option defaults
-  foreach (keys %CONFIG_DEFAULT_BIBLATEX) {
-    Biber::Config->setblxoption($_, $CONFIG_DEFAULT_BIBLATEX{$_});
-  }
-
   # There is a special default config file for tool mode
   # Referring to as yet unprocessed cmd-line tool option as it isn't processed until below
   if ($opts->{tool}) {
@@ -194,6 +189,13 @@ sub _initopts {
 
   # Normal user config file - overrides tool mode defaults, if any
   _config_file_set($opts->{configfile});
+
+  # Set hard-coded biblatex option defaults
+  # This has to go after _config_file_set() as this is what defines option scope
+  # in tool mode (from the .conf file)
+  foreach (keys %CONFIG_DEFAULT_BIBLATEX) {
+    Biber::Config->setblxoption($_, $CONFIG_DEFAULT_BIBLATEX{$_});
+  }
 
   # Command-line overrides everything else
   foreach my $copt (keys %$opts) {
@@ -370,13 +372,22 @@ sub _config_file_set {
                                                             qr/\Asort\z/,
                                                             qr/\Asortitem\z/,
                                                             qr/\Apresort\z/,
+                                                            qr/\Aoptionscope\z/,
                                                            ],
                                            'NsStrip' => 1,
                                            'KeyAttr' => []) or
                                              croak("Failed to read biber config file '$conf'\n $@");
   }
+  # Option scope has to be set first
+  foreach my $bcfscopeopts (@{$userconf->{optionscope}}) {
+    my $type = $bcfscopeopts->{type};
+    foreach my $bcfscopeopt (@{$bcfscopeopts->{option}}) {
+      $CONFIG_SCOPE_BIBLATEX{$bcfscopeopt->{content}}{$type} = 1;
+    }
+  }
+  delete $userconf->{optionscope};
 
-  # Set options from config file.
+  # Set options from config file
   while (my ($k, $v) = each %$userconf) {
     if (exists($v->{content})) { # simple option
       Biber::Config->setconfigfileoption($k, $v->{content});

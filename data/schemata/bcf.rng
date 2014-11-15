@@ -65,10 +65,8 @@
         <ref name="sortscheme"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
-        <ref name="useauthor"/>
-        <ref name="useeditor"/>
         <ref name="useprefix"/>
-        <ref name="usetranslator"/>
+        <ref name="usenames"/>
       </element>
       <zeroOrMore>
         <!-- Per-entrytype BibLaTeX options -->
@@ -135,6 +133,9 @@
             <ref name="skiplab"/>
           </optional>
           <optional>
+            <ref name="skipbiblist"/>
+          </optional>
+          <optional>
             <ref name="skiplos"/>
           </optional>
           <optional>
@@ -147,19 +148,30 @@
             <ref name="uniquename"/>
           </optional>
           <optional>
-            <ref name="useauthor"/>
-          </optional>
-          <optional>
-            <ref name="useeditor"/>
-          </optional>
-          <optional>
             <ref name="useprefix"/>
           </optional>
           <optional>
-            <ref name="usetranslator"/>
+            <ref name="usenames"/>
           </optional>
         </element>
       </zeroOrMore>
+      <oneOrMore>
+        <!-- Option scope -->
+        <element name="bcf:optionscope">
+          <attribute name="type">
+            <choice>
+              <value>GLOBAL</value>
+              <value>PER_TYPE</value>
+              <value>PER_ENTRY</value>
+            </choice>
+          </attribute>
+          <oneOrMore>
+            <element name="bcf:option">
+              <data type="string"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
       <optional>
         <!-- user field/entrytype mapping -->
         <element name="bcf:sourcemap">
@@ -989,7 +1001,30 @@
       </data>
     </element>
   </define>
-  <!-- option definitions -->
+  <!--
+    option definitions
+    use<name> options are dynamically determined from data model
+  -->
+  <define name="usenames">
+    <oneOrMore>
+      <element name="bcf:option">
+        <attribute name="type">
+          <value>singlevalued</value>
+        </attribute>
+        <element name="bcf:key">
+          <data type="string">
+            <param name="pattern">use.*</param>
+          </data>
+        </element>
+        <element name="bcf:value">
+          <choice>
+            <value>0</value>
+            <value>1</value>
+          </choice>
+        </element>
+      </element>
+    </oneOrMore>
+  </define>
   <define name="useprefix">
     <element name="bcf:option">
       <attribute name="type">
@@ -997,54 +1032,6 @@
       </attribute>
       <element name="bcf:key">
         <value>useprefix</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
-      </element>
-    </element>
-  </define>
-  <define name="useauthor">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>useauthor</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
-      </element>
-    </element>
-  </define>
-  <define name="useeditor">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>useeditor</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
-      </element>
-    </element>
-  </define>
-  <define name="usetranslator">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>usetranslator</value>
       </element>
       <element name="bcf:value">
         <choice>
@@ -1228,6 +1215,22 @@
       </attribute>
       <element name="bcf:key">
         <value>skiplos</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="skipbiblist">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>skipbiblist</value>
       </element>
       <element name="bcf:value">
         <choice>
