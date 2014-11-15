@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 42;
+use Test::More tests => 43;
 
 use Biber;
 use Biber::Output::bbl;
@@ -76,6 +76,7 @@ my $edtypeclass1 = 'redactor,Jaffé!Philipp,Loewenfeld!Samuel#Kaltenbrunner!Ferd
 my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
 my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,0000';
 my $labels      = '2005,03,02';
+my $sn1         = '';
 
 # These have custom presort and also an exclusion on year and title set
 my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0000';
@@ -1396,4 +1397,24 @@ $main->set_sortscheme($S);
 $biber->prepare;
 
 is($main->get_sortdata('labelstest')->[0], $labels, 'date labels' );
+
+# sortname sort
+$S = {spec => [
+      [
+       {},
+       {'sortname'   => {}},
+       {'author'     => {}},
+      ]
+     ]};
+
+$main->set_sortscheme($S);
+
+Biber::Config->setblxoption('useauthor', 0);
+Biber::Config->setblxoption('useeditor', 0);
+Biber::Config->setblxoption('usetranslator', 0);
+Biber::Config->setblxoption('usenamea', 0);
+Biber::Config->setblxoption('useeditora', 0);
+$biber->prepare;
+# Testing that when no use<name> settings are true, sortname is ignored
+is($main->get_sortdata('sn1')->[0], $sn1, 'Sortname - 1' );
 
