@@ -140,24 +140,24 @@ sub clone {
   my $newkey = shift;
   my $new = new Biber::Entry;
   while (my ($k, $v) = each(%{$self->{datafields}})) {
-    $new->{datafields}{$k} = dclone($v);
+    $new->{datafields}{$k} = $v;
   }
   while (my ($k, $v) = each(%{$self->{rawfields}})) {
-    $new->{rawfields}{$k} = dclone($v);
+    $new->{rawfields}{$k} = $v;
   }
   while (my ($k, $v) = each(%{$self->{origfields}})) {
-    $new->{origfields}{$k} = dclone($v);
+    $new->{origfields}{$k} = $v;
   }
   # Need to add entrytype and datatype
-  $new->{derivedfields}{entrytype}{original}{default} = $self->{derivedfields}{entrytype}{original}{default};
-  $new->{derivedfields}{datatype}{original}{default} = $self->{derivedfields}{datatype}{original}{default};
+  $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
+  $new->{derivedfields}{datatype} = $self->{derivedfields}{datatype};
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{citekey}{original}{default} = $newkey;
+    $new->{derivedfields}{citekey} = $newkey;
   }
   # Record the key of the source of the clone in the clone. Useful for loop detection etc.
   # in biblatex
-  $new->{derivedfields}{clonesourcekey}{original}{default} = $self->get_field('citekey');
+  $new->{derivedfields}{clonesourcekey} = $self->get_field('citekey');
   return $new;
 }
 
@@ -184,8 +184,6 @@ sub notnull {
 sub set_labelname_info {
   my $self = shift;
   my $data = shift;
-  $data->{form} = $data->{form} || 'original';
-  $data->{lang} = $data->{lang} || 'default';
   $self->{labelnameinfo} = $data;
   return;
 }
@@ -214,8 +212,6 @@ sub get_labelname_info {
 sub set_labelnamefh_info {
   my $self = shift;
   my $data = shift;
-  $data->{form} = $data->{form} || 'original';
-  $data->{lang} = $data->{lang} || 'default';
   $self->{labelnamefhinfo} = $data;
   return;
 }
@@ -244,8 +240,6 @@ sub get_labelnamefh_info {
 sub set_labeltitle_info {
   my $self = shift;
   my $data = shift;
-  $data->{form} = $data->{form} || 'original';
-  $data->{lang} = $data->{lang} || 'default';
   $self->{labeltitleinfo} = $data;
   return;
 }
@@ -275,8 +269,6 @@ sub get_labeltitle_info {
 sub set_labeldate_info {
   my $self = shift;
   my $data = shift;
-  $data->{form} = $data->{form} || 'original';
-  $data->{lang} = $data->{lang} || 'default';
   $self->{labeldateinfo} = $data;
   return;
 }
@@ -304,11 +296,9 @@ sub get_labeldate_info {
 
 sub set_field {
   my $self = shift;
-  my ($key, $val, $form, $lang) = @_;
-  $form = $form || 'original';
-  $lang = $lang || 'default';
+  my ($key, $val) = @_;
   # All derived fields can be null
-  $self->{derivedfields}{$key}{$form}{$lang} = $val;
+  $self->{derivedfields}{$key} = $val;
   return;
 }
 
@@ -321,70 +311,14 @@ sub set_field {
 =cut
 
 sub get_field {
-  no autovivification;
   my $self = shift;
-  my ($key, $form, $lang) = @_;
+  my $key = shift;
   return undef unless $key;
-  $form = $form || 'original';
-  $lang = $lang || 'default';
-  # Override for special fields whose form and langs are assumed to be already resolved.
-  if ( first {$key eq $_} ( 'labelname', 'labeltitle', 'labelyear', 'labelmonth', 'labelday' )) {
-    $form = 'original';
-    $lang = 'default';
-  }
-  return $self->{datafields}{$key}{$form}{$lang} //
-         $self->{derivedfields}{$key}{$form}{$lang} //
+  return $self->{datafields}{$key} //
+         $self->{derivedfields}{$key} //
          $self->{rawfields}{$key};
 }
 
-
-=head2 get_field_forms
-
-    Get all field forms for a Biber::Entry object field
-
-=cut
-
-sub get_field_forms {
-  no autovivification;
-  my $self = shift;
-  my $key = shift;
-  return undef unless $key;
-  return $self->{datafields}{$key} ||
-         $self->{derivedfields}{$key};
-}
-
-=head2 get_field_form_names
-
-    Get all field form names for a Biber::Entry object field
-
-=cut
-
-sub get_field_form_names {
-  no autovivification;
-  my $self = shift;
-  my $key = shift;
-  return undef unless $key;
-  return sort keys %{$self->{datafields}{$key} ||
-                     $self->{derivedfields}{$key} ||
-                     {}};
-}
-
-=head2 get_field_form_lang_names
-
-    Get all field lang names for a Biber::Entry object field and form
-
-=cut
-
-sub get_field_form_lang_names {
-  no autovivification;
-  my $self = shift;
-  my ($key, $form) = @_;
-  return undef unless $key;
-  return undef unless $form;
-  return sort keys %{$self->{datafields}{$key}{$form} ||
-                     $self->{derivedfields}{$key}{$form} ||
-                     {}};
-}
 
 =head2 set_datafield
 
@@ -394,25 +328,11 @@ sub get_field_form_lang_names {
 
 sub set_datafield {
   my $self = shift;
-  my ($key, $val, $form, $lang) = @_;
-  $form = $form || 'original';
-  $lang = $lang || 'default';
-  $self->{datafields}{$key}{$form}{$lang} = $val;
-  return;
-}
-
-=head2 set_datafield_forms
-
-    Set all forms of a field which is in the bib data file
-
-=cut
-
-sub set_datafield_forms {
-  my $self = shift;
   my ($key, $val) = @_;
   $self->{datafields}{$key} = $val;
   return;
 }
+
 
 
 =head2 set_rawfield
@@ -435,7 +355,6 @@ sub set_rawfield {
 =cut
 
 sub get_rawfield {
-  no autovivification;
   my $self = shift;
   my $key = shift;
   return $self->{rawfields}{$key};
@@ -449,12 +368,9 @@ sub get_rawfield {
 =cut
 
 sub get_datafield {
-  no autovivification;
   my $self = shift;
-  my ($key, $form, $lang) = @_;
-  $form = $form || 'original';
-  $lang = $lang || 'default';
-  return $self->{datafields}{$key}{$form}{$lang};
+  my $key = shift;
+  return $self->{datafields}{$key};
 }
 
 
@@ -494,29 +410,12 @@ sub del_datafield {
 =cut
 
 sub field_exists {
-  no autovivification;
   my $self = shift;
   my $key = shift;
-  return ($self->{datafields}{$key} ||
-          $self->{derivedfields}{$key} ||
-          $self->{rawfields}{$key}) ? 1 : 0;
+  return (exists($self->{datafields}{$key}) ||
+          exists($self->{derivedfields}{$key}) ||
+          exists($self->{rawfields}{$key})) ? 1 : 0;
 }
-
-=head2 field_form_exists
-
-    Check whether a representation form for a field exists (even if null)
-
-=cut
-
-sub field_form_exists {
-  no autovivification;
-  my $self = shift;
-  my ($key, $form) = @_;
-  $form = $form || 'original';
-  return ($self->{datafields}{$key}{$form} ||
-          $self->{derivedfields}{$key}{$form}) ? 1 : 0;
-}
-
 
 =head2 datafields
 
@@ -592,10 +491,8 @@ sub count_fields {
 sub has_keyword {
   no autovivification;
   my $self = shift;
-  my ($keyword, $form, $lang) = @_;
-  $form = $form || 'original';
-  $lang = $lang || 'default';
-  if (my $keywords = $self->{datafields}{keywords}{$form}{$lang}) {
+  my $keyword = shift;
+  if (my $keywords = $self->{datafields}{keywords}) {
     return (first {$_ eq $keyword} @$keywords) ? 1 : 0;
   }
   else {
@@ -615,7 +512,7 @@ sub has_keyword {
 sub add_warning {
   my $self = shift;
   my $warning = shift;
-  push @{$self->{derivedfields}{warnings}{original}{default}}, $warning;
+  push @{$self->{derivedfields}{warnings}}, $warning;
   return;
 }
 
@@ -639,7 +536,7 @@ sub set_inherit_from {
   # Data source fields
   foreach my $field ($parent->datafields) {
     next if $self->field_exists($field); # Don't overwrite existing fields
-    $self->set_datafield_forms($field, dclone($parent->get_field_forms($field)));
+    $self->set_datafield($field, $parent->get_field($field));
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
@@ -695,7 +592,7 @@ sub resolve_xdata {
         else {
           foreach my $field ($xdatum_entry->datafields()) { # set fields
             next if $field eq 'ids'; # Never inherit aliases
-            $self->set_datafield_forms($field, $xdatum_entry->get_field_forms($field));
+            $self->set_datafield($field, $xdatum_entry->get_field($field));
 
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
@@ -793,7 +690,7 @@ sub inherit_from {
               $self->set_rawfield($field->{target}, $parent->get_rawfield($field->{source}));
             }
             else {
-              $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
+              $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
             }
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
@@ -825,7 +722,7 @@ sub inherit_from {
               $self->set_rawfield($field, $parent->get_rawfield($field));
             }
             else {
-              $self->set_datafield_forms($field, $parent->get_field_forms($field));
+              $self->set_datafield($field, $parent->get_field($field));
             }
 
             # Record graphing information if required

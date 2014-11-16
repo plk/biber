@@ -1270,15 +1270,11 @@ sub process_singletitle {
   # Use labelname to generate this, if there is one ...
   my $identifier;
   if (my $lni = $be->get_labelname_info) {
-    $identifier = $self->_getnamehash_u($citekey, $be->get_field($lni->{field},
-                                                                 $lni->{form},
-                                                                 $lni->{lang}));
+    $identifier = $self->_getnamehash_u($citekey, $be->get_field($lni));
   }
   # ... otherwise use labeltitle
   elsif (my $lti = $be->get_labeltitle_info) {
-    $identifier = $be->get_field($lti->{field},
-                                 $lti->{form},
-                                 $lti->{lang});
+    $identifier = $be->get_field($lti);
   }
 
   # Don't generate this information for entries with no labelname or labeltitle
@@ -1324,9 +1320,7 @@ sub process_extrayear {
 
     my $name_string = '';
     if (my $lni = $be->get_labelname_info) {
-      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni->{field},
-                                                                    $lni->{form},
-                                                                    $lni->{lang}));
+      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni));
     }
 
     # extrayear takes into account the labelyear which can be a range
@@ -1373,15 +1367,11 @@ sub process_extratitle {
 
     my $name_string = '';
     if (my $lni = $be->get_labelname_info) {
-      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni->{field},
-                                                                    $lni->{form},
-                                                                    $lni->{lang}));
+      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni));
     }
 
     my $lti = $be->get_labeltitle_info;
-    my $title_string = $be->get_field($lti->{field},
-                                      $lti->{form},
-                                      $lti->{lang}) // '';
+    my $title_string = $be->get_field($lti) // '';
 
     my $nametitle_string = "$name_string,$title_string";
     $logger->trace("Setting nametitle to '$nametitle_string' for entry '$citekey'");
@@ -1422,9 +1412,7 @@ sub process_extratitleyear {
     $logger->trace("Creating extratitleyear information for '$citekey'");
 
     my $lti = $be->get_labeltitle_info;
-    my $title_string = $be->get_field($lti->{field},
-                                      $lti->{form},
-                                      $lti->{lang}) // '';
+    my $title_string = $be->get_field($lti) // '';
 
     # Takes into account the labelyear which can be a range
     my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
@@ -1520,10 +1508,8 @@ sub process_labelname {
       next;
     }
 
-    if ($be->get_field($ln, $h_ln->{form}, $h_ln->{lang})) {
-      $be->set_labelname_info({'field' => $ln,
-                               'form'  => $h_ln->{form},
-                               'lang'  => $h_ln->{lang}});
+    if ($be->get_field($ln)) {
+      $be->set_labelname_info($ln);
       last;
     }
   }
@@ -1548,10 +1534,8 @@ sub process_labelname {
       next;
     }
 
-    if ($be->get_field($ln, $h_ln->{form}, $h_ln->{lang})) {
-      $be->set_labelnamefh_info({'field' => $ln,
-                                 'form'  => $h_ln->{form},
-                                 'lang'  => $h_ln->{lang}});
+    if ($be->get_field($ln)) {
+      $be->set_labelnamefh_info($ln);
       last;
     }
   }
@@ -1560,10 +1544,7 @@ sub process_labelname {
   # Note this is not set with form and lang, as it is now resolved and the information
   # on what form and lang were used to resolve it are in labelname_info
   if (my $lni = $be->get_labelname_info) {
-    $be->set_field('labelname',
-                   $be->get_field($lni->{field},
-                                  $lni->{form},
-                                  $lni->{lang}));
+    $be->set_field('labelname',$be->get_field($lni));
   }
   else {
     $logger->debug("Could not determine the labelname of entry $citekey");
@@ -1689,10 +1670,8 @@ sub process_labeltitle {
 
   foreach my $h_ltn (@$ltitlespec) {
     my $ltn = $h_ltn->{content};
-    if (my $lt = $be->get_field($ltn, $h_ltn->{form}, $h_ltn->{lang})) {
-      $be->set_labeltitle_info({'field' => $ltn,
-                                'form'  => $h_ltn->{form},
-                                'lang'  => $h_ltn->{lang}});
+    if (my $lt = $be->get_field($ltn)) {
+      $be->set_labeltitle_info($ltn);
       $be->set_field('labeltitle', $lt);
       last;
     }
@@ -1716,9 +1695,7 @@ sub process_fullhash {
   # fullhash is generated from the labelname but ignores SHORT* fields and
   # max/mincitenames settings
   if (my $lnfhi = $be->get_labelnamefh_info) {
-    if (my $lnfh = $be->get_field($lnfhi->{field},
-                                  $lnfhi->{form},
-                                  $lnfhi->{lang})) {
+    if (my $lnfh = $be->get_field($lnfhi)) {
       $be->set_field('fullhash', $self->_getfullhash($citekey, $lnfh));
     }
   }
@@ -1742,9 +1719,7 @@ sub process_namehash {
 
   # namehash is generated from the labelname
   if (my $lni = $be->get_labelname_info) {
-    if (my $ln = $be->get_field($lni->{field},
-                                $lni->{form},
-                                $lni->{lang})) {
+    if (my $ln = $be->get_field($lni)) {
       $be->set_field('namehash', $self->_getnamehash($citekey, $ln));
     }
   }
@@ -1769,14 +1744,10 @@ sub process_pername_hashes {
   my $dm = Biber::Config->get_dm;
 
   # Generate hashes for all forms and langs
-N:  foreach my $pn (@{$dm->get_fields_of_type('list', 'name')}) {
-    foreach my $form ($be->get_field_form_names($pn)) {
-      foreach my $lang ($be->get_field_form_lang_names($pn, $form)) {
-        my $names = $be->get_field($pn, $form, $lang) or next N;
-        foreach my $n (@{$names->names}) {
-          $n->set_hash($self->_genpnhash($citekey, $n));
-        }
-      }
+  foreach my $pn (@{$dm->get_fields_of_type('list', 'name')}) {
+    next unless my $names = $be->get_field($pn);
+    foreach my $n (@{$names->names}) {
+      $n->set_hash($self->_genpnhash($citekey, $n));
     }
   }
   return;
@@ -1866,12 +1837,10 @@ sub process_visible_names {
       $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
       $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
       # Need to set these on all name forms
-      foreach my $form ($be->get_field_form_names($n)) {
-        my $ns = $be->get_field($n, $form);
-        $ns->set_visible_cite($visible_names_cite);
-        $ns->set_visible_bib($visible_names_bib);
-        $ns->set_visible_alpha($visible_names_alpha);
-      }
+      my $ns = $be->get_field($n);
+      $ns->set_visible_cite($visible_names_cite);
+      $ns->set_visible_bib($visible_names_bib);
+      $ns->set_visible_alpha($visible_names_alpha);
     }
   }
 }
@@ -2214,13 +2183,9 @@ sub create_uniquename_info {
 
       # Set the index limit beyond which we don't look for disambiguating information
       my $ul = undef;           # Not set
-      if (defined($be->get_field($lni->{field},
-                                 $lni->{form},
-                                 $lni->{lang})->get_uniquelist)) {
+      if (defined($be->get_field($lni)->get_uniquelist)) {
         # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
-        $ul = $be->get_field($lni->{field},
-                             $lni->{form},
-                             $lni->{lang})->get_uniquelist;
+        $ul = $be->get_field($lni)->get_uniquelist;
       }
       my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
       my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
@@ -2240,9 +2205,7 @@ sub create_uniquename_info {
       # be uniquename = 2 unless even the full name doesn't disambiguate
       # and then it is left at uniquename = 0
 
-      my $nl = $be->get_field($lni->{field},
-                              $lni->{form},
-                              $lni->{lang});
+      my $nl = $be->get_field($lni);
       my $num_names = $nl->count_names;
       my $names = $nl->names;
       # If name list was truncated in bib with "and others", this overrides maxcitenames
@@ -2394,16 +2357,12 @@ sub generate_uniquename {
       # Set the index limit beyond which we don't look for disambiguating information
 
       # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
-      my $ul = $be->get_field($lni->{field},
-                              $lni->{form},
-                              $lni->{lang})->get_uniquelist;
+      my $ul = $be->get_field($lni)->get_uniquelist;
 
       my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
       my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
-      my $nl = $be->get_field($lni->{field},
-                              $lni->{form},
-                              $lni->{lang});
+      my $nl = $be->get_field($lni);
       my $num_names = $nl->count_names;
       my $names = $nl->names;
       # If name list was truncated in bib with "and others", this overrides maxcitenames
@@ -2536,9 +2495,7 @@ sub create_uniquelist_info {
     $logger->trace("Generating uniquelist information for '$citekey'");
 
     if (my $lni = $be->get_labelname_info) {
-      my $nl = $be->get_field($lni->{field},
-                              $lni->{form},
-                              $lni->{lang});
+      my $nl = $be->get_field($lni);
       my $num_names = $nl->count_names;
       my $namelist = [];
       my $ulminyear_namelist = [];
@@ -2624,9 +2581,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
     $logger->trace("Creating uniquelist for '$citekey'");
 
     if (my $lni = $be->get_labelname_info) {
-      my $nl = $be->get_field($lni->{field},
-                              $lni->{form},
-                              $lni->{lang});
+      my $nl = $be->get_field($lni);
       my $namelist = [];
       my $num_names = $nl->count_names;
 
@@ -3431,12 +3386,6 @@ sub _parse_sort {
       }
       if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
         $sortitemattributes->{pad_side} = $sortitem->{pad_side};
-      }
-      if (defined($sortitem->{form})) { # Found script form attribute
-        $sortitemattributes->{form} = $sortitem->{form};
-      }
-      if (defined($sortitem->{lang})) { # Found script lang attribute
-        $sortitemattributes->{lang} = $sortitem->{lang};
       }
       push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};
     }

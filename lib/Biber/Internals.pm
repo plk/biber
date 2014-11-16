@@ -303,8 +303,6 @@ sub _labelpart {
       my $f = $part->{content};
       if ( first {$f eq $_} @{$dm->get_fields_of_type('list', 'name')} or
           $f eq 'labelname') {
-        # get-field doesn't need form/lang here as we are just counting names
-        # and we assume that the name count is the same for all forms/langs
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;
         my $visible_names;
@@ -377,10 +375,10 @@ sub _label_basic {
   my $f;
   if ($args->[1] and
       $args->[1] eq 'nostrip') {
-    $f = $be->get_field($e, $labelattrs->{form}, $labelattrs->{lang});
+    $f = $be->get_field($e);
   }
   else {
-    $f = normalise_string_label($be->get_field($e, $labelattrs->{form}, $labelattrs->{lang}));
+    $f = normalise_string_label($be->get_field($e));
   }
   if ($f) {
     my $b = _process_label_attributes($self, $citekey, $f, $labelattrs, $e);
@@ -422,14 +420,14 @@ sub _label_name {
   # as we need this to set the use* options below.
   my $realname;
   if ($namename eq 'labelname') {
-    $realname = $be->get_labelname_info->{field};
+    $realname = $be->get_labelname_info;
   }
   else {
     $realname = $namename;
   }
 
   # If $namename is 'labelname', form and lang will be ignored anyway
-  my $nameval  = $be->get_field($namename, $labelattrs->{form}, $labelattrs->{lang});
+  my $nameval  = $be->get_field($namename);
 
   # Account for labelname set to short* when testing use* options
   my $lnameopt;
@@ -510,7 +508,7 @@ sub _process_label_attributes {
         # Get the indices of each field (or namepart) we are dealing with
         my %indices;
         foreach my $key (@citekeys) {
-          if (my $f = $section->bibentry($key)->get_field($field, $labelattrs->{form}, $labelattrs->{lang})) {
+          if (my $f = $section->bibentry($key)->get_field($field)) {
             if ($namepart) {
               foreach my $n (@{$f->first_n_names($f->get_visible_alpha)}) {
                 # Do strip/nosort here as that's what we also do to the field contents
@@ -585,7 +583,7 @@ sub _process_label_attributes {
       else {
         # This retains the structure of the entries for the "l" list disambiguation
         # Have to be careful if field "$f" is not set for all entries
-        my $strings = [map {my $f = $section->bibentry($_)->get_field($field, $labelattrs->{form}, $labelattrs->{lang});
+        my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
                             $f ? ($namepart ? [map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_alpha)}] : [$f]) : ['']
                           } @citekeys];
         my $lcache = _label_listdisambiguation($strings);
@@ -1079,7 +1077,7 @@ sub _sort_labelname {
   # re-direct to the right sorting routine for the labelname
   if (my $lni = $be->get_labelname_info) {
     # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($lni->{field}, $citekey, $sortelementattributes);
+    return $self->_dispatch_sorting($lni, $citekey, $sortelementattributes);
   }
   else {
     return '';
@@ -1094,7 +1092,7 @@ sub _sort_labeltitle {
   # re-direct to the right sorting routine for the labeltitle
   if (my $lti = $be->get_labeltitle_info) {
     # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($lti->{field}, $citekey, $sortelementattributes);
+    return $self->_dispatch_sorting($lti, $citekey, $sortelementattributes);
   }
   else {
     return '';
@@ -1131,8 +1129,8 @@ sub _sort_list {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if ($be->get_field($list, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
-    my $string = $self->_liststring($citekey, $list, $sortelementattributes->{form}, $sortelementattributes->{lang});
+  if ($be->get_field($list)) {
+    my $string = $self->_liststring($citekey, $list);
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1149,7 +1147,7 @@ sub _sort_literal {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if (my $field = $be->get_field($literal, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
+  if (my $field = $be->get_field($literal)) {
     my $string = normalise_string_sort($field, $literal);
     return _process_sort_attributes($string, $sortelementattributes);
   }
@@ -1172,8 +1170,8 @@ sub _sort_name {
       not Biber::Config->getblxoption("use$name", $be->get_field('entrytype'), $citekey)) {
     return '';
     }
-  if ($be->get_field($name, $sortelementattributes->{form}, $sortelementattributes->{lang})) {
-    my $string = $self->_namestring($citekey, $name, $sortelementattributes->{form}, $sortelementattributes->{lang});
+  if ($be->get_field($name)) {
+    my $string = $self->_namestring($citekey, $name);
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1198,9 +1196,9 @@ sub _sort_sortname {
   my $dm = Biber::Config->get_dm;
 
   # sortname is ignored if no use<name> option is defined - see biblatex manual
-  if ($be->get_field('sortname', $sortelementattributes->{form}, $sortelementattributes->{lang}) and
+  if ($be->get_field('sortname') and
       grep {Biber::Config->getblxoption("use$_", $be->get_field('entrytype'), $citekey)} @{$dm->get_fields_of_type('list', 'name')}) {
-    my $string = $self->_namestring($citekey, 'sortname', $sortelementattributes->{form}, $sortelementattributes->{lang});
+    my $string = $self->_namestring($citekey, 'sortname');
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1259,12 +1257,12 @@ sub _process_sort_attributes {
 # This is used to generate sorting string for names
 sub _namestring {
   my $self = shift;
-  my ($citekey, $field, $form, $lang) = @_;
+  my ($citekey, $field) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $names = $be->get_field($field, $form, $lang);
+  my $names = $be->get_field($field);
   my $str = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
@@ -1321,12 +1319,12 @@ sub _namestring {
 }
 
 sub _liststring {
-  my ( $self, $citekey, $field, $form, $lang ) = @_;
+  my ($self, $citekey, $field) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $f = $be->get_field($field, $form, $lang); # _liststring is used in tests so there has to be
+  my $f = $be->get_field($field); # _liststring is used in tests so there has to be
   return '' unless defined($f);   # more error checking which will never be needed in normal use
   my @items = @$f;
   my $str = '';

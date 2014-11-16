@@ -30,42 +30,13 @@
         <bltx:last>Aхмедов</bltx:last>
       </bltx:person>
     </bltx:author>
-    <bltx:author form="uniform" morenames="1">
-      <bltx:person>
-        <bltx:first>
-          <bltx:namepart initial="P">Pavel</bltx:namepart>
-          <bltx:namepart initial="G">G.</bltx:namepart>
-        </bltx:first>
-        <bltx:last>Bulgakov</bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:first>
-          <bltx:namepart>Boris</bltx:namepart>
-          <bltx:namepart>A.</bltx:namepart>
-        </bltx:first>
-        <bltx:last>Rozenfeld</bltx:last>
-        <bltx:middle initial="B">Bill</bltx:middle>
-      </bltx:person>
-      <bltx:person>
-        <bltx:first>
-          <bltx:namepart initial="A">Ashraf</bltx:namepart>
-          <bltx:namepart>A.</bltx:namepart>
-        </bltx:first>
-        <bltx:last>Akhmedov</bltx:last>
-      </bltx:person>
-    </bltx:author>
     <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
     <bltx:title form="romanised">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bltx:title>
     <bltx:title form="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bltx:title>
     <bltx:location>Москва</bltx:location>
-    <bltx:location form="romanised">Moskva</bltx:location>
-    <bltx:location form="uniform">Moscow</bltx:location>
     <bltx:publisher>Наука</bltx:publisher>
-    <bltx:publisher form="romanised">Nauka</bltx:publisher>
-    <bltx:publisher form="translated" xml:lang="en">Science</bltx:publisher>
     <bltx:language>Russian</bltx:language>
     <bltx:series>Научно-биографическая литература</bltx:series>
-    <bltx:series form="romanised">Nauchno-biograficheskaya literatura</bltx:series>
     <bltx:date>1983</bltx:date>
     <bltx:date datetype="orig">1985-04-02</bltx:date>
     <bltx:date datetype ="event">

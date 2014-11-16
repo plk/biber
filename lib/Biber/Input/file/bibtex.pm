@@ -602,32 +602,30 @@ sub create_entry {
 
 # HANDLERS
 # ========
-my $S = Biber::Config->getoption('mssplit');
-my $fl_re = qr/\A([^$S]+)$S?(original|translated|romanised|uniform)?$S?(.+)?\z/;
 
 # Literal fields
 sub _literal {
-  my ($bibentry, $entry, $f) = @_;
-  my $value = biber_decode_utf8($entry->get($f));
-  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  my ($bibentry, $entry, $field) = @_;
+  my $value = biber_decode_utf8($entry->get($field));
+
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
-  return if ($f eq 'year' and $bibentry->get_datafield('year'));
-  return if ($f eq 'month' and $bibentry->get_datafield('month'));
+  return if ($field eq 'year' and $bibentry->get_datafield('year'));
+  return if ($field eq 'month' and $bibentry->get_datafield('month'));
 
   # Try to sanitise months to biblatex requirements
-  if ($f eq 'month') {
-    $bibentry->set_datafield($field, _hack_month($value), $form, $lang);
+  if ($field eq 'month') {
+    $bibentry->set_datafield($field, _hack_month($value));
   }
   # Rationalise any bcp47 style langids into babel/polyglossia names
   # biblatex will convert these back again when loading .lbx files
   # We need this until babel/polyglossia support proper bcp47 language/locales
-  elsif ($f eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
-    $bibentry->set_datafield($field, $map, $form, $lang);
+  elsif ($field eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
+    $bibentry->set_datafield($field, $map);
   }
   else {
-    $bibentry->set_datafield($field, $value, $form, $lang);
+    $bibentry->set_datafield($field, $value);
   }
 
 
@@ -636,9 +634,8 @@ sub _literal {
 
 # URI fields
 sub _uri {
-  my ($bibentry, $entry, $f) = @_;
-  my $value = NFC(decode_utf8($entry->get($f)));# Unicode NFC boundary (before hex encoding)
-  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  my ($bibentry, $entry, $field) = @_;
+  my $value = NFC(decode_utf8($entry->get($field)));# Unicode NFC boundary (before hex encoding)
 
   # If there are some escapes in the URI, unescape them
   if ($value =~ /\%/) {
@@ -649,7 +646,7 @@ sub _uri {
 
   $value = URI->new($value)->as_string;
 
-  $bibentry->set_datafield($field, $value, $form, $lang);
+  $bibentry->set_datafield($field, $value);
   return;
 }
 
@@ -657,17 +654,16 @@ sub _uri {
 sub _xsv {
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
-  my ($bibentry, $entry, $f) = @_;
-  $bibentry->set_datafield($f, [ split(/$S/, biber_decode_utf8($entry->get($f))) ]);
+  my ($bibentry, $entry, $field) = @_;
+  $bibentry->set_datafield($field, [ split(/$S/, biber_decode_utf8($entry->get($field))) ]);
   return;
 }
 
 # Verbatim fields
 sub _verbatim {
-  my ($bibentry, $entry, $f) = @_;
-  my $value = biber_decode_utf8($entry->get($f));
-  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
-  $bibentry->set_datafield($field, $value, $form, $lang);
+  my ($bibentry, $entry, $field) = @_;
+  my $value = biber_decode_utf8($entry->get($field));
+  $bibentry->set_datafield($field, $value);
   return;
 }
 
@@ -678,14 +674,9 @@ sub _verbatim {
 # -n  -> ['', n]
 # -   -> ['', undef]
 sub _range {
-  my ($bibentry, $entry, $f, $key) = @_;
+  my ($bibentry, $entry, $field, $key) = @_;
   my $values_ref;
-  my $value = biber_decode_utf8($entry->get($f));
-  # Because there is another match below and we dont' want bleed of $1,$2 etc.
-  my $field;
-  my $form;
-  my $lang;
-  {($field, $form, $lang) = $f =~ m/$fl_re/xms;}
+  my $value = biber_decode_utf8($entry->get($field));
 
   my @values = split(/\s*[;,]\s*/, $value);
   # If there is a range sep, then we set the end of the range even if it's null
@@ -706,18 +697,17 @@ sub _range {
     biber_warn("Range field '$field' in entry '$key' is malformed, skipping", $bibentry) unless $start;
     push @$values_ref, [$start || '', $end];
   }
-  $bibentry->set_datafield($field, $values_ref, $form, $lang);
+  $bibentry->set_datafield($field, $values_ref);
   return;
 }
 
 
 # Names
 sub _name {
-  my ($bibentry, $entry, $f, $key) = @_;
+  my ($bibentry, $entry, $field, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $value = biber_decode_utf8($entry->get($f));
-  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  my $value = biber_decode_utf8($entry->get($field));
 
   # @tmp is bytes again now
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
@@ -755,7 +745,7 @@ sub _name {
     }
 
     # Skip names that don't parse for some reason (like no lastname found - see parsename())
-    next unless my $no = parsename($name, $f, {useprefix => $useprefix});
+    next unless my $no = parsename($name, $field, {useprefix => $useprefix});
 
     # Deal with implied "et al" in data source
     if (lc($no->get_namestring) eq Biber::Config->getoption('others_string')) {
@@ -766,17 +756,16 @@ sub _name {
     }
 
   }
-  $bibentry->set_datafield($field, $names, $form, $lang);
+  $bibentry->set_datafield($field, $names);
   return;
 }
 
 # Dates
 # Date fields can't have script forms - they are just a(n ISO) standard format
 sub _date {
-  my ($bibentry, $entry, $f, $key) = @_;
-  my $datetype = $f =~ s/date\z//xmsr;
-  my $date = biber_decode_utf8($entry->get($f));
-  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  my ($bibentry, $entry, $field, $key) = @_;
+  my $datetype = $field =~ s/date\z//xmsr;
+  my $date = biber_decode_utf8($entry->get($field));
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
@@ -811,29 +800,27 @@ sub _date {
     }
   }
   else {
-    biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of date field '$f' - ignoring", $bibentry);
+    biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of date field '$field' - ignoring", $bibentry);
   }
   return;
 }
 
 # Bibtex list fields with listsep separator
 sub _list {
-  my ($bibentry, $entry, $f) = @_;
-  my $value = biber_decode_utf8($entry->get($f));
-  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  my ($bibentry, $entry, $field) = @_;
+  my $value = biber_decode_utf8($entry->get($field));
 
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
   @tmp = map { biber_decode_utf8($_) } @tmp;
   @tmp = map { remove_outer($_) } @tmp;
-  $bibentry->set_datafield($field, [ @tmp ], $form, $lang);
+  $bibentry->set_datafield($field, [ @tmp ]);
   return;
 }
 
 # Bibtex uri lists
 sub _urilist {
-  my ($bibentry, $entry, $f) = @_;
-  my $value = NFC(decode_utf8($entry->get($f)));# Unicode NFC boundary (before hex encoding)
-  my ($field, $form, $lang) = $f =~ m/$fl_re/xms;
+  my ($bibentry, $entry, $field) = @_;
+  my $value = NFC(decode_utf8($entry->get($field)));# Unicode NFC boundary (before hex encoding)
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
   @tmp = map {
     # If there are some escapes in the URI, unescape them
@@ -847,7 +834,7 @@ sub _urilist {
 
   @tmp = map { URI->new($_)->as_string } @tmp;
 
-  $bibentry->set_datafield($field, [ @tmp ], $form, $lang);
+  $bibentry->set_datafield($field, [ @tmp ]);
   return;
 }
 
@@ -1248,8 +1235,6 @@ sub _hack_month {
 
 sub _get_handler {
   my $field = shift;
-  my $S = Biber::Config->getoption('mssplit');
-  $field =~ s/$S(?:original|translated|romanised|uniform)$S?.*$//;
   if (my $h = $handlers->{CUSTOM}{$field}) {
     return $h;
   }

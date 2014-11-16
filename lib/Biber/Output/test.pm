@@ -141,7 +141,7 @@ sub set_output_entry {
 
       my $total = $nf->count_names;
       # Copy perl-list options to the actual labelname too
-      $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
+      $plo = '' unless (defined($lni) and $namefield eq $lni);
       $acc .= "      \\name{$namefield}{$total}{}{%\n";
       foreach my $n (@{$nf->names}) {
         $acc .= $n->name_to_bbl;

@@ -271,7 +271,7 @@ sub set_output_entry {
 
       my $total = $nf->count_names;
       # Copy per-list options to the actual labelname too
-      $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
+      $plo = '' unless (defined($lni) and $namefield eq $lni);
       $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
       foreach my $n (@{$nf->names}) {
         $acc .= $n->name_to_bbl;
@@ -477,7 +477,7 @@ sub set_output_entry {
   }
 
   # Append any warnings to the entry, if any
-  if ( my $w = $be->get_field('warnings')) {
+  if (my $w = $be->get_field('warnings')) {
     foreach my $warning (@$w) {
       $acc .= "      \\warn{\\item $warning}\n";
     }

@@ -70,7 +70,7 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \field{sortinithash}{8f918f8686258589a227d5aaf265a9bb}
       \field{labelyear}{1983}
       \field{datelabelsource}{}
-      \field{labeltitle}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field{labeltitle}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{05}
@@ -84,7 +84,7 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \field{relatedstring}{Somestring}
       \field{relatedtype}{reprint}
       \field{series}{Научно-биографическая литература}
-      \field{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
+      \field{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
       \field{urlday}{01}
       \field{urlendyear}{}
       \field{urlmonth}{07}
