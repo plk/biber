@@ -6,6 +6,7 @@ use Test::More;
 # These are used at top-level in bibtex.pm and the tests moan if it's not set.
 use Biber::Config;
 Biber::Config->setoption('vsplit', '_');
+$Biber::Constants::CONFIG_SCOPE_BIBLATEX{variantforms} = {'GLOBAL' => 1};
 Biber::Config->setblxoption('variantforms', []);
 
 # Ensure a recent version of Test::Pod::Coverage

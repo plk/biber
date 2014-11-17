@@ -355,7 +355,6 @@ sub set_field {
 =cut
 
 sub get_field {
-  no autovivification;
   my $self = shift;
   my ($field, $form, $lang) = @_;
   return undef unless $field;
@@ -580,7 +579,6 @@ sub set_datafield_forms {
   return;
 }
 
-
 =head2 set_rawfield
 
     Save a copy of the raw field from the datasource
@@ -607,7 +605,6 @@ sub set_rawfield {
 =cut
 
 sub get_rawfield {
-  no autovivification;
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;
@@ -628,7 +625,6 @@ sub get_rawfield {
 =cut
 
 sub get_datafield {
-  no autovivification;
   my $self = shift;
   my ($field) = @_;
   return $self->{datafields}{nonvariant}{$field};
@@ -679,7 +675,6 @@ sub del_datafield {
 =cut
 
 sub field_exists {
-  no autovivification;
   my $self = shift;
   my $field = shift;
   my $dm = Biber::Config->get_dm;

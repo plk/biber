@@ -1206,12 +1206,11 @@ sub _sort_sortname {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $dm = Biber::Config->get_dm;
 
-  # see biblatex manual §3.4 - sortname is ignored if no use<name> option is defined
+  # sortname is ignored if no use<name> option is defined - see biblatex manual
   if ($be->get_field('sortname', $sortelementattributes->{form}, $sortelementattributes->{lang}) and
-    (Biber::Config->getblxoption('useauthor', $be->get_field('entrytype'), $citekey) or
-      Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) or
-      Biber::Config->getblxoption('useetranslator', $be->get_field('entrytype'), $citekey))) {
+      grep {Biber::Config->getblxoption("use$_", $be->get_field('entrytype'), $citekey)} @{$dm->get_fields_of_type('list', 'name')}) {
     my $string = $self->_namestring($citekey, 'sortname', $sortelementattributes->{form}, $sortelementattributes->{lang});
     return _process_sort_attributes($string, $sortelementattributes);
   }
@@ -1343,7 +1342,7 @@ sub _namestring {
 }
 
 sub _liststring {
-  my ( $self, $citekey, $field, $form, $lang ) = @_;
+  my ($self, $citekey, $field, $form, $lang) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);

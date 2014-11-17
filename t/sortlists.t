@@ -51,4 +51,3 @@ is_deeply([$biber->sortlists->get_list(0, 'lnameswe', 'entry', 'lnameswe')->get_
 is_deeply([$biber->sortlists->get_list(0, 'ltitlespan', 'entry', 'ltitlespan')->get_keys], ['K1', 'K4', 'K10', 'K7', 'K8', 'K9', 'K2', 'K6', 'K5', 'K3', 'K11'], 'List - title order (spanish)');
 # Test sortset-local locale sorting
 is_deeply([$biber->sortlists->get_list(0, 'ltitleset', 'entry', 'ltitleset')->get_keys], ['K1', 'K7', 'K9', 'K8', 'K4', 'K10', 'K2', 'K6', 'K5', 'K3', 'K11'], 'List - granular locale (spanish)');
-

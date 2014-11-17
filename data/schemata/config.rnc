@@ -1,4 +1,9 @@
 start = element config {
+  # Option scope
+  element optionscope {
+    attribute type { "GLOBAL" | "PER_TYPE" | "PER_ENTRY" },
+    element option { xsd:string }+
+  }+ &
   element clrmacros           { "0" | "1" }? &
   element collate             { "0" | "1" }? &
   element collate_options     {

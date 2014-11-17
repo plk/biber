@@ -442,63 +442,8 @@ our %LOCALE_MAP_R = (
                      'vi-VN'      => 'vietnamese',
                     );
 
-# Defines the scope of each of the BibLaTeX configuration options
-#
-# Several things in here are not "real" biblatex option passed by biblatex.
-# They are defined by the biblatex macros and are stored in here as they
-# can be global/per-type or per-entry and therefore it's natural to store them here.
-our %CONFIG_SCOPE_BIBLATEX = (
-  alphaothers        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  autovlang          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  controlversion     => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  debug              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  datamodel          => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  dataonly           => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
-  inheritance        => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  labelalpha         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelalphatemplate => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labeldate          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labeldatespec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelnamefield     => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
-  labelnameform      => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
-  labelnamelang      => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
-  labelnamespec      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labelnumber        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labeltitle         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labeltitlefield    => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
-  labeltitleform     => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
-  labeltitlelang     => {GLOBAL => 0, PER_TYPE => 0, PER_ENTRY => 1},
-  labeltitlespec     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  labeltitleyear     => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  maxalphanames      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  maxbibnames        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  maxcitenames       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  maxitems           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  minalphanames      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  minbibnames        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  mincitenames       => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  minitems           => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  presort            => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  singletitle        => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  skipbib            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
-  skipbiblist        => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
-  skiplab            => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 1},
-  sortalphaothers    => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 0},
-  sortexclusion      => {GLOBAL => 0, PER_TYPE => 1, PER_ENTRY => 0},
-  sorting            => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  sortlocale         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  sortscheme         => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  uniquelist         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  uniquename         => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  useauthor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  useeditor          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  useprefix          => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  usetranslator      => {GLOBAL => 1, PER_TYPE => 1, PER_ENTRY => 1},
-  variantfallbacks   => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  variantforms       => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 0},
-  vform              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
-  vlang              => {GLOBAL => 1, PER_TYPE => 0, PER_ENTRY => 1},
-);
+# Holds the scope of each of the BibLaTeX configuration options fro the .bcf
+our %CONFIG_SCOPE_BIBLATEX;
 
 # For per-entry options, what should be set when we find them and
 # what should be output to the .bbl for biblatex.

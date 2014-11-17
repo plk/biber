@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 28;
+use Test::More tests => 26;
 
 use Biber;
 use Biber::Utils;
@@ -59,14 +59,10 @@ is($bibentries->entry('forms1')->get_field('author')->nth_name(3)->get_firstname
 is($bibentries->entry('forms1')->get_field('labelname')->nth_name(3)->get_firstname, 'Борис', 'labelname - 1');
 # per-type labelname form
 is($bibentries->entry('forms2')->get_field('labelname')->nth_name(1)->get_firstname, 'Boris', 'labelname - 2');
-# per-entry labelname form
-is($bibentries->entry('forms3')->get_field('labelname')->nth_name(1)->get_firstname, 'Борис', 'labelname - 3');
 # global labeltitle form
 is($bibentries->entry('forms1')->get_field('labeltitle'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'labeltitle - 1');
 # per-type labeltitle form
 is($bibentries->entry('forms2')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Okolo 783 – okolo 850', 'labeltitle - 2');
-# per-entry labeltitle form
-is($bibentries->entry('forms3')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'labeltitle - 3');
 is_deeply($bibentries->entry('forms7')->get_field('warnings'), $f7, 'MS warnings - 1') ;
 
 my $S = { spec => [
@@ -97,7 +93,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare(1);
 $section = $biber->sections->get_section(0);
 # There is complex interaction here between the variant sorting scheme above and the fallback defaults for variants in the .bcf
-is_deeply([$main->get_keys], ['forms12', 'forms13', 'forms14', 'forms5', 'forms8', 'forms15', 'forms4', 'forms11', 'forms9', 'forms10', 'forms6', 'forms3', 'forms2', 'forms1', 'forms7'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms12', 'forms13', 'forms14', 'forms5', 'forms8', 'forms15', 'forms4', 'forms11', 'forms9', 'forms10', 'forms6', 'forms2', 'forms1', 'forms7'], 'Forms sorting - 1');
 # Uses name from generic variant for sorting when a name in the sorting variant is null
 is(NFC($main->get_sortdata('forms1')->[0]), 'Bulgakov!Pavel#Smith!Jim#Rosenfeld!Boris,Мухаммад ибн муса алХорезми Около 783 около 850,Moskva!London,2002', 'Null name sortstring');
 

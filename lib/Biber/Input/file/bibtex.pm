@@ -709,17 +709,17 @@ sub _literal {
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
-  return if ($f eq 'year' and $bibentry->get_datafield('year'));
-  return if ($f eq 'month' and $bibentry->get_datafield('month'));
+  return if ($field eq 'year' and $bibentry->get_datafield('year'));
+  return if ($field eq 'month' and $bibentry->get_datafield('month'));
 
   # Try to sanitise months to biblatex requirements
-  if ($f eq 'month') {
+  if ($field eq 'month') {
     $bibentry->set_datafield($field, _hack_month($value), $form, $lang);
   }
   # Rationalise any bcp47 style langids into babel/polyglossia names
   # biblatex will convert these back again when loading .lbx files
   # We need this until babel/polyglossia support proper bcp47 language/locales
-  elsif ($f eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
+  elsif ($field eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
     $bibentry->set_datafield($field, $map, $form, $lang);
   }
   else {
@@ -758,8 +758,8 @@ sub _uri {
 sub _xsv {
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
-  my ($bibentry, $entry, $f) = @_;
-  $bibentry->set_datafield($f, [ split(/$S/, biber_decode_utf8($entry->get($f))) ]);
+  my ($bibentry, $entry, $field) = @_;
+  $bibentry->set_datafield($field, [ split(/$S/, biber_decode_utf8($entry->get($field))) ]);
   return;
 }
 
@@ -787,7 +787,7 @@ sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   my $values_ref;
   my $value = biber_decode_utf8($entry->get($f));
-  # Because there is another match below and we dont' want bleed of $1,$2 etc.
+# Because there is another match below and we dont' want bleed of $1,$2 etc.
   my $field;
   my $form;
   my $lang;
@@ -870,7 +870,7 @@ sub _name {
     }
 
     # Skip names that don't parse for some reason (like no lastname found - see parsename())
-    next unless my $no = parsename($name, $f, {useprefix => $useprefix});
+    next unless my $no = parsename($name, $field, {useprefix => $useprefix});
 
     # Deal with implied "et al" in data source
     if (lc($no->get_namestring) eq Biber::Config->getoption('others_string')) {
@@ -931,7 +931,7 @@ sub _date {
     }
   }
   else {
-    biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of date field '$f' - ignoring", $bibentry);
+    biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of date field '$field' - ignoring", $bibentry);
   }
 
   return;
