@@ -153,7 +153,7 @@ sub init_sets {
         my $to = $map->findnodes('to')->shift();
         $remap_e->{$type}{map}{NFD($to->textContent())} = NFD($from->textContent());
       }
-      # Some things might need to be inserted as is rather than wrappen in some macro/braces
+      # Some things might need to be inserted as is rather than wrapped in some macro/braces
       foreach my $map ($maps->findnodes('map[from[@raw]]')) {
         my $from = $map->findnodes('from')->shift();
         my $to = $map->findnodes('to')->shift();
@@ -343,6 +343,19 @@ sub latex_encode {
   foreach my $type (sort keys %$remap_e) {
     my $map = $remap_e->{$type}{map};
     my $re = $remap_e->{$type}{re};
+    if ($type eq 'letters') {
+      # General macros (excluding special encoding excludes)
+      $text =~ s/{?($re)}?/($remap_e_raw->{$1} ? '' : "{\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '}')/ge;
+    }
+    if (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
+      # Math mode macros (excluding special encoding excludes)
+      $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "{\$\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '$}')/ge;
+    }
+  }
+
+  foreach my $type (sort keys %$remap_e) {
+    my $map = $remap_e->{$type}{map};
+    my $re = $remap_e->{$type}{re};
     if ($type eq 'accents') {
       # Accents
       # special case such as "i\x{304}" -> '\={\i}' -> "i" needs the dot removing for accents
@@ -369,19 +382,6 @@ sub latex_encode {
               }{
                 "\\" . $map->{$2} . _get_diac_last_r($1,$2)
               }gex;
-    }
-  }
-
-  foreach my $type (sort keys %$remap_e) {
-    my $map = $remap_e->{$type}{map};
-    my $re = $remap_e->{$type}{re};
-    if ($type eq 'letters') {
-      # General macros (excluding special encoding excludes)
-      $text =~ s/{?($re)}?/($remap_e_raw->{$1} ? '' : "{\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '}')/ge;
-    }
-    if (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
-      # Math mode macros (excluding special encoding excludes)
-      $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "{\$\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '$}')/ge;
     }
   }
 
