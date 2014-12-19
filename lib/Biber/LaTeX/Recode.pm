@@ -14,6 +14,7 @@ use List::AllUtils qw (first);
 use Log::Log4perl qw(:no_extra_logdie_message);
 use XML::LibXML::Simple;
 use Carp;
+use utf8;
 
 our @EXPORT  = qw(latex_encode latex_decode);
 
@@ -115,7 +116,7 @@ sub init_sets {
   my $recodexml = $parser->parse_string(decode('UTF-8', $xml));
   my $xpc = XML::LibXML::XPathContext->new($recodexml);
 
-  my @types = qw(accents letters diacritics punctuation symbols negatedsymbols superscripts cmdsuperscripts dings greek);
+  my @types = qw(letters diacritics punctuation symbols negatedsymbols superscripts cmdsuperscripts dings greek);
 
   # Have to have separate loops for decode/recode or you can't have independent decode/recode
   # sets
@@ -168,37 +169,19 @@ sub init_sets {
   }
 
   # Populate the decode regexps
+  # sort by descending length of macro name to avoid shorter macros which are substrings
+  # of longer ones damaging the longer ones
   foreach my $type (@types) {
     next unless exists $remap_d->{$type};
-    if ($type eq 'accents') {
-      $remap_d->{$type}{re} = '[' . join('', sort keys %{$remap_d->{$type}{map}}) . ']';
-      $remap_d->{$type}{re} = qr/$remap_d->{$type}{re}/;
-    }
-    elsif ($type eq 'superscripts') {
-      $remap_d->{$type}{re} = join('|', map { /[\+\-\)\(]/ ? '\\' . $_ : $_ } sort keys %{$remap_d->{$type}{map}});
-      $remap_d->{$type}{re} = qr|$remap_d->{$type}{re}|;
-    }
-    else {
-      $remap_d->{$type}{re} = join('|', sort keys %{$remap_d->{$type}{map}});
-      $remap_d->{$type}{re} = qr|$remap_d->{$type}{re}|;
-    }
+    $remap_d->{$type}{re} = join('|', map { /[\.\^\|\+\-\)\(]/ ? '\\' . $_ : $_ } sort {length($b) <=> length($a)} keys %{$remap_d->{$type}{map}});
+    $remap_d->{$type}{re} = qr|$remap_d->{$type}{re}|;
   }
-
+  use Data::Dump;dd($remap_d);
   # Populate the encode regexps
   foreach my $type (@types) {
     next unless exists $remap_e->{$type};
-    if ($type eq 'accents') {
-      $remap_e->{$type}{re} = '[' . join('', sort keys %{$remap_e->{$type}{map}}) . ']';
-      $remap_e->{$type}{re} = qr/$remap_e->{$type}{re}/;
-    }
-    elsif ($type eq 'superscripts') {
-      $remap_e->{$type}{re} = join('|', map { /[\+\-\)\(]/ ? '\\' . $_ : $_ } sort keys %{$remap_e->{$type}{map}});
-      $remap_e->{$type}{re} = qr|$remap_e->{$type}{re}|;
-    }
-    else {
-      $remap_e->{$type}{re} = join('|', sort keys %{$remap_e->{$type}{map}});
-      $remap_e->{$type}{re} = qr|$remap_e->{$type}{re}|;
-    }
+    $remap_e->{$type}{re} = join('|', map { /[\.\^\|\+\-\)\(]/ ? '\\' . $_ : $_ } sort keys %{$remap_e->{$type}{map}});
+    $remap_e->{$type}{re} = qr|$remap_e->{$type}{re}|;
   }
 }
 
@@ -243,18 +226,14 @@ sub latex_decode {
     $text =~ s/\\char'(\d+)/"chr(0$1)"/gee;  # octal chars
     $text =~ s/\\char(\d+)/"chr($1)"/gee;    # decimal chars
 
-    # Some tricky cases
-    my $a_re = $remap_d->{accents}{re} || '';
-    # Change dotless i/j to normal i/j when applying accents
-    $text =~ s/(\\(?:$a_re)){\\(i|j)}/$1$2/g;     # \={\i}    -> \=i
-    $text =~ s/(\\(?:$a_re))\\(i|j)/$1$2/g;       # \=\i      -> \=i
-
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
     $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
 
-    foreach my $type (sort keys %$remap_d) {
+    foreach my $type ('greek', 'dings', 'punctuation', 'symbols', 'negatedsymbols', 'superscripts', 'cmdsuperscripts', 'letters', 'diacritics') {
       my $map = $remap_d->{$type}{map};
       my $re = $remap_d->{$type}{re};
+      next unless $re; # Might not be present depending on set
+
       if ($type eq 'negatedsymbols') {
         $text =~ s/\\not\\($re)/$map->{$1}/ge if $re;
       }
@@ -268,35 +247,35 @@ sub latex_decode {
         $text =~ s/\\ding{([2-9AF][0-9A-F])}/$map->{$1}/ge;
       }
       elsif ($type eq 'letters') {
-        $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/gxe;
+        $text =~ s/\\($re)(?:\{\}|\s+|\b)/$map->{$1}/ge;
       }
-    }
-
-    # Things that don't begin with backslash are ignored for decoding, which is good (like '--')
-    foreach my $type (sort keys %$remap_d) {
-      my $map = $remap_d->{$type}{map};
-      my $re = $remap_d->{$type}{re};
-
-      if (first {$type eq $_} ('punctuation', 'symbols', 'greek')) {
-        ## remove {} around macros that print one character
-        ## by default we skip that, as it would break constructions like \foo{\i}
+      elsif (first {$type eq $_} ('punctuation', 'symbols', 'greek')) {
+        # remove {} around macros that print one character
+        # by default we skip that, as it would break constructions like \foo{\i}
         if ($strip_outer_braces) {
-          $text =~ s/\{\\($re)\}/$map->{$1}/gxe;
+          $text =~ s/\{\\($re)\}/$map->{$1}/ge;
         }
-        $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/gxe;
+        $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/ge;
       }
-      if ($type eq 'accents') {
+      elsif ($type eq 'diacritics') {
         $text =~ s/\\($re)\s*\{(\pL\pM*)\}/$2 . $map->{$1}/ge;
-        $text =~ s/\\($re)\s*(\pL\pM*)/$2 . $map->{$1}/ge;
-      }
-      if ($type eq 'diacritics') {
-        $text =~ s/\\($re)\s*\{(\pL\pM*)\}/$2 . $map->{$1}/ge;
-        $text =~ s/\\($re)\s+(\pL\pM*)/$2 . $map->{$1}/ge;
+        # Conditional regexp with code-block condition
+        # non letter macros for diacritics (e.g. \=) can be followed by any letter
+        # but letter diacritic macros (e.g \c) can't (\cS) horribly Broken
+        #
+        # If the RE for the macro doesn't end with a basic LaTeX macro letter (\=), then
+        #   next char can be any letter (\=d)
+        # Else if it did end with a normal LaTeX macro letter (\c), then
+        #   If this was followed by a space (\c )
+        #     Any letter is allowed after the space (\c S)
+        #   Else
+        #     Only a non basic LaTeX letter is allowed (\c-)
+        $text =~ s/\\($re)(\s*)((?(?{$1 !~ m:[A-Za-z]$:})\pL|(?(?{$2})\pL|[^A-Za-z]))\pM*)/$3 . $map->{$1}/gxe;
       }
     }
 
-    ## remove {} around letter+combining mark(s)
-    ## by default we skip that, as it would destroy constructions like \foo{\`e}
+    # remove {} around letter+combining mark(s)
+    # by default we skip that, as it would destroy constructions like \foo{\`e}
     if ($strip_outer_braces) {
         $text =~ s/{(\PM\pM+)}/$1/g;
     }
@@ -323,12 +302,14 @@ sub latex_encode {
   # Optimisation - if virtual null set was specified, do nothing
   return $text if $set_e eq 'null';
 
-  foreach my $type (sort keys %$remap_e) {
+  foreach my $type ('greek', 'dings', 'negatedsymbols', 'superscripts', 'cmdsuperscripts', 'diacritics', 'letters', 'punctuation', 'symbols') {
     my $map = $remap_e->{$type}{map};
     my $re = $remap_e->{$type}{re};
-      if ($type eq 'negatedsymbols') {
-        $text =~ s/($re)/"{\$\\not\\" . $map->{$1} . '$}'/ge;
-      }
+    next unless $re; # Might not be present depending on set
+
+    if ($type eq 'negatedsymbols') {
+      $text =~ s/($re)/"{\$\\not\\" . $map->{$1} . '$}'/ge;
+    }
     elsif ($type eq 'superscripts') {
       $text =~ s/($re)/'\textsuperscript{' . $map->{$1} . '}'/ge;
     }
@@ -338,68 +319,39 @@ sub latex_encode {
     elsif ($type eq 'dings') {
       $text =~ s/($re)/'\ding{' . $map->{$1} . '}'/ge;
     }
-  }
-
-  foreach my $type (sort keys %$remap_e) {
-    my $map = $remap_e->{$type}{map};
-    my $re = $remap_e->{$type}{re};
-    if ($type eq 'letters') {
-      # General macros (excluding special encoding excludes)
-      $text =~ s/{?($re)}?/($remap_e_raw->{$1} ? '' : "{\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '}')/ge;
+    elsif ($type eq 'letters') {
+    # General macros (excluding special encoding excludes)
+    $text =~ s/{?($re)}?/($remap_e_raw->{$1} ? '' : "{\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '}')/ge;
     }
-    if (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
+    elsif (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
       # Math mode macros (excluding special encoding excludes)
       $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "{\$\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '$}')/ge;
     }
-  }
-
-  foreach my $type (sort keys %$remap_e) {
-    my $map = $remap_e->{$type}{map};
-    my $re = $remap_e->{$type}{re};
-    if ($type eq 'accents') {
-      # Accents
+    elsif ($type eq 'diacritics') {
       # special case such as "i\x{304}" -> '\={\i}' -> "i" needs the dot removing for accents
       $text =~ s/i($re)/"\\" . $map->{$1} . '{\i}'/ge;
 
-      $text =~ s/\{(\p{L}\p{M}*)\}($re)/"\\" . $map->{$2} . "{$1}"/ge;
-      $text =~ s/(\p{L}\p{M}*)($re)/"\\" . $map->{$2} . "{$1}"/ge;
+      $text =~ s/\{(\pL\pM*)\}($re)/"\\" . $map->{$2} . "{$1}"/ge;
+      $text =~ s/(\pL\pM*)($re)/"\\" . $map->{$2} . "{$1}"/ge;
 
-    }
-    if ($type eq 'diacritics') {
-      # Diacritics
       $text =~ s{
-                  (\P{M})($re)($re)($re)
+                  (\PM)($re)($re)($re)
               }{
-                "\\" . $map->{$4} . "{\\" . $map->{$3} . "{\\" . $map->{$2} . _get_diac_last_r($1,$2) . '}}'
+                "\\" . $map->{$4} . "{\\" . $map->{$3} . "{\\" . $map->{$2} . "{$1}" . '}}'
               }gex;
       $text =~ s{
-                  (\P{M})($re)($re)
+                  (\PM)($re)($re)
               }{
-                "\\" . $map->{$3} . "{\\" . $map->{$2} . _get_diac_last_r($1,$2) . '}'
+                "\\" . $map->{$3} . "{\\" . $map->{$2} . "{$1}" . '}'
               }gex;
       $text =~ s{
-                  (\P{M})($re)
+                  (\PM)($re)
               }{
-                "\\" . $map->{$2} . _get_diac_last_r($1,$2)
+                "\\" . $map->{$2} . "{$1}"
               }gex;
     }
   }
-
   return $text;
-}
-
-
-# Helper subroutines
-
-sub _get_diac_last_r {
-    my ($a, $b) = @_;
-    my $re = $remap_e->{accents}{re};
-    if ($b =~ /$re/) {
-      return (($a eq 'i') || ($a eq 'j')) ? "{\\$a}" : $a;
-    }
-    else {
-      return "{$a}";
-    }
 }
 
 1;

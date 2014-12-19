@@ -2,15 +2,6 @@
 <?oxygen RNGSchema="../../../data/schemata/texmap.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../../data/texmap.xsl"?>
 <texmap>
-  <maps type="accents" set="base,full">
-    <map><from>`</from><to hex="300">̀</to></map>
-    <map><from>'</from><to hex="301">́</to></map>
-    <map><from>^</from><to hex="302">̂</to></map>
-    <map><from>~</from><to hex="303">̃</to></map>
-    <map><from>=</from><to hex="304">̄</to></map>
-    <map><from>.</from><to hex="307">̇</to></map>
-    <map><from>"</from><to hex="308">̈</to></map>
-  </maps>
   <maps type="letters" set="base,full">
     <map><from>AA</from>                               <to hex="C5">Å</to></map>
     <map><from>AE</from>                               <to hex="C6">Æ</to></map>
@@ -200,10 +191,20 @@
     <map><from>textlengthmark</from>                   <to hex="2D0">ː</to></map>
   </maps>
   <maps type="diacritics" set="base,full">
+    <map><from>`</from>                          <to hex="300">̀</to></map>
+    <map><from>'</from>                          <to hex="301">́</to></map>
+    <map><from>^</from>                          <to hex="302">̂</to></map>
+    <map><from>~</from>                          <to hex="303">̃</to></map>
+    <map><from>=</from>                          <to hex="304">̄</to></map>
+    <map><from>u</from>                          <to hex="306">̆</to></map>
+    <map><from>.</from>                          <to hex="307">̇</to></map>
+    <map><from>"</from>                          <to hex="308">̈</to></map>
+    <map><from>h</from>                          <to hex="309">̉</to></map>
     <map><from>r</from>                          <to hex="30A">̊</to></map>
     <map><from>H</from>                          <to hex="30B">̋</to></map>
-    <map><from>u</from>                          <to hex="306">̆</to></map>
     <map><from>v</from>                          <to hex="30C">̌</to></map>
+    <map><from preferred="1">|</from>            <to hex="30D">̍</to></map>
+    <map><from preferred="1">U</from>            <to hex="30E">̎</to></map>
     <map><from>G</from>                          <to hex="30F">̏</to></map>
     <map><from>M</from>                          <to hex="322">̢</to></map>
     <map><from>d</from>                          <to hex="323">̣</to></map>
