@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 57;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Utils;
@@ -70,12 +72,6 @@ vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsc
 set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 } ;
 
 my $u1 = q|    \entry{u1}{misc}{}
-      \name{labelname}{4}{uniquelist=4}{%
-        {{uniquename=0,hash=e1faffb3e614e6c2fba74296962386b7}{AAA}{A\bibinitperiod}{}{}{}{}{}{}}%
-        {{uniquename=0,hash=2bb225f0ba9a58930757a868ed57d9a3}{BBB}{B\bibinitperiod}{}{}{}{}{}{}}%
-        {{uniquename=0,hash=defb99e69a9f1f6e06f15006b1f166ae}{CCC}{C\bibinitperiod}{}{}{}{}{}{}}%
-        {{uniquename=0,hash=45054f47ac3305a2a33e9bcceadff712}{DDD}{D\bibinitperiod}{}{}{}{}{}{}}%
-      }
       \name{author}{4}{uniquelist=4}{%
         {{uniquename=0,hash=e1faffb3e614e6c2fba74296962386b7}{AAA}{A\bibinitperiod}{}{}{}{}{}{}}%
         {{uniquename=0,hash=2bb225f0ba9a58930757a868ed57d9a3}{BBB}{B\bibinitperiod}{}{}{}{}{}{}}%
@@ -87,8 +83,9 @@ my $u1 = q|    \entry{u1}{misc}{}
       \field{labelalpha}{AAA\textbf{+}00}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
-      \field{labeltitle}{A title}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{A title}
       \field{year}{2000}
     \endentry
@@ -120,22 +117,6 @@ $out = $biber->get_output_obj;
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $murray1 = q|    \entry{murray}{article}{}
-      \name{labelname}{14}{}{%
-        {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=34c410f87490dd022093780c69640413}{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=a803710eddd16b95e91f420c0081985c}{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=38d1db37321ac524d14a116e74123685}{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=969c673c8b05314f89a822ecfbead6af}{Londono}{L\bibinitperiod}{J.\bibnamedelimi David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=fc6cda30bdeb421b5b57ef2d1ce6f92b}{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=69dcde2965d0ce8a53fae463355f36f5}{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=8cfed260a429843a4846ad8d83f9a09f}{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=71a4aee3f5124c9c94825634735417be}{Glish}{G\bibinitperiod}{Gary\bibnamedelima L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=9406f7f2b15056febb90692ae05e8620}{Porter}{P\bibinitperiod}{Marc\bibnamedelima D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
@@ -157,8 +138,9 @@ my $murray1 = q|    \entry{murray}{article}{}
       \field{labelalpha}{Hos\textbf{+}98}
       \field{sortinit}{H}
       \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
-      \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field{journaltitle}{Langmuir}
@@ -177,22 +159,6 @@ my $murray1 = q|    \entry{murray}{article}{}
 |;
 
 my $murray2 = q|    \entry{murray}{article}{}
-      \name{labelname}{14}{}{%
-        {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=34c410f87490dd022093780c69640413}{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=a803710eddd16b95e91f420c0081985c}{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=38d1db37321ac524d14a116e74123685}{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=969c673c8b05314f89a822ecfbead6af}{Londono}{L\bibinitperiod}{J.\bibnamedelimi David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=fc6cda30bdeb421b5b57ef2d1ce6f92b}{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=69dcde2965d0ce8a53fae463355f36f5}{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=8cfed260a429843a4846ad8d83f9a09f}{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=71a4aee3f5124c9c94825634735417be}{Glish}{G\bibinitperiod}{Gary\bibnamedelima L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=9406f7f2b15056febb90692ae05e8620}{Porter}{P\bibinitperiod}{Marc\bibnamedelima D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{14}{}{%
         {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
@@ -214,8 +180,9 @@ my $murray2 = q|    \entry{murray}{article}{}
       \field{labelalpha}{Hos98}
       \field{sortinit}{H}
       \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
-      \field{labeltitle}{Alkanethiolate gold cluster molecules}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field{journaltitle}{Langmuir}
@@ -235,9 +202,6 @@ my $murray2 = q|    \entry{murray}{article}{}
 
 # This example wouldn't compile - it's just to test escaping
 my $t1 = q+    \entry{t1}{misc}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
       }
@@ -246,7 +210,8 @@ my $t1 = q+    \entry{t1}{misc}{}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
       \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
-      \field{labeltitle}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
@@ -256,9 +221,6 @@ my $t1 = q+    \entry{t1}{misc}{}
 +;
 
 my $t2 = q|    \entry{t2}{misc}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
       }
@@ -267,7 +229,8 @@ my $t2 = q|    \entry{t2}{misc}{}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
       \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
-      \field{labeltitle}{Signs of W$\frac{o}{a}$nder}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Signs of W$\frac{o}{a}$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
@@ -276,9 +239,6 @@ my $t2 = q|    \entry{t2}{misc}{}
 |;
 
 my $anon1 = q|    \entry{anon1}{unpublished}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=9873a6cc65c553faa2b21aaad626fe4b}{XAnony}{X\bibinitperiod}{}{}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=a66f357fe2fd356fe49959173522a651}{AnonymousX}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
@@ -290,8 +250,9 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \field{labelalpha}{XAn35}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
-      \field{labeltitle}{Shorttitle}
       \true{singletitle}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{shorttitle}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field{note}{anon1}
@@ -305,9 +266,6 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
 |;
 
 my $anon2 = q|    \entry{anon2}{unpublished}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=f64c29e89ea49402b997956610b58ef6}{YAnony}{Y\bibinitperiod}{}{}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=a0bccee4041bc840e14c06e5ba7f083c}{AnonymousY}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
@@ -319,8 +277,9 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \field{labelalpha}{YAn39}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
-      \field{labeltitle}{Shorttitle}
       \true{singletitle}
+      \field{labelnamesource}{shortauthor}
+      \field{labeltitlesource}{shorttitle}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field{note}{anon2}
@@ -334,9 +293,6 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
 |;
 
 my $url1 = q|    \entry{url1}{misc}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=b2106a3dda6c5a4879a0cab37e9cca55}{Alias}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{uniquename=0,hash=b2106a3dda6c5a4879a0cab37e9cca55}{Alias}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
       }
@@ -346,6 +302,7 @@ my $url1 = q|    \entry{url1}{misc}{}
       \field{sortinit}{A}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{extraalpha}{4}
+      \field{labelnamesource}{author}
       \field{year}{2005}
       \verb{url}
       \verb http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0
@@ -371,17 +328,17 @@ my $list1 = q|    \entry{list1}{book}{}
 my $Worman_N = [ 'Worman_N' ] ;
 my $Gennep = [ 'v_Gennep_A', 'v_Gennep_J' ] ;
 
-is( $out->get_output_entry('t1', $main), $t1, 'bbl entry with maths in title 1' ) ;
-is( $bibentries->entry('shore')->get_field('month'), '03', 'default bib month macros' ) ;
+eq_or_diff( $out->get_output_entry('t1', $main), $t1, 'bbl entry with maths in title 1' ) ;
+eq_or_diff( $bibentries->entry('shore')->get_field('month'), '03', 'default bib month macros' ) ;
 ok( $bibentries->entry('t1')->has_keyword('primary'), 'Keywords test - 1' ) ;
 ok( $bibentries->entry('t1')->has_keyword('something'), 'Keywords test - 2' ) ;
 ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3' ) ;
-is( $out->get_output_entry('t2', $main), $t2, 'bbl entry with maths in title 2' ) ;
+eq_or_diff( $out->get_output_entry('t2', $main), $t2, 'bbl entry with maths in title 2' ) ;
 is_deeply( Biber::Config->_get_uniquename('Worman_N', 'global'), $Worman_N, 'uniquename count 1') ;
 is_deeply( Biber::Config->_get_uniquename('vanGennep', 'global'), $Gennep, 'uniquename count 2') ;
-is( $out->get_output_entry('murray', $main), $murray1, 'bbl with > maxcitenames' ) ;
-is( $out->get_output_entry('missing1', $main), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
-is( $out->get_output_entry('missing2', $main), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
+eq_or_diff( $out->get_output_entry('murray', $main), $murray1, 'bbl with > maxcitenames' ) ;
+eq_or_diff( $out->get_output_entry('missing1', $main), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
+eq_or_diff( $out->get_output_entry('missing2', $main), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
 
 
 Biber::Config->setblxoption('alphaothers', '');
@@ -398,31 +355,31 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $out = $biber->get_output_obj;
 
-is( $out->get_output_entry('murray', $main), $murray2, 'bbl with > maxcitenames, empty alphaothers' ) ;
+eq_or_diff($out->get_output_entry('murray', $main), $murray2, 'bbl with > maxcitenames, empty alphaothers');
 
 # Make sure namehash and fullhash are seperately generated
-is( $out->get_output_entry('anon1', $main), $anon1, 'namehash/fullhash 1' ) ;
-is( $out->get_output_entry('anon2', $main), $anon2, 'namehash/fullhash 2' ) ;
+eq_or_diff( $out->get_output_entry('anon1', $main), $anon1, 'namehash/fullhash 1' ) ;
+eq_or_diff( $out->get_output_entry('anon2', $main), $anon2, 'namehash/fullhash 2' ) ;
 
 # Testing of user field map ignores
 ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'map 1' );
-is($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
+eq_or_diff($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
-is(NFC($bibentries->entry('i2')->get_field('usere')), 'a Štring', 'map 4' );
+eq_or_diff(NFC($bibentries->entry('i2')->get_field('usere')), 'a Štring', 'map 4' );
 # Testing ot UTF8 match/replace
-is($biber->_liststring('i1', 'listd'), 'abc', 'map 5' );
+eq_or_diff($biber->_liststring('i1', 'listd'), 'abc', 'map 5' );
 # Testing of user field map match/replace
-is($biber->_liststring('i1', 'listb'), 'REPlacedte!early', 'map 6');
-is($biber->_liststring('i1', 'institution'), 'REPlaCEDte!early', 'map 7');
+eq_or_diff($biber->_liststring('i1', 'listb'), 'REPlacedte!early', 'map 6');
+eq_or_diff($biber->_liststring('i1', 'institution'), 'REPlaCEDte!early', 'map 7');
 # Testing of pseudo-field "entrykey" handling
-is($bibentries->entry('i1')->get_field('note'), 'i1', 'map 8' );
+eq_or_diff($bibentries->entry('i1')->get_field('note'), 'i1', 'map 8' );
 # Checking deletion of alsosets with value BMAP_NULL
 ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 9' );
 # Checking that the "misc" type-specific mapping to null takes precedence over global userb->userc
 ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 10' );
 
 # Make sure visibility doesn't exceed number of names.
-is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info)->get_visible_bib, '3', 'bib visibility - 1');
+eq_or_diff($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info)->get_visible_bib, '3', 'bib visibility - 1');
 
 # Testing per_type and per_entry max/min* so reset globals to defaults
 Biber::Config->setblxoption('uniquelist', 0);
@@ -452,31 +409,31 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_visible_cite, '1', 'per_type maxcitenames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_visible_cite, '3', 'per_type maxcitenames - 2');
-is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info)->get_visible_bib, '2', 'per_type bibnames - 3');
-is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info)->get_visible_bib, '3', 'per_type bibnames - 4');
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
-is($biber->_liststring('tmn1', 'institution'), 'A!B!C', 'per_type/entry items - 1');
-is($biber->_liststring('tmn3', 'institution'), "A!B\x{10FFFD}", 'per_type/entry items - 2');
+eq_or_diff($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_visible_cite, '1', 'per_type maxcitenames - 1');
+eq_or_diff($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_visible_cite, '3', 'per_type maxcitenames - 2');
+eq_or_diff($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info)->get_visible_bib, '2', 'per_type bibnames - 3');
+eq_or_diff($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info)->get_visible_bib, '3', 'per_type bibnames - 4');
+eq_or_diff($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
+eq_or_diff($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
+eq_or_diff($biber->_liststring('tmn1', 'institution'), 'A!B!C', 'per_type/entry items - 1');
+eq_or_diff($biber->_liststring('tmn3', 'institution'), "A!B\x{10FFFD}", 'per_type/entry items - 2');
 
 # Citekey alias testing
-is($section->get_citekey_alias('alias3'), 'alias1', 'Citekey aliases - 1');
+eq_or_diff($section->get_citekey_alias('alias3'), 'alias1', 'Citekey aliases - 1');
 ok(is_undef($section->get_citekey_alias('alias2')), 'Citekey aliases - 2');
-is($section->get_citekey_alias('alias4'), 'alias2', 'Citekey aliases - 3');
+eq_or_diff($section->get_citekey_alias('alias4'), 'alias2', 'Citekey aliases - 3');
 # primary key 'alias5' is not cited but should be added anyway as cited alias 'alias6' needs it
-is($section->get_citekey_alias('alias6'), 'alias5', 'Citekey aliases - 4');
+eq_or_diff($section->get_citekey_alias('alias6'), 'alias5', 'Citekey aliases - 4');
 ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 
 # URL encoding testing
-is($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
-is($bibentries->entry('url2')->get_field('url'), 'http://www.something.com/q=one%20two', 'URL encoding - 2');
-is($out->get_output_entry('url1', $main), $url1, 'URL encoding - 3' ) ;
+eq_or_diff($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
+eq_or_diff($bibentries->entry('url2')->get_field('url'), 'http://www.something.com/q=one%20two', 'URL encoding - 2');
+eq_or_diff($out->get_output_entry('url1', $main), $url1, 'URL encoding - 3' ) ;
 
 # map_final testing with map_field_set
-is($bibentries->entry('ol1')->get_field('note'), 'A note', 'map_final - 1');
-is($bibentries->entry('ol1')->get_field('title'), 'Online1', 'map_final - 2');
+eq_or_diff($bibentries->entry('ol1')->get_field('note'), 'A note', 'map_final - 1');
+eq_or_diff($bibentries->entry('ol1')->get_field('title'), 'Online1', 'map_final - 2');
 
 # Test for tricky pages field
 is_deeply($bibentries->entry('pages1')->get_field('pages'),[[23, 24]], 'pages - 1');
@@ -489,7 +446,7 @@ is_deeply($bibentries->entry('pages7')->get_field('pages'), [['\bibstring{number
 is_deeply($bibentries->entry('pages8')->get_field('pages'), [[10,15],['ⅥⅠ', 'ⅻ']], 'pages - 8');
 
 # Test for map levels, the user map makes this CUSTOMC and then style map makes it CUSTOMA
-is($bibentries->entry('us1')->get_field('entrytype'), 'customa', 'Map levels - 1');
+eq_or_diff($bibentries->entry('us1')->get_field('entrytype'), 'customa', 'Map levels - 1');
 
 # Test for "others" in lists
-is( $out->get_output_entry('list1', $main), $list1, 'Entry with others list' ) ;
+eq_or_diff( $out->get_output_entry('list1', $main), $list1, 'Entry with others list' ) ;

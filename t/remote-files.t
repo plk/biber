@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8' ;
 
 use Test::More;
+use Test::Differences;
+unified_diff;
 
 if ($ENV{BIBER_DEV_TESTS}) {
   plan tests => 3;
@@ -52,12 +54,6 @@ my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 my $cu1 = q|    \entry{citeulike:8283461}{article}{}
-      \name{labelname}{4}{}{%
-        {{uniquename=0,hash=aba7750b7045425a3cf8573f7710ec18}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=1f2c257ff6c86cffeb33019b6d8598c5}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=e1b1769dbb6e7d04008811b49cd745a9}{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=b1d8ec8b73d39a27898e50cfa3e3c676}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{4}{}{%
         {{uniquename=0,hash=aba7750b7045425a3cf8573f7710ec18}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=1f2c257ff6c86cffeb33019b6d8598c5}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
@@ -71,7 +67,8 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \field{labelyear}{1999}
       \field{labelmonth}{05}
       \field{datelabelsource}{}
-      \field{labeltitle}{Alteration of the platelet serotonin transporter in romantic love.}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{abstract}{{BACKGROUND}: The evolutionary consequences of love are so important that there must be some long-established biological process regulating it. Recent findings suggest that the serotonin ({5-HT}) transporter might be linked to both neuroticism and sexual behaviour as well as to obsessive-compulsive disorder ({OCD}). The similarities between an overvalued idea, such as that typical of subjects in the early phase of a love relationship, and obsession, prompted us to explore the possibility that the two conditions might share alterations at the level of the {5-HT} transporter. {METHODS}: Twenty subjects who had recently (within the previous 6 months) fallen in love, 20 unmedicated {OCD} patients and 20 normal controls, were included in the study. The {5-HT} transporter was evaluated with the specific binding of {3H}-paroxetine ({3H}-Par) to platelet membranes. {RESULTS}: The results showed that the density of {3H}-Par binding sites was significantly lower in subjects who had recently fallen in love and in {OCD} patients than in controls. {DISCUSSION}: The main finding of the present study is that subjects who were in the early romantic phase of a love relationship were not different from {OCD} patients in terms of the density of the platelet {5-HT} transporter, which proved to be significantly lower than in the normal controls. This would suggest common neurochemical changes involving the {5-HT} system, linked to psychological dimensions shared by the two conditions, perhaps at an ideational level.}
       \field{issn}{0033-2917}
       \field{journaltitle}{Psychological medicine}
@@ -90,10 +87,6 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
 |;
 
 my $dl1 = q|    \entry{AbdelbarH98}{article}{}
-      \name{labelname}{2}{}{%
-        {{uniquename=0,hash=14c582ce40292affd427311ca8e3bc9c}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=558ac9729b484b6f378e45a86582ea1d}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{2}{}{%
         {{uniquename=0,hash=14c582ce40292affd427311ca8e3bc9c}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=558ac9729b484b6f378e45a86582ea1d}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
@@ -104,7 +97,8 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
       \field{labelyear}{1998}
       \field{datelabelsource}{}
-      \field{labeltitle}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{journaltitle}{Artificial Intelligence}
       \field{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
       \field{volume}{102}
@@ -115,9 +109,6 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
 |;
 
 my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=83d062f99d033839537243075d75bad2}{Merleau-Ponty}{M\bibinithyphendelim P\bibinitperiod}{Maurice}{M\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{uniquename=0,hash=83d062f99d033839537243075d75bad2}{Merleau-Ponty}{M\bibinithyphendelim P\bibinitperiod}{Maurice}{M\bibinitperiod}{}{}{}{}}%
       }
@@ -139,7 +130,8 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       \field{sortinithash}{4203d16473bc940d4ac780773cb7c5dd}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
-      \field{labeltitle}{Le philosophe et son ombre}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{booktitle}{Œuvres}
       \field{title}{Le philosophe et son ombre}
       \field{year}{2010}
@@ -150,6 +142,6 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
 |;
 
 
-is( $out->get_output_entry('citeulike:8283461', $main), $cu1, 'Fetch from citeulike') ;
-is( $out->get_output_entry('AbdelbarH98', $main), $dl1, 'Fetch from plain bib download') ;
-is( $out->get_output_entry('merleau-ponty_philosophe_2010', $main), $ssl, 'HTTPS test') ;
+eq_or_diff( $out->get_output_entry('citeulike:8283461', $main), $cu1, 'Fetch from citeulike') ;
+eq_or_diff( $out->get_output_entry('AbdelbarH98', $main), $dl1, 'Fetch from plain bib download') ;
+eq_or_diff( $out->get_output_entry('merleau-ponty_philosophe_2010', $main), $ssl, 'HTTPS test') ;

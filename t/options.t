@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8' ;
 
 use Test::More tests => 9;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Output::bbl;
@@ -80,9 +82,6 @@ my $dmv =  [
 my $bln = [ {content => 'author'}, {content => 'editor'} ];
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
@@ -97,7 +96,8 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{labelmonth}{04}
       \field{labelday}{05}
       \field{datelabelsource}{}
-      \field{labeltitle}{Title 1}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{day}{05}
       \field{month}{04}
       \field{origday}{30}
@@ -110,9 +110,6 @@ my $l1 = q|    \entry{L1}{book}{}
 |;
 
 my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
       }
@@ -127,7 +124,8 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \field{labelmonth}{04}
       \field{labelday}{05}
       \field{datelabelsource}{}
-      \field{labeltitle}{Title 2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{day}{05}
       \field{month}{04}
       \field{title}{Title 2}
@@ -136,9 +134,6 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
 |;
 
 my $l3 = q|    \entry{L3}{book}{blah=10}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
       }
@@ -153,7 +148,8 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \field{labelmonth}{04}
       \field{labelday}{05}
       \field{datelabelsource}{}
-      \field{labeltitle}{Title 3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{day}{05}
       \field{month}{04}
       \field{title}{Title 3}
@@ -166,7 +162,7 @@ is_deeply(Biber::Config->getblxoption('labelnamespec'), [ {content => 'author'} 
 ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
 ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valued options");
 is_deeply(Biber::Config->getblxoption('labelnamespec', 'book'), $bln, "Per-type multi-valued options");
-is($bibentries->entry('L1')->get_labeldate_info->{field}{year}, 'year', 'Global labelyear setting' ) ;
-is( $out->get_output_entry('L1', $main), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
-is( $out->get_output_entry('L2', $main), $l2, 'Entry-local biblatex option mappings - 1') ;
-is( $out->get_output_entry('L3', $main), $l3, 'Entry-local biblatex option mappings - 2') ;
+eq_or_diff($bibentries->entry('L1')->get_labeldate_info->{field}{year}, 'year', 'Global labelyear setting' ) ;
+eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
+eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'Entry-local biblatex option mappings - 1') ;
+eq_or_diff( $out->get_output_entry('L3', $main), $l3, 'Entry-local biblatex option mappings - 2') ;

@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 22;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Utils;
@@ -46,20 +48,20 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
-is($main->get_extrayeardata('L1'), '1', 'Entry L1 - one name, first in 1995');
-is($main->get_extrayeardata('L2'), '2', 'Entry L2 - one name, second in 1995');
-is($main->get_extrayeardata('L3'), '3', 'Entry L3 - one name, third in 1995');
-is($main->get_extrayeardata('L4'), '1', 'Entry L4 - two names, first in 1995');
-is($main->get_extrayeardata('L5'), '2', 'Entry L5 - two names, second in 1995');
-is($main->get_extrayeardata('L6'), '1', 'Entry L6 - two names, first in 1996');
-is($main->get_extrayeardata('L7'), '2', 'Entry L7 - two names, second in 1996');
-is($main->get_extrayeardata('nodate1'), '1', 'Same name, no year 1');
-is($main->get_extrayeardata('nodate2'), '2', 'Same name, no year 2');
+eq_or_diff($main->get_extrayeardata('L1'), '1', 'Entry L1 - one name, first in 1995');
+eq_or_diff($main->get_extrayeardata('L2'), '2', 'Entry L2 - one name, second in 1995');
+eq_or_diff($main->get_extrayeardata('L3'), '3', 'Entry L3 - one name, third in 1995');
+eq_or_diff($main->get_extrayeardata('L4'), '1', 'Entry L4 - two names, first in 1995');
+eq_or_diff($main->get_extrayeardata('L5'), '2', 'Entry L5 - two names, second in 1995');
+eq_or_diff($main->get_extrayeardata('L6'), '1', 'Entry L6 - two names, first in 1996');
+eq_or_diff($main->get_extrayeardata('L7'), '2', 'Entry L7 - two names, second in 1996');
+eq_or_diff($main->get_extrayeardata('nodate1'), '1', 'Same name, no year 1');
+eq_or_diff($main->get_extrayeardata('nodate2'), '2', 'Same name, no year 2');
 ok(is_undef($main->get_extrayeardata('L8')), 'Entry L8 - one name, only in year');
 ok(is_undef($main->get_extrayeardata('L9')), 'Entry L9 - No name, same year as another with no name');
 ok(is_undef($main->get_extrayeardata('L10')), 'Entry L10 - No name, same year as another with no name');
-is($main->get_extrayeardata('companion1'), '1', 'Entry companion1 - names truncated to same as another entry in same year');
-is($main->get_extrayeardata('companion2'), '2', 'Entry companion2 - names truncated to same as another entry in same year');
+eq_or_diff($main->get_extrayeardata('companion1'), '1', 'Entry companion1 - names truncated to same as another entry in same year');
+eq_or_diff($main->get_extrayeardata('companion2'), '2', 'Entry companion2 - names truncated to same as another entry in same year');
 ok(is_undef($main->get_extrayeardata('companion3')), 'Entry companion3 - one name, same year as truncated names');
 ok(is_undef($main->get_extrayeardata('vangennep')), 'Entry vangennep - prefix makes it different');
 ok(is_undef($main->get_extrayeardata('gennep')), 'Entry gennep - different from prefix name');
@@ -68,5 +70,5 @@ ok(is_undef($main->get_extrayeardata('LY2')), 'Date range means no extrayear - 2
 ok(is_undef($main->get_extrayeardata('LY3')), 'Date range means no extrayear - 3');
 
 # Test for labelyearspec literal string
-is($bibentries->entry('nodate1')->get_field('labelyear'), 'nodate', 'Labelyear string - 1');
-is($bibentries->entry('nodate2')->get_field('labelyear'), 'nodate', 'Labelyear string - 2');
+eq_or_diff($bibentries->entry('nodate1')->get_field('labelyear'), 'nodate', 'Labelyear string - 1');
+eq_or_diff($bibentries->entry('nodate2')->get_field('labelyear'), 'nodate', 'Labelyear string - 2');

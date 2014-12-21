@@ -301,8 +301,11 @@ sub _labelpart {
     # length
     if (my $ic = $part->{ifnamecount}) {
       my $f = $part->{content};
-      if ( first {$f eq $_} @{$dm->get_fields_of_type('list', 'name')} or
-          $f eq 'labelname') {
+      # resolve labelname
+      if ($f eq 'labelname') {
+        $f = ($be->get_labelname_info || '');
+      }
+      if ( first {$f eq $_} @{$dm->get_fields_of_type('list', 'name')}) {
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;
         my $visible_names;
@@ -426,8 +429,7 @@ sub _label_name {
     $realname = $namename;
   }
 
-  # If $namename is 'labelname', form and lang will be ignored anyway
-  my $nameval  = $be->get_field($namename);
+  my $nameval  = $be->get_field($realname);
 
   # Account for labelname set to short* when testing use* options
   my $lnameopt;
@@ -443,7 +445,7 @@ sub _label_name {
     my $numnames  = $nameval->count_names;
     my $visibility = $nameval->get_visible_alpha;
 
-    my @lastnames = map { normalise_string_sort($_->get_lastname, $namename) } @{$nameval->names};
+    my @lastnames = map { normalise_string_sort($_->get_lastname, $realname) } @{$nameval->names};
     my @prefices  = map { $_->get_prefix } @{$nameval->names};
     my $loopnames;
 
@@ -460,7 +462,7 @@ sub _label_name {
 
     for (my $i = 0; $i < $loopnames; $i++) {
       $acc .= Unicode::GCString->new($prefices[$i])->substr(0,1)->as_string if ($useprefix and $prefices[$i]);
-      $acc .= _process_label_attributes($self, $citekey, $lastnames[$i], $labelattrs, $namename, 'lastname', $i);
+      $acc .= _process_label_attributes($self, $citekey, $lastnames[$i], $labelattrs, $realname, 'lastname', $i);
     }
 
     $sortacc = $acc;

@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 16;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Utils;
@@ -45,9 +47,6 @@ my $bibentries = $section->bibentries;
 
 my $set1 = q|    \entry{seta}{set}{}
       \set{set:membera,set:memberb,set:memberc}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
@@ -59,8 +58,9 @@ my $set1 = q|    \entry{seta}{set}{}
       \field{extrayear}{1}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
-      \field{labeltitle}{Set Member A}
       \field{extraalpha}{1}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Set Member A}
       \field{year}{2010}
       \keyw{key1,key2}
@@ -69,9 +69,6 @@ my $set1 = q|    \entry{seta}{set}{}
 
 my $set2 = q|    \entry{set:membera}{book}{}
       \inset{seta}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
@@ -79,7 +76,8 @@ my $set2 = q|    \entry{set:membera}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
-      \field{labeltitle}{Set Member A}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Set Member A}
       \field{year}{2010}
       \keyw{key1,key2}
@@ -88,9 +86,6 @@ my $set2 = q|    \entry{set:membera}{book}{}
 
 my $set3 = q|    \entry{set:memberb}{book}{}
       \inset{seta}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
@@ -98,7 +93,8 @@ my $set3 = q|    \entry{set:memberb}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
-      \field{labeltitle}{Set Member B}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Set Member B}
       \field{year}{2010}
     \endentry
@@ -106,9 +102,6 @@ my $set3 = q|    \entry{set:memberb}{book}{}
 
 my $set4 = q|    \entry{set:memberc}{book}{}
       \inset{seta}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
@@ -116,16 +109,14 @@ my $set4 = q|    \entry{set:memberc}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
-      \field{labeltitle}{Set Member C}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Set Member C}
       \field{year}{2010}
     \endentry
 |;
 
 my $noset1 = q|    \entry{noseta}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
@@ -137,17 +128,15 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{extrayear}{2}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
-      \field{labeltitle}{Stand-Alone A}
       \field{extraalpha}{2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Stand-Alone A}
       \field{year}{2010}
     \endentry
 |;
 
 my $noset2 = q|    \entry{nosetb}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
@@ -159,17 +148,15 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{extrayear}{3}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
-      \field{labeltitle}{Stand-Alone B}
       \field{extraalpha}{3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Stand-Alone B}
       \field{year}{2010}
     \endentry
 |;
 
 my $noset3 = q|    \entry{nosetc}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
@@ -181,17 +168,15 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{extrayear}{4}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
-      \field{labeltitle}{Stand-Alone C}
       \field{extraalpha}{4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Stand-Alone C}
       \field{year}{2010}
     \endentry
 |;
 
 my $sk4 = q|    \entry{skip4}{article}{dataonly}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
@@ -205,7 +190,8 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
-      \field{labeltitle}{Algorithms Which Sort}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{shorthand}{AWS}
       \field{title}{Algorithms Which Sort}
       \field{year}{1932}
@@ -214,18 +200,18 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
 
 is_deeply([$shs->get_keys], ['skip1'], 'skipbiblist - not in biblist for shorthands');
 is_deeply($bibentries->entry('skip1')->get_field('options'), ['skipbib'], 'Passing skipbib through');
-is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
-is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labeldate_info->{field}{year}), '1995', 'Normal labelyear');
+eq_or_diff($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
+eq_or_diff($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labeldate_info->{field}{year}), '1995', 'Normal labelyear');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');
 ok(is_undef($bibentries->entry('skip3')->get_labeldate_info), 'skiplab - no labelyear');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelalpha')), 'dataonly - no labelalpha');
-is($out->get_output_entry('skip4', $main), $sk4, 'dataonly - checking output');
+eq_or_diff($out->get_output_entry('skip4', $main), $sk4, 'dataonly - checking output');
 ok(is_undef($bibentries->entry('skip4')->get_labeldate_info), 'dataonly - no labelyear');
-is($out->get_output_entry('seta', $main), $set1, 'Set parent - with labels');
-is($out->get_output_entry('set:membera', $main), $set2, 'Set member - no labels 1');
-is($out->get_output_entry('set:memberb', $main), $set3, 'Set member - no labels 2');
-is($out->get_output_entry('set:memberc', $main), $set4, 'Set member - no labels 3');
-is($out->get_output_entry('noseta', $main), $noset1, 'Not a set member - extrayear continues from set 1');
-is($out->get_output_entry('nosetb', $main), $noset2, 'Not a set member - extrayear continues from set 2');
-is($out->get_output_entry('nosetc', $main), $noset3, 'Not a set member - extrayear continues from set 3');
+eq_or_diff($out->get_output_entry('seta', $main), $set1, 'Set parent - with labels');
+eq_or_diff($out->get_output_entry('set:membera', $main), $set2, 'Set member - no labels 1');
+eq_or_diff($out->get_output_entry('set:memberb', $main), $set3, 'Set member - no labels 2');
+eq_or_diff($out->get_output_entry('set:memberc', $main), $set4, 'Set member - no labels 3');
+eq_or_diff($out->get_output_entry('noseta', $main), $noset1, 'Not a set member - extrayear continues from set 1');
+eq_or_diff($out->get_output_entry('nosetb', $main), $noset2, 'Not a set member - extrayear continues from set 2');
+eq_or_diff($out->get_output_entry('nosetc', $main), $noset3, 'Not a set member - extrayear continues from set 3');
 

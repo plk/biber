@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 4;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Output::bbl;
@@ -48,7 +50,7 @@ Biber::Config->setblxoption('labelnamespec', [ {content => 'namea'},
 $biber->prepare;
 my $bibentries = $biber->sections->get_section(0)->bibentries;
 
-is($bibentries->entry('angenendtsa')->get_labelname_info, 'shortauthor', 'global shortauthor' );
-is($bibentries->entry('stdmodel')->get_labelname_info, 'author', 'global author' );
-is($bibentries->entry('aristotle:anima')->get_labelname_info, 'editor', 'type-specific editor' );
-is($bibentries->entry('lne1')->get_labelname_info, 'namea', 'type-specific exotic name' );
+eq_or_diff($bibentries->entry('angenendtsa')->get_labelname_info, 'shortauthor', 'global shortauthor' );
+eq_or_diff($bibentries->entry('stdmodel')->get_labelname_info, 'author', 'global author' );
+eq_or_diff($bibentries->entry('aristotle:anima')->get_labelname_info, 'editor', 'type-specific editor' );
+eq_or_diff($bibentries->entry('lne1')->get_labelname_info, 'namea', 'type-specific exotic name' );

@@ -4,6 +4,9 @@ use warnings;
 use utf8;
 
 use Test::More tests => 9;
+use Test::Differences;
+unified_diff;
+
 use Biber;
 use Cwd qw(getcwd);
 use File::Spec;
@@ -1051,14 +1054,14 @@ my $sourcemap = [
 # Set up Biber object
 my $biber = Biber->new( configfile => 'biber-test.conf', mincrossrefs => 7 );
 $biber->parse_ctrlfile('general1.bcf');
-is(Biber::Config->getoption('mincrossrefs'), 7, 'Options 1 - from cmdline');
-is(Biber::Config->getoption('configfile'), File::Spec->catfile('biber-test.conf'), 'Options 2 - from cmdline');
-is(Biber::Config->getoption('sortlocale'), 'testlocale', 'Options 3 - from config file');
+eq_or_diff(Biber::Config->getoption('mincrossrefs'), 7, 'Options 1 - from cmdline');
+eq_or_diff(Biber::Config->getoption('configfile'), File::Spec->catfile('biber-test.conf'), 'Options 2 - from cmdline');
+eq_or_diff(Biber::Config->getoption('sortlocale'), 'testlocale', 'Options 3 - from config file');
 is_deeply(Biber::Config->getoption('collate_options'), $collopts, 'Options 4 - from config file');
 is_deeply(Biber::Config->getoption('nosort'), $nosort, 'Options 5 - from config file');
 is_deeply(Biber::Config->getoption('noinit'), $noinit, 'Options 6 - from config file');
 is_deeply(Biber::Config->getoption('sortcase'), 0, 'Options 7 - from .bcf');
-is(Biber::Config->getoption('decodecharsset'), 'base', 'Options 8 - from defaults');
+eq_or_diff(Biber::Config->getoption('decodecharsset'), 'base', 'Options 8 - from defaults');
 # Here the result is a merge of the biblatex option from the .bcf and the option from
 # the biber config file as sourcemap is a special case
 is_deeply(Biber::Config->getoption('sourcemap'), $sourcemap, 'Options 9 - from config file');

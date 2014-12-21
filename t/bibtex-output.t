@@ -2,6 +2,10 @@
 use strict;
 use warnings;
 use Test::More tests => 5;
+use Test::Differences;
+unified_diff;
+
+
 use Encode;
 use Biber;
 use Biber::Utils;
@@ -80,8 +84,8 @@ my $b3 = q|@BOOK{xd1,
 |;
 
 # NFD here because we are testing internals here and all internals expect NFD
-is($out->get_output_entry('murray',), $b1, 'bibtex output 1');
-is($out->get_output_entry('b1',), $b2, 'bibtex output 2');
-is($out->get_output_entry('xd1',), $b3, 'bibtex output 3');
+eq_or_diff($out->get_output_entry('murray',), $b1, 'bibtex output 1');
+eq_or_diff($out->get_output_entry('b1',), $b2, 'bibtex output 2');
+eq_or_diff($out->get_output_entry('xd1',), $b3, 'bibtex output 3');
 ok(is_undef($out->get_output_entry('reese')), 'bibtex output 4');
 is_deeply([$main->get_keys], ['murray', 'kant:ku', 'b1', 'xd1'], 'bibtex output sorting');

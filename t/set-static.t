@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 5;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Output::bbl;
@@ -43,9 +45,6 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Static1}{set}{}
       \set{Static2,Static3,Static4}
-      \name{labelname}{1}{}{%
-        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
@@ -55,7 +54,8 @@ my $string1 = q|    \entry{Static1}{set}{}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
-      \field{labeltitle}{Blessed Brains}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{annotation}{Some notes}
       \field{title}{Blessed Brains}
       \field{year}{2001}
@@ -64,9 +64,6 @@ my $string1 = q|    \entry{Static1}{set}{}
 
 my $string2 = q|    \entry{Static2}{book}{}
       \inset{Static1}
-      \name{labelname}{1}{}{%
-        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
@@ -74,7 +71,8 @@ my $string2 = q|    \entry{Static2}{book}{}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field{labeltitle}{Blessed Brains}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{annotation}{Some Blessed Note}
       \field{title}{Blessed Brains}
       \field{year}{2001}
@@ -83,9 +81,6 @@ my $string2 = q|    \entry{Static2}{book}{}
 
 my $string3 = q|    \entry{Static3}{book}{}
       \inset{Static1}
-      \name{labelname}{1}{}{%
-        {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
       }
@@ -93,7 +88,8 @@ my $string3 = q|    \entry{Static3}{book}{}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field{labeltitle}{Castles and Crime}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Castles and Crime}
       \field{year}{2002}
     \endentry
@@ -101,9 +97,6 @@ my $string3 = q|    \entry{Static3}{book}{}
 
 my $string4 = q|    \entry{Static4}{book}{}
       \inset{Static1}
-      \name{labelname}{1}{}{%
-        {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
@@ -111,7 +104,8 @@ my $string4 = q|    \entry{Static4}{book}{}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{0}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field{labeltitle}{Dungeons, Dark and Dangerous}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{title}{Dungeons, Dark and Dangerous}
       \field{year}{2005}
     \endentry
@@ -120,9 +114,6 @@ my $string4 = q|    \entry{Static4}{book}{}
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
 my $string5 = q|    \entry{Static2}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
@@ -132,7 +123,8 @@ my $string5 = q|    \entry{Static2}{book}{}
       \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
-      \field{labeltitle}{Blessed Brains}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{annotation}{Some Blessed Note}
       \field{title}{Blessed Brains}
       \field{year}{2001}
@@ -140,9 +132,9 @@ my $string5 = q|    \entry{Static2}{book}{}
 |;
 
 
-is($out->get_output_entry('Static1', $main), $string1, 'Static set test 1');
-is($out->get_output_entry('Static2', $main), $string2, 'Static set test 2');
-is($out->get_output_entry('Static3', $main), $string3, 'Static set test 3');
-is($out->get_output_entry('Static4', $main), $string4, 'Static set test 4');
-is($out->get_output_entry('Static2', $main, 1), $string5, 'Static set test 5');
+eq_or_diff($out->get_output_entry('Static1', $main), $string1, 'Static set test 1');
+eq_or_diff($out->get_output_entry('Static2', $main), $string2, 'Static set test 2');
+eq_or_diff($out->get_output_entry('Static3', $main), $string3, 'Static set test 3');
+eq_or_diff($out->get_output_entry('Static4', $main), $string4, 'Static set test 4');
+eq_or_diff($out->get_output_entry('Static2', $main, 1), $string5, 'Static set test 5');
 

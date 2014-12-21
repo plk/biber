@@ -1540,14 +1540,8 @@ sub process_labelname {
     }
   }
 
-  # Set the actual labelname
-  # Note this is not set with form and lang, as it is now resolved and the information
-  # on what form and lang were used to resolve it are in labelname_info
-  if (my $lni = $be->get_labelname_info) {
-    $be->set_field('labelname',$be->get_field($lni));
-  }
-  else {
-    $logger->debug("Could not determine the labelname of entry $citekey");
+  unless ($be->get_labelname_info) {
+    $logger->debug("Could not determine the labelname source of entry $citekey");
   }
 }
 

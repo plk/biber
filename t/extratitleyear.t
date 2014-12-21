@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 8;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Utils;
@@ -43,8 +45,8 @@ my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 # Don't forget that the extratitleyear data is inserted after sorting
-is($main->get_extratitleyeardata('L1'), '1', 'Same title, same year');
-is($main->get_extratitleyeardata('L2'), '2', 'Same title, same year');
+eq_or_diff($main->get_extratitleyeardata('L1'), '1', 'Same title, same year');
+eq_or_diff($main->get_extratitleyeardata('L2'), '2', 'Same title, same year');
 ok(is_undef($main->get_extratitledata('L3')), 'No title,  same year');
 ok(is_undef($main->get_extratitleyeardata('L4')), 'Same title,  different year');
 ok(is_undef($main->get_extratitleyeardata('L5')), 'Different labeltitle,  same year');

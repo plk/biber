@@ -3,12 +3,18 @@ use strict;
 use warnings;
 use utf8;
 no warnings 'utf8';
+use Text::Diff::Config;
+$Text::Diff::Config::Output_Unicode = 1;
 
 use Test::More tests => 3;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Output::bbl;
 use Log::Log4perl;
+use Encode;
+
 chdir("t/tdata");
 
 # Set up Biber object
@@ -43,12 +49,6 @@ my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 my $l1 = q|    \entry{bltx1}{book}{}
-      \true{morelabelname}
-      \name{labelname}{3}{}{%
-        {{hash=7b4da3df896da456361ae44dc651770a}{Булгаков}{Б\bibinitperiod}{Павел\bibnamedelima Георгиевич}{П\bibinitperiod\bibinitdelim Г\bibinitperiod}{}{}{}{}}%
-        {{hash=ee55ff3b0e4268cfb193143e86c283a9}{Розенфельд}{Р\bibinitperiod}{Борис-ZZ\bibnamedelima Aбрамович}{Б\bibinithyphendelim Z\bibinitperiod\bibinitdelim A\bibinitperiod}{Билл}{Б\bibinitperiod}{}{}{}{}}%
-        {{hash=e708d5a31534e937578abf161c867a25}{Aхмедов}{A\bibinitperiod}{Ашраф\bibnamedelima Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
-      }
       \true{moreauthor}
       \name{author}{3}{}{%
         {{hash=7b4da3df896da456361ae44dc651770a}{Булгаков}{Б\bibinitperiod}{Павел\bibnamedelima Георгиевич}{П\bibinitperiod\bibinitdelim Г\bibinitperiod}{}{}{}{}}%
@@ -70,7 +70,8 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \field{sortinithash}{8f918f8686258589a227d5aaf265a9bb}
       \field{labelyear}{1983}
       \field{datelabelsource}{}
-      \field{labeltitle}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{05}
@@ -93,6 +94,7 @@ my $l1 = q|    \entry{bltx1}{book}{}
     \endentry
 |;
 
-is($out->get_output_entry('bltx1', $main), $l1, 'BibLaTeXML - 1');
-is($section->get_citekey_alias('bltx1a1'), 'bltx1', 'Citekey aliases - 1');
-is($section->get_citekey_alias('bltx1a2'), 'bltx1', 'Citekey aliases - 2');
+# Test::Differences doesn't like utf8 unless it's encoded here
+eq_or_diff(encode_utf8($out->get_output_entry('bltx1', $main)), encode_utf8($l1), 'BibLaTeXML - 1');
+eq_or_diff($section->get_citekey_alias('bltx1a1'), 'bltx1', 'Citekey aliases - 1');
+eq_or_diff($section->get_citekey_alias('bltx1a2'), 'bltx1', 'Citekey aliases - 2');
