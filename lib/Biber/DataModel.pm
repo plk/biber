@@ -534,10 +534,10 @@ sub check_data_constraints {
   foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{data}}) {
     # This is the datatype of the constraint, not the field!
     if ($c->{datatype} eq 'isbn') {
-      foreach my $f (@{$c->{fields}}) {
+      foreach my $f (@{$c->{fields}}) {a
         if (my $fv = $be->get_field($f)) {
           require Business::ISBN;
-          (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
+          my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
           $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
           # Just in case it is already set. We also need to fake this in tests or it will
           # look for it in the blib dir
