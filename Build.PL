@@ -29,10 +29,12 @@ my $builder = $class->new(
     dist_author         => 'Philip Kime <Philip@kime.org.uk>',
     dist_abstract       => 'Biber is a much-augmented bibtex replacement for biblatex users',
     dist_version_from   => 'lib/Biber/Config.pm',
-    build_recommends => {
-       'Test::More'   => 0,
-       'Test::Differences' => 0,
-       'File::Which'  => 0
+    test_requires => {
+                      'Test::More'   => 0,
+                      'Test::Pod'   => 0,
+                      'Test::Pod::Coverage'   => 0,
+                      'Test::Differences' => 0,
+                      'File::Which'  => 0
                         },
     add_to_cleanup      => [ 'biber-*' ],
     configure_requires => { 'Module::Build' => 0.38 },
