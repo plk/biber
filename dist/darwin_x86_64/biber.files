@@ -8,10 +8,10 @@
 ../../lib/Biber/LaTeX/recode_data.xml;lib/Biber/LaTeX/recode_data.xml
 ../../data/bcf.xsl;lib/Biber/bcf.xsl
 ../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
-/opt/local/lib/perl5/site_perl/5.18.2/darwin-thread-multi-2level/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
-/opt/local/lib/perl5/site_perl/5.18.2/darwin-thread-multi-2level/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
-/opt/local/lib/perl5/site_perl/5.18.2/darwin-thread-multi-2level/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
-/opt/local/lib/perl5/site_perl/5.18.2/darwin-thread-multi-2level/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
-/opt/local/lib/perl5/site_perl/5.18.2/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem
-/opt/local/lib/perl5/site_perl/5.18.2/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml
-/opt/local/lib/perl5/site_perl/5.18.2/darwin-thread-multi-2level/auto/Unicode/LineBreak/LineBreak.bundle;lib/auto/Unicode/LineBreak/LineBreak.bundle
+/opt/local/lib/perl5/site_perl/5.20/darwin-thread-multi-2level/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
+/opt/local/lib/perl5/site_perl/5.20/darwin-thread-multi-2level/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
+/opt/local/lib/perl5/site_perl/5.20/darwin-thread-multi-2level/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
+/opt/local/lib/perl5/site_perl/5.20/darwin-thread-multi-2level/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
+/opt/local/lib/perl5/site_perl/5.20/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem
+/opt/local/lib/perl5/site_perl/5.20/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml
+/opt/local/lib/perl5/site_perl/5.20/darwin-thread-multi-2level/auto/Unicode/LineBreak/LineBreak.bundle;lib/auto/Unicode/LineBreak/LineBreak.bundle

@@ -16,7 +16,7 @@
 # constructed in the code so Par::Packer can't auto-detect them.
 # Same with some of the output modules.
 
-cp /opt/local/libexec/perl5.18/sitebin/biber /tmp/biber-darwin
+cp /opt/local/libexec/perl5.20/sitebin/biber /tmp/biber-darwin
 cp /opt/local/lib/libz.1.2.7.dylib /tmp/libz.1.dylib
 
 PAR_VERBATIM=1 pp --compress=6 \
