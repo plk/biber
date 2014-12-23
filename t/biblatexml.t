@@ -67,7 +67,7 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \strng{namehash}{80e524d8402a5619e59ea67ea2d937a5}
       \strng{fullhash}{afcf3a11058ba0a3fc7609c2a29ae6da}
       \field{sortinit}{Б}
-      \field{sortinithash}{8f918f8686258589a227d5aaf265a9bb}
+      \field{sortinithash}{161dbde41bd990699d9b7ff419202d50}
       \field{labelyear}{1983}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}

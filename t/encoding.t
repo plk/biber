@@ -44,7 +44,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \true{singletitle}
@@ -66,7 +66,7 @@ my $encode2 = q|    \entry{test1}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \true{singletitle}
@@ -88,7 +88,7 @@ my $encode3 = q|    \entry{test1}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \true{singletitle}
@@ -110,7 +110,7 @@ my $encode5 = q|    \entry{test}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \true{singletitle}
@@ -132,7 +132,7 @@ my $encode6 = q|    \entry{test}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \true{singletitle}
@@ -154,7 +154,7 @@ my $encode7 = q|    \entry{test}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \true{singletitle}

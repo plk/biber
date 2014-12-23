@@ -82,7 +82,7 @@ my $u1 = q|    \entry{u1}{misc}{}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
       \field{labelalpha}{AAA\textbf{+}00}
       \field{sortinit}{A}
-      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -91,7 +91,7 @@ my $u1 = q|    \entry{u1}{misc}{}
     \endentry
 |;
 
-is( $out->get_output_entry('u1', $main), $u1, 'uniquelist 1' ) ;
+eq_or_diff( $out->get_output_entry('u1', $main), $u1, 'uniquelist 1' ) ;
 
 is_deeply( \@keys, \@citedkeys, 'citekeys 1') ;
 is_deeply( [ $biber->sortlists->get_list(0, 'shorthands', 'list', 'shorthands')->get_keys ], [ 'kant:kpv', 'kant:ku' ], 'shorthands' ) ;
@@ -137,7 +137,7 @@ my $murray1 = q|    \entry{murray}{article}{}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos\textbf{+}98}
       \field{sortinit}{H}
-      \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
+      \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{shorttitle}
@@ -179,7 +179,7 @@ my $murray2 = q|    \entry{murray}{article}{}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos98}
       \field{sortinit}{H}
-      \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
+      \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{shorttitle}
@@ -209,7 +209,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
-      \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
@@ -228,7 +228,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
-      \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Signs of W$\frac{o}{a}$nder}
@@ -249,7 +249,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
       \field{labelalpha}{XAn35}
       \field{sortinit}{A}
-      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
       \field{labelnamesource}{shortauthor}
       \field{labeltitlesource}{shorttitle}
@@ -276,7 +276,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
       \field{labelalpha}{YAn39}
       \field{sortinit}{A}
-      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
       \field{labelnamesource}{shortauthor}
       \field{labeltitlesource}{shorttitle}
@@ -300,7 +300,7 @@ my $url1 = q|    \entry{url1}{misc}{}
       \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \field{labelalpha}{Ali05}
       \field{sortinit}{A}
-      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \field{extraalpha}{4}
       \field{labelnamesource}{author}
       \field{year}{2005}
@@ -321,7 +321,7 @@ my $list1 = q|    \entry{list1}{book}{}
         {BBB}%
       }
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
     \endentry
 |;
 

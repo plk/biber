@@ -57,7 +57,7 @@ my $l1 = q|    \entry{http://0-muse.jhu.edu.pugwash.lib.warwick.ac.uk:80/journal
       \strng{namehash}{2d6c91380dc6798fd8219e73cf91f468}
       \strng{fullhash}{2d6c91380dc6798fd8219e73cf91f468}
       \field{sortinit}{R}
-      \field{sortinithash}{ff5a3533ecf9d5a03ff60b1e1389b63d}
+      \field{sortinithash}{c7387613477035a752d935acfc3e3ea2}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}
@@ -88,7 +88,7 @@ my $l2 = q|    \entry{urn:isbn:0713990023}{book}{}
       \strng{namehash}{984e5967448051538555a64aac11ed21}
       \strng{fullhash}{984e5967448051538555a64aac11ed21}
       \field{sortinit}{F}
-      \field{sortinithash}{9661cce5f16ac30b6b0c804d4583ed99}
+      \field{sortinithash}{c6a7d9913bbd7b20ea954441c0460b78}
       \field{labelyear}{1988}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}
@@ -121,7 +121,7 @@ my $l3 = q|    \entry{item_54}{inbook}{}
       \strng{namehash}{984e5967448051538555a64aac11ed21}
       \strng{fullhash}{984e5967448051538555a64aac11ed21}
       \field{sortinit}{F}
-      \field{sortinithash}{9661cce5f16ac30b6b0c804d4583ed99}
+      \field{sortinithash}{c6a7d9913bbd7b20ea954441c0460b78}
       \field{labelyear}{1996}
       \field{labelmonth}{03\bibdatedash 04}
       \field{labelday}{04\bibdatedash 07}
