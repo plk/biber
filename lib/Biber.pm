@@ -1737,7 +1737,6 @@ sub process_pername_hashes {
   my $bee = $be->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
 
-  # Generate hashes for all forms and langs
   foreach my $pn (@{$dm->get_fields_of_type('list', 'name')}) {
     next unless my $names = $be->get_field($pn);
     foreach my $n (@{$names->names}) {
