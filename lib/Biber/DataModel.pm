@@ -534,7 +534,7 @@ sub check_data_constraints {
   foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{data}}) {
     # This is the datatype of the constraint, not the field!
     if ($c->{datatype} eq 'isbn') {
-      foreach my $f (@{$c->{fields}}) {a
+      foreach my $f (@{$c->{fields}}) {
         if (my $fv = $be->get_field($f)) {
           require Business::ISBN;
           my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
