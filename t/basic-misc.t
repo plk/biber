@@ -82,7 +82,7 @@ my $u1 = q|    \entry{u1}{misc}{}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
       \field{labelalpha}{AAA\textbf{+}00}
       \field{sortinit}{A}
-      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -137,8 +137,7 @@ my $murray1 = q|    \entry{murray}{article}{vlang=english}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos\textbf{+}98}
       \field{sortinit}{H}
-      \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
-      \field{labeltitle}{Alkanethiolate gold cluster molecules}
+      \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -180,7 +179,7 @@ my $murray2 = q|    \entry{murray}{article}{vlang=english}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos98}
       \field{sortinit}{H}
-      \field{sortinithash}{95b2cb08933fe649b7e9f8beee2132b4}
+      \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -210,9 +209,9 @@ my $t1 = q+    \entry{t1}{misc}{}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
       \field[form=original,lang=english]{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
@@ -229,9 +228,9 @@ my $t2 = q|    \entry{t2}{misc}{}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{sortinithash}{1a3a21dbed09540af12d49a0b14f4751}
       \field[form=original,lang=english]{title}{Signs of W$\frac{o}{a}$nder}
       \field{year}{1994}
       \field{pages}{100\bibrangedash 108}
@@ -250,10 +249,10 @@ my $anon1 = q|    \entry{anon1}{unpublished}{vlang=english}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
       \field{labelalpha}{XAn35}
       \field{sortinit}{A}
-      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
       \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{shorttitle}
+      \field{labeltitlesource}{title}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field[form=original,lang=english]{note}{anon1}
@@ -277,10 +276,10 @@ my $anon2 = q|    \entry{anon2}{unpublished}{vlang=english}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
       \field{labelalpha}{YAn39}
       \field{sortinit}{A}
-      \field{sortinithash}{c8a29dea43e9d2645817723335a4dbe8}
+      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
       \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{shorttitle}
+      \field{labeltitlesource}{title}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field[form=original,lang=english]{note}{anon2}
@@ -380,7 +379,7 @@ ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 9' );
 ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 10' );
 
 # Make sure visibility doesn't exceed number of names.
-is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info->{field})->get_visible_bib, '3', 'bib visibility - 1');
+is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info)->get_visible_bib, '3', 'bib visibility - 1');
 
 # Testing per_type and per_entry max/min* so reset globals to defaults
 Biber::Config->setblxoption('uniquelist', 0);
@@ -410,12 +409,12 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info->{field})->get_visible_cite, '1', 'per_type maxcitenames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info->{field})->get_visible_cite, '3', 'per_type maxcitenames - 2');
-is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info->{field})->get_visible_bib, '2', 'per_type bibnames - 3');
-is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info->{field})->get_visible_bib, '3', 'per_type bibnames - 4');
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info->{field})->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info->{field})->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_visible_cite, '1', 'per_type maxcitenames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_visible_cite, '3', 'per_type maxcitenames - 2');
+is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info)->get_visible_bib, '2', 'per_type bibnames - 3');
+is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info)->get_visible_bib, '3', 'per_type bibnames - 4');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
 is($biber->_liststring('tmn1', 'institution'), 'A!B!C', 'per_type/entry items - 1');
 is($biber->_liststring('tmn3', 'institution'), "A!B\x{10FFFD}", 'per_type/entry items - 2');
 

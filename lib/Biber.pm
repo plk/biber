@@ -2381,9 +2381,7 @@ sub create_uniquename_info {
       # be uniquename = 2 unless even the full name doesn't disambiguate
       # and then it is left at uniquename = 0
 
-      my $nl = $be->get_field($lni->{field},
-                              $lni->{form},
-                              $lni->{lang});
+      my $nl = $be->get_field($lni);
       my $num_names = $nl->count_names;
       my $names = $nl->names;
       # If name list was truncated in bib with "and others", this overrides maxcitenames

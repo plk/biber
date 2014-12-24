@@ -201,10 +201,8 @@ sub set_labelname_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
   $self->{labelnameinfo} = $data;
-  $logger->trace("Set labelname for '$key' to " . $data->{field} . '/' . $data->{form} . '/' . $data->{lang});
+  $logger->trace("Set labelname for '$key' to '$data'");
   return;
 }
 
@@ -233,8 +231,6 @@ sub set_labelnamefh_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
   $self->{labelnamefhinfo} = $data;
   return;
 }
@@ -264,10 +260,8 @@ sub set_labeltitle_info {
   my $self = shift;
   my $data = shift;
   my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
   $self->{labeltitleinfo} = $data;
-  $logger->trace("Set labeltitle for '$key' to " . $data->{field} . '/' . $data->{form} . '/' . $data->{lang});
+  $logger->trace("Set labeltitle for '$key' to '$data'");
   return;
 }
 
@@ -296,9 +290,6 @@ sub get_labeltitle_info {
 sub set_labeldate_info {
   my $self = shift;
   my $data = shift;
-  my $key = $self->get_field('citekey');
-  $data->{form} = $data->{form} || Biber::Config->getblxoption('vform', undef, $key);
-  $data->{lang} = $data->{lang} || Biber::Config->getblxoption('vlang', undef, $key);
   $self->{labeldateinfo} = $data;
   return;
 }
