@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 12;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Output::bbl;
@@ -56,7 +58,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{1998}
       \field{datelabelsource}{}
       \field{labeltitle}{Original Title}
@@ -95,7 +97,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2009}
       \field{datelabelsource}{}
       \field{labeltitle}{Reprint Title}
@@ -256,14 +258,14 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
 
 my $c1 = q|    \entry{c1}{book}{}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{related}{9ab62b5ef34a985438bfdf7ee0102229}
     \endentry
 |;
 
 my $c2k = q|    \entry{9ab62b5ef34a985438bfdf7ee0102229}{book}{dataonly}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{clonesourcekey}{c2}
       \field{related}{0a3d72134fb3d6c024db4c510bc1605b}
     \endentry
@@ -271,27 +273,27 @@ my $c2k = q|    \entry{9ab62b5ef34a985438bfdf7ee0102229}{book}{dataonly}
 
 my $c3k = q|    \entry{0a3d72134fb3d6c024db4c510bc1605b}{book}{dataonly}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{clonesourcekey}{c3}
       \field{related}{9ab62b5ef34a985438bfdf7ee0102229}
     \endentry
 |;
 
 
-is( $out->get_output_entry('key1', $main), $k1, 'Related entry test 1' ) ;
-is( $out->get_output_entry('key2', $main), $k2, 'Related entry test 2' ) ;
+eq_or_diff( $out->get_output_entry('key1', $main), $k1, 'Related entry test 1' ) ;
+eq_or_diff( $out->get_output_entry('key2', $main), $k2, 'Related entry test 2' ) ;
 # Key k3 is used only to create a related entry clone but since it isn't cited itself
 # it shouldn't be in the .bbl
-is( $out->get_output_entry('key3', $main), undef, 'Related entry test 3' ) ;
-is( $out->get_output_entry('c2add694bf942dc77b376592d9c862cd', $main), $kck1, 'Related entry test 4' ) ;
-is( $out->get_output_entry('78f825aaa0103319aaa1a30bf4fe3ada', $main), $kck2, 'Related entry test 5' ) ;
-is( $out->get_output_entry('3631578538a2d6ba5879b31a9a42f290', $main), $kck3, 'Related entry test 6' ) ;
-is( $out->get_output_entry('caf8e34be07426ae7127c1b4829983c1', $main), $kck4, 'Related entry test 7' ) ;
+eq_or_diff( $out->get_output_entry('key3', $main), undef, 'Related entry test 3' ) ;
+eq_or_diff( $out->get_output_entry('c2add694bf942dc77b376592d9c862cd', $main), $kck1, 'Related entry test 4' ) ;
+eq_or_diff( $out->get_output_entry('78f825aaa0103319aaa1a30bf4fe3ada', $main), $kck2, 'Related entry test 5' ) ;
+eq_or_diff( $out->get_output_entry('3631578538a2d6ba5879b31a9a42f290', $main), $kck3, 'Related entry test 6' ) ;
+eq_or_diff( $out->get_output_entry('caf8e34be07426ae7127c1b4829983c1', $main), $kck4, 'Related entry test 7' ) ;
 # Key k4 is used only to create a related entry clone but since it isn't cited itself
 # it shouldn't be in the .bbl
-is( $out->get_output_entry('key4', $main), undef, 'Related entry test 8' ) ;
+eq_or_diff( $out->get_output_entry('key4', $main), undef, 'Related entry test 8' ) ;
 is_deeply([$shs->get_keys], ['key1', 'key2'], 'Related entry test 9');
 # Testing circular dependencies
-is( $out->get_output_entry('c1', $main), $c1, 'Related entry test 10' ) ;
-is( $out->get_output_entry('9ab62b5ef34a985438bfdf7ee0102229', $main), $c2k, 'Related entry test 11' ) ;
-is( $out->get_output_entry('0a3d72134fb3d6c024db4c510bc1605b', $main), $c3k, 'Related entry test 12' ) ;
+eq_or_diff( $out->get_output_entry('c1', $main), $c1, 'Related entry test 10' ) ;
+eq_or_diff( $out->get_output_entry('9ab62b5ef34a985438bfdf7ee0102229', $main), $c2k, 'Related entry test 11' ) ;
+eq_or_diff( $out->get_output_entry('0a3d72134fb3d6c024db4c510bc1605b', $main), $c3k, 'Related entry test 12' ) ;

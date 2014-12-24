@@ -18,10 +18,15 @@ use File::Which;
 my $perl = which('perl');
 my $stdout;
 
+# This test will complain on the test linux servers as /usr/local/perl/bin/perl will not be
+# returned by "which perl" and so the following workaround will fail to find the ISBN messaged file.
+# Doesn't matter much but just in case when running "Build test" on the current test VMs, worth
+# remembering.
+
 # This is needed so that this env var is set to the runtime location of the message file and not
 # the test runtime as this is altered by Module::Build which sets up $INC{} differently
 run3  [ $perl, '-MBusiness::ISBN', '-e', 'print $INC{"Business/ISBN.pm"}' ], \undef, \$stdout, \undef;
-(my $vol, my $dir, undef) = File::Spec->splitpath($stdout);
+my ($vol, $dir, undef) = File::Spec->splitpath($stdout);
 $ENV{ISBN_RANGE_MESSAGE} = File::Spec->catpath($vol, "$dir/ISBN/", 'RangeMessage.xml');
 
 # Set up Biber object

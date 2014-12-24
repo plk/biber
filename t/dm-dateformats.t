@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 33;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Output::bbl;
@@ -78,7 +80,7 @@ my $l13c = q|    \entry{L13}{book}{}
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labelyear}{1996\bibdatedash }
       \field{labelmonth}{01}
       \field{labelday}{01}
@@ -113,7 +115,7 @@ my $l14 = q|    \entry{L14}{book}{}
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{3}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
@@ -151,7 +153,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{4}
       \field{labeltitle}{Title 2}
       \field{labeltitlesourcefield}{title}
@@ -180,7 +182,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{5}
       \field{labelyear}{1996}
       \field{labelmonth}{01}
@@ -216,7 +218,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{4}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
@@ -267,7 +269,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labelyear}{1998}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
@@ -317,7 +319,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \strng{namehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labelyear}{1998\bibdatedash 2004}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
@@ -359,20 +361,20 @@ is_deeply($bibentries->entry('L4')->get_field('warnings'), $l4, 'Date values tes
 is_deeply($bibentries->entry('L5')->get_field('warnings'), $l5, 'Date values test 5' ) ;
 is_deeply($bibentries->entry('L6')->get_field('warnings'), $l6, 'Date values test 6' ) ;
 is_deeply($bibentries->entry('L7')->get_field('warnings'), $l7, 'Date values test 7' ) ;
-is($bibentries->entry('L8')->get_field('month'), '01', 'Date values test 8b - MONTH hacked to integer' ) ;
+eq_or_diff($bibentries->entry('L8')->get_field('month'), '01', 'Date values test 8b - MONTH hacked to integer' ) ;
 ok(is_undef($bibentries->entry('L9')->get_field('warnings')), 'Date values test 9' ) ;
 ok(is_undef($bibentries->entry('L10')->get_field('warnings')), 'Date values test 10' ) ;
 is_deeply($bibentries->entry('L11')->get_field('warnings'), $l11, 'Date values test 11' );
-is($bibentries->entry('L11')->get_field('year'), '1996', 'Date values test 11a - DATE overrides YEAR' ) ;
+eq_or_diff($bibentries->entry('L11')->get_field('year'), '1996', 'Date values test 11a - DATE overrides YEAR' ) ;
 is_deeply($bibentries->entry('L12')->get_field('warnings'), $l12, 'Date values test 12' );
-is($bibentries->entry('L12')->get_field('month'), '01', 'Date values test 12a - DATE overrides MONTH' ) ;
+eq_or_diff($bibentries->entry('L12')->get_field('month'), '01', 'Date values test 12a - DATE overrides MONTH' ) ;
 # it means something if endyear is defined but null ("1935-")
 ok(is_def_and_null($bibentries->entry('L13')->get_field('endyear')), 'Date values test 13 - range with no end' ) ;
 ok(is_undef($bibentries->entry('L13')->get_field('endmonth')), 'Date values test 13a - ENDMONTH undef for open-ended range' ) ;
 ok(is_undef($bibentries->entry('L13')->get_field('endday')), 'Date values test 13b - ENDDAY undef for open-ended range' ) ;
-is( $out->get_output_entry('L13', $main), $l13c, 'Date values test 13c - labelyear open-ended range' ) ;
-is( $out->get_output_entry('L14', $main), $l14, 'Date values test 14 - labelyear same as YEAR when ENDYEAR == YEAR') ;
-is( $out->get_output_entry('L15', $main), $l15, 'Date values test 15 - labelyear should be undef, no DATE or YEAR') ;
+eq_or_diff( $out->get_output_entry('L13', $main), $l13c, 'Date values test 13c - labelyear open-ended range' ) ;
+eq_or_diff( $out->get_output_entry('L14', $main), $l14, 'Date values test 14 - labelyear same as YEAR when ENDYEAR == YEAR') ;
+eq_or_diff( $out->get_output_entry('L15', $main), $l15, 'Date values test 15 - labelyear should be undef, no DATE or YEAR') ;
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'},
@@ -383,10 +385,10 @@ $bibentries->del_entry('L16');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('L16')->get_labeldate_info->{field}{year}, 'eventyear', 'Date values test 16 - labelyear = EVENTYEAR when YEAR is (mistakenly) missing' ) ;
-is($out->get_output_entry('L16', $main), $l16, 'Date values test 16a - labelyear = EVENTYEAR value when YEAR is (mistakenly) missing' );
-is($bibentries->entry('L17')->get_labeldate_info->{field}{year}, 'year', 'Date values test 17 - labelyear = YEAR' ) ;
-is($out->get_output_entry('L17', $main), $l17, 'Date values test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
+eq_or_diff($bibentries->entry('L16')->get_labeldate_info->{field}{year}, 'eventyear', 'Date values test 16 - labelyear = EVENTYEAR when YEAR is (mistakenly) missing' ) ;
+eq_or_diff($out->get_output_entry('L16', $main), $l16, 'Date values test 16a - labelyear = EVENTYEAR value when YEAR is (mistakenly) missing' );
+eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{year}, 'year', 'Date values test 17 - labelyear = YEAR' ) ;
+eq_or_diff($out->get_output_entry('L17', $main), $l17, 'Date values test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labeldatespec', [ {content => 'origdate', type => 'field'},
@@ -396,8 +398,8 @@ $bibentries->del_entry('L17');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('L17')->get_labeldate_info->{field}{year}, 'origyear', 'Date values test 17b - labelyear = ORIGYEAR' ) ;
-is($out->get_output_entry('L17', $main), $l17c, 'Date values test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
+eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{year}, 'origyear', 'Date values test 17b - labelyear = ORIGYEAR' ) ;
+eq_or_diff($out->get_output_entry('L17', $main), $l17c, 'Date values test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labeldatespec', [ {content => 'eventdate', type => 'field'},
@@ -407,9 +409,9 @@ $bibentries->del_entry('L17');
 $biber->prepare;
 $out = $biber->get_output_obj;
 
-is($bibentries->entry('L17')->get_labeldate_info->{field}{year}, 'eventyear', 'Date values test 17d - labelyear = EVENTYEAR' ) ;
-is($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'event', 'Date values test 17d - source = event' ) ;
-is($out->get_output_entry('L17', $main), $l17e, 'Date values test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
+eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{year}, 'eventyear', 'Date values test 17d - labelyear = EVENTYEAR' ) ;
+eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'event', 'Date values test 17d - source = event' ) ;
+eq_or_diff($out->get_output_entry('L17', $main), $l17e, 'Date values test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labeldatespec', [ {content => 'pubstate', type => 'field'} ], 'PER_TYPE', 'proceedings');
@@ -417,4 +419,4 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'pubstate', type => '
 $bibentries->del_entry('L17');
 $biber->prepare;
 $out = $biber->get_output_obj;
-is($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubstate', 'Source is non-date field' );
+eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubstate', 'Source is non-date field' );

@@ -176,7 +176,7 @@ sub init_sets {
     $remap_d->{$type}{re} = join('|', map { /[\.\^\|\+\-\)\(]/ ? '\\' . $_ : $_ } sort {length($b) <=> length($a)} keys %{$remap_d->{$type}{map}});
     $remap_d->{$type}{re} = qr|$remap_d->{$type}{re}|;
   }
-  use Data::Dump;dd($remap_d);
+
   # Populate the encode regexps
   foreach my $type (@types) {
     next unless exists $remap_e->{$type};

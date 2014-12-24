@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 31;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Output::bbl;
@@ -609,13 +611,13 @@ is($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections');
 is($out->get_output_entry('ccr2', $main0), $ccr1, 'cascading crossref test 1');
 is($out->get_output_entry('ccr3', $main0), $ccr2, 'cascading crossref test 2');
 chomp $stderr;
-is($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'", 'Cyclic crossref error check');
-is($section0->has_citekey('r1'), 1,'Recursive crossref test 1');
+eq_or_diff($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'", 'Cyclic crossref error check');
+eq_or_diff($section0->has_citekey('r1'), 1,'Recursive crossref test 1');
 ok(defined($section0->bibentry('r1')),'Recursive crossref test 2');
-is($section0->has_citekey('r2'), 0,'Recursive crossref test 3');
+eq_or_diff($section0->has_citekey('r2'), 0,'Recursive crossref test 3');
 ok(defined($section0->bibentry('r2')),'Recursive crossref test 4');
-is($section0->has_citekey('r3'), 0,'Recursive crossref test 5');
+eq_or_diff($section0->has_citekey('r3'), 0,'Recursive crossref test 5');
 ok(defined($section0->bibentry('r3')),'Recursive crossref test 6');
-is($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
+eq_or_diff($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
 ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
 

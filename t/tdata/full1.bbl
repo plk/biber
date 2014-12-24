@@ -42,6 +42,8 @@
       \field{labeltitlesourceform}{original}
       \field{labeltitlesourcelang}{english}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{shorthand}{\emph{A}}
       \field[form=original,lang=english]{title}{The Fullness of Times}
       \field{year}{1995}

@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 5;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Output::bbl;
@@ -55,7 +57,7 @@ my $string1 = q|    \entry{Static1}{set}{}
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
       \field{labeltitle}{Blessed Brains}
@@ -156,7 +158,7 @@ my $string5 = q|    \entry{Static2}{book}{}
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
       \field{labeltitle}{Blessed Brains}
@@ -170,9 +172,9 @@ my $string5 = q|    \entry{Static2}{book}{}
 |;
 
 
-is($out->get_output_entry('Static1', $main), $string1, 'Static set test 1');
-is($out->get_output_entry('Static2', $main), $string2, 'Static set test 2');
-is($out->get_output_entry('Static3', $main), $string3, 'Static set test 3');
-is($out->get_output_entry('Static4', $main), $string4, 'Static set test 4');
-is($out->get_output_entry('Static2', $main, 1), $string5, 'Static set test 5');
+eq_or_diff($out->get_output_entry('Static1', $main), $string1, 'Static set test 1');
+eq_or_diff($out->get_output_entry('Static2', $main), $string2, 'Static set test 2');
+eq_or_diff($out->get_output_entry('Static3', $main), $string3, 'Static set test 3');
+eq_or_diff($out->get_output_entry('Static4', $main), $string4, 'Static set test 4');
+eq_or_diff($out->get_output_entry('Static2', $main, 1), $string5, 'Static set test 5');
 

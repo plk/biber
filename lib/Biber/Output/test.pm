@@ -128,38 +128,8 @@ sub set_output_entry {
     }
   }
 
+
   # Output name fields
-
-  # first output copy in labelname
-  # This is essentially doing the same thing twice but in the future,
-  # labelname may have different things attached than the raw name
-  my $lni = $be->get_labelname_info;
-  my $name_others_deleted = '';
-  my $plo; # per-list options
-
-  if (my $ln = $be->get_field('labelname')) {
-    my @plo;
-
-    # Add uniquelist, if defined
-    if (my $ul = $ln->get_uniquelist){
-      push @plo, "uniquelist=$ul";
-    }
-    $plo =join(',', @plo);
-
-    # Did we have "and others" in the data?
-    if ( $ln->get_morenames ) {
-      $acc .= "      \\true{morelabelname}\n";
-    }
-
-    my $total = $ln->count_names;
-    $acc .= "      \\name{labelname}{$total}{$plo}{%\n";
-    foreach my $n (@{$ln->names}) {
-      $acc .= $n->name_to_bbl;
-    }
-    $acc .= "      }\n";
-  }
-
-  # then names themselves
   foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
     next if $dm->field_is_skipout($namefield);
 
@@ -174,15 +144,26 @@ sub set_output_entry {
     foreach my $form ($be->get_field_form_names($namefield)) {
       foreach my $lang ($be->get_field_form_lang_names($namefield, $form)) {
         if ( my $nf = $be->get_field($namefield, $form, $lang) ) {
+          my $plo = '';
 
           my $total = $nf->count_names;
-          # Copy per-list options to the actual labelname too
-          $plo = '' unless (defined($lni) and $namefield eq $lni->{field});
 
           # Names are not necessarily variant enabled - for example, if a style
           # defines a custom name field which isn't. This is guaranteed only in the
           # default biblatex datamodel
           my $fl = $dm->field_is_variant_enabled($namefield) ? "[form=$form,lang=$lang]" : '';
+
+          # Add per-list options, if any
+          my $lni = $be->get_labelname_info;
+          if (defined($lni) and
+              $lni eq $namefield) {
+            # Add uniquelist, if defined
+            my @plo;
+            if (my $ul = $nf->get_uniquelist){
+              push @plo, "uniquelist=$ul";
+            }
+            $plo = join(',', @plo);
+          }
 
           $acc .= "      \\name${fl}{$namefield}{$total}{$plo}{%\n";
           foreach my $n (@{$nf->names}) {
@@ -295,21 +276,6 @@ sub set_output_entry {
     }
   }
 
-  # labeltitle is always output
-  if (my $lt = $be->get_field('labeltitle')) {
-    $acc .= "      \\field{labeltitle}{$lt}\n";
-    # Set information about where labeltitle came from
-    if (my $ltsf = $be->get_field('labeltitlesourcefield')) {
-      $acc .= "      \\field{labeltitlesourcefield}{$ltsf}\n";
-    }
-    if (my $ltsfo = $be->get_field('labeltitlesourceform')) {
-      $acc .= "      \\field{labeltitlesourceform}{$ltsfo}\n";
-    }
-    if (my $ltsl = $be->get_field('labeltitlesourcelang')) {
-      $acc .= "      \\field{labeltitlesourcelang}{$ltsl}\n";
-    }
-  }
-
   # The labelalpha option determines whether "extraalpha" is output
   # Skip generating extraalpha for entries with "skiplab" set
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
@@ -333,6 +299,16 @@ sub set_output_entry {
 
   if (defined($be->get_field('singletitle'))) {
     $acc .= "      \\true{singletitle}\n";
+  }
+
+  # The source field for labelname
+  if (my $lni = $be->get_labelname_info) {
+    $acc .= "      \\field{labelnamesource}{$lni}\n";
+  }
+
+  # The source field for labeltitle
+  if (my $lti = $be->get_labeltitle_info) {
+    $acc .= "      \\field{labeltitlesource}{$lti}\n";
   }
 
   foreach my $field (sort @{$dm->get_fields_of_type('field', 'entrykey')},

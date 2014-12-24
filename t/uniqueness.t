@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 193;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Utils;
@@ -461,12 +463,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
-is($main->get_extrayeardata('ey1'), '1', 'Extrayear - 1');
-is($main->get_extrayeardata('ey2'), '2', 'Extrayear - 2');
-is($main->get_extrayeardata('ey3'), '1', 'Extrayear - 3');
-is($main->get_extrayeardata('ey4'), '2', 'Extrayear - 4');
-is($main->get_extrayeardata('ey5'), '1', 'Extrayear - 5');
-is($main->get_extrayeardata('ey6'), '2', 'Extrayear - 6');
+eq_or_diff($main->get_extrayeardata('ey1'), '1', 'Extrayear - 1');
+eq_or_diff($main->get_extrayeardata('ey2'), '2', 'Extrayear - 2');
+eq_or_diff($main->get_extrayeardata('ey3'), '1', 'Extrayear - 3');
+eq_or_diff($main->get_extrayeardata('ey4'), '2', 'Extrayear - 4');
+eq_or_diff($main->get_extrayeardata('ey5'), '1', 'Extrayear - 5');
+eq_or_diff($main->get_extrayeardata('ey6'), '2', 'Extrayear - 6');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 1');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 2');
 ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'Singletitle - 3');
@@ -492,13 +494,13 @@ $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 ok(is_undef($main->get_extrayeardata('ey1')), 'Extrayear - 7');
 ok(is_undef($main->get_extrayeardata('ey2')), 'Extrayear - 8');
-is($main->get_extrayeardata('ey3'), '1', 'Extrayear - 9');
-is($main->get_extrayeardata('ey4'), '2', 'Extrayear - 10');
+eq_or_diff($main->get_extrayeardata('ey3'), '1', 'Extrayear - 9');
+eq_or_diff($main->get_extrayeardata('ey4'), '2', 'Extrayear - 10');
 ok(is_undef($main->get_extrayeardata('ey5')), 'Extrayear - 11');
 ok(is_undef($main->get_extrayeardata('ey6')), 'Extrayear - 12');
-is($bibentries->entry('ey1')->get_field('singletitle'), '1', 'Singletitle - 4');
-is($bibentries->entry('ey2')->get_field('singletitle'), '1', 'Singletitle - 5');
-is($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
+eq_or_diff($bibentries->entry('ey1')->get_field('singletitle'), '1', 'Singletitle - 4');
+eq_or_diff($bibentries->entry('ey2')->get_field('singletitle'), '1', 'Singletitle - 5');
+eq_or_diff($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
 
 #############################################################################
 
@@ -519,12 +521,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
-is($main->get_extrayeardata('ey1'), '1', 'Extrayear - 13');
-is($main->get_extrayeardata('ey2'), '2', 'Extrayear - 14');
-is($main->get_extrayeardata('ey3'), '1', 'Extrayear - 15');
-is($main->get_extrayeardata('ey4'), '2', 'Extrayear - 16');
-is($main->get_extrayeardata('ey5'), '1', 'Extrayear - 17');
-is($main->get_extrayeardata('ey6'), '2', 'Extrayear - 18');
+eq_or_diff($main->get_extrayeardata('ey1'), '1', 'Extrayear - 13');
+eq_or_diff($main->get_extrayeardata('ey2'), '2', 'Extrayear - 14');
+eq_or_diff($main->get_extrayeardata('ey3'), '1', 'Extrayear - 15');
+eq_or_diff($main->get_extrayeardata('ey4'), '2', 'Extrayear - 16');
+eq_or_diff($main->get_extrayeardata('ey5'), '1', 'Extrayear - 17');
+eq_or_diff($main->get_extrayeardata('ey6'), '2', 'Extrayear - 18');
 ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 7');
 ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 8');
 

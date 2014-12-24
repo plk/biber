@@ -301,8 +301,11 @@ sub _labelpart {
     # length
     if (my $ic = $part->{ifnamecount}) {
       my $f = $part->{content};
-      if ( first {$f eq $_} @{$dm->get_fields_of_type('list', 'name')} or
-          $f eq 'labelname') {
+      # resolve labelname
+      if ($f eq 'labelname') {
+        $f = ($be->get_labelname_info || '');
+      }
+      if ( first {$f eq $_} @{$dm->get_fields_of_type('list', 'name')}) {
         # get-field doesn't need form/lang here as we are just counting names
         # and we assume that the name count is the same for all forms/langs
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
@@ -422,14 +425,13 @@ sub _label_name {
   # as we need this to set the use* options below.
   my $realname;
   if ($namename eq 'labelname') {
-    $realname = $be->get_labelname_info->{field};
+    $realname = $be->get_labelname_info;
   }
   else {
     $realname = $namename;
   }
 
-  # If $namename is 'labelname', form and lang will be ignored anyway
-  my $nameval  = $be->get_field($namename, $labelattrs->{form}, $labelattrs->{lang});
+  my $nameval  = $be->get_field($realname, $labelattrs->{form}, $labelattrs->{lang});
 
   # Account for labelname set to short* when testing use* options
   my $lnameopt;
@@ -445,7 +447,7 @@ sub _label_name {
     my $numnames  = $nameval->count_names;
     my $visibility = $nameval->get_visible_alpha;
 
-    my @lastnames = map { normalise_string_sort($_->get_lastname, $namename) } @{$nameval->names};
+    my @lastnames = map { normalise_string_sort($_->get_lastname, $realname) } @{$nameval->names};
     my @prefices  = map { $_->get_prefix } @{$nameval->names};
 
     my $loopnames;
@@ -463,7 +465,7 @@ sub _label_name {
 
     for (my $i = 0; $i < $loopnames; $i++) {
       $acc .= Unicode::GCString->new($prefices[$i])->substr(0,1)->as_string if ($useprefix and $prefices[$i]);
-      $acc .= _process_label_attributes($self, $citekey, $lastnames[$i], $labelattrs, $namename, 'lastname', $i);
+      $acc .= _process_label_attributes($self, $citekey, $lastnames[$i], $labelattrs, $realname, 'lastname', $i);
     }
 
     $sortacc = $acc;

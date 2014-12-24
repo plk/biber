@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 10;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Utils;
@@ -48,7 +50,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{Šome title}
@@ -78,7 +80,7 @@ my $encode2 = q|    \entry{test1}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{Söme title}
@@ -108,7 +110,7 @@ my $encode3 = q|    \entry{test1}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{Żome title}
@@ -138,7 +140,7 @@ my $encode5 = q|    \entry{test}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{à titlé}
@@ -168,7 +170,7 @@ my $encode6 = q|    \entry{test}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{↑\`{a} titl\'{e}}
@@ -198,7 +200,7 @@ my $encode7 = q|    \entry{test}{book}{}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{655e26c7438ff123e5c69c6c3f702107}
+      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
       \field{labeltitle}{{$\uparrow$}\`{a} titl\'{e}}
@@ -228,7 +230,7 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1), 'latin9 .bib -> UTF-8 .bbl');
+eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1), 'latin9 .bib -> UTF-8 .bbl');
 
 # UTF-8 .bib -> UTF-8 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');
@@ -243,7 +245,7 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1), 'UTF-8 .bib -> UTF-8 .bbl');
+eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1), 'UTF-8 .bib -> UTF-8 .bbl');
 
 # UTF-8 .bib -> latin1 .bbl
 $biber->parse_ctrlfile('encoding5.bcf');
@@ -258,7 +260,7 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('output_encoding'), $encode5), 'UTF-8 .bib -> latin1 .bbl');
+eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode5), 'UTF-8 .bib -> latin1 .bbl');
 
 # UTF-8 .bib -> UTF-8 with --output_safechars
 $biber->parse_ctrlfile('encoding6.bcf');
@@ -274,7 +276,7 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('output_encoding'), $encode6), 'UTF-8 .bib -> UTF-8 .bbl, safechars');
+eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode6), 'UTF-8 .bib -> UTF-8 .bbl, safechars');
 
 # UTF-8 .bib -> UTF-8 with --output_safechars and --bblcharsset=full
 $biber->parse_ctrlfile('encoding6.bcf');
@@ -291,7 +293,7 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('output_encoding'), $encode7), 'UTF-8 .bib -> UTF-8 .bbl, output_safecharsset=full');
+eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode7), 'UTF-8 .bib -> UTF-8 .bbl, output_safecharsset=full');
 
 # UTF-8 .bib -> Latin9 .bbl
 $biber->parse_ctrlfile('encoding2.bcf');
@@ -307,7 +309,7 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1), 'UTF-8 .bib -> latin9 .bbl');
+eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1), 'UTF-8 .bib -> latin9 .bbl');
 
 # latin1 .bib -> cp1252 .bbl
 $biber->parse_ctrlfile('encoding3.bcf');
@@ -322,7 +324,7 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('output_encoding'), $encode2), 'latin1 .bib -> CP1252 .bbl');
+eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode2), 'latin1 .bib -> CP1252 .bbl');
 
 # latin2 .bib -> latin3 .bbl
 $biber->parse_ctrlfile('encoding4.bcf');
@@ -337,7 +339,7 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('output_encoding'), $encode3), 'latin2 .bib -> latin3 .bbl');
+eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode3), 'latin2 .bib -> latin3 .bbl');
 
 # latin2 .bib -> latin1 .bbl - should fail
 $biber->parse_ctrlfile('encoding4.bcf');
@@ -372,5 +374,5 @@ $output = $biber->get_output_obj;
 $output->set_output_target_file(\$outvar);
 # Write the output to the target
 $output->output;
-is($outvar, encode(Biber::Config->getoption('output_encoding'), $encode2), 'latin1 .bib -> applemacce (custom alias) .bbl');
+eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode2), 'latin1 .bib -> applemacce (custom alias) .bbl');
 

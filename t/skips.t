@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 16;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Utils;
@@ -58,7 +60,7 @@ my $set1 = q|    \entry{seta}{set}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{1}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
@@ -160,7 +162,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{2}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
@@ -188,7 +190,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{3}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
@@ -216,7 +218,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{4}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
@@ -262,18 +264,18 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
 
 is_deeply([$shs->get_keys], ['skip1'], 'skipbiblist - not in biblist for shorthands');
 is_deeply($bibentries->entry('skip1')->get_field('options'), ['skipbib'], 'Passing skipbib through');
-is($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
-is($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labeldate_info->{field}{year}), '1995', 'Normal labelyear');
+eq_or_diff($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
+eq_or_diff($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labeldate_info->{field}{year}), '1995', 'Normal labelyear');
 ok(is_undef($bibentries->entry('skip3')->get_field('labelalpha')), 'skiplab - no labelalpha');
 ok(is_undef($bibentries->entry('skip3')->get_labeldate_info), 'skiplab - no labelyear');
 ok(is_undef($bibentries->entry('skip4')->get_field('labelalpha')), 'dataonly - no labelalpha');
-is($out->get_output_entry('skip4', $main), $sk4, 'dataonly - checking output');
+eq_or_diff($out->get_output_entry('skip4', $main), $sk4, 'dataonly - checking output');
 ok(is_undef($bibentries->entry('skip4')->get_labeldate_info), 'dataonly - no labelyear');
-is($out->get_output_entry('seta', $main), $set1, 'Set parent - with labels');
-is($out->get_output_entry('set:membera', $main), $set2, 'Set member - no labels 1');
-is($out->get_output_entry('set:memberb', $main), $set3, 'Set member - no labels 2');
-is($out->get_output_entry('set:memberc', $main), $set4, 'Set member - no labels 3');
-is($out->get_output_entry('noseta', $main), $noset1, 'Not a set member - extrayear continues from set 1');
-is($out->get_output_entry('nosetb', $main), $noset2, 'Not a set member - extrayear continues from set 2');
-is($out->get_output_entry('nosetc', $main), $noset3, 'Not a set member - extrayear continues from set 3');
+eq_or_diff($out->get_output_entry('seta', $main), $set1, 'Set parent - with labels');
+eq_or_diff($out->get_output_entry('set:membera', $main), $set2, 'Set member - no labels 1');
+eq_or_diff($out->get_output_entry('set:memberb', $main), $set3, 'Set member - no labels 2');
+eq_or_diff($out->get_output_entry('set:memberc', $main), $set4, 'Set member - no labels 3');
+eq_or_diff($out->get_output_entry('noseta', $main), $noset1, 'Not a set member - extrayear continues from set 1');
+eq_or_diff($out->get_output_entry('nosetb', $main), $noset2, 'Not a set member - extrayear continues from set 2');
+eq_or_diff($out->get_output_entry('nosetc', $main), $noset3, 'Not a set member - extrayear continues from set 3');
 

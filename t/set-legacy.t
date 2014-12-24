@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 3;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Output::bbl;
@@ -55,7 +57,7 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{1955}
       \field{labelmonth}{03}
       \field{datelabelsource}{}
@@ -149,7 +151,7 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
     \endentry
 |;
 
-is($out->get_output_entry('Elias1955', $main), $string1, 'Legacy set test 1');
-is($out->get_output_entry('Elias1955a', $main), $string2, 'Legacy set test 2');
-is($out->get_output_entry('Elias1955b', $main), $string3, 'Legacy set test 3');
+eq_or_diff($out->get_output_entry('Elias1955', $main), $string1, 'Legacy set test 1');
+eq_or_diff($out->get_output_entry('Elias1955a', $main), $string2, 'Legacy set test 2');
+eq_or_diff($out->get_output_entry('Elias1955b', $main), $string3, 'Legacy set test 3');
 

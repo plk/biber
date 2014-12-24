@@ -5,6 +5,8 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 113;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Utils;
@@ -49,28 +51,28 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
-is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=1 minalphanames=1 entry L1 labelalpha');
+eq_or_diff($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=1 minalphanames=1 entry L1 labelalpha');
 ok(is_undef($main->get_extraalphadata('l1')), 'maxalphanames=1 minalphanames=1 entry L1 extraalpha');
-is($bibentries->entry('L2')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L2 labelalpha');
-is($main->get_extraalphadata('L2'), '1', 'maxalphanames=1 minalphanames=1 entry L2 extraalpha');
-is($bibentries->entry('L3')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L3 labelalpha');
-is($main->get_extraalphadata('L3'), '2', 'maxalphanames=1 minalphanames=1 entry L3 extraalpha');
-is($bibentries->entry('L4')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L4 labelalpha');
-is($main->get_extraalphadata('L4'), '3', 'maxalphanames=1 minalphanames=1 entry L4 extraalpha');
-is($bibentries->entry('L5')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L5 labelalpha');
-is($main->get_extraalphadata('L5'), '4', 'maxalphanames=1 minalphanames=1 entry L5 extraalpha');
-is($bibentries->entry('L6')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L6 labelalpha');
-is($main->get_extraalphadata('L6'), '5', 'maxalphanames=1 minalphanames=1 entry L6 extraalpha');
-is($bibentries->entry('L7')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L7 labelalpha');
-is($main->get_extraalphadata('L7'), '6', 'maxalphanames=1 minalphanames=1 entry L7 extraalpha');
-is($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=1 minalphanames=1 entry L8 labelalpha');
+eq_or_diff($bibentries->entry('L2')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L2 labelalpha');
+eq_or_diff($main->get_extraalphadata('L2'), '1', 'maxalphanames=1 minalphanames=1 entry L2 extraalpha');
+eq_or_diff($bibentries->entry('L3')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L3 labelalpha');
+eq_or_diff($main->get_extraalphadata('L3'), '2', 'maxalphanames=1 minalphanames=1 entry L3 extraalpha');
+eq_or_diff($bibentries->entry('L4')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L4 labelalpha');
+eq_or_diff($main->get_extraalphadata('L4'), '3', 'maxalphanames=1 minalphanames=1 entry L4 extraalpha');
+eq_or_diff($bibentries->entry('L5')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L5 labelalpha');
+eq_or_diff($main->get_extraalphadata('L5'), '4', 'maxalphanames=1 minalphanames=1 entry L5 extraalpha');
+eq_or_diff($bibentries->entry('L6')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L6 labelalpha');
+eq_or_diff($main->get_extraalphadata('L6'), '5', 'maxalphanames=1 minalphanames=1 entry L6 extraalpha');
+eq_or_diff($bibentries->entry('L7')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L7 labelalpha');
+eq_or_diff($main->get_extraalphadata('L7'), '6', 'maxalphanames=1 minalphanames=1 entry L7 extraalpha');
+eq_or_diff($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=1 minalphanames=1 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('L8')), 'maxalphanames=1 minalphanames=1 entry L8 extraalpha');
 ok(is_undef($main->get_extraalphadata('L9')), 'L9 extraalpha unset due to shorthand');
 ok(is_undef($main->get_extraalphadata('L10')), 'L10 extraalpha unset due to shorthand');
-is($main->get_extraalphadata('knuth:ct'), '1', 'YEAR with range needs label differentiating from individual volumes - 1');
-is($main->get_extraalphadata('knuth:ct:a'), '2', 'YEAR with range needs label differentiating from individual volumes - 2');
-is($main->get_extraalphadata('knuth:ct:b'), '1', 'YEAR with range needs label differentiating from individual volumes - 3');
-is($main->get_extraalphadata('knuth:ct:c'), '2', 'YEAR with range needs label differentiating from individual volumes - 4');
+eq_or_diff($main->get_extraalphadata('knuth:ct'), '1', 'YEAR with range needs label differentiating from individual volumes - 1');
+eq_or_diff($main->get_extraalphadata('knuth:ct:a'), '2', 'YEAR with range needs label differentiating from individual volumes - 2');
+eq_or_diff($main->get_extraalphadata('knuth:ct:b'), '1', 'YEAR with range needs label differentiating from individual volumes - 3');
+eq_or_diff($main->get_extraalphadata('knuth:ct:c'), '2', 'YEAR with range needs label differentiating from individual volumes - 4');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 2);
@@ -89,21 +91,21 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=1 entry L1 labelalpha');
+eq_or_diff($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=1 entry L1 labelalpha');
 ok(is_undef($main->get_extraalphadata('l1')), 'maxalphanames=2 minalphanames=1 entry L1 extraalpha');
-is($bibentries->entry('L2')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=2 minalphanames=1 entry L2 labelalpha');
-is($main->get_extraalphadata('L2'), '1', 'maxalphanames=2 minalphanames=1 entry L2 extraalpha');
-is($bibentries->entry('L3')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=2 minalphanames=1 entry L3 labelalpha');
-is($main->get_extraalphadata('L3'), '2', 'maxalphanames=2 minalphanames=1 entry L3 extraalpha');
-is($bibentries->entry('L4')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=2 minalphanames=1 entry L4 labelalpha');
-is($main->get_extraalphadata('L4'), '1', 'maxalphanames=2 minalphanames=1 entry L4 extraalpha');
-is($bibentries->entry('L5')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=2 minalphanames=1 entry L5 labelalpha');
-is($main->get_extraalphadata('L5'), '2', 'maxalphanames=2 minalphanames=1 entry L5 extraalpha');
-is($bibentries->entry('L6')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=2 minalphanames=1 entry L6 labelalpha');
-is($main->get_extraalphadata('L6'), '3', 'maxalphanames=2 minalphanames=1 entry L6 extraalpha');
-is($bibentries->entry('L7')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=2 minalphanames=1 entry L7 labelalpha');
-is($main->get_extraalphadata('L7'), '4', 'maxalphanames=2 minalphanames=1 entry L7 extraalpha');
-is($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=2 minalphanames=1 entry L8 labelalpha');
+eq_or_diff($bibentries->entry('L2')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=2 minalphanames=1 entry L2 labelalpha');
+eq_or_diff($main->get_extraalphadata('L2'), '1', 'maxalphanames=2 minalphanames=1 entry L2 extraalpha');
+eq_or_diff($bibentries->entry('L3')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=2 minalphanames=1 entry L3 labelalpha');
+eq_or_diff($main->get_extraalphadata('L3'), '2', 'maxalphanames=2 minalphanames=1 entry L3 extraalpha');
+eq_or_diff($bibentries->entry('L4')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=2 minalphanames=1 entry L4 labelalpha');
+eq_or_diff($main->get_extraalphadata('L4'), '1', 'maxalphanames=2 minalphanames=1 entry L4 extraalpha');
+eq_or_diff($bibentries->entry('L5')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=2 minalphanames=1 entry L5 labelalpha');
+eq_or_diff($main->get_extraalphadata('L5'), '2', 'maxalphanames=2 minalphanames=1 entry L5 extraalpha');
+eq_or_diff($bibentries->entry('L6')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=2 minalphanames=1 entry L6 labelalpha');
+eq_or_diff($main->get_extraalphadata('L6'), '3', 'maxalphanames=2 minalphanames=1 entry L6 extraalpha');
+eq_or_diff($bibentries->entry('L7')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=2 minalphanames=1 entry L7 labelalpha');
+eq_or_diff($main->get_extraalphadata('L7'), '4', 'maxalphanames=2 minalphanames=1 entry L7 extraalpha');
+eq_or_diff($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=2 minalphanames=1 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('L8')), 'maxalphanames=2 minalphanames=1 entry L8 extraalpha');
 
 # reset options and regenerate information
@@ -123,21 +125,21 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=2 entry L1 labelalpha');
+eq_or_diff($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=2 entry L1 labelalpha');
 ok(is_undef($main->get_extraalphadata('l1')), 'maxalphanames=2 minalphanames=2 entry L1 extraalpha');
-is($bibentries->entry('L2')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=2 minalphanames=2 entry L2 labelalpha');
-is($main->get_extraalphadata('L2'), '1', 'maxalphanames=2 minalphanames=2 entry L2 extraalpha');
-is($bibentries->entry('L3')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=2 minalphanames=2 entry L3 labelalpha');
-is($main->get_extraalphadata('L3'), '2', 'maxalphanames=2 minalphanames=2 entry L3 extraalpha');
-is($bibentries->entry('L4')->get_field('sortlabelalpha'), 'DA+95', 'maxalphanames=2 minalphanames=2 entry L4 labelalpha');
-is($main->get_extraalphadata('L4'), '1', 'maxalphanames=2 minalphanames=2 entry L4 extraalpha');
-is($bibentries->entry('L5')->get_field('sortlabelalpha'), 'DA+95', 'maxalphanames=2 minalphanames=2 entry L5 labelalpha');
-is($main->get_extraalphadata('L5'), '2', 'maxalphanames=2 minalphanames=2 entry L5 extraalpha');
-is($bibentries->entry('L6')->get_field('sortlabelalpha'), 'DS+95', 'maxalphanames=2 minalphanames=2 entry L6 labelalpha');
-is($main->get_extraalphadata('L6'), '1', 'maxalphanames=2 minalphanames=2 entry L6 extraalpha');
-is($bibentries->entry('L7')->get_field('sortlabelalpha'), 'DS+95', 'maxalphanames=2 minalphanames=2 entry L7 labelalpha');
-is($main->get_extraalphadata('L7'), '2', 'maxalphanames=2 minalphanames=2 entry L7 extraalpha');
-is($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=2 minalphanames=2 entry L8 labelalpha');
+eq_or_diff($bibentries->entry('L2')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=2 minalphanames=2 entry L2 labelalpha');
+eq_or_diff($main->get_extraalphadata('L2'), '1', 'maxalphanames=2 minalphanames=2 entry L2 extraalpha');
+eq_or_diff($bibentries->entry('L3')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=2 minalphanames=2 entry L3 labelalpha');
+eq_or_diff($main->get_extraalphadata('L3'), '2', 'maxalphanames=2 minalphanames=2 entry L3 extraalpha');
+eq_or_diff($bibentries->entry('L4')->get_field('sortlabelalpha'), 'DA+95', 'maxalphanames=2 minalphanames=2 entry L4 labelalpha');
+eq_or_diff($main->get_extraalphadata('L4'), '1', 'maxalphanames=2 minalphanames=2 entry L4 extraalpha');
+eq_or_diff($bibentries->entry('L5')->get_field('sortlabelalpha'), 'DA+95', 'maxalphanames=2 minalphanames=2 entry L5 labelalpha');
+eq_or_diff($main->get_extraalphadata('L5'), '2', 'maxalphanames=2 minalphanames=2 entry L5 extraalpha');
+eq_or_diff($bibentries->entry('L6')->get_field('sortlabelalpha'), 'DS+95', 'maxalphanames=2 minalphanames=2 entry L6 labelalpha');
+eq_or_diff($main->get_extraalphadata('L6'), '1', 'maxalphanames=2 minalphanames=2 entry L6 extraalpha');
+eq_or_diff($bibentries->entry('L7')->get_field('sortlabelalpha'), 'DS+95', 'maxalphanames=2 minalphanames=2 entry L7 labelalpha');
+eq_or_diff($main->get_extraalphadata('L7'), '2', 'maxalphanames=2 minalphanames=2 entry L7 extraalpha');
+eq_or_diff($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=2 minalphanames=2 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('L8')), 'maxalphanames=2 minalphanames=2 entry L8 extraalpha');
 
 # reset options and regenerate information
@@ -157,24 +159,24 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=3 minalphanames=1 entry L1 labelalpha');
+eq_or_diff($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=3 minalphanames=1 entry L1 labelalpha');
 ok(is_undef($main->get_extraalphadata('L1')), 'maxalphanames=3 minalphanames=1 entry L1 extraalpha');
-is($bibentries->entry('L2')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=3 minalphanames=1 entry L2 labelalpha');
-is($main->get_extraalphadata('L2'), '1', 'maxalphanames=3 minalphanames=1 entry L2 extraalpha');
-is($bibentries->entry('L3')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=3 minalphanames=1 entry L3 labelalpha');
-is($main->get_extraalphadata('L3'), '2', 'maxalphanames=3 minalphanames=1 entry L3 extraalpha');
-is($bibentries->entry('L4')->get_field('sortlabelalpha'), 'DAE95', 'maxalphanames=3 minalphanames=1 entry L4 labelalpha');
-is($main->get_extraalphadata('L4'), '1', 'maxalphanames=3 minalphanames=1 entry L4 extraalpha');
-is($bibentries->entry('L5')->get_field('sortlabelalpha'), 'DAE95', 'maxalphanames=3 minalphanames=1 entry L5 labelalpha');
-is($main->get_extraalphadata('L5'), '2', 'maxalphanames=3 minalphanames=1 entry L5 extraalpha');
-is($bibentries->entry('L6')->get_field('sortlabelalpha'), 'DSE95', 'maxalphanames=3 minalphanames=1 entry L6 labelalpha');
+eq_or_diff($bibentries->entry('L2')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=3 minalphanames=1 entry L2 labelalpha');
+eq_or_diff($main->get_extraalphadata('L2'), '1', 'maxalphanames=3 minalphanames=1 entry L2 extraalpha');
+eq_or_diff($bibentries->entry('L3')->get_field('sortlabelalpha'), 'DA95', 'maxalphanames=3 minalphanames=1 entry L3 labelalpha');
+eq_or_diff($main->get_extraalphadata('L3'), '2', 'maxalphanames=3 minalphanames=1 entry L3 extraalpha');
+eq_or_diff($bibentries->entry('L4')->get_field('sortlabelalpha'), 'DAE95', 'maxalphanames=3 minalphanames=1 entry L4 labelalpha');
+eq_or_diff($main->get_extraalphadata('L4'), '1', 'maxalphanames=3 minalphanames=1 entry L4 extraalpha');
+eq_or_diff($bibentries->entry('L5')->get_field('sortlabelalpha'), 'DAE95', 'maxalphanames=3 minalphanames=1 entry L5 labelalpha');
+eq_or_diff($main->get_extraalphadata('L5'), '2', 'maxalphanames=3 minalphanames=1 entry L5 extraalpha');
+eq_or_diff($bibentries->entry('L6')->get_field('sortlabelalpha'), 'DSE95', 'maxalphanames=3 minalphanames=1 entry L6 labelalpha');
 ok(is_undef($main->get_extraalphadata('L6')), 'maxalphanames=3 minalphanames=1 entry L6 extraalpha');
-is($bibentries->entry('L7')->get_field('sortlabelalpha'), 'DSJ95', 'maxalphanames=3 minalphanames=1 entry L7 labelalpha');
+eq_or_diff($bibentries->entry('L7')->get_field('sortlabelalpha'), 'DSJ95', 'maxalphanames=3 minalphanames=1 entry L7 labelalpha');
 ok(is_undef($main->get_extraalphadata('L7')), 'maxalphanames=3 minalphanames=1 entry L7 extraalpha');
-is($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=3 minalphanames=1 entry L8 labelalpha');
+eq_or_diff($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=3 minalphanames=1 entry L8 labelalpha');
 ok(is_undef($main->get_extraalphadata('L8')), 'maxalphanames=3 minalphanames=1 entry L8 extraalpha');
-is($bibentries->entry('LDN1')->get_field('sortlabelalpha'), 'VUR89', 'Testing compound lastnames 1');
-is($bibentries->entry('LDN2')->get_field('sortlabelalpha'), 'VU45', 'Testing compound lastnames 2');
+eq_or_diff($bibentries->entry('LDN1')->get_field('sortlabelalpha'), 'VUR89', 'Testing compound lastnames 1');
+eq_or_diff($bibentries->entry('LDN2')->get_field('sortlabelalpha'), 'VU45', 'Testing compound lastnames 2');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 4);
@@ -196,24 +198,24 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('L11')->get_field('sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
-is($bibentries->entry('L12')->get_field('sortlabelalpha'), 'vRvB2', 'prefix labelalpha 2');
+eq_or_diff($bibentries->entry('L11')->get_field('sortlabelalpha'), 'vRan22', 'prefix labelalpha 1');
+eq_or_diff($bibentries->entry('L12')->get_field('sortlabelalpha'), 'vRvB2', 'prefix labelalpha 2');
 # only the first name in the list is in the label due to namecount=1
-is($bibentries->entry('L13')->get_field('sortlabelalpha'), 'vRa+-ksUnV', 'per-type labelalpha 1');
-is($bibentries->entry('L14')->get_field('sortlabelalpha'), 'Alabel-ksUnW', 'per-type labelalpha 2');
-is($bibentries->entry('L15')->get_field('sortlabelalpha'), 'AccBrClim', 'labelalpha disambiguation 1');
-is($bibentries->entry('L16')->get_field('sortlabelalpha'), 'AccBaClim', 'labelalpha disambiguation 2');
-is($bibentries->entry('L16a')->get_field('sortlabelalpha'), 'AccBaClim', 'labelalpha disambiguation 2a');
-is($main->get_extraalphadata('L16'), '1', 'labelalpha disambiguation 2c');
-is($main->get_extraalphadata('L16a'), '2', 'labelalpha disambiguation 2d');
-is($bibentries->entry('L17')->get_field('sortlabelalpha'), 'AckBaClim', 'labelalpha disambiguation 3');
-is($main->get_extraalphadata('L17a'), '2', 'custom labelalpha extrayear 1');
-is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AgChLa', 'labelalpha disambiguation 4');
-is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgConLe', 'labelalpha disambiguation 5');
-is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgCouLa', 'labelalpha disambiguation 6');
-is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BoConEdb', 'labelalpha disambiguation 7');
-is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BoConEm', 'labelalpha disambiguation 8');
-is($bibentries->entry('L23')->get_field('sortlabelalpha'), 'Sa', 'labelalpha disambiguation 9');
+eq_or_diff($bibentries->entry('L13')->get_field('sortlabelalpha'), 'vRa+-ksUnV', 'per-type labelalpha 1');
+eq_or_diff($bibentries->entry('L14')->get_field('sortlabelalpha'), 'Alabel-ksUnW', 'per-type labelalpha 2');
+eq_or_diff($bibentries->entry('L15')->get_field('sortlabelalpha'), 'AccBrClim', 'labelalpha disambiguation 1');
+eq_or_diff($bibentries->entry('L16')->get_field('sortlabelalpha'), 'AccBaClim', 'labelalpha disambiguation 2');
+eq_or_diff($bibentries->entry('L16a')->get_field('sortlabelalpha'), 'AccBaClim', 'labelalpha disambiguation 2a');
+eq_or_diff($main->get_extraalphadata('L16'), '1', 'labelalpha disambiguation 2c');
+eq_or_diff($main->get_extraalphadata('L16a'), '2', 'labelalpha disambiguation 2d');
+eq_or_diff($bibentries->entry('L17')->get_field('sortlabelalpha'), 'AckBaClim', 'labelalpha disambiguation 3');
+eq_or_diff($main->get_extraalphadata('L17a'), '2', 'custom labelalpha extrayear 1');
+eq_or_diff($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AgChLa', 'labelalpha disambiguation 4');
+eq_or_diff($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgConLe', 'labelalpha disambiguation 5');
+eq_or_diff($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgCouLa', 'labelalpha disambiguation 6');
+eq_or_diff($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BoConEdb', 'labelalpha disambiguation 7');
+eq_or_diff($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BoConEm', 'labelalpha disambiguation 8');
+eq_or_diff($bibentries->entry('L23')->get_field('sortlabelalpha'), 'Sa', 'labelalpha disambiguation 9');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -246,9 +248,9 @@ $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 # "Agas" and not "Aga" because the Schmidt/Schnee below need 4 chars to disambiguate
-is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AgasChaLaver', 'labelalpha disambiguation 10');
-is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgasConLendl', 'labelalpha disambiguation 11');
-is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgasCouLaver', 'labelalpha disambiguation 12');
+eq_or_diff($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AgasChaLaver', 'labelalpha disambiguation 10');
+eq_or_diff($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgasConLendl', 'labelalpha disambiguation 11');
+eq_or_diff($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgasCouLaver', 'labelalpha disambiguation 12');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -278,15 +280,15 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AChL', 'labelalpha list disambiguation 1');
-is($bibentries->entry('L19')->get_field('sortlabelalpha'), 'ACoL', 'labelalpha list disambiguation 2');
-is($bibentries->entry('L20')->get_field('sortlabelalpha'), 'ACL', 'labelalpha list disambiguation 3');
-is($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha list disambiguation 4');
-is($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCE', 'labelalpha list disambiguation 5');
-is($bibentries->entry('L24')->get_field('sortlabelalpha'), 'Z', 'labelalpha list disambiguation 6');
-is($bibentries->entry('L25')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 7');
-is($bibentries->entry('L26')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 8');
-is(NFC($bibentries->entry('title1')->get_field('sortlabelalpha')), 'Tït', 'Title in braces with UTF-8 char - 1');
+eq_or_diff($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AChL', 'labelalpha list disambiguation 1');
+eq_or_diff($bibentries->entry('L19')->get_field('sortlabelalpha'), 'ACoL', 'labelalpha list disambiguation 2');
+eq_or_diff($bibentries->entry('L20')->get_field('sortlabelalpha'), 'ACL', 'labelalpha list disambiguation 3');
+eq_or_diff($bibentries->entry('L21')->get_field('sortlabelalpha'), 'BCEd', 'labelalpha list disambiguation 4');
+eq_or_diff($bibentries->entry('L22')->get_field('sortlabelalpha'), 'BCE', 'labelalpha list disambiguation 5');
+eq_or_diff($bibentries->entry('L24')->get_field('sortlabelalpha'), 'Z', 'labelalpha list disambiguation 6');
+eq_or_diff($bibentries->entry('L25')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 7');
+eq_or_diff($bibentries->entry('L26')->get_field('sortlabelalpha'), 'ZX', 'labelalpha list disambiguation 8');
+eq_or_diff(NFC($bibentries->entry('title1')->get_field('sortlabelalpha')), 'Tït', 'Title in braces with UTF-8 char - 1');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 3);
@@ -331,15 +333,15 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'Sch+07', 'extraalpha ne extrayear 1');
-is($main->get_extraalphadata('Schmidt2007'), '1', 'extraalpha ne extrayear 2');
-is($bibentries->entry('Schmidt2007a')->get_field('sortlabelalpha'), 'Sch07', 'extraalpha ne extrayear 3');
-is($main->get_extraalphadata('Schmidt2007a'), '1', 'extraalpha ne extrayear 4');
+eq_or_diff($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'Sch+07', 'extraalpha ne extrayear 1');
+eq_or_diff($main->get_extraalphadata('Schmidt2007'), '1', 'extraalpha ne extrayear 2');
+eq_or_diff($bibentries->entry('Schmidt2007a')->get_field('sortlabelalpha'), 'Sch07', 'extraalpha ne extrayear 3');
+eq_or_diff($main->get_extraalphadata('Schmidt2007a'), '1', 'extraalpha ne extrayear 4');
 
-is($bibentries->entry('Schnee2007')->get_field('sortlabelalpha'), 'Sch+07', 'extraalpha ne extrayear 5');
-is($main->get_extraalphadata('Schnee2007'), '2', 'extraalpha ne extrayear 6');
-is($bibentries->entry('Schnee2007a')->get_field('sortlabelalpha'), 'Sch07', 'extraalpha ne extrayear 7');
-is($main->get_extraalphadata('Schnee2007a'), '2', 'extraalpha ne extrayear 8');
+eq_or_diff($bibentries->entry('Schnee2007')->get_field('sortlabelalpha'), 'Sch+07', 'extraalpha ne extrayear 5');
+eq_or_diff($main->get_extraalphadata('Schnee2007'), '2', 'extraalpha ne extrayear 6');
+eq_or_diff($bibentries->entry('Schnee2007a')->get_field('sortlabelalpha'), 'Sch07', 'extraalpha ne extrayear 7');
+eq_or_diff($main->get_extraalphadata('Schnee2007a'), '2', 'extraalpha ne extrayear 8');
 
 Biber::Config->setblxoption('labelalphatemplate', {
   labelelement => [
@@ -369,7 +371,7 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'SCH', 'entrykey label 1');
+eq_or_diff($bibentries->entry('Schmidt2007')->get_field('sortlabelalpha'), 'SCH', 'entrykey label 1');
 
 Biber::Config->setblxoption('labelalphatemplate', {
   labelelement => [
@@ -412,9 +414,9 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '20050302', 'labeldate test - 1');
-is($bibentries->entry('padtest')->get_field('labelalpha'), '\&Al\_\_{\textasciitilde}{\textasciitilde}T07', 'pad test - 1');
-is($bibentries->entry('padtest')->get_field('sortlabelalpha'), '&Al__~~T07', 'pad test - 2');
+eq_or_diff($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '20050302', 'labeldate test - 1');
+eq_or_diff($bibentries->entry('padtest')->get_field('labelalpha'), '\&Al\_\_{\textasciitilde}{\textasciitilde}T07', 'pad test - 1');
+eq_or_diff($bibentries->entry('padtest')->get_field('sortlabelalpha'), '&Al__~~T07', 'pad test - 2');
 
 
 

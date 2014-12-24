@@ -150,11 +150,6 @@ is($bibentries->entry('forms5')->get_field('sortlabelalpha'), 'A t', 'labelalpha
 is($bibentries->entry('forms6')->get_field('sortlabelalpha'), 'Z t', 'labelalpha forms - 4');
 
 my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
-      \name{labelname}{3}{}{%
-        {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=24b7be5b577041e83bf3c4fe658111a5}{Smith}{S\bibinitperiod}{Jim}{J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=russian]{author}{3}{}{%
         {{uniquename=0,hash=e7c368e13a02c9c0f0d3629316eb6227}{Булгаков}{Б\bibinitperiod}{Павел}{П\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=24b7be5b577041e83bf3c4fe658111a5}{Smith}{S\bibinitperiod}{Jim}{J\bibinitperiod}{}{}{}{}}%
@@ -165,9 +160,6 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
         {{hash=24b7be5b577041e83bf3c4fe658111a5}{Smith}{S\bibinitperiod}{Jim}{J\bibinitperiod}{}{}{}{}}%
         {{hash=87d0ec74cbe7f9e39f5bbc25930f1474}{Rosenfeld}{R\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{russian}
       \list[form=original,lang=russian]{institution}{1}{%
         {University of Life}%
       }
@@ -197,10 +189,6 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
       \field{labelalpha}{БSР02}
       \field{sortinit}{Б}
       \field{sortinithash}{8f918f8686258589a227d5aaf265a9bb}
-      \field{labeltitle}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{russian}
       \true{singletitle}
       \field{day}{01}
       \field{langid}{russian}
@@ -215,10 +203,6 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
 my $forms9 = q|    \entry{forms9}{book}{vlang=french}
       \field{sortinit}{U}
       \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
-      \field{labeltitle}{Un titel}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{french}
       \field{langid}{french}
       \field[form=original,lang=french]{title}{Un titel}
     \endentry
@@ -227,10 +211,6 @@ my $forms9 = q|    \entry{forms9}{book}{vlang=french}
 my $forms10 = q|    \entry{forms10}{book}{vlang=french}
       \field{sortinit}{U}
       \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
-      \field{labeltitle}{Un titel}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{french}
       \field[form=original,lang=french]{journaltitle}{FJ}
       \field[form=translated,lang=french]{journaltitle}{TFJ}
       \field{langid}{french}
@@ -241,10 +221,6 @@ my $forms10 = q|    \entry{forms10}{book}{vlang=french}
 my $forms11 = q|    \entry{forms11}{unpublished}{}
       \field{sortinit}{T}
       \field{sortinithash}{9378dd666f3c24d81538df53aa99e23d}
-      \field{labeltitle}{TITLE}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
       \true{singletitle}
       \field[form=translated,lang=german]{edition}{Gedition}
       \field[form=translated,lang=french]{maintitle}{Maintitle translated FRENCH}
@@ -294,10 +270,6 @@ my $forms15 = q|    \entry{forms15}{book}{autovlang=true}
       \field{labelalpha}{03}
       \field{sortinit}{Π}
       \field{sortinithash}{9056cb6813a3c373de7ee34a24f2f7ae}
-      \field{labeltitle}{Περίοδοι καὶ μαρτύριον τοῦ ἁγίου Βαρνάβα τοῦ ἀποστόλου}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
       \true{singletitle}
       \field[form=original,lang=latin]{booktitle}{Acta Apocryphorum Apostolorum}
       \field[form=original,lang=greek]{title}{Περίοδοι καὶ μαρτύριον τοῦ ἁγίου Βαρνάβα τοῦ ἀποστόλου}
