@@ -12,6 +12,7 @@ use Biber;
 use Biber::Output::bbl;
 use Log::Log4perl;
 use Unicode::Normalize;
+use Encode;
 chdir("t/tdata");
 
 # Set up Biber object
@@ -424,10 +425,10 @@ my $l11 = q|    \entry{L11}{book}{}
 
 my $l12 = q|    \entry{L12}{book}{}
       \name{author}{1}{}{%
-        {{hash=92d941ea6054dedec40ff02466e9769b}{Vall{é}e\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
+        {{hash=5bb094a9232384acc478f1aa54e8cf3c}{Vallée\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
       }
-      \strng{namehash}{92d941ea6054dedec40ff02466e9769b}
-      \strng{fullhash}{92d941ea6054dedec40ff02466e9769b}
+      \strng{namehash}{5bb094a9232384acc478f1aa54e8cf3c}
+      \strng{fullhash}{5bb094a9232384acc478f1aa54e8cf3c}
       \field{sortinit}{d}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labelnamesource}{author}
@@ -545,10 +546,10 @@ my $l20 = q|    \entry{L20}{book}{}
 
 my $l21 = q|    \entry{L21}{book}{}
       \name{author}{1}{}{%
-        {{hash=b3df6330af0651b93bce079a36dea339}{Smith}{S\bibinitperiod}{{\v{S}}omeone}{\v{S}\bibinitperiod}{}{}{}{}}%
+        {{hash=4389a3c0dc7da74487b50808ba9436ad}{Smith}{S\bibinitperiod}{\v{S}omeone}{\v{S}\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{b3df6330af0651b93bce079a36dea339}
-      \strng{fullhash}{b3df6330af0651b93bce079a36dea339}
+      \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
+      \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
@@ -557,10 +558,10 @@ my $l21 = q|    \entry{L21}{book}{}
 
 my $l22u = q|    \entry{L22}{book}{}
       \name{author}{1}{}{%
-        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{{Š}mith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{2273e0084ca97649d7edced9ce8d0ea3}
-      \strng{fullhash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{namehash}{e58b861545799d0eaf883402a882126e}
+      \strng{fullhash}{e58b861545799d0eaf883402a882126e}
       \field{sortinit}{Š}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
@@ -570,10 +571,10 @@ my $l22u = q|    \entry{L22}{book}{}
 
 my $l22 = q|    \entry{L22}{book}{}
       \name{author}{1}{}{%
-        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{{\v{S}}mith}{\v{S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=e58b861545799d0eaf883402a882126e}{\v{S}mith}{\v{S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{2273e0084ca97649d7edced9ce8d0ea3}
-      \strng{fullhash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{namehash}{e58b861545799d0eaf883402a882126e}
+      \strng{fullhash}{e58b861545799d0eaf883402a882126e}
       \field{sortinit}{\v{S}}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
@@ -652,16 +653,16 @@ my $l29 = q|    \entry{L29}{book}{}
 
 my $l31 = q|    \entry{L31}{book}{}
       \name{author}{1}{}{%
-        {{hash=b43419361d83c9ab010e98aed1a83e35}{{\~{Z}}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name{editor}{1}{}{%
-        {{hash=b43419361d83c9ab010e98aed1a83e35}{{\~{Z}}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name{translator}{1}{}{%
         {{hash=b43419361d83c9ab010e98aed1a83e35}{{\~{Z}}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
-      \strng{namehash}{b43419361d83c9ab010e98aed1a83e35}
-      \strng{fullhash}{b43419361d83c9ab010e98aed1a83e35}
+      \strng{namehash}{29c3ff92fff79d09a8b44d2f775de0b1}
+      \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \field{sortinit}{\~{Z}}
       \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
       \field{labelnamesource}{author}
@@ -707,7 +708,7 @@ eq_or_diff( $out->get_output_entry('L18', $main), $l18, 'Last, First F.{\bibinit
 eq_or_diff( $out->get_output_entry('L19', $main), $l19, 'Firstname with hyphen');
 eq_or_diff( $out->get_output_entry('L19a', $main), $l19a, 'Short firstname with hyphen');
 eq_or_diff( $out->get_output_entry('L20', $main), $l20, 'Protected dual first name');
-eq_or_diff( NFC($out->get_output_entry('L22', $main)), $l22u, 'LaTeX encoded unicode lastname - 1');
+eq_or_diff( encode_utf8(NFC($out->get_output_entry('L22', $main))), encode_utf8($l22u), 'LaTeX encoded unicode lastname - 1');
 eq_or_diff( NFC($out->get_output_entry('L23', $main)), $l23, 'Unicode firstname');
 eq_or_diff( NFC($out->get_output_entry('L24', $main)), $l24, 'Unicode lastname');
 eq_or_diff( $out->get_output_entry('L25', $main), $l25, 'Single string name');
@@ -742,7 +743,7 @@ $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info)->nth_name(1)->get_firstname_i->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
-eq_or_diff( $out->get_output_entry('L12', $main), $l12, 'First First First First prefix prefix Last Last') ;
+eq_or_diff( encode_utf8($out->get_output_entry('L12', $main)), encode_utf8($l12), 'First First First First prefix prefix Last Last') ;
 eq_or_diff( $out->get_output_entry('L21', $main), $l21, 'LaTeX encoded unicode firstname');
 eq_or_diff( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode lastname - 2');
 eq_or_diff( $out->get_output_entry('L31', $main), $l31, 'LaTeX encoded unicode lastname with tie char');

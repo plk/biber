@@ -247,7 +247,7 @@ sub latex_decode {
         $text =~ s/\\ding{([2-9AF][0-9A-F])}/$map->{$1}/ge;
       }
       elsif ($type eq 'letters') {
-        $text =~ s/\\($re)(?:\{\}|\s+|\b)/$map->{$1}/ge;
+        $text =~ s/\{?\\($re)(?:\{\}|\s+|\b)\}?/$map->{$1}/ge;
       }
       elsif (first {$type eq $_} ('punctuation', 'symbols', 'greek')) {
         # remove {} around macros that print one character
@@ -270,14 +270,14 @@ sub latex_decode {
         #     Any letter is allowed after the space (\c S)
         #   Else
         #     Only a non basic LaTeX letter is allowed (\c-)
-        $text =~ s/\\($re)(\s*)((?(?{$1 !~ m:[A-Za-z]$:})\pL|(?(?{$2})\pL|[^A-Za-z]))\pM*)/$3 . $map->{$1}/gxe;
+        $text =~ s/\{?\\($re)(\s*)((?(?{$1 !~ m:[A-Za-z]$:})\pL|(?(?{$2})\pL|[^A-Za-z]))\pM*)\}?/$3 . $map->{$1}/gxe;
       }
     }
 
-    # remove {} around letter+combining mark(s)
-    # by default we skip that, as it would destroy constructions like \foo{\`e}
+    # remove {} around single grapheme clusters
+    # by default we skip that, as it would destroy constructions like \frac{a}{b}
     if ($strip_outer_braces) {
-        $text =~ s/{(\PM\pM+)}/$1/g;
+        $text =~ s/{(\X)}/$1/g;
     }
 
     $logger->trace("String in latex_decode() now -> '$text'");

@@ -63,11 +63,10 @@ sub _getnamehash {
     }
 
     # without useprefix, prefix is not first in the hash
-    if ( $n->get_prefix and not
-         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+    if ($n->get_prefix and not
+        Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
       $hashkey .= $n->get_prefix;
     }
-
   }
 
   # name list was truncated
