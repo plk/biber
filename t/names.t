@@ -496,11 +496,8 @@ my $l11 = q|    \entry{L11}{book}{}
 |;
 
 my $l12 = q|    \entry{L12}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=92d941ea6054dedec40ff02466e9769b}{Vall{é}e\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
-        {{hash=92d941ea6054dedec40ff02466e9769b}{Vall{é}e\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
+        {{hash=92d941ea6054dedec40ff02466e9769b}{Vallée\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
       }
       \field{labelnamesourcefield}{author}
       \field{labelnamesourceform}{original}
@@ -514,9 +511,6 @@ my $l12 = q|    \entry{L12}{book}{}
 |;
 
 my $l13 = q|    \entry{L13}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=5e79da6869afaf0d38e01285b494d555}{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelimi J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=5e79da6869afaf0d38e01285b494d555}{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelimi J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       }
@@ -695,11 +689,8 @@ my $l21 = q|    \entry{L21}{book}{}
 |;
 
 my $l22u = q|    \entry{L22}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{{Š}mith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
-        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{{Š}mith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
       \field{labelnamesourcefield}{author}
       \field{labelnamesourceform}{original}
@@ -714,11 +705,8 @@ my $l22u = q|    \entry{L22}{book}{}
 
 
 my $l22 = q|    \entry{L22}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{{\v{S}}mith}{\v{S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
-        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{{\v{S}}mith}{\v{S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{\v{S}mith}{\v{S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
       \field{labelnamesourcefield}{author}
       \field{labelnamesourceform}{original}
@@ -733,9 +721,6 @@ my $l22 = q|    \entry{L22}{book}{}
 
 
 my $l23 = q|    \entry{L23}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=4389a3c0dc7da74487b50808ba9436ad}{Smith}{S\bibinitperiod}{Šomeone}{Š\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{Smith}{S\bibinitperiod}{Šomeone}{Š\bibinitperiod}{}{}{}{}}%
       }
@@ -751,9 +736,6 @@ my $l23 = q|    \entry{L23}{book}{}
 |;
 
 my $l24 = q|    \entry{L24}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
@@ -832,14 +814,11 @@ my $l29 = q|    \entry{L29}{book}{}
 |;
 
 my $l31 = q|    \entry{L31}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=b43419361d83c9ab010e98aed1a83e35}{{\~{Z}}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
-        {{hash=b43419361d83c9ab010e98aed1a83e35}{{\~{Z}}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=b43419361d83c9ab010e98aed1a83e35}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name[form=original,lang=english]{editor}{1}{}{%
-        {{hash=b43419361d83c9ab010e98aed1a83e35}{{\~{Z}}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=b43419361d83c9ab010e98aed1a83e35}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name[form=original,lang=english]{translator}{1}{}{%
         {{hash=b43419361d83c9ab010e98aed1a83e35}{{\~{Z}}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%

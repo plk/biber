@@ -31,47 +31,54 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 my $logger = Log::Log4perl::get_logger('main');
 
-
-sub _getnamehash {
-  my ($self, $citekey, $names) = @_;
+# namehash obeys list truncations but not uniquename
+sub _gennamehash {
+  my ($self, $citekey) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $hashkey = '';
-  my $count = $names->count_names;
-  my $visible = $names->get_visible_cite;
+  my $labelnamename = $be->get_labelname_info;
 
-  # namehash obeys list truncations but not uniquename
-  foreach my $n (@{$names->first_n_names($visible)}) {
-    if ( $n->get_prefix and
-         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $hashkey .= $n->get_prefix;
+  # Generate hash from all variants of labelname
+  foreach my $form ($be->get_field_form_names($labelnamename)) {
+    foreach my $lang ($be->get_field_form_lang_names($labelnamename, $form)) {
+      if (my $names = $be->get_field($labelnamename, $form, $lang)) {
+        my $count = $names->count_names;
+        my $visible = $names->get_visible_cite;
+        foreach my $n (@{$names->first_n_names($visible)}) {
+          if ($n->get_prefix and
+               Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+            $hashkey .= $n->get_prefix;
+          }
+          $hashkey .= $n->get_lastname;
+
+          if ( $n->get_suffix ) {
+            $hashkey .= $n->get_suffix;
+          }
+
+          if ( $n->get_firstname ) {
+            $hashkey .= $n->get_firstname;
+          }
+
+          if ( $n->get_middlename ) {
+            $hashkey .= $n->get_middlename;
+          }
+
+          # without useprefix, prefix is not first in the hash
+          if ( $n->get_prefix and not
+               Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+            $hashkey .= $n->get_prefix;
+          }
+        }
+
+        # name list was truncated
+        if ($visible < $count or $names->get_morenames) {
+          $hashkey .= '+';
+        }
+      }
     }
-    $hashkey .= $n->get_lastname;
-
-    if ( $n->get_suffix ) {
-      $hashkey .= $n->get_suffix;
-    }
-
-    if ( $n->get_firstname ) {
-      $hashkey .= $n->get_firstname;
-    }
-
-    if ( $n->get_middlename ) {
-      $hashkey .= $n->get_middlename;
-    }
-
-    # without useprefix, prefix is not first in the hash
-    if ($n->get_prefix and not
-        Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $hashkey .= $n->get_prefix;
-    }
-  }
-
-  # name list was truncated
-  if ($visible < $count or $names->get_morenames) {
-    $hashkey .= '+';
   }
 
   $logger->trace("Creating MD5 namehash using '$hashkey'");
@@ -79,54 +86,62 @@ sub _getnamehash {
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
 
-# Same as _getnamehash but takes account of uniquename setting for firstname
+# Same as _gennamehash but takes account of uniquename setting for firstname
 # It's used for extra* tracking only
-sub _getnamehash_u {
-  my ($self, $citekey, $names) = @_;
+sub _gennamehash_u {
+  my ($self, $citekey) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $hashkey = '';
-  my $count = $names->count_names;
-  my $visible = $names->get_visible_cite;
+  my $labelnamename = $be->get_labelname_info;
 
   # namehash obeys list truncations but not uniquename
-  foreach my $n (@{$names->first_n_names($visible)}) {
-    if ( $n->get_prefix and
-         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $hashkey .= $n->get_prefix;
-    }
-    $hashkey .= $n->get_lastname;
+  foreach my $form ($be->get_field_form_names($labelnamename)) {
+    foreach my $lang ($be->get_field_form_lang_names($labelnamename, $form)) {
+      if (my $names = $be->get_field($labelnamename, $form, $lang)) {
+        my $count = $names->count_names;
+        my $visible = $names->get_visible_cite;
 
-    if ( $n->get_suffix ) {
-      $hashkey .= $n->get_suffix;
-    }
+        foreach my $n (@{$names->first_n_names($visible)}) {
+          if ( $n->get_prefix and
+               Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+            $hashkey .= $n->get_prefix;
+          }
+          $hashkey .= $n->get_lastname;
 
-    if ( $n->get_firstname and defined($n->get_uniquename)) {
-      if ($n->get_uniquename eq '2') {
-        $hashkey .= $n->get_firstname;
+          if ( $n->get_suffix ) {
+            $hashkey .= $n->get_suffix;
+          }
+
+          if ( $n->get_firstname and defined($n->get_uniquename)) {
+            if ($n->get_uniquename eq '2') {
+              $hashkey .= $n->get_firstname;
+            }
+            elsif ($n->get_uniquename eq '1') {
+              $hashkey .= join('', @{$n->get_firstname_i});
+            }
+          }
+
+          if ( $n->get_middlename ) {
+            $hashkey .= $n->get_middlename;
+          }
+
+          # without useprefix, prefix is not first in the hash
+          if ( $n->get_prefix and not
+               Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+            $hashkey .= $n->get_prefix;
+          }
+
+        }
+
+        # name list was truncated
+        if ($visible < $count or $names->get_morenames) {
+          $hashkey .= '+';
+        }
       }
-      elsif ($n->get_uniquename eq '1') {
-        $hashkey .= join('', @{$n->get_firstname_i});
-      }
     }
-
-    if ( $n->get_middlename ) {
-      $hashkey .= $n->get_middlename;
-    }
-
-    # without useprefix, prefix is not first in the hash
-    if ( $n->get_prefix and not
-         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $hashkey .= $n->get_prefix;
-    }
-
-  }
-
-  # name list was truncated
-  if ($visible < $count or $names->get_morenames) {
-    $hashkey .= '+';
   }
 
   $logger->trace("Creating MD5 namehash_u using '$hashkey'");
@@ -134,43 +149,49 @@ sub _getnamehash_u {
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
 
-
-sub _getfullhash {
-  my ($self, $citekey, $names) = @_;
+sub _genfullhash {
+  my ($self, $citekey) = @_;
   my $hashkey = '';
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  foreach my $n (@{$names->names}) {
-    if ( my $p = $n->get_prefix and
-      Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $hashkey .= $p;
+  my $labelnamename = $be->get_labelnamefh_info;
+
+  foreach my $form ($be->get_field_form_names($labelnamename)) {
+    foreach my $lang ($be->get_field_form_lang_names($labelnamename, $form)) {
+      if (my $names = $be->get_field($labelnamename, $form, $lang)) {
+        foreach my $n (@{$names->names}) {
+          if (my $p = $n->get_prefix and
+              Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey)) {
+            $hashkey .= $p;
+          }
+          $hashkey .= $n->get_lastname;
+
+          if ( $n->get_suffix ) {
+            $hashkey .= $n->get_suffix;
+          }
+
+          if ( $n->get_firstname ) {
+            $hashkey .= $n->get_firstname;
+          }
+
+          if ( $n->get_middlename ) {
+            $hashkey .= $n->get_middlename;
+          }
+
+          # without useprefix, prefix is not first in the hash
+          if (my $p = $n->get_prefix and not
+              Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey)) {
+            $hashkey .= $p;
+          }
+        }
+
+        # If we had an "and others"
+        if ($names->get_morenames) {
+          $hashkey .= '+'
+        }
+      }
     }
-    $hashkey .= $n->get_lastname;
-
-    if ( $n->get_suffix ) {
-      $hashkey .= $n->get_suffix;
-    }
-
-    if ( $n->get_firstname ) {
-      $hashkey .= $n->get_firstname;
-    }
-
-    if ( $n->get_middlename ) {
-      $hashkey .= $n->get_middlename;
-    }
-
-    # without useprefix, prefix is not first in the hash
-    if ( my $p = $n->get_prefix and not
-         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $hashkey .= $p;
-    }
-
-  }
-
-  # If we had an "and others"
-  if ($names->get_morenames) {
-    $hashkey .= '+'
   }
 
   $logger->trace("Creating MD5 fullhash using '$hashkey'");

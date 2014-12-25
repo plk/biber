@@ -1430,8 +1430,8 @@ sub process_singletitle {
 
   # Use labelname to generate this, if there is one ...
   my $identifier;
-  if (my $lni = $be->get_labelname_info) {
-    $identifier = $self->_getnamehash_u($citekey, $be->get_field($lni));
+  if ($be->get_labelname_info) {
+    $identifier = $self->_gennamehash_u($citekey);
   }
   # ... otherwise use labeltitle
   elsif (my $lti = $be->get_labeltitle_info) {
@@ -1447,8 +1447,6 @@ sub process_singletitle {
   }
   return;
 }
-
-
 
 =head2 process_extrayear
 
@@ -1480,8 +1478,8 @@ sub process_extrayear {
     $logger->trace("Creating extrayear information for '$citekey'");
 
     my $name_string = '';
-    if (my $lni = $be->get_labelname_info) {
-      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni));
+    if ($be->get_labelname_info) {
+      $name_string = $self->_gennamehash_u($citekey);
     }
 
     # extrayear takes into account the labelyear which can be a range
@@ -1527,8 +1525,8 @@ sub process_extratitle {
     $logger->trace("Creating extratitle information for '$citekey'");
 
     my $name_string = '';
-    if (my $lni = $be->get_labelname_info) {
-      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni));
+    if ($be->get_labelname_info) {
+      $name_string = $self->_gennamehash_u($citekey);
     }
 
     my $lti = $be->get_labeltitle_info;
@@ -1842,6 +1840,9 @@ sub process_labeltitle {
 
     Generate fullhash
 
+    fullhash is generated from the labelname but ignores SHORT* fields and
+    max/mincitenames settings
+
 =cut
 
 sub process_fullhash {
@@ -1851,12 +1852,8 @@ sub process_fullhash {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
 
-  # fullhash is generated from the labelname but ignores SHORT* fields and
-  # max/mincitenames settings
-  if (my $lnfhi = $be->get_labelnamefh_info) {
-    if (my $lnfh = $be->get_field($lnfhi)) {
-      $be->set_field('fullhash', $self->_getfullhash($citekey, $lnfh));
-    }
+  if ($be->get_labelnamefh_info) {
+    $be->set_field('fullhash', $self->_genfullhash($citekey));
   }
 
   return;
@@ -1865,6 +1862,8 @@ sub process_fullhash {
 =head2 process_namehash
 
     Generate namehash
+
+    namehash is generated from the labelname
 
 =cut
 
@@ -1876,11 +1875,8 @@ sub process_namehash {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
 
-  # namehash is generated from the labelname
-  if (my $lni = $be->get_labelname_info) {
-    if (my $ln = $be->get_field($lni)) {
-      $be->set_field('namehash', $self->_getnamehash($citekey, $ln));
-    }
+  if ($be->get_labelname_info) {
+    $be->set_field('namehash', $self->_gennamehash($citekey));
   }
 
   return;
