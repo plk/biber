@@ -12,6 +12,7 @@ use Biber;
 use Biber::Output::bbl;
 use Log::Log4perl;
 use Unicode::Normalize;
+use Encode;
 chdir("t/tdata");
 
 # Set up Biber object
@@ -893,7 +894,7 @@ eq_or_diff( $out->get_output_entry('L18', $main), $l18, 'Last, First F.{\bibinit
 eq_or_diff( $out->get_output_entry('L19', $main), $l19, 'Firstname with hyphen');
 eq_or_diff( $out->get_output_entry('L19a', $main), $l19a, 'Short firstname with hyphen');
 eq_or_diff( $out->get_output_entry('L20', $main), $l20, 'Protected dual first name');
-eq_or_diff( NFC($out->get_output_entry('L22', $main)), $l22u, 'LaTeX encoded unicode lastname - 1');
+eq_or_diff( encode_utf8(NFC($out->get_output_entry('L22', $main))), encode_utf8($l22u), 'LaTeX encoded unicode lastname - 1');
 eq_or_diff( NFC($out->get_output_entry('L23', $main)), $l23, 'Unicode firstname');
 eq_or_diff( NFC($out->get_output_entry('L24', $main)), $l24, 'Unicode lastname');
 eq_or_diff( $out->get_output_entry('L25', $main), $l25, 'Single string name');

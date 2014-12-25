@@ -17,6 +17,8 @@ use Log::Log4perl;
 use IPC::Cmd qw( can_run );
 use Cwd;
 use Unicode::Normalize;
+use Encode;
+
 my $cwd = getcwd;
 
 my $biber = Biber->new(noconf => 1);
@@ -63,8 +65,8 @@ eq_or_diff(File::Spec->canonpath(locate_biber_file('general1.bcf')), File::Spec-
 eq_or_diff(normalise_string('"a, b–c: d" ', 1),  'a bc d', 'normalise_string' );
 
 Biber::Config->setoption('output_encoding', 'UTF-8');
-eq_or_diff(NFC(normalise_string_underscore(latex_decode('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
-    $§+ :-)   ', strip_outer_braces => 1), 0)), 'Şecöka_Nìño', 'normalise_string_underscore 1' );
+eq_or_diff(encode_utf8(NFC(normalise_string_underscore(latex_decode('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
+    $§+ :-)   '), 0))), encode_utf8('Şecöka_Nìño'), 'normalise_string_underscore 1' );
 
 eq_or_diff(normalise_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalise_string_underscore 3');
 
