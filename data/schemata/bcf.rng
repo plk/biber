@@ -1131,12 +1131,6 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
-          <optional>
-            <attribute name="form"/>
-          </optional>
-          <optional>
-            <attribute name="lang"/>
-          </optional>
           <text/>
         </element>
       </oneOrMore>
@@ -1473,12 +1467,6 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
-          <optional>
-            <attribute name="form"/>
-          </optional>
-          <optional>
-            <attribute name="lang"/>
-          </optional>
           <text/>
         </element>
       </oneOrMore>

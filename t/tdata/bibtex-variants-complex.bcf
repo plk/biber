@@ -166,11 +166,11 @@
   <bcf:options component="biblatex" type="misc">
     <bcf:option type="multivalued">
       <bcf:key>labelnamespec</bcf:key>
-      <bcf:value order="1" form="uniform">translator</bcf:value>
+      <bcf:value order="1">translator</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labeltitlespec</bcf:key>
-      <bcf:value order="1" form="romanised">title</bcf:value>
+      <bcf:value order="1">title</bcf:value>
     </bcf:option>
   </bcf:options>
   <!-- BIBLATEX OPTION SCOPE -->

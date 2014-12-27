@@ -31,6 +31,29 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 my $logger = Log::Log4perl::get_logger('main');
 
+sub _gentitlehash {
+  my ($self, $citekey) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+  my $hashkey = '';
+  my $labeltitlename = $be->get_labeltitle_info;
+
+  # Generate hash from all variants of labelname
+  foreach my $form ($be->get_field_form_names($labeltitlename)) {
+    foreach my $lang ($be->get_field_form_lang_names($labeltitlename, $form)) {
+      if (my $title = $be->get_field($labeltitlename, $form, $lang)) {
+        $hashkey .= $title;
+      }
+    }
+  }
+
+  $logger->trace("Creating MD5 titlehash using '$hashkey'");
+  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
+  return md5_hex(encode_utf8(NFC($hashkey)));
+}
+
 # namehash obeys list truncations but not uniquename
 sub _gennamehash {
   my ($self, $citekey) = @_;

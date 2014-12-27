@@ -290,6 +290,5 @@ is($out->get_output_entry('forms11', $main), $forms11, 'bbl entry - mapping with
 is($out->get_output_entry('forms12', $main), $forms12, 'bbl entry - mapping with forms/langs - 2');
 is($out->get_output_entry('forms13', $main), $forms13, 'bbl entry - mapping with forms/langs - 3');
 is($out->get_output_entry('forms14', $main), $forms14, 'bbl entry - mapping with forms/langs - 4');
-
 is($out->get_output_entry('forms15', $main), $forms15, 'autovlang=true as entry option');
 

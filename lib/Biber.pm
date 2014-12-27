@@ -671,7 +671,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   my $sortlists = new Biber::SortLists;
 
   foreach my $list (@{$bcfxml->{sortlist}}) {
-    my $ltype  = $list->{type};
+    my $ltype = $list->{type};
     my $lssn = $list->{sortscheme};
     my $lname = $list->{name};
     my $lform = $list->{form};
@@ -1434,8 +1434,8 @@ sub process_singletitle {
     $identifier = $self->_gennamehash_u($citekey);
   }
   # ... otherwise use labeltitle
-  elsif (my $lti = $be->get_labeltitle_info) {
-    $identifier = $be->get_field($lti);
+  elsif ($be->get_labeltitle_info) {
+    $identifier = $self->_gentitlehash($citekey);
   }
 
   # Don't generate this information for entries with no labelname or labeltitle
@@ -1529,12 +1529,12 @@ sub process_extratitle {
       $name_string = $self->_gennamehash_u($citekey);
     }
 
-    my $lti = $be->get_labeltitle_info;
-    my $title_string = $be->get_field($lti) // '';
+    my $title_string = '';
+    if ($be->get_labeltitle_info) {
+      $title_string = $self->_gentitlehash($citekey);
+    }
 
-    my $nametitle_string = "$name_string,$title_string";
-    $logger->trace("Setting nametitle to '$nametitle_string' for entry '$citekey'");
-    $be->set_field('nametitle', $nametitle_string);
+    $be->set_field('nametitle', "$name_string,$title_string");
     $logger->trace("Incrementing nametitle for '$name_string'");
     Biber::Config->incr_seen_nametitle($name_string, $title_string);
   }
@@ -1570,15 +1570,15 @@ sub process_extratitleyear {
 
     $logger->trace("Creating extratitleyear information for '$citekey'");
 
-    my $lti = $be->get_labeltitle_info;
-    my $title_string = $be->get_field($lti) // '';
+    my $title_string = '';
+    if ($be->get_labeltitle_info) {
+      $title_string = $self->_gentitlehash($citekey);
+    }
 
     # Takes into account the labelyear which can be a range
     my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
 
-    my $titleyear_string = "$title_string,$year_string";
-    $logger->trace("Setting titleyear to '$titleyear_string' for entry '$citekey'");
-    $be->set_field('titleyear', $titleyear_string);
+    $be->set_field('titleyear', "$title_string,$year_string");
     $logger->trace("Incrementing titleyear for '$title_string'");
     Biber::Config->incr_seen_titleyear($title_string, $year_string);
   }
@@ -1674,7 +1674,7 @@ sub process_labelname {
     }
 
     $logger->trace("Looking for labelname $ln");
-    if ($be->get_field($ln)) {
+    if ($be->field_exists($ln)) {
       $be->set_labelname_info($ln);
       last;
     }
@@ -1699,7 +1699,7 @@ sub process_labelname {
       next;
     }
 
-    if ($be->get_field($ln)) {
+    if ($be->field_exists($ln)) {
       $be->set_labelnamefh_info($ln);
       last;
     }
@@ -1827,7 +1827,7 @@ sub process_labeltitle {
 
   foreach my $h_ltn (@$ltitlespec) {
     my $ltn = $h_ltn->{content};
-    if (my $lt = $be->get_field($ltn)) {
+    if ($be->field_exists($ltn)) {
       $be->set_labeltitle_info($ltn);
     }
   }
@@ -1939,7 +1939,7 @@ sub process_visible_names {
     my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
 
     # Here we are assuming that any variants of a name list have the same number of members.
-    # We must assume this otherwise nothing really makes sense.
+    # We must assume this otherwise nothing would really work
     foreach my $n (@{$dm->get_fields_of_type('list', 'name')}) {
       next unless my $names = $be->get_field($n);
 
@@ -2237,7 +2237,7 @@ sub generate_sortinfo {
 
 =head2 uniqueness
 
-    Generate the uniqueness information needed when creating .bbl
+    Generate the uniqueness information
 
 =cut
 
