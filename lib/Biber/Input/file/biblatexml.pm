@@ -551,7 +551,7 @@ sub _name {
     my $form = $node->getAttribute('form') || Biber::Config->getblxoption('vform', undef, $key);
     my $lang = bcp472locale($node->getAttribute('xml:lang'));
 
-    my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
+    my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field_nv('entrytype'), $key);
     my $names = new Biber::Entry::Names;
     foreach my $name ($node->findnodes("./$NS:person")) {
       $names->add_name(parsename($name, $f, {useprefix => $useprefix}));

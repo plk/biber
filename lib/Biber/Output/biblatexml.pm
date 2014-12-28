@@ -87,18 +87,18 @@ sub set_output_target_file {
 sub set_output_entry {
   my $self = shift;
   my $be = shift; # Biber::Entry object
-  my $bee = $be->get_field('entrytype');
+  my $bee = $be->get_field_nv('entrytype');
   my $section = shift; # Section object the entry occurs in
   my $dm = shift; # Data Model object
   my $secnum = $section->number;
-  my $key = $be->get_field('citekey');
+  my $key = $be->get_field_nv('citekey');
   my $xml = $self->{output_target};
   my $xml_prefix = $self->{xml_prefix};
 
   $xml->startTag([$xml_prefix, 'entry'], id => NFC($key), entrytype => NFC($bee));
 
   # Id field
-  if (my $ids = $be->get_field('ids')) {
+  if (my $ids = $be->get_field_nv('ids')) {
     $xml->startTag([$xml_prefix, 'id']);
     foreach my $id (@$ids) {
       $xml->dataElement([$xml_prefix, 'item'], NFC($id));
@@ -113,14 +113,14 @@ sub set_output_entry {
   # which could be again used as input and so we don't want to resolve/skip
   # fields like DATE etc.
   unless (Biber::Config->getoption('output_resolve')) {
-    if (my $xdata = $be->get_field('xdata')) {
+    if (my $xdata = $be->get_field_nv('xdata')) {
       $xml->startTag([$xml_prefix, 'xdata']);
       foreach my $xd (@$xdata) {
         $xml->dataElement([$xml_prefix, 'item'], NFC($xd));
       }
       $xml->endTag();
     }
-    if (my $crossref = $be->get_field('crossref')) {
+    if (my $crossref = $be->get_field_nv('crossref')) {
       $xml->dataElement([$xml_prefix, 'crossref'], NFC($crossref));
     }
   }
@@ -208,17 +208,12 @@ sub set_output_entry {
                      @{$dm->get_fields_of_type('field', 'verbatim')},
                      @{$dm->get_fields_of_type('field', 'uri')}) {
     next if $dm->get_fieldformat($field) eq 'xsv';
-    if ( ($dm->field_is_nullok($field) and
-          $be->field_exists($field)) or
-         $be->get_field($field) ) {
-
-      foreach my $form ($be->get_field_form_names($field)) {
-        foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
-          if (my $f = $be->get_field($field, $form, $lang)) {
-
-            my @attrs;
-            if ($dm->field_is_variant_enabled($field)) {
-              # form/lang
+    if ($be->field_exists($field)) {
+      my @attrs = ();
+      if ($dm->field_is_variant_enabled($field)) {
+        foreach my $form ($be->get_field_form_names($field)) {
+          foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
+            if (my $f = $be->get_field($field, $form, $lang)) {
               unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
                 push @attrs, (form => $form);
               }
@@ -226,10 +221,10 @@ sub set_output_entry {
                 push @attrs, (lang => $lang);
               }
             }
-            $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs);
           }
         }
       }
+      $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs);
     }
   }
 
@@ -239,14 +234,14 @@ sub set_output_entry {
     next if $xsvf eq 'xdata'; # XDATA is special
 
     # xsv fields don't have form/lang
-    if (my $f = $be->get_field($xsvf)) {
+    if (my $f = $be->get_field_nv($xsvf)) {
       $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',@$f)));
     }
   }
 
   # Range fields
   foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
-    if ( my $rf = $be->get_field($rfield) ) {
+    if ( my $rf = $be->get_field_nv($rfield) ) {
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
       $xml->startTag([$xml_prefix, $rfield]);
@@ -271,7 +266,7 @@ sub set_output_entry {
   # Date fields
   my %dinfo;
   foreach my $dfield (@{$dm->get_fields_of_datatype('datepart')}) {
-    if ( my $df = $be->get_field($dfield) ) {
+    if ( my $df = $be->get_field_nv($dfield) ) {
       # There are some assumptions here about field names which is not nice but
       # they are part of the default biblatex data model which is unlikely to be
       # changed by users

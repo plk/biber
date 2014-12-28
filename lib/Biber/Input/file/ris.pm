@@ -550,7 +550,7 @@ sub _date {
   my ($bibentry, $entry, $f) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $key = $bibentry->get_field('citekey');
+  my $key = $bibentry->get_field_nv('citekey');
   my $ds = $section->get_keytods($key);
   my $date = $entry->{$f};
   if ($date =~ m|\A([0-9]{4})/([0-9]{2})/([0-9]{2})\s*\z|xms) {
@@ -574,8 +574,8 @@ sub _name {
   my $names_obj = new Biber::Entry::Names;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $key = $bibentry->get_field('citekey');
-  my $ds = $section->get_keytods($bibentry->get_field('citekey'));
+  my $key = $bibentry->get_field_nv('citekey');
+  my $ds = $section->get_keytods($bibentry->get_field_nv('citekey'));
   foreach my $name (@$names) {
     $logger->debug('Parsing RIS name');
     if ($name =~ m|\A([^,]+)\s*,?\s*([^,]+)?\s*,?\s*([^,]+)?\z|xms) {

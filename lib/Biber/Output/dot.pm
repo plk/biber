@@ -143,13 +143,13 @@ sub output {
 
     # First create nodes/groups for entries
     foreach my $be ($section->bibentries->entries) {
-      my $citekey = $be->get_field('citekey');
+      my $citekey = $be->get_field_nv('citekey');
       $state->{$secnum}{"${secnum}/${citekey}"} = 1;
-      my $et = uc($be->get_field('entrytype'));
+      my $et = uc($be->get_field_nv('entrytype'));
 
       # colour depends on whether cited, uncited, dataonly or key alias
       my $c = $section->has_citekey($citekey) ? '#a0d0ff' : '#deefff';
-      if (my $options = $be->get_field('options')) {
+      if (my $options = $be->get_field_nv('options')) {
         $c = '#fdffd9' if $options =~ m/dataonly/o;
       }
       $c = '#a1edec' if $section->get_citekey_alias($citekey);

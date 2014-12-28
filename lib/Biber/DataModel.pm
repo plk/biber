@@ -416,8 +416,8 @@ sub check_mandatory_constraints {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my @warnings;
-  my $et = $be->get_field('entrytype');
-  my $key = $be->get_field('citekey');
+  my $et = $be->get_field_nv('entrytype');
+  my $key = $be->get_field_nv('citekey');
   my $ds = $section->get_keytods($key);
 
   foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{mandatory}}) {
@@ -479,8 +479,8 @@ sub check_conditional_constraints {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my @warnings;
-  my $et = $be->get_field('entrytype');
-  my $key = $be->get_field('citekey');
+  my $et = $be->get_field_nv('entrytype');
+  my $key = $be->get_field_nv('citekey');
   my $ds = $section->get_keytods($key);
 
   foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{conditional}}) {
@@ -544,15 +544,15 @@ sub check_data_constraints {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my @warnings;
-  my $et = $be->get_field('entrytype');
-  my $key = $be->get_field('citekey');
+  my $et = $be->get_field_nv('entrytype');
+  my $key = $be->get_field_nv('citekey');
   my $ds = $section->get_keytods($key);
 
   foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{data}}) {
     # This is the datatype of the constraint, not the field!
     if ($c->{datatype} eq 'isbn') {
       foreach my $f (@{$c->{fields}}) {
-        if (my $fv = $be->get_field($f)) {
+        if (my $fv = $be->get_field_nv($f)) {
           require Business::ISBN;
           my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
           $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
@@ -580,7 +580,7 @@ sub check_data_constraints {
     }
     elsif ($c->{datatype} eq 'issn') {
       foreach my $f (@{$c->{fields}}) {
-        if (my $fv = $be->get_field($f)) {
+        if (my $fv = $be->get_field_nv($f)) {
           require Business::ISSN;
           # Treat as a list field just in case someone has made it so in a custom datamodel
           unless ($self->get_fieldtype($f) eq 'list') {
@@ -597,7 +597,7 @@ sub check_data_constraints {
     }
     elsif ($c->{datatype} eq 'ismn') {
       foreach my $f (@{$c->{fields}}) {
-        if (my $fv = $be->get_field($f)) {
+        if (my $fv = $be->get_field_nv($f)) {
           require Business::ISMN;
           # Treat as a list field just in case someone has made it so in a custom datamodel
           unless ($self->get_fieldtype($f) eq 'list') {
@@ -616,7 +616,7 @@ sub check_data_constraints {
            $c->{datatype} eq 'datepart') {
       my $dt = $DM_DATATYPES{$c->{datatype}};
       foreach my $f (@{$c->{fields}}) {
-        if (my $fv = $be->get_field($f)) {
+        if (my $fv = $be->get_field_nv($f)) {
           unless ( $fv =~ /$dt/ ) {
             push @warnings, "Datamodel: Entry '$key' ($ds): Invalid format (" . $c->{datatype}. ") of field '$f' - ignoring field";
             $be->del_field($f);
@@ -652,7 +652,7 @@ sub check_data_constraints {
         # so we just set it to any valid value for the test
         my $byc;
         my $byc_d; # Display value for errors so as not to confuse people
-        if ($d eq '' and not $be->get_field('datesplit')) {
+        if ($d eq '' and not $be->get_field_nv('datesplit')) {
           $byc = '1900';        # Any valid value is fine
           $byc_d = 'YYYY';
         }

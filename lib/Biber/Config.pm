@@ -1555,8 +1555,8 @@ sub list_differs_superset {
 
 sub get_numofuniquenames {
   shift; # class method so don't care about class name
-  my ($name, $namecontext) = @_;
-  my $return = scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
+  my ($name, $form, $lang, $namecontext) = @_;
+  my $return = scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}{$form}{$lang}{$namecontext}};
   $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
   return $return;
 }
@@ -1569,8 +1569,8 @@ sub get_numofuniquenames {
 
 sub get_numofuniquenames_all {
   shift; # class method so don't care about class name
-  my ($name, $namecontext) = @_;
-  my $return = scalar keys %{$CONFIG->{state}{uniquenamecount_all}{$name}{$namecontext}};
+  my ($name, $form, $lang, $namecontext) = @_;
+  my $return = scalar keys %{$CONFIG->{state}{uniquenamecount_all}{$name}{$form}{$lang}{$namecontext}};
   $logger->trace("get_numofuniquenames_all() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
   return $return;
 }
@@ -1585,8 +1585,8 @@ sub get_numofuniquenames_all {
 
 sub add_uniquenamecount {
   shift; # class method so don't care about class name
-  my ($name, $namecontext, $key) = @_;
-  $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}{$key}++;
+  my ($name, $form, $lang, $namecontext, $key) = @_;
+  $CONFIG->{state}{uniquenamecount}{$name}{$form}{$lang}{$namecontext}{$key}++;
   return;
 }
 
@@ -1599,8 +1599,8 @@ sub add_uniquenamecount {
 
 sub add_uniquenamecount_all {
   shift; # class method so don't care about class name
-  my ($name, $namecontext, $key) = @_;
-  $CONFIG->{state}{uniquenamecount_all}{$name}{$namecontext}{$key}++;
+  my ($name, $form, $lang, $namecontext, $key) = @_;
+  $CONFIG->{state}{uniquenamecount_all}{$name}{$form}{$lang}{$namecontext}{$key}++;
   return;
 }
 
@@ -1626,8 +1626,8 @@ sub reset_uniquenamecount {
 
 sub _get_uniquename {
   shift; # class method so don't care about class name
-  my ($name, $namecontext) = @_;
-  my @list = sort keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
+  my ($name, $form, $lang, $namecontext) = @_;
+  my @list = sort keys %{$CONFIG->{state}{uniquenamecount}{$name}{$form}{$lang}{$namecontext}};
   return \@list;
 }
 

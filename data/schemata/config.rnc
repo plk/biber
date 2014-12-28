@@ -217,16 +217,10 @@ inheritance =
             # either a "skip this field" specification
             # so we can say inherit all except certain fields OR ...
             (attribute source { xsd:string },
-             attribute form { text }?,
-             attribute lang { text }?,
              attribute skip { "true" | "false" }) |
             # ... a source and target field with an optional override attribute
             (attribute source { xsd:string {minLength="1"}},
-             attribute source_form { text }?,
-             attribute source_lang { text }?,
              attribute target { xsd:string {minLength="1"}},
-             attribute target_form { text }?,
-             attribute target_lang { text }?,
              attribute override_target { "true" | "false" }?)
           ),
           empty

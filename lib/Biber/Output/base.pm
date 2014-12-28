@@ -298,7 +298,7 @@ sub set_output_entry {
   my $entry = shift;
   my $section = shift;
   my $struc = shift;
-  $self->{output_data}{ENTRIES}{$section}{index}{$entry->get_field('citekey')} = $entry->dump;
+  $self->{output_data}{ENTRIES}{$section}{index}{$entry->get_field_nv('citekey')} = $entry->dump;
   return;
 }
 

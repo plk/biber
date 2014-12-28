@@ -837,7 +837,7 @@ sub _name {
   # @tmp is bytes again now
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
 
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field_nv('entrytype'), $key);
   my $names = new Biber::Entry::Names;
   foreach my $name (@tmp) {
 

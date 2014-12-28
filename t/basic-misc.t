@@ -329,13 +329,13 @@ my $Worman_N = [ 'Worman_N' ] ;
 my $Gennep = [ 'v_Gennep_A', 'v_Gennep_J' ] ;
 
 eq_or_diff( $out->get_output_entry('t1', $main), $t1, 'bbl entry with maths in title 1' ) ;
-eq_or_diff( $bibentries->entry('shore')->get_field('month'), '03', 'default bib month macros' ) ;
+eq_or_diff( $bibentries->entry('shore')->get_field_nv('month'), '03', 'default bib month macros' ) ;
 ok( $bibentries->entry('t1')->has_keyword('primary'), 'Keywords test - 1' ) ;
 ok( $bibentries->entry('t1')->has_keyword('something'), 'Keywords test - 2' ) ;
 ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3' ) ;
 eq_or_diff( $out->get_output_entry('t2', $main), $t2, 'bbl entry with maths in title 2' ) ;
-is_deeply( Biber::Config->_get_uniquename('Worman_N', 'global'), $Worman_N, 'uniquename count 1') ;
-is_deeply( Biber::Config->_get_uniquename('vanGennep', 'global'), $Gennep, 'uniquename count 2') ;
+is_deeply( Biber::Config->_get_uniquename('Worman_N', 'original', 'english', 'global'), $Worman_N, 'uniquename count 1') ;
+is_deeply( Biber::Config->_get_uniquename('vanGennep', 'original', 'french', 'global'), $Gennep, 'uniquename count 2') ;
 eq_or_diff( $out->get_output_entry('murray', $main), $murray1, 'bbl with > maxcitenames' ) ;
 eq_or_diff( $out->get_output_entry('missing1', $main), "  \\missing{missing1}\n", 'missing citekey 1' ) ;
 eq_or_diff( $out->get_output_entry('missing2', $main), "  \\missing{missing2}\n", 'missing citekey 2' ) ;
@@ -362,24 +362,24 @@ eq_or_diff( $out->get_output_entry('anon1', $main), $anon1, 'namehash/fullhash 1
 eq_or_diff( $out->get_output_entry('anon2', $main), $anon2, 'namehash/fullhash 2' ) ;
 
 # Testing of user field map ignores
-ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'map 1' );
-eq_or_diff($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
-ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
-eq_or_diff(NFC($bibentries->entry('i2')->get_field('usere')), 'a Štring', 'map 4' );
+ok(! $bibentries->entry('i1')->field_exists('abstract'), 'map 1' );
+eq_or_diff($bibentries->entry('i1')->get_field_nv('userd'), 'test', 'map 2' );
+ok(is_undef($bibentries->entry('i2')->get_field_nv('userb')), 'map 3' );
+eq_or_diff(NFC($bibentries->entry('i2')->get_field_nv('usere')), 'a Štring', 'map 4' );
 # Testing ot UTF8 match/replace
 eq_or_diff($biber->_liststring('i1', 'listd'), 'abc', 'map 5' );
 # Testing of user field map match/replace
 eq_or_diff($biber->_liststring('i1', 'listb'), 'REPlacedte!early', 'map 6');
-eq_or_diff($biber->_liststring('i1', 'institution'), 'REPlaCEDte!early', 'map 7');
+eq_or_diff($biber->_liststring('i1', 'institution', 'original', 'english'), 'REPlaCEDte!early', 'map 7');
 # Testing of pseudo-field "entrykey" handling
-eq_or_diff($bibentries->entry('i1')->get_field('note'), 'i1', 'map 8' );
+eq_or_diff($bibentries->entry('i1')->get_field('note', 'original', 'english'), 'i1', 'map 8' );
 # Checking deletion of alsosets with value BMAP_NULL
-ok(is_undef($bibentries->entry('i2')->get_field('userf')), 'map 9' );
+ok(is_undef($bibentries->entry('i2')->get_field_nv('userf')), 'map 9' );
 # Checking that the "misc" type-specific mapping to null takes precedence over global userb->userc
-ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 10' );
+ok(is_undef($bibentries->entry('i2')->get_field_nv('userc')), 'map 10' );
 
 # Make sure visibility doesn't exceed number of names.
-is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info)->get_visible_bib, '3', 'bib visibility - 1');
+is($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info, 'original', 'english')->get_visible_bib, '3', 'bib visibility - 1');
 
 # Testing per_type and per_entry max/min* so reset globals to defaults
 Biber::Config->setblxoption('uniquelist', 0);
@@ -409,14 +409,14 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_visible_cite, '1', 'per_type maxcitenames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_visible_cite, '3', 'per_type maxcitenames - 2');
-is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info)->get_visible_bib, '2', 'per_type bibnames - 3');
-is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info)->get_visible_bib, '3', 'per_type bibnames - 4');
-is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info)->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
-is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info)->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
-is($biber->_liststring('tmn1', 'institution'), 'A!B!C', 'per_type/entry items - 1');
-is($biber->_liststring('tmn3', 'institution'), "A!B\x{10FFFD}", 'per_type/entry items - 2');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info, 'original', 'english')->get_visible_cite, '1', 'per_type maxcitenames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info, 'original', 'english')->get_visible_cite, '3', 'per_type maxcitenames - 2');
+is($bibentries->entry('tmn3')->get_field($bibentries->entry('tmn3')->get_labelname_info, 'original', 'english')->get_visible_bib, '2', 'per_type bibnames - 3');
+is($bibentries->entry('tmn4')->get_field($bibentries->entry('tmn4')->get_labelname_info, 'original', 'english')->get_visible_bib, '3', 'per_type bibnames - 4');
+is($bibentries->entry('tmn1')->get_field($bibentries->entry('tmn1')->get_labelname_info, 'original', 'english')->get_visible_alpha, '3', 'per_type/entry alphanames - 1');
+is($bibentries->entry('tmn2')->get_field($bibentries->entry('tmn2')->get_labelname_info, 'original', 'english')->get_visible_alpha, '2', 'per_type/entry alphanames - 2');
+is($biber->_liststring('tmn1', 'institution', 'original', 'english'), 'A!B!C', 'per_type/entry items - 1');
+is($biber->_liststring('tmn3', 'institution', 'original', 'english'), "A!B\x{10FFFD}", 'per_type/entry items - 2');
 
 # Citekey alias testing
 eq_or_diff($section->get_citekey_alias('alias3'), 'alias1', 'Citekey aliases - 1');
@@ -427,26 +427,26 @@ eq_or_diff($section->get_citekey_alias('alias6'), 'alias5', 'Citekey aliases - 4
 ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 
 # URL encoding testing
-eq_or_diff($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
-eq_or_diff($bibentries->entry('url2')->get_field('url'), 'http://www.something.com/q=one%20two', 'URL encoding - 2');
+eq_or_diff($bibentries->entry('url1')->get_field_nv('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
+eq_or_diff($bibentries->entry('url2')->get_field_nv('url'), 'http://www.something.com/q=one%20two', 'URL encoding - 2');
 eq_or_diff($out->get_output_entry('url1', $main), $url1, 'URL encoding - 3' ) ;
 
 # map_final testing with map_field_set
-eq_or_diff($bibentries->entry('ol1')->get_field('note'), 'A note', 'map_final - 1');
-eq_or_diff($bibentries->entry('ol1')->get_field('title'), 'Online1', 'map_final - 2');
+eq_or_diff($bibentries->entry('ol1')->get_field('note', 'original', 'english'), 'A note', 'map_final - 1');
+eq_or_diff($bibentries->entry('ol1')->get_field('title', 'original', 'english'), 'Online1', 'map_final - 2');
 
 # Test for tricky pages field
-is_deeply($bibentries->entry('pages1')->get_field('pages'),[[23, 24]], 'pages - 1');
-is_deeply($bibentries->entry('pages2')->get_field('pages'),[[23, undef]], 'pages - 2');
-is_deeply($bibentries->entry('pages3')->get_field('pages'), [['I-II', 'III-IV']], 'pages - 3');
-is_deeply($bibentries->entry('pages4')->get_field('pages'), [[3,5]], 'pages - 4');
-is_deeply($bibentries->entry('pages5')->get_field('pages'), [[42, '']], 'pages - 5');
-is_deeply($bibentries->entry('pages6')->get_field('pages'), [['\bibstring{number} 42', undef]], 'pages - 6');
-is_deeply($bibentries->entry('pages7')->get_field('pages'), [['\bibstring{number} 42', undef], [3,6], ['I-II',5 ]], 'pages - 7');
-is_deeply($bibentries->entry('pages8')->get_field('pages'), [[10,15],['ⅥⅠ', 'ⅻ']], 'pages - 8');
+is_deeply($bibentries->entry('pages1')->get_field_nv('pages'),[[23, 24]], 'pages - 1');
+is_deeply($bibentries->entry('pages2')->get_field_nv('pages'),[[23, undef]], 'pages - 2');
+is_deeply($bibentries->entry('pages3')->get_field_nv('pages'), [['I-II', 'III-IV']], 'pages - 3');
+is_deeply($bibentries->entry('pages4')->get_field_nv('pages'), [[3,5]], 'pages - 4');
+is_deeply($bibentries->entry('pages5')->get_field_nv('pages'), [[42, '']], 'pages - 5');
+is_deeply($bibentries->entry('pages6')->get_field_nv('pages'), [['\bibstring{number} 42', undef]], 'pages - 6');
+is_deeply($bibentries->entry('pages7')->get_field_nv('pages'), [['\bibstring{number} 42', undef], [3,6], ['I-II',5 ]], 'pages - 7');
+is_deeply($bibentries->entry('pages8')->get_field_nv('pages'), [[10,15],['ⅥⅠ', 'ⅻ']], 'pages - 8');
 
 # Test for map levels, the user map makes this CUSTOMC and then style map makes it CUSTOMA
-eq_or_diff($bibentries->entry('us1')->get_field('entrytype'), 'customa', 'Map levels - 1');
+eq_or_diff($bibentries->entry('us1')->get_field_nv('entrytype'), 'customa', 'Map levels - 1');
 
 # Test for "others" in lists
 eq_or_diff( $out->get_output_entry('list1', $main), $list1, 'Entry with others list' ) ;

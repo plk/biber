@@ -55,12 +55,12 @@ sub set_output_target_file {
 sub set_output_entry {
   my $self = shift;
   my $be = shift; # Biber::Entry object
-  my $bee = $be->get_field('entrytype');
+  my $bee = $be->get_field_nv('entrytype');
   my $section = shift; # Section object the entry occurs in
   my $dm = shift; # Data Model object
   my $acc = '';
   my $secnum = $section->number;
-  my $key = $be->get_field('citekey');
+  my $key = $be->get_field_nv('citekey');
 
   # Make the right casing function
   my $casing;

@@ -124,11 +124,11 @@ sub set_output_target_file {
 sub _printfield {
   my ($be, $field) = @_;
   my $acc;
-  my $key = $be->get_field('citekey');
+  my $key = $be->get_field_nv('citekey');
 
   # crossref and xref are of type 'strng' in the .bbl
   if (lc($field) eq 'crossref' or lc($field) eq 'xref') {
-    my $f = $be->get_field($field);
+    my $f = $be->get_field_nv($field);
     if (Biber::Config->getoption('wraplines')) {
       ## 16 is the length of '      \strng{}{}'
       if ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($f)->length > 2*$Text::Wrap::columns ) {
@@ -146,46 +146,68 @@ sub _printfield {
     }
   }
   else {
-    # loop over all field forms and langs
-    foreach my $form ($be->get_field_form_names($field)) {
-      foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
-        my $dm = Biber::Config->get_dm;
-        my $f = $be->get_field($field, $form, $lang);
+    my $dm = Biber::Config->get_dm;
+    if ($dm->field_is_variant_enabled($field)) {
+      foreach my $form ($be->get_field_form_names($field)) {
+        foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
+          my $f = $be->get_field($field, $form, $lang);
 
-        # xSV fields are not strings yet
-        if ($dm->get_fieldformat($field) eq 'xsv') {
-          $f = join(',', @$f);
-        }
-
-        # auto-escape TeX special chars if:
-        # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
-        # * It's not a \\strng field
-        if ($be->get_field('datatype') ne 'bibtex') {
-          $f =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
-        }
-
-        # Can the field have multiple script/lang variants?
-        my $fl = $dm->field_is_variant_enabled($field) ? "[form=$form,lang=$lang]" : '';
-
-        if (Biber::Config->getoption('wraplines')) {
-          ## 18 is the length of '      \field[]{}{}'
-          if ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + length($field) + Unicode::GCString->new($f)->length > 2*$Text::Wrap::columns ) {
-            $acc .= "      \\field${fl}{$field}{%\n" . wrap('      ', '      ', $f) . "%\n      }\n";
+          # auto-escape TeX special chars if:
+          # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
+          # * It's not a \\strng field
+          if ($be->get_field_nv('datatype') ne 'bibtex') {
+            $f =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
           }
-          elsif ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + Unicode::GCString->new($field)->length + Unicode::GCString->new($f)->length > $Text::Wrap::columns ) {
-            $acc .= wrap('      ', '      ', "\\field${fl}{$field}{$f}" ) . "\n";
+
+          if (Biber::Config->getoption('wraplines')) {
+            # 18 is the length of '      \field[]{}{}'
+            if ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + length($field) + Unicode::GCString->new($f)->length > 2*$Text::Wrap::columns ) {
+              $acc .= "      \\field[form=$form,lang=$lang]{$field}{%\n" . wrap('      ', '      ', $f) . "%\n      }\n";
+            }
+            elsif ( 18 + Unicode::GCString->new($form)->length + Unicode::GCString->new($lang)->length + Unicode::GCString->new($field)->length + Unicode::GCString->new($f)->length > $Text::Wrap::columns ) {
+              $acc .= wrap('      ', '      ', "\\field[form=$form,lang=$lang]{$field}{$f}" ) . "\n";
+            }
+            else {
+              $acc .= "      \\field[form=$form,lang=$lang]{$field}{$f}\n";
+            }
           }
           else {
-            $acc .= "      \\field${fl}{$field}{$f}\n";
+            $acc .= "      \\field[form=$form,lang=$lang]{$field}{$f}\n";
           }
         }
-        else {
-          $acc .= "      \\field${fl}{$field}{$f}\n";
-        }
-
       }
     }
+    else {
+      my $f = $be->get_field_nv($field);
 
+      # xSV fields are not strings yet
+      if ($dm->get_fieldformat($field) eq 'xsv') {
+        $f = join(',', @$f);
+      }
+
+      # auto-escape TeX special chars if:
+      # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
+      # * It's not a \\strng field
+      if ($be->get_field_nv('datatype') ne 'bibtex') {
+        $f =~ s/(?<!\\)(\#|\&|\%)/\\$1/gxms;
+      }
+
+      if (Biber::Config->getoption('wraplines')) {
+        # 16 is the length of '      \field{}{}'
+        if ( 16 + length($field) + Unicode::GCString->new($f)->length > 2*$Text::Wrap::columns ) {
+          $acc .= "      \\field{$field}{%\n" . wrap('      ', '      ', $f) . "%\n      }\n";
+        }
+        elsif ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($f)->length > $Text::Wrap::columns ) {
+          $acc .= wrap('      ', '      ', "\\field{$field}{$f}" ) . "\n";
+        }
+        else {
+          $acc .= "      \\field{$field}{$f}\n";
+        }
+      }
+      else {
+        $acc .= "      \\field{$field}{$f}\n";
+      }
+    }
   }
   return $acc;
 }
@@ -244,24 +266,24 @@ sub set_output_undefkey {
 sub set_output_entry {
   my $self = shift;
   my $be = shift; # Biber::Entry object
-  my $bee = $be->get_field('entrytype');
+  my $bee = $be->get_field_nv('entrytype');
   my $section = shift; # Section object the entry occurs in
   my $dm = shift; # Data Model object
   my $acc = '';
   my $secnum = $section->number;
-  my $key = $be->get_field('citekey');
+  my $key = $be->get_field_nv('citekey');
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
 
-  $acc .= "    \\entry{$key}{$bee}{" . join(',', @{filter_entry_options($be->get_field('options'))}) . "}\n";
+  $acc .= "    \\entry{$key}{$bee}{" . join(',', @{filter_entry_options($be->get_field_nv('options'))}) . "}\n";
 
   # Generate set information
   if ( $bee eq 'set' ) {   # Set parents get \set entry ...
-    $acc .= "      \\set{" . join(',', @{$be->get_field('entryset')}) . "}\n";
+    $acc .= "      \\set{" . join(',', @{$be->get_field_nv('entryset')}) . "}\n";
   }
   else { # Everything else that isn't a set parent ...
-    if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
+    if (my $es = $be->get_field_nv('entryset')) { # ... gets a \inset if it's a set member
       $acc .= "      \\inset{" . join(',', @$es) . "}\n";
     }
   }
@@ -269,44 +291,77 @@ sub set_output_entry {
   # Output name fields
   foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
     next if $dm->field_is_skipout($namefield);
+    # Names are not necessarily variant enabled - for example, if a style
+    # defines a custom name field which isn't. This is guaranteed only in the
+    # default biblatex datamodel
+    if ($dm->field_is_variant_enabled($namefield)) {
 
-    # Did we have "and others" in the data?
-    # Don't need a per-form/lang more<name> field
-    if ( $be->get_field($namefield) and
-         $be->get_field($namefield)->get_morenames ) {
-      $acc .= "      \\true{more$namefield}\n";
-    }
+      # Did we have "and others" in the data?
+      # Don't need a per-form/lang more<name> field
+      if ( $be->field_exists($namefield) and
+           $be->get_field_any_variant($namefield)->get_morenames ) {
+        $acc .= "      \\true{more$namefield}\n";
+      }
 
-    # loop over all name forms and langs
-    foreach my $form ($be->get_field_form_names($namefield)) {
-      foreach my $lang ($be->get_field_form_lang_names($namefield, $form)) {
-        if ( my $nf = $be->get_field($namefield, $form, $lang) ) {
-          my $plo = '';
+      # loop over all name forms and langs
+      foreach my $form ($be->get_field_form_names($namefield)) {
+        foreach my $lang ($be->get_field_form_lang_names($namefield, $form)) {
+          if (my $nf = $be->get_field($namefield, $form, $lang)) {
 
-          my $total = $nf->count_names;
+            my $plo = '';
 
-          # Add per-list options, if any
-          my $lni = $be->get_labelname_info;
-          if (defined($lni) and
-              $lni eq $namefield) {
-            # Add uniquelist, if defined
-            my @plo;
-            if (my $ul = $nf->get_uniquelist) {
-              push @plo, "uniquelist=$ul";
+            my $total = $nf->count_names;
+
+            # Add per-list options, if any
+            my $lni = $be->get_labelname_info;
+            if (defined($lni) and
+                $lni eq $namefield) {
+              # Add uniquelist, if defined
+              my @plo;
+              if (my $ul = $nf->get_uniquelist) {
+                push @plo, "uniquelist=$ul";
+              }
+              $plo = join(',', @plo);
             }
-            $plo = join(',', @plo);
-          }
-          # Names are not necessarily variant enabled - for example, if a style
-          # defines a custom name field which isn't. This is guaranteed only in the
-          # default biblatex datamodel
-          my $fl = $dm->field_is_variant_enabled($namefield) ? "[form=$form,lang=$lang]" : '';
 
-          $acc .= "      \\name${fl}{$namefield}{$total}{$plo}{%\n";
-          foreach my $n (@{$nf->names}) {
-            $acc .= $n->name_to_bbl;
+            $acc .= "      \\name[form=$form,lang=$lang]{$namefield}{$total}{$plo}{%\n";
+            foreach my $n (@{$nf->names}) {
+              $acc .= $n->name_to_bbl;
+            }
+            $acc .= "      }\n";
           }
-          $acc .= "      }\n";
         }
+      }
+    }
+    else {
+      if (my $nf = $be->get_field_nv($namefield)) {
+        # Did we have "and others" in the data?
+        # Don't need a per-form/lang more<name> field
+        if ($nf->get_morenames) {
+          $acc .= "      \\true{more$namefield}\n";
+        }
+
+        my $plo = '';
+
+        my $total = $nf->count_names;
+
+        # Add per-list options, if any
+        my $lni = $be->get_labelname_info;
+        if (defined($lni) and
+            $lni eq $namefield) {
+          # Add uniquelist, if defined
+          my @plo;
+          if (my $ul = $nf->get_uniquelist) {
+            push @plo, "uniquelist=$ul";
+          }
+          $plo = join(',', @plo);
+        }
+
+        $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
+        foreach my $n (@{$nf->names}) {
+          $acc .= $n->name_to_bbl;
+        }
+        $acc .= "      }\n";
       }
     }
   }
@@ -318,44 +373,61 @@ sub set_output_entry {
     next if $dm->field_is_datatype('uri', $listfield); # special lists
     next if $dm->field_is_skipout($listfield);
 
+    if ($dm->field_is_variant_enabled($listfield)) {
     # Don't need a per-form/lang more<list> field
-    if (my $lf = $be->get_field($listfield)) {
-      if (lc($lf->[-1]) eq Biber::Config->getoption('others_string')) {
-        $acc .= "      \\true{more$listfield}\n";
+      if (my $lf = $be->get_field_any_variant($listfield)) {
+        if (lc($lf->[-1]) eq Biber::Config->getoption('others_string')) {
+          $acc .= "      \\true{more$listfield}\n";
+        }
+      }
+
+      # loop over all list forms and langs
+      foreach my $form ($be->get_field_form_names($listfield)) {
+        foreach my $lang ($be->get_field_form_lang_names($listfield, $form)) {
+          if (my $lf = $be->get_field($listfield, $form, $lang)) {
+            if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
+              pop @$lf;         # remove the last element in the array
+            }
+            my $total = $#$lf + 1;
+
+            $acc .= "      \\list[form=$form,lang=$lang]{$listfield}{$total}{%\n";
+            foreach my $f (@$lf) {
+              $acc .= "        {$f}%\n";
+            }
+            $acc .= "      }\n";
+          }
+        }
       }
     }
-
-    # loop over all list forms and langs
-    foreach my $form ($be->get_field_form_names($listfield)) {
-      foreach my $lang ($be->get_field_form_lang_names($listfield, $form)) {
-        if (my $lf = $be->get_field($listfield, $form, $lang)) {
-          if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
-            pop @$lf;           # remove the last element in the array
-          }
-          my $total = $#$lf + 1;
-
-          # Can the field have multiple script/lang variants?
-          my $dm = Biber::Config->get_dm;
-          my $fl = $dm->field_is_variant_enabled($listfield) ? "[form=$form,lang=$lang]" : '';
-
-          $acc .= "      \\list${fl}{$listfield}{$total}{%\n";
-          foreach my $f (@$lf) {
-            $acc .= "        {$f}%\n";
-          }
-          $acc .= "      }\n";
+    else {
+      # Don't need a per-form/lang more<list> field
+      if (my $lf = $be->get_field_nv($listfield)) {
+        if (lc($lf->[-1]) eq Biber::Config->getoption('others_string')) {
+          $acc .= "      \\true{more$listfield}\n";
         }
+
+        if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
+          pop @$lf;             # remove the last element in the array
+        }
+        my $total = $#$lf + 1;
+
+        $acc .= "      \\list{$listfield}{$total}{%\n";
+        foreach my $f (@$lf) {
+          $acc .= "        {$f}%\n";
+        }
+        $acc .= "      }\n";
       }
     }
   }
 
-  my $namehash = $be->get_field('namehash');
+  my $namehash = $be->get_field_nv('namehash');
   $acc .= "      \\strng{namehash}{$namehash}\n" if $namehash;
-  my $fullhash = $be->get_field('fullhash');
+  my $fullhash = $be->get_field_nv('fullhash');
   $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
 
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
     # Might not have been set due to skiplab/dataonly
-    if (my $label = $be->get_field('labelalpha')) {
+    if (my $label = $be->get_field_nv('labelalpha')) {
       $acc .= "      \\field{labelalpha}{$label}\n";
     }
   }
@@ -368,29 +440,29 @@ sub set_output_entry {
   # The labeldate option determines whether "extrayear" is output
   if ( Biber::Config->getblxoption('labeldate', $bee)) {
     # Might not have been set due to skiplab/dataonly
-    if (my $nameyear = $be->get_field('nameyear')) {
+    if (my $nameyear = $be->get_field_nv('nameyear')) {
       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
         $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
       }
     }
-    if (my $ly = $be->get_field('labelyear')) {
+    if (my $ly = $be->get_field_nv('labelyear')) {
       $acc .= "      \\field{labelyear}{$ly}\n";
     }
-    if (my $lm = $be->get_field('labelmonth')) {
+    if (my $lm = $be->get_field_nv('labelmonth')) {
       $acc .= "      \\field{labelmonth}{$lm}\n";
     }
-    if (my $ld = $be->get_field('labelday')) {
+    if (my $ld = $be->get_field_nv('labelday')) {
       $acc .= "      \\field{labelday}{$ld}\n";
     }
     if ($be->field_exists('datelabelsource')) {
-      $acc .= "      \\field{datelabelsource}{" . $be->get_field('datelabelsource') .  "}\n";
+      $acc .= "      \\field{datelabelsource}{" . $be->get_field_nv('datelabelsource') .  "}\n";
     }
   }
 
   # The labeltitle option determines whether "extratitle" is output
   if ( Biber::Config->getblxoption('labeltitle', $bee)) {
     # Might not have been set due to skiplab/dataonly
-    if (my $nametitle = $be->get_field('nametitle')) {
+    if (my $nametitle = $be->get_field_nv('nametitle')) {
       if ( Biber::Config->get_seen_nametitle($nametitle) > 1) {
         $acc .= "      <BDS>EXTRATITLE</BDS>\n";
       }
@@ -400,7 +472,7 @@ sub set_output_entry {
   # The labeltitleyear option determines whether "extratitleyear" is output
   if ( Biber::Config->getblxoption('labeltitleyear', $bee)) {
     # Might not have been set due to skiplab/dataonly
-    if (my $titleyear = $be->get_field('titleyear')) {
+    if (my $titleyear = $be->get_field_nv('titleyear')) {
       if ( Biber::Config->get_seen_titleyear($titleyear) > 1) {
         $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
       }
@@ -410,7 +482,7 @@ sub set_output_entry {
   # The labelalpha option determines whether "extraalpha" is output
   if ( Biber::Config->getblxoption('labelalpha', $bee)) {
     # Might not have been set due to skiplab/dataonly
-    if (my $la = $be->get_field('labelalpha')) {
+    if (my $la = $be->get_field_nv('labelalpha')) {
       if (Biber::Config->get_la_disambiguation($la) > 1) {
         $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
       }
@@ -418,15 +490,15 @@ sub set_output_entry {
   }
 
   if ( Biber::Config->getblxoption('labelnumber', $bee) ) {
-    if (my $sh = $be->get_field('shorthand')) {
+    if (my $sh = $be->get_field_nv('shorthand')) {
       $acc .= "      \\field{labelnumber}{$sh}\n";
     }
-    elsif (my $lnum = $be->get_field('labelnumber')) {
+    elsif (my $lnum = $be->get_field_nv('labelnumber')) {
       $acc .= "      \\field{labelnumber}{$lnum}\n";
     }
   }
 
-  if (defined($be->get_field('singletitle'))) {
+  if (defined($be->get_field_nv('singletitle'))) {
     $acc .= "      \\true{singletitle}\n";
   }
 
@@ -440,7 +512,7 @@ sub set_output_entry {
     $acc .= "      \\field{labeltitlesource}{$lti}\n";
   }
 
-  if (my $ck = $be->get_field('clonesourcekey')) {
+  if (my $ck = $be->get_field_nv('clonesourcekey')) {
     $acc .= "      \\field{clonesourcekey}{$ck}\n";
   }
 
@@ -456,15 +528,15 @@ sub set_output_entry {
           $be->field_exists($field)) or
          ($dm->field_is_variant_enabled($field) and
           $be->get_field_variants($field)) or
-          $be->get_field($field)) {
+          $be->get_field_nv($field)) {
       # We skip outputting the crossref or xref when the parent is not cited.
       # Sets are a special case so always output crossref/xref for them since their
       # children will always be in the .bbl otherwise they make no sense.
       unless ($bee eq 'set') {
         next if ($field eq 'crossref' and
-                 not $section->has_citekey($be->get_field('crossref')));
+                 not $section->has_citekey($be->get_field_nv('crossref')));
         next if ($field eq 'xref' and
-                 not $section->has_citekey($be->get_field('xref')));
+                 not $section->has_citekey($be->get_field_nv('xref')));
       }
       $acc .= _printfield($be, $field);
     }
@@ -473,14 +545,14 @@ sub set_output_entry {
   foreach my $field (sort @{$dm->get_fields_of_fieldformat('xsv')}) {
     next if $dm->field_is_skipout($field);
     next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
-    if (my $f = $be->get_field($field)) {
+    if (my $f = $be->get_field_nv($field)) {
       $acc .= _printfield($be, $field, join(',', @$f) );
     }
   }
 
   foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
     next if $dm->field_is_skipout($rfield);
-    if ( my $rf = $be->get_field($rfield) ) {
+    if ( my $rf = $be->get_field_nv($rfield) ) {
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
       my @pr;
@@ -502,7 +574,7 @@ sub set_output_entry {
   foreach my $vfield ((@{$dm->get_fields_of_type('field', 'verbatim')},
                        @{$dm->get_fields_of_type('field', 'uri')})) {
     next if $dm->field_is_skipout($vfield);
-    if ( my $vf = $be->get_field($vfield) ) {
+    if ( my $vf = $be->get_field_nv($vfield) ) {
       $acc .= "      \\verb{$vfield}\n";
       $acc .= "      \\verb $vf\n      \\endverb\n";
     }
@@ -511,7 +583,7 @@ sub set_output_entry {
   foreach my $vlist ((@{$dm->get_fields_of_type('list', 'verbatim')},
                       @{$dm->get_fields_of_type('list', 'uri')})) {
     next if $dm->field_is_skipout($vlist);
-    if ( my $vlf = $be->get_field($vlist) ) {
+    if ( my $vlf = $be->get_field_nv($vlist) ) {
       if ( lc($vlf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$vlist}\n";
         pop @$vlf; # remove the last element in the array
@@ -525,13 +597,13 @@ sub set_output_entry {
     }
   }
 
-  if ( my $k = $be->get_field('keywords') ) {
+  if ( my $k = $be->get_field_nv('keywords') ) {
     $k = join(',', @$k);
     $acc .= "      \\keyw{$k}\n";
   }
 
   # Append any warnings to the entry, if any
-  if (my $w = $be->get_field('warnings')) {
+  if (my $w = $be->get_field_nv('warnings')) {
     foreach my $warning (@$w) {
       $acc .= "      \\warn{\\item $warning}\n";
     }
