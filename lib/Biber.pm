@@ -712,7 +712,12 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $globalss = Biber::Config->getblxoption('sortscheme');
     my $secnum = $section->{number};
     unless ($sortlists->get_list($secnum, $globalss, 'entry', $globalss)) {
-      my $seclist = Biber::SortList->new(section => $secnum, type => 'entry', sortschemename => $globalss, name => $globalss);
+      my $seclist = Biber::SortList->new(section => $secnum,
+                                         type => 'entry',
+                                         sortschemename => $globalss,
+                                         name => $globalss,
+                                         form => Biber::Config->getblxoption('vform', undef, undef),
+                                         lang => Biber::Config->getblxoption('vlang', undef, undef));
       $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $sortlists->add_list($seclist);
     }
@@ -2054,6 +2059,7 @@ sub process_lists {
     my $llang = $list->get_lang;
     my $ltype = $list->get_type;
     my $lname = $list->get_name;
+
     # Last-ditch fallback in case we still don't have a sorting spec
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
 
@@ -3597,10 +3603,10 @@ sub _parse_sort {
       if (defined($sortitem->{pad_side})) { # Found sorting pad side attribute
         $sortitemattributes->{pad_side} = $sortitem->{pad_side};
       }
-      if (defined($sortitem->{form})) { # Found script form attribute
+      if (defined($sortitem->{form})) { # Found variant form attribute
         $sortitemattributes->{form} = $sortitem->{form};
       }
-      if (defined($sortitem->{lang})) { # Found script lang attribute
+      if (defined($sortitem->{lang})) { # Found variant lang attribute
         $sortitemattributes->{lang} = $sortitem->{lang};
       }
       push @{$sortingitems}, {$sortitem->{content} => $sortitemattributes};

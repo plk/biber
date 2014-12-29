@@ -60,7 +60,6 @@ t/extratitleyear.t
 t/extrayear.t
 t/full.t
 t/inheritance.t
-t/inheritance-variants.t
 THANKS
 t/labelalpha.t
 t/labelname.t
@@ -129,8 +128,6 @@ t/tdata/general1.bcf
 t/tdata/general2.bcf
 t/tdata/inheritance.bcf
 t/tdata/inheritance.bib
-t/tdata/inheritance-variants.bcf
-t/tdata/inheritance-variants.bib
 t/tdata/labelalpha.bcf
 t/tdata/labelalpha.bib
 t/tdata/labelalpha.bib

@@ -336,7 +336,6 @@ sub get_field_any_variant {
   }
 }
 
-
 =head2 get_field
 
     Get a specific field variant for a Biber::Entry object,
@@ -390,23 +389,35 @@ sub get_field_nv {
 sub get_field_v {
   no autovivification;
   my $self = shift;
-  my ($field, $form, $langs) = @_;
+  my ($field, $forms, $langs) = @_;
   return undef unless $field;
   return undef unless $self->field_exists($field);
   return undef unless my $key = $self->{derivedfields}{nonvariant}{citekey};
   my $bee = $self->{derivedfields}{nonvariant}{entrytype};
 
+  $forms .= ',*';
   $langs .= ',*';
-  foreach my $lang (split(/\s*,\s*/, $langs)) {
-    if ($lang eq '*') {
-      $lang = ($self->get_field_form_lang_names($field, $form))[0];
+
+  foreach my $form (split(/\s*,\s*/, $forms)) {
+
+    # Use first available form
+    if ($form eq '*') {
+      $form = ($self->get_field_form_names($field))[0];
     }
 
-    $logger->trace("Looking for variant enabled field in '$key': $field/$form/$lang");
-    my $fv =  $self->{datafields}{variant}{$field}{$form}{$lang} //
-              $self->{derivedfields}{variant}{$field}{$form}{$lang} //
-              $self->{rawfields}{variant}{$field};
-    return $fv if $fv;
+    foreach my $lang (split(/\s*,\s*/, $langs)) {
+      $logger->trace("Looking for variant enabled field in '$key': $field/$form/$lang");
+
+      # Use first available lang
+      if ($lang eq '*') {
+        $lang = ($self->get_field_form_lang_names($field, $form))[0];
+      }
+
+      my $fv =  $self->{datafields}{variant}{$field}{$form}{$lang} //
+        $self->{derivedfields}{variant}{$field}{$form}{$lang} //
+          $self->{rawfields}{variant}{$field};
+      return $fv if $fv;
+    }
   }
   return undef;
 }

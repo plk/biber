@@ -8,6 +8,7 @@ use Biber::Constants;
 use Biber::Utils;
 use Biber::DataModel;
 use Data::Compare;
+use Encode;
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Digest::MD5 qw( md5_hex );
@@ -15,7 +16,7 @@ use POSIX qw( locale_h ); # for lc()
 use Unicode::GCString;
 use Unicode::Collate::Locale;
 use Unicode::Normalize;
-use Encode;
+use Storable qw( dclone );
 
 =encoding utf-8
 
@@ -917,6 +918,7 @@ sub _generatesortinfo {
   # sortstring isn't actually used to sort, it's used to generate sortinit and
   # for debugging purposes
   my $ss = join($sorting_sep, @$sortobj);
+
   $list->set_sortdata($citekey, [$ss, $sortobj]);
   $logger->debug("Sorting object for key '$citekey' -> " . Data::Dump::pp($sortobj));
 
@@ -943,6 +945,7 @@ sub _generatesortinfo {
 # Process sorting set
 sub _sortset {
   my ($self, $sortset, $citekey, $list) = @_;
+  $logger->trace('Entering _sortset');
   foreach my $sortelement (@$sortset[1..$#$sortset]) {
     my ($sortelementname, $sortelementattributes) = %$sortelement;
     $BIBER_SORT_NULL = 0; # reset this per sortset
@@ -958,10 +961,12 @@ sub _sortset {
         $BIBER_SORT_FINAL = $string;
         last;
       }
+      $logger->trace('Leaving _sortset');
       return $string;
     }
   }
   $BIBER_SORT_NULL = 1; # set null flag - need this to deal with some cases
+  $logger->trace('Leaving _sortset');
   return '';
 }
 
@@ -1024,10 +1029,12 @@ sub _dispatch_sorting {
   my $code_ref;
   my $code_args_ref;
   my $dm = Biber::Config->get_dm;
+  $logger->trace('Entering _dispatch_sorting');
 
   # If this field is excluded from sorting for this entrytype, then skip it and return
   if (my $se = Biber::Config->getblxoption('sortexclusion', $be->get_field_nv('entrytype'))) {
     if ($se->{$sortfield}) {
+      $logger->trace('Leaving _dispatch_sorting');
       return '';
     }
   }
@@ -1041,9 +1048,14 @@ sub _dispatch_sorting {
     $code_ref = ${_dispatch_table_sorting($sortfield, $dm)}[0];
     $code_args_ref  = ${_dispatch_table_sorting($sortfield, $dm)}[1];
   }
-  $sortelementattributes->{form} = $sortelementattributes->{form} // $list->{form};
-  $sortelementattributes->{lang} = $sortelementattributes->{lang} // $list->{lang};
-  return &{$code_ref}($self, $citekey, $sortelementattributes, $code_args_ref);
+
+  # Dont' modify the scheme itself as it's used multiple times in different list
+  # contexts
+  my $attrs = dclone($sortelementattributes);
+  $attrs->{form} = $attrs->{form} // $list->{form};
+  $attrs->{lang} = $attrs->{lang} // $list->{lang};
+  $logger->trace("Leaving _dispatch_sorting by dispatching for '$sortfield'");
+  return &{$code_ref}($self, $citekey, $attrs, $code_args_ref);
 }
 
 ##############################################
