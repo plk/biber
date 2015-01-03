@@ -898,7 +898,7 @@ $S = {spec => [
                          pad_char => 'Đ'}},
        {'0000'       => {}}
       ]
-     ]};
+              ]};
 $main->set_sortscheme($S);
 
 # regenerate information
@@ -949,6 +949,7 @@ $main->set_sortscheme($S);
 $biber->prepare(1);# Pass special testing flag
 
 eq_or_diff($main->get_sortdata('stdmodel')->[0], $nty, 'basic nty sort' );
+# Note that this needs "english,german" as the lang setting for the sortlist in the .bcf
 eq_or_diff($main->get_sortdata('angenendtsk')->[0], $sk1, 'basic sortkey sort' );
 
 # nyt

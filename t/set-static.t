@@ -45,25 +45,17 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Static1}{set}{}
       \set{Static2,Static3,Static4}
-      \name{labelname}{1}{}{%
-        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
-      \field{labeltitle}{Blessed Brains}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{annotation}{Some notes}
       \field[form=original,lang=english]{title}{Blessed Brains}
       \field{year}{2001}
@@ -72,23 +64,15 @@ my $string1 = q|    \entry{Static1}{set}{}
 
 my $string2 = q|    \entry{Static2}{book}{}
       \inset{Static1}
-      \name{labelname}{1}{}{%
-        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field{labeltitle}{Blessed Brains}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{annotation}{Some Blessed Note}
       \field[form=original,lang=english]{title}{Blessed Brains}
       \field{year}{2001}
@@ -97,23 +81,15 @@ my $string2 = q|    \entry{Static2}{book}{}
 
 my $string3 = q|    \entry{Static3}{book}{}
       \inset{Static1}
-      \name{labelname}{1}{}{%
-        {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{Crenellation}{C\bibinitperiod}{Clive}{C\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field{labeltitle}{Castles and Crime}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{Castles and Crime}
       \field{year}{2002}
     \endentry
@@ -121,23 +97,15 @@ my $string3 = q|    \entry{Static3}{book}{}
 
 my $string4 = q|    \entry{Static4}{book}{}
       \inset{Static1}
-      \name{labelname}{1}{}{%
-        {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{Dingle}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field{labeltitle}{Dungeons, Dark and Dangerous}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{Dungeons, Dark and Dangerous}
       \field{year}{2005}
     \endentry
@@ -146,25 +114,17 @@ my $string4 = q|    \entry{Static4}{book}{}
 # Labelyear is now here as skiplab is not set for this entry when cited in section
 # without citation of a set it is a member of
 my $string5 = q|    \entry{Static2}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{Bumble}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2001}
       \field{datelabelsource}{}
-      \field{labeltitle}{Blessed Brains}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{annotation}{Some Blessed Note}
       \field[form=original,lang=english]{title}{Blessed Brains}
       \field{year}{2001}

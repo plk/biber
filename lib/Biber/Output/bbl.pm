@@ -441,7 +441,7 @@ sub set_output_entry {
   if ( Biber::Config->getblxoption('labeldate', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear = $be->get_field_nv('nameyear')) {
-      if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
+      if (Biber::Config->get_seen_nameyear($nameyear) > 1) {
         $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
       }
     }

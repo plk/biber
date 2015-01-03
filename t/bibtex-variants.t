@@ -5,10 +5,13 @@ use utf8;
 no warnings 'utf8';
 
 use Test::More tests => 26;
+use Test::Differences;
+unified_diff;
 
 use Biber;
 use Biber::Utils;
 use Biber::Output::bbl;
+use Encode;
 use Log::Log4perl;
 use Unicode::Normalize;
 chdir("t/tdata");
@@ -49,20 +52,20 @@ my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $f7 = [ "The variant enabled name field 'author' in entry 'forms7' has variants with different numbers of items. This will almost certainly cause problems.",
            "The variant enabled list field 'location' in entry 'forms7' has variants with different numbers of items. This will almost certainly cause problems." ];
 
-is($bibentries->entry('forms1')->get_field('title'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 1');
-is($bibentries->entry('forms1')->get_field('title', 'original'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 2');
-is($bibentries->entry('forms1')->get_field('title', 'romanised'), 'Mukhammad al-Khorezmi. Okolo 783 – okolo 850', 'forms - 3');
-is($bibentries->entry('forms1')->get_field('title', 'translated'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'forms - 4');
-is($bibentries->entry('forms1')->get_field('publisher', 'original')->[0], 'Наука', 'forms - 5');
-is($bibentries->entry('forms1')->get_field('author')->nth_name(3)->get_firstname, 'Борис', 'forms - 6');
+is($bibentries->entry('forms1')->get_field('title', 'original', 'russian'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 1');
+is($bibentries->entry('forms1')->get_field('title', 'original', 'russian'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'forms - 2');
+is($bibentries->entry('forms1')->get_field('title', 'romanised', 'russian'), 'Mukhammad al-Khorezmi. Okolo 783 – okolo 850', 'forms - 3');
+is($bibentries->entry('forms1')->get_field('title', 'translated', 'english'), 'Mukhammad al-Khorezmi. Ca. 783 – ca. 850', 'forms - 4');
+is($bibentries->entry('forms1')->get_field('publisher', 'original', 'russian')->[0], 'Наука', 'forms - 5');
+is($bibentries->entry('forms1')->get_field('author', 'original', 'russian')->nth_name(3)->get_firstname, 'Борис', 'forms - 6');
 # global labelname form
-is($bibentries->entry('forms1')->get_field('labelname')->nth_name(3)->get_firstname, 'Борис', 'labelname - 1');
+is($bibentries->entry('forms1')->get_field($bibentries->entry('forms1')->get_labelname_info, 'original', 'russian')->nth_name(3)->get_firstname, 'Борис', 'labelname - 1');
 # per-type labelname form
-is($bibentries->entry('forms2')->get_field('labelname')->nth_name(1)->get_firstname, 'Boris', 'labelname - 2');
+is($bibentries->entry('forms2')->get_field($bibentries->entry('forms2')->get_labelname_info, 'uniform', 'russian')->nth_name(1)->get_firstname, 'Boris', 'labelname - 2');
 # global labeltitle form
-is($bibentries->entry('forms1')->get_field('labeltitle'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'labeltitle - 1');
+is($bibentries->entry('forms1')->get_field($bibentries->entry('forms1')->get_labeltitle_info, 'original', 'russian'), 'Мухаммад ибн муса ал-Хорезми. Около 783 – около 850', 'labeltitle - 1');
 # per-type labeltitle form
-is($bibentries->entry('forms2')->get_field('labeltitle'), 'Mukhammad al-Khorezmi. Okolo 783 – okolo 850', 'labeltitle - 2');
+is($bibentries->entry('forms2')->get_field($bibentries->entry('forms2')->get_labeltitle_info, 'romanised', 'russian'), 'Mukhammad al-Khorezmi. Okolo 783 – okolo 850', 'labeltitle - 2');
 is_deeply($bibentries->entry('forms7')->get_field('warnings'), $f7, 'MS warnings - 1') ;
 
 my $S = { spec => [
@@ -156,9 +159,9 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
         {{uniquename=0,hash=f5f90439e5cc9d87b2665d584974a41d}{Розенфельд}{Р\bibinitperiod}{Борис}{Б\bibinitperiod}{}{}{}{}}%
       }
       \name[form=uniform,lang=russian]{author}{3}{}{%
-        {{hash=d3e42eb37529f4d05f9646c333b5fd5f}{Bulgakov}{B\bibinitperiod}{Pavel}{P\bibinitperiod}{}{}{}{}}%
-        {{hash=24b7be5b577041e83bf3c4fe658111a5}{Smith}{S\bibinitperiod}{Jim}{J\bibinitperiod}{}{}{}{}}%
-        {{hash=87d0ec74cbe7f9e39f5bbc25930f1474}{Rosenfeld}{R\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=d3e42eb37529f4d05f9646c333b5fd5f}{Bulgakov}{B\bibinitperiod}{Pavel}{P\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=24b7be5b577041e83bf3c4fe658111a5}{Smith}{S\bibinitperiod}{Jim}{J\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=87d0ec74cbe7f9e39f5bbc25930f1474}{Rosenfeld}{R\bibinitperiod}{Boris}{B\bibinitperiod}{}{}{}{}}%
       }
       \list[form=original,lang=russian]{institution}{1}{%
         {University of Life}%
@@ -184,25 +187,28 @@ my $forms1 = q|    \entry{forms1}{book}{vlang=russian}
       \list[form=translated,lang=russian]{publisher}{1}{%
         {Science}%
       }
-      \strng{namehash}{d56c0403019e70d45bafa420d2695fa9}
-      \strng{fullhash}{d56c0403019e70d45bafa420d2695fa9}
+      \strng{namehash}{899713297eb2d663fbb6a0b41bf66c4c}
+      \strng{fullhash}{899713297eb2d663fbb6a0b41bf66c4c}
       \field{labelalpha}{БSР02}
-      \field{sortinit}{Б}
-      \field{sortinithash}{8f918f8686258589a227d5aaf265a9bb}
+      \field{sortinit}{B}
+      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{day}{01}
       \field{langid}{russian}
       \field{month}{10}
       \field[form=original,lang=russian]{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \field[form=romanised,lang=russian]{title}{Mukhammad al-Khorezmi. Okolo 783 – okolo 850}
-      \field[form=translated,lang=russian]{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
+      \field[form=translated,lang=english]{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
       \field{year}{2002}
     \endentry
 |;
 
 my $forms9 = q|    \entry{forms9}{book}{vlang=french}
       \field{sortinit}{U}
-      \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
+      \field{sortinithash}{8145509bd2718876fc77d31fd2cde117}
+      \field{labeltitlesource}{title}
       \field{langid}{french}
       \field[form=original,lang=french]{title}{Un titel}
     \endentry
@@ -210,7 +216,8 @@ my $forms9 = q|    \entry{forms9}{book}{vlang=french}
 
 my $forms10 = q|    \entry{forms10}{book}{vlang=french}
       \field{sortinit}{U}
-      \field{sortinithash}{311bb924dfb84a64dcdd01c5b07d40b0}
+      \field{sortinithash}{8145509bd2718876fc77d31fd2cde117}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=french]{journaltitle}{FJ}
       \field[form=translated,lang=french]{journaltitle}{TFJ}
       \field{langid}{french}
@@ -220,8 +227,9 @@ my $forms10 = q|    \entry{forms10}{book}{vlang=french}
 
 my $forms11 = q|    \entry{forms11}{unpublished}{}
       \field{sortinit}{T}
-      \field{sortinithash}{9378dd666f3c24d81538df53aa99e23d}
+      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
       \true{singletitle}
+      \field{labeltitlesource}{title}
       \field[form=translated,lang=german]{edition}{Gedition}
       \field[form=translated,lang=french]{maintitle}{Maintitle translated FRENCH}
       \field[form=uniform,lang=german]{subtitle}{Subtitle uniform GERMAN}
@@ -282,13 +290,13 @@ my $forms15 = q|    \entry{forms15}{book}{autovlang=true}
     \endentry
 |;
 
-is($out->get_output_entry('forms1', $main), $forms1, 'bbl entry - forms 1') ;
+eq_or_diff(encode_utf8($out->get_output_entry('forms1', $main)), encode_utf8($forms1), 'bbl entry - forms 1') ;
 is($bibentries->entry('forms8')->get_field('title', 'original', 'lang1'), 'L title', 'lang only');
-is($out->get_output_entry('forms9', $main), $forms9, 'bbl entry - langid option');
-is($out->get_output_entry('forms10', $main), $forms10, 'bbl entry - vlang with unset options');
-is($out->get_output_entry('forms11', $main), $forms11, 'bbl entry - mapping with forms/langs - 1');
-is($out->get_output_entry('forms12', $main), $forms12, 'bbl entry - mapping with forms/langs - 2');
-is($out->get_output_entry('forms13', $main), $forms13, 'bbl entry - mapping with forms/langs - 3');
-is($out->get_output_entry('forms14', $main), $forms14, 'bbl entry - mapping with forms/langs - 4');
-is($out->get_output_entry('forms15', $main), $forms15, 'autovlang=true as entry option');
+eq_or_diff(encode_utf8($out->get_output_entry('forms9', $main)), encode_utf8($forms9), 'bbl entry - langid option');
+eq_or_diff(encode_utf8($out->get_output_entry('forms10', $main)), encode_utf8($forms10), 'bbl entry - vlang with unset options');
+eq_or_diff(encode_utf8($out->get_output_entry('forms11', $main)), encode_utf8($forms11), 'bbl entry - mapping with forms/langs - 1');
+eq_or_diff(encode_utf8($out->get_output_entry('forms12', $main)), encode_utf8($forms12), 'bbl entry - mapping with forms/langs - 2');
+eq_or_diff(encode_utf8($out->get_output_entry('forms13', $main)), encode_utf8($forms13), 'bbl entry - mapping with forms/langs - 3');
+eq_or_diff(encode_utf8($out->get_output_entry('forms14', $main)), encode_utf8($forms14), 'bbl entry - mapping with forms/langs - 4');
+eq_or_diff(encode_utf8($out->get_output_entry('forms15', $main)), encode_utf8($forms15), 'autovlang=true as entry option');
 

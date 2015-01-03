@@ -254,7 +254,7 @@ sub tool_mode_setup {
   Biber::Config->setblxoption('vform', 'original');
   Biber::Config->setblxoption('vlang', 'english');
   my $sortlists = new Biber::SortLists;
-  my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'));
+  my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'), form => 'original', lang => 'default');
   $seclist->set_type('entry');
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
   # Locale just needs a default here - there is no biblatex option to take it from
@@ -561,10 +561,6 @@ sub parse_ctrlfile {
     }
   }
 
-  # variant fallbacks
-  Biber::Config->setblxoption('variantfallbacks',
-                              $bcfxml->{variantfallbacks}{variantfallback});
-
   my $sorting = _parse_sort($bcfxml->{sorting});
 
   Biber::Config->setblxoption('sorting', $sorting);
@@ -763,7 +759,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # Global locale in non tool mode bibtex output is default
     Biber::Config->setblxoption('sortlocale', 'english');
 
-    my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'));
+    my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'), form => 'original', lang => 'english');
     $seclist->set_type('entry');
     # bibtex output in non-tool mode is just citeorder
     $seclist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
@@ -990,80 +986,90 @@ sub instantiate_listnulls {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $dm = Biber::Config->get_dm;
-  my $fbs = Biber::Config->getblxoption('variantfallbacks');
 
 KEY:  foreach my $citekey ($section->get_citekeys) {
     $logger->debug("Instantiating variant list nulls in entry '$citekey' from section $secnum");
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field_nv('entrytype');
+    my $forms = Biber::Config->getblxoption('vform', undef, $citekey);
+    my $langs = Biber::Config->getblxoption('vlang', undef, $citekey);
 
-  foreach my $f ($be->fields) {
+  foreach my $field ($be->fields) {
       # Plain lists
-      if ($dm->get_fieldtype($f) eq 'list' and
-          $dm->get_datatype($f) eq 'literal' and
-          $dm->field_is_variant_enabled($f)) {
+      if ($dm->get_fieldtype($field) eq 'list' and
+          $dm->get_datatype($field) eq 'literal' and
+          $dm->field_is_variant_enabled($field)) {
 
-        # Find variant fallback
-        my $nvlist;
-        foreach my $fb (@$fbs) {
-          last if $nvlist = $be->get_field($f,
-                                           $fb->{form} || Biber::Config->getblxoption('vform', undef, $citekey),
-                                           $fb->{lang} || Biber::Config->getblxoption('vlang', undef, $citekey));
-        }
-        unless ($nvlist) {
-          $logger->warn("No fallback found for plain list '$f' in entry '$citekey'");
-          next KEY;
-        }
+        my $up_chain_list;
+        foreach my $form (split(/\s*,\s*/, $forms)) {
 
-        foreach my $form ($be->get_field_form_names($f)) {
-          foreach my $lang ($be->get_field_form_lang_names($f, $form)) {
-            if (my $lf = $be->get_field($f, $form, $lang)) {
-              $logger->debug("Instantiating variant plain list nulls for field '$f/$form/$lang' in entry '$citekey' from section $secnum");
-              for (my $i=0;$i<=$#$lf;$i++) {
-                if ($lf->[$i] eq Biber::Config->getoption('variant_null_list')) {
-                  $lf->[$i] = $nvlist->[$i];
+          # Use first available form
+          if ($form eq '*' and not $up_chain_list) {
+            $form = ($be->get_field_form_names($field))[0];
+          }
+
+          foreach my $lang (split(/\s*,\s*/, $langs)) {
+
+            # Use first available lang
+            if ($lang eq '*' and not $up_chain_list) {
+              $lang = ($be->get_field_form_lang_names($field, $form))[0];
+            }
+
+            next unless my $list = $be->get_field($field, $form, $lang);
+
+            if (first {$_ eq Biber::Config->getoption('variant_null_list')} @$list) {
+              for (my $i=0;$i<=$#$list;$i++) {
+                if ($list->[$i] eq Biber::Config->getoption('variant_null_list')) {
+                  $list->[$i] = $up_chain_list->[$i];
                 }
               }
+            }
+            else {
+              $up_chain_list = $list;
             }
           }
         }
       }
       # Names
-      elsif ($dm->get_fieldtype($f) eq 'list' and
-             $dm->get_datatype($f) eq 'name' and
-             $dm->field_is_variant_enabled($f)) {
+      elsif ($dm->get_fieldtype($field) eq 'list' and
+             $dm->get_datatype($field) eq 'name' and
+             $dm->field_is_variant_enabled($field)) {
 
-        # Find variant fallback
-        my $nvnames;
-        foreach my $fb (@$fbs) {
-          last if $nvnames = $be->get_field($f,
-                                            $fb->{form} || Biber::Config->getblxoption('vform', undef, $citekey),
-                                            $fb->{lang} || Biber::Config->getblxoption('vlang', undef, $citekey));
-        }
+        my $up_chain_names;
+        foreach my $form (split(/\s*,\s*/, $forms)) {
 
-        unless ($nvnames) {
-          $logger->warn("No fallback found for name list '$f' in entry '$citekey'");
-          next KEY;
-        }
+          # Use first available form
+          if ($form eq '*' and not $up_chain_names) {
+            $form = ($be->get_field_form_names($field))[0];
+          }
 
-        foreach my $form ($be->get_field_form_names($f)) {
-          foreach my $lang ($be->get_field_form_lang_names($f, $form)) {
-            if (my $nf = $be->get_field($f, $form, $lang)) {
-              $logger->debug("Instantiating variant name list nulls for field '$f/$form/$lang' in entry '$citekey' from section $secnum");
-              foreach my $n (@{$nf->names}) {
+          foreach my $lang (split(/\s*,\s*/, $langs)) {
+
+            # Use first available lang
+            if ($lang eq '*' and not $up_chain_names) {
+              $lang = ($be->get_field_form_lang_names($field, $form))[0];
+            }
+
+            next unless my $names = $be->get_field($field, $form, $lang);
+
+            if (first {$_->get_lastname eq Biber::Config->getoption('variant_null_list')} @{$names->names}) {
+              foreach my $n (@{$names->names}) {
                 # null name
                 if ($n->get_lastname eq Biber::Config->getoption('variant_null_list')) {
                   my $nindex = $n->get_index;
-                  $n->set_lastname($nvnames->nth_name($nindex)->get_lastname);
-                  $n->set_lastname_i($nvnames->nth_name($nindex)->get_lastname_i);
-                  $n->set_firstname($nvnames->nth_name($nindex)->get_firstname);
-                  $n->set_firstname_i($nvnames->nth_name($nindex)->get_firstname_i);
-                  $n->set_prefix($nvnames->nth_name($nindex)->get_prefix);
-                  $n->set_prefix_i($nvnames->nth_name($nindex)->get_prefix_i);
-                  $n->set_suffix($nvnames->nth_name($nindex)->get_suffix);
-                  $n->set_suffix_i($nvnames->nth_name($nindex)->get_suffix_i);
+                  $n->set_lastname($up_chain_names->nth_name($nindex)->get_lastname);
+                  $n->set_lastname_i($up_chain_names->nth_name($nindex)->get_lastname_i);
+                  $n->set_firstname($up_chain_names->nth_name($nindex)->get_firstname);
+                  $n->set_firstname_i($up_chain_names->nth_name($nindex)->get_firstname_i);
+                  $n->set_prefix($up_chain_names->nth_name($nindex)->get_prefix);
+                  $n->set_prefix_i($up_chain_names->nth_name($nindex)->get_prefix_i);
+                  $n->set_suffix($up_chain_names->nth_name($nindex)->get_suffix);
+                  $n->set_suffix_i($up_chain_names->nth_name($nindex)->get_suffix_i);
                 }
               }
+            }
+            else {
+              $up_chain_names = $names;
             }
           }
         }
@@ -1528,19 +1534,19 @@ sub process_extratitle {
 
     $logger->trace("Creating extratitle information for '$citekey'");
 
-    my $name_string = '';
+    my $name_hash = '';
     if ($be->get_labelname_info) {
-      $name_string = $self->_gennamehash_u($citekey);
+      $name_hash = $self->_gennamehash_u($citekey);
     }
 
-    my $title_string = '';
+    my $title_hash = '';
     if ($be->get_labeltitle_info) {
-      $title_string = $self->_gentitlehash($citekey);
+      $title_hash = $self->_gentitlehash($citekey);
     }
 
-    $be->set_field('nametitle', "$name_string,$title_string");
-    $logger->trace("Incrementing nametitle for '$name_string'");
-    Biber::Config->incr_seen_nametitle($name_string, $title_string);
+    $be->set_field('nametitle', "$name_hash,$title_hash");
+    $logger->trace("Incrementing nametitle for '$name_hash,$title_hash'");
+    Biber::Config->incr_seen_nametitle($name_hash, $title_hash);
   }
 
   return;
@@ -1833,6 +1839,7 @@ sub process_labeltitle {
     my $ltn = $h_ltn->{content};
     if ($be->field_exists($ltn)) {
       $be->set_labeltitle_info($ltn);
+      last;
     }
   }
   unless ($be->get_labeltitle_info) {
@@ -2194,6 +2201,10 @@ sub generate_labelinfo {
   my $sortscheme = $list->get_sortscheme;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+
+  # Since we run this multiple times, once per list, we need to reset this between lists
+  Biber::Config->reset_la_disambiguation;
+
   foreach my $citekey ($list->get_keys) {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field_nv('entrytype');

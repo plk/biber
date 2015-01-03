@@ -986,6 +986,17 @@ sub is_inheritance_path {
 
 =head1 labelalpha disambiguation
 
+=head2 reset_la_disambiguation
+
+    Resets labalalpha disambiguation counters
+
+=cut
+
+sub reset_la_disambiguation {
+  shift; # class method so don't care about class name
+  delete($CONFIG->{state}{ladisambiguation});
+}
+
 =head2 incr_la_disambiguation
 
     Increment a counter to say we have seen this labelalpha

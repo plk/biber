@@ -105,9 +105,6 @@ my $l4 = q|    \entry{L4}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -118,27 +115,19 @@ my $l4 = q|    \entry{L4}{book}{}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
-      \field{labeltitle}{Some title about sorting}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extraalpha}{2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{Some title about sorting}
       \field{year}{1995}
     \endentry
 |;
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -149,27 +138,19 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
-      \field{labeltitle}{Algorithms For Sorting}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extraalpha}{1}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{Algorithms For Sorting}
       \field{year}{1995}
     \endentry
 |;
 
 my $l2 = q|    \entry{L2}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -180,27 +161,19 @@ my $l2 = q|    \entry{L2}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
-      \field{labeltitle}{Sorting Algorithms}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extraalpha}{3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{Sorting Algorithms}
       \field{year}{1995}
     \endentry
 |;
 
 my $l3 = q|    \entry{L3}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -211,12 +184,10 @@ my $l3 = q|    \entry{L3}{book}{}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
-      \field{labeltitle}{More and More Algorithms}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extraalpha}{2}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{More and More Algorithms}
       \field{year}{1995}
     \endentry
@@ -227,9 +198,6 @@ my $l5 = q|    \entry{L5}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{1}{%
         {Cambridge}%
       }
@@ -240,12 +208,10 @@ my $l5 = q|    \entry{L5}{book}{}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
-      \field{sortinithash}{a01c54d1737685bc6dbf0ea0673fa44c}
-      \field{labeltitle}{Some other title about sorting}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extraalpha}{1}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{Some other title about sorting}
       \field{year}{1995}
     \endentry

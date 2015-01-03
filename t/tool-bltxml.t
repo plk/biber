@@ -2,8 +2,6 @@
 use strict;
 use warnings;
 use Test::More tests => 2;
-use Test::Differences;
-unified_diff;
 
 use Encode;
 use Biber;
@@ -29,12 +27,11 @@ my $l4pconf = qq|
 |;
 Log::Log4perl->init(\$l4pconf);
 
-my $outvar;
-
 $biber->set_output_obj(Biber::Output::biblatexml->new());
 # Get reference to output object
 my $out = $biber->get_output_obj;
 # Set the output target
+my $outvar;
 $out->set_output_target_file(\$outvar);
 
 # Options - we could set these in the control file but it's nice to see what we're
@@ -177,6 +174,5 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
 </bltx:entries>
 |;
 
-# NFD here because we are testing internals here and all internals expect NFD
-eq_or_diff(decode_utf8($outvar), $bltxml1, 'bltxml tool mode - 1');
+is(decode_utf8($outvar), $bltxml1, 'bltxml tool mode - 1');
 is_deeply([$main->get_keys], ['macmillan:pub', 'macmillan:loc', 'mv1', 'b1', 'xd1', 'macmillan', NFD('i3Š')], 'tool mode sorting');

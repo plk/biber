@@ -220,7 +220,7 @@ sub get_listdata {
            $self->{extrayeardata},
            $self->{extraalphadata},
            $self->{form},
-           $self->{lang} ];
+           $self->{lang}];
 }
 
 =head2 set_extrayeardata_for_key

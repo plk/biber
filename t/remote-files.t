@@ -4,6 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8' ;
 
+use Encode;
 use Test::More;
 use Test::Differences;
 unified_diff;
@@ -54,21 +55,12 @@ my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 my $cu1 = q|    \entry{citeulike:8283461}{article}{}
-      \name{labelname}{4}{}{%
-        {{uniquename=0,hash=aba7750b7045425a3cf8573f7710ec18}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=1f2c257ff6c86cffeb33019b6d8598c5}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=e1b1769dbb6e7d04008811b49cd745a9}{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=b1d8ec8b73d39a27898e50cfa3e3c676}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{4}{}{%
         {{uniquename=0,hash=aba7750b7045425a3cf8573f7710ec18}{Marazziti}{M\bibinitperiod}{D.}{D\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=1f2c257ff6c86cffeb33019b6d8598c5}{Akiskal}{A\bibinitperiod}{H.\bibnamedelimi S.}{H\bibinitperiod\bibinitdelim S\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=e1b1769dbb6e7d04008811b49cd745a9}{Rossi}{R\bibinitperiod}{A.}{A\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=b1d8ec8b73d39a27898e50cfa3e3c676}{Cassano}{C\bibinitperiod}{G.\bibnamedelimi B.}{G\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
       \strng{fullhash}{ee363ce5e21ebe022f83aae896dd47f9}
       \field{sortinit}{M}
@@ -76,10 +68,8 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \field{labelyear}{1999}
       \field{labelmonth}{05}
       \field{datelabelsource}{}
-      \field{labeltitle}{Alteration of the platelet serotonin transporter in romantic love.}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{abstract}{{BACKGROUND}: The evolutionary consequences of love are so important that there must be some long-established biological process regulating it. Recent findings suggest that the serotonin ({5-HT}) transporter might be linked to both neuroticism and sexual behaviour as well as to obsessive-compulsive disorder ({OCD}). The similarities between an overvalued idea, such as that typical of subjects in the early phase of a love relationship, and obsession, prompted us to explore the possibility that the two conditions might share alterations at the level of the {5-HT} transporter. {METHODS}: Twenty subjects who had recently (within the previous 6 months) fallen in love, 20 unmedicated {OCD} patients and 20 normal controls, were included in the study. The {5-HT} transporter was evaluated with the specific binding of {3H}-paroxetine ({3H}-Par) to platelet membranes. {RESULTS}: The results showed that the density of {3H}-Par binding sites was significantly lower in subjects who had recently fallen in love and in {OCD} patients than in controls. {DISCUSSION}: The main finding of the present study is that subjects who were in the early romantic phase of a love relationship were not different from {OCD} patients in terms of the density of the platelet {5-HT} transporter, which proved to be significantly lower than in the normal controls. This would suggest common neurochemical changes involving the {5-HT} system, linked to psychological dimensions shared by the two conditions, perhaps at an ideational level.}
       \field{issn}{0033-2917}
       \field[form=original,lang=english]{journaltitle}{Psychological medicine}
@@ -98,27 +88,18 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
 |;
 
 my $dl1 = q|    \entry{AbdelbarH98}{article}{}
-      \name{labelname}{2}{}{%
-        {{uniquename=0,hash=14c582ce40292affd427311ca8e3bc9c}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=558ac9729b484b6f378e45a86582ea1d}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{2}{}{%
         {{uniquename=0,hash=14c582ce40292affd427311ca8e3bc9c}{Abdelbar}{A\bibinitperiod}{A.M.}{A\bibinitperiod}{}{}{}{}}%
         {{uniquename=0,hash=558ac9729b484b6f378e45a86582ea1d}{Hedetniemi}{H\bibinitperiod}{S.M.}{S\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{01599a4cb58316d64208b12a07741765}
       \strng{fullhash}{01599a4cb58316d64208b12a07741765}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \field{labelyear}{1998}
       \field{datelabelsource}{}
-      \field{labeltitle}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{journaltitle}{Artificial Intelligence}
       \field[form=original,lang=english]{title}{Approximating {MAP}s for belief networks is {NP}-hard and other theorems}
       \field{volume}{102}
@@ -129,18 +110,12 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
 |;
 
 my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=83d062f99d033839537243075d75bad2}{Merleau-Ponty}{M\bibinithyphendelim P\bibinitperiod}{Maurice}{M\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=83d062f99d033839537243075d75bad2}{Merleau-Ponty}{M\bibinithyphendelim P\bibinitperiod}{Maurice}{M\bibinitperiod}{}{}{}{}}%
       }
       \name[form=original,lang=english]{editor}{1}{}{%
         {{hash=ff5f90046157eecef0c22da4dac6486e}{Lefort}{L\bibinitperiod}{Claude}{C\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list{language}{1}{%
         {Fransk}%
       }
@@ -156,10 +131,8 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelyear}{2010}
       \field{datelabelsource}{}
-      \field{labeltitle}{Le philosophe et son ombre}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{booktitle}{Œuvres}
       \field[form=original,lang=english]{title}{Le philosophe et son ombre}
       \field{year}{2010}
@@ -172,4 +145,4 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
 
 eq_or_diff( $out->get_output_entry('citeulike:8283461', $main), $cu1, 'Fetch from citeulike') ;
 eq_or_diff( $out->get_output_entry('AbdelbarH98', $main), $dl1, 'Fetch from plain bib download') ;
-eq_or_diff( $out->get_output_entry('merleau-ponty_philosophe_2010', $main), $ssl, 'HTTPS test') ;
+eq_or_diff( encode_utf8($out->get_output_entry('merleau-ponty_philosophe_2010', $main)), encode_utf8($ssl), 'HTTPS test') ;

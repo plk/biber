@@ -277,15 +277,9 @@ my $name17 =
       nameinitstring => 'Other_AN' } ;
 
 my $l1 = q|    \entry{L1}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=72287a68c1714cb1b9f4ab9e03a88b96}{Adler}{A\bibinitperiod}{Alfred}{A\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=72287a68c1714cb1b9f4ab9e03a88b96}{Adler}{A\bibinitperiod}{Alfred}{A\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{fullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \field{sortinit}{A}
@@ -295,15 +289,9 @@ my $l1 = q|    \entry{L1}{book}{}
 |;
 
 my $l2 = q|    \entry{L2}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=1c867a2b5ceb243bab70afb18702dc04}{Bull}{B\bibinitperiod}{Bertie\bibnamedelima B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=1c867a2b5ceb243bab70afb18702dc04}{Bull}{B\bibinitperiod}{Bertie\bibnamedelima B.}{B\bibinitperiod\bibinitdelim B\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{1c867a2b5ceb243bab70afb18702dc04}
       \strng{fullhash}{1c867a2b5ceb243bab70afb18702dc04}
       \field{sortinit}{B}
@@ -313,15 +301,9 @@ my $l2 = q|    \entry{L2}{book}{}
 |;
 
 my $l3 = q|    \entry{L3}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=cecd18116c43ee86e5a136b6e0362948}{Crop}{C\bibinitperiod}{C.\bibnamedelimi Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=cecd18116c43ee86e5a136b6e0362948}{Crop}{C\bibinitperiod}{C.\bibnamedelimi Z.}{C\bibinitperiod\bibinitdelim Z\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{cecd18116c43ee86e5a136b6e0362948}
       \strng{fullhash}{cecd18116c43ee86e5a136b6e0362948}
       \field{sortinit}{C}
@@ -331,15 +313,9 @@ my $l3 = q|    \entry{L3}{book}{}
 |;
 
 my $l4 = q|    \entry{L4}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=675883f3aca7c6069c0b154d47af4c86}{Decket}{D\bibinitperiod}{Derek\bibnamedelima D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=675883f3aca7c6069c0b154d47af4c86}{Decket}{D\bibinitperiod}{Derek\bibnamedelima D}{D\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{675883f3aca7c6069c0b154d47af4c86}
       \strng{fullhash}{675883f3aca7c6069c0b154d47af4c86}
       \field{sortinit}{D}
@@ -349,15 +325,9 @@ my $l4 = q|    \entry{L4}{book}{}
 |;
 
 my $l5 = q|    \entry{L5}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=c2d41bb75b01ec2339c1050981f9c2cc}{Eel}{E\bibinitperiod}{Egbert}{E\bibinitperiod}{von}{v\bibinitperiod}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=c2d41bb75b01ec2339c1050981f9c2cc}{Eel}{E\bibinitperiod}{Egbert}{E\bibinitperiod}{von}{v\bibinitperiod}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{c2d41bb75b01ec2339c1050981f9c2cc}
       \strng{fullhash}{c2d41bb75b01ec2339c1050981f9c2cc}
       \field{sortinit}{v}
@@ -367,15 +337,9 @@ my $l5 = q|    \entry{L5}{book}{}
 |;
 
 my $l6 = q|    \entry{L6}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=68e9105aa98379a85ef6cd2e7ac29c00}{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van\bibnamedelimb der\bibnamedelima valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=68e9105aa98379a85ef6cd2e7ac29c00}{Frome}{F\bibinitperiod}{Francis}{F\bibinitperiod}{van\bibnamedelimb der\bibnamedelima valt}{v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{68e9105aa98379a85ef6cd2e7ac29c00}
       \strng{fullhash}{68e9105aa98379a85ef6cd2e7ac29c00}
       \field{sortinit}{v}
@@ -385,15 +349,9 @@ my $l6 = q|    \entry{L6}{book}{}
 |;
 
 my $l7 = q|    \entry{L7}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=4dbef3c5464f951b537a49ba93676a9a}{Gloom}{G\bibinitperiod}{Gregory\bibnamedelima R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=4dbef3c5464f951b537a49ba93676a9a}{Gloom}{G\bibinitperiod}{Gregory\bibnamedelima R.}{G\bibinitperiod\bibinitdelim R\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{4dbef3c5464f951b537a49ba93676a9a}
       \strng{fullhash}{4dbef3c5464f951b537a49ba93676a9a}
       \field{sortinit}{v}
@@ -403,15 +361,9 @@ my $l7 = q|    \entry{L7}{book}{}
 |;
 
 my $l8 = q|    \entry{L8}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=9fb4d242b62f047e4255282864eedb97}{Henkel}{H\bibinitperiod}{Henry\bibnamedelima F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=9fb4d242b62f047e4255282864eedb97}{Henkel}{H\bibinitperiod}{Henry\bibnamedelima F.}{H\bibinitperiod\bibinitdelim F\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{9fb4d242b62f047e4255282864eedb97}
       \strng{fullhash}{9fb4d242b62f047e4255282864eedb97}
       \field{sortinit}{v}
@@ -421,15 +373,9 @@ my $l8 = q|    \entry{L8}{book}{}
 |;
 
 my $l9 = q|    \entry{L9}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=1734924c4c55de5bb18d020c34a5249e}{{Iliad\bibnamedelimb Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=1734924c4c55de5bb18d020c34a5249e}{{Iliad\bibnamedelimb Ipswich}}{I\bibinitperiod}{Ian}{I\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{1734924c4c55de5bb18d020c34a5249e}
       \strng{fullhash}{1734924c4c55de5bb18d020c34a5249e}
       \field{sortinit}{I}
@@ -440,15 +386,9 @@ my $l9 = q|    \entry{L9}{book}{}
 
 
 my $l10 = q|    \entry{L10}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=758a11cc45860d7635b1f6091b2d95a9}{Jolly}{J\bibinitperiod}{James}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=758a11cc45860d7635b1f6091b2d95a9}{Jolly}{J\bibinitperiod}{James}{J\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{758a11cc45860d7635b1f6091b2d95a9}
       \strng{fullhash}{758a11cc45860d7635b1f6091b2d95a9}
       \field{sortinit}{J}
@@ -459,15 +399,9 @@ my $l10 = q|    \entry{L10}{book}{}
 
 
 my $l10a = q|    \entry{L10a}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=5e60d697e6432558eab7dccf9890eb79}{Pimentel}{P\bibinitperiod}{Joseph\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=5e60d697e6432558eab7dccf9890eb79}{Pimentel}{P\bibinitperiod}{Joseph\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{Jr.}{J\bibinitperiod}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{5e60d697e6432558eab7dccf9890eb79}
       \strng{fullhash}{5e60d697e6432558eab7dccf9890eb79}
       \field{sortinit}{P}
@@ -478,15 +412,9 @@ my $l10a = q|    \entry{L10a}{book}{}
 
 
 my $l11 = q|    \entry{L11}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=ef4ab7eba5cd140b54ba4329e1dda90b}{Kluster}{K\bibinitperiod}{Kevin}{K\bibinitperiod}{van}{v\bibinitperiod}{Jr.}{J\bibinitperiod}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=ef4ab7eba5cd140b54ba4329e1dda90b}{Kluster}{K\bibinitperiod}{Kevin}{K\bibinitperiod}{van}{v\bibinitperiod}{Jr.}{J\bibinitperiod}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{ef4ab7eba5cd140b54ba4329e1dda90b}
       \strng{fullhash}{ef4ab7eba5cd140b54ba4329e1dda90b}
       \field{sortinit}{v}
@@ -497,13 +425,10 @@ my $l11 = q|    \entry{L11}{book}{}
 
 my $l12 = q|    \entry{L12}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
-        {{hash=92d941ea6054dedec40ff02466e9769b}{Vallée\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
+        {{hash=5bb094a9232384acc478f1aa54e8cf3c}{Vallée\bibnamedelima Poussin}{V\bibinitperiod\bibinitdelim P\bibinitperiod}{Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph}{C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}{de\bibnamedelima la}{d\bibinitperiod\bibinitdelim l\bibinitperiod}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
-      \strng{namehash}{92d941ea6054dedec40ff02466e9769b}
-      \strng{fullhash}{92d941ea6054dedec40ff02466e9769b}
+      \strng{namehash}{5bb094a9232384acc478f1aa54e8cf3c}
+      \strng{fullhash}{5bb094a9232384acc478f1aa54e8cf3c}
       \field{sortinit}{d}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labelnamesource}{author}
@@ -514,9 +439,6 @@ my $l13 = q|    \entry{L13}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=5e79da6869afaf0d38e01285b494d555}{Van\bibnamedelimb de\bibnamedelima Graaff}{V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod}{R.\bibnamedelimi J.}{R\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{5e79da6869afaf0d38e01285b494d555}
       \strng{fullhash}{5e79da6869afaf0d38e01285b494d555}
       \field{sortinit}{V}
@@ -526,15 +448,9 @@ my $l13 = q|    \entry{L13}{book}{}
 |;
 
 my $l14 = q|    \entry{L14}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=2319907d9a5d5dd46da77879bdb7e609}{St\bibnamedelima John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=2319907d9a5d5dd46da77879bdb7e609}{St\bibnamedelima John-Mollusc}{S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod}{Oliver}{O\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{2319907d9a5d5dd46da77879bdb7e609}
       \strng{fullhash}{2319907d9a5d5dd46da77879bdb7e609}
       \field{sortinit}{S}
@@ -544,15 +460,9 @@ my $l14 = q|    \entry{L14}{book}{}
 |;
 
 my $l15 = q|    \entry{L15}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=379b415d869a4751678a5eee23b07e48}{Gompel}{G\bibinitperiod}{Roger\bibnamedelima P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=379b415d869a4751678a5eee23b07e48}{Gompel}{G\bibinitperiod}{Roger\bibnamedelima P.{\,}G.}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{379b415d869a4751678a5eee23b07e48}
       \strng{fullhash}{379b415d869a4751678a5eee23b07e48}
       \field{sortinit}{v}
@@ -562,15 +472,9 @@ my $l15 = q|    \entry{L15}{book}{}
 |;
 
 my $l16 = q|    \entry{L16}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=0a9532fa161f6305ec403c1c85951bdf}{Gompel}{G\bibinitperiod}{Roger\bibnamedelima {P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=0a9532fa161f6305ec403c1c85951bdf}{Gompel}{G\bibinitperiod}{Roger\bibnamedelima {P.\,G.}}{R\bibinitperiod\bibinitdelim P\bibinitperiod}{van}{v\bibinitperiod}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{0a9532fa161f6305ec403c1c85951bdf}
       \strng{fullhash}{0a9532fa161f6305ec403c1c85951bdf}
       \field{sortinit}{v}
@@ -580,15 +484,9 @@ my $l16 = q|    \entry{L16}{book}{}
 |;
 
 my $l17 = q|    \entry{L17}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=766d5329cf995fcc7c1cef19de2a2ae8}{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=766d5329cf995fcc7c1cef19de2a2ae8}{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima H.{\,}P.}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{766d5329cf995fcc7c1cef19de2a2ae8}
       \strng{fullhash}{766d5329cf995fcc7c1cef19de2a2ae8}
       \field{sortinit}{L}
@@ -598,15 +496,9 @@ my $l17 = q|    \entry{L17}{book}{}
 |;
 
 my $l18 = q|    \entry{L18}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=58620d2c7d6839bac23306c732c563fb}{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima {H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=58620d2c7d6839bac23306c732c563fb}{Lovecraft}{L\bibinitperiod}{Bill\bibnamedelima {H.\,P.}}{B\bibinitperiod\bibinitdelim H\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{58620d2c7d6839bac23306c732c563fb}
       \strng{fullhash}{58620d2c7d6839bac23306c732c563fb}
       \field{sortinit}{L}
@@ -616,15 +508,9 @@ my $l18 = q|    \entry{L18}{book}{}
 |;
 
 my $l19 = q|    \entry{L19}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=83caa52f21f97e572dd3267bdf62978a}{Mustermann}{M\bibinitperiod}{Klaus-Peter}{K\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=83caa52f21f97e572dd3267bdf62978a}{Mustermann}{M\bibinitperiod}{Klaus-Peter}{K\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{fullhash}{83caa52f21f97e572dd3267bdf62978a}
       \field{sortinit}{M}
@@ -634,15 +520,9 @@ my $l19 = q|    \entry{L19}{book}{}
 |;
 
 my $l19a = q|    \entry{L19a}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=0963f6904ccfeaac2770c5882a587001}{Lam}{L\bibinitperiod}{Ho-Pun}{H\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=0963f6904ccfeaac2770c5882a587001}{Lam}{L\bibinitperiod}{Ho-Pun}{H\bibinithyphendelim P\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{0963f6904ccfeaac2770c5882a587001}
       \strng{fullhash}{0963f6904ccfeaac2770c5882a587001}
       \field{sortinit}{L}
@@ -653,15 +533,9 @@ my $l19a = q|    \entry{L19a}{book}{}
 
 
 my $l20 = q|    \entry{L20}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=fdaa0936724be89ef8bd16cf02e08c74}{Ford}{F\bibinitperiod}{{John\bibnamedelimb Henry}}{J\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=fdaa0936724be89ef8bd16cf02e08c74}{Ford}{F\bibinitperiod}{{John\bibnamedelimb Henry}}{J\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{fdaa0936724be89ef8bd16cf02e08c74}
       \strng{fullhash}{fdaa0936724be89ef8bd16cf02e08c74}
       \field{sortinit}{F}
@@ -671,17 +545,11 @@ my $l20 = q|    \entry{L20}{book}{}
 |;
 
 my $l21 = q|    \entry{L21}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=b3df6330af0651b93bce079a36dea339}{Smith}{S\bibinitperiod}{{\v{S}}omeone}{\v{S}\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
-        {{hash=b3df6330af0651b93bce079a36dea339}{Smith}{S\bibinitperiod}{{\v{S}}omeone}{\v{S}\bibinitperiod}{}{}{}{}}%
+        {{hash=4389a3c0dc7da74487b50808ba9436ad}{Smith}{S\bibinitperiod}{\v{S}omeone}{\v{S}\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
-      \strng{namehash}{b3df6330af0651b93bce079a36dea339}
-      \strng{fullhash}{b3df6330af0651b93bce079a36dea339}
+      \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
+      \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
@@ -690,13 +558,10 @@ my $l21 = q|    \entry{L21}{book}{}
 
 my $l22u = q|    \entry{L22}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
-        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
-      \strng{namehash}{2273e0084ca97649d7edced9ce8d0ea3}
-      \strng{fullhash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{namehash}{e58b861545799d0eaf883402a882126e}
+      \strng{fullhash}{e58b861545799d0eaf883402a882126e}
       \field{sortinit}{Š}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
@@ -706,13 +571,10 @@ my $l22u = q|    \entry{L22}{book}{}
 
 my $l22 = q|    \entry{L22}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
-        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{\v{S}mith}{\v{S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
+        {{hash=e58b861545799d0eaf883402a882126e}{\v{S}mith}{\v{S}\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
-      \strng{namehash}{2273e0084ca97649d7edced9ce8d0ea3}
-      \strng{fullhash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{namehash}{e58b861545799d0eaf883402a882126e}
+      \strng{fullhash}{e58b861545799d0eaf883402a882126e}
       \field{sortinit}{\v{S}}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
@@ -724,9 +586,6 @@ my $l23 = q|    \entry{L23}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{Smith}{S\bibinitperiod}{Šomeone}{Š\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
       \field{sortinit}{S}
@@ -739,9 +598,6 @@ my $l24 = q|    \entry{L24}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{Šmith}{Š\bibinitperiod}{Someone}{S\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
       \field{sortinit}{Š}
@@ -751,15 +607,9 @@ my $l24 = q|    \entry{L24}{book}{}
 |;
 
 my $l25 = q|    \entry{L25}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=7069367d4a4f37ffb0377e3830e98ed0}{{American\bibnamedelimb Psychological\bibnamedelimb Association,\bibnamedelimb Task\bibnamedelimb Force\bibnamedelimb on\bibnamedelimb the\bibnamedelimb Sexualization\bibnamedelimb of\bibnamedelimb Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=7069367d4a4f37ffb0377e3830e98ed0}{{American\bibnamedelimb Psychological\bibnamedelimb Association,\bibnamedelimb Task\bibnamedelimb Force\bibnamedelimb on\bibnamedelimb the\bibnamedelimb Sexualization\bibnamedelimb of\bibnamedelimb Girls}}{A\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{7069367d4a4f37ffb0377e3830e98ed0}
       \strng{fullhash}{7069367d4a4f37ffb0377e3830e98ed0}
       \field{sortinit}{A}
@@ -769,15 +619,9 @@ my $l25 = q|    \entry{L25}{book}{}
 |;
 
 my $l26 = q|    \entry{L26}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=d176a8af5ce1c45cb06875c4433f2fe2}{{Sci-Art\bibnamedelimb Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=d176a8af5ce1c45cb06875c4433f2fe2}{{Sci-Art\bibnamedelimb Publishers}}{S\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{d176a8af5ce1c45cb06875c4433f2fe2}
       \strng{fullhash}{d176a8af5ce1c45cb06875c4433f2fe2}
       \field{sortinit}{S}
@@ -796,15 +640,9 @@ my $l28 = q|    \entry{L28}{book}{}
 
 
 my $l29 = q|    \entry{L29}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=59a5e43a502767d00e589eb29f863728}{{U.S.\bibnamedelimi Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=59a5e43a502767d00e589eb29f863728}{{U.S.\bibnamedelimi Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}}{U\bibinitperiod}{}{}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{59a5e43a502767d00e589eb29f863728}
       \strng{fullhash}{59a5e43a502767d00e589eb29f863728}
       \field{sortinit}{U}
@@ -815,19 +653,16 @@ my $l29 = q|    \entry{L29}{book}{}
 
 my $l31 = q|    \entry{L31}{book}{}
       \name[form=original,lang=english]{author}{1}{}{%
-        {{hash=b43419361d83c9ab010e98aed1a83e35}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name[form=original,lang=english]{editor}{1}{}{%
-        {{hash=b43419361d83c9ab010e98aed1a83e35}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name[form=original,lang=english]{translator}{1}{}{%
         {{hash=b43419361d83c9ab010e98aed1a83e35}{{\~{Z}}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
-      \strng{namehash}{b43419361d83c9ab010e98aed1a83e35}
-      \strng{fullhash}{b43419361d83c9ab010e98aed1a83e35}
+      \strng{namehash}{29c3ff92fff79d09a8b44d2f775de0b1}
+      \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \field{sortinit}{\~{Z}}
       \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
       \field{labelnamesource}{author}
@@ -878,15 +713,15 @@ eq_or_diff( NFC($out->get_output_entry('L23', $main)), $l23, 'Unicode firstname'
 eq_or_diff( NFC($out->get_output_entry('L24', $main)), $l24, 'Unicode lastname');
 eq_or_diff( $out->get_output_entry('L25', $main), $l25, 'Single string name');
 eq_or_diff( $out->get_output_entry('L26', $main), $l26, 'Hyphen at brace level <> 0');
-eq_or_diff($section->bibentry('L27')->get_field('author')->count_names, 1, 'Bad name with 3 commas');
+eq_or_diff($section->bibentry('L27')->get_field('author', 'original', 'english')->count_names, 1, 'Bad name with 3 commas');
 eq_or_diff( $out->get_output_entry('L28', $main), $l28, 'Bad name with consecutive commas');
 eq_or_diff( $out->get_output_entry('L29', $main), $l29, 'Escaped name with 3 commas');
 
 # Checking visibility
 # Count does not include the "and others" as this "name" is delete in the output driver
-is($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info->{field})->count_names, '2', 'Name count for "and others" - 1');
-is($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info->{field})->get_visible_cite, '2', 'Visibility for "and others" - 1');
-is($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_labelname_info->{field})->get_visible_cite, '1', 'Visibility for "and others" - 2');
+is($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info, 'original', 'english')->count_names, '2', 'Name count for "and others" - 1');
+is($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info, 'original', 'english')->get_visible_cite, '2', 'Visibility for "and others" - 1');
+is($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_labelname_info, 'original', 'english')->get_visible_cite, '1', 'Visibility for "and others" - 2');
 
 # A few tests depend set to non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
@@ -907,9 +742,9 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-is(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info->{field})->nth_name(1)->get_firstname_i->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
-is( $out->get_output_entry('L12', $main), $l12, 'First First First First prefix prefix Last Last') ;
-is( $out->get_output_entry('L21', $main), $l21, 'LaTeX encoded unicode firstname');
-is( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode lastname - 2');
-is( $out->get_output_entry('L31', $main), $l31, 'LaTeX encoded unicode lastname with tie char');
+is(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info, 'original', 'english')->nth_name(1)->get_firstname_i->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
+eq_or_diff( $out->get_output_entry('L12', $main), $l12, 'First First First First prefix prefix Last Last') ;
+eq_or_diff( $out->get_output_entry('L21', $main), $l21, 'LaTeX encoded unicode firstname');
+eq_or_diff( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode lastname - 2');
+eq_or_diff( $out->get_output_entry('L31', $main), $l31, 'LaTeX encoded unicode lastname with tie char');
 

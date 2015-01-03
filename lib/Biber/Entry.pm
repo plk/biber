@@ -395,9 +395,6 @@ sub get_field_v {
   return undef unless my $key = $self->{derivedfields}{nonvariant}{citekey};
   my $bee = $self->{derivedfields}{nonvariant}{entrytype};
 
-  $forms .= ',*';
-  $langs .= ',*';
-
   foreach my $form (split(/\s*,\s*/, $forms)) {
 
     # Use first available form
@@ -413,62 +410,14 @@ sub get_field_v {
         $lang = ($self->get_field_form_lang_names($field, $form))[0];
       }
 
-      my $fv =  $self->{datafields}{variant}{$field}{$form}{$lang} //
-        $self->{derivedfields}{variant}{$field}{$form}{$lang} //
-          $self->{rawfields}{variant}{$field};
+      my $fv = $self->{datafields}{variant}{$field}{$form}{$lang} //
+               $self->{derivedfields}{variant}{$field}{$form}{$lang} //
+               $self->{rawfields}{variant}{$field};
       return $fv if $fv;
     }
   }
   return undef;
 }
-
-# # Pure get_field with no fallbacks
-# sub _get_field {
-#   no autovivification;
-#   my $self = shift;
-#   my ($field, $form, $lang) = @_;
-#   my $dm = Biber::Config->get_dm;
-#   # can't use get_field due to recursion ...
-#   my $key = $self->{derivedfields}{nonvariant}{citekey};
-#   my $bee = $self->{derivedfields}{nonvariant}{entrytype};
-#   if ($dm->field_is_variant_enabled($field)) {
-#     $form = $form || Biber::Config->getblxoption('vform', undef, $key);
-
-#     # Wildcard lang
-#     if (Biber::Config->getblxoption('autovlang', $bee, $key)) {
-#       my @langs = $self->get_field_form_lang_names($field, $form);
-#       $lang = $langs[0] || Biber::Config->getblxoption('vlang', undef, $key);
-#     }
-#     else {
-#       $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
-#     }
-
-#     $logger->trace("Looking for variant enabled field in '$key': $field/$form/$lang");
-#     my $r = $self->{datafields}{variant}{$field}{$form}{$lang} //
-#             $self->{derivedfields}{variant}{$field}{$form}{$lang} //
-#               $self->{rawfields}{variant}{$field};
-#     if ($r) {
-#       $logger->trace("Found variant enabled field in '$key': $field/$form/$lang");
-#     }
-#     else {
-#       $logger->trace("Did NOT find variant enabled field in '$key': $field/$form/$lang");
-#     }
-#     return $r;
-#   }
-#   else {
-#     $logger->trace("Looking for field in '$key': $field") if $key;
-#     my $r = $self->{datafields}{nonvariant}{$field} //
-#             $self->{derivedfields}{nonvariant}{$field} //
-#             $self->{rawfields}{nonvariant}{$field};
-#     if ($r) {
-#       $logger->trace("Found variant enabled field in '$key': $field");
-#     }
-#     else {
-#       $logger->trace("Did NOT find variant enabled field in '$key': $field");
-#     }
-#     return $r;
-#   }
-# }
 
 =head2 field_has_variants
 
@@ -580,8 +529,12 @@ sub set_field {
   my $dm = Biber::Config->get_dm;
   my $key = ($field eq 'citekey' ) ? $val : $self->{derivedfields}{nonvariant}{citekey};
   if ($dm->field_is_variant_enabled($field)) {
-    $form = $form || 'original';
+    # First element of vform/vlang list is default
+    $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
+    # first element is the default
+    $form = (split(/\s*,\s*/, $form))[0];
+    $lang = (split(/\s*,\s*/, $lang))[0];
     $logger->trace("Setting variant enabled field in '$key': $field/$form/$lang=$val");
     # All derived fields can be null
     $self->{derivedfields}{variant}{$field}{$form}{$lang} = $val;
@@ -607,8 +560,11 @@ sub set_datafield {
   my $bee = $self->get_field_nv('entrytype');
   my $dm = Biber::Config->get_dm;
   if ($dm->field_is_variant_enabled($field)) {
-    $form = $form || 'original';
+    $form = $form || Biber::Config->getblxoption('vform', undef, $key);
     $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
+    # first element is the default
+    $form = (split(/\s*,\s*/, $form))[0];
+    $lang = (split(/\s*,\s*/, $lang))[0];
     $logger->trace("Setting variant enabled datafield in '$key': $field/$form/$lang=$val");
 
     # Can happen in cases where "x_y" and "x" are in the same entry with vform=y
@@ -1000,11 +956,6 @@ sub resolve_xdata {
     Takes a second Biber::Entry object as argument
     Uses the crossref inheritance specifications from the .bcf
 
-    Rather verbose because we have to deal with all combinations of variant/non-variant
-    fields. It could be more parameterised but it would be horrible to debug.
-    At least this is relatively clear and the conditional branches are mutally
-    exclusive.
-
 =cut
 
 sub inherit_from {
@@ -1016,8 +967,6 @@ sub inherit_from {
   my $target_key = $self->get_field_nv('citekey'); # target/child key
   my $source_key = $parent->get_field_nv('citekey'); # source/parent key
   my $dm = Biber::Config->get_dm;
-  my $vlang_s = Biber::Config->getblxoption('vlang', undef, $source_key);
-  my $vlang_t = Biber::Config->getblxoption('vlang', undef, $target_key);
 
   # record the inheritance between these entries to prevent loops and repeats.
   Biber::Config->set_inheritance('crossref', $source_key, $target_key);
@@ -1036,8 +985,8 @@ sub inherit_from {
   my $type        = $self->get_field_nv('entrytype');
   my $parenttype  = $parent->get_field_nv('entrytype');
   my $inheritance = Biber::Config->getblxoption('inheritance');
-  my $vsplit      = Biber::Config->getoption('vsplit');
   my $processed;
+
   # get defaults
   my $defaults = $inheritance->{defaults};
   # global defaults ...
@@ -1081,27 +1030,35 @@ sub inherit_from {
 
           # Can't inherit between variant/non-variant
           # Things like that are best dealt with syntactically with mappings
-          if (my $sf = $dm->field_is_variant_enabled($field->{source})) {
-            unless (my $tf = $dm->field_is_variant_enabled($field->{target})) {
-              $logger->warn("Inheritance defined between variant ($sf) and non-variant ($tf) data fields in key '$target_key', ignoring")
+          if ($dm->field_is_variant_enabled($field->{source})) {
+            unless ($dm->field_is_variant_enabled($field->{target})) {
+              $logger->warn('Inheritance defined between variant (' .
+                            $field->{source} .
+                            ') and non-variant (' .
+                            $field->{target} .
+                            ") data fields in key '$target_key', ignoring");
+              next;
             }
-            next;
           }
-          if (my $tf = $dm->field_is_variant_enabled($field->{target})) {
-            unless (my $sf = $dm->field_is_variant_enabled($field->{source})) {
-              $logger->warn("Inheritance defined between variant ($tf) and non-variant ($sf) data fields in key '$target_key', ignoring")
+          if ($dm->field_is_variant_enabled($field->{target})) {
+            unless ($dm->field_is_variant_enabled($field->{source})) {
+              $logger->warn('Inheritance defined between variant (' .
+                            $field->{target} .
+                            ') and non-variant (' .
+                            $field->{source} .
+                            ") data fields in key '$target_key', ignoring");
+              next;
             }
-            next;
           }
 
-          # Do inheritance is target does not exist or override is true
+          # Do inheritance if target does not exist or override is true
           if (not $self->field_exists($field->{target}) or
               $field_override_target eq 'true') {
             $logger->debug("Entry '$target_key' is inheriting field '" .
                            $field->{source} .
                            "' as '" .
                            $field->{target} .
-                           "' from entry '$source_key'");
+                           "' from entry '$source_key' (explicit)");
             # Target is variant (meaning source is variant too due to test above)
             if ($dm->field_is_variant_enabled($field->{target})) {
               $self->set_datafield_forms($field->{target}, $parent->get_field_forms($field->{source}));
@@ -1139,7 +1096,7 @@ sub inherit_from {
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or
           $override_target eq 'true') {
-        $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
+        $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key' (implicit)");
         # For tool mode with bibtex output we need to copy the raw fields
         if (Biber::Config->getoption('tool') and
             Biber::Config->getoption('output_format') eq 'bibtex') {

@@ -54,15 +54,9 @@ my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $out = $biber->get_output_obj;
 
 my $xd1 = q|    \entry{xd1}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=51db4bfd331cba22959ce2d224c517cd}{Ellington}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{Ellington}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{2}{%
         {New York}%
         {London}%
@@ -76,21 +70,16 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{2007}
       \field{datelabelsource}{}
+      \field{labelnamesource}{author}
       \field[form=original,lang=english]{note}{A Note}
       \field{year}{2007}
     \endentry
 |;
 
 my $xd2 = q|    \entry{xd2}{book}{}
-      \name{labelname}{1}{}{%
-        {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{Pillington}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{Pillington}{P\bibinitperiod}{Peter}{P\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{location}{2}{%
         {New York}%
         {London}%
@@ -104,6 +93,7 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
       \field{labelyear}{2003}
       \field{datelabelsource}{}
+      \field{labelnamesource}{author}
       \field[form=original,lang=english]{abstract}{An abstract}
       \field[form=original,lang=english]{addendum}{Москва}
       \field[form=original,lang=english]{note}{A Note}

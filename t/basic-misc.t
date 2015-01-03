@@ -140,7 +140,7 @@ my $murray1 = q|    \entry{murray}{article}{vlang=english}
       \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
       \true{singletitle}
       \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field{labeltitlesource}{shorttitle}
       \field[form=original,lang=english]{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field[form=original,lang=english]{journaltitle}{Langmuir}
@@ -182,7 +182,7 @@ my $murray2 = q|    \entry{murray}{article}{vlang=english}
       \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
       \true{singletitle}
       \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
+      \field{labeltitlesource}{shorttitle}
       \field[form=original,lang=english]{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
       \field{indextitle}{Alkanethiolate gold cluster molecules}
       \field[form=original,lang=english]{journaltitle}{Langmuir}
@@ -252,7 +252,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{vlang=english}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
       \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{title}
+      \field{labeltitlesource}{shorttitle}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field[form=original,lang=english]{note}{anon1}
@@ -279,7 +279,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{vlang=english}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
       \field{labelnamesource}{shortauthor}
-      \field{labeltitlesource}{title}
+      \field{labeltitlesource}{shorttitle}
       \field{langid}{english}
       \field{langidopts}{variant=american}
       \field[form=original,lang=english]{note}{anon2}

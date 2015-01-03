@@ -34,15 +34,9 @@ Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'C');
 
 my $encode1 = q|    \entry{testŠ}{book}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {A press}%
       }
@@ -53,26 +47,18 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
-      \field{labeltitle}{Šome title}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{Šome title}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode2 = q|    \entry{test1}{book}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {A press}%
       }
@@ -83,26 +69,18 @@ my $encode2 = q|    \entry{test1}{book}{}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
-      \field{labeltitle}{Söme title}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{Söme title}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode3 = q|    \entry{test1}{book}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {A press}%
       }
@@ -113,26 +91,18 @@ my $encode3 = q|    \entry{test1}{book}{}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
-      \field{labeltitle}{Żome title}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{Żome title}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode5 = q|    \entry{test}{book}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {A press}%
       }
@@ -143,26 +113,18 @@ my $encode5 = q|    \entry{test}{book}{}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
-      \field{labeltitle}{à titlé}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{à titlé}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode6 = q|    \entry{test}{book}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {A press}%
       }
@@ -173,26 +135,18 @@ my $encode6 = q|    \entry{test}{book}{}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
-      \field{labeltitle}{↑\`{a} titl\'{e}}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{↑\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry
 |;
 
 my $encode7 = q|    \entry{test}{book}{}
-      \name{labelname}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \list[form=original,lang=english]{publisher}{1}{%
         {A press}%
       }
@@ -203,11 +157,9 @@ my $encode7 = q|    \entry{test}{book}{}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1999}
       \field{datelabelsource}{}
-      \field{labeltitle}{{$\uparrow$}\`{a} titl\'{e}}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
       \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=english]{title}{{$\uparrow$}\`{a} titl\'{e}}
       \field{year}{1999}
     \endentry

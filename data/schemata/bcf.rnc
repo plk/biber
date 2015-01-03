@@ -182,14 +182,6 @@ start =
         empty
       }+
     }?,
-    # variant fallbacks specification
-    element bcf:variantfallbacks {
-      element bcf:variantfallback {
-        attribute form { xsd:string },
-        attribute lang { xsd:string }?,
-        empty
-      }+
-    },
     # Global sorting specification
     sorting,
     # Data model specification

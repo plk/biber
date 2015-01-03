@@ -152,18 +152,17 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>vform</bcf:key>
-      <bcf:value>original</bcf:value>
+      <bcf:value>original,*</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>vlang</bcf:key>
-      <bcf:value>english</bcf:value>
+      <bcf:value>english,*</bcf:value>
     </bcf:option>
   </bcf:options>
   <!-- BIBLATEX OPTION SCOPE -->
   <bcf:optionscope type="GLOBAL">
     <bcf:option>autovlang</bcf:option>
     <bcf:option>variantforms</bcf:option>
-    <bcf:option>variantfallbacks</bcf:option>
     <bcf:option>vform</bcf:option>
     <bcf:option>vlang</bcf:option>
     <bcf:option>alphaothers</bcf:option>
@@ -613,11 +612,6 @@
       <bcf:field source="sortkey" skip="true"/>
     </bcf:inherit>
   </bcf:inheritance>
-  <!-- VARIANT FALLBACKS -->
-  <bcf:variantfallbacks>
-    <bcf:variantfallback form="original"/>
-    <bcf:variantfallback form="romanised"/>
-  </bcf:variantfallbacks>
   <!-- SORTING -->
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>

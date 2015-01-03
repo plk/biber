@@ -440,8 +440,6 @@ sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
-    my $form = $node->getAttribute('form') || Biber::Config->getblxoption('vform', undef, $key);
-    my $lang = bcp472locale($node->getAttribute('xml:lang'));
 
     # List of ranges/values
     if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
@@ -449,11 +447,11 @@ sub _range {
       foreach my $range (@rangelist) {
         push @$rl, _parse_range_list($range);
       }
-      $bibentry->set_datafield(_norm($f), $rl, $form, $lang);
+      $bibentry->set_datafield(_norm($f), $rl);
     }
     # Simple range
     elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
-      $bibentry->set_datafield(_norm($f), [ _parse_range_list($range) ], $form, $lang);
+      $bibentry->set_datafield(_norm($f), [ _parse_range_list($range) ]);
     }
     # simple list
     else {
@@ -474,7 +472,7 @@ sub _range {
         }
         push @$values_ref, [$1 || '', $end];
       }
-      $bibentry->set_datafield(_norm($f), $values_ref, $form, $lang);
+      $bibentry->set_datafield(_norm($f), $values_ref);
     }
   }
   return;
@@ -557,7 +555,7 @@ sub _name {
       $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
     }
 
-    # Deal with explicit "moreenames" in data source
+    # Deal with explicit "morenames" in data source
     if ($node->getAttribute('morenames')) {
       $names->set_morenames;
     }

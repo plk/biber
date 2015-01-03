@@ -45,15 +45,9 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Elias1955}{set}{}
       \set{Elias1955a,Elias1955b}
-      \name{labelname}{1}{}{%
-        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{sortinit}{0}
@@ -61,10 +55,8 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \field{labelyear}{1955}
       \field{labelmonth}{03}
       \field{datelabelsource}{}
-      \field{labeltitle}{Predictive coding--I}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{issn}{0096-1000}
       \field[form=original,lang=english]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
@@ -83,23 +75,15 @@ my $string1 = q|    \entry{Elias1955}{set}{}
 
 my $string2 = q|    \entry{Elias1955a}{article}{}
       \inset{Elias1955}
-      \name{labelname}{1}{}{%
-        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field{labeltitle}{Predictive coding--I}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{issn}{0096-1000}
       \field[form=original,lang=english]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}
@@ -118,23 +102,15 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
 
 my $string3 = q|    \entry{Elias1955b}{article}{}
       \inset{Elias1955}
-      \name{labelname}{1}{}{%
-        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
-      }
       \name[form=original,lang=english]{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
       }
-      \field{labelnamesourcefield}{author}
-      \field{labelnamesourceform}{original}
-      \field{labelnamesourcelang}{english}
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
-      \field{labeltitle}{Predictive coding--II}
-      \field{labeltitlesourcefield}{title}
-      \field{labeltitlesourceform}{original}
-      \field{labeltitlesourcelang}{english}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{issn}{0096-1000}
       \field[form=original,lang=english]{journaltitle}{IRE Transactions on Information Theory}
       \field{month}{03}

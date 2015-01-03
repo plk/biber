@@ -102,9 +102,9 @@ String for Preamble 4%
 my $tail = qq||;
 
 is_deeply($biber->get_preamble, $preamble, 'Preamble for all sections');
-eq_or_diff($section0->bibentry('sect1')->get_field('note'), 'value1', 'Section 0 macro test');
+eq_or_diff($section0->bibentry('sect1')->get_field('note', 'original', 'english'), 'value1', 'Section 0 macro test');
 # If macros were not reset between sections, this would give a macro redef error
-eq_or_diff($section1->bibentry('sect4')->get_field('note'), 'value2', 'Section 1 macro test');
+eq_or_diff($section1->bibentry('sect4')->get_field('note', 'original', 'english'), 'value2', 'Section 1 macro test');
 is_deeply([$main0->get_keys], ['sect1', 'sect2', 'sect3', 'sect8'], 'Section 0 citekeys');
 is_deeply([$shs0->get_keys], ['sect1', 'sect2', 'sect8'], 'Section 0 shorthands');
 is_deeply([$main1->get_keys], ['sect4', 'sect5'], 'Section 1 citekeys');

@@ -220,11 +220,14 @@ sub set_output_entry {
               unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
                 push @attrs, (lang => $lang);
               }
+              $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs);
             }
           }
         }
       }
-      $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs);
+      else {
+        $xml->dataElement([$xml_prefix, $field], NFC($be->get_field_nv($field)), @attrs);
+      }
     }
   }
 

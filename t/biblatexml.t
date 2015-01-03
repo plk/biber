@@ -50,6 +50,11 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|    \entry{bltx1}{book}{}
       \true{moreauthor}
+      \name[form=original,lang=russian]{author}{3}{}{%
+        {{hash=7b4da3df896da456361ae44dc651770a}{Булгаков}{Б\\bibinitperiod}{Павел\\bibnamedelima Георгиевич}{П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}{}{}{}{}}%
+        {{hash=ee55ff3b0e4268cfb193143e86c283a9}{Розенфельд}{Р\\bibinitperiod}{Борис-ZZ\\bibnamedelima Aбрамович}{Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}{Билл}{Б\\bibinitperiod}{}{}{}{}}%
+        {{hash=e708d5a31534e937578abf161c867a25}{Aхмедов}{A\\bibinitperiod}{Ашраф\\bibnamedelima Ахмедович}{А\\bibinitperiod\\bibinitdelim А\\bibinitperiod}{}{}{}{}}%
+      }
       \name[form=uniform,lang=russian]{author}{3}{}{%
         {{hash=eebdb6e8831004ef71d26f7c2b77f3d1}{Bulgakov}{B\bibinitperiod}{Pavel\bibnamedelima G.}{P\bibinitperiod\bibinitdelim G\bibinitperiod}{}{}{}{}}%
         {{hash=aa7443826b696f2ac320d278f0fe5f5a}{Rozenfeld}{R\bibinitperiod}{Boris\bibnamedelima A.}{B\bibinitperiod\bibinitdelim A\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
@@ -76,12 +81,14 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \list[form=translated,lang=english]{publisher}{1}{%
         {Science}%
       }
-      \strng{namehash}{80e524d8402a5619e59ea67ea2d937a5}
-      \strng{fullhash}{afcf3a11058ba0a3fc7609c2a29ae6da}
+      \strng{namehash}{517669a910814f3fe8befaa0e5c550c6}
+      \strng{fullhash}{03b6dfdde51b496c890b0dca8ab47ef5}
       \field{sortinit}{Б}
       \field{sortinithash}{161dbde41bd990699d9b7ff419202d50}
       \field{labelyear}{1983}
       \field{datelabelsource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{05}
