@@ -2007,7 +2007,7 @@
     <bcf:citekey order="3">forms3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry" form="romanised" lang="english"/>
+  <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry" form="romanised,*" lang="english,*"/>
   <bcf:sortlist section="0" name="shorthands" sortscheme="shorthands" type="list" form="romanised" lang="english">
     <bcf:filter type="field">shorthand</bcf:filter>
   </bcf:sortlist>

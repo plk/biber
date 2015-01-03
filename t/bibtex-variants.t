@@ -88,7 +88,8 @@ my $S = { spec => [
           {},
           {'year'  => {}},
          ],
-        ]};
+
+                  ]};
 
 $main->set_sortscheme($S);
 
@@ -96,7 +97,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare(1);
 $section = $biber->sections->get_section(0);
 # There is complex interaction here between the variant sorting scheme above and the fallback defaults for variants in the .bcf
-is_deeply([$main->get_keys], ['forms12', 'forms13', 'forms14', 'forms5', 'forms8', 'forms15', 'forms4', 'forms11', 'forms9', 'forms10', 'forms6', 'forms2', 'forms1', 'forms7'], 'Forms sorting - 1');
+is_deeply([$main->get_keys], ['forms12', 'forms13', 'forms14', 'forms8', 'forms5', 'forms4', 'forms11', 'forms9', 'forms10', 'forms6', 'forms15', 'forms2', 'forms1', 'forms7'], 'Forms sorting - 1');
 # Uses name from generic variant for sorting when a name in the sorting variant is null
 is(NFC($main->get_sortdata('forms1')->[0]), 'Bulgakov!Pavel#Smith!Jim#Rosenfeld!Boris,Мухаммад ибн муса алХорезми Около 783 около 850,Moskva!London,2002', 'Null name sortstring');
 
@@ -239,8 +240,8 @@ my $forms11 = q|    \entry{forms11}{unpublished}{}
 |;
 
 my $forms12 = q|    \entry{forms12}{unpublished}{}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{}
+      \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
       \field[form=translated,lang=german]{edition}{Gedition}
       \field[form=translated,lang=french]{journaltitle}{Jtitle translated french}
       \field[form=uniform,lang=french]{journaltitle}{Jtitle uniform french}
@@ -250,8 +251,8 @@ my $forms12 = q|    \entry{forms12}{unpublished}{}
 |;
 
 my $forms13 = q|    \entry{forms13}{unpublished}{}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{}
+      \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
       \field[form=translated,lang=german]{edition}{Gedition}
       \field[form=original,lang=french]{journaltitle}{JTITLE french}
       \field[form=translated,lang=english]{note}{NOTE translated}
@@ -259,8 +260,8 @@ my $forms13 = q|    \entry{forms13}{unpublished}{}
 |;
 
 my $forms14 = q|    \entry{forms14}{unpublished}{}
-      \field{sortinit}{0}
-      \field{sortinithash}{a08a9549c5c2429f8cec5d1a581b26ca}
+      \field{sortinit}{}
+      \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
       \field[form=romanised,lang=english]{booktitle}{German title}
       \field[form=translated,lang=german]{edition}{Gedition}
       \field[form=original,lang=english]{series}{B}
@@ -268,17 +269,18 @@ my $forms14 = q|    \entry{forms14}{unpublished}{}
     \endentry
 |;
 
-my $forms15 = q|    \entry{forms15}{book}{autovlang=true}
-      \list[form=original,lang=english]{location}{1}{%
+my $forms15 = q|    \entry{forms15}{book}{vlang=*}
+      \list[form=original,lang=*]{location}{1}{%
         {Leipzig}%
       }
-      \list[form=original,lang=english]{publisher}{1}{%
+      \list[form=original,lang=*]{publisher}{1}{%
         {Hermann Mendelssohn}%
       }
       \field{labelalpha}{03}
       \field{sortinit}{Π}
-      \field{sortinithash}{9056cb6813a3c373de7ee34a24f2f7ae}
+      \field{sortinithash}{682f850d6476ec936644313fed5a5ff0}
       \true{singletitle}
+      \field{labeltitlesource}{title}
       \field[form=original,lang=latin]{booktitle}{Acta Apocryphorum Apostolorum}
       \field[form=original,lang=greek]{title}{Περίοδοι καὶ μαρτύριον τοῦ ἁγίου Βαρνάβα τοῦ ἀποστόλου}
       \field[form=translated,lang=french]{title}{Actes de Barnabé}

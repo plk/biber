@@ -63,7 +63,7 @@ my $w2 = ["Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'author
 
 eq_or_diff($bibentries->entry('alias1')->get_field('entrytype'), 'thesis', 'Alias - 1' );
 eq_or_diff($bibentries->entry('alias1')->get_field('type'), 'phdthesis', 'Alias - 2' );
-is_deeply($bibentries->entry('alias1')->get_field('location'), ['Ivory Towers'], 'Alias - 3' );
+is_deeply($bibentries->entry('alias1')->get_field('location', 'original', 'english'), ['Ivory Towers'], 'Alias - 3' );
 eq_or_diff($bibentries->entry('alias1')->get_field('address'), undef, 'Alias - 4' );
 eq_or_diff($bibentries->entry('alias2')->get_field('entrytype'), 'misc', 'Alias - 5' );
 is_deeply($bibentries->entry('alias2')->get_field('warnings'), $w1, 'Alias - 6' ) ;
@@ -76,13 +76,13 @@ eq_or_diff($bibentries->entry('alias4')->get_field('eprint'), 'anid', 'Alias - 1
 eq_or_diff($bibentries->entry('alias4')->get_field('eprinttype'), 'PUBMEDID', 'Alias - 13' );
 eq_or_diff($bibentries->entry('alias4')->get_field('userd'), 'Some string of things', 'Alias - 14' );
 eq_or_diff($bibentries->entry('alias4')->get_field('pubmedid'), undef, 'Alias - 15' );
-eq_or_diff($bibentries->entry('alias4')->get_field('namea')->nth_name(1)->get_firstname, 'Sam', 'Alias - 16' );
+eq_or_diff($bibentries->entry('alias4')->get_field('namea', 'original', 'english')->nth_name(1)->get_firstname, 'Sam', 'Alias - 16' );
 is_deeply($bibentries->entry('alias4')->get_field('warnings'), $w2, 'Alias - 17' ) ;
 
 # Testing of .bcf field map match/replace
 ok(is_undef($bibentries->entry('alias5')->get_field('abstract')), 'Alias - 18' );
 eq_or_diff($biber->_liststring('alias5', 'listb'), 'REPlaCEDte!early', 'Alias - 19');
-eq_or_diff($biber->_liststring('alias5', 'institution'), 'REPlaCEDte!early', 'Alias - 20');
+eq_or_diff($biber->_liststring('alias5', 'institution', 'original', 'english'), 'REPlaCEDte!early', 'Alias - 20');
 
 # Testing of no target but just field additions
 is_deeply($bibentries->entry('alias6')->get_field('keywords'), ['keyw1', 'keyw2'], 'Alias - 21' );
