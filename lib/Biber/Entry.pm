@@ -434,8 +434,9 @@ sub field_has_variants {
   my $key = $self->get_field_nv('citekey');
   foreach my $form ($self->get_field_form_names($field)) {
     foreach my $lang ($self->get_field_form_lang_names($field, $form)) {
+      my $glang = (split(/\s*,\s*/, Biber::Config->getblxoption('vlang', undef, $key)))[0];
       return 1 unless ($form eq 'original' and
-                       $lang eq Biber::Config->getblxoption('vlang', undef, $key));
+                       $lang eq $glang);
     }
   }
   return 0;
@@ -735,7 +736,7 @@ sub field_variant_exists {
   my $dm = Biber::Config->get_dm;
   my $type = $dm->field_is_variant_enabled($field) ? 'variant' : 'nonvariant';
   $form = $form || 'original';
-  $lang = $lang || Biber::Config->getblxoption('vlang', undef, $key);
+  $lang = $lang || (split(/\s*,\s*/, Biber::Config->getblxoption('vlang', undef, $key)))[0];
   return (defined($self->{datafields}{$type}{$field}{$form}{$lang}) ||
           defined($self->{derivedfields}{$type}{$field}{$form}{$lang})) ? 1 : 0;
 }

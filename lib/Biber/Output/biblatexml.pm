@@ -139,13 +139,12 @@ sub set_output_entry {
           if ( $nf->get_morenames ) {
             push @attrs, (morenames => 1);
           }
-
           if ($dm->field_is_variant_enabled($namefield)) {
             # form/lang
-            unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
+            unless ($form eq (split(/\s*,\s*/, Biber::Config->getblxoption('vform', undef, $key)))[0]) {
               push @attrs, (form => $form);
             }
-            unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
+            unless ($lang eq (split(/\s*,\s*/, Biber::Config->getblxoption('vlang', undef, $key)))[0]) {
               push @attrs, (lang => $lang);
             }
           }
@@ -179,10 +178,10 @@ sub set_output_entry {
 
           # form/lang
           if ($dm->field_is_variant_enabled($listfield)) {
-            unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
+            unless ($form eq (split(/\s*,\s*/, Biber::Config->getblxoption('vform', undef, $key)))[0]) {
               push @attrs, (form => $form);
             }
-            unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
+            unless ($lang eq (split(/\s*,\s*/, Biber::Config->getblxoption('vlang', undef, $key)))[0]) {
               push @attrs, (lang => $lang);
             }
           }
@@ -214,10 +213,10 @@ sub set_output_entry {
         foreach my $form ($be->get_field_form_names($field)) {
           foreach my $lang ($be->get_field_form_lang_names($field, $form)) {
             if (my $f = $be->get_field($field, $form, $lang)) {
-              unless ($form eq Biber::Config->getblxoption('vform', undef, $key)) {
+              unless ($form eq (split(/\s*,\s*/, Biber::Config->getblxoption('vform', undef, $key)))[0]) {
                 push @attrs, (form => $form);
               }
-              unless ($lang eq Biber::Config->getblxoption('vlang', undef, $key)) {
+              unless ($lang eq (split(/\s*,\s*/, Biber::Config->getblxoption('vlang', undef, $key)))[0]) {
                 push @attrs, (lang => $lang);
               }
               $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs);
