@@ -39,10 +39,6 @@
       <bcf:value>\textbf{+}</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>autovlang</bcf:key>
-      <bcf:value>1</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
@@ -165,7 +161,6 @@
   </bcf:options>
   <!-- BIBLATEX OPTION SCOPE -->
   <bcf:optionscope type="GLOBAL">
-    <bcf:option>autovlang</bcf:option>
     <bcf:option>variantforms</bcf:option>
     <bcf:option>vform</bcf:option>
     <bcf:option>vlang</bcf:option>
@@ -282,7 +277,6 @@
     <bcf:option>mergedate</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="PER_TYPE">
-    <bcf:option>autovlang</bcf:option>
     <bcf:option>alphaothers</bcf:option>
     <bcf:option>sortalphaothers</bcf:option>
     <bcf:option>useafterword</bcf:option>
@@ -337,7 +331,6 @@
     <bcf:option>dataonly</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="PER_ENTRY">
-    <bcf:option>autovlang</bcf:option>
     <bcf:option>vform</bcf:option>
     <bcf:option>vlang</bcf:option>
     <bcf:option>useafterword</bcf:option>

@@ -39,10 +39,6 @@
       <bcf:value>\textbf{+}</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>autovlang</bcf:key>
-      <bcf:value>0</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>
@@ -161,7 +157,6 @@
   </bcf:options>
   <!-- BIBLATEX OPTION SCOPE -->
   <bcf:optionscope type="GLOBAL">
-    <bcf:option>autovlang</bcf:option>
     <bcf:option>variantforms</bcf:option>
     <bcf:option>vform</bcf:option>
     <bcf:option>vlang</bcf:option>
@@ -278,7 +273,6 @@
     <bcf:option>mergedate</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="PER_TYPE">
-    <bcf:option>autovlang</bcf:option>
     <bcf:option>alphaothers</bcf:option>
     <bcf:option>sortalphaothers</bcf:option>
     <bcf:option>useafterword</bcf:option>
@@ -333,7 +327,6 @@
     <bcf:option>dataonly</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="PER_ENTRY">
-    <bcf:option>autovlang</bcf:option>
     <bcf:option>vform</bcf:option>
     <bcf:option>vlang</bcf:option>
     <bcf:option>useafterword</bcf:option>
@@ -653,7 +646,6 @@
       <bcf:entrytype>misc</bcf:entrytype>
     </bcf:entrytypes>
     <bcf:fields>
-
       <bcf:field fieldtype="field" datatype="datepart">day</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">endday</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">endmonth</bcf:field>
@@ -890,6 +882,7 @@
       <bcf:field>year</bcf:field>
       <bcf:field>month</bcf:field>
       <bcf:field>journaltitle</bcf:field>
+      <bcf:field>note</bcf:field>
     </bcf:entryfields>
     <bcf:constraints>
       <bcf:constraint type="data" datatype="integer" rangemin="1" rangemax="12">
@@ -1060,6 +1053,14 @@
       <bcf:constraint type="data" datatype="pattern" pattern="(?:sf|sm|sn|pf|pm|pn|pp)">
         <bcf:field>gender</bcf:field>
       </bcf:constraint>
+      <bcf:constraint type="data" datatype="pattern" pattern="a"
+                      form="original" lang="english">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
+      <bcf:constraint type="data" datatype="pattern" pattern="a"
+                      form="translated">
+        <bcf:field>note</bcf:field>
+      </bcf:constraint>
     </bcf:constraints>
   </bcf:datamodel>
   <!-- SECTION 0 -->
@@ -1077,6 +1078,7 @@
     <bcf:citekey order="8">c8</bcf:citekey>
     <bcf:citekey order="9">c9</bcf:citekey>
     <bcf:citekey order="10">c10</bcf:citekey>
+    <bcf:citekey order="11">c11</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry" form="original" lang="english"/>

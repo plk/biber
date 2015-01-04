@@ -152,7 +152,9 @@ sub new {
             $data->{datatype} = $c->{datatype};
             $data->{rangemin} = $c->{rangemin};
             $data->{rangemax} = $c->{rangemax};
-            $data->{pattern} = $c->{pattern};
+            $data->{pattern}  = $c->{pattern};
+            $data->{form}     = $c->{form};
+            $data->{lang}     = $c->{lang};
             push @{$constraints->{data}}, $data;
           }
         }
@@ -547,6 +549,7 @@ sub check_data_constraints {
   my $et = $be->get_field_nv('entrytype');
   my $key = $be->get_field_nv('citekey');
   my $ds = $section->get_keytods($key);
+  my $dm = Biber::Config->get_dm;
 
   foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{data}}) {
     # This is the datatype of the constraint, not the field!
@@ -702,9 +705,52 @@ sub check_data_constraints {
         push @warnings, "Datamodel: Pattern constraint has no pattern!";
       }
       foreach my $f (@{$c->{fields}}) {
-        if (my $fv = $be->get_field($f)) {
-          unless (imatch($fv, $patt)) {
-            push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f'";
+        if ($dm->field_is_variant_enabled($f)) {
+          if ($c->{form} or $c->{lang}) {
+            # both
+            if ($c->{form} and $c->{lang}) {
+              if (my $fv = $be->get_field($f, $c->{form}, $c->{lang})) {
+                unless (imatch($fv, $patt)) {
+                  push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f/" . $c->{form} . '/' . $c->{lang} . "'";
+                }
+              }
+            }
+            elsif ($c->{form}) { # just form
+              foreach my $lang ($be->get_field_form_lang_names($f, $c->{form})) {
+                if (my $fv = $be->get_field($f, $c->{form}, $lang)) {
+                  unless (imatch($fv, $patt)) {
+                    push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f/" . $c->{form} . "/$lang'";
+                  }
+                }
+              }
+            }
+            elsif ($c->{lang}) { # just lang
+              foreach my $form ($be->get_field_form_names($f)) {
+                if (my $fv = $be->get_field($f, $form, $c->{lang})) {
+                  unless (imatch($fv, $patt)) {
+                  push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f/$form/" . $c->{lang} . "'";
+                  }
+                }
+              }
+            }
+          }
+          else {
+            foreach my $form ($be->get_field_form_names($f)) {
+              foreach my $lang ($be->get_field_form_lang_names($f, $form)) {
+                if (my $fv = $be->get_field($f, $form, $lang)) {
+                  unless (imatch($fv, $patt)) {
+                    push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f/$form/$lang'";
+                  }
+                }
+              }
+            }
+          }
+        }
+        else {
+          if (my $fv = $be->get_field_nv($f)) {
+            unless (imatch($fv, $patt)) {
+              push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f'";
+            }
           }
         }
       }

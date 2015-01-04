@@ -26,7 +26,6 @@ start =
       attribute component { "biblatex" },
       attribute type { "global" },
       alphaothers,
-      autovlang,
       labelalpha,
       labelnamespec,
       labeltitle,
@@ -60,7 +59,6 @@ start =
       attribute component { "biblatex" },
       attribute type { text },
       alphaothers?,
-      autovlang?,
       labelalpha?,
       labelnamespec?,
       labeltitle?,
@@ -257,6 +255,8 @@ start =
               attribute rangemin { xsd:int }?,
               attribute rangemax { xsd:int }?,
               attribute pattern { text }?,
+              attribute form { text }?,
+              attribute lang { text }?,
               element bcf:field { text }+
             ) |
             # Mandatoriness constraints which say which fields must appear
@@ -292,9 +292,9 @@ listspec =
       attribute sortscheme { xsd:string {minLength="1"}},
       # name is only needed for list types
       attribute name { xsd:string {minLength="1"}},
-      # override for variants from biblatex \vform, \vlang macros
-      attribute form { xsd:normalizedString { pattern = "\S+" }},
-      attribute lang { xsd:normalizedString { pattern = "\S+" }},
+      # variants
+      attribute form { text },
+      attribute lang { text },
       (filter | orfilter )*,
       element bcf:sorting {
         # locale for entire sorting specification
@@ -619,9 +619,7 @@ vform =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "vform" },
-    element bcf:value {
-      xsd:normalizedString { pattern = "\S+" }
-    }
+    element bcf:value { text }
   }
 variantforms =
   element bcf:option {
@@ -635,15 +633,7 @@ vlang =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "vlang" },
-    element bcf:value {
-      xsd:normalizedString { pattern = "\S+" }
-    }
-  }
-autovlang =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "autovlang" },
-    element bcf:value { "0" | "1" }
+    element bcf:value { text }
   }
 sortupper = 
   element bcf:option {

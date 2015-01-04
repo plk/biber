@@ -42,7 +42,6 @@
           <value>global</value>
         </attribute>
         <ref name="alphaothers"/>
-        <ref name="autovlang"/>
         <ref name="labelalpha"/>
         <ref name="labelnamespec"/>
         <ref name="labeltitle"/>
@@ -81,9 +80,6 @@
           <attribute name="type"/>
           <optional>
             <ref name="alphaothers"/>
-          </optional>
-          <optional>
-            <ref name="autovlang"/>
           </optional>
           <optional>
             <ref name="labelalpha"/>
@@ -668,6 +664,12 @@
                       <optional>
                         <attribute name="pattern"/>
                       </optional>
+                      <optional>
+                        <attribute name="form"/>
+                      </optional>
+                      <optional>
+                        <attribute name="lang"/>
+                      </optional>
                       <oneOrMore>
                         <element name="bcf:field">
                           <text/>
@@ -750,17 +752,9 @@
             <param name="minLength">1</param>
           </data>
         </attribute>
-        <!-- override for variants from biblatex \vform, \vlang macros -->
-        <attribute name="form">
-          <data type="normalizedString">
-            <param name="pattern">\S+</param>
-          </data>
-        </attribute>
-        <attribute name="lang">
-          <data type="normalizedString">
-            <param name="pattern">\S+</param>
-          </data>
-        </attribute>
+        <!-- variants -->
+        <attribute name="form"/>
+        <attribute name="lang"/>
         <zeroOrMore>
           <choice>
             <ref name="filter"/>
@@ -1562,9 +1556,7 @@
         <value>vform</value>
       </element>
       <element name="bcf:value">
-        <data type="normalizedString">
-          <param name="pattern">\S+</param>
-        </data>
+        <text/>
       </element>
     </element>
   </define>
@@ -1594,25 +1586,7 @@
         <value>vlang</value>
       </element>
       <element name="bcf:value">
-        <data type="normalizedString">
-          <param name="pattern">\S+</param>
-        </data>
-      </element>
-    </element>
-  </define>
-  <define name="autovlang">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>autovlang</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <text/>
       </element>
     </element>
   </define>

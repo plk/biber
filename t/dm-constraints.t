@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 
 use Biber;
 use Biber::Output::bbl;
@@ -68,6 +68,7 @@ my $c3 = [ "Datamodel: Entry 'c3' (dm-constraints.bib): Invalid format (integer)
            "Datamodel: Entry 'c3' (dm-constraints.bib): Invalid value (pattern match fails) for field 'gender'" ];
 my $c4 = [ "Datamodel: Entry 'c4' (dm-constraints.bib): Invalid value of field 'month' must be '<=12' - ignoring field",
            "Datamodel: Entry 'c4' (dm-constraints.bib): Invalid value of field 'field1' must be '>=5' - ignoring field" ];
+my $c11 = [ "Datamodel: Entry 'c11' (dm-constraints.bib): Invalid value (pattern match fails) for field 'note/translated/french'" ];
 # There would also have been a date+year constraint violation in the next test if
 # it weren't for the fact that the date processing in bibtex.pm already deals with this
 # and removed the year field
@@ -100,3 +101,4 @@ is_deeply($bibentries->entry('c8')->get_field('warnings'), $c8, 'Constraints tes
 ok(is_undef($bibentries->entry('c8')->get_field('field4')), 'Constraints test 8b' );
 ok(is_undef($bibentries->entry('c9')->get_field('warnings')), 'Constraints test 9' );
 is_deeply($bibentries->entry('c10')->get_field('warnings'), $c10, 'Constraints test 10' );
+is_deeply($bibentries->entry('c11')->get_field('warnings'), $c11, 'Constraints test 11' );
