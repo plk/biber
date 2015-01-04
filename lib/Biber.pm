@@ -1004,17 +1004,18 @@ KEY:  foreach my $citekey ($section->get_citekeys) {
         foreach my $form (split(/\s*,\s*/, $forms)) {
 
           # Use first available form
-          if ($form eq '*' and not $up_chain_list) {
+          if ($form eq '*') {
             $form = ($be->get_field_form_names($field))[0];
           }
 
           foreach my $lang (split(/\s*,\s*/, $langs)) {
 
             # Use first available lang
-            if ($lang eq '*' and not $up_chain_list) {
+            if ($lang eq '*') {
               $lang = ($be->get_field_form_lang_names($field, $form))[0];
             }
 
+            next unless $lang;
             next unless my $list = $be->get_field($field, $form, $lang);
 
             if (first {$_ eq Biber::Config->getoption('variant_null_list')} @$list) {
