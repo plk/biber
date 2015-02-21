@@ -29,8 +29,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{1.9}    % BIBER VERSION
-\gdef\biblatexversion{2.9}   % BIBLATEX VERSION
+\gdef\biberversion{2.0}    % BIBER VERSION
+\gdef\biblatexversion{3.0}   % BIBLATEX VERSION
 
 % colour for tables
 \definecolor{Gray}{gray}{0.85}
@@ -778,6 +778,7 @@ examples. A \opt{map} element looks like this:
              +\textcolor{blue}{map\_append="1"}+
              +\textcolor{blue}{map\_null="1"}+
              +\textcolor{blue}{map\_entry\_null="1"}+
+             +\textcolor{blue}{map\_entry\_clone="\textcolor{red}{prefix}"}+
              +\textcolor{blue}{map\_origfield="1"}+
              +\textcolor{blue}{map\_origfieldval="1"}+
              +\textcolor{blue}{map\_origentrytype="1"}+
@@ -808,6 +809,13 @@ datasource entry being processed. A \opt{map\_step} works like this:
   entry is not created. It is as if it did not exist in the
   datasource. Obviously, you should select the entries which you want
   to apply this to using prior mapping steps.
+\item If \textcolor{blue}{\texttt{map\_entry\_clone}} is set,
+  a clone of the entry is created with an entry key prefixed by
+  \textcolor{red}{\texttt{prefix}}. Obviously this may cause
+  labelling problems in author/year styles etc. and should be used with
+  care. It is mainly intended for numbering issues with numeric styles
+  and multiple bibliographies where the same entries occur in more than one
+  bibliography.
 \item Change the \textcolor{red}{\texttt{source-entrytype}} to
   \textcolor{red}{\texttt{target-entrytype}}, if defined. If
   \textcolor{blue}{\texttt{map\_final}} is set then if the entrytype of the
@@ -2720,7 +2728,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 1.8
+INFO - This is Biber 2.0
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
