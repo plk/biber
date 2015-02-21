@@ -238,7 +238,7 @@ sub extract_entries {
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($key, $filename);
 
-      unless (create_entry($key, $entry, $source, $smaps)) {
+      unless (create_entry($key, $entry, $source, $smaps, \@rkeys)) {
         # if create entry returns false, remove the key from the cache
         @{$cache->{orig_key_order}{$filename}} = grep {$key ne $_} @{$cache->{orig_key_order}{$filename}};
       }
@@ -282,7 +282,7 @@ sub extract_entries {
 
         # Skip creation if it's already been done, for example, via a citekey alias
         unless ($section->bibentries->entry_exists($wanted_key)) {
-          create_entry($wanted_key, $entry, $source, $smaps);
+          create_entry($wanted_key, $entry, $source, $smaps, \@rkeys);
         }
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
@@ -296,7 +296,7 @@ sub extract_entries {
         # just in case only the alias is cited
         unless ($section->bibentries->entry_exists($rk)) {
           if (my $entry = $cache->{data}{$filename}{$rk}) {
-            create_entry($rk, $entry, $source, $smaps);
+            create_entry($rk, $entry, $source, $smaps, \@rkeys);
             $section->add_citekeys($rk);
           }
         }
@@ -350,11 +350,15 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($key, $entry, $source, $smaps) = @_;
+  # We have to pass in $rkeys so that the clone operation can remove the clone
+  # key from the list of wanted keys because cloned entries will never appear to the normal
+  # key search loop
+  my ($key, $entry, $source, $smaps, $rkeys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $bibentry = new Biber::Entry;
+  $logger->debug("Creating entry with key '$key'");
 
   $bibentry->set_field('citekey', $key);
   my $ds = $section->get_keytods($key);
@@ -448,7 +452,7 @@ sub create_entry {
         my $last_field = undef;
         my $last_fieldval = undef;
 
-        my @imatches; # For persising parenthetical matches over several steps
+        my @imatches; # For persisting parenthetical matches over several steps
 
         # Check pertype restrictions
         unless (not exists($map->{per_type}) or
@@ -470,6 +474,17 @@ sub create_entry {
           if ($step->{map_entry_null}) {
             $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
             return 0; # don't create an entry at all
+          }
+
+          # entry clone
+          if (my $prefix = $step->{map_entry_clone}) {
+            $logger->debug("Source mapping (type=$level, key=$key): cloning entry with prefix '$prefix'");
+            # Create entry with no sourcemapping to avoid recursion
+            create_entry("$prefix$key", $entry);
+
+            # found a prefix clone key, remove it from the list of keys we want since we
+            # have "found" it by creating it along with its clone parent
+            @$rkeys = grep {"$prefix$key" ne $_} @$rkeys;
           }
 
           # Entrytype map
