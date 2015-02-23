@@ -774,6 +774,7 @@ examples. A \opt{map} element looks like this:
 <map +\textcolor{blue}{map\_overwrite="0|1"}+>
   +\textcolor{blue}{<per\_datasource>\textcolor{red}{datasource}</per\_datasource>}+
   +\textcolor{blue}{<per\_type>\textcolor{red}{entrytype}</per\_type>}+
+  +\textcolor{blue}{<per\_nottype>\textcolor{red}{entrytype}</per\_nottype>}+
   <map_step +\textcolor{blue}{map\_type\_source="\textcolor{red}{source-entrytype}"}+
              +\textcolor{blue}{map\_field\_source="\textcolor{red}{source-field}"}+
              +\textcolor{blue}{map\_field\_source\_form="\textcolor{red}{source-field-form}"}+
@@ -810,6 +811,9 @@ examples. A \opt{map} element looks like this:
 \item If there are any \textcolor{red}{\texttt{entrytypes}}s named in
   \textcolor{blue}{\texttt{per\_type}} elements, this mapping only applies to entries
   of the named \textcolor{red}{\texttt{entrytypes}}s.
+\item If there are any \textcolor{red}{\texttt{entrytypes}}s named in
+  \textcolor{blue}{\texttt{per\_nottype}} elements, this mapping only applies to entries
+  not of the named \textcolor{red}{\texttt{entrytypes}}s.
 \item The \texttt{map\_overwrite} attribute can be used to override the
   value for this attribute set on the parent \opt{maps} element. If
   omitted, it defaults to the parent \opt{maps} attribute value.
