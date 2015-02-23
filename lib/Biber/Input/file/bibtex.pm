@@ -379,13 +379,23 @@ sub create_entry {
         my @imatches; # For persisting parenthetical matches over several steps
 
         # Check pertype restrictions
+        # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
+        # messier to write than Q
         unless (not exists($map->{per_type}) or
                 first {lc($_->{content}) eq $entry->type} @{$map->{per_type}}) {
           next;
         }
 
+        # Check negated pertype restrictions
+        if (exists($map->{per_nottype}) and
+            first {lc($_->{content}) eq $entry->type} @{$map->{per_nottype}}) {
+          next;
+        }
+
         # Check per_datasource restrictions
         # Don't compare case insensitively - this might not be correct
+        # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
+        # messier to write than Q
         unless (not exists($map->{per_datasource}) or
                 first {$_->{content} eq $source} @{$map->{per_datasource}}) {
           next;
