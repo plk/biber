@@ -419,6 +419,11 @@ sub create_entry {
             # found a prefix clone key, remove it from the list of keys we want since we
             # have "found" it by creating it along with its clone parent
             @$rkeys = grep {"$prefix$key" ne $_} @$rkeys;
+            # Need to add the clone key to the section if allkeys is set since all keys are cleared
+            # for allkeys sections initially
+            if ($section->is_allkeys) {
+              $section->add_citekeys("$prefix$key");
+            }
           }
 
           # Entrytype map
