@@ -1,5 +1,19 @@
 Revision history for Biber
 
+2.0    (2015-02-)
+       * Misc bug fixes
+       * New negated "per type" sourcemap verb for negating the application
+         of maps to specific entry types
+       * New "entry clone" sourcemap verb for cloning entries during
+         sourcemapping
+       * Added range length calculation support. Biber now calculates the length of
+         ranges for biblatex and can handle roman numerals, including just
+         about any UTF-8 composed, non-composed or compatversions
+       * Complete re-write of the biblatex use* name functionality. See
+         biblatex manual
+       * Moved labelname resolution from biber to biblatex for more
+         flexibility and future extensions
+       * Moved to perl 5.20 for all internals and builds
 1.9    (2014-05-25)
        * Misc bug fixes
        * Option names accept dashes as well as underscores for general Tex
