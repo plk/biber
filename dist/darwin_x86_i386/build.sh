@@ -32,6 +32,8 @@ PAR_VERBATIM=1 pp --compress=6 \
   --module=Biber::Output::biblatexml \
   --module=Pod::Simple::TranscodeSmart \
   --module=Pod::Simple::TranscodeDumb \
+  --module=List::MoreUtils::XS \
+  --module=List::MoreUtils::PP \
   --module=Encode::Byte \
   --module=Encode::CN \
   --module=Encode::CJKConstants \
