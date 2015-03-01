@@ -321,9 +321,10 @@
     <map><from>textasciicircum</from>                  <to hex="5E">^</to></map>
     <map><from>textunderscore</from>                   <to hex="5F">_</to></map>
     <map><from>textasciigrave</from>                   <to hex="60">`</to></map>
-    <map><from>textbraceleft</from>                    <to hex="7B">{</to></map>
+    <!-- these break braces, best not decode them -->
+    <!--    <map><from>textbraceleft</from>                    <to hex="7B">{</to></map> -->
     <map><from>textbar</from>                          <to hex="7C">|</to></map>
-    <map><from>textbraceright</from>                   <to hex="7D">}</to></map>
+    <!--    <map><from>textbraceright</from>                   <to hex="7D">}</to></map> -->
     <map><from>textasciitilde</from>                   <to hex="7E">~</to></map>
     <map><from>nobreakspace</from>                     <to hex="A0"> </to></map>
     <map><from>textexclamdown</from>                   <to hex="A1">¡</to></map>
@@ -889,7 +890,7 @@
   </encode_exclude>
 </texmap>
 <!--
-    Copyright 2009-2014 François Charette and Philip Kime, all rights reserved.
+    Copyright 2009-2015 François Charette and Philip Kime, all rights reserved.
     
     This code is free software.  You can redistribute it and/or
     modify it under the terms of the Artistic License 2.0.
