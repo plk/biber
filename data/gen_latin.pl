@@ -5,7 +5,7 @@ use warnings;
 
 # First get the latest DUCET allkeys.txt and pass it as the first argument
 
-# Modify the ranges as per the Unicode standard you are using. Currently Unicode 6.0
+# Modify the ranges as per the Unicode standard you are using. Currently Unicode 7.0
 
 my $latin_ranges = [
                     ['0000', '007F'], # ASCII
