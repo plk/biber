@@ -2271,8 +2271,8 @@ sub create_uniquename_info {
         # "X" and "von X" or "X" and "X Jr" using initials/first names when there is no need.
         my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
                         $name->get_prefix ? $name->get_prefix : '') .
-                          $name->get_lastname .
-                            ($name->get_suffix ? $name->get_suffix : '');
+                          $name->get_lastname;
+#                            ($name->get_suffix ? $name->get_suffix : '');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring     = $name->get_namestring;
         my $namecontext;
@@ -2384,8 +2384,8 @@ sub generate_uniquename {
         # "X" and "von X" or "X" and "X Jr" using initials/first names when there is no need.
         my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
                         $name->get_prefix ? $name->get_prefix : '') .
-                          $name->get_lastname .
-                            ($name->get_suffix ? $name->get_suffix : '');
+                          $name->get_lastname;
+#                            ($name->get_suffix ? $name->get_suffix : '');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
         my $namecontext = 'global'; # default
