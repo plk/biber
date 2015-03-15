@@ -57,6 +57,7 @@ my $builder = $class->new(
         'Regexp::Common' => 0,
         'Log::Log4perl' => 0,
         'Unicode::Collate' => '1.11',
+        'Unicode::Normalize' => '<= 1.17',# 1.18 removes XS and is too slow
         'Unicode::GCString' => 0,
         'Encode::EUCJPASCII' => 0,
         'Encode::JIS2K' => 0,
