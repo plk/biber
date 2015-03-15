@@ -1273,6 +1273,12 @@ sub parsename {
   $gen_suffix_i      = inits(biber_decode_utf8($nd_name->format($si_f)));
 
   my $namestring = '';
+
+
+  # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
+  # which should only care about lastname + any prefix (if useprefix=true). See biblatex github
+  # tracker #306.
+
   # prefix
   my $ps;
   my $prefix_stripped;
@@ -1301,7 +1307,6 @@ sub parsename {
     $suffix_i        = $gen_suffix_i;
     $suffix_stripped = remove_outer($suffix);
     $ss = $suffix ne $suffix_stripped ? 1 : 0;
-    $namestring .= "$suffix_stripped, ";
   }
   # firstname
   my $fs;
@@ -1323,7 +1328,6 @@ sub parsename {
   my $nameinitstr = '';
   $nameinitstr .= join('', @$prefix_i) . '_' if ( $usepre and $prefix );
   $nameinitstr .= $lastname if $lastname;
-  $nameinitstr .= '_' . join('', @$suffix_i) if $suffix;
   $nameinitstr .= '_' . join('', @$firstname_i) if $firstname;
   $nameinitstr =~ s/\s+/_/g;
   $nameinitstr =~ s/~/_/g;
