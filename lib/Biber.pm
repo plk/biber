@@ -2266,7 +2266,7 @@ sub create_uniquename_info {
       }
 
       foreach my $name (@$names) {
-        # we have to differentiatite here between last names with and without
+        # we have to differentiate here between last names with and without
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
         my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
@@ -2378,7 +2378,7 @@ sub generate_uniquename {
       }
 
       foreach my $name (@$names) {
-        # we have to differentiatite here between last names with and without
+        # we have to differentiate here between last names with and without
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
         my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
