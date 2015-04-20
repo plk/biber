@@ -564,15 +564,14 @@ sub _subject {
     $bibentry->set_datafield('library', $lib->textContent());
   }
   elsif (my @s = $entry->findnodes("./$f")) {
-    my @kws;
+    my $kws;
     foreach my $s (@s) {
-      push @kws, '{'.$s->textContent().'}';
+      push @$kws, '{'.$s->textContent().'}';
     }
-    $bibentry->set_datafield('keywords', join(',', @kws));
+    $bibentry->set_datafield('keywords', $kws);
   }
   return;
 }
-
 
 # List fields
 sub _list {
