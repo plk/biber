@@ -1,14 +1,14 @@
 Revision history for Biber
 
-2.0    (2015-02-)
+2.0    (2015-04-20)
        * Misc bug fixes
        * New negated "per type" sourcemap verb for negating the application
          of maps to specific entry types
        * New "entry clone" sourcemap verb for cloning entries during
-         sourcemapping
+         sourcemapping. See PDF documentation for biber.
        * Added range length calculation support. Biber now calculates the length of
          ranges for biblatex and can handle roman numerals, including just
-         about any UTF-8 composed, non-composed or compatversions
+         about any UTF-8 composed, non-composed or compat versions
        * Complete re-write of the biblatex use* name functionality now
          automatically supports all name fields defined in the data model. See
          biblatex manual

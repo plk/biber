@@ -39,6 +39,9 @@ CALL pp ^
   --module=List::MoreUtils::PP ^
   --module=Encode::Byte ^
   --module=Encode::CN ^
+  --module=HTTP::Status ^
+  --module=HTTP::Date ^
+  --module=Encode::Locale ^
   --module=Encode::CJKConstants ^
   --module=Encode::EBCDIC ^
   --module=Encode::Encoder ^
