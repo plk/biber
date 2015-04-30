@@ -235,26 +235,21 @@ sub latex_decode {
       next unless $re; # Might not be present depending on set
 
       if ($type eq 'negatedsymbols') {
-        $text =~ s/\\not\\($re)/$map->{$1}/ge if $re;
+        $text =~ s/\\not\\($re)/$map->{$1}/ge;
       }
       elsif ($type eq 'superscripts') {
-        $text =~ s/\\textsuperscript{($re)}/$map->{$1}/ge if $re;
+        $text =~ s/\\textsuperscript{($re)}/$map->{$1}/ge;
       }
       elsif ($type eq 'cmdsuperscripts') {
-        $text =~ s/\\textsuperscript{\\($re)}/$map->{$1}/ge if $re;
+        $text =~ s/\\textsuperscript{\\($re)}/$map->{$1}/ge;
       }
       elsif ($type eq 'dings') {
         $text =~ s/\\ding{([2-9AF][0-9A-F])}/$map->{$1}/ge;
       }
       elsif ($type eq 'letters') {
-        $text =~ s/\{?\\($re)(?:\{\}|\s+|\b)\}?/$map->{$1}/ge;
+        $text =~ s/\\($re)(?:\{\}|\s+|\b)/$map->{$1}/ge;
       }
       elsif (first {$type eq $_} ('punctuation', 'symbols', 'greek')) {
-        # remove {} around macros that print one character
-        # by default we skip that, as it would break constructions like \foo{\i}
-        if ($strip_outer_braces) {
-          $text =~ s/\{\\($re)\}/$map->{$1}/ge;
-        }
         $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/ge;
       }
       elsif ($type eq 'diacritics') {
@@ -270,16 +265,36 @@ sub latex_decode {
         #     Any letter is allowed after the space (\c S)
         #   Else
         #     Only a non basic LaTeX letter is allowed (\c-)
-        $text =~ s/\{?\\($re)(\s*)((?(?{$1 !~ m:[A-Za-z]$:})\pL|(?(?{$2})\pL|[^A-Za-z]))\pM*)\}?/$3 . $map->{$1}/gxe;
+        $text =~ s/\\# slash
+                   ($re)# the diacritic
+                   (\s*)# optional space
+                   (# capture paren
+                     (?(?{$1 !~ m:[A-Za-z]$:})# code block condition (is not a letter?)
+                       \pL # yes pattern
+                     | # no pattern
+                       (?(?{$2}) # code block condition (space matched earlier after diacritic?)
+                         \pL # yes pattern
+                       | # no pattern
+                         [^A-Za-z]
+                       ) # close conditional
+                     ) # close conditional
+                     \pM* # optional marks
+                   ) # capture paren
+                   /$3 . $map->{$1}/gxe;
       }
     }
 
-    # remove {} around single grapheme clusters
-    # by default we skip that, as it would destroy constructions like \frac{a}{b}
-    if ($strip_outer_braces) {
-        $text =~ s/{(\X)}/$1/g;
-    }
-
+    # Now remove braces around single letters with diacriticals (which the replace above
+    # can result in). Things like '{á}'. Such things can break kerning. We can't do this in
+    # the RE above as we can't determine if the braces are wrapping a phrase because this
+    # match is on an entire file string. So we can't in one step tell the difference betwee:
+    #
+    # author = {Andr\'e}
+    # and
+    # author = {Andr\'{e}}
+    #
+    # when this is part of a (much) larger string
+    $text =~ s/{(\pL\pM+)}/$1/g;
     $logger->trace("String in latex_decode() now -> '$text'");
 
     if ($norm) {

@@ -74,7 +74,7 @@ sub new {
   Biber::Config->_initopts(\%opts);
 
   # Add a reference to a global temp dir we might use for various things
-  $self->{TEMPDIR} = File::Temp->newdir();
+  $self->{TEMPDIR} = File::Temp->newdir(CLEANUP => 0);
 
   # Initialise recoding schemes
   Biber::LaTeX::Recode->init_sets(Biber::Config->getoption('decodecharsset'),
