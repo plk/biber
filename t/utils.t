@@ -80,8 +80,6 @@ eq_or_diff(encode_utf8(NFC(latex_decode("{M{\\'a}t{\\'e}}"))), encode_utf8('{Má
 eq_or_diff(encode_utf8(NFC(latex_decode("{M\\'{a}t\\'{e}}"))), encode_utf8('{Máté}'), 'latex decode accent 2');
 eq_or_diff(encode_utf8(NFC(latex_decode("{M\\'at\\'e}"))), encode_utf8('{Máté}'), 'latex decode accent 3');
 
-#{\'\i}
-
 Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
 
 eq_or_diff(latex_decode('\alpha'), 'α', 'latex decode 4'); # greek decoding with "full"
@@ -95,6 +93,7 @@ eq_or_diff(latex_decode('\j'), 'ȷ', 'latex decode 10'); # checking dotless j
 eq_or_diff(latex_decode('\textdiv'), '÷', 'latex decode 11'); # checking multiple set for types
 eq_or_diff(latex_decode('\textbackslash'), "\\", 'latex decode 12'); # checking multiple set for types
 eq_or_diff(latex_decode('--'), '--', 'latex decode 13'); # Testing raw
+
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 eq_or_diff(latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols
 eq_or_diff(latex_encode(NFD('≄')), '{$\not\simeq$}', 'latex encode 5'); # Testing negated symbols

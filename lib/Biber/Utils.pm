@@ -21,6 +21,7 @@ use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
 use Log::Log4perl qw(:no_extra_logdie_message);
+use Scalar::Util qw(looks_like_number);
 use Text::Roman qw(isroman roman2int);
 use Unicode::Normalize;
 my $logger = Log::Log4perl::get_logger('main');
@@ -989,6 +990,11 @@ sub rangelen {
         $n = NFKD($n);
         $m = isroman($m) ? roman2int($m) : $m;
         $n = isroman($n) ? roman2int($n) : $n;
+        # If still not an int at this point, it's probably some non-int page number that
+        # isn't a roman numeral so give up
+        unless (looks_like_number($n) and looks_like_number($m)) {
+          return -1;
+        }
         # Deal with not so explicit ranges like 22-4 or 135-38
         # Done by turning numbers into string arrays, reversing and then filling in blanks
         if ($n < $m) {

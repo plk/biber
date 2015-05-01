@@ -713,7 +713,8 @@ sub _range {
   # If no range sep, then the end of the range is undef
   foreach my $value (@values) {
     $value =~ m/\A\s*(\P{Pd}+)\s*\z/xms ||# Simple value without range
-      $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*)\s*\z/xms;
+      $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*)\s*\z/xms ||
+        $value =~ m/\A\s*(.+)(\p{Pd}{2,})(.+)\s*\z/xms;# M-1--M-4
     my $start = $1;
     my $end;
     if ($2) {
@@ -1062,6 +1063,7 @@ sub parsename {
   $namestr =~ s/\A\s*//xms; # leading whitespace
   $namestr =~ s/\s*\z//xms; # trailing whitespace
   $namestr =~ s/\s+/ /g;    # Collapse internal whitespace
+  $namestr =~ s/\\\s/ /g;   # Remove escaped spaces like in "Christina A. L.\ Thiele"
 
   # If requested, try to correct broken initials with no space between them.
   # This can slightly mess up some other names like {{U.K. Government}} etc.
