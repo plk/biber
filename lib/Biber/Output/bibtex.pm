@@ -38,12 +38,6 @@ sub set_output_target_file {
   my $self = shift;
   my $outfile = shift;
   $self->{output_target_file} = $outfile;
-  my $enc_out;
-  if (Biber::Config->getoption('output_encoding')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
-  }
-  my $TOOLFILE = IO::File->new($outfile, ">$enc_out");
-  $self->set_output_target($TOOLFILE);
 }
 
 =head2 set_output_entry
@@ -151,11 +145,19 @@ sub set_output_entry {
 sub output {
   my $self = shift;
   my $data = $self->{output_data};
-  my $target = $self->{output_target};
+
   my $target_string = "Target"; # Default
   if ($self->{output_target_file}) {
     $target_string = $self->{output_target_file};
   }
+
+  # Instantiate output file now that input is read in case we want to do in-place
+  # output for tool mode
+  my $enc_out;
+  if (Biber::Config->getoption('output_encoding')) {
+    $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
+  }
+  my $target = IO::File->new($target_string, ">$enc_out");
 
   # for debugging mainly
   unless ($target) {

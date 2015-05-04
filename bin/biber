@@ -346,7 +346,7 @@ else {
 # Get reference to output object
 my $biberoutput = $biber->get_output_obj;
 
-# Set the output target
+# Set the output target file name
 $biberoutput->set_output_target_file($outfile);
 
 # Do all the real work
