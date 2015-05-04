@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 54;
+use Test::More tests => 55;
 use Test::Differences;
 unified_diff;
 
@@ -275,6 +275,19 @@ my $name17 =
       strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
       namestring     => 'Other, A. N.',
       nameinitstring => 'Other_AN' } ;
+
+my $name18 =
+   {  firstname      => undef,
+      firstname_i    => undef,
+      lastname       => 'British National Corpus',
+      lastname_i     => ['B'],
+      prefix         => undef,
+      prefix_i       => undef,
+      suffix         => undef,
+      suffix_i       => undef,
+      strip          => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
+      namestring     => 'British National Corpus',
+      nameinitstring => '{British_National_Corpus}' } ;
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
@@ -659,7 +672,7 @@ my $l31 = q|    \entry{L31}{book}{}
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \name{translator}{1}{}{%
-        {{hash=b43419361d83c9ab010e98aed1a83e35}{{\~{Z}}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{\~{Z}elly}{\~{Z}\bibinitperiod}{Arthur}{A\bibinitperiod}{}{}{}{}}%
       }
       \strng{namehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
@@ -686,6 +699,8 @@ is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin'
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. El-{M}allah', 'author'), $name15, 'parsename 15');
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author'), $name16, 'parsename 16');
 is_deeply(Biber::Input::file::bibtex::parsename('Other, A.~N.', 'author'), $name17, 'parsename 17');
+is_deeply(Biber::Input::file::bibtex::parsename('{{{British National Corpus}}}', 'author'), $name18, 'parsename 18');
+
 
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'First Last') ;
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'First Initial. Last') ;
