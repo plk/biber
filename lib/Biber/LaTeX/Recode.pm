@@ -293,7 +293,7 @@ sub latex_decode {
     # Workaround perl's lack of variable-width negative look-behind -
     # Reverse string (and therefore some of the Re) and use variable width negative look-ahead
     $text = reverse $text;
-    $text =~ s/}(\pM+\pL){(?!\S+\\)/$1/g;
+    $text =~ s/}(\pM+\pL){(?!\pL+\\)/$1/g;
     $text = reverse $text;
     $logger->trace("String in latex_decode() now -> '$text'");
 
