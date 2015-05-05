@@ -3,8 +3,9 @@ use strict;
 use warnings;
 use utf8;
 no warnings 'utf8' ;
+use open qw/:std :utf8/;
 
-use Test::More tests => 54;
+use Test::More tests => 56;
 use Test::Differences;
 unified_diff;
 
@@ -65,8 +66,8 @@ eq_or_diff(File::Spec->canonpath(locate_biber_file('general1.bcf')), File::Spec-
 eq_or_diff(normalise_string('"a, b–c: d" ', 1),  'a bc d', 'normalise_string' );
 
 Biber::Config->setoption('output_encoding', 'UTF-8');
-eq_or_diff(encode_utf8(NFC(normalise_string_underscore(latex_decode('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
-    $§+ :-)   '), 0))), encode_utf8('Şecöka_Nìño'), 'normalise_string_underscore 1' );
+eq_or_diff(NFC(normalise_string_underscore(latex_decode('\c Se\x{c}\"ok-\foo{a},  N\`i\~no
+    $§+ :-)   '), 0)), 'Şecöka_Nìño', 'normalise_string_underscore 1' );
 
 eq_or_diff(normalise_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalise_string_underscore 3');
 
@@ -76,15 +77,18 @@ eq_or_diff(latex_decode('\alpha'), '\alpha', 'latex decode 2'); # no greek decod
 eq_or_diff(latex_decode('\textless\textampersand'), '<&', 'latex decode 3'); # checking XML encoding bits
 eq_or_diff(latex_encode(NFD('Muḥammad ibn Mūsā al-Khwārizmī')), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');
 eq_or_diff(latex_encode(NFD('α')), 'α', 'latex encode 2'); # no greek encoding by default
-eq_or_diff(encode_utf8(NFC(latex_decode("{M{\\'a}t{\\'e}}"))), encode_utf8('{Máté}'), 'latex decode accent 1');
-eq_or_diff(encode_utf8(NFC(latex_decode("{M\\'{a}t\\'{e}}"))), encode_utf8('{Máté}'), 'latex decode accent 2');
-eq_or_diff(encode_utf8(NFC(latex_decode("{M\\'at\\'e}"))), encode_utf8('{Máté}'), 'latex decode accent 3');
+eq_or_diff(NFC(latex_decode("{M{\\'a}t{\\'e}}")), '{Máté}', 'latex decode accent 1');
+eq_or_diff(NFC(latex_decode("{M\\'{a}t\\'{e}}")), '{Máté}', 'latex decode accent 2');
+eq_or_diff(NFC(latex_decode("{M\\'at\\'e}")), '{Máté}', 'latex decode accent 3');
+eq_or_diff(NFC(latex_decode("R{\\'egis}")), 'R{égis}', 'latex decode accent 4');
+eq_or_diff(NFC(latex_decode("\\textuppercase{\\'e}")), '\textuppercase{é}', 'latex decode accent 5');
 
 Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
 
 eq_or_diff(latex_decode('\alpha'), 'α', 'latex decode 4'); # greek decoding with "full"
 eq_or_diff(NFC(latex_decode("\\'\\i")), 'ı́', 'latex decode 5'); # checking i/j with accents
-eq_or_diff(encode_utf8(NFC(latex_decode("{\\'\\i}"))), encode_utf8('ı́'), 'latex decode 5a'); # checking i/j with accents
+
+eq_or_diff(NFC(latex_decode("{\\'\\i}")), 'ı́', 'latex decode 5a'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("\\^{\\j}")), 'ȷ̂', 'latex decode 6'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("\\u{\\i}")), 'ı̆', 'latex decode 7'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("\\u\\i")), 'ı̆', 'latex decode 8'); # checking i/j with accents

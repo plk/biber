@@ -197,12 +197,6 @@ The function accepts a number of options:
     * normalization => <normalization form> (default 'NFD')
         and if yes, the normalization form to use (see the Unicode::Normalize documentation)
 
-    * strip_outer_braces => $bool (default 0)
-        whether the outer curly braces around letters+combining marks should be
-        stripped off. By default "fut{\\'e}" becomes fut{é}, to prevent something
-        like '\\textuppercase{\\'e}' from becoming '\\textuppercaseé'. Setting this option to
-        TRUE can be useful for instance when converting BibTeX files.
-
 =cut
 
 sub latex_decode {
@@ -218,8 +212,6 @@ sub latex_decode {
     my %opts      = @_;
     my $norm      = exists $opts{normalize} ? $opts{normalize} : 1;
     my $norm_form = exists $opts{normalization} ? $opts{normalization} : 'NFD';
-    my $strip_outer_braces =
-      exists $opts{strip_outer_braces} ? $opts{strip_outer_braces} : 0;
 
     # Deal with raw TeX \char macros.
     $text =~ s/\\char"(\p{ASCII_Hex_Digit}+)/"chr(0x$1)"/gee; # hex chars
@@ -284,17 +276,25 @@ sub latex_decode {
       }
     }
 
-    # Now remove braces around single letters with diacriticals (which the replace above
+    # Now remove braces around single letters with diacritics (which the replace above
     # can result in). Things like '{á}'. Such things can break kerning. We can't do this in
     # the RE above as we can't determine if the braces are wrapping a phrase because this
-    # match is on an entire file string. So we can't in one step tell the difference betwee:
+    # match is on an entire file string. So we can't in one step tell the difference between:
     #
     # author = {Andr\'e}
     # and
     # author = {Andr\'{e}}
     #
     # when this is part of a (much) larger string
-    $text =~ s/{(\pL\pM+)}/$1/g;
+    #
+    # We don't want to do this if it would result in a broken macro name like with
+    # \textupper{é}
+    #
+    # Workaround perl's lack of variable-width negative look-behind -
+    # Reverse string (and therefore some of the Re) and use variable width negative look-ahead
+    $text = reverse $text;
+    $text =~ s/}(\pM+\pL){(?!\S+\\)/$1/g;
+    $text = reverse $text;
     $logger->trace("String in latex_decode() now -> '$text'");
 
     if ($norm) {
