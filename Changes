@@ -1,5 +1,7 @@
 Revision history for Biber
 
+2.1    (2015-05-06)
+       * Misc bug fixes
 2.0    (2015-04-20)
        * Misc bug fixes
        * New negated "per type" sourcemap verb for negating the application
