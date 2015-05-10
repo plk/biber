@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 56;
+use Test::More tests => 60;
 use Test::Differences;
 unified_diff;
 
@@ -72,19 +72,22 @@ eq_or_diff(NFC(normalise_string_underscore(latex_decode('\c Se\x{c}\"ok-\foo{a},
 eq_or_diff(normalise_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalise_string_underscore 3');
 
 # LaTeX decoding/encoding
-eq_or_diff(NFC(latex_decode('Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i} \r{a}')), 'Muḥammad ibn Mūsā al-Khwārizmı̄ å', 'latex decode 1');
+eq_or_diff(NFC(latex_decode('Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\=\i{} \r{a}')), 'Muḥammad ibn Mūsā al-Khwārizmı̄ å', 'latex decode 1');
 eq_or_diff(latex_decode('\alpha'), '\alpha', 'latex decode 2'); # no greek decoding by default
 eq_or_diff(latex_decode('\textless\textampersand'), '<&', 'latex decode 3'); # checking XML encoding bits
-eq_or_diff(latex_encode(NFD('Muḥammad ibn Mūsā al-Khwārizmī')), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');
+eq_or_diff(latex_encode(NFD('Muḥammad ibn Mūsā al-Khwārizmī')), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\=\i{}', 'latex encode 1');
 eq_or_diff(latex_encode(NFD('α')), 'α', 'latex encode 2'); # no greek encoding by default
 eq_or_diff(NFC(latex_decode("{M{\\'a}t{\\'e}}")), '{Máté}', 'latex decode accent 1');
 eq_or_diff(NFC(latex_decode("{M\\'{a}t\\'{e}}")), '{Máté}', 'latex decode accent 2');
 eq_or_diff(NFC(latex_decode("{M\\'at\\'e}")), '{Máté}', 'latex decode accent 3');
 eq_or_diff(NFC(latex_decode("R{\\'egis}")), 'R{égis}', 'latex decode accent 4');
 eq_or_diff(NFC(latex_decode("\\textuppercase{\\'e}")), '\textuppercase{é}', 'latex decode accent 5');
+eq_or_diff(NFC(latex_decode("\\DH{}and\\dj{}and\\'{c}, H.")), 'Ðandđandć, H.', 'latex reversing recoding test 1');
+eq_or_diff(NFC(latex_decode("{\\DH{}and\\dj{}and\\'{c}, H.}")), '{Ðandđandć, H.}', 'latex reversing recoding test 2');
+eq_or_diff(latex_encode(NFD('Ðandđandć, H.')), '\\DH{}and\\dj{}and\\\'{c}, H.', 'latex reversing recoding test 3');
+eq_or_diff(latex_encode(NFD('{Ðandđandć, H.}')), '{\\DH{}and\\dj{}and\\\'{c}, H.}', 'latex reversing recoding test 4');
 
 Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
-
 eq_or_diff(latex_decode('\alpha'), 'α', 'latex decode 4'); # greek decoding with "full"
 eq_or_diff(NFC(latex_decode("\\'\\i")), 'ı́', 'latex decode 5'); # checking i/j with accents
 
@@ -101,13 +104,13 @@ eq_or_diff(latex_decode('--'), '--', 'latex decode 13'); # Testing raw
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 eq_or_diff(latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols
 eq_or_diff(latex_encode(NFD('≄')), '{$\not\simeq$}', 'latex encode 5'); # Testing negated symbols
-eq_or_diff(latex_encode(NFD('Þ')), '{\TH}', 'latex encode 6'); # Testing preferred
+eq_or_diff(latex_encode(NFD('Þ')), '\TH{}', 'latex encode 6'); # Testing preferred
 eq_or_diff(latex_encode('$'), '$', 'latex encode 7'); # Testing exclude
 eq_or_diff(latex_encode(NFD('–')), '--', 'latex encode 8'); # Testing raw
 eq_or_diff(latex_decode('a\-a'), 'a\-a', 'discretionary hyphens');
 eq_or_diff(latex_encode(NFD('Åå')), '\r{A}\r{a}', 'latex encode 9');
 eq_or_diff(latex_encode(NFD('a̍')), '\|{a}', 'latex encode 10');
-eq_or_diff(latex_encode(NFD('ı̆')), '\u{\i}', 'latex encode 11');
+eq_or_diff(latex_encode(NFD('ı̆')), '\u{\i{}}', 'latex encode 11');
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
@@ -126,7 +129,7 @@ eq_or_diff(latex_encode(NFD('÷')), '{$\div$}', 'latex different encode/decode s
 
 Biber::LaTeX::Recode->init_sets('null', 'full'); # Need to do this to reset
 eq_or_diff(latex_decode('\i'), '\i', 'latex null decode 1');
-eq_or_diff(latex_encode(NFD('ı')), '{\i}', 'latex null encode 2');
+eq_or_diff(latex_encode(NFD('ı')), '\i{}', 'latex null encode 2');
 
 eq_or_diff(rangelen([[10,15]]), 6, 'Rangelen test 1');
 eq_or_diff(rangelen([[10,15],[47, 53]]), 13, 'Rangelen test 2');
