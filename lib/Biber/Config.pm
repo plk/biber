@@ -3,6 +3,7 @@ use v5.16;
 
 use Biber;
 use Biber::Constants;
+use Biber::Utils;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Cwd qw( abs_path );
@@ -575,7 +576,7 @@ sub postprocess_biber_opts {
       }
       unless ($CONFIG->{options}{biber}{$opt} eq '1' or
               $CONFIG->{options}{biber}{$opt} eq '0') {
-        biber_error("Invalid value for option '$opt'");
+        Biber::Utils::biber_error("Invalid value for option '$opt'");
       }
     }
   }
