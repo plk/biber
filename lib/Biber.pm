@@ -472,7 +472,14 @@ sub parse_ctrlfile {
       # Merge any user maps from the document set by \DeclareSourcemap into user
       # maps set in the biber config file. These document user maps take precedence so go
       # at the front of any other user maps
-      unshift(@$usms, grep {$_->{level} eq 'user'} @{$bcfxml->{sourcemap}{maps}});
+      # Are there any doc maps to merge?
+      if (my @docmaps = grep {$_->{level} eq 'user'} @{$bcfxml->{sourcemap}{maps}}) {
+        # If so, get a reference to the maps in the config map and prepend all
+        # of the doc maps to it. Must also deref the doc maps map element to make
+        # sure that they collapse nicely
+        my $configmaps = first {$_->{level} eq 'user'} @$usms;
+        unshift(@{$configmaps->{map}}, map {@{$_->{map}}} @docmaps);
+      }
 
       # Merge the driver/style maps with the user maps from the config file
       if (my @m = grep {$_->{level} eq 'driver' or
