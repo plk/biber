@@ -33,7 +33,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # relying on here for tests
 Biber::Config->setoption('sortcase', 1);
 Biber::Config->setoption('sortupper', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 $S =  [
                                                 [

@@ -36,7 +36,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 1);
@@ -84,7 +84,7 @@ $biber->parse_ctrlfile('uniqueness1.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 1);
@@ -111,7 +111,7 @@ $biber->parse_ctrlfile('uniqueness2.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 5);
@@ -138,7 +138,7 @@ $biber->parse_ctrlfile('uniqueness1.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 2);
 Biber::Config->setblxoption('mincitenames', 1);
@@ -157,7 +157,7 @@ $biber->parse_ctrlfile('uniqueness2.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 1);
@@ -218,7 +218,7 @@ $biber->parse_ctrlfile('uniqueness1.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 1);
 Biber::Config->setblxoption('mincitenames', 1);
@@ -247,7 +247,7 @@ $biber->parse_ctrlfile('uniqueness4.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 3);
 Biber::Config->setblxoption('mincitenames', 3);
@@ -317,7 +317,7 @@ $biber->parse_ctrlfile('uniqueness4.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 3);
 Biber::Config->setblxoption('mincitenames', 1);
@@ -357,7 +357,7 @@ $biber->parse_ctrlfile('uniqueness4.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 2);
 Biber::Config->setblxoption('mincitenames', 1);
@@ -393,7 +393,7 @@ $biber->parse_ctrlfile('uniqueness5.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 1);
 Biber::Config->setblxoption('mincitenames', 1);
@@ -422,7 +422,7 @@ $biber->parse_ctrlfile('uniqueness5.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 3);
 Biber::Config->setblxoption('mincitenames', 2);
@@ -451,7 +451,7 @@ $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 0);
@@ -480,7 +480,7 @@ $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
@@ -509,7 +509,7 @@ $biber->parse_ctrlfile('uniqueness3.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 0);
 Biber::Config->setblxoption('uniquelist', 0);
@@ -538,7 +538,7 @@ $biber->parse_ctrlfile('uniqueness2.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 3);
 Biber::Config->setblxoption('uniquelist', 1);
@@ -565,7 +565,7 @@ $biber->parse_ctrlfile('uniqueness2.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('uniquename', 4);
 Biber::Config->setblxoption('uniquelist', 1);

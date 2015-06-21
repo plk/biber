@@ -31,7 +31,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
-Biber::Config->setoption('sortlocale', 'sv_SE');
+Biber::Config->setoption('sortlocale', 'sv_SE.UTF-8');
 
 # U::C Swedish tailoring
 $biber->prepare;

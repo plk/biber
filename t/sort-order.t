@@ -31,8 +31,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setblxoption('labelyear', undef);
 Biber::Config->setblxoption('labelalpha', 0);
 
@@ -498,7 +498,7 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Have to set locale to something which understand lexical/case differences for this test
 # otherwise testing on Windows doesn't work ...
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L1B','L1','L1A','L2','L3','L4','L5','L7','L8','L9','L6'], 'location - sortcase=1');

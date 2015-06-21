@@ -37,8 +37,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # relying on here for tests
 
 # Biber options
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
 Biber::Config->setoption('validate_datamodel', 1);
 
 # THERE IS A MAPPING SECTION IN THE .bcf BEING USED TO TEST USER MAPS TOO!

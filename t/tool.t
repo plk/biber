@@ -38,7 +38,7 @@ $biber->set_output_obj(Biber::Output::bibtex->new());
 Biber::Config->setoption('tool', 1);
 Biber::Config->setoption('output_resolve', 1);
 Biber::Config->setoption('output_format', 'bibtex');
-Biber::Config->setoption('sortlocale', 'C');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 # THERE IS A CONFIG FILE BEING READ!
 

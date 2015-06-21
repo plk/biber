@@ -657,8 +657,6 @@ sub _literal {
   else {
     $bibentry->set_datafield($field, $value);
   }
-
-
   return;
 }
 
@@ -759,7 +757,7 @@ sub _name {
     # Check for malformed names in names which aren't completely escaped
 
     # Too many commas
-    unless ($name =~ m/\A{\X+}\z/xms) { # Ignore these tests for escaped names
+    unless ($name =~ m/\A\{\X+\}\z/xms) { # Ignore these tests for escaped names
       my @commas = $name =~ m/,/g;
       if ($#commas > 1) {
         biber_warn("Name \"$name\" has too many commas: skipping name", $bibentry);
@@ -1262,8 +1260,8 @@ my %months = (
 
 sub _hack_month {
   my $in_month = shift;
-  if ($in_month =~ m/\A\s*((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*)\s*\z/i) {
-    return $months{lc(Unicode::GCString->new($1)->substr(0,3)->as_string)};
+  if (my ($m) = $in_month =~ m/\A\s*((?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).*)\s*\z/i) {
+    return $months{lc(Unicode::GCString->new($m)->substr(0,3)->as_string)};
   }
   else {
     return $in_month;

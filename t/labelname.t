@@ -27,8 +27,8 @@ my $l4pconf = qq|
 |;
 Log::Log4perl->init(\$l4pconf);
 
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setoption('sortlocale', 'C');
 $biber->parse_ctrlfile("general1.bcf");
 $biber->set_output_obj(Biber::Output::bbl->new());
 
