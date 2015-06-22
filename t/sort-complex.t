@@ -240,6 +240,7 @@ Biber::Config->setoption('sourcemap', undef); # no longer ignore shorthand*
 $bibentries->del_entries;
 $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $shs = $biber->sortlists->get_list(0, 'shorthands', 'list', 'shorthands');
