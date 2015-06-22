@@ -498,7 +498,7 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Have to set locale to something which understands lexical/case differences for this test
 # otherwise testing on Windows doesn't work ...
-Biber::Config->setoption('sortlocale', 'en_US.UTF-8');
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L1B','L1','L1A','L2','L3','L4','L5','L7','L8','L9','L6'], 'location - sortcase=1');
