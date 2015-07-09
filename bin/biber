@@ -296,6 +296,10 @@ else {
     elsif (Biber::Config->getoption('output_format') eq 'bbl') { # bbl output
       $outfile = $bcf =~ s/bcf$/bbl/r;
     }
+    else {
+      say "output_format option '" . Biber::Config->getoption('output_format') . "' only makes sense in tool mode (--tool)";
+      exit EXIT_ERROR;
+    }
   }
 }
 
