@@ -790,7 +790,6 @@ sub _name {
 }
 
 # Dates
-# Date fields can't have script forms - they are just a(n ISO) standard format
 sub _date {
   my ($bibentry, $entry, $field, $key) = @_;
   my $datetype = $field =~ s/date\z//xmsr;

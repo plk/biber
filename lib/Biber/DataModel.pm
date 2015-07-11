@@ -411,7 +411,9 @@ sub check_mandatory_constraints {
         my $flag = 0;
         my $xorflag = 0;
         foreach my $of (@fs) {
-          if ($be->field_exists($of)) {
+          if ($be->field_exists($of) and
+              # ignore date field if it has been split into parts
+              not ($of eq 'date' and $be->get_field('datesplit'))) {
             if ($xorflag) {
               push @warnings, "Datamodel: Entry '$key' ($ds): Mandatory fields - only one of '" . join(', ', @fs) . "' must be defined - ignoring field '$of'";
               $be->del_field($of);
