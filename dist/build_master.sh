@@ -93,22 +93,22 @@ fi
 # Build farm cygwin
 # We run "Build realclean" at the end as we are using the same tree for
 # win and cygwin builds
-if [ ! -e $DIR/biber-cygwin32.tar.gz ]; then
-  ssh vbox@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
-  sleep 20
-  # We have to move aside the windows libbtparse.dll otherwise it's picked up by cygwin
-  ssh bbf-wxp32 ". bin/set-biber-cyg-build-env.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build installdeps;./Build install;cd dist/cygwin32;./build.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS /cygdrive/c/WINDOWS/system32/libbtparse.dll;cd ~/biblatex-biber;./Build realclean"
-  scp bbf-wxp32:biblatex-biber/dist/cygwin32/biber-cygwin32.exe $DIR/
-  ssh bbf-wxp32 "\\rm -f biblatex-biber/dist/cygwin32/biber-cygwin32.exe"
-  ssh vbox@wood "VBoxManage controlvm bbf-wxp32 savestate"
-  cd $DIR
-  mv biber-cygwin32.exe biber.exe
-  chmod +x biber.exe
-  tar cf biber-cygwin32.tar biber.exe
-  gzip biber-cygwin32.tar
-  \rm -f biber.exe
-  cd $BASE
-fi
+# if [ ! -e $DIR/biber-cygwin32.tar.gz ]; then
+#   ssh vbox@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
+#   sleep 20
+#   # We have to move aside the windows libbtparse.dll otherwise it's picked up by cygwin
+#   ssh bbf-wxp32 ". bin/set-biber-cyg-build-env.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build installdeps;./Build install;cd dist/cygwin32;./build.sh;mv /cygdrive/c/WINDOWS/system32/libbtparse.dll.DIS /cygdrive/c/WINDOWS/system32/libbtparse.dll;cd ~/biblatex-biber;./Build realclean"
+#   scp bbf-wxp32:biblatex-biber/dist/cygwin32/biber-cygwin32.exe $DIR/
+#   ssh bbf-wxp32 "\\rm -f biblatex-biber/dist/cygwin32/biber-cygwin32.exe"
+#   ssh vbox@wood "VBoxManage controlvm bbf-wxp32 savestate"
+#   cd $DIR
+#   mv biber-cygwin32.exe biber.exe
+#   chmod +x biber.exe
+#   tar cf biber-cygwin32.tar biber.exe
+#   gzip biber-cygwin32.tar
+#   \rm -f biber.exe
+#   cd $BASE
+# fi
 
 # Build farm Linux 32
 if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
@@ -167,9 +167,9 @@ if [ -e $DIR/biber-MSWIN.zip ]; then
 fi
 
 # Cygwin
-if [ -e $DIR/biber-cygwin32.tar.gz ]; then
-  scp biber-cygwin32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Cygwin/biber-cygwin32.tar.gz
-fi
+# if [ -e $DIR/biber-cygwin32.tar.gz ]; then
+#   scp biber-cygwin32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Cygwin/biber-cygwin32.tar.gz
+# fi
 
 # Linux 32-bit
 if [ -e $DIR/biber-linux_x86_32.tar.gz ]; then
