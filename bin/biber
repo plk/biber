@@ -388,7 +388,7 @@ biber [options] file[.bcf]
 biber [options] --tool <datasource>
 
   Creates "file.bbl" using control file "file.bcf" (".bcf" extension is
-  optional). Normaly use with biblatex requires no options as they are
+  optional). Normally use with biblatex requires no options as they are
   all set in biblatex and passed via the ".bcf" file
 
   In "tool" mode (see B<--tool> option), takes a datasource (defaults to
