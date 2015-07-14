@@ -230,13 +230,13 @@ sub latex_decode {
         $text =~ s/\\not\\($re)/$map->{$1}/ge;
       }
       elsif ($type eq 'superscripts') {
-        $text =~ s/\\textsuperscript{($re)}/$map->{$1}/ge;
+        $text =~ s/\\textsuperscript\{($re)}/$map->{$1}/ge;
       }
       elsif ($type eq 'cmdsuperscripts') {
-        $text =~ s/\\textsuperscript{\\($re)}/$map->{$1}/ge;
+        $text =~ s/\\textsuperscript\{\\($re)}/$map->{$1}/ge;
       }
       elsif ($type eq 'dings') {
-        $text =~ s/\\ding{([2-9AF][0-9A-F])}/$map->{$1}/ge;
+        $text =~ s/\\ding\{([2-9AF][0-9A-F])}/$map->{$1}/ge;
       }
       elsif ($type eq 'letters') {
         $text =~ s/\\($re)(?:\{\}|\s+|\b)/$map->{$1}/ge;
@@ -293,7 +293,7 @@ sub latex_decode {
     # Workaround perl's lack of variable-width negative look-behind -
     # Reverse string (and therefore some of the Re) and use variable width negative look-ahead
     $text = reverse $text;
-    $text =~ s/}(\pM+\pL){(?!\pL+\\)/$1/g;
+    $text =~ s/}(\pM+\pL)\{(?!\pL+\\)/$1/g;
     $text = reverse $text;
     $logger->trace("String in latex_decode() now -> '$text'");
 
