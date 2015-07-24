@@ -14,7 +14,7 @@
 # constructed in the code so Par::Packer can't auto-detect them.
 # Same with some of the output modules.
 
-cp /opt/local/libexec/perl5.20/sitebin/biber /tmp/biber-darwin
+cp /opt/local/libexec/perl5.22/sitebin/biber /tmp/biber-darwin
 cp /opt/local/lib/libz.1.2.7.dylib /tmp/libz.1.dylib
 
 PAR_VERBATIM=1 pp --compress=6 \
@@ -56,7 +56,7 @@ PAR_VERBATIM=1 pp --compress=6 \
   --module=IO::Socket::SSL \
   --link=/tmp/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
-  --link=/opt/local/libexec/perl5.20/sitebin/libbtparse.dylib \
+  --link=/opt/local/libexec/perl5.22/sitebin/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
   --link=/opt/local/lib/libxslt.1.dylib \
   --link=/opt/local/lib/libgdbm.4.dylib \
