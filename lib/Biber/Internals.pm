@@ -629,7 +629,7 @@ sub _process_label_attributes {
         $padchar = unescape_label($padchar);
         my $pad_side = ($labelattrs->{pad_side} or 'right');
         my $paddiff = $subs_width - Unicode::GCString->new($field_string)->length;
-        if ($paddiff) {
+        if ($paddiff > 0) {
           if ($pad_side eq 'right') {
             $field_string .= $padchar x $paddiff;
           }
@@ -1245,11 +1245,13 @@ sub _process_sort_attributes {
     my $pad_side = ($sortelementattributes->{pad_side} or $default_pad_side);
     my $pad_char = ($sortelementattributes->{pad_char} or $default_pad_char);
     my $pad_length = $pad_width - Unicode::GCString->new($field_string)->length;
-    if ($pad_side eq 'left') {
-      $field_string = ($pad_char x $pad_length) . $field_string;
-    }
-    elsif ($pad_side eq 'right') {
-      $field_string = $field_string . ($pad_char x $pad_length);
+    if ($pad_length > 0) {
+      if ($pad_side eq 'left') {
+        $field_string = ($pad_char x $pad_length) . $field_string;
+      }
+      elsif ($pad_side eq 'right') {
+        $field_string = $field_string . ($pad_char x $pad_length);
+      }
     }
   }
   return $field_string;
