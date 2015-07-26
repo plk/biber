@@ -98,11 +98,12 @@ fi
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
 #if [ ! -e $DIR/biber-MSWIN.zip -o ! -e $DIR/biber-cygwin32.tar.gz ]; then
 if [ ! -e $DIR/biber-MSWIN.zip ]; then
-vmon wxp32
+  vmon wxp32
   sleep 20
   ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp philkime@bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN.exe $DIR/
   ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWin32/biber-MSWIN.exe"
+  vmoff wxp32
   cd $DIR
   mv biber-MSWIN.exe biber.exe
   chmod +x biber.exe
