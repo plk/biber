@@ -523,6 +523,17 @@ sub parse_ctrlfile {
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('noinit', $noinit) if $noinit;
 
+  # NOLABEL
+  # Make the data structure look like the biber config file structure
+  # "value" is forced to arrays for other elements so we extract
+  # the first element here as they will always be only length=1
+  my $nolabel;
+  foreach my $ni (@{$bcfxml->{nolabels}{nolabel}}) {
+    push @$nolabel, { value => $ni->{value}[0]};
+  }
+  # There is a default so don't set this option if nothing is in the .bcf
+  Biber::Config->setoption('nolabel', $nolabel) if $nolabel;
+
   # NOSORT
   # Make the data structure look like the biber config file structure
   # "field" and "value" are forced to arrays for other elements so we extract

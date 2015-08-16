@@ -175,6 +175,7 @@ sub _initopts {
     elsif (lc($k) eq 'dot_include' or
            lc($k) eq 'collate_options' or
            lc($k) eq 'nosort' or
+           lc($k) eq 'nolabel' or
            lc($k) eq 'noinit' ) {
       Biber::Config->setoption($k, $v->{option});
     }
@@ -395,7 +396,8 @@ sub _config_file_set {
     }
     # mildly complex options - nosort/collate_options
     elsif (lc($k) eq 'nosort' or
-           lc($k) eq 'noinit' ) {
+           lc($k) eq 'noinit' or
+           lc($k) eq 'nolabel' ) {
       Biber::Config->setconfigfileoption($k, $v->{option});
     }
     # rather complex options

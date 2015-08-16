@@ -2293,6 +2293,8 @@
     <bcf:citekey order="35">title1</bcf:citekey>
     <bcf:citekey order="36">labelstest</bcf:citekey>
     <bcf:citekey order="37">padtest</bcf:citekey>
+    <bcf:citekey order="38">ignore1</bcf:citekey>
+    <bcf:citekey order="39">ignore2</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry"/>

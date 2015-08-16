@@ -270,19 +270,27 @@ sub strip_nosort {
 
 =head2 normalise_string_label
 
-Remove some things from a string for label generation, like braces.
-It also decodes LaTeX character macros into Unicode as this is always safe when
-normalising strings for sorting since they don't appear in the output.
+Remove some things from a string for label generation.
 
 =cut
 
 sub normalise_string_label {
   my $str = shift;
-  my $fieldname = shift;
   return '' unless $str; # Sanitise missing data
-  return normalise_string_common($str);
+  my $nolabels = Biber::Config->getoption('nolabel');
+  $str =~ s/\\[A-Za-z]+//g;        # remove latex macros (assuming they have only ASCII letters)
+  # Replace ties with spaces or they will be lost
+  $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
+  foreach my $nolabel (@$nolabels) {
+    my $nlopt = $nolabel->{value};
+    my $re = qr/$nlopt/;
+    $str =~ s/$re//gxms;           # remove nolabel items
+  }
+  $str =~ s/^\s+//;                # Remove leading spaces
+  $str =~ s/\s+$//;                # Remove trailing spaces
+  $str =~ s/\s+/ /g;               # collapse spaces
+  return $str;
 }
-
 
 =head2 normalise_string_sort
 

@@ -29,7 +29,7 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{2.1}    % BIBER VERSION
+\gdef\biberversion{2.2}    % BIBER VERSION
 \gdef\biblatexversion{3.0}   % BIBLATEX VERSION
 
 % colour for tables
@@ -608,6 +608,10 @@ an example config file which displays the \biber\ defaults:
     <!-- strip diacritics when generating initials -->
     <option value="[\x{2bf}\x{2018}]"/>
   </noinit>
+  <nolabel>
+    <!-- strip punctuation, symbols, separator and control characters -->
+    <option value="[\p{P}\p{S}\p{C}]+"/> 
+  </nolabel>
   <nolog>0</nolog>
   <nostdmacros>0</nostdmacros>
   <nosort>
@@ -1245,6 +1249,40 @@ your individual cases. By default, only lowercased prefices are looked for
 so as to avoid breaking things like «Ho-Pun» where you want the initials to
 be «H.-P.», for example. See the Perl regular expression manual page for
 details of the regular expression
+syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
+
+\subsubsection{The \texttt{nolabel} option}\label{nolabel}
+
+The value of the \opt{nolabel} option can only be set in the config file and
+not on the command line. This is because the values are Perl regular
+expressions and would need special quoting to set on the command line. This
+can get a bit tricky on some OSes (like Windows) so it's safer to set them
+in the config file. \opt{nolabel} allows you to ignore elements of a field when
+generating labels. This is done using Perl regular expressions which
+specify what to ignore. You can specific multiple regular expressions and
+they will be removed from a field before it is passed to the label
+generating system.
+
+For example, this option can be used to ignore control, punctuation, symbol
+and separator characters when generation labels. Given (the default):
+
+\begin{lstlisting}[language=xml]
+  <nolabel>
+    <!-- strip punctuation, symbols, separator and control characters-->
+    <option value="[\p{P}\p{S}\p{C}]+"/> 
+  </nolabel>
+\end{lstlisting}
+
+\noindent and the \BibTeX\ datasource entry with default label generation
+definition (see \biblatex\ documentation for \cmd{DeclareLabelalphaTemplate}):
+
+\begin{verbatim}
+AUTHOR = {O'Toole, Alexander},
+\end{verbatim}
+
+\noindent Then the label for the name will be <<OTo07>> as the apostrophe
+is ignored by the label generation routine. See the Perl regular expression
+manual page for details of the regular expression
 syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
 \bigskip
 \subsubsection{The \texttt{sorting} option}\label{sorting}

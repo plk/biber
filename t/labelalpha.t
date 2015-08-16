@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 113;
+use Test::More tests => 115;
 use Test::Differences;
 unified_diff;
 
@@ -73,6 +73,8 @@ eq_or_diff($main->get_extraalphadata('knuth:ct'), '1', 'YEAR with range needs la
 eq_or_diff($main->get_extraalphadata('knuth:ct:a'), '2', 'YEAR with range needs label differentiating from individual volumes - 2');
 eq_or_diff($main->get_extraalphadata('knuth:ct:b'), '1', 'YEAR with range needs label differentiating from individual volumes - 3');
 eq_or_diff($main->get_extraalphadata('knuth:ct:c'), '2', 'YEAR with range needs label differentiating from individual volumes - 4');
+eq_or_diff($bibentries->entry('ignore1')->get_field('sortlabelalpha'), 'OTo07', 'Default ignore');
+eq_or_diff($bibentries->entry('ignore2')->get_field('sortlabelalpha'), 'De 07', 'Default no ignore spaces');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 2);

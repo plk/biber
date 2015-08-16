@@ -112,6 +112,7 @@ our $CONFIG_DEFAULT_BIBER = {
   nodieonerror        => { content => 0 },
   noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},
                                        {value => q/[\x{2bf}\x{2018}]/} ] },
+  nolabel             => { option => [ {value => q/[\p{P}\p{S}\p{C}]+/} ] },
   nolog               => { content => 0 },
   nostdmacros         => { content => 0 },
   nosort              => { option => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
