@@ -611,11 +611,11 @@ sub _process_label_attributes {
         $subs_offset = 0 - $subs_width;
       }
 
-      # If desired, do the substring on all part of compound strings
+      # If desired, do the substring on all parts of compound strings
       # (strings with internal spaces or hyphens)
       if ($labelattrs->{substring_compound}) {
         my $tmpstring;
-        foreach my $part (split(/[ -]+/, $field_string)) {
+        foreach my $part (split(/[\s\p{Dash}]+/, $field_string)) {
           $tmpstring .= Unicode::GCString->new($part)->substr($subs_offset, $subs_width)->as_string;
         }
         $field_string = $tmpstring;
