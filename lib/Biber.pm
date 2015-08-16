@@ -360,6 +360,7 @@ sub parse_ctrlfile {
                                                            qr/\Aper_datasource\z/,
                                                            qr/\Anosort\z/,
                                                            qr/\Anoinit\z/,
+                                                           qr/\Anolabel\z/,
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
@@ -528,8 +529,8 @@ sub parse_ctrlfile {
   # "value" is forced to arrays for other elements so we extract
   # the first element here as they will always be only length=1
   my $nolabel;
-  foreach my $ni (@{$bcfxml->{nolabels}{nolabel}}) {
-    push @$nolabel, { value => $ni->{value}[0]};
+  foreach my $nl (@{$bcfxml->{nolabels}{nolabel}}) {
+    push @$nolabel, { value => $nl->{value}[0]};
   }
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nolabel', $nolabel) if $nolabel;
