@@ -169,6 +169,13 @@ start =
         empty
       }+
     }?,
+    # nolabel specification
+    element bcf:nolabelss {
+      element bcf:nolabel {
+        attribute value { xsd:string },
+        empty
+      }+
+    }?,
     # nosort specification
     element bcf:nosorts {
       element bcf:nosort {

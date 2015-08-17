@@ -455,6 +455,19 @@
         </element>
       </optional>
       <optional>
+        <!-- nolabel specification -->
+        <element name="bcf:nolabels">
+          <oneOrMore>
+            <element name="bcf:nolabel">
+              <attribute name="value">
+                <data type="string"/>
+              </attribute>
+              <empty/>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
         <!-- nosort specification -->
         <element name="bcf:nosorts">
           <oneOrMore>
