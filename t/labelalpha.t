@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 115;
+use Test::More tests => 116;
 use Test::Differences;
 unified_diff;
 
@@ -420,5 +420,44 @@ eq_or_diff($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '20050
 eq_or_diff($bibentries->entry('padtest')->get_field('labelalpha'), '\&Al\_\_{\textasciitilde}{\textasciitilde}T07', 'pad test - 1');
 eq_or_diff($bibentries->entry('padtest')->get_field('sortlabelalpha'), '&Al__~~T07', 'pad test - 2');
 
+Biber::Config->setblxoption('labelalphatemplate', {
+  labelelement => [
+                   {
+                    labelpart => [
+                                  {
+                   content         => "author",
+                   ifnamecount     => 1,
+                   substring_side  => "left",
+                   substring_width => 3,
+                 },
+               ],
+                   order => 1,
+                   },
+                   {
+               labelpart => [
+                 {
+                   content         => "title",
+                   substring_side  => "left",
+                   substring_width => 4,
+                 },
+               ],
+              order => 2,
+             },
+           ],
+  type  => "global",
+});
 
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extraalphadata_for_key($k, undef);
+}
+# The "o"s are ignored for width substring calculation - take note
+Biber::Config->setoption('nolabelwidthcount', [ {value => q/o+/} ] );
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
+$bibentries = $section->bibentries;
+
+eq_or_diff($bibentries->entry('skipwidthtest1')->get_field('sortlabelalpha'), 'OToolOToole', 'Skip width test - 1');
 

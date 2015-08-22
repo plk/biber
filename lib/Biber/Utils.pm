@@ -24,6 +24,7 @@ use Log::Log4perl qw(:no_extra_logdie_message);
 use Scalar::Util qw(looks_like_number);
 use Text::Roman qw(isroman roman2int);
 use Unicode::Normalize;
+use Unicode::GCString;
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -47,7 +48,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  locale2bcp47 bcp472locale rangelen};
+  locale2bcp47 bcp472locale rangelen match_indices};
 
 =head1 FUNCTIONS
 
@@ -1032,6 +1033,28 @@ sub rangelen {
     }
   }
   return $rl;
+}
+
+
+=head2 match_indices
+
+  Return array ref of array refs of matches and start indices of matches
+  for provided array of compiled regexps into string
+
+=cut
+
+sub match_indices {
+  my ($regexes, $string) = @_;
+  my $ret;
+  my $relen = 0;
+  foreach my $regex (@$regexes) {
+    while ($string =~ /$regex/g) {
+      my $gcs = Unicode::GCString->new($string)->substr($-[0], $+[0]-$-[0]);
+      push @$ret, [ $gcs->as_string, $-[0] - $relen ];
+      $relen += $gcs->length;
+    }
+  }
+  return $ret
 }
 
 1;

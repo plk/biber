@@ -1284,6 +1284,43 @@ AUTHOR = {O'Toole, Alexander},
 is ignored by the label generation routine. See the Perl regular expression
 manual page for details of the regular expression
 syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
+
+\subsubsection{The \texttt{nolabelwidthcount} option}\label{nolabelwidthcount}
+
+The value of the \opt{nolabelwidthcount} option can only be set in the
+config file and not on the command line. This is because the values are
+Perl regular expressions and would need special quoting to set on the
+command line. This can get a bit tricky on some OSes (like Windows) so it's
+safer to set them in the config file. \opt{nolabelwidthcount} allows you to
+ignore elements of a field when generating fixed-width substrings of
+labels. This is done using Perl regular expressions which specify what to
+ignore. You can specific multiple regular expressions and they will be
+removed from a field before it is passed to the label generating system.
+
+For example, this option can be used to ignore punctuation characters when
+generating substrings for labels. Note that in this example we reset
+\opt{nolabel} because by default this removes punctuation characters. Given:
+
+\begin{lstlisting}[language=xml]
+  <nolabel>
+    <option value=""/> 
+  </nolabel>
+  <nolabelwidthcount>
+    <option value="\p{P}+"/> 
+  </nolabelwidthcount>
+\end{lstlisting}
+
+\noindent and the \BibTeX\ datasource entry with default label generation
+definition (see \biblatex\ documentation for \cmd{DeclareLabelalphaTemplate}):
+
+\begin{verbatim}
+AUTHOR = {O'Toole, Alexander},
+\end{verbatim}
+
+\noindent Then the label for the name will be <<O'To07>> as the apostrophe
+is ignored by the substring generation routine. See the Perl regular expression
+manual page for details of the regular expression
+syntax\footnote{\url{http://perldoc.perl.org/perlre.html}}.
 \bigskip
 \subsubsection{The \texttt{sorting} option}\label{sorting}
 

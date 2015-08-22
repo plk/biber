@@ -268,8 +268,8 @@ sub _genlabel {
 
   foreach my $labelpart (sort {$a->{order} <=> $b->{order}} @{$labelalphatemplate->{labelelement}}) {
     my $ret = _labelpart($self, $labelpart->{labelpart}, $citekey);
-    $label .= $ret->[0];
-    $slabel .= $ret->[1];
+    $label .= $ret->[0] || '';
+    $slabel .= $ret->[1] || '';
     last if $LABEL_FINAL;
   }
 
@@ -611,6 +611,17 @@ sub _process_label_attributes {
         $subs_offset = 0 - $subs_width;
       }
 
+      # Get map of regexps to not count against stringth width and record their place in the string
+      my $nolabelwcs = Biber::Config->getoption('nolabelwidthcount');
+      my $nolabelwcis = match_indices([map {$_->{value}} @$nolabelwcs], $field_string);
+
+      # Then remove the nolabelwidthcount chars for now
+      foreach my $nolabelwc (@$nolabelwcs) {
+        my $nlwcopt = $nolabelwc->{value};
+        my $re = qr/$nlwcopt/;
+        $field_string =~ s/$re//gxms;           # remove nolabelwidthcount items
+      }
+
       # If desired, do the substring on all parts of compound strings
       # (strings with internal spaces or hyphens)
       if ($labelattrs->{substring_compound}) {
@@ -639,6 +650,20 @@ sub _process_label_attributes {
         }
         $field_string = escape_label($field_string);
       }
+
+      # Now reinstate any nolabelwidthcount regexps
+      # Unicode::GCString->substr() with 3 args doesn't seem to work
+      my $subslength = Unicode::GCString->new($field_string)->length;
+      my @gca = Unicode::GCString->new($field_string)->as_array;
+      my $splicelen = 0;
+      foreach my $nolabelwci (@$nolabelwcis) {
+        if (($nolabelwci->[1] + 1) <= $subslength) {
+          splice(@gca, $nolabelwci->[1] + $splicelen, 0, $nolabelwci->[0]);
+          # - 1 here as we are using a length as a 0-based index calculation later on
+          $splicelen += (Unicode::GCString->new($nolabelwci->[0])->length - 1);
+        }
+      }
+      $field_string = join('', @gca);
     }
   }
 

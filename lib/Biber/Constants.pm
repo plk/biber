@@ -96,7 +96,7 @@ our %DM_DATATYPES = (
 our $CONFIG_DEFAULT_BIBER = {
   clrmacros           => { content => 0 },
   collate             => { content => 1 },
-  collate_options     => { option => { level => 4, variable => 'non-ignorable', normalization => 'prenormalized' }},
+  collate_options     => { option => {level => 4, variable => 'non-ignorable', normalization => 'prenormalized' }},
   graph               => { content => 0 },
   debug               => { content => 0 },
   decodecharsset      => { content => 'base' },
@@ -113,6 +113,7 @@ our $CONFIG_DEFAULT_BIBER = {
   noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},
                                        {value => q/[\x{2bf}\x{2018}]/} ] },
   nolabel             => { option => [ {value => q/[\p{P}\p{S}\p{C}]+/} ] },
+  nolabelwidthcount   => { option => [ {value => q//} ] },
   nolog               => { content => 0 },
   nostdmacros         => { content => 0 },
   nosort              => { option => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },

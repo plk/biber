@@ -176,6 +176,7 @@ sub _initopts {
            lc($k) eq 'collate_options' or
            lc($k) eq 'nosort' or
            lc($k) eq 'nolabel' or
+           lc($k) eq 'nolabelwidthcount' or
            lc($k) eq 'noinit' ) {
       Biber::Config->setoption($k, $v->{option});
     }

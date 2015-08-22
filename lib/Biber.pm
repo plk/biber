@@ -361,6 +361,7 @@ sub parse_ctrlfile {
                                                            qr/\Anosort\z/,
                                                            qr/\Anoinit\z/,
                                                            qr/\Anolabel\z/,
+                                                           qr/\Anolabelwidthcount\z/,
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
@@ -534,6 +535,17 @@ sub parse_ctrlfile {
   }
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nolabel', $nolabel) if $nolabel;
+
+  # NOLABELWIDTHCOUNT
+  # Make the data structure look like the biber config file structure
+  # "value" is forced to arrays for other elements so we extract
+  # the first element here as they will always be only length=1
+  my $nolabelwidthcount;
+  foreach my $nlwc (@{$bcfxml->{nolabelwidthcounts}{nolabelwidthcount}}) {
+    push @$nolabelwidthcount, { value => $nlwc->{value}[0]};
+  }
+  # There is a default so don't set this option if nothing is in the .bcf
+  Biber::Config->setoption('nolabelwidthcount', $nolabelwidthcount) if $nolabelwidthcount;
 
   # NOSORT
   # Make the data structure look like the biber config file structure
