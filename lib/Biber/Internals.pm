@@ -615,6 +615,8 @@ sub _process_label_attributes {
       my $nolabelwcs = Biber::Config->getoption('nolabelwidthcount');
       my $nolabelwcis = match_indices([map {$_->{value}} @$nolabelwcs], $field_string);
 
+      $logger->trace('Saved indices for nolabelwidthcount: ' . Data::Dump::pp($nolabelwcis));
+
       # Then remove the nolabelwidthcount chars for now
       foreach my $nolabelwc (@$nolabelwcs) {
         my $nlwcopt = $nolabelwc->{value};
