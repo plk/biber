@@ -953,12 +953,16 @@ sub cache_data {
       biber_warn("Possible typo (case mismatch) between datasource keys: '$key' and '$okey' in file '$filename'");
     }
 
-    # If we've already seen this key in a datasource, ignore it and warn
-    if ($section->has_everykey($key)) {
+    # If we've already seen this key in a datasource, ignore it and warn unless user wants
+    # duplicates
+    if ($section->has_everykey($key) and not Biber::Config->getoption('noskipduplicates')) {
       biber_warn("Duplicate entry key: '$key' in file '$filename', skipping ...");
       next;
     }
     else {
+      if ($section->has_everykey($key)) {
+        biber_warn("Duplicate entry key: '$key' in file '$filename'");
+      }
       $section->add_everykey($key);
     }
 

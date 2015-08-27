@@ -129,6 +129,7 @@ our $CONFIG_DEFAULT_BIBER = {
   output_safechars    => { content => 0 },
   output_safecharsset => { content => 'base' },
   quiet               => { content => 0 },
+  noskipduplicates    => { content => 0 },
   sortcase            => { content => 1 },
   sortfirstinits      => { content => 0 },
   sortupper           => { content => 1 },

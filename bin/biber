@@ -68,6 +68,7 @@ GetOptions(
            'output_safecharsset|output-safecharsset=s',
            'quiet|q+',
            'recodedata=s',
+           'noskipduplicates',
            'sortcase=s',
            'sortfirstinits=s',
            'sortlocale|l=s',
@@ -637,6 +638,12 @@ the sets specified with the --output_safecharsset and --decodecharsset options.
 It defaults to F<recode_data.xml> in the same directory as Biber's F<Recode.pm> module.
 See the PDF documentation for the format of this file. If this option is
 used, then F<file> should be somewhere C<kpsewhich> can find it.
+
+=item B<--noskipduplicates>
+
+Don't skip duplicate bibliography keys if found. The detection of duplicate keys is done across
+all data sources. Sometimes you might need duplicates when using several data sources
+across several refsections in which case you might need to use this option.
 
 =item B<--sortcase=true|false>
 
