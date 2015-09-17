@@ -35,6 +35,7 @@ use Data::Dump;
 use Data::Compare;
 use Text::BibTeX qw(:macrosubs);
 use Unicode::Normalize;
+use POSIX qw( locale_h ); # for lc()
 
 =encoding utf-8
 
@@ -377,7 +378,7 @@ sub parse_ctrlfile {
                                                            qr/\Asortlist\z/,
                                                            qr/\Alabel(?:part|element|alphatemplate)\z/,
                                                            qr/\Acondition\z/,
-                                                           qr/\A(?:or)?filter\z/,
+                                                           qr/\Afilter(?:or)?\z/,
                                                            qr/\Aoptionscope\z/,
                                                           ],
                                           'NsStrip' => 1,
@@ -707,11 +708,17 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     $seclist->set_type($ltype || 'entry'); # lists are entry lists by default
     $seclist->set_name($lname || $lssn); # name is only relevelant for "list" type, default to ss
     foreach my $filter (@{$list->{filter}}) {
-      $seclist->add_filter($filter->{type}, $filter->{content});
+      $seclist->add_filter({'type'  => $filter->{type},
+                            'value' => $filter->{content}});
     }
-    # disjunctive filters
-    foreach my $orfilter (@{$list->{orfilter}}) {
-      $seclist->add_filter('orfilter', { map {$_->{type} => [$_->{content}]} @{$orfilter->{filter}} });
+    # disjunctive filters are an array ref of filter hashes
+    foreach my $orfilter (@{$list->{filteror}}) {
+      my $orfilts = [];
+      foreach my $filter (@{$orfilter->{filter}}) {
+        push @$orfilts, {'type'  => $filter->{type},
+                         'value' => $filter->{content}};
+      }
+      $seclist->add_filter($orfilts) if $orfilts;
     }
 
     if (my $sorting = $list->{sorting}) { # can be undef for fallback to global sorting
@@ -2011,14 +2018,13 @@ KEYLOOP: foreach my $k ($list->get_keys) {
 
         $logger->debug("Checking key '$k' in list '$lname' against list filters");
         my $be = $section->bibentry($k);
-        foreach my $t (keys %$filters) {
-          my $fs = $filters->{$t};
+        foreach my $f (@$filters) {
           # Filter disjunction is ok if any of the checks are ok, hence the grep()
-          if ($t eq 'orfilter') {
-            next KEYLOOP unless grep {check_list_filter($k, $_, $fs->{$_}, $be)} keys %$fs;
+          if (ref $f eq 'ARRAY') {
+            next KEYLOOP unless grep {check_list_filter($k, $_->{type}, $_->{value}, $be)} @$f;
           }
           else {
-            next KEYLOOP unless check_list_filter($k, $t, $fs, $be);
+            next KEYLOOP unless check_list_filter($k, $f->{type}, $f->{value}, $be);
           }
         }
         push @$flist, $k;
@@ -2039,32 +2045,72 @@ KEYLOOP: foreach my $k ($list->get_keys) {
 
 sub check_list_filter {
   my ($k, $t, $fs, $be) = @_;
-  $logger->debug("Checking key '$k' against filter '$t=" . join(',', @$fs) . "'");
+  $logger->debug("Checking key '$k' against filter '$t=$fs'");
   if ($t eq 'type') {
-    return 0 unless grep {$be->get_field('entrytype') eq $_} @$fs;
+    if ($be->get_field('entrytype') eq lc($fs)) {
+      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+    }
+    else {
+      return 0;
+    }
   }
   elsif ($t eq 'nottype') {
-    return 0 if grep {$be->get_field('entrytype') eq $_} @$fs;
+    if ($be->get_field('entrytype') eq lc($fs)) {
+      return 0;
+    }
+    else {
+      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+    }
   }
   elsif ($t eq 'subtype') {
-    return 0 unless grep {$be->field_exists('entrysubtype') and
-                                $be->get_field('entrysubtype') eq $_} @$fs;
+    if ($be->field_exists('entrysubtype') and
+        $be->get_field('entrysubtype') eq lc($fs)) {
+      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+    }
+    else {
+      return 0;
+    }
   }
   elsif ($t eq 'notsubtype') {
-    return 0 if grep {$be->field_exists('entrysubtype') and
-                            $be->get_field('entrysubtype') eq $_} @$fs;
+    if ($be->field_exists('entrysubtype') and
+        $be->get_field('entrysubtype') eq lc($fs)) {
+      return 0;
+    }
+    else {
+      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+    }
   }
   elsif ($t eq 'keyword') {
-    return 0 unless grep {$be->has_keyword($_)} @$fs;
+    if ($be->has_keyword($fs)) {
+      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+    }
+    else {
+      return 0;
+    }
   }
   elsif ($t eq 'notkeyword') {
-    return 0 if grep {$be->has_keyword($_)} @$fs;
+    if ($be->has_keyword($fs)) {
+      return 0;
+    }
+    else {
+      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+    }
   }
   elsif ($t eq 'field') {
-    return 0 unless grep {$be->field_exists($_)} @$fs;
+    if ($be->field_exists($fs)) {
+      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+    }
+    else {
+      return 0;
+    }
   }
   elsif ($t eq 'notfield') {
-    return 0 if grep {$be->field_exists($_)} @$fs;
+    if ($be->field_exists($fs)) {
+      return 0;
+    }
+    else {
+      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+    }
   }
   return 1;
 }

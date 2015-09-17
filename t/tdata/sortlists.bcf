@@ -2211,10 +2211,10 @@
   </bcf:sortlist>
   <bcf:sortlist section="0" name="lnamef5" sortscheme="lnamef5" type="entry">
     <bcf:filter type="field">author</bcf:filter>
-    <bcf:orfilter>
+    <bcf:filteror>
       <bcf:filter type="field">verba</bcf:filter>
       <bcf:filter type="subtype">rubbish</bcf:filter>
-    </bcf:orfilter>
+    </bcf:filteror>
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">author</bcf:sortitem>

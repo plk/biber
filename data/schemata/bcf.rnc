@@ -292,7 +292,7 @@ listspec =
       attribute sortscheme { xsd:string {minLength="1"}},
       # name is only needed for list types
       attribute name { xsd:string {minLength="1"}},
-      (filter | orfilter )*,
+      (filter | filteror )*,
       element bcf:sorting {
         # locale for entire sorting specification
         attribute locale { xsd:string {minLength="1"}}?,
@@ -373,7 +373,7 @@ secspec =
     }*
   }
 
-orfilter = element bcf:orfilter {
+filteror = element bcf:filteror {
              filter+
            }
 

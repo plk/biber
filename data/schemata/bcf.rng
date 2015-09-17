@@ -760,7 +760,7 @@
         <zeroOrMore>
           <choice>
             <ref name="filter"/>
-            <ref name="orfilter"/>
+            <ref name="filteror"/>
           </choice>
         </zeroOrMore>
         <optional>
@@ -988,8 +988,8 @@
       </zeroOrMore>
     </element>
   </define>
-  <define name="orfilter">
-    <element name="bcf:orfilter">
+  <define name="filteror">
+    <element name="bcf:filteror">
       <oneOrMore>
         <ref name="filter"/>
       </oneOrMore>

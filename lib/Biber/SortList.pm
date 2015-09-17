@@ -437,27 +437,9 @@ sub get_sortscheme {
 
 sub add_filter {
   my $self = shift;
-  my ($type, $values) = @_;
-  # Disjunctive filters are not simple values
-  if ($type eq 'orfilter') {
-    $self->{filters}{$type} = $values;
-  }
-  else {
-    $self->{filters}{$type} = [ split(/\s*,\s*/,$values) ];
-  }
+  my ($filter) = @_;
+  push @{$self->{filters}}, $filter;
   return;
-}
-
-=head2 get_filter
-
-    Gets a specific filter from a list object
-
-=cut
-
-sub get_filter {
-  my $self = shift;
-  my $type = shift;
-  return $self->{filters}{$type};
 }
 
 =head2 get_filters
