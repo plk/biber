@@ -2539,7 +2539,7 @@ sub generate_uniquename {
 
 =head2 create_uniquelist_info
 
-    Gather the uniquename information as we look through the names
+    Gather the uniquelist information as we look through the names
 
 =cut
 
