@@ -3108,6 +3108,7 @@ sub prepare_tool {
   }
 
   $self->validate_datamodel;   # Check against data model
+  $self->process_visible_names;        # Generate visible names information for all entries
   $self->process_lists;        # process the output lists (sort and filtering)
   $out->create_output_section; # Generate and push the section output into the
                                # into the output object ready for writing

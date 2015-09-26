@@ -147,8 +147,20 @@ our $CONFIG_DEFAULT_BIBER = {
 # * Some tool-mode defaults (as there is no .bcf and some biblatex options
 #   cannot be set in a biber config file)
 our %CONFIG_DEFAULT_BIBLATEX = (
-  sortscheme => 'none',
-);
+                                sortscheme    => 'none',
+                                useauthor     => 1,
+                                useeditor     => 1,
+                                usetranslator => 1,
+                                maxbibnames   => 3,
+                                maxitems      => 3,
+                                minbibnames   => 1,
+                                maxalphanames => 3,
+                                maxcitenames  => 3,
+                                minalphanames => 1,
+                                mincitenames  => 1,
+                                minitems      => 1,
+                                useprefix     => 0
+                               );
 
 # Set up some encoding aliases to map \inputen{c,x} encoding names to Encode
 # It seems that inputen{c,x} has a different idea of nextstep than Encode
