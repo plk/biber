@@ -151,14 +151,14 @@ our %CONFIG_DEFAULT_BIBLATEX = (
                                 useauthor     => 1,
                                 useeditor     => 1,
                                 usetranslator => 1,
-                                maxbibnames   => 3,
-                                maxitems      => 3,
-                                minbibnames   => 1,
-                                maxalphanames => 3,
-                                maxcitenames  => 3,
-                                minalphanames => 1,
-                                mincitenames  => 1,
-                                minitems      => 1,
+                                maxbibnames   => 100,
+                                maxitems      => 100,
+                                minbibnames   => 100,
+                                maxalphanames => 100,
+                                maxcitenames  => 100,
+                                minalphanames => 100,
+                                mincitenames  => 100,
+                                minitems      => 100,
                                 useprefix     => 0
                                );
 

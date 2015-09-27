@@ -682,6 +682,12 @@ sub setconfigfileoption {
   my ($opt, $val) = @_;
   # Config file options are also options ...
   $CONFIG->{options}{biber}{$opt} = $CONFIG->{configfileoptions}{$opt} = $val;
+
+  # Config file options can also be global biblatex options
+  if ($CONFIG_SCOPE_BIBLATEX{$opt}) {
+    $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;
+  }
+
   return;
 }
 
