@@ -43,6 +43,9 @@ GetOptions(
            'input_directory|input-directory=s',
            'input_encoding|input-encodinge=s',
            'input_format|input-format=s',
+           'isbn10',
+           'isbn13',
+           'isbn_normalise|isbn-normalise',
            'listsep=s',
            'logfile=s',
            'mincrossrefs|m=s',
@@ -215,6 +218,12 @@ if (not exists($opts->{output_format})) {
   else {
     $opts->{output_format} = 'bbl'; # default for normal use
   }
+}
+
+# Check ISBN options
+if (exists($opts->{isbn10}) and exists($opts->{isbn13})) {
+  say STDERR "Biber: Select only one of 'isbn10' or 'isbn13' but not both";
+  exit EXIT_ERROR;
 }
 
 # Check the tool_* options
@@ -500,6 +509,18 @@ Biber input format. This option only means something in tool mode (see B<tool> o
 normally the input format of a data source is specified in the F<.bcf> file and
 therefore from the B<\addbibresouce> macro in BibLaTeX.
 The default value when in tool mode is 'bibtex'
+
+=item B<--isbn10>
+
+Force all ISBNs to 10-digit versions on output.
+
+=item B<--isbn13>
+
+Force all ISBNs to 13-digit versions on output.
+
+=item B<--isbn-normalise>
+
+Normalise ISBNs with hyphens in the correct places on output.
 
 =item B<--logfile [file]>
 

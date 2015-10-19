@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 58;
+use Test::More tests => 60;
 use Test::Differences;
 unified_diff;
 
@@ -46,6 +46,8 @@ Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
 Biber::Config->setblxoption('maxbibnames', 10);
 Biber::Config->setblxoption('minbibnames', 7);
+Biber::Config->setoption('isbn-normalise', 1);
+Biber::Config->setoption('isbn13', 1);
 
 # THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
@@ -55,7 +57,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 };
+my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2};
 
 # entry "loh" is missing as the biber.conf map removes it with map_entry_null
 my @allkeys = sort map {lc()} qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
@@ -69,7 +71,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9} ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2} ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
@@ -451,3 +453,37 @@ eq_or_diff($bibentries->entry('us1')->get_field('entrytype'), 'customa', 'Map le
 
 # Test for "others" in lists
 eq_or_diff( $out->get_output_entry('list1', $main), $list1, 'Entry with others list' ) ;
+
+my $isbn1 = q|    \entry{isbn1}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{Flummox}{F\\bibinitperiod}{Fred}{F\\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \field{labelalpha}{Flu}
+      \field{sortinit}{F}
+      \field{sortinithash}{c6a7d9913bbd7b20ea954441c0460b78}
+      \field{extraalpha}{1}
+      \field{labelnamesource}{author}
+      \field{isbn}{978-0-8165-2066-4}
+    \endentry
+|;
+
+my $isbn2 = q|    \entry{isbn2}{misc}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{Flummox}{F\\bibinitperiod}{Fred}{F\\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \field{labelalpha}{Flu}
+      \field{sortinit}{F}
+      \field{sortinithash}{c6a7d9913bbd7b20ea954441c0460b78}
+      \field{extraalpha}{2}
+      \field{labelnamesource}{author}
+      \field{isbn}{978-0-8165-2066-4}
+    \endentry
+|;
+
+# ISBN options tests
+eq_or_diff($out->get_output_entry('isbn1', $main), $isbn1, 'ISBN options - 1');
+eq_or_diff($out->get_output_entry('isbn2', $main), $isbn2, 'ISBN options - 2');

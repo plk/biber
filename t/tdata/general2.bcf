@@ -2195,6 +2195,9 @@
     <bcf:citekey order="15">alias6</bcf:citekey>
     <bcf:citekey order="16">us1</bcf:citekey>
     <bcf:citekey order="17">list1</bcf:citekey>
+    <bcf:citekey order="18">isbn1</bcf:citekey>
+    <bcf:citekey order="19">isbn2</bcf:citekey>
+    <bcf:citekey order="20">issn1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry"/>

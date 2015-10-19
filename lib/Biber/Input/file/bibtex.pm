@@ -635,7 +635,7 @@ sub create_entry {
 
 # Literal fields
 sub _literal {
-  my ($bibentry, $entry, $field) = @_;
+  my ($bibentry, $entry, $field, $key) = @_;
   my $value = biber_decode_utf8($entry->get($field));
 
   # If we have already split some date fields into literal fields
@@ -643,6 +643,42 @@ sub _literal {
   # year/month
   return if ($field eq 'year' and $bibentry->get_datafield('year'));
   return if ($field eq 'month' and $bibentry->get_datafield('month'));
+
+  # Deal with ISBN options
+  if ($field eq 'isbn') {
+    require Business::ISBN;
+    my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
+    $dir =~ s/\/$//;            # splitpath sometimes leaves a trailing '/'
+    # Just in case it is already set. We also need to fake this in tests or it will
+    # look for it in the blib dir
+    unless (exists($ENV{ISBN_RANGE_MESSAGE})) {
+      $ENV{ISBN_RANGE_MESSAGE} = File::Spec->catpath($vol, "$dir/ISBN/", 'RangeMessage.xml');
+    }
+    my $isbn = Business::ISBN->new($value);
+
+    # Ignore invalid ISBNs
+    if (not $isbn or not $isbn->is_valid) {
+      biber_warn("ISBN '$value' in entry '$key' is invalid - run biber with '--validate_datamodel' for details.");
+      $bibentry->set_datafield($field, $value);
+      return;
+    }
+
+    # Force to a specified format
+    if (Biber::Config->getoption('isbn13')) {
+      $isbn = $isbn->as_isbn13;
+    }
+    elsif (Biber::Config->getoption('isbn10')) {
+      $isbn = $isbn->as_isbn10;
+    }
+
+    # Normalise if requested
+    if (Biber::Config->getoption('isbn-normalise')) {
+      $value = $isbn->as_string;
+    }
+    else {
+      $value = $isbn->isbn;
+    }
+  }
 
   # Try to sanitise months to biblatex requirements
   if ($field eq 'month') {

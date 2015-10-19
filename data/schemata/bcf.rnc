@@ -170,7 +170,7 @@ start =
       }+
     }?,
     # nolabel specification
-    element bcf:nolabelss {
+    element bcf:nolabels {
       element bcf:nolabel {
         attribute value { xsd:string },
         empty
