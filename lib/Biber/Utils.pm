@@ -48,7 +48,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  locale2bcp47 bcp472locale rangelen match_indices};
+  locale2bcp47 bcp472locale rangelen match_indices process_comment};
 
 =head1 FUNCTIONS
 
@@ -941,6 +941,23 @@ sub _expand_option {
   }
   return;
 }
+
+=head2 process_comment
+
+  Fix up some problems with comments after being processed by btparse
+
+=cut
+
+sub process_comment {
+  my $comment = shift;
+  # Fix up structured Jabref comments by re-instating line breaks. Hack.
+  if ($comment =~ m/jabref-meta:/) {
+    $comment =~ s/([:;])\s(\d)/$1\n$2/xmsg;
+    $comment =~ s/\z/\n/xms;
+  }
+  return $comment;
+}
+
 
 =head2 locale2bcp47
 

@@ -943,7 +943,7 @@ sub cache_data {
     # Save comments for output in tool mode
     if ( $entry->metatype == BTE_COMMENT ) {
       if (Biber::Config->getoption('tool')) {
-        push @{$cache->{comments}{$filename}}, biber_decode_utf8($entry->value);
+        push @{$cache->{comments}{$filename}}, process_comment(biber_decode_utf8($entry->value));
       }
       next;
     }
