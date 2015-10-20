@@ -1,5 +1,8 @@
 Revision history for Biber
 
+2.2    (2015-)
+        * Tool mode now preserves comments at the end of the file
+        * New ISBN formatting options for biber (--isbn10, --isnb13, --isbn-normalise)
 2.1    (2015-05-06)
        * Misc bug fixes
 2.0    (2015-04-20)
