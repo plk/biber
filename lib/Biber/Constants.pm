@@ -110,7 +110,6 @@ our $CONFIG_DEFAULT_BIBER = {
   isbn_normalise      => { content => 0 },
   listsep             => { content => 'and' },
   mincrossrefs        => { content => 2 },
-  mssplit             => { content => '_' },
   namesep             => { content => 'and' },
   nodieonerror        => { content => 0 },
   noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},

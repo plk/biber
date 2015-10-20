@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 6;
 use Test::Differences;
 unified_diff;
 
@@ -85,9 +85,12 @@ my $t3 = q|@BOOK{b1,
 
 |;
 
+my $tc1 = ["\@COMMENT{Comment 1}\n", "\@COMMENT{Comment 2}\n", "\@COMMENT{Comment 3}\n"];
+
 # NFD here because we are testing internals here and all internals expect NFD
 eq_or_diff($out->get_output_entry(NFD('i3Š')), $t1, 'tool mode 1');
 ok(is_undef($out->get_output_entry('loh')), 'tool mode 2');
 eq_or_diff($out->get_output_entry('xd1',), $t2, 'tool mode 3');
 eq_or_diff($out->get_output_entry('b1',), $t3, 'tool mode 4');
 is_deeply([$main->get_keys], ['macmillan:pub', 'macmillan:loc', 'mv1', 'b1', 'xd1', 'macmillan', NFD('i3Š')], 'tool mode sorting');
+eq_or_diff($out->get_output_comments, $tc1, 'tool mode 5');

@@ -206,6 +206,18 @@ sub get_output_entries {
                 $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$_}} @{$list->get_keys}];
 }
 
+
+=head2 get_output_comments
+
+    Get the output comments for tool mode tests
+
+=cut
+
+sub get_output_comments {
+  my $self = shift;
+  return $self->{output_data}{COMMENTS};
+}
+
 =head2 get_output_entry
 
     Get the output data for a specific entry.

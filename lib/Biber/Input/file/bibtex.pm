@@ -335,6 +335,13 @@ sub extract_entries {
     push @{$Biber::MASTER->{preamble}}, @{$cache->{preamble}{$filename}};
   }
 
+  # Save comments if in tool mode
+  if (Biber::Config->getoption('tool')) {
+    if ($cache->{comments}{$filename}) {
+      $Biber::MASTER->{comments} = $cache->{comments}{$filename};
+    }
+  }
+
   return @rkeys;
 }
 
@@ -933,10 +940,17 @@ sub cache_data {
       next;
     }
 
+    # Save comments for output in tool mode
+    if ( $entry->metatype == BTE_COMMENT ) {
+      if (Biber::Config->getoption('tool')) {
+        push @{$cache->{comments}{$filename}}, biber_decode_utf8($entry->value);
+      }
+      next;
+    }
+
     # Ignore misc BibTeX entry types we don't care about
     next if ( $entry->metatype == BTE_MACRODEF or
-              $entry->metatype == BTE_UNKNOWN or
-              $entry->metatype == BTE_COMMENT );
+              $entry->metatype == BTE_UNKNOWN );
 
     # If an entry has no key, ignore it and warn
     unless ($entry->key) {

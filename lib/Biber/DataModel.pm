@@ -177,12 +177,8 @@ sub new {
 sub is_field {
   my $self = shift;
   my $field = shift;
-  my $S = Biber::Config->getoption('mssplit');
   if ($field =~ m/^BIBERCUSTOM/o) {
     return 1;
-  }
-  elsif ($field =~ m/^([^$S]+)$S(?:original|translated|romanised|uniform)$S?.*$/) {
-    return $self->{fieldsbyname}{$1} ? 1 : 0;
   }
   else {
     return $self->{fieldsbyname}{$field} ? 1 : 0;

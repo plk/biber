@@ -40,6 +40,38 @@ sub set_output_target_file {
   $self->{output_target_file} = $outfile;
 }
 
+=head2 set_output_comment
+
+  Set the output for a comment
+
+=cut
+
+sub set_output_comment {
+  my $self = shift;
+  my $comment = shift;
+  my $acc = '';
+
+  # Make the right casing function
+  my $casing;
+
+  if (Biber::Config->getoption('output_fieldcase') eq 'upper') {
+    $casing = sub {uc(shift)};
+  }
+  elsif (Biber::Config->getoption('output_fieldcase') eq 'lower') {
+    $casing = sub {lc(shift)};
+  }
+  elsif (Biber::Config->getoption('output_fieldcase') eq 'title') {
+    $casing = sub {ucfirst(shift)};
+  }
+
+  $acc .= '@';
+  $acc .= $casing->('comment');
+  $acc .= "{$comment}\n";
+
+  push @{$self->{output_data}{COMMENTS}}, $acc;
+  return;
+}
+
 =head2 set_output_entry
 
   Set the output for an entry
@@ -58,21 +90,15 @@ sub set_output_entry {
 
   # Make the right casing function
   my $casing;
-  my $mss = Biber::Config->getoption('mssplit');
+
   if (Biber::Config->getoption('output_fieldcase') eq 'upper') {
-    $casing = sub {my $s = shift;
-                   my @s = split(/$mss/, $s);
-                   join($mss, uc(shift(@s)), @s)};
+    $casing = sub {uc(shift)};
   }
   elsif (Biber::Config->getoption('output_fieldcase') eq 'lower') {
-    $casing = sub {my $s = shift;
-                   my @s = split(/$mss/, $s);
-                   join($mss, lc(shift(@s)), @s)};
+    $casing = sub {lc(shift)};
   }
   elsif (Biber::Config->getoption('output_fieldcase') eq 'title') {
-    $casing = sub {my $s = shift;
-                   my @s = split(/$mss/, $s);
-                   join($mss, ucfirst(shift(@s)), @s)};
+    $casing = sub {ucfirst(shift)};
   }
 
   $acc .= '@';
@@ -178,6 +204,13 @@ sub output {
     out($target, ${$data->{ENTRIES}{99999}{index}{$key}});
   }
 
+  # Output any comments when in tool mode
+  if (Biber::Config->getoption('tool')) {
+    foreach my $comment (@{$data->{COMMENTS}}) {
+      out($target, $comment);
+    }
+  }
+
   out($target, $data->{TAIL});
 
   $logger->info("Output to $target_string");
@@ -197,12 +230,16 @@ sub create_output_section {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
 
-
-  # We rely on the order of this array for the order of the .bbl
+  # We rely on the order of this array for the order of the .bib
   foreach my $k ($section->get_citekeys) {
     # Regular entry
     my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");
     $self->set_output_entry($be, $section, Biber::Config->get_dm);
+  }
+
+  # Output all comments at the end
+  foreach my $comment (@{$Biber::MASTER->{comments}}) {
+    $self->set_output_comment($comment);
   }
 
   # Make sure the output object knows about the output section
