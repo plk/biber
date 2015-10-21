@@ -1,8 +1,13 @@
 Revision history for Biber
 
-2.2    (2015-)
-        * Tool mode now preserves comments at the end of the file
-        * New ISBN formatting options for biber (--isbn10, --isnb13, --isbn-normalise)
+2.2    (2015-10-21)
+       * Tool mode now preserves comments at the end of the file
+       * New ISBN formatting options for biber (--isbn10, --isnb13, --isbn-normalise)
+       * Implemented way of ignoring certain regexps when counting
+         fixed-width string in labels (see biblatex \DeclareNolabelwidthcount macro)
+       * Updated binary builds to perl 5.22
+       * Cygwin binary build is now handled by Texlive builders
+       * Misc bug fixes
 2.1    (2015-05-06)
        * Misc bug fixes
 2.0    (2015-04-20)

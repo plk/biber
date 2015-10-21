@@ -22,7 +22,7 @@ use Log::Log4perl::Layout::PatternLayout;
 use Unicode::Normalize;
 
 our $VERSION = '2.2';
-our $BETA_VERSION = 1; # Is this a beta version?
+our $BETA_VERSION = 0; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
 our $screen  = Log::Log4perl::get_logger('screen');
