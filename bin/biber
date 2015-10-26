@@ -394,8 +394,8 @@ C<biber> - A bibtex replacement for users of biblatex
 
 =head1 SYNOPSIS
 
-biber [options] file[.bcf]
-biber [options] --tool <datasource>
+  biber [options] file[.bcf]
+  biber [options] --tool <datasource>
 
   Creates "file.bbl" using control file "file.bcf" (".bcf" extension is
   optional). Normally use with biblatex requires no options as they are
