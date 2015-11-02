@@ -453,7 +453,7 @@ sub _label_name {
       if ($lc > $numnames) { # cap at numnames, of course
         $lc = $numnames;
       }
-      $loopnames = $lc; # Only look as many names as specified
+      $loopnames = $lc; # Only look at as many names as specified
     }
     else {
       $loopnames = $visibility; # Else use bib visibility
