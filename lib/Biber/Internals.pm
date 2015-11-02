@@ -460,7 +460,21 @@ sub _label_name {
     }
 
     for (my $i = 0; $i < $loopnames; $i++) {
-      $acc .= Unicode::GCString->new($prefices[$i])->substr(0,1)->as_string if ($useprefix and $prefices[$i]);
+      # Deal with prefix options
+      if ($useprefix and $prefices[$i]) {
+        my $w = $labelattrs->{substring_pwidth} // 1;
+        if ($labelattrs->{substring_pcompound}) {
+          my $tmpstring;
+          # Splitting on tilde too as libbtparse inserts these into compound prefices
+          foreach my $part (split(/[\s\p{Dash}~]+/, $prefices[$i])) {
+            $tmpstring .= Unicode::GCString->new($part)->substr(0, $w)->as_string;
+          }
+          $acc .= $tmpstring;
+        }
+        else {
+          $acc .= Unicode::GCString->new($prefices[$i])->substr(0, $w)->as_string;
+        }
+      }
       $acc .= _process_label_attributes($self, $citekey, $lastnames[$i], $labelattrs, $realname, 'lastname', $i);
     }
 

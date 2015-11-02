@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 116;
+use Test::More tests => 118;
 use Test::Differences;
 unified_diff;
 
@@ -51,6 +51,8 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
+
+eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'vVaa99', 'Default prefix settings entry prefix1 labelalpha');
 eq_or_diff($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=1 minalphanames=1 entry L1 labelalpha');
 ok(is_undef($main->get_extraalphadata('l1')), 'maxalphanames=1 minalphanames=1 entry L1 extraalpha');
 eq_or_diff($bibentries->entry('L2')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L2 labelalpha');
@@ -429,7 +431,9 @@ Biber::Config->setblxoption('labelalphatemplate', {
                    ifnamecount     => 1,
                    substring_side  => "left",
                    substring_width => 3,
-                 },
+                   substring_pwidth => 2,
+                   substring_pcompound=> 1,
+                                  },
                ],
                    order => 1,
                    },
@@ -460,4 +464,5 @@ $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
 eq_or_diff($bibentries->entry('skipwidthtest1')->get_field('sortlabelalpha'), 'OToolOToole', 'Skip width test - 1');
+eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'vadeVaaThin', 'compound and string length entry prefix1 labelalpha');
 
