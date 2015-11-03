@@ -859,6 +859,7 @@
   </maps>
   <decode_exclude>
     <char>-</char>
+    <char>|</char>
     <char>textbraceleft</char>
     <char>textbraceright</char>
   </decode_exclude>
