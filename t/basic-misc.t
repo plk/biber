@@ -46,7 +46,7 @@ Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
 Biber::Config->setblxoption('maxbibnames', 10);
 Biber::Config->setblxoption('minbibnames', 7);
-Biber::Config->setoption('isbn-normalise', 1);
+Biber::Config->setoption('isbn_normalise', 1);
 Biber::Config->setoption('isbn13', 1);
 
 # THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!

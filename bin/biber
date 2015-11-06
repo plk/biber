@@ -512,11 +512,15 @@ The default value when in tool mode is 'bibtex'
 
 =item B<--isbn10>
 
-Force all ISBNs to 10-digit versions on output.
+Force all ISBNs to 10-digit versions on output. This will convert the ISBN internally to an ISBN
+object which will not have hyphens on output. If you use this option and want an ISBN with hyphens
+in the correct place on output, use the B<--isbn-normalise> option.
 
 =item B<--isbn13>
 
-Force all ISBNs to 13-digit versions on output.
+Force all ISBNs to 13-digit versions on output. This will convert the ISBN internally to an ISBN
+object which will not have hyphens on output. If you use this option and want an ISBN with hyphens
+in the correct place on output, use the B<--isbn-normalise> option.
 
 =item B<--isbn-normalise>
 

@@ -673,17 +673,16 @@ sub _literal {
     # Force to a specified format
     if (Biber::Config->getoption('isbn13')) {
       $isbn = $isbn->as_isbn13;
+      $value = $isbn->isbn;
     }
     elsif (Biber::Config->getoption('isbn10')) {
       $isbn = $isbn->as_isbn10;
+      $value = $isbn->isbn;
     }
 
     # Normalise if requested
-    if (Biber::Config->getoption('isbn-normalise')) {
+    if (Biber::Config->getoption('isbn_normalise')) {
       $value = $isbn->as_string;
-    }
-    else {
-      $value = $isbn->isbn;
     }
   }
 

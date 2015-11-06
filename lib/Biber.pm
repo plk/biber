@@ -285,6 +285,16 @@ sub parse_ctrlfile {
 
   biber_error("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless ($ctrl_file_path and -e $ctrl_file_path);
 
+  # Early check to make sure .bcf is well-formed. If not, this means that the last biblatex run
+  # exited prematurely while writing the .bcf. This results is problems for latexmk. So, if the
+  # .bcf is broken, just stop here, remove the .bcf and exit with error so that we don't write
+  # a bad .bbl
+  my $checkbuf = File::Slurp::read_file($ctrl_file_path) or biber_error("Cannot open $ctrl_file_path: $!");
+  $checkbuf = NFD(decode('UTF-8', $checkbuf));# Unicode NFD boundary
+  unless (eval "XML::LibXML->load_xml(string => \$checkbuf)") {
+    biber_error("$ctrl_file_path is malformed, last biblatex run probably failed");
+  }
+
   # Validate if asked to
   if (Biber::Config->getoption('validate_control')) {
     validate_biber_xml($ctrl_file_path, 'bcf', 'https://sourceforge.net/projects/biblatex');
@@ -302,7 +312,7 @@ sub parse_ctrlfile {
     # we assume that the schema files are in the same dir as Biber.pm:
     (my $vol, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
 
-    # Deal with the strange world of Par::Packer paths
+    # Deal with the strange world of PAR::Packer paths
     # We might be running inside a PAR executable and @INC is a bit odd in this case
     # Specifically, "Biber.pm" in @INC might resolve to an internal jumbled name
     # nowhere near to these files. You know what I mean if you've dealt with pp
