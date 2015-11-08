@@ -78,6 +78,7 @@ GetOptions(
            'sortupper=s',
            'ssl-nointernalca',
            'ssl-noverify-host',
+           'strip_comments|strip-comments',
            'tool',
            'tool_align|tool-align',                 # legacy alias for output_align
            'tool_config|tool-config',
@@ -704,6 +705,10 @@ to find the CA certs.
 
 Turn off host verification when using HTTPS to fetch remote data sources.
 You may need this if the SSL certificate is self-signed for example.
+
+=item B<--strip-comments>
+
+In tool mode, strip all comments from the output file.
 
 =item B<--tool>
 

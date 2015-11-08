@@ -633,7 +633,6 @@ sub create_entry {
     $bibentry->set_field('datatype', 'bibtex');
     $bibentries->add_entry($key, $bibentry);
   }
-
   return 1;
 }
 
@@ -939,9 +938,10 @@ sub cache_data {
       next;
     }
 
-    # Save comments for output in tool mode
+    # Save comments for output in tool mode unless comment strippig is requested
     if ( $entry->metatype == BTE_COMMENT ) {
-      if (Biber::Config->getoption('tool')) {
+      if (Biber::Config->getoption('tool') and not
+          Biber::Config->getoption('strip_comments') ) {
         push @{$cache->{comments}{$filename}}, process_comment(biber_decode_utf8($entry->value));
       }
       next;

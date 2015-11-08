@@ -3111,6 +3111,8 @@ sub prepare_tool {
   $self->set_current_section($secnum); # Set the section number we are working on
   $self->fetch_data;      # Fetch cited key and dependent data from sources
 
+  $self->process_visible_names;# Generate visible names information for all entries
+
   if (Biber::Config->getoption('output_resolve')) {
     $self->resolve_alias_refs; # Resolve xref/crossref/xdata aliases to real keys
     $self->resolve_xdata;      # Resolve xdata entries
@@ -3118,7 +3120,6 @@ sub prepare_tool {
   }
 
   $self->validate_datamodel;   # Check against data model
-  $self->process_visible_names;        # Generate visible names information for all entries
   $self->process_lists;        # process the output lists (sort and filtering)
   $out->create_output_section; # Generate and push the section output into the
                                # into the output object ready for writing

@@ -135,6 +135,7 @@ our $CONFIG_DEFAULT_BIBER = {
   sortcase            => { content => 1 },
   sortfirstinits      => { content => 0 },
   sortupper           => { content => 1 },
+  strip_comments      => { content => 0 },
   tool                => { content => 0 },
   trace               => { content => 0 },
   validate_config     => { content => 0 },
