@@ -320,6 +320,23 @@ if (my $outdir = Biber::Config->getoption('output_directory')) {
   $outfile = File::Spec->catfile($outdir, $file)
 }
 
+# Set the output class. Should be a subclass of Biber::Output::base
+if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
+  require Biber::Output::dot;
+  $biber->set_output_obj(Biber::Output::dot->new());
+}
+else {
+  my $package = 'Biber::Output::' . Biber::Config->getoption('output_format');
+  eval "require $package" or biber_error("Error loading data source package '$package': $@");
+  $biber->set_output_obj(eval "${package}->new()");
+}
+
+# Get reference to output object
+my $biberoutput = $biber->get_output_obj;
+
+# Set the output target file name
+$biberoutput->set_output_target_file($outfile);
+
 # Fake some necessary .bcf parts if in tool mode
 if (Biber::Config->getoption('tool')) {
   $biber->tool_mode_setup;
@@ -346,23 +363,6 @@ if (Biber::Config->getoption('trace')) {
     $biber->_stringdump,
     "\n###########################################################")
 }
-
-# Set the output class. Should be a subclass of Biber::Output::base
-if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
-  require Biber::Output::dot;
-  $biber->set_output_obj(Biber::Output::dot->new());
-}
-else {
-  my $package = 'Biber::Output::' . Biber::Config->getoption('output_format');
-  eval "require $package" or biber_error("Error loading data source package '$package': $@");
-  $biber->set_output_obj(eval "${package}->new()");
-}
-
-# Get reference to output object
-my $biberoutput = $biber->get_output_obj;
-
-# Set the output target file name
-$biberoutput->set_output_target_file($outfile);
 
 # Do all the real work
 Biber::Config->getoption('tool') ? $biber->prepare_tool : $biber->prepare;

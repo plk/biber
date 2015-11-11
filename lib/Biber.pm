@@ -292,7 +292,9 @@ sub parse_ctrlfile {
   my $checkbuf = File::Slurp::read_file($ctrl_file_path) or biber_error("Cannot open $ctrl_file_path: $!");
   $checkbuf = NFD(decode('UTF-8', $checkbuf));# Unicode NFD boundary
   unless (eval "XML::LibXML->load_xml(string => \$checkbuf)") {
-    biber_error("$ctrl_file_path is malformed, last biblatex run probably failed");
+    my $output = $self->get_output_obj->get_output_target_file;
+    unlink($output);
+    biber_error("$ctrl_file_path is malformed, last biblatex run probably failed. Deleted $output");
   }
 
   # Validate if asked to
