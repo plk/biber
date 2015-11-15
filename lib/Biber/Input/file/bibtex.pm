@@ -293,7 +293,7 @@ sub extract_entries {
         # Make sure there is a real, cited entry for the citekey alias
         # just in case only the alias is cited
         unless ($section->bibentries->entry_exists($rk)) {
-          if (my $entry = $cache->{data}{$filename}{$rk}) {
+          if (my $entry = $cache->{data}{GLOBALDS}{$rk}) {# Look in cache of all datasource keys
             create_entry($rk, $entry, $source, $smaps, \@rkeys);
             $section->add_citekeys($rk);
           }
@@ -705,17 +705,7 @@ sub _literal {
 sub _uri {
   my ($bibentry, $entry, $field) = @_;
   my $value = NFC(decode_utf8($entry->get($field)));# Unicode NFC boundary (before hex encoding)
-
-  # If there are some escapes in the URI, unescape them
-  if ($value =~ /\%/) {
-    $value =~ s/\\%/%/g; # just in case someone BibTeX escaped the "%"
-    # This is what uri_unescape() does but it's faster
-    $value =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
-  }
-
-  $value = URI->new($value)->as_string;
-
-  $bibentry->set_datafield($field, $value);
+  $bibentry->set_datafield($field, URI->new($value)->as_string); # Performs url encoding
   return;
 }
 
@@ -1023,7 +1013,8 @@ sub cache_data {
 
     # Cache the entry so we don't have to read the file again on next pass.
     # Two reasons - So we avoid T::B macro redef warnings and speed
-    $cache->{data}{$filename}{$key} = $entry;
+    # Create a global "all datasources" cache too as this is useful in places
+    $cache->{data}{GLOBALDS}{$key} = $cache->{data}{$filename}{$key} = $entry;
     # We do this as otherwise we have no way of determining the origing .bib entry order
     # We need this in order to do sorting=none + allkeys because in this case, there is no
     # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order

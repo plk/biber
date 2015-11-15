@@ -920,7 +920,7 @@ sub process_citekey_aliases {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   foreach my $citekey ($section->get_citekeys) {
-    if ($section->get_citekey_alias($citekey)) {
+    if (my $a = $section->get_citekey_alias($citekey)) {
       $logger->debug("Pruning citekey alias '$citekey' from citekeys");
       $section->del_citekey($citekey);
     }

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 60;
+use Test::More tests => 59;
 use Test::Differences;
 unified_diff;
 
@@ -71,7 +71,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 url2 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2} ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2} ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
@@ -430,8 +430,7 @@ ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 
 # URL encoding testing
 eq_or_diff($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
-eq_or_diff($bibentries->entry('url2')->get_field('url'), 'http://www.something.com/q=one%20two', 'URL encoding - 2');
-eq_or_diff($out->get_output_entry('url1', $main), $url1, 'URL encoding - 3' ) ;
+eq_or_diff($out->get_output_entry('url1', $main), $url1, 'URL encoding - 2' ) ;
 
 # map_final testing with map_field_set
 eq_or_diff($bibentries->entry('ol1')->get_field('note'), 'A note', 'map_final - 1');
