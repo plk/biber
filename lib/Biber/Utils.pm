@@ -440,11 +440,14 @@ sub reduce_array {
 
     Remove surrounding curly brackets:
         '{string}' -> 'string'
+    but not
+        '{string} {string}' -> 'string} {string'
 
 =cut
 
 sub remove_outer {
   my $str = shift;
+  return $str if $str =~ m/}\s*{/;
   $str =~ s/^{(\X+)}$/$1/;
   return $str;
 }
