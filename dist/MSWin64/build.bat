@@ -19,9 +19,9 @@
 :: constructed in the code so Par::Packer can't auto-detect them.
 :: Same with some of the output modules.
 
-SET perldir=C:\strawberry\
+SET perldir=d:\apps\perl
 
-COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN64
+COPY %perldir%\perl\site\bin\biber %TEMP%\biber-MSWIN64
 
 SET PAR_VERBATIM=1
 
@@ -39,8 +39,13 @@ CALL pp ^
   --module=Biber::Output::biblatexml ^
   --module=Pod::Simple::TranscodeSmart ^
   --module=Pod::Simple::TranscodeDumb ^
+  --module=List::MoreUtils::XS ^
+  --module=List::MoreUtils::PP ^
   --module=Encode::Byte ^
   --module=Encode::CN ^
+  --module=HTTP::Status ^
+  --module=HTTP::Date ^
+  --module=Encode::Locale ^
   --module=Encode::CJKConstants ^
   --module=Encode::EBCDIC ^
   --module=Encode::Encoder ^
@@ -58,19 +63,16 @@ CALL pp ^
   --module=Encode::HanExtra ^
   --module=IO::Socket::SSL ^
   --module=File::Find::Rule ^
+  --exclude=DBD::SQLite ^
   --link=C:\WINDOWS\system32\libbtparse.dll ^
-  --link=d:\apps\c\bin\libxslt-1_.dll ^
-  --link=d:\apps\c\bin\libexslt-0_.dll ^
-  --link=d:\apps\c\bin\zlib1_.dll ^
-  --link=d:\apps\c\bin\libxml2-2_.dll ^
-  --link=d:\apps\c\bin\libiconv-2_.dll ^
-  --link=d:\apps\c\bin\ssleay32_.dll ^
-  --link=d:\apps\c\bin\libeay32_.dll ^
-  --link=d:\apps\c\bin\liblzma-5_.dll ^
-  --link=C:\strawberry\c\bin\libxml2-2__.dll ^
-  --link=C:\strawberry\c\bin\libiconv-2__.dll ^
-  --link=C:\strawberry\c\bin\liblzma-5__.dll ^
-  --link=C:\strawberry\c\bin\zlib1__.dll ^
+  --link=%perldir%\c\bin\libxslt-1_.dll ^
+  --link=%perldir%\c\bin\libexslt-0_.dll ^
+  --link=%perldir%\c\bin\zlib1_.dll ^
+  --link=%perldir%\c\bin\libxml2-2_.dll ^
+  --link=%perldir%\c\bin\libiconv-2_.dll ^
+  --link=%perldir%\c\bin\ssleay32_.dll ^
+  --link=%perldir%\c\bin\libeay32_.dll ^
+  --link=%perldir%\c\bin\liblzma-5_.dll ^
   --addlist=biber.files ^
   --cachedeps=scancache ^
   --output=biber-MSWIN64.exe ^
