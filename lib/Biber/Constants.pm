@@ -122,7 +122,7 @@ our $CONFIG_DEFAULT_BIBER = {
                                        { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
   onlylog             => { content => 0 },
   others_string       => { content => 'others' },
-  output_align        => { content => 1 },
+  output_align        => { content => 0 },
   output_encoding     => { content => 'UTF-8' },
   output_format       => { content => 'bbl' },
   output_indent       => { content => '2' },
