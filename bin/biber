@@ -576,7 +576,7 @@ Use F<string> as the final name in a name field which implies "et al". Defaults 
 
 =item B<--output-align>
 
-Align field values in neat columns in output. Effect depends on the output format. Default is true.
+Align field values in neat columns in output. Effect depends on the output format. Default is false.
 The legacy option B<--tool_align> is supported as an alias.
 
 =item B<--output-directory [directory]>

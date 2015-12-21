@@ -131,7 +131,7 @@ example:
 \noindent is now:
 
 \begin{verbatim}
-  biber --output_format=dot --dot_include=section,field <file>
+  biber --output-format=dot --dot-include=section,field <file>
 \end{verbatim}
 
 \minisec{1.8}
@@ -623,7 +623,7 @@ an example config file which displays the \biber\ defaults:
   </nosort>
   <onlylog>0</onlylog>
   <others_string>others</others_string>
-  <ouput_align>1</output_align>
+  <ouput_align>0</output_align>
   <output_encoding>UTF-8</output_encoding>
   <output_fieldcase>upper</output_fieldcase>
   <output_format>bbl</output_format>
@@ -669,7 +669,7 @@ for typesetting to someone. To do this, you would, after the first \latex
 run, call \biber like this:
 
 \begin{verbatim}
-  biber --output_format=bibtex test.bcf
+  biber --output-format=bibtex test.bcf
 \end{verbatim}
 
 \noindent This would result in a new \file{.bib} file called
@@ -1868,12 +1868,12 @@ files which may or may not be accurate.
 
 \noindent Case insensitive sorting.
 
-\biberex{biber --sortupper=false --collate_options="backwards => 2"}
+\biberex{biber --sortupper=false --collate-options="backwards => 2"}
 
 \noindent Collate lowercase before upper and collate French accents in
 reverse order at UCA level 2.
 
-\biberex{biber --collate_options="variable => 'shifted'"}
+\biberex{biber --collate-options="variable => 'shifted'"}
 
 \noindent Use the UCA default setting for variable weight punctuation
 (which is to ignore it for sorting, effectively).
@@ -2008,24 +2008,24 @@ UTF-8 for a particular character. It's unlikely you will need to use this.
 \noindent Set \opt{input-encoding} and \opt{output-encoding} from the
 config file or \verb+.bcf+
 
-\biberex{biber --output_encoding=latin2}
+\biberex{biber --output-encoding=latin2}
 
 \noindent Encode the \verb+.bbl+ as latin2, overriding the
 \verb+.bcf+
 
-\biberex{biber --output_safechars}
+\biberex{biber --output-safechars}
 
 \noindent Set \opt{input-encoding} and \opt{output-encoding} from the
 config file or \verb+.bcf+. Force encoding of UTF-8 chars to \latex\
 macros using default conversion set
 
-\biberex{biber --output_encoding=ascii}
+\biberex{biber --output-encoding=ascii}
 
 \noindent Encode the \verb+.bbl+ as ascii, overriding the
 \verb+.bcf+. Automatically sets \opt{--output-safechars} to force UTF-8
 to \latex\ macro conversion
 
-\biberex{biber --output_encoding=ascii --output_safecharsset=full}
+\biberex{biber --output-encoding=ascii --output-safecharsset=full}
 
 \noindent Encode the \verb+.bbl+ as ascii, overriding the
 \verb+.bcf+. Automatically sets \opt{--output-safechars} to force UTF-8
@@ -2153,7 +2153,7 @@ the \verb+.dot+ output graph. The valid sub-options are shown in Table
 then the default setting is implicitly used, which is:
 
 \begin{verbatim}
---dot_include=crossref,section,xdata,xref
+--dot-include=crossref,section,xdata,xref
 \end{verbatim}
 
 \begin{table}
@@ -2241,7 +2241,7 @@ data to a different format. For example, you could choose to reencode your
 datasource by turning all UTF-8 characters into \latex\ macros:
 
 \begin{verbatim}
-biber --tool --output_encoding=ascii file.bib
+biber --tool --output-encoding=ascii file.bib
 \end{verbatim}
 
 \noindent This would output a copy of \file{file.bib} called \file{file\_bibertool.bib} with all
@@ -2280,21 +2280,21 @@ then you must enclose the whole option value in quotes. For example,
 these two will do the same thing:
 
 \begin{verbatim}
-biber --tool --output_macro_fields=month,publisher
-biber --tool --output_macro_fields='month, publisher'
+biber --tool --output-macro_fields=month,publisher
+biber --tool --output-macro_fields='month, publisher'
 \end{verbatim}
 
 Tool mode also allows some reformatting of the \file{.bib} file. The
 option \opt{--tool-fieldcase} can be used to force the entrytype and
 fieldnames to upper, lower or title case. The option
 \opt{--tool-indent} can be used to customise the indentation of
-fields. The option \opt{tool-align} can be used to align all field
+fields. The option \opt{output-align} can be used to align all field
 values neatly. See the \biber\ \opt{--help} output for documentation
 and defaults. For example, the command:
 
 \begin{verbatim}
-biber --tool --output_fieldcase=title --output_indent=4 \
-      --output_align=true file.bib
+biber --tool --output-fieldcase=title --output-indent=4 \
+      --output-align=true file.bib
 \end{verbatim}
 %
 results in \file{.bib} entries which look like this:
@@ -2310,8 +2310,8 @@ results in \file{.bib} entries which look like this:
 %
 another example:
 \begin{verbatim}
-biber --tool --output_fieldcase=upper --output_indent=2 \
-      --output_align=false file.bib
+biber --tool --output-fieldcase=upper --output-indent=2 \
+      --output-align=false file.bib
 \end{verbatim}
 %
 results in entries like this:
@@ -2437,7 +2437,7 @@ example, consider a \file{test.bib} file:
 Running \biber as:
 
 \begin{verbatim}
-biber --tool --output_resolve test.bib
+biber --tool --output-resolve test.bib
 \end{verbatim}
 %
 The result of this would be a file \file{test\_bibertool.bib} with contents:
@@ -2496,7 +2496,7 @@ if you wish to covert a \bibtex format data file to the experimental
 \texttt{biblatexml} XML format, you can do:
 
 \begin{verbatim}
-biber --tool --output_format=biblatexml file.bib
+biber --tool --output-format=biblatexml file.bib
 \end{verbatim}
 
 \noindent This will output a file \file{file\_bibertool.bltxml} by
@@ -2797,7 +2797,7 @@ SourceForge\footnote{\url{https://sourceforge.net/projects/biblatex-biber/files/
 put them in a directory and run \biber\ in that directory like this:
 
 \begin{verbatim}
-biber --validate_control --convert_control test
+biber --validate-control --convert-control test
 \end{verbatim}
 
 \noindent This will run \biber\ normally on the test files plus it
@@ -2809,7 +2809,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.0
+INFO - This is Biber 2.2
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
