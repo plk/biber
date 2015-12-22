@@ -36,6 +36,7 @@ Log::Log4perl->init(\$l4pconf);
 # Biber options
 Biber::Config->setoption('output_resolve', 1);
 Biber::Config->setoption('output_format', 'bibtex');
+Biber::Config->setoption('output_align', '1');
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $biber->parse_ctrlfile('bibtex-output.bcf');
 $biber->set_output_obj(Biber::Output::bibtex->new());
