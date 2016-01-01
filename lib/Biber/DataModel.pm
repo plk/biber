@@ -162,6 +162,29 @@ sub new {
   return $self;
 }
 
+=head2 fieldtypes
+
+    Returns array ref of legal fieldtypes
+
+=cut
+
+sub fieldtypes {
+  my $self = shift;
+  return [ keys %{$self->{fieldsbyfieldtype}} ];
+}
+
+=head2 datatypes
+
+    Returns array ref of legal datatypes
+
+=cut
+
+sub datatypes {
+  my $self = shift;
+  return [ keys %{$self->{fieldsbydatatype}} ];
+}
+
+
 =head2 is_field
 
     Returns boolean to say if a field is a legal field
@@ -187,7 +210,7 @@ sub is_field {
 
 =head2 entrytypes
 
-    Returns array of legal entrytypes
+    Returns array ref of legal entrytypes
 
 =cut
 
@@ -301,6 +324,23 @@ sub get_fields_of_type {
   }
 
   return $f ? [ sort @$f ] : [];
+}
+
+=head2 is_fields_of_type
+
+  Returns boolean to say if the given fieldtype/datatype/format is a valid combination
+
+=cut
+
+sub is_fields_of_type {
+  my ($self, $fieldtype, $datatype, $format) = @_;
+  my $f;
+  if ($format) {
+    return exists($self->{fieldsbytype}{$fieldtype}{$datatype}{$format}) ? 1 : 0;
+  }
+  else {
+    return exists($self->{fieldsbytype}{$fieldtype}{$datatype}) ? 1 : 0;
+  }
 }
 
 =head2 get_fieldtype
@@ -763,7 +803,7 @@ sub generate_bltxml_schema {
 
   # alternate IDs
   $writer->comment('Alternate IDs');
-  $writer->startTag('zeroOrMore');
+  $writer->startTag('optional');
   $writer->startTag('element', 'name' => "$bltx:ids");
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bltx:id");
@@ -771,11 +811,18 @@ sub generate_bltxml_schema {
   $writer->endTag();# id element
   $writer->endTag();# oneOrMore
   $writer->endTag();# ids element
-  $writer->endTag();# zeroOrMore
+  $writer->endTag();# optional element
 
-  # Name lists
-  $writer->comment('Name lists');
-  $writer->emptyTag('ref', 'name' => 'namelists');
+  foreach my $ft (@{$dm->fieldtypes()}) {
+    foreach my $dt (@{$dm->datatypes()}) {
+      if ($dm->is_fields_of_type($ft, $dt)) {
+        $writer->comment("$dt ${ft}s");
+        $writer->startTag('zeroOrMore');
+        $writer->emptyTag('ref', 'name' => "$dt$ft");
+        $writer->endTag();# zeroOrMore
+      }
+    }
+  }
 
   $writer->endTag();# interleave
   $writer->endTag();# entry element
@@ -783,12 +830,10 @@ sub generate_bltxml_schema {
   $writer->endTag();# entries element
   $writer->endTag();# start
 
-
-  # Names element definition
-  # ========================
+  # Name lists element definition
+  # ==============================
   $writer->comment('names element definition');
-  $writer->startTag('define', 'name' => 'namelists');
-  $writer->startTag('zeroOrMore');
+  $writer->startTag('define', 'name' => 'namelist');
   $writer->startTag('element', 'name' => "$bltx:names");
 
   # type attribute
@@ -819,7 +864,7 @@ sub generate_bltxml_schema {
   $writer->startTag('element', 'name' => "$bltx:namepart");
   $writer->startTag('attribute', 'name' => 'type');
   $writer->startTag('choice');
-  foreach my $nt ('first', 'middle', 'last', 'prefix', 'suffix') {
+  foreach my $nt ('first', 'middle', 'last', 'prefix', 'suffix', 'org') {
     $writer->dataElement('value', $nt);
   }
   $writer->endTag(); # choice
@@ -838,10 +883,88 @@ sub generate_bltxml_schema {
   $writer->endTag(); # name element
   $writer->endTag(); # oneOrMore
   $writer->endTag(); # names element
-  $writer->endTag(); # zeroOrMore
   $writer->endTag(); # define
   # ========================
 
+  # literal lists element definition
+  # ==============================
+  $writer->comment('literal list elements definition');
+  $writer->startTag('define', 'name' => 'literallist');
+  foreach my $list (@{$dm->get_fields_of_type('list', 'literal')}) {
+    $writer->startTag('element', 'name' => "$bltx:$list");
+    $writer->startTag('oneOrMore');
+    $writer->startTag('element', 'name' => "$bltx:item");
+    $writer->emptyTag('text');# text
+    $writer->endTag(); # item element
+    $writer->endTag(); # oneOrMore element
+    $writer->endTag(); # $list element
+  }
+  $writer->endTag(); # define
+  # ==============================
+
+  # key lists element definition
+  # ============================
+  $writer->comment('key list elements definition');
+  $writer->startTag('define', 'name' => 'keylist');
+  foreach my $list (@{$dm->get_fields_of_type('list', 'key')}) {
+    $writer->startTag('element', 'name' => "$bltx:$list");
+    $writer->startTag('oneOrMore');
+    $writer->startTag('element', 'name' => "$bltx:item");
+    $writer->emptyTag('text');# text
+    $writer->endTag(); # item element
+    $writer->endTag(); # oneOrMore element
+    $writer->endTag(); # $list element
+  }
+  $writer->endTag(); # define
+  # ==============================
+
+  # literal fields element definition
+  # =================================
+  $writer->comment('literal field elements definition');
+  $writer->startTag('define', 'name' => 'literalfield');
+  foreach my $field (@{$dm->get_fields_of_type('field', 'literal')}) {
+    $writer->startTag('element', 'name' => "$bltx:$field");
+    $writer->emptyTag('text');# text
+    $writer->endTag(); # $field element
+  }
+  $writer->endTag(); # define
+  # ==============================
+
+  # key fields element definition
+  # =============================
+  $writer->comment('key field elements definition');
+  $writer->startTag('define', 'name' => 'keyfield');
+  foreach my $field (@{$dm->get_fields_of_type('field', 'key')}) {
+    $writer->startTag('element', 'name' => "$bltx:$field");
+    $writer->emptyTag('text');# text
+    $writer->endTag(); # $field element
+  }
+  $writer->endTag(); # define
+  # ==============================
+
+  # verbatim fields element definition
+  # ==================================
+  $writer->comment('verbatim field elements definition');
+  $writer->startTag('define', 'name' => 'verbatimfield');
+  foreach my $field (@{$dm->get_fields_of_type('field', 'verbatim')}) {
+    $writer->startTag('element', 'name' => "$bltx:$field");
+    $writer->emptyTag('text');# text
+    $writer->endTag(); # $field element
+  }
+  $writer->endTag(); # define
+  # ==============================
+
+  # uri fields element definition
+  # =============================
+  $writer->comment('uri field elements definition');
+  $writer->startTag('define', 'name' => 'urifield');
+  foreach my $field (@{$dm->get_fields_of_type('field', 'uri')}) {
+    $writer->startTag('element', 'name' => "$bltx:$field");
+    $writer->emptyTag('text');# text
+    $writer->endTag(); # $field element
+  }
+  $writer->endTag(); # define
+  # ==============================
 
   # gender attribute definition
   # ===========================

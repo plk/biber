@@ -33,7 +33,9 @@
     <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
     <bltx:location>Москва</bltx:location>
     <bltx:publisher>Наука</bltx:publisher>
-    <bltx:language>Russian</bltx:language>
+    <bltx:language>
+      <bltx:item>russian</bltx:item>
+    </bltx:language>
     <bltx:series>Научно-биографическая литература</bltx:series>
     <bltx:date>1983</bltx:date>
     <bltx:date datetype="orig">1985-04-02</bltx:date>

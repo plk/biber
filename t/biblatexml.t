@@ -57,7 +57,7 @@ my $l1 = q|    \entry{bltx1}{book}{}
         {{hash=e708d5a31534e937578abf161c867a25}{Aхмедов}{A\bibinitperiod}{Ашраф\bibnamedelima Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
       }
       \list{language}{1}{%
-        {Russian}%
+        {russian}%
       }
       \list{location}{1}{%
         {Москва}%
