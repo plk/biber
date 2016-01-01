@@ -334,7 +334,7 @@ sub set_lastname {
 
 =head2 get_lastname
 
-    Get lastname for a Biber::Entry::Name object
+    Get last name for a Biber::Entry::Name object
 
 =cut
 
@@ -507,7 +507,7 @@ sub name_to_biblatexml {
   my $xml = shift;
   my $out = shift;
   my $xml_prefix = $out->{xml_prefix};
-  $xml->startTag([$xml_prefix, 'person']);
+  $xml->startTag([$xml_prefix, 'name']);
 
   # lastname
   _name_part_to_bltxml($xml,
@@ -550,7 +550,7 @@ sub name_to_biblatexml {
 sub _name_part_to_bltxml {
   my ($xml, $xml_prefix, $np, $nip, $npn) = @_;
   if ($np) {
-    $xml->startTag([$xml_prefix, $npn]);
+    $xml->startTag([$xml_prefix, 'namepart'], type => $npn);
     my $parts = [split(/[\s~]/, $np)];
     for (my $i=0;$i <= $#$parts;$i++) {
       if (my $init = $nip->[$i]) {

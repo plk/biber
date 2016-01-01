@@ -194,7 +194,7 @@ sub extract_entries {
       # We can't do this with a driver entry for the IDS field as this needs
       # an entry object creating first and the whole point of aliases is that
       # there is no entry object
-      foreach my $id ($entry->findnodes("./$NS:ids/$NS:item")) {
+      foreach my $id ($entry->findnodes("./$NS:ids/$NS:id")) {
         my $ids = $id->textContent();
 
         # Skip aliases which are also real entry keys
@@ -333,7 +333,8 @@ sub create_entry {
 
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
-  foreach my $f (uniq map {$_->nodeName()} $entry->findnodes('*')) {
+  foreach my $f (uniq map { if (_norm($_->nodeName) eq 'names') { $_->getAttribute('type') }
+                            else { $_->nodeName()} }  $entry->findnodes('*')) {
 
     # We have to process local options as early as possible in order
     # to make them available for things that need them like name parsing
@@ -379,17 +380,15 @@ sub _literal {
   my ($bibentry, $entry, $f, $key) = @_;
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
-    my $form = $node->getAttribute('form') || 'original';
-    my $lang = bcp472locale($node->getAttribute('xml:lang'));
     # eprint is special case
     if ($f eq "$NS:eprint") {
-      $bibentry->set_datafield('eprinttype', $node->getAttribute('type'), $form, $lang);
+      $bibentry->set_datafield('eprinttype', $node->getAttribute('type'));
       if (my $ec = $node->getAttribute('class')) {
-        $bibentry->set_datafield('eprintclass', $ec, $form, $lang);
+        $bibentry->set_datafield('eprintclass', $ec);
       }
     }
     else {
-      $bibentry->set_datafield(_norm($f), $node->textContent(), $form, $lang);
+      $bibentry->set_datafield(_norm($f), $node->textContent());
     }
   }
   return;
@@ -428,9 +427,7 @@ sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
-    my $form = $node->getAttribute('form') || 'original';
-    my $lang = bcp472locale($node->getAttribute('xml:lang'));
-    $bibentry->set_datafield(_norm($f), _split_list($node), $form, $lang);
+    $bibentry->set_datafield(_norm($f), _split_list($node));
   }
   return;
 }
@@ -440,20 +437,17 @@ sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
-    my $form = $node->getAttribute('form') || 'original';
-    my $lang = bcp472locale($node->getAttribute('xml:lang'));
-
     # List of ranges/values
     if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
       my $rl;
       foreach my $range (@rangelist) {
         push @$rl, _parse_range_list($range);
       }
-      $bibentry->set_datafield(_norm($f), $rl, $form, $lang);
+      $bibentry->set_datafield(_norm($f), $rl);
     }
     # Simple range
     elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
-      $bibentry->set_datafield(_norm($f), [ _parse_range_list($range) ], $form, $lang);
+      $bibentry->set_datafield(_norm($f), [ _parse_range_list($range) ]);
     }
     # simple list
     else {
@@ -474,14 +468,13 @@ sub _range {
         }
         push @$values_ref, [$1 || '', $end];
       }
-      $bibentry->set_datafield(_norm($f), $values_ref, $form, $lang);
+      $bibentry->set_datafield(_norm($f), $values_ref);
     }
   }
   return;
 }
 
 # Date fields
-# Can't have form/lang - they are a(n ISO) standard format
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
@@ -546,14 +539,12 @@ sub _date {
 # Name fields
 sub _name {
   my ($bibentry, $entry, $f, $key) = @_;
-  # can be multiple nodes with different script forms
-  foreach my $node ($entry->findnodes("./$f")) {
-    my $form = $node->getAttribute('form') || 'original';
-    my $lang = bcp472locale($node->getAttribute('xml:lang'));
 
+  # can be multiple nodes with different script forms
+  foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
     my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
     my $names = new Biber::Entry::Names;
-    foreach my $name ($node->findnodes("./$NS:person")) {
+    foreach my $name ($node->findnodes("./$NS:name")) {
       $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
     }
 
@@ -562,7 +553,7 @@ sub _name {
       $names->set_morenames;
     }
 
-    $bibentry->set_datafield(_norm($f), $names, $form, $lang);
+    $bibentry->set_datafield(_norm($f), $names);
   }
   return;
 }
@@ -573,17 +564,17 @@ sub _name {
 
     Returns an object which internally looks a bit like this:
 
-    { firstname     => 'John',
-      firstname_i   => 'J',
-      middlename    => 'Fred',
-      middlename_i  => 'F',
-      lastname      => 'Doe',
-      lastname_i    => 'D',
-      prefix        => undef,
-      prefix_i      => undef,
-      suffix        => undef,
-      suffix_i      => undef,
-      namestring    => 'Doe, John Fred',
+    { firstname      => 'John',
+      firstname_i    => 'J',
+      middlename     => 'Fred',
+      middlename_i   => 'F',
+      lastname       => 'Doe',
+      lastname_i     => 'D',
+      prefix         => undef,
+      prefix_i       => undef,
+      suffix         => undef,
+      suffix_i       => undef,
+      namestring     => 'Doe, John Fred',
       nameinitstring => 'Doe_JF',
       gender         => sm
 
@@ -597,7 +588,7 @@ sub parsename {
   my %namec;
 
   if ( $node->firstChild->nodeName eq '#text' and
-       not $node->findnodes("./$NS:last")) {
+       not $node->findnodes("./$NS:namepart[\@type='last']")) {
     $namec{last} = $node->textContent();
     if (my $ni = $node->getAttribute('initial')) {
       $namec{last_i} = [$ni];
@@ -609,7 +600,7 @@ sub parsename {
   else {
     foreach my $n ('last', 'first', 'middle', 'prefix', 'suffix') {
       # If there is a name component node for this component ...
-      if (my $nc_node = $node->findnodes("./$NS:$n")->get_node(1)) {
+      if (my $nc_node = $node->findnodes("./$NS:namepart[\@type='$n']")->get_node(1)) {
         # name component with parts
         if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
           $namec{$n} = _join_name_parts(\@parts);
@@ -637,7 +628,7 @@ sub parsename {
   }
 
   # Only warn about lastnames since there should always be one
-  biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
+  biber_warn("Couldn't determine lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
 
   my $namestring = '';
 
@@ -769,6 +760,7 @@ sub _norm {
 
 sub _get_handler {
   my $field = shift;
+
   if (my $h = $handlers->{CUSTOM}{_norm($field)}) {
     return $h;
   }

@@ -2359,7 +2359,7 @@ sub create_uniquename_info {
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
         my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
-                        $name->get_prefix ? $name->get_prefix : '') .
+                          $name->get_prefix ? $name->get_prefix : '') .
                           $name->get_lastname;
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring     = $name->get_namestring;
@@ -2471,7 +2471,7 @@ sub generate_uniquename {
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
         my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
-                        $name->get_prefix ? $name->get_prefix : '') .
+                          $name->get_prefix ? $name->get_prefix : '') .
                           $name->get_lastname;
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
@@ -3154,6 +3154,7 @@ sub fetch_data {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $dm = Biber::Config->get_dm;
   # Only looking for static keys, dynamic key entries are not in any datasource ...
   my @citekeys = $section->get_static_citekeys;
   no strict 'refs'; # symbolic references below ...
@@ -3194,6 +3195,9 @@ sub fetch_data {
     my $type = $datasource->{type};
     my $name = $datasource->{name};
     my $datatype = $datasource->{datatype};
+    if ($datatype eq 'biblatexml') {
+      $dm->generate_bltxml_schema();
+    }
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
     eval "require $package" or
       biber_error("Error loading data source package '$package': $@");

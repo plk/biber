@@ -722,7 +722,7 @@ sub parsename {
   }
 
   # Only warn about lastnames since there should always be one
-  biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
+  biber_warn("Couldn't determine Family name for name XPath: " . $node->nodePath) unless exists($namec{last});
 
   my $namestring = '';
 

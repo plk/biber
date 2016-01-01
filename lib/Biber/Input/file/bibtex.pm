@@ -1127,14 +1127,14 @@ sub parsename {
 
   # Generate name parts
   my $lastname  = biber_decode_utf8($name->format($l_f));
-  my $firstname = biber_decode_utf8($name->format($f_f));
-  my $prefix    = biber_decode_utf8($name->format($p_f));
-  my $suffix    = biber_decode_utf8($name->format($s_f));
+  my $firstname   = biber_decode_utf8($name->format($f_f));
+  my $prefix      = biber_decode_utf8($name->format($p_f));
+  my $suffix      = biber_decode_utf8($name->format($s_f));
 
   # Skip the name if we can't determine last name - otherwise many other things will
   # fail later
   unless ($lastname) {
-    biber_warn("Couldn't determine Last Name for name \"$namestr\" - ignoring name");
+    biber_warn("Couldn't determine Family Name for name \"$namestr\" - ignoring name");
     return 0;
   }
 
@@ -1172,10 +1172,10 @@ sub parsename {
   $pi_f->set_options(BTN_VON,   1, BTJ_FORCETIE, BTJ_NOTHING);
   $si_f->set_options(BTN_JR,    1, BTJ_FORCETIE, BTJ_NOTHING);
 
-  $gen_lastname_i    = inits(biber_decode_utf8($nd_name->format($li_f)));
-  $gen_firstname_i   = inits(biber_decode_utf8($nd_name->format($fi_f)));
-  $gen_prefix_i      = inits(biber_decode_utf8($nd_name->format($pi_f)));
-  $gen_suffix_i      = inits(biber_decode_utf8($nd_name->format($si_f)));
+  $gen_lastname_i = inits(biber_decode_utf8($nd_name->format($li_f)));
+  $gen_firstname_i  = inits(biber_decode_utf8($nd_name->format($fi_f)));
+  $gen_prefix_i     = inits(biber_decode_utf8($nd_name->format($pi_f)));
+  $gen_suffix_i     = inits(biber_decode_utf8($nd_name->format($si_f)));
 
   my $namestring = '';
 

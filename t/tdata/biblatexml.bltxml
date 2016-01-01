@@ -3,36 +3,34 @@
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
   <bltx:entry id="bltx1" entrytype="book">
     <bltx:ids>
-      <bltx:item>bltx1a1</bltx:item>
-      <bltx:item>bltx1a2</bltx:item>
+      <bltx:id>bltx1a1</bltx:id>
+      <bltx:id>bltx1a2</bltx:id>
     </bltx:ids>
-    <bltx:author morenames="1">
-      <bltx:person gender="sm">
-        <bltx:first>
+    <bltx:names type="author" morenames="1">
+      <bltx:name gender="sm">
+        <bltx:namepart type="first">
           <bltx:namepart initial="П">Павел</bltx:namepart>
           <bltx:namepart initial="Г">Георгиевич</bltx:namepart>
-        </bltx:first>
-        <bltx:last>Булгаков</bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:first>
+        </bltx:namepart>
+        <bltx:namepart type="last">Булгаков</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="first">
           <bltx:namepart>Борис-ZZ</bltx:namepart>
           <bltx:namepart>Aбрамович</bltx:namepart>
-        </bltx:first>
-        <bltx:last>Розенфельд</bltx:last>
-        <bltx:middle initial="Б">Билл</bltx:middle>
-      </bltx:person>
-      <bltx:person>
-        <bltx:first>
+        </bltx:namepart>
+        <bltx:namepart type="last">Розенфельд</bltx:namepart>
+        <bltx:namepart type="middle" initial="Б">Билл</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="first">
           <bltx:namepart initial="A">Ашраф</bltx:namepart>
           <bltx:namepart>Ахмедович</bltx:namepart>
-        </bltx:first>
-        <bltx:last>Aхмедов</bltx:last>
-      </bltx:person>
-    </bltx:author>
+        </bltx:namepart>
+        <bltx:namepart type="last">Aхмедов</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
     <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
-    <bltx:title form="romanised">Mukhammad al-Khorezmi. Okolo 783 – okolo 850</bltx:title>
-    <bltx:title form="translated" xml:lang="en">Mukhammad al-Khorezmi. Ca. 783 – ca. 850</bltx:title>
     <bltx:location>Москва</bltx:location>
     <bltx:publisher>Наука</bltx:publisher>
     <bltx:language>Russian</bltx:language>

@@ -185,6 +185,17 @@ sub is_field {
   }
 }
 
+=head2 entrytypes
+
+    Returns array of legal entrytypes
+
+=cut
+
+sub entrytypes {
+  my $self = shift;
+  return [ keys %{$self->{entrytypesbyname}} ];
+}
+
 
 =head2 is_entrytype
 
@@ -704,6 +715,157 @@ sub dump {
   my $self = shift;
   return pp($self);
 }
+
+=head2 generate_bltxml_schema
+
+    Generate a RelaxNG XML schema from the datamodel for BibLaTeXML datasources
+
+=cut
+
+sub generate_bltxml_schema {
+  my $dm = shift;
+  return if $dm->{bltxml_schema_gen_done};
+  my $outfile = Biber::Config->getoption('bcf') =~ s/bcf$/rng/r;
+  my $rng = IO::File->new($outfile, '>:encoding(UTF-8)');
+  $rng->autoflush;# Needed for running tests to string refs
+  $logger->info("Writing BibLaTeXML RNG schema '$outfile' for datamodel");
+  require XML::Writer;
+  my $bltx_ns = 'http://biblatex-biber.sourceforge.net/biblatexml';
+  my $bltx = 'bltx';
+  my $default_ns = 'http://relaxng.org/ns/structure/1.0';
+  my $writer = new XML::Writer(NAMESPACES   => 1,
+                               ENCODING     => 'UTF-8',
+                               DATA_MODE    => 1,
+                               DATA_INDENT  => 2,
+                               OUTPUT       => $rng,
+                               PREFIX_MAP   => {$bltx_ns    => $bltx,
+                                                $default_ns => ''});
+
+  $writer->xmlDecl();
+  $writer->comment('Auto-generated from .bcf Datamodel');
+  $writer->forceNSDecl($default_ns);
+  $writer->forceNSDecl($bltx_ns);
+  $writer->startTag('grammar',
+                    'datatypeLibrary' => 'http://www.w3.org/2001/XMLSchema-datatypes');
+  $writer->startTag('start');
+  $writer->startTag('element', 'name' => "$bltx:entries");
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bltx:entry");
+  $writer->emptyTag('attribute', 'name' => 'id');
+  $writer->startTag('attribute', 'name' => 'entrytype');
+  $writer->startTag('choice');
+  foreach my $entrytype (@{$dm->entrytypes}) {
+    $writer->dataElement('value', $entrytype);
+  }
+  $writer->endTag();# choice
+  $writer->endTag();# attribute
+  $writer->startTag('interleave');
+
+  # alternate IDs
+  $writer->comment('Alternate IDs');
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bltx:ids");
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bltx:id");
+  $writer->emptyTag('text');# text
+  $writer->endTag();# id element
+  $writer->endTag();# oneOrMore
+  $writer->endTag();# ids element
+  $writer->endTag();# zeroOrMore
+
+  # Name lists
+  $writer->comment('Name lists');
+  $writer->emptyTag('ref', 'name' => 'namelists');
+
+  $writer->endTag();# interleave
+  $writer->endTag();# entry element
+  $writer->endTag();# oneOrMore
+  $writer->endTag();# entries element
+  $writer->endTag();# start
+
+
+  # Names element definition
+  # ========================
+  $writer->comment('names element definition');
+  $writer->startTag('define', 'name' => 'namelists');
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bltx:names");
+
+  # type attribute
+  $writer->comment('types of names elements');
+  $writer->startTag('attribute', 'name' => 'type');
+  $writer->startTag('choice');
+  foreach my $name (@{$dm->get_fields_of_type('list', 'name')}) {
+    $writer->dataElement('value', $name);
+  }
+  $writer->endTag();# choice
+  $writer->endTag();# attribute
+
+  # morenames attribute
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'morenames');
+  $writer->emptyTag('data', 'type' => 'boolean');
+  $writer->endTag(); # attribute
+  $writer->endTag(); # optional
+  $writer->startTag('oneOrMore');
+
+  # Individual name element
+  $writer->startTag('element', 'name' => "$bltx:name");
+
+  # gender attribute ref
+  $writer->emptyTag('ref', 'name' => 'gender');
+
+  # namepart element
+  $writer->startTag('element', 'name' => "$bltx:namepart");
+  $writer->startTag('attribute', 'name' => 'type');
+  $writer->startTag('choice');
+  foreach my $nt ('first', 'middle', 'last', 'prefix', 'suffix') {
+    $writer->dataElement('value', $nt);
+  }
+  $writer->endTag(); # choice
+  $writer->endTag(); # attribute
+  $writer->startTag('optional');
+  $writer->emptyTag('attribute', 'name' => 'initial');
+  $writer->endTag(); # optional
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bltx:namepart");
+  $writer->startTag('optional');
+  $writer->emptyTag('attribute', 'name' => 'initial');
+  $writer->endTag(); # optional
+  $writer->endTag(); # (sub)namepart element
+  $writer->endTag(); # zeroOrMore
+  $writer->endTag(); # namepart element
+  $writer->endTag(); # name element
+  $writer->endTag(); # oneOrMore
+  $writer->endTag(); # names element
+  $writer->endTag(); # zeroOrMore
+  $writer->endTag(); # define
+  # ========================
+
+
+  # gender attribute definition
+  # ===========================
+  $writer->comment('gender attribute definition');
+  $writer->startTag('define', 'name' => 'gender');
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('attribute', 'name' => 'gender');
+  $writer->startTag('choice');
+  foreach my $gender ('sf', 'sm', 'sn', 'pf', 'pm', 'pn', 'pp') {
+    $writer->dataElement('value', $gender);
+  }
+  $writer->endTag();# choice
+  $writer->endTag();# attribute
+  $writer->endTag();# zeroOrMore
+  $writer->endTag();# define
+  # ===========================
+
+  $writer->endTag();# grammar
+  $writer->end();
+  $rng->close();
+  # So we only do this one for potentially multiple .bltxml datasources
+  $dm->{bltxml_schema_gen_done} = 1;
+}
+
 
 1;
 

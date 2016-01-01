@@ -78,7 +78,7 @@ $CONFIG->{state}{uniquelistcount} = {};
 # Default is true so that uniquename/uniquelist processing starts
 $CONFIG->{state}{unulchanged} = 1;
 
-# uniquenamecount holds a hash of lastnames and lastname/initials
+# uniquenamecount holds a hash of familynames and familyname/initials
 $CONFIG->{state}{uniquenamecount} = {};
 # Same as uniquenamecount but for all names, regardless of visibility. Needed to track
 # uniquelist

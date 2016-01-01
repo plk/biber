@@ -40,6 +40,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('fastsort', 1);
+Biber::Config->setoption('bcf', 'biblatexml.bcf');
 
 # Now generate the information
 $biber->prepare;
@@ -85,7 +86,7 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \field{relatedstring}{Somestring}
       \field{relatedtype}{reprint}
       \field{series}{Научно-биографическая литература}
-      \field{title}{Mukhammad al-Khorezmi. Ca. 783 – ca. 850}
+      \field{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
       \field{urlday}{01}
       \field{urlendyear}{}
       \field{urlmonth}{07}

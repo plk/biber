@@ -212,7 +212,7 @@ sub _genpnhash {
   }
 
   $logger->trace("Creating MD5 pnhash using '$hashkey'");
-  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output") 
+  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
 

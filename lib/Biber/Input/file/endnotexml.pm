@@ -617,8 +617,8 @@ sub _xsv {
       firstname_i   => 'J',
       middlename    => 'Fred',
       middlename_i  => 'F',
-      lastname      => 'Doe',
-      lastname_i    => 'D',
+      lastname    => 'Doe',
+      lastname_i  => 'D',
       prefix        => undef,
       prefix_i      => undef,
       suffix        => undef,
@@ -674,8 +674,8 @@ sub parsename {
         }
       }
     }
-  # Only warn about lastnames since there should always be one
-    biber_warn("Couldn't determine Lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
+  # Only warn about famailynames since there should always be one
+    biber_warn("Couldn't determine Last Name for name XPath: " . $node->nodePath) unless exists($namec{last});
 
     my $namestring = '';
 
@@ -708,8 +708,8 @@ sub parsename {
       firstname_i     => exists($namec{first}) ? $namec{first_i} : undef,
       middlename      => $namec{middle} // undef,
       middlename_i    => exists($namec{middle}) ? $namec{middle_i} : undef,
-      lastname        => $namec{last} // undef,
-      lastname_i      => exists($namec{last}) ? $namec{last_i} : undef,
+      lastname      => $namec{last} // undef,
+      lastname_i    => exists($namec{last}) ? $namec{last_i} : undef,
       suffix          => $namec{suffix} // undef,
       suffix_i        => exists($namec{suffix}) ? $namec{suffix_i} : undef,
       namestring      => $namestring,
@@ -761,7 +761,7 @@ sub parsename {
     $s_f->set_options(BTN_JR,    0, BTJ_MAYTIE, BTJ_NOTHING);
 
     # Generate name parts
-    my $lastname  = $name->format($l_f);
+    my $lastname = $name->format($l_f);
     my $firstname = $name->format($f_f);
     my $prefix    = $name->format($p_f);
     my $suffix    = $name->format($s_f);

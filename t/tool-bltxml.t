@@ -60,33 +60,33 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
 
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
   <bltx:entry id="i3Š" entrytype="unpublished">
-    <bltx:author>
-      <bltx:person>
-        <bltx:last>
+    <bltx:names type="author">
+      <bltx:name>
+        <bltx:namepart type="last">
           <bltx:namepart initial="A">AAA</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:last>
+        </bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="last">
           <bltx:namepart initial="B">BBB</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:last>
+        </bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="last">
           <bltx:namepart initial="C">CCC</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:last>
+        </bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="last">
           <bltx:namepart initial="D">DDD</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-      <bltx:person>
-        <bltx:last>
+        </bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="last">
           <bltx:namepart initial="E">EEE</bltx:namepart>
-        </bltx:last>
-      </bltx:person>
-    </bltx:author>
+        </bltx:namepart>
+      </bltx:name>
+    </bltx:names>
     <bltx:institution>
       <bltx:item>REPlaCEDte</bltx:item>
       <bltx:item>early</bltx:item>
@@ -109,16 +109,16 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:date>2003</bltx:date>
   </bltx:entry>
   <bltx:entry id="xd1" entrytype="book">
-    <bltx:author>
-      <bltx:person>
-        <bltx:last>
+    <bltx:names type="author">
+      <bltx:name>
+        <bltx:namepart type="last">
           <bltx:namepart initial="E">Ellington</bltx:namepart>
-        </bltx:last>
-        <bltx:first>
+        </bltx:namepart>
+        <bltx:namepart type="first">
           <bltx:namepart initial="E">Edward</bltx:namepart>
-        </bltx:first>
-      </bltx:person>
-    </bltx:author>
+        </bltx:namepart>
+      </bltx:name>
+    </bltx:names>
     <bltx:location>
       <bltx:item>New York</bltx:item>
       <bltx:item>London</bltx:item>
@@ -130,9 +130,9 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:date>2001</bltx:date>
   </bltx:entry>
   <bltx:entry id="macmillan" entrytype="xdata">
-    <bltx:id>
-      <bltx:item>macmillanalias</bltx:item>
-    </bltx:id>
+    <bltx:ids>
+      <bltx:id>macmillanalias</bltx:id>
+    </bltx:ids>
     <bltx:location>
       <bltx:item>New York</bltx:item>
       <bltx:item>London</bltx:item>
@@ -144,9 +144,9 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:date>2001</bltx:date>
   </bltx:entry>
   <bltx:entry id="macmillan:pub" entrytype="xdata">
-    <bltx:id>
-      <bltx:item>macmillan:pubALIAS</bltx:item>
-    </bltx:id>
+    <bltx:ids>
+      <bltx:id>macmillan:pubALIAS</bltx:id>
+    </bltx:ids>
     <bltx:publisher>
       <bltx:item>Macmillan</bltx:item>
     </bltx:publisher>
@@ -167,9 +167,9 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:date>1999</bltx:date>
   </bltx:entry>
   <bltx:entry id="mv1" entrytype="mvbook">
-    <bltx:id>
-      <bltx:item>mvalias</bltx:item>
-    </bltx:id>
+    <bltx:ids>
+      <bltx:id>mvalias</bltx:id>
+    </bltx:ids>
     <bltx:subtitle>Mainsubtitle</bltx:subtitle>
     <bltx:title>Maintitle</bltx:title>
     <bltx:titleaddon>Maintitleaddon</bltx:titleaddon>
