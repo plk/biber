@@ -92,6 +92,8 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \field{urlmonth}{07}
       \field{urlyear}{1991}
       \field{year}{1983}
+      \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
+      \range{pages}{15}
     \endentry
 |;
 

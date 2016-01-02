@@ -102,7 +102,7 @@ sub set_output_entry {
   if (my $ids = $be->get_field('ids')) {
     $xml->startTag([$xml_prefix, 'ids']);
     foreach my $id (@$ids) {
-      $xml->dataElement([$xml_prefix, 'id'], NFC($id));
+      $xml->dataElement([$xml_prefix, 'key'], NFC($id));
     }
   $xml->endTag;
   }
@@ -250,7 +250,7 @@ sub set_output_entry {
       $xml->startTag([$xml_prefix, 'date']);
     }
     else {
-      $xml->startTag([$xml_prefix, 'date'], datetype => $dp);
+      $xml->startTag([$xml_prefix, 'date'], type => $dp);
     }
 
     my @s;

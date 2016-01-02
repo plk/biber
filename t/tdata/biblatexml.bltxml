@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="../../data/schemata/biblatexml.rnc" type="compact"?>
+<?xml-model href="biblatexml.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
   <bltx:entry id="bltx1" entrytype="book">
     <bltx:ids>
-      <bltx:id>bltx1a1</bltx:id>
-      <bltx:id>bltx1a2</bltx:id>
+      <bltx:key>bltx1a1</bltx:key>
+      <bltx:key>bltx1a2</bltx:key>
     </bltx:ids>
     <bltx:names type="author" morenames="1">
       <bltx:name gender="sm">
@@ -38,16 +38,26 @@
     </bltx:language>
     <bltx:series>Научно-биографическая литература</bltx:series>
     <bltx:date>1983</bltx:date>
-    <bltx:date datetype="orig">1985-04-02</bltx:date>
-    <bltx:date datetype ="event">
+    <bltx:date type="orig">1985-04-02</bltx:date>
+    <bltx:date type ="event">
       <bltx:start>1990-05-16</bltx:start>
       <bltx:end>1990-05-17</bltx:end>
     </bltx:date>
-    <bltx:date datetype="url">
+    <bltx:date type="url">
       <bltx:start>1991-07-01</bltx:start>
       <bltx:end></bltx:end>
     </bltx:date>
     <bltx:pagetotal>240</bltx:pagetotal>
+    <bltx:pages>
+      <bltx:item>
+        <bltx:start>1</bltx:start>
+        <bltx:end>10</bltx:end>
+      </bltx:item>
+      <bltx:item>
+        <bltx:start>30</bltx:start>
+        <bltx:end>34</bltx:end>
+      </bltx:item>
+    </bltx:pages>
     <bltx:related>
       <bltx:item type="reprint" string="Somestring" ids="rel1,rel2"/>
     </bltx:related>

@@ -194,27 +194,27 @@ sub extract_entries {
       # We can't do this with a driver entry for the IDS field as this needs
       # an entry object creating first and the whole point of aliases is that
       # there is no entry object
-      foreach my $id ($entry->findnodes("./$NS:ids/$NS:id")) {
-        my $ids = $id->textContent();
+      foreach my $id ($entry->findnodes("./$NS:ids/$NS:key")) {
+        my $idstr = $id->textContent();
 
         # Skip aliases which are also real entry keys
-        if ($section->has_everykey($ids)) {
-          biber_warn("Citekey alias '$ids' is also a real entry key, skipping ...");
+        if ($section->has_everykey($idstr)) {
+          biber_warn("Citekey alias '$idstr' is also a real entry key, skipping ...");
           next;
         }
 
 
         # Warn on conflicting aliases
-        if (my $otherid = $section->get_citekey_alias($ids)) {
+        if (my $otherid = $section->get_citekey_alias($idstr)) {
           if ($otherid ne $key) {
-            biber_warn("Citekey alias '$ids' already has an alias '$otherid', skipping ...");
+            biber_warn("Citekey alias '$idstr' already has an alias '$otherid', skipping ...");
           }
         }
         else {
           # Since this is allkeys, we are guaranteed that the real entry for the alias
           # will be available
-          $section->set_citekey_alias($ids, $key);
-          $logger->debug("Citekey '$ids' is an alias for citekey '$key'");
+          $section->set_citekey_alias($idstr, $key);
+          $logger->debug("Citekey '$idstr' is an alias for citekey '$key'");
         }
       }
 
@@ -438,37 +438,12 @@ sub _range {
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
     # List of ranges/values
-    if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
+    if (my @rangelist = $node->findnodes("./$NS:item")) {
       my $rl;
       foreach my $range (@rangelist) {
         push @$rl, _parse_range_list($range);
       }
       $bibentry->set_datafield(_norm($f), $rl);
-    }
-    # Simple range
-    elsif (my $range = $node->findnodes("./$NS:range")->get_node(1)) {
-      $bibentry->set_datafield(_norm($f), [ _parse_range_list($range) ]);
-    }
-    # simple list
-    else {
-      my $values_ref;
-      my @values = split(/\s*,\s*/, $node->textContent());
-      # Here the "-–" contains two different chars even though they might
-      # look the same in some fonts ...
-      # If there is a range sep, then we set the end of the range even if it's null
-      # If no  range sep, then the end of the range is undef
-      foreach my $value (@values) {
-        $value =~ m/\A\s*([^-–]+)([-–]*)([^-–]*)\s*\z/xms;
-        my $end;
-        if ($2) {
-          $end = $3;
-        }
-        else {
-          $end = undef;
-        }
-        push @$values_ref, [$1 || '', $end];
-      }
-      $bibentry->set_datafield(_norm($f), $values_ref);
     }
   }
   return;
@@ -481,7 +456,7 @@ sub _date {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
   foreach my $node ($entry->findnodes("./$f")) {
-    my $datetype = $node->getAttribute('datetype') // '';
+    my $datetype = $node->getAttribute('type') // '';
     # We are not validating dates here, just syntax parsing
     my $date_re = qr/(\d{4}) # year
                      (?:-(\d{2}))? # month

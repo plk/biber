@@ -1,3 +1,4 @@
 * org names (bltxml)
-
+* name taxonomy (first, middle, last) needs to be generalised. Internally in Biber too
+* year/month (datepart fields) are not allowed in bltxml
 

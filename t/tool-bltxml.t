@@ -131,7 +131,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
   </bltx:entry>
   <bltx:entry id="macmillan" entrytype="xdata">
     <bltx:ids>
-      <bltx:id>macmillanalias</bltx:id>
+      <bltx:key>macmillanalias</bltx:key>
     </bltx:ids>
     <bltx:location>
       <bltx:item>New York</bltx:item>
@@ -145,7 +145,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
   </bltx:entry>
   <bltx:entry id="macmillan:pub" entrytype="xdata">
     <bltx:ids>
-      <bltx:id>macmillan:pubALIAS</bltx:id>
+      <bltx:key>macmillan:pubALIAS</bltx:key>
     </bltx:ids>
     <bltx:publisher>
       <bltx:item>Macmillan</bltx:item>
@@ -168,7 +168,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
   </bltx:entry>
   <bltx:entry id="mv1" entrytype="mvbook">
     <bltx:ids>
-      <bltx:id>mvalias</bltx:id>
+      <bltx:key>mvalias</bltx:key>
     </bltx:ids>
     <bltx:subtitle>Mainsubtitle</bltx:subtitle>
     <bltx:title>Maintitle</bltx:title>
