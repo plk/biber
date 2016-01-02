@@ -72,7 +72,7 @@ start = element config {
   element sortupper            { "0" | "1" }? &
   element sourcemap            {
     element maps {
-      attribute datatype { "bibtex" | "biblatexml" | "ris" | "zoterordfxml" | "endnotexml" },
+      attribute datatype { "bibtex" | "biblatexml" | "ris" },
       attribute map_overwrite { "0" | "1" }?,
       map+
     }+
