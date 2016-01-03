@@ -91,6 +91,7 @@ GetOptions(
            'U',                   # alias for output_encoding=UTF-8
            'validate_config|validate-config',
            'validate_control|validate-control',
+           'validate_bltxml|validate-bltxml',
            'validate_datamodel|validate-datamodel|V',
            'version|v',
            'wraplines|w',
@@ -743,6 +744,13 @@ Schema validate the biber config file.
 =item B<--validate-control>
 
 Schema validate the F<.bcf> biblatex control file.
+
+=item B<--validate-bltxml>
+
+Schema validate BibLaTeXML datasources against a schema auto-generated from the BibLaTeX
+datamodel. The schema will be auto-generated with the name of the F<.bcf> file with a F<.rng>
+extension. This validation does not validate all semantic aspects of the datamodel (i.e. the
+data model constraints). For this use the B<--validate-datamodel> option.
 
 =item B<--validate-datamodel|-V>
 

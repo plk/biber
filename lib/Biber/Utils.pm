@@ -788,12 +788,12 @@ sub ireplace {
 
 =head2 validate_biber_xml
 
-  Validate a biber/biblatex XML metadata file against an RNG schema
+  Validate a biber/biblatex XML metadata file against an RNG XML schema
 
 =cut
 
 sub validate_biber_xml {
-  my ($file, $type, $prefix) = @_;
+  my ($file, $type, $prefix, $schema) = @_;
   require XML::LibXML;
 
   # Set up XML parser
@@ -803,27 +803,28 @@ sub validate_biber_xml {
   # Set up schema
   my $xmlschema;
 
-  # we assume that the schema files are in the same dir as Biber.pm:
-  (my $vol, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
-  $biber_path =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
-
   # Deal with the strange world of Par::Packer paths
   # We might be running inside a PAR executable and @INC is a bit odd in this case
   # Specifically, "Biber.pm" in @INC might resolve to an internal jumbled name
   # nowhere near to these files. You know what I mean if you've dealt with pp
-  my $rng;
-  if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
-    $rng = File::Spec->catpath($vol, "$biber_path/inc/lib/Biber", "${type}.rng");
-  }
-  else {
-    $rng = File::Spec->catpath($vol, "$biber_path/Biber", "${type}.rng");
+  unless ($schema) {
+    # we assume that unspecified schema files are in the same dir as Biber.pm:
+    (my $vol, my $biber_path, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+    $biber_path =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+
+    if ($biber_path =~ m|/par\-| and $biber_path !~ m|/inc|) { # a mangled PAR @INC path
+      $schema = File::Spec->catpath($vol, "$biber_path/inc/lib/Biber", "${type}.rng");
+    }
+    else {
+      $schema = File::Spec->catpath($vol, "$biber_path/Biber", "${type}.rng");
+    }
   }
 
-  if (-e $rng) {
-    $xmlschema = XML::LibXML::RelaxNG->new( location => $rng )
+  if (-e $schema) {
+    $xmlschema = XML::LibXML::RelaxNG->new( location => $schema )
   }
   else {
-    biber_warn("Cannot find XML::LibXML::RelaxNG schema. Skipping validation : $!");
+    biber_warn("Cannot find XML::LibXML::RelaxNG schema '$schema'. Skipping validation : $!");
     return;
   }
 
@@ -840,13 +841,13 @@ sub validate_biber_xml {
   eval { $xmlschema->validate($xp) };
   if (ref($@)) {
     $logger->debug( $@->dump() );
-    biber_error("'$file' failed to validate against schema '$rng'");
+    biber_error("'$file' failed to validate against schema '$schema'");
   }
   elsif ($@) {
-    biber_error("'$file' failed to validate against schema '$rng'\n$@");
+    biber_error("'$file' failed to validate against schema '$schema'\n$@");
   }
   else {
-    $logger->info("'$file' validates against schema '$rng'");
+    $logger->info("'$file' validates against schema '$schema'");
   }
   undef $xmlparser;
 }

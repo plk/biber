@@ -140,6 +140,7 @@ our $CONFIG_DEFAULT_BIBER = {
   trace               => { content => 0 },
   validate_config     => { content => 0 },
   validate_control    => { content => 0 },
+  validate_bltxml     => { content => 0 },
   validate_datamodel  => { content => 0 },
   wraplines           => { content => 0 },
   xsvsep              => { content => q/\s*,\s*/ },

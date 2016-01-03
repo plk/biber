@@ -3196,7 +3196,11 @@ sub fetch_data {
     my $name = $datasource->{name};
     my $datatype = $datasource->{datatype};
     if ($datatype eq 'biblatexml') {
-      $dm->generate_bltxml_schema();
+      my $outfile = Biber::Config->getoption('bcf') =~ s/bcf$/rng/r;
+      $dm->generate_bltxml_schema($outfile);
+      if (Biber::Config->getoption('validate_bltxml')) {
+        validate_biber_xml($name, 'bltx', 'http://biblatex-biber.sourceforge.net/biblatexml', $outfile);
+      }
     }
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
     eval "require $package" or

@@ -763,9 +763,8 @@ sub dump {
 =cut
 
 sub generate_bltxml_schema {
-  my $dm = shift;
+  my ($dm, $outfile) = @_;
   return if $dm->{bltxml_schema_gen_done};
-  my $outfile = Biber::Config->getoption('bcf') =~ s/bcf$/rng/r;
   my $rng = IO::File->new($outfile, '>:encoding(UTF-8)');
   $rng->autoflush;# Needed for running tests to string refs
   $logger->info("Writing BibLaTeXML RNG schema '$outfile' for datamodel");
@@ -859,7 +858,7 @@ sub generate_bltxml_schema {
           $writer->startTag('element', 'name' => "$bltx:namepart");
           $writer->startTag('attribute', 'name' => 'type');
           $writer->startTag('choice');
-          foreach my $nt ('first', 'middle', 'last', 'prefix', 'suffix', 'org') {
+          foreach my $nt ('given', 'middle', 'family', 'prefix', 'suffix') {
             $writer->dataElement('value', $nt);
           }
           $writer->endTag();    # choice
