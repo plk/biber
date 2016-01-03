@@ -44,28 +44,28 @@ sub _getnamehash {
 
   # namehash obeys list truncations but not uniquename
   foreach my $n (@{$names->first_n_names($visible)}) {
-    if ( $n->get_prefix and
+    if ( $n->get_namepart('prefix') and
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $hashkey .= $n->get_prefix;
+      $hashkey .= $n->get_namepart('prefix');
     }
-    $hashkey .= $n->get_lastname;
+    $hashkey .= $n->get_namepart('lastname');
 
-    if ( $n->get_suffix ) {
-      $hashkey .= $n->get_suffix;
-    }
-
-    if ( $n->get_firstname ) {
-      $hashkey .= $n->get_firstname;
+    if ( $n->get_namepart('suffix') ) {
+      $hashkey .= $n->get_namepart('suffix');
     }
 
-    if ( $n->get_middlename ) {
-      $hashkey .= $n->get_middlename;
+    if ( $n->get_namepart('firstname') ) {
+      $hashkey .= $n->get_namepart('firstname');
+    }
+
+    if ( $n->get_namepart('middlename') ) {
+      $hashkey .= $n->get_namepart('middlename');
     }
 
     # without useprefix, prefix is not first in the hash
-    if ($n->get_prefix and not
+    if ($n->get_namepart('prefix') and not
         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $hashkey .= $n->get_prefix;
+      $hashkey .= $n->get_namepart('prefix');
     }
   }
 
@@ -93,33 +93,33 @@ sub _getnamehash_u {
 
   # namehash obeys list truncations but not uniquename
   foreach my $n (@{$names->first_n_names($visible)}) {
-    if ( $n->get_prefix and
+    if ( $n->get_namepart('prefix') and
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $hashkey .= $n->get_prefix;
+      $hashkey .= $n->get_namepart('prefix');
     }
-    $hashkey .= $n->get_lastname;
+    $hashkey .= $n->get_namepart('lastname');
 
-    if ( $n->get_suffix ) {
-      $hashkey .= $n->get_suffix;
+    if ( $n->get_namepart('suffix') ) {
+      $hashkey .= $n->get_namepart('suffix');
     }
 
-    if ( $n->get_firstname and defined($n->get_uniquename)) {
+    if ( $n->get_namepart('firstname') and defined($n->get_uniquename)) {
       if ($n->get_uniquename eq '2') {
-        $hashkey .= $n->get_firstname;
+        $hashkey .= $n->get_namepart('firstname');
       }
       elsif ($n->get_uniquename eq '1') {
-        $hashkey .= join('', @{$n->get_firstname_i});
+        $hashkey .= join('', @{$n->get_namepart_initial('firstname')});
       }
     }
 
-    if ( $n->get_middlename ) {
-      $hashkey .= $n->get_middlename;
+    if ( $n->get_namepart('middlename') ) {
+      $hashkey .= $n->get_namepart('middlename');
     }
 
     # without useprefix, prefix is not first in the hash
-    if ( $n->get_prefix and not
+    if ( $n->get_namepart('prefix') and not
          Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
-      $hashkey .= $n->get_prefix;
+      $hashkey .= $n->get_namepart('prefix');
     }
 
   }
@@ -142,26 +142,26 @@ sub _getfullhash {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   foreach my $n (@{$names->names}) {
-    if ( my $p = $n->get_prefix and
+    if ( my $p = $n->get_namepart('prefix') and
       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
       $hashkey .= $p;
     }
-    $hashkey .= $n->get_lastname;
+    $hashkey .= $n->get_namepart('lastname');
 
-    if ( $n->get_suffix ) {
-      $hashkey .= $n->get_suffix;
+    if ( $n->get_namepart('suffix') ) {
+      $hashkey .= $n->get_namepart('suffix');
     }
 
-    if ( $n->get_firstname ) {
-      $hashkey .= $n->get_firstname;
+    if ( $n->get_namepart('firstname') ) {
+      $hashkey .= $n->get_namepart('firstname');
     }
 
-    if ( $n->get_middlename ) {
-      $hashkey .= $n->get_middlename;
+    if ( $n->get_namepart('middlename') ) {
+      $hashkey .= $n->get_namepart('middlename');
     }
 
     # without useprefix, prefix is not first in the hash
-    if ( my $p = $n->get_prefix and not
+    if ( my $p = $n->get_namepart('prefix') and not
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
       $hashkey .= $p;
     }
@@ -187,28 +187,28 @@ sub _genpnhash {
   my $be = $section->bibentry($citekey);
   my $hashkey = '';
 
-  if ( my $p = $n->get_prefix and
+  if ( my $p = $n->get_namepart('prefix') and
        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
     $hashkey .= $p;
   }
-  $hashkey .= $n->get_lastname;
+  $hashkey .= $n->get_namepart('lastname');
 
-  if ( $n->get_suffix ) {
-    $hashkey .= $n->get_suffix;
+  if ( $n->get_namepart('suffix') ) {
+    $hashkey .= $n->get_namepart('suffix');
   }
 
-  if ( $n->get_firstname ) {
-    $hashkey .= $n->get_firstname;
+  if ( $n->get_namepart('firstname') ) {
+    $hashkey .= $n->get_namepart('firstname');
   }
 
-  if ( $n->get_middlename ) {
-    $hashkey .= $n->get_middlename;
+  if ( $n->get_namepart('middlename') ) {
+    $hashkey .= $n->get_namepart('middlename');
   }
 
   # without useprefix, prefix is not first in the hash
-  if ( $n->get_prefix and not
+  if ( $n->get_namepart('prefix') and not
        Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-    $hashkey .= $n->get_prefix;
+    $hashkey .= $n->get_namepart('prefix');
   }
 
   $logger->trace("Creating MD5 pnhash using '$hashkey'");
@@ -444,8 +444,8 @@ sub _label_name {
     my $numnames  = $nameval->count_names;
     my $visibility = $nameval->get_visible_alpha;
 
-    my @lastnames = map { normalise_string_label($_->get_lastname, $realname) } @{$nameval->names};
-    my @prefices  = map { $_->get_prefix } @{$nameval->names};
+    my @lastnames = map { normalise_string_label($_->get_namepart('lastname'), $realname) } @{$nameval->names};
+    my @prefices  = map { $_->get_namepart('prefix') } @{$nameval->names};
     my $loopnames;
 
     # loopnames is the number of names to loop over in the name list when constructing the label
@@ -1327,28 +1327,28 @@ sub _namestring {
   # guarantee that the separators are never in names
   foreach my $n (@{$names->first_n_names($visible)}) {
     # If useprefix is true, use prefix at start of name for sorting
-    if ( $n->get_prefix and
+    if ( $n->get_namepart('prefix') and
          Biber::Config->getblxoption('useprefix', $bee, $citekey ) ) {
-      $str .= normalise_string_sort($n->get_prefix, $field) . $nsi;
+      $str .= normalise_string_sort($n->get_namepart('prefix'), $field) . $nsi;
     }
     # Append last name
-    $str .= normalise_string_sort($n->get_lastname, $field) . $nsi;
+    $str .= normalise_string_sort($n->get_namepart('lastname'), $field) . $nsi;
 
     # Append first name or inits if sortfirstinits is set
     if (Biber::Config->getoption('sortfirstinits')) {
-      $str .=  normalise_string_sort(join('', @{$n->get_firstname_i}), $field) . $nsi if $n->get_firstname_i;
+      $str .=  normalise_string_sort(join('', @{$n->get_namepart_initial('firstname')}), $field) . $nsi if $n->get_namepart_initial('firstname');
     }
     else {
-      $str .= normalise_string_sort($n->get_firstname, $field) . $nsi if $n->get_firstname;
+      $str .= normalise_string_sort($n->get_namepart('firstname'), $field) . $nsi if $n->get_namepart('firstname');
     }
 
     # Append suffix
-    $str .= normalise_string_sort($n->get_suffix, $field) . $nsi if $n->get_suffix;
+    $str .= normalise_string_sort($n->get_namepart('suffix'), $field) . $nsi if $n->get_namepart('suffix');
 
     # If useprefix is false, use prefix at end of name
-    if ( $n->get_prefix and not
+    if ( $n->get_namepart('prefix') and not
          Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= normalise_string_sort($n->get_prefix, $field) . $nsi;
+      $str .= normalise_string_sort($n->get_namepart('prefix'), $field) . $nsi;
     }
 
     $str =~ s/\Q$nsi\E\z//xms;       # Remove any trailing internal separator

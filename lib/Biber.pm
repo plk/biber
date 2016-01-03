@@ -2325,7 +2325,7 @@ sub create_uniquename_info {
 
           push @truncnames, $name;
           if ($un == 5 or $un == 6) {
-            push @lastnames, $name->get_lastname;
+            push @lastnames, $name->get_namepart('lastname');
             push @fullnames, $name->get_namestring;
             push @initnames, $name->get_nameinitstring;
           }
@@ -2359,8 +2359,8 @@ sub create_uniquename_info {
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
         my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
-                          $name->get_prefix ? $name->get_prefix : '') .
-                          $name->get_lastname;
+                          $name->get_namepart('prefix') ? $name->get_namepart('prefix') : '') .
+                          $name->get_namepart('lastname');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring     = $name->get_namestring;
         my $namecontext;
@@ -2471,8 +2471,8 @@ sub generate_uniquename {
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
         my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
-                          $name->get_prefix ? $name->get_prefix : '') .
-                          $name->get_lastname;
+                          $name->get_namepart('prefix') ? $name->get_namepart('prefix') : '') .
+                          $name->get_namepart('lastname');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
         my $namecontext = 'global'; # default
@@ -2583,7 +2583,7 @@ sub create_uniquelist_info {
 
       foreach my $name (@{$nl->names}) {
 
-        my $lastname   = $name->get_lastname;
+        my $lastname   = $name->get_namepart('lastname');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
         my $ulminyearflag = 0;
@@ -2668,7 +2668,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 
       foreach my $name (@{$nl->names}) {
 
-        my $lastname   = $name->get_lastname;
+        my $lastname   = $name->get_namepart('lastname');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
 

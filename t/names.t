@@ -757,7 +757,7 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info)->nth_name(1)->get_firstname_i->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
+eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info)->nth_name(1)->get_namepart_initial('firstname')->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
 eq_or_diff( encode_utf8($out->get_output_entry('L12', $main)), encode_utf8($l12), 'First First First First prefix prefix Last Last') ;
 eq_or_diff( $out->get_output_entry('L21', $main), $l21, 'LaTeX encoded unicode firstname');
 eq_or_diff( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode lastname - 2');

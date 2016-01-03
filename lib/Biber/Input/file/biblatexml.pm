@@ -203,7 +203,6 @@ sub extract_entries {
           next;
         }
 
-
         # Warn on conflicting aliases
         if (my $otherid = $section->get_citekey_alias($idstr)) {
           if ($otherid ne $key) {
@@ -551,7 +550,7 @@ sub _name {
       suffix_i       => undef,
       namestring     => 'Doe, John Fred',
       nameinitstring => 'Doe_JF',
-      gender         => sm
+      gender         => sm }
 
 =cut
 

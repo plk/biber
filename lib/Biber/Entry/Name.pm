@@ -249,181 +249,40 @@ sub get_namepart {
   return $self->{$namepart};
 }
 
+=head2 set_namepart
 
-=head2 set_firstname
-
-    Set firstname for a Biber::Entry::Name object
+    Set a namepart by passed name
 
 =cut
 
-sub set_firstname {
-  my ($self, $val) = @_;
-  $self->{firstname} = $val;
+sub set_namepart {
+  my ($self, $namepart, $val) = @_;
+  $self->{$namepart} = $val;
   return;
 }
 
-=head2 get_firstname
+=head2 get_namepart_initial
 
-    Get firstname for a Biber::Entry::Name object
+    Get a namepart initial by passed name
 
 =cut
 
-sub get_firstname {
-  my $self = shift;
-  return $self->{firstname};
+sub get_namepart_initial {
+  my ($self, $namepart) = @_;
+  return $self->{"${namepart}_i"};
 }
 
-=head2 get_firstname_i
+=head2 set_namepart_initial
 
-    Get firstname initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_firstname_i {
-  my $self = shift;
-  return $self->{firstname_i};
-}
-
-
-=head2 set_middlename
-
-    Set middlename for a Biber::Entry::Name object
+    Set a namepart initial by passed name
 
 =cut
 
-sub set_middlename {
-  my ($self, $val) = @_;
-  $self->{middlename} = $val;
+sub set_namepart_initial {
+  my ($self, $namepart, $val) = @_;
+  $self->{"${namepart}_i"} = $val;
   return;
 }
-
-=head2 get_middlename
-
-    Get middlename for a Biber::Entry::Name object
-
-=cut
-
-sub get_middlename {
-  my $self = shift;
-  return $self->{middlename};
-}
-
-=head2 get_middlename_i
-
-    Get middlename initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_middlename_i {
-  my $self = shift;
-  return $self->{middlename_i};
-}
-
-
-=head2 set_lastname
-
-    Set lastname for a Biber::Entry::Name object
-
-=cut
-
-sub set_lastname {
-  my ($self, $val) = @_;
-  $self->{lastname} = $val;
-  return;
-}
-
-=head2 get_lastname
-
-    Get last name for a Biber::Entry::Name object
-
-=cut
-
-sub get_lastname {
-  my $self = shift;
-  return $self->{lastname};
-}
-
-=head2 get_lastname_i
-
-    Get lastname initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_lastname_i {
-  my $self = shift;
-  return $self->{lastname_i};
-}
-
-
-=head2 set_suffix
-
-    Set suffix for a Biber::Entry::Name object
-
-=cut
-
-sub set_suffix {
-  my ($self, $val) = @_;
-  $self->{suffix} = $val;
-  return;
-}
-
-=head2 get_suffix
-
-    Get suffix for a Biber::Entry::Name object
-
-=cut
-
-sub get_suffix {
-  my $self = shift;
-  return $self->{suffix};
-}
-
-=head2 get_suffix_i
-
-    Get suffix initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_suffix_i {
-  my $self = shift;
-  return $self->{suffix_i};
-}
-
-
-=head2 set_prefix
-
-    Set prefix for a Biber::Entry::Name object
-
-=cut
-
-sub set_prefix {
-  my ($self, $val) = @_;
-  $self->{prefix} = $val;
-  return;
-}
-
-=head2 get_prefix
-
-    Get prefix for a Biber::Entry::Name object
-
-=cut
-
-sub get_prefix {
-  my $self = shift;
-  return $self->{prefix};
-}
-
-=head2 get_prefix_i
-
-    Get prefix initials for a Biber::Entry::Name object
-
-=cut
-
-sub get_prefix_i {
-  my $self = shift;
-  return $self->{prefix_i};
-}
-
 
 =head2 set_gender
 
@@ -512,36 +371,36 @@ sub name_to_biblatexml {
   # lastname
   _name_part_to_bltxml($xml,
                        $xml_prefix,
-                       $self->get_lastname,
-                       $self->get_lastname_i,
+                       $self->get_namepart('lastname'),
+                       $self->get_namepart_initial('lastname'),
                        'last');
 
   # firstname
   _name_part_to_bltxml($xml,
                        $xml_prefix,
-                       $self->get_firstname,
-                       $self->get_firstname_i,
+                       $self->get_namepart('firstname'),
+                       $self->get_namepart_initial('firstname'),
                        'first');
 
   # middlename
   _name_part_to_bltxml($xml,
                        $xml_prefix,
-                       $self->get_middlename,
-                       $self->get_middlename_i,
+                       $self->get_namepart('middlename'),
+                       $self->get_namepart_initial('middlename'),
                        'middle');
 
   # prefix
   _name_part_to_bltxml($xml,
                        $xml_prefix,
-                       $self->get_prefix,
-                       $self->get_prefix_i,
+                       $self->get_namepart('prefix'),
+                       $self->get_namepart_initial('prefix'),
                        'prefix');
 
   # suffix
   _name_part_to_bltxml($xml,
                        $xml_prefix,
-                       $self->get_suffix,
-                       $self->get_suffix_i,
+                       $self->get_namepart('suffix'),
+                       $self->get_namepart_initial('suffix'),
                        'suffix');
 
   $xml->endTag(); # Name
@@ -580,22 +439,22 @@ sub name_to_bbl {
 
   # lastname is always defined
   my $lni;
-  my $ln  = Biber::Utils::join_name($self->get_lastname);
+  my $ln  = Biber::Utils::join_name($self->get_namepart('lastname'));
   if ($self->was_stripped('lastname')) {
     $ln = Biber::Utils::add_outer($ln);
   }
-  $lni = join('\bibinitperiod\bibinitdelim ', @{$self->get_lastname_i}) . '\bibinitperiod';
+  $lni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('lastname')}) . '\bibinitperiod';
   $lni =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
 
   # firstname
   my $fn;
   my $fni;
-  if ($fn = $self->get_firstname) {
+  if ($fn = $self->get_namepart('firstname')) {
     $fn = Biber::Utils::join_name($fn);
     if ($self->was_stripped('firstname')) {
       $fn = Biber::Utils::add_outer($fn);
     }
-    $fni = join('\bibinitperiod\bibinitdelim ', @{$self->get_firstname_i}) . '\bibinitperiod';
+    $fni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('firstname')}) . '\bibinitperiod';
     $fni =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
   }
   else {
@@ -606,9 +465,9 @@ sub name_to_bbl {
   # middlename
   my $mn;
   my $mni;
-  if ($mn = $self->get_middlename) {
+  if ($mn = $self->get_namepart('middlename')) {
     $mn = Biber::Utils::join_name($mn);
-    $mni = join('\bibinitperiod\bibinitdelim ', @{$self->get_middlename_i}) . '\bibinitperiod';
+    $mni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('middlename')}) . '\bibinitperiod';
     $mni =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
   }
   else {
@@ -619,12 +478,12 @@ sub name_to_bbl {
   # prefix
   my $pre;
   my $prei;
-  if ($pre = $self->get_prefix) {
+  if ($pre = $self->get_namepart('prefix')) {
     $pre = Biber::Utils::join_name($pre);
     if ($self->was_stripped('prefix')) {
       $pre = Biber::Utils::add_outer($pre);
     }
-    $prei = join('\bibinitperiod\bibinitdelim ', @{$self->get_prefix_i}) . '\bibinitperiod';
+    $prei = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('prefix')}) . '\bibinitperiod';
     $prei =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
   }
   else {
@@ -635,12 +494,12 @@ sub name_to_bbl {
   # suffix
   my $suf;
   my $sufi;
-  if ($suf = $self->get_suffix) {
+  if ($suf = $self->get_namepart('suffix')) {
     $suf = Biber::Utils::join_name($suf);
     if ($self->was_stripped('suffix')) {
       $suf = Biber::Utils::add_outer($suf);
     }
-    $sufi = join('\bibinitperiod\bibinitdelim ', @{$self->get_suffix_i}) . '\bibinitperiod';
+    $sufi = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('suffix')}) . '\bibinitperiod';
     $sufi =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
   }
   else {
@@ -656,7 +515,7 @@ sub name_to_bbl {
   push @pno, 'hash=' . $self->get_hash;
   $pno = join(',', @pno);
   # Some data sources support middle names
-  if ($self->get_middlename) {
+  if ($self->get_namepart('middlename')) {
     return "        {{$pno}{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";
   }
   else {
