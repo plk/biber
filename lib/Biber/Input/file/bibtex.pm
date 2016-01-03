@@ -1195,13 +1195,13 @@ sub parsename {
     $namestring .= "$prefix_stripped ";
   }
   # family name
-  my $ls;
+  my $fs;
   my $family_stripped;
   my $family_i;
   if ($family) {
     $family_i        = $gen_family_i;
     $family_stripped = remove_outer($family);
-    $ls = $family ne $family_stripped ? 1 : 0;
+    $fs = $family ne $family_stripped ? 1 : 0;
     $namestring .= "$family_stripped, ";
   }
   # suffix
@@ -1214,13 +1214,13 @@ sub parsename {
     $ss = $suffix ne $suffix_stripped ? 1 : 0;
   }
   # given name
-  my $fs;
+  my $gs;
   my $given_stripped;
   my $given_i;
   if ($given) {
     $given_i        = $gen_given_i;
     $given_stripped = remove_outer($given);
-    $fs = $given ne $given_stripped ? 1 : 0;
+    $gs = $given ne $given_stripped ? 1 : 0;
     $namestring .= "$given_stripped";
   }
 
@@ -1277,8 +1277,8 @@ sub parsename {
     suffix_i        => $suffix         eq '' ? undef : $suffix_i,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
-    strip           => {'given'  => $fs,
-                        'family' => $ls,
+    strip           => {'given'  => $gs,
+                        'family' => $fs,
                         'prefix' => $ps,
                         'suffix' => $ss}
     );
