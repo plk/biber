@@ -50,242 +50,239 @@ my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 my $bibentries = $section->bibentries;
 
 my $name1 =
-    { firstname      => 'John',
-      firstname_i    => ['J'],
-      lastname       => 'Doe',
-      lastname_i     => ['D'],
+    { given          => 'John',
+      given_i        => ['J'],
+      family         => 'Doe',
+      family_i       => ['D'],
       nameinitstring => 'Doe_J',
       namestring     => 'Doe, John',
       prefix         => undef,
       prefix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
       suffix         => undef,
       suffix_i       => undef};
+
 my $name2 =
-    { firstname      => 'John',
-      firstname_i    => ['J'],
-      lastname       => 'Doe',
-      lastname_i     => ['D'],
+    { given          => 'John',
+      given_i        => ['J'],
+      family         => 'Doe',
+      family_i       => ['D'],
       nameinitstring => 'Doe_J',
       namestring     => 'Doe, John',
       prefix         => undef,
       prefix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => 0 },
+      strip          => { given => 0, family => 0, prefix => undef, suffix => 0 },
       suffix         => 'Jr',
       suffix_i       => ['J'] } ;
 
-
-
 my $name3 =
-    { firstname      => 'Johann~Gottfried',
-      firstname_i    => ['J', 'G'],
-      lastname       => 'Berlichingen zu~Hornberg',
-      lastname_i     => ['B', 'z', 'H'],
+    { given          => 'Johann~Gottfried',
+      given_i        => ['J', 'G'],
+      family         => 'Berlichingen zu~Hornberg',
+      family_i       => ['B', 'z', 'H'],
       nameinitstring => 'v_Berlichingen_zu_Hornberg_JG',
       namestring     => 'von Berlichingen zu Hornberg, Johann Gottfried',
       prefix         => 'von',
       prefix_i       => ['v'],
-      strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
       suffix         => undef,
       suffix_i       => undef};
 
 my $name4 =
-    { firstname      => 'Johann~Gottfried',
-      firstname_i    => ['J', 'G'],
-      lastname       => 'Berlichingen zu~Hornberg',
-      lastname_i     => ['B', 'z', 'H'],
+    { given          => 'Johann~Gottfried',
+      given_i        => ['J', 'G'],
+      family         => 'Berlichingen zu~Hornberg',
+      family_i       => ['B', 'z', 'H'],
       nameinitstring => 'Berlichingen_zu_Hornberg_JG',
       namestring     => 'von Berlichingen zu Hornberg, Johann Gottfried',
       prefix         => 'von',
       prefix_i       => ['v'],
-      strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
       suffix         => undef,
       suffix_i       => undef};
 
-
 my $name5 =
-   {  firstname      => undef,
-      firstname_i    => undef,
-      lastname       => 'Robert and Sons, Inc.',
-      lastname_i     => ['R'],
+   {  given          => undef,
+      given_i        => undef,
+      family         => 'Robert and Sons, Inc.',
+      family_i       => ['R'],
       nameinitstring => '{Robert_and_Sons,_Inc.}',
       namestring     => 'Robert and Sons, Inc.',
       prefix         => undef,
       prefix_i       => undef,
-      strip          => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
+      strip          => { given => undef, family => 1, prefix => undef, suffix => undef },
       suffix         => undef,
       suffix_i       => undef};
 
-
 my $name6 =
-   {  firstname      => 'ʿAbdallāh',
-      firstname_i    => ['A'],
-      lastname       => 'al-Ṣāliḥ',
-      lastname_i     => ['Ṣ'],
+   {  given          => 'ʿAbdallāh',
+      given_i        => ['A'],
+      family         => 'al-Ṣāliḥ',
+      family_i       => ['Ṣ'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
       namestring     => 'al-Ṣāliḥ, ʿAbdallāh',
       nameinitstring => 'al-Ṣāliḥ_A' } ;
 
 my $name7 =
-   {  firstname      => 'Jean Charles~Gabriel',
-      firstname_i    => ['J', 'C', 'G'],
-      lastname       => 'Vallée~Poussin',
-      lastname_i     => ['V', 'P'],
+   {  given          => 'Jean Charles~Gabriel',
+      given_i        => ['J', 'C', 'G'],
+      family         => 'Vallée~Poussin',
+      family_i       => ['V', 'P'],
       prefix         => 'de~la',
       prefix_i       => ['d', 'l'],
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
       namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
       nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
 
 my $name8 =
-   {  firstname      => 'Jean Charles Gabriel',
-      firstname_i    => ['J'],
-      lastname       => 'Vallée~Poussin',
-      lastname_i     => ['V', 'P'],
+   {  given          => 'Jean Charles Gabriel',
+      given_i        => ['J'],
+      family         => 'Vallée~Poussin',
+      family_i       => ['V', 'P'],
       prefix         => 'de~la',
       prefix_i       => ['d', 'l'],
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 1, lastname => 0, prefix => 0, suffix => undef },
+      strip          => { given => 1, family => 0, prefix => 0, suffix => undef },
       namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
       nameinitstring => 'Vallée_Poussin_J' } ;
 
 my $name9 =
-   {  firstname      => 'Jean Charles Gabriel {de la}~Vallée',
-      firstname_i    => ['J', 'C', 'G', 'd', 'V'],
-      lastname       => 'Poussin',
-      lastname_i     => ['P'],
+   {  given          => 'Jean Charles Gabriel {de la}~Vallée',
+      given_i        => ['J', 'C', 'G', 'd', 'V'],
+      family         => 'Poussin',
+      family_i       => ['P'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
       namestring     => 'Poussin, Jean Charles Gabriel {de la} Vallée',
       nameinitstring => 'Poussin_JCGdV' } ;
 
 my $name10 =
-   {  firstname      => 'Jean Charles~Gabriel',
-      firstname_i    => ['J', 'C', 'G'],
-      lastname       => 'Vallée Poussin',
-      lastname_i     => ['V'],
+   {  given          => 'Jean Charles~Gabriel',
+      given_i        => ['J', 'C', 'G'],
+      family         => 'Vallée Poussin',
+      family_i       => ['V'],
       prefix         => 'de~la',
       prefix_i       => ['d', 'l'],
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 1, prefix => 0, suffix => undef },
+      strip          => { given => 0, family => 1, prefix => 0, suffix => undef },
       namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
       nameinitstring => '{Vallée_Poussin}_JCG' } ;
 
 my $name11 =
-   {  firstname      => 'Jean Charles Gabriel',
-      firstname_i    => ['J'],
-      lastname       => 'Vallée Poussin',
-      lastname_i     => ['V'],
+   {  given          => 'Jean Charles Gabriel',
+      given_i        => ['J'],
+      family         => 'Vallée Poussin',
+      family_i       => ['V'],
       prefix         => 'de~la',
       prefix_i       => ['d', 'l'],
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 1, lastname => 1, prefix => 0, suffix => undef },
+      strip          => { given => 1, family => 1, prefix => 0, suffix => undef },
       namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
       nameinitstring => '{Vallée_Poussin}_J' } ;
 
 my $name12 =
-   {  firstname      => 'Jean Charles~Gabriel',
-      firstname_i    => ['J', 'C', 'G'],
-      lastname       => 'Poussin',
-      lastname_i     => ['P'],
+   {  given          => 'Jean Charles~Gabriel',
+      given_i        => ['J', 'C', 'G'],
+      family         => 'Poussin',
+      family_i       => ['P'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
       namestring     => 'Poussin, Jean Charles Gabriel',
       nameinitstring => 'Poussin_JCG' } ;
 
 my $name13 =
-   {  firstname      => 'Jean~Charles',
-      firstname_i    => ['J', 'C'],
-      lastname       => 'Poussin Lecoq',
-      lastname_i     => ['P'],
+   {  given          => 'Jean~Charles',
+      given_i        => ['J', 'C'],
+      family         => 'Poussin Lecoq',
+      family_i       => ['P'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 1, prefix => undef, suffix => undef },
+      strip          => { given => 0, family => 1, prefix => undef, suffix => undef },
       namestring     => 'Poussin Lecoq, Jean Charles',
       nameinitstring => '{Poussin_Lecoq}_JC' } ;
 
 my $name14 =
-   {  firstname      => 'J.~C.~G.',
-      firstname_i    => ['J', 'C', 'G'],
-      lastname       => 'Vallée~Poussin',
-      lastname_i     => ['V', 'P'],
+   {  given          => 'J.~C.~G.',
+      given_i        => ['J', 'C', 'G'],
+      family         => 'Vallée~Poussin',
+      family_i       => ['V', 'P'],
       prefix         => 'de~la',
       prefix_i       => ['d', 'l'],
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => 0, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
       namestring     => 'de la Vallée Poussin, J. C. G.',
       nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
 
-# Note that the lastname initials are wrong because the prefix "El-" was not stripped
+# Note that the family initials are wrong because the prefix "El-" was not stripped
 # This is because the default noinit regexp only strips lower-case prefices to protect
 # hyphenated names
 my $name15 =
-   {  firstname      => 'E.~S.',
-      firstname_i    => ['E', 'S'],
-      lastname       => 'El-{M}allah',
-      lastname_i     => ['E-M'],
+   {  given          => 'E.~S.',
+      given_i        => ['E', 'S'],
+      family         => 'El-{M}allah',
+      family_i       => ['E-M'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
       namestring     => 'El-{M}allah, E. S.',
       nameinitstring => 'El-{M}allah_ES' } ;
 
 my $name16 =
-   {  firstname      => 'E.~S.',
-      firstname_i    => ['E', 'S'],
-      lastname       => '{K}ent-{B}oswell',
-      lastname_i     => ['K-B'],
+   {  given          => 'E.~S.',
+      given_i        => ['E', 'S'],
+      family         => '{K}ent-{B}oswell',
+      family_i       => ['K-B'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
       namestring     => '{K}ent-{B}oswell, E. S.',
       nameinitstring => '{K}ent-{B}oswell_ES' } ;
 
 my $name17 =
-   {  firstname      => 'A.~N.',
-      firstname_i    => ['A', 'N'],
-      lastname       => 'Other',
-      lastname_i     => ['O'],
+   {  given          => 'A.~N.',
+      given_i        => ['A', 'N'],
+      family         => 'Other',
+      family_i       => ['O'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => 0, lastname => 0, prefix => undef, suffix => undef },
+      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
       namestring     => 'Other, A. N.',
       nameinitstring => 'Other_AN' } ;
 
 my $name18 =
-   {  firstname      => undef,
-      firstname_i    => undef,
-      lastname       => 'British National Corpus',
-      lastname_i     => ['B'],
+   {  given          => undef,
+      given_i        => undef,
+      family         => 'British National Corpus',
+      family_i       => ['B'],
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
       suffix_i       => undef,
-      strip          => { firstname => undef, lastname => 1, prefix => undef, suffix => undef },
+      strip          => { given => undef, family => 1, prefix => undef, suffix => undef },
       namestring     => 'British National Corpus',
       nameinitstring => '{British_National_Corpus}' } ;
 
@@ -701,7 +698,6 @@ is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'autho
 is_deeply(Biber::Input::file::bibtex::parsename('Other, A.~N.', 'author'), $name17, 'parsename 17');
 is_deeply(Biber::Input::file::bibtex::parsename('{{{British National Corpus}}}', 'author'), $name18, 'parsename 18');
 
-
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'First Last') ;
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'First Initial. Last') ;
 eq_or_diff( $out->get_output_entry('L3', $main), $l3, 'Initial. Initial. Last') ;
@@ -721,11 +717,11 @@ eq_or_diff( $out->get_output_entry('L16', $main), $l16, 'First {F.\bibinitdelim 
 eq_or_diff( $out->get_output_entry('L17', $main), $l17, 'Last, First {F.\bibinitdelim F.}');
 eq_or_diff( $out->get_output_entry('L18', $main), $l18, 'Last, First F.{\bibinitdelim }F.');
 eq_or_diff( $out->get_output_entry('L19', $main), $l19, 'Firstname with hyphen');
-eq_or_diff( $out->get_output_entry('L19a', $main), $l19a, 'Short firstname with hyphen');
-eq_or_diff( $out->get_output_entry('L20', $main), $l20, 'Protected dual first name');
-eq_or_diff( encode_utf8(NFC($out->get_output_entry('L22', $main))), encode_utf8($l22u), 'LaTeX encoded unicode lastname - 1');
-eq_or_diff( NFC($out->get_output_entry('L23', $main)), $l23, 'Unicode firstname');
-eq_or_diff( NFC($out->get_output_entry('L24', $main)), $l24, 'Unicode lastname');
+eq_or_diff( $out->get_output_entry('L19a', $main), $l19a, 'Short given name with hyphen');
+eq_or_diff( $out->get_output_entry('L20', $main), $l20, 'Protected dual given name');
+eq_or_diff( encode_utf8(NFC($out->get_output_entry('L22', $main))), encode_utf8($l22u), 'LaTeX encoded unicode family - 1');
+eq_or_diff( NFC($out->get_output_entry('L23', $main)), $l23, 'Unicode given name');
+eq_or_diff( NFC($out->get_output_entry('L24', $main)), $l24, 'Unicode family name');
 eq_or_diff( $out->get_output_entry('L25', $main), $l25, 'Single string name');
 eq_or_diff( $out->get_output_entry('L26', $main), $l26, 'Hyphen at brace level <> 0');
 eq_or_diff($section->bibentry('L27')->get_field('author')->count_names, 1, 'Bad name with 3 commas');
@@ -757,9 +753,9 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 $bibentries = $section->bibentries;
 
-eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info)->nth_name(1)->get_namepart_initial('firstname')->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
+eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info)->nth_name(1)->get_namepart_initial('given')->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8
 eq_or_diff( encode_utf8($out->get_output_entry('L12', $main)), encode_utf8($l12), 'First First First First prefix prefix Last Last') ;
-eq_or_diff( $out->get_output_entry('L21', $main), $l21, 'LaTeX encoded unicode firstname');
-eq_or_diff( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode lastname - 2');
-eq_or_diff( $out->get_output_entry('L31', $main), $l31, 'LaTeX encoded unicode lastname with tie char');
+eq_or_diff( $out->get_output_entry('L21', $main), $l21, 'LaTeX encoded unicode given name');
+eq_or_diff( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode family name - 2');
+eq_or_diff( $out->get_output_entry('L31', $main), $l31, 'LaTeX encoded unicode family name with tie char');
 

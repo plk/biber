@@ -21,7 +21,7 @@ Biber::Entry::Name
 
     Initialize a Biber::Entry::Name object, optionally with key=>value arguments.
 
-    Ex: Biber::Entry::Name->new( lastname=>"Bolzmann", firstname=>"Anna Maria", prefix => "von" )
+    Ex: Biber::Entry::Name->new( family=>"Bolzmann", given=>"Anna Maria", prefix => "von" )
 
 =cut
 
@@ -30,12 +30,12 @@ sub new {
   if (%params) {
     my $name = {};
     foreach my $attr (qw/gender
-                         lastname
-                         lastname_i
-                         firstname
-                         firstname_i
-                         middlename
-                         middlename_i
+                         family
+                         family_i
+                         given
+                         given_i
+                         middle
+                         middle_i
                          prefix
                          prefix_i
                          suffix
@@ -214,14 +214,14 @@ sub reset_uniquename {
 
 =head2 set_minimal_info
 
-    Set the string of lastnames and string of fullnames
+    Set the string of family names and string of fullnames
     Used to track uniquename=5 or 6
 
 =cut
 
 sub set_minimal_info {
   my ($self, $lns) = @_;
-  $self->{lastnames_string} = $lns;
+  $self->{familynames_string} = $lns;
   return;
 }
 
@@ -234,7 +234,7 @@ sub set_minimal_info {
 
 sub get_minimal_info {
   my $self = shift;
-  return $self->{lastnames_string};
+  return $self->{familynames_string};
 }
 
 
@@ -368,25 +368,25 @@ sub name_to_biblatexml {
   my $xml_prefix = $out->{xml_prefix};
   $xml->startTag([$xml_prefix, 'name']);
 
-  # lastname
+  # family name
   _name_part_to_bltxml($xml,
                        $xml_prefix,
-                       $self->get_namepart('lastname'),
-                       $self->get_namepart_initial('lastname'),
-                       'last');
+                       $self->get_namepart('family'),
+                       $self->get_namepart_initial('family'),
+                       'family');
 
-  # firstname
+  # given name
   _name_part_to_bltxml($xml,
                        $xml_prefix,
-                       $self->get_namepart('firstname'),
-                       $self->get_namepart_initial('firstname'),
-                       'first');
+                       $self->get_namepart('given'),
+                       $self->get_namepart_initial('given'),
+                       'given');
 
-  # middlename
+  # middle name
   _name_part_to_bltxml($xml,
                        $xml_prefix,
-                       $self->get_namepart('middlename'),
-                       $self->get_namepart_initial('middlename'),
+                       $self->get_namepart('middle'),
+                       $self->get_namepart_initial('middle'),
                        'middle');
 
   # prefix
@@ -437,24 +437,24 @@ sub name_to_bbl {
   my @pno; # per-name options
   my $pno; # per-name options final string
 
-  # lastname is always defined
+  # family name is always defined
   my $lni;
-  my $ln  = Biber::Utils::join_name($self->get_namepart('lastname'));
-  if ($self->was_stripped('lastname')) {
+  my $ln  = Biber::Utils::join_name($self->get_namepart('family'));
+  if ($self->was_stripped('family')) {
     $ln = Biber::Utils::add_outer($ln);
   }
-  $lni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('lastname')}) . '\bibinitperiod';
+  $lni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('family')}) . '\bibinitperiod';
   $lni =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
 
-  # firstname
+  # given name
   my $fn;
   my $fni;
-  if ($fn = $self->get_namepart('firstname')) {
+  if ($fn = $self->get_namepart('given')) {
     $fn = Biber::Utils::join_name($fn);
-    if ($self->was_stripped('firstname')) {
+    if ($self->was_stripped('given')) {
       $fn = Biber::Utils::add_outer($fn);
     }
-    $fni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('firstname')}) . '\bibinitperiod';
+    $fni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('given')}) . '\bibinitperiod';
     $fni =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
   }
   else {
@@ -462,12 +462,12 @@ sub name_to_bbl {
     $fni = '';
   }
 
-  # middlename
+  # middle name
   my $mn;
   my $mni;
-  if ($mn = $self->get_namepart('middlename')) {
+  if ($mn = $self->get_namepart('middle')) {
     $mn = Biber::Utils::join_name($mn);
-    $mni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('middlename')}) . '\bibinitperiod';
+    $mni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('middle')}) . '\bibinitperiod';
     $mni =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
   }
   else {
@@ -515,7 +515,7 @@ sub name_to_bbl {
   push @pno, 'hash=' . $self->get_hash;
   $pno = join(',', @pno);
   # Some data sources support middle names
-  if ($self->get_namepart('middlename')) {
+  if ($self->get_namepart('middle')) {
     return "        {{$pno}{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";
   }
   else {

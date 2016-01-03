@@ -62,27 +62,27 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
   <bltx:entry id="i3Š" entrytype="unpublished">
     <bltx:names type="author">
       <bltx:name>
-        <bltx:namepart type="last">
+        <bltx:namepart type="family">
           <bltx:namepart initial="A">AAA</bltx:namepart>
         </bltx:namepart>
       </bltx:name>
       <bltx:name>
-        <bltx:namepart type="last">
+        <bltx:namepart type="family">
           <bltx:namepart initial="B">BBB</bltx:namepart>
         </bltx:namepart>
       </bltx:name>
       <bltx:name>
-        <bltx:namepart type="last">
+        <bltx:namepart type="family">
           <bltx:namepart initial="C">CCC</bltx:namepart>
         </bltx:namepart>
       </bltx:name>
       <bltx:name>
-        <bltx:namepart type="last">
+        <bltx:namepart type="family">
           <bltx:namepart initial="D">DDD</bltx:namepart>
         </bltx:namepart>
       </bltx:name>
       <bltx:name>
-        <bltx:namepart type="last">
+        <bltx:namepart type="family">
           <bltx:namepart initial="E">EEE</bltx:namepart>
         </bltx:namepart>
       </bltx:name>
@@ -111,10 +111,10 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
   <bltx:entry id="xd1" entrytype="book">
     <bltx:names type="author">
       <bltx:name>
-        <bltx:namepart type="last">
+        <bltx:namepart type="family">
           <bltx:namepart initial="E">Ellington</bltx:namepart>
         </bltx:namepart>
-        <bltx:namepart type="first">
+        <bltx:namepart type="given">
           <bltx:namepart initial="E">Edward</bltx:namepart>
         </bltx:namepart>
       </bltx:name>

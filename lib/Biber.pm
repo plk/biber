@@ -2216,24 +2216,24 @@ sub uniqueness {
     which are ignored. They serve only to accumulate repeated occurences with the context
     and we don't care about this and so the values are a useful sinkhole for such repetition.
 
-    For example, if we find in the global context a lastname "Smith" in two different entries
+    For example, if we find in the global context a family name "Smith" in two different entries
     under the same form "Alan Smith", the data structure will look like:
 
     {Smith}->{global}->{Alan Smith} = 2
 
     We don't care about the value as this means that there are 2 "Alan Smith"s in the global
     context which need disambiguating identically anyway. So, we just count the keys for the
-    lastname "Smith" in the global context to see how ambiguous the lastname itself is. This
+    family name "Smith" in the global context to see how ambiguous the family name itself is. This
     would be "1" and so "Alan Smith" would get uniquename=0 because it's unambiguous as just
     "Smith".
 
     The same goes for "minimal" list context disambiguation for uniquename=5 or 6.
-    For example, if we had the lastname "Smith" to disambiguate in two entries with labelname
+    For example, if we had the family name "Smith" to disambiguate in two entries with labelname
     "John Smith and Alan Jones", the data structure would look like:
 
     {Smith}->{Smith+Jones}->{John Smith+Alan Jones} = 2
 
-    Again, counting the keys of the context for the lastname gives us "1" which means we
+    Again, counting the keys of the context for the family name gives us "1" which means we
     have uniquename=0 for "John Smith" in both entries because it's the same list. This also works
     for repeated names in the same list "John Smith and Bert Smith". Disambiguating "Smith" in this:
 
@@ -2277,8 +2277,8 @@ sub create_uniquename_info {
       # we can't, were still processing entries at this point.
       # Here we are just recording seen combinations of:
       #
-      # lastname and how many name context keys contain this (uniquename = 0)
-      # lastnames+initials and how many name context keys contain this (uniquename = 1)
+      # family name and how many name context keys contain this (uniquename = 0)
+      # familynames+initials and how many name context keys contain this (uniquename = 1)
       # Full name and how many name context keys contain this (uniquename = 2)
       #
       # A name context can be either a complete single name or a list of names
@@ -2295,7 +2295,7 @@ sub create_uniquename_info {
       my $morenames = $nl->get_morenames ? 1 : 0;
 
       my @truncnames;
-      my @lastnames;
+      my @familynames;
       my @fullnames;
       my @initnames;
 
@@ -2325,31 +2325,31 @@ sub create_uniquename_info {
 
           push @truncnames, $name;
           if ($un == 5 or $un == 6) {
-            push @lastnames, $name->get_namepart('lastname');
+            push @familynames, $name->get_namepart('family');
             push @fullnames, $name->get_namestring;
             push @initnames, $name->get_nameinitstring;
           }
         }
       }
       # Information for mininit ($un=5) or minfull ($un=6)
-      my $lastnames_string;
+      my $familynames_string;
       my $fullnames_string;
       my $initnames_string;
       if ($un == 5) {
-        $lastnames_string = join("\x{10FFFD}", @lastnames);
+        $familynames_string = join("\x{10FFFD}", @familynames);
         $initnames_string = join("\x{10FFFD}", @initnames);
-        if ($#lastnames + 1 < $num_names or
+        if ($#familynames + 1 < $num_names or
             $morenames) {
-          $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+          $familynames_string .= "\x{10FFFD}et al"; # if truncated, record this
           $initnames_string .= "\x{10FFFD}et al"; # if truncated, record this
         }
       }
       elsif ($un == 6) {
-        $lastnames_string = join("\x{10FFFD}", @lastnames);
+        $familynames_string = join("\x{10FFFD}", @familynames);
         $fullnames_string = join("\x{10FFFD}", @fullnames);
-        if ($#lastnames + 1 < $num_names or
+        if ($#familynames + 1 < $num_names or
             $morenames) {
-          $lastnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+          $familynames_string .= "\x{10FFFD}et al"; # if truncated, record this
           $fullnames_string .= "\x{10FFFD}et al"; # if truncated, record this
         }
       }
@@ -2358,9 +2358,9 @@ sub create_uniquename_info {
         # we have to differentiate here between last names with and without
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
-        my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
+        my $familyname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
                           $name->get_namepart('prefix') ? $name->get_namepart('prefix') : '') .
-                          $name->get_namepart('lastname');
+                          $name->get_namepart('family');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring     = $name->get_namestring;
         my $namecontext;
@@ -2376,22 +2376,22 @@ sub create_uniquename_info {
           $key = $namestring;
         }
         elsif ($un == 5) {
-          $namecontext = $lastnames_string;
+          $namecontext = $familynames_string;
           $key = $initnames_string;
-          $name->set_minimal_info($lastnames_string);
+          $name->set_minimal_info($familynames_string);
         }
         elsif ($un == 6) {
-          $namecontext = $lastnames_string;
+          $namecontext = $familynames_string;
           $key = $fullnames_string;
-          $name->set_minimal_info($lastnames_string);
+          $name->set_minimal_info($familynames_string);
         }
         if (first {Compare($_, $name)} @truncnames) {
-          # Record a uniqueness information entry for the lastname showing that
-          # this lastname has been seen in this name context
-          Biber::Config->add_uniquenamecount($lastname, $namecontext, $key);
+          # Record a uniqueness information entry for the family name showing that
+          # this family name has been seen in this name context
+          Biber::Config->add_uniquenamecount($familyname, $namecontext, $key);
 
-          # Record a uniqueness information entry for the lastname+initials showing that
-          # this lastname_initials has been seen in this name context
+          # Record a uniqueness information entry for the family name+initials showing that
+          # this familyname_initials has been seen in this name context
           Biber::Config->add_uniquenamecount($nameinitstring, $namecontext, $key);
 
           # Record a uniqueness information entry for the fullname
@@ -2402,7 +2402,7 @@ sub create_uniquename_info {
         # As above but here we are collecting (separate) information for all
         # names, regardless of visibility (needed to track uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-          Biber::Config->add_uniquenamecount_all($lastname, $namecontext, $key);
+          Biber::Config->add_uniquenamecount_all($familyname, $namecontext, $key);
           Biber::Config->add_uniquenamecount_all($nameinitstring, $namecontext, $key);
           Biber::Config->add_uniquenamecount_all($namestring, $namecontext, $key);
         }
@@ -2470,9 +2470,9 @@ sub generate_uniquename {
         # we have to differentiate here between last names with and without
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
-        my $lastname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
+        my $familyname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
                           $name->get_namepart('prefix') ? $name->get_namepart('prefix') : '') .
-                          $name->get_namepart('lastname');
+                          $name->get_namepart('family');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
         my $namecontext = 'global'; # default
@@ -2482,18 +2482,18 @@ sub generate_uniquename {
 
         if (first {Compare($_, $name)} @truncnames) {
 
-          # If there is one key for the lastname, then it's unique using just lastname
+          # If there is one key for the family name, then it's unique using just family name
           # because either:
-          # * There are no other identical lastnames
-          # * All identical lastnames have a lastname+init ($un=5) or fullname ($un=6)
+          # * There are no other identical family names
+          # * All identical family names have a family name+init ($un=5) or fullname ($un=6)
           #   which is identical and therefore can't be disambiguated any further anyway
-          if (Biber::Config->get_numofuniquenames($lastname, $namecontext) == 1) {
+          if (Biber::Config->get_numofuniquenames($familyname, $namecontext) == 1) {
             $name->set_uniquename(0);
           }
-          # Otherwise, if there is one key for the lastname+inits, then it's unique
+          # Otherwise, if there is one key for the family name+inits, then it's unique
           # using initials because either:
-          # * There are no other identical lastname+inits
-          # * All identical lastname+inits have a fullname ($un=6) which is identical
+          # * There are no other identical  familyname+inits
+          # * All identical family name+inits have a fullname ($un=6) which is identical
           #   and therefore can't be disambiguated any further anyway
           elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) == 1) {
             $name->set_uniquename(1);
@@ -2523,7 +2523,7 @@ sub generate_uniquename {
 
         # As above but not just for visible names (needed for uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-          if (Biber::Config->get_numofuniquenames_all($lastname, $namecontext) == 1) {
+          if (Biber::Config->get_numofuniquenames_all($familyname, $namecontext) == 1) {
             $name->set_uniquename_all(0);
           }
           elsif (Biber::Config->get_numofuniquenames_all($nameinitstring, $namecontext) == 1) {
@@ -2583,7 +2583,7 @@ sub create_uniquelist_info {
 
       foreach my $name (@{$nl->names}) {
 
-        my $lastname   = $name->get_namepart('lastname');
+        my $familyname   = $name->get_namepart('family');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
         my $ulminyearflag = 0;
@@ -2597,17 +2597,17 @@ sub create_uniquelist_info {
           }
         }
 
-        # uniquename is not set so generate uniquelist based on just lastname
+        # uniquename is not set so generate uniquelist based on just family name
         if (not defined($name->get_uniquename_all)) {
-          push @$namelist, $lastname;
-          push @$ulminyear_namelist, $lastname if $ulminyearflag;
+          push @$namelist, $familyname;
+          push @$ulminyear_namelist, $familyname if $ulminyearflag;
         }
-        # uniquename indicates unique with just lastname
+        # uniquename indicates unique with just family name
         elsif ($name->get_uniquename_all == 0) {
-          push @$namelist, $lastname;
-          push @$ulminyear_namelist, $lastname if $ulminyearflag;
+          push @$namelist, $familyname;
+          push @$ulminyear_namelist, $familyname if $ulminyearflag;
         }
-        # uniquename indicates unique with lastname with initials
+        # uniquename indicates unique with family name with initials
         elsif ($name->get_uniquename_all == 1) {
           push @$namelist, $nameinitstring;
           push @$ulminyear_namelist, $nameinitstring if $ulminyearflag;
@@ -2668,19 +2668,19 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 
       foreach my $name (@{$nl->names}) {
 
-        my $lastname   = $name->get_namepart('lastname');
+        my $familyname   = $name->get_namepart('family');
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
 
-        # uniquename is not set so generate uniquelist based on just lastname
+        # uniquename is not set so generate uniquelist based on just family name
         if (not defined($name->get_uniquename_all)) {
-          push @$namelist, $lastname;
+          push @$namelist, $familyname;
         }
-        # uniquename indicates unique with just lastname
+        # uniquename indicates unique with just family name
         elsif ($name->get_uniquename_all == 0) {
-          push @$namelist, $lastname;
+          push @$namelist, $familyname;
         }
-        # uniquename indicates unique with lastname with initials
+        # uniquename indicates unique with family name with initials
         elsif ($name->get_uniquename_all == 1) {
           push @$namelist, $nameinitstring;
         }

@@ -1,5 +1,5 @@
 * org names (bltxml)
-* name taxonomy (first, middle, last) needs to be generalised. Internally in Biber too
+* DONE name taxonomy (first, middle, last) needs to be generalised. Internally in Biber too
 ** firstname -> given
 ** lastname -> family
 ** middlename -> middle

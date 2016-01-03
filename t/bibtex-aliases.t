@@ -76,7 +76,7 @@ eq_or_diff($bibentries->entry('alias4')->get_field('eprint'), 'anid', 'Alias - 1
 eq_or_diff($bibentries->entry('alias4')->get_field('eprinttype'), 'PUBMEDID', 'Alias - 13' );
 eq_or_diff($bibentries->entry('alias4')->get_field('userd'), 'Some string of things', 'Alias - 14' );
 eq_or_diff($bibentries->entry('alias4')->get_field('pubmedid'), undef, 'Alias - 15' );
-eq_or_diff($bibentries->entry('alias4')->get_field('namea')->nth_name(1)->get_namepart('firstname'), 'Sam', 'Alias - 16' );
+eq_or_diff($bibentries->entry('alias4')->get_field('namea')->nth_name(1)->get_namepart('given'), 'Sam', 'Alias - 16' );
 is_deeply($bibentries->entry('alias4')->get_field('warnings'), $w2, 'Alias - 17' ) ;
 
 # Testing of .bcf field map match/replace

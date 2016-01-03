@@ -8,26 +8,26 @@
     </bltx:ids>
     <bltx:names type="author" morenames="1">
       <bltx:name gender="sm">
-        <bltx:namepart type="first">
+        <bltx:namepart type="given">
           <bltx:namepart initial="П">Павел</bltx:namepart>
           <bltx:namepart initial="Г">Георгиевич</bltx:namepart>
         </bltx:namepart>
-        <bltx:namepart type="last">Булгаков</bltx:namepart>
+        <bltx:namepart type="family">Булгаков</bltx:namepart>
       </bltx:name>
       <bltx:name>
-        <bltx:namepart type="first">
+        <bltx:namepart type="given">
           <bltx:namepart>Борис-ZZ</bltx:namepart>
           <bltx:namepart>Aбрамович</bltx:namepart>
         </bltx:namepart>
-        <bltx:namepart type="last">Розенфельд</bltx:namepart>
+        <bltx:namepart type="family">Розенфельд</bltx:namepart>
         <bltx:namepart type="middle" initial="Б">Билл</bltx:namepart>
       </bltx:name>
       <bltx:name>
-        <bltx:namepart type="first">
+        <bltx:namepart type="given">
           <bltx:namepart initial="A">Ашраф</bltx:namepart>
           <bltx:namepart>Ахмедович</bltx:namepart>
         </bltx:namepart>
-        <bltx:namepart type="last">Aхмедов</bltx:namepart>
+        <bltx:namepart type="family">Aхмедов</bltx:namepart>
       </bltx:name>
     </bltx:names>
     <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>

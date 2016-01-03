@@ -804,7 +804,7 @@ sub _name {
       }
     }
 
-    # Skip names that don't parse for some reason (like no lastname found - see parsename())
+    # Skip names that don't parse for some reason (like no family found - see parsename())
     next unless my $no = parsename($name, $field, {useprefix => $useprefix});
 
     # Deal with implied "et al" in data source
@@ -1078,20 +1078,20 @@ sub preprocess_file {
     parsename('John Doe')
     returns an object which internally looks a bit like this:
 
-    { firstname     => 'John',
-      firstname_i   => ['J'],
-      lastname      => 'Doe',
-      lastname_i    => ['D'],
-      prefix        => undef,
-      prefix_i      => undef,
-      suffix        => undef,
-      suffix_i      => undef,
-      namestring    => 'Doe, John',
+    { given          => 'John',
+      given_i        => ['J'],
+      family         => 'Doe',
+      family_i       => ['D'],
+      prefix         => undef,
+      prefix_i       => undef,
+      suffix         => undef,
+      suffix_i       => undef,
+      namestring     => 'Doe, John',
       nameinitstring => 'Doe_J',
-      strip          => {'firstname' => 0,
-                         'lastname'  => 0,
-                         'prefix'    => 0,
-                         'suffix'    => 0}
+      strip          => {'given'  => 0,
+                         'family' => 0,
+                         'prefix' => 0,
+                         'suffix' => 0}
       }
 
 =cut
@@ -1126,21 +1126,21 @@ sub parsename {
   $s_f->set_options(BTN_JR,    0, BTJ_MAYTIE, BTJ_NOTHING);
 
   # Generate name parts
-  my $lastname  = biber_decode_utf8($name->format($l_f));
-  my $firstname   = biber_decode_utf8($name->format($f_f));
-  my $prefix      = biber_decode_utf8($name->format($p_f));
-  my $suffix      = biber_decode_utf8($name->format($s_f));
+  my $family = biber_decode_utf8($name->format($l_f));
+  my $given  = biber_decode_utf8($name->format($f_f));
+  my $prefix = biber_decode_utf8($name->format($p_f));
+  my $suffix = biber_decode_utf8($name->format($s_f));
 
   # Skip the name if we can't determine last name - otherwise many other things will
   # fail later
-  unless ($lastname) {
+  unless ($family) {
     biber_warn("Couldn't determine Family Name for name \"$namestr\" - ignoring name");
     return 0;
   }
 
   # Variables to hold the Text::BibTeX::NameFormat generated initials string
-  my $gen_lastname_i;
-  my $gen_firstname_i;
+  my $gen_family_i;
+  my $gen_given_i;
   my $gen_prefix_i;
   my $gen_suffix_i;
 
@@ -1172,16 +1172,16 @@ sub parsename {
   $pi_f->set_options(BTN_VON,   1, BTJ_FORCETIE, BTJ_NOTHING);
   $si_f->set_options(BTN_JR,    1, BTJ_FORCETIE, BTJ_NOTHING);
 
-  $gen_lastname_i = inits(biber_decode_utf8($nd_name->format($li_f)));
-  $gen_firstname_i  = inits(biber_decode_utf8($nd_name->format($fi_f)));
-  $gen_prefix_i     = inits(biber_decode_utf8($nd_name->format($pi_f)));
-  $gen_suffix_i     = inits(biber_decode_utf8($nd_name->format($si_f)));
+  $gen_family_i = inits(biber_decode_utf8($nd_name->format($li_f)));
+  $gen_given_i  = inits(biber_decode_utf8($nd_name->format($fi_f)));
+  $gen_prefix_i = inits(biber_decode_utf8($nd_name->format($pi_f)));
+  $gen_suffix_i = inits(biber_decode_utf8($nd_name->format($si_f)));
 
   my $namestring = '';
 
 
   # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
-  # which should only care about lastname + any prefix (if useprefix=true). See biblatex github
+  # which should only care about family + any prefix (if useprefix=true). See biblatex github
   # tracker #306.
 
   # prefix
@@ -1194,15 +1194,15 @@ sub parsename {
     $ps = $prefix ne $prefix_stripped ? 1 : 0;
     $namestring .= "$prefix_stripped ";
   }
-  # lastname
+  # family name
   my $ls;
-  my $lastname_stripped;
-  my $lastname_i;
-  if ($lastname) {
-    $lastname_i        = $gen_lastname_i;
-    $lastname_stripped = remove_outer($lastname);
-    $ls = $lastname ne $lastname_stripped ? 1 : 0;
-    $namestring .= "$lastname_stripped, ";
+  my $family_stripped;
+  my $family_i;
+  if ($family) {
+    $family_i        = $gen_family_i;
+    $family_stripped = remove_outer($family);
+    $ls = $family ne $family_stripped ? 1 : 0;
+    $namestring .= "$family_stripped, ";
   }
   # suffix
   my $ss;
@@ -1213,18 +1213,18 @@ sub parsename {
     $suffix_stripped = remove_outer($suffix);
     $ss = $suffix ne $suffix_stripped ? 1 : 0;
   }
-  # firstname
+  # given name
   my $fs;
-  my $firstname_stripped;
-  my $firstname_i;
-  if ($firstname) {
-    $firstname_i        = $gen_firstname_i;
-    $firstname_stripped = remove_outer($firstname);
-    $fs = $firstname ne $firstname_stripped ? 1 : 0;
-    $namestring .= "$firstname_stripped";
+  my $given_stripped;
+  my $given_i;
+  if ($given) {
+    $given_i        = $gen_given_i;
+    $given_stripped = remove_outer($given);
+    $fs = $given ne $given_stripped ? 1 : 0;
+    $namestring .= "$given_stripped";
   }
 
-  # Remove any trailing comma and space if, e.g. missing firstname
+  # Remove any trailing comma and space if, e.g. missing given
   # Replace any nbspes
   $namestring =~ s/,\s+\z//xms;
   $namestring =~ s/\s*~\s*/ /gxms;
@@ -1232,20 +1232,20 @@ sub parsename {
   # Construct $nameinitstring
   my $nameinitstr = '';
   $nameinitstr .= join('', @$prefix_i) . '_' if ( $usepre and $prefix );
-  $nameinitstr .= $lastname if $lastname;
-  $nameinitstr .= '_' . join('', @$firstname_i) if $firstname;
+  $nameinitstr .= $family if $family;
+  $nameinitstr .= '_' . join('', @$given_i) if $given;
   $nameinitstr =~ s/\s+/_/g;
   $nameinitstr =~ s/~/_/g;
 
   # output is always NFC and so when testing the output of this routine, need NFC
   if ($testing) {
-    if ($firstname) {
-      $firstname_stripped = NFC($firstname_stripped);
-      $firstname_i        = [ map {NFC($_)} @$firstname_i ];
+    if ($given) {
+      $given_stripped = NFC($given_stripped);
+      $given_i        = [ map {NFC($_)} @$given_i ];
     }
-    if ($lastname) {
-      $lastname_stripped  = NFC($lastname_stripped);
-      $lastname_i         = [ map {NFC($_)} @$lastname_i ];
+    if ($family) {
+      $family_stripped  = NFC($family_stripped);
+      $family_i         = [ map {NFC($_)} @$family_i ];
     }
     if ($prefix) {
       $prefix_stripped    = NFC($prefix_stripped);
@@ -1267,20 +1267,20 @@ sub parsename {
   # stripped during processing so we can add them back when printing the
   # .bbl so as to maintain maximum BibTeX compatibility
   return Biber::Entry::Name->new(
-    firstname       => $firstname      eq '' ? undef : $firstname_stripped,
-    firstname_i     => $firstname      eq '' ? undef : $firstname_i,
-    lastname        => $lastname       eq '' ? undef : $lastname_stripped,
-    lastname_i      => $lastname       eq '' ? undef : $lastname_i,
+    given           => $given          eq '' ? undef : $given_stripped,
+    given_i         => $given          eq '' ? undef : $given_i,
+    family          => $family         eq '' ? undef : $family_stripped,
+    family_i        => $family         eq '' ? undef : $family_i,
     prefix          => $prefix         eq '' ? undef : $prefix_stripped,
     prefix_i        => $prefix         eq '' ? undef : $prefix_i,
     suffix          => $suffix         eq '' ? undef : $suffix_stripped,
     suffix_i        => $suffix         eq '' ? undef : $suffix_i,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
-    strip           => {'firstname' => $fs,
-                        'lastname'  => $ls,
-                        'prefix'    => $ps,
-                        'suffix'    => $ss}
+    strip           => {'given'  => $fs,
+                        'family' => $ls,
+                        'prefix' => $ps,
+                        'suffix' => $ss}
     );
 }
 

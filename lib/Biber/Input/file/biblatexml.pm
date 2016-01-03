@@ -538,12 +538,12 @@ sub _name {
 
     Returns an object which internally looks a bit like this:
 
-    { firstname      => 'John',
-      firstname_i    => 'J',
-      middlename     => 'Fred',
-      middlename_i   => 'F',
-      lastname       => 'Doe',
-      lastname_i     => 'D',
+    { given          => 'John',
+      given_i        => 'J',
+      middle         => 'Fred',
+      middle_i       => 'F',
+      family         => 'Doe',
+      family_i       => 'D',
       prefix         => undef,
       prefix_i       => undef,
       suffix         => undef,
@@ -562,17 +562,17 @@ sub parsename {
   my %namec;
 
   if ( $node->firstChild->nodeName eq '#text' and
-       not $node->findnodes("./$NS:namepart[\@type='last']")) {
-    $namec{last} = $node->textContent();
+       not $node->findnodes("./$NS:namepart[\@type='family']")) {
+    $namec{family} = $node->textContent();
     if (my $ni = $node->getAttribute('initial')) {
-      $namec{last_i} = [$ni];
+      $namec{family_i} = [$ni];
     }
     else {
-      $namec{last_i} = [_gen_initials($namec{last})];
+      $namec{family_i} = [_gen_initials($namec{family})];
     }
   }
   else {
-    foreach my $n ('last', 'first', 'middle', 'prefix', 'suffix') {
+    foreach my $n ('family', 'given', 'middle', 'prefix', 'suffix') {
       # If there is a name component node for this component ...
       if (my $nc_node = $node->findnodes("./$NS:namepart[\@type='$n']")->get_node(1)) {
         # name component with parts
@@ -601,13 +601,13 @@ sub parsename {
     }
   }
 
-  # Only warn about lastnames since there should always be one
-  biber_warn("Couldn't determine lastname for name XPath: " . $node->nodePath) unless exists($namec{last});
+  # Only warn about family names since there should always be one
+  biber_warn("Couldn't determine family name for name XPath: " . $node->nodePath) unless exists($namec{family});
 
   my $namestring = '';
 
   # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
-  # which should only care about lastname + any prefix (if useprefix=true). See biblatex github
+  # which should only care about family name + any prefix (if useprefix=true). See biblatex github
   # tracker #306.
 
   # prefix
@@ -615,33 +615,33 @@ sub parsename {
     $namestring .= "$p ";
   }
 
-  # lastname
-  if (my $l = $namec{last}) {
+  # family name
+  if (my $l = $namec{family}) {
     $namestring .= "$l, ";
   }
 
-  # firstname
-  if (my $f = $namec{first}) {
+  # given name
+  if (my $f = $namec{given}) {
     $namestring .= "$f";
   }
 
-  # Remove any trailing comma and space if, e.g. missing firstname
+  # Remove any trailing comma and space if, e.g. missing given name
   $namestring =~ s/,\s+\z//xms;
 
   # Construct $nameinitstring
   my $nameinitstr = '';
   $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $usepre and exists($namec{prefix}) );
-  $nameinitstr .= $namec{last} if exists($namec{last});
-  $nameinitstr .= '_' . join('', @{$namec{first_i}}) if exists($namec{first});
+  $nameinitstr .= $namec{family} if exists($namec{family});
+  $nameinitstr .= '_' . join('', @{$namec{given_i}}) if exists($namec{given});
   $nameinitstr =~ s/\s+/_/g;
 
   return Biber::Entry::Name->new(
-    firstname       => $namec{first} // undef,
-    firstname_i     => exists($namec{first}) ? $namec{first_i} : undef,
-    middlename      => $namec{middle} // undef,
-    middlename_i    => exists($namec{middle}) ? $namec{middle_i} : undef,
-    lastname        => $namec{last} // undef,
-    lastname_i      => exists($namec{last}) ? $namec{last_i} : undef,
+    given           => $namec{given} // undef,
+    given_i         => exists($namec{given}) ? $namec{given_i} : undef,
+    middle          => $namec{middle} // undef,
+    middle_i        => exists($namec{middle}) ? $namec{middle_i} : undef,
+    family          => $namec{family} // undef,
+    family_i        => exists($namec{family}) ? $namec{family_i} : undef,
     prefix          => $namec{prefix} // undef,
     prefix_i        => exists($namec{prefix}) ? $namec{prefix_i} : undef,
     suffix          => $namec{suffix} // undef,
@@ -656,7 +656,7 @@ sub parsename {
 # Joins name parts using BibTeX tie algorithm. Ties are added:
 #
 # 1. After the first part if it is less than three characters long
-# 2. Before the last part
+# 2. Before the family part
 sub _join_name_parts {
   my $parts = shift;
   # special case - 1 part
