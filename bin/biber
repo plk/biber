@@ -749,8 +749,10 @@ Schema validate the F<.bcf> biblatex control file.
 
 Schema validate BibLaTeXML datasources against a schema auto-generated from the BibLaTeX
 datamodel. The schema will be auto-generated with the name of the F<.bcf> file with a F<.rng>
-extension. This validation does not validate all semantic aspects of the datamodel (i.e. the
-data model constraints). For this use the B<--validate-datamodel> option.
+extension. The generated schema can be kept and used with standard XML editors to validate the
+datasource during datasource development. The schema validation does not validate all
+semantic aspects of the datamodel (i.e. the data model constraints)---for this use the
+B<--validate-datamodel> option.
 
 =item B<--validate-datamodel|-V>
 
