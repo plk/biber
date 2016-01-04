@@ -27,7 +27,7 @@ our @EXPORT = qw{
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '2.9';
+our $BCF_VERSION = '3.0';
 # Format version of the .bbl. Used when writing the .bbl
 our $BBL_VERSION = '2.5';
 
@@ -99,6 +99,7 @@ our $CONFIG_DEFAULT_BIBER = {
   collate_options     => { option => {level => 4, variable => 'non-ignorable', normalization => 'prenormalized' }},
   graph               => { content => 0 },
   debug               => { content => 0 },
+  dieondatamodel      => { content => 0 },
   decodecharsset      => { content => 'base' },
   dot_include         => { option => {section => 1, xdata => 1, crossref => 1, xref => 1 }},
   fastsort            => { content => 0 },

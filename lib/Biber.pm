@@ -390,6 +390,7 @@ sub parse_ctrlfile {
                                                            qr/\Asortlist\z/,
                                                            qr/\Alabel(?:part|element|alphatemplate)\z/,
                                                            qr/\Acondition\z/,
+                                                           qr/\Anamepart\z/,
                                                            qr/\Afilter(?:or)?\z/,
                                                            qr/\Aoptionscope\z/,
                                                           ],
@@ -572,6 +573,17 @@ sub parse_ctrlfile {
   Biber::Config->setoption('nosort', $nosort) if $nosort;
 
   # SORTING
+
+  # sorting name key specification
+  my $snk;
+  foreach my $snkp (@{$bcfxml->{sortingnamekey}{namepart}}) {
+    my $np = { namepart => $snkp->{content} };
+    if (exists($snkp->{use})) {
+      $np->{use} = $snkp->{use};
+    }
+    push @$snk, $np
+  }
+  Biber::Config->setblxoption('sortingnamekey', $snk);
 
   # sorting excludes
   foreach my $sex (@{$bcfxml->{sorting}{sortexclusion}}) {
@@ -1172,6 +1184,7 @@ sub validate_datamodel {
   my $dm = Biber::Config->get_dm;
 
   if (Biber::Config->getoption('validate_datamodel')) {
+    my $dmwe = Biber::Config->getoption('dieondatamodel') ? \&biber_error : \&biber_warn;
     foreach my $citekey ($section->get_citekeys) {
       my $be = $section->bibentry($citekey);
       my $citekey = $be->get_field('citekey');
@@ -1180,7 +1193,7 @@ sub validate_datamodel {
 
       # default entrytype to MISC type if not a known type
       unless ($dm->is_entrytype($et)) {
-        biber_warn("Datamodel: Entry '$citekey' ($ds): Invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
+        &{$dmwe}("Datamodel: Entry '$citekey' ($ds): Invalid entry type '" . $be->get_field('entrytype') . "' - defaulting to 'misc'", $be);
         $be->set_field('entrytype', 'misc');
         $et = 'misc';           # reset this too
       }
@@ -1192,23 +1205,23 @@ sub validate_datamodel {
       # * Valid because entrytype allows "ALL" fields
       foreach my $ef ($be->datafields) {
         unless ($dm->is_field_for_entrytype($et, $ef)) {
-          biber_warn("Datamodel: Entry '$citekey' ($ds): Invalid field '$ef' for entrytype '$et'", $be);
+          &{$dmwe}("Datamodel: Entry '$citekey' ($ds): Invalid field '$ef' for entrytype '$et'", $be);
         }
       }
 
       # Mandatory constraints
       foreach my $warning ($dm->check_mandatory_constraints($be)) {
-        biber_warn($warning, $be);
+        &{$dmwe}($warning, $be);
       }
 
       # Conditional constraints
       foreach my $warning ($dm->check_conditional_constraints($be)) {
-        biber_warn($warning, $be);
+        &{$dmwe}($warning, $be);
       }
 
       # Data constraints
       foreach my $warning ($dm->check_data_constraints($be)) {
-        biber_warn($warning, $be);
+        &{$dmwe}($warning, $be);
       }
     }
   }

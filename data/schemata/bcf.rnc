@@ -184,6 +184,8 @@ start =
         empty
       }+
     }?,
+    # Sorting name key specification
+    sortingnamekey,
     # Global sorting specification
     sorting,
     # Data model specification
@@ -300,6 +302,13 @@ listspec =
       }?
     }*
 
+sortingnamekey = 
+  element bcf:sortingnamekey {
+    element bcf:namepart {
+      attribute use { "0" | "1" }?,
+      text
+    }+
+  }
 
 sorting = 
   element bcf:sorting {

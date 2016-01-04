@@ -481,6 +481,8 @@
           </oneOrMore>
         </element>
       </optional>
+      <!-- Sorting name key specification -->
+      <ref name="sortingnamekey"/>
       <!-- Global sorting specification -->
       <ref name="sorting"/>
       <optional>
@@ -778,6 +780,23 @@
         </optional>
       </element>
     </zeroOrMore>
+  </define>
+  <define name="sortingnamekey">
+    <element name="bcf:sortingnamekey">
+      <oneOrMore>
+        <element name="bcf:namepart">
+          <optional>
+            <attribute name="use">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
   </define>
   <define name="sorting">
     <element name="bcf:sorting">

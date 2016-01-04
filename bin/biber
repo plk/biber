@@ -34,9 +34,10 @@ GetOptions(
            'collate_options|collate-options|c=s',
            'configfile|g=s',
            'convert_control|convert-control',
-           'dot_include|dot-include:s@',
-           'decodecharsset=s',
            'debug|D',
+           'decodecharsset=s',
+           'dieondatamodel',
+           'dot_include|dot-include:s@',
            'fastsort|f',
            'fixinits',
            'help|h|?',
@@ -471,6 +472,11 @@ may be specified which effectively turns off macro decoding.
 
 Turn on debugging for C<biber>.
 
+=item B<--dieondatamodel>
+
+Exit immediately with error if using C<--validate-datamodel> and a datamodel validation
+error is found. Default is to warn and continue.
+
 =item B<--dot-include=section,field,xdata,crossref,xref,related>
 
 Specifies the element to include in GraphViz DOT output format if the output format is 'dot'.
@@ -753,7 +759,7 @@ datamodel. The schema will be auto-generated with the name of the F<.bcf> file w
 extension. The generated schema can be kept and used with standard XML editors to validate the
 datasource during datasource development. The schema validation does not validate all
 semantic aspects of the datamodel (i.e. the data model constraints)---for this use the
-B<--validate-datamodel> option.
+C<--validate-datamodel> option.
 
 =item B<--validate-datamodel|-V>
 

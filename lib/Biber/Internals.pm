@@ -1310,6 +1310,7 @@ sub _namestring {
   my $str = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
+  my $snk = Biber::Config->getblxoption('sortingnamekey');
 
   # These should be symbols which can't appear in names and which sort before all alphanum
   # so that "Alan Smith" sorts after "Al Smith". This means, symbols which normalise_string_sort()
@@ -1326,6 +1327,7 @@ sub _namestring {
   # as name separators things which would otherwise be stripped. This way we
   # guarantee that the separators are never in names
   foreach my $n (@{$names->first_n_names($visible)}) {
+
     # If useprefix is true, use prefix at start of name for sorting
     if ( $n->get_namepart('prefix') and
          Biber::Config->getblxoption('useprefix', $bee, $citekey ) ) {

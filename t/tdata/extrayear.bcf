@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
 <?xml-model href="../../data/schemata/bcf.rnc" type="application/relax-ng-compact-syntax"?>
-<bcf:controlfile version="2.9" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="3.0" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -183,6 +183,7 @@
     <bcf:option>useshorteditor</bcf:option>
     <bcf:option>labelalphatemplate</bcf:option>
     <bcf:option>inheritance</bcf:option>
+    <bcf:option>sortingnamekey</bcf:option>
     <bcf:option>sortscheme</bcf:option>
     <bcf:option>presort</bcf:option>
     <bcf:option>labelnamespec</bcf:option>
@@ -593,6 +594,14 @@
       <bcf:field source="sortkey" skip="true"/>
     </bcf:inherit>
   </bcf:inheritance>
+  <!-- SORTING NAME KEY -->
+  <bcf:sortingnamekey>
+    <bcf:namepart use="1">prefix</bcf:namepart>
+    <bcf:namepart>family</bcf:namepart>
+    <bcf:namepart>given</bcf:namepart>
+    <bcf:namepart>suffix</bcf:namepart>
+    <bcf:namepart use="0">prefix</bcf:namepart>
+  </bcf:sortingnamekey>
   <!-- SORTING -->
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>

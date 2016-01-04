@@ -1,12 +1,13 @@
-* org names (bltxml)
+* TODO useprefix per names/name?
+* TODO More flexible sorting allowing arbitrary name part order?
 * DONE name taxonomy (first, middle, last) needs to be generalised. Internally in Biber too
 ** firstname -> given
 ** lastname -> family
 ** middlename -> middle
 ** prefix -> prefix
 ** suffix -> suffix
-* year/month (datepart fields) are not allowed in bltxml
-* name parts should be defined in data model and nothing hard-coded?
-* gender types in data model too
-* lastname mandatory relaxed? How about just mandatory that some part is defined since sorting isn't always on lastname first?
-* More flexible sorting allowing arbitrary name part order?
+* TODO Document year/month (datepart fields) are not allowed in bltxml
+* TODO name parts should be defined in data model and nothing hard-coded?
+* TODO gender types in data model too
+* TODO lastname mandatory relaxed? How about just mandatory that some part is defined since sorting isn't always on lastname first?
+
