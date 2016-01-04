@@ -107,8 +107,8 @@ sub set_output_target_file {
   my $bblfile = shift;
   $self->{output_target_file} = $bblfile;
   my $enc_out;
-  if (Biber::Config->getoption('output_encoding')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
+  if (my $enc = Biber::Config->getoption('output_encoding')) {
+    $enc_out = ":encoding($enc)";
   }
   my $BBLFILE = IO::File->new($bblfile, ">$enc_out");
   $self->set_output_target($BBLFILE);

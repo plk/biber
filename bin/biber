@@ -335,9 +335,6 @@ else {
 # Get reference to output object
 my $biberoutput = $biber->get_output_obj;
 
-# Set the output target file name
-$biberoutput->set_output_target_file($outfile);
-
 # Fake some necessary .bcf parts if in tool mode
 if (Biber::Config->getoption('tool')) {
   $biber->tool_mode_setup;
@@ -349,6 +346,10 @@ else {
 
 # Postprocess biber options now that they are all read from the various places
 Biber::Config->postprocess_biber_opts;
+
+# Set the output target file name
+# Must come after ctrlfile/option parsing otherwise output encoding is not set
+$biberoutput->set_output_target_file($outfile);
 
 # Check to see if the .bcf set debug=1. If so, increase logging level
 # We couldn't set this on logger init as the .bcf hadn't been read then
