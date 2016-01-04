@@ -2268,7 +2268,7 @@ and defaults. For example, the command:
 
 \begin{verbatim}
 biber --tool --output-fieldcase=title --output-indent=4 \
-      --output-align=true file.bib
+      --output-align file.bib
 \end{verbatim}
 %
 results in \file{.bib} entries which look like this:
@@ -2284,8 +2284,7 @@ results in \file{.bib} entries which look like this:
 %
 another example:
 \begin{verbatim}
-biber --tool --output-fieldcase=upper --output-indent=2 \
-      --output-align=false file.bib
+biber --tool --output-fieldcase=upper --output-indent=2 file.bib
 \end{verbatim}
 %
 results in entries like this:
