@@ -1,5 +1,6 @@
+* TODO biblatex firstinits option to giveninits
 * TODO useprefix per names/name?
-* TODO More flexible sorting allowing arbitrary name part order?
+* DONE More flexible sorting allowing arbitrary name part order?
 * DONE name taxonomy (first, middle, last) needs to be generalised. Internally in Biber too
 ** firstname -> given
 ** lastname -> family

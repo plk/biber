@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 43;
+use Test::More tests => 44;
 use Test::Differences;
 unified_diff;
 
@@ -79,6 +79,7 @@ my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah
 my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,0000';
 my $labels      = '2005,03,02';
 my $sn1         = '';
+my $snk1        = 'mm,,John!von!Doe!Jr,,,0000';
 
 # These have custom presort and also an exclusion on year and title set
 my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0000';
@@ -94,9 +95,32 @@ my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty');
 
 eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 
-Biber::Config->setblxoption('useprefix', 0);
+
+# Testing custom name sorting key
+my $SNK;
+$SNK = [
+        {namepart => 'given'},
+        {namepart => 'prefix', use => 1},
+        {namepart => 'family'},
+        {namepart => 'suffix'},
+        {namepart => 'prefix', use => 0},
+       ];
+Biber::Config->setblxoption('sortingnamekey', $SNK);
+$biber->prepare;
+eq_or_diff($main->get_sortdata('snk1')->[0], $snk1, 'Sorting name key - 1' );
+
 
 # regenerate information
+Biber::Config->setblxoption('useprefix', 0);
+# Default name sorting key back again
+$SNK = [
+        {namepart => 'prefix', use => 1},
+        {namepart => 'family'},
+        {namepart => 'given'},
+        {namepart => 'suffix'},
+        {namepart => 'prefix', use => 0},
+       ];
+Biber::Config->setblxoption('sortingnamekey', $SNK);
 $biber->prepare;
 
 eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix2, 'von with type-specific presort, exclusions and useprefix=false' );
@@ -1250,11 +1274,11 @@ $main->set_sortscheme($S);
 $biber->prepare;
 
 eq_or_diff($main->get_sortdata('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
-Biber::Config->setoption('sortfirstinits', 1);
+Biber::Config->setoption('sortgiveninits', 1);
 $biber->prepare;
 eq_or_diff($main->get_sortdata('stdmodel')->[0], $sortinits, 'sort first name inits only' );
 
-Biber::Config->setoption('sortfirstinits', 0);
+Biber::Config->setoption('sortgiveninits', 0);
 Biber::Config->setblxoption('labelalpha', 0);
 
 # debug

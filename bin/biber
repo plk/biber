@@ -74,7 +74,7 @@ GetOptions(
            'recodedata=s',
            'noskipduplicates',
            'sortcase=s',
-           'sortfirstinits=s',
+           'sortgiveninits|sortfirstinits=s',
            'sortlocale|l=s',
            'sortupper=s',
            'ssl-nointernalca',
@@ -683,11 +683,11 @@ across several refsections in which case you might need to use this option.
 
 Case-sensitive sorting (default is true).
 
-=item B<--sortfirstinits=true|false>
+=item B<--sortgiveninits=true|false>
 
-When sorting names, use only the first name initials, not full first name. Some people expect
-the biblatex B<firstinits> option to do this but it needs to be a separate option in case
-users, for example, need to show only initials but sort with full first names (default is false).
+When sorting names, use only the given name initials, not full given name. Some people expect
+the biblatex B<giveninits> option to do this but it needs to be a separate option in case
+users, for example, need to show only initials but sort with full given names (default is false).
 
 =item B<--sortlocale|-l [locale]>
 

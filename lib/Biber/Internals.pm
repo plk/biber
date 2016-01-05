@@ -1326,31 +1326,25 @@ sub _namestring {
   # We strip each individual component instead of the whole thing so we can use
   # as name separators things which would otherwise be stripped. This way we
   # guarantee that the separators are never in names
+
   foreach my $n (@{$names->first_n_names($visible)}) {
 
-    # If useprefix is true, use prefix at start of name for sorting
-    if ( $n->get_namepart('prefix') and
-         Biber::Config->getblxoption('useprefix', $bee, $citekey ) ) {
-      $str .= normalise_string_sort($n->get_namepart('prefix'), $field) . $nsi;
-    }
-    # Append last name
-    $str .= normalise_string_sort($n->get_namepart('family'), $field) . $nsi;
-
-    # Append first name or inits if sortfirstinits is set
-    if (Biber::Config->getoption('sortfirstinits')) {
-      $str .=  normalise_string_sort(join('', @{$n->get_namepart_initial('given')}), $field) . $nsi if $n->get_namepart_initial('given');
-    }
-    else {
-      $str .= normalise_string_sort($n->get_namepart('given'), $field) . $nsi if $n->get_namepart('given');
-    }
-
-    # Append suffix
-    $str .= normalise_string_sort($n->get_namepart('suffix'), $field) . $nsi if $n->get_namepart('suffix');
-
-    # If useprefix is false, use prefix at end of name
-    if ( $n->get_namepart('prefix') and not
-         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
-      $str .= normalise_string_sort($n->get_namepart('prefix'), $field) . $nsi;
+    # Get the sorting name key specification and use it to construct a sorting key for each name
+    foreach my $np (@$snk) {
+      my $namepart = $np->{namepart};
+      my $useopt = exists($np->{use}) ? "use$namepart" : undef;
+      if (not $useopt or
+          ($useopt and Biber::Config->getblxoption($useopt, $bee, $citekey) == $np->{use})) {
+        if ($n->get_namepart($namepart)) {
+          # Given name part can be modified by sortgiveninits option
+          if ($namepart eq 'given' and Biber::Config->getoption('sortgiveninits')) {
+            $str .=  normalise_string_sort(join('', @{$n->get_namepart_initial($namepart)}), $field) . $nsi if $n->get_namepart_initial($namepart);
+          }
+          else {
+            $str .= normalise_string_sort($n->get_namepart($namepart), $field) . $nsi if $n->get_namepart($namepart);
+          }
+        }
+      }
     }
 
     $str =~ s/\Q$nsi\E\z//xms;       # Remove any trailing internal separator

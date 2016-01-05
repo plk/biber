@@ -1995,6 +1995,7 @@
     <bcf:citekey order="19">lne1</bcf:citekey>
     <bcf:citekey order="20">labelstest</bcf:citekey>
     <bcf:citekey order="21">sn1</bcf:citekey>
+    <bcf:citekey order="22">snk1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry"/>

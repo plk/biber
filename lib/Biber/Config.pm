@@ -565,11 +565,11 @@ sub set_unul_changed {
 
 sub postprocess_biber_opts {
   shift; # class method so don't care about class name
-  # Turn sortcase, sortupper, sortfirstinits into booleans if they are not already
+  # Turn sortcase, sortupper, sortgiveninits into booleans if they are not already
   # They are not booleans on the command-line/config file so that they
   # mirror biblatex option syntax for users, for example
 
-  foreach my $opt ('sortfirstinits', 'sortcase', 'sortupper') {
+  foreach my $opt ('sortgiveninits', 'sortcase', 'sortupper') {
     if (exists($CONFIG->{options}{biber}{$opt})) {
       if ($CONFIG->{options}{biber}{$opt} eq 'true') {
         $CONFIG->{options}{biber}{$opt} = 1;
