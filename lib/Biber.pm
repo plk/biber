@@ -2271,6 +2271,8 @@ sub create_uniquename_info {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
 
+    my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+
     next unless my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey);
 
     $logger->trace("Generating uniquename information for '$citekey'");
@@ -2311,6 +2313,11 @@ sub create_uniquename_info {
       my @familynames;
       my @fullnames;
       my @initnames;
+
+      # Name list scope useprefix option
+      if (defined($nl->get_useprefix)) {
+        $useprefix = $nl->get_useprefix;
+      }
 
       foreach my $name (@$names) {
         # We need to track two types of uniquename disambiguation here:
@@ -2368,10 +2375,16 @@ sub create_uniquename_info {
       }
 
       foreach my $name (@$names) {
+
+        # Name scope useprefix option
+        if (defined($name->get_useprefix)) {
+          $useprefix = $name->get_useprefix;
+        }
+
         # we have to differentiate here between last names with and without
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
-        my $familyname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
+        my $familyname = ($useprefix and
                           $name->get_namepart('prefix') ? $name->get_namepart('prefix') : '') .
                           $name->get_namepart('family');
         my $nameinitstring = $name->get_nameinitstring;
@@ -2446,6 +2459,8 @@ sub generate_uniquename {
 
     next unless my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey);
 
+    my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+
     $logger->trace("Setting uniquename for '$citekey'");
 
     if (my $lni = $be->get_labelname_info) {
@@ -2479,11 +2494,22 @@ sub generate_uniquename {
         }
       }
 
+      # Name list scope useprefix option
+      if (defined($nl->get_useprefix)) {
+        $useprefix = $nl->get_useprefix;
+      }
+
       foreach my $name (@$names) {
+
+        # Name scope useprefix option
+        if (defined($name->get_useprefix)) {
+          $useprefix = $name->get_useprefix;
+        }
+
         # we have to differentiate here between last names with and without
         # prefices otherwise we end up falsely trying to disambiguate
         # "X" and "von X" using initials/first names when there is no need.
-        my $familyname = (Biber::Config->getblxoption('useprefix', $bee, $citekey) and
+        my $familyname = ($useprefix and
                           $name->get_namepart('prefix') ? $name->get_namepart('prefix') : '') .
                           $name->get_namepart('family');
         my $nameinitstring = $name->get_nameinitstring;

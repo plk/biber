@@ -829,6 +829,12 @@ sub generate_bltxml_schema {
           $writer->startTag('optional');
           $writer->startTag('element', 'name' => "$bltx:names");
 
+          # useprefix attribute
+          $writer->comment('useprefix option');
+          $writer->startTag('attribute', 'name' => 'useprefix');
+          $writer->emptyTag('data', 'type' => 'boolean');
+          $writer->endTag();    # attribute
+
           # type attribute
           $writer->comment('types of names elements');
           $writer->startTag('attribute', 'name' => 'type');
@@ -849,6 +855,12 @@ sub generate_bltxml_schema {
 
           # Individual name element
           $writer->startTag('element', 'name' => "$bltx:name");
+
+          # useprefix attribute
+          $writer->comment('useprefix option');
+          $writer->startTag('attribute', 'name' => 'useprefix');
+          $writer->emptyTag('data', 'type' => 'boolean');
+          $writer->endTag();    # attribute
 
           # gender attribute ref
           $writer->emptyTag('ref', 'name' => 'gender');

@@ -9,6 +9,8 @@ use Data::Dump qw( pp );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
 use Unicode::Normalize;
+no autovivification;
+
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -29,7 +31,8 @@ sub new {
   my ($class, %params) = @_;
   if (%params) {
     my $name = {};
-    foreach my $attr (qw/gender
+    foreach my $attr (qw/useprefix
+                         gender
                          family
                          family_i
                          given
@@ -90,6 +93,29 @@ sub notnull {
 sub was_stripped {
   my ($self, $part) = @_;
   return exists($self->{strip}) ? $self->{strip}{$part} : undef;
+}
+
+=head2 get_useprefix
+
+    Get the useprefix option
+
+=cut
+
+sub get_useprefix {
+  my $self = shift;
+  return $self->{useprefix};
+}
+
+=head2 set_useprefix
+
+    Set the useprefix option
+
+=cut
+
+sub set_useprefix {
+  my ($self, $val) = @_;
+  $self->{useprefix} = $val;
+  return;
 }
 
 =head2 set_hash

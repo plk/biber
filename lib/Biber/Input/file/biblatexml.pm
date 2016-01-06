@@ -516,10 +516,27 @@ sub _name {
 
   # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
-    my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
     my $names = new Biber::Entry::Names;
-    foreach my $name ($node->findnodes("./$NS:name")) {
-      $names->add_name(parsename($name, $f, {useprefix => $useprefix}));
+
+    # Save useprefix attribute
+    if (my $up =  $node->getAttribute('useprefix')) {
+      $names->set_useprefix($up);
+    }
+
+    foreach my $namenode ($node->findnodes("./$NS:name")) {
+
+      my $useprefix;
+      # Name list scope useprefix option (name scope is done inside parsename)
+      if (defined($names->get_useprefix)) {
+        $useprefix = $names->get_useprefix;
+      }
+      else {
+        $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
+      }
+
+      $names->add_name(parsename($namenode,
+                                 $f,
+                                 {useprefix => $useprefix}));
     }
 
     # Deal with explicit "moreenames" in data source
@@ -550,14 +567,21 @@ sub _name {
       suffix_i       => undef,
       namestring     => 'Doe, John Fred',
       nameinitstring => 'Doe_JF',
-      gender         => sm }
+      gender         => sm,
+      useprefix      => 1 }
+ }
 
 =cut
 
 sub parsename {
   my ($node, $fieldname, $opts) = @_;
   $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
-  my $usepre = $opts->{useprefix};
+  my $useprefix = $opts->{useprefix};
+
+  # Override name-scope useprefix attribute if it exists
+  if (my $up = $node->getAttribute('useprefix')) {
+    $useprefix = $up;
+  }
 
   my %namec;
 
@@ -630,7 +654,7 @@ sub parsename {
 
   # Construct $nameinitstring
   my $nameinitstr = '';
-  $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $usepre and exists($namec{prefix}) );
+  $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $useprefix and exists($namec{prefix}) );
   $nameinitstr .= $namec{family} if exists($namec{family});
   $nameinitstr .= '_' . join('', @{$namec{given_i}}) if exists($namec{given});
   $nameinitstr =~ s/\s+/_/g;
@@ -648,7 +672,8 @@ sub parsename {
     suffix_i        => exists($namec{suffix}) ? $namec{suffix_i} : undef,
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
-    gender          => $node->getAttribute('gender')
+    gender          => $node->getAttribute('gender'),
+    useprefix       => $useprefix
 
     );
 }

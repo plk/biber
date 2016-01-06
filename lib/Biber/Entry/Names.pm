@@ -2,6 +2,7 @@ package Biber::Entry::Names;
 use v5.16;
 use strict;
 use warnings;
+no autovivification;
 
 use Data::Dump;
 use Biber::Config;
@@ -64,6 +65,30 @@ sub names {
   my $self = shift;
   return $self->{namelist};
 }
+
+=head2 get_useprefix
+
+    Get the useprefix option
+
+=cut
+
+sub get_useprefix {
+  my $self = shift;
+  return $self->{useprefix};
+}
+
+=head2 set_useprefix
+
+    Set the useprefix option
+
+=cut
+
+sub set_useprefix {
+  my ($self, $val) = @_;
+  $self->{useprefix} = $val;
+  return;
+}
+
 
 =head2 reset_uniquelist
 

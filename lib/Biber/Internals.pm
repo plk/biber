@@ -41,11 +41,22 @@ sub _getnamehash {
   my $hashkey = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_cite;
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+
+  # Name list scope useprefix option
+  if (defined($names->get_useprefix)) {
+    $useprefix = $names->get_useprefix;
+  }
 
   # namehash obeys list truncations but not uniquename
   foreach my $n (@{$names->first_n_names($visible)}) {
-    if ( $n->get_namepart('prefix') and
-         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+
+    # Name scope useprefix option
+    if (defined($n->get_useprefix)) {
+      $useprefix = $n->get_useprefix;
+    }
+
+    if ( $n->get_namepart('prefix') and $useprefix ) {
       $hashkey .= $n->get_namepart('prefix');
     }
     $hashkey .= $n->get_namepart('family');
@@ -63,8 +74,7 @@ sub _getnamehash {
     }
 
     # without useprefix, prefix is not first in the hash
-    if ($n->get_namepart('prefix') and not
-        Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+    if ($n->get_namepart('prefix') and not $useprefix ) {
       $hashkey .= $n->get_namepart('prefix');
     }
   }
@@ -90,11 +100,22 @@ sub _getnamehash_u {
   my $hashkey = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_cite;
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+
+  # Name list scope useprefix option
+  if (defined($names->get_useprefix)) {
+    $useprefix = $names->get_useprefix;
+  }
 
   # namehash obeys list truncations but not uniquename
   foreach my $n (@{$names->first_n_names($visible)}) {
-    if ( $n->get_namepart('prefix') and
-         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+
+    # Name scope useprefix option
+    if (defined($n->get_useprefix)) {
+      $useprefix = $n->get_useprefix;
+    }
+
+    if ( $n->get_namepart('prefix') and $useprefix ) {
       $hashkey .= $n->get_namepart('prefix');
     }
     $hashkey .= $n->get_namepart('family');
@@ -117,8 +138,7 @@ sub _getnamehash_u {
     }
 
     # without useprefix, prefix is not first in the hash
-    if ( $n->get_namepart('prefix') and not
-         Biber::Config->getblxoption('useprefix', $bee, $citekey)) {
+    if ( $n->get_namepart('prefix') and not $useprefix ) {
       $hashkey .= $n->get_namepart('prefix');
     }
 
@@ -141,9 +161,19 @@ sub _getfullhash {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+  if (defined($names->get_useprefix)) {
+    $useprefix = $names->get_useprefix;
+  }
+
   foreach my $n (@{$names->names}) {
-    if ( my $p = $n->get_namepart('prefix') and
-      Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+
+    if (defined($n->get_useprefix)) {
+      $useprefix = $n->get_useprefix;
+    }
+
+    if ( my $p = $n->get_namepart('prefix') and $useprefix ) {
       $hashkey .= $p;
     }
     $hashkey .= $n->get_namepart('family');
@@ -161,8 +191,7 @@ sub _getfullhash {
     }
 
     # without useprefix, prefix is not first in the hash
-    if ( my $p = $n->get_namepart('prefix') and not
-         Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+    if ( my $p = $n->get_namepart('prefix') and not $useprefix ) {
       $hashkey .= $p;
     }
 
@@ -185,10 +214,15 @@ sub _genpnhash {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
   my $hashkey = '';
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
 
-  if ( my $p = $n->get_namepart('prefix') and
-       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+  if (defined($n->get_useprefix)) {
+    $useprefix = $n->get_useprefix;
+  }
+
+  if ( my $p = $n->get_namepart('prefix') and $useprefix ) {
     $hashkey .= $p;
   }
   $hashkey .= $n->get_namepart('family');
@@ -206,8 +240,7 @@ sub _genpnhash {
   }
 
   # without useprefix, prefix is not first in the hash
-  if ( $n->get_namepart('prefix') and not
-       Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey ) ) {
+  if ( $n->get_namepart('prefix') and not $useprefix ) {
     $hashkey .= $n->get_namepart('prefix');
   }
 
@@ -428,7 +461,11 @@ sub _label_name {
     $realname = $namename;
   }
 
-  my $nameval  = $be->get_field($realname);
+  my $names = $be->get_field($realname);
+
+  if (defined($names->get_useprefix)) {
+    $useprefix = $names->get_useprefix;
+  }
 
   # Account for labelname set to short* when testing use* options
   my $lnameopt;
@@ -440,12 +477,14 @@ sub _label_name {
   }
 
   if (Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) and
-    $nameval) {
-    my $numnames  = $nameval->count_names;
-    my $visibility = $nameval->get_visible_alpha;
+    $names) {
+    my $numnames  = $names->count_names;
+    my $visibility = $names->get_visible_alpha;
 
-    my @familynames = map { normalise_string_label($_->get_namepart('family'), $realname) } @{$nameval->names};
-    my @prefices  = map { $_->get_namepart('prefix') } @{$nameval->names};
+    my @familynames = map { normalise_string_label($_->get_namepart('family'), $realname) } @{$names->names};
+    my @prefices  = map { $_->get_namepart('prefix') } @{$names->names};
+    my @useprefices  = map { if (defined($_->get_useprefix)) {$_->get_useprefix} else {$useprefix} } @{$names->names};
+
     my $loopnames;
 
     # loopnames is the number of names to loop over in the name list when constructing the label
@@ -461,7 +500,7 @@ sub _label_name {
 
     for (my $i = 0; $i < $loopnames; $i++) {
       # Deal with prefix options
-      if ($useprefix and $prefices[$i]) {
+      if ($useprefices[$i] and $prefices[$i]) {
         my $w = $labelattrs->{substring_pwidth} // 1;
         if ($labelattrs->{substring_pcompound}) {
           my $tmpstring;
@@ -481,7 +520,7 @@ sub _label_name {
     $sortacc = $acc;
 
     # Add alphaothers if name list is truncated
-    if ($numnames > $loopnames or $nameval->get_morenames) {
+    if ($numnames > $loopnames or $names->get_morenames) {
       $acc .= $alphaothers // ''; # alphaothers can be undef
       $sortacc .= $sortalphaothers // ''; # sortalphaothers can be undef
     }
@@ -1311,6 +1350,12 @@ sub _namestring {
   my $count = $names->count_names;
   my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
   my $snk = Biber::Config->getblxoption('sortingnamekey');
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+
+  # Name list scope useprefix option
+  if (defined($names->get_useprefix)) {
+    $useprefix = $names->get_useprefix;
+  }
 
   # These should be symbols which can't appear in names and which sort before all alphanum
   # so that "Alan Smith" sorts after "Al Smith". This means, symbols which normalise_string_sort()
@@ -1329,12 +1374,26 @@ sub _namestring {
 
   foreach my $n (@{$names->first_n_names($visible)}) {
 
+    # Name scope useprefix option
+    if (defined($n->get_useprefix)) {
+      $useprefix = $n->get_useprefix;
+    }
+
     # Get the sorting name key specification and use it to construct a sorting key for each name
     foreach my $np (@$snk) {
       my $namepart = $np->{namepart};
       my $useopt = exists($np->{use}) ? "use$namepart" : undef;
+
+      #
+      my $useoptval = Biber::Config->getblxoption($useopt, $bee, $citekey);
+
+      # useprefix can be name list or name local
+      if ($useopt and $useopt eq 'useprefix') {
+        $useoptval = $useprefix;
+      }
+
       if (not $useopt or
-          ($useopt and Biber::Config->getblxoption($useopt, $bee, $citekey) == $np->{use})) {
+          ($useopt and $useoptval == $np->{use})) {
         if ($n->get_namepart($namepart)) {
           # Given name part can be modified by sortgiveninits option
           if ($namepart eq 'given' and Biber::Config->getoption('sortgiveninits')) {

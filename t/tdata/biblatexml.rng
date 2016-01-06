@@ -10,86 +10,184 @@
           <attribute name="entrytype">
             <choice>
               <value>video</value>
-              <value>customf</value>
-              <value>patent</value>
-              <value>inreference</value>
-              <value>custome</value>
-              <value>set</value>
-              <value>booklet</value>
-              <value>manual</value>
-              <value>music</value>
-              <value>jurisdiction</value>
-              <value>artwork</value>
-              <value>customa</value>
-              <value>performance</value>
-              <value>bibnote</value>
-              <value>movie</value>
-              <value>unpublished</value>
-              <value>customc</value>
-              <value>collection</value>
-              <value>article</value>
-              <value>customd</value>
-              <value>legislation</value>
               <value>legal</value>
+              <value>book</value>
               <value>customb</value>
-              <value>reference</value>
-              <value>report</value>
               <value>xdata</value>
+              <value>proceedings</value>
+              <value>suppbook</value>
+              <value>standard</value>
+              <value>jurisdiction</value>
+              <value>mvbook</value>
               <value>mvcollection</value>
               <value>inproceedings</value>
-              <value>online</value>
-              <value>standard</value>
-              <value>suppbook</value>
-              <value>software</value>
-              <value>inbook</value>
-              <value>bookinbook</value>
-              <value>mvbook</value>
-              <value>misc</value>
-              <value>incollection</value>
-              <value>periodical</value>
-              <value>commentary</value>
-              <value>image</value>
-              <value>proceedings</value>
-              <value>book</value>
-              <value>review</value>
-              <value>suppcollection</value>
-              <value>audio</value>
               <value>thesis</value>
+              <value>movie</value>
+              <value>customd</value>
+              <value>suppcollection</value>
+              <value>review</value>
+              <value>manual</value>
+              <value>commentary</value>
+              <value>audio</value>
+              <value>bookinbook</value>
+              <value>incollection</value>
+              <value>performance</value>
+              <value>customc</value>
+              <value>patent</value>
+              <value>collection</value>
+              <value>article</value>
+              <value>report</value>
+              <value>bibnote</value>
+              <value>artwork</value>
+              <value>online</value>
+              <value>software</value>
+              <value>booklet</value>
+              <value>periodical</value>
+              <value>music</value>
               <value>letter</value>
+              <value>customa</value>
+              <value>customf</value>
+              <value>set</value>
+              <value>custome</value>
+              <value>inreference</value>
+              <value>inbook</value>
+              <value>image</value>
+              <value>reference</value>
+              <value>legislation</value>
+              <value>unpublished</value>
+              <value>misc</value>
             </choice>
           </attribute>
           <interleave>
-            <!-- literal lists -->
-            <ref name="literallist" />
-            <!-- name lists -->
-            <ref name="namelist" />
             <!-- key lists -->
             <ref name="keylist" />
-            <!-- code fields -->
-            <ref name="codefield" />
-            <!-- keyword fields -->
-            <ref name="keywordfield" />
-            <!-- uri fields -->
-            <ref name="urifield" />
+            <!-- name lists -->
+            <ref name="namelist" />
+            <!-- literal lists -->
+            <ref name="literallist" />
             <!-- date fields -->
             <ref name="datefield" />
-            <!-- literal fields -->
-            <ref name="literalfield" />
-            <!-- range fields -->
-            <ref name="rangefield" />
+            <!-- uri fields -->
+            <ref name="urifield" />
+            <!-- code fields -->
+            <ref name="codefield" />
             <!-- entrykey fields -->
             <ref name="entrykeyfield" />
+            <!-- verbatim fields -->
+            <ref name="verbatimfield" />
             <!-- key fields -->
             <ref name="keyfield" />
             <!-- option fields -->
             <ref name="optionfield" />
-            <!-- verbatim fields -->
-            <ref name="verbatimfield" />
+            <!-- keyword fields -->
+            <ref name="keywordfield" />
+            <!-- range fields -->
+            <ref name="rangefield" />
+            <!-- literal fields -->
+            <ref name="literalfield" />
           </interleave>
         </element>
       </oneOrMore>
     </element>
   </start>
+  <!-- key lists definition -->
+  <define name="keylist">
+    <interleave>
+      <optional>
+        <element name="bltx:language">
+          <choice>
+            <text />
+            <oneOrMore>
+              <element name="bltx:item">
+                <text />
+              </element>
+            </oneOrMore>
+          </choice>
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <!-- name lists definition -->
+  <define name="namelist">
+    <optional>
+      <element name="bltx:names">
+        <!-- useprefix option -->
+        <attribute name="useprefix">
+          <data type="boolean" />
+        </attribute>
+        <!-- types of names elements -->
+        <attribute name="type">
+          <choice>
+            <value>afterword</value>
+            <value>annotator</value>
+            <value>author</value>
+            <value>bookauthor</value>
+            <value>commentator</value>
+            <value>director</value>
+            <value>editor</value>
+            <value>editora</value>
+            <value>editorb</value>
+            <value>editorc</value>
+            <value>execproducer</value>
+            <value>foreword</value>
+            <value>holder</value>
+            <value>introduction</value>
+            <value>namea</value>
+            <value>nameb</value>
+            <value>namec</value>
+            <value>producer</value>
+            <value>shortauthor</value>
+            <value>shorteditor</value>
+            <value>sortname</value>
+            <value>translator</value>
+            <value>with</value>
+            <value>writer</value>
+          </choice>
+        </attribute>
+        <optional>
+          <attribute name="morenames">
+            <data type="boolean" />
+          </attribute>
+        </optional>
+        <oneOrMore>
+          <element name="bltx:name">
+            <!-- useprefix option -->
+            <attribute name="useprefix">
+              <data type="boolean" />
+            </attribute>
+            <ref name="gender" />
+            <oneOrMore>
+              <element name="bltx:namepart">
+                <attribute name="type">
+                  <choice>
+                    <value>given</value>
+                    <value>middle</value>
+                    <value>family</value>
+                    <value>prefix</value>
+                    <value>suffix</value>
+                  </choice>
+                </attribute>
+                <optional>
+                  <attribute name="initial" />
+                </optional>
+                <choice>
+                  <text />
+                  <oneOrMore>
+                    <element name="bltx:namepart">
+                      <optional>
+                        <attribute name="initial" />
+                      </optional>
+                      <text />
+                    </element>
+                  </oneOrMore>
+                </choice>
+              </element>
+            </oneOrMore>
+          </element>
+        </oneOrMore>
+      </element>
+    </optional>
+  </define>
   <!-- literal lists definition -->
   <define name="literallist">
     <interleave>
@@ -239,126 +337,6 @@
       </optional>
     </interleave>
   </define>
-  <!-- name lists definition -->
-  <define name="namelist">
-    <optional>
-      <element name="bltx:names">
-        <!-- types of names elements -->
-        <attribute name="type">
-          <choice>
-            <value>afterword</value>
-            <value>annotator</value>
-            <value>author</value>
-            <value>bookauthor</value>
-            <value>commentator</value>
-            <value>director</value>
-            <value>editor</value>
-            <value>editora</value>
-            <value>editorb</value>
-            <value>editorc</value>
-            <value>execproducer</value>
-            <value>foreword</value>
-            <value>holder</value>
-            <value>introduction</value>
-            <value>namea</value>
-            <value>nameb</value>
-            <value>namec</value>
-            <value>producer</value>
-            <value>shortauthor</value>
-            <value>shorteditor</value>
-            <value>sortname</value>
-            <value>translator</value>
-            <value>with</value>
-            <value>writer</value>
-          </choice>
-        </attribute>
-        <optional>
-          <attribute name="morenames">
-            <data type="boolean" />
-          </attribute>
-        </optional>
-        <oneOrMore>
-          <element name="bltx:name">
-            <ref name="gender" />
-            <oneOrMore>
-              <element name="bltx:namepart">
-                <attribute name="type">
-                  <choice>
-                    <value>given</value>
-                    <value>middle</value>
-                    <value>family</value>
-                    <value>prefix</value>
-                    <value>suffix</value>
-                  </choice>
-                </attribute>
-                <optional>
-                  <attribute name="initial" />
-                </optional>
-                <choice>
-                  <text />
-                  <oneOrMore>
-                    <element name="bltx:namepart">
-                      <optional>
-                        <attribute name="initial" />
-                      </optional>
-                      <text />
-                    </element>
-                  </oneOrMore>
-                </choice>
-              </element>
-            </oneOrMore>
-          </element>
-        </oneOrMore>
-      </element>
-    </optional>
-  </define>
-  <!-- key lists definition -->
-  <define name="keylist">
-    <interleave>
-      <optional>
-        <element name="bltx:language">
-          <choice>
-            <text />
-            <oneOrMore>
-              <element name="bltx:item">
-                <text />
-              </element>
-            </oneOrMore>
-          </choice>
-        </element>
-      </optional>
-    </interleave>
-  </define>
-  <!-- code fields definition -->
-  <define name="codefield">
-    <interleave>
-      <optional>
-        <element name="bltx:execute">
-          <text />
-        </element>
-      </optional>
-    </interleave>
-  </define>
-  <!-- keyword fields definition -->
-  <define name="keywordfield">
-    <interleave>
-      <optional>
-        <element name="bltx:keywords">
-          <text />
-        </element>
-      </optional>
-    </interleave>
-  </define>
-  <!-- uri fields definition -->
-  <define name="urifield">
-    <interleave>
-      <optional>
-        <element name="bltx:url">
-          <data type="anyURI" />
-        </element>
-      </optional>
-    </interleave>
-  </define>
   <!-- date fields definition -->
   <define name="datefield">
     <zeroOrMore>
@@ -389,6 +367,281 @@
         </choice>
       </element>
     </zeroOrMore>
+  </define>
+  <!-- uri fields definition -->
+  <define name="urifield">
+    <interleave>
+      <optional>
+        <element name="bltx:url">
+          <data type="anyURI" />
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <!-- code fields definition -->
+  <define name="codefield">
+    <interleave>
+      <optional>
+        <element name="bltx:execute">
+          <text />
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <!-- entrykey fields definition -->
+  <define name="entrykeyfield">
+    <interleave>
+      <optional>
+        <element name="bltx:crossref">
+          <choice>
+            <list>
+              <oneOrMore>
+                <data type="string" />
+              </oneOrMore>
+            </list>
+            <oneOrMore>
+              <element name="bltx:key">
+                <text />
+              </element>
+            </oneOrMore>
+          </choice>
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:entryset">
+          <choice>
+            <list>
+              <oneOrMore>
+                <data type="string" />
+              </oneOrMore>
+            </list>
+            <oneOrMore>
+              <element name="bltx:key">
+                <text />
+              </element>
+            </oneOrMore>
+          </choice>
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:ids">
+          <choice>
+            <list>
+              <oneOrMore>
+                <data type="string" />
+              </oneOrMore>
+            </list>
+            <oneOrMore>
+              <element name="bltx:key">
+                <text />
+              </element>
+            </oneOrMore>
+          </choice>
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:related">
+          <oneOrMore>
+            <element name="bltx:item">
+              <attribute name="type" />
+              <attribute name="ids" />
+              <optional>
+                <attribute name="string" />
+              </optional>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:xdata">
+          <choice>
+            <list>
+              <oneOrMore>
+                <data type="string" />
+              </oneOrMore>
+            </list>
+            <oneOrMore>
+              <element name="bltx:key">
+                <text />
+              </element>
+            </oneOrMore>
+          </choice>
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:xref">
+          <choice>
+            <list>
+              <oneOrMore>
+                <data type="string" />
+              </oneOrMore>
+            </list>
+            <oneOrMore>
+              <element name="bltx:key">
+                <text />
+              </element>
+            </oneOrMore>
+          </choice>
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <!-- verbatim fields definition -->
+  <define name="verbatimfield">
+    <interleave>
+      <optional>
+        <element name="bltx:abstracturl">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:doi">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:eprint">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:file">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:verba">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:verbb">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:verbc">
+          <text />
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <!-- key fields definition -->
+  <define name="keyfield">
+    <interleave>
+      <optional>
+        <element name="bltx:authortype">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:bookpagination">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:editoratype">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:editorbtype">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:editorctype">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:editortype">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:nameatype">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:namebtype">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:namectype">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:origlanguage">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:pagination">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:pubstate">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:type">
+          <text />
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <!-- option fields definition -->
+  <define name="optionfield">
+    <interleave>
+      <optional>
+        <element name="bltx:options">
+          <text />
+        </element>
+      </optional>
+      <optional>
+        <element name="bltx:relatedoptions">
+          <text />
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <!-- keyword fields definition -->
+  <define name="keywordfield">
+    <interleave>
+      <optional>
+        <element name="bltx:keywords">
+          <text />
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <!-- range fields definition -->
+  <define name="rangefield">
+    <interleave>
+      <optional>
+        <element name="bltx:pages">
+          <oneOrMore>
+            <element name="bltx:item">
+              <element name="bltx:start">
+                <text />
+              </element>
+              <element name="bltx:end">
+                <choice>
+                  <text />
+                  <empty />
+                </choice>
+              </element>
+            </element>
+          </oneOrMore>
+        </element>
+      </optional>
+    </interleave>
   </define>
   <!-- literal fields definition -->
   <define name="literalfield">
@@ -765,251 +1018,6 @@
       </optional>
       <optional>
         <element name="bltx:volumes">
-          <text />
-        </element>
-      </optional>
-    </interleave>
-  </define>
-  <!-- range fields definition -->
-  <define name="rangefield">
-    <interleave>
-      <optional>
-        <element name="bltx:pages">
-          <oneOrMore>
-            <element name="bltx:item">
-              <element name="bltx:start">
-                <text />
-              </element>
-              <element name="bltx:end">
-                <choice>
-                  <text />
-                  <empty />
-                </choice>
-              </element>
-            </element>
-          </oneOrMore>
-        </element>
-      </optional>
-    </interleave>
-  </define>
-  <!-- entrykey fields definition -->
-  <define name="entrykeyfield">
-    <interleave>
-      <optional>
-        <element name="bltx:crossref">
-          <choice>
-            <list>
-              <oneOrMore>
-                <data type="string" />
-              </oneOrMore>
-            </list>
-            <oneOrMore>
-              <element name="bltx:key">
-                <text />
-              </element>
-            </oneOrMore>
-          </choice>
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:entryset">
-          <choice>
-            <list>
-              <oneOrMore>
-                <data type="string" />
-              </oneOrMore>
-            </list>
-            <oneOrMore>
-              <element name="bltx:key">
-                <text />
-              </element>
-            </oneOrMore>
-          </choice>
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:ids">
-          <choice>
-            <list>
-              <oneOrMore>
-                <data type="string" />
-              </oneOrMore>
-            </list>
-            <oneOrMore>
-              <element name="bltx:key">
-                <text />
-              </element>
-            </oneOrMore>
-          </choice>
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:related">
-          <oneOrMore>
-            <element name="bltx:item">
-              <attribute name="type" />
-              <attribute name="ids" />
-              <optional>
-                <attribute name="string" />
-              </optional>
-            </element>
-          </oneOrMore>
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:xdata">
-          <choice>
-            <list>
-              <oneOrMore>
-                <data type="string" />
-              </oneOrMore>
-            </list>
-            <oneOrMore>
-              <element name="bltx:key">
-                <text />
-              </element>
-            </oneOrMore>
-          </choice>
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:xref">
-          <choice>
-            <list>
-              <oneOrMore>
-                <data type="string" />
-              </oneOrMore>
-            </list>
-            <oneOrMore>
-              <element name="bltx:key">
-                <text />
-              </element>
-            </oneOrMore>
-          </choice>
-        </element>
-      </optional>
-    </interleave>
-  </define>
-  <!-- key fields definition -->
-  <define name="keyfield">
-    <interleave>
-      <optional>
-        <element name="bltx:authortype">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:bookpagination">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:editoratype">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:editorbtype">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:editorctype">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:editortype">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:nameatype">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:namebtype">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:namectype">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:origlanguage">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:pagination">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:pubstate">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:type">
-          <text />
-        </element>
-      </optional>
-    </interleave>
-  </define>
-  <!-- option fields definition -->
-  <define name="optionfield">
-    <interleave>
-      <optional>
-        <element name="bltx:options">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:relatedoptions">
-          <text />
-        </element>
-      </optional>
-    </interleave>
-  </define>
-  <!-- verbatim fields definition -->
-  <define name="verbatimfield">
-    <interleave>
-      <optional>
-        <element name="bltx:abstracturl">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:doi">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:eprint">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:file">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:verba">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:verbb">
-          <text />
-        </element>
-      </optional>
-      <optional>
-        <element name="bltx:verbc">
           <text />
         </element>
       </optional>
