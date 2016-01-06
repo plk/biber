@@ -9,7 +9,8 @@
 ** suffix -> suffix
 * DONE lastname mandatory relaxed? How about just mandatory that some part is defined since sorting isn't always on lastname first?
 * TODO Document year/month (datepart fields) are not allowed in bltxml
-* TODO name parts should be defined in data model and nothing hard-coded?
-* TODO gender types in data model too
+* TODO name parts and gender types in data model as constants
 
+\DeclareDatamodelConstant[type=string]{name}{string}
+\DeclareDatamodelConstant[type=list]{name}{a,b,c,d}
 

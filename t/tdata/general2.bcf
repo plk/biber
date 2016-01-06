@@ -25,7 +25,7 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>sortfirstinits</bcf:key>
+      <bcf:key>sortgiveninits</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
@@ -199,7 +199,7 @@
     <bcf:option>minalphanames</bcf:option>
     <bcf:option>terseinits</bcf:option>
     <bcf:option>firstinits</bcf:option>
-    <bcf:option>sortfirstinits</bcf:option>
+    <bcf:option>sortgiveninits</bcf:option>
     <bcf:option>abbreviate</bcf:option>
     <bcf:option>dateabbrev</bcf:option>
     <bcf:option>sortlocale</bcf:option>
@@ -626,6 +626,10 @@
   </bcf:sorting>
   <!-- DATA MODEL -->
   <bcf:datamodel>
+    <bcf:constants>
+      <bcf:constant type="list" name="gender">sf,sm,sn,pf,pm,pn,pp</bcf:constant>
+      <bcf:constant type="list" name="nameparts">family,given,prefix,suffix</bcf:constant>
+    </bcf:constants>
     <bcf:entrytypes>
       <bcf:entrytype>article</bcf:entrytype>
       <bcf:entrytype>artwork</bcf:entrytype>

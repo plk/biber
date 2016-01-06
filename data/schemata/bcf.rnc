@@ -16,7 +16,7 @@ start =
       debug,
       mincrossrefs,
       sortcase,
-      sortfirstinits,
+      sortgiveninits,
       sortupper
     },
 
@@ -109,10 +109,12 @@ start =
           attribute pad_char { xsd:string {minLength="1"}}?,
           attribute pad_side { "left" | "right" }?,
           attribute substring_width { xsd:integer | "v" | "vf" | "l" }?,
+          attribute substring_pwidth { xsd:integer }?,
           attribute substring_fixed_threshold { xsd:integer }?,
           attribute substring_width_max { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
           attribute substring_compound { "0" | "1" }?,
+          attribute substring_pcompound { "0" | "1" }?,
           attribute ifnamecount { xsd:integer }?,
           attribute namecount { xsd:integer }?,
           attribute form { "original" | "translated" | "romanised" | "uniform" }?,
@@ -190,6 +192,14 @@ start =
     sorting,
     # Data model specification
     element bcf:datamodel {
+      # Constants
+      element bcf:constants {
+        element bcf:constant {
+          attribute type { "string" | "list" }?,
+          attribute name { text },
+          text
+        }+
+      },
       # Valid entrytypes
       element bcf:entrytypes {
         element bcf:entrytype {
@@ -610,10 +620,10 @@ sortcase =
     element bcf:key { "sortcase" },
     element bcf:value { "0" | "1" }
   }
-sortfirstinits =
+sortgiveninits =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "sortfirstinits" },
+    element bcf:key { "sortgiveninits" },
     element bcf:value { "0" | "1" }
   }
 alphaothers =

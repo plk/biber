@@ -27,7 +27,7 @@
         <ref name="debug"/>
         <ref name="mincrossrefs"/>
         <ref name="sortcase"/>
-        <ref name="sortfirstinits"/>
+        <ref name="sortgiveninits"/>
         <ref name="sortupper"/>
       </element>
       <!--
@@ -258,6 +258,11 @@
                     </attribute>
                   </optional>
                   <optional>
+                    <attribute name="substring_pwidth">
+                      <data type="integer"/>
+                    </attribute>
+                  </optional>
+                  <optional>
                     <attribute name="substring_fixed_threshold">
                       <data type="integer"/>
                     </attribute>
@@ -277,6 +282,14 @@
                   </optional>
                   <optional>
                     <attribute name="substring_compound">
+                      <choice>
+                        <value>0</value>
+                        <value>1</value>
+                      </choice>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="substring_pcompound">
                       <choice>
                         <value>0</value>
                         <value>1</value>
@@ -488,6 +501,23 @@
       <optional>
         <!-- Data model specification -->
         <element name="bcf:datamodel">
+          <!-- Constants -->
+          <element name="bcf:constants">
+            <oneOrMore>
+              <element name="bcf:constant">
+                <optional>
+                  <attribute name="type">
+                    <choice>
+                      <value>string</value>
+                      <value>list</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <attribute name="name"/>
+                <text/>
+              </element>
+            </oneOrMore>
+          </element>
           <!-- Valid entrytypes -->
           <element name="bcf:entrytypes">
             <oneOrMore>
@@ -1565,13 +1595,13 @@
       </element>
     </element>
   </define>
-  <define name="sortfirstinits">
+  <define name="sortgiveninits">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>sortfirstinits</value>
+        <value>sortgiveninits</value>
       </element>
       <element name="bcf:value">
         <choice>
