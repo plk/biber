@@ -86,7 +86,6 @@ t/tool-bltxml.t
 t/tdata/biber-test.conf
 t/tdata/tool-test.conf
 t/tdata/biblatexml.bcf
-t/tdata/biblatexml.rng
 t/tdata/biblatexml.bltxml
 t/tdata/bibtex-aliases.bcf
 t/tdata/bibtex-aliases.bib
