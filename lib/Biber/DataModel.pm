@@ -73,6 +73,12 @@ sub new {
     }
   }
 
+  my $constants;
+  foreach my $constant (@{$dm->{constants}{constant}}) {
+    $self->{constants}{$constant->{name}}{type} = $constant->{type};
+    $self->{constants}{$constant->{name}}{value} = $constant->{content};
+  }
+
   my $leg_ents;
   foreach my $et (@{$dm->{entrytypes}{entrytype}}) {
     my $es = $et->{content};
@@ -161,6 +167,45 @@ sub new {
 #  use Data::Dump;dd($self);exit 0;
   return $self;
 }
+
+=head2 constants
+
+    Returns array ref of constant names
+
+=cut
+
+sub constants {
+  my $self = shift;
+  return [ keys %{$self->{constants}} ];
+}
+
+=head2 get_constant_type
+
+    Returns a constant type
+
+=cut
+
+sub get_constant_type {
+  my ($self, $name) = @_;
+  return $self->{constants}{$name}{type};
+}
+
+=head2 get_constant_value
+
+    Returns a constant value
+
+=cut
+
+sub get_constant_value {
+  my ($self, $name) = @_;
+  if ($self->{constants}{$name}{type} eq 'list') {
+    return split(/\s*,\s*/, $self->{constants}{$name}{value});
+  }
+  elsif ($self->{constants}{$name}{type} eq 'string') {
+    return $self->{constants}{$name}{value};
+  }
+}
+
 
 =head2 fieldtypes
 
@@ -1059,7 +1104,7 @@ sub generate_bltxml_schema {
   $writer->startTag('zeroOrMore');
   $writer->startTag('attribute', 'name' => 'gender');
   $writer->startTag('choice');
-  foreach my $gender ('sf', 'sm', 'sn', 'pf', 'pm', 'pn', 'pp') {
+  foreach my $gender ($dm->get_constant_value('gender')) {# list type so returns list
     $writer->dataElement('value', $gender);
   }
   $writer->endTag();# choice

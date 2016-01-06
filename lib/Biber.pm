@@ -360,6 +360,7 @@ sub parse_ctrlfile {
                                                            qr/\Asortitem\z/,
                                                            qr/\Abibdata\z/,
                                                            qr/\Adatasource\z/,
+                                                           qr/\Aconstant\z/,
                                                            qr/\Asection\z/,
                                                            qr/\Asortexclusion\z/,
                                                            qr/\Aexclusion\z/,

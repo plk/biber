@@ -695,6 +695,21 @@
         <xsl:if test="/bcf:controlfile/bcf:datamodel">
           <hr/>
           <h3>Data Model</h3>
+          <h4>Constants</h4>
+          <table>
+            <thead>
+              <tr><td>Name</td><td>Type</td><td>Value</td></tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="/bcf:controlfile/bcf:datamodel/bcf:constants/bcf:constant">
+                <tr>
+                  <td><xsl:value-of select="./@name"/></td>
+                  <td><xsl:value-of select="./@type"/></td>
+                  <td><xsl:value-of select="./text()"/></td>
+                </tr>
+              </xsl:for-each>
+              </tbody>
+          </table>
           <h4>Legal entrytypes</h4>
           <table>
             <thead>
