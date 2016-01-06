@@ -1131,13 +1131,6 @@ sub parsename {
   my $prefix = biber_decode_utf8($name->format($p_f));
   my $suffix = biber_decode_utf8($name->format($s_f));
 
-  # Skip the name if we can't determine last name - otherwise many other things will
-  # fail later
-  unless ($family) {
-    biber_warn("Couldn't determine Family Name for name \"$namestr\" - ignoring name");
-    return 0;
-  }
-
   # Variables to hold the Text::BibTeX::NameFormat generated initials string
   my $gen_family_i;
   my $gen_given_i;

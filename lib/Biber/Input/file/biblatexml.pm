@@ -625,9 +625,6 @@ sub parsename {
     }
   }
 
-  # Only warn about family names since there should always be one
-  biber_warn("Couldn't determine family name for name XPath: " . $node->nodePath) unless exists($namec{family});
-
   my $namestring = '';
 
   # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
