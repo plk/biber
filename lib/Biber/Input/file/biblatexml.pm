@@ -519,8 +519,8 @@ sub _name {
     my $names = new Biber::Entry::Names;
 
     # Save useprefix attribute
-    if (my $up =  $node->getAttribute('useprefix')) {
-      $names->set_useprefix($up);
+    if ($node->hasAttribute('useprefix')) {
+      $names->set_useprefix($node->getAttribute('useprefix'));
     }
 
     foreach my $namenode ($node->findnodes("./$NS:name")) {
@@ -579,8 +579,8 @@ sub parsename {
   my $useprefix = $opts->{useprefix};
 
   # Override name-scope useprefix attribute if it exists
-  if (my $up = $node->getAttribute('useprefix')) {
-    $useprefix = $up;
+  if ($node->hasAttribute('useprefix')) {
+    $useprefix = $node->getAttribute('useprefix');
   }
 
   my %namec;

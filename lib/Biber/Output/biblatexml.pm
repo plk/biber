@@ -138,6 +138,11 @@ sub set_output_entry {
       if ( $nf->get_morenames ) {
         push @attrs, (morenames => 1);
       }
+      # name list scope useprefix. Use defined() because this can be 0
+      if ( defined($nf->get_useprefix) ) {
+        push @attrs, (useprefix => $nf->get_useprefix);
+      }
+
       $xml->startTag([$xml_prefix, 'names'], @attrs);
 
       foreach my $n (@{$nf->names}) {

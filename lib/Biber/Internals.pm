@@ -1392,15 +1392,17 @@ sub _namestring {
         $useoptval = $useprefix;
       }
 
-      if (not $useopt or
-          ($useopt and $useoptval == $np->{use})) {
-        if ($n->get_namepart($namepart)) {
+      if (my $npstring = $n->get_namepart($namepart)) {
+        # No use attribute conditionals or the attribute is specified and matches the option
+        if (not $useopt or
+            ($useopt and $useoptval == $np->{use})) {
           # Given name part can be modified by sortgiveninits option
           if ($namepart eq 'given' and Biber::Config->getoption('sortgiveninits')) {
-            $str .=  normalise_string_sort(join('', @{$n->get_namepart_initial($namepart)}), $field) . $nsi if $n->get_namepart_initial($namepart);
+            my $npistring = $n->get_namepart_initial($namepart);
+            $str .=  normalise_string_sort(join('', @{$npistring}), $field) . $nsi if $npistring;
           }
           else {
-            $str .= normalise_string_sort($n->get_namepart($namepart), $field) . $nsi if $n->get_namepart($namepart);
+            $str .= normalise_string_sort($npstring, $field) . $nsi if $npstring;
           }
         }
       }

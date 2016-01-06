@@ -392,7 +392,14 @@ sub name_to_biblatexml {
   my $xml = shift;
   my $out = shift;
   my $xml_prefix = $out->{xml_prefix};
-  $xml->startTag([$xml_prefix, 'name']);
+  my @attrs;
+
+  # name scope useprefix. Use defined() because this can be 0
+  if ( defined($self->get_useprefix) ) {
+    push @attrs, (useprefix => $self->get_useprefix);
+  }
+
+  $xml->startTag([$xml_prefix, 'name'], @attrs);
 
   # family name
   _name_part_to_bltxml($xml,
