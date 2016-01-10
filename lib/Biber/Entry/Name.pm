@@ -34,15 +34,10 @@ sub new {
     foreach my $attr (qw/useprefix
                          gender
                          family
-                         family_i
                          given
-                         given_i
                          middle
-                         middle_i
                          prefix
-                         prefix_i
                          suffix
-                         suffix_i
                          namestring
                          nameinitstring
                          strip/) {
@@ -272,7 +267,7 @@ sub get_minimal_info {
 
 sub get_namepart {
   my ($self, $namepart) = @_;
-  return $self->{$namepart};
+  return $self->{$namepart}{string};
 }
 
 =head2 set_namepart
@@ -283,7 +278,7 @@ sub get_namepart {
 
 sub set_namepart {
   my ($self, $namepart, $val) = @_;
-  $self->{$namepart} = $val;
+  $self->{$namepart}{string} = $val;
   return;
 }
 
@@ -295,7 +290,7 @@ sub set_namepart {
 
 sub get_namepart_initial {
   my ($self, $namepart) = @_;
-  return $self->{"${namepart}_i"};
+  return $self->{$namepart}{initial};
 }
 
 =head2 set_namepart_initial
@@ -306,7 +301,7 @@ sub get_namepart_initial {
 
 sub set_namepart_initial {
   my ($self, $namepart, $val) = @_;
-  $self->{"${namepart}_i"} = $val;
+  $self->{$namepart}{initial} = $val;
   return;
 }
 

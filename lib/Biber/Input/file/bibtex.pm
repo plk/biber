@@ -1078,14 +1078,10 @@ sub preprocess_file {
     parsename('John Doe')
     returns an object which internally looks a bit like this:
 
-    { given          => 'John',
-      given_i        => ['J'],
-      family         => 'Doe',
-      family_i       => ['D'],
-      prefix         => undef,
-      prefix_i       => undef,
-      suffix         => undef,
-      suffix_i       => undef,
+    { given          => {string => 'John', initial => ['J']},
+      family         => {string => 'Doe', initial => ['D']},
+      prefix         => {string => undef, initial => undef},
+      suffix         => {string => undef, initial => undef},
       namestring     => 'Doe, John',
       nameinitstring => 'Doe_J',
       strip          => {'given'  => 0,
@@ -1260,14 +1256,14 @@ sub parsename {
   # stripped during processing so we can add them back when printing the
   # .bbl so as to maintain maximum BibTeX compatibility
   return Biber::Entry::Name->new(
-    given           => $given          eq '' ? undef : $given_stripped,
-    given_i         => $given          eq '' ? undef : $given_i,
-    family          => $family         eq '' ? undef : $family_stripped,
-    family_i        => $family         eq '' ? undef : $family_i,
-    prefix          => $prefix         eq '' ? undef : $prefix_stripped,
-    prefix_i        => $prefix         eq '' ? undef : $prefix_i,
-    suffix          => $suffix         eq '' ? undef : $suffix_stripped,
-    suffix_i        => $suffix         eq '' ? undef : $suffix_i,
+    given           => {string  => $given  eq '' ? undef : $given_stripped,
+                        initial => $given  eq '' ? undef : $given_i},
+    family          => {string  => $family eq '' ? undef : $family_stripped,
+                        initial => $family eq '' ? undef : $family_i},
+    prefix          => {string  => $prefix eq '' ? undef : $prefix_stripped,
+                        initial => $prefix eq '' ? undef : $prefix_i},
+    suffix          => {string  => $suffix eq '' ? undef : $suffix_stripped,
+                        initial => $suffix eq '' ? undef : $suffix_i},
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
     strip           => {'given'  => $gs,

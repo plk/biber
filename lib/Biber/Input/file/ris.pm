@@ -615,15 +615,15 @@ sub _name {
       $nameinitstr =~ s/~/_/g;
 
       my $name_obj = Biber::Entry::Name->new(
-        given           => $givenname || undef,
-        given_i         => $givenname ? \@fni : undef,
-        family          => $familyname,
-        family_i        => \@lni,
-        suffix          => $suffix || undef,
-        suffix_i        => $suffix ? \@si : undef,
-        namestring      => $namestring,
-        nameinitstring  => $nameinitstr
-      );
+                                             given  => {string  => $givenname || undef,
+                                                        initial => $givenname ? \@fni : undef},
+                                             family => {string  => $familyname,
+                                                        initial => \@lni},
+                                             suffix => {string  => $suffix || undef,
+                                                        initial => $suffix ? \@si : undef},
+                                             namestring      => $namestring,
+                                             nameinitstring  => $nameinitstr
+                                            );
       $names_obj->add_name($name_obj);
       $bibentry->set_datafield($f, $names_obj);
 

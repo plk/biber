@@ -555,21 +555,16 @@ sub _name {
 
     Returns an object which internally looks a bit like this:
 
-    { given          => 'John',
-      given_i        => 'J',
-      middle         => 'Fred',
-      middle_i       => 'F',
-      family         => 'Doe',
-      family_i       => 'D',
-      prefix         => undef,
-      prefix_i       => undef,
-      suffix         => undef,
-      suffix_i       => undef,
+    { given          => {string => 'John', initial => ['J']},
+      family         => {string => 'Doe', initial => ['D']},
+      middle         => {string => 'Fred', initial => ['F']},
+      prefix         => {string => undef, initial => undef},
+      suffix         => {string => undef, initial => undef},
       namestring     => 'Doe, John Fred',
       nameinitstring => 'Doe_JF',
       gender         => sm,
       useprefix      => 1 }
- }
+      }
 
 =cut
 
@@ -657,21 +652,20 @@ sub parsename {
   $nameinitstr =~ s/\s+/_/g;
 
   return Biber::Entry::Name->new(
-    given           => $namec{given} // undef,
-    given_i         => exists($namec{given}) ? $namec{given_i} : undef,
-    middle          => $namec{middle} // undef,
-    middle_i        => exists($namec{middle}) ? $namec{middle_i} : undef,
-    family          => $namec{family} // undef,
-    family_i        => exists($namec{family}) ? $namec{family_i} : undef,
-    prefix          => $namec{prefix} // undef,
-    prefix_i        => exists($namec{prefix}) ? $namec{prefix_i} : undef,
-    suffix          => $namec{suffix} // undef,
-    suffix_i        => exists($namec{suffix}) ? $namec{suffix_i} : undef,
+    given           => {string  => $namec{given} // undef,
+                        initial => exists($namec{given}) ? $namec{given_i} : undef},
+    middle          => {string  => $namec{middle} // undef,
+                        initial => exists($namec{middle}) ? $namec{middle_i} : undef},
+    family          => {string  => $namec{family} // undef,
+                        initial => exists($namec{family}) ? $namec{family_i} : undef},
+    prefix          => {string  => $namec{prefix} // undef,
+                        initial => exists($namec{prefix}) ? $namec{prefix_i} : undef},
+    suffix          => {string  => $namec{suffix} // undef,
+                        initial => exists($namec{suffix}) ? $namec{suffix_i} : undef},
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
     gender          => $node->getAttribute('gender'),
     useprefix       => $useprefix
-
     );
 }
 
