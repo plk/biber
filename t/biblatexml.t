@@ -6,6 +6,7 @@ no warnings 'utf8';
 use Text::Diff::Config;
 $Text::Diff::Config::Output_Unicode = 1;
 
+
 use Test::More tests => 4;
 use Test::Differences;
 unified_diff;
@@ -102,4 +103,4 @@ my $bltx1 = "mm,,,von!Булгаков!Павел Георгиевич#Розе�
 eq_or_diff(encode_utf8($out->get_output_entry('bltx1', $main)), encode_utf8($l1), 'BibLaTeXML - 1');
 eq_or_diff($section->get_citekey_alias('bltx1a1'), 'bltx1', 'Citekey aliases - 1');
 eq_or_diff($section->get_citekey_alias('bltx1a2'), 'bltx1', 'Citekey aliases - 2');
-eq_or_diff($main->get_sortdata('bltx1')->[0], $bltx1, 'useprefix at name list and name scope - 1' );
+eq_or_diff(encode_utf8($main->get_sortdata('bltx1')->[0]), encode_utf8($bltx1), 'useprefix at name list and name scope - 1' );
