@@ -29,18 +29,15 @@ Biber::Entry::Name
 
 sub new {
   my ($class, %params) = @_;
+  my $dm = Biber::Config->get_dm;
   if (%params) {
     my $name = {};
-    foreach my $attr (qw/useprefix
-                         gender
-                         family
-                         given
-                         middle
-                         prefix
-                         suffix
-                         namestring
-                         nameinitstring
-                         strip/) {
+    foreach my $attr (('useprefix',
+                       'gender',
+                       'namestring',
+                       'nameinitstring',
+                       'strip',
+                       $dm->get_constant_value('nameparts'))) {
       if (exists $params{$attr}) {
         $name->{$attr} = $params{$attr}
       }
