@@ -21,7 +21,7 @@ Biber::Entry::Name
 
 =head2 new
 
-    Initialize a Biber::Entry::Name object, optionally with key=>value arguments.
+    Initialise a Biber::Entry::Name object, optionally with key=>value arguments.
 
 =cut
 
