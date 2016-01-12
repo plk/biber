@@ -392,45 +392,33 @@ sub name_to_biblatexml {
   $xml->startTag([$xml_prefix, 'name'], @attrs);
 
   # family name
-  _name_part_to_bltxml($xml,
-                       $xml_prefix,
-                       $self->get_namepart('family'),
-                       $self->get_namepart_initial('family'),
-                       'family');
+  $self->name_part_to_bltxml($xml, $xml_prefix, 'family');
 
   # given name
-  _name_part_to_bltxml($xml,
-                       $xml_prefix,
-                       $self->get_namepart('given'),
-                       $self->get_namepart_initial('given'),
-                       'given');
+  $self->name_part_to_bltxml($xml, $xml_prefix, 'given');
 
   # middle name
-  _name_part_to_bltxml($xml,
-                       $xml_prefix,
-                       $self->get_namepart('middle'),
-                       $self->get_namepart_initial('middle'),
-                       'middle');
+  $self->name_part_to_bltxml($xml, $xml_prefix, 'middle');
 
   # prefix
-  _name_part_to_bltxml($xml,
-                       $xml_prefix,
-                       $self->get_namepart('prefix'),
-                       $self->get_namepart_initial('prefix'),
-                       'prefix');
+  $self->name_part_to_bltxml($xml, $xml_prefix, 'prefix');
 
   # suffix
-  _name_part_to_bltxml($xml,
-                       $xml_prefix,
-                       $self->get_namepart('suffix'),
-                       $self->get_namepart_initial('suffix'),
-                       'suffix');
+  $self->name_part_to_bltxml($xml, $xml_prefix, 'suffix');
 
   $xml->endTag(); # Name
 }
 
-sub _name_part_to_bltxml {
-  my ($xml, $xml_prefix, $np, $nip, $npn) = @_;
+=head2 name_part_to_bltxml
+
+    Return BibLaTeXML data for a name
+
+=cut
+
+sub name_part_to_bltxml {
+  my ($self, $xml, $xml_prefix, $npn) = @_;
+  my $np = $self->get_namepart($npn);
+  my $nip = $self->get_namepart_initial($npn);
   if ($np) {
     $xml->startTag([$xml_prefix, 'namepart'], type => $npn);
     my $parts = [split(/[\s~]/, $np)];
@@ -448,7 +436,7 @@ sub _name_part_to_bltxml {
   }
 }
 
-=head2 name_to_bbl {
+=head2 name_to_bbl
 
     Return bbl data for a name
 
