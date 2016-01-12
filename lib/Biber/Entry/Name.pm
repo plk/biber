@@ -37,7 +37,7 @@ sub new {
                       'strip',
                       $dm->get_constant_value('nameparts')) {
       if (exists $params{$attr}) {
-        $name->{$attr} = $params{$attr}
+        $name->{$attr} = $params{$attr};
       }
     }
     return bless $name, $class;
