@@ -23,8 +23,6 @@ Biber::Entry::Name
 
     Initialize a Biber::Entry::Name object, optionally with key=>value arguments.
 
-    Ex: Biber::Entry::Name->new( family=>"Bolzmann", given=>"Anna Maria", prefix => "von" )
-
 =cut
 
 sub new {
@@ -32,12 +30,12 @@ sub new {
   my $dm = Biber::Config->get_dm;
   if (%params) {
     my $name = {};
-    foreach my $attr (('useprefix',
-                       'gender',
-                       'namestring',
-                       'nameinitstring',
-                       'strip',
-                       $dm->get_constant_value('nameparts'))) {
+    foreach my $attr ('useprefix',
+                      'gender',
+                      'namestring',
+                      'nameinitstring',
+                      'strip',
+                      $dm->get_constant_value('nameparts')) {
       if (exists $params{$attr}) {
         $name->{$attr} = $params{$attr}
       }
