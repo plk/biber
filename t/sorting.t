@@ -79,7 +79,7 @@ my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah
 my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,0000';
 my $labels      = '2005,03,02';
 my $sn1         = '';
-my $snk1        = 'mm,,John!von!Doe!Jr,,,0000';
+my $snk1        = 'mm,,John John!von!Doe!Jr,,,0000';
 
 # These have custom presort and also an exclusion on year and title set
 my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0000';
@@ -99,7 +99,9 @@ eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specif
 # Testing custom name sorting key
 my $SNK;
 $SNK = [
-        [{ type => 'namepart', value => 'given' }],
+        [{ type => 'namepart', value => 'given' },
+         { type => 'literal', value => ' ' },
+         { type => 'namepart', value => 'given' }],
         [{ type => 'namepart', value => 'prefix', use => 1}],
         [{ type => 'namepart', value => 'family'}],
         [{ type => 'namepart', value => 'suffix'}],
