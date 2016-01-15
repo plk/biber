@@ -556,7 +556,7 @@ sub output {
             my $outenc = Biber::Config->getoption('output_encoding');
             if ($outenc ne 'UTF-8') {
               # Can this entry be represented in the output encoding?
-              # We must have an ASCII-safe replacement string for encode whic is unlikely to be
+              # We must have an ASCII-safe replacement string for encode which is unlikely to be
               # in the string. Default is "?" which could easily be in URLS so we choose ASCII null
               if (encode($outenc, NFC($entry_string), sub {"\0"})  =~ /\0/) { # Malformed data encoding char
                 # So convert to macro
@@ -579,12 +579,12 @@ sub output {
     }
 
     # Aliases
-    while (my ($k, $ks) = each %{$data->{ALIAS_ENTRIES}{$secnum}{index}}) {
+    foreach my $ks (values %{$data->{ALIAS_ENTRIES}{$secnum}{index}}) {
       out($target, $$ks);
     }
 
     # Missing keys
-    while (my ($k, $ks) = each %{$data->{MISSING_ENTRIES}{$secnum}{index}}) {
+    foreach my $ks (values %{$data->{MISSING_ENTRIES}{$secnum}{index}}) {
       out($target, $$ks);
     }
 

@@ -247,7 +247,6 @@ sub extract_entries {
     # will be available
     while (my ($alias, $key) = each %{$cache->{data}{citekey_aliases}}) {
       $section->set_citekey_alias($alias, $key);
-      $logger->debug("Citekey '$alias' is an alias for citekey '$key'");
     }
 
     # If allkeys, push all bibdata keys into citekeys (if they are not already there).
@@ -287,7 +286,6 @@ sub extract_entries {
 
       }
       elsif (my $rk = $cache->{data}{citekey_aliases}{$wanted_key}) {
-        $logger->debug("Citekey '${wanted_key}' is an alias for citekey '$rk'");
         $section->set_citekey_alias($wanted_key, $rk);
 
         # Make sure there is a real, cited entry for the citekey alias

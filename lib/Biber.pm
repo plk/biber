@@ -1694,14 +1694,14 @@ sub process_labeldate {
           $be->set_field('labelyear',
                          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
         }
-        # pseudodates (field which are not really dates per se) are just years
+        # pseudodates (fields which are not really dates per se) are just years
         if (not $pseudodate and
             $be->get_field($ytype . 'endmonth')
             and ($be->get_field($df->{month}) ne $be->get_field($ytype . 'endmonth'))) {
           $be->set_field('labelmonth',
                          $be->get_field('labelmonth') . '\bibdatedash ' . $be->get_field($ytype . 'endmonth'));
         }
-        # pseudodates (field which are not really dates per se) are just years
+        # pseudodates (fields which are not really dates per se) are just years
         if (not $pseudodate and
             $be->get_field($ytype . 'endday')
             and ($be->get_field($df->{day}) ne $be->get_field($ytype . 'endday'))) {
