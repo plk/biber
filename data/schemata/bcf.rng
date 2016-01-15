@@ -813,6 +813,7 @@
   </define>
   <define name="sortingnamekey">
     <element name="bcf:sortingnamekey">
+      <attribute name="keyscheme"/>
       <oneOrMore>
         <element name="bcf:keypart">
           <attribute name="order">

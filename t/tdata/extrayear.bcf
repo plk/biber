@@ -595,7 +595,7 @@
     </bcf:inherit>
   </bcf:inheritance>
   <!-- SORTING NAME KEY -->
-  <bcf:sortingnamekey>
+  <bcf:sortingnamekey keyscheme="global">
     <bcf:keypart order="1">
       <bcf:part type="namepart" order="1" use="1">prefix</bcf:part>
     </bcf:keypart>

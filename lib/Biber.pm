@@ -373,6 +373,7 @@ sub parse_ctrlfile {
                                                            qr/\Aper_nottype\z/,
                                                            qr/\Akeypart\z/,
                                                            qr/\Apart\z/,
+                                                           qr/\Asortingnamekey\z/,
                                                            qr/\Aper_datasource\z/,
                                                            qr/\Anosort\z/,
                                                            qr/\Anoinit\z/,
@@ -574,30 +575,35 @@ sub parse_ctrlfile {
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nosort', $nosort) if $nosort;
 
-  # SORTING
+  # SORTING NAME KEY
 
-  # sorting name key specification
-  # use the order attributes to make sure things are in right order and create a data structure
+  # Use the order attributes to make sure things are in right order and create a data structure
   # we can use later
-  my $snkps;
-  foreach my $snkp (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{sortingnamekey}{keypart}}) {
-    my $snps;
-    foreach my $snp (sort {$a->{order} <=> $b->{order}} @{$snkp->{part}}) {
-      my $np;
-      if ($snp->{type} eq 'namepart') {
-        $np = { type => 'namepart', value => $snp->{content} };
-        if (exists($snp->{use})) {
-          $np->{use} = $snp->{use};
+  my $snss;
+  foreach my $sns (@{$bcfxml->{sortingnamekey}}) {
+    my $snkps;
+    foreach my $snkp (sort {$a->{order} <=> $b->{order}} @{$sns->{keypart}}) {
+      my $snps;
+      foreach my $snp (sort {$a->{order} <=> $b->{order}} @{$snkp->{part}}) {
+        my $np;
+        if ($snp->{type} eq 'namepart') {
+          $np = { type => 'namepart', value => $snp->{content} };
+          if (exists($snp->{use})) {
+            $np->{use} = $snp->{use};
+          }
         }
+        elsif ($snp->{type} eq 'literal') {
+          $np = { type => 'literal', value => $snp->{content} };
+        }
+        push @$snps, $np;
       }
-      elsif ($snp->{type} eq 'literal') {
-        $np = { type => 'literal', value => $snp->{content} };
-      }
-      push @$snps, $np;
+      push @$snkps, $snps;
     }
-    push @$snkps, $snps;
+    $snss->{$sns->{keyscheme}} = $snkps;
   }
-  Biber::Config->setblxoption('sortingnamekey', $snkps);
+  Biber::Config->setblxoption('sortingnamekey', $snss);
+
+  # SORTING
 
   # sorting excludes
   foreach my $sex (@{$bcfxml->{sorting}{sortexclusion}}) {

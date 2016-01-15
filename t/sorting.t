@@ -98,7 +98,7 @@ eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specif
 
 # Testing custom name sorting key
 my $SNK;
-$SNK = [
+$SNK = {global => [
         [{ type => 'namepart', value => 'given' },
          { type => 'literal', value => ' ' },
          { type => 'namepart', value => 'given' }],
@@ -106,7 +106,7 @@ $SNK = [
         [{ type => 'namepart', value => 'family'}],
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
-       ];
+       ]};
 Biber::Config->setblxoption('sortingnamekey', $SNK);
 $biber->prepare;
 eq_or_diff($main->get_sortdata('snk1')->[0], $snk1, 'Sorting name key - 1' );
@@ -115,13 +115,13 @@ eq_or_diff($main->get_sortdata('snk1')->[0], $snk1, 'Sorting name key - 1' );
 # regenerate information
 Biber::Config->setblxoption('useprefix', 0);
 # Default name sorting key back again
-$SNK = [
+$SNK = {global => [
         [{ type => 'namepart', value => 'prefix', use => 1}],
         [{ type => 'namepart', value => 'family'}],
         [{ type => 'namepart', value => 'given' }],
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
-       ];
+       ]};
 Biber::Config->setblxoption('sortingnamekey', $SNK);
 $biber->prepare;
 

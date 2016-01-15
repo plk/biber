@@ -1333,7 +1333,8 @@ sub _namestring {
   my $str = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
-  my $snk = Biber::Config->getblxoption('sortingnamekey');
+  my $snkschemes = Biber::Config->getblxoption('sortingnamekey');
+  my $snk = $snkschemes->{global};
   my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
 
   # Name list scope useprefix option

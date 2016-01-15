@@ -163,6 +163,9 @@
           h2,h3,h4 {
             font-family: Arial,sans-serif;
           }
+          .small {
+            font-size: 70%;
+          }
           .key {
             font-size: 70%;
             padding-top: 2ex;
@@ -684,13 +687,29 @@
           </tbody>
         </table>
         <h4>Sorting Name Key Specification</h4>
-        <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekey/bcf:keypart">
-          <xsl:sort select="./@order"/>
-          <xsl:for-each select="./bcf:part">
-            <xsl:sort select="./@order"/>
-            <xsl:value-of select="./text()"/><xsl:if test="./@use"> (if use<xsl:value-of select="./text()"/>=<xsl:value-of select="./@use"/>)</xsl:if>
-            <xsl:if test="not(position()=last())"> + </xsl:if>
-          </xsl:for-each>
+        <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekey">
+          <table>
+            <thead>
+              <tr><td colspan="2"><b><xsl:value-of select="./@keyscheme"/></b></td></tr>
+              <tr><td>Order</td><td>Keypart</td></tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="./bcf:keypart">
+                <xsl:sort select="./@order"/>
+                <tr>
+                  <td><xsl:value-of select="./@order"/></td>
+                  <td>
+                    <xsl:for-each select="./bcf:part">
+                      <xsl:sort select="./@order"/>
+                      <xsl:value-of select="./text()"/><xsl:if
+                      test="./@use"><span class="small"> (if use<xsl:value-of select="./text()"/>=<xsl:value-of select="./@use"/>)</span></xsl:if>
+                      <xsl:if test="not(position()=last())"> + </xsl:if>
+                    </xsl:for-each>
+                  </td>
+                </tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
           <br/>
         </xsl:for-each>
         <h4>Sorting Specification</h4>
