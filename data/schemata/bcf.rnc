@@ -314,9 +314,14 @@ listspec =
 
 sortingnamekey = 
   element bcf:sortingnamekey {
-    element bcf:namepart {
-      attribute use { "0" | "1" }?,
-      text
+   element bcf:keypart {
+     attribute order { xsd:integer },
+     element bcf:part {
+        attribute type { "namepart" | "literal" },
+        attribute order { xsd:integer },
+        attribute use { "0" | "1" }?,
+        text
+      }+
     }+
   }
 

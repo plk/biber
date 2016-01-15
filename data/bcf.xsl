@@ -684,9 +684,14 @@
           </tbody>
         </table>
         <h4>Sorting Name Key Specification</h4>
-        <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekey/bcf:namepart">
-          <xsl:value-of select="./text()"/><xsl:if test="./@use"> (if use<xsl:value-of select="./text()"/>=<xsl:value-of select="./@use"/>)</xsl:if>
-          <xsl:if test="not(position()=last())"> + </xsl:if>
+        <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekey/bcf:keypart">
+          <xsl:sort select="./@order"/>
+          <xsl:for-each select="./bcf:part">
+            <xsl:sort select="./@order"/>
+            <xsl:value-of select="./text()"/><xsl:if test="./@use"> (if use<xsl:value-of select="./text()"/>=<xsl:value-of select="./@use"/>)</xsl:if>
+            <xsl:if test="not(position()=last())"> + </xsl:if>
+          </xsl:for-each>
+          <br/>
         </xsl:for-each>
         <h4>Sorting Specification</h4>
         <xsl:call-template name="sorting-spec">

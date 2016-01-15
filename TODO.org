@@ -9,6 +9,9 @@
 ** suffix -> suffix
 * DONE lastname mandatory relaxed? How about just mandatory that some part is defined since sorting isn't always on lastname first?
 * DONE name parts and gender types in data model as constants
+* TODO \keypart round \namepart
+* TODO make namepart specs named and selectable per-entry, per-name
+* TODO implement patronymic namepart
 * TODO Document year/month (datepart fields) are not allowed in bltxml
 
 

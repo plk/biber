@@ -1364,32 +1364,40 @@ sub _namestring {
     }
 
     # Get the sorting name key specification and use it to construct a sorting key for each name
-    foreach my $np (@$snk) {
-      my $namepart = $np->{namepart};
-      my $useopt = exists($np->{use}) ? "use$namepart" : undef;
+    foreach my $kp (@$snk) {
+      my $kps;
+      foreach my $np (@$kp) {
+        if ($np->{type} eq 'namepart') {
+          my $namepart = $np->{value};
+          my $useopt = exists($np->{use}) ? "use$namepart" : undef;
+          my $useoptval = Biber::Config->getblxoption($useopt, $bee, $citekey);
 
-      #
-      my $useoptval = Biber::Config->getblxoption($useopt, $bee, $citekey);
-
-      # useprefix can be name list or name local
-      if ($useopt and $useopt eq 'useprefix') {
-        $useoptval = $useprefix;
-      }
-
-      if (my $npstring = $n->get_namepart($namepart)) {
-        # No use attribute conditionals or the attribute is specified and matches the option
-        if (not $useopt or
-            ($useopt and $useoptval == $np->{use})) {
-          # Given name part can be modified by sortgiveninits option
-          if ($namepart eq 'given' and Biber::Config->getoption('sortgiveninits')) {
-            my $npistring = $n->get_namepart_initial($namepart);
-            $str .=  normalise_string_sort(join('', @{$npistring}), $field) . $nsi if $npistring;
+          # useprefix can be name list or name local
+          if ($useopt and $useopt eq 'useprefix') {
+            $useoptval = $useprefix;
           }
-          else {
-            $str .= normalise_string_sort($npstring, $field) . $nsi if $npstring;
+
+          if (my $npstring = $n->get_namepart($namepart)) {
+            # No use attribute conditionals or the attribute is specified and matches the option
+            if (not $useopt or
+                ($useopt and $useoptval == $np->{use})) {
+              # Given name part can be modified by sortgiveninits option
+              if ($namepart eq 'given' and Biber::Config->getoption('sortgiveninits')) {
+                my $npistring = $n->get_namepart_initial($namepart);
+                $kps .= normalise_string_sort(join('', @{$npistring}), $field);
+              }
+              else {
+                $kps .= normalise_string_sort($npstring, $field);
+              }
+            }
           }
         }
+        elsif ($np->{type} eq 'literal') {
+          $kps .= $np->{value};
+        }
       }
+      # Now append the key part string plus internal name sep if the string is not empty
+      $str .= $kps . $nsi if $kps;
     }
 
     $str =~ s/\Q$nsi\E\z//xms;       # Remove any trailing internal separator

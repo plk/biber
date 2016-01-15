@@ -371,6 +371,8 @@ sub parse_ctrlfile {
                                                            qr/\Amap_step\z/,
                                                            qr/\Aper_type\z/,
                                                            qr/\Aper_nottype\z/,
+                                                           qr/\Akeypart\z/,
+                                                           qr/\Apart\z/,
                                                            qr/\Aper_datasource\z/,
                                                            qr/\Anosort\z/,
                                                            qr/\Anoinit\z/,
@@ -391,7 +393,6 @@ sub parse_ctrlfile {
                                                            qr/\Asortlist\z/,
                                                            qr/\Alabel(?:part|element|alphatemplate)\z/,
                                                            qr/\Acondition\z/,
-                                                           qr/\Anamepart\z/,
                                                            qr/\Afilter(?:or)?\z/,
                                                            qr/\Aoptionscope\z/,
                                                           ],
@@ -576,15 +577,27 @@ sub parse_ctrlfile {
   # SORTING
 
   # sorting name key specification
-  my $snk;
-  foreach my $snkp (@{$bcfxml->{sortingnamekey}{namepart}}) {
-    my $np = { namepart => $snkp->{content} };
-    if (exists($snkp->{use})) {
-      $np->{use} = $snkp->{use};
+  # use the order attributes to make sure things are in right order and create a data structure
+  # we can use later
+  my $snkps;
+  foreach my $snkp (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{sortingnamekey}{keypart}}) {
+    my $snps;
+    foreach my $snp (sort {$a->{order} <=> $b->{order}} @{$snkp->{part}}) {
+      my $np;
+      if ($snp->{type} eq 'namepart') {
+        $np = { type => 'namepart', value => $snp->{content} };
+        if (exists($snp->{use})) {
+          $np->{use} = $snp->{use};
+        }
+      }
+      elsif ($snp->{type} eq 'literal') {
+        $np = { type => 'literal', value => $snp->{content} };
+      }
+      push @$snps, $np;
     }
-    push @$snk, $np
+    push @$snkps, $snps;
   }
-  Biber::Config->setblxoption('sortingnamekey', $snk);
+  Biber::Config->setblxoption('sortingnamekey', $snkps);
 
   # sorting excludes
   foreach my $sex (@{$bcfxml->{sorting}{sortexclusion}}) {
