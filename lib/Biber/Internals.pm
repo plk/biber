@@ -69,10 +69,6 @@ sub _getnamehash {
       $hashkey .= $n->get_namepart('given');
     }
 
-    if ( $n->get_namepart('middle') ) {
-      $hashkey .= $n->get_namepart('middle');
-    }
-
     # without useprefix, prefix is not first in the hash
     if ($n->get_namepart('prefix') and not $useprefix ) {
       $hashkey .= $n->get_namepart('prefix');
@@ -133,10 +129,6 @@ sub _getnamehash_u {
       }
     }
 
-    if ( $n->get_namepart('middle') ) {
-      $hashkey .= $n->get_namepart('middle');
-    }
-
     # without useprefix, prefix is not first in the hash
     if ( $n->get_namepart('prefix') and not $useprefix ) {
       $hashkey .= $n->get_namepart('prefix');
@@ -186,10 +178,6 @@ sub _getfullhash {
       $hashkey .= $n->get_namepart('given');
     }
 
-    if ( $n->get_namepart('middle') ) {
-      $hashkey .= $n->get_namepart('middle');
-    }
-
     # without useprefix, prefix is not first in the hash
     if ( my $p = $n->get_namepart('prefix') and not $useprefix ) {
       $hashkey .= $p;
@@ -233,10 +221,6 @@ sub _genpnhash {
 
   if ( $n->get_namepart('given') ) {
     $hashkey .= $n->get_namepart('given');
-  }
-
-  if ( $n->get_namepart('middle') ) {
-    $hashkey .= $n->get_namepart('middle');
   }
 
   # without useprefix, prefix is not first in the hash
