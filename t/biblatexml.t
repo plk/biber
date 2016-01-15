@@ -54,7 +54,7 @@ my $l1 = q|    \entry{bltx1}{book}{}
       \true{moreauthor}
       \name{author}{3}{}{%
         {{hash=d16c52bc219d448d5f07dc865d5c4f54}{Булгаков}{Б\\bibinitperiod}{Павел\\bibnamedelima Георгиевич}{П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
-        {{hash=e6ebb51fd496cfbd29f3c9f4f665d5e5}{Розенфельд}{Р\\bibinitperiod}{Борис-ZZ\\bibnamedelima Aбрамович}{Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}{Билл}{Б\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
+        {{hash=9f2c2b41c55d40495140c437adb24c7f}{Розенфельд}{Р\\bibinitperiod}{Борис-ZZ\\bibnamedelima Aбрамович}{Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
         {{hash=e708d5a31534e937578abf161c867a25}{Aхмедов}{A\bibinitperiod}{Ашраф\bibnamedelima Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
       }
       \list{language}{1}{%
@@ -67,7 +67,7 @@ my $l1 = q|    \entry{bltx1}{book}{}
         {Наука}%
       }
       \strng{namehash}{b5cf3ab49063f1ac8cf913eb3527f38e}
-      \strng{fullhash}{104e07354635f6e6f48fc6b7e667a9de}
+      \strng{fullhash}{d934abc5fadc45af86b9fc5160209def}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelyear}{1983}

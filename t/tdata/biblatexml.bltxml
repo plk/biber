@@ -21,7 +21,6 @@
           <bltx:namepart>Aбрамович</bltx:namepart>
         </bltx:namepart>
         <bltx:namepart type="family">Розенфельд</bltx:namepart>
-        <bltx:namepart type="middle" initial="Б">Билл</bltx:namepart>
         <bltx:namepart type="prefix" initial="v">von</bltx:namepart>
       </bltx:name>
       <bltx:name>

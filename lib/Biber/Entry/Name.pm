@@ -397,9 +397,6 @@ sub name_to_biblatexml {
   # given name
   $self->name_part_to_bltxml($xml, $xml_prefix, 'given');
 
-  # middle name
-  $self->name_part_to_bltxml($xml, $xml_prefix, 'middle');
-
   # prefix
   $self->name_part_to_bltxml($xml, $xml_prefix, 'prefix');
 
@@ -473,19 +470,6 @@ sub name_to_bbl {
     $fni = '';
   }
 
-  # middle name
-  my $mn;
-  my $mni;
-  if ($mn = $self->get_namepart('middle')) {
-    $mn = Biber::Utils::join_name($mn);
-    $mni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('middle')}) . '\bibinitperiod';
-    $mni =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
-  }
-  else {
-    $mn = '';
-    $mni = '';
-  }
-
   # prefix
   my $pre;
   my $prei;
@@ -525,13 +509,7 @@ sub name_to_bbl {
   # Add the name hash to the options
   push @pno, 'hash=' . $self->get_hash;
   $pno = join(',', @pno);
-  # Some data sources support middle names
-  if ($self->get_namepart('middle')) {
-    return "        {{$pno}{$ln}{$lni}{$fn}{$fni}{$mn}{$mni}{$pre}{$prei}{$suf}{$sufi}}%\n";
-  }
-  else {
-    return "        {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
-  }
+  return "        {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
 }
 
 =head2 dump
