@@ -308,6 +308,9 @@
           </element>
         </optional>
         <optional>
+          <ref name="sortingnamekey"/>
+        </optional>
+        <optional>
           <ref name="sorting"/>
         </optional>
         <optional>
@@ -917,6 +920,40 @@
             </group>
           </choice>
           <empty/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="sortingnamekey">
+    <element name="sortingnamekey">
+      <attribute name="keyscheme"/>
+      <oneOrMore>
+        <element name="keypart">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <oneOrMore>
+            <element name="part">
+              <attribute name="type">
+                <choice>
+                  <value>namepart</value>
+                  <value>literal</value>
+                </choice>
+              </attribute>
+              <attribute name="order">
+                <data type="integer"/>
+              </attribute>
+              <optional>
+                <attribute name="use">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <text/>
+            </element>
+          </oneOrMore>
         </element>
       </oneOrMore>
     </element>

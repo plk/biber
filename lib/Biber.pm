@@ -251,7 +251,7 @@ sub tool_mode_setup {
   $self->add_sections($bib_sections);
 
   my $sortlists = new Biber::SortLists;
-  my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'));
+  my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', name => Biber::Config->getblxoption('sortscheme'));
   $seclist->set_type('entry');
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
   # Locale just needs a default here - there is no biblatex option to take it from
@@ -740,19 +740,20 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   foreach my $list (@{$bcfxml->{sortlist}}) {
     my $ltype  = $list->{type};
     my $lssn = $list->{sortscheme};
+    my $lsnksn = $list->{sortnamekeyscheme};
     my $lname = $list->{name};
 
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
-    if (my $l = $sortlists->get_list($lsection, $lname, $ltype, $lssn)) {
-      $logger->debug("Section sortlist '$lname' of type '$ltype' with sortscheme '$lssn' is repeated for section $lsection - ignoring");
+    if ($sortlists->get_list($lsection, $lname, $ltype, $lssn, $lsnksn)) {
+      $logger->debug("Section sortlist '$lname' of type '$ltype' with sortscheme '$lssn' and sortnamekeyscheme '$lsnksn' is repeated for section $lsection - ignoring");
       next;
     }
 
-    my $seclist = Biber::SortList->new(section => $lsection, sortschemename => $lssn, name => $lname);
-    $seclist->set_type($ltype || 'entry'); # lists are entry lists by default
-    $seclist->set_name($lname || $lssn); # name is only relevelant for "list" type, default to ss
+    my $sortlist = Biber::SortList->new(section => $lsection, sortschemename => $lssn, sortnamekeyschemename => $lsnksn, name => $lname);
+    $sortlist->set_type($ltype || 'entry'); # lists are entry lists by default
+    $sortlist->set_name($lname || $lssn); # name is only relevant for "list" type, default to ss
     foreach my $filter (@{$list->{filter}}) {
-      $seclist->add_filter({'type'  => $filter->{type},
+      $sortlist->add_filter({'type'  => $filter->{type},
                             'value' => $filter->{content}});
     }
     # disjunctive filters are an array ref of filter hashes
@@ -762,17 +763,21 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
         push @$orfilts, {'type'  => $filter->{type},
                          'value' => $filter->{content}};
       }
-      $seclist->add_filter($orfilts) if $orfilts;
+      $sortlist->add_filter($orfilts) if $orfilts;
     }
 
     if (my $sorting = $list->{sorting}) { # can be undef for fallback to global sorting
-      $seclist->set_sortscheme(_parse_sort($sorting));
+      $sortlist->set_sortscheme(_parse_sort($sorting));
     }
     else {
-      $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
     }
-    $logger->debug("Adding sortlist of type '$ltype' with sortscheme '$lssn' and name '$lname' for section $lsection");
-    $sortlists->add_list($seclist);
+
+    # Set sorting name key scheme name
+    $sortlist->set_sortnamekeyschemename($lsnksn);
+
+    $logger->debug("Adding sortlist of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn' and name '$lname' for section $lsection");
+    $sortlists->add_list($sortlist);
   }
 
   # Check to make sure that each section has an entry sortlist for global sorting
@@ -780,10 +785,10 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   foreach my $section (@{$bcfxml->{section}}) {
     my $globalss = Biber::Config->getblxoption('sortscheme');
     my $secnum = $section->{number};
-    unless ($sortlists->get_list($secnum, $globalss, 'entry', $globalss)) {
-      my $seclist = Biber::SortList->new(section => $secnum, type => 'entry', sortschemename => $globalss, name => $globalss);
-      $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-      $sortlists->add_list($seclist);
+    unless ($sortlists->get_list($secnum, $globalss, 'entry', $globalss, 'global')) {
+      my $sortlist = Biber::SortList->new(section => $secnum, type => 'entry', sortschemename => $globalss, sortnamekeyschemename => 'global', name => $globalss);
+      $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $sortlists->add_list($sortlist);
     }
   }
 
@@ -827,10 +832,10 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # Global locale in non tool mode bibtex output is default
     Biber::Config->setblxoption('sortlocale', 'english');
 
-    my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'));
-    $seclist->set_type('entry');
+    my $sortlist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', name => Biber::Config->getblxoption('sortscheme'));
+    $sortlist->set_type('entry');
     # bibtex output in non-tool mode is just citeorder
-    $seclist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
+    $sortlist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
                               spec   =>
                              [
                               [
@@ -839,7 +844,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
                               ]
                              ]});
     $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
-    $self->{sortlists}->add_list($seclist);
+    $self->{sortlists}->add_list($sortlist);
   }
 
   return;
@@ -861,7 +866,7 @@ sub process_setup {
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
     unless ($self->sortlists->has_lists_of_type_for_section($secnum, 'entry')) {
-      my $dlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'), name => Biber::Config->getblxoption('sortscheme'));
+      my $dlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', name => Biber::Config->getblxoption('sortscheme'));
       $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $dlist->set_type('entry');
       $dlist->set_section($secnum);
@@ -2003,13 +2008,15 @@ sub process_lists {
   my $section = $self->sections->get_section($secnum);
   foreach my $list (@{$self->sortlists->get_lists_for_section($secnum)}) {
     my $lssn = $list->get_sortschemename;
+    my $lsnksn = $list->get_sortnamekeyschemename;
     my $ltype = $list->get_type;
     my $lname = $list->get_name;
     # Last-ditch fallback in case we still don't have a sorting spec
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
+    $list->set_sortnamekeyschemename('global') unless $list->get_sortnamekeyschemename;
 
     $list->set_keys([ $section->get_citekeys ]);
-    $logger->debug("Populated sortlist '$lname' of type '$ltype' with sortscheme '$lssn' in section $secnum with keys: " . join(', ', $list->get_keys));
+    $logger->debug("Populated sortlist '$lname' of type '$ltype' with sortscheme '$lssn' and sorting name key scheme '$lsnksn' in section $secnum with keys: " . join(', ', $list->get_keys));
 
     # Now we check the sorting cache to see if we already have results
     # for this scheme since sorting is computationally expensive.
@@ -2023,29 +2030,31 @@ sub process_lists {
     # * extra* data
 
     my $cache_flag = 0;
-    $logger->debug("Checking sorting cache for scheme '$lssn'");
+    $logger->debug("Checking sorting cache for scheme '$lssn' with sorting name key scheme '$lsnksn'");
     foreach my $cacheitem (@{$section->get_sort_cache}) {
-      if (Compare($list->get_sortscheme, $cacheitem->[0])) {
-        $logger->debug("Found sorting cache entry for scheme '$lssn'");
-        $logger->trace("Sorting list cache for scheme '$lssn':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
-        $list->set_keys($cacheitem->[1]);
-        $list->set_sortinitdata($cacheitem->[2]);
-        $list->set_extrayeardata($cacheitem->[3]);
-        $list->set_extraalphadata($cacheitem->[4]);
+      if (Compare($list->get_sortscheme, $cacheitem->[0]) and
+          $list->get_sortnamekeyschemename eq $cacheitem->[1]) {
+        $logger->debug("Found sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+        $logger->trace("Sorting list cache for scheme '$lssn' with sorting name key scheme '$lsnksn':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
+        $list->set_sortnamekeyschemename($cacheitem->[1]);
+        $list->set_keys($cacheitem->[2]);
+        $list->set_sortinitdata($cacheitem->[3]);
+        $list->set_extrayeardata($cacheitem->[4]);
+        $list->set_extraalphadata($cacheitem->[5]);
         $cache_flag = 1;
         last;
       }
     }
 
     unless ($cache_flag) {
-      $logger->debug("No sorting cache entry for scheme '$lssn'");
+      $logger->debug("No sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
       # Sorting
       $self->generate_sortinfo($list);       # generate the sort information
       $self->sort_list($list);               # sort the list
       $self->generate_extra($list) unless Biber::Config->getoption('tool'); # generate the extra* fields
 
       # Cache the results
-      $logger->debug("Adding sorting cache entry for scheme '$lssn'");
+      $logger->debug("Adding sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
       $section->add_sort_cache($list->get_listdata);
     }
 
@@ -2167,14 +2176,10 @@ sub check_list_filter {
 =cut
 
 sub generate_sortinfo {
-  my $self = shift;
-  my $list = shift;
+  my ($self, $list) = @_;
 
-  my $sortscheme = $list->get_sortscheme;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
   foreach my $key ($list->get_keys) {
-    $self->_generatesortinfo($key, $list, $sortscheme);
+    $self->_generatesortinfo($key, $list);
   }
   return;
 }

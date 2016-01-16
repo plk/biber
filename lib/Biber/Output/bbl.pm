@@ -518,6 +518,7 @@ sub output {
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
       if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
+          $list->get_sortnamekeyschemename eq 'global' and
           $list->get_type eq 'entry') {
         next;
       }
@@ -528,14 +529,15 @@ sub output {
     # due to its sequential reading of the .bbl as the final list overrides the
     # previously read ones and the global list determines the order of labelnumber
     # and sortcites etc. when not using defernumbers
-    push @lists, $Biber::MASTER->sortlists->get_list($secnum, Biber::Config->getblxoption('sortscheme'), 'entry', Biber::Config->getblxoption('sortscheme'));
+    push @lists, $Biber::MASTER->sortlists->get_list($secnum, Biber::Config->getblxoption('sortscheme'), 'entry', Biber::Config->getblxoption('sortscheme'), 'global');
 
     foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists
       my $listssn = $list->get_sortschemename;
+      my $listsnksn = $list->get_sortnamekeyschemename;
       my $listtype = $list->get_type;
       my $listname = $list->get_name;
-      $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn'");
+      $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn' and sort name key scheme '$listsnksn'");
 
       out($target, "  \\sortlist{$listname}{$listssn}\n");
 

@@ -75,6 +75,31 @@ sub get_sortschemename {
   return $self->{sortschemename};
 }
 
+=head2 set_sortnamekeyschemename
+
+    Sets the sortnamekeyscheme name of a sort list
+
+=cut
+
+sub set_sortnamekeyschemename {
+  my $self = shift;
+  my $snksn = shift;
+  $self->{sortnamekeyschemename} = lc($snksn);
+  return;
+}
+
+=head2 get_sortnamekeyschemename
+
+    Gets the sortnamekeyschemename of a sort list
+
+=cut
+
+sub get_sortnamekeyschemename {
+  my $self = shift;
+  return $self->{sortnamekeyschemename};
+}
+
+
 =head2 set_name
 
     Sets the name of a sort list
@@ -168,6 +193,7 @@ sub count_keys {
 sub get_listdata {
   my $self = shift;
   return [ $self->{sortscheme},
+           $self->{sortnamekeyschemename},
            $self->{keys},
            $self->{sortinitdata},
            $self->{extrayeardata},

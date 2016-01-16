@@ -959,7 +959,7 @@ sub _dispatch_table_sorting {
 
 # Main sorting dispatch method
 sub _dispatch_sorting {
-  my ($self, $sortfield, $citekey, $sortelementattributes) = @_;
+  my ($self, $sortfield, $citekey, $sortlist, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -983,12 +983,13 @@ sub _dispatch_sorting {
     $code_ref = ${_dispatch_table_sorting($sortfield, $dm)}[0];
     $code_args_ref  = ${_dispatch_table_sorting($sortfield, $dm)}[1];
   }
-  return &{$code_ref}($self, $citekey, $sortelementattributes, $code_args_ref);
+  return &{$code_ref}($self, $citekey, $sortlist, $sortelementattributes, $code_args_ref);
 }
 
 # Conjunctive set of sorting sets
 sub _generatesortinfo {
-  my ($self, $citekey, $list, $sortscheme) = @_;
+  my ($self, $citekey, $sortlist) = @_;
+  my $sortscheme = $sortlist->get_sortscheme;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -996,7 +997,7 @@ sub _generatesortinfo {
   $BIBER_SORT_FINAL = 0;
   $BIBER_SORT_FINAL = '';
   foreach my $sortset (@{$sortscheme->{spec}}) {
-    my $s = $self->_sortset($sortset, $citekey);
+    my $s = $self->_sortset($sortset, $citekey, $sortlist);
     # We have already found a "final" item so if this item returns null,
     # copy in the "final" item string as it's the master key for this entry now
     if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
@@ -1011,7 +1012,7 @@ sub _generatesortinfo {
   # sortstring isn't actually used to sort, it's used to generate sortinit and
   # for debugging purposes
   my $ss = join($sorting_sep, @$sortobj);
-  $list->set_sortdata($citekey, [$ss, $sortobj]);
+  $sortlist->set_sortdata($citekey, [$ss, $sortobj]);
   $logger->debug("Sorting object for key '$citekey' -> " . Data::Dump::pp($sortobj));
 
   # Generate sortinit. Skip if there is no sortstring, which is possible in tests
@@ -1028,18 +1029,18 @@ sub _generatesortinfo {
     # and if this was locally different to the global sorting, something would be very strange.
     my $Collator = Unicode::Collate::Locale->new(locale => Biber::Config->getoption('sortlocale'), level => 1);
     my $inithash = md5_hex($Collator->viewSortKey($init));
-    $list->set_sortinitdata_for_key($citekey, $init, $inithash);
+    $sortlist->set_sortinitdata_for_key($citekey, $init, $inithash);
   }
   return;
 }
 
 # Process sorting set
 sub _sortset {
-  my ($self, $sortset, $citekey) = @_;
+  my ($self, $sortset, $citekey, $sortlist) = @_;
   foreach my $sortelement (@$sortset[1..$#$sortset]) {
     my ($sortelementname, $sortelementattributes) = %$sortelement;
     $BIBER_SORT_NULL = 0; # reset this per sortset
-    my $string = $self->_dispatch_sorting($sortelementname, $citekey, $sortelementattributes);
+    my $string = $self->_dispatch_sorting($sortelementname, $citekey, $sortlist, $sortelementattributes);
     if ($string) { # sort returns something for this key
       if ($sortset->[0]{final}) {
         # If we encounter a "final" element, we return an empty sort
@@ -1063,7 +1064,7 @@ sub _sortset {
 ##############################################
 
 sub _sort_citeorder {
-  my ($self, $citekey, $sortelementattributes) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   # Pad the numbers so that they sort with "cmp" properly. Assume here max of
@@ -1091,7 +1092,7 @@ sub _sort_citeorder {
 }
 
 sub _sort_integer {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $dmtype = $args->[0]; # get day/month field type
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1105,7 +1106,7 @@ sub _sort_integer {
 }
 
 sub _sort_editort {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $edtypeclass = $args->[0]; # get editor type/class field
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1121,12 +1122,12 @@ sub _sort_editort {
 }
 
 sub _sort_entrykey {
-  my ($self, $citekey, $sortelementattributes) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes) = @_;
   return _process_sort_attributes($citekey, $sortelementattributes);
 }
 
 sub _sort_labelalpha {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1135,14 +1136,14 @@ sub _sort_labelalpha {
 }
 
 sub _sort_labelname {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right sorting routine for the labelname
   if (my $lni = $be->get_labelname_info) {
     # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($lni, $citekey, $sortelementattributes);
+    return $self->_dispatch_sorting($lni, $citekey, $sortlist, $sortelementattributes);
   }
   else {
     return '';
@@ -1150,14 +1151,14 @@ sub _sort_labelname {
 }
 
 sub _sort_labeltitle {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # re-direct to the right sorting routine for the labeltitle
   if (my $lti = $be->get_labeltitle_info) {
     # Don't process attributes as they will be processed in the real sub
-    return $self->_dispatch_sorting($lti, $citekey, $sortelementattributes);
+    return $self->_dispatch_sorting($lti, $citekey, $sortlist, $sortelementattributes);
   }
   else {
     return '';
@@ -1166,7 +1167,7 @@ sub _sort_labeltitle {
 
 sub _sort_labeldate {
   no autovivification;
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $ldc = $args->[0]; # labeldate component
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1175,7 +1176,7 @@ sub _sort_labeldate {
   if (my $ldi = $be->get_labeldate_info) {
     if (my $ldf = $ldi->{field}{$ldc}) {
       # Don't process attributes as they will be processed in the real sub
-      return $self->_dispatch_sorting($ldf, $citekey, $sortelementattributes);
+      return $self->_dispatch_sorting($ldf, $citekey, $sortlist, $sortelementattributes);
     }
     elsif (exists($ldi->{string})) { # labelyear fallback string
       return '';
@@ -1189,7 +1190,7 @@ sub _sort_labeldate {
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
 sub _sort_list {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $list = $args->[0]; # get list field
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1207,7 +1208,7 @@ sub _sort_list {
 # It's done to avoid having many repetitions of almost identical sorting code
 # for literal strings which need normalising
 sub _sort_literal {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $literal = $args->[0]; # get actual field
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1225,7 +1226,7 @@ sub _sort_literal {
 # It's done to avoid having many repetitions of almost identical sorting code
 # for the editor roles
 sub _sort_name {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $name = $args->[0]; # get name field name
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -1236,7 +1237,7 @@ sub _sort_name {
     return '';
     }
   if ($be->get_field($name)) {
-    my $string = $self->_namestring($citekey, $name);
+    my $string = $self->_namestring($citekey, $name, $sortlist);
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1245,7 +1246,7 @@ sub _sort_name {
 }
 
 sub _sort_presort {
-  my ($self, $citekey, $sortelementattributes) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1254,7 +1255,7 @@ sub _sort_presort {
 }
 
 sub _sort_sortname {
-  my ($self, $citekey, $sortelementattributes) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1263,7 +1264,7 @@ sub _sort_sortname {
   # sortname is ignored if no use<name> option is defined - see biblatex manual
   if ($be->get_field('sortname') and
       grep {Biber::Config->getblxoption("use$_", $be->get_field('entrytype'), $citekey)} @{$dm->get_fields_of_type('list', 'name')}) {
-    my $string = $self->_namestring($citekey, 'sortname');
+    my $string = $self->_namestring($citekey, 'sortname', $sortlist);
     return _process_sort_attributes($string, $sortelementattributes);
   }
   else {
@@ -1272,7 +1273,7 @@ sub _sort_sortname {
 }
 
 sub _sort_string {
-  my ($self, $citekey, $sortelementattributes, $args) = @_;
+  my ($self, $citekey, $sortlist, $sortelementattributes, $args) = @_;
   my $string = $args->[0]; # get literal string
   return _process_sort_attributes($string, $sortelementattributes);
 }
@@ -1324,7 +1325,7 @@ sub _process_sort_attributes {
 # This is used to generate sorting string for names
 sub _namestring {
   my $self = shift;
-  my ($citekey, $field) = @_;
+  my ($citekey, $field, $sortlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1333,9 +1334,10 @@ sub _namestring {
   my $str = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
-  my $snkschemes = Biber::Config->getblxoption('sortingnamekey');
-  my $snk = $snkschemes->{global};
   my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+
+  # Get the sorting name key scheme for this list context
+  my $snk = Biber::Config->getblxoption('sortingnamekey')->{$sortlist->get_sortnamekeyschemename};
 
   # Name list scope useprefix option
   if (defined($names->get_useprefix)) {

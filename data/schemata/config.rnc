@@ -1,97 +1,99 @@
-start = element config {
-  # Option scope
-  element optionscope {
-    attribute type { "GLOBAL" | "PER_TYPE" | "PER_ENTRY" },
-    element option { xsd:string }+
-  }+ &
-  element clrmacros           { "0" | "1" }? &
-  element collate             { "0" | "1" }? &
-  element collate_options     {
-    element option {
-      attribute name { text } &
-      attribute value { text }
-    }+
-  }? &
-# Can't specify the config file location in the config file ...
-#  element configfile          { text }? & 
-  element convert_control     { "0" | "1" }? &
-  element dot_include         { text }? &
-  # Data model specification (mainly for tool mode)
-   datamodel? &
-  element decodecharsset      { text }? &
-  element debug               { "0" | "1" }? &
-  element fastsort            { "0" | "1" }? &
-  element fixinits            { "0" | "1" }? &
-# Would never want this in the config file
-#  element help                { "0" | "1" }? &
-  inheritance? &
-  element input_encoding      { text }? &
-  element listsep             { text }? &
-  element logfile             { text }? &
-  element mincrossrefs        { xsd:unsignedByte }? &
-  element mssplit             { text }? &
-  element namesep             { text }? &
-# Can't specify not to use a config file in the config file ...
-#  element noconf              { "0" | "1" }? &
-  element nodieonerror         { "0" | "1" }? &
-  element nolog                { "0" | "1" }? &
-  # noinit specification
-  element noinit {
-    element option {
-      attribute value { xsd:string },
-      empty
-    }+
-  }? &
-  # nosort specification
-  element nosort     {
-    element option {
-      attribute name { text } &
-      attribute value { text }
-    }+
-  }? &
-  element nostdmacros          { "0" | "1" }? &
-  element onlylog              { "0" | "1" }? &
-  element others_string        { text }? &
-  element output_align         { "0" | "1" }? &
-  element output_directory     { text }? &
-  element output_encoding      { text }? &
-  element output_fieldcase     { "upper" | "lower" | "title" }? &
-  element output_file          { text }? &
-  element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
-  element output_indent        { xsd:unsignedByte }? &
-  element output_macro_fields  { text }? &
-  element output_resolve       { "0" | "1" }? &
-  element output_safechars     { "0" | "1" }? &
-  element output_safecharsset  { "base" | "full" }? &
-  element quiet                { "0" | "1" }? &
-  element recodedata           { text }? &
-  element sortcase             { "0" | "1" }? &
-  element sortfirstinits       { "0" | "1" }? &
-  sorting? &
-  element sortlocale           { text }? &
-  element sortupper            { "0" | "1" }? &
-  element sourcemap            {
-    element maps {
-      attribute datatype { "bibtex" | "biblatexml" | "ris" },
-      attribute map_overwrite { "0" | "1" }?,
-      map+
-    }+
-  }? &
-  element ssl-nointernalca     { "0" | "1" }? &
-  element ssl-noverify-host    { "0" | "1" }? &
-  element tool                 { "0" | "1" }? &
-  element tool_config          { text }? &
-  element trace                { "0" | "1" }? &
-  element validate_config      { "0" | "1" }? &
-  element validate_control     { "0" | "1" }? &
-  element validate_datamodel   { "0" | "1" }? &
-# Meaningless in the config file
-#  element version              { "0" | "1" }? &
-  element wraplines            { "0" | "1" }?
-}
+start =
+  element config {
+    # Option scope
+    element optionscope {
+      attribute type { "GLOBAL" | "PER_TYPE" | "PER_ENTRY" },
+      element option { xsd:string }+
+    }+ &
+    element clrmacros           { "0" | "1" }? &
+    element collate             { "0" | "1" }? &
+    element collate_options     {
+      element option {
+        attribute name { text } &
+        attribute value { text }
+      }+
+    }? &
+    # Can't specify the config file location in the config file ...
+    #  element configfile          { text }? & 
+    element convert_control     { "0" | "1" }? &
+    element dot_include         { text }? &
+    # Data model specification (mainly for tool mode)
+    datamodel? &
+    element decodecharsset      { text }? &
+    element debug               { "0" | "1" }? &
+    element fastsort            { "0" | "1" }? &
+    element fixinits            { "0" | "1" }? &
+    # Would never want this in the config file
+    #  element help                { "0" | "1" }? &
+    inheritance? &
+    element input_encoding      { text }? &
+    element listsep             { text }? &
+    element logfile             { text }? &
+    element mincrossrefs        { xsd:unsignedByte }? &
+    element mssplit             { text }? &
+    element namesep             { text }? &
+    # Can't specify not to use a config file in the config file ...
+    #  element noconf              { "0" | "1" }? &
+    element nodieonerror         { "0" | "1" }? &
+    element nolog                { "0" | "1" }? &
+    # noinit specification
+    element noinit {
+      element option {
+        attribute value { xsd:string },
+        empty
+      }+
+    }? &
+    # nosort specification
+    element nosort     {
+      element option {
+        attribute name { text } &
+        attribute value { text }
+      }+
+    }? &
+    element nostdmacros          { "0" | "1" }? &
+    element onlylog              { "0" | "1" }? &
+    element others_string        { text }? &
+    element output_align         { "0" | "1" }? &
+    element output_directory     { text }? &
+    element output_encoding      { text }? &
+    element output_fieldcase     { "upper" | "lower" | "title" }? &
+    element output_file          { text }? &
+    element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
+    element output_indent        { xsd:unsignedByte }? &
+    element output_macro_fields  { text }? &
+    element output_resolve       { "0" | "1" }? &
+    element output_safechars     { "0" | "1" }? &
+    element output_safecharsset  { "base" | "full" }? &
+    element quiet                { "0" | "1" }? &
+    element recodedata           { text }? &
+    element sortcase             { "0" | "1" }? &
+    element sortfirstinits       { "0" | "1" }? &
+    sortingnamekey? &
+    sorting? &
+    element sortlocale           { text }? &
+    element sortupper            { "0" | "1" }? &
+    element sourcemap            {
+      element maps {
+        attribute datatype { "bibtex" | "biblatexml" | "ris" },
+        attribute map_overwrite { "0" | "1" }?,
+        map+
+      }+
+    }? &
+    element ssl-nointernalca     { "0" | "1" }? &
+    element ssl-noverify-host    { "0" | "1" }? &
+    element tool                 { "0" | "1" }? &
+    element tool_config          { text }? &
+    element trace                { "0" | "1" }? &
+    element validate_config      { "0" | "1" }? &
+    element validate_control     { "0" | "1" }? &
+    element validate_datamodel   { "0" | "1" }? &
+    # Meaningless in the config file
+    #  element version              { "0" | "1" }? &
+    element wraplines            { "0" | "1" }?
+  }
 
 datamodel =
- element datamodel {
+  element datamodel {
     # Valid entrytypes
     element entrytypes {
       element entrytype {
@@ -183,47 +185,47 @@ datamodel =
     }+
   }
 inheritance =
-    # Cross-reference inheritance specifications
-    element inheritance {
-      # Defaults
-      element defaults {
-        # Whether to inherit all fields
-        attribute inherit_all { "true" | "false" },
-        # Should we overwrite the target field if it exists?
-        attribute override_target { "true" | "false" },
-        # Default inherit_all and override_target settings for entrytype source/target pairs
-        element type_pair {
-          attribute source { "*" | xsd:string {minLength="1"}},
-          attribute target { "*" | xsd:string {minLength="1"}},
-          attribute inherit_all { "true" | "false" }?,
-          attribute override_target { "true" | "false" }?,
-          empty
-        }*
-      },
-      # An inheritance specification
-      element inherit {
-        # applies to these pairs of source/target entrytypes
-        element type_pair {
-          attribute source { "*" | xsd:string {minLength="1"}},
-          attribute target { "*" | xsd:string {minLength="1"}},
-          empty
-        }+,
-        # and here are the field specifications
-        element field {
-          (
-            # either a "skip this field" specification
-            # so we can say inherit all except certain fields OR ...
-            (attribute source { xsd:string },
-              attribute skip { "true" | "false" }) |
-            # ... a source and target field with an optional override attribute
-            (attribute source { xsd:string {minLength="1"}},
-              attribute target { xsd:string {minLength="1"}},
-              attribute override_target { "true" | "false" }?)
-          ),
-          empty
-        }+
-      }*
-    }
+  # Cross-reference inheritance specifications
+element inheritance {
+  # Defaults
+  element defaults {
+    # Whether to inherit all fields
+    attribute inherit_all { "true" | "false" },
+    # Should we overwrite the target field if it exists?
+    attribute override_target { "true" | "false" },
+    # Default inherit_all and override_target settings for entrytype source/target pairs
+    element type_pair {
+      attribute source { "*" | xsd:string {minLength="1"}},
+      attribute target { "*" | xsd:string {minLength="1"}},
+      attribute inherit_all { "true" | "false" }?,
+      attribute override_target { "true" | "false" }?,
+      empty
+    }*
+  },
+  # An inheritance specification
+  element inherit {
+    # applies to these pairs of source/target entrytypes
+    element type_pair {
+      attribute source { "*" | xsd:string {minLength="1"}},
+      attribute target { "*" | xsd:string {minLength="1"}},
+      empty
+    }+,
+    # and here are the field specifications
+    element field {
+      (
+        # either a "skip this field" specification
+        # so we can say inherit all except certain fields OR ...
+        (attribute source { xsd:string },
+          attribute skip { "true" | "false" }) |
+        # ... a source and target field with an optional override attribute
+        (attribute source { xsd:string {minLength="1"}},
+          attribute target { xsd:string {minLength="1"}},
+          attribute override_target { "true" | "false" }?)
+      ),
+      empty
+    }+
+  }*
+}
 
 
 
@@ -265,6 +267,20 @@ map =
     }+
   }
 
+sortingnamekey = 
+  element sortingnamekey {
+    attribute keyscheme { text },
+    element keypart {
+      attribute order { xsd:integer },
+      element part {
+        attribute type { "namepart" | "literal" },
+        attribute order { xsd:integer },
+        attribute use { "0" | "1" }?,
+        text
+      }+
+    }+
+  }
+
 sorting = 
   element sorting {
     # locale for entire sorting specification
@@ -284,39 +300,39 @@ sorting =
 
 sort =
   # sort specification
-  element sort {
-    # order of this specification in the set of all sort specifications
+element sort {
+  # order of this specification in the set of all sort specifications
+  attribute order { xsd:integer },
+  # Should we stop generating sorting information after this item?
+  attribute final { "1" }?,
+  # Sort ascending or descending
+  attribute sort_direction { "ascending" | "descending" }?,
+  # Sort case sensitive or not?
+  attribute sortcase { "0" | "1" }?,
+  # Sort upper before lower?
+  attribute sortupper { "0" | "1" }?,
+  # sortset specific override for locale
+  attribute locale { xsd:string {minLength="1"}}?,
+  # A sort item specification - a field or pseudo-field to get sort information from
+  element sortitem {
+    # order of this item in the set of all other item specifications
     attribute order { xsd:integer },
-    # Should we stop generating sorting information after this item?
-    attribute final { "1" }?,
-    # Sort ascending or descending
-    attribute sort_direction { "ascending" | "descending" }?,
-    # Sort case sensitive or not?
-    attribute sortcase { "0" | "1" }?,
-    # Sort upper before lower?
-    attribute sortupper { "0" | "1" }?,
-    # sortset specific override for locale
-    attribute locale { xsd:string {minLength="1"}}?,
-    # A sort item specification - a field or pseudo-field to get sort information from
-    element sortitem {
-      # order of this item in the set of all other item specifications
-      attribute order { xsd:integer },
-      # Just use a part of the item information for sorting?
-      attribute substring_side { "left" | "right" }?,
-      attribute substring_width { xsd:integer }?,
-      # Pad the item information when sorting with it?
-      attribute pad_side { "left" | "right" }?,
-      attribute pad_width { xsd:integer }?,
-      attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
-      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
-      text
-    }+
+    # Just use a part of the item information for sorting?
+    attribute substring_side { "left" | "right" }?,
+    attribute substring_width { xsd:integer }?,
+    # Pad the item information when sorting with it?
+    attribute pad_side { "left" | "right" }?,
+    attribute pad_width { xsd:integer }?,
+    attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
+    attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+    text
   }+
+}+
 # Copyright 2009-2016 François Charette and Philip Kime, all rights reserved.
 
 # This code is free software.  You can redistribute it and/or
 # modify it under the terms of the Artistic License 2.0.
 
 # This program is distributed in the hope that it will be useful,
-# but without any warranty; without even the implied warranty of
+  # but without any warranty; without even the implied warranty of
 # merchantability or fitness for a particular purpose.

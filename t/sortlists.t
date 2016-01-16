@@ -37,17 +37,17 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
-is_deeply([$biber->sortlists->get_list(0, 'lname', 'entry', 'lname')->get_keys], ['K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K5', 'K6'], 'List - name order');
-is_deeply([$biber->sortlists->get_list(0, 'lyear', 'entry', 'lyear')->get_keys], ['K4', 'K1', 'K2', 'K3', 'K6', 'K5', 'K7', 'K8', 'K9', 'K10'], 'List - year order');
-is_deeply([$biber->sortlists->get_list(0, 'ltitle', 'entry', 'ltitle')->get_keys], ['K1', 'K7', 'K8', 'K9', 'K4', 'K10', 'K2', 'K6', 'K5', 'K3'], 'List - title order');
-is_deeply([$biber->sortlists->get_list(0, 'lnamef1', 'entry', 'lnamef1')->get_keys], ['K2', 'K4', 'K5', 'K6'], 'List - name order (filtered) - 1');
-is_deeply([$biber->sortlists->get_list(0, 'lnamef2', 'entry', 'lnamef2')->get_keys], ['K4'], 'List - name order (filtered) - 2');
-is_deeply([$biber->sortlists->get_list(0, 'lnamef3', 'entry', 'lnamef3')->get_keys], ['K1', 'K2', 'K7', 'K5', 'K6'], 'List - name order (filtered) - 3');
-is_deeply([$biber->sortlists->get_list(0, 'lnamef4', 'entry', 'lnamef4')->get_keys], ['K3'], 'List - name order (filtered) - 4');
-is_deeply([$biber->sortlists->get_list(0, 'lnamef5', 'entry', 'lnamef5')->get_keys], ['K1', 'K3'], 'List - name order (filtered) - 5');
+is_deeply([$biber->sortlists->get_list(0, 'lname', 'entry', 'lname', 'global')->get_keys], ['K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K5', 'K6'], 'List - name order');
+is_deeply([$biber->sortlists->get_list(0, 'lyear', 'entry', 'lyear', 'global')->get_keys], ['K4', 'K1', 'K2', 'K3', 'K6', 'K5', 'K7', 'K8', 'K9', 'K10'], 'List - year order');
+is_deeply([$biber->sortlists->get_list(0, 'ltitle', 'entry', 'ltitle', 'global')->get_keys], ['K1', 'K7', 'K8', 'K9', 'K4', 'K10', 'K2', 'K6', 'K5', 'K3'], 'List - title order');
+is_deeply([$biber->sortlists->get_list(0, 'lnamef1', 'entry', 'lnamef1', 'global')->get_keys], ['K2', 'K4', 'K5', 'K6'], 'List - name order (filtered) - 1');
+is_deeply([$biber->sortlists->get_list(0, 'lnamef2', 'entry', 'lnamef2', 'global')->get_keys], ['K4'], 'List - name order (filtered) - 2');
+is_deeply([$biber->sortlists->get_list(0, 'lnamef3', 'entry', 'lnamef3', 'global')->get_keys], ['K1', 'K2', 'K7', 'K5', 'K6'], 'List - name order (filtered) - 3');
+is_deeply([$biber->sortlists->get_list(0, 'lnamef4', 'entry', 'lnamef4', 'global')->get_keys], ['K3'], 'List - name order (filtered) - 4');
+is_deeply([$biber->sortlists->get_list(0, 'lnamef5', 'entry', 'lnamef5', 'global')->get_keys], ['K1', 'K3'], 'List - name order (filtered) - 5');
 # Test list-local locale sorting
-is_deeply([$biber->sortlists->get_list(0, 'lnameswe', 'entry', 'lnameswe')->get_keys], ['K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K6', 'K5'], 'List - name order (swedish)');
-is_deeply([$biber->sortlists->get_list(0, 'ltitlespan', 'entry', 'ltitlespan')->get_keys], ['K1', 'K4', 'K10', 'K7', 'K8', 'K9', 'K2', 'K6', 'K5', 'K3'], 'List - title order (spanish)');
+is_deeply([$biber->sortlists->get_list(0, 'lnameswe', 'entry', 'lnameswe', 'global')->get_keys], ['K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K6', 'K5'], 'List - name order (swedish)');
+is_deeply([$biber->sortlists->get_list(0, 'ltitlespan', 'entry', 'ltitlespan', 'global')->get_keys], ['K1', 'K4', 'K10', 'K7', 'K8', 'K9', 'K2', 'K6', 'K5', 'K3'], 'List - title order (spanish)');
 # Test sortset-local locale sorting
-is_deeply([$biber->sortlists->get_list(0, 'ltitleset', 'entry', 'ltitleset')->get_keys], ['K1', 'K7', 'K9', 'K8', 'K4', 'K10', 'K2', 'K6', 'K5', 'K3'], 'List - granular locale (spanish)');
+is_deeply([$biber->sortlists->get_list(0, 'ltitleset', 'entry', 'ltitleset', 'global')->get_keys], ['K1', 'K7', 'K9', 'K8', 'K4', 'K10', 'K2', 'K6', 'K5', 'K3'], 'List - granular locale (spanish)');
 

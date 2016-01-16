@@ -2017,8 +2017,8 @@
     <bcf:citekey order="20">nodate2</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist section="0" name="nty" sortscheme="nty" type="entry"/>
-  <bcf:sortlist section="0" name="shorthands" sortscheme="shorthands" type="list">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty" sortscheme="nty" type="entry"/>
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="shorthands" sortscheme="shorthands" type="list">
     <bcf:filter type="field">shorthand</bcf:filter>
   </bcf:sortlist>
 </bcf:controlfile>

@@ -67,15 +67,16 @@ sub get_lists_for_section {
 
 =head2 get_list
 
-    Returns a specific list by section, name, type, sortscheme
+    Returns a specific list by section, name, type, sortscheme, sortnamekeyscheme
 
 =cut
 
 sub get_list {
-  my ($self, $section, $name, $type, $ssn) = @_;
+  my ($self, $section, $name, $type, $ssn, $snksn) = @_;
   foreach my $list (@{$self->{lists}}) {
     return $list if ($list->get_name eq $name and
                      $list->get_sortschemename eq $ssn and
+                     $list->get_sortnamekeyschemename eq $snksn and
                      $list->get_type eq $type and
                      $list->get_section == $section);
   }
