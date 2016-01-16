@@ -39,7 +39,7 @@ Biber::Config->setblxoption('labelalpha', 0);
 # (re)generate informtion based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty', 'entry', 'nty', 'global');
+my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
 
 is_deeply([ $main->get_keys ], ['L2','L3','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'citeorder');
 

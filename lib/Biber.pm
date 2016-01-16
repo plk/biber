@@ -251,7 +251,7 @@ sub tool_mode_setup {
   $self->add_sections($bib_sections);
 
   my $sortlists = new Biber::SortLists;
-  my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', name => Biber::Config->getblxoption('sortscheme'));
+  my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', name => Biber::Config->getblxoption('sortscheme') . '/global');
   $seclist->set_type('entry');
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
   # Locale just needs a default here - there is no biblatex option to take it from
@@ -751,7 +751,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
     my $sortlist = Biber::SortList->new(section => $lsection, sortschemename => $lssn, sortnamekeyschemename => $lsnksn, name => $lname);
     $sortlist->set_type($ltype || 'entry'); # lists are entry lists by default
-    $sortlist->set_name($lname || $lssn); # name is only relevant for "list" type, default to ss
+    $sortlist->set_name($lname || $lssn . "/$lsnksn"); # name is only relevant for "list" type, default to ss+snkss
     foreach my $filter (@{$list->{filter}}) {
       $sortlist->add_filter({'type'  => $filter->{type},
                             'value' => $filter->{content}});
@@ -785,8 +785,8 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
   foreach my $section (@{$bcfxml->{section}}) {
     my $globalss = Biber::Config->getblxoption('sortscheme');
     my $secnum = $section->{number};
-    unless ($sortlists->get_list($secnum, $globalss, 'entry', $globalss, 'global')) {
-      my $sortlist = Biber::SortList->new(section => $secnum, type => 'entry', sortschemename => $globalss, sortnamekeyschemename => 'global', name => $globalss);
+    unless ($sortlists->get_list($secnum, "$globalss/global", 'entry', $globalss, 'global')) {
+      my $sortlist = Biber::SortList->new(section => $secnum, type => 'entry', sortschemename => $globalss, sortnamekeyschemename => 'global', name => $globalss . '/global');
       $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $sortlists->add_list($sortlist);
     }
@@ -832,7 +832,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # Global locale in non tool mode bibtex output is default
     Biber::Config->setblxoption('sortlocale', 'english');
 
-    my $sortlist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', name => Biber::Config->getblxoption('sortscheme'));
+    my $sortlist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', name => Biber::Config->getblxoption('sortscheme') . '/global');
     $sortlist->set_type('entry');
     # bibtex output in non-tool mode is just citeorder
     $sortlist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
@@ -866,7 +866,7 @@ sub process_setup {
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
     unless ($self->sortlists->has_lists_of_type_for_section($secnum, 'entry')) {
-      my $dlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', name => Biber::Config->getblxoption('sortscheme'));
+      my $dlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', name => Biber::Config->getblxoption('sortscheme') . '/global');
       $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $dlist->set_type('entry');
       $dlist->set_section($secnum);
@@ -2059,9 +2059,6 @@ sub process_lists {
     }
 
     # Filtering
-    # This is not really used - filtering is more efficient to do on the biblatex
-    # side since we are filtering after sorting anyway. It is used to provide
-    # a field=shorthand filter for type=shorthand lists though.
     if (my $filters = $list->get_filters) {
       my $flist = [];
 KEYLOOP: foreach my $k ($list->get_keys) {

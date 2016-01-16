@@ -353,9 +353,7 @@ sub output {
     my $section = $self->get_output_section($secnum);
     foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
       next unless $list->count_keys; # skip empty lists
-      my $listssn = $list->get_sortschemename;
       my $listtype = $list->get_type;
-      my $listname = $list->get_name;
       foreach my $k ($list->get_keys) {
         if ($listtype eq 'entry') {
           my $entry = $data->{ENTRIES}{$secnum}{index}{$k};

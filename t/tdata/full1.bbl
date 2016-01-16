@@ -18,10 +18,10 @@
 
 
 \refsection{0}
-  \sortlist{shorthands}{shorthands}
+  \sortlist{shorthands/global}{shorthands}
     \key{F1}
   \endsortlist
-  \sortlist{nty}{nty}
+  \sortlist{nty/global}{nty}
     \entry{F1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
