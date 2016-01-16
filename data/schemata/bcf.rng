@@ -817,38 +817,40 @@
     </zeroOrMore>
   </define>
   <define name="sortingnamekey">
-    <element name="bcf:sortingnamekey">
-      <attribute name="keyscheme"/>
-      <oneOrMore>
-        <element name="bcf:keypart">
-          <attribute name="order">
-            <data type="integer"/>
-          </attribute>
-          <oneOrMore>
-            <element name="bcf:part">
-              <attribute name="type">
-                <choice>
-                  <value>namepart</value>
-                  <value>literal</value>
-                </choice>
-              </attribute>
-              <attribute name="order">
-                <data type="integer"/>
-              </attribute>
-              <optional>
-                <attribute name="use">
+    <oneOrMore>
+      <element name="bcf:sortingnamekey">
+        <attribute name="keyscheme"/>
+        <oneOrMore>
+          <element name="bcf:keypart">
+            <attribute name="order">
+              <data type="integer"/>
+            </attribute>
+            <oneOrMore>
+              <element name="bcf:part">
+                <attribute name="type">
                   <choice>
-                    <value>0</value>
-                    <value>1</value>
+                    <value>namepart</value>
+                    <value>literal</value>
                   </choice>
                 </attribute>
-              </optional>
-              <text/>
-            </element>
-          </oneOrMore>
-        </element>
-      </oneOrMore>
-    </element>
+                <attribute name="order">
+                  <data type="integer"/>
+                </attribute>
+                <optional>
+                  <attribute name="use">
+                    <choice>
+                      <value>0</value>
+                      <value>1</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <text/>
+              </element>
+            </oneOrMore>
+          </element>
+        </oneOrMore>
+      </element>
+    </oneOrMore>
   </define>
   <define name="sorting">
     <element name="bcf:sorting">

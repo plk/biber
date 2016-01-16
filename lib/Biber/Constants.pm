@@ -466,7 +466,7 @@ our %LOCALE_MAP_R = (
                      'vi-VN'      => 'vietnamese',
                     );
 
-# Holds the scope of each of the BibLaTeX configuration options fro the .bcf
+# Holds the scope of each of the BibLaTeX configuration options from the .bcf
 our %CONFIG_SCOPE_BIBLATEX;
 
 # For per-entry options, what should be set when we find them and
@@ -474,31 +474,37 @@ our %CONFIG_SCOPE_BIBLATEX;
 # Basically, here we have to emulate relevant parts of biblatex's options processing
 # for local entry-specific options, note therefore the presence here of some
 # options like max/mincitenames which are not passed in the .bcf
-our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =  (
-  dataonly       => {OUTPUT => 1, INPUT => {'skiplab' => 1,
-                                            'skipbiblist' => 1,
-                                            'uniquename' => 0,
-                                            'uniquelist' => 0}},
-  maxitems       => {OUTPUT => 1},
-  minitems       => {OUTPUT => 1},
-  maxbibnames    => {OUTPUT => 1},
-  minbibnames    => {OUTPUT => 1},
-  maxcitenames   => {OUTPUT => 1},
-  mincitenames   => {OUTPUT => 1},
-  maxalphanames  => {OUTPUT => 0},
-  minalphanames  => {OUTPUT => 0},
-  maxnames       => {OUTPUT => ['maxcitenames', 'maxbibnames'], INPUT  => ['maxcitenames', 'maxbibnames']},
-  minnames       => {OUTPUT => ['mincitenames', 'minbibnames'], INPUT  => ['mincitenames', 'minbibnames']},
-  presort        => {OUTPUT => 0},
-  skipbib        => {OUTPUT => 1},
-  skipbiblist    => {OUTPUT => 1},
-  skiplab        => {OUTPUT => 1},
-  uniquelist     => {OUTPUT => 0},
-  useauthor      => {OUTPUT => 1},
-  useeditor      => {OUTPUT => 1},
-  useprefix      => {OUTPUT => 1},
-  usetranslator  => {OUTPUT => 1},
-);
+our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =
+  (
+   dataonly          => {OUTPUT => 1,
+                         INPUT => {skiplab     => 1,
+                                   skipbiblist => 1,
+                                   uniquename  => 0,
+                                   uniquelist  => 0}
+                        },
+   maxitems          => {OUTPUT => 1},
+   minitems          => {OUTPUT => 1},
+   maxbibnames       => {OUTPUT => 1},
+   minbibnames       => {OUTPUT => 1},
+   maxcitenames      => {OUTPUT => 1},
+   mincitenames      => {OUTPUT => 1},
+   maxalphanames     => {OUTPUT => 0},
+   minalphanames     => {OUTPUT => 0},
+   maxnames          => {OUTPUT => ['maxcitenames', 'maxbibnames'],
+                         INPUT  => ['maxcitenames', 'maxbibnames']},
+   minnames          => {OUTPUT => ['mincitenames', 'minbibnames'],
+                         INPUT  => ['mincitenames', 'minbibnames']},
+   presort           => {OUTPUT => 0},
+   skipbib           => {OUTPUT => 1},
+   skipbiblist       => {OUTPUT => 1},
+   skiplab           => {OUTPUT => 1},
+   sortnamekeyscheme => {OUTPUT => 0},
+   uniquelist        => {OUTPUT => 0},
+   useauthor         => {OUTPUT => 1},
+   useeditor         => {OUTPUT => 1},
+   useprefix         => {OUTPUT => 1},
+   usetranslator     => {OUTPUT => 1},
+  );
 
 
 1;

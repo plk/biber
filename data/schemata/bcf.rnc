@@ -325,7 +325,7 @@ sortingnamekey =
         text
       }+
     }+
-  }
+  }+
 
 sorting = 
   element bcf:sorting {

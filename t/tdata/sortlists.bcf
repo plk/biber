@@ -352,6 +352,7 @@
     <bcf:option>skipbiblist</bcf:option>
     <bcf:option>skiplab</bcf:option>
     <bcf:option>dataonly</bcf:option>
+    <bcf:option>sortnamekeyscheme</bcf:option>
   </bcf:optionscope>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
@@ -597,6 +598,14 @@
     </bcf:keypart>
     <bcf:keypart order="5">
       <bcf:part type="namepart" order="1" use="0">prefix</bcf:part>
+    </bcf:keypart>
+  </bcf:sortingnamekey>
+  <bcf:sortingnamekey keyscheme="given">
+    <bcf:keypart order="1">
+      <bcf:part type="namepart" order="1">given</bcf:part>
+    </bcf:keypart>
+    <bcf:keypart order="2">
+      <bcf:part type="namepart" order="1">family</bcf:part>
     </bcf:keypart>
   </bcf:sortingnamekey>
   <!-- SORTING -->
@@ -2065,6 +2074,14 @@
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">publisher</bcf:sortitem>
+      </bcf:sort>
+    </bcf:sorting>
+  </bcf:sortlist>
+  <!-- non-global sorting name key scheme -->
+  <bcf:sortlist sortnamekeyscheme="given" section="0" name="lname" sortscheme="lname" type="entry">
+    <bcf:sorting>
+      <bcf:sort order="1">
+        <bcf:sortitem order="1">author</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>

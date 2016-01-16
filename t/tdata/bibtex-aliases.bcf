@@ -348,6 +348,7 @@
     <bcf:option>skipbiblist</bcf:option>
     <bcf:option>skiplab</bcf:option>
     <bcf:option>dataonly</bcf:option>
+    <bcf:option>sortnamekeyscheme</bcf:option>
   </bcf:optionscope>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>

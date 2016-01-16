@@ -1337,7 +1337,13 @@ sub _namestring {
   my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
 
   # Get the sorting name key scheme for this list context
-  my $snk = Biber::Config->getblxoption('sortingnamekey')->{$sortlist->get_sortnamekeyschemename};
+  my $snkname = $sortlist->get_sortnamekeyschemename;
+
+  # Override with any entry-specific sorting name key scheme option
+  $snkname = Biber::Config->getblxoption('sortnamekeyscheme', undef, $citekey) // $snkname;
+
+  # Now get the actual sorting name key scheme
+  my $snk = Biber::Config->getblxoption('sortingnamekey')->{$snkname};
 
   # Name list scope useprefix option
   if (defined($names->get_useprefix)) {

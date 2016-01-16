@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 use Biber;
 use Biber::Output::bbl;
@@ -45,9 +45,15 @@ is_deeply([$biber->sortlists->get_list(0, 'lnamef2', 'entry', 'lnamef2', 'global
 is_deeply([$biber->sortlists->get_list(0, 'lnamef3', 'entry', 'lnamef3', 'global')->get_keys], ['K1', 'K2', 'K7', 'K5', 'K6'], 'List - name order (filtered) - 3');
 is_deeply([$biber->sortlists->get_list(0, 'lnamef4', 'entry', 'lnamef4', 'global')->get_keys], ['K3'], 'List - name order (filtered) - 4');
 is_deeply([$biber->sortlists->get_list(0, 'lnamef5', 'entry', 'lnamef5', 'global')->get_keys], ['K1', 'K3'], 'List - name order (filtered) - 5');
+
 # Test list-local locale sorting
 is_deeply([$biber->sortlists->get_list(0, 'lnameswe', 'entry', 'lnameswe', 'global')->get_keys], ['K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K6', 'K5'], 'List - name order (swedish)');
 is_deeply([$biber->sortlists->get_list(0, 'ltitlespan', 'entry', 'ltitlespan', 'global')->get_keys], ['K1', 'K4', 'K10', 'K7', 'K8', 'K9', 'K2', 'K6', 'K5', 'K3'], 'List - title order (spanish)');
+
 # Test sortset-local locale sorting
 is_deeply([$biber->sortlists->get_list(0, 'ltitleset', 'entry', 'ltitleset', 'global')->get_keys], ['K1', 'K7', 'K9', 'K8', 'K4', 'K10', 'K2', 'K6', 'K5', 'K3'], 'List - granular locale (spanish)');
 
+# Testing sorting name key schemes
+# Note that K6 has a per-entry override which makes it sort with family first despite the
+# 'given' name key scheme using the given name first.
+is_deeply([$biber->sortlists->get_list(0, 'lname', 'entry', 'lname', 'given')->get_keys], ['K1', 'K2', 'K4', 'K3', 'K7', 'K5', 'K8', 'K9', 'K10', 'K6'], 'List - sorting name key schemes - 1');
