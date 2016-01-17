@@ -30,7 +30,7 @@ my $l4pconf = qq|
 Log::Log4perl->init(\$l4pconf);
 
 # WARNING - the .bcf has special defs for URLS to test verbatim lists
-$biber->parse_ctrlfile('general2.bcf');
+$biber->parse_ctrlfile('basic-misc.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're

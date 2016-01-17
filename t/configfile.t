@@ -368,7 +368,7 @@ my $sourcemap = [
 
 # Set up Biber object
 my $biber = Biber->new( configfile => 'biber-test.conf', mincrossrefs => 7 );
-$biber->parse_ctrlfile('general1.bcf');
+$biber->parse_ctrlfile('general.bcf');
 eq_or_diff(Biber::Config->getoption('mincrossrefs'), 7, 'Options 1 - from cmdline');
 eq_or_diff(Biber::Config->getoption('configfile'), File::Spec->catfile('biber-test.conf'), 'Options 2 - from cmdline');
 eq_or_diff(Biber::Config->getoption('sortlocale'), 'testlocale', 'Options 3 - from config file');

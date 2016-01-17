@@ -2019,8 +2019,5 @@
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global" sortscheme="nty" type="entry"/>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="shorthands/global" sortscheme="shorthands" type="list">
-    <bcf:filter type="field">shorthand</bcf:filter>
-  </bcf:sortlist>
 </bcf:controlfile>
 
