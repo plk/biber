@@ -539,7 +539,7 @@ sub output {
       my $listname = $list->get_name;
       $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn' and sort name key scheme '$listsnksn'");
 
-      out($target, "  \\sortlist{$listname}{$listssn}{$listsnksn}\n");
+      out($target, "  \\sortlist{$listname}\n");
 
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
