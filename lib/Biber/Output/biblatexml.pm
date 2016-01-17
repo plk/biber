@@ -143,6 +143,11 @@ sub set_output_entry {
         push @attrs, (useprefix => $nf->get_useprefix);
       }
 
+      # name list scope sortnamekeyscheme.
+      if (my $snks = $nf->get_sortnamekeyscheme) {
+        push @attrs, (sortnamekeyscheme => $snks);
+      }
+
       $xml->startTag([$xml_prefix, 'names'], @attrs);
 
       foreach my $n (@{$nf->names}) {

@@ -413,6 +413,11 @@ sub name_to_biblatexml {
     push @attrs, (useprefix => $self->get_useprefix);
   }
 
+  # name scope sortnamekeyscheme.
+  if (my $snks = $self->get_sortnamekeyscheme) {
+    push @attrs, (sortnamekeyscheme => $snks);
+  }
+
   $xml->startTag([$xml_prefix, 'name'], @attrs);
 
   # family name
