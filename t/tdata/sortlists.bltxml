@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="sortlists.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
+  <bltx:entry id="K11" entrytype="book">
+    <bltx:names type="author" sortnamekeyscheme="snk1">
+      <bltx:name gender="sm">
+        <bltx:namepart type="given" initial="X">Xavier</bltx:namepart>
+        <bltx:namepart type="family">Xanax</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+    <bltx:title>One</bltx:title>
+    <bltx:location>Moscow</bltx:location>
+    <bltx:publisher>Publisher</bltx:publisher>
+    <bltx:date>1983</bltx:date>
+  </bltx:entry>
+  <bltx:entry id="K12" entrytype="book">
+    <bltx:names type="author">
+      <bltx:name gender="sm" sortnamekeyscheme="snk2">
+        <bltx:namepart type="given" initial="A">Arthur</bltx:namepart>
+        <bltx:namepart type="family">Allen</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+    <bltx:title>Two</bltx:title>
+    <bltx:location>Moscow</bltx:location>
+    <bltx:publisher>Publisher</bltx:publisher>
+    <bltx:date>1983</bltx:date>
+  </bltx:entry>
+</bltx:entries>

@@ -30,7 +30,8 @@ sub new {
   my $dm = Biber::Config->get_dm;
   if (%params) {
     my $name = {};
-    foreach my $attr ('useprefix',
+    foreach my $attr ('sortnamekeyscheme',
+                      'useprefix',
                       'gender',
                       'namestring',
                       'nameinitstring',
@@ -105,6 +106,29 @@ sub get_useprefix {
 sub set_useprefix {
   my ($self, $val) = @_;
   $self->{useprefix} = $val;
+  return;
+}
+
+=head2 get_sortnamekeyscheme
+
+    Get the sortnamekeyscheme option
+
+=cut
+
+sub get_sortnamekeyscheme {
+  my $self = shift;
+  return $self->{sortnamekeyscheme};
+}
+
+=head2 set_sortnamekeyscheme
+
+    Set the sortnamekeyscheme option
+
+=cut
+
+sub set_sortnamekeyscheme {
+  my ($self, $val) = @_;
+  $self->{sortnamekeyscheme} = $val;
   return;
 }
 

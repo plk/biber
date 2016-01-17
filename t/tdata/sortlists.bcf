@@ -608,6 +608,22 @@
       <bcf:part type="namepart" order="1">family</bcf:part>
     </bcf:keypart>
   </bcf:sortingnamekey>
+  <bcf:sortingnamekey keyscheme="snk1">
+    <bcf:keypart order="1">
+      <bcf:part type="literal" order="1">a</bcf:part>
+    </bcf:keypart>
+    <bcf:keypart order="2">
+      <bcf:part type="namepart" order="1">family</bcf:part>
+    </bcf:keypart>
+  </bcf:sortingnamekey>
+  <bcf:sortingnamekey keyscheme="snk2">
+    <bcf:keypart order="1">
+      <bcf:part type="literal" order="1">Z</bcf:part>
+    </bcf:keypart>
+    <bcf:keypart order="2">
+      <bcf:part type="namepart" order="1">family</bcf:part>
+    </bcf:keypart>
+  </bcf:sortingnamekey>
   <!-- SORTING -->
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
@@ -1963,6 +1979,7 @@
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
     <bcf:datasource type="file" datatype="bibtex">sortlists.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="biblatexml">sortlists.bltxml</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">K1</bcf:citekey>
@@ -1975,6 +1992,8 @@
     <bcf:citekey order="8">K8</bcf:citekey>
     <bcf:citekey order="9">K9</bcf:citekey>
     <bcf:citekey order="10">K10</bcf:citekey>
+    <bcf:citekey order="11">K11</bcf:citekey>
+    <bcf:citekey order="12">K12</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="lname" sortscheme="lname" type="entry">
@@ -2077,7 +2096,8 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <!-- non-global sorting name key scheme -->
+  <!-- sortlist/entry/names and name scope sorting name key scheme
+       scheme is overridden at entry (K6), names (K11) and name (K12) scope -->
   <bcf:sortlist sortnamekeyscheme="given" section="0" name="lname" sortscheme="lname" type="entry">
     <bcf:sorting>
       <bcf:sort order="1">

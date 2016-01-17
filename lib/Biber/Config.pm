@@ -221,7 +221,7 @@ sub _initopts {
   # Set control file name. In a conditional as @ARGV might not be set in tests
   if (my $bcf = $ARGV[0]) {         # ARGV is ok even in a module
     $bcf .= '.bcf' unless $bcf =~ m/\.bcf$/;
-    Biber::Config->setoption('bcf', $bcf); # only referenced in biber program
+    Biber::Config->setoption('bcf', $bcf);
   }
 
   # Set log file name

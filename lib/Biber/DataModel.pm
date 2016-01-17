@@ -876,9 +876,19 @@ sub generate_bltxml_schema {
 
           # useprefix attribute
           $writer->comment('useprefix option');
+          $writer->startTag('optional');
           $writer->startTag('attribute', 'name' => 'useprefix');
           $writer->emptyTag('data', 'type' => 'boolean');
           $writer->endTag();    # attribute
+          $writer->endTag();    # optional
+
+          # sortnamekeyscheme attribute
+          $writer->comment('sortnamekeyscheme option');
+          $writer->startTag('optional');
+          $writer->startTag('attribute', 'name' => 'sortnamekeyscheme');
+          $writer->emptyTag('data', 'type' => 'string');
+          $writer->endTag();    # attribute
+          $writer->endTag();    # optional
 
           # type attribute
           $writer->comment('types of names elements');
@@ -896,6 +906,7 @@ sub generate_bltxml_schema {
           $writer->emptyTag('data', 'type' => 'boolean');
           $writer->endTag();    # attribute
           $writer->endTag();    # optional
+
           $writer->startTag('oneOrMore');
 
           # Individual name element
@@ -903,9 +914,19 @@ sub generate_bltxml_schema {
 
           # useprefix attribute
           $writer->comment('useprefix option');
+          $writer->startTag('optional');
           $writer->startTag('attribute', 'name' => 'useprefix');
           $writer->emptyTag('data', 'type' => 'boolean');
           $writer->endTag();    # attribute
+          $writer->endTag();    # optional
+
+          # sortnamekeyscheme attribute
+          $writer->comment('sortnamekeyscheme option');
+          $writer->startTag('optional');
+          $writer->startTag('attribute', 'name' => 'sortnamekeyscheme');
+          $writer->emptyTag('data', 'type' => 'string');
+          $writer->endTag();    # attribute
+          $writer->endTag();    # optional
 
           # gender attribute ref
           $writer->emptyTag('ref', 'name' => 'gender');

@@ -751,7 +751,7 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
     my $sortlist = Biber::SortList->new(section => $lsection, sortschemename => $lssn, sortnamekeyschemename => $lsnksn, name => $lname);
     $sortlist->set_type($ltype || 'entry'); # lists are entry lists by default
-    $sortlist->set_name($lname || $lssn . "/$lsnksn"); # name is only relevant for "list" type, default to ss+snkss
+    $sortlist->set_name($lname || $lssn . "/$lsnksn"); # default to ss+snkss
     foreach my $filter (@{$list->{filter}}) {
       $sortlist->add_filter({'type'  => $filter->{type},
                             'value' => $filter->{content}});

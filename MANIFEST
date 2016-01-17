@@ -6,8 +6,6 @@ data/biber-tool.conf
 data/latinkeys.txt
 data/schemata/bcf.rnc
 data/schemata/bcf.rng
-data/schemata/biblatexml.rnc
-data/schemata/biblatexml.rng
 data/schemata/config.rnc
 data/schemata/config.rng
 data/schemata/texmap.rnc
@@ -154,6 +152,7 @@ t/tdata/sort-case.bib
 t/tdata/sort-complex.bcf
 t/tdata/sortlists.bcf
 t/tdata/sortlists.bib
+t/tdata/sortlists.bltxml
 t/tdata/sort-order.bcf
 t/tdata/sort-order.bib
 t/tdata/sort-order.bib

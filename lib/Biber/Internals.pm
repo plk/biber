@@ -1342,8 +1342,8 @@ sub _namestring {
   # Override with any entry-specific sorting name key scheme option
   $snkname = Biber::Config->getblxoption('sortnamekeyscheme', undef, $citekey) // $snkname;
 
-  # Now get the actual sorting name key scheme
-  my $snk = Biber::Config->getblxoption('sortingnamekey')->{$snkname};
+  # Override with any namelist scope sorting name key scheme option
+  $snkname = $names->get_sortnamekeyscheme // $snkname;
 
   # Name list scope useprefix option
   if (defined($names->get_useprefix)) {
@@ -1371,6 +1371,12 @@ sub _namestring {
     if (defined($n->get_useprefix)) {
       $useprefix = $n->get_useprefix;
     }
+
+    # Override with any name scope sorting name key scheme option
+    $snkname = $n->get_sortnamekeyscheme // $snkname;
+
+    # Now get the actual sorting name key scheme
+    my $snk = Biber::Config->getblxoption('sortingnamekey')->{$snkname};
 
     # Get the sorting name key specification and use it to construct a sorting key for each name
     foreach my $kp (@$snk) {

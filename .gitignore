@@ -9,4 +9,4 @@ META.yml
 META.json
 dist/*/biber-*
 dist/*/scancache
-t/tdata/biblatexml.rng
+t/tdata/*.rng

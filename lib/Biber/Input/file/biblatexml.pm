@@ -523,10 +523,16 @@ sub _name {
       $names->set_useprefix($node->getAttribute('useprefix'));
     }
 
+    # Save sortnamekeyscheme attribute
+    if ($node->hasAttribute('sortnamekeyscheme')) {
+      $names->set_sortnamekeyscheme($node->getAttribute('sortnamekeyscheme'));
+    }
+
     foreach my $namenode ($node->findnodes("./$NS:name")) {
 
       my $useprefix;
-      # Name list scope useprefix option (name scope is done inside parsename)
+      # Name list and higher scope useprefix option. We have to pass this into parsename
+      # as the actual current scope value is needed to generate name objects
       if (defined($names->get_useprefix)) {
         $useprefix = $names->get_useprefix;
       }
@@ -534,9 +540,7 @@ sub _name {
         $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
       }
 
-      $names->add_name(parsename($namenode,
-                                 $f,
-                                 {useprefix => $useprefix}));
+      $names->add_name(parsename($namenode,$f, {useprefix => $useprefix}));
     }
 
     # Deal with explicit "moreenames" in data source
@@ -555,15 +559,16 @@ sub _name {
 
     Returns an object which internally looks a bit like this:
 
-    { given          => {string => 'John', initial => ['J']},
-      family         => {string => 'Doe', initial => ['D']},
-      middle         => {string => 'Fred', initial => ['F']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      namestring     => 'Doe, John Fred',
-      nameinitstring => 'Doe_JF',
-      gender         => sm,
-      useprefix      => 1 }
+    { given             => {string => 'John', initial => ['J']},
+      family            => {string => 'Doe', initial => ['D']},
+      middle            => {string => 'Fred', initial => ['F']},
+      prefix            => {string => undef, initial => undef},
+      suffix            => {string => undef, initial => undef},
+      namestring        => 'Doe, John Fred',
+      nameinitstring    => 'Doe_JF',
+      gender            => sm,
+      useprefix         => 1,
+      sortnamekeyscheme => 'scheme' }
       }
 
 =cut
@@ -571,9 +576,11 @@ sub _name {
 sub parsename {
   my ($node, $fieldname, $opts) = @_;
   $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
+  # We have to pass this in from higher scopes as something things depend on it in this
+  # sub
   my $useprefix = $opts->{useprefix};
 
-  # Override name-scope useprefix attribute if it exists
+  # Set name-scope useprefix attribute if it exists
   if ($node->hasAttribute('useprefix')) {
     $useprefix = $node->getAttribute('useprefix');
   }
@@ -591,7 +598,7 @@ sub parsename {
     }
   }
   else {
-    foreach my $n ('family', 'given', 'middle', 'prefix', 'suffix') {
+    foreach my $n ('family', 'given', 'prefix', 'suffix') {
       # If there is a name component node for this component ...
       if (my $nc_node = $node->findnodes("./$NS:namepart[\@type='$n']")->get_node(1)) {
         # name component with parts
@@ -651,7 +658,7 @@ sub parsename {
   $nameinitstr .= '_' . join('', @{$namec{given_i}}) if exists($namec{given});
   $nameinitstr =~ s/\s+/_/g;
 
-  return Biber::Entry::Name->new(
+  my $newname = Biber::Entry::Name->new(
     given           => {string  => $namec{given} // undef,
                         initial => exists($namec{given}) ? $namec{given_i} : undef},
     middle          => {string  => $namec{middle} // undef,
@@ -666,7 +673,14 @@ sub parsename {
     nameinitstring  => $nameinitstr,
     gender          => $node->getAttribute('gender'),
     useprefix       => $useprefix
-    );
+  );
+
+  # Set name-scope sortnamekeyscheme attribute if it exists
+  if ($node->hasAttribute('sortnamekeyscheme')) {
+    $newname->set_sortnamekeyscheme($node->getAttribute('sortnamekeyscheme'));
+  }
+
+  return $newname;
 }
 
 # Joins name parts using BibTeX tie algorithm. Ties are added:
