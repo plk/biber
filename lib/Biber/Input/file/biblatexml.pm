@@ -332,7 +332,7 @@ sub create_entry {
 
     # We have to process local options as early as possible in order
     # to make them available for things that need them like name parsing
-    if (_norm($entry->nodeName) eq 'options') {
+    if (_norm($f) eq 'options') {
       if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
         process_entry_options($key, [ split(/\s*,\s*/, $node->textContent()) ]);
         # Save the raw options in case we are to output another input format like

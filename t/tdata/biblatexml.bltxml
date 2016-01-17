@@ -2,6 +2,7 @@
 <?xml-model href="biblatexml.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
   <bltx:entry id="bltx1" entrytype="book">
+    <bltx:options>useprefix=false</bltx:options>
     <bltx:ids>
       <bltx:key>bltx1a1</bltx:key>
       <bltx:key>bltx1a2</bltx:key>

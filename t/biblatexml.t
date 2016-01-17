@@ -50,7 +50,7 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
 my $bibentries = $section->bibentries;
 
-my $l1 = q|    \entry{bltx1}{book}{}
+my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
       \true{moreauthor}
       \name{author}{3}{}{%
         {{hash=d16c52bc219d448d5f07dc865d5c4f54}{Булгаков}{Б\\bibinitperiod}{Павел\\bibnamedelima Георгиевич}{П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
