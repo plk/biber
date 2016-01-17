@@ -325,11 +325,6 @@ sub create_entry {
 
   $bibentry->set_field('citekey', $key);
 
-  # Some entry attributes
-  if (my $hp = $entry->getAttribute('howpublished')) {
-    $bibentry->set_datafield('howpublished', $hp);
-  }
-
   # We put all the fields we find modulo field aliases into the object.
   # Validation happens later and is not datasource dependent
   foreach my $f (uniq map { if (_norm($_->nodeName) eq 'names') { $_->getAttribute('type') }
