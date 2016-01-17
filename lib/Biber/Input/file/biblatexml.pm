@@ -582,41 +582,29 @@ sub parsename {
 
   my %namec;
 
-  if ( $node->firstChild->nodeName eq '#text' and
-       not $node->findnodes("./$NS:namepart[\@type='family']")) {
-    $namec{family} = $node->textContent();
-    if (my $ni = $node->getAttribute('initial')) {
-      $namec{family_i} = [$ni];
-    }
-    else {
-      $namec{family_i} = [_gen_initials($namec{family})];
-    }
-  }
-  else {
-    foreach my $n ('family', 'given', 'prefix', 'suffix') {
-      # If there is a name component node for this component ...
-      if (my $nc_node = $node->findnodes("./$NS:namepart[\@type='$n']")->get_node(1)) {
-        # name component with parts
-        if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
-          $namec{$n} = _join_name_parts(\@parts);
-          $logger->debug("Found name component '$n': " . $namec{$n});
-          if (my $ni = $node->getAttribute('initial')) {
-            $namec{"${n}_i"} = [$ni];
-          }
-          else {
-            $namec{"${n}_i"} = [_gen_initials(@parts)];
-          }
+  foreach my $n ($dm->get_constant_value('nameparts')) { # list type so returns list
+    # If there is a name component node for this component ...
+    if (my $nc_node = $node->findnodes("./$NS:namepart[\@type='$n']")->get_node(1)) {
+      # name component with parts
+      if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
+        $namec{$n} = _join_name_parts(\@parts);
+        $logger->debug("Found name component '$n': " . $namec{$n});
+        if (my $ni = $node->getAttribute('initial')) {
+          $namec{"${n}_i"} = [$ni];
         }
-        # with no parts
-        elsif (my $t = $nc_node->textContent()) {
-          $namec{$n} = $t;
-          $logger->debug("Found name component '$n': $t");
-          if (my $ni = $node->getAttribute('initial')) {
-            $namec{"${n}_i"} = [$ni];
-          }
-          else {
-            $namec{"${n}_i"} = [_gen_initials($t)];
-          }
+        else {
+          $namec{"${n}_i"} = [_gen_initials(@parts)];
+        }
+      }
+      # with no parts
+      elsif (my $t = $nc_node->textContent()) {
+        $namec{$n} = $t;
+        $logger->debug("Found name component '$n': $t");
+        if (my $ni = $node->getAttribute('initial')) {
+          $namec{"${n}_i"} = [$ni];
+        }
+        else {
+          $namec{"${n}_i"} = [_gen_initials($t)];
         }
       }
     }
