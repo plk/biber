@@ -16,6 +16,7 @@
 *** TODO abx@aux@sortscheme etc. probably this needs to be generalised to mentioned refcontexts
 ** DONE per-entry
 ** DONE per-namelist, per name
+* TODO useprefix needs per names/name support in bltx and sortnamekeyscheme needs per entry/names/name
 * TODO Document example in biblatex manual of compound keypart
 * TODO implement patronymic namepart
 * TODO Document year/month (datepart fields) are not allowed in bltxml

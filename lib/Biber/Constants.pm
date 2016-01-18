@@ -17,6 +17,7 @@ our @EXPORT = qw{
                   %LOCALE_MAP
                   %LOCALE_MAP_R
                   %REMOTE_MAP
+                  %DS_EXTENSIONS
                   $BIBER_CONF_NAME
                   $BCF_VERSION
                   $BBL_VERSION
@@ -87,9 +88,16 @@ our %NOSORT_TYPES = (
 
 # datatypes for data model validation
 our %DM_DATATYPES = (
-                     integer => qr/\A\d+\z/xms,
+                     integer  => qr/\A\d+\z/xms,
                      datepart => qr/\A\d+\z/xms
-);
+                    );
+
+# Mapping of data source types to extensions
+our %DS_EXTENSIONS = (
+                      bibtex     => 'bib',
+                      biblatexml => 'bltxml',
+                      ris        => 'ris'
+                      );
 
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 

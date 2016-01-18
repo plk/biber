@@ -75,7 +75,7 @@ my $b2 = q|@BOOK{b1,
 |;
 
 my $b3 = q|@BOOK{xd1,
-  AUTHOR    = {Edward Ellington},
+  AUTHOR    = {Edward Paul Ellington},
   LOCATION  = {New York and London},
   NOTE      = {A Note},
   PUBLISHER = {Macmillan},

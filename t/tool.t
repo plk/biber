@@ -67,7 +67,7 @@ my $t1 = q|@UNPUBLISHED{i3Š,
 |;
 
 my $t2 = q|@BOOK{xd1,
-  AUTHOR    = {Edward Ellington},
+  AUTHOR    = {Edward Paul Ellington},
   LOCATION  = {New York and London},
   NOTE      = {A Note},
   PUBLISHER = {Macmillan},

@@ -446,19 +446,32 @@ sub name_part_to_bltxml {
   my $np = $self->get_namepart($npn);
   my $nip = $self->get_namepart_initial($npn);
   if ($np) {
-    $xml->startTag([$xml_prefix, 'namepart'], type => $npn);
     my $parts = [split(/[\s~]/, $np)];
-    for (my $i=0;$i <= $#$parts;$i++) {
-      if (my $init = $nip->[$i]) {
-        $xml->startTag([$xml_prefix, 'namepart'], initial => $init);
+    # Compound name part
+    if ($#$parts > 0) {
+      $xml->startTag([$xml_prefix, 'namepart'], type => $npn);
+      for (my $i=0;$i <= $#$parts;$i++) {
+        if (my $init = $nip->[$i]) {
+          $xml->startTag([$xml_prefix, 'namepart'], initial => $init);
+        }
+        else {
+          $xml->startTag([$xml_prefix, 'namepart']);
+        }
+        $xml->characters(NFC($parts->[$i]));
+        $xml->endTag();         # namepart
+      }
+      $xml->endTag();           # namepart
+    }
+    else { # simple name part
+      if (my $init = $nip->[0]) {
+        $xml->startTag([$xml_prefix, 'namepart'], type => $npn, initial => $init);
       }
       else {
         $xml->startTag([$xml_prefix, 'namepart']);
       }
-      $xml->characters(NFC($parts->[$i]));
-      $xml->endTag();
+      $xml->characters(NFC($parts->[0]));
+      $xml->endTag();           # namepart
     }
-    $xml->endTag();
   }
 }
 
