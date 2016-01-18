@@ -5,6 +5,7 @@ use warnings;
 
 use Regexp::Common qw( balanced );
 use Biber::Config;
+use Biber::Utils;
 use Data::Dump qw( pp );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
@@ -410,7 +411,7 @@ sub name_to_biblatexml {
 
   # name scope useprefix. Use defined() because this can be 0
   if ( defined($self->get_useprefix) ) {
-    push @attrs, (useprefix => $self->get_useprefix);
+    push @attrs, (useprefix => map_boolean($self->get_useprefix), 'tostring');
   }
 
   # name scope sortnamekeyscheme.

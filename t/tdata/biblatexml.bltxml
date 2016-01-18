@@ -7,7 +7,7 @@
       <bltx:key>bltx1a1</bltx:key>
       <bltx:key>bltx1a2</bltx:key>
     </bltx:ids>
-    <bltx:names type="author" morenames="1" useprefix="1">
+    <bltx:names type="author" morenames="1" useprefix="true">
       <bltx:name gender="sm">
         <bltx:namepart type="given">
           <bltx:namepart initial="П">Павел</bltx:namepart>

@@ -247,10 +247,14 @@ sub set_output_entry {
       my $lni = $be->get_labelname_info;
       if (defined($lni) and
           $lni eq $namefield) {
-        # Add uniquelist, if defined
         my @plo;
+        # Add uniquelist, if defined
         if (my $ul = $nf->get_uniquelist){
           push @plo, "uniquelist=$ul";
+        }
+        # Add useprefix, if defined
+        if (my $up = $nf->get_useprefix){
+          push @plo, 'useprefix=' . map_boolean($up, 'tostring');
         }
         $plo = join(',', @plo);
       }

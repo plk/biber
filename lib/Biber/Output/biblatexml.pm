@@ -146,7 +146,7 @@ sub set_output_entry {
       }
       # name list scope useprefix. Use defined() because this can be 0
       if ( defined($nf->get_useprefix) ) {
-        push @attrs, (useprefix => $nf->get_useprefix);
+        push @attrs, (useprefix => map_boolean($nf->get_useprefix), 'tostring');
       }
 
       # name list scope sortnamekeyscheme.

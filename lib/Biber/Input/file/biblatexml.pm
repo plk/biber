@@ -515,7 +515,7 @@ sub _name {
 
     # Save useprefix attribute
     if ($node->hasAttribute('useprefix')) {
-      $names->set_useprefix($node->getAttribute('useprefix'));
+      $names->set_useprefix(map_boolean($node->getAttribute('useprefix'), 'tonum'));
     }
 
     # Save sortnamekeyscheme attribute
@@ -577,7 +577,7 @@ sub parsename {
 
   # Set name-scope useprefix attribute if it exists
   if ($node->hasAttribute('useprefix')) {
-    $useprefix = $node->getAttribute('useprefix');
+    $useprefix = map_boolean($node->getAttribute('useprefix'), 'tonum');
   }
 
   my %namec;
@@ -613,7 +613,7 @@ sub parsename {
   my $namestring = '';
 
   # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
-  # which should only care about family name + any prefix (if useprefix=true). See biblatex github
+  # which should only care about family name + any prefix (if useprefix=1). See biblatex github
   # tracker #306.
 
   # prefix

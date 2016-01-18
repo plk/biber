@@ -48,7 +48,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  locale2bcp47 bcp472locale rangelen match_indices process_comment};
+  locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean};
 
 =head1 FUNCTIONS
 
@@ -850,6 +850,30 @@ sub validate_biber_xml {
     $logger->info("'$file' validates against schema '$schema'");
   }
   undef $xmlparser;
+}
+
+=head2 map_boolean
+
+    Convert booleans between strings and numbers. Because standard XML "boolean"
+    datatype considers "true" and "1" the same etc.
+
+=cut
+
+sub map_boolean {
+  my $b = lc(shift);
+  my $dir = shift;
+  my %map = (true  => 1,
+             false => 0,
+            );
+  if ($dir eq 'tonum') {
+    return $b if looks_like_number($b);
+    return $map{$b};
+  }
+  elsif ($dir eq 'tostring') {
+    return $b if not looks_like_number($b);
+    %map = reverse %map;
+    return $map{$b};
+  }
 }
 
 =head2 process_entry_options
