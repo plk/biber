@@ -395,7 +395,7 @@ sub _config_file_set {
   foreach my $bcfscopeopts (@{$userconf->{optionscope}}) {
     my $type = $bcfscopeopts->{type};
     foreach my $bcfscopeopt (@{$bcfscopeopts->{option}}) {
-      $CONFIG_SCOPE_BIBLATEX{$bcfscopeopt->{content}}{$type} = 1;
+      $CONFIG_OPTSCOPE_BIBLATEX{$bcfscopeopt->{content}}{$type} = 1;
     }
   }
   delete $userconf->{optionscope};
@@ -694,7 +694,7 @@ sub setconfigfileoption {
   $CONFIG->{options}{biber}{$opt} = $CONFIG->{configfileoptions}{$opt} = $val;
 
   # Config file options can also be global biblatex options
-  if ($CONFIG_SCOPE_BIBLATEX{$opt}) {
+  if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}) {
     $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;
   }
 
@@ -760,12 +760,12 @@ sub setblxoption {
   shift; # class method so don't care about class name
   my ($opt, $val, $scope, $scopeval) = @_;
   if (not defined($scope)) { # global is the default
-    if ($CONFIG_SCOPE_BIBLATEX{$opt}->{GLOBAL}) {
+    if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{GLOBAL}) {
       $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;
     }
   }
   else { # Per-type/entry options need to specify type/entry too
-    if ($CONFIG_SCOPE_BIBLATEX{$opt}->{$scope}) {
+    if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{$scope}) {
       $CONFIG->{options}{biblatex}{$scope}{$scopeval}{$opt} = $val;
     }
   }
@@ -774,7 +774,7 @@ sub setblxoption {
 
 =head2 getblxoption
 
-    Get a biblatex option from the global or per entry-type scope
+    Get a biblatex option from the global, per-type or per entry scope
 
     getblxoption('option', ['entrytype'], ['citekey'])
 
@@ -789,18 +789,18 @@ sub getblxoption {
   shift; # class method so don't care about class name
   my ($opt, $entrytype, $citekey) = @_;
   if ( defined($citekey) and
-       $CONFIG_SCOPE_BIBLATEX{$opt}->{PER_ENTRY} and
+       $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{PER_ENTRY} and
        defined $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey} and
        defined $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey}{$opt}) {
     return $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey}{$opt};
   }
   elsif (defined($entrytype) and
-         $CONFIG_SCOPE_BIBLATEX{$opt}->{PER_TYPE} and
+         $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{PER_TYPE} and
          defined $CONFIG->{options}{biblatex}{PER_TYPE}{lc($entrytype)} and
          defined $CONFIG->{options}{biblatex}{PER_TYPE}{lc($entrytype)}{$opt}) {
     return $CONFIG->{options}{biblatex}{PER_TYPE}{lc($entrytype)}{$opt};
   }
-  elsif ($CONFIG_SCOPE_BIBLATEX{$opt}->{GLOBAL}) {
+  elsif ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{GLOBAL}) {
     return $CONFIG->{options}{biblatex}{GLOBAL}{$opt};
   }
 }
@@ -1698,89 +1698,6 @@ sub incr_crossrefkey {
   my $k = shift;
   $CONFIG->{state}{crossrefkeys}{$k}++;
   return;
-}
-
-
-############################
-# Displaymode static methods
-############################
-
-=head2 set_displaymode
-
-    Set the display mode for a field.
-    setdisplaymode(['entrytype'], ['field'], ['citekey'], $value)
-
-    This sets the desired displaymode to use for some data in the bib.
-    Of course, this is entirey seperate semantically from the
-    displaymodes *defined* in the bib which just tell you what to return
-    for a particular displaymode request for some data.
-
-=cut
-
-sub set_displaymode {
-  shift; # class method so don't care about class name
-  my ($val, $entrytype, $fieldtype, $citekey) = @_;
-  if ($citekey) {
-    if ($fieldtype) {
-      $CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype} = $val;
-    }
-    else {
-      $CONFIG->{displaymodes}{PER_ENTRY}{$citekey} = $val;
-    }
-  }
-  elsif ($fieldtype) {
-    $CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype} = $val;
-  }
-  elsif ($entrytype) {
-    $CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype} = $val;
-  }
-  else {
-    $CONFIG->{displaymodes}{GLOBAL} = $val ;
-  }
-}
-
-=head2 get_displaymode
-
-    Get the display mode for a field.
-    getdisplaymode(['entrytype'], ['field'], ['citekey'])
-
-    Returns the displaymode. In order of decreasing preference, returns:
-    1. Mode defined for a specific field in a specific citekey
-    2. Mode defined for a citekey
-    3. Mode defined for a fieldtype (any citekey)
-    4. Mode defined for an entrytype (any citekey)
-    5. Mode defined globally (any citekey)
-
-=cut
-
-sub get_displaymode {
-  shift; # class method so don't care about class name
-  my ($entrytype, $fieldtype, $citekey) = @_;
-  my $dm;
-  if ($citekey) {
-    if ($fieldtype and
-      defined($CONFIG->{displaymodes}{PER_FIELD}) and
-      defined($CONFIG->{displaymodes}{PER_FIELD}{$citekey}) and
-      defined($CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype})) {
-      $dm = $CONFIG->{displaymodes}{PER_FIELD}{$citekey}{$fieldtype};
-    }
-    elsif (defined($CONFIG->{displaymodes}{PER_ENTRY}) and
-      defined($CONFIG->{displaymodes}{PER_ENTRY}{$citekey})) {
-      $dm = $CONFIG->{displaymodes}{PER_ENTRY}{$citekey};
-    }
-  }
-  elsif ($fieldtype and
-    defined($CONFIG->{displaymodes}{PER_FIELDTYPE}) and
-    defined($CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype})) {
-    $dm = $CONFIG->{displaymodes}{PER_FIELDTYPE}{$fieldtype};
-  }
-  elsif ($entrytype and
-    defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}) and
-    defined($CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype})) {
-    $dm = $CONFIG->{displaymodes}{PER_ENTRYTYPE}{$entrytype};
-  }
-  $dm = $CONFIG->{displaymodes}{'*'} unless $dm; # Global if nothing else;
-  return $dm;
 }
 
 =head2 dump

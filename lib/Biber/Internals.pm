@@ -1232,7 +1232,7 @@ sub _sort_name {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # If there is a biblatex option which controls the use of this name, check it
-  if ($CONFIG_SCOPE_BIBLATEX{"use$name"} and
+  if ($CONFIG_OPTSCOPE_BIBLATEX{"use$name"} and
       not Biber::Config->getblxoption("use$name", $be->get_field('entrytype'), $citekey)) {
     return '';
     }

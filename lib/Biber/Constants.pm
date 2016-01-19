@@ -10,7 +10,8 @@ use base 'Exporter';
 our @EXPORT = qw{
                   $CONFIG_DEFAULT_BIBER
                   %CONFIG_DEFAULT_BIBLATEX
-                  %CONFIG_SCOPE_BIBLATEX
+                  %CONFIG_OPTSCOPE_BIBLATEX
+                  %CONFIG_OPTTYPE_BIBLATEX
                   %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS
                   %NOSORT_TYPES
                   %DM_DATATYPES
@@ -475,7 +476,9 @@ our %LOCALE_MAP_R = (
                     );
 
 # Holds the scope of each of the BibLaTeX configuration options from the .bcf
-our %CONFIG_SCOPE_BIBLATEX;
+our %CONFIG_OPTSCOPE_BIBLATEX;
+# Holds the datatype of an option at a particular scope
+our %CONFIG_OPTTYPE_BIBLATEX;
 
 # For per-entry options, what should be set when we find them and
 # what should be output to the .bbl for biblatex.

@@ -167,6 +167,14 @@
           </attribute>
           <oneOrMore>
             <element name="bcf:option">
+              <attribute name="datatype">
+                <choice>
+                  <value>boolean</value>
+                  <value>integer</value>
+                  <value>string</value>
+                  <value>xml</value>
+                </choice>
+              </attribute>
               <data type="string"/>
             </element>
           </oneOrMore>

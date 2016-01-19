@@ -412,7 +412,15 @@ sub parse_ctrlfile {
   foreach my $bcfscopeopts (@{$bcfxml->{optionscope}}) {
     my $type = $bcfscopeopts->{type};
     foreach my $bcfscopeopt (@{$bcfscopeopts->{option}}) {
-      $CONFIG_SCOPE_BIBLATEX{$bcfscopeopt->{content}}{$type} = 1;
+      my $opt = $bcfscopeopt->{content};
+      $CONFIG_OPTSCOPE_BIBLATEX{$opt}{$type} = 1;
+      if (defined($CONFIG_OPTTYPE_BIBLATEX{$opt}) and
+          lc($CONFIG_OPTTYPE_BIBLATEX{$opt}) ne lc($bcfscopeopt->{datatype})) {
+        biber_warn("Warning: Datatype for biblatex option '$opt' has conflicting values, probably at different scopes. This is not supported.");
+      }
+      else {
+        $CONFIG_OPTTYPE_BIBLATEX{$opt} = lc($bcfscopeopt->{datatype});
+      }
     }
   }
 
@@ -1592,7 +1600,7 @@ sub process_labelname {
     }
 
     # If there is a biblatex option which controls the use of this labelname info, check it
-    if ($CONFIG_SCOPE_BIBLATEX{"use$lnameopt"} and
+    if ($CONFIG_OPTSCOPE_BIBLATEX{"use$lnameopt"} and
        not Biber::Config->getblxoption("use$lnameopt", $bee, $citekey)) {
       next;
     }
@@ -1618,7 +1626,7 @@ sub process_labelname {
     }
 
     # If there is a biblatex option which controls the use of this labelname info, check it
-    if ($CONFIG_SCOPE_BIBLATEX{"use$ln"} and
+    if ($CONFIG_OPTSCOPE_BIBLATEX{"use$ln"} and
        not Biber::Config->getblxoption("use$ln", $bee, $citekey)) {
       next;
     }

@@ -889,18 +889,13 @@ sub process_entry_options {
   foreach (@$options) {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)(=?)(.+)?$/;
-    my $val;
     if ($2) {
-      if ($3 eq 'true') {
-        $val = 1;
-      }
-      elsif ($3 eq 'false') {
-        $val = 0;
+      if ($CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
+        _expand_option($1, map_boolean($3, 'tonum'), $citekey);
       }
       else {
-        $val = $3;
+        _expand_option($1, $3, $citekey);
       }
-      _expand_option($1, $val, $citekey);
     }
     else {
       _expand_option($1, 1, $citekey);

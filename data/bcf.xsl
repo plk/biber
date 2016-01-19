@@ -299,6 +299,27 @@
           </table>
         </xsl:for-each>
         <!-- DATASOURCE MAPPINGS -->
+        <hr/>
+        <h3>Option Scope</h3>
+        <xsl:for-each select="/bcf:controlfile/bcf:optionscope">
+          <table>
+            <thead>
+              <tr>
+                <td colspan="2"><b><xsl:value-of select="./@type"/></b></td>
+              </tr>
+              <tr>
+                <td><b>Option</b></td><td><b>Datatype</b></td>
+              </tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="./bcf:option">
+                <xsl:sort select="./text()"/>
+                <tr><td><xsl:value-of select="./text()"/></td><td><xsl:value-of select="./@datatype"/></td></tr>
+              </xsl:for-each>
+              </tbody>
+          </table>
+        </xsl:for-each>
+        <!-- DATASOURCE MAPPINGS -->
         <xsl:if test="/bcf:controlfile/bcf:sourcemap">
           <hr/>
           <h3>Datasource Mappings</h3>
