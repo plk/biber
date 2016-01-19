@@ -311,6 +311,7 @@ sub output {
   my $data = $self->{output_data};
   my $xml = $self->{output_target};
   my $target_string = "Target"; # Default
+  my $dm = Biber::Config->get_dm;
   if ($self->{output_target_file}) {
     $target_string = $self->{output_target_file};
   }
@@ -321,6 +322,15 @@ sub output {
   $xml->end();
 
   $logger->info("Output to $target_string");
+  my $exts = join('|', values %DS_EXTENSIONS);
+  my $schemafile = Biber::Config->getoption('dsn') =~ s/\.(?:$exts)$/.rng/r;
+  unless (Biber::Config->getoption('no_bltxml_schema')) {
+    $dm->generate_bltxml_schema($schemafile);
+  }
+  if (Biber::Config->getoption('validate_bltxml')) {
+    validate_biber_xml($target_string, 'bltx', 'http://biblatex-biber.sourceforge.net/biblatexml', $schemafile);
+  }
+
   return;
 }
 

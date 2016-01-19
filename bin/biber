@@ -51,6 +51,7 @@ GetOptions(
            'logfile=s',
            'mincrossrefs|m=s',
            'namesep=s',
+           'no_bltxml_schema|no-bltxml-schema',
            'noconf',
            'nodieonerror',
            'nolog',
@@ -552,6 +553,12 @@ Set threshold for crossrefs.
 
 Use F<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
 'and'.
+
+
+=item B<--no-bltxml-schema>
+
+When reading or writing biblatexml data source, don't generate an RNG XML schema from the data
+model.
 
 =item B<--noconf>
 

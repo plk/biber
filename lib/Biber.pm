@@ -3270,7 +3270,9 @@ sub fetch_data {
     my $datatype = $datasource->{datatype};
     if ($datatype eq 'biblatexml') {
       my $outfile = Biber::Config->getoption('bcf') =~ s/bcf$/rng/r;
-      $dm->generate_bltxml_schema($outfile);
+      unless (Biber::Config->getoption('no_bltxml_schema')) {
+        $dm->generate_bltxml_schema($outfile);
+      }
       if (Biber::Config->getoption('validate_bltxml')) {
         validate_biber_xml($name, 'bltx', 'http://biblatex-biber.sourceforge.net/biblatexml', $outfile);
       }

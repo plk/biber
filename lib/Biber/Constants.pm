@@ -121,6 +121,7 @@ our $CONFIG_DEFAULT_BIBER = {
   listsep             => { content => 'and' },
   mincrossrefs        => { content => 2 },
   namesep             => { content => 'and' },
+  no_bltxml_schema    => { content => 0 },
   nodieonerror        => { content => 0 },
   noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},
                                        {value => q/[\x{2bf}\x{2018}]/} ] },
