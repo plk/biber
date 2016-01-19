@@ -2032,6 +2032,8 @@ sub process_lists {
     my $cache_flag = 0;
     $logger->debug("Checking sorting cache for scheme '$lssn' with sorting name key scheme '$lsnksn'");
     foreach my $cacheitem (@{$section->get_sort_cache}) {
+      # This conditional checks for identity of the data elements which constitute
+      # a biblatex refcontext since a sortlist is conceptually part of a refcontext
       if (Compare($list->get_sortscheme, $cacheitem->[0]) and
           $list->get_sortnamekeyschemename eq $cacheitem->[1]) {
         $logger->debug("Found sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
