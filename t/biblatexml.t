@@ -53,8 +53,8 @@ my $bibentries = $section->bibentries;
 my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
       \true{moreauthor}
       \name{author}{3}{useprefix=true}{%
-        {{hash=d16c52bc219d448d5f07dc865d5c4f54}{Булгаков}{Б\\bibinitperiod}{Павел\\bibnamedelima Георгиевич}{П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
-        {{hash=9f2c2b41c55d40495140c437adb24c7f}{Розенфельд}{Р\\bibinitperiod}{Борис-ZZ\\bibnamedelima Aбрамович}{Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
+        {{hash=633a0b6ab963c5f044b56f06c6091c27}{Булгаков}{Б\\bibinitperiod}{Павел\\bibnamedelima Георгиевич}{П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
+        {{useprefix=false,hash=9f2c2b41c55d40495140c437adb24c7f}{Розенфельд}{Р\\bibinitperiod}{Борис-ZZ\\bibnamedelima Aбрамович}{Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
         {{hash=e708d5a31534e937578abf161c867a25}{Aхмедов}{A\bibinitperiod}{Ашраф\bibnamedelima Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
       }
       \list{language}{1}{%

@@ -549,6 +549,10 @@ sub name_to_bbl {
   if (defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename;
   }
+  # Add useprefix, if defined
+  if (defined($self->get_useprefix)){
+    push @pno, 'useprefix=' . Biber::Utils::map_boolean($self->get_useprefix, 'tostring');
+  }
   # Add the name hash to the options
   push @pno, 'hash=' . $self->get_hash;
   $pno = join(',', @pno);

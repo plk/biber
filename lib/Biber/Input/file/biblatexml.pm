@@ -571,14 +571,16 @@ sub _name {
 sub parsename {
   my ($node, $fieldname, $opts) = @_;
   $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
-  # We have to pass this in from higher scopes as something things depend on it in this
-  # sub
+  # We have to pass this in from higher scopes as we need to actually use the scoped
+  # value in this sub as well as set the name local value in the object
   my $useprefix = $opts->{useprefix};
+  my $namescope_useprefix;
 
   # Set name-scope useprefix attribute if it exists
   if ($node->hasAttribute('useprefix')) {
-    $useprefix = map_boolean($node->getAttribute('useprefix'), 'tonum');
+    $useprefix = $namescope_useprefix = map_boolean($node->getAttribute('useprefix'), 'tonum');
   }
+
 
   my %namec;
 
@@ -654,13 +656,17 @@ sub parsename {
                         initial => exists($namec{suffix}) ? $namec{suffix_i} : undef},
     namestring      => $namestring,
     nameinitstring  => $nameinitstr,
-    gender          => $node->getAttribute('gender'),
-    useprefix       => $useprefix
+    gender          => $node->getAttribute('gender')
   );
 
   # Set name-scope sortnamekeyscheme attribute if it exists
   if ($node->hasAttribute('sortnamekeyscheme')) {
     $newname->set_sortnamekeyscheme($node->getAttribute('sortnamekeyscheme'));
+  }
+
+  # Set name-scope useprefix if it is defined
+  if (defined($namescope_useprefix)) {
+    $newname->set_useprefix($namescope_useprefix);
   }
 
   return $newname;
