@@ -16,7 +16,10 @@
 *** TODO abx@aux@sortscheme etc. probably this needs to be generalised to mentioned refcontexts
 ** DONE per-entry
 ** DONE per-namelist, per name
-* TODO useprefix needs per names/name support in bltx and sortnamekeyscheme needs per entry/names/name
+* TODO useprefix
+** DONE needs per names/name support in biblatex and in bbl
+** TODO getnamehash subs should use sorting name key schemes? But how since this would need doing in sortlist loop?
+** TODO sortnamekeyscheme needs per entry/names/name in bbl and biblatex macro support in formats
 * TODO Document example in biblatex manual of compound keypart
 * TODO implement patronymic namepart
 * TODO Document year/month (datepart fields) are not allowed in bltxml

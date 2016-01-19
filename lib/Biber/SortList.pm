@@ -491,8 +491,11 @@ sub get_filters {
   Currently this means:
 
   * sortinit
+  * sortinithash
   * extrayear
   * extraalpha
+  * extratitle
+  * extratitleyear
 
 =cut
 
