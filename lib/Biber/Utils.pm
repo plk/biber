@@ -729,14 +729,21 @@ sub filter_entry_options {
   foreach (@$options) {
     m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
     my $cfopt = $CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT};
+    # convert booleans
+    my $val = $2;
+    if ($val and
+        $CONFIG_OPTTYPE_BIBLATEX{lc($1)} and
+        $CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
+      $val = map_boolean($val, 'tostring');
+    }
     # Standard option
     if (not defined($cfopt) or $cfopt == 1) {
-      push @$roptions, $1 . ($2 ? "=$2" : '') ;
+      push @$roptions, $1 . ($val ? "=$val" : '') ;
     }
     # Set all split options to same value as parent
     elsif (ref($cfopt) eq 'ARRAY') {
       foreach my $map (@$cfopt) {
-        push @$roptions, "$map=$2";
+        push @$roptions, "$map=$val";
       }
     }
     # Set all splits to specific values
