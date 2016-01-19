@@ -31,7 +31,9 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 my $logger = Log::Log4perl::get_logger('main');
 
-
+# Hashes should not care about use* or sorting name key scheme etc. We want to generat hashes
+# unique to a name, not a particualr representation of a name. So, always statically concatenate
+# nameparts from the data model list of valid nameparts
 sub _getnamehash {
   my ($self, $citekey, $names) = @_;
   my $secnum = $self->get_current_section;
@@ -41,37 +43,14 @@ sub _getnamehash {
   my $hashkey = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_cite;
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
-
-  # Name list scope useprefix option
-  if (defined($names->get_useprefix)) {
-    $useprefix = $names->get_useprefix;
-  }
+  my $dm = Biber::Config->get_dm;
 
   # namehash obeys list truncations but not uniquename
   foreach my $n (@{$names->first_n_names($visible)}) {
-
-    # Name scope useprefix option
-    if (defined($n->get_useprefix)) {
-      $useprefix = $n->get_useprefix;
-    }
-
-    if ( $n->get_namepart('prefix') and $useprefix ) {
-      $hashkey .= $n->get_namepart('prefix');
-    }
-    $hashkey .= $n->get_namepart('family');
-
-    if ( $n->get_namepart('suffix') ) {
-      $hashkey .= $n->get_namepart('suffix');
-    }
-
-    if ( $n->get_namepart('given') ) {
-      $hashkey .= $n->get_namepart('given');
-    }
-
-    # without useprefix, prefix is not first in the hash
-    if ($n->get_namepart('prefix') and not $useprefix ) {
-      $hashkey .= $n->get_namepart('prefix');
+    foreach my $nt ($dm->get_constant_value('nameparts')) {# list type so returns list
+      if (my $np = $n->get_namepart($nt)) {
+        $hashkey .= $np;
+      }
     }
   }
 
@@ -96,44 +75,27 @@ sub _getnamehash_u {
   my $hashkey = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_cite;
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+  my $dm = Biber::Config->get_dm;
 
-  # Name list scope useprefix option
-  if (defined($names->get_useprefix)) {
-    $useprefix = $names->get_useprefix;
-  }
-
-  # namehash obeys list truncations but not uniquename
+  # namehash obeys list truncations
   foreach my $n (@{$names->first_n_names($visible)}) {
-
-    # Name scope useprefix option
-    if (defined($n->get_useprefix)) {
-      $useprefix = $n->get_useprefix;
-    }
-
-    if ( $n->get_namepart('prefix') and $useprefix ) {
-      $hashkey .= $n->get_namepart('prefix');
-    }
-    $hashkey .= $n->get_namepart('family');
-
-    if ( $n->get_namepart('suffix') ) {
-      $hashkey .= $n->get_namepart('suffix');
-    }
-
-    if ( $n->get_namepart('given') and defined($n->get_uniquename)) {
-      if ($n->get_uniquename eq '2') {
-        $hashkey .= $n->get_namepart('given');
-      }
-      elsif ($n->get_uniquename eq '1') {
-        $hashkey .= join('', @{$n->get_namepart_initial('given')});
+    foreach my $nt ($dm->get_constant_value('nameparts')) {# list type so returns list
+      if (my $np = $n->get_namepart($nt)) {
+        if ($nt eq 'given') {
+          if (defined($n->get_uniquename)) {
+            if ($n->get_uniquename eq '2') {
+              $hashkey .= $np;
+            }
+            elsif ($n->get_uniquename eq '1') {
+              $hashkey .= join('', @{$n->get_namepart_initial('given')});
+            }
+          }
+        }
+        else {
+          $hashkey .= $np;
+        }
       }
     }
-
-    # without useprefix, prefix is not first in the hash
-    if ( $n->get_namepart('prefix') and not $useprefix ) {
-      $hashkey .= $n->get_namepart('prefix');
-    }
-
   }
 
   # name list was truncated
@@ -146,7 +108,6 @@ sub _getnamehash_u {
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
 
-
 sub _getfullhash {
   my ($self, $citekey, $names) = @_;
   my $hashkey = '';
@@ -154,35 +115,14 @@ sub _getfullhash {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
-  if (defined($names->get_useprefix)) {
-    $useprefix = $names->get_useprefix;
-  }
+  my $dm = Biber::Config->get_dm;
 
   foreach my $n (@{$names->names}) {
-
-    if (defined($n->get_useprefix)) {
-      $useprefix = $n->get_useprefix;
+    foreach my $nt ($dm->get_constant_value('nameparts')) {# list type so returns list
+      if (my $np = $n->get_namepart($nt)) {
+        $hashkey .= $np;
+      }
     }
-
-    if ( my $p = $n->get_namepart('prefix') and $useprefix ) {
-      $hashkey .= $p;
-    }
-    $hashkey .= $n->get_namepart('family');
-
-    if ( $n->get_namepart('suffix') ) {
-      $hashkey .= $n->get_namepart('suffix');
-    }
-
-    if ( $n->get_namepart('given') ) {
-      $hashkey .= $n->get_namepart('given');
-    }
-
-    # without useprefix, prefix is not first in the hash
-    if ( my $p = $n->get_namepart('prefix') and not $useprefix ) {
-      $hashkey .= $p;
-    }
-
   }
 
   # If we had an "and others"
@@ -204,28 +144,12 @@ sub _genpnhash {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $hashkey = '';
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+  my $dm = Biber::Config->get_dm;
 
-  if (defined($n->get_useprefix)) {
-    $useprefix = $n->get_useprefix;
-  }
-
-  if ( my $p = $n->get_namepart('prefix') and $useprefix ) {
-    $hashkey .= $p;
-  }
-  $hashkey .= $n->get_namepart('family');
-
-  if ( $n->get_namepart('suffix') ) {
-    $hashkey .= $n->get_namepart('suffix');
-  }
-
-  if ( $n->get_namepart('given') ) {
-    $hashkey .= $n->get_namepart('given');
-  }
-
-  # without useprefix, prefix is not first in the hash
-  if ( $n->get_namepart('prefix') and not $useprefix ) {
-    $hashkey .= $n->get_namepart('prefix');
+  foreach my $nt ($dm->get_constant_value('nameparts')) {# list type so returns list
+    if (my $np = $n->get_namepart($nt)) {
+      $hashkey .= $np;
+    }
   }
 
   $logger->trace("Creating MD5 pnhash using '$hashkey'");

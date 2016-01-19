@@ -53,8 +53,8 @@ my $bibentries = $section->bibentries;
 my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
       \true{moreauthor}
       \name{author}{3}{useprefix=true}{%
-        {{hash=633a0b6ab963c5f044b56f06c6091c27}{Булгаков}{Б\\bibinitperiod}{Павел\\bibnamedelima Георгиевич}{П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
-        {{useprefix=false,hash=9f2c2b41c55d40495140c437adb24c7f}{Розенфельд}{Р\\bibinitperiod}{Борис-ZZ\\bibnamedelima Aбрамович}{Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
+        {{hash=d16c52bc219d448d5f07dc865d5c4f54}{Булгаков}{Б\\bibinitperiod}{Павел\\bibnamedelima Георгиевич}{П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
+        {{useprefix=false,hash=d4b3732f25a1f82b3eb6c24cb1b8a9d0}{Розенфельд}{Р\\bibinitperiod}{Борис-ZZ\\bibnamedelima Aбрамович}{Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
         {{hash=e708d5a31534e937578abf161c867a25}{Aхмедов}{A\bibinitperiod}{Ашраф\bibnamedelima Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
       }
       \list{language}{1}{%
@@ -67,7 +67,7 @@ my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
         {Наука}%
       }
       \strng{namehash}{b5cf3ab49063f1ac8cf913eb3527f38e}
-      \strng{fullhash}{d934abc5fadc45af86b9fc5160209def}
+      \strng{fullhash}{0fe1efdea80f99438d5ff6eefa7d2171}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelyear}{1983}

@@ -74,7 +74,7 @@ my $l1 = q|    \entry{test1}{report}{}
 
 my $l2 = q|    \entry{test2}{inbook}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=f2574dc91f1242eb0e7507a71730631b}{Smith}{S\bibinitperiod}{John\bibnamedelima Frederick}{J\bibinitperiod\bibinitdelim F\bibinitperiod}{}{}{III}{I\bibinitperiod}}%
+        {{uniquename=0,hash=f2574dc91f1242eb0e7507a71730631b}{Smith}{S\\bibinitperiod}{John\\bibnamedelima Frederick}{J\\bibinitperiod\\bibinitdelim F\\bibinitperiod}{}{}{III}{I\\bibinitperiod}}%
       }
       \name{editor}{1}{}{%
         {{hash=c889e5c69d0c445e8f3bb0fe1ea7a19c}{Brown}{B\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%

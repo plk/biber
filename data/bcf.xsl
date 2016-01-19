@@ -308,7 +308,7 @@
                 <td colspan="2"><b><xsl:value-of select="./@type"/></b></td>
               </tr>
               <tr>
-                <td><b>Option</b></td><td><b>Datatype</b></td>
+                <td>Option</td><td>Datatype</td>
               </tr>
             </thead>
             <tbody>

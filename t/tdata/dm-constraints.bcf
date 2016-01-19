@@ -633,7 +633,7 @@
   <bcf:datamodel>
     <bcf:constants>
       <bcf:constant type="list" name="gender">sf,sm,sn,pf,pm,pn,pp</bcf:constant>
-      <bcf:constant type="list" name="nameparts">family,given,prefix,suffix</bcf:constant>
+      <bcf:constant type="list" name="nameparts">prefix,family,suffix,given</bcf:constant>
       <bcf:constant type="list" name="optiondatatypes">boolean,integer,string,xml</bcf:constant>
     </bcf:constants>
     <bcf:entrytypes>

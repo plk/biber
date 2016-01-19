@@ -63,8 +63,8 @@ ok(is_undef($main->get_extrayeardata('L10')), 'Entry L10 - No name, same year as
 eq_or_diff($main->get_extrayeardata('companion1'), '1', 'Entry companion1 - names truncated to same as another entry in same year');
 eq_or_diff($main->get_extrayeardata('companion2'), '2', 'Entry companion2 - names truncated to same as another entry in same year');
 ok(is_undef($main->get_extrayeardata('companion3')), 'Entry companion3 - one name, same year as truncated names');
-ok(is_undef($main->get_extrayeardata('vangennep')), 'Entry vangennep - prefix makes it different');
-ok(is_undef($main->get_extrayeardata('gennep')), 'Entry gennep - different from prefix name');
+eq_or_diff($main->get_extrayeardata('vangennep'), '2', 'Entry vangennep - useprefix does makes it different');
+eq_or_diff($main->get_extrayeardata('gennep'), '1', 'Entry gennep - different from prefix name');
 ok(is_undef($main->get_extrayeardata('LY1')), 'Date range means no extrayear - 1');
 ok(is_undef($main->get_extrayeardata('LY2')), 'Date range means no extrayear - 2');
 ok(is_undef($main->get_extrayeardata('LY3')), 'Date range means no extrayear - 3');
