@@ -2043,6 +2043,8 @@ sub process_lists {
         $list->set_sortinitdata($cacheitem->[3]);
         $list->set_extrayeardata($cacheitem->[4]);
         $list->set_extraalphadata($cacheitem->[5]);
+        $list->set_extratitledata($cacheitem->[6]);
+        $list->set_extratitleyeardata($cacheitem->[7]);
         $cache_flag = 1;
         last;
       }

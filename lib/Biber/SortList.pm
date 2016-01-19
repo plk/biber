@@ -197,7 +197,9 @@ sub get_listdata {
            $self->{keys},
            $self->{sortinitdata},
            $self->{extrayeardata},
-           $self->{extraalphadata} ];
+           $self->{extraalphadata},
+           $self->{extratitledata},
+           $self->{extratitleyeardata} ];
 }
 
 =head2 set_extrayeardata_for_key
