@@ -2,6 +2,8 @@ package Biber::Entry::Name;
 use v5.16;
 use strict;
 use warnings;
+use parent qw(Class::Accessor);
+__PACKAGE__->follow_best_practice;
 
 use Regexp::Common qw( balanced );
 use Biber::Config;
@@ -12,37 +14,15 @@ use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
 use Unicode::Normalize;
 no autovivification;
-
 my $logger = Log::Log4perl::get_logger('main');
 
 # Names of simple package accessor attributes
-my @scalar_attributes = qw (
-                             hash
-                             index
-                             namestring
-                             nameinitstring
-                          );
-
-sub _scalar_accessor {
-  my ($attribute, $package) = @_;
-  no strict 'refs';
-  *{ $package . "::set_$attribute" } = sub {
-    my ($self, $val) = @_;
-    $self->{$attribute} = $val;
-    return;
-  };
-  *{ $package . "::get_$attribute" } = sub {
-    my $self = shift;
-    return $self->{$attribute};
-  };
-}
-
-# Now create accessors for simple attributes
-# These should come from $CONFIG_SCOPEOPT_BIBLATEX{NAME} but this isn't defined so 
-# _scalar_accessor needs to be used elsewhere but then it needs not to be here
-foreach my $attribute ( @scalar_attributes, 'useprefix', 'sortnamekeyscheme', 'gender') {
-  _scalar_accessor($attribute, __PACKAGE__);
-}
+__PACKAGE__->mk_accessors(qw (
+                               hash
+                               index
+                               namestring
+                               nameinitstring
+                            ));
 
 =encoding utf-8
 

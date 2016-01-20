@@ -2,7 +2,6 @@ package Biber::Input::file::biblatexml;
 use v5.16;
 use strict;
 use warnings;
-use parent 'Exporter';
 
 use Carp;
 use Biber::Constants;

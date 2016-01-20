@@ -2,7 +2,7 @@ package Biber::Output::test;
 use v5.16;
 use strict;
 use warnings;
-use parent 'Biber::Output::base';
+use parent qw(Biber::Output::base);
 
 use Biber::Config;
 use Biber::Constants;

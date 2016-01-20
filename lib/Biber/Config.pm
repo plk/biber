@@ -20,6 +20,8 @@ use Log::Log4perl::Appender::File;
 use Log::Log4perl::Layout::SimpleLayout;
 use Log::Log4perl::Layout::PatternLayout;
 use Unicode::Normalize;
+use parent qw(Class::Accessor);
+__PACKAGE__->follow_best_practice;
 
 our $VERSION = '2.4';
 our $BETA_VERSION = 1; # Is this a beta version?
@@ -393,11 +395,25 @@ sub _config_file_set {
   }
   # Option scope has to be set first
   foreach my $bcfscopeopts (@{$userconf->{optionscope}}) {
-    my $type = $bcfscopeopts->{type};
+    my $scope = $bcfscopeopts->{type};
     foreach my $bcfscopeopt (@{$bcfscopeopts->{option}}) {
-      $CONFIG_OPTSCOPE_BIBLATEX{$bcfscopeopt->{content}}{$type} = 1;
+      my $opt = $bcfscopeopt->{content};
+      $CONFIG_OPTSCOPE_BIBLATEX{$opt}{$scope} = 1;
+      $CONFIG_SCOPEOPT_BIBLATEX{$scope}{$opt} = 1;
     }
   }
+
+  # Now we have the per-namelist options, make the accessors for them in the Names package
+  foreach my $nso (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}}) {
+    Biber::Entry::Names->follow_best_practice;
+    Biber::Entry::Names->mk_accessors($nso);
+  }
+  # Now we have the per-name options, make the accessors for them in the Name package
+  foreach my $no (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+    Biber::Entry::Name->follow_best_practice;
+    Biber::Entry::Name->mk_accessors($no);
+  }
+
   delete $userconf->{optionscope};
 
   # Set options from config file

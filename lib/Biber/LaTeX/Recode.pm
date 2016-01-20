@@ -2,7 +2,7 @@ package Biber::LaTeX::Recode;
 use v5.16;
 use strict;
 use warnings;
-use parent 'Exporter';
+use parent qw(Exporter);
 use Biber::Config;
 use Encode;
 use File::Slurp;

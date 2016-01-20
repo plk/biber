@@ -18,12 +18,12 @@
 ** DONE per-namelist, per name
 * DONE hashes use static construction from DM name constants - problem with uniquelist
 * DONE tool mode bltx output should write schema but controlled by option (normal output uses same option)
-* TODO What to do with gender attribute on name?
-* TODO per-names/name options are not in .bcf - matters?
+* DONE per-names/name options are not in .bcf - matters?
 * TODO per-namelists/per-name options
 ** DONE needs per names/name support in biblatex and in bbl
-** TODO getnamehash subs should use sorting name key schemes? But how since this would need doing in sortlist loop?
 ** TODO sortnamekeyscheme needs per entry/names/name in bbl and biblatex macro support in formats
+** TODO What to do with gender attribute on name?
+
 * TODO Document example in biblatex manual of compound keypart
 * TODO implement patronymic namepart
 * TODO Document year/month (datepart fields) are not allowed in bltxml

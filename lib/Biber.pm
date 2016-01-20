@@ -2,7 +2,7 @@ package Biber;
 use v5.16;
 use strict;
 use warnings;
-use parent 'Biber::Internals';
+use parent qw(Class::Accessor Biber::Internals);
 
 use constant {
   EXIT_OK => 0,
@@ -23,6 +23,7 @@ use Biber::DataModel;
 use Biber::Internals;
 use Biber::Entries;
 use Biber::Entry;
+use Biber::Entry::Names;
 use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
@@ -423,6 +424,16 @@ sub parse_ctrlfile {
         $CONFIG_OPTTYPE_BIBLATEX{$opt} = lc($bcfscopeopt->{datatype});
       }
     }
+  }
+  # Now we have the per-namelist options, make the accessors for them in the Names package
+  foreach my $nso (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}}) {
+    Biber::Entry::Names->follow_best_practice;
+    Biber::Entry::Names->mk_accessors($nso);
+  }
+  # Now we have the per-name options, make the accessors for them in the Name package
+  foreach my $no (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+    Biber::Entry::Name->follow_best_practice;
+    Biber::Entry::Name->mk_accessors($no);
   }
 
   # OPTIONS
