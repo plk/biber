@@ -469,13 +469,13 @@ sub parse_ctrlfile {
         my $entrytype = $bcfopts->{type};
         foreach my $bcfopt (@{$bcfopts->{option}}) {
           if ($bcfopt->{type} eq 'singlevalued') {
-            Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content}, 'PER_TYPE', $entrytype);
+            Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content}, 'ENTRYTYPE', $entrytype);
           }
           elsif ($bcfopt->{type} eq 'multivalued') {
             # sort on order attribute and then remove it
             Biber::Config->setblxoption($bcfopt->{key}{content},
               [ map {delete($_->{order}); $_} sort {$a->{order} <=> $b->{order}} @{$bcfopt->{value}} ],
-              'PER_TYPE',
+              'ENTRYTYPE',
               $entrytype);
           }
         }
@@ -531,7 +531,7 @@ sub parse_ctrlfile {
     else {
       Biber::Config->setblxoption('labelalphatemplate',
                                   $t,
-                                  'PER_TYPE',
+                                  'ENTRYTYPE',
                                   $latype);
     }
   }
@@ -621,7 +621,7 @@ sub parse_ctrlfile {
     }
     Biber::Config->setblxoption('sortexclusion',
                                 $excludes,
-                                'PER_TYPE',
+                                'ENTRYTYPE',
                                 $sex->{type});
   }
 
@@ -635,7 +635,7 @@ sub parse_ctrlfile {
     else {
       Biber::Config->setblxoption('presort',
                                   $presort->{content},
-                                  'PER_TYPE',
+                                  'ENTRYTYPE',
                                   $presort->{type});
     }
   }
@@ -2000,7 +2000,7 @@ sub process_presort {
   my $be = $section->bibentry($citekey);
   # We are treating presort as an option as it can be set per-type and globally too
   if (my $ps = $be->get_field('presort')) {
-    Biber::Config->setblxoption('presort', $ps, 'PER_ENTRY', $citekey);
+    Biber::Config->setblxoption('presort', $ps, 'ENTRY', $citekey);
   }
 }
 

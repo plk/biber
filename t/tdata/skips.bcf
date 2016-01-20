@@ -273,7 +273,7 @@
     <bcf:option datatype="integer">minalphanames</bcf:option>
     <bcf:option datatype="integer">maxparens</bcf:option>
   </bcf:optionscope>
-  <bcf:optionscope type="PER_TYPE">
+  <bcf:optionscope type="ENTRYTYPE">
     <bcf:option datatype="string">alphaothers</bcf:option>
     <bcf:option datatype="string">sortalphaothers</bcf:option>
     <bcf:option datatype="string">presort</bcf:option>
@@ -327,7 +327,7 @@
     <bcf:option datatype="integer">maxalphanames</bcf:option>
     <bcf:option datatype="integer">minalphanames</bcf:option>
   </bcf:optionscope>
-  <bcf:optionscope type="PER_ENTRY">
+  <bcf:optionscope type="ENTRY">
     <bcf:option datatype="boolean">useafterword</bcf:option>
     <bcf:option datatype="boolean">useannotator</bcf:option>
     <bcf:option datatype="boolean">useauthor</bcf:option>
@@ -367,6 +367,14 @@
     <bcf:option datatype="integer">minitems</bcf:option>
     <bcf:option datatype="integer">maxalphanames</bcf:option>
     <bcf:option datatype="integer">minalphanames</bcf:option>
+  </bcf:optionscope>
+  <bcf:optionscope type="NAMELIST">
+    <bcf:option datatype="boolean">useprefix</bcf:option>
+    <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
+  </bcf:optionscope>
+  <bcf:optionscope type="NAME">
+    <bcf:option datatype="boolean">useprefix</bcf:option>
+    <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
   </bcf:optionscope>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>

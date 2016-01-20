@@ -237,7 +237,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
              },
            ],
   type  => "unpublished",
-}, 'PER_TYPE', 'unpublished');
+}, 'ENTRYTYPE', 'unpublished');
 
 
 foreach my $k ($section->get_citekeys) {
@@ -271,7 +271,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
              },
            ],
   type  => "unpublished",
-}, 'PER_TYPE', 'unpublished');
+}, 'ENTRYTYPE', 'unpublished');
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');

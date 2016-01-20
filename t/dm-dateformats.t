@@ -341,7 +341,7 @@ eq_or_diff($out->get_output_entry('L17', $main), $l17c, 'Date values test 17c - 
 # reset options and regenerate information
 Biber::Config->setblxoption('labeldatespec', [ {content => 'eventdate', type => 'field'},
                                                {content => 'date', type => 'field'},
-                                               {content => 'origdate', type => 'field'} ], 'PER_TYPE', 'proceedings');
+                                               {content => 'origdate', type => 'field'} ], 'ENTRYTYPE', 'proceedings');
 $bibentries->del_entry('L17');
 $biber->prepare;
 $out = $biber->get_output_obj;
@@ -351,7 +351,7 @@ eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'even
 eq_or_diff($out->get_output_entry('L17', $main), $l17e, 'Date values test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labeldatespec', [ {content => 'pubstate', type => 'field'} ], 'PER_TYPE', 'proceedings');
+Biber::Config->setblxoption('labeldatespec', [ {content => 'pubstate', type => 'field'} ], 'ENTRYTYPE', 'proceedings');
 
 $bibentries->del_entry('L17');
 $biber->prepare;

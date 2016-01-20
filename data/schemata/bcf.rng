@@ -161,8 +161,10 @@
           <attribute name="type">
             <choice>
               <value>GLOBAL</value>
-              <value>PER_TYPE</value>
-              <value>PER_ENTRY</value>
+              <value>ENTRYTYPE</value>
+              <value>ENTRY</value>
+              <value>NAMELIST</value>
+              <value>NAME</value>
             </choice>
           </attribute>
           <oneOrMore>

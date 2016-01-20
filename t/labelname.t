@@ -42,9 +42,9 @@ Biber::Config->setblxoption('labelnamespec', [ {content => 'shortauthor'},
                                                {content => 'editor'},
                                                {content => 'translator'}]);
 Biber::Config->setblxoption('labelnamespec', [ {content => 'editor'},
-                                               {content => 'translator'}], 'PER_TYPE', 'book');
+                                               {content => 'translator'}], 'ENTRYTYPE', 'book');
 Biber::Config->setblxoption('labelnamespec', [ {content => 'namea'},
-                                               {content => 'author' }], 'PER_TYPE', 'misc');
+                                               {content => 'author' }], 'ENTRYTYPE', 'misc');
 
 # Now generate the information
 $biber->prepare;

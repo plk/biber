@@ -119,7 +119,7 @@ $CONFIG->{state}{datafiles} = [];
 =cut
 
 sub _init {
-  $CONFIG->{options}{biblatex}{PER_ENTRY} = {};
+  $CONFIG->{options}{biblatex}{ENTRY} = {};
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seenwork} = {};
@@ -447,7 +447,7 @@ sub _config_file_set {
         }
         Biber::Config->setblxoption('sortexclusion',
                                     $excludes,
-                                    'PER_TYPE',
+                                    'ENTRYTYPE',
                                     $sex->{type});
       }
 
@@ -461,7 +461,7 @@ sub _config_file_set {
         else {
           Biber::Config->setblxoption('presort',
                                       $presort->{content},
-                                      'PER_TYPE',
+                                      'ENTRYTYPE',
                                       $presort->{type});
         }
       }
@@ -786,19 +786,18 @@ sub setblxoption {
 =cut
 
 sub getblxoption {
+  no autovivification;
   shift; # class method so don't care about class name
   my ($opt, $entrytype, $citekey) = @_;
   if ( defined($citekey) and
-       $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{PER_ENTRY} and
-       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey} and
-       defined $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey}{$opt}) {
-    return $CONFIG->{options}{biblatex}{PER_ENTRY}{$citekey}{$opt};
+       $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{ENTRY} and
+       defined $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$opt}) {
+    return $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$opt};
   }
   elsif (defined($entrytype) and
-         $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{PER_TYPE} and
-         defined $CONFIG->{options}{biblatex}{PER_TYPE}{lc($entrytype)} and
-         defined $CONFIG->{options}{biblatex}{PER_TYPE}{lc($entrytype)}{$opt}) {
-    return $CONFIG->{options}{biblatex}{PER_TYPE}{lc($entrytype)}{$opt};
+         $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{ENTRYTYPE} and
+         defined $CONFIG->{options}{biblatex}{ENTRYTYPE}{lc($entrytype)}{$opt}) {
+    return $CONFIG->{options}{biblatex}{ENTRYTYPE}{lc($entrytype)}{$opt};
   }
   elsif ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{GLOBAL}) {
     return $CONFIG->{options}{biblatex}{GLOBAL}{$opt};

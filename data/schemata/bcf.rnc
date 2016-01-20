@@ -85,7 +85,7 @@ start =
 
     # Option scope
     element bcf:optionscope {
-      attribute type { "GLOBAL" | "PER_TYPE" | "PER_ENTRY" },
+      attribute type { "GLOBAL" | "ENTRYTYPE" | "ENTRY" | "NAMELIST" | "NAME" },
       element bcf:option {
         attribute datatype { "boolean" | "integer" | "string" | "xml" },
         xsd:string

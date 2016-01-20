@@ -12,7 +12,7 @@ our @EXPORT = qw{
                   %CONFIG_DEFAULT_BIBLATEX
                   %CONFIG_OPTSCOPE_BIBLATEX
                   %CONFIG_OPTTYPE_BIBLATEX
-                  %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS
+                  %CONFIG_BIBLATEX_ENTRY_OPTIONS
                   %NOSORT_TYPES
                   %DM_DATATYPES
                   %LOCALE_MAP
@@ -486,7 +486,7 @@ our %CONFIG_OPTTYPE_BIBLATEX;
 # Basically, here we have to emulate relevant parts of biblatex's options processing
 # for local entry-specific options, note therefore the presence here of some
 # options like max/mincitenames which are not passed in the .bcf
-our %CONFIG_BIBLATEX_PER_ENTRY_OPTIONS =
+our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
   (
    dataonly          => {OUTPUT => 1,
                          INPUT => {skiplab     => 1,

@@ -392,13 +392,13 @@ Biber::Config->setblxoption('maxbibnames', 3);
 Biber::Config->setblxoption('minbibnames', 1);
 Biber::Config->setblxoption('maxalphanames', 3);
 Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxcitenames', 1, 'PER_TYPE', 'misc');
-Biber::Config->setblxoption('maxbibnames', 2, 'PER_TYPE', 'unpublished');
-Biber::Config->setblxoption('minbibnames', 2, 'PER_TYPE', 'unpublished');
+Biber::Config->setblxoption('maxcitenames', 1, 'ENTRYTYPE', 'misc');
+Biber::Config->setblxoption('maxbibnames', 2, 'ENTRYTYPE', 'unpublished');
+Biber::Config->setblxoption('minbibnames', 2, 'ENTRYTYPE', 'unpublished');
 # maxalphanames is set on tmn2 entry
-Biber::Config->setblxoption('minalphanames', 2, 'PER_TYPE', 'book');
+Biber::Config->setblxoption('minalphanames', 2, 'ENTRYTYPE', 'book');
 # minitems is set on tmn3 entry
-Biber::Config->setblxoption('maxitems', 2, 'PER_TYPE', 'unpublished');
+Biber::Config->setblxoption('maxitems', 2, 'ENTRYTYPE', 'unpublished');
 
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()

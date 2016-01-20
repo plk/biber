@@ -728,7 +728,7 @@ sub filter_entry_options {
   my $roptions = [];
   foreach (@$options) {
     m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
-    my $cfopt = $CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($1)}{OUTPUT};
+    my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}{OUTPUT};
     # convert booleans
     my $val = $2;
     if ($val and
@@ -952,21 +952,21 @@ sub out {
 
 sub _expand_option {
   my ($opt, $val, $citekey) = @_;
-  my $cfopt = $CONFIG_BIBLATEX_PER_ENTRY_OPTIONS{lc($opt)}{INPUT};
+  my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($opt)}{INPUT};
   # Standard option
   if (not defined($cfopt)) {
-    Biber::Config->setblxoption($opt, $val, 'PER_ENTRY', $citekey);
+    Biber::Config->setblxoption($opt, $val, 'ENTRY', $citekey);
   }
   # Set all split options to same value as parent
   elsif (ref($cfopt) eq 'ARRAY') {
     foreach my $k (@$cfopt) {
-      Biber::Config->setblxoption($k, $val, 'PER_ENTRY', $citekey);
+      Biber::Config->setblxoption($k, $val, 'ENTRY', $citekey);
     }
   }
   # Specify values per all splits
   elsif (ref($cfopt) eq 'HASH') {
     foreach my $k (keys %$cfopt) {
-      Biber::Config->setblxoption($k, $cfopt->{$k}, 'PER_ENTRY', $citekey);
+      Biber::Config->setblxoption($k, $cfopt->{$k}, 'ENTRY', $citekey);
     }
   }
   return;
