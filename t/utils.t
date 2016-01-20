@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 65;
+use Test::More tests => 70;
 use Test::Differences;
 unified_diff;
 
@@ -149,3 +149,10 @@ eq_or_diff(map_boolean('False', 'tonum'), 0, 'Boolean conversion - 2');
 eq_or_diff(map_boolean(1, 'tostring'), 'true', 'Boolean conversion - 3');
 eq_or_diff(map_boolean(0, 'tostring'), 'false', 'Boolean conversion - 4');
 eq_or_diff(map_boolean(0, 'tonum'), 0, 'Boolean conversion - 5');
+
+# Range parsing
+eq_or_diff(parse_range('1--2'), [1,2], 'Range parsing - 1');
+eq_or_diff(parse_range('-2'), [1,2], 'Range parsing - 2');
+eq_or_diff(parse_range('3-'), [3,undef], 'Range parsing - 3');
+eq_or_diff(parse_range('5'), [1,5], 'Range parsing - 4');
+eq_or_diff(parse_range('3--+'), [3,'+'], 'Range parsing - 5');

@@ -119,8 +119,8 @@ start =
           attribute substring_compound { "0" | "1" }?,
           attribute substring_pcompound { "0" | "1" }?,
           attribute ifnamecount { xsd:integer }?,
-          attribute namecount { xsd:integer }?,
-          attribute form { "original" | "translated" | "romanised" | "uniform" }?,
+          attribute namerange { text }?,
+          attribute noalphaothers { "0" | "1" }?,
           xsd:string
         }+
       }+
@@ -373,7 +373,6 @@ sort =
       attribute pad_side { "left" | "right" }?,
       attribute pad_width { xsd:integer }?,
       attribute pad_char { xsd:string { minLength = "1" maxLength = "1" } }?,
-      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
       text
     }+
   }+
@@ -444,7 +443,6 @@ labeltitlespec =
     element bcf:key { "labeltitlespec" },
     element bcf:value {
       attribute order { xsd:integer },
-      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
       attribute lang { text }?,
       text
     }+
@@ -589,7 +587,6 @@ labelnamespec =
     element bcf:key { "labelnamespec" },
     element bcf:value {
       attribute order { xsd:integer },
-      attribute form { "original" | "translated" | "romanised" | "uniform" }?,
       attribute lang { text }?,
       text
     }+

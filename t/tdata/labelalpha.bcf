@@ -137,11 +137,19 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useeditor</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useforeword</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useholder</bcf:key>
+      <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
   <bcf:options component="biblatex" type="collection">
@@ -506,7 +514,7 @@
   <bcf:labelalphatemplate type="misc">
     <bcf:labelelement order="1">
       <bcf:labelpart>label</bcf:labelpart>
-      <bcf:labelpart substring_width="2" namecount="1" substring_side="left">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="2" namerange="1" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">
       <bcf:labelpart>-</bcf:labelpart>
@@ -2109,6 +2117,7 @@
     <bcf:citekey order="39">ignore2</bcf:citekey>
     <bcf:citekey order="40">skipwidthtest1</bcf:citekey>
     <bcf:citekey order="41">prefix1</bcf:citekey>
+    <bcf:citekey order="42">rangetest1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global" sortscheme="nty" type="entry"/>

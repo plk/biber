@@ -310,17 +310,13 @@
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="namecount">
-                      <data type="integer"/>
-                    </attribute>
+                    <attribute name="namerange"/>
                   </optional>
                   <optional>
-                    <attribute name="form">
+                    <attribute name="noalphaothers">
                       <choice>
-                        <value>original</value>
-                        <value>translated</value>
-                        <value>romanised</value>
-                        <value>uniform</value>
+                        <value>0</value>
+                        <value>1</value>
                       </choice>
                     </attribute>
                   </optional>
@@ -987,16 +983,6 @@
                 </data>
               </attribute>
             </optional>
-            <optional>
-              <attribute name="form">
-                <choice>
-                  <value>original</value>
-                  <value>translated</value>
-                  <value>romanised</value>
-                  <value>uniform</value>
-                </choice>
-              </attribute>
-            </optional>
             <text/>
           </element>
         </oneOrMore>
@@ -1176,16 +1162,6 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
-          <optional>
-            <attribute name="form">
-              <choice>
-                <value>original</value>
-                <value>translated</value>
-                <value>romanised</value>
-                <value>uniform</value>
-              </choice>
-            </attribute>
-          </optional>
           <optional>
             <attribute name="lang"/>
           </optional>
@@ -1525,16 +1501,6 @@
           <attribute name="order">
             <data type="integer"/>
           </attribute>
-          <optional>
-            <attribute name="form">
-              <choice>
-                <value>original</value>
-                <value>translated</value>
-                <value>romanised</value>
-                <value>uniform</value>
-              </choice>
-            </attribute>
-          </optional>
           <optional>
             <attribute name="lang"/>
           </optional>

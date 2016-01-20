@@ -353,7 +353,7 @@ sub _label_name {
   return ['',''] unless defined($be->get_labelname_info);
 
   my $namename = $args->[0];
-  my $acc;
+  my $acc = '';# Must initialise to empty string as we need to return a string
   # This contains sortalphaothers instead of alphaothers, if defined
   # This is needed in cases where alphaothers is something like
   # '\textasteriskcentered' which would mess up sorting.
@@ -371,10 +371,6 @@ sub _label_name {
 
   my $names = $be->get_field($realname);
 
-  if (defined($names->get_useprefix)) {
-    $useprefix = $names->get_useprefix;
-  }
-
   # Account for labelname set to short* when testing use* options
   my $lnameopt;
   if ( $realname =~ /\Ashort(\X+)\z/xms ) {
@@ -386,6 +382,11 @@ sub _label_name {
 
   if (Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) and
     $names) {
+
+    if (defined($names->get_useprefix)) {
+      $useprefix = $names->get_useprefix;
+    }
+
     my $numnames  = $names->count_names;
     my $visibility = $names->get_visible_alpha;
 
@@ -393,20 +394,29 @@ sub _label_name {
     my @prefices  = map { $_->get_namepart('prefix') } @{$names->names};
     my @useprefices  = map { if (defined($_->get_useprefix)) {$_->get_useprefix} else {$useprefix} } @{$names->names};
 
-    my $loopnames;
+    # Use name range override, if any
+    my $nr_start;
+    my $nr_end;
+    if (exists($labelattrs->{namerange})) {
+      my $nr = parse_range($labelattrs->{namerange});
+      $nr_start = $nr->[0];
+      $nr_end = $nr->[1];
 
-    # loopnames is the number of names to loop over in the name list when constructing the label
-    if (my $lc = $labelattrs->{namecount}) {
-      if ($lc > $numnames) { # cap at numnames, of course
-        $lc = $numnames;
+      if (defined($nr_end) and
+          $nr_end eq '+') {# minalphanames cap marker
+        $nr_end = $visibility;
       }
-      $loopnames = $lc; # Only look at as many names as specified
+      elsif (not defined($nr_end) or
+          $nr_end > $numnames) { # cap at numnames, of course
+        $nr_end = $numnames;
+      }
     }
     else {
-      $loopnames = $visibility; # Else use bib visibility
+      $nr_start = 1;
+      $nr_end = $visibility; # Else use bib visibility
     }
-
-    for (my $i = 0; $i < $loopnames; $i++) {
+    $logger->trace("$realname/numnames=$numnames/visibility=$visibility/nr_start=$nr_start/nr_end=$nr_end");
+    for (my $i = $nr_start-1; $i < $nr_end; $i++) {
       # Deal with prefix options
       if ($useprefices[$i] and $prefices[$i]) {
         my $w = $labelattrs->{substring_pwidth} // 1;
@@ -427,12 +437,13 @@ sub _label_name {
 
     $sortacc = $acc;
 
-    # Add alphaothers if name list is truncated
-    if ($numnames > $loopnames or $names->get_morenames) {
-      $acc .= $alphaothers // ''; # alphaothers can be undef
-      $sortacc .= $sortalphaothers // ''; # sortalphaothers can be undef
+    # Add alphaothers if name list is truncated unless noalphaothers is specified
+    unless ($labelattrs->{noalphaothers}) {
+      if ($numnames > $nr_end or $names->get_morenames) {
+        $acc .= $alphaothers // ''; # alphaothers can be undef
+        $sortacc .= $sortalphaothers // ''; # sortalphaothers can be undef
+      }
     }
-
     return [$acc, unescape_label($sortacc)];
   }
   else {

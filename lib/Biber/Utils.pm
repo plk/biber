@@ -48,7 +48,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean};
+  locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean parse_range };
 
 =head1 FUNCTIONS
 
@@ -1104,6 +1104,26 @@ sub match_indices {
     $relen += $len;
   }
   return $ret
+}
+
+=head2 parse_range
+
+  Parses a range of values into a two-value array ref.
+  Ranges with no starting value default to "1"
+  Ranges can be open-ended and it's up to surrounding code to interpret this
+  Ranges can be single figures which is shorthand for 1-x
+
+=cut
+
+sub parse_range {
+  my $rs = shift;
+  $rs =~ m/\A\s*(\P{Pd}+)?\s*(\p{Pd})*\s*(\P{Pd}+)?\s*\z/xms;
+  if ($2) {
+    return [$1 // 1, $3];
+  }
+  else {
+    return [1, $1];
+  }
 }
 
 1;
