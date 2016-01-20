@@ -392,10 +392,21 @@ sub name_to_bbl {
   if (defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename;
   }
-  # Add useprefix, if defined
-  if (defined($self->get_useprefix)){
-    push @pno, 'useprefix=' . Biber::Utils::map_boolean($self->get_useprefix, 'tostring');
+
+  # Add per-name options
+  foreach my $pnoname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+    if (defined($self->${\"get_$pnoname"})) {
+      my $pno = $self->${\"get_$pnoname"};
+      if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
+          $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
+        push @pno, "$pnoname=" . Biber::Utils::map_boolean($pno, 'tostring');
+      }
+      else {
+        push @pno, "$pnoname=$pno";
+      }
+    }
   }
+
   # Add the name hash to the options
   push @pno, 'hash=' . $self->get_hash;
   $pno = join(',', @pno);

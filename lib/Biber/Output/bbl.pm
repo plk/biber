@@ -243,19 +243,30 @@ sub set_output_entry {
 
       my $total = $nf->count_names;
 
-      # Add per-list options, if any
       my $lni = $be->get_labelname_info;
       if (defined($lni) and
           $lni eq $namefield) {
         my @plo;
+
         # Add uniquelist, if defined
         if (my $ul = $nf->get_uniquelist){
           push @plo, "uniquelist=$ul";
         }
-        # Add useprefix, if defined
-        if (my $up = $nf->get_useprefix){
-          push @plo, 'useprefix=' . map_boolean($up, 'tostring');
+
+        # Add per-namelist options
+        foreach my $ploname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}}) {
+          if (defined($nf->${\"get_$ploname"})) {
+            my $plo = $nf->${\"get_$ploname"};
+            if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
+                $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
+                  push @plo, "$ploname=" . map_boolean($plo, 'tostring');
+                }
+            else {
+              push @plo, "$ploname=$plo";
+            }
+          }
         }
+
         $plo = join(',', @plo);
       }
       $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
