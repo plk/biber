@@ -5,7 +5,7 @@ use warnings;
 
 use Encode::Alias;
 
-use base 'Exporter';
+use parent 'Exporter';
 
 our @EXPORT = qw{
                   $CONFIG_DEFAULT_BIBER

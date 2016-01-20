@@ -2,7 +2,7 @@ package Biber::Output::bbl;
 use v5.16;
 use strict;
 use warnings;
-use base 'Biber::Output::base';
+use parent 'Biber::Output::base';
 
 use Biber::Config;
 use Biber::Constants;

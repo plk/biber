@@ -3,7 +3,7 @@ use v5.16;
 use strict;
 use warnings;
 use re 'eval';
-use base 'Exporter';
+use parent 'Exporter';
 
 use constant {
   EXIT_OK => 0,

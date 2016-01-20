@@ -62,8 +62,6 @@ t/labelname.t
 t/names.t
 TODO.org
 t/options.t
-t/pod-coverage.t
-t/pod.t
 t/related-entries.t
 t/remote-files.t
 t/ris.t

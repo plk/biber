@@ -2,7 +2,7 @@ package Biber::Input::file::ris;
 use v5.16;
 use strict;
 use warnings;
-use base 'Exporter';
+use parent 'Exporter';
 
 use Carp;
 use Biber::Constants;

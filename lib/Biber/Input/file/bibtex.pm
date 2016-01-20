@@ -3,7 +3,7 @@ use v5.16;
 use strict;
 use warnings;
 use sigtrap qw(handler TBSIG SEGV);
-use base 'Exporter';
+use parent 'Exporter';
 
 use Carp;
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);

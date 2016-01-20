@@ -2,7 +2,7 @@ package Biber;
 use v5.16;
 use strict;
 use warnings;
-use base 'Biber::Internals';
+use parent 'Biber::Internals';
 
 use constant {
   EXIT_OK => 0,
