@@ -5,6 +5,7 @@ use warnings;
 
 use Regexp::Common qw( balanced );
 use Biber::Config;
+use Biber::Constants;
 use Biber::Utils;
 use Data::Dump qw( pp );
 use Log::Log4perl qw( :no_extra_logdie_message );
@@ -13,6 +14,35 @@ use Unicode::Normalize;
 no autovivification;
 
 my $logger = Log::Log4perl::get_logger('main');
+
+# Names of simple package accessor attributes
+my @scalar_attributes = qw (
+                             hash
+                             index
+                             namestring
+                             nameinitstring
+                          );
+
+sub _scalar_accessor {
+  my ($attribute, $package) = @_;
+  no strict 'refs';
+  *{ $package . "::set_$attribute" } = sub {
+    my ($self, $val) = @_;
+    $self->{$attribute} = $val;
+    return;
+  };
+  *{ $package . "::get_$attribute" } = sub {
+    my $self = shift;
+    return $self->{$attribute};
+  };
+}
+
+# Now create accessors for simple attributes
+# These should come from $CONFIG_SCOPEOPT_BIBLATEX{NAME} but this isn't defined so 
+# _scalar_accessor needs to be used elsewhere but then it needs not to be here
+foreach my $attribute ( @scalar_attributes, 'useprefix', 'sortnamekeyscheme', 'gender') {
+  _scalar_accessor($attribute, __PACKAGE__);
+}
 
 =encoding utf-8
 
@@ -31,9 +61,7 @@ sub new {
   my $dm = Biber::Config->get_dm;
   if (%params) {
     my $name = {};
-    foreach my $attr ('sortnamekeyscheme',
-                      'useprefix',
-                      'gender',
+    foreach my $attr (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}},
                       'namestring',
                       'nameinitstring',
                       'strip',
@@ -85,100 +113,6 @@ sub notnull {
 sub was_stripped {
   my ($self, $part) = @_;
   return exists($self->{strip}) ? $self->{strip}{$part} : undef;
-}
-
-=head2 get_useprefix
-
-    Get the useprefix option
-
-=cut
-
-sub get_useprefix {
-  my $self = shift;
-  return $self->{useprefix};
-}
-
-=head2 set_useprefix
-
-    Set the useprefix option
-
-=cut
-
-sub set_useprefix {
-  my ($self, $val) = @_;
-  $self->{useprefix} = $val;
-  return;
-}
-
-=head2 get_sortnamekeyscheme
-
-    Get the sortnamekeyscheme option
-
-=cut
-
-sub get_sortnamekeyscheme {
-  my $self = shift;
-  return $self->{sortnamekeyscheme};
-}
-
-=head2 set_sortnamekeyscheme
-
-    Set the sortnamekeyscheme option
-
-=cut
-
-sub set_sortnamekeyscheme {
-  my ($self, $val) = @_;
-  $self->{sortnamekeyscheme} = $val;
-  return;
-}
-
-=head2 set_hash
-
-    Set a hash for the name
-
-=cut
-
-sub set_hash {
-  my ($self, $hash) = @_;
-  $self->{hash} = $hash;
-  return;
-}
-
-=head2 get_hash
-
-    Get a hash for the name
-
-=cut
-
-sub get_hash {
-  my $self = shift;
-  return $self->{hash};
-}
-
-
-
-=head2 set_index
-
-    Set a field telling what position in the name list the name is
-
-=cut
-
-sub set_index {
-  my ($self, $index) = @_;
-  $self->{index} = $index;
-  return;
-}
-
-=head2 get_index
-
-    Get the index of a Biber::Entry::Name object
-
-=cut
-
-sub get_index {
-  my $self = shift;
-  return $self->{index};
 }
 
 
@@ -323,77 +257,6 @@ sub set_namepart_initial {
   my ($self, $namepart, $val) = @_;
   $self->{$namepart}{initial} = $val;
   return;
-}
-
-=head2 set_gender
-
-    Set gender for a Biber::Entry::Name object
-
-=cut
-
-sub set_gender {
-  my ($self, $val) = @_;
-  $self->{gender} = $val;
-  return;
-}
-
-=head2 get_gender
-
-    Get gender for a Biber::Entry::Name object
-
-=cut
-
-sub get_gender {
-  my $self = shift;
-  return $self->{gender};
-}
-
-
-
-=head2 set_namestring
-
-    Set namestring for a Biber::Entry::Name object
-
-=cut
-
-sub set_namestring {
-  my ($self, $val) = @_;
-  $self->{namestring} = $val;
-  return;
-}
-
-=head2 get_namestring
-
-    Get namestring for a Biber::Entry::Name object
-
-=cut
-
-sub get_namestring {
-  my $self = shift;
-  return $self->{namestring};
-}
-
-=head2 set_nameinitstring
-
-    Set nameinitstring for a Biber::Entry::Name object
-
-=cut
-
-sub set_nameinitstring {
-  my ($self, $val) = @_;
-  $self->{nameinitstring} = $val;
-  return;
-}
-
-=head2 get_nameinitstring
-
-    Get nameinitstring for a Biber::Entry::Name object
-
-=cut
-
-sub get_nameinitstring {
-  my $self = shift;
-  return $self->{nameinitstring};
 }
 
 =head2 name_to_biblatexml {

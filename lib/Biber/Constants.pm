@@ -11,6 +11,7 @@ our @EXPORT = qw{
                   $CONFIG_DEFAULT_BIBER
                   %CONFIG_DEFAULT_BIBLATEX
                   %CONFIG_OPTSCOPE_BIBLATEX
+                  %CONFIG_SCOPEOPT_BIBLATEX
                   %CONFIG_OPTTYPE_BIBLATEX
                   %CONFIG_BIBLATEX_ENTRY_OPTIONS
                   %NOSORT_TYPES
@@ -478,6 +479,8 @@ our %LOCALE_MAP_R = (
 
 # Holds the scope of each of the BibLaTeX configuration options from the .bcf
 our %CONFIG_OPTSCOPE_BIBLATEX;
+# Holds the options in a particular scope
+our %CONFIG_SCOPEOPT_BIBLATEX;
 # Holds the datatype of an option at a particular scope
 our %CONFIG_OPTTYPE_BIBLATEX;
 

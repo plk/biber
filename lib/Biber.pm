@@ -410,10 +410,11 @@ sub parse_ctrlfile {
 
   # Option scope
   foreach my $bcfscopeopts (@{$bcfxml->{optionscope}}) {
-    my $type = $bcfscopeopts->{type};
+    my $scope = $bcfscopeopts->{type};
     foreach my $bcfscopeopt (@{$bcfscopeopts->{option}}) {
       my $opt = $bcfscopeopt->{content};
-      $CONFIG_OPTSCOPE_BIBLATEX{$opt}{$type} = 1;
+      $CONFIG_OPTSCOPE_BIBLATEX{$opt}{$scope} = 1;
+      $CONFIG_SCOPEOPT_BIBLATEX{$scope}{$opt} = 1;
       if (defined($CONFIG_OPTTYPE_BIBLATEX{$opt}) and
           lc($CONFIG_OPTTYPE_BIBLATEX{$opt}) ne lc($bcfscopeopt->{datatype})) {
         biber_warn("Warning: Datatype for biblatex option '$opt' has conflicting values, probably at different scopes. This is not supported.");

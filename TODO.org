@@ -18,6 +18,7 @@
 ** DONE per-namelist, per name
 * DONE hashes use static construction from DM name constants - problem with uniquelist
 * DONE tool mode bltx output should write schema but controlled by option (normal output uses same option)
+* TODO What to do with gender attribute on name?
 * TODO per-names/name options are not in .bcf - matters?
 * TODO per-namelists/per-name options
 ** DONE needs per names/name support in biblatex and in bbl

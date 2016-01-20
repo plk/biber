@@ -369,6 +369,7 @@
   </bcf:optionscope>
   <bcf:optionscope type="NAME">
     <bcf:option datatype="boolean">useprefix</bcf:option>
+    <bcf:option datatype="string">gender</bcf:option>
     <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
   </bcf:optionscope>
   <!-- SOURCEMAP -->
