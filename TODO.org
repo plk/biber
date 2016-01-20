@@ -21,9 +21,9 @@
 * DONE per-names/name options are not in .bcf - matters?
 * TODO per-namelists/per-name options
 ** DONE needs per names/name support in biblatex and in bbl
-** TODO sortnamekeyscheme needs per entry/names/name in bbl and biblatex macro support in formats
-** TODO What to do with gender attribute on name?
-
+** DONE sortnamekeyscheme needs per entry/names/name in bbl
+** TODO biblatex macro support in formats for sortnamekeyscheme
+** DONE What to do with gender attribute on name?
 * TODO Document example in biblatex manual of compound keypart
 * TODO implement patronymic namepart
 * TODO Document year/month (datepart fields) are not allowed in bltxml

@@ -3281,7 +3281,14 @@ sub fetch_data {
     my $name = $datasource->{name};
     my $datatype = $datasource->{datatype};
     if ($datatype eq 'biblatexml') {
-      my $outfile = Biber::Config->getoption('bcf') =~ s/bcf$/rng/r;
+      my $outfile;
+      if (Biber::Config->getoption('tool')) {
+        my $exts = join('|', values %DS_EXTENSIONS);
+        $outfile = Biber::Config->getoption('dsn') =~ s/\.(?:$exts)$/.rng/r;
+      }
+      else {
+        $outfile = Biber::Config->getoption('bcf') =~ s/bcf$/rng/r;
+      }
       unless (Biber::Config->getoption('no_bltxml_schema')) {
         $dm->generate_bltxml_schema($outfile);
       }

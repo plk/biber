@@ -252,14 +252,18 @@ sub name_to_biblatexml {
   my $xml_prefix = $out->{xml_prefix};
   my @attrs;
 
-  # name scope useprefix. Use defined() because this can be 0
-  if ( defined($self->get_useprefix) ) {
-    push @attrs, (useprefix => map_boolean($self->get_useprefix), 'tostring');
-  }
-
-  # name scope sortnamekeyscheme.
-  if (my $snks = $self->get_sortnamekeyscheme) {
-    push @attrs, (sortnamekeyscheme => $snks);
+  # Add per-name options
+  foreach my $pnoname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+    if (defined($self->${\"get_$pnoname"})) {
+      my $pno = $self->${\"get_$pnoname"};
+      if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
+          $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
+        push @attrs, ($pnoname => Biber::Utils::map_boolean($pno, 'tostring'));
+      }
+      else {
+        push @attrs, ($pnoname => $pno);
+      }
+    }
   }
 
   $xml->startTag([$xml_prefix, 'name'], @attrs);

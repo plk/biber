@@ -897,7 +897,8 @@ sub process_entry_options {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)(=?)(.+)?$/;
     if ($2) {
-      if ($CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
+      if ($CONFIG_OPTTYPE_BIBLATEX{lc($1)} and
+          $CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
         _expand_option($1, map_boolean($3, 'tonum'), $citekey);
       }
       else {

@@ -104,10 +104,10 @@ sub set_output_entry {
 
   $xml->startTag([$xml_prefix, 'entry'], id => NFC($key), entrytype => NFC($bee));
 
-  # Id field
-  if (my $ids = $be->get_field('ids')) {
+  # Filter aliases which point to this key an insert them
+  if (my @ids = sort grep {$section->get_citekey_alias($_) eq $key} $section->get_citekey_aliases) {
     $xml->startTag([$xml_prefix, 'ids']);
-    foreach my $id (@$ids) {
+    foreach my $id (@ids) {
       $xml->dataElement([$xml_prefix, 'key'], NFC($id));
     }
   $xml->endTag;
@@ -132,6 +132,10 @@ sub set_output_entry {
     }
   }
 
+  if (my $opts = $be->get_field('options')) {
+    $xml->dataElement([$xml_prefix, 'options'], NFC(join(',', @{filter_entry_options($be->get_field('options'))})));
+  }
+
   # Output name fields
   foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
 
@@ -144,14 +148,19 @@ sub set_output_entry {
       if ( $nf->get_morenames ) {
         push @attrs, (morenames => 1);
       }
-      # name list scope useprefix. Use defined() because this can be 0
-      if ( defined($nf->get_useprefix) ) {
-        push @attrs, (useprefix => map_boolean($nf->get_useprefix), 'tostring');
-      }
 
-      # name list scope sortnamekeyscheme.
-      if (my $snks = $nf->get_sortnamekeyscheme) {
-        push @attrs, (sortnamekeyscheme => $snks);
+      # Add per-namelist options
+      foreach my $ploname (sort keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}}) {
+        if (defined($nf->${\"get_$ploname"})) {
+          my $plo = $nf->${\"get_$ploname"};
+          if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
+              $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
+            push @attrs, ($ploname =>  map_boolean($plo, 'tostring'));
+          }
+          else {
+            push @attrs, ($ploname => $plo);
+          }
+        }
       }
 
       $xml->startTag([$xml_prefix, 'names'], @attrs);
@@ -164,7 +173,7 @@ sub set_output_entry {
   }
 
   # Output list fields
-  foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
+  foreach my $listfield (sort @{$dm->get_fields_of_fieldtype('list')}) {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
 
     # List loop
@@ -219,7 +228,7 @@ sub set_output_entry {
   }
 
   # Range fields
-  foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
+  foreach my $rfield (sort @{$dm->get_fields_of_datatype('range')}) {
     if ( my $rf = $be->get_field($rfield) ) {
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
@@ -261,7 +270,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $dp (keys %dinfo) {
+  foreach my $dp (sort keys %dinfo) {
     if ($dp eq 'MAIN') {
       $xml->startTag([$xml_prefix, 'date']);
     }
