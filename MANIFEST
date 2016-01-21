@@ -79,7 +79,7 @@ t/sort-order.t
 t/sort-uc.t
 t/tool.t
 t/tool-bltxml.t
-tool-bltxml-inout.t
+t/tool-bltxml-inout.t
 t/tdata/basic-misc.bcf
 t/tdata/biber-test.conf
 t/tdata/tool-test.conf
