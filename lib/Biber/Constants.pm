@@ -513,7 +513,7 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
    skipbib           => {OUTPUT => 1},
    skipbiblist       => {OUTPUT => 1},
    skiplab           => {OUTPUT => 1},
-   sortnamekeyscheme => {OUTPUT => 0},
+   sortnamekeyscheme => {OUTPUT => 1},
    uniquelist        => {OUTPUT => 0},
    useauthor         => {OUTPUT => 1},
    useeditor         => {OUTPUT => 1},
