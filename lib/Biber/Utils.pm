@@ -759,6 +759,8 @@ sub filter_entry_options {
 =head2 imatch
 
     Do an interpolating (neg)match using a match RE and a string passed in as variables
+    Using /g on matches so that $1,$2 etc. can be populated from repeated matches of
+    same capture group as well as different groups
 
 =cut
 
@@ -767,10 +769,10 @@ sub imatch {
   return 0 unless $val_match;
   $val_match = qr/$val_match/;
   if ($negmatch) {# "!~" doesn't work here as we need an array returned
-    return $value =~ m/$val_match/xms ? () : (1);
+    return $value =~ m/$val_match/xmsg ? () : (1);
   }
   else {
-    return $value =~ m/$val_match/xms;
+    return $value =~ m/$val_match/xmsg;
   }
 }
 
