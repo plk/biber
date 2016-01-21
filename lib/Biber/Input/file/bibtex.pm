@@ -497,6 +497,8 @@ sub create_entry {
                 # Now re-instate any unescaped $1 .. $9 to get round these being
                 # dynamically scoped and being null when we get here from any
                 # previous map_match
+                # Be aware that imatch() uses m//g so @imatches can have multiple paren group
+                # captures which might be useful
                 $m =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
                 unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
                   # Skip the rest of the map if this step doesn't match and match is final
