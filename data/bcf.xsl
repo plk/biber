@@ -185,6 +185,9 @@
           .map_final {
             color: #FF0000;
           }
+          .map_newentry {
+            color: #00BB00;
+          }
           .map_origentrytype {
             color: #04FF04;
           }
@@ -367,6 +370,10 @@
                           <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>@<xsl:value-of select="./@map_type_target"/>
                         </xsl:if>
                       </xsl:if>
+                      <xsl:if test="./@map_entry_new">
+                        <span><xsl:attribute name="class">map_newentry</xsl:attribute>NEW <xsl:value-of
+                        select="./@map_entry_newtype"/> created with key &quot;<xsl:value-of select="./@map_entry_new"/>&quot;</span>
+                      </xsl:if>
                       <xsl:if test="./@map_field_source">
                         <span><xsl:if test="./@map_final='1'">
                           <xsl:attribute name="class">map_final</xsl:attribute>
@@ -387,7 +394,14 @@
                         <xsl:if test="./@map_field_value">=&quot;<xsl:value-of select="./@map_field_value"/>&quot;</xsl:if>
                         <xsl:if test="./@map_origentrytype='1'">=<span class="map_origentrytype">TYPE</span></xsl:if>
                         <xsl:if test="./@map_origfield='1'">=<span class="map_origfield">FIELD</span></xsl:if>
-                        <xsl:if test="./@map_origfieldval='1'">=<span class="map_origfieldval">FIELDVAL</span></xsl:if></xsl:if></td></tr>
+                        <xsl:if test="./@map_origfieldval='1'">=<span
+                        class="map_origfieldval">FIELDVAL</span></xsl:if></xsl:if>
+                        <xsl:if test="./@map_entrytarget">
+                          <span><xsl:attribute
+                                    name="class">map_newentry</xsl:attribute>
+                          applied to target &quot;<xsl:value-of select="./@map_entrytarget"/>&quot;</span>
+                        </xsl:if>
+                    </td></tr>
                   </xsl:for-each>
                 </tbody>
               </table>

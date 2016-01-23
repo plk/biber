@@ -94,6 +94,14 @@ start =
 
 datamodel =
   element datamodel {
+    # Constants
+    element constants {
+      element constant {
+        attribute type { "string" | "list" }?,
+        attribute name { text },
+        text
+      }+
+    },
     # Valid entrytypes
     element entrytypes {
       element entrytype {
@@ -227,8 +235,6 @@ element inheritance {
   }*
 }
 
-
-
 map =
   element map {
     attribute map_overwrite { "0" | "1" }?,
@@ -253,6 +259,9 @@ map =
           attribute map_replace { xsd:string {minLength="1"} }?
         ) |
         (
+          ( attribute map_entry_new { xsd:string {minLength="1"} },
+            attribute map_entry_newtype { xsd:string {minLength="1"} })?,
+          attribute map_entrytarget { xsd:string {minLength="1"} }?,
           attribute map_field_set { xsd:string {minLength="1"} },
           attribute map_append { "1" }?,
           attribute map_final { "1" }?,

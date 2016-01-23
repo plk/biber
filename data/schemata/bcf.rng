@@ -1747,6 +1747,25 @@
               </optional>
             </group>
             <group>
+              <optional>
+                <attribute name="map_entry_new">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+                <attribute name="map_entry_newtype">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_entrytarget">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
               <attribute name="map_field_set">
                 <data type="string">
                   <param name="minLength">1</param>

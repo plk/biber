@@ -9,7 +9,6 @@ no autovivification;
 use Data::Dump;
 use Biber::Config;
 use Log::Log4perl qw( :no_extra_logdie_message );
-use Storable qw( dclone );
 my $logger = Log::Log4perl::get_logger('main');
 
 # Names of simple package accessor attributes

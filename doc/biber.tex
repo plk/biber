@@ -818,6 +818,18 @@ examples. A \opt{map} element looks like this:
 datasource entry being processed. A \opt{map\_step} works like this:
 
 \begin{itemize}
+\item If \textcolor{blue}{\texttt{map\_entry\_new}} is set, a new entry is
+  created with the entry key given as the value 
+  to \textcolor{blue}{\texttt{map\_entry\_new}} and the entry type given in
+  the option \textcolor{blue}{\texttt{map\_entry\_newtype}}. This 
+  entry is only in-scope during the processing of the current entry and can be referenced by   
+  \textcolor{blue}{\texttt{map\_entrytarget}}.
+\item When a \textcolor{blue}{\texttt{map\_field\_set}} step has
+  \textcolor{blue}{\texttt{map\_entrytarget}} set to the entrykey of an
+  entry created by \textcolor{blue}{\texttt{map\_entry\_new}}, the target
+  for the field set will be the \textcolor{blue}{\texttt{map\_entrytarget}}
+  entry rather than the entry being currently processed. This allows users
+  to create new entries and set fields in them.
 \item If \textcolor{blue}{\texttt{map\_entry\_null}} is set,
   processing of the \opt{map} immediately terminates and the current
   entry is not created. It is as if it did not exist in the

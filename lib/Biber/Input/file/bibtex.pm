@@ -359,16 +359,10 @@ sub create_entry {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
-  my $bibentry = new Biber::Entry;
-  $logger->debug("Creating entry with key '$key'");
-
-  $bibentry->set_field('citekey', $key);
   my $ds = $section->get_keytods($key);
 
   if ( $entry->metatype == BTE_REGULAR ) {
-
-    # Save pre-mapping data. Might be useful somewhere
-    $bibentry->set_field('rawdata', biber_decode_utf8($entry->print_s));
+    my %newentries; # In case we create a new entry in a map
 
     # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
     foreach my $smap (@$smaps) {
@@ -414,6 +408,26 @@ sub create_entry {
             return 0; # don't create an entry at all
           }
 
+          # new entry
+          if (my $newkey = $step->{map_entry_new}) {
+            my $newentrytype;
+            unless ($newentrytype = $step->{map_entry_newtype}) {
+              biber_warn("Source mapping (type=$level, key=$key): Missing type for new entry '$newkey', skipping step ...");
+              next;
+            }
+            $logger->debug("Source mapping (type=$level, key=$key): Creating new entry with key '$newkey'");
+            my $newentry = new Text::BibTeX::Entry;
+            $newentry->set_metatype(BTE_REGULAR);
+            $newentry->set_key(encode('UTF-8', NFC($newkey)));
+            $newentry->set_type(encode('UTF-8', NFC($newentrytype)));
+
+            # for allkeys sections initially
+            if ($section->is_allkeys) {
+              $section->add_citekeys($newkey);
+            }
+            $newentries{$newkey} = $newentry;
+          }
+
           # entry clone
           if (my $prefix = $step->{map_entry_clone}) {
             $logger->debug("Source mapping (type=$level, key=$key): cloning entry with prefix '$prefix'");
@@ -428,6 +442,18 @@ sub create_entry {
             if ($section->is_allkeys) {
               $section->add_citekeys("$prefix$key");
             }
+          }
+
+          # An entry created by map_entry_new previously
+          my $etarget;
+          if (my $etargetkey = $step->{map_entrytarget}) {
+            unless ($etarget = $newentries{$etargetkey}) {
+              biber_warn("Source mapping (type=$level, key=$key): Dynamically created entry target '$etargetkey' does not exist skipping step ...");
+              next;
+            }
+          }
+          else {
+            $etarget = $entry;
           }
 
           # Entrytype map
@@ -452,7 +478,7 @@ sub create_entry {
 
           # Field map
           if (my $source = $step->{map_field_source}) {
-            # key is a psudo-field. It's guaranteed to exist so
+            # key is a pseudo-field. It's guaranteed to exist so
             # just check if that's what's being asked for
             unless (lc($source) eq 'entrykey' or
                     $entry->exists(lc($source))) {
@@ -533,7 +559,7 @@ sub create_entry {
                   next;
                 }
               }
-              $entry->set(lc($target), encode('UTF-8', NFC(biber_decode_utf8($entry->get(lc($source))))));
+              $etarget->set(lc($target), encode('UTF-8', NFC(biber_decode_utf8($entry->get(lc($source))))));
               $entry->delete(lc($source));
             }
           }
@@ -547,7 +573,7 @@ sub create_entry {
               $entry->delete(lc($field));
             }
             else {
-              if ($entry->exists(lc($field))) {
+              if ($etarget->exists(lc($field))) {
                 unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
                   if ($step->{map_final}) {
                     # map_final is set, ignore and skip rest of step
@@ -563,22 +589,22 @@ sub create_entry {
               }
 
               # If append is set, keep the original value and append the new
-              my $orig = $step->{map_append} ? biber_decode_utf8($entry->get(lc($field))) : '';
+              my $orig = $step->{map_append} ? biber_decode_utf8($etarget->get(lc($field))) : '';
 
               if ($step->{map_origentrytype}) {
                 next unless $last_type;
                 $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${last_type}'");
-                $entry->set(lc($field), encode('UTF-8', NFC($orig . $last_type)));
+                $etarget->set(lc($field), encode('UTF-8', NFC($orig . $last_type)));
               }
               elsif ($step->{map_origfieldval}) {
                 next unless $last_fieldval;
                 $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${last_fieldval}'");
-                $entry->set(lc($field), encode('UTF-8', NFC($orig . $last_fieldval)));
+                $etarget->set(lc($field), encode('UTF-8', NFC($orig . $last_fieldval)));
               }
               elsif ($step->{map_origfield}) {
                 next unless $last_field;
                 $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${last_field}'");
-                $entry->set(lc($field), encode('UTF-8', NFC($orig . $last_field)));
+                $etarget->set(lc($field), encode('UTF-8', NFC($orig . $last_field)));
               }
               else {
                 my $fv = $step->{map_field_value};
@@ -587,7 +613,7 @@ sub create_entry {
                 # previous map_match
                 $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
                 $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${fv}'");
-                $entry->set(lc($field), encode('UTF-8', NFC($orig . $fv)));
+                $etarget->set(lc($field), encode('UTF-8', NFC($orig . $fv)));
               }
             }
           }
@@ -595,42 +621,56 @@ sub create_entry {
       }
     }
 
-    my $entrytype = biber_decode_utf8($entry->type);
+    # Need to also instantiate fields in any new entries created by map
+    foreach my $e ($entry, values %newentries) {
+      next unless $e; # newentry might be undef
 
-    # We put all the fields we find modulo field aliases into the object
-    # validation happens later and is not datasource dependent
-    foreach my $f ($entry->fieldlist) {
+      my $bibentry = new Biber::Entry;
+      my $key = biber_decode_utf8($e->key);
 
-      # In tool mode, keep the raw data fields
-      if (Biber::Config->getoption('tool')) {
-        $bibentry->set_rawfield($f, biber_decode_utf8($entry->get($f)));
+      $bibentry->set_field('citekey', $key);
+      $logger->debug("Creating entry with key '$key'");
+
+      # Save pre-mapping data. Might be useful somewhere
+      $bibentry->set_field('rawdata', biber_decode_utf8($e->print_s));
+
+      my $entrytype = biber_decode_utf8($e->type);
+
+      # We put all the fields we find modulo field aliases into the object
+      # validation happens later and is not datasource dependent
+      foreach my $f ($e->fieldlist) {
+
+        # In tool mode, keep the raw data fields
+        if (Biber::Config->getoption('tool')) {
+          $bibentry->set_rawfield($f, biber_decode_utf8($e->get($f)));
+        }
+
+        # We have to process local options as early as possible in order
+        # to make them available for things that need them like parsename()
+        if ($f eq 'options') {
+          my $value = biber_decode_utf8($e->get($f));
+          my $Srx = Biber::Config->getoption('xsvsep');
+          my $S = qr/$Srx/;
+          process_entry_options($key, [ split(/$S/, $value) ]);
+          # Save the raw options in case we are to output another input format like
+          # biblatexml
+          $bibentry->set_field('rawoptions', $value);
+        }
+
+        # Now run any defined handler
+        if ($dm->is_field($f)) {
+          my $handler = _get_handler($f);
+          &$handler($bibentry, $e, $f, $key);
+        }
+        elsif (Biber::Config->getoption('validate_datamodel')) {
+          biber_warn("Datamodel: Entry '$key' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
+        }
       }
 
-      # We have to process local options as early as possible in order
-      # to make them available for things that need them like parsename()
-      if ($f eq 'options') {
-        my $value = biber_decode_utf8($entry->get($f));
-        my $Srx = Biber::Config->getoption('xsvsep');
-        my $S = qr/$Srx/;
-        process_entry_options($key, [ split(/$S/, $value) ]);
-        # Save the raw options in case we are to output another input format like
-        # biblatexml
-        $bibentry->set_field('rawoptions', $value);
-      }
-
-      # Now run any defined handler
-      if ($dm->is_field($f)) {
-        my $handler = _get_handler($f);
-        &$handler($bibentry, $entry, $f, $key);
-      }
-      elsif (Biber::Config->getoption('validate_datamodel')) {
-        biber_warn("Datamodel: Entry '$key' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
-      }
+      $bibentry->set_field('entrytype', $entrytype);
+      $bibentry->set_field('datatype', 'bibtex');
+      $bibentries->add_entry($key, $bibentry);
     }
-
-    $bibentry->set_field('entrytype', $entrytype);
-    $bibentry->set_field('datatype', 'bibtex');
-    $bibentries->add_entry($key, $bibentry);
   }
   return 1;
 }

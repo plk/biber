@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 59;
+use Test::More tests => 60;
 use Test::Differences;
 unified_diff;
 
@@ -71,7 +71,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1} ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 newtestkey } ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
@@ -485,3 +485,14 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
 # ISBN options tests
 eq_or_diff($out->get_output_entry('isbn1', $main), $isbn1, 'ISBN options - 1');
 eq_or_diff($out->get_output_entry('isbn2', $main), $isbn2, 'ISBN options - 2');
+
+my $new1 = q|    \entry{newtestkey}{book}{}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{note}{note}
+      \field{usera}{RC-6947}
+    \endentry
+|;
+
+# New entry map test
+eq_or_diff($out->get_output_entry('newtestkey', $main), $new1, 'New key mapping - 1');

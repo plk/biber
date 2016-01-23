@@ -680,6 +680,9 @@ map =
           attribute map_replace { xsd:string {minLength="1"} }?
         ) |
         (
+          ( attribute map_entry_new { xsd:string {minLength="1"} },
+            attribute map_entry_newtype { xsd:string {minLength="1"} })?,
+          attribute map_entrytarget { xsd:string {minLength="1"} }?,
           attribute map_field_set { xsd:string {minLength="1"} },
           attribute map_append { "1" }?,
           attribute map_final { "1" }?,

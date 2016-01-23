@@ -10,7 +10,6 @@ use Data::Dump qw( pp );
 use Digest::MD5 qw( md5_hex );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
-use Storable qw( dclone );
 
 my $logger = Log::Log4perl::get_logger('main');
 

@@ -430,6 +430,23 @@
   </start>
   <define name="datamodel">
     <element name="datamodel">
+      <!-- Constants -->
+      <element name="constants">
+        <oneOrMore>
+          <element name="constant">
+            <optional>
+              <attribute name="type">
+                <choice>
+                  <value>string</value>
+                  <value>list</value>
+                </choice>
+              </attribute>
+            </optional>
+            <attribute name="name"/>
+            <text/>
+          </element>
+        </oneOrMore>
+      </element>
       <!-- Valid entrytypes -->
       <element name="entrytypes">
         <oneOrMore>
@@ -883,6 +900,25 @@
               </optional>
             </group>
             <group>
+              <optional>
+                <attribute name="map_entry_new">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+                <attribute name="map_entry_newtype">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_entrytarget">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
               <attribute name="map_field_set">
                 <data type="string">
                   <param name="minLength">1</param>
