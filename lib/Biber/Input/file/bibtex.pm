@@ -421,6 +421,10 @@ sub create_entry {
             $newentry->set_key(encode('UTF-8', NFC($newkey)));
             $newentry->set_type(encode('UTF-8', NFC($newentrytype)));
 
+            # found a new entry key, remove it from the list of keys we want since we
+            # have "found" it by creating it
+            @$rkeys = grep {$newkey ne $_} @$rkeys;
+
             # for allkeys sections initially
             if ($section->is_allkeys) {
               $section->add_citekeys($newkey);
