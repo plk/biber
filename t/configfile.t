@@ -137,9 +137,9 @@ my $sourcemap = [
       {
         map_step => [
         { map_field_source => "TYPE", map_match => "resreport", map_final => "1" },
-        { map_entry_new => "loopkey:\$MAPLOOP", map_entry_newtype => "book" },
+        { map_entry_new => "loopkey:\$MAPLOOP:\$MAPUNIQ", map_entry_newtype => "book" },
         ],
-        foreach => "USERA",
+        map_foreach => "USERA",
       },
       {
        map_step => [{ map_field_source => "TYPE", map_match => "resreport", map_final => "1" },
