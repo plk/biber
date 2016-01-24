@@ -352,8 +352,8 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  # We have to pass in $rkeys so that the clone operation can remove the clone
-  # key from the list of wanted keys because cloned entries will never appear to the normal
+  # We have to pass in $rkeys so that the new/clone operations can remove the new/clone
+  # key from the list of wanted keys because new/cloned entries will never appear to the normal
   # key search loop
   my ($key, $entry, $source, $smaps, $rkeys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
@@ -448,16 +448,19 @@ sub create_entry {
             }
           }
 
-          # An entry created by map_entry_new previously
+          # An entry created by map_entry_new previously can be the target for field setting
+          # options
           my $etarget;
-          if (my $etargetkey = $step->{map_entrytarget}) {
+          my $etargetkey;
+          if ($etargetkey = $step->{map_entrytarget}) {
             unless ($etarget = $newentries{$etargetkey}) {
               biber_warn("Source mapping (type=$level, key=$key): Dynamically created entry target '$etargetkey' does not exist skipping step ...");
               next;
             }
           }
-          else {
+          else {# default is that we operate on the same entry
             $etarget = $entry;
+            $etargetkey = $key;
           }
 
           # Entrytype map
@@ -550,16 +553,16 @@ sub create_entry {
 
               # Can't remap entry key pseudo-field
               if (lc($source) eq 'entrykey') {
-                $logger->debug("Source mapping (type=$level, key=$key): Field '$source' is 'entrykey'- cannot map this to a new field as you must have an entrykey, skipping ...");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$source' is 'entrykey'- cannot map this to a new field as you must have an entrykey, skipping ...");
                 next;
               }
 
               if ($entry->exists(lc($target))) {
                 if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                  $logger->debug("Source mapping (type=$level, key=$key): Overwriting existing field '$target'");
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field '$target'");
                 }
                 else {
-                  $logger->debug("Source mapping (type=$level, key=$key): Field '$source' is aliased to field '$target' but both are defined, skipping ...");
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$source' is aliased to field '$target' but both are defined, skipping ...");
                   next;
                 }
               }
@@ -581,12 +584,12 @@ sub create_entry {
                 unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
                   if ($step->{map_final}) {
                     # map_final is set, ignore and skip rest of step
-                    $logger->debug("Source mapping (type=$level, key=$key): Field '" . lc($field) . "' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '" . lc($field) . "' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
                     next MAP;
                   }
                   else {
                     # just ignore this step
-                    $logger->debug("Source mapping (type=$level, key=$key): Field '" . lc($field) . "' exists and overwrite is not set, skipping step ...");
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '" . lc($field) . "' exists and overwrite is not set, skipping step ...");
                     next;
                   }
                 }
@@ -597,17 +600,17 @@ sub create_entry {
 
               if ($step->{map_origentrytype}) {
                 next unless $last_type;
-                $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${last_type}'");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '" . lc($field) . "' to '${orig}${last_type}'");
                 $etarget->set(lc($field), encode('UTF-8', NFC($orig . $last_type)));
               }
               elsif ($step->{map_origfieldval}) {
                 next unless $last_fieldval;
-                $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${last_fieldval}'");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '" . lc($field) . "' to '${orig}${last_fieldval}'");
                 $etarget->set(lc($field), encode('UTF-8', NFC($orig . $last_fieldval)));
               }
               elsif ($step->{map_origfield}) {
                 next unless $last_field;
-                $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${last_field}'");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '" . lc($field) . "' to '${orig}${last_field}'");
                 $etarget->set(lc($field), encode('UTF-8', NFC($orig . $last_field)));
               }
               else {
@@ -616,7 +619,7 @@ sub create_entry {
                 # dynamically scoped and being null when we get here from any
                 # previous map_match
                 $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-                $logger->debug("Source mapping (type=$level, key=$key): Setting field '" . lc($field) . "' to '${orig}${fv}'");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '" . lc($field) . "' to '${orig}${fv}'");
                 $etarget->set(lc($field), encode('UTF-8', NFC($orig . $fv)));
               }
             }
@@ -630,10 +633,10 @@ sub create_entry {
       next unless $e; # newentry might be undef
 
       my $bibentry = new Biber::Entry;
-      my $key = biber_decode_utf8($e->key);
+      my $k = biber_decode_utf8($e->key);
 
-      $bibentry->set_field('citekey', $key);
-      $logger->debug("Creating entry with key '$key'");
+      $bibentry->set_field('citekey', $k);
+      $logger->debug("Creating entry with key '$k'");
 
       # Save pre-mapping data. Might be useful somewhere
       $bibentry->set_field('rawdata', biber_decode_utf8($e->print_s));
@@ -655,7 +658,7 @@ sub create_entry {
           my $value = biber_decode_utf8($e->get($f));
           my $Srx = Biber::Config->getoption('xsvsep');
           my $S = qr/$Srx/;
-          process_entry_options($key, [ split(/$S/, $value) ]);
+          process_entry_options($k, [ split(/$S/, $value) ]);
           # Save the raw options in case we are to output another input format like
           # biblatexml
           $bibentry->set_field('rawoptions', $value);
@@ -664,16 +667,16 @@ sub create_entry {
         # Now run any defined handler
         if ($dm->is_field($f)) {
           my $handler = _get_handler($f);
-          &$handler($bibentry, $e, $f, $key);
+          &$handler($bibentry, $e, $f, $k);
         }
         elsif (Biber::Config->getoption('validate_datamodel')) {
-          biber_warn("Datamodel: Entry '$key' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
+          biber_warn("Datamodel: Entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
         }
       }
 
       $bibentry->set_field('entrytype', $entrytype);
       $bibentry->set_field('datatype', 'bibtex');
-      $bibentries->add_entry($key, $bibentry);
+      $bibentries->add_entry($k, $bibentry);
     }
   }
   return 1;

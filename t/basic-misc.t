@@ -491,6 +491,7 @@ my $new1 = q|    \entry{newtestkey}{book}{}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{note}{note}
       \field{usera}{RC-6947}
+      \field{userb}{RC}
     \endentry
 |;
 
