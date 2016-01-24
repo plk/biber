@@ -52,6 +52,7 @@ Biber::Config - Configuration items which need to be saved across the
 
 # Static (class) data
 our $CONFIG;
+
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{seenwork} = {};
 
@@ -610,6 +611,7 @@ sub postprocess_biber_opts {
     }
   }
 }
+
 
 =head2 set_dm
 

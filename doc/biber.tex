@@ -773,11 +773,11 @@ allows you to do a particular thing or combination of things:
 examples. A \opt{map} element looks like this:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<map +\textcolor{blue}{map\_overwrite="0|1"}+>
+<map +\textcolor{blue}{map\_overwrite="0|1"} \textcolor{blue}{map\_foreach="\textcolor{red}{loopfield}"}+>
   +\textcolor{blue}{<per\_datasource>\textcolor{red}{datasource}</per\_datasource>}+
   +\textcolor{blue}{<per\_type>\textcolor{red}{entrytype}</per\_type>}+
   +\textcolor{blue}{<per\_nottype>\textcolor{red}{entrytype}</per\_nottype>}+
-  <map_step +\textcolor{blue}{map\_type\_source="\textcolor{red}{source-entrytype}"}+
+  <map_step  +\textcolor{blue}{map\_type\_source="\textcolor{red}{source-entrytype}"}+
              +\textcolor{blue}{map\_field\_source="\textcolor{red}{source-field}"}+
              +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-entrytype}"}+
              +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
@@ -786,6 +786,9 @@ examples. A \opt{map} element looks like this:
              +\textcolor{blue}{map\_replace="\textcolor{red}{replace-regexp}"}+
              +\textcolor{blue}{map\_field\_set="\textcolor{red}{set-field}"}+
              +\textcolor{blue}{map\_field\_value="\textcolor{red}{set-value}"}+
+             +\textcolor{blue}{map\_entry\_new="\textcolor{red}{newentrykey}"}+
+             +\textcolor{blue}{map\_entry\_newtype="\textcolor{red}{newentrykeytype}"}+
+             +\textcolor{blue}{map\_entry\_entrytarget="\textcolor{red}{newentrykey}"}+
              +\textcolor{blue}{map\_append="1"}+
              +\textcolor{blue}{map\_null="1"}+
              +\textcolor{blue}{map\_entry\_null="1"}+
@@ -812,6 +815,15 @@ examples. A \opt{map} element looks like this:
 \item The \texttt{map\_overwrite} attribute can be used to override the
   value for this attribute set on the parent \opt{maps} element. If
   omitted, it defaults to the parent \opt{maps} attribute value.
+\item The \texttt{map\_foreach} attribute loops over all \cmd{step}s in
+  this \cmd{map}, setting the special variable \verb+$MAPLOOP+ to each of
+  the comma-separated values contained in the entry field
+  \textcolor{red}{\texttt{loopfield}}. This allows the user to repeat a
+  group of \opt{map\_step}s for each value of another CSV field. Using
+  regexp maps, it is possible to create a CSV field for use with this
+  functionality. The special variable \verb+$MAPUNIQ+ may also be used the
+  \opt{map\_step}s to generate a random unique string. This can be useful when
+  creating keys for new entries.
 \end{itemize}
 
 \noindent Each \opt{map\_step} is looked at in turn and compared with the
@@ -819,10 +831,11 @@ datasource entry being processed. A \opt{map\_step} works like this:
 
 \begin{itemize}
 \item If \textcolor{blue}{\texttt{map\_entry\_new}} is set, a new entry is
-  created with the entry key given as the value 
-  to \textcolor{blue}{\texttt{map\_entry\_new}} and the entry type given in
-  the option \textcolor{blue}{\texttt{map\_entry\_newtype}}. This 
-  entry is only in-scope during the processing of the current entry and can be referenced by   
+  created with the entry key \textcolor{red}{\texttt{newentrykey}} and the
+  entry type \textcolor{red}{\texttt{newentrykeytype}} given in the option
+  \textcolor{blue}{\texttt{map\_entry\_newtype}}. This entry is only
+  in-scope during the processing of the current entry and can be referenced
+  by \textcolor{red}{\texttt{newentrykeytype}} given as the value to
   \textcolor{blue}{\texttt{map\_entrytarget}}.
 \item When a \textcolor{blue}{\texttt{map\_field\_set}} step has
   \textcolor{blue}{\texttt{map\_entrytarget}} set to the entrykey of an

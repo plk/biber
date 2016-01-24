@@ -238,6 +238,7 @@ element inheritance {
 map =
   element map {
     attribute map_overwrite { "0" | "1" }?,
+    attribute map_foreach { xsd:string {minLength="1"} }?,
     element per_datasource { xsd:string {minLength="1"} }*,
     element per_type { xsd:string {minLength="1"} }*,
     element map_step {

@@ -114,7 +114,8 @@ my $bibentries = $section->bibentries;
 
 $out = $biber->get_output_obj;
 
-@keys = sort map {lc()} $section->get_citekeys;
+# Strip out loopkeys because they contain a variable key
+@keys = sort grep {$_ !~ m/^loopkey/} map {lc()} $section->get_citekeys;
 
 is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 

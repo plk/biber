@@ -659,6 +659,7 @@ sortalphaothers =
 map =
   element bcf:map {
     attribute map_overwrite { "0" | "1" }?,
+    attribute map_foreach { xsd:string {minLength="1"} }?,
     element bcf:per_datasource { xsd:string {minLength="1"} }*,
     element bcf:per_type { xsd:string {minLength="1"} }*,
     element bcf:map_step {

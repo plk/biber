@@ -820,6 +820,13 @@
           </choice>
         </attribute>
       </optional>
+      <optional>
+        <attribute name="map_foreach">
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </attribute>
+      </optional>
       <zeroOrMore>
         <element name="per_datasource">
           <data type="string">

@@ -129,6 +129,19 @@ my $sourcemap = [
         per_datasource => [{ content => "examples.bib" }],
       },
       {
+        map_step => [
+        { map_field_source => "TYPE", map_match => "resreport", map_final => "1" },
+        { map_field_set => "USERA", map_field_value => "a, b,c" }
+        ],
+      },
+      {
+        map_step => [
+        { map_field_source => "TYPE", map_match => "resreport", map_final => "1" },
+        { map_entry_new => "loopkey:\$MAPLOOP", map_entry_newtype => "book" },
+        ],
+        foreach => "USERA",
+      },
+      {
        map_step => [{ map_field_source => "TYPE", map_match => "resreport", map_final => "1" },
                     { map_entry_new => "newtestkey", map_entry_newtype => "book" },
                     { map_entrytarget => "newtestkey", map_field_set => "NOTE", map_field_value => "note" },

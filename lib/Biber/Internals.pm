@@ -32,7 +32,7 @@ Biber::Internals - Internal methods for processing the bibliographic data
 my $logger = Log::Log4perl::get_logger('main');
 
 # Hashes should not care about use* or sorting name key scheme etc. We want to generat hashes
-# unique to a name, not a particualr representation of a name. So, always statically concatenate
+# unique to a name, not a particular representation of a name. So, always statically concatenate
 # nameparts from the data model list of valid nameparts
 sub _getnamehash {
   my ($self, $citekey, $names) = @_;

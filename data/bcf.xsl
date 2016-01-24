@@ -355,6 +355,9 @@
                       <xsl:value-of select="./text()"/>
                       <xsl:if test="not(position()=last())">, </xsl:if>
                     </xsl:for-each>
+                  </xsl:if>
+                  <xsl:if test="./@map_foreach">
+                    , foreach loop field=<xsl:value-of select="./@map_foreach"/>
                   </xsl:if>)</td>
                   </tr>
                 </thead>
