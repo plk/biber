@@ -2086,7 +2086,7 @@ sub process_lists {
     if (my $filters = $list->get_filters) {
       my $flist = [];
 KEYLOOP: foreach my $k ($list->get_keys) {
-        # Filter out skipbiblist entries as a special case in 'shorthand' type lists
+        # Filter out skipbiblist entries as a special case in 'list' type biblists
         if ($list->get_type eq 'list') {
           next if Biber::Config->getblxoption('skipbiblist', $section->bibentry($k)->get_field('entrytype'), $k);
         }
