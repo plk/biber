@@ -914,6 +914,28 @@ sub process_entry_options {
   return;
 }
 
+sub _expand_option {
+  my ($opt, $val, $citekey) = @_;
+  my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($opt)}{INPUT};
+  # Standard option
+  if (not defined($cfopt)) {
+    Biber::Config->setblxoption($opt, $val, 'ENTRY', $citekey);
+  }
+  # Set all split options to same value as parent
+  elsif (ref($cfopt) eq 'ARRAY') {
+    foreach my $k (@$cfopt) {
+      Biber::Config->setblxoption($k, $val, 'ENTRY', $citekey);
+    }
+  }
+  # Specify values per all splits
+  elsif (ref($cfopt) eq 'HASH') {
+    foreach my $k (keys %$cfopt) {
+      Biber::Config->setblxoption($k, $cfopt->{$k}, 'ENTRY', $citekey);
+    }
+  }
+  return;
+}
+
 =head2 parse_date
 
   Simple parse of ISO8601 dates because not decent module exists for this that
@@ -951,28 +973,6 @@ sub biber_decode_utf8 {
 sub out {
   my ($fh, $string) = @_;
   print $fh NFC($string);# Unicode NFC boundary
-}
-
-sub _expand_option {
-  my ($opt, $val, $citekey) = @_;
-  my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($opt)}{INPUT};
-  # Standard option
-  if (not defined($cfopt)) {
-    Biber::Config->setblxoption($opt, $val, 'ENTRY', $citekey);
-  }
-  # Set all split options to same value as parent
-  elsif (ref($cfopt) eq 'ARRAY') {
-    foreach my $k (@$cfopt) {
-      Biber::Config->setblxoption($k, $val, 'ENTRY', $citekey);
-    }
-  }
-  # Specify values per all splits
-  elsif (ref($cfopt) eq 'HASH') {
-    foreach my $k (keys %$cfopt) {
-      Biber::Config->setblxoption($k, $cfopt->{$k}, 'ENTRY', $citekey);
-    }
-  }
-  return;
 }
 
 =head2 process_comment

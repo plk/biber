@@ -1555,9 +1555,10 @@ sub process_sets {
     # Enforce Biber parts of virtual "dataonly" for set members
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
-      process_entry_options($member, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
-
       my $me = $section->bibentry($member);
+      process_entry_options($member, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
+      $me->set_field('options', ['skiplab,skipbiblist']);
+
       if ($me->get_field('entryset')) {
         biber_warn("Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'", $me);
         $me->del_field('entryset');
@@ -1574,7 +1575,9 @@ sub process_sets {
   # had skips set by being seen as a member of that set yet
   else {
     if (Biber::Config->get_set_parents($citekey)) {
+      my $me = $section->bibentry($citekey);
       process_entry_options($citekey, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
+      $me->set_field('options', ['skiplab,skipbiblist']);
     }
   }
 }
@@ -2086,10 +2089,6 @@ sub process_lists {
     if (my $filters = $list->get_filters) {
       my $flist = [];
 KEYLOOP: foreach my $k ($list->get_keys) {
-        # Filter out skipbiblist entries as a special case in 'list' type biblists
-        if ($list->get_type eq 'list') {
-          next if Biber::Config->getblxoption('skipbiblist', $section->bibentry($k)->get_field('entrytype'), $k);
-        }
 
         $logger->debug("Checking key '$k' in list '$lname' against list filters");
         my $be = $section->bibentry($k);

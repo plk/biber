@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 8;
+use Test::More tests => 7;
 use Test::Differences;
 unified_diff;
 
@@ -67,7 +67,7 @@ my $string1 = q|    \entry{DynSet}{set}{}
     \endentry
 |;
 
-my $string2 = q|    \entry{Dynamic1}{book}{}
+my $string2 = q|    \entry{Dynamic1}{book}{skiplab,skipbiblist}
       \inset{DynSet}
       \name{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
@@ -85,7 +85,7 @@ my $string2 = q|    \entry{Dynamic1}{book}{}
     \endentry
 |;
 
-my $string3 = q|    \entry{Dynamic2}{book}{}
+my $string3 = q|    \entry{Dynamic2}{book}{skiplab,skipbiblist}
       \inset{DynSet}
       \name{author}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
@@ -102,7 +102,7 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
     \endentry
 |;
 
-my $string4 = q|    \entry{Dynamic3}{book}{}
+my $string4 = q|    \entry{Dynamic3}{book}{skiplab,skipbiblist}
       \inset{DynSet}
       \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
@@ -139,6 +139,7 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
     \endentry
 |;
 
+
 # Make sure allkeys works with dynamic sets
 my @allkeys = qw(dynamic1 dynamic2 dynamic3 dynset elias1955 elias1955a elias1955b static1 static2 static3 static4);
 my @keys = sort map {lc()} $section0->get_citekeys;
@@ -149,6 +150,7 @@ eq_or_diff($out->get_output_entry('Dynamic1', $main0), $string2, 'Dynamic set te
 eq_or_diff($out->get_output_entry('Dynamic2', $main0), $string3, 'Dynamic set test 3');
 eq_or_diff($out->get_output_entry('Dynamic3', $main0), $string4, 'Dynamic set test 4');
 eq_or_diff($out->get_output_entry('Dynamic3', $main0, 1), $string5, 'Dynamic set test 5');
-is_deeply([$sh0->get_keys], ['DynSet'], 'Dynamic set skipbiblist 1');
-is_deeply([$sh1->get_keys], ['Dynamic3'], 'Dynamic set skipbiblist 2');
+
+eq_or_diff($out->get_output_entry('Dynamic1', $sh0), $string2, 'Dynamic set skipbiblist 1');
+
 

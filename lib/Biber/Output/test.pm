@@ -355,22 +355,17 @@ sub output {
       next unless $list->count_keys; # skip empty lists
       my $listtype = $list->get_type;
       foreach my $k ($list->get_keys) {
-        if ($listtype eq 'entry') {
-          my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
+        my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
 
-          # Instantiate any dynamic, list specific entry information
-          my $entry_string = $list->instantiate_entry($entry, $k);
+        # Instantiate any dynamic, list specific entry information
+        my $entry_string = $list->instantiate_entry($entry, $k);
 
-          # If requested to convert UTF-8 to macros ...
-          if (Biber::Config->getoption('output_safechars')) {
-            $entry_string = latex_recode_output($entry_string);
-          }
-          out($target, $entry_string);
+        # If requested to convert UTF-8 to macros ...
+        if (Biber::Config->getoption('output_safechars')) {
+          $entry_string = latex_recode_output($entry_string);
         }
-        elsif ($listtype eq 'shorthand') {
-          next if Biber::Config->getblxoption('skipbiblist', $section->bibentry($k), $k);
-          out($target, $k);
-        }
+        out($target, $entry_string);
+
       }
     }
   }

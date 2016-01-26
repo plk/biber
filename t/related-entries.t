@@ -244,7 +244,14 @@ eq_or_diff( $out->get_output_entry('caf8e34be07426ae7127c1b4829983c1', $main), $
 # Key k4 is used only to create a related entry clone but since it isn't cited itself
 # it shouldn't be in the .bbl
 eq_or_diff( $out->get_output_entry('key4', $main), undef, 'Related entry test 8' ) ;
-is_deeply([$shs->get_keys], ['key1', 'key2'], 'Related entry test 9');
+is_deeply([$shs->get_keys], [
+    "caf8e34be07426ae7127c1b4829983c1",
+    "78f825aaa0103319aaa1a30bf4fe3ada",
+    "3631578538a2d6ba5879b31a9a42f290",
+    "c2add694bf942dc77b376592d9c862cd",
+    "key1",
+    "key2",
+  ], 'Related entry test 9');
 # Testing circular dependencies
 eq_or_diff( $out->get_output_entry('c1', $main), $c1, 'Related entry test 10' ) ;
 eq_or_diff( $out->get_output_entry('9ab62b5ef34a985438bfdf7ee0102229', $main), $c2k, 'Related entry test 11' ) ;

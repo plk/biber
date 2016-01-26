@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 16;
+use Test::More tests => 15;
 use Test::Differences;
 unified_diff;
 
@@ -67,7 +67,7 @@ my $set1 = q|    \entry{seta}{set}{}
     \endentry
 |;
 
-my $set2 = q|    \entry{set:membera}{book}{}
+my $set2 = q|    \entry{set:membera}{book}{skiplab,skipbiblist}
       \inset{seta}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
@@ -84,7 +84,7 @@ my $set2 = q|    \entry{set:membera}{book}{}
     \endentry
 |;
 
-my $set3 = q|    \entry{set:memberb}{book}{}
+my $set3 = q|    \entry{set:memberb}{book}{skiplab,skipbiblist}
       \inset{seta}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
@@ -100,7 +100,7 @@ my $set3 = q|    \entry{set:memberb}{book}{}
     \endentry
 |;
 
-my $set4 = q|    \entry{set:memberc}{book}{}
+my $set4 = q|    \entry{set:memberc}{book}{skiplab,skipbiblist}
       \inset{seta}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
@@ -198,7 +198,6 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
     \endentry
 |;
 
-is_deeply([$shs->get_keys], ['skip1'], 'skipbiblist - not in biblist for shorthands');
 is_deeply($bibentries->entry('skip1')->get_field('options'), ['skipbib'], 'Passing skipbib through');
 eq_or_diff($bibentries->entry('skip2')->get_field('labelalpha'), 'SA', 'Normal labelalpha');
 eq_or_diff($bibentries->entry('skip2')->get_field($bibentries->entry('skip2')->get_labeldate_info->{field}{year}), '1995', 'Normal labelyear');

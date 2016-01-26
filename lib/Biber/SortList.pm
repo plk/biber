@@ -515,6 +515,9 @@ sub instantiate_entry {
     my $str = "\\field{sortinit}{$sinit}";
     $entry_string =~ s|<BDS>SORTINIT</BDS>|$str|gxms;
   }
+  else {# might not be defined if sortscheme returns nothing at all
+    $entry_string =~ s|<BDS>SORTINIT</BDS>||gxms;
+  }
 
   # sortinithash
   my $sinithash = $self->get_sortinithash_for_key($key);
@@ -522,32 +525,31 @@ sub instantiate_entry {
     my $str = "\\field{sortinithash}{$sinithash}";
     $entry_string =~ s|<BDS>SORTINITHASH</BDS>|$str|gxms;
   }
+  else {# might not be defined if sortscheme returns nothing at all
+    $entry_string =~ s|<BDS>SORTINITHASH</BDS>||gxms;
+  }
 
   # extrayear
-  my $eys;
   if (my $e = $self->get_extrayeardata($key)) {
-    $eys = "      \\field{extrayear}{$e}\n";
+    my $eys = "      \\field{extrayear}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
   }
 
   # extratitle
-  my $ets;
   if (my $e = $self->get_extratitledata($key)) {
-    $ets = "      \\field{extratitle}{$e}\n";
+    my $ets = "      \\field{extratitle}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRATITLE</BDS>\n|$ets|gxms;
   }
 
   # extratitle
-  my $etys;
   if (my $e = $self->get_extratitleyeardata($key)) {
-    $etys = "      \\field{extratitleyear}{$e}\n";
+    my $etys = "      \\field{extratitleyear}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRATITLEYEAR</BDS>\n|$etys|gxms;
   }
 
   # extraalpha
-  my $eas;
   if (my $e = $self->get_extraalphadata($key)) {
-    $eas = "      \\field{extraalpha}{$e}\n";
+    my $eas = "      \\field{extraalpha}{$e}\n";
     $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
   }
 

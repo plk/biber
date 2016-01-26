@@ -73,7 +73,7 @@ my $string1 = q|    \entry{Elias1955}{set}{}
     \endentry
 |;
 
-my $string2 = q|    \entry{Elias1955a}{article}{}
+my $string2 = q|    \entry{Elias1955a}{article}{skiplab,skipbiblist}
       \inset{Elias1955}
       \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%
@@ -100,7 +100,7 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
     \endentry
 |;
 
-my $string3 = q|    \entry{Elias1955b}{article}{}
+my $string3 = q|    \entry{Elias1955b}{article}{skiplab,skipbiblist}
       \inset{Elias1955}
       \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{Elias}{E\bibinitperiod}{P.}{P\bibinitperiod}{}{}{}{}}%

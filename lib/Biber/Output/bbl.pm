@@ -530,6 +530,7 @@ sub output {
     my @lists; # Need to reshuffle list to put global sort order list at end, see below
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
+    # but omit the global context list so that we can add this last
     foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
       if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
           $list->get_sortnamekeyschemename eq 'global' and
@@ -551,43 +552,45 @@ sub output {
       my $listsnksn = $list->get_sortnamekeyschemename;
       my $listtype = $list->get_type;
       my $listname = $list->get_name;
+
       $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn' and sort name key scheme '$listsnksn'");
 
-      out($target, "  \\sortlist{$listname}\n");
+      if ($listtype eq 'entry') {
+        out($target, "  \\sortlist[entry]{$listname}\n");
+      }
+      elsif ($listtype eq 'list') {
+        out($target, "  \\sortlist[list]{$listname}\n");
+      }
 
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
         $logger->debug("Writing entry for key '$k'");
-        if ($listtype eq 'entry') {
-          my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
 
-          # Instantiate any dynamic, list specific entry information
-          my $entry_string = $list->instantiate_entry($entry, $k);
+        my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
 
-          # If requested to convert UTF-8 to macros ...
-          if (Biber::Config->getoption('output_safechars')) {
-            $entry_string = latex_recode_output($entry_string);
-          }
-          else { # ... or, check for encoding problems and force macros
-            my $outenc = Biber::Config->getoption('output_encoding');
-            if ($outenc ne 'UTF-8') {
-              # Can this entry be represented in the output encoding?
-              # We must have an ASCII-safe replacement string for encode which is unlikely to be
-              # in the string. Default is "?" which could easily be in URLS so we choose ASCII null
-              if (encode($outenc, NFC($entry_string), sub {"\0"})  =~ /\0/) { # Malformed data encoding char
-                # So convert to macro
-                $entry_string = latex_recode_output($entry_string);
-                biber_warn("The entry '$k' has characters which cannot be encoded in '$outenc'. Recoding problematic characters into macros.");
-              }
+        # Instantiate any dynamic, list specific entry information
+        my $entry_string = $list->instantiate_entry($entry, $k);
+
+        # If requested to convert UTF-8 to macros ...
+        if (Biber::Config->getoption('output_safechars')) {
+          $entry_string = latex_recode_output($entry_string);
+        }
+        else {       # ... or, check for encoding problems and force macros
+          my $outenc = Biber::Config->getoption('output_encoding');
+          if ($outenc ne 'UTF-8') {
+            # Can this entry be represented in the output encoding?
+            # We must have an ASCII-safe replacement string for encode which is unlikely to be
+            # in the string. Default is "?" which could easily be in URLS so we choose ASCII null
+            if (encode($outenc, NFC($entry_string), sub {"\0"})  =~ /\0/) { # Malformed data encoding char
+              # So convert to macro
+              $entry_string = latex_recode_output($entry_string);
+              biber_warn("The entry '$k' has characters which cannot be encoded in '$outenc'. Recoding problematic characters into macros.");
             }
           }
+        }
 
-          # Now output
-          out($target, $entry_string);
-        }
-        elsif ($listtype eq 'list') {
-          out($target, "    \\key{$k}\n");
-        }
+        # Now output
+        out($target, $entry_string);
       }
 
       out($target, "  \\endsortlist\n");
