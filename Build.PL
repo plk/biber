@@ -31,8 +31,6 @@ my $builder = $class->new(
     dist_version_from   => 'lib/Biber/Config.pm',
     test_requires => {
                       'Test::More'   => 0,
-                      'Test::Pod'   => 0,
-                      'Test::Pod::Coverage'   => 0,
                       'Test::Differences' => 0,
                       'File::Which'  => 0
                         },
