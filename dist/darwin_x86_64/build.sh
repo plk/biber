@@ -22,8 +22,6 @@ PAR_VERBATIM=1 pp --compress=6 \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
   --module=Biber::Input::file::ris \
-  --module=Biber::Input::file::zoterordfxml \
-  --module=Biber::Input::file::endnotexml \
   --module=Biber::Output::dot \
   --module=Biber::Output::bbl \
   --module=Biber::Output::bibtex \
