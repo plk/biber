@@ -52,10 +52,10 @@ PAR_VERBATIM=1 pp --compress=6 \
    --module=IO::Socket::SSL \
    --module=File::Find::Rule \
    --link=/usr/bin/cygz.dll \
-   --link=/usr/bin/cyggcrypt-11.dll \
+   --link=/usr/bin/cyggcrypt-20.dll \
    --link=/usr/bin/cygiconv-2.dll \
    --link=/usr/bin/cyggpg-error-0.dll \
-   --link=/usr/local/bin/libbtparse.dll \
+   --link=/usr/bin/libbtparse.dll \
    --link=/usr/bin/cygxml2-2.dll \
    --link=/usr/bin/cygxslt-1.dll \
    --link=/usr/bin/cygexslt-0.dll \
@@ -63,6 +63,8 @@ PAR_VERBATIM=1 pp --compress=6 \
    --link=/usr/bin/cygcrypto-1.0.0.dll \
    --link=/usr/bin/cygssl-1.0.0.dll \
    --link=/usr/bin/cygcrypt-0.dll \
+   --link=/usr/bin/cygdatrie-1.dll \
+   --link=/usr/bin/cygthai-0.dll \
    --addlist=biber.files \
    --cachedeps=scancache \
    --output=biber-cygwin32.exe \
