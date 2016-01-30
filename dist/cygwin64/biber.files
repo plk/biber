@@ -1,0 +1,13 @@
+../../data/biber-tool.conf;lib/Biber/biber-tool.conf
+../../data/schemata/config.rnc;lib/Biber/config.rnc
+../../data/schemata/config.rng;lib/Biber/config.rng
+../../data/schemata/bcf.rnc;lib/Biber/bcf.rnc
+../../data/schemata/bcf.rng;lib/Biber/bcf.rng
+../../lib/Biber/LaTeX/recode_data.xml;lib/Biber/LaTeX/recode_data.xml
+../../data/bcf.xsl;lib/Biber/bcf.xsl
+../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
+/usr/lib/perl5/vendor_perl/5.22/x86_64-cygwin-threads/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
+/usr/lib/perl5/vendor_perl/5.22/x86_64-cygwin-threads/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
+/usr/lib/perl5/vendor_perl/5.22/x86_64-cygwin-threads/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
+/usr/lib/perl5/vendor_perl/5.22/x86_64-cygwin-threads/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
+/usr/lib/perl5/vendor_perl/5.22/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml
