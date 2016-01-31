@@ -112,20 +112,20 @@ fi
 # Build farm WMSWIN64
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
-if [ ! -e $DIR/biber-MSWIN64.zip ]; then
-  vmon w1064
-  sleep 20
-  ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin64;./build.bat;cd ~/biblatex-biber;./Build realclean"
-  scp philkime@bbf-w1064:biblatex-biber/dist/MSWin64/biber-MSWIN64.exe $DIR/
-  ssh philkime@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWin64/biber-MSWIN64.exe"
-  vmoff w1064
-  cd $DIR
-  mv biber-MSWIN64.exe biber.exe
-  chmod +x biber.exe
-  /usr/bin/zip biber-MSWIN64.zip biber.exe
-  \rm -f biber.exe
-  cd $BASE
-fi
+# if [ ! -e $DIR/biber-MSWIN64.zip ]; then
+#   vmon w1064
+#   sleep 20
+#   ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin64;./build.bat;cd ~/biblatex-biber;./Build realclean"
+#   scp philkime@bbf-w1064:biblatex-biber/dist/MSWin64/biber-MSWIN64.exe $DIR/
+#   ssh philkime@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWin64/biber-MSWIN64.exe"
+#   vmoff w1064
+#   cd $DIR
+#   mv biber-MSWIN64.exe biber.exe
+#   chmod +x biber.exe
+#   /usr/bin/zip biber-MSWIN64.zip biber.exe
+#   \rm -f biber.exe
+#   cd $BASE
+# fi
 
 # Build farm Linux 32
 if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
@@ -184,9 +184,9 @@ if [ -e $DIR/biber-MSWIN32.zip ]; then
 fi
 
 # Windows 64-bit
-if [ -e $DIR/biber-MSWIN64.zip ]; then
-  scp biber-MSWIN64.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN64.zip
-fi
+# if [ -e $DIR/biber-MSWIN64.zip ]; then
+#   scp biber-MSWIN64.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN64.zip
+# fi
 
 # Linux 32-bit
 if [ -e $DIR/biber-linux_x86_32.tar.gz ]; then
