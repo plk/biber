@@ -19,7 +19,7 @@
 :: constructed in the code so Par::Packer can't auto-detect them.
 :: Same with some of the output modules.
 
-COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN
+COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN32
 
 SET PAR_VERBATIM=1
 
@@ -70,7 +70,7 @@ CALL pp ^
   --link=C:\strawberry\c\bin\liblzma-5_.dll ^
   --addlist=biber.files ^
   --cachedeps=scancache ^
-  --output=biber-MSWIN.exe ^
-  %TEMP%\biber-MSWIN
+  --output=biber-MSWIN32.exe ^
+  %TEMP%\biber-MSWIN32
 
-DEL %TEMP%\biber-MSWIN
+DEL %TEMP%\biber-MSWIN32
