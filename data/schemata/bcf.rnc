@@ -664,6 +664,9 @@ map =
     element bcf:per_type { xsd:string {minLength="1"} }*,
     element bcf:map_step {
       (
+        ( attribute map_entry_new { xsd:string {minLength="1"} },
+          attribute map_entry_newtype { xsd:string {minLength="1"} }
+        ) |
         (
           attribute map_entry_null { "1" }
         ) |
@@ -678,13 +681,12 @@ map =
           attribute map_final { "1" }?,
           attribute map_match { xsd:string {minLength="1"} }?,
           attribute map_notmatch { xsd:string {minLength="1"} }?,
-          attribute map_replace { xsd:string {minLength="1"} }?
+          attribute map_replace { xsd:string }?
         ) |
         (
-          ( attribute map_entry_new { xsd:string {minLength="1"} },
-            attribute map_entry_newtype { xsd:string {minLength="1"} })?,
+          attribute map_field_source { xsd:string {minLength="1"} }?,
           attribute map_entrytarget { xsd:string {minLength="1"} }?,
-          attribute map_field_set { xsd:string {minLength="1"} },
+          attribute map_field_set { xsd:string {minLength="1"} }?,
           attribute map_append { "1" }?,
           attribute map_final { "1" }?,
           ( attribute map_null { "1" } |

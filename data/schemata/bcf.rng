@@ -1691,6 +1691,18 @@
       <oneOrMore>
         <element name="bcf:map_step">
           <choice>
+            <group>
+              <attribute name="map_entry_new">
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
+              </attribute>
+              <attribute name="map_entry_newtype">
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
+              </attribute>
+            </group>
             <attribute name="map_entry_null">
               <value>1</value>
             </attribute>
@@ -1747,20 +1759,13 @@
               </optional>
               <optional>
                 <attribute name="map_replace">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
+                  <data type="string"/>
                 </attribute>
               </optional>
             </group>
             <group>
               <optional>
-                <attribute name="map_entry_new">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </attribute>
-                <attribute name="map_entry_newtype">
+                <attribute name="map_field_source">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>
@@ -1773,11 +1778,13 @@
                   </data>
                 </attribute>
               </optional>
-              <attribute name="map_field_set">
-                <data type="string">
-                  <param name="minLength">1</param>
-                </data>
-              </attribute>
+              <optional>
+                <attribute name="map_field_set">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
               <optional>
                 <attribute name="map_append">
                   <value>1</value>

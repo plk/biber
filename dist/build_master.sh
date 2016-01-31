@@ -83,7 +83,7 @@ if [ ! -e $DIR/biber-MSWIN32.zip ]; then
   cd $DIR
   mv biber-MSWIN32.exe biber.exe
   chmod +x biber.exe
-  /usr/bin/zip biber-MSWIN.zip biber.exe
+  /usr/bin/zip biber-MSWIN32.zip biber.exe
   \rm -f biber.exe
   cd $BASE
 fi
