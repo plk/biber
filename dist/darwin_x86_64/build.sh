@@ -15,7 +15,7 @@
 # Same with some of the output modules.
 
 cp /opt/local/libexec/perl5.22/sitebin/biber /tmp/biber-darwin
-cp /opt/local/lib/libz.1.2.7.dylib /tmp/libz.1.dylib
+cp /opt/local/lib/libz.1.2.8.dylib /tmp/libz.1.dylib
 
 PAR_VERBATIM=1 pp --compress=6 \
   --module=deprecate \
