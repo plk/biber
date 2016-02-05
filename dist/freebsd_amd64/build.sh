@@ -20,8 +20,6 @@ export PAR_VERBATIM
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
   --module=Biber::Input::file::ris \
-  --module=Biber::Input::file::zoterordfxml \
-  --module=Biber::Input::file::endnotexml \
   --module=Biber::Output::dot \
   --module=Biber::Output::bbl \
   --module=Biber::Output::bibtex \
@@ -54,7 +52,6 @@ export PAR_VERBATIM
   --module=Readonly::XS \
   --module=IO::Socket::SSL \
   --module=File::Find::Rule \
-  --module=String::Interpolate \
   --link=/usr/local/lib/libbtparse.so \
   --link=/usr/local/lib/libiconv.so.3 \
   --link=/usr/local/lib/libxml2.so.5 \
@@ -68,5 +65,5 @@ export PAR_VERBATIM
   --link=`ls /usr/lib/libssl.so.*` \
   --addlist=biber.files \
   --cachedeps=scancache \
-  --output=biber-2.3.`uname -m`-freebsd`uname -r | sed 's/\..*//' | sed 's/7/7,8,9,10,11/'` \
+  --output=biber-2.4.`uname -m`-freebsd`uname -r | sed 's/\..*//' | sed 's/7/7,8,9,10,11/'` \
   /usr/local/bin/biber
