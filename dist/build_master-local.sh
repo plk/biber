@@ -116,8 +116,8 @@ if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   vmon w1064
   sleep 20
   ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin64;./build.bat;cd ~/biblatex-biber;./Build realclean"
-  scp philkime@bbf-w1064:biblatex-biber/dist/MSWin64/biber-MSWIN64.exe $DIR/
-  ssh philkime@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWin64/biber-MSWIN64.exe"
+  scp phili@bbf-w1064:biblatex-biber/dist/MSWin64/biber-MSWIN64.exe $DIR/
+  ssh phili@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWin64/biber-MSWIN64.exe"
   vmoff w1064
   cd $DIR
   mv biber-MSWIN64.exe biber.exe
