@@ -74,21 +74,21 @@ fi
 # Build farm OSX 32-bit intel (universal)
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
-# if [ ! -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
-#   vmon osx10.5
-#   sleep 10
-#   ssh philkime@bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_i386;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
-#   scp philkime@bbf-osx10.5:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
-#   ssh philkime@bbf-osx10.5 "\\rm -f biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386"
-#   vmoff osx10.5
-#   cd $DIR
-#   mv biber-darwin_x86_i386 biber
-#   chmod +x biber
-#   tar cf biber-darwin_x86_i386.tar biber
-#   gzip biber-darwin_x86_i386.tar
-#   \rm biber
-#   cd $BASE
-# fi
+if [ ! -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
+  vmon osx10.5
+  sleep 10
+  ssh philkime@bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_i386;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  scp philkime@bbf-osx10.5:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
+  ssh philkime@bbf-osx10.5 "\\rm -f biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386"
+  vmoff osx10.5
+  cd $DIR
+  mv biber-darwin_x86_i386 biber
+  chmod +x biber
+  tar cf biber-darwin_x86_i386.tar biber
+  gzip biber-darwin_x86_i386.tar
+  \rm biber
+  cd $BASE
+fi
 
 
 # Build farm WMSWIN32
@@ -184,9 +184,9 @@ if [ -e $DIR/biber-MSWIN32.zip ]; then
 fi
 
 # Windows 64-bit
-# if [ -e $DIR/biber-MSWIN64.zip ]; then
-#   scp biber-MSWIN64.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN64.zip
-# fi
+if [ -e $DIR/biber-MSWIN64.zip ]; then
+  scp biber-MSWIN64.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN64.zip
+fi
 
 # Linux 32-bit
 if [ -e $DIR/biber-linux_x86_32.tar.gz ]; then
