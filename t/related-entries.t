@@ -47,7 +47,9 @@ my $bibentries = $section->bibentries;
 
 my $k1 = q|    \entry{key1}{article}{}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
+           family={Author},
+           family_i={A\bibinitperiod}}}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
@@ -72,7 +74,9 @@ my $k1 = q|    \entry{key1}{article}{}
 
 my $k2 = q|    \entry{key2}{inbook}{}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
+           family={Author},
+           family_i={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Location}%
@@ -103,7 +107,9 @@ my $k2 = q|    \entry{key2}{inbook}{}
 
 my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
+           family={Author},
+           family_i={A\bibinitperiod}}}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
@@ -127,7 +133,9 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
 
 my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
+           family={Author},
+           family_i={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Location}%
@@ -156,7 +164,9 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
 
 my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
+           family={Author},
+           family_i={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Location}%
@@ -184,7 +194,9 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
 
 my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{Author}{A\bibinitperiod}{}{}{}{}{}{}}%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
+           family={Author},
+           family_i={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Location}%

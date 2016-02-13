@@ -67,7 +67,11 @@ is_deeply([$biber->sortlists->get_list(0, 'lname', 'entry', 'lname', 'given')->g
 
 my $K11 = q|    \entry{K11}{book}{}
       \name{author}{1}{sortnamekeyscheme=snk1}{%
-        {{hash=4edc280a0ef229f9c061e3b121b17482}{Xanax}{X\\bibinitperiod}{Xavier}{X\\bibinitperiod}{}{}{}{}}%
+        {{hash=4edc280a0ef229f9c061e3b121b17482}{%
+           family={Xanax},
+           family_i={X\bibinitperiod},
+           given={Xavier},
+           given_i={X\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Moscow}%
@@ -90,7 +94,11 @@ my $K11 = q|    \entry{K11}{book}{}
 
 my $K12 = q|    \entry{K12}{book}{}
       \name{author}{1}{}{%
-        {{sortnamekeyscheme=snk2,hash=a846a485fc9cbb59b0ebeedd6ac637e4}{Allen}{A\\bibinitperiod}{Arthur}{A\\bibinitperiod}{}{}{}{}}%
+        {{sortnamekeyscheme=snk2,hash=a846a485fc9cbb59b0ebeedd6ac637e4}{%
+           family={Allen},
+           family_i={A\bibinitperiod},
+           given={Arthur},
+           given_i={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Moscow}%

@@ -53,9 +53,25 @@ my $bibentries = $section->bibentries;
 my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
       \true{moreauthor}
       \name{author}{3}{useprefix=true}{%
-        {{hash=d16c52bc219d448d5f07dc865d5c4f54}{Булгаков}{Б\\bibinitperiod}{Павел\\bibnamedelima Георгиевич}{П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
-        {{useprefix=false,hash=d4b3732f25a1f82b3eb6c24cb1b8a9d0}{Розенфельд}{Р\\bibinitperiod}{Борис-ZZ\\bibnamedelima Aбрамович}{Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}{von}{v\\bibinitperiod}{}{}}%
-        {{hash=e708d5a31534e937578abf161c867a25}{Aхмедов}{A\bibinitperiod}{Ашраф\bibnamedelima Ахмедович}{А\bibinitperiod\bibinitdelim А\bibinitperiod}{}{}{}{}}%
+        {{hash=d16c52bc219d448d5f07dc865d5c4f54}{%
+           prefix={von},
+           prefix_i={v\\bibinitperiod},
+           family={Булгаков},
+           family_i={Б\\bibinitperiod},
+           given={Павел\\bibnamedelima Георгиевич},
+           given_i={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}}}%
+        {{useprefix=false,hash=d4b3732f25a1f82b3eb6c24cb1b8a9d0}{%
+           prefix={von},
+           prefix_i={v\\bibinitperiod},
+           family={Розенфельд},
+           family_i={Р\\bibinitperiod},
+           given={Борис-ZZ\\bibnamedelima Aбрамович},
+           given_i={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}}}%
+        {{hash=e708d5a31534e937578abf161c867a25}{%
+           family={Aхмедов},
+           family_i={A\\bibinitperiod},
+           given={Ашраф\\bibnamedelima Ахмедович},
+           given_i={А\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
       }
       \list{language}{1}{%
         {russian}%

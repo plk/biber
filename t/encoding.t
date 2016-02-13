@@ -35,7 +35,11 @@ Biber::Config->setoption('fastsort', 1);
 
 my $encode1 = q|    \entry{testŠ}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
+           family={Encalcer},
+           family_i={E\bibinitperiod},
+           given={Edward},
+           given_i={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -57,7 +61,11 @@ my $encode1 = q|    \entry{testŠ}{book}{}
 
 my $encode2 = q|    \entry{test1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
+           family={Encalcer},
+           family_i={E\bibinitperiod},
+           given={Edward},
+           given_i={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -79,7 +87,11 @@ my $encode2 = q|    \entry{test1}{book}{}
 
 my $encode3 = q|    \entry{test1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
+           family={Encalcer},
+           family_i={E\bibinitperiod},
+           given={Edward},
+           given_i={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -101,7 +113,11 @@ my $encode3 = q|    \entry{test1}{book}{}
 
 my $encode5 = q|    \entry{test}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
+           family={Encalcer},
+           family_i={E\bibinitperiod},
+           given={Edward},
+           given_i={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -123,7 +139,11 @@ my $encode5 = q|    \entry{test}{book}{}
 
 my $encode6 = q|    \entry{test}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
+           family={Encalcer},
+           family_i={E\bibinitperiod},
+           given={Edward},
+           given_i={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -145,7 +165,11 @@ my $encode6 = q|    \entry{test}{book}{}
 
 my $encode7 = q|    \entry{test}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{Encalcer}{E\bibinitperiod}{Edward}{E\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
+           family={Encalcer},
+           family_i={E\bibinitperiod},
+           given={Edward},
+           given_i={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%

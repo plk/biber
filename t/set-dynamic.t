@@ -50,7 +50,11 @@ my $out = $biber->get_output_obj;
 my $string1 = q|    \entry{DynSet}{set}{}
       \set{Dynamic1,Dynamic2,Dynamic3}
       \name{author}{1}{}{%
-        {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=252caa7921a061ca92087a1a52f15b78}{%
+           family={Dynamism},
+           family_i={D\bibinitperiod},
+           given={Derek},
+           given_i={D\bibinitperiod}}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
@@ -70,7 +74,11 @@ my $string1 = q|    \entry{DynSet}{set}{}
 my $string2 = q|    \entry{Dynamic1}{book}{skiplab,skipbiblist}
       \inset{DynSet}
       \name{author}{1}{}{%
-        {{hash=252caa7921a061ca92087a1a52f15b78}{Dynamism}{D\bibinitperiod}{Derek}{D\bibinitperiod}{}{}{}{}}%
+        {{hash=252caa7921a061ca92087a1a52f15b78}{%
+           family={Dynamism},
+           family_i={D\bibinitperiod},
+           given={Derek},
+           given_i={D\bibinitperiod}}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
@@ -88,7 +96,11 @@ my $string2 = q|    \entry{Dynamic1}{book}{skiplab,skipbiblist}
 my $string3 = q|    \entry{Dynamic2}{book}{skiplab,skipbiblist}
       \inset{DynSet}
       \name{author}{1}{}{%
-        {{hash=894a5fe6de820f5dcce84a65581667f4}{Bunting}{B\bibinitperiod}{Brian}{B\bibinitperiod}{}{}{}{}}%
+        {{hash=894a5fe6de820f5dcce84a65581667f4}{%
+           family={Bunting},
+           family_i={B\bibinitperiod},
+           given={Brian},
+           given_i={B\bibinitperiod}}}%
       }
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
@@ -105,7 +117,11 @@ my $string3 = q|    \entry{Dynamic2}{book}{skiplab,skipbiblist}
 my $string4 = q|    \entry{Dynamic3}{book}{skiplab,skipbiblist}
       \inset{DynSet}
       \name{author}{1}{}{%
-        {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
+           family={Regardless},
+           family_i={R\bibinitperiod},
+           given={Roger},
+           given_i={R\bibinitperiod}}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
@@ -123,7 +139,11 @@ my $string4 = q|    \entry{Dynamic3}{book}{skiplab,skipbiblist}
 # without citation of a set it is a member of
 my $string5 = q|    \entry{Dynamic3}{book}{}
       \name{author}{1}{}{%
-        {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{Regardless}{R\bibinitperiod}{Roger}{R\bibinitperiod}{}{}{}{}}%
+        {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
+           family={Regardless},
+           family_i={R\bibinitperiod},
+           given={Roger},
+           given_i={R\bibinitperiod}}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}

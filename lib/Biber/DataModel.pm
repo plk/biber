@@ -936,8 +936,8 @@ sub generate_bltxml_schema {
           $writer->startTag('element', 'name' => "$bltx:namepart");
           $writer->startTag('attribute', 'name' => 'type');
           $writer->startTag('choice');
-          foreach my $nt ($dm->get_constant_value('nameparts')) {# list type so returns list
-            $writer->dataElement('value', $nt);
+          foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
+            $writer->dataElement('value', $np);
           }
           $writer->endTag();    # choice
           $writer->endTag();    # attribute

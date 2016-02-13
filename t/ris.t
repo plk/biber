@@ -48,11 +48,31 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|    \entry{test1}{report}{}
       \name{author}{5}{}{%
-        {{uniquename=0,hash=35fb6a7132629790580cd2c9c0a5ab87}{Baldwin}{B\bibinitperiod}{S.A.}{S\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=f8b1ae371652de603e137e413b55de78}{Fugaccia}{F\bibinitperiod}{I.}{I\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=86957f40459ed948ee1b4ff0ec7740f6}{Brown}{B\bibinitperiod}{D.R.}{D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=baf6c971e311fa61ec2f75e93531016e}{Brown}{B\bibinitperiod}{L.V.}{L\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=bd289ff4276c0fc8c16a49161011c5da}{Scheff}{S\bibinitperiod}{S.W.}{S\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=35fb6a7132629790580cd2c9c0a5ab87}{%
+           family={Baldwin},
+           family_i={B\bibinitperiod},
+           given={S.A.},
+           given_i={S\bibinitperiod}}}%
+        {{uniquename=0,hash=f8b1ae371652de603e137e413b55de78}{%
+           family={Fugaccia},
+           family_i={F\bibinitperiod},
+           given={I.},
+           given_i={I\bibinitperiod}}}%
+        {{uniquename=0,hash=86957f40459ed948ee1b4ff0ec7740f6}{%
+           family={Brown},
+           family_i={B\bibinitperiod},
+           given={D.R.},
+           given_i={D\bibinitperiod}}}%
+        {{uniquename=0,hash=baf6c971e311fa61ec2f75e93531016e}{%
+           family={Brown},
+           family_i={B\bibinitperiod},
+           given={L.V.},
+           given_i={L\bibinitperiod}}}%
+        {{uniquename=0,hash=bd289ff4276c0fc8c16a49161011c5da}{%
+           family={Scheff},
+           family_i={S\bibinitperiod},
+           given={S.W.},
+           given_i={S\bibinitperiod}}}%
       }
       \strng{namehash}{deae9fead6c78a99d3f38159b0710b1f}
       \strng{fullhash}{bde87bef9bb3834837786f78acfebc54}
@@ -74,10 +94,20 @@ my $l1 = q|    \entry{test1}{report}{}
 
 my $l2 = q|    \entry{test2}{inbook}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=f2574dc91f1242eb0e7507a71730631b}{Smith}{S\\bibinitperiod}{John\\bibnamedelima Frederick}{J\\bibinitperiod\\bibinitdelim F\\bibinitperiod}{}{}{III}{I\\bibinitperiod}}%
+        {{uniquename=0,hash=f2574dc91f1242eb0e7507a71730631b}{%
+           family={Smith},
+           family_i={S\bibinitperiod},
+           suffix={III},
+           suffix_i={I\bibinitperiod},
+           given={John\bibnamedelima Frederick},
+           given_i={J\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
-        {{hash=c889e5c69d0c445e8f3bb0fe1ea7a19c}{Brown}{B\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+        {{hash=c889e5c69d0c445e8f3bb0fe1ea7a19c}{%
+           family={Brown},
+           family_i={B\bibinitperiod},
+           given={Alan},
+           given_i={A\bibinitperiod}}}%
       }
       \strng{namehash}{f2574dc91f1242eb0e7507a71730631b}
       \strng{fullhash}{f2574dc91f1242eb0e7507a71730631b}

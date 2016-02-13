@@ -331,65 +331,30 @@ sub name_part_to_bltxml {
 
 sub name_to_bbl {
   my $self = shift;
-
+  my $dm = Biber::Config->get_dm;
   my @pno; # per-name options
   my $pno; # per-name options final string
+  my $namestring;
+  my @namestrings;
 
-  # family name is always defined
-  my $lni;
-  my $ln  = Biber::Utils::join_name($self->get_namepart('family'));
-  if ($self->was_stripped('family')) {
-    $ln = Biber::Utils::add_outer($ln);
-  }
-  $lni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('family')}) . '\bibinitperiod';
-  $lni =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
-
-  # given name
-  my $fn;
-  my $fni;
-  if ($fn = $self->get_namepart('given')) {
-    $fn = Biber::Utils::join_name($fn);
-    if ($self->was_stripped('given')) {
-      $fn = Biber::Utils::add_outer($fn);
+  foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
+    my $npc;
+    my $npci;
+    if ($npc = $self->get_namepart($np)) {
+      $npc = Biber::Utils::join_name($npc);
+      if ($self->was_stripped($np)) {
+        $npc = Biber::Utils::add_outer($npc);
+      }
+      $npci = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial($np)}) . '\bibinitperiod';
+      $npci =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
     }
-    $fni = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('given')}) . '\bibinitperiod';
-    $fni =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
-  }
-  else {
-    $fn = '';
-    $fni = '';
-  }
-
-  # prefix
-  my $pre;
-  my $prei;
-  if ($pre = $self->get_namepart('prefix')) {
-    $pre = Biber::Utils::join_name($pre);
-    if ($self->was_stripped('prefix')) {
-      $pre = Biber::Utils::add_outer($pre);
+    # Some of the subs above can result in these being undef so make sure there is an empty
+    # string instead of undef so that interpolation below doesn't produce warnings
+    $npc //= '';
+    $npci //= '';
+    if ($npc) {
+      push @namestrings, "           $np={$npc}", "           ${np}_i={$npci}";
     }
-    $prei = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('prefix')}) . '\bibinitperiod';
-    $prei =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
-  }
-  else {
-    $pre = '';
-    $prei = '';
-  }
-
-  # suffix
-  my $suf;
-  my $sufi;
-  if ($suf = $self->get_namepart('suffix')) {
-    $suf = Biber::Utils::join_name($suf);
-    if ($self->was_stripped('suffix')) {
-      $suf = Biber::Utils::add_outer($suf);
-    }
-    $sufi = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial('suffix')}) . '\bibinitperiod';
-    $sufi =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
-  }
-  else {
-    $suf = '';
-    $sufi = '';
   }
 
   # Generate uniquename if uniquename is requested
@@ -414,7 +379,12 @@ sub name_to_bbl {
   # Add the name hash to the options
   push @pno, 'hash=' . $self->get_hash;
   $pno = join(',', @pno);
-  return "        {{$pno}{$ln}{$lni}{$fn}{$fni}{$pre}{$prei}{$suf}{$sufi}}%\n";
+
+  $namestring = "        {{$pno}{\%\n";
+  $namestring .= join(",\n", @namestrings);
+  $namestring .= "}}%\n";
+
+  return $namestring;
 }
 
 =head2 dump

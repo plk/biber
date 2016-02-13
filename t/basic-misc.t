@@ -75,10 +75,18 @@ set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 al
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
-        {{uniquename=0,hash=e1faffb3e614e6c2fba74296962386b7}{AAA}{A\bibinitperiod}{}{}{}{}{}{}}%
-        {{uniquename=0,hash=2bb225f0ba9a58930757a868ed57d9a3}{BBB}{B\bibinitperiod}{}{}{}{}{}{}}%
-        {{uniquename=0,hash=defb99e69a9f1f6e06f15006b1f166ae}{CCC}{C\bibinitperiod}{}{}{}{}{}{}}%
-        {{uniquename=0,hash=45054f47ac3305a2a33e9bcceadff712}{DDD}{D\bibinitperiod}{}{}{}{}{}{}}%
+        {{uniquename=0,hash=e1faffb3e614e6c2fba74296962386b7}{%
+           family={AAA},
+           family_i={A\bibinitperiod}}}%
+        {{uniquename=0,hash=2bb225f0ba9a58930757a868ed57d9a3}{%
+           family={BBB},
+           family_i={B\bibinitperiod}}}%
+        {{uniquename=0,hash=defb99e69a9f1f6e06f15006b1f166ae}{%
+           family={CCC},
+           family_i={C\bibinitperiod}}}%
+        {{uniquename=0,hash=45054f47ac3305a2a33e9bcceadff712}{%
+           family={DDD},
+           family_i={D\bibinitperiod}}}%
       }
       \strng{namehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
@@ -121,20 +129,76 @@ is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $murray1 = q|    \entry{murray}{article}{}
       \name{author}{14}{}{%
-        {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=34c410f87490dd022093780c69640413}{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=a803710eddd16b95e91f420c0081985c}{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=38d1db37321ac524d14a116e74123685}{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=969c673c8b05314f89a822ecfbead6af}{Londono}{L\bibinitperiod}{J.\bibnamedelimi David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=fc6cda30bdeb421b5b57ef2d1ce6f92b}{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=69dcde2965d0ce8a53fae463355f36f5}{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=8cfed260a429843a4846ad8d83f9a09f}{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=71a4aee3f5124c9c94825634735417be}{Glish}{G\bibinitperiod}{Gary\bibnamedelima L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=9406f7f2b15056febb90692ae05e8620}{Porter}{P\bibinitperiod}{Marc\bibnamedelima D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{%
+           family={Hostetler},
+           family_i={H\bibinitperiod},
+           given={Michael\bibnamedelima J.},
+           given_i={M\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{%
+           family={Wingate},
+           family_i={W\bibinitperiod},
+           given={Julia\bibnamedelima E.},
+           given_i={J\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{%
+           family={Zhong},
+           family_i={Z\bibinitperiod},
+           given={Chuan-Jian},
+           given_i={C\bibinithyphendelim J\bibinitperiod}}}%
+        {{uniquename=0,hash=34c410f87490dd022093780c69640413}{%
+           family={Harris},
+           family_i={H\bibinitperiod},
+           given={Jay\bibnamedelima E.},
+           given_i={J\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{uniquename=0,hash=a803710eddd16b95e91f420c0081985c}{%
+           family={Vachet},
+           family_i={V\bibinitperiod},
+           given={Richard\bibnamedelima W.},
+           given_i={R\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{uniquename=0,hash=38d1db37321ac524d14a116e74123685}{%
+           family={Clark},
+           family_i={C\bibinitperiod},
+           given={Michael\bibnamedelima R.},
+           given_i={M\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{uniquename=0,hash=969c673c8b05314f89a822ecfbead6af}{%
+           family={Londono},
+           family_i={L\bibinitperiod},
+           given={J.\bibnamedelimi David},
+           given_i={J\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{uniquename=0,hash=fc6cda30bdeb421b5b57ef2d1ce6f92b}{%
+           family={Green},
+           family_i={G\bibinitperiod},
+           given={Stephen\bibnamedelima J.},
+           given_i={S\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{uniquename=0,hash=69dcde2965d0ce8a53fae463355f36f5}{%
+           family={Stokes},
+           family_i={S\bibinitperiod},
+           given={Jennifer\bibnamedelima J.},
+           given_i={J\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{uniquename=0,hash=8cfed260a429843a4846ad8d83f9a09f}{%
+           family={Wignall},
+           family_i={W\bibinitperiod},
+           given={George\bibnamedelima D.},
+           given_i={G\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{uniquename=0,hash=71a4aee3f5124c9c94825634735417be}{%
+           family={Glish},
+           family_i={G\bibinitperiod},
+           given={Gary\bibnamedelima L.},
+           given_i={G\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{uniquename=0,hash=9406f7f2b15056febb90692ae05e8620}{%
+           family={Porter},
+           family_i={P\bibinitperiod},
+           given={Marc\bibnamedelima D.},
+           given_i={M\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{%
+           family={Evans},
+           family_i={E\bibinitperiod},
+           given={Neal\bibnamedelima D.},
+           given_i={N\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{%
+           family={Murray},
+           family_i={M\bibinitperiod},
+           given={Royce\bibnamedelima W.},
+           given_i={R\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
       }
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
@@ -163,20 +227,76 @@ my $murray1 = q|    \entry{murray}{article}{}
 
 my $murray2 = q|    \entry{murray}{article}{}
       \name{author}{14}{}{%
-        {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{Hostetler}{H\bibinitperiod}{Michael\bibnamedelima J.}{M\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{Wingate}{W\bibinitperiod}{Julia\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{Zhong}{Z\bibinitperiod}{Chuan-Jian}{C\bibinithyphendelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=34c410f87490dd022093780c69640413}{Harris}{H\bibinitperiod}{Jay\bibnamedelima E.}{J\bibinitperiod\bibinitdelim E\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=a803710eddd16b95e91f420c0081985c}{Vachet}{V\bibinitperiod}{Richard\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=38d1db37321ac524d14a116e74123685}{Clark}{C\bibinitperiod}{Michael\bibnamedelima R.}{M\bibinitperiod\bibinitdelim R\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=969c673c8b05314f89a822ecfbead6af}{Londono}{L\bibinitperiod}{J.\bibnamedelimi David}{J\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=fc6cda30bdeb421b5b57ef2d1ce6f92b}{Green}{G\bibinitperiod}{Stephen\bibnamedelima J.}{S\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=69dcde2965d0ce8a53fae463355f36f5}{Stokes}{S\bibinitperiod}{Jennifer\bibnamedelima J.}{J\bibinitperiod\bibinitdelim J\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=8cfed260a429843a4846ad8d83f9a09f}{Wignall}{W\bibinitperiod}{George\bibnamedelima D.}{G\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=71a4aee3f5124c9c94825634735417be}{Glish}{G\bibinitperiod}{Gary\bibnamedelima L.}{G\bibinitperiod\bibinitdelim L\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=9406f7f2b15056febb90692ae05e8620}{Porter}{P\bibinitperiod}{Marc\bibnamedelima D.}{M\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{Evans}{E\bibinitperiod}{Neal\bibnamedelima D.}{N\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
-        {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{Murray}{M\bibinitperiod}{Royce\bibnamedelima W.}{R\bibinitperiod\bibinitdelim W\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=f1bafaf959660d1c3ca82d486ce5a651}{%
+           family={Hostetler},
+           family_i={H\bibinitperiod},
+           given={Michael\bibnamedelima J.},
+           given_i={M\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{uniquename=0,hash=de9f774c929dc661b4180b07f5eb62f3}{%
+           family={Wingate},
+           family_i={W\bibinitperiod},
+           given={Julia\bibnamedelima E.},
+           given_i={J\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{uniquename=0,hash=76100791c221471771c6bf1dbbc0975d}{%
+           family={Zhong},
+           family_i={Z\bibinitperiod},
+           given={Chuan-Jian},
+           given_i={C\bibinithyphendelim J\bibinitperiod}}}%
+        {{uniquename=0,hash=34c410f87490dd022093780c69640413}{%
+           family={Harris},
+           family_i={H\bibinitperiod},
+           given={Jay\bibnamedelima E.},
+           given_i={J\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{uniquename=0,hash=a803710eddd16b95e91f420c0081985c}{%
+           family={Vachet},
+           family_i={V\bibinitperiod},
+           given={Richard\bibnamedelima W.},
+           given_i={R\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{uniquename=0,hash=38d1db37321ac524d14a116e74123685}{%
+           family={Clark},
+           family_i={C\bibinitperiod},
+           given={Michael\bibnamedelima R.},
+           given_i={M\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{uniquename=0,hash=969c673c8b05314f89a822ecfbead6af}{%
+           family={Londono},
+           family_i={L\bibinitperiod},
+           given={J.\bibnamedelimi David},
+           given_i={J\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{uniquename=0,hash=fc6cda30bdeb421b5b57ef2d1ce6f92b}{%
+           family={Green},
+           family_i={G\bibinitperiod},
+           given={Stephen\bibnamedelima J.},
+           given_i={S\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{uniquename=0,hash=69dcde2965d0ce8a53fae463355f36f5}{%
+           family={Stokes},
+           family_i={S\bibinitperiod},
+           given={Jennifer\bibnamedelima J.},
+           given_i={J\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{uniquename=0,hash=8cfed260a429843a4846ad8d83f9a09f}{%
+           family={Wignall},
+           family_i={W\bibinitperiod},
+           given={George\bibnamedelima D.},
+           given_i={G\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{uniquename=0,hash=71a4aee3f5124c9c94825634735417be}{%
+           family={Glish},
+           family_i={G\bibinitperiod},
+           given={Gary\bibnamedelima L.},
+           given_i={G\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{uniquename=0,hash=9406f7f2b15056febb90692ae05e8620}{%
+           family={Porter},
+           family_i={P\bibinitperiod},
+           given={Marc\bibnamedelima D.},
+           given_i={M\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{uniquename=0,hash=f8d80918767d0ce7f535453dc016c327}{%
+           family={Evans},
+           family_i={E\bibinitperiod},
+           given={Neal\bibnamedelima D.},
+           given_i={N\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{uniquename=0,hash=98688e58f25c10d275f9d15d31ba3396}{%
+           family={Murray},
+           family_i={M\bibinitperiod},
+           given={Royce\bibnamedelima W.},
+           given_i={R\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
       }
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
@@ -206,7 +326,11 @@ my $murray2 = q|    \entry{murray}{article}{}
 # This example wouldn't compile - it's just to test escaping
 my $t1 = q+    \entry{t1}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
+           family={Brown},
+           family_i={B\bibinitperiod},
+           given={Bill},
+           given_i={B\bibinitperiod}}}%
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
@@ -225,7 +349,11 @@ my $t1 = q+    \entry{t1}{misc}{}
 
 my $t2 = q|    \entry{t2}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{Brown}{B\bibinitperiod}{Bill}{B\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
+           family={Brown},
+           family_i={B\bibinitperiod},
+           given={Bill},
+           given_i={B\bibinitperiod}}}%
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
@@ -243,10 +371,14 @@ my $t2 = q|    \entry{t2}{misc}{}
 
 my $anon1 = q|    \entry{anon1}{unpublished}{}
       \name{author}{1}{}{%
-        {{hash=a66f357fe2fd356fe49959173522a651}{AnonymousX}{A\bibinitperiod}{}{}{}{}{}{}}%
+        {{hash=a66f357fe2fd356fe49959173522a651}{%
+           family={AnonymousX},
+           family_i={A\bibinitperiod}}}%
       }
       \name{shortauthor}{1}{}{%
-        {{uniquename=0,hash=9873a6cc65c553faa2b21aaad626fe4b}{XAnony}{X\bibinitperiod}{}{}{}{}{}{}}%
+        {{uniquename=0,hash=9873a6cc65c553faa2b21aaad626fe4b}{%
+           family={XAnony},
+           family_i={X\bibinitperiod}}}%
       }
       \strng{namehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
@@ -270,10 +402,14 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
 
 my $anon2 = q|    \entry{anon2}{unpublished}{}
       \name{author}{1}{}{%
-        {{hash=a0bccee4041bc840e14c06e5ba7f083c}{AnonymousY}{A\bibinitperiod}{}{}{}{}{}{}}%
+        {{hash=a0bccee4041bc840e14c06e5ba7f083c}{%
+           family={AnonymousY},
+           family_i={A\bibinitperiod}}}%
       }
       \name{shortauthor}{1}{}{%
-        {{uniquename=0,hash=f64c29e89ea49402b997956610b58ef6}{YAnony}{Y\bibinitperiod}{}{}{}{}{}{}}%
+        {{uniquename=0,hash=f64c29e89ea49402b997956610b58ef6}{%
+           family={YAnony},
+           family_i={Y\bibinitperiod}}}%
       }
       \strng{namehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
@@ -297,7 +433,11 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
 
 my $url1 = q|    \entry{url1}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=b2106a3dda6c5a4879a0cab37e9cca55}{Alias}{A\bibinitperiod}{Alan}{A\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=b2106a3dda6c5a4879a0cab37e9cca55}{%
+           family={Alias},
+           family_i={A\bibinitperiod},
+           given={Alan},
+           given_i={A\bibinitperiod}}}%
       }
       \strng{namehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
@@ -455,7 +595,11 @@ eq_or_diff( $out->get_output_entry('list1', $main), $list1, 'Entry with others l
 
 my $isbn1 = q|    \entry{isbn1}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{Flummox}{F\\bibinitperiod}{Fred}{F\\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
+           family={Flummox},
+           family_i={F\bibinitperiod},
+           given={Fred},
+           given_i={F\bibinitperiod}}}%
       }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
@@ -470,7 +614,11 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
 
 my $isbn2 = q|    \entry{isbn2}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{Flummox}{F\\bibinitperiod}{Fred}{F\\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
+           family={Flummox},
+           family_i={F\bibinitperiod},
+           given={Fred},
+           given_i={F\bibinitperiod}}}%
       }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}

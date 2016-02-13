@@ -84,7 +84,11 @@ my $bln = [ {content => 'author'}, {content => 'editor'} ];
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{Doe}{D\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
+           family={Doe},
+           family_i={D\bibinitperiod},
+           given={John},
+           given_i={J\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%
@@ -112,7 +116,11 @@ my $l1 = q|    \entry{L1}{book}{}
 
 my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{Edwards}{E\bibinitperiod}{Ellison}{E\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=19eec87c959944d6d9c72434a42856ba}{%
+           family={Edwards},
+           family_i={E\bibinitperiod},
+           given={Ellison},
+           given_i={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%
@@ -136,7 +144,11 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
 
 my $l3 = q|    \entry{L3}{book}{blah=10}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{Bluntford}{B\bibinitperiod}{Bunty}{B\bibinitperiod}{}{}{}{}}%
+        {{uniquename=0,hash=490250da1f3b92580d97563dc96c6c84}{%
+           family={Bluntford},
+           family_i={B\bibinitperiod},
+           given={Bunty},
+           given_i={B\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%
