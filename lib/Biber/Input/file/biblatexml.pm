@@ -642,21 +642,18 @@ sub parsename {
   $nameinitstr .= '_' . join('', @{$namec{given_i}}) if exists($namec{given});
   $nameinitstr =~ s/\s+/_/g;
 
+  my %nps;
+  foreach my $n ($dm->get_constant_value('nameparts')) { # list type so returns list
+    $nps{$n} = {string  => $namec{$n} // undef,
+                initial => exists($namec{$n}) ? $namec{"${n}_i"} : undef};
+  }
+
   my $newname = Biber::Entry::Name->new(
-    given           => {string  => $namec{given} // undef,
-                        initial => exists($namec{given}) ? $namec{given_i} : undef},
-    middle          => {string  => $namec{middle} // undef,
-                        initial => exists($namec{middle}) ? $namec{middle_i} : undef},
-    family          => {string  => $namec{family} // undef,
-                        initial => exists($namec{family}) ? $namec{family_i} : undef},
-    prefix          => {string  => $namec{prefix} // undef,
-                        initial => exists($namec{prefix}) ? $namec{prefix_i} : undef},
-    suffix          => {string  => $namec{suffix} // undef,
-                        initial => exists($namec{suffix}) ? $namec{suffix_i} : undef},
-    namestring      => $namestring,
-    nameinitstring  => $nameinitstr,
-    gender          => $node->getAttribute('gender')
-  );
+                                        %nps,
+                                        namestring      => $namestring,
+                                        nameinitstring  => $nameinitstr,
+                                        gender          => $node->getAttribute('gender')
+                                       );
 
   # Set name-scope sortnamekeyscheme attribute if it exists
   if ($node->hasAttribute('sortnamekeyscheme')) {

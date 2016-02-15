@@ -557,7 +557,7 @@ Use F<sep> as the separator for BibTeX data source name fields. Defaults to BibT
 
 =item B<--no-bltxml-schema>
 
-When reading or writing biblatexml data source, don't generate an RNG XML schema from the data
+When reading or writing biblatexml data sources, don't generate an RNG XML schema from the data
 model.
 
 =item B<--noconf>
