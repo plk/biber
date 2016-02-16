@@ -1038,6 +1038,9 @@ sub generate_bltxml_schema {
               $writer->emptyTag('attribute', 'name' => 'type');
               $writer->emptyTag('attribute', 'name' => 'ids');
               $writer->startTag('optional');
+              $writer->emptyTag('attribute', 'name' => 'options');
+              $writer->endTag(); # optional
+              $writer->startTag('optional');
               $writer->emptyTag('attribute', 'name' => 'string');
               $writer->endTag(); # optional
               $writer->endTag(); # item element

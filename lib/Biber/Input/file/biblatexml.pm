@@ -357,12 +357,18 @@ sub create_entry {
 # Related entries
 sub _related {
   my ($bibentry, $entry, $f, $key) = @_;
+  my $Srx = Biber::Config->getoption('xsvsep');
+  my $S = qr/$Srx/;
   my $node = $entry->findnodes("./$f")->get_node(1);
   foreach my $item ($node->findnodes("./$NS:item")) {
-    $bibentry->set_datafield('related', [ split(/\s*,\s*/, $item->getAttribute('ids')) ]);
+    $bibentry->set_datafield('related', [ split(/$S/, $item->getAttribute('ids')) ]);
     $bibentry->set_datafield('relatedtype', $item->getAttribute('type'));
     if (my $string = $item->getAttribute('string')) {
       $bibentry->set_datafield('relatedstring', $string);
+    }
+    if (my $string = $item->getAttribute('options')) {
+      $bibentry->set_datafield('relatedoptions',
+                               [ split(/$S/, $item->getAttribute('relatedoptions')) ]);
     }
   }
   return;
@@ -371,7 +377,6 @@ sub _related {
 # literal fields
 sub _literal {
   my ($bibentry, $entry, $f, $key) = @_;
-  # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
     # eprint is special case
     if ($f eq "$NS:eprint") {
@@ -387,7 +392,7 @@ sub _literal {
   return;
 }
 
-# xSV field form
+# xSV field
 sub _xsv {
   my ($bibentry, $entry, $f) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
@@ -398,7 +403,6 @@ sub _xsv {
 
 
 # uri fields
-# No script form or language - makes no sense in a URI
 sub _uri {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
@@ -418,7 +422,6 @@ sub _uri {
 # List fields
 sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
-  # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
     $bibentry->set_datafield(_norm($f), _split_list($node));
   }
@@ -428,7 +431,6 @@ sub _list {
 # Range fields
 sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
-  # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$f")) {
     # List of ranges/values
     if (my @rangelist = $node->findnodes("./$NS:item")) {
@@ -508,7 +510,6 @@ sub _date {
 sub _name {
   my ($bibentry, $entry, $f, $key) = @_;
 
-  # can be multiple nodes with different script forms
   foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
     my $names = new Biber::Entry::Names;
 
