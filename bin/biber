@@ -745,11 +745,11 @@ information in the log.
 
 =item B<-u>
 
-Alias for B<--input_encoding=UTF-8>
+Alias for B<--input-encoding=UTF-8>
 
 =item B<-U>
 
-Alias for B<--output_encoding=UTF-8>
+Alias for B<--output-encoding=UTF-8>
 
 =item B<--validate-config>
 
