@@ -111,10 +111,9 @@ sub init_sets {
   }
 
   # Read driver config file
-  my $parser = XML::LibXML->new();
   my $xml = File::Slurp::read_file($mapdata) or biber_error("Can't read file $mapdata");
-  my $recodexml = $parser->parse_string(decode('UTF-8', $xml));
-  my $xpc = XML::LibXML::XPathContext->new($recodexml);
+  my $doc = XML::LibXML->load_xml(string => decode('UTF-8', $xml));
+  my $xpc = XML::LibXML::XPathContext->new($doc);
 
   my @types = qw(letters diacritics punctuation symbols negatedsymbols superscripts cmdsuperscripts dings greek);
 

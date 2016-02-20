@@ -19,6 +19,7 @@ use Encode;
 chdir("t/tdata");
 
 # Set up Biber object
+# THERE ARE MAPS IN THE BCF
 my $biber = Biber->new(noconf => 1);
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
@@ -50,7 +51,7 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
 my $bibentries = $section->bibentries;
 
-my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
+my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \true{moreauthor}
       \name{author}{3}{useprefix=true}{%
         {{hash=d16c52bc219d448d5f07dc865d5c4f54}{%
@@ -60,10 +61,10 @@ my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
            family_i={Б\\bibinitperiod},
            given={Павел\\bibnamedelima Георгиевич},
            given_i={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}}}%
-        {{useprefix=false,hash=d4b3732f25a1f82b3eb6c24cb1b8a9d0}{%
+        {{useprefix=false,hash=a3dd54ba13bec8a96a9d9b9804fc7927}{%
            prefix={von},
            prefix_i={v\\bibinitperiod},
-           family={Розенфельд},
+           family={РРозенфельд},
            family_i={Р\\bibinitperiod},
            given={Борис-ZZ\\bibnamedelima Aбрамович},
            given_i={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}}}%
@@ -72,6 +73,13 @@ my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
            family_i={A\\bibinitperiod},
            given={Ашраф\\bibnamedelima Ахмедович},
            given_i={А\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
+      }
+      \name{translator}{1}{}{%
+        {{hash=b44eba830fe9817fbe8e53c82f1cbe04}{%
+           family={Smith},
+           family_i={S\\bibinitperiod},
+           given={Paul},
+           given_i={P\\bibinitperiod}}}%
       }
       \list{language}{1}{%
         {russian}%
@@ -83,13 +91,14 @@ my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
         {Наука}%
       }
       \strng{namehash}{b5cf3ab49063f1ac8cf913eb3527f38e}
-      \strng{fullhash}{0fe1efdea80f99438d5ff6eefa7d2171}
+      \strng{fullhash}{676e5835f2422c4d02b9107e530be190}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelyear}{1983}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
+      \field{addendum}{userc}
       \field{eventday}{16}
       \field{eventendday}{17}
       \field{eventendmonth}{05}
@@ -108,12 +117,15 @@ my $l1 = q|    \entry{bltx1}{book}{useprefix=false}
       \field{urlendyear}{}
       \field{urlmonth}{07}
       \field{urlyear}{1991}
+      \field{userb}{usera}
+      \field{userd}{userc}
       \field{year}{1983}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}
     \endentry
 |;
-my $bltx1 = "mm,,,von!Булгаков!Павел Георгиевич#Розенфельд!БорисZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович,1983,0000,Мухаммад ибн муса алХорезми Около 783 около 850";
+
+my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРозенфельд!БорисZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович,1983,0000,Мухаммад ибн муса алХорезми Около 783 около 850';
 
 # Test::Differences doesn't like utf8 unless it's encoded here
 eq_or_diff(encode_utf8($out->get_output_entry('bltx1', $main)), encode_utf8($l1), 'BibLaTeXML - 1');

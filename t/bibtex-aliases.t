@@ -73,7 +73,7 @@ eq_or_diff($bibentries->entry('alias4')->get_field('entrytype'), 'customa', 'Ali
 eq_or_diff($bibentries->entry('alias4')->get_field('verba'), 'conversation', 'Alias - 10' );
 eq_or_diff($bibentries->entry('alias4')->get_field('verbb'), 'somevalue', 'Alias - 11' );
 eq_or_diff($bibentries->entry('alias4')->get_field('eprint'), 'anid', 'Alias - 12' );
-eq_or_diff($bibentries->entry('alias4')->get_field('eprinttype'), 'PUBMEDID', 'Alias - 13' );
+eq_or_diff($bibentries->entry('alias4')->get_field('eprinttype'), 'pubmedid', 'Alias - 13' );
 eq_or_diff($bibentries->entry('alias4')->get_field('userd'), 'Some string of things', 'Alias - 14' );
 eq_or_diff($bibentries->entry('alias4')->get_field('pubmedid'), undef, 'Alias - 15' );
 eq_or_diff($bibentries->entry('alias4')->get_field('namea')->nth_name(1)->get_namepart('given'), 'Sam', 'Alias - 16' );

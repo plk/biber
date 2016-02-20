@@ -14,12 +14,13 @@ use Biber::Sections;
 use Biber::Section;
 use Biber::Utils;
 use Biber::Config;
+use Data::Uniqid qw ( suniqid );
 use Encode;
 use File::Spec;
 use File::Slurp;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
-use List::AllUtils qw( uniq );
+use List::AllUtils qw( uniq first );
 use XML::LibXML;
 use XML::LibXML::Simple;
 use Data::Dump qw(dump);
@@ -85,6 +86,24 @@ sub extract_entries {
   my $tf; # Up here so that the temp file has enough scope to survive until we've
           # used it
   $logger->trace("Entering extract_entries() in driver 'biblatexml'");
+
+  # Get a reference to the correct sourcemap sections, if they exist
+  my $smaps = [];
+  # Maps are applied in order USER->STYLE->DRIVER
+  if (defined(Biber::Config->getoption('sourcemap'))) {
+    # User maps
+    if (my $m = first {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'user' } @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+    # Style maps
+    if (my $m = first {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'style' } @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+    # Driver default maps
+    if (my $m = first {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'driver'} @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, $m;
+    }
+  }
 
   # If it's a remote data file, fetch it first
   if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
@@ -161,17 +180,16 @@ sub extract_entries {
   $logger->info("Found BibLaTeXML data file '$filename'");
 
   # Set up XML parser and namespace
-  my $parser = XML::LibXML->new();
   my $xml = File::Slurp::read_file($filename) or biber_error("Can't read file $filename");
   $xml = NFD(decode('UTF-8', $xml));# Unicode NFD boundary
-  my $bltxml = $parser->parse_string($xml);
+  my $bltxml = XML::LibXML->load_xml(string => $xml);
   my $xpc = XML::LibXML::XPathContext->new($bltxml);
   $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
 
   if ($section->is_allkeys) {
     $logger->debug("All citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
-    foreach my $entry ($xpc->findnodes("//$NS:entry")) {
+    foreach my $entry ($xpc->findnodes("/$NS:entries/$NS:entry")) {
       $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
 
       # If an entry has no key, ignore it and warn
@@ -233,7 +251,7 @@ sub extract_entries {
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($key, $filename);
 
-      create_entry($key, $entry);
+      create_entry($key, $entry, $source, $smaps, \@rkeys);
 
       # We do this as otherwise we have no way of determining the origing .bib entry order
       # We need this in order to do sorting=none + allkeys because in this case, there is no
@@ -256,7 +274,7 @@ sub extract_entries {
     $logger->debug('Wanted keys: ' . join(', ', @$keys));
     foreach my $wanted_key (@$keys) {
       $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
-      if (my @entries = $xpc->findnodes("//$NS:entry[\@id='$wanted_key']")) {
+      if (my @entries = $xpc->findnodes("/$NS:entries/$NS:entry[\@id='$wanted_key']")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
           biber_warn("Found more than one entry for key '$wanted_key' in '$filename': " .
@@ -274,25 +292,25 @@ sub extract_entries {
           # Record a key->datasource name mapping for error reporting
           $section->set_keytods($wanted_key, $filename);
 
-          create_entry($wanted_key, $entry);
+          create_entry($wanted_key, $entry, $source, $smaps, \@rkeys);
         }
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
-      elsif ($xpc->findnodes("//$NS:entry/$NS:id[text()='$wanted_key']")) {
-        my $key = $xpc->findnodes("//$NS:entry/\@id");
+      elsif ($xpc->findnodes("/$NS:entries/$NS:entry/$NS:id[text()='$wanted_key']")) {
+        my $key = $xpc->findnodes("/$NS:entries/$NS:entry/\@id");
         $logger->debug("Citekey '$wanted_key' is an alias for citekey '$key'");
         $section->set_citekey_alias($wanted_key, $key);
 
         # Make sure there is a real, cited entry for the citekey alias
         # just in case only the alias is cited
         unless ($section->bibentries->entry_exists($key)) {
-          my $entry = $xpc->findnodes("//$NS:entry/[\@id='$key']");
+          my $entry = $xpc->findnodes("/$NS:entries/$NS:entry/[\@id='$key']");
 
           # Record a key->datasource name mapping for error reporting
           $section->set_keytods($key, $filename);
 
-          create_entry($key, $entry);
+          create_entry($key, $entry, $source, $smaps, \@rkeys);
           $section->add_citekeys($key);
         }
 
@@ -314,43 +332,362 @@ sub extract_entries {
 =cut
 
 sub create_entry {
-  my ($key, $entry) = @_;
+  my ($key, $entry, $datasource, $smaps, $rkeys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
 
   my $dm = Biber::Config->get_dm;
   my $bibentries = $section->bibentries;
-  my $bibentry = new Biber::Entry;
 
-  $bibentry->set_field('citekey', $key);
+  my %newentries; # In case we create a new entry in a map
 
-  # We put all the fields we find modulo field aliases into the object.
-  # Validation happens later and is not datasource dependent
-  foreach my $f (uniq map { if (_norm($_->nodeName) eq 'names') { $_->getAttribute('type') }
-                            else { $_->nodeName()} }  $entry->findnodes('*')) {
+  # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
+  foreach my $smap (@$smaps) {
+    $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
+    my $level = $smap->{level};
 
-    # We have to process local options as early as possible in order
-    # to make them available for things that need them like name parsing
-    if (_norm($f) eq 'options') {
-      if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
-        process_entry_options($key, [ split(/\s*,\s*/, $node->textContent()) ]);
-        # Save the raw options in case we are to output another input format like
-        # biblatexml
-        $bibentry->set_field('rawoptions', $node->textContent());
+  MAP:    foreach my $map (@{$smap->{map}}) {
+
+      # defaults to the entrytype unless changed below
+      my $last_type = $entry->getAttribute('entrytype');
+      my $last_field = undef;
+      my $last_fieldval = undef;
+      my $cnerror;
+
+      my @imatches; # For persisting parenthetical matches over several steps
+
+      # Check pertype restrictions
+      # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
+      # messier to write than Q
+      unless (not exists($map->{per_type}) or
+              first {lc($_->{content}) eq $entry->type} @{$map->{per_type}}) {
+        next;
       }
-    }
 
-    # Now run any defined handler
-    if ($dm->is_field(_norm($f))) {
-      my $handler = _get_handler($f);
-      &$handler($bibentry, $entry, $f, $key);
+      # Check negated pertype restrictions
+      if (exists($map->{per_nottype}) and
+          first {lc($_->{content}) eq $entry->getAttribute('entrytype')} @{$map->{per_nottype}}) {
+        next;
+      }
+
+      # Check per_datasource restrictions
+      # Don't compare case insensitively - this might not be correct
+      # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
+      # messier to write than Q
+      unless (not exists($map->{per_datasource}) or
+              first {$_->{content} eq $datasource} @{$map->{per_datasource}}) {
+        next;
+      }
+
+      # Set up any mapping foreach loop
+      my @maploop = ('');
+      if (my $xp_foreach = $map->{map_foreach}) {
+        if (my $felist = $entry->findnodes($xp_foreach)) {
+          @maploop = split(/\s*,\s*/, $felist);
+        }
+      }
+
+      foreach my $maploop (@maploop) {
+        my $maploopuniq = suniqid;
+        # loop over mapping steps
+        foreach my $step (@{$map->{map_step}}) {
+
+          # entry deletion. Really only useful with allkeys or tool mode
+          if ($step->{map_entry_null}) {
+            $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
+            return 0;           # don't create an entry at all
+          }
+
+          # new entry
+          if (my $newkey = maploop($step->{map_entry_new}, $maploop, $maploopuniq)) {
+            my $newentrytype;
+            unless ($newentrytype = maploop($step->{map_entry_newtype}, $maploop, $maploopuniq)) {
+              biber_warn("Source mapping (type=$level, key=$key): Missing type for new entry '$newkey', skipping step ...");
+              next;
+            }
+            $logger->debug("Source mapping (type=$level, key=$key): Creating new entry with key '$newkey'");
+            my $newentry = XML::LibXML::Element->new("$NS:entry");
+            $newentry->setAttribute('id', NFC($newkey));
+            $newentry->setAttribute('entrytype', NFC($newentrytype));
+
+            # found a new entry key, remove it from the list of keys we want since we
+            # have "found" it by creating it
+            @$rkeys = grep {$newkey ne $_} @$rkeys;
+
+            # for allkeys sections initially
+            if ($section->is_allkeys) {
+              $section->add_citekeys($newkey);
+            }
+            $newentries{$newkey} = $newentry;
+          }
+
+          # entry clone
+          if (my $prefix = maploop($step->{map_entry_clone}, $maploop, $maploopuniq)) {
+            $logger->debug("Source mapping (type=$level, key=$key): cloning entry with prefix '$prefix'");
+            # Create entry with no sourcemapping to avoid recursion
+            create_entry("$prefix$key", $entry);
+
+            # found a prefix clone key, remove it from the list of keys we want since we
+            # have "found" it by creating it along with its clone parent
+            @$rkeys = grep {"$prefix$key" ne $_} @$rkeys;
+            # Need to add the clone key to the section if allkeys is set since all keys are cleared
+            # for allkeys sections initially
+            if ($section->is_allkeys) {
+              $section->add_citekeys("$prefix$key");
+            }
+          }
+
+          # An entry created by map_entry_new previously can be the target for field setting
+          # options
+          # A newly created entry as target of operations doesn't make sense in all situations
+          # so it's limited to being the target for field sets
+          my $etarget;
+          my $etargetkey;
+          if ($etargetkey = maploop($step->{map_entrytarget}, $maploop, $maploopuniq)) {
+            unless ($etarget = $newentries{$etargetkey}) {
+              biber_warn("Source mapping (type=$level, key=$key): Dynamically created entry target '$etargetkey' does not exist skipping step ...");
+              next;
+            }
+          }
+          else {             # default is that we operate on the same entry
+            $etarget = $entry;
+            $etargetkey = $key;
+          }
+
+          # Entrytype map
+          if (my $typesource = maploop($step->{map_type_source}, $maploop, $maploopuniq)) {
+            $typesource = lc($typesource);
+            unless ($entry->getAttribute('entrytype') eq $typesource) {
+              # Skip the rest of the map if this step doesn't match and match is final
+              if ($step->{map_final}) {
+                $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->getAttribute('entrytype') . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
+                next MAP;
+              }
+              else {
+                # just ignore this step
+                $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->getAttribute('entrytype') . "' but map wants '$typesource', skipping step ...");
+                next;
+              }
+            }
+            # Change entrytype if requested
+            $last_type = $entry->getAttribute('entrytype');
+            my $t = lc(maploop($step->{map_type_target}, $maploop, $maploopuniq));
+            $logger->debug("Source mapping (type=$level, key=$key): Changing entry type from '$last_type' to $t");
+            $entry->setAttribute('entrytype', NFC($t));
+          }
+
+          # Field map
+          if (my $fieldsource = maploop($step->{map_field_source}, $maploop, $maploopuniq)) {
+            # just a field name, make it XPATH
+            if ($fieldsource !~ m|/|) {
+              $fieldsource = "./bltx:$fieldsource";
+            }
+
+            my $xp_fieldsource = XML::LibXML::XPathExpression->new($fieldsource);
+            # key is a pseudo-field. It's guaranteed to exist so
+            # just check if that's what's being asked for
+            unless ($entry->exists($xp_fieldsource)) {
+              # Skip the rest of the map if this step doesn't match and match is final
+              if ($step->{map_final}) {
+                $logger->debug("Source mapping (type=$level, key=$key): No field xpath '$fieldsource' and step has 'final' set, skipping rest of map ...");
+                next MAP;
+              }
+              else {
+                # just ignore this step
+                $logger->debug("Source mapping (type=$level, key=$key): No field xpath '$fieldsource', skipping step ...");
+                next;
+              }
+            }
+
+            $last_field = $entry->findnodes($xp_fieldsource)->get_node(1)->nodeName;
+            $last_fieldval = $entry->findvalue($xp_fieldsource);
+
+            my $negmatch = 0;
+            # Negated matches are a normal match with a special flag
+            if (my $nm = $step->{map_notmatch}) {
+              $step->{map_match} = $nm;
+              $negmatch = 1;
+            }
+
+            # map fields to targets
+            if (my $m = maploop($step->{map_match}, $maploop, $maploopuniq)) {
+              if (defined($step->{map_replace})) { # replace can be null
+
+                # Can't modify entrykey
+                if (lc($fieldsource) eq './@id') {
+                  $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$fieldsource' is entrykey- cannot remap the value of this field, skipping ...");
+                  next;
+                }
+
+                my $r = maploop($step->{map_replace}, $maploop, $maploopuniq);
+                $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field xpath '$fieldsource'");
+
+                unless (_changenode($entry, $fieldsource, ireplace($last_fieldval, $m, $r)), \$cnerror) {
+                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                }
+              }
+              else {
+                # Now re-instate any unescaped $1 .. $9 to get round these being
+                # dynamically scoped and being null when we get here from any
+                # previous map_match
+                # Be aware that imatch() uses m//g so @imatches can have multiple paren group
+                # captures which might be useful
+                $m =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+                unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
+                  # Skip the rest of the map if this step doesn't match and match is final
+                  if ($step->{map_final}) {
+                    $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$fieldsource' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                    next MAP;
+                  }
+                  else {
+                    # just ignore this step
+                    $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$fieldsource' does not match '$m', skipping step ...");
+                    next;
+                  }
+                }
+              }
+            }
+
+            # Set to a different target if there is one
+            if (my $target = maploop($step->{map_field_target}, $maploop, $maploopuniq)) {
+
+              # just a field name, make it XPATH
+              if ($target !~ m|/|) {
+                $target = "./bltx:$target";
+              }
+
+              my $xp_target = XML::LibXML::XPathExpression->new($target);
+              # Can't remap entry key pseudo-field
+              if (lc($fieldsource) eq './@id') {
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$fieldsource' is entrykey- cannot map this to a new field as you must have an entrykey, skipping ...");
+                next;
+              }
+
+            if ($etarget->exists($xp_target)) {
+                if ($map->{map_overwrite} // $smap->{map_overwrite}) {
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field xpath '$target'");
+                }
+                else {
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$fieldsource' is mapped to field xpath '$target' but both are defined, skipping ...");
+                  next;
+                }
+              }
+              unless (_changenode($etarget, $target, $fieldsource, \$cnerror)) {
+                biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+              }
+              $etarget->findnodes($xp_fieldsource)->get_node(1)->unbindNode();
+            }
+          }
+
+          # field changes
+          if (my $node = maploop($step->{map_field_set}, $maploop, $maploopuniq)) {
+
+            # just a field name, make it XPATH
+            if ($node !~ m|/|) {
+              $node = "./bltx:$node";
+            }
+
+            my $xp_node = XML::LibXML::XPathExpression->new($node);
+            # Deal with special tokens
+            if ($step->{map_null}) {
+              $logger->debug("Source mapping (type=$level, key=$key): Deleting field xpath '$node'");
+              $entry->findnodes($xp_node)->get_node(1)->unbindNode();
+            }
+            else {
+              if ($etarget->exists($xp_node)) {
+                unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
+                  if ($step->{map_final}) {
+                    # map_final is set, ignore and skip rest of step
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$node' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
+                    next MAP;
+                  }
+                  else {
+                    # just ignore this step
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$node' exists and overwrite is not set, skipping step ...");
+                    next;
+                  }
+                }
+              }
+
+              # If append is set, keep the original value and append the new
+              my $orig = $step->{map_append} ? $etarget->findvalue($xp_node) : '';
+
+              if ($step->{map_origentrytype}) {
+                next unless $last_type;
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting xpath '$node' to '${orig}${last_type}'");
+
+                unless (_changenode($etarget, $node, $orig . $last_type, \$cnerror)) {
+                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                }
+              }
+              elsif ($step->{map_origfieldval}) {
+                next unless $last_fieldval;
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$node' to '${orig}${last_fieldval}'");
+                unless (_changenode($etarget, $node, $orig . $last_fieldval, \$cnerror)) {
+                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                }
+              }
+              elsif ($step->{map_origfield}) {
+                next unless $last_field;
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$node' to '${orig}${last_field}'");
+                unless (_changenode($etarget, $node, $orig . $last_field, \$cnerror)) {
+                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                }
+              }
+              else {
+                my $fv = maploop($step->{map_field_value}, $maploop, $maploopuniq);
+                # Now re-instate any unescaped $1 .. $9 to get round these being
+                # dynamically scoped and being null when we get here from any
+                # previous map_match
+                $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$node' to '${orig}${fv}'");
+                unless (_changenode($etarget, $node, $orig . $fv, \$cnerror)) {
+                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 
-  $bibentry->set_field('entrytype', $entry->getAttribute('entrytype'));
-  $bibentry->set_field('datatype', 'biblatexml');
-  $bibentries->add_entry($key, $bibentry);
+  # Need to also instantiate fields in any new entries created by map
+  foreach my $e ($entry, values %newentries) {
+    next unless $e;             # newentry might be undef
 
+    my $bibentry = new Biber::Entry;
+    my $k = $e->getAttribute('id');
+    $bibentry->set_field('citekey', $k);
+    $logger->debug("Creating entry with key '$k'");
+
+    # We put all the fields we find modulo field aliases into the object.
+    # Validation happens later and is not datasource dependent
+    foreach my $f (uniq map { if (_norm($_->nodeName) eq 'names') { $_->getAttribute('type') }
+                              else { $_->nodeName()} }  $e->findnodes('*')) {
+
+      # We have to process local options as early as possible in order
+      # to make them available for things that need them like name parsing
+      if (_norm($f) eq 'options') {
+        if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
+          process_entry_options($k, [ split(/\s*,\s*/, $node->textContent()) ]);
+          # Save the raw options in case we are to output another input format like
+          # biblatexml
+          $bibentry->set_field('rawoptions', $node->textContent());
+        }
+      }
+
+      # Now run any defined handler
+      if ($dm->is_field(_norm($f))) {
+        my $handler = _get_handler($f);
+        &$handler($bibentry, $e, $f, $k);
+      }
+    }
+
+    $bibentry->set_field('entrytype', $e->getAttribute('entrytype'));
+    $bibentry->set_field('datatype', 'biblatexml');
+    $bibentries->add_entry($k, $bibentry);
+  }
   return;
 }
 
@@ -759,6 +1096,86 @@ sub _get_handler {
   }
 }
 
+sub _changenode {
+  my ($e, $target, $value, $error) = @_;
+
+  # value is XPATH, assume it needs copying in full
+  my $nodeval = 0;
+  if ($value =~ m|/|) {
+    $value = $e->findnodes($value)->get_node(1)->cloneNode(1);
+    $nodeval = 1;
+  }
+
+  # target already exists
+  if (my $n = $e->findnodes($target)->get_node(1)) {
+    # set attribute value
+    if ($n->nodeType == XML_ATTRIBUTE_NODE) {
+      if ($nodeval) {
+        $$error = "Tried to replace '$target' Atribute node with complex data";
+        return 0;
+      }
+      $n->setValue(NFC($value));
+    }
+    # Set element
+    elsif ($n->nodeType == XML_ELEMENT_NODE) {
+      # if value is a node, remove target child nodes and replace with value child nodes
+      if ($nodeval) {
+        $n->removeChildNodes();
+        foreach my $cn ($value->childNodes) {
+          $n->appendChild($cn);
+        }
+      }
+      # value is just a string, replace target text content with value string
+      else {
+        $n->findnodes('./text()')->get_node(1)->setData(NFC($value));
+      }
+    }
+    # target is a text node, just replace string
+    elsif ($n->nodeType == XML_TEXT_NODE) {
+      if ($nodeval) {
+        $$error = "Tried to replace '$target' Text node with complex data";
+        return 0;
+      }
+      $n->setData(NFC($value));
+    }
+  }
+  else {
+    my @nodes = split(m|/|, $target =~ s|^\./||r);
+    my $nodepath = '.';
+    my $nodeparent = '.';
+    for (my $i = 0; $i <= $#nodes; $i++) {
+      my $node = $nodes[$i];
+      $nodepath .= "/$node";
+      unless ($e->findnodes($nodepath)) {
+        # Element
+        if ($node =~ m/^bltx:/) {
+          my $parent = $e->findnodes($nodeparent)->get_node(1);
+          my $newnode = $parent->appendChild(XML::LibXML::Element->new($node =~ s|^bltx:||r));
+          $newnode->setNamespace($BIBLATEXML_NAMESPACE_URI, 'bltx');
+          if ($i == $#nodes) {
+            $newnode->appendTextNode(NFC($value));
+          }
+        }
+        # Attribute
+        elsif ($node =~ m/^@/) {
+          if ($i == $#nodes) {
+            my $parent = $e->findnodes($nodeparent)->get_node(1);
+            $parent->setAttribute($node =~ s|^@||r, NFC($value));
+          }
+        }
+        # Text
+        elsif ($node =~ m/text\(\)$/) {
+          if ($i == $#nodes) {
+            my $parent = $e->findnodes($nodeparent)->get_node(1);
+            $parent->appendTextNode(NFC($value));
+          }
+        }
+      }
+      $nodeparent .= "/$node";
+    }
+  }
+  return 1;
+}
 
 1;
 

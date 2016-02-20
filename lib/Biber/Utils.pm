@@ -838,16 +838,16 @@ sub validate_biber_xml {
   }
 
   # Parse file
-  my $xp = $xmlparser->parse_file($file);
+  my $doc = $xmlparser->load_xml(location => $file);
 
   # XPath context
   if ($prefix) {
-    my $xpc = XML::LibXML::XPathContext->new($xp);
+    my $xpc = XML::LibXML::XPathContext->new($doc);
     $xpc->registerNs($type, $prefix);
   }
 
   # Validate against schema. Dies if it fails.
-  eval { $xmlschema->validate($xp) };
+  eval { $xmlschema->validate($doc) };
   if (ref($@)) {
     $logger->debug( $@->dump() );
     biber_error("'$file' failed to validate against schema '$schema'");
@@ -1137,6 +1137,7 @@ sub parse_range {
 
 sub maploop {
   my ($string, $maploop, $mapuniq) = @_;
+  return $string if not defined($string);
   return $string unless ($maploop or $mapuniq);
   $string =~ s/\$MAPLOOP/$maploop/ge if $maploop;
   $string =~ s/\$MAPUNIQ/$mapuniq/ge if $mapuniq;

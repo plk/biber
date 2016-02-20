@@ -16,7 +16,7 @@
         <bltx:namepart type="family">Булгаков</bltx:namepart>
         <bltx:namepart type="prefix" initial="v">von</bltx:namepart>
       </bltx:name>
-      <bltx:name useprefix="0">
+      <bltx:name>
         <bltx:namepart type="given">
           <bltx:namepart>Борис-ZZ</bltx:namepart>
           <bltx:namepart>Aбрамович</bltx:namepart>
@@ -32,6 +32,18 @@
         <bltx:namepart type="family">Aхмедов</bltx:namepart>
       </bltx:name>
     </bltx:names>
+    <bltx:names type="editor">
+      <bltx:name gender="sm">
+        <bltx:namepart type="given">Paul</bltx:namepart>
+        <bltx:namepart type="family">Smith</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+    <bltx:names type="translator">
+      <bltx:name gender="sm">
+        <bltx:namepart type="given">John </bltx:namepart>
+        <bltx:namepart type="family">Brown</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
     <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
     <bltx:location>Москва</bltx:location>
     <bltx:publisher>Наука</bltx:publisher>
@@ -39,6 +51,10 @@
       <bltx:item>russian</bltx:item>
     </bltx:language>
     <bltx:series>Научно-биографическая литература</bltx:series>
+    <bltx:usera>usera</bltx:usera>
+    <bltx:userb>userb</bltx:userb>
+    <bltx:userc>userc</bltx:userc>
+    <bltx:userd>userd</bltx:userd>
     <bltx:date>1983</bltx:date>
     <bltx:date type="orig">1985-04-02</bltx:date>
     <bltx:date type ="event">

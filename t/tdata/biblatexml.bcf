@@ -378,6 +378,21 @@
   </bcf:optionscope>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
+    <bcf:maps datatype="biblatexml" map_overwrite="1" level="user">
+      <bcf:map>
+        <bcf:map_step map_type_source="book" map_type_target="misc" map_final="1"/>
+      </bcf:map>
+      <bcf:map>
+        <bcf:map_step map_field_source="./bltx:names[@type='author']/bltx:name[2]/bltx:namepart[@type='family']" map_match="\AР" map_replace="РР"/>
+        <bcf:map_step map_field_source="./bltx:names[@type='editor']" map_field_target="./bltx:names[@type='translator']"/>
+        <bcf:map_step
+            map_field_set="./bltx:names[@type='author']/bltx:name[2]/@useprefix"
+            map_field_value="false"/> 
+        <bcf:map_step map_field_source="./bltx:usera" map_field_target="./bltx:userb"/>
+        <bcf:map_step map_field_source="userc" map_field_target="userd"/>
+        <bcf:map_step map_field_set="./bltx:addendum" map_origfieldval="1"/>
+      </bcf:map>
+    </bcf:maps>
     <bcf:maps datatype="bibtex" level="driver">
       <bcf:map>
         <bcf:map_step map_type_source="conference" map_type_target="inproceedings" map_final="1"/>

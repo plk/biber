@@ -354,7 +354,7 @@ sub create_entry {
   # We have to pass in $rkeys so that the new/clone operations can remove the new/clone
   # key from the list of wanted keys because new/cloned entries will never appear to the normal
   # key search loop
-  my ($key, $entry, $source, $smaps, $rkeys) = @_;
+  my ($key, $entry, $datasource, $smaps, $rkeys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
@@ -395,7 +395,7 @@ sub create_entry {
         # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
         # messier to write than Q
         unless (not exists($map->{per_datasource}) or
-                first {$_->{content} eq $source} @{$map->{per_datasource}}) {
+                first {$_->{content} eq $datasource} @{$map->{per_datasource}}) {
           next;
         }
 
@@ -476,16 +476,17 @@ sub create_entry {
             }
 
             # Entrytype map
-            if (my $source = maploop($step->{map_type_source}, $maploop, $maploopuniq)) {
-              unless ($entry->type eq lc($source)) {
+            if (my $typesource = maploop($step->{map_type_source}, $maploop, $maploopuniq)) {
+              $typesource = lc($typesource);
+              unless ($entry->type eq $typesource) {
                 # Skip the rest of the map if this step doesn't match and match is final
                 if ($step->{map_final}) {
-                  $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->type . "' but map wants '" . lc($source) . "' and step has 'final' set, skipping rest of map ...");
+                  $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->type . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
                   next MAP;
                 }
                 else {
                   # just ignore this step
-                  $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->type . "' but map wants '" . lc($source) . "', skipping step ...");
+                  $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->type . "' but map wants '$typesource', skipping step ...");
                   next;
                 }
               }
@@ -497,25 +498,26 @@ sub create_entry {
             }
 
             # Field map
-            if (my $source = maploop($step->{map_field_source}, $maploop, $maploopuniq)) {
+            if (my $fieldsource = maploop($step->{map_field_source}, $maploop, $maploopuniq)) {
+              $fieldsource = lc($fieldsource);
               # key is a pseudo-field. It's guaranteed to exist so
               # just check if that's what's being asked for
-              unless (lc($source) eq 'entrykey' or
-                      $entry->exists(lc($source))) {
+              unless ($fieldsource eq 'entrykey' or
+                      $entry->exists($fieldsource)) {
                 # Skip the rest of the map if this step doesn't match and match is final
                 if ($step->{map_final}) {
-                  $logger->debug("Source mapping (type=$level, key=$key): No field '" . lc($source) . "' and step has 'final' set, skipping rest of map ...");
+                  $logger->debug("Source mapping (type=$level, key=$key): No field '$fieldsource' and step has 'final' set, skipping rest of map ...");
                   next MAP;
                 }
                 else {
                   # just ignore this step
-                  $logger->debug("Source mapping (type=$level, key=$key): No field '" . lc($source) . "', skipping step ...");
+                  $logger->debug("Source mapping (type=$level, key=$key): No field '$fieldsource', skipping step ...");
                   next;
                 }
               }
 
-              $last_field = $source;
-              $last_fieldval = lc($source) eq 'entrykey' ? biber_decode_utf8($entry->key) : biber_decode_utf8($entry->get(lc($source)));
+              $last_field = $fieldsource;
+              $last_fieldval = $fieldsource eq 'entrykey' ? biber_decode_utf8($entry->key) : biber_decode_utf8($entry->get($fieldsource));
 
               my $negmatch = 0;
               # Negated matches are a normal match with a special flag
@@ -529,14 +531,14 @@ sub create_entry {
                 if (defined($step->{map_replace})) { # replace can be null
 
                   # Can't modify entrykey
-                  if (lc($source) eq 'entrykey') {
-                    $logger->debug("Source mapping (type=$level, key=$key): Field '" . lc($source) . "' is 'entrykey'- cannot remap the value of this field, skipping ...");
+                  if ($fieldsource eq 'entrykey') {
+                    $logger->debug("Source mapping (type=$level, key=$key): Field '$fieldsource' is 'entrykey'- cannot remap the value of this field, skipping ...");
                     next;
                   }
 
                   my $r = maploop($step->{map_replace}, $maploop, $maploopuniq);
-                  $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field '" . lc($source) . "'");
-                  $entry->set(lc($source),
+                  $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
+                  $entry->set($fieldsource,
                               encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
                 }
                 else {
@@ -549,12 +551,12 @@ sub create_entry {
                   unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
                     # Skip the rest of the map if this step doesn't match and match is final
                     if ($step->{map_final}) {
-                      $logger->debug("Source mapping (type=$level, key=$key): Field '" . lc($source) . "' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                      $logger->debug("Source mapping (type=$level, key=$key): Field '$fieldsource' does not match '$m' and step has 'final' set, skipping rest of map ...");
                       next MAP;
                     }
                     else {
                       # just ignore this step
-                      $logger->debug("Source mapping (type=$level, key=$key): Field '" . lc($source) . "' does not match '$m', skipping step ...");
+                      $logger->debug("Source mapping (type=$level, key=$key): Field '$fieldsource' does not match '$m', skipping step ...");
                       next;
                     }
                   }
@@ -563,68 +565,68 @@ sub create_entry {
 
               # Set to a different target if there is one
               if (my $target = maploop($step->{map_field_target}, $maploop, $maploopuniq)) {
-
+                $target = lc($target);
                 # Can't remap entry key pseudo-field
-                if (lc($source) eq 'entrykey') {
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$source' is 'entrykey'- cannot map this to a new field as you must have an entrykey, skipping ...");
+                if ($fieldsource eq 'entrykey') {
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot map this to a new field as you must have an entrykey, skipping ...");
                   next;
                 }
 
-                if ($entry->exists(lc($target))) {
+                if ($etarget->exists($target)) {
                   if ($map->{map_overwrite} // $smap->{map_overwrite}) {
                     $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field '$target'");
                   }
                   else {
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$source' is aliased to field '$target' but both are defined, skipping ...");
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is mapped to field '$target' but both are defined, skipping ...");
                     next;
                   }
                 }
-                $etarget->set(lc($target), encode('UTF-8', NFC(biber_decode_utf8($entry->get(lc($source))))));
-                $entry->delete(lc($source));
+                $etarget->set($target, encode('UTF-8', NFC(biber_decode_utf8($entry->get($fieldsource)))));
+                $etarget->delete($fieldsource);
               }
             }
 
             # field changes
             if (my $field = maploop($step->{map_field_set}, $maploop, $maploopuniq)) {
-
+              $field = lc($field);
               # Deal with special tokens
               if ($step->{map_null}) {
                 $logger->debug("Source mapping (type=$level, key=$key): Deleting field '$field'");
-                $entry->delete(lc($field));
+                $entry->delete($field);
               }
               else {
-                if ($etarget->exists(lc($field))) {
+                if ($etarget->exists($field)) {
                   unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
                     if ($step->{map_final}) {
                       # map_final is set, ignore and skip rest of step
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '" . lc($field) . "' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
                       next MAP;
                     }
                     else {
                       # just ignore this step
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '" . lc($field) . "' exists and overwrite is not set, skipping step ...");
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists and overwrite is not set, skipping step ...");
                       next;
                     }
                   }
                 }
 
                 # If append is set, keep the original value and append the new
-                my $orig = $step->{map_append} ? biber_decode_utf8($etarget->get(lc($field))) : '';
+                my $orig = $step->{map_append} ? biber_decode_utf8($etarget->get($field)) : '';
 
                 if ($step->{map_origentrytype}) {
                   next unless $last_type;
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '" . lc($field) . "' to '${orig}${last_type}'");
-                  $etarget->set(lc($field), encode('UTF-8', NFC($orig . $last_type)));
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_type}'");
+                  $etarget->set($field, encode('UTF-8', NFC($orig . $last_type)));
                 }
                 elsif ($step->{map_origfieldval}) {
                   next unless $last_fieldval;
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '" . lc($field) . "' to '${orig}${last_fieldval}'");
-                  $etarget->set(lc($field), encode('UTF-8', NFC($orig . $last_fieldval)));
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_fieldval}'");
+                  $etarget->set($field, encode('UTF-8', NFC($orig . $last_fieldval)));
                 }
                 elsif ($step->{map_origfield}) {
                   next unless $last_field;
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '" . lc($field) . "' to '${orig}${last_field}'");
-                  $etarget->set(lc($field), encode('UTF-8', NFC($orig . $last_field)));
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_field}'");
+                  $etarget->set($field, encode('UTF-8', NFC($orig . $last_field)));
                 }
                 else {
                   my $fv = maploop($step->{map_field_value}, $maploop, $maploopuniq);
@@ -632,8 +634,8 @@ sub create_entry {
                   # dynamically scoped and being null when we get here from any
                   # previous map_match
                   $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '" . lc($field) . "' to '${orig}${fv}'");
-                  $etarget->set(lc($field), encode('UTF-8', NFC($orig . $fv)));
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${fv}'");
+                  $etarget->set($field, encode('UTF-8', NFC($orig . $fv)));
                 }
               }
             }
