@@ -55,6 +55,7 @@
     <bltx:userb>userb</bltx:userb>
     <bltx:userc>userc</bltx:userc>
     <bltx:userd>userd</bltx:userd>
+    <bltx:usere>a,b,c</bltx:usere>
     <bltx:date>1983</bltx:date>
     <bltx:date type="orig">1985-04-02</bltx:date>
     <bltx:date type ="event">

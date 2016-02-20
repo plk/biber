@@ -7,7 +7,7 @@ use Text::Diff::Config;
 $Text::Diff::Config::Output_Unicode = 1;
 
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Test::Differences;
 unified_diff;
 
@@ -119,11 +119,19 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{urlyear}{1991}
       \field{userb}{usera}
       \field{userd}{userc}
+      \field{usere}{a,b,c}
       \field{year}{1983}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}
     \endentry
 |;
+
+my $l2 = q|    \entry{loopkey:a}{book}{}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+    \endentry
+|;
+
 
 my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРозенфельд!БорисZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович,1983,0000,Мухаммад ибн муса алХорезми Около 783 около 850';
 
@@ -132,3 +140,4 @@ eq_or_diff(encode_utf8($out->get_output_entry('bltx1', $main)), encode_utf8($l1)
 eq_or_diff($section->get_citekey_alias('bltx1a1'), 'bltx1', 'Citekey aliases - 1');
 eq_or_diff($section->get_citekey_alias('bltx1a2'), 'bltx1', 'Citekey aliases - 2');
 eq_or_diff(encode_utf8($main->get_sortdata('bltx1')->[0]), encode_utf8($bltx1), 'useprefix at name list and name scope - 1' );
+eq_or_diff(encode_utf8($out->get_output_entry('loopkey:a', $main)), encode_utf8($l2), 'BibLaTeXML automapcreate - 1');

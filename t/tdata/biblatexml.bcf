@@ -379,6 +379,10 @@
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
     <bcf:maps datatype="biblatexml" map_overwrite="1" level="user">
+      <!-- This will create three entries -->
+      <bcf:map map_foreach="usere">
+        <bcf:map_step map_entry_new="loopkey:$MAPLOOP" map_entry_newtype="book"/>
+      </bcf:map>
       <bcf:map>
         <bcf:map_step map_type_source="book" map_type_target="misc" map_final="1"/>
       </bcf:map>

@@ -381,8 +381,13 @@ sub create_entry {
 
       # Set up any mapping foreach loop
       my @maploop = ('');
-      if (my $xp_foreach = $map->{map_foreach}) {
-        if (my $felist = $entry->findnodes($xp_foreach)) {
+      if (my $foreach = $map->{map_foreach}) {
+        # just a field name, make it XPATH
+        if ($foreach !~ m|/|) {
+          $foreach = "./bltx:$foreach";
+        }
+
+        if (my $felist = $entry->findnodes($foreach)) {
           @maploop = split(/\s*,\s*/, $felist);
         }
       }
