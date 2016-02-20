@@ -119,7 +119,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{urlyear}{1991}
       \field{userb}{usera}
       \field{userd}{userc}
-      \field{usere}{a,b,c}
+      \field{usere}{a}
       \field{year}{1983}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}
