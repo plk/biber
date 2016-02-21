@@ -1087,6 +1087,10 @@ sub _get_handler {
   }
 }
 
+
+# Changes node $xp_target_s (XPATH 1.0) to $value in the biblatexml entry $e, puts errors
+# into $error. Quite complicated because of the various node types that can be changed and
+# also due to the requirements of creating new targets when then don't exist.
 sub _changenode {
   my ($e, $xp_target_s, $value, $error) = @_;
 
@@ -1098,6 +1102,7 @@ sub _changenode {
     }
   }
 
+  # $value can be an XPATH or just a string.
   my $nodeval = 0;
   if ($value =~ m|/|) {
     $value = $e->findnodes($value)->get_node(1)->cloneNode(1);
