@@ -74,6 +74,13 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
            given={Ашраф\\bibnamedelima Ахмедович},
            given_i={А\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
       }
+      \name{foreword}{1}{}{%
+        {{hash=0ee59e598dae22fac8e6d9d2df7e79ec}{%
+           family={Brown},
+           family_i={B\\bibinitperiod},
+           given={John\\bibnamedelimb },
+           given_i={J\\bibinitperiod}}}%
+      }
       \name{translator}{1}{}{%
         {{hash=b44eba830fe9817fbe8e53c82f1cbe04}{%
            family={Smith},

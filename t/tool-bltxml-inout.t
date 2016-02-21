@@ -71,6 +71,12 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:key>bltx1a2</bltx:key>
     </bltx:ids>
     <bltx:options>useprefix=false</bltx:options>
+    <bltx:names type="afterword">
+      <bltx:name>
+        <bltx:namepart type="family" initial="B">Brown</bltx:namepart>
+        <bltx:namepart type="given" initial="J">John</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
     <bltx:names type="author" morenames="1" useprefix="1">
       <bltx:name>
         <bltx:namepart type="family" initial="Б">Булгаков</bltx:namepart>
@@ -80,7 +86,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
         </bltx:namepart>
         <bltx:namepart type="prefix" initial="v">von</bltx:namepart>
       </bltx:name>
-      <bltx:name useprefix="0">
+      <bltx:name>
         <bltx:namepart type="family" initial="Р">Розенфельд</bltx:namepart>
         <bltx:namepart type="given">
           <bltx:namepart initial="Б-Z">Борис-ZZ</bltx:namepart>
@@ -94,6 +100,18 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
           <bltx:namepart initial="А">Ашраф</bltx:namepart>
           <bltx:namepart initial="А">Ахмедович</bltx:namepart>
         </bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+    <bltx:names type="editor">
+      <bltx:name>
+        <bltx:namepart type="family" initial="S">Smith</bltx:namepart>
+        <bltx:namepart type="given" initial="P">Paul</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+    <bltx:names type="translator">
+      <bltx:name>
+        <bltx:namepart type="family" initial="B">Brown</bltx:namepart>
+        <bltx:namepart type="given" initial="J">John</bltx:namepart>
       </bltx:name>
     </bltx:names>
     <bltx:language>
@@ -110,6 +128,11 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:relatedtype>reprint</bltx:relatedtype>
     <bltx:series>Научно-биографическая литература</bltx:series>
     <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
+    <bltx:usera>usera</bltx:usera>
+    <bltx:userb>userb</bltx:userb>
+    <bltx:userc>userc</bltx:userc>
+    <bltx:userd>userd</bltx:userd>
+    <bltx:usere>a</bltx:usere>
     <bltx:pages>
       <bltx:list>
         <bltx:item>

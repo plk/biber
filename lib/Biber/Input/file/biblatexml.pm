@@ -482,24 +482,20 @@ sub create_entry {
           }
 
           # Field map
-          if (my $fieldsource = maploop($step->{map_field_source}, $maploop, $maploopuniq)) {
-            # just a field name, make it XPATH
-            if ($fieldsource !~ m|/|) {
-              $fieldsource = "./bltx:$fieldsource";
-            }
+          if (my $xp_fieldsource_s = _getpath(maploop($step->{map_field_source}, $maploop, $maploopuniq))) {
+            my $xp_fieldsource = XML::LibXML::XPathExpression->new($xp_fieldsource_s);
 
-            my $xp_fieldsource = XML::LibXML::XPathExpression->new($fieldsource);
             # key is a pseudo-field. It's guaranteed to exist so
             # just check if that's what's being asked for
             unless ($entry->exists($xp_fieldsource)) {
               # Skip the rest of the map if this step doesn't match and match is final
               if ($step->{map_final}) {
-                $logger->debug("Source mapping (type=$level, key=$key): No field xpath '$fieldsource' and step has 'final' set, skipping rest of map ...");
+                $logger->debug("Source mapping (type=$level, key=$key): No field xpath '$xp_fieldsource_s' and step has 'final' set, skipping rest of map ...");
                 next MAP;
               }
               else {
                 # just ignore this step
-                $logger->debug("Source mapping (type=$level, key=$key): No field xpath '$fieldsource', skipping step ...");
+                $logger->debug("Source mapping (type=$level, key=$key): No field xpath '$xp_fieldsource_s', skipping step ...");
                 next;
               }
             }
@@ -519,16 +515,16 @@ sub create_entry {
               if (defined($step->{map_replace})) { # replace can be null
 
                 # Can't modify entrykey
-                if (lc($fieldsource) eq './@id') {
-                  $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$fieldsource' is entrykey- cannot remap the value of this field, skipping ...");
+                if (lc($xp_fieldsource_s) eq './@id') {
+                  $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$xp_fieldsource_s' is entrykey- cannot remap the value of this field, skipping ...");
                   next;
                 }
 
                 my $r = maploop($step->{map_replace}, $maploop, $maploopuniq);
-                $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field xpath '$fieldsource'");
+                $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field xpath '$xp_fieldsource_s'");
 
-                unless (_changenode($entry, $fieldsource, ireplace($last_fieldval, $m, $r)), \$cnerror) {
-                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                unless (_changenode($entry, $xp_fieldsource_s, ireplace($last_fieldval, $m, $r)), \$cnerror) {
+                  biber_warn("Source mapping (type=$level, key=$key): $cnerror");
                 }
               }
               else {
@@ -541,12 +537,12 @@ sub create_entry {
                 unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
                   # Skip the rest of the map if this step doesn't match and match is final
                   if ($step->{map_final}) {
-                    $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$fieldsource' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                    $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$xp_fieldsource_s' does not match '$m' and step has 'final' set, skipping rest of map ...");
                     next MAP;
                   }
                   else {
                     # just ignore this step
-                    $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$fieldsource' does not match '$m', skipping step ...");
+                    $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$xp_fieldsource_s' does not match '$m', skipping step ...");
                     next;
                   }
                 }
@@ -554,48 +550,38 @@ sub create_entry {
             }
 
             # Set to a different target if there is one
-            if (my $target = maploop($step->{map_field_target}, $maploop, $maploopuniq)) {
+            if (my $xp_target_s = _getpath(maploop($step->{map_field_target}, $maploop, $maploopuniq))) {
+              my $xp_target = XML::LibXML::XPathExpression->new($xp_target_s);
 
-              # just a field name, make it XPATH
-              if ($target !~ m|/|) {
-                $target = "./bltx:$target";
-              }
-
-              my $xp_target = XML::LibXML::XPathExpression->new($target);
               # Can't remap entry key pseudo-field
-              if (lc($fieldsource) eq './@id') {
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$fieldsource' is entrykey- cannot map this to a new field as you must have an entrykey, skipping ...");
+              if (lc($xp_target_s) eq './@id') {
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' is entrykey - cannot map this to a new field as you must have an entrykey, skipping ...");
                 next;
               }
 
             if ($etarget->exists($xp_target)) {
                 if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field xpath '$target'");
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field xpath '$xp_target_s'");
                 }
                 else {
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$fieldsource' is mapped to field xpath '$target' but both are defined, skipping ...");
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' is mapped to field xpath '$xp_target_s' but both are defined, skipping ...");
                   next;
                 }
               }
-              unless (_changenode($etarget, $target, $fieldsource, \$cnerror)) {
-                biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+              unless (_changenode($etarget, $xp_target_s, $xp_fieldsource_s, \$cnerror)) {
+                biber_warn("Source mapping (type=$level, key=$key): $cnerror");
               }
               $etarget->findnodes($xp_fieldsource)->get_node(1)->unbindNode();
             }
           }
 
           # field changes
-          if (my $node = maploop($step->{map_field_set}, $maploop, $maploopuniq)) {
+          if (my $xp_node_s = _getpath(maploop($step->{map_field_set}, $maploop, $maploopuniq))) {
+            my $xp_node = XML::LibXML::XPathExpression->new($xp_node_s);
 
-            # just a field name, make it XPATH
-            if ($node !~ m|/|) {
-              $node = "./bltx:$node";
-            }
-
-            my $xp_node = XML::LibXML::XPathExpression->new($node);
             # Deal with special tokens
             if ($step->{map_null}) {
-              $logger->debug("Source mapping (type=$level, key=$key): Deleting field xpath '$node'");
+              $logger->debug("Source mapping (type=$level, key=$key): Deleting field xpath '$xp_node_s'");
               $entry->findnodes($xp_node)->get_node(1)->unbindNode();
             }
             else {
@@ -603,12 +589,12 @@ sub create_entry {
                 unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
                   if ($step->{map_final}) {
                     # map_final is set, ignore and skip rest of step
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$node' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_node_s' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
                     next MAP;
                   }
                   else {
                     # just ignore this step
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$node' exists and overwrite is not set, skipping step ...");
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_node_s' exists and overwrite is not set, skipping step ...");
                     next;
                   }
                 }
@@ -619,24 +605,24 @@ sub create_entry {
 
               if ($step->{map_origentrytype}) {
                 next unless $last_type;
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting xpath '$node' to '${orig}${last_type}'");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting xpath '$xp_node_s' to '${orig}${last_type}'");
 
-                unless (_changenode($etarget, $node, $orig . $last_type, \$cnerror)) {
-                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                unless (_changenode($etarget, $xp_node_s, $orig . $last_type, \$cnerror)) {
+                  biber_warn("Source mapping (type=$level, key=$key): $cnerror");
                 }
               }
               elsif ($step->{map_origfieldval}) {
                 next unless $last_fieldval;
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$node' to '${orig}${last_fieldval}'");
-                unless (_changenode($etarget, $node, $orig . $last_fieldval, \$cnerror)) {
-                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_fieldval}'");
+                unless (_changenode($etarget, $xp_node_s, $orig . $last_fieldval, \$cnerror)) {
+                  biber_warn("Source mapping (type=$level, key=$key): $cnerror");
                 }
               }
               elsif ($step->{map_origfield}) {
                 next unless $last_field;
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$node' to '${orig}${last_field}'");
-                unless (_changenode($etarget, $node, $orig . $last_field, \$cnerror)) {
-                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_field}'");
+                unless (_changenode($etarget, $xp_node_s, $orig . $last_field, \$cnerror)) {
+                  biber_warn("Source mapping (type=$level, key=$key): $cnerror");
                 }
               }
               else {
@@ -645,9 +631,9 @@ sub create_entry {
                 # dynamically scoped and being null when we get here from any
                 # previous map_match
                 $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$node' to '${orig}${fv}'");
-                unless (_changenode($etarget, $node, $orig . $fv, \$cnerror)) {
-                  biber_warn("Source mapping (type=$level, key=$key): $$cnerror");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${fv}'");
+                unless (_changenode($etarget, $xp_node_s, $orig . $fv, \$cnerror)) {
+                  biber_warn("Source mapping (type=$level, key=$key): $cnerror");
                 }
               }
             }
@@ -1102,9 +1088,16 @@ sub _get_handler {
 }
 
 sub _changenode {
-  my ($e, $target, $value, $error) = @_;
+  my ($e, $xp_target_s, $value, $error) = @_;
 
-  # value is XPATH, assume it needs copying in full
+  # names are special and can be specified by just the string
+  if ($dm->is_field($value)) {
+    my $dmv = $dm->get_dm_for_field($value);
+    if ($dmv->{fieldtype} eq 'list' and $dmv->{datatype} eq 'name') {
+      $value = _getpath($value);
+    }
+  }
+
   my $nodeval = 0;
   if ($value =~ m|/|) {
     $value = $e->findnodes($value)->get_node(1)->cloneNode(1);
@@ -1112,11 +1105,11 @@ sub _changenode {
   }
 
   # target already exists
-  if (my $n = $e->findnodes($target)->get_node(1)) {
+  if (my $n = $e->findnodes($xp_target_s)->get_node(1)) {
     # set attribute value
     if ($n->nodeType == XML_ATTRIBUTE_NODE) {
       if ($nodeval) {
-        $$error = "Tried to replace '$target' Atribute node with complex data";
+        $$error = "Tried to replace '$xp_target_s' Atribute node with complex data";
         return 0;
       }
       $n->setValue(NFC($value));
@@ -1138,40 +1131,63 @@ sub _changenode {
     # target is a text node, just replace string
     elsif ($n->nodeType == XML_TEXT_NODE) {
       if ($nodeval) {
-        $$error = "Tried to replace '$target' Text node with complex data";
+        $$error = "Tried to replace '$xp_target_s' Text node with complex data";
         return 0;
       }
       $n->setData(NFC($value));
     }
   }
   else {
-    my @nodes = split(m|/|, $target =~ s|^\./||r);
+    my @nodes = split(m|/|, $xp_target_s =~ s|^\./||r);
     my $nodepath = '.';
     my $nodeparent = '.';
     for (my $i = 0; $i <= $#nodes; $i++) {
       my $node = $nodes[$i];
       $nodepath .= "/$node";
       unless ($e->findnodes($nodepath)) {
+        my $parent = $e->findnodes($nodeparent)->get_node(1);
         # Element
-        if ($node =~ m/^bltx:/) {
-          my $parent = $e->findnodes($nodeparent)->get_node(1);
-          my $newnode = $parent->appendChild(XML::LibXML::Element->new($node =~ s|^bltx:||r));
-          $newnode->setNamespace($BIBLATEXML_NAMESPACE_URI, 'bltx');
-          if ($i == $#nodes) {
-            $newnode->appendTextNode(NFC($value));
+        my $f;
+        if (my ($np) = $node =~ m|^bltx:([^/]+)|) {
+          # names are special
+          $f = $np;
+          if ($np =~ /names\[\@type\s*=\s*'(.+)'\]/) {
+            $f = $1;
+          }
+          if ($dm->field_is_fieldtype('list', $f) and
+              $dm->field_is_datatype('name', $f)) {
+            my $newnode = $parent->appendChild(XML::LibXML::Element->new('names'));
+            $newnode->setNamespace($BIBLATEXML_NAMESPACE_URI, 'bltx');
+            $newnode->setAttribute('type', $f);
+            if ($i == $#nodes) { # terminal node
+              if ($nodeval) {
+                foreach my $cn ($value->childNodes) {
+                  $newnode->appendChild($cn);
+                }
+              }
+              else {
+                $$error = "Tried to map to complex target '$xp_target_s' with string value";
+                return 0;
+              }
+            }
+          }
+          else {
+            my $newnode = $parent->appendChild(XML::LibXML::Element->new($node =~ s|^bltx:||r));
+            $newnode->setNamespace($BIBLATEXML_NAMESPACE_URI, 'bltx');
+            if ($i == $#nodes) { # terminal node
+              $newnode->appendTextNode(NFC($value));
+            }
           }
         }
         # Attribute
         elsif ($node =~ m/^@/) {
           if ($i == $#nodes) {
-            my $parent = $e->findnodes($nodeparent)->get_node(1);
             $parent->setAttribute($node =~ s|^@||r, NFC($value));
           }
         }
         # Text
         elsif ($node =~ m/text\(\)$/) {
           if ($i == $#nodes) {
-            my $parent = $e->findnodes($nodeparent)->get_node(1);
             $parent->appendTextNode(NFC($value));
           }
         }
@@ -1181,6 +1197,30 @@ sub _changenode {
   }
   return 1;
 }
+
+sub _getpath {
+  my $string = shift;
+  return undef unless $string;
+  my $dm = Biber::Config->get_dm;
+  if ($string =~ m|/|) {
+    return $string;             # presumably already XPath
+  }
+  else {
+    if ($dm->is_field($string)) {
+      my $dms = $dm->get_dm_for_field($string);
+      if ($dms->{fieldtype} eq 'list' and $dms->{datatype} eq 'name') {
+        return "./bltx:names[\@type='$string']";
+      }
+      else {
+        return "./bltx:$string";
+      }
+    }
+    else {
+      return $string; # not a field, presumably just a string value
+    }
+  }
+}
+
 
 1;
 

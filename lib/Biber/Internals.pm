@@ -187,8 +187,8 @@ sub _dispatch_table_label {
     return undef;
   }
   # Fields which are part of the datamodel
-  my ($t, $dt) = $dm->get_dm_for_field($field);
-  if ($t eq 'list' and $dt eq 'name') {
+  my $dmf = $dm->get_dm_for_field($field);
+  if ($dmf->{fieldtype} eq 'list' and $dmf->{datatype} eq 'name') {
     return [\&_label_name, [$field]];
   }
   else {
@@ -872,22 +872,22 @@ sub _dispatch_table_sorting {
     return undef;
   }
   # Fields which are part of the datamodel
-  my ($t, $dt) = $dm->get_dm_for_field($field);
-  if ($t eq 'list' and $dt eq 'name') {
+  my $dmf = $dm->get_dm_for_field($field);
+  if ($dmf->{fieldtype} eq 'list' and $dmf->{datatype} eq 'name') {
     return [\&_sort_name, [$field]];
   }
-  elsif ($t eq 'field' and $dt eq 'literal') {
+  elsif ($dmf->{fieldtype} eq 'field' and $dmf->{datatype} eq 'literal') {
     return [\&_sort_literal, [$field]];
   }
-  elsif ($t eq 'field' and
-         ($dt eq 'integer' or $dt eq 'datepart')) {
+  elsif ($dmf->{fieldtype} eq 'field' and
+         ($dmf->{datatype} eq 'integer' or $dmf->{datatype} eq 'datepart')) {
     return [\&_sort_integer, [$field]];
   }
-  elsif ($t eq 'list' and
-         ($dt eq 'literal' or $dt eq 'key')) {
+  elsif ($dmf->{fieldtype} eq 'list' and
+         ($dmf->{datatype} eq 'literal' or $dmf->{datatype} eq 'key')) {
     return [\&_sort_list, [$field]];
   }
-  elsif ($t eq 'field' and $dt eq 'key') {
+  elsif ($dmf->{fieldtype} eq 'field' and $dmf->{datatype} eq 'key') {
     return [\&_sort_literal, [$field]];
   }
 }

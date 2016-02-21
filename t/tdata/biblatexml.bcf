@@ -389,6 +389,8 @@
       <bcf:map>
         <bcf:map_step map_field_source="./bltx:names[@type='author']/bltx:name[2]/bltx:namepart[@type='family']" map_match="\AР" map_replace="РР"/>
         <bcf:map_step map_field_source="./bltx:names[@type='editor']" map_field_target="./bltx:names[@type='translator']"/>
+        <bcf:map_step map_field_source="afterword" map_field_target="annotator"/>
+        <bcf:map_step map_field_source="./bltx:names[@type='annotator']" map_field_target="foreword"/>
         <bcf:map_step
             map_field_set="./bltx:names[@type='author']/bltx:name[2]/@useprefix"
             map_field_value="false"/> 
