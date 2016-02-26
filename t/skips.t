@@ -71,7 +71,7 @@ my $set1 = q|    \entry{seta}{set}{}
     \endentry
 |;
 
-my $set2 = q|    \entry{set:membera}{book}{skiplab,skipbiblist}
+my $set2 = q|    \entry{set:membera}{book}{}
       \inset{seta}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
@@ -92,7 +92,7 @@ my $set2 = q|    \entry{set:membera}{book}{skiplab,skipbiblist}
     \endentry
 |;
 
-my $set3 = q|    \entry{set:memberb}{book}{skiplab,skipbiblist}
+my $set3 = q|    \entry{set:memberb}{book}{}
       \inset{seta}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
@@ -112,7 +112,7 @@ my $set3 = q|    \entry{set:memberb}{book}{skiplab,skipbiblist}
     \endentry
 |;
 
-my $set4 = q|    \entry{set:memberc}{book}{skiplab,skipbiblist}
+my $set4 = q|    \entry{set:memberc}{book}{}
       \inset{seta}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%

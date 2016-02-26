@@ -1541,7 +1541,9 @@ sub process_extratitleyear {
 
     Postprocess set entries
 
-    Checks for common set errors and enforces 'dataonly' for set members
+    Checks for common set errors and enforces 'dataonly' for set members.
+    It's not necessary to set skipbib, skipbiblist in the OPTIONS field for
+    the set members as these are automatically set by biblatex due to the \inset
 
 =cut
 
@@ -1557,7 +1559,6 @@ sub process_sets {
     foreach my $member (@entrysetkeys) {
       my $me = $section->bibentry($member);
       process_entry_options($member, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
-      $me->set_field('options', ['skiplab,skipbiblist']);
 
       if ($me->get_field('entryset')) {
         biber_warn("Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'", $me);
@@ -1577,7 +1578,6 @@ sub process_sets {
     if (Biber::Config->get_set_parents($citekey)) {
       my $me = $section->bibentry($citekey);
       process_entry_options($citekey, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
-      $me->set_field('options', ['skiplab,skipbiblist']);
     }
   }
 }

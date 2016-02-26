@@ -66,7 +66,7 @@ my $string1 = q|    \entry{Static1}{set}{}
     \endentry
 |;
 
-my $string2 = q|    \entry{Static2}{book}{skiplab,skipbiblist}
+my $string2 = q|    \entry{Static2}{book}{}
       \inset{Static1}
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
@@ -87,7 +87,7 @@ my $string2 = q|    \entry{Static2}{book}{skiplab,skipbiblist}
     \endentry
 |;
 
-my $string3 = q|    \entry{Static3}{book}{skiplab,skipbiblist}
+my $string3 = q|    \entry{Static3}{book}{}
       \inset{Static1}
       \name{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{%
@@ -107,7 +107,7 @@ my $string3 = q|    \entry{Static3}{book}{skiplab,skipbiblist}
     \endentry
 |;
 
-my $string4 = q|    \entry{Static4}{book}{skiplab,skipbiblist}
+my $string4 = q|    \entry{Static4}{book}{}
       \inset{Static1}
       \name{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{%
