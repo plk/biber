@@ -2619,15 +2619,17 @@ Binaries are available for many architectures, directly on SourceForge and
 also via \TeX Live:
 
 \begin{itemize}
+\item \verb+darwin_x86_64+
+\item \verb+darwin_x86_i386+
 \item \verb+linux_x86_32+
 \item \verb+linux_x86_64+
 \item \verb+MSWin32+
-\item \verb+cygwin32+
-\item \verb+darwin_x86_64+
-\item \verb+darwin_x86_i386+
+\item \verb+MSWin64+
+\item \verb+cygwin32+\tpb
 \item \verb+freebsd_x86+\tpb
 \item \verb+freebsd_amd64+\tpb
-\item \verb+solaris_x86+\tpb
+\item \verb+solaris_i386+\tpb
+\item \verb+solaris_x86_64+\tpb
 \end{itemize}
 
 \noindent If you want to run development versions, they are usually only
@@ -2671,7 +2673,7 @@ sudo chmod +x /opt/local/bin/biber
 \subsubsection{Windows}
 
 The easiest way is to just move the executable into your \verb+C:\Windows+ directory since
-that is always in your path. A more elegant is to put it somewhere in
+that is always in your path. A more elegant way is to put it somewhere in
 your \TeX\ distribution that is already in your path. For example if you
 are using MiK\TeX:
 
@@ -2704,7 +2706,7 @@ the following modules:
 
 \noindent You should have the latest CPAN versions of all required modules
 as \biber\ is very specific in some cases about module versions and
-depends on recent fixes in many cases. You can see if you have the
+sometimes depends on recent fixes. You can see if you have the
 \biber\ Perl dependencies by the usual
 
 \begin{verbatim}
@@ -2749,15 +2751,14 @@ define these two things as part of constructing new build scripts:
 
 \begin{itemize}
 \item Make a new sub-folder in the \verb+dist+ directory named after the
-  architecture you are building for. This name is arbitrary but should
-  be fairly obvious like «\verb+solaris-sparc-64+», for example.
+  architecture you are building for.
 \item Copy the \verb+biber.files+ file from an existing build
   architecture into this directory.
 \item For all of the files with absolute pathnames in there (that is,
   ones we are not pulling from the \biber\ tree itself), locate these
   files in your Perl installation tree and put the correct path in the
   file.
-\item Copy the build script from a vaguely similar architecture
+\item Copy the build script from a similar architecture
   (i.e. Windows/non-Windows \ldots) to your new architecture
   directory. 
 \item Change the \opt{--link} options to point to where the required
@@ -2810,7 +2811,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.3
+INFO - This is Biber 2.4
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'
@@ -2820,9 +2821,9 @@ INFO - Processing bib section 0
 INFO - Looking for BibTeX format file 'test.bib' for section 0
 INFO - Found BibTeX data file 'test.bib'
 INFO - Decoding LaTeX character macros into UTF-8
-INFO - Sorting list 'MAIN' keys
+INFO - Sorting list 'nyt/global' keys
 INFO - No sort tailoring available for locale 'en_GB.UTF-8'
-INFO - Sorting list 'SHORTHANDS' keys
+INFO - Sorting list 'shorthands/global' keys
 INFO - No sort tailoring available for locale 'en_GB.UTF-8'
 INFO - Writing 'test.bbl' with encoding 'UTF-8'
 INFO - Output to test.bbl
