@@ -1,5 +1,17 @@
 Revision history for Biber
 
+2.4    (2016-03-01)
+       * Misc bug fixes
+       * There is now a 64-bit windows build built on windows 10
+       * Biblatexml datasources now support sourcemapping and have a schema
+         automatically generated from the datamodel. See new biber options
+         'validate-bltxml' and 'no-bltxml-schema' in --help output.
+       * New functionality in sourcemaps for creating new entries and
+         looping over specified fields.
+       * Sorting key used to sort names is now customisable. See
+         \DeclareSortingNamekeyScheme in biblatex manual.
+       * Support for Zotero RDF/XML and Endnote removed. These were
+         experimental and messy.
 2.3    (2015-12-28)
        * Misc bug fixes
 2.2    (2015-10-21)

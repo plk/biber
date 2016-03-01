@@ -24,8 +24,8 @@
 ** DONE sortnamekeyscheme needs per entry/names/name in bbl
 ** DONE biblatex macro support in formats for sortnamekeyscheme
 ** DONE What to do with gender attribute on name?
-* TODO Document example in biblatex manual of compound keypart
-* TODO implement patronymic namepart
+* DONE Document example in biblatex manual of compound keypart
+* DONE implement patronymic namepart example
 * TODO Document year/month (datepart fields) are not allowed in bltxml
 
 
