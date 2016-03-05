@@ -335,6 +335,9 @@ sub set_output_entry {
     }
   }
 
+  # prefixnumber is list-specific
+  $acc .= "      <BDS>PREFIXNUMBER</BDS>\n";
+
   # The labeltitle option determines whether "extratitle" is output
   if ( Biber::Config->getblxoption('labeltitle', $bee)) {
     # Might not have been set due to skiplab/dataonly
@@ -534,6 +537,7 @@ sub output {
     foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
       if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
           $list->get_sortnamekeyschemename eq 'global' and
+          $list->get_prefixnumbers eq '' and
           $list->get_type eq 'entry') {
         next;
       }
@@ -544,16 +548,17 @@ sub output {
     # due to its sequential reading of the .bbl as the final list overrides the
     # previously read ones and the global list determines the order of labelnumber
     # and sortcites etc. when not using defernumbers
-    push @lists, $Biber::MASTER->sortlists->get_list($secnum, Biber::Config->getblxoption('sortscheme') . '/global', 'entry', Biber::Config->getblxoption('sortscheme'), 'global');
+    push @lists, $Biber::MASTER->sortlists->get_list($secnum, Biber::Config->getblxoption('sortscheme') . '/global/', 'entry', Biber::Config->getblxoption('sortscheme'), 'global', '');
 
     foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists
       my $listssn = $list->get_sortschemename;
       my $listsnksn = $list->get_sortnamekeyschemename;
+      my $listpn = $list->get_prefixnumbers;
       my $listtype = $list->get_type;
       my $listname = $list->get_name;
 
-      $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn' and sort name key scheme '$listsnksn'");
+      $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn', sort name key scheme '$listsnksn' and prefixnumbers '$listpn'");
 
       if ($listtype eq 'entry') {
         out($target, "  \\sortlist[entry]{$listname}\n");

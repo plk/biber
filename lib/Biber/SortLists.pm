@@ -72,11 +72,12 @@ sub get_lists_for_section {
 =cut
 
 sub get_list {
-  my ($self, $section, $name, $type, $ssn, $snksn) = @_;
+  my ($self, $section, $name, $type, $ssn, $snksn, $pn) = @_;
   foreach my $list (@{$self->{lists}}) {
     return $list if ($list->get_name eq $name and
                      $list->get_sortschemename eq $ssn and
                      $list->get_sortnamekeyschemename eq $snksn and
+                     $list->get_prefixnumbers eq $pn and
                      $list->get_type eq $type and
                      $list->get_section == $section);
   }
