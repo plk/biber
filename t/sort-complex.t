@@ -54,8 +54,8 @@ Biber::Config->setblxoption('labeldate', undef);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
-my $shs = $biber->sortlists->get_list(0, 'shorthands/global', 'list', 'shorthands', 'global');
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $shs = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');
 my $out = $biber->get_output_obj;
 
 my $ss = { locale => 'en-US',
@@ -263,7 +263,7 @@ Biber::Input::file::bibtex->init_cache;
 Biber::Config->setoption('fastsort', 0);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$shs = $biber->sortlists->get_list(0, 'shorthands/global', 'list', 'shorthands', 'global');
+$shs = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');
 
 # Sort by shorthand
 is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');

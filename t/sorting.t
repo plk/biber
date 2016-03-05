@@ -91,7 +91,7 @@ Biber::Config->setblxoption('useprefix', 1);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 
 eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 

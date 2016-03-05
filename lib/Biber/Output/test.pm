@@ -221,15 +221,6 @@ sub set_output_entry {
     }
   }
 
-  if ( Biber::Config->getblxoption('labelnumber', $be->get_field('entrytype')) ) {
-    if (my $sh = $be->get_field('shorthand')) {
-      $acc .= "      \\field{labelnumber}{$sh}\n";
-    }
-    elsif (my $ln = $be->get_field('labelnumber')) {
-      $acc .= "      \\field{labelnumber}{$ln}\n";
-    }
-  }
-
   if (defined($be->get_field('singletitle'))) {
     $acc .= "      \\true{singletitle}\n";
   }

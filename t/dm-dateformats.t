@@ -46,7 +46,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $bibentries = $section->bibentries;
 my $l1 = [ "Datamodel: Entry 'L1' (dm-dateformats.bib): Invalid format '1985-1030' of date field 'origdate' - ignoring",
            "Datamodel: Entry 'L1' (dm-dateformats.bib): Invalid format '1.5.1998' of date field 'urldate' - ignoring",

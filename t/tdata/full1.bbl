@@ -1,5 +1,5 @@
 % $ biblatex auxiliary file $
-% $ biblatex bbl format version 2.6 $
+% $ biblatex bbl format version 2.7 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -18,7 +18,7 @@
 
 
 \refsection{0}
-  \sortlist[list]{shorthands/global}
+  \sortlist[list]{shorthands/global/}
     \entry{F1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
@@ -40,7 +40,7 @@
       \field{year}{1995}
     \endentry
   \endsortlist
-  \sortlist[entry]{nty/global}
+  \sortlist[entry]{nty/global/}
     \entry{F1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%

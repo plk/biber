@@ -48,7 +48,7 @@ Biber::Config->setoption('bcf', 'biblatexml.bcf');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $bibentries = $section->bibentries;
 
 my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}

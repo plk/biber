@@ -335,8 +335,11 @@ sub set_output_entry {
     }
   }
 
-  # prefixnumber is list-specific
-  $acc .= "      <BDS>PREFIXNUMBER</BDS>\n";
+  # prefixnumber is list-specific. It is only defined is there is no shorthand
+  # (see biblatex documentation)
+  unless ($be->get_field('shorthand')) {
+    $acc .= "      <BDS>PREFIXNUMBER</BDS>\n";
+  }
 
   # The labeltitle option determines whether "extratitle" is output
   if ( Biber::Config->getblxoption('labeltitle', $bee)) {
@@ -365,15 +368,6 @@ sub set_output_entry {
       if (Biber::Config->get_la_disambiguation($la) > 1) {
         $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
       }
-    }
-  }
-
-  if ( Biber::Config->getblxoption('labelnumber', $bee) ) {
-    if (my $sh = $be->get_field('shorthand')) {
-      $acc .= "      \\field{labelnumber}{$sh}\n";
-    }
-    elsif (my $lnum = $be->get_field('labelnumber')) {
-      $acc .= "      \\field{labelnumber}{$lnum}\n";
     }
   }
 

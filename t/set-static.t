@@ -40,7 +40,7 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Static1}{set}{}

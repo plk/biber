@@ -47,7 +47,7 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'fiel
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $bibentries = $section->bibentries;
 
 my $dmv =  [

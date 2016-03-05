@@ -41,7 +41,7 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $bibentries = $section->bibentries;
 
 # Don't forget that the extratitleyear data is inserted after sorting

@@ -792,6 +792,9 @@
             <param name="minLength">1</param>
           </data>
         </attribute>
+        <attribute name="prefixnumbers">
+          <data type="string"/>
+        </attribute>
         <!-- name is only needed for list types -->
         <attribute name="name">
           <data type="string">

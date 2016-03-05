@@ -58,7 +58,7 @@ $ARGV[0] = 'biblatexml.bltxml'; # fake this as we are not running through top-le
 $biber->tool_mode_setup;
 $biber->prepare_tool;
 $out->output;
-my $main = $biber->sortlists->get_list(99999, Biber::Config->getblxoption('sortscheme') . '/global', 'entry', Biber::Config->getblxoption('sortscheme'), 'global');
+my $main = $biber->sortlists->get_list(99999, Biber::Config->getblxoption('sortscheme') . '/global/', 'entry', Biber::Config->getblxoption('sortscheme'), 'global', '');
 
 my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="biblatexml.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>

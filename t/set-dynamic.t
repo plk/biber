@@ -40,11 +40,11 @@ Biber::Config->setoption('fastsort', 1);
 # Now generate the information
 $biber->prepare;
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $biber->sortlists->get_list(0, 'nty/global', 'entry', 'nty', 'global');
-my $sh0 = $biber->sortlists->get_list(0, 'shorthands/global', 'list', 'shorthands', 'global');
+my $main0 = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $sh0 = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->sortlists->get_list(1, 'nty/global', 'entry', 'nty', 'global');
-my $sh1 = $biber->sortlists->get_list(1, 'shorthands/global', 'list', 'shorthands', 'global');
+my $main1 = $biber->sortlists->get_list(1, 'nty/global/', 'entry', 'nty', 'global', '');
+my $sh1 = $biber->sortlists->get_list(1, 'shorthands/global/', 'list', 'shorthands', 'global', '');
 my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{DynSet}{set}{}
