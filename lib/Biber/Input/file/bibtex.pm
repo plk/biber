@@ -401,9 +401,12 @@ sub create_entry {
 
         # Set up any mapping foreach loop
         my @maploop = ('');
-        if (my $foreachfield = $map->{map_foreach}) {
-          if (my $felist = $entry->get(lc($foreachfield))) {
+        if (my $foreach = $map->{map_foreach}) {
+          if (my $felist = $entry->get(lc($foreach))) {
             @maploop = split(/\s*,\s*/, $felist);
+          }
+          else {
+            @maploop = split(/\s*,\s*/, $foreach);
           }
         }
 
