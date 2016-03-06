@@ -500,7 +500,7 @@ sub parse_ctrlfile {
   # Since we have to use the datamodel to resolve some members, just record the settings
   # here for processing after the datamodel is parsed
   foreach my $s (@{$bcfxml->{datafieldset}}) {
-    my $name = $s->{name};
+    my $name = lc($s->{name});
     foreach my $m (@{$s->{member}}) {
       if (my $field = $m->{field}[0]) {# 'field' has forcearray for other things
         push @{$DATAFIELD_SETS{$name}}, $field;
@@ -969,7 +969,6 @@ sub _resolve_datafieldsets {
     }
     $DATAFIELD_SETS{$key} = $fs;
   }
-  use Data::Dump;dd(%DATAFIELD_SETS);
 }
 
 

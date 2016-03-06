@@ -49,7 +49,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean parse_range maploop };
+  locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean parse_range maploopreplace };
 
 =head1 FUNCTIONS
 
@@ -1130,13 +1130,13 @@ sub parse_range {
   }
 }
 
-=head2 maploop
+=head2 maploopreplace
 
   Replace loop markers with values.
 
 =cut
 
-sub maploop {
+sub maploopreplace {
   my ($string, $maploop, $mapuniq) = @_;
   return $string if not defined($string);
   return $string unless ($maploop or $mapuniq);

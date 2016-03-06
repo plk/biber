@@ -368,7 +368,7 @@ sub create_entry {
       $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
       my $level = $smap->{level};
 
-    MAP:    foreach my $map (@{$smap->{map}}) {
+      MAP: foreach my $map (@{$smap->{map}}) {
 
         my $last_type = $entry->type; # defaults to the entrytype unless changed below
         my $last_field = undef;
@@ -419,9 +419,9 @@ sub create_entry {
             }
 
             # new entry
-            if (my $newkey = maploop($step->{map_entry_new}, $maploop, $maploopuniq)) {
+            if (my $newkey = maploopreplace($step->{map_entry_new}, $maploop, $maploopuniq)) {
               my $newentrytype;
-              unless ($newentrytype = maploop($step->{map_entry_newtype}, $maploop, $maploopuniq)) {
+              unless ($newentrytype = maploopreplace($step->{map_entry_newtype}, $maploop, $maploopuniq)) {
                 biber_warn("Source mapping (type=$level, key=$key): Missing type for new entry '$newkey', skipping step ...");
                 next;
               }
@@ -443,7 +443,7 @@ sub create_entry {
             }
 
             # entry clone
-            if (my $prefix = maploop($step->{map_entry_clone}, $maploop, $maploopuniq)) {
+            if (my $prefix = maploopreplace($step->{map_entry_clone}, $maploop, $maploopuniq)) {
               $logger->debug("Source mapping (type=$level, key=$key): cloning entry with prefix '$prefix'");
               # Create entry with no sourcemapping to avoid recursion
               create_entry("$prefix$key", $entry);
@@ -464,7 +464,7 @@ sub create_entry {
             # so it's limited to being the target for field sets
             my $etarget;
             my $etargetkey;
-            if ($etargetkey = maploop($step->{map_entrytarget}, $maploop, $maploopuniq)) {
+            if ($etargetkey = maploopreplace($step->{map_entrytarget}, $maploop, $maploopuniq)) {
               unless ($etarget = $newentries{$etargetkey}) {
                 biber_warn("Source mapping (type=$level, key=$key): Dynamically created entry target '$etargetkey' does not exist skipping step ...");
                 next;
@@ -476,7 +476,7 @@ sub create_entry {
             }
 
             # Entrytype map
-            if (my $typesource = maploop($step->{map_type_source}, $maploop, $maploopuniq)) {
+            if (my $typesource = maploopreplace($step->{map_type_source}, $maploop, $maploopuniq)) {
               $typesource = lc($typesource);
               unless ($entry->type eq $typesource) {
                 # Skip the rest of the map if this step doesn't match and match is final
@@ -492,14 +492,15 @@ sub create_entry {
               }
               # Change entrytype if requested
               $last_type = $entry->type;
-              my $t = lc(maploop($step->{map_type_target}, $maploop, $maploopuniq));
+              my $t = lc(maploopreplace($step->{map_type_target}, $maploop, $maploopuniq));
               $logger->debug("Source mapping (type=$level, key=$key): Changing entry type from '$last_type' to $t");
               $entry->set_type(encode('UTF-8', NFC($t)));
             }
 
             # Field map
-            if (my $fieldsource = maploop($step->{map_field_source}, $maploop, $maploopuniq)) {
+            if (my $fieldsource = maploopreplace($step->{map_field_source}, $maploop, $maploopuniq)) {
               $fieldsource = lc($fieldsource);
+
               # key is a pseudo-field. It's guaranteed to exist so
               # just check if that's what's being asked for
               unless ($fieldsource eq 'entrykey' or
@@ -527,7 +528,7 @@ sub create_entry {
               }
 
               # map fields to targets
-              if (my $m = maploop($step->{map_match}, $maploop, $maploopuniq)) {
+              if (my $m = maploopreplace($step->{map_match}, $maploop, $maploopuniq)) {
                 if (defined($step->{map_replace})) { # replace can be null
 
                   # Can't modify entrykey
@@ -536,7 +537,7 @@ sub create_entry {
                     next;
                   }
 
-                  my $r = maploop($step->{map_replace}, $maploop, $maploopuniq);
+                  my $r = maploopreplace($step->{map_replace}, $maploop, $maploopuniq);
                   $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
                   $entry->set($fieldsource,
                               encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
@@ -564,7 +565,7 @@ sub create_entry {
               }
 
               # Set to a different target if there is one
-              if (my $target = maploop($step->{map_field_target}, $maploop, $maploopuniq)) {
+              if (my $target = maploopreplace($step->{map_field_target}, $maploop, $maploopuniq)) {
                 $target = lc($target);
                 # Can't remap entry key pseudo-field
                 if ($fieldsource eq 'entrykey') {
@@ -587,7 +588,7 @@ sub create_entry {
             }
 
             # field changes
-            if (my $field = maploop($step->{map_field_set}, $maploop, $maploopuniq)) {
+            if (my $field = maploopreplace($step->{map_field_set}, $maploop, $maploopuniq)) {
               $field = lc($field);
               # Deal with special tokens
               if ($step->{map_null}) {
@@ -629,7 +630,7 @@ sub create_entry {
                   $etarget->set($field, encode('UTF-8', NFC($orig . $last_field)));
                 }
                 else {
-                  my $fv = maploop($step->{map_field_value}, $maploop, $maploopuniq);
+                  my $fv = maploopreplace($step->{map_field_value}, $maploop, $maploopuniq);
                   # Now re-instate any unescaped $1 .. $9 to get round these being
                   # dynamically scoped and being null when we get here from any
                   # previous map_match
