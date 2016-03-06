@@ -2,6 +2,9 @@
 !*.aux
 !*.bcf
 !*.bbl
+doc/*.aux
+doc/*.out
+doc/*.synctex
 auto
 MYMETA.yml
 MYMETA.json
