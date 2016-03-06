@@ -774,7 +774,7 @@ allows you to do a particular thing or combination of things:
 examples. A \opt{map} element looks like this:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<map +\textcolor{blue}{map\_overwrite="0|1"} \textcolor{blue}{map\_foreach="\textcolor{red}{loopfield}"}+>
+<map +\textcolor{blue}{map\_overwrite="0|1"} \textcolor{blue}{map\_foreach="\textcolor{red}{loopval}"}+>
   +\textcolor{blue}{<per\_datasource>\textcolor{red}{datasource}</per\_datasource>}+
   +\textcolor{blue}{<per\_type>\textcolor{red}{entrytype}</per\_type>}+
   +\textcolor{blue}{<per\_nottype>\textcolor{red}{entrytype}</per\_nottype>}+
@@ -818,13 +818,15 @@ examples. A \opt{map} element looks like this:
   omitted, it defaults to the parent \opt{maps} attribute value.
 \item The \texttt{map\_foreach} attribute loops over all \cmd{step}s in
   this \cmd{map}, setting the special variable \verb+$MAPLOOP+ to each of
-  the comma-separated values contained in the entry field
-  \textcolor{red}{\texttt{loopfield}}. This allows the user to repeat a
-  group of \opt{map\_step}s for each value of another CSV field. Using
-  regexp maps, it is possible to create a CSV field for use with this
-  functionality. The special variable \verb+$MAPUNIQ+ may also be used the
-  \opt{map\_step}s to generate a random unique string. This can be useful when
-  creating keys for new entries.
+  the comma-separated values contained in
+  \textcolor{red}{\texttt{loopval}}. \textcolor{red}{\texttt{loopval}} can
+  either be the name of a field which contains a comma-separated values
+  list or can be an explicit comma-separated values list itself. This
+  allows the user to repeat a group of \opt{map\_step}s for each value of
+  \textcolor{red}{\texttt{loopval}}.q The special variable
+  \verb+$MAPUNIQ+ may also be used the \opt{map\_step}s to generate a
+  random unique string. This can be useful when creating keys for new
+  entries.
 \end{itemize}
 
 \noindent Each \opt{map\_step} is looked at in turn and compared with the
@@ -1113,6 +1115,18 @@ for abstracts:
   </map>
 </maps>
 \end{lstlisting}
+
+\noindent Here we use a loop to apply a regular expression replacement to
+several fields:
+
+\begin{lstlisting}[language=xml,escapechar=;,mathescape=true]
+<maps datatype="bibtex" level="user">
+  <map map_overwrite="1" map_foreach="author,editor,translator">
+    <map_step map_field_source=";\$MAPLOOP;" map_match="Smith" map_replace="Jones"/>
+  </map>
+</maps>
+\end{lstlisting}
+
 \bigskip
 \subsubsection{The \texttt{inheritance} option}\label{inheritance}
 
