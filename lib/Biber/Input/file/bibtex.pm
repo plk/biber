@@ -402,10 +402,13 @@ sub create_entry {
         # Set up any mapping foreach loop
         my @maploop = ('');
         if (my $foreach = $map->{map_foreach}) {
-          if (my $felist = $entry->get(lc($foreach))) {
+          if (my $dslist = $DATAFIELD_SETS{lc($foreach)}) {# datafield set list
+            @maploop = @$dslist;
+          }
+          elsif (my $felist = $entry->get(lc($foreach))) {# datafield
             @maploop = split(/\s*,\s*/, $felist);
           }
-          else {
+          else { # explicit CSV
             @maploop = split(/\s*,\s*/, $foreach);
           }
         }

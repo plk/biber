@@ -820,10 +820,12 @@ examples. A \opt{map} element looks like this:
   this \cmd{map}, setting the special variable \verb+$MAPLOOP+ to each of
   the comma-separated values contained in
   \textcolor{red}{\texttt{loopval}}. \textcolor{red}{\texttt{loopval}} can
-  either be the name of a field which contains a comma-separated values
-  list or can be an explicit comma-separated values list itself. This
-  allows the user to repeat a group of \opt{map\_step}s for each value of
-  \textcolor{red}{\texttt{loopval}}.q The special variable
+  either be the name of a datafield set defined with \biblatex's
+  \cmd{DeclareDatafieldSet}, a datasource field which contains a
+  comma-separated values list or an explicit comma-separated values list
+  itself (and \textcolor{red}{\texttt{loopval}} is determined in that
+  order). This allows the user to repeat a group of \opt{map\_step}s for
+  each value of \textcolor{red}{\texttt{loopval}}.q The special variable
   \verb+$MAPUNIQ+ may also be used the \opt{map\_step}s to generate a
   random unique string. This can be useful when creating keys for new
   entries.
