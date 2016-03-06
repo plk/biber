@@ -301,7 +301,7 @@
             </tbody>
           </table>
         </xsl:for-each>
-        <!-- DATASOURCE MAPPINGS -->
+        <!-- OPTION SCOPE -->
         <hr/>
         <h3>Option Scope</h3>
         <xsl:for-each select="/bcf:controlfile/bcf:optionscope">
@@ -322,6 +322,43 @@
               </tbody>
           </table>
         </xsl:for-each>
+        <!-- DATAFIELD SETS -->
+        <hr/>
+        <h3>Datafield Sets</h3>
+        <table>
+          <thead>
+            <tr>
+              <td><b>Name</b></td><td><b>Members</b></td>
+            </tr>
+          </thead>
+          <tbody>
+            <xsl:for-each select="/bcf:controlfile/bcf:datafieldset">
+              <tr>
+                <td><xsl:value-of select="./@name"/></td>
+                <td>
+                  <xsl:for-each select="./bcf:member">
+                    <xsl:if test="./@datatype">
+                      <b>datatype:</b><xsl:value-of select="./@datatype"/>
+                      <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
+                    </xsl:if>
+                    <xsl:if test="./@fieldtype">
+                      <b>fieldtype:</b><xsl:value-of select="./@fieldtype"/>
+                      <xsl:if test="not(position()=last())">
+                        <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
+                      </xsl:if>
+                    </xsl:if>
+                    <xsl:if test="./@field">
+                      <xsl:value-of select="./@field"/>
+                      <xsl:if test="not(position()=last())">
+                        <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
+                      </xsl:if>
+                    </xsl:if>
+                  </xsl:for-each>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </tbody>
+        </table>
         <!-- DATASOURCE MAPPINGS -->
         <xsl:if test="/bcf:controlfile/bcf:sourcemap">
           <hr/>
