@@ -2007,21 +2007,21 @@
     <bcf:citekey order="12">K12</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lname" sortscheme="lname" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lname" sortscheme="lname" type="entry" labelprefix="">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">author</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnameswe" sortscheme="lnameswe" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnameswe" sortscheme="lnameswe" type="entry" labelprefix="">
     <bcf:sorting locale="swedish">
       <bcf:sort order="1">
         <bcf:sortitem order="1">author</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef1" sortscheme="lnamef1" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef1" sortscheme="lnamef1" type="entry" labelprefix="">
     <bcf:filter type="field">publisher</bcf:filter>
     <bcf:filter type="notfield">verba</bcf:filter>
     <bcf:sorting>
@@ -2030,7 +2030,7 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef2" sortscheme="lnamef2" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef2" sortscheme="lnamef2" type="entry" labelprefix="">
     <bcf:filter type="keyword">key2</bcf:filter>
     <bcf:sorting>
       <bcf:sort order="1">
@@ -2038,7 +2038,7 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef3" sortscheme="lnamef3" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef3" sortscheme="lnamef3" type="entry" labelprefix="">
     <bcf:filter type="nottype">thesis</bcf:filter>
     <bcf:filter type="notkeyword">key1</bcf:filter>
     <bcf:sorting>
@@ -2047,7 +2047,7 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef4" sortscheme="lnamef4" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef4" sortscheme="lnamef4" type="entry" labelprefix="">
     <bcf:filter type="notfield">verba</bcf:filter>
     <bcf:filter type="subtype">rubbish</bcf:filter>
     <bcf:sorting>
@@ -2056,7 +2056,7 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef5" sortscheme="lnamef5" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lnamef5" sortscheme="lnamef5" type="entry" labelprefix="">
     <bcf:filter type="field">author</bcf:filter>
     <bcf:filteror>
       <bcf:filter type="field">verba</bcf:filter>
@@ -2068,28 +2068,28 @@
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lyear" sortscheme="lyear" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="lyear" sortscheme="lyear" type="entry" labelprefix="">
     <bcf:sorting>
       <bcf:sort order="1" sort_direction="descending">
         <bcf:sortitem order="1">year</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="ltitle" sortscheme="ltitle" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="ltitle" sortscheme="ltitle" type="entry" labelprefix="">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">title</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="ltitlespan" sortscheme="ltitlespan" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="ltitlespan" sortscheme="ltitlespan" type="entry" labelprefix="">
     <bcf:sorting locale="es_ES_trad">
       <bcf:sort order="1">
         <bcf:sortitem order="1">title</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="ltitleset" sortscheme="ltitleset" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="ltitleset" sortscheme="ltitleset" type="entry" labelprefix="">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">title</bcf:sortitem>
@@ -2100,7 +2100,7 @@
     </bcf:sorting>
   </bcf:sortlist>
   <!-- This should be ignored as it's a repeat -->
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="ltitle" sortscheme="ltitle" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="ltitle" sortscheme="ltitle" type="entry" labelprefix="">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">publisher</bcf:sortitem>
@@ -2109,7 +2109,7 @@
   </bcf:sortlist>
   <!-- sortlist/entry/names and name scope sorting name key scheme
        scheme is overridden at entry (K6), names (K11) and name (K12) scope -->
-  <bcf:sortlist sortnamekeyscheme="given" section="0" name="lname" sortscheme="lname" type="entry" prefixnumbers="">
+  <bcf:sortlist sortnamekeyscheme="given" section="0" name="lname" sortscheme="lname" type="entry" labelprefix="">
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">author</bcf:sortitem>

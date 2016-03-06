@@ -1971,6 +1971,6 @@
     <bcf:citekey order="1">Elias1955</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" prefixnumbers=""/>
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>
 </bcf:controlfile>
 

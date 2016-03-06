@@ -2029,6 +2029,6 @@
     <bcf:citekey order="20">nodate2</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" prefixnumbers=""/>
+  <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>
 </bcf:controlfile>
 

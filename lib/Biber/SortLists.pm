@@ -77,7 +77,7 @@ sub get_list {
     return $list if ($list->get_name eq $name and
                      $list->get_sortschemename eq $ssn and
                      $list->get_sortnamekeyschemename eq $snksn and
-                     $list->get_prefixnumbers eq $pn and
+                     $list->get_labelprefix eq $pn and
                      $list->get_type eq $type and
                      $list->get_section == $section);
   }

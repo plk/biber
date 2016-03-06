@@ -100,27 +100,27 @@ sub get_sortnamekeyschemename {
 }
 
 
-=head2 get_prefixnumbers
+=head2 get_labelprefix
 
-    Gets the prefixnumbers setting of a sort list
+    Gets the labelprefix setting of a sort list
 
 =cut
 
-sub get_prefixnumbers {
+sub get_labelprefix {
   my $self = shift;
-  return $self->{prefixnumbers};
+  return $self->{labelprefix};
 }
 
-=head2 set_prefixnumbers
+=head2 set_labelprefix
 
-    Sets the prefixnumbers setting of a sort list
+    Sets the labelprefix setting of a sort list
 
 =cut
 
-sub set_prefixnumbers {
+sub set_labelprefix {
   my $self = shift;
   my $pn = shift;
-  $self->{prefixnumbers} = $pn;
+  $self->{labelprefix} = $pn;
   return
 }
 
@@ -218,7 +218,7 @@ sub get_listdata {
   my $self = shift;
   return [ $self->{sortscheme},
            $self->{sortnamekeyschemename},
-           $self->{prefixnumbers},
+           $self->{labelprefix},
            $self->{keys},
            $self->{sortinitdata},
            $self->{extrayeardata},
@@ -523,7 +523,7 @@ sub get_filters {
   * extraalpha
   * extratitle
   * extratitleyear
-  * prefixnumber
+  * labelprefix
 
 =cut
 
@@ -579,12 +579,12 @@ sub instantiate_entry {
     $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
   }
 
-  # prefixnumber
+  # labelprefix
   my $pns = '';
-  if (my $pn = $self->get_prefixnumbers($key)) {
-    $pns = "      \\field{prefixnumber}{$pn}\n";
+  if (my $pn = $self->get_labelprefix($key)) {
+    $pns = "      \\field{labelprefix}{$pn}\n";
   }
-  $entry_string =~ s|^\s*<BDS>PREFIXNUMBER</BDS>\n|$pns|gxms;
+  $entry_string =~ s|^\s*<BDS>LABELPREFIX</BDS>\n|$pns|gxms;
   return $entry_string;
 }
 

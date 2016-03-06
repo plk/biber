@@ -335,10 +335,10 @@ sub set_output_entry {
     }
   }
 
-  # prefixnumber is list-specific. It is only defined is there is no shorthand
+  # labelprefix is list-specific. It is only defined is there is no shorthand
   # (see biblatex documentation)
   unless ($be->get_field('shorthand')) {
-    $acc .= "      <BDS>PREFIXNUMBER</BDS>\n";
+    $acc .= "      <BDS>LABELPREFIX</BDS>\n";
   }
 
   # The labeltitle option determines whether "extratitle" is output
@@ -531,7 +531,7 @@ sub output {
     foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
       if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
           $list->get_sortnamekeyschemename eq 'global' and
-          $list->get_prefixnumbers eq '' and
+          $list->get_labelprefix eq '' and
           $list->get_type eq 'entry') {
         next;
       }
@@ -548,11 +548,11 @@ sub output {
       next unless $list->count_keys; # skip empty lists
       my $listssn = $list->get_sortschemename;
       my $listsnksn = $list->get_sortnamekeyschemename;
-      my $listpn = $list->get_prefixnumbers;
+      my $listpn = $list->get_labelprefix;
       my $listtype = $list->get_type;
       my $listname = $list->get_name;
 
-      $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn', sort name key scheme '$listsnksn' and prefixnumbers '$listpn'");
+      $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn', sort name key scheme '$listsnksn' and labelprefix '$listpn'");
 
       if ($listtype eq 'entry') {
         out($target, "  \\sortlist[entry]{$listname}\n");

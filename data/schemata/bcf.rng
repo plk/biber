@@ -792,7 +792,7 @@
             <param name="minLength">1</param>
           </data>
         </attribute>
-        <attribute name="prefixnumbers">
+        <attribute name="labelprefix">
           <data type="string"/>
         </attribute>
         <!-- name is only needed for list types -->
