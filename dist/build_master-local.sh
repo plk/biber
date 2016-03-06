@@ -199,6 +199,12 @@ if [ -e $DIR/biber-linux_x86_64.tar.gz ]; then
 fi
 
 # Doc
+cd $DOCDIR
+lualatex -interaction=batchmode biber.tex
+lualatex -interaction=batchmode biber.tex
+lualatex -interaction=batchmode biber.tex
+\rm *.{aux,bbl,bcf,blg,log,run.xml,toc,out,lot,synctex} 2>/dev/null
+cd $BASE
 scp $DOCDIR/biber.pdf philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/documentation/biber.pdf
 
 # Changes file
@@ -209,7 +215,7 @@ perl $BINDIR/xsl-transform.pl $BASE/lib/Biber/LaTeX/recode_data.xml $XSLDIR/texm
 scp $BASE/lib/Biber/LaTeX/recode_data.xml.html philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/documentation/utf8-macro-map.html
 \rm -f $BASE/lib/Biber/LaTeX/recode_data.xml.html
 
-# source - no longer needed
+# source
 cd $BASE
 ./Build dist
 scp $BASE/biblatex-biber-*.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/biblatex-biber.tar.gz

@@ -2,6 +2,7 @@
 !*.aux
 !*.bcf
 !*.bbl
+doc/*.pdf
 doc/*.aux
 doc/*.out
 doc/*.synctex

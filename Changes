@@ -1,5 +1,9 @@
 Revision history for Biber
 
+2.5    (2016-03-)
+       * Integration with new biblatex 3.4 \DeclareDatafieldSet
+         functionality.
+       * Improved sourcemap looping functionality
 2.4    (2016-03-01)
        * Misc bug fixes
        * There is now a 64-bit windows build built on windows 10
