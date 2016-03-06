@@ -513,7 +513,7 @@ $S = { spec => [
 
 $main->set_sortscheme($S);
 # Set nosort for tests, skipping "The " in titles so L7 should sort before L6
-Biber::Config->setoption('nosort', [{ name => 'type_title', value => q/\AThe\s+/ }]);
+Biber::Config->setoption('nosort', [{ name => 'settitles', value => q/\AThe\s+/ }]);
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;

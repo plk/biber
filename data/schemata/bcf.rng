@@ -182,6 +182,34 @@
           </oneOrMore>
         </element>
       </oneOrMore>
+      <oneOrMore>
+        <!-- datafield sets -->
+        <element name="bcf:datafieldset">
+          <attribute name="name"/>
+          <oneOrMore>
+            <element name="bcf:member">
+              <choice>
+                <group>
+                  <optional>
+                    <attribute name="fieldtype">
+                      <ref name="dmfieldtype"/>
+                    </attribute>
+                  </optional>
+                  <optional>
+                    <attribute name="datatype">
+                      <ref name="dmdatatype"/>
+                    </attribute>
+                  </optional>
+                </group>
+                <optional>
+                  <attribute name="field"/>
+                </optional>
+              </choice>
+              <empty/>
+            </element>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
       <optional>
         <!-- user field/entrytype mapping -->
         <element name="bcf:sourcemap">
@@ -547,10 +575,7 @@
               <element name="bcf:field">
                 <!-- fieldtype is "field" or "list" -->
                 <attribute name="fieldtype">
-                  <choice>
-                    <value>field</value>
-                    <value>list</value>
-                  </choice>
+                  <ref name="dmfieldtype"/>
                 </attribute>
                 <optional>
                   <!--
@@ -563,21 +588,7 @@
                 </optional>
                 <!-- datatype of field content -->
                 <attribute name="datatype">
-                  <choice>
-                    <value>literal</value>
-                    <value>name</value>
-                    <value>key</value>
-                    <value>entrykey</value>
-                    <value>date</value>
-                    <value>verbatim</value>
-                    <value>integer</value>
-                    <value>range</value>
-                    <value>code</value>
-                    <value>uri</value>
-                    <value>datepart</value>
-                    <value>keyword</value>
-                    <value>option</value>
-                  </choice>
+                  <ref name="dmdatatype"/>
                 </attribute>
                 <optional>
                   <!-- Are we allowed to output a null field value to the .bbl for this field? -->
@@ -1823,6 +1834,29 @@
         </element>
       </oneOrMore>
     </element>
+  </define>
+  <define name="dmfieldtype">
+    <choice>
+      <value>field</value>
+      <value>list</value>
+    </choice>
+  </define>
+  <define name="dmdatatype">
+    <choice>
+      <value>literal</value>
+      <value>name</value>
+      <value>key</value>
+      <value>entrykey</value>
+      <value>date</value>
+      <value>verbatim</value>
+      <value>integer</value>
+      <value>range</value>
+      <value>code</value>
+      <value>uri</value>
+      <value>datepart</value>
+      <value>keyword</value>
+      <value>option</value>
+    </choice>
   </define>
 </grammar>
 <!-- Copyright 2009-2016 François Charette and Philip Kime, all rights reserved. -->

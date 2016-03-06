@@ -20,6 +20,7 @@ use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
 use Regexp::Common qw( balanced );
+use List::AllUtils qw( first );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Scalar::Util qw(looks_like_number);
 use Text::Roman qw(isroman roman2int);
@@ -245,7 +246,7 @@ sub strip_nosort {
   # Strip user-defined REs from string
   my $restrings;
   foreach my $nsopt (@$nosort) {
-    # Specific fieldnames override types
+    # Specific fieldnames override sets
     if (fc($nsopt->{name}) eq fc($fieldname)) {
       push @$restrings, $nsopt->{value};
     }
@@ -253,8 +254,8 @@ sub strip_nosort {
 
   unless ($restrings) {
     foreach my $nsopt (@$nosort) {
-      next unless $nsopt->{name} =~ /\Atype_/xms;
-      if ($NOSORT_TYPES{lc($nsopt->{name})}{lc($fieldname)}) {
+      next unless defined($DATAFIELD_SETS{lc($nsopt->{name})});
+      if (first {lc($_) eq lc($fieldname)} @{$DATAFIELD_SETS{lc($nsopt->{name})}}) {
         push @$restrings, $nsopt->{value};
       }
     }

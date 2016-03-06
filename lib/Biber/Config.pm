@@ -376,6 +376,7 @@ sub _config_file_set {
                                                             qr/\Afieldxor\z/,
                                                             qr/\Afield\z/,
                                                             qr/\Aalias\z/,
+                                                            qr/\Amember\z/,
                                                             qr/\Aalsoset\z/,
                                                             qr/\Aconstraints\z/,
                                                             qr/\Aconstraint\z/,
@@ -416,6 +417,23 @@ sub _config_file_set {
   }
 
   delete $userconf->{optionscope};
+
+  # DATAFIELD SETS
+  # Since we have to use the datamodel to resolve some members, just record the settings
+  # here for processing after the datamodel is parsed
+  foreach my $s (@{$userconf->{datafieldset}}) {
+    my $name = $s->{name};
+    foreach my $m (@{$s->{member}}) {
+      if (my $field = $m->{field}[0]) {# 'field' has forcearray for other things
+        push @{$DATAFIELD_SETS{$name}}, $field;
+      }
+      else {
+          push @{$DATAFIELD_SETS{$name}}, {fieldtype => $m->{fieldtype},
+                                           datatype  => $m->{datatype}};
+      }
+    }
+  }
+  delete $userconf->{datafieldset};
 
   # Set options from config file
   while (my ($k, $v) = each %$userconf) {
@@ -558,6 +576,7 @@ sub config_file {
 ##############################
 # Biber options static methods
 ##############################
+
 
 =head2 get_unul_done
 

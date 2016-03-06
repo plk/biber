@@ -29,8 +29,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{2.3}    % BIBER VERSION
-\gdef\biblatexversion{3.2}   % BIBLATEX VERSION
+\gdef\biberversion{2.5}    % BIBER VERSION
+\gdef\biblatexversion{3.4}   % BIBLATEX VERSION
 
 % colour for tables
 \definecolor{Gray}{gray}{0.85}
@@ -237,6 +237,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
+2.5 & 3.4\\
 2.4 & 3.3\\
 2.3 & 3.2\\
 2.2 & 3.1\\
@@ -620,9 +621,9 @@ an example config file which displays the \biber\ defaults:
   <nostdmacros>0</nostdmacros>
   <nosort>
     <!-- strip prefices like 'El-' when sorting name fields -->
-    <option name="type_name" value="\A\p{L}{2}\p{Pd}"/>
+    <option name="setnames" value="\A\p{L}{2}\p{Pd}"/>
     <!-- strip some diacritics when sorting name fields -->
-    <option name="type_name" value="[\x{2bf}\x{2018}]"/>
+    <option name="setnames" value="[\x{2bf}\x{2018}]"/>
   </nosort>
   <onlylog>0</onlylog>
   <others_string>others</others_string>
@@ -1580,19 +1581,20 @@ personal default and thus they would naturally be set in the config file
 anyway. \opt{nosort} allows you to ignore parts of a field for sorting.
 This is done using Perl regular expressions which specify what to
 ignore in a field. You can specify as many patterns as you like for a
-specific field. Also available are some field type aliases so you can, for
-example, specify patterns for all name fields or all title fields. These
-field types all begin with the string «\verb+type_+», see Table
-\ref{tab:nst}.
+specific field. Datasource field sets defined using
+\cmd{DeclareDatafieldSet} in \biblatex are also recognised as valid options
+values and so you can specify \opt{nosort} regular expressions for
+arbitrary sets of fields. \biblatex defines as standard two sets as shown
+in Table \ref{tab:nst}.
 
 \begin{table}
 \begin{center}
 \small
 \begin{tabular}{ll}
 \toprule
-Alias & Fields\\
+Set & Fields\\
 \midrule
-type\_name & author\\
+setnames & author\\
           & afterword\\
           & annotator\\
           & bookauthor\\
@@ -1610,7 +1612,7 @@ type\_name & author\\
           & shortauthor\\
           & shorteditor\\
           & translator\\
-type\_title & booktitle\\
+settitles & booktitle\\
            & eventtitle\\
            & issuetitle\\
            & journaltitle\\
@@ -1620,7 +1622,7 @@ type\_title & booktitle\\
 \bottomrule
 \end{tabular}
 \end{center}
-\caption{\texttt{nosort} option field type aliases}
+\caption{Default \biblatex\ datafield sets}
 \label{tab:nst}
 \end{table}
 
@@ -1630,9 +1632,9 @@ in names which should not be considered when sorting. Given (the default):
 \begin{lstlisting}[language=xml]
 <nosort>
   <!-- strip prefices like 'al-' when sorting names -->
-  <option name="type_name" value="\A\p{L}{2}\p{Pd}"/>
+  <option name="setnames" value="\A\p{L}{2}\p{Pd}"/>
   <!-- strip diacritics when sorting names -->
-  <option name="type_name" value="[\x{2bf}\x{2018}]"/>
+  <option name="setnames" value="[\x{2bf}\x{2018}]"/>
 </nosort>
 \end{lstlisting}
 
@@ -1665,7 +1667,7 @@ beginning of a \bibfield{TITLE} field when sorting, you could add this to your
 
 \begin{lstlisting}[language=xml]
 <nosort>
-  <option name="type_title" value="\AThe\s+"/>
+  <option name="settitles" value="\AThe\s+"/>
 </nosort>
 \end{lstlisting}
 

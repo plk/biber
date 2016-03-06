@@ -92,6 +92,17 @@ start =
       }+
     }+,
     
+    # datafield sets
+    element bcf:datafieldset {
+      attribute name { text },
+      element bcf:member {
+        ((attribute fieldtype { dmfieldtype }?,
+          attribute datatype { dmdatatype }?) |
+        attribute field { text }?),
+        empty
+      }+
+    }+,
+
     # user field/entrytype mapping
     element bcf:sourcemap {
       element bcf:maps {
@@ -216,12 +227,12 @@ start =
       element bcf:fields {
         element bcf:field {
           # fieldtype is "field" or "list"
-          attribute fieldtype { "field" | "list" },
+          attribute fieldtype { dmfieldtype },
           # format is a specification of the format of the field. If not specified, field contents
           # are just as is. 
           attribute format { "xsv" }?,
           # datatype of field content
-          attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "code" | "uri" | "datepart" | "keyword" | "option" },
+          attribute datatype { dmdatatype },
           # Are we allowed to output a null field value to the .bbl for this field?
           attribute nullok { "true" }?,
           # Should this field be skipped and not output to the .bbl?
@@ -700,6 +711,10 @@ map =
       empty
     }+
   }
+
+dmfieldtype =  "field" | "list"
+dmdatatype =  "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "code" | "uri" | "datepart" | "keyword" | "option"
+
 # Copyright 2009-2016 François Charette and Philip Kime, all rights reserved.
 
 # This code is free software.  You can redistribute it and/or

@@ -1065,7 +1065,7 @@
             <h6>Sorting Specification</h6>
             <div class="small">Using sorting name key scheme: <xsl:value-of
             select="./@sortnamekeyscheme"/><xsl:if
-            test="./@prefixnumbers"> and prefixnumbers: <xsl:value-of select="./@prefixnumbers"/></xsl:if></div>
+            test="./@labelprefix"> and labelprefix: <xsl:value-of select="./@labelprefix"/></xsl:if></div>
             <xsl:choose>
               <xsl:when test="./bcf:sorting">
                 <xsl:call-template name="sorting-spec">

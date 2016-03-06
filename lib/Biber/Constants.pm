@@ -14,7 +14,7 @@ our @EXPORT = qw{
                   %CONFIG_SCOPEOPT_BIBLATEX
                   %CONFIG_OPTTYPE_BIBLATEX
                   %CONFIG_BIBLATEX_ENTRY_OPTIONS
-                  %NOSORT_TYPES
+                  %DATAFIELD_SETS
                   %DM_DATATYPES
                   %LOCALE_MAP
                   %LOCALE_MAP_R
@@ -55,38 +55,9 @@ unless ($locale) {
   }
 }
 
-# nosort type category shortcuts
-our %NOSORT_TYPES = (
-                     type_name => {
-                                   author => 1,
-                                   afterword => 1,
-                                   annotator => 1,
-                                   bookauthor => 1,
-                                   commentator => 1,
-                                   editor => 1,
-                                   editora => 1,
-                                   editorb => 1,
-                                   editorc => 1,
-                                   foreword => 1,
-                                   holder => 1,
-                                   introduction => 1,
-                                   namea => 1,
-                                   nameb => 1,
-                                   namec => 1,
-                                   shortauthor => 1,
-                                   shorteditor => 1,
-                                   translator => 1
-                                  },
-                     type_title => {
-                                    booktitle => 1,
-                                    eventtitle => 1,
-                                    issuetitle => 1,
-                                    journaltitle => 1,
-                                    maintitle => 1,
-                                    origtitle => 1,
-                                    title => 1
-                                   }
-);
+
+# datafieldsets
+our %DATAFIELD_SETS = ();
 
 # datatypes for data model validation
 our %DM_DATATYPES = (
@@ -130,8 +101,8 @@ our $CONFIG_DEFAULT_BIBER = {
   nolabelwidthcount   => { option => [ {value => q//} ] },
   nolog               => { content => 0 },
   nostdmacros         => { content => 0 },
-  nosort              => { option => [ { name => 'type_name', value => q/\A\p{L}{2}\p{Pd}/ },
-                                       { name => 'type_name', value => q/[\x{2bf}\x{2018}]/ } ] },
+  nosort              => { option => [ { name => 'setnames', value => q/\A\p{L}{2}\p{Pd}/ },
+                                       { name => 'setnames', value => q/[\x{2bf}\x{2018}]/ } ] },
   onlylog             => { content => 0 },
   others_string       => { content => 'others' },
   output_align        => { content => 0 },

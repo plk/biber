@@ -384,6 +384,19 @@
     <bcf:option datatype="boolean">useprefix</bcf:option>
     <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
   </bcf:optionscope>
+  <!-- DATAFIELDSETS -->
+  <bcf:datafieldset name="setnames">
+    <bcf:member datatype="name" fieldtype="list"/>
+  </bcf:datafieldset>
+  <bcf:datafieldset name="settitles">
+    <bcf:member field="title"/>
+    <bcf:member field="booktitle"/>
+    <bcf:member field="eventtitle"/>
+    <bcf:member field="issuetitle"/>
+    <bcf:member field="journaltitle"/>
+    <bcf:member field="maintitle"/>
+    <bcf:member field="origtitle"/>
+  </bcf:datafieldset>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
     <bcf:maps datatype="bibtex" level="driver">

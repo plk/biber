@@ -377,6 +377,7 @@ sub parse_ctrlfile {
                                                            qr/\Asortingnamekey\z/,
                                                            qr/\Aper_datasource\z/,
                                                            qr/\Anosort\z/,
+                                                           qr/\Amember\z/,
                                                            qr/\Anoinit\z/,
                                                            qr/\Anolabel\z/,
                                                            qr/\Anolabelwidthcount\z/,
@@ -491,6 +492,22 @@ sub parse_ctrlfile {
               $entrytype);
           }
         }
+      }
+    }
+  }
+
+  # DATAFIELD SETS
+  # Since we have to use the datamodel to resolve some members, just record the settings
+  # here for processing after the datamodel is parsed
+  foreach my $s (@{$bcfxml->{datafieldset}}) {
+    my $name = $s->{name};
+    foreach my $m (@{$s->{member}}) {
+      if (my $field = $m->{field}[0]) {# 'field' has forcearray for other things
+        push @{$DATAFIELD_SETS{$name}}, $field;
+      }
+      else {
+          push @{$DATAFIELD_SETS{$name}}, {fieldtype => $m->{fieldtype},
+                                           datatype  => $m->{datatype}};
       }
     }
   }
@@ -898,6 +915,9 @@ sub process_setup {
   # up user config dm settings
   Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
+  # Now resolve any datafield sets from the .bcf
+  _resolve_datafieldsets();
+
   # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
   if (Biber::Config->getoption('output_encoding') =~ /(?:x-)?ascii/xmsi and
       Biber::Config->getoption('input_encoding') !~ /(?:x-)?ascii/xmsi) {
@@ -916,11 +936,40 @@ sub process_setup_tool {
 
   Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
+  # Now resolve any datafield sets from the .bcf
+  _resolve_datafieldsets();
+
   # Force output_safechars flag if output to ASCII and input_encoding is not ASCII
   if (Biber::Config->getoption('output_encoding') =~ /(?:x-)?ascii/xmsi and
       Biber::Config->getoption('input_encoding') !~ /(?:x-)?ascii/xmsi) {
     Biber::Config->setoption('output_safechars', 1);
   }
+}
+
+# datafield sets need to be resolved after the datamodel is parsed
+sub _resolve_datafieldsets {
+  my $dm = Biber::Config->get_dm;
+  while (my ($key, $value) = each %DATAFIELD_SETS) {
+    my $fs;
+    foreach my $m (@$value) {
+      if (ref $m eq 'HASH') {
+        if ($m->{fieldtype} and $m->{datatype}) {
+          push @$fs, @{$dm->get_fields_of_type($m->{fieldtype}, $m->{datatype})};
+        }
+        elsif ($m->{fieldtype}) {
+          push @$fs, @{$dm->get_fields_of_fieldtype($m->{fieldtype})};
+        }
+        elsif ($m->{datatype}) {
+          push @$fs, @{$dm->get_fields_of_datatype($m->{datatype})};
+        }
+      }
+      else {
+        push @$fs, $m;
+      }
+    }
+    $DATAFIELD_SETS{$key} = $fs;
+  }
+  use Data::Dump;dd(%DATAFIELD_SETS);
 }
 
 
