@@ -239,7 +239,7 @@ sub _labelpart {
     # Deal with various tests
     # ifnamecount only uses this label template part if the list it is applied to is a certain
     # length
-    if (my $ic = $part->{ifnamecount}) {
+    if (my $inc = $part->{ifnamecount}) {
       my $f = $part->{content};
       # resolve labelname
       if ($f eq 'labelname') {
@@ -256,7 +256,23 @@ sub _labelpart {
           $visible_names = $total_names;
         }
 
-        next unless $visible_names == $ic;
+        # Deal with ifnamecount
+        if ($inc =~ m/^\d+$/) {# just a number
+          next unless $visible_names == $inc;
+        }
+        else {# a range
+          my $incr = parse_range_alt($inc);
+          if (not defined($incr->[0])) {# range -x
+            next unless $visible_names <= $incr->[1];
+          }
+          elsif (not defined($incr->[1])) {# range x-
+            next unless $visible_names >= $incr->[0];
+          }
+          else {# range x-y
+            next unless ($visible_names >= $incr->[0] and
+                         $visible_names <= $incr->[1]);
+          }
+        }
       }
     }
     my $ret = _dispatch_label($self, $part, $citekey);

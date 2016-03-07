@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 119;
+use Test::More tests => 120;
 use Test::Differences;
 unified_diff;
 
@@ -564,4 +564,75 @@ $bibentries = $section->bibentries;
 
 eq_or_diff($bibentries->entry('rangetest1')->get_field('sortlabelalpha'), 'WAXAYAZA.VEWEXE+.VTWT.XFYFZF.WH+', 'Name range test - 1');
 
+
+Biber::Config->setblxoption('labelalphatemplate', {
+  labelelement => [
+                   {
+                    labelpart => [
+                                  {
+                   content         => "author",
+                   ifnamecount     => "3-",
+                   substring_side  => "left",
+                   substring_width => 1,
+                                  },
+                   ],
+                   order => 1,
+                   },
+                   {
+                    labelpart => [
+                                  {
+                   content         => ".",
+                                  },
+                   ],
+                   order => 2,
+                   },
+                   {
+                    labelpart => [
+                                  {
+                   content         => "editor",
+                   ifnamecount     => "-2",
+                   substring_side  => "left",
+                   substring_width => 1,
+                                  },
+                   ],
+                   order => 3,
+                   },
+                   {
+                    labelpart => [
+                                  {
+                   content         => ".",
+                                  },
+                   ],
+                   order => 4,
+                   },
+                   {
+                    labelpart => [
+                                  {
+                   content         => "translator",
+                   ifnamecount     => "4-6",
+                   substring_side  => "left",
+                   substring_width => 1,
+                                  },
+                   ],
+                   order => 5,
+                   },
+
+                  ],
+  type  => "global",
+});
+
+Biber::Config->setblxoption('maxalphanames', 10);
+Biber::Config->setblxoption('minalphanames', 10);
+
+foreach my $k ($section->get_citekeys) {
+  $bibentries->entry($k)->del_field('sortlabelalpha');
+  $bibentries->entry($k)->del_field('labelalpha');
+  $main->set_extraalphadata_for_key($k, undef);
+}
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+$bibentries = $section->bibentries;
+
+eq_or_diff($bibentries->entry('rangetest1')->get_field('sortlabelalpha'), 'VWXYZ..VWXYZ', 'Name range test - 2');
 

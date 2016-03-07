@@ -49,7 +49,8 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean parse_range maploopreplace };
+  locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean parse_range
+  parse_range_alt maploopreplace };
 
 =head1 FUNCTIONS
 
@@ -1129,6 +1130,25 @@ sub parse_range {
     return [1, $1];
   }
 }
+
+=head2 parse_range_alt
+
+  Parses a range of values into a two-value array ref.
+  Either start or end can be undef and it's up to surrounding code to interpret this
+
+=cut
+
+sub parse_range_alt {
+  my $rs = shift;
+  $rs =~ m/\A\s*(\P{Pd}+)?\s*(\p{Pd})*\s*(\P{Pd}+)?\s*\z/xms;
+  if ($2) {
+    return [$1, $3];
+  }
+  else {
+    return undef;
+  }
+}
+
 
 =head2 maploopreplace
 
