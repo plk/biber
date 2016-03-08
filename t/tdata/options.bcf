@@ -481,7 +481,7 @@
     <bcf:labelelement order="1">
       <bcf:labelpart final="1">shorthand</bcf:labelpart>
       <bcf:labelpart>label</bcf:labelpart>
-      <bcf:labelpart substring_width="3" substring_side="left" ifnamecount="1">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="3" substring_side="left" ifnames="1">labelname</bcf:labelpart>
       <bcf:labelpart substring_width="1" substring_side="left">labelname</bcf:labelpart>
     </bcf:labelelement>
     <bcf:labelelement order="2">

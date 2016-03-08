@@ -129,8 +129,9 @@ start =
           attribute substring_side { "left" | "right" }?,
           attribute substring_compound { "0" | "1" }?,
           attribute substring_pcompound { "0" | "1" }?,
-          attribute ifnamecount { xsd:integer }?,
-          attribute namerange { text }?,
+          attribute ifnames { text }?,
+          attribute names { text }?,
+          attribute namessep { string }?,
           attribute noalphaothers { "0" | "1" }?,
           xsd:string
         }+

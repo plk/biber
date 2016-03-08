@@ -204,6 +204,10 @@
             font-size: 60%;
             font-family: "Courier New",monospace;
           }
+          .la_fieldkey {
+            font-style: italic;
+            color: #AAAAAA;
+            }
           .la_final {
             color: #FF0000;
           }
@@ -213,8 +217,11 @@
           .la_compound {
             color: #6699CC;
           }
-          .la_namerange {
+          .la_names {
             color: #04FF04;
+          }
+          .la_namessep {
+            color: #FF0000;
           }
           .field_xor_coerce {
             color: #FF0000;
@@ -494,8 +501,8 @@
                               <xsl:if test="./@substring_compound='1'">
                                 <xsl:attribute name="class">la_compound</xsl:attribute>
                               </xsl:if>
-                              <xsl:if test="./@ifnamecount">
-                                namecount&gt;<xsl:value-of select="./@ifnamecount"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
+                              <xsl:if test="./@ifnames">
+                                namecount=<xsl:value-of select="./@ifnames"/><xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>
                               </xsl:if>
                               <!-- left substring -->
                               <xsl:if test="./@substring_side='left'">
@@ -507,8 +514,11 @@
                                 </span>
                               </xsl:if>
                               <xsl:value-of select="./text()"/>
-                              <xsl:if test="./@namerange">
-                                <span><xsl:attribute name="class">la_namerange</xsl:attribute>=<xsl:value-of select="./@namerange"/></span>
+                              <xsl:if test="./@namessep">
+                                <span><xsl:attribute name="class">la_namessep</xsl:attribute>(<xsl:value-of select="./@namessep"/>)</span>
+                              </xsl:if>
+                              <xsl:if test="./@names">
+                                <span><xsl:attribute name="class">la_names</xsl:attribute>=<xsl:value-of select="./@names"/></span>
                               </xsl:if>
                               <!-- right substring -->
                               <xsl:if test="./@substring_side='right'">
@@ -544,7 +554,7 @@
           <div class="key"><u>Key</u>
           <ul>
             <li><b>Heading key</b>: Label parts are concatenated together in part order shown</li>
-            <li><b>Labelpart key</b>: <span class="la_final">Final label, no more parts are considered</span>. &quot;namecount&gt;n<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>field&quot; - conditional field part, only used if there are more than n names. Substring specification: <span class="la_substring">&gt;&gt;&gt;</span>field = use three chars from left side of field, field<span class="la_substring">&lt;&lt;</span> = use two chars from right side of field, field<span class="la_substring">v/n</span> = variable-width substring, max n chars, field<span class="la_substring">vf/n</span> = variable-width substring fixed to same length as longest string occuring at least n times, field<span class="la_substring">l</span> = list scope disambiguation where the label as a whole is unique, not necessarily the individual parts. <span class="la_compound">field with compound substring extraction enabled</span>. field<span class="la_namerange">=range</span> = only use the names in the specified range to form the labelpart, <span class="la_final"><xsl:text disable-output-escaping="yes">&amp;otimes;</xsl:text></span> = supress alphaothers</li>
+            <li><b>Labelpart key</b>: <span class="la_final">Final label, no more parts are considered</span>. &quot;namecount=n<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><span class="la_fieldkey">field</span>&quot; - conditional name <span class="la_fieldkey">field</span>part, only used if there as many names as specified by the range n. Substring specification: &quot;<span class="la_substring">&gt;&gt;&gt;</span><span class="la_fieldkey">field</span>&quot; = use three chars from left side of field. &quot;<span class="la_fieldkey">field</span><span class="la_substring">&lt;&lt;</span>&quot; = use two chars from right side of field. &quot;<span class="la_fieldkey">field</span><span class="la_substring">v/n</span>&quot; = variable-width substring, max n chars. &quot;<span class="la_fieldkey">field</span><span class="la_substring">vf/n</span>&quot; = variable-width substring fixed to same length as longest string occuring at least n times. &quot;<span class="la_fieldkey">field</span><span class="la_substring">l</span>&quot; = list scope disambiguation where the label as a whole is unique, not necessarily the individual parts. &quot;<span class="la_compound"><span class="la_fieldkey">field</span>&quot; with compound substring extraction enabled</span>. &quot;<span class="la_fieldkey">field</span><span class="la_names">&quot;=range</span>=only use the names in the specified range to form the labelpart. &quot;<span class="la_fieldkey">field</span><span class="la_namessep">(string)</span>&quot;=use string as separator between all names. <span class="la_final"><xsl:text disable-output-escaping="yes">&amp;otimes;</xsl:text></span> = supress alphaothers</li>
           </ul>
           </div>
         </xsl:if>

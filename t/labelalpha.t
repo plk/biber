@@ -229,6 +229,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                  {
                   content         => "labelname",
                   substring_width => "vf",
+                  namessep => "/",
                   substring_fixed_threshold => 2,
                   substring_side => "left"
                  },
@@ -252,9 +253,9 @@ $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', 
 $bibentries = $section->bibentries;
 
 # "Agas" and not "Aga" because the Schmidt/Schnee below need 4 chars to disambiguate
-eq_or_diff($bibentries->entry('L18')->get_field('sortlabelalpha'), 'AgasChaLaver', 'labelalpha disambiguation 10');
-eq_or_diff($bibentries->entry('L19')->get_field('sortlabelalpha'), 'AgasConLendl', 'labelalpha disambiguation 11');
-eq_or_diff($bibentries->entry('L20')->get_field('sortlabelalpha'), 'AgasCouLaver', 'labelalpha disambiguation 12');
+eq_or_diff($bibentries->entry('L18')->get_field('sortlabelalpha'), 'Agas/Cha/Laver', 'labelalpha disambiguation 10');
+eq_or_diff($bibentries->entry('L19')->get_field('sortlabelalpha'), 'Agas/Con/Lendl', 'labelalpha disambiguation 11');
+eq_or_diff($bibentries->entry('L20')->get_field('sortlabelalpha'), 'Agas/Cou/Laver', 'labelalpha disambiguation 12');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('labelalphatemplate', {
@@ -308,7 +309,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                  { content => "label" },
                  {
                    content         => "labelname",
-                   ifnamecount     => 1,
+                   ifnames     => 1,
                    substring_side  => "left",
                    substring_width => 3,
                  },
@@ -428,7 +429,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                     labelpart => [
                                   {
                    content         => "author",
-                   ifnamecount     => 1,
+                   ifnames     => 1,
                    substring_side  => "left",
                    substring_width => 3,
                    substring_pwidth => 2,
@@ -473,7 +474,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                     labelpart => [
                                   {
                    content         => "author",
-                   namerange       => "2-7"
+                   names       => "2-7"
                                   },
                    ],
                    order => 1,
@@ -490,7 +491,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                     labelpart => [
                                   {
                    content         => "editor",
-                   namerange       => "--3"
+                   names       => "--3"
                                   },
                    ],
                    order => 3,
@@ -507,7 +508,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                     labelpart => [
                                   {
                    content         => "translator",
-                   namerange       => "2",
+                   names       => "2",
                    noalphaothers   => "1"
                                   },
                    ],
@@ -525,7 +526,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                     labelpart => [
                                   {
                    content         => "foreword",
-                   namerange       => "3--"
+                   names       => "3--"
                                   },
                    ],
                    order => 7,
@@ -542,7 +543,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                     labelpart => [
                                   {
                    content         => "holder",
-                   namerange       => "2-+"
+                   names       => "2-+"
                                   },
                    ],
                    order => 9,
@@ -571,7 +572,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                     labelpart => [
                                   {
                    content         => "author",
-                   ifnamecount     => "3-",
+                   ifnames     => "3-",
                    substring_side  => "left",
                    substring_width => 1,
                                   },
@@ -590,7 +591,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                     labelpart => [
                                   {
                    content         => "editor",
-                   ifnamecount     => "-2",
+                   ifnames     => "-2",
                    substring_side  => "left",
                    substring_width => 1,
                                   },
@@ -609,7 +610,8 @@ Biber::Config->setblxoption('labelalphatemplate', {
                     labelpart => [
                                   {
                    content         => "translator",
-                   ifnamecount     => "4-6",
+                   ifnames     => "4-6",
+                   namessep     => "/",
                    substring_side  => "left",
                    substring_width => 1,
                                   },
@@ -634,5 +636,5 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 $bibentries = $section->bibentries;
 
-eq_or_diff($bibentries->entry('rangetest1')->get_field('sortlabelalpha'), 'VWXYZ..VWXYZ', 'Name range test - 2');
+eq_or_diff($bibentries->entry('rangetest1')->get_field('sortlabelalpha'), 'VWXYZ..V/W/X/Y/Z', 'Name range test - 2');
 

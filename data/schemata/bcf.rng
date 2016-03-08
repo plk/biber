@@ -335,12 +335,15 @@
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="ifnamecount">
-                      <data type="integer"/>
-                    </attribute>
+                    <attribute name="ifnames"/>
                   </optional>
                   <optional>
-                    <attribute name="namerange"/>
+                    <attribute name="names"/>
+                  </optional>
+                  <optional>
+                    <attribute name="namessep">
+                      <data type="string" datatypeLibrary=""/>
+                    </attribute>
                   </optional>
                   <optional>
                     <attribute name="noalphaothers">

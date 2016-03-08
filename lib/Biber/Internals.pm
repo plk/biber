@@ -237,9 +237,9 @@ sub _labelpart {
     }
 
     # Deal with various tests
-    # ifnamecount only uses this label template part if the list it is applied to is a certain
+    # ifnames only uses this label template part if the list it is applied to is a certain
     # length
-    if (my $inc = $part->{ifnamecount}) {
+    if (my $inc = $part->{ifnames}) {
       my $f = $part->{content};
       # resolve labelname
       if ($f eq 'labelname') {
@@ -256,7 +256,7 @@ sub _labelpart {
           $visible_names = $total_names;
         }
 
-        # Deal with ifnamecount
+        # Deal with ifnames
         if ($inc =~ m/^\d+$/) {# just a number
           next unless $visible_names == $inc;
         }
@@ -413,8 +413,8 @@ sub _label_name {
     # Use name range override, if any
     my $nr_start;
     my $nr_end;
-    if (exists($labelattrs->{namerange})) {
-      my $nr = parse_range($labelattrs->{namerange});
+    if (exists($labelattrs->{names})) {
+      my $nr = parse_range($labelattrs->{names});
       $nr_start = $nr->[0];
       $nr_end = $nr->[1];
 
@@ -449,6 +449,10 @@ sub _label_name {
         }
       }
       $acc .= _process_label_attributes($self, $citekey, $familynames[$i], $labelattrs, $realname, 'family', $i);
+      # put in names sep, if any
+      if (my $nsep = $labelattrs->{namessep}) {
+        $acc .= $nsep unless ($i == $nr_end-1);
+      }
     }
 
     $sortacc = $acc;
