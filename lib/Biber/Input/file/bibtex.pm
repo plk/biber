@@ -358,7 +358,6 @@ sub create_entry {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
-  my $ds = $section->get_keytods($key);
 
   if ( $entry->metatype == BTE_REGULAR ) {
     my %newentries; # In case we create a new entry in a map
@@ -451,11 +450,12 @@ sub create_entry {
             # entry clone
             if (my $prefix = maploopreplace($step->{map_entry_clone}, $maploop, $maploopuniq)) {
               $logger->debug("Source mapping (type=$level, key=$key): cloning entry with prefix '$prefix'");
-              # Create entry with no sourcemapping to avoid recursion
-              create_entry("$prefix$key", $entry);
+              # Create entry
+              _create_entry("$prefix$key", $entry);
 
               # found a prefix clone key, remove it from the list of keys we want since we
               # have "found" it by creating it along with its clone parent
+              $logger->debug("Source mapping (type=$level, key=$key): created '$prefix$key', removing from dependent list");
               @$rkeys = grep {"$prefix$key" ne $_} @$rkeys;
               # Need to add the clone key to the section if allkeys is set since all keys are cleared
               # for allkeys sections initially
@@ -651,58 +651,69 @@ sub create_entry {
       }
     }
 
+    _create_entry($key, $entry);
+
     # Need to also instantiate fields in any new entries created by map
-    foreach my $e ($entry, values %newentries) {
-      next unless $e; # newentry might be undef
-
-      my $bibentry = new Biber::Entry;
-      my $k = biber_decode_utf8($e->key);
-
-      $bibentry->set_field('citekey', $k);
-      $logger->debug("Creating entry with key '$k'");
-
-      # Save pre-mapping data. Might be useful somewhere
-      $bibentry->set_field('rawdata', biber_decode_utf8($e->print_s));
-
-      my $entrytype = biber_decode_utf8($e->type);
-
-      # We put all the fields we find modulo field aliases into the object
-      # validation happens later and is not datasource dependent
-      foreach my $f ($e->fieldlist) {
-
-        # In tool mode, keep the raw data fields
-        if (Biber::Config->getoption('tool')) {
-          $bibentry->set_rawfield($f, biber_decode_utf8($e->get($f)));
-        }
-
-        # We have to process local options as early as possible in order
-        # to make them available for things that need them like parsename()
-        if ($f eq 'options') {
-          my $value = biber_decode_utf8($e->get($f));
-          my $Srx = Biber::Config->getoption('xsvsep');
-          my $S = qr/$Srx/;
-          process_entry_options($k, [ split(/$S/, $value) ]);
-          # Save the raw options in case we are to output another input format like
-          # biblatexml
-          $bibentry->set_field('rawoptions', $value);
-        }
-
-        # Now run any defined handler
-        if ($dm->is_field($f)) {
-          my $handler = _get_handler($f);
-          &$handler($bibentry, $e, $f, $k);
-        }
-        elsif (Biber::Config->getoption('validate_datamodel')) {
-          biber_warn("Datamodel: Entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
-        }
-      }
-
-      $bibentry->set_field('entrytype', $entrytype);
-      $bibentry->set_field('datatype', 'bibtex');
-      $bibentries->add_entry($k, $bibentry);
+    foreach my $e (values %newentries) {
+      _create_entry(biber_decode_utf8($e->key), $e);
     }
   }
   return 1;
+}
+
+sub _create_entry {
+  my ($k, $e) = @_;
+  return unless $e; # newentry might be undef
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+  my $ds = $section->get_keytods($k);
+
+  my $bibentry = new Biber::Entry;
+
+  $bibentry->set_field('citekey', $k);
+  $logger->debug("Creating biber Entry object with key '$k'");
+
+  # Save pre-mapping data. Might be useful somewhere
+  $bibentry->set_field('rawdata', biber_decode_utf8($e->print_s));
+
+  my $entrytype = biber_decode_utf8($e->type);
+
+  # We put all the fields we find modulo field aliases into the object
+  # validation happens later and is not datasource dependent
+  foreach my $f ($e->fieldlist) {
+
+    # In tool mode, keep the raw data fields
+    if (Biber::Config->getoption('tool')) {
+      $bibentry->set_rawfield($f, biber_decode_utf8($e->get($f)));
+    }
+
+    # We have to process local options as early as possible in order
+    # to make them available for things that need them like parsename()
+    if ($f eq 'options') {
+      my $value = biber_decode_utf8($e->get($f));
+      my $Srx = Biber::Config->getoption('xsvsep');
+      my $S = qr/$Srx/;
+      process_entry_options($k, [ split(/$S/, $value) ]);
+      # Save the raw options in case we are to output another input format like
+      # biblatexml
+      $bibentry->set_field('rawoptions', $value);
+    }
+
+    # Now run any defined handler
+    if ($dm->is_field($f)) {
+      my $handler = _get_handler($f);
+      &$handler($bibentry, $e, $f, $k);
+    }
+    elsif (Biber::Config->getoption('validate_datamodel')) {
+      biber_warn("Datamodel: Entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
+    }
+  }
+
+  $bibentry->set_field('entrytype', $entrytype);
+  $bibentry->set_field('datatype', 'bibtex');
+  $logger->debug("Adding entry with key '$k' to biblist");
+  $bibentries->add_entry($k, $bibentry);
 }
 
 # HANDLERS
