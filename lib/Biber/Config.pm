@@ -55,6 +55,7 @@ our $CONFIG;
 
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{seenwork} = {};
+$CONFIG->{state}{seentitle} = {};
 
 # Set tracking, parent->child and child->parent
 $CONFIG->{state}{set}{pc} = {};
@@ -126,6 +127,7 @@ sub _init {
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seenwork} = {};
+  $CONFIG->{state}{seentitle} = {};
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{ladisambiguation} = {};
   $CONFIG->{state}{uniquenamecount} = {};
@@ -1182,7 +1184,30 @@ sub incr_seenwork {
   return;
 }
 
+=head2 get_seentitle
 
+    Get the count of occurences of a labeltitle
+
+=cut
+
+sub get_seentitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  return $CONFIG->{state}{seentitle}{$identifier};
+}
+
+=head2 incr_seentitle
+
+    Increment the count of occurences of a labeltitle
+
+=cut
+
+sub incr_seentitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  $CONFIG->{state}{seentitle}{$identifier}++;
+  return;
+}
 
 =head2 reset_seen_extra
 

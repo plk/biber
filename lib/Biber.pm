@@ -1390,8 +1390,8 @@ sub process_entries_post {
     # generate information for tracking extratitleyear
     $self->process_extratitleyear($citekey);
 
-    # generate information for tracking singletitle
-    $self->process_singletitle($citekey);
+    # generate information for tracking singletitle and uniquetitle
+    $self->process_xtitle($citekey);
 
     # generate namehash
     $self->process_namehash($citekey);
@@ -1407,20 +1407,19 @@ sub process_entries_post {
 }
 
 
-=head2 process_singletitle
+=head2 process_xtitle
 
-    Track seen work combination for generation of singletitle
+    Track seen work combination for generation of singletitle and uniquetitle
 
 =cut
 
-sub process_singletitle {
+sub process_xtitle {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  $logger->trace("Creating singletitle information for '$citekey'");
 
   # Use labelname to generate this, if there is one ...
   my $identifier;
@@ -1432,13 +1431,24 @@ sub process_singletitle {
     $identifier = $be->get_field($lti);
   }
 
-  # Don't generate this information for entries with no labelname or labeltitle
-  # as it would make no sense
+  # Don't generate singletitle information for entries with no labelname or labeltitle
   if ($identifier and Biber::Config->getblxoption('singletitle', $bee)) {
+    $logger->trace("Creating singletitle information for '$citekey'");
     Biber::Config->incr_seenwork($identifier);
     $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
     $be->set_field('seenwork', $identifier);
   }
+
+  # Don't generate uniquetitle information for entries with no labeltitle
+  if (Biber::Config->getblxoption('uniquetitle', $bee)) {
+    if (my $lti = $be->get_labeltitle_info) {
+      my $identifier = $be->get_field($lti);
+      Biber::Config->incr_seentitle($identifier);
+      $logger->trace("Setting seentitle for '$citekey' to '$identifier'");
+      $be->set_field('seentitle', $identifier);
+    }
+  }
+
   return;
 }
 
@@ -2920,7 +2930,7 @@ sub generate_extra {
 =head2 generate_singletitle
 
     Generate the singletitle field, if requested. The information for generating
-    this is gathered in process_singletitle()
+    this is gathered in process_xtitle()
 
 =cut
 
@@ -2940,6 +2950,35 @@ sub generate_singletitle {
       }
       else {
         $logger->trace("Not setting singletitle for '$citekey'");
+      }
+    }
+  }
+  return;
+}
+
+=head2 generate_uniquetitle
+
+    Generate the uniquetitle field, if requested. The information for generating
+    this is gathered in process_xtitle()
+
+=cut
+
+sub generate_uniquetitle {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+
+  foreach my $citekey ( $section->get_citekeys ) {
+    my $be = $bibentries->entry($citekey);
+    if (Biber::Config->getblxoption('uniquetitle', $be->get_field('entrytype'))) {
+      if ($be->get_field('seentitle') and
+          Biber::Config->get_seentitle($be->get_field('seentitle')) < 2 ) {
+        $logger->trace("Setting uniquetitle for '$citekey'");
+        $be->set_field('uniquetitle', 1);
+      }
+      else {
+        $logger->trace("Not setting uniquetitle for '$citekey'");
       }
     }
   }
@@ -3215,6 +3254,7 @@ sub prepare {
     $self->process_entries_post;         # Main entry processing loop, part 2
     $self->process_lists;                # process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
+    $self->generate_uniquetitle;         # Generate uniquetitle field if requested
     $out->create_output_section;         # Generate and push the section output into the
                                          # output object ready for writing
   }

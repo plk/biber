@@ -65,6 +65,7 @@
         <ref name="sortscheme"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
+        <ref name="uniquetitle"/>
         <ref name="useprefix"/>
         <ref name="usenames"/>
       </element>
@@ -146,6 +147,9 @@
           </optional>
           <optional>
             <ref name="uniquename"/>
+          </optional>
+          <optional>
+            <ref name="uniquetitle"/>
           </optional>
           <optional>
             <ref name="useprefix"/>
@@ -1373,6 +1377,22 @@
           <value>4</value>
           <value>5</value>
           <value>6</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="uniquetitle">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>uniquetitle</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
         </choice>
       </element>
     </element>

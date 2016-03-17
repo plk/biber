@@ -47,6 +47,7 @@ start =
       sortscheme,
       uniquelist,
       uniquename,
+      uniquetitle,
       useprefix,
       usenames
     },
@@ -79,6 +80,7 @@ start =
       sortalphaothers?,
       uniquelist?,
       uniquename?,
+      uniquetitle?,
       useprefix?,
       usenames?
     }*,
@@ -533,6 +535,12 @@ uniquename =
     attribute type { "singlevalued" },
     element bcf:key { "uniquename" },
     element bcf:value { "0" | "1" | "2" | "3" | "4" | "5" | "6" }
+  }
+uniquetitle =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "uniquetitle" },
+    element bcf:value { "0" | "1" }
   }
 maxitems =
   element bcf:option {
