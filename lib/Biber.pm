@@ -252,7 +252,11 @@ sub tool_mode_setup {
   $self->add_sections($bib_sections);
 
   my $sortlists = new Biber::SortLists;
-  my $seclist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', labelprefix => '', name => Biber::Config->getblxoption('sortscheme') . '/global/');
+  my $seclist = Biber::SortList->new(section => 99999,
+                                     sortschemename => Biber::Config->getblxoption('sortscheme'),
+                                     sortnamekeyschemename => 'global',
+                                     labelprefix => '',
+                                     name => Biber::Config->getblxoption('sortscheme') . '/global/');
   $seclist->set_type('entry');
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
   # Locale just needs a default here - there is no biblatex option to take it from
@@ -787,7 +791,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       next;
     }
 
-    my $sortlist = Biber::SortList->new(section => $lsection, sortschemename => $lssn, sortnamekeyschemename => $lsnksn, labelprefix => $lpn, name => $lname);
+    my $sortlist = Biber::SortList->new(section => $lsection,
+                                        sortschemename => $lssn,
+                                        sortnamekeyschemename => $lsnksn,
+                                        labelprefix => $lpn,
+                                        name => $lname);
     $sortlist->set_type($ltype || 'entry'); # lists are entry lists by default
     $sortlist->set_name($lname || "$lssn/$lsnksn/$lpn"); # default to ss+snkss+pn
     foreach my $filter (@{$list->{filter}}) {
@@ -821,7 +829,12 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     my $globalss = Biber::Config->getblxoption('sortscheme');
     my $secnum = $section->{number};
     unless ($sortlists->get_list($secnum, "$globalss/global/", 'entry', $globalss, 'global', '')) {
-      my $sortlist = Biber::SortList->new(section => $secnum, type => 'entry', sortschemename => $globalss, sortnamekeyschemename => 'global', labelprefix => '', name => "$globalss/global/");
+      my $sortlist = Biber::SortList->new(section => $secnum,
+                                          type => 'entry',
+                                          sortschemename => $globalss,
+                                          sortnamekeyschemename => 'global',
+                                          labelprefix => '',
+                                          name => "$globalss/global/");
       $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $sortlists->add_list($sortlist);
     }
@@ -867,7 +880,11 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # Global locale in non tool mode bibtex output is default
     Biber::Config->setblxoption('sortlocale', 'english');
 
-    my $sortlist = Biber::SortList->new(section => 99999, sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', labelprefix => '', name => Biber::Config->getblxoption('sortscheme') . '/global/');
+    my $sortlist = Biber::SortList->new(section => 99999,
+                                        sortschemename => Biber::Config->getblxoption('sortscheme'),
+                                        sortnamekeyschemename => 'global',
+                                        labelprefix => '',
+                                        name => Biber::Config->getblxoption('sortscheme') . '/global/');
     $sortlist->set_type('entry');
     # bibtex output in non-tool mode is just citeorder
     $sortlist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
@@ -901,7 +918,10 @@ sub process_setup {
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
     unless ($self->sortlists->has_lists_of_type_for_section($secnum, 'entry')) {
-      my $dlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'), sortnamekeyschemename => 'global', labelprefix => '', name => Biber::Config->getblxoption('sortscheme') . '/global/');
+      my $dlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'),
+                                       sortnamekeyschemename => 'global',
+                                       labelprefix => '',
+                                       name => Biber::Config->getblxoption('sortscheme') . '/global/');
       $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $dlist->set_type('entry');
       $dlist->set_section($secnum);

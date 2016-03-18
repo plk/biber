@@ -195,7 +195,7 @@ sub _initopts {
     _config_file_set(File::Spec->catpath($vol, "$dir", 'biber-tool.conf'));
   }
 
-  # Normal user config file - overrides tool mode defaults, if any
+  # Normal user config file - overrides tool mode defaults
   _config_file_set($opts->{configfile});
 
   # Set hard-coded biblatex option defaults
@@ -222,7 +222,6 @@ sub _initopts {
       Biber::Config->setcmdlineoption($copt, $opts->{$copt});
     }
   }
-
 
   # Record the $ARGV[0] name for future use
   if (Biber::Config->getoption('tool')) {
@@ -378,6 +377,8 @@ sub _config_file_set {
                                                             qr/\Afieldxor\z/,
                                                             qr/\Afield\z/,
                                                             qr/\Aalias\z/,
+                                                            qr/\Akeypart\z/,
+                                                            qr/\Apart\z/,
                                                             qr/\Amember\z/,
                                                             qr/\Aalsoset\z/,
                                                             qr/\Aconstraints\z/,
@@ -392,6 +393,7 @@ sub _config_file_set {
                                                             qr/\Asortitem\z/,
                                                             qr/\Apresort\z/,
                                                             qr/\Aoptionscope\z/,
+                                                            qr/\Asortingnamekey\z/,
                                                            ],
                                            'NsStrip' => 1,
                                            'KeyAttr' => []) or
@@ -439,7 +441,34 @@ sub _config_file_set {
 
   # Set options from config file
   while (my ($k, $v) = each %$userconf) {
-    if (exists($v->{content})) { # simple option
+    # sortingnamekey is special and has to be an array ref and so must come before
+    # the later options tests which assume hash refs
+    if (lc($k) eq 'sortingnamekey') {
+      my $snss;
+      foreach my $sns (@$v) {
+        my $snkps;
+        foreach my $snkp (sort {$a->{order} <=> $b->{order}} @{$sns->{keypart}}) {
+          my $snps;
+          foreach my $snp (sort {$a->{order} <=> $b->{order}} @{$snkp->{part}}) {
+            my $np;
+            if ($snp->{type} eq 'namepart') {
+              $np = { type => 'namepart', value => $snp->{content} };
+              if (exists($snp->{use})) {
+                $np->{use} = $snp->{use};
+              }
+            }
+            elsif ($snp->{type} eq 'literal') {
+              $np = { type => 'literal', value => $snp->{content} };
+            }
+            push @$snps, $np;
+          }
+          push @$snkps, $snps;
+        }
+        $snss->{$sns->{keyscheme}} = $snkps;
+      }
+      Biber::Config->setblxoption('sortingnamekey', $snss);
+    }
+    elsif (exists($v->{content})) { # simple option
       Biber::Config->setconfigfileoption($k, $v->{content});
     }
     # mildly complex options - nosort/collate_options

@@ -96,5 +96,5 @@ eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($t1), '
 ok(is_undef($out->get_output_entry('loh')), 'tool mode 2');
 eq_or_diff($out->get_output_entry('xd1',), $t2, 'tool mode 3');
 eq_or_diff($out->get_output_entry('b1',), $t3, 'tool mode 4');
-is_deeply([$main->get_keys], ['macmillan:pub', 'macmillan:loc', 'mv1', 'b1', 'xd1', 'macmillan', NFD('i3Š')], 'tool mode sorting');
+is_deeply([$main->get_keys], ['macmillan:pub', 'macmillan:loc', 'mv1', 'b1', 'macmillan', NFD('i3Š'), 'xd1'], 'tool mode sorting');
 eq_or_diff($out->get_output_comments, $tc1, 'tool mode 5');
