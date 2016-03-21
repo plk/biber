@@ -114,7 +114,9 @@ t/tdata/extratitleyear.bib
 t/tdata/extrayear.bcf
 t/tdata/extrayear.bib
 t/tdata/extrayear.bib
-t/tdata/full1.bbl
+t/tdata/full-bblxml.bblxml
+t/tdata/full-bblxml.bcf
+t/tdata/full.bbl
 t/tdata/full.bcf
 t/tdata/full.bib
 t/tdata/general.bcf
