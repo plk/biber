@@ -543,7 +543,7 @@ sub instantiate_entry {
       $str = "\\field{sortinit}{$sinit}";
     }
     elsif ($format eq 'bblxml') {
-      $str = "<bbl:field type=\"sortinit\">$sinit</bbl:field>";
+      $str = "<bbl:field name=\"sortinit\">$sinit</bbl:field>";
     }
     $entry_string =~ s|<BDS>SORTINIT</BDS>|$str|gxms;
   }
@@ -559,7 +559,7 @@ sub instantiate_entry {
       $str = "\\field{sortinithash}{$sinithash}";
     }
     elsif ($format eq 'bblxml') {
-      $str = "<bbl:field type=\"sortinithash\">$sinithash</bbl:field>";
+      $str = "<bbl:field name=\"sortinithash\">$sinithash</bbl:field>";
     }
     $entry_string =~ s|<BDS>SORTINITHASH</BDS>|$str|gxms;
   }
@@ -571,60 +571,60 @@ sub instantiate_entry {
   if (my $e = $self->get_extrayeardata($key)) {
     my $str;
     if ($format eq 'bbl') {
-      $str = "      \\field{extrayear}{$e}\n";
+      $str = "\\field{extrayear}{$e}";
     }
     elsif ($format eq 'bblxml') {
-      $str = "<bbl:field type=\"extrayear\">$e</bbl:field>";
+      $str = "<bbl:field name=\"extrayear\">$e</bbl:field>";
     }
-    $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$str|gxms;
+    $entry_string =~ s|<BDS>EXTRAYEAR</BDS>|$str|gxms;
   }
 
   # extratitle
   if (my $e = $self->get_extratitledata($key)) {
     my $str;
     if ($format eq 'bbl') {
-      $str = "      \\field{extratitle}{$e}\n";
+      $str = "\\field{extratitle}{$e}";
     }
     elsif ($format eq 'bblxml') {
-      $str = "<bbl:field type=\"extratitle\">$e</bbl:field>";
+      $str = "<bbl:field name=\"extratitle\">$e</bbl:field>";
     }
-    $entry_string =~ s|^\s*<BDS>EXTRATITLE</BDS>\n|$str|gxms;
+    $entry_string =~ s|<BDS>EXTRATITLE</BDS>|$str|gxms;
   }
 
   # extratitle
   if (my $e = $self->get_extratitleyeardata($key)) {
     my $str;
     if ($format eq 'bbl') {
-      $str = "      \\field{extratitleyear}{$e}\n";
+      $str = "\\field{extratitleyear}{$e}";
     }
     elsif ($format eq 'bblxml') {
-      $str = "<bbl:field type=\"extratitleyear\">$e</bbl:field>";
+      $str = "<bbl:field name=\"extratitleyear\">$e</bbl:field>";
     }
-    $entry_string =~ s|^\s*<BDS>EXTRATITLEYEAR</BDS>\n|$str|gxms;
+    $entry_string =~ s|<BDS>EXTRATITLEYEAR</BDS>|$str|gxms;
   }
 
   # extraalpha
   if (my $e = $self->get_extraalphadata($key)) {
     my $str;
     if ($format eq 'bbl') {
-      $str = "      \\field{extraalpha}{$e}\n";
+      $str = "\\field{extraalpha}{$e}";
     }
     elsif ($format eq 'bblxml') {
-      $str = "<bbl:field type=\"extraalpha\">$e</bbl:field>";
+      $str = "<bbl:field name=\"extraalpha\">$e</bbl:field>";
     }
-    $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$str|gxms;
+    $entry_string =~ s|<BDS>EXTRAALPHA</BDS>|$str|gxms;
   }
 
   # labelprefix
   if (my $pn = $self->get_labelprefix($key)) {
     my $str;
     if ($format eq 'bbl') {
-      $str = "      \\field{labelprefix}{$pn}\n";
+      $str = "\\field{labelprefix}{$pn}";
     }
     elsif ($format eq 'bblxml') {
-      $str = "<bbl:field type=\"labelprefix\">$pn</bbl:field>";
+      $str = "<bbl:field name=\"labelprefix\">$pn</bbl:field>";
     }
-    $entry_string =~ s|^\s*<BDS>LABELPREFIX</BDS>\n|$str|gxms;
+    $entry_string =~ s|<BDS>LABELPREFIX</BDS>|$str|gxms;
   }
   else {
     $entry_string =~ s|^\s*<BDS>LABELPREFIX</BDS>\n||gxms;

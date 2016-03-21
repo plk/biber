@@ -2014,6 +2014,12 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">shore</bcf:citekey>
+    <bcf:citekey order="2">stdmodel</bcf:citekey>
+    <bcf:citekey order="3">angenendt</bcf:citekey>
+    <bcf:citekey order="4">reese</bcf:citekey>
+    <bcf:citekey order="5">knuth:ct:b</bcf:citekey>
+    <bcf:citekey order="6">knuth:ct:c</bcf:citekey>
+    <bcf:citekey order="7">set:aksin</bcf:citekey>    
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>

@@ -1211,6 +1211,27 @@ sub generate_bblxml_schema {
   $writer->endTag();    # attribute
   $writer->startTag('interleave');
 
+  # sets
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:set");
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:member");
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # member
+  $writer->endTag();    # oneOrMore
+  $writer->endTag();    # set
+  $writer->endTag();    # zeroOrMore
+
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:inset");
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:member");
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # member
+  $writer->endTag();    # oneOrMore
+  $writer->endTag();    # inset
+  $writer->endTag();    # zeroOrMore
+
   # names
   my @names = grep {not $dm->field_is_skipout($_)} @{$dm->get_fields_of_type('list', 'name')};
 
@@ -1264,7 +1285,7 @@ sub generate_bblxml_schema {
   $writer->endTag();    # optional
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:namepart");
-  $writer->emptyTag('attribute', 'name' => 'name');
+  $writer->emptyTag('attribute', 'name' => 'type');
   $writer->emptyTag('attribute', 'name' => 'initials');
   $writer->emptyTag('text');# text
   $writer->endTag();# namepart
@@ -1307,8 +1328,8 @@ sub generate_bblxml_schema {
   $writer->endTag();          # list
   $writer->endTag();          # zeroOrMore
 
-  # some internal fields
-  my @fs = qw/namehash
+  # fields
+  my @fs1 = qw/namehash
               fullhash
               labelalpha
               sortinit
@@ -1327,34 +1348,8 @@ sub generate_bblxml_schema {
               labeltitlesource
               clonesourcekey/;
 
-  $writer->startTag('zeroOrMore');
-  $writer->startTag('element', 'name' => "$bbl:field");
-  $writer->startTag('attribute', 'name' => 'name');
-  $writer->startTag('choice');
-  foreach my $f (@fs) {
-      $writer->dataElement('value', $f);
-    }
-  $writer->endTag();    # choice
-  $writer->endTag();    # attribute
-  $writer->emptyTag('text');# text
-  $writer->endTag();    # field
-  $writer->endTag();    # zeroOrMore
-
-  $writer->startTag('optional');
-  $writer->startTag('element', 'name' => "$bbl:singletitle");
-  $writer->emptyTag('empty');# text
-  $writer->endTag();    # singletitle
-  $writer->endTag();    # optional
-
-  $writer->startTag('optional');
-  $writer->startTag('element', 'name' => "$bbl:uniquetitle");
-  $writer->emptyTag('empty');# text
-  $writer->endTag();    # uniquetitle
-  $writer->endTag();    # optional
-
-  # general fields
   # verbatim fields don't need special handling in XML, unlike TeX so they are here
-  my @fields = grep {
+  my @fs2 = grep {
       not ($dm->get_fieldformat($_) eq 'xsv')
         and not $dm->field_is_skipout($_)
       } @{$dm->get_fields_of_type('field',
@@ -1366,24 +1361,40 @@ sub generate_bblxml_schema {
                                    'code',
                                    'verbatim'])};
 
-  $writer->startTag('zeroOrMore');
+  # uri fields
+  my @fs3 = @{$dm->get_fields_of_type('field', 'uri')};
+
+  $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:field");
   $writer->startTag('attribute', 'name' => 'name');
+
   $writer->startTag('choice');
-  foreach my $f (@fields) {
-    $writer->dataElement('value', $f);
-  }
+  foreach my $f (@fs1, @fs2, @fs3) {
+      $writer->dataElement('value', $f);
+    }
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->emptyTag('text');# text
   $writer->endTag();    # field
-  $writer->endTag();    # zeroOrMore
+  $writer->endTag();    #
+
+  $writer->startTag('optional');
+  $writer->startTag('element', 'name' => "$bbl:singletitle");
+  $writer->emptyTag('empty');# text
+  $writer->endTag();    # singletitle
+  $writer->endTag();    # optional
+
+  $writer->startTag('optional');
+  $writer->startTag('element', 'name' => "$bbl:uniquetitle");
+  $writer->emptyTag('empty');# text
+  $writer->endTag();    # uniquetitle
+  $writer->endTag();    # oneOrMore
 
   # ranges
   my @ranges = grep {not $dm->field_is_skipout($_)} @{$dm->get_fields_of_datatype('range')};
 
   $writer->startTag('zeroOrMore');
-  $writer->startTag('element', 'name' => "$bbl:field");
+  $writer->startTag('element', 'name' => "$bbl:range");
   $writer->startTag('attribute', 'name' => 'name');
   $writer->startTag('choice');
   foreach my $r (@ranges) {
@@ -1406,23 +1417,8 @@ sub generate_bblxml_schema {
   $writer->endTag();    # optional
   $writer->endTag();    # item
   $writer->endTag();    # oneOrMore
-  $writer->endTag();    # field
+  $writer->endTag();    # range
   $writer->endTag();    # zeroOrMore
-
-  # uri fields
-  my @uri = @{$dm->get_fields_of_type('field', 'uri')};
-  $writer->startTag('optional');
-  $writer->startTag('element', 'name' => "$bbl:field");
-  $writer->startTag('attribute', 'name' => 'name');
-  $writer->startTag('choice');
-  foreach my $r (@uri) {
-    $writer->dataElement('value', $r);
-  }
-  $writer->endTag();    # choice
-  $writer->endTag();    # attribute
-  $writer->emptyTag('data', 'type' => 'anyURI');
-  $writer->endTag();   # $field element
-  $writer->endTag();# optional
 
   # uri lists - not in default data model
   if (my @uril = @{$dm->get_fields_of_type('list', 'uri')}) {

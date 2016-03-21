@@ -664,7 +664,8 @@ which is described in section \ref{ref:map}.
 \biber\ is able to output formats other than \file{.bbl} files for \biblatex\
 to consume. It is also able to output other formats such as \file{DOT} for
 visualisation of entry dependencies (see section \ref{ref:vis}), the
-experimental \verb+biblatexml+ XML format and also \bibtex\ \file{.bib} files.
+experimental \verb+biblatexml+ XML format, \bibtex\ \file{.bib} files and
+an XML version of the \file{.bbl} format with extension \file{.bblxml}.
 \file{.bib} output is possible in tool mode, when you are converting an
 entire datasource file independently of any particular document (see
 section \ref{ref:tool}). It is also useful when you want, instead of a
@@ -683,6 +684,19 @@ citation order, formatted according to the various \opt{ouput-*} options.
 You could of course also perform more processing like source mapping
 (see section \ref{ref:map}), reencoding (see section \ref{ref:enc}) etc. using more
 command line options or a config file.
+
+The \file{.bblxml} format for output is an XML version of the \file{.bbl}.
+It cannot be read by \biblatex\ but contains the same information as in the
+\file{.bbl} and may be useful if you want to transform a document
+bibliography into some other format since XML is a well-supported
+transformation format (using, for example, XSLT). By default, when choosing
+\file{.bblxml} output with the option \opt{--output-format=bblxml}, a
+RelaxNG XML schema is also generated (unless the \opt{--no-bblxml-schema}
+is used). This schema is derived from the active datamodel in the document
+(passed in the \file{.bcf} from \biblatex) and is placed in the same
+directory as the \file{.bblxml} output file. The extension of the schema is
+\file{.rng}. The option \opt{--validate-bblxml} may be used to validate the
+\file{.bblxml} against the schema.
 
 \subsubsection{The \texttt{sourcemap} option}\label{ref:map}
 
@@ -2829,7 +2843,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.4
+INFO - This is Biber 2.5
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

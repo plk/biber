@@ -92,9 +92,10 @@ GetOptions(
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
+           'validate_bblxml|validate-bblxml',
+           'validate_bltxml|validate-bltxml',
            'validate_config|validate-config',
            'validate_control|validate-control',
-           'validate_bltxml|validate-bltxml',
            'validate_datamodel|validate-datamodel|V',
            'version|v',
            'wraplines|w',
@@ -634,14 +635,18 @@ paths in this case are stripped to filename only). F<file> can
 be absolute if B<--output_directory> is not set.
 The legacy option B<--outfile> is supported as an alias.
 
-=item B<--output-format=dot|bibtex|biblatexml|bbl>
+=item B<--output-format=dot|bibtex|biblatexml|bbl|bblxml>
 
 Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
 to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of
 the bibliography data showing entries and, as requested, sections and fields.
 You must process this file with C<dot>, e.g. C<dot -Tsvg test.dot -o test.svg> to
 render the graph. See the B<--dot_include> option to select what is included in
-the DOT output.
+the DOT output. F<bblxml> is an XML version of the F<bbl> format which you could
+transform using XSLT. By default, when outputting F<bblxml>, a RelaxNG XML schema
+is generated from the active data modeal and saved with a F<rng> extension along
+with the output file name (unless the B<--no-bblxml-schema> option is specified). You
+may validate the F<bblxml> using the schema with the B<--validate-bblxml> option.
 The legacy option B<--outformat> is supported as an alias.
 
 =item B<--output-macro-fields=[field1, ... fieldn]>

@@ -1,6 +1,10 @@
 Revision history for Biber
 
 2.5    (2016-03-)
+       * Addition of new bblXML output format and associated RelaxNG XML
+         schema based on active datamodel.
+       * Integration with new biblatex 3.4 labelprefix name change and
+         refcontext option.
        * Integration with new biblatex 3.4 \DeclareDatafieldSet
          functionality.
        * Improved sourcemap looping functionality

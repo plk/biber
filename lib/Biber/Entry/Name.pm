@@ -436,8 +436,9 @@ sub name_to_bblxml {
   # Add the name hash to the options
   $pno{hash} = $self->get_hash;
 
-  $xml->startTag([$xml_prefix, 'name'], %pno);
-  while (my ($key, $value) = each %names) {
+  $xml->startTag([$xml_prefix, 'name'], sort keys %pno);
+  foreach my $key (sort keys %names) {
+    my $value = $names{$key};
     $xml->startTag([$xml_prefix, 'namepart'], type => $key, initials => NFC($value->[1]));
     $xml->characters(NFC($value->[0]));
     $xml->endTag();# namepart

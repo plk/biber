@@ -28,7 +28,7 @@ my $bbl = $tmpfile->filename;
 my $stdout;
 
 run3  [ $perl, 'bin/biber', '--noconf', '--nolog', "--output-file=$bbl", 't/tdata/full.bcf' ], \undef, \$stdout, \undef;
-
+# say $stdout;
 is($? >> 8, 0, 'Full test has zero exit status');
 ok(compare($bbl, 't/tdata/full.bbl') == 0, 'Testing lossort case and sortinit for macros');
 like($stdout, qr|WARN - Duplicate entry key: 'F1' in file 't/tdata/full\.bib', skipping \.\.\.|ms, 'Testing duplicate/case key warnings - 1');

@@ -23,12 +23,15 @@ my $perl = which('perl');
 
 my $tmpfile = File::Temp->new();
 #my $tmpfile = File::Temp->new(UNLINK => 0);
-my $bbl = $tmpfile->filename;
-#print "File: $bbl\n";
+my $bblxml = $tmpfile->filename;
+#print "File: $bblxml\n";
 my $stdout;
 
-run3  [ $perl, 'bin/biber', '--noconf', '--nolog', '--output-format=bblxml', "--output-file=$bbl", 't/tdata/full-bblxml.bcf' ], \undef, \$stdout, \undef;
-
+run3  [ $perl, 'bin/biber', '--noconf', '--nolog', '--output-format=bblxml', "--output-file=$bblxml", '--validate-bblxml', 't/tdata/full-bblxml.bcf' ], \undef, \$stdout, \undef;
+# say $stdout;
 is($? >> 8, 0, 'Full test has zero exit status');
-ok(compare($bbl, 't/tdata/full1.bbl') == 0, 'Testing bblxml output');
+
+# Now replace the model ref for comparison with the static test file
+run3  [ $perl, '-pi.bak', '-e', 's/(<\?xml-model href=")([^"]+)/$1full-bblxml.rng/', $bblxml ], \undef, \$stdout, \undef;
+ok(compare($bblxml, 't/tdata/full-bblxml.bblxml') == 0, 'Testing bblxml output');
 
