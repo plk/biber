@@ -387,6 +387,67 @@ sub name_to_bbl {
   return $namestring;
 }
 
+=head2 name_to_bblxml
+
+    Return bblxml data for a name
+
+=cut
+
+sub name_to_bblxml {
+  my ($self, $xml, $xml_prefix) = @_;
+  my $dm = Biber::Config->get_dm;
+  my %pno; # per-name options
+  my %names;
+
+  foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
+    my $npc;
+    my $npci;
+    if ($npc = $self->get_namepart($np)) {
+      $npci = join('. ', @{$self->get_namepart_initial($np)});
+    }
+    # Some of the subs above can result in these being undef so make sure there is an empty
+    # string instead of undef so that interpolation below doesn't produce warnings
+    $npc //= '';
+    $npci //= '';
+    if ($npc) {
+      $names{$np} = [$npc, $npci];
+    }
+  }
+
+  # Generate uniquename if uniquename is requested
+  if (defined($self->get_uniquename)) {
+    $pno{uniquename} = $self->get_uniquename;
+  }
+
+  # Add per-name options
+  foreach my $pnoname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+    if (defined($self->${\"get_$pnoname"})) {
+      my $pno = $self->${\"get_$pnoname"};
+      if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
+          $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
+        $pno{$pnoname} = Biber::Utils::map_boolean($pno, 'tostring');
+      }
+      else {
+        $pno{$pnoname} = $pno;
+      }
+    }
+  }
+
+  # Add the name hash to the options
+  $pno{hash} = $self->get_hash;
+
+  $xml->startTag([$xml_prefix, 'name'], %pno);
+  while (my ($key, $value) = each %names) {
+    $xml->startTag([$xml_prefix, 'namepart'], type => $key, initials => NFC($value->[1]));
+    $xml->characters(NFC($value->[0]));
+    $xml->endTag();# namepart
+  }
+  $xml->endTag();# names
+
+  return;
+}
+
+
 =head2 dump
 
     Dump Biber::Entry::Name object

@@ -51,6 +51,7 @@ GetOptions(
            'logfile=s',
            'mincrossrefs|m=s',
            'namesep=s',
+           'no_bblxml_schema|no-bblxml-schema',
            'no_bltxml_schema|no-bltxml-schema',
            'noconf',
            'nodieonerror',
@@ -201,8 +202,8 @@ if ($opts->{U}) {
 
 # Check the output_format option
 if (my $of = $opts->{output_format}) {
-  unless ($opts->{output_format} =~ /\A(?:bbl|dot|bibtex|biblatexml)\z/xms) {
-    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot', 'bibtex', 'biblatexml'";
+  unless ($opts->{output_format} =~ /\A(?:bbl|dot|bibtex|biblatexml|bblxml)\z/xms) {
+    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot', 'bibtex', 'biblatexml', 'bblxml'";
     exit EXIT_ERROR;
   }
 }
@@ -210,7 +211,7 @@ if (my $of = $opts->{output_format}) {
 if (exists($opts->{tool}) and
     exists($opts->{output_format}) and
     $opts->{output_format} !~ /\A(?:bibtex|biblatexml)\z/xms) {
-    say STDERR "Biber: Output format in tool mode must be one of 'bbl' or 'biblatexml'";
+    say STDERR "Biber: Output format in tool mode must be one of 'bibtex' or 'biblatexml'";
     exit EXIT_ERROR;
 }
 
@@ -309,6 +310,9 @@ else {
     }
     elsif (Biber::Config->getoption('output_format') eq 'bbl') { # bbl output
       $outfile = $bcf =~ s/bcf$/bbl/r;
+    }
+    elsif (Biber::Config->getoption('output_format') eq 'bblxml') { # bblxml output
+      $outfile = $bcf =~ s/bcf$/bblxml/r;
     }
     else {
       say "output_format option '" . Biber::Config->getoption('output_format') . "' only makes sense in tool mode (--tool)";
@@ -555,6 +559,10 @@ Use F<sep> as the separator for BibTeX data source name fields. Defaults to BibT
 'and'.
 
 
+=item B<--no-bblxml-schema>
+
+When writing bblxml output, don't generate an RNG XML schema from the data model.
+
 =item B<--no-bltxml-schema>
 
 When reading or writing biblatexml data sources, don't generate an RNG XML schema from the data
@@ -751,13 +759,12 @@ Alias for B<--input-encoding=UTF-8>
 
 Alias for B<--output-encoding=UTF-8>
 
-=item B<--validate-config>
+=item B<--validate-bblxml>
 
-Schema validate the biber config file.
-
-=item B<--validate-control>
-
-Schema validate the F<.bcf> biblatex control file.
+Schema validate bblXML output against a schema auto-generated from the BibLaTeX
+datamodel. The schema will be auto-generated with the name of the F<.bbl> file with a F<.rng>
+extension. The generated schema can be kept and used with standard XML editors to validate the
+output during XSL development.
 
 =item B<--validate-bltxml>
 
@@ -767,6 +774,14 @@ extension. The generated schema can be kept and used with standard XML editors t
 datasource during datasource development. The schema validation does not validate all
 semantic aspects of the datamodel (i.e. the data model constraints)---for this use the
 C<--validate-datamodel> option.
+
+=item B<--validate-config>
+
+Schema validate the biber config file.
+
+=item B<--validate-control>
+
+Schema validate the F<.bcf> biblatex control file.
 
 =item B<--validate-datamodel|-V>
 

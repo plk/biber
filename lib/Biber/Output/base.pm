@@ -176,7 +176,7 @@ sub add_output_tail {
 =head2 set_output_section
 
   Records the section object in the output object
-  We need some information from this when writing the .bbl
+  We need some information from this when writing the output
 
 =cut
 
@@ -320,7 +320,7 @@ sub create_output_section {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
 
-  # We rely on the order of this array for the order of the .bbl
+  # We rely on the order of this array for the order of the ouput
   foreach my $k ($section->get_citekeys) {
     # Regular entry
     my $be = $section->bibentry($k) or biber_error("Cannot find entry with key '$k' to output");

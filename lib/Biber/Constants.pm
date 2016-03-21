@@ -65,8 +65,10 @@ our %DM_DATATYPES = (
                      datepart => qr/\A\d+\z/xms
                     );
 
-# Mapping of data source types to extensions
+# Mapping of data source and output types to extensions
 our %DS_EXTENSIONS = (
+                      bbl        => 'bbl',
+                      bblxml     => 'bblxml',
                       bibtex     => 'bib',
                       biblatexml => 'bltxml',
                       ris        => 'ris'
@@ -93,6 +95,7 @@ our $CONFIG_DEFAULT_BIBER = {
   listsep             => { content => 'and' },
   mincrossrefs        => { content => 2 },
   namesep             => { content => 'and' },
+  no_bblxml_schema    => { content => 0 },
   no_bltxml_schema    => { content => 0 },
   nodieonerror        => { content => 0 },
   noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},
@@ -121,9 +124,10 @@ our $CONFIG_DEFAULT_BIBER = {
   strip_comments      => { content => 0 },
   tool                => { content => 0 },
   trace               => { content => 0 },
+  validate_bblxml     => { content => 0 },
+  validate_bltxml     => { content => 0 },
   validate_config     => { content => 0 },
   validate_control    => { content => 0 },
-  validate_bltxml     => { content => 0 },
   validate_datamodel  => { content => 0 },
   wraplines           => { content => 0 },
   xsvsep              => { content => q/\s*,\s*/ },

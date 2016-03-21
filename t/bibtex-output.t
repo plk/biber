@@ -84,7 +84,6 @@ my $b3 = q|@BOOK{xd1,
 
 |;
 
-# NFD here because we are testing internals here and all internals expect NFD
 eq_or_diff($out->get_output_entry('murray',), $b1, 'bibtex output 1');
 eq_or_diff($out->get_output_entry('b1',), $b2, 'bibtex output 2');
 eq_or_diff($out->get_output_entry('xd1',), $b3, 'bibtex output 3');

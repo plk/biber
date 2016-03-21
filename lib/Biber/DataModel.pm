@@ -361,11 +361,20 @@ sub get_fields_of_datatype {
 sub get_fields_of_type {
   my ($self, $fieldtype, $datatype, $format) = @_;
   my $f;
-  if ($format) {
-    $f = $self->{fieldsbytype}{$fieldtype}{$datatype}{$format};
+  $format //= '*';
+
+  # datatype can be array ref of datatypes - makes some calls cleaner
+  if (ref($datatype) eq 'ARRAY') {
+    foreach my $dt (@$datatype) {
+      if (my $fs = $self->{fieldsbytype}{$fieldtype}{$dt}{$format}) {
+        push @$f, @$fs;
+      }
+    }
   }
   else {
-    $f = $self->{fieldsbytype}{$fieldtype}{$datatype}{'*'};
+    if (my $fs = $self->{fieldsbytype}{$fieldtype}{$datatype}{$format}) {
+      push @$f, @$fs;
+    }
   }
 
   return $f ? [ sort @$f ] : [];
@@ -1144,6 +1153,347 @@ sub generate_bltxml_schema {
   $rng->close();
   # So we only do this one for potentially multiple .bltxml datasources
   $dm->{bltxml_schema_gen_done} = 1;
+}
+
+
+=head2 generate_bblxml_schema
+
+    Generate a RelaxNG XML schema from the datamodel for bblXML output
+
+=cut
+
+sub generate_bblxml_schema {
+  my ($dm, $outfile) = @_;
+  my $rng = IO::File->new($outfile, '>:encoding(UTF-8)');
+  $rng->autoflush;# Needed for running tests to string refs
+  $logger->info("Writing bblXML RNG schema '$outfile' for datamodel");
+  require XML::Writer;
+  my $bbl_ns = 'https://sourceforge.net/projects/biblatex/bblxml';
+  my $bbl = 'bbl';
+  my $default_ns = 'http://relaxng.org/ns/structure/1.0';
+  my $writer = new XML::Writer(NAMESPACES   => 1,
+                               ENCODING     => 'UTF-8',
+                               DATA_MODE    => 1,
+                               DATA_INDENT  => 2,
+                               OUTPUT       => $rng,
+                               PREFIX_MAP   => {$bbl_ns    => $bbl,
+                                                $default_ns => ''});
+
+  $writer->xmlDecl();
+  $writer->comment('Auto-generated from .bcf Datamodel');
+  $writer->forceNSDecl($default_ns);
+  $writer->forceNSDecl($bbl_ns);
+  $writer->startTag('grammar',
+                    'datatypeLibrary' => 'http://www.w3.org/2001/XMLSchema-datatypes');
+  $writer->startTag('start');
+  $writer->startTag('element', 'name' => "$bbl:refsections");
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:refsection");
+  $writer->emptyTag('attribute', 'name' => 'id');
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:sortlist");
+  $writer->emptyTag('attribute', 'name' => 'id');
+  $writer->startTag('attribute', 'name' => 'type');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'entry');
+  $writer->dataElement('value', 'list');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:entry");
+  $writer->emptyTag('attribute', 'name' => 'key');
+  $writer->startTag('attribute', 'name' => 'type');
+  $writer->startTag('choice');
+  foreach my $et (@{$dm->entrytypes}) {
+    $writer->dataElement('value', $et);
+  }
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->startTag('interleave');
+
+  # names
+  my @names = grep {not $dm->field_is_skipout($_)} @{$dm->get_fields_of_type('list', 'name')};
+
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:names");
+  $writer->startTag('attribute', 'name' => 'type');
+  $writer->startTag('choice');
+  foreach my $name (@names) {
+    $writer->dataElement('value', $name);
+  }
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->startTag('attribute', 'name' => 'count');
+  $writer->emptyTag('data', 'type' => 'integer');
+  $writer->endTag();    # attribute
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'uniquelist');
+  $writer->emptyTag('data', 'type' => 'integer');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'useprefix');
+  $writer->emptyTag('data', 'type' => 'boolean');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->emptyTag('attribute', 'name' => 'sortnamekeyscheme');
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'more');
+  $writer->emptyTag('data', 'type' => 'boolean');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+
+  # name
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:name");
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'useprefix');
+  $writer->emptyTag('data', 'type' => 'boolean');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->emptyTag('attribute', 'name' => 'sortnamekeyscheme');
+  $writer->endTag();    # optional
+  $writer->emptyTag('attribute', 'name' => 'hash');
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'uniquename');
+  $writer->emptyTag('data', 'type' => 'integer');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:namepart");
+  $writer->emptyTag('attribute', 'name' => 'name');
+  $writer->emptyTag('attribute', 'name' => 'initials');
+  $writer->emptyTag('text');# text
+  $writer->endTag();# namepart
+  $writer->endTag();# oneOrMore
+  $writer->endTag();# name
+  $writer->endTag();# oneOrMore
+  $writer->endTag();# names
+  $writer->endTag();# oneOrMore
+
+  # lists
+  # verbatim lists don't need special handling in XML, unlike TeX so they are here
+  my @lists = grep {
+    not $dm->field_is_datatype('name', $_)
+        and not $dm->field_is_datatype('uri', $_)
+          and not $dm->field_is_skipout($_)
+        } @{$dm->get_fields_of_fieldtype('list')};
+
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:list");
+  $writer->startTag('attribute', 'name' => 'name');
+  $writer->startTag('choice');
+  foreach my $list (@lists) {
+    $writer->dataElement('value', $list);
+  }
+  $writer->endTag();          # choice
+  $writer->endTag();          # attribute
+  $writer->startTag('attribute', 'name' => 'count');
+  $writer->emptyTag('data', 'type' => 'integer');
+  $writer->endTag();          # attribute
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'more');
+  $writer->emptyTag('data', 'type' => 'boolean');
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:item");
+  $writer->emptyTag('text');# text
+  $writer->endTag();          # item
+  $writer->endTag();          # oneOrMore
+  $writer->endTag();          # list
+  $writer->endTag();          # zeroOrMore
+
+  # some internal fields
+  my @fs = qw/namehash
+              fullhash
+              labelalpha
+              sortinit
+              sortinithash
+              sortinithash
+              extrayear
+              labelyear
+              labelmonth
+              labelday
+              datelabelsource
+              labelprefix
+              extratitle
+              extratitleyear
+              extraalpha
+              labelnamesource
+              labeltitlesource
+              clonesourcekey/;
+
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:field");
+  $writer->startTag('attribute', 'name' => 'name');
+  $writer->startTag('choice');
+  foreach my $f (@fs) {
+      $writer->dataElement('value', $f);
+    }
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # field
+  $writer->endTag();    # zeroOrMore
+
+  $writer->startTag('optional');
+  $writer->startTag('element', 'name' => "$bbl:singletitle");
+  $writer->emptyTag('empty');# text
+  $writer->endTag();    # singletitle
+  $writer->endTag();    # optional
+
+  $writer->startTag('optional');
+  $writer->startTag('element', 'name' => "$bbl:uniquetitle");
+  $writer->emptyTag('empty');# text
+  $writer->endTag();    # uniquetitle
+  $writer->endTag();    # optional
+
+  # general fields
+  # verbatim fields don't need special handling in XML, unlike TeX so they are here
+  my @fields = grep {
+      not ($dm->get_fieldformat($_) eq 'xsv')
+        and not $dm->field_is_skipout($_)
+      } @{$dm->get_fields_of_type('field',
+                                  ['entrykey',
+                                   'key',
+                                   'integer',
+                                   'datepart',
+                                   'literal',
+                                   'code',
+                                   'verbatim'])};
+
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:field");
+  $writer->startTag('attribute', 'name' => 'name');
+  $writer->startTag('choice');
+  foreach my $f (@fields) {
+    $writer->dataElement('value', $f);
+  }
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # field
+  $writer->endTag();    # zeroOrMore
+
+  # ranges
+  my @ranges = grep {not $dm->field_is_skipout($_)} @{$dm->get_fields_of_datatype('range')};
+
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:field");
+  $writer->startTag('attribute', 'name' => 'name');
+  $writer->startTag('choice');
+  foreach my $r (@ranges) {
+    $writer->dataElement('value', $r);
+  }
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:item");
+  $writer->startTag('attribute', 'name' => 'length');
+  $writer->emptyTag('data', 'type' => 'integer');
+  $writer->endTag();    # attribute
+  $writer->startTag('element', 'name' => "$bbl:start");
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # start
+  $writer->startTag('optional');
+  $writer->startTag('element', 'name' => "$bbl:end");
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # end
+  $writer->endTag();    # optional
+  $writer->endTag();    # item
+  $writer->endTag();    # oneOrMore
+  $writer->endTag();    # field
+  $writer->endTag();    # zeroOrMore
+
+  # uri fields
+  my @uri = @{$dm->get_fields_of_type('field', 'uri')};
+  $writer->startTag('optional');
+  $writer->startTag('element', 'name' => "$bbl:field");
+  $writer->startTag('attribute', 'name' => 'name');
+  $writer->startTag('choice');
+  foreach my $r (@uri) {
+    $writer->dataElement('value', $r);
+  }
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->emptyTag('data', 'type' => 'anyURI');
+  $writer->endTag();   # $field element
+  $writer->endTag();# optional
+
+  # uri lists - not in default data model
+  if (my @uril = @{$dm->get_fields_of_type('list', 'uri')}) {
+    $writer->startTag('optional');
+    $writer->startTag('element', 'name' => "$bbl:list");
+    $writer->startTag('attribute', 'name' => 'name');
+    $writer->startTag('choice');
+    foreach my $u (@uril) {
+      $writer->dataElement('value', $u);
+    }
+    $writer->endTag();          # choice
+    $writer->endTag();          # attribute
+    $writer->startTag('attribute', 'name' => 'count');
+    $writer->emptyTag('data', 'type' => 'integer');
+    $writer->endTag();          # attribute
+    $writer->startTag('oneOrMore');
+    $writer->startTag('element', 'name' => "$bbl:item");
+    $writer->emptyTag('data', 'type' => 'anyURI');
+    $writer->endTag();          # item
+    $writer->endTag();          # oneOrMore
+    $writer->endTag();          # list element
+    $writer->endTag();          # optional
+  }
+
+  # keywords
+  $writer->startTag('optional');
+  $writer->startTag('element', 'name' => "$bbl:keywords");
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:keyword");
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();# item
+  $writer->endTag();# oneOrMore
+  $writer->endTag();# keywords
+  $writer->endTag();# optional
+
+  # warnings
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:warning");
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();# warning
+  $writer->endTag();# zeroOrMore
+
+  $writer->endTag();# interleave element
+  $writer->endTag();# entry element
+  $writer->endTag();# oneOrMore
+  $writer->endTag();# sortlist element
+  $writer->endTag();# oneOrMore
+
+  # aliases
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:keyalias");
+  $writer->emptyTag('attribute', 'name' => 'key');
+  $writer->emptyTag('text');# text
+  $writer->endTag();# keyalias
+  $writer->endTag();# zeroOrMore
+
+  # missing keys
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:missing");
+  $writer->emptyTag('text');# text
+  $writer->endTag();# missing
+  $writer->endTag();# zeroOrMore
+
+  $writer->endTag();# refsection element
+  $writer->endTag();# oneOrMore
+  $writer->endTag();# refsections element
+  $writer->endTag();# start
+
+  $writer->endTag();# grammar
+  $writer->end();
+  $rng->close();
 }
 
 

@@ -30,7 +30,7 @@ my $stdout;
 run3  [ $perl, 'bin/biber', '--noconf', '--nolog', "--output-file=$bbl", 't/tdata/full.bcf' ], \undef, \$stdout, \undef;
 
 is($? >> 8, 0, 'Full test has zero exit status');
-ok(compare($bbl, 't/tdata/full1.bbl') == 0, 'Testing lossort case and sortinit for macros');
+ok(compare($bbl, 't/tdata/full.bbl') == 0, 'Testing lossort case and sortinit for macros');
 like($stdout, qr|WARN - Duplicate entry key: 'F1' in file 't/tdata/full\.bib', skipping \.\.\.|ms, 'Testing duplicate/case key warnings - 1');
 like($stdout, qr|WARN - Possible typo \(case mismatch\) between datasource keys: 'f1' and 'F1' in file 't/tdata/full\.bib'|ms, 'Testing duplicate/case key warnings - 2');
 like($stdout, qr|WARN - Possible typo \(case mismatch\) between citation and datasource keys: 'C1' and 'c1' in file 't/tdata/full\.bib'|ms, 'Testing duplicate/case key warnings - 3');

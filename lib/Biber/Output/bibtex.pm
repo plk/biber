@@ -164,7 +164,7 @@ sub set_output_entry {
 
 =head2 output
 
-    Tool output method
+    output method
 
 =cut
 

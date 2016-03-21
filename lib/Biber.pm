@@ -3396,9 +3396,12 @@ sub fetch_data {
       else {
         $outfile = Biber::Config->getoption('bcf') =~ s/bcf$/rng/r;
       }
+
+      # Generate schema for datasource
       unless (Biber::Config->getoption('no_bltxml_schema')) {
         $dm->generate_bltxml_schema($outfile);
       }
+
       if (Biber::Config->getoption('validate_bltxml')) {
         validate_biber_xml($name, 'bltx', 'http://biblatex-biber.sourceforge.net/biblatexml', $outfile);
       }

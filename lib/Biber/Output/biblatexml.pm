@@ -12,10 +12,8 @@ use List::AllUtils qw( :all );
 use Encode;
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
-use Text::Wrap;
 use XML::Writer;
 use Unicode::Normalize;
-$Text::Wrap::columns = 80;
 my $logger = Log::Log4perl::get_logger('main');
 
 =encoding utf-8
@@ -110,7 +108,7 @@ sub set_output_entry {
     foreach my $id (@ids) {
       $xml->dataElement([$xml_prefix, 'key'], NFC($id));
     }
-  $xml->endTag;
+  $xml->endTag();# ids
   }
 
   # If CROSSREF and XDATA have been resolved, don't output them
@@ -197,13 +195,14 @@ sub set_output_entry {
   }
 
   # Standard fields
-  foreach my $field (sort @{$dm->get_fields_of_type('field', 'entrykey')},
-                     @{$dm->get_fields_of_type('field', 'key')},
-                     @{$dm->get_fields_of_type('field', 'literal')},
-                     @{$dm->get_fields_of_type('field', 'code')},
-                     @{$dm->get_fields_of_type('field', 'integer')},
-                     @{$dm->get_fields_of_type('field', 'verbatim')},
-                     @{$dm->get_fields_of_type('field', 'uri')}) {
+  foreach my $field (sort @{$dm->get_fields_of_type('field',
+                                                    ['entrykey',
+                                                     'key',
+                                                     'literal',
+                                                     'code',
+                                                     'integer',
+                                                     'verbatim',
+                                                     'uri'])}) {
     next if $dm->get_fieldformat($field) eq 'xsv';
     if ( ($dm->field_is_nullok($field) and
           $be->field_exists($field)) or
@@ -333,9 +332,12 @@ sub output {
   $logger->info("Output to $target_string");
   my $exts = join('|', values %DS_EXTENSIONS);
   my $schemafile = Biber::Config->getoption('dsn') =~ s/\.(?:$exts)$/.rng/r;
+
+  # Generate schema to accompany output
   unless (Biber::Config->getoption('no_bltxml_schema')) {
     $dm->generate_bltxml_schema($schemafile);
   }
+
   if (Biber::Config->getoption('validate_bltxml')) {
     validate_biber_xml($target_string, 'bltx', 'http://biblatex-biber.sourceforge.net/biblatexml', $schemafile);
   }
@@ -354,7 +356,6 @@ sub create_output_section {
   my $self = shift;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-
 
   # We rely on the order of this array for the order of the .bbl
   foreach my $k ($section->get_citekeys) {

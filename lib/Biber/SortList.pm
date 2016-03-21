@@ -529,62 +529,107 @@ sub get_filters {
 
 sub instantiate_entry {
   my $self = shift;
-  my $entry = shift;
-  my $key = shift;
+  my ($entry, $key, $format) = @_;
   return '' unless $entry;
+  $format //= 'bbl'; # default
 
   my $entry_string = $$entry;
 
   # sortinit
   my $sinit = $self->get_sortinit_for_key($key);
   if (defined($sinit)) {
-    my $str = "\\field{sortinit}{$sinit}";
+    my $str;
+    if ($format eq 'bbl') {
+      $str = "\\field{sortinit}{$sinit}";
+    }
+    elsif ($format eq 'bblxml') {
+      $str = "<bbl:field type=\"sortinit\">$sinit</bbl:field>";
+    }
     $entry_string =~ s|<BDS>SORTINIT</BDS>|$str|gxms;
   }
   else {# might not be defined if sortscheme returns nothing at all
-    $entry_string =~ s|<BDS>SORTINIT</BDS>||gxms;
+    $entry_string =~ s|^\s*<BDS>SORTINIT</BDS>\n||gxms;
   }
 
   # sortinithash
   my $sinithash = $self->get_sortinithash_for_key($key);
   if (defined($sinithash)) {
-    my $str = "\\field{sortinithash}{$sinithash}";
+    my $str;
+    if ($format eq 'bbl') {
+      $str = "\\field{sortinithash}{$sinithash}";
+    }
+    elsif ($format eq 'bblxml') {
+      $str = "<bbl:field type=\"sortinithash\">$sinithash</bbl:field>";
+    }
     $entry_string =~ s|<BDS>SORTINITHASH</BDS>|$str|gxms;
   }
   else {# might not be defined if sortscheme returns nothing at all
-    $entry_string =~ s|<BDS>SORTINITHASH</BDS>||gxms;
+    $entry_string =~ s|^\s*<BDS>SORTINITHASH</BDS>\n||gxms;
   }
 
   # extrayear
   if (my $e = $self->get_extrayeardata($key)) {
-    my $eys = "      \\field{extrayear}{$e}\n";
-    $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$eys|gxms;
+    my $str;
+    if ($format eq 'bbl') {
+      $str = "      \\field{extrayear}{$e}\n";
+    }
+    elsif ($format eq 'bblxml') {
+      $str = "<bbl:field type=\"extrayear\">$e</bbl:field>";
+    }
+    $entry_string =~ s|^\s*<BDS>EXTRAYEAR</BDS>\n|$str|gxms;
   }
 
   # extratitle
   if (my $e = $self->get_extratitledata($key)) {
-    my $ets = "      \\field{extratitle}{$e}\n";
-    $entry_string =~ s|^\s*<BDS>EXTRATITLE</BDS>\n|$ets|gxms;
+    my $str;
+    if ($format eq 'bbl') {
+      $str = "      \\field{extratitle}{$e}\n";
+    }
+    elsif ($format eq 'bblxml') {
+      $str = "<bbl:field type=\"extratitle\">$e</bbl:field>";
+    }
+    $entry_string =~ s|^\s*<BDS>EXTRATITLE</BDS>\n|$str|gxms;
   }
 
   # extratitle
   if (my $e = $self->get_extratitleyeardata($key)) {
-    my $etys = "      \\field{extratitleyear}{$e}\n";
-    $entry_string =~ s|^\s*<BDS>EXTRATITLEYEAR</BDS>\n|$etys|gxms;
+    my $str;
+    if ($format eq 'bbl') {
+      $str = "      \\field{extratitleyear}{$e}\n";
+    }
+    elsif ($format eq 'bblxml') {
+      $str = "<bbl:field type=\"extratitleyear\">$e</bbl:field>";
+    }
+    $entry_string =~ s|^\s*<BDS>EXTRATITLEYEAR</BDS>\n|$str|gxms;
   }
 
   # extraalpha
   if (my $e = $self->get_extraalphadata($key)) {
-    my $eas = "      \\field{extraalpha}{$e}\n";
-    $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$eas|gxms;
+    my $str;
+    if ($format eq 'bbl') {
+      $str = "      \\field{extraalpha}{$e}\n";
+    }
+    elsif ($format eq 'bblxml') {
+      $str = "<bbl:field type=\"extraalpha\">$e</bbl:field>";
+    }
+    $entry_string =~ s|^\s*<BDS>EXTRAALPHA</BDS>\n|$str|gxms;
   }
 
   # labelprefix
-  my $pns = '';
   if (my $pn = $self->get_labelprefix($key)) {
-    $pns = "      \\field{labelprefix}{$pn}\n";
+    my $str;
+    if ($format eq 'bbl') {
+      $str = "      \\field{labelprefix}{$pn}\n";
+    }
+    elsif ($format eq 'bblxml') {
+      $str = "<bbl:field type=\"labelprefix\">$pn</bbl:field>";
+    }
+    $entry_string =~ s|^\s*<BDS>LABELPREFIX</BDS>\n|$str|gxms;
   }
-  $entry_string =~ s|^\s*<BDS>LABELPREFIX</BDS>\n|$pns|gxms;
+  else {
+    $entry_string =~ s|^\s*<BDS>LABELPREFIX</BDS>\n||gxms;
+  }
+
   return $entry_string;
 }
 
