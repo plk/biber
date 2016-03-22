@@ -21,6 +21,7 @@ PAR_VERBATIM=1 pp --compress=6 \
    --module=Biber::Input::file::ris \
    --module=Biber::Output::dot \
    --module=Biber::Output::bbl \
+   --module=Biber::Output::bblxml \
    --module=Biber::Output::bibtex \
    --module=Biber::Output::biblatexml \
    --module=Pod::Simple::TranscodeSmart \

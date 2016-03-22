@@ -22,6 +22,7 @@ export PAR_VERBATIM
   --module=Biber::Input::file::ris \
   --module=Biber::Output::dot \
   --module=Biber::Output::bbl \
+  --module=Biber::Output::bblxml \
   --module=Biber::Output::bibtex \
   --module=Biber::Output::biblatexml \
   --module=HTTP::Status \
