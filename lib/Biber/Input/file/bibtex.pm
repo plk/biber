@@ -1008,7 +1008,7 @@ sub cache_data {
       next;
     }
 
-    # Save comments for output in tool mode unless comment strippig is requested
+    # Save comments for output in tool mode unless comment stripping is requested
     if ( $entry->metatype == BTE_COMMENT ) {
       if (Biber::Config->getoption('tool') and not
           Biber::Config->getoption('strip_comments') ) {

@@ -353,7 +353,7 @@ my $l8 = q|    \entry{L8}{book}{}
 my $l9 = q|    \entry{L9}{book}{}
       \name{author}{1}{}{%
         {{hash=1734924c4c55de5bb18d020c34a5249e}{%
-           family={{Iliad\bibnamedelimb Ipswich}},
+           family={{Iliad Ipswich}},
            family_i={I\bibinitperiod},
            given={Ian},
            given_i={I\bibinitperiod}}}%
@@ -581,7 +581,7 @@ my $l20 = q|    \entry{L20}{book}{}
         {{hash=fdaa0936724be89ef8bd16cf02e08c74}{%
            family={Ford},
            family_i={F\bibinitperiod},
-           given={{John\bibnamedelimb Henry}},
+           given={{John Henry}},
            given_i={J\bibinitperiod}}}%
       }
       \strng{namehash}{fdaa0936724be89ef8bd16cf02e08c74}
@@ -677,7 +677,7 @@ my $l24 = q|    \entry{L24}{book}{}
 my $l25 = q|    \entry{L25}{book}{}
       \name{author}{1}{}{%
         {{hash=7069367d4a4f37ffb0377e3830e98ed0}{%
-           family={{American\bibnamedelimb Psychological\bibnamedelimb Association,\bibnamedelimb Task\bibnamedelimb Force\bibnamedelimb on\bibnamedelimb the\bibnamedelimb Sexualization\bibnamedelimb of\bibnamedelimb Girls}},
+           family={{American Psychological Association, Task Force on the Sexualization of Girls}},
            family_i={A\bibinitperiod}}}%
       }
       \strng{namehash}{7069367d4a4f37ffb0377e3830e98ed0}
@@ -691,7 +691,7 @@ my $l25 = q|    \entry{L25}{book}{}
 my $l26 = q|    \entry{L26}{book}{}
       \name{author}{1}{}{%
         {{hash=d176a8af5ce1c45cb06875c4433f2fe2}{%
-           family={{Sci-Art\bibnamedelimb Publishers}},
+           family={{Sci-Art Publishers}},
            family_i={S\bibinitperiod}}}%
       }
       \strng{namehash}{d176a8af5ce1c45cb06875c4433f2fe2}
@@ -714,7 +714,7 @@ my $l28 = q|    \entry{L28}{book}{}
 my $l29 = q|    \entry{L29}{book}{}
       \name{author}{1}{}{%
         {{hash=59a5e43a502767d00e589eb29f863728}{%
-           family={{U.S.\bibnamedelimi Department\bibnamedelimb of\bibnamedelimb Health\bibnamedelimb and\bibnamedelimb Human\bibnamedelimb Services,\bibnamedelimb National\bibnamedelimb Institute\bibnamedelimb of\bibnamedelimb Mental\bibnamedelimb Health,\bibnamedelimb National\bibnamedelimb Heart,\bibnamedelimb Lung\bibnamedelimb and\bibnamedelimb Blood\bibnamedelimb Institute}},
+           family={{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}},
            family_i={U\bibinitperiod}}}%
       }
       \strng{namehash}{59a5e43a502767d00e589eb29f863728}

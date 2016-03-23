@@ -341,10 +341,15 @@ sub name_to_bbl {
     my $npc;
     my $npci;
     if ($npc = $self->get_namepart($np)) {
-      $npc = Biber::Utils::join_name($npc);
+
       if ($self->was_stripped($np)) {
         $npc = Biber::Utils::add_outer($npc);
       }
+      else {
+        # Don't insert name seps in protected names
+        $npc = Biber::Utils::join_name($npc);
+      }
+
       $npci = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial($np)}) . '\bibinitperiod';
       $npci =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
     }
