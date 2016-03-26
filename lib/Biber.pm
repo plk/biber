@@ -3455,11 +3455,14 @@ sub fetch_data {
 =cut
 
 sub get_dependents {
-  my ($self, $keys) = @_;
+  my ($self, $keys, $keyswithdeps, $missing) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $dep_map; # Flag to say an entry has some deps so we can shortcut deletions
   my $new_deps;
+
+  $keyswithdeps = $keyswithdeps // [];
+  $missing = $missing // [];
+
   no strict 'refs'; # symbolic references below ...
 
   foreach my $citekey (@$keys) {
@@ -3467,7 +3470,7 @@ sub get_dependents {
     if (my $real = $section->get_citekey_alias($citekey)) {
       $logger->debug("Alias '$citekey' requires real key '$real'");
       push @$new_deps, $real;
-      $dep_map->{$real} = 1;
+      push @$keyswithdeps, $real unless first {$real eq $_} @$keyswithdeps;
     }
     # Dynamic sets don't exist yet but their members do
     elsif (my @dmems = $section->get_dynamic_set($citekey)) {
@@ -3475,7 +3478,7 @@ sub get_dependents {
       foreach my $dm (@dmems) {
         unless ($section->bibentry($dm)) {
           push @$new_deps, $dm;
-          $dep_map->{$citekey} = 1;
+          push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
         }
       }
       $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
@@ -3490,7 +3493,7 @@ sub get_dependents {
           # skip looking for dependent if it's already there (loop suppression)
           push @$new_deps, $xdatum unless $section->bibentry($xdatum);
           $logger->debug("Entry '$citekey' has xdata '$xdatum'");
-          $dep_map->{$citekey} = 1;
+          push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
         }
       }
 
@@ -3501,7 +3504,7 @@ sub get_dependents {
         # skip looking for dependent if it's already there (loop suppression)
         push @$new_deps, $refkey unless $section->bibentry($refkey);
         $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
-        $dep_map->{$citekey} = 1;
+        push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
       }
 
       # static sets
@@ -3511,7 +3514,7 @@ sub get_dependents {
         foreach my $sm (@$smems) {
           unless ($section->has_citekey($sm)) {
             push @$new_deps, $sm;
-            $dep_map->{$citekey} = 1;
+            push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
           }
         }
         $logger->debug("Static set entry '$citekey' has members: " . join(', ', @$smems));
@@ -3525,7 +3528,7 @@ sub get_dependents {
             # record that $rm is used as a related entry key
             $section->add_related($rm);
             push @$new_deps, $rm;
-            $dep_map->{$citekey} = 1;
+            push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
           }
         }
         $logger->debug("Entry '$citekey' has related entries: " . join(', ', @$relkeys));
@@ -3535,7 +3538,6 @@ sub get_dependents {
 
   # Remove repeated keys which are dependents of more than one entry
   @$new_deps = uniq @$new_deps;
-  my @missing;
 
   if (@$new_deps) {
     # Now look for the dependents of the directly cited keys
@@ -3545,40 +3547,44 @@ sub get_dependents {
     # are in section
     if ($section->is_allkeys) {
       foreach my $dk (@$new_deps) {
-        push @missing, $dk unless $section->has_citekey($dk);
+        push @$missing, $dk unless $section->has_citekey($dk);
       }
     }
     else {
-      @missing = @$new_deps;
+      @$missing = @$new_deps;
       foreach my $datasource (@{$section->get_datasources}) {
         # shortcut if we have found all the keys now
-        last unless @missing;
+        last unless @$missing;
         my $type = $datasource->{type};
         my $name = $datasource->{name};
         my $datatype = $datasource->{datatype};
         my $package = 'Biber::Input::' . $type . '::' . $datatype;
         eval "require $package" or
           biber_error("Error loading data source package '$package': $@");
-        @missing = &{"${package}::extract_entries"}($name, \@missing);
+        @$missing = &{"${package}::extract_entries"}($name, $missing);
       }
     }
 
-    # error reporting
-    $logger->debug("Dependent keys not found for section '$secnum': " . join(', ', @missing));
-    foreach my $citekey ($section->get_citekeys) {
-      $logger->trace("Checking '$citekey' for dependencies");
-      next unless $dep_map->{$citekey}; # only if we have some missing deps to delete
-      $logger->trace("Citekey '$citekey' has dependencies");
-      foreach my $missing_key (@missing) {
-        $self->remove_undef_dependent($citekey, $missing_key);
-        # Remove the missing key from the list to recurse with
-        @$new_deps = grep { $_ ne $missing_key } @$new_deps;
-      }
+    $logger->debug("Dependent keys not found for section '$secnum': " . join(', ', @$missing));
+    foreach my $missing_key (@$missing) {
+      # Remove the missing key from the list to recurse with
+      @$new_deps = grep { $_ ne $missing_key } @$new_deps;
     }
   }
 
+  # recurse if there are more things to find
   $logger->trace('Recursing in get_dependents with: ' . join(', ', @$new_deps));
-  get_dependents($self, $new_deps) if @$new_deps; # recurse if there are more things to find
+  get_dependents($self, $new_deps, $keyswithdeps) if @$new_deps;
+
+  # Now remove any missing entries from various places in all entries we have flagged
+  # as having dependendents. If we don't do this, many things fail later like clone creation
+  # for related entries etc.
+  foreach my $keywithdeps (@$keyswithdeps) {
+    foreach my $missing_key (@$missing) {
+      $self->remove_undef_dependent($keywithdeps, $missing_key);
+    }
+  }
+
   return; # bottom of recursion
 }
 
