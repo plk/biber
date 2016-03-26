@@ -28,17 +28,11 @@
 * DONE implement patronymic namepart example
 * DONE Document year/month (datepart fields) are not allowed in bltxml
 * TODO Transliteration interface
-** sorttlit|t=s (from:to)
-** showtlit (construct quick U::T object, list->pairs();
-** Incompatible with fastsort
-** This option needs to be available everywhere locale is.
-*** biber sortlocale
-*** biblatex sortlocale
-*** \sort - line 3693 Biber.pm
-*** Top-level of sort - line 3703 in Biber.pm
-*** module and icu on all build vms, instructions to others
-    /opt/local/lib/libicudata.55.dylib
-    /opt/local/lib/libicuuc.55.dylib
-    /opt/local/lib/libicui18n.55.dylib
 
+\DeclareSortTranslit[entrytype]{%
+  \translit[field or fieldset]{from}{to}
+}
 
+package Lingua::Dev into biber as Biber::Translit.
+document allowable from/to pairs
+parse in Biber.pm, use in constructing sort key part for fields in Internals.pm

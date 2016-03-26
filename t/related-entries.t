@@ -243,6 +243,7 @@ my $c3k = q|    \entry{0a3d72134fb3d6c024db4c510bc1605b}{book}{dataonly}
     \endentry
 |;
 
+my $m1 = q||;
 
 eq_or_diff( $out->get_output_entry('key1', $main), $k1, 'Related entry test 1' ) ;
 eq_or_diff( $out->get_output_entry('key2', $main), $k2, 'Related entry test 2' ) ;

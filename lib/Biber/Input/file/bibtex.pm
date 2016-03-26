@@ -712,7 +712,7 @@ sub _create_entry {
 
   $bibentry->set_field('entrytype', $entrytype);
   $bibentry->set_field('datatype', 'bibtex');
-  $logger->debug("Adding entry with key '$k' to biblist");
+  $logger->debug("Adding entry with key '$k' to entry list");
   $bibentries->add_entry($k, $bibentry);
 }
 

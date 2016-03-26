@@ -3566,7 +3566,9 @@ sub get_dependents {
     # error reporting
     $logger->debug("Dependent keys not found for section '$secnum': " . join(', ', @missing));
     foreach my $citekey ($section->get_citekeys) {
+      $logger->trace("Checking '$citekey' for dependencies");
       next unless $dep_map->{$citekey}; # only if we have some missing deps to delete
+      $logger->trace("Citekey '$citekey' has dependencies");
       foreach my $missing_key (@missing) {
         $self->remove_undef_dependent($citekey, $missing_key);
         # Remove the missing key from the list to recurse with
@@ -3593,13 +3595,13 @@ sub remove_undef_dependent {
   my ($citekey, $missing_key) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  $logger->debug("Removing dependency on missing key '$missing_key' from '$citekey' in section '$secnum'");
 
   # remove from any dynamic keys
   if (my @dmems = $section->get_dynamic_set($citekey)){
     if (first {$missing_key eq $_} @dmems) {
       $section->set_dynamic_set($citekey, grep {$_ ne $missing_key} @dmems);
-    }
-    else {
+      $logger->trace("Removed dynamic set dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
       biber_warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)");
     }
   }
@@ -3614,6 +3616,7 @@ sub remove_undef_dependent {
     # remove any crossrefs
     if ($be->get_field('crossref') and ($be->get_field('crossref') eq $missing_key)) {
       $be->del_field('crossref');
+      $logger->trace("Removed crossref dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
       biber_warn("I didn't find a database entry for crossref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
 
@@ -3621,6 +3624,7 @@ sub remove_undef_dependent {
     if (my $xdata = $be->get_field('xdata')) {
       if (first {$missing_key eq $_} @$xdata) {
         $be->set_datafield('xdata', [ grep {$_ ne $missing_key} @$xdata ]) ;
+        $logger->trace("Removed xdata dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
         biber_warn("I didn't find a database entry for xdata entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
     }
@@ -3630,6 +3634,7 @@ sub remove_undef_dependent {
       my $smems = $be->get_field('entryset');
       if (first {$missing_key eq $_} @$smems) {
         $be->set_datafield('entryset', [ grep {$_ ne $missing_key} @$smems ]);
+        $logger->trace("Removed static set dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
         biber_warn("I didn't find a database entry for static set member '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
     }
@@ -3642,6 +3647,7 @@ sub remove_undef_dependent {
         unless ($be->get_field('related')) {
           $be->del_field('relatedtype');
           $be->del_field('relatedstring');
+          $logger->trace("Removed related entry dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
         }
         biber_warn("I didn't find a database entry for related entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
