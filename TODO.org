@@ -29,10 +29,4 @@
 * DONE Document year/month (datepart fields) are not allowed in bltxml
 * TODO Transliteration interface
 
-\DeclareSortTranslit[entrytype]{%
-  \translit[field or fieldset]{from}{to}
-}
 
-package Lingua::Dev into biber as Biber::Translit.
-document allowable from/to pairs
-parse in Biber.pm, use in constructing sort key part for fields in Internals.pm

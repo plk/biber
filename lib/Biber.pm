@@ -391,6 +391,8 @@ sub parse_ctrlfile {
                                                            qr/\Afieldor\z/,
                                                            qr/\Afieldxor\z/,
                                                            qr/\Afield\z/,
+                                                           qr/\Atransliteration\z/,
+                                                           qr/\Atranslit\z/,
                                                            qr/\Aalias\z/,
                                                            qr/\Aalsoset\z/,
                                                            qr/\Aconstraints\z/,
@@ -616,6 +618,9 @@ sub parse_ctrlfile {
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nosort', $nosort) if $nosort;
 
+  # TRANSLITERATION
+
+
   # SORTING NAME KEY
 
   # Use the order attributes to make sure things are in right order and create a data structure
@@ -645,6 +650,19 @@ sub parse_ctrlfile {
   Biber::Config->setblxoption('sortingnamekey', $snss);
 
   # SORTING
+
+  # transliterations
+  foreach my $tr (@{$bcfxml->{transliteration}}) {
+    if ($tr->{entrytype}[0] eq '*') { # already array forced for another option
+      Biber::Config->setblxoption('translit', $tr->{translit});
+    }
+    else { # per_entrytype
+      Biber::Config->setblxoption('translit',
+                                  $tr->{translit},
+                                  'ENTRYTYPE',
+                                  $tr->{entrytype}[0]);
+    }
+  }
 
   # sorting excludes
   foreach my $sex (@{$bcfxml->{sorting}{sortexclusion}}) {

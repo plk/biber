@@ -203,6 +203,8 @@ start =
         empty
       }+
     }?,
+    # Transliteration specification(s)
+    translit*,
     # Sorting name key specification
     sortingnamekey,
     # Global sorting specification
@@ -330,6 +332,16 @@ listspec =
         sort+
       }?
     }*
+
+translit =
+  element bcf:transliteration {
+    attribute entrytype { "*" | xsd:string {minLength="1"} },
+    element bcf:translit {
+      attribute target { "*" | xsd:string {minLength="1"} },
+      attribute from { xsd:string {minLength="1"} },
+      attribute to { xsd:string {minLength="1"} }
+    }+
+  }
 
 sortingnamekey = 
   element bcf:sortingnamekey {

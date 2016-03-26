@@ -50,7 +50,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
   locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean parse_range
-  parse_range_alt maploopreplace };
+  parse_range_alt maploopreplace get_transliterator call_transliterator};
 
 =head1 FUNCTIONS
 
@@ -1163,6 +1163,48 @@ sub maploopreplace {
   $string =~ s/\$MAPLOOP/$maploop/ge if $maploop;
   $string =~ s/\$MAPUNIQ/$mapuniq/ge if $mapuniq;
   return $string;
+}
+
+=head2 get_transliterator
+
+  Get a ref to a transliterator for the given from/to
+  We are abstracting this in this way because it is not clear what the future
+  of the transliteration library is. We want to be able to switch.
+
+=cut
+
+sub get_transliterator {
+  my ($from, $to) = map {lc} @_;
+  my @valid_from = ('iast');
+  my @valid_to   = ('devanagari');
+  unless (first {$from eq $_} @valid_from and
+          first {$to eq $_} @valid_to) {
+    biber_warn("Invalid transliteration from/to pair ($from/$to)");
+  }
+  require Lingua::Translit;
+  # List pairs explicitly as we don't expect there to be to many of these ever
+  if ($from eq 'iast' and $to eq 'devanagari') {
+    return new Lingua::Translit('IAST Devanagari');
+  }
+  return undef;
+}
+
+=head2 call_transliterator
+
+  Run a transliterator on passed text. Hides call semantics of transliterator
+  so we can switch engine in the future.
+
+=cut
+
+sub call_transliterator {
+  my ($from, $to, $text) = @_;
+  if (my $tr = get_transliterator($from, $to)) {
+    # using Lingua::Translit
+    return $tr->translit($text);
+  }
+  else {
+    return $text;
+  }
 }
 
 

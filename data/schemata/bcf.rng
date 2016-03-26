@@ -535,6 +535,10 @@
           </oneOrMore>
         </element>
       </optional>
+      <zeroOrMore>
+        <!-- Transliteration specification(s) -->
+        <ref name="translit"/>
+      </zeroOrMore>
       <!-- Sorting name key specification -->
       <ref name="sortingnamekey"/>
       <!-- Global sorting specification -->
@@ -842,6 +846,40 @@
         </optional>
       </element>
     </zeroOrMore>
+  </define>
+  <define name="translit">
+    <element name="bcf:transliteration">
+      <attribute name="entrytype">
+        <choice>
+          <value>*</value>
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </choice>
+      </attribute>
+      <oneOrMore>
+        <element name="bcf:translit">
+          <attribute name="target">
+            <choice>
+              <value>*</value>
+              <data type="string">
+                <param name="minLength">1</param>
+              </data>
+            </choice>
+          </attribute>
+          <attribute name="from">
+            <data type="string">
+              <param name="minLength">1</param>
+            </data>
+          </attribute>
+          <attribute name="to">
+            <data type="string">
+              <param name="minLength">1</param>
+            </data>
+          </attribute>
+        </element>
+      </oneOrMore>
+    </element>
   </define>
   <define name="sortingnamekey">
     <oneOrMore>
