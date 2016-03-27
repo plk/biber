@@ -2,7 +2,6 @@ package Biber::Utils;
 use v5.16;
 use strict;
 use warnings;
-use re 'eval';
 use parent qw(Exporter);
 
 use constant {
