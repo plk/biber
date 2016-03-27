@@ -1,3 +1,4 @@
+# $Id$
 package Biber::Entry::Names;
 use v5.16;
 use strict;

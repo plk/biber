@@ -1,1 +1,6 @@
-lib/Biber/Config.pm ident
+bin/biber ident
+*.pm ident
+*.rnc ident
+*.rng ident
+*.xml ident
+

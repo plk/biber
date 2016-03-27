@@ -1,3 +1,4 @@
+# $Id$
 package Biber::Config;
 use v5.16;
 
@@ -24,7 +25,6 @@ use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
 our $VERSION = '2.5';
-our $SHA = '$Id$';
 our $BETA_VERSION = 1; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');

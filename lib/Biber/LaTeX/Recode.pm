@@ -1,3 +1,4 @@
+# $Id$
 package Biber::LaTeX::Recode;
 use v5.16;
 use strict;

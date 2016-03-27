@@ -1,3 +1,4 @@
+# $Id$
 package Biber::Input::file::biblatexml;
 use v5.16;
 use strict;

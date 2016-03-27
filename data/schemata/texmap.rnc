@@ -1,3 +1,4 @@
+# $Id$
 start =
   element texmap {
     element maps {

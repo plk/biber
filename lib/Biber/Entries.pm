@@ -1,3 +1,4 @@
+# $Id$
 package Biber::Entries;
 use v5.16;
 use strict;

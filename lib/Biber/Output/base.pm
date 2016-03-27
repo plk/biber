@@ -1,3 +1,4 @@
+# $Id$
 package Biber::Output::base;
 use v5.16;
 use strict;
