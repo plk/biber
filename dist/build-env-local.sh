@@ -22,9 +22,9 @@ function vmoff {
 }
 
 # Things to do on each server
-COMMANDS_OSX="sudo cpan RSCHUPP/PAR-Packer-1.029_04.tar.gz"
+COMMANDS_OSX="sudo cpan Module::ScanDeps"
 COMMANDS_WINDOWS=""
-COMMANDS_LINUX="sudo /usr/local/perl/bin/cpan RSCHUPP/PAR-Packer-1.029_04.tar.gz"
+COMMANDS_LINUX="sudo /usr/local/perl/bin/cpan Module::ScanDeps"
 
 # Build farm OSX 64-bit intel
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
