@@ -45,7 +45,7 @@ fi
 # time difference is too great between boots
 if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   ssh vbox@park "VBoxHeadless --startvm bbf-osx10.6 </dev/null >/dev/null 2>&1 &"
-  sleep 10
+  sleep 5
   ssh bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-osx10.6:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
@@ -64,7 +64,7 @@ fi
 # time difference is too great between boots
 if [ ! -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
   ssh vbox@park "VBoxHeadless --startvm bbf-osx10.5 </dev/null >/dev/null 2>&1 &"
-  sleep 10
+  sleep 5
   ssh bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_i386;$SCANCACHE;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-osx10.5:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
   ssh bbf-osx10.5 "\\rm -f biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386"
@@ -84,7 +84,7 @@ fi
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
 if [ ! -e $DIR/biber-MSWIN32.zip ]; then
   ssh vbox@park "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
-  sleep 20
+  sleep 10
   ssh bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWIN32;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp bbf-wxp32:biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe $DIR/
   ssh bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe"
@@ -102,7 +102,7 @@ fi
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
 if [ ! -e $DIR/biber-MSWIN364.zip ]; then
   ssh vbox@park "VBoxHeadless --startvm bbf-w1064 </dev/null >/dev/null 2>&1 &"
-  sleep 20
+  sleep 10
   ssh bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWIN64;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp bbf-w1064:biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe $DIR/
   ssh bbf-w1064 "\\rm -f biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe"
@@ -118,7 +118,7 @@ fi
 # Build farm Linux 32
 if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
   ssh vbox@park "VBoxHeadless --startvm bbf-jj32 </dev/null >/dev/null 2>&1 &"
-  sleep 20
+  sleep 10
   ssh bbf-jj32 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;$SCANCACHE;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-jj32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
   ssh bbf-jj32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
@@ -135,7 +135,7 @@ fi
 # Build farm Linux 64
 if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   ssh vbox@park "VBoxHeadless --startvm bbf-jj64 </dev/null >/dev/null 2>&1 &"
-  sleep 20
+  sleep 10
   ssh bbf-jj64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_64;$SCANCACHE;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp bbf-jj64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
   ssh bbf-jj64 "\\rm -f biblatex-biber/dist/linux_x86_64/biber-linux_x86_64"
