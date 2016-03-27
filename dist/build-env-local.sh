@@ -23,7 +23,7 @@ function vmoff {
 
 # Things to do on each server
 COMMANDS_OSX="sudo cpan RSCHUPP/PAR-Packer-1.029_04.tar.gz"
-COMMANDS_WINDOWS="cpan RSCHUPP/PAR-Packer-1.029_04.tar.gz"
+COMMANDS_WINDOWS=""
 COMMANDS_LINUX="sudo /usr/local/perl/bin/cpan RSCHUPP/PAR-Packer-1.029_04.tar.gz"
 
 # Build farm OSX 64-bit intel
@@ -42,7 +42,7 @@ fi
 if [[ $@ =~ "osx10.5" || $@ =~ "ALL" ]]; then
   vmon osx10.5
   sleep 10
-  ssh philkime@bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;;$COMMANDS_OSX"
+  ssh philkime@bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;$COMMANDS_OSX"
   vmoff osx10.5
 fi
 
