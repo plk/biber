@@ -85,9 +85,9 @@ fi
 if [ ! -e $DIR/biber-MSWIN32.zip ]; then
   ssh vbox@wood "VBoxHeadless --startvm bbf-wxp32 </dev/null >/dev/null 2>&1 &"
   sleep 20
-  ssh bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
-  scp bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN32.exe $DIR/
-  ssh bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWin32/biber-MSWIN32.exe"
+  ssh bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWIN32;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
+  scp bbf-wxp32:biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe $DIR/
+  ssh bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe"
   ssh vbox@wood "VBoxManage controlvm bbf-wxp32 savestate"
   cd $DIR
   mv biber-MSWIN32.exe biber.exe
@@ -103,9 +103,9 @@ fi
 if [ ! -e $DIR/biber-MSWIN364.zip ]; then
   ssh vbox@wood "VBoxHeadless --startvm bbf-w1064 </dev/null >/dev/null 2>&1 &"
   sleep 20
-  ssh bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin64;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
-  scp bbf-w1064:biblatex-biber/dist/MSWin64/biber-MSWIN64.exe $DIR/
-  ssh bbf-w1064 "\\rm -f biblatex-biber/dist/MSWin64/biber-MSWIN64.exe"
+  ssh bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWIN64;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
+  scp bbf-w1064:biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe $DIR/
+  ssh bbf-w1064 "\\rm -f biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe"
   ssh vbox@wood "VBoxManage controlvm bbf-w1064 savestate"
   cd $DIR
   mv biber-MSWIN64.exe biber.exe

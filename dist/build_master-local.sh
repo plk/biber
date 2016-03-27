@@ -105,9 +105,9 @@ fi
 if [ ! -e $DIR/biber-MSWIN32.zip ]; then
   vmon wxp32
   sleep 20
-  ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
-  scp philkime@bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN32.exe $DIR/
-  ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWin32/biber-MSWIN32.exe"
+  ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWIN32;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
+  scp philkime@bbf-wxp32:biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe $DIR/
+  ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWIN32/biber-MSWIN32.exe"
   vmoff wxp32
   cd $DIR
   mv biber-MSWIN32.exe biber.exe
@@ -123,9 +123,9 @@ fi
 if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   vmon w1064
   sleep 20
-  ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin64;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
-  scp phili@bbf-w1064:biblatex-biber/dist/MSWin64/biber-MSWIN64.exe $DIR/
-  ssh phili@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWin64/biber-MSWIN64.exe"
+  ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWIN64;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
+  scp phili@bbf-w1064:biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe $DIR/
+  ssh phili@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWIN64/biber-MSWIN64.exe"
   vmoff w1064
   cd $DIR
   mv biber-MSWIN64.exe biber.exe
