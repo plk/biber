@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Test::Differences;
 unified_diff;
 
@@ -12,6 +12,7 @@ use Cwd qw(getcwd);
 use File::Spec;
 use Log::Log4perl;
 use Unicode::Normalize;
+use XML::LibXML;
 
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
@@ -27,6 +28,11 @@ my $l4pconf = qq|
 Log::Log4perl->init(\$l4pconf);
 
 chdir('t/tdata');
+
+# Set up schema
+my $CFxmlschema = XML::LibXML::RelaxNG->new(location => '../../data/schemata/config.rng');
+
+my $conf = 'biber-test.conf';
 
 my $collopts = { level => 3,
                  variable => 'non-ignorable',
@@ -392,10 +398,10 @@ my $sourcemap = [
 ];
 
 # Set up Biber object
-my $biber = Biber->new( configfile => 'biber-test.conf', mincrossrefs => 7 );
+my $biber = Biber->new( configfile => $conf, mincrossrefs => 7 );
 $biber->parse_ctrlfile('general.bcf');
 eq_or_diff(Biber::Config->getoption('mincrossrefs'), 7, 'Options 1 - from cmdline');
-eq_or_diff(Biber::Config->getoption('configfile'), File::Spec->catfile('biber-test.conf'), 'Options 2 - from cmdline');
+eq_or_diff(Biber::Config->getoption('configfile'), File::Spec->catfile($conf), 'Options 2 - from cmdline');
 eq_or_diff(Biber::Config->getoption('sortlocale'), 'testlocale', 'Options 3 - from config file');
 is_deeply(Biber::Config->getoption('collate_options'), $collopts, 'Options 4 - from config file');
 is_deeply(Biber::Config->getoption('nosort'), $nosort, 'Options 5 - from config file');
@@ -405,3 +411,12 @@ eq_or_diff(Biber::Config->getoption('decodecharsset'), 'base', 'Options 8 - from
 # Here the result is a merge of the biblatex option from the .bcf and the option from
 # the biber config file as sourcemap is a special case
 is_deeply(Biber::Config->getoption('sourcemap'), $sourcemap, 'Options 9 - from config file');
+
+my $CFxmlparser = XML::LibXML->new();
+ # basic parse and XInclude processing
+my $CFxp = $CFxmlparser->parse_file($conf);
+# XPath context
+my $CFxpc = XML::LibXML::XPathContext->new($CFxp);
+# Validate against schema. Dies if it fails.
+$CFxmlschema->validate($CFxp);
+is($@, '', "Validation of $conf");

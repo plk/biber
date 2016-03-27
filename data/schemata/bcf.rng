@@ -159,7 +159,7 @@
           </optional>
         </element>
       </zeroOrMore>
-      <oneOrMore>
+      <zeroOrMore>
         <!-- Option scope -->
         <element name="bcf:optionscope">
           <attribute name="type">
@@ -185,7 +185,7 @@
             </element>
           </oneOrMore>
         </element>
-      </oneOrMore>
+      </zeroOrMore>
       <oneOrMore>
         <!-- datafield sets -->
         <element name="bcf:datafieldset">
@@ -1766,6 +1766,11 @@
       <oneOrMore>
         <element name="bcf:map_step">
           <choice>
+            <attribute name="map_entry_clone">
+              <data type="string">
+                <param name="minLength">1</param>
+              </data>
+            </attribute>
             <group>
               <attribute name="map_entry_new">
                 <data type="string">

@@ -2,9 +2,12 @@ start =
   element config {
     # Option scope
     element optionscope {
-      attribute type { "GLOBAL" | "PER_TYPE" | "PER_ENTRY" },
-      element option { xsd:string }+
-    }+ &
+      attribute type { "GLOBAL" | "ENTRYTYPE" | "ENTRY" | "NAMELIST" | "NAME" },
+      element option {
+        attribute datatype { "boolean" | "integer" | "string" | "xml" },
+        xsd:string
+      }+
+    }* &
     element clrmacros           { "0" | "1" }? &
     element collate             { "0" | "1" }? &
     element collate_options     {
@@ -13,6 +16,16 @@ start =
         attribute value { text }
       }+
     }? &
+    # datafield sets
+    element datafieldset {
+      attribute name { text },
+      element member {
+        ((attribute fieldtype { dmfieldtype }?,
+          attribute datatype { dmdatatype }?) |
+        attribute field { text }?),
+        empty
+      }+
+    }* &
     # Can't specify the config file location in the config file ...
     #  element configfile          { text }? & 
     element convert_control     { "0" | "1" }? &
@@ -37,8 +50,15 @@ start =
     element nodieonerror         { "0" | "1" }? &
     element nolog                { "0" | "1" }? &
     # noinit specification
-    element noinit {
-      element option {
+    element noinits {
+      element noinit {
+        attribute value { xsd:string },
+        empty
+      }+
+    }? &
+    # nolabel specification
+    element nolabels {
+      element nolabel {
         attribute value { xsd:string },
         empty
       }+
@@ -68,6 +88,7 @@ start =
     element recodedata           { text }? &
     element sortcase             { "0" | "1" }? &
     element sortfirstinits       { "0" | "1" }? &
+    translit* &
     sortingnamekey? &
     sorting? &
     element sortlocale           { text }? &
@@ -115,16 +136,18 @@ datamodel =
     element fields {
       element field {
         # fieldtype is "field" or "list"
-        attribute fieldtype { "field" | "list" },
+        attribute fieldtype { dmfieldtype },
         # format is a specification of the format of the field. If not specified, field contents
         # are just as is. 
-        attribute format { "csv" }?,
+        attribute format { "xsv" }?,
         # datatype of field content
-        attribute datatype { "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "csv" | "code" | "uri" | "datepart" | "keyword" | "option" },
+        attribute datatype { dmdatatype },
         # Are we allowed to output a null field value to the .bbl for this field?
         attribute nullok { "true" }?,
         # Should this field be skipped and not output to the .bbl?
         attribute skip_output { "true" }?,
+        # Field can be used as a label? This auto-generates some defaults in biblatex
+        attribute label { "true" }?,
         text
       }+
     },
@@ -192,6 +215,17 @@ datamodel =
       }*
     }+
   }
+
+translit =
+  element transliteration {
+    attribute entrytype { "*" | xsd:string {minLength="1"} },
+    element translit {
+      attribute target { "*" | xsd:string {minLength="1"} },
+      attribute from { xsd:string {minLength="1"} },
+      attribute to { xsd:string {minLength="1"} }
+    }+
+  }
+
 inheritance =
   # Cross-reference inheritance specifications
 element inheritance {
@@ -243,6 +277,11 @@ map =
     element per_type { xsd:string {minLength="1"} }*,
     element map_step {
       (
+        ( attribute map_entry_clone { xsd:string {minLength="1"} }
+        ) |
+        ( attribute map_entry_new { xsd:string {minLength="1"} },
+          attribute map_entry_newtype { xsd:string {minLength="1"} }
+        ) |
         (
           attribute map_entry_null { "1" }
         ) |
@@ -257,13 +296,12 @@ map =
           attribute map_final { "1" }?,
           attribute map_match { xsd:string {minLength="1"} }?,
           attribute map_notmatch { xsd:string {minLength="1"} }?,
-          attribute map_replace { xsd:string {minLength="1"} }?
+          attribute map_replace { xsd:string }?
         ) |
         (
-          ( attribute map_entry_new { xsd:string {minLength="1"} },
-            attribute map_entry_newtype { xsd:string {minLength="1"} })?,
+          attribute map_field_source { xsd:string {minLength="1"} }?,
           attribute map_entrytarget { xsd:string {minLength="1"} }?,
-          attribute map_field_set { xsd:string {minLength="1"} },
+          attribute map_field_set { xsd:string {minLength="1"} }?,
           attribute map_append { "1" }?,
           attribute map_final { "1" }?,
           ( attribute map_null { "1" } |
@@ -338,6 +376,10 @@ element sort {
     text
   }+
 }+
+
+dmfieldtype =  "field" | "list"
+dmdatatype =  "literal" | "name" | "key" | "entrykey" | "date" | "verbatim" | "integer" | "range" | "code" | "uri" | "datepart" | "keyword" | "option"
+
 # Copyright 2009-2016 François Charette and Philip Kime, all rights reserved.
 
 # This code is free software.  You can redistribute it and/or

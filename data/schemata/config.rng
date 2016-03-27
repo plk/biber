@@ -3,23 +3,33 @@
   <start>
     <element name="config">
       <interleave>
-        <oneOrMore>
+        <zeroOrMore>
           <!-- Option scope -->
           <element name="optionscope">
             <attribute name="type">
               <choice>
                 <value>GLOBAL</value>
-                <value>PER_TYPE</value>
-                <value>PER_ENTRY</value>
+                <value>ENTRYTYPE</value>
+                <value>ENTRY</value>
+                <value>NAMELIST</value>
+                <value>NAME</value>
               </choice>
             </attribute>
             <oneOrMore>
               <element name="option">
+                <attribute name="datatype">
+                  <choice>
+                    <value>boolean</value>
+                    <value>integer</value>
+                    <value>string</value>
+                    <value>xml</value>
+                  </choice>
+                </attribute>
                 <data type="string"/>
               </element>
             </oneOrMore>
           </element>
-        </oneOrMore>
+        </zeroOrMore>
         <optional>
           <element name="clrmacros">
             <choice>
@@ -48,6 +58,34 @@
             </oneOrMore>
           </element>
         </optional>
+        <zeroOrMore>
+          <!-- datafield sets -->
+          <element name="datafieldset">
+            <attribute name="name"/>
+            <oneOrMore>
+              <element name="member">
+                <choice>
+                  <group>
+                    <optional>
+                      <attribute name="fieldtype">
+                        <ref name="dmfieldtype"/>
+                      </attribute>
+                    </optional>
+                    <optional>
+                      <attribute name="datatype">
+                        <ref name="dmdatatype"/>
+                      </attribute>
+                    </optional>
+                  </group>
+                  <optional>
+                    <attribute name="field"/>
+                  </optional>
+                </choice>
+                <empty/>
+              </element>
+            </oneOrMore>
+          </element>
+        </zeroOrMore>
         <optional>
           <!--
             Can't specify the config file location in the config file ...
@@ -157,9 +195,22 @@
         </optional>
         <optional>
           <!-- noinit specification -->
-          <element name="noinit">
+          <element name="noinits">
             <oneOrMore>
-              <element name="option">
+              <element name="noinit">
+                <attribute name="value">
+                  <data type="string"/>
+                </attribute>
+                <empty/>
+              </element>
+            </oneOrMore>
+          </element>
+        </optional>
+        <optional>
+          <!-- nolabel specification -->
+          <element name="nolabels">
+            <oneOrMore>
+              <element name="nolabel">
                 <attribute name="value">
                   <data type="string"/>
                 </attribute>
@@ -307,6 +358,9 @@
             </choice>
           </element>
         </optional>
+        <zeroOrMore>
+          <ref name="translit"/>
+        </zeroOrMore>
         <optional>
           <ref name="sortingnamekey"/>
         </optional>
@@ -470,10 +524,7 @@
           <element name="field">
             <!-- fieldtype is "field" or "list" -->
             <attribute name="fieldtype">
-              <choice>
-                <value>field</value>
-                <value>list</value>
-              </choice>
+              <ref name="dmfieldtype"/>
             </attribute>
             <optional>
               <!--
@@ -481,27 +532,12 @@
                 are just as is. 
               -->
               <attribute name="format">
-                <value>csv</value>
+                <value>xsv</value>
               </attribute>
             </optional>
             <!-- datatype of field content -->
             <attribute name="datatype">
-              <choice>
-                <value>literal</value>
-                <value>name</value>
-                <value>key</value>
-                <value>entrykey</value>
-                <value>date</value>
-                <value>verbatim</value>
-                <value>integer</value>
-                <value>range</value>
-                <value>csv</value>
-                <value>code</value>
-                <value>uri</value>
-                <value>datepart</value>
-                <value>keyword</value>
-                <value>option</value>
-              </choice>
+              <ref name="dmdatatype"/>
             </attribute>
             <optional>
               <!-- Are we allowed to output a null field value to the .bbl for this field? -->
@@ -512,6 +548,12 @@
             <optional>
               <!-- Should this field be skipped and not output to the .bbl? -->
               <attribute name="skip_output">
+                <value>true</value>
+              </attribute>
+            </optional>
+            <optional>
+              <!-- Field can be used as a label? This auto-generates some defaults in biblatex -->
+              <attribute name="label">
                 <value>true</value>
               </attribute>
             </optional>
@@ -675,6 +717,40 @@
               </choice>
             </element>
           </zeroOrMore>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="translit">
+    <element name="transliteration">
+      <attribute name="entrytype">
+        <choice>
+          <value>*</value>
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </choice>
+      </attribute>
+      <oneOrMore>
+        <element name="translit">
+          <attribute name="target">
+            <choice>
+              <value>*</value>
+              <data type="string">
+                <param name="minLength">1</param>
+              </data>
+            </choice>
+          </attribute>
+          <attribute name="from">
+            <data type="string">
+              <param name="minLength">1</param>
+            </data>
+          </attribute>
+          <attribute name="to">
+            <data type="string">
+              <param name="minLength">1</param>
+            </data>
+          </attribute>
         </element>
       </oneOrMore>
     </element>
@@ -844,6 +920,23 @@
       <oneOrMore>
         <element name="map_step">
           <choice>
+            <attribute name="map_entry_clone">
+              <data type="string">
+                <param name="minLength">1</param>
+              </data>
+            </attribute>
+            <group>
+              <attribute name="map_entry_new">
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
+              </attribute>
+              <attribute name="map_entry_newtype">
+                <data type="string">
+                  <param name="minLength">1</param>
+                </data>
+              </attribute>
+            </group>
             <attribute name="map_entry_null">
               <value>1</value>
             </attribute>
@@ -900,20 +993,13 @@
               </optional>
               <optional>
                 <attribute name="map_replace">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
+                  <data type="string"/>
                 </attribute>
               </optional>
             </group>
             <group>
               <optional>
-                <attribute name="map_entry_new">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </attribute>
-                <attribute name="map_entry_newtype">
+                <attribute name="map_field_source">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>
@@ -926,11 +1012,13 @@
                   </data>
                 </attribute>
               </optional>
-              <attribute name="map_field_set">
-                <data type="string">
-                  <param name="minLength">1</param>
-                </data>
-              </attribute>
+              <optional>
+                <attribute name="map_field_set">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
               <optional>
                 <attribute name="map_append">
                   <value>1</value>
@@ -1143,6 +1231,29 @@
         </oneOrMore>
       </element>
     </oneOrMore>
+  </define>
+  <define name="dmfieldtype">
+    <choice>
+      <value>field</value>
+      <value>list</value>
+    </choice>
+  </define>
+  <define name="dmdatatype">
+    <choice>
+      <value>literal</value>
+      <value>name</value>
+      <value>key</value>
+      <value>entrykey</value>
+      <value>date</value>
+      <value>verbatim</value>
+      <value>integer</value>
+      <value>range</value>
+      <value>code</value>
+      <value>uri</value>
+      <value>datepart</value>
+      <value>keyword</value>
+      <value>option</value>
+    </choice>
   </define>
 </grammar>
 <!-- Copyright 2009-2016 François Charette and Philip Kime, all rights reserved. -->

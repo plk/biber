@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 7;
 use Test::Differences;
 unified_diff;
 
@@ -11,12 +11,19 @@ use Biber::Utils;
 use Biber::Output::bibtex;
 use Log::Log4perl;
 use Unicode::Normalize;
-chdir("t/tdata");
+use XML::LibXML;
+
 no warnings 'utf8';
 use utf8;
 
+chdir("t/tdata");
+my $conf = 'tool-test.conf';
+
+# Set up schema
+my $CFxmlschema = XML::LibXML::RelaxNG->new(location => '../../data/schemata/config.rng');
+
 # Set up Biber object
-my $biber = Biber->new(configfile => 'tool-test.conf');
+my $biber = Biber->new(configfile => $conf);
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -98,3 +105,12 @@ eq_or_diff($out->get_output_entry('xd1',), $t2, 'tool mode 3');
 eq_or_diff($out->get_output_entry('b1',), $t3, 'tool mode 4');
 is_deeply([$main->get_keys], ['macmillan:pub', 'macmillan:loc', 'mv1', 'b1', 'macmillan', NFD('i3Š'), 'xd1'], 'tool mode sorting');
 eq_or_diff($out->get_output_comments, $tc1, 'tool mode 5');
+
+my $CFxmlparser = XML::LibXML->new();
+ # basic parse and XInclude processing
+my $CFxp = $CFxmlparser->parse_file($conf);
+# XPath context
+my $CFxpc = XML::LibXML::XPathContext->new($CFxp);
+# Validate against schema. Dies if it fails.
+$CFxmlschema->validate($CFxp);
+is($@, '', "Validation of $conf");

@@ -380,6 +380,8 @@ sub _config_file_set {
                                                             qr/\Akeypart\z/,
                                                             qr/\Apart\z/,
                                                             qr/\Amember\z/,
+                                                            qr/\Anoinit\z/,
+                                                            qr/\Anolabel\z/,
                                                             qr/\Aalsoset\z/,
                                                             qr/\Aconstraints\z/,
                                                             qr/\Aconstraint\z/,
@@ -468,8 +470,20 @@ sub _config_file_set {
       }
       Biber::Config->setblxoption('sortingnamekey', $snss);
     }
-    elsif (exists($v->{content})) { # simple option
-      Biber::Config->setconfigfileoption($k, $v->{content});
+    elsif (lc($k) eq 'transliteration') {
+      foreach my $tr (@$v) {
+        if ($tr->{entrytype}[0] eq '*') { # already array forced for another option
+          Biber::Config->setblxoption('translit', $tr->{translit});
+        }
+        else {                  # per_entrytype
+          Biber::Config->setblxoption('translit',
+                                      $tr->{translit},
+                                      'ENTRYTYPE',
+                                      $tr->{entrytype}[0]);
+
+
+        }
+      }
     }
     # mildly complex options - nosort/collate_options
     elsif (lc($k) eq 'nosort' or
@@ -535,6 +549,9 @@ sub _config_file_set {
     }
     elsif (lc($k) eq 'datamodel') {# This is a biblatex option
       Biber::Config->setblxoption('datamodel', $v);
+    }
+    elsif (exists($v->{content})) { # simple option
+      Biber::Config->setconfigfileoption($k, $v->{content});
     }
   }
 }

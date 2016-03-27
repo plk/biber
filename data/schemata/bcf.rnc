@@ -92,7 +92,7 @@ start =
         attribute datatype { "boolean" | "integer" | "string" | "xml" },
         xsd:string
       }+
-    }+,
+    }*,
     
     # datafield sets
     element bcf:datafieldset {
@@ -697,6 +697,8 @@ map =
     element bcf:per_type { xsd:string {minLength="1"} }*,
     element bcf:map_step {
       (
+        ( attribute map_entry_clone { xsd:string {minLength="1"} }
+        ) |
         ( attribute map_entry_new { xsd:string {minLength="1"} },
           attribute map_entry_newtype { xsd:string {minLength="1"} }
         ) |
