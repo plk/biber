@@ -29,6 +29,7 @@
 # which doesn't have gzopen64 in it.
 
 PAR_VERBATIM=1 /usr/local/perl/bin/pp \
+  --unicode \
   --compress=6 \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \

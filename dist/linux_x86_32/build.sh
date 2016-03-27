@@ -26,6 +26,7 @@
 # Same with some of the output modules.
 
 PAR_VERBATIM=1 /usr/local/perl/bin/pp \
+  --unicode \
   --compress=6 \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \

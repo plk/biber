@@ -14,6 +14,7 @@ PAR_VERBATIM=1
 export PAR_VERBATIM
 
 /usr/local/bin/pp -vv \
+  --unicode \
   --compress=6 \
   --module=deprecate \
   --module=App::Packer::PAR \

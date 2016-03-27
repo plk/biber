@@ -24,6 +24,7 @@ COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN64
 SET PAR_VERBATIM=1
 
 CALL pp ^
+  --unicode ^
   --compress=6 ^
   --module=deprecate ^
   --module=Biber::Input::file::bibtex ^
