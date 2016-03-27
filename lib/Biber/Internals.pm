@@ -1054,7 +1054,7 @@ sub _sort_integer {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   if (my $field = $be->get_field($dmtype)) {
-    return _translit($field, $bee, _process_sort_attributes($field, $sortelementattributes));
+    return _translit($dmtype, $bee, _process_sort_attributes($field, $sortelementattributes));
   }
   else {
     return '';
@@ -1071,7 +1071,7 @@ sub _sort_editort {
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
     $be->get_field($edtypeclass)) {
     my $string = $be->get_field($edtypeclass);
-    return _translit($string, $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit($edtypeclass, $bee, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1155,7 +1155,7 @@ sub _sort_list {
   my $bee = $be->get_field('entrytype');
   if ($be->get_field($list)) {
     my $string = $self->_liststring($citekey, $list);
-    return _translit($string, $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit($list, $bee, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1174,7 +1174,7 @@ sub _sort_literal {
   my $bee = $be->get_field('entrytype');
   if (my $field = $be->get_field($literal)) {
     my $string = normalise_string_sort($field, $literal);
-    return _translit($field, $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit($literal, $bee, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1198,7 +1198,7 @@ sub _sort_name {
     }
   if ($be->get_field($name)) {
     my $string = $self->_namestring($citekey, $name, $sortlist);
-    return _translit($string, $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit($name, $bee, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1226,7 +1226,7 @@ sub _sort_sortname {
   if ($be->get_field('sortname') and
       grep {Biber::Config->getblxoption("use$_", $be->get_field('entrytype'), $citekey)} @{$dm->get_fields_of_type('list', 'name')}) {
     my $string = $self->_namestring($citekey, 'sortname', $sortlist);
-    return _translit($string, $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit('sortname', $bee, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1424,13 +1424,13 @@ sub _liststring {
 
 # transliterate if requested
 sub _translit {
-  my ($field, $entrytype, $string) = @_;
+  my ($target, $entrytype, $string) = @_;
   if (my $translits = Biber::Config->getblxoption('translit', $entrytype)) {
     foreach my $tr (@$translits) {
       if (lc($tr->{target}) eq '*' or
-          $tr->{target} eq $field or
-          first {$field eq $_} @{$DATAFIELD_SETS{$tr->{target}}}) {
-        return call_transliterator($tr->{from}, $tr->{to}, $string);
+          $tr->{target} eq $target or
+          first {$target eq $_} @{$DATAFIELD_SETS{$tr->{target}}}) {
+        return call_transliterator($target, $tr->{from}, $tr->{to}, $string);
       }
     }
   }

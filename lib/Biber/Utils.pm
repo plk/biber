@@ -1173,7 +1173,7 @@ sub maploopreplace {
 =cut
 
 sub get_transliterator {
-  my ($from, $to) = map {lc} @_;
+  my ($target, $from, $to) = map {lc} @_;
   my @valid_from = ('iast');
   my @valid_to   = ('devanagari');
   unless (first {$from eq $_} @valid_from and
@@ -1183,6 +1183,7 @@ sub get_transliterator {
   require Lingua::Translit;
   # List pairs explicitly as we don't expect there to be to many of these ever
   if ($from eq 'iast' and $to eq 'devanagari') {
+    $logger->debug("Using 'iast -> devanagari' transliteration for sorting '$target'");
     return new Lingua::Translit('IAST Devanagari');
   }
   return undef;
@@ -1196,8 +1197,8 @@ sub get_transliterator {
 =cut
 
 sub call_transliterator {
-  my ($from, $to, $text) = @_;
-  if (my $tr = get_transliterator($from, $to)) {
+  my ($target, $from, $to, $text) = @_;
+  if (my $tr = get_transliterator($target, $from, $to)) {
     # using Lingua::Translit
     return $tr->translit($text);
   }
