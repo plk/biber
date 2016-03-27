@@ -3,12 +3,13 @@
 # This version of the build script can be run on the server hosting the VMs instead of a remote
 # client
 
-# build_master.sh <dir> <release> <branch> <justbuild>
+# build_master.sh <dir> <release> <branch> <justbuild> <deletescancache>
 
 # <dir> is where the binaries are
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
 # <justbuild> is a boolean which says to just build and stop without uploading
+# <deletescancache> is a boolean which says to delete the scancache
 
 me=$(whoami)
 if [ "$me" = "root" ]; then
@@ -40,6 +41,7 @@ DIR=${1:-"/tmp/b"}
 RELEASE=${2:-"development"}
 BRANCH=${3:-"dev"}
 JUSTBUILD=${4:-"0"}
+DSCANCACHE=${5:-"0"}
 
 echo "** Checking out branch '$BRANCH' on farm servers **"
 echo "** If this is not correct, Ctrl-C now **"
@@ -50,6 +52,12 @@ if [ ! -e $DIR ]; then
   mkdir $DIR
 fi
 
+# Stop here if JUSTBUILD is set
+if [ "$DSCANCACHE" = "1" ]; then
+  echo "Deleting scan caches before builds";
+  $SCANCACHE="rm -f scancache"
+fi
+
 # Create the binaries from the build farm if they don't exist
 
 # Build farm OSX 64-bit intel
@@ -58,7 +66,7 @@ fi
 if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   vmon osx10.6
   sleep 10
-  ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-osx10.6:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh philkime@bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
   vmoff osx10.6
@@ -77,7 +85,7 @@ fi
 if [ ! -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
   vmon osx10.5
   sleep 10
-  ssh philkime@bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_i386;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  ssh philkime@bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_i386;$SCANCACHE;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-osx10.5:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
   ssh philkime@bbf-osx10.5 "\\rm -f biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386"
   vmoff osx10.5
@@ -97,7 +105,7 @@ fi
 if [ ! -e $DIR/biber-MSWIN32.zip ]; then
   vmon wxp32
   sleep 20
-  ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;./build.bat;cd ~/biblatex-biber;./Build realclean"
+  ssh philkime@bbf-wxp32 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin32;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp philkime@bbf-wxp32:biblatex-biber/dist/MSWin32/biber-MSWIN32.exe $DIR/
   ssh philkime@bbf-wxp32 "\\rm -f biblatex-biber/dist/MSWin32/biber-MSWIN32.exe"
   vmoff wxp32
@@ -115,7 +123,7 @@ fi
 if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   vmon w1064
   sleep 20
-  ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin64;./build.bat;cd ~/biblatex-biber;./Build realclean"
+  ssh phili@bbf-w1064 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;./Build install;cd dist/MSWin64;$SCANCACHE;./build.bat;cd ~/biblatex-biber;./Build realclean"
   scp phili@bbf-w1064:biblatex-biber/dist/MSWin64/biber-MSWIN64.exe $DIR/
   ssh phili@bbf-w1064 "\\rm -f biblatex-biber/dist/MSWin64/biber-MSWIN64.exe"
   vmoff w1064
@@ -131,7 +139,7 @@ fi
 if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
   vmon jj32
   sleep 20
-  ssh philkime@bbf-jj32 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  ssh philkime@bbf-jj32 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;$SCANCACHE;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-jj32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
   ssh philkime@bbf-jj32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
   vmoff jj32
@@ -148,7 +156,7 @@ fi
 if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   vmon jj64
   sleep 20
-  ssh philkime@bbf-jj64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_64;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  ssh philkime@bbf-jj64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_64;$SCANCACHE;./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-jj64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
   ssh philkime@bbf-jj64 "\\rm -f biblatex-biber/dist/linux_x86_64/biber-linux_x86_64"
   vmoff jj64
