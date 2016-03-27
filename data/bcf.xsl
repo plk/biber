@@ -30,6 +30,29 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="transliteration-spec">
+    <xsl:param name="spec"/>
+    <table>
+      <thead>
+        <tr>
+          <td colspan="3"><b>Entrytype: <xsl:value-of select="$spec/@entrytype"/></b></td>
+        </tr>
+        <tr>
+          <td><b>Target</b></td><td><b>From</b></td><td><b>To</b></td>
+        </tr>
+      </thead>
+      <tbody>
+        <xsl:for-each select="$spec/bcf:translit">
+          <tr>
+            <td><xsl:value-of select="./@target"/></td>
+            <td><xsl:value-of select="./@from"/></td>
+            <td><xsl:value-of select="./@to"/></td>
+          </tr>
+        </xsl:for-each>
+      </tbody>
+    </table>
+  </xsl:template>
+  
   <xsl:template name="sorting-spec">
     <xsl:param name="spec"/>
     <table>
@@ -804,6 +827,15 @@
         <xsl:call-template name="sorting-spec">
 	        <xsl:with-param name="spec" select="/bcf:controlfile/bcf:sorting"/>
 	      </xsl:call-template>
+        <xsl:if test="/bcf:controlfile/bcf:transliteration">
+          <h4>Sorting Transliteration</h4>
+          <xsl:for-each select="/bcf:controlfile/bcf:transliteration">
+            <xsl:call-template name="transliteration-spec">
+	            <xsl:with-param name="spec" select="."/>
+	          </xsl:call-template>
+            <br/>
+          </xsl:for-each>
+        </xsl:if>
         <xsl:if test="/bcf:controlfile/bcf:datamodel">
           <hr/>
           <h3>Data Model</h3>
