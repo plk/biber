@@ -25,7 +25,6 @@ SET PAR_VERBATIM=1
 
 CALL pp ^
   --unicode ^
-  --compress=6 ^
   --module=deprecate ^
   --module=Biber::Input::file::bibtex ^
   --module=Biber::Input::file::biblatexml ^

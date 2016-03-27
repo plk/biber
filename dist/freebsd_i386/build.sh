@@ -15,7 +15,6 @@ export PAR_VERBATIM
 
 /usr/local/bin/pp -vv \
   --unicode \
-  --compress=6 \
   --module=deprecate \
   --module=App::Packer::PAR \
   --module=Biber::Input::file::bibtex \

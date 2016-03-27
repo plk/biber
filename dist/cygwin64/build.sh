@@ -16,7 +16,6 @@ cp /usr/local/bin/biber /tmp/biber-cygwin
 
 PAR_VERBATIM=1 pp \
    --unicode \
-   --compress=6 \
    --module=deprecate \
    --module=Biber::Input::file::bibtex \
    --module=Biber::Input::file::biblatexml \

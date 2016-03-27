@@ -21,7 +21,6 @@ cp /opt/local/lib/libz.1.2.8.dylib /tmp/libz.1.dylib
 
 PAR_VERBATIM=1 pp \
   --unicode \
-  --compress=6 \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
