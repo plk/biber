@@ -84,7 +84,7 @@ sub new {
 
   $MASTER = $self;
 
-  # Validate if asked to
+  # Validate if asked to.
   # This has to be here, after config file is read and options
   # are parsed. It seems strange to validate the config file after it's been
   # read but there is no choice and it's useful anyway as this will catch some semantic
