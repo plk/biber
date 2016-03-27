@@ -38,8 +38,6 @@ lib/Biber/SortLists.pm
 lib/Biber/UCollate.pm
 lib/Biber/Utils.pm
 MANIFEST
-META.json
-META.yml
 README
 t/basic-misc.t
 t/bcfvalidation.t
