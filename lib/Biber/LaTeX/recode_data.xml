@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?oxygen RNGSchema="../../../data/schemata/texmap.rnc" type="compact"?>
 <?xml-stylesheet type="text/xsl" href="../../../data/texmap.xsl"?>
-<!-- $Id$ -->
 <texmap>
   <maps type="letters" set="base,full">
     <map><from>AA</from>                               <to hex="C5">Å</to></map>

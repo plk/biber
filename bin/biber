@@ -1,6 +1,5 @@
 #!/usr/bin/perl
 
-# $Id$
 use v5.16;
 use strict;
 use warnings;

@@ -1,4 +1,3 @@
-# $Id$
 package Biber::Section;
 use v5.16;
 use strict;

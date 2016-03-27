@@ -1,4 +1,3 @@
-# $Id$
 package Biber::Config;
 use v5.16;
 

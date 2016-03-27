@@ -1,4 +1,3 @@
-# $Id$
 package Biber::Output::dot;
 use v5.16;
 use strict;

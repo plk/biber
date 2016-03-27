@@ -1,4 +1,3 @@
-# $Id$
 package Biber::Entry;
 use v5.16;
 use strict;

@@ -1,4 +1,3 @@
-# $Id$
 package Biber::Output::bblxml;
 use v5.16;
 use strict;

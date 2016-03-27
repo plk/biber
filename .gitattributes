@@ -1,6 +1,0 @@
-bin/biber ident
-*.pm ident
-*.rnc ident
-*.rng ident
-*.xml ident
-

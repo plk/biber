@@ -1,4 +1,3 @@
-# $Id$
 package Biber::Constants;
 use v5.16;
 use strict;

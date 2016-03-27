@@ -1,4 +1,3 @@
-# $Id$
 package Biber::Internals;
 use v5.16;
 use strict;

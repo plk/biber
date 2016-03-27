@@ -1,4 +1,3 @@
-# $Id$
 package Biber;
 use v5.16;
 use strict;

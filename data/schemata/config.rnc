@@ -1,4 +1,3 @@
-# $Id$
 start =
   element config {
     # Option scope
