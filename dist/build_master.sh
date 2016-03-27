@@ -35,7 +35,7 @@ fi
 # Stop here if JUSTBUILD is set
 if [ "$DSCANCACHE" = "1" ]; then
   echo "Deleting scan caches before builds";
-  $SCANCACHE="rm -f scancache"
+  SCANCACHE="rm -f scancache"
 fi
 
 # Create the binaries from the build farm if they don't exist
