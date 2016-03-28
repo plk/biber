@@ -18,6 +18,7 @@ use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
 use Biber::Constants;
 use Biber::LaTeX::Recode;
 use Biber::Entry::Name;
+use Data::Uniqid qw ( suniqid );
 use Regexp::Common qw( balanced );
 use List::AllUtils qw( first );
 use Log::Log4perl qw(:no_extra_logdie_message);
@@ -1156,11 +1157,11 @@ sub parse_range_alt {
 =cut
 
 sub maploopreplace {
-  my ($string, $maploop, $mapuniq) = @_;
-  return $string if not defined($string);
-  return $string unless ($maploop or $mapuniq);
-  $string =~ s/\$MAPLOOP/$maploop/ge if $maploop;
-  $string =~ s/\$MAPUNIQ/$mapuniq/ge if $mapuniq;
+  my ($string, $maploop) = @_;
+  return undef unless defined($string);
+  return $string unless $maploop;
+  $string =~ s/\$MAPLOOP/$maploop/g;
+  $string =~ s/\$MAPUNIQ/suniqid/eg;
   return $string;
 }
 

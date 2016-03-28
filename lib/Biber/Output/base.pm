@@ -213,7 +213,7 @@ sub get_output_entries {
   my $list = shift;
   return [ map {$self->{output_data}{ENTRIES}{$section}{index}{$_} ||
                 $self->{output_data}{MISSING_ENTRIES}{$section}{index}{$_} ||
-                $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$_}} @{$list->get_keys}];
+                $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$_}} $list->get_keys];
 }
 
 
