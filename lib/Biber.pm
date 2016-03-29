@@ -960,6 +960,69 @@ sub process_setup {
   # up user config dm settings
   Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
 
+  # Calculate and store some convenient lists of DM fields. This is to save the expense
+  # of constructing these in dense loops like entry processing/output.
+  # Mostly only used for .bbl output since that's the most commonly used one and so
+  # we care about performance there. Other output formats are not often used and so a few
+  # seconds difference is irrelevant.
+  my $dm = Biber::Config->get_dm;
+  Biber::Config->set_dm_helpers(
+                     {namelists => [sort grep
+                                    {not $dm->field_is_skipout($_)}
+                                    @{$dm->get_fields_of_type('list', 'name')}],
+                      lists     => [sort grep
+                                    {
+                                      not $dm->field_is_datatype('name', $_) and
+                                        not $dm->field_is_skipout($_) and
+                                          not $dm->field_is_datatype('verbatim', $_) and
+                                            not $dm->field_is_datatype('uri', $_)
+                                    }
+                                    @{$dm->get_fields_of_fieldtype('list')}],
+                      fields    => [sort grep
+                                    {
+                                      not $dm->field_is_skipout($_) and
+                                        not $dm->get_fieldformat($_) eq 'xsv'
+                                    }
+                                    @{$dm->get_fields_of_type('field',
+                                                              ['entrykey',
+                                                               'key',
+                                                               'integer',
+                                                               'datepart',
+                                                               'literal',
+                                                               'code'])}],
+                      xsv       => [sort grep
+                                    {
+                                      not $dm->field_is_skipout($_) and
+                                        not $dm->get_datatype($_) eq 'keyword'
+                                    }
+                                    @{$dm->get_fields_of_fieldformat('xsv')}],
+                      ranges    => [sort grep
+                                    {
+                                      not $dm->field_is_skipout($_)
+                                    }
+                                    @{$dm->get_fields_of_datatype('range')}],
+                      uris      => [sort grep
+                                    {
+                                      not $dm->field_is_skipout($_);
+                                    }
+                                    @{$dm->get_fields_of_type('field', 'uri')}],
+                      urils     => [sort grep
+                                    {
+                                      not $dm->field_is_skipout($_);
+                                    }
+                                    @{$dm->get_fields_of_type('list', 'uri')}],
+                      vfields   => [sort grep
+                                    {
+                                      not $dm->field_is_skipout($_);
+                                    }
+                                    @{$dm->get_fields_of_type('field', ['verbatim', 'uri'])}],
+                      vlists    => [sort grep
+                                    {
+                                      not $dm->field_is_skipout($_);
+                                    }
+                                    @{$dm->get_fields_of_type('list', ['verbatim', 'uri'])}]
+                     });
+
   # Now resolve any datafield sets from the .bcf
   _resolve_datafieldsets();
 

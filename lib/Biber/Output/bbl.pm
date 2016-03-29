@@ -206,14 +206,12 @@ sub set_output_undefkey {
 =cut
 
 sub set_output_entry {
-  my $self = shift;
-  my $be = shift; # Biber::Entry object
+  my ($self, $be, $section, $dm) = @_;
   my $bee = $be->get_field('entrytype');
-  my $section = shift; # Section object the entry occurs in
-  my $dm = shift; # Data Model object
-  my $acc = '';
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
+  my $acc = '';
+  my $dmh = Biber::Config->get_dm_helpers;
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
@@ -230,8 +228,8 @@ sub set_output_entry {
   }
 
   # Output name fields
-  foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
-    next if $dm->field_is_skipout($namefield);
+  foreach my $namefield (@{$dmh->{namelists}}) {
+    # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $nf = $be->get_field($namefield) ) {
       my $plo = '';
 
@@ -277,11 +275,8 @@ sub set_output_entry {
   }
 
   # Output list fields
-  foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
-    next if $dm->field_is_datatype('name', $listfield); # name is a special list
-    next if $dm->field_is_datatype('verbatim', $listfield); # special lists
-    next if $dm->field_is_datatype('uri', $listfield); # special lists
-    next if $dm->field_is_skipout($listfield);
+  foreach my $listfield (@{$dmh->{lists}}) {
+    # Performance - as little as possible here - loop over DM fields for every entry
     if (my $lf = $be->get_field($listfield)) {
       if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$listfield}\n";
@@ -393,18 +388,12 @@ sub set_output_entry {
     $acc .= "      \\field{clonesourcekey}{$ck}\n";
   }
 
-  foreach my $field (sort @{$dm->get_fields_of_type('field',
-                                                    ['entrykey',
-                                                     'key',
-                                                     'integer',
-                                                     'datepart',
-                                                     'literal',
-                                                     'code'])}) {
-    next if $dm->field_is_skipout($field);
-    next if $dm->get_fieldformat($field) eq 'xsv';
-    if ( ($dm->field_is_nullok($field) and
-          $be->field_exists($field)) or
-         $be->get_field($field) ) {
+  foreach my $field (@{$dmh->{fields}}) {
+    # Performance - as little as possible here - loop over DM fields for every entry
+    if ( $be->get_field($field) or
+         ($dm->field_is_nullok($field) and
+          $be->field_exists($field)) ) {
+
       # we skip outputting the crossref or xref when the parent is not cited
       # (biblatex manual, section 2.2.3)
       # sets are a special case so always output crossref/xref for them since their
@@ -419,16 +408,14 @@ sub set_output_entry {
     }
   }
 
-  foreach my $field (sort @{$dm->get_fields_of_fieldformat('xsv')}) {
-    next if $dm->field_is_skipout($field);
-    next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
+  foreach my $field (@{$dmh->{xsv}}) {
     if (my $f = $be->get_field($field)) {
       $acc .= _printfield($be, $field, join(',', @$f) );
     }
   }
 
-  foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
-    next if $dm->field_is_skipout($rfield);
+  foreach my $rfield (@{$dmh->{ranges}}) {
+    # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $rf = $be->get_field($rfield) ) {
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
@@ -448,16 +435,15 @@ sub set_output_entry {
   }
 
   # verbatim fields
-  foreach my $vfield (@{$dm->get_fields_of_type('field', ['verbatim', 'uri'])}) {
-    next if $dm->field_is_skipout($vfield);
+  foreach my $vfield (@{$dmh->{vfields}}) {
+    # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $vf = $be->get_field($vfield) ) {
       $acc .= "      \\verb{$vfield}\n";
       $acc .= "      \\verb $vf\n      \\endverb\n";
     }
   }
   # verbatim lists
-  foreach my $vlist (@{$dm->get_fields_of_type('list', ['verbatim', 'uri'])}) {
-    next if $dm->field_is_skipout($vlist);
+  foreach my $vlist (@{$dmh->{vlists}}) {
     if ( my $vlf = $be->get_field($vlist) ) {
       if ( lc($vlf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$vlist}\n";

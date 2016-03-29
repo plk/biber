@@ -704,6 +704,31 @@ sub get_dm {
   return $CONFIG->{dm};
 }
 
+=head2 set_dm_helpers
+
+    Sets some datamodel helper lists
+
+=cut
+
+sub set_dm_helpers {
+  shift;
+  my $obj = shift;
+  $CONFIG->{dmhelpers} = $obj;
+  return;
+}
+
+=head2 get_dm_helpers
+
+    Sets the datamodel helper lists
+
+=cut
+
+sub get_dm_helpers {
+  shift;
+  return $CONFIG->{dmhelpers};
+}
+
+
 =head2 set_ctrlfile_path
 
     Stores the path to the control file

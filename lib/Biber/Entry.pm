@@ -135,8 +135,7 @@ sub relclone {
 =cut
 
 sub clone {
-  my $self = shift;
-  my $newkey = shift;
+  my ($self, $newkey) = @_;
   my $new = new Biber::Entry;
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = $v;
@@ -181,8 +180,7 @@ sub notnull {
 =cut
 
 sub set_labelname_info {
-  my $self = shift;
-  my $data = shift;
+  my ($self, $data) = @_;
   $self->{labelnameinfo} = $data;
   return;
 }
@@ -209,8 +207,7 @@ sub get_labelname_info {
 =cut
 
 sub set_labelnamefh_info {
-  my $self = shift;
-  my $data = shift;
+  my ($self, $data) = @_;
   $self->{labelnamefhinfo} = $data;
   return;
 }
@@ -237,8 +234,7 @@ sub get_labelnamefh_info {
 =cut
 
 sub set_labeltitle_info {
-  my $self = shift;
-  my $data = shift;
+  my ($self, $data) = @_;
   $self->{labeltitleinfo} = $data;
   return;
 }
@@ -266,8 +262,7 @@ sub get_labeltitle_info {
 =cut
 
 sub set_labeldate_info {
-  my $self = shift;
-  my $data = shift;
+  my ($self, $data) = @_;
   $self->{labeldateinfo} = $data;
   return;
 }
@@ -294,8 +289,7 @@ sub get_labeldate_info {
 =cut
 
 sub set_field {
-  my $self = shift;
-  my ($key, $val) = @_;
+  my ($self, $key, $val) = @_;
   # All derived fields can be null
   $self->{derivedfields}{$key} = $val;
   return;
@@ -310,8 +304,7 @@ sub set_field {
 =cut
 
 sub get_field {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   return undef unless $key;
   return $self->{datafields}{$key} //
          $self->{derivedfields}{$key} //
@@ -326,8 +319,7 @@ sub get_field {
 =cut
 
 sub set_datafield {
-  my $self = shift;
-  my ($key, $val) = @_;
+  my ($self, $key, $val) = @_;
   $self->{datafields}{$key} = $val;
   return;
 }
@@ -341,8 +333,7 @@ sub set_datafield {
 =cut
 
 sub set_rawfield {
-  my $self = shift;
-  my ($key, $val) = @_;
+  my ($self, $key, $val) = @_;
   $self->{rawfields}{$key} = $val;
   return;
 }
@@ -354,8 +345,7 @@ sub set_rawfield {
 =cut
 
 sub get_rawfield {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   return $self->{rawfields}{$key};
 }
 
@@ -367,8 +357,7 @@ sub get_rawfield {
 =cut
 
 sub get_datafield {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   return $self->{datafields}{$key};
 }
 
@@ -380,8 +369,7 @@ sub get_datafield {
 =cut
 
 sub del_field {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   delete $self->{datafields}{$key};
   delete $self->{derivedfields}{$key};
   delete $self->{rawfields}{$key};
@@ -395,8 +383,7 @@ sub del_field {
 =cut
 
 sub del_datafield {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   delete $self->{datafields}{$key};
   return;
 }
@@ -409,8 +396,7 @@ sub del_datafield {
 =cut
 
 sub field_exists {
-  my $self = shift;
-  my $key = shift;
+  my ($self, $key) = @_;
   return (exists($self->{datafields}{$key}) ||
           exists($self->{derivedfields}{$key}) ||
           exists($self->{rawfields}{$key})) ? 1 : 0;
@@ -509,8 +495,7 @@ sub has_keyword {
 =cut
 
 sub add_warning {
-  my $self = shift;
-  my $warning = shift;
+  my ($self, $warning) = @_;
   push @{$self->{derivedfields}{warnings}}, $warning;
   return;
 }
@@ -529,8 +514,7 @@ sub add_warning {
 =cut
 
 sub set_inherit_from {
-  my $self = shift;
-  my $parent = shift;
+  my ($self, $parent) = @_;
 
   # Data source fields
   foreach my $field ($parent->datafields) {
