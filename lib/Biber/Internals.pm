@@ -979,12 +979,7 @@ sub _generatesortinfo {
     $ss =~ s/\A$pre$sorting_sep+//;
     my $init = Unicode::GCString->new(normalise_string($ss))->substr(0, 1)->as_string;
 
-    # Collator for determining primary weight hash for sortinit
-    # Using the global sort locale because we only want the sortinit of the first sorting field
-    # and if this was locally different to the global sorting, something would be very strange.
-    my $Collator = Unicode::Collate::Locale->new(locale => Biber::Config->getoption('sortlocale'), level => 1);
-    my $inithash = md5_hex($Collator->viewSortKey($init));
-    $sortlist->set_sortinitdata_for_key($citekey, $init, $inithash);
+    $sortlist->set_sortinitdata_for_key($citekey, $init);
   }
   return;
 }

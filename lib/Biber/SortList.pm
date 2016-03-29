@@ -5,6 +5,7 @@ use warnings;
 
 use Biber::Utils;
 use Biber::Constants;
+use Digest::MD5 qw( md5_hex );
 use List::Util qw( first );
 
 =encoding utf-8
@@ -97,6 +98,29 @@ sub set_sortnamekeyschemename {
 sub get_sortnamekeyschemename {
   my $self = shift;
   return $self->{sortnamekeyschemename};
+}
+
+=head2 set_sortinit_collator
+
+    Sets the sortinit collator for this list
+
+=cut
+
+sub set_sortinit_collator {
+  my $self = shift;
+  $self->{sortinitcollator} = shift;;
+  return;
+}
+
+=head2 get_sortinit_collator
+
+    Gets the sortinit collator for this list
+
+=cut
+
+sub get_sortinit_collator {
+  my $self = shift;
+  return $self->{sortinitcollator};
 }
 
 
@@ -413,10 +437,9 @@ sub get_sortdata {
 =cut
 
 sub set_sortinitdata_for_key {
-  my ($self, $key, $init, $inithash) = @_;
+  my ($self, $key, $init) = @_;
   return unless defined($key);
-  $self->{sortinitdata}{$key} = {init     => $init,
-                                 inithash => $inithash};
+  $self->{sortinitdata}{$key} = {init => $init};
   return;
 }
 
@@ -432,7 +455,6 @@ sub set_sortinitdata {
   return;
 }
 
-
 =head2 get_sortinit_for_key
 
     Gets the sortinit in a list for a key
@@ -443,18 +465,6 @@ sub get_sortinit_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
   return $self->{sortinitdata}{$key}{init};
-}
-
-=head2 get_sortinithash_for_key
-
-    Gets the sortinit hash in a list for a key
-
-=cut
-
-sub get_sortinithash_for_key {
-  my ($self, $key) = @_;
-  return unless defined($key);
-  return $self->{sortinitdata}{$key}{inithash};
 }
 
 =head2 set_sortscheme
@@ -552,9 +562,11 @@ sub instantiate_entry {
   }
 
   # sortinithash
-  my $sinithash = $self->get_sortinithash_for_key($key);
-  if (defined($sinithash)) {
+  if (defined($sinit)) {
     my $str;
+    my $collator = $self->get_sortinit_collator;
+    my $sinithash = md5_hex($collator->viewSortKey($sinit));
+
     if ($format eq 'bbl') {
       $str = "\\field{sortinithash}{$sinithash}";
     }

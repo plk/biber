@@ -837,6 +837,13 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
     }
 
+    # Collator for determining primary weight hash for sortinit
+    # Here as it varies only with the locale and that doesn't vary between entries in a list
+    # Potentially, the locale could be different for the first field in the sort spec in which
+    # case that might give wrong results but this is highly unlikely as it is only used to
+    # determine sortinithash in SortList.pm and that only changes \bibinitsep in biblatex.
+    $sortlist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $sortlist->get_sortscheme->{locale}, level => 1));
+
     $logger->debug("Adding sortlist of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn', labelprefix '$lpn' and name '$lname' for section $lsection");
     $sortlists->add_list($sortlist);
   }
