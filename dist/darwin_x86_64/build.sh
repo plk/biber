@@ -4,18 +4,11 @@
 # called "biber" as on case-insensitive file systems, this clashes with
 # the Biber lib directory and generates a (harmless) warning on first run
 
-# Also, pp resolves symlinks and copies the symlink targets of linked libs
-# which then don't have the right names and so things that link to them
-# through the link name break. So, we copy them to the link names first and
-# and package those. This is because OSX is not ELF object format, unlike Linux
-# and so PAR::Packer doesn't understand how to follow the links.
-
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them.
 # Same with some of the output modules.
 
 cp /opt/local/libexec/perl5.22/sitebin/biber /tmp/biber-darwin
-cp /opt/local/lib/libz.1.2.8.dylib /tmp/libz.1.dylib
 
 PAR_VERBATIM=1 pp \
   --unicode \
@@ -37,7 +30,7 @@ PAR_VERBATIM=1 pp \
   --module=Encode:: \
   --module=File::Find::Rule \
   --module=IO::Socket::SSL \
-  --link=/tmp/libz.1.dylib \
+  --link=/opt/local/lib/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
   --link=/opt/local/libexec/perl5.22/sitebin/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
@@ -54,4 +47,4 @@ PAR_VERBATIM=1 pp \
   /tmp/biber-darwin
 
 \rm -f /tmp/biber-darwin
-\rm -f /tmp/libz.1.dylib
+
