@@ -123,7 +123,6 @@ sub get_sortinit_collator {
   return $self->{sortinitcollator};
 }
 
-
 =head2 get_labelprefix
 
     Gets the labelprefix setting of a sort list
@@ -564,8 +563,9 @@ sub instantiate_entry {
   # sortinithash
   if (defined($sinit)) {
     my $str;
-    my $collator = $self->get_sortinit_collator;
-    my $sinithash = md5_hex($collator->viewSortKey($sinit));
+
+    # All Unicode::Collate operations are expensive so use a cache when possible
+    my $sinithash = md5_hex($self->{sortinitcollator}->viewSortKey($sinit));
 
     if ($format eq 'bbl') {
       $str = "\\field{sortinithash}{$sinithash}";
