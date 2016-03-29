@@ -53,6 +53,8 @@ t/extratitle.t
 t/extratitleyear.t
 t/extrayear.t
 t/full.t
+t/full-bblxml.t
+t/full-dot.t
 THANKS
 t/labelalpha.t
 t/labelname.t
@@ -113,6 +115,9 @@ t/tdata/extrayear.bib
 t/tdata/extrayear.bib
 t/tdata/full-bblxml.bblxml
 t/tdata/full-bblxml.bcf
+t/tdata/full-dot.bcf
+t/tdata/full-dot.bib
+t/tdata/full-dot.dot
 t/tdata/full.bbl
 t/tdata/full.bcf
 t/tdata/full.bib

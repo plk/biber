@@ -122,8 +122,8 @@ sub output {
   $in = 2; # indentation
   $i = ' '; # starting indentation
 
-  # Loop over sections.
-  foreach my $section (@{$biber->sections->get_sections}) {
+  # Loop over sections, sort so we can run tests
+  foreach my $section (sort {$a->number <=> $b->number} @{$biber->sections->get_sections}) {
     my $secnum = $section->number;
     if ($gopts->{section}) {
       $graph .= $i x $in . "subgraph \"cluster_section${secnum}\" {\n";
@@ -137,7 +137,7 @@ sub output {
     }
 
     # First create nodes/groups for entries
-    foreach my $be ($section->bibentries->entries) {
+    foreach my $be (sort {$a->get_field('citekey') cmp $b->get_field('citekey')} $section->bibentries->entries) {
       my $citekey = $be->get_field('citekey');
       $state->{$secnum}{"${secnum}/${citekey}"} = 1;
       my $et = uc($be->get_field('entrytype'));
@@ -169,7 +169,7 @@ sub output {
 
       # Citekey aliases
       my $aliases = '';
-      foreach my $alias ($section->get_citekey_aliases) {
+      foreach my $alias (sort $section->get_citekey_aliases) {
         my $realkey = $section->get_citekey_alias($alias);
         if ($realkey eq $citekey) {
           $aliases .= "\\n$alias (alias)";
@@ -184,7 +184,7 @@ sub output {
         $graph .= $i x $in . "tooltip=\"$citekey ($et)\";\n";
         $graph .= $i x $in . "fillcolor=\"$c\";\n";
         $graph .= "\n";
-        foreach my $field ($be->datafields) {
+        foreach my $field (sort $be->datafields) {
           $graph .= $i x $in . "\"section${secnum}/${citekey}/${field}\" [ label=\"" . uc($field) . "\" ]\n";
         }
         $in -= 2;
@@ -249,8 +249,9 @@ sub _graph_related {
   if (my $gr = Biber::Config->get_graph('related')) {
 
     # related links
-    while (my ($f_entry, $m) = each %{$gr->{clonetotarget}}) {
-      foreach my $t_entry (keys %$m) {
+    foreach my $f_entry (sort keys %{$gr->{clonetotarget}}) {
+      my $m = $gr->{clonetotarget}{$f_entry};
+      foreach my $t_entry (sort keys %$m) {
         next unless $state->{$secnum}{"${secnum}/${f_entry}"};
         next unless $state->{$secnum}{"${secnum}/${t_entry}"};
 
@@ -266,8 +267,9 @@ sub _graph_related {
     }
 
     # clone links
-    while (my ($f_entry, $m) = each %{$gr->{reltoclone}}) {
-      foreach my $t_entry (keys %$m) {
+    foreach my $f_entry (sort keys %{$gr->{reltoclone}}) {
+      my $m = $gr->{reltoclone}{$f_entry};
+      foreach my $t_entry (sort keys %$m) {
         next unless $state->{$secnum}{"${secnum}/${f_entry}"};
         next unless $state->{$secnum}{"${secnum}/${t_entry}"};
 
@@ -288,7 +290,8 @@ sub _graph_related {
 sub _graph_xref {
   my $secnum = shift;
   if (my $gr = Biber::Config->get_graph('xref')) {
-    while (my ($f_entry, $t_entry) = each %$gr) {
+    foreach my $f_entry (sort keys %$gr) {
+      my $t_entry = $gr->{$f_entry};
       next unless $state->{$secnum}{"${secnum}/${f_entry}"};
       next unless $state->{$secnum}{"${secnum}/${t_entry}"};
 
@@ -319,9 +322,12 @@ sub _graph_inheritance {
   if (my $gr = Biber::Config->get_graph($type)) {
     # Show fields
     if ($gopts->{field}) {
-      while (my ($f_entry, $v) = each %$gr) {
-        while (my ($f_field, $w) = each %$v) {
-          while (my ($t_entry, $t_field) = each %$w) {
+      foreach my $f_entry (sort keys %$gr) {
+        my $v = $gr->{$f_entry};
+        foreach my $f_field (sort keys %$v) {
+          my $w = $v->{$f_field};
+          foreach my $t_entry (sort keys %$w) {
+            my $t_field = $w->{$t_entry};
             next unless $state->{$secnum}{"${secnum}/${f_entry}"};
             next unless $state->{$secnum}{"${secnum}/${t_entry}"};
             $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_field}\" -> \"section${secnum}/${t_entry}/${t_field}\" [ penwidth=\"2.0\", color=\"${edgecolor}\", tooltip=\"${t_entry}/" . uc($t_field) . " inherited via " . uc($type) . " from ${f_entry}/" . uc($f_field) . "\" ]\n";
@@ -331,9 +337,10 @@ sub _graph_inheritance {
     }
     # Just show the entries, no fields
     else {
-      while (my ($f_entry, $v) = each %$gr) {
-        while (my (undef, $w) = each %$v) {
-          while (my ($t_entry, undef) = each %$w) {
+      foreach my $f_entry (sort keys %$gr) {
+        my $v = $gr->{$f_entry};
+        foreach my $w (sort values %$v) {
+          foreach my $t_entry (sort keys %$w) {
             next unless $state->{$secnum}{"${secnum}/${f_entry}"};
             next unless $state->{$secnum}{"${secnum}/${t_entry}"};
             next if $state->{edges}{"section${secnum}/${f_entry}"}{"section${secnum}/${t_entry}"};
