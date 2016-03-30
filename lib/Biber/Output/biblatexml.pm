@@ -203,11 +203,11 @@ sub set_output_entry {
                                                      'integer',
                                                      'verbatim',
                                                      'uri'])}) {
-    next if $dm->get_fieldformat($field) eq 'xsv';
     if ( ($dm->field_is_nullok($field) and
           $be->field_exists($field)) or
          $be->get_field($field) ) {
 
+      next if $dm->get_fieldformat($field) eq 'xsv';
       if (my $f = $be->get_field($field)) {
 
         my @attrs;
@@ -218,10 +218,10 @@ sub set_output_entry {
 
   # xsv fields
   foreach my $xsvf (@{$dm->get_fields_of_type('field', 'xsv')}) {
-    next if $xsvf eq 'ids'; # IDS is special
-    next if $xsvf eq 'xdata'; # XDATA is special
-
     if (my $f = $be->get_field($xsvf)) {
+      next if $xsvf eq 'ids'; # IDS is special
+      next if $xsvf eq 'xdata'; # XDATA is special
+
       $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',@$f)));
     }
   }

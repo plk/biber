@@ -151,8 +151,8 @@ sub set_output_entry {
 
   # Output name fields
   foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
-    next if $dm->field_is_skipout($namefield);
     if ( my $nf = $be->get_field($namefield) ) {
+      next if $dm->field_is_skipout($namefield);
       my %plo;
 
       # Did we have "and others" in the data?
@@ -199,10 +199,11 @@ sub set_output_entry {
 
   # Output list fields
   foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
-    next if $dm->field_is_datatype('name', $listfield); # name is a special list
-    next if $dm->field_is_datatype('uri', $listfield); # special lists
-    next if $dm->field_is_skipout($listfield);
     if (my $lf = $be->get_field($listfield)) {
+      next if $dm->field_is_datatype('name', $listfield); # name is a special list
+      next if $dm->field_is_datatype('uri', $listfield); # special lists
+      next if $dm->field_is_skipout($listfield);
+
       my %plo;
 
       if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
@@ -325,11 +326,11 @@ sub set_output_entry {
                                                      'literal',
                                                      'code',
                                                      'verbatim'])}) {
-    next if $dm->field_is_skipout($field);
-    next if $dm->get_fieldformat($field) eq 'xsv';
     if ( ($dm->field_is_nullok($field) and
           $be->field_exists($field)) or
          $be->get_field($field) ) {
+      next if $dm->field_is_skipout($field);
+      next if $dm->get_fieldformat($field) eq 'xsv';
       # we skip outputting the crossref or xref when the parent is not cited
       # (biblatex manual, section 2.2.3)
       # sets are a special case so always output crossref/xref for them since their
@@ -345,9 +346,9 @@ sub set_output_entry {
   }
 
   foreach my $field (sort @{$dm->get_fields_of_fieldformat('xsv')}) {
-    next if $dm->field_is_skipout($field);
-    next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
     if (my $f = $be->get_field($field)) {
+      next if $dm->field_is_skipout($field);
+      next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
       $xml->startTag([$xml_prefix, 'field'], name => $field, format => 'xsv');
       foreach my $f (@$f) {
         $xml->dataElement([$xml_prefix, 'item'], NFC($f));
@@ -357,8 +358,8 @@ sub set_output_entry {
   }
 
   foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
-    next if $dm->field_is_skipout($rfield);
     if ( my $rf = $be->get_field($rfield) ) {
+      next if $dm->field_is_skipout($rfield);
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
       my @pr;
@@ -377,16 +378,16 @@ sub set_output_entry {
 
   # uri fields
   foreach my $uri (@{$dm->get_fields_of_type('field', 'uri')}) {
-    next if $dm->field_is_skipout($uri);
     if ( my $f = $be->get_field($uri) ) {
+      next if $dm->field_is_skipout($uri);
       $xml->dataElement([$xml_prefix, 'field'], NFC($f), name => $uri);
     }
   }
 
   # uri lists
   foreach my $uril (@{$dm->get_fields_of_type('list', 'uri')}) {
-    next if $dm->field_is_skipout($uril);
     if ( my $urilf = $be->get_field($uril) ) {
+      next if $dm->field_is_skipout($uril);
       my %plo;
       if ( lc($urilf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $plo{$uril} = 'true';
