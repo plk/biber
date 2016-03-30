@@ -862,6 +862,8 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
                                           name => "$globalss/global/");
       $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $sortlists->add_list($sortlist);
+      # See comment above
+      $sortlist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $sortlist->get_sortscheme->{locale}, level => 1));
     }
   }
 
@@ -943,14 +945,16 @@ sub process_setup {
   foreach my $section (@{$self->sections->get_sections}) {
     my $secnum = $section->number;
     unless ($self->sortlists->has_lists_of_type_for_section($secnum, 'entry')) {
-      my $dlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'),
+      my $sortlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'),
                                        sortnamekeyschemename => 'global',
                                        labelprefix => '',
                                        name => Biber::Config->getblxoption('sortscheme') . '/global/');
-      $dlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-      $dlist->set_type('entry');
-      $dlist->set_section($secnum);
-      $self->sortlists->add_list($dlist);
+      $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $sortlist->set_type('entry');
+      $sortlist->set_section($secnum);
+      $self->sortlists->add_list($sortlist);
+      # See comment for same call in .bcf instantiation of sortlists
+      $sortlist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $sortlist->get_sortscheme->{locale}, level => 1));
     }
   }
 
