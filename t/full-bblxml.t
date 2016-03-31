@@ -1,4 +1,5 @@
 # -*- cperl -*-
+use v5.16;
 use strict;
 use warnings;
 use utf8;
@@ -24,11 +25,13 @@ my $perl = which('perl');
 my $tmpfile = File::Temp->new();
 #my $tmpfile = File::Temp->new(UNLINK => 0);
 my $bblxml = $tmpfile->filename;
-#print "File: $bblxml\n";
 my $stdout;
+my $stderr;
 
-run3  [ $perl, 'bin/biber', '--noconf', '--nolog', '--output-format=bblxml', "--output-file=$bblxml", '--validate-bblxml', 't/tdata/full-bblxml.bcf' ], \undef, \$stdout, \undef;
+run3  [ $perl, 'bin/biber', '--noconf', '--nolog', '--output-format=bblxml', "--output-file=$bblxml", '--validate-bblxml', 't/tdata/full-bblxml.bcf' ], \undef, \$stdout, \$stderr;
 # say $stdout;
+# say $stderr;
+
 is($? >> 8, 0, 'Full test has zero exit status');
 
 # Now replace the model ref for comparison with the static test file

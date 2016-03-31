@@ -203,7 +203,7 @@ Biber::Config->setoption('output_encoding', 'UTF-8');
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 $output->output;
 eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1), 'latin9 .bib -> UTF-8 .bbl');
@@ -218,7 +218,7 @@ Biber::Config->setoption('output_encoding', 'UTF-8');
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 $output->output;
 eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1), 'UTF-8 .bib -> UTF-8 .bbl');
@@ -233,7 +233,7 @@ Biber::Config->setoption('output_encoding', 'latin1');
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 $output->output;
 eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode5), 'UTF-8 .bib -> latin1 .bbl');
@@ -249,7 +249,7 @@ Biber::Config->setoption('output_safechars', 1);
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 $output->output;
 eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode6), 'UTF-8 .bib -> UTF-8 .bbl, safechars');
@@ -266,7 +266,7 @@ Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 $output->output;
 eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode7), 'UTF-8 .bib -> UTF-8 .bbl, output_safecharsset=full');
@@ -282,7 +282,7 @@ Biber::Config->setoption('output_encoding', 'latin9');
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 $output->output;
 eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1), 'UTF-8 .bib -> latin9 .bbl');
@@ -297,7 +297,7 @@ Biber::Config->setoption('output_encoding', 'cp1252');
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 $output->output;
 eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode2), 'latin1 .bib -> CP1252 .bbl');
@@ -312,7 +312,7 @@ Biber::Config->setoption('output_encoding', 'latin3');
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 $output->output;
 eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode3), 'latin2 .bib -> latin3 .bbl');
@@ -327,7 +327,7 @@ Biber::Config->setoption('output_encoding', 'latin1');
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 # This test will generate encoding errors so redirect STDERR until it's done
 open OLDERR, '>&', \*STDERR;
@@ -347,7 +347,7 @@ Biber::Config->setoption('output_encoding', 'applemacce');
 $biber->prepare;
 # Get reference to output object
 $output = $biber->get_output_obj;
-$output->set_output_target_file(\$outvar);
+$output->set_output_target($output->set_output_target_file(\$outvar));
 # Write the output to the target
 $output->output;
 eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode2), 'latin1 .bib -> applemacce (custom alias) .bbl');

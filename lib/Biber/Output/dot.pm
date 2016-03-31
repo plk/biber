@@ -69,7 +69,7 @@ sub set_output_target_file {
   my $self = shift;
   my $dotfile = shift;
   $self->{output_target_file} = $dotfile;
-  $self->set_output_target(IO::File->new($dotfile, '>:encoding(UTF-8)'));
+  return IO::File->new($dotfile, '>:encoding(UTF-8)');
 }
 
 =head2 set_output_entry

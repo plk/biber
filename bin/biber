@@ -329,18 +329,17 @@ if (my $outdir = Biber::Config->getoption('output_directory')) {
 }
 
 # Set the output class. Should be a subclass of Biber::Output::base
-if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
-  require Biber::Output::dot;
-  $biber->set_output_obj(Biber::Output::dot->new());
-}
-else {
-  my $package = 'Biber::Output::' . Biber::Config->getoption('output_format');
-  eval "require $package" or biber_error("Error loading data source package '$package': $@");
-  $biber->set_output_obj(eval "${package}->new()");
-}
+my $package = 'Biber::Output::' . Biber::Config->getoption('output_format');
+eval "require $package" or biber_error("Error loading data source package '$package': $@");
+$biber->set_output_obj(eval "${package}->new()");
 
 # Get reference to output object
 my $biberoutput = $biber->get_output_obj;
+
+# Set the output filename and get ref to output object This has to come
+# before .bcf parsing so that we can detect .bcf parsing errors
+# early and clean up
+my $outfileobj = $biberoutput->set_output_target_file($outfile);
 
 # Fake some necessary .bcf parts if in tool mode
 if (Biber::Config->getoption('tool')) {
@@ -354,9 +353,9 @@ else {
 # Postprocess biber options now that they are all read from the various places
 Biber::Config->postprocess_biber_opts;
 
-# Set the output target file name
+# Set the output target obj
 # Must come after ctrlfile/option parsing otherwise output encoding is not set
-$biberoutput->set_output_target_file($outfile);
+$biberoutput->set_output_target($outfileobj);
 
 # Check to see if the .bcf set debug=1. If so, increase logging level
 # We couldn't set this on logger init as the .bcf hadn't been read then

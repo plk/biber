@@ -25,7 +25,6 @@ my $perl = which('perl');
 my $tmpfile = File::Temp->new();
 #my $tmpfile = File::Temp->new(UNLINK => 0);
 my $dot = $tmpfile->filename;
-# print "File: $dot\n";
 my $stdout;
 my $stderr;
 

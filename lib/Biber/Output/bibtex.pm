@@ -38,6 +38,7 @@ sub set_output_target_file {
   my $self = shift;
   my $outfile = shift;
   $self->{output_target_file} = $outfile;
+  return undef;
 }
 
 =head2 set_output_comment

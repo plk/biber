@@ -48,7 +48,7 @@ sub new {
 
     Set the output target file of a Biber::Output::base object
     A convenience around set_output_target so we can keep track of the
-    filename
+    filename. Returns an IO::File object for the target
 
 =cut
 
@@ -57,11 +57,10 @@ sub set_output_target_file {
   my $file = shift;
   $self->{output_target_file} = $file;
   my $enc_out;
-  if (Biber::Config->getoption('output_encoding')) {
-    $enc_out = ':encoding(' . Biber::Config->getoption('output_encoding') . ')';
+  if (my $enc = Biber::Config->getoption('output_encoding')) {
+    $enc_out = ":encoding($enc)";
   }
-  my $TARGET = IO::File->new($file, ">$enc_out");
-  $self->set_output_target($TARGET);
+  return IO::File->new($file, ">$enc_out");
 }
 
 =head2 get_output_target_file

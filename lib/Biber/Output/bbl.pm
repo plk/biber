@@ -94,26 +94,6 @@ sub create_output_misc {
   return;
 }
 
-=head2 set_output_target_file
-
-    Set the output target file of a Biber::Output::bbl object
-    A convenience around set_output_target so we can keep track of the
-    filename
-
-=cut
-
-sub set_output_target_file {
-  my $self = shift;
-  my $bblfile = shift;
-  $self->{output_target_file} = $bblfile;
-  my $enc_out;
-  if (my $enc = Biber::Config->getoption('output_encoding')) {
-    $enc_out = ":encoding($enc)";
-  }
-  my $BBLFILE = IO::File->new($bblfile, ">$enc_out");
-  $self->set_output_target($BBLFILE);
-}
-
 =head2 _printfield
 
   Add the .bbl for a text field to the output accumulator.

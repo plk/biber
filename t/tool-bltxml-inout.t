@@ -49,7 +49,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('dsn', 'biblatexml.bltxml');
 
 # Set the output target
-$out->set_output_target_file(\$outvar);
+$out->set_output_target($out->set_output_target_file(\$outvar));
 
 # THERE IS A CONFIG FILE BEING READ!
 
