@@ -618,9 +618,6 @@ sub parse_ctrlfile {
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nosort', $nosort) if $nosort;
 
-  # TRANSLITERATION
-
-
   # SORTING NAME KEY
 
   # Use the order attributes to make sure things are in right order and create a data structure
@@ -3326,6 +3323,42 @@ sub sort_list {
   return;
 }
 
+=head2 preprocess_options
+
+   Preprocessing for options. Used primarily to perform process-intensive
+   operations which can be done once instead of inside dense loops later.
+
+=cut
+
+sub preprocess_options {
+
+  # nosort - compile regexps
+  if (my $nosort = Biber::Config->getoption('nosort')) {
+    foreach my $nsopt (@$nosort) {
+      my $re = $nsopt->{value};
+      $nsopt->{value} = qr/$re/;
+    }
+  }
+
+  # nolabel - compile regexps
+  if (my $nolabel = Biber::Config->getoption('nolabel')) {
+    foreach my $nsopt (@$nolabel) {
+      my $re = $nsopt->{value};
+      $nsopt->{value} = qr/$re/;
+    }
+  }
+
+  # noinit - compile regexps
+  if (my $noinit = Biber::Config->getoption('noinit')) {
+    foreach my $nsopt (@$noinit) {
+      my $re = $nsopt->{value};
+      $nsopt->{value} = qr/$re/;
+    }
+  }
+
+  return;
+}
+
 =head2 prepare
 
     Do the main work.
@@ -3351,6 +3384,7 @@ sub prepare {
     $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
+    $self->preprocess_options;           # Preprocess any options
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
     $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
@@ -3395,6 +3429,7 @@ sub prepare_tool {
   $section->reset_caches; # Reset the the section caches (sorting, label etc.)
   Biber::Config->_init;   # (re)initialise Config object
   $self->set_current_section($secnum); # Set the section number we are working on
+  $self->preprocess_options;           # Preprocess any options
   $self->fetch_data;      # Fetch cited key and dependent data from sources
 
   $self->process_visible_names;# Generate visible names information for all entries

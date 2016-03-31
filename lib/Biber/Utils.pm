@@ -226,7 +226,6 @@ sub strip_noinit {
   return $string unless my $noinit = Biber::Config->getoption('noinit');
   foreach my $opt (@$noinit) {
     my $re = $opt->{value};
-    $re = qr/$re/;
     $string =~ s/$re//gxms;
   }
   return $string;
@@ -240,36 +239,33 @@ sub strip_noinit {
 =cut
 
 sub strip_nosort {
-  my $string = shift;
-  my $fieldname = shift;
+  no autovivification;
+  my ($string, $fieldname) = @_;
   return '' unless $string; # Sanitise missing data
   return $string unless my $nosort = Biber::Config->getoption('nosort');
-  # Strip user-defined REs from string
+
   my $restrings;
+
   foreach my $nsopt (@$nosort) {
     # Specific fieldnames override sets
     if (fc($nsopt->{name}) eq fc($fieldname)) {
       push @$restrings, $nsopt->{value};
     }
-  }
-
-  unless ($restrings) {
-    foreach my $nsopt (@$nosort) {
-      next unless defined($DATAFIELD_SETS{lc($nsopt->{name})});
-      if (first {lc($_) eq lc($fieldname)} @{$DATAFIELD_SETS{lc($nsopt->{name})}}) {
+    elsif (my $set = $DATAFIELD_SETS{lc($nsopt->{name})} ) {
+      if (first {fc($_) eq fc($fieldname)} @$set) {
         push @$restrings, $nsopt->{value};
       }
     }
   }
+
   # If no nosort to do, just return string
   return $string unless $restrings;
+
   foreach my $re (@$restrings) {
-    $re = qr/$re/;
     $string =~ s/$re//gxms;
   }
   return $string;
 }
-
 
 =head2 normalise_string_label
 
@@ -281,12 +277,11 @@ sub normalise_string_label {
   my $str = shift;
   return '' unless $str; # Sanitise missing data
   my $nolabels = Biber::Config->getoption('nolabel');
-  $str =~ s/\\[A-Za-z]+//g;        # remove latex macros (assuming they have only ASCII letters)
+  $str =~ s/\\[A-Za-z]+//g;    # remove latex macros (assuming they have only ASCII letters)
   # Replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   foreach my $nolabel (@$nolabels) {
-    my $nlopt = $nolabel->{value};
-    my $re = qr/$nlopt/;
+    my $re = $nolabel->{value};
     $str =~ s/$re//gxms;           # remove nolabel items
   }
   $str =~ s/^\s+//;                # Remove leading spaces
@@ -339,7 +334,7 @@ sub normalise_string {
 
 sub normalise_string_common {
   my $str = shift;
-  $str =~ s/\\[A-Za-z]+//g;        # remove latex macros (assuming they have only ASCII letters)
+  $str =~ s/\\[A-Za-z]+//g;       # remove latex macros (assuming they have only ASCII letters)
   $str =~ s/[\p{P}\p{S}\p{C}]+//g; # remove punctuation, symbols, separator and control
   $str =~ s/^\s+//;                # Remove leading spaces
   $str =~ s/\s+$//;                # Remove trailing spaces
