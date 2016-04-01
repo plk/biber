@@ -5,6 +5,7 @@ start =
     # This is usually the same as the biblatex version string but not necessarily.
     # Sometimes the BCF format version doesn't change between biblatex releases
     attribute version { xsd:string {minLength="1"}},
+    attribute bltxversion { xsd:string {minLength="1"}},
 
     # "Global" Biber options. It's not clear what a non-global biber option
     # would be but just in case, we have the option ...

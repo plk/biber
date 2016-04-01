@@ -409,12 +409,11 @@ sub parse_ctrlfile {
                                           'KeyAttr' => []);
 #  use Data::Dump;dd($bcfxml);exit 0;
   my $controlversion = $bcfxml->{version};
+  my $bltxversion = $bcfxml->{bltxversion};
   Biber::Config->setblxoption('controlversion', $controlversion);
   unless ($controlversion eq $BCF_VERSION) {
-    biber_warn("Warning: Found biblatex control file version $controlversion, expected version $BCF_VERSION");
+    biber_error("Error: Found biblatex control file version $controlversion, expected version $BCF_VERSION.\nThis means that your biber ($Biber::Config::VERSION) and biblatex ($bltxversion) versions are incompatible.\nSee compat matrix in biblatex or biber PDF documentation.");
   }
-
-  # Look at control file and populate our main data structure with its information
 
   # Option scope
   foreach my $bcfscopeopts (@{$bcfxml->{optionscope}}) {

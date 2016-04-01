@@ -296,7 +296,7 @@
         </style>
       </head>
       <body>
-        <h2><tt>BibLaTeX</tt> Control File (format version: <xsl:value-of select="/bcf:controlfile/@version"/>)</h2>
+        <h2><tt>BibLaTeX</tt> Control File (BCF format version: <xsl:value-of select="/bcf:controlfile/@version"/> biblatex version: <xsl:value-of select="/bcf:controlfile/@bltxversion"/>)</h2>
         <!-- OPTIONS -->
         <hr/>
         <xsl:for-each select="/bcf:controlfile/bcf:options">

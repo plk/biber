@@ -11,6 +11,11 @@
           <param name="minLength">1</param>
         </data>
       </attribute>
+      <attribute name="bltxversion">
+        <data type="string">
+          <param name="minLength">1</param>
+        </data>
+      </attribute>
       <!--
         "Global" Biber options. It's not clear what a non-global biber option
         would be but just in case, we have the option ...
