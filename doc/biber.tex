@@ -347,9 +347,8 @@ processing in \biber. The most difficult tasks which \biber\
 performs are the processing of \biblatex's \opt{uniquename} and
 \opt{uniquelist} options\footnote{A rather tricky unbounded loop but with
   a guaranteed eventual stable exit state.}, the sorting of
-lists\footnote{This is a complex, arbitrary multi-field Schwartzian
-  Transform which has to deal with potentially different case and order
-  settings for every field.} and the initial data parse and remap into an
+lists\footnote{This is multi-field ST sort with an embedded cache for
+ performance.} and the initial data parse and remap into an
 internal data model. \biber\ is getting on for around 20,000 lines of
 mostly OO Perl and relies on certain splendid Perl modules
 such as \verb+Unicode::Collate+, \verb+Text::BibTeX+ and
@@ -425,7 +424,7 @@ way performance-wise. \biber\ is written in Perl and does a
 \emph{great} deal more than \BibTeX\ which is written in C. One of
 \biber's test cases is a 2150 entry, 15,000 line \verb+.bib+ file
 which references a 630 entry macros file with a resulting 160 or so page (A4)
-formatted bibliography. This takes \biber\ under a minute to process on
+formatted bibliography. This takes \biber\ just under 30 seconds to process on
 a reasonable computer. This is perfectly acceptable, especially for a
 batch program.
 
