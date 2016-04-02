@@ -3329,6 +3329,9 @@ sub sort_list {
     my $cache;
 
     # ST multi-field sort with OM in sorter
+    # Normally ST needs no OM because the extractor is a vanilla ->[] but
+    # here it isn't - it's an expensive call to U::C around ->[] which often
+    # returns the same thing and so benefits from an OM cache.
     @keys = map  { eval $sort_extractor }
             sort { eval $sorter }
             map  { eval $data_extractor } @keys;
