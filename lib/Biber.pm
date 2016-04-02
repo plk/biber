@@ -3279,11 +3279,41 @@ sub sort_list {
       my $sd = $sortset->[0]{sort_direction};
       if (defined($sd) and $sd eq 'descending') {
         # descending field
-        $sorter .= "(\$cache->{$num_sorts}{\$b->[$num_sorts]} ||= $cobj$fc->getSortKey(\$b->[$num_sorts])) cmp (\$cache->{$num_sorts}{\$a->[$num_sorts]} ||= $cobj$fc->getSortKey(\$a->[$num_sorts]))";
+        $sorter .= '($cache->{' .
+          $num_sorts .
+            '}{$b->[' .
+              $num_sorts .
+                ']} ||= ' .
+                  $cobj . $fc . '->getSortKey($b->[' .
+                    $num_sorts .
+                      '])) cmp ($cache->{' .
+                        $num_sorts .
+                          '}{$a->[' .
+                            $num_sorts .
+                              ']} ||= '.
+                                $cobj . $fc .
+                                  '->getSortKey($a->[' .
+                                    $num_sorts .
+                                   ']))';
       }
       else {
         # ascending field
-        $sorter .= "(\$cache->{$num_sorts}{\$a->[$num_sorts]} ||= $cobj$fc->getSortKey(\$a->[$num_sorts])) cmp (\$cache->{$num_sorts}{\$b->[$num_sorts]} ||= $cobj$fc->getSortKey(\$b->[$num_sorts]))";
+        $sorter .= '($cache->{' .
+          $num_sorts .
+            '}{$a->[' .
+              $num_sorts .
+                ']} ||= ' .
+                  $cobj . $fc . '->getSortKey($a->[' .
+                    $num_sorts .
+                      '])) cmp ($cache->{' .
+                        $num_sorts .
+                          '}{$b->[' .
+                            $num_sorts .
+                              ']} ||= '.
+                                $cobj . $fc .
+                                  '->getSortKey($b->[' .
+                                    $num_sorts .
+                                   ']))';
       }
       $num_sorts++;
     }
