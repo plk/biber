@@ -7,6 +7,9 @@ use warnings;
 
 # Modify the ranges as per the Unicode standard you are using. Currently Unicode 7.0
 
+# NOT USED ANY MORE - because allkeys.txt in U::C is precompiled ans is faster than using
+# an uncompiled latinkeys.txt a tenth of the size anyway.
+
 my $latin_ranges = [
                     ['0000', '007F'], # ASCII
                     ['0080', '00FF'], # Latin-1 Supplement

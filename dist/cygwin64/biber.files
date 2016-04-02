@@ -5,7 +5,6 @@
 ../../data/schemata/bcf.rng;lib/Biber/bcf.rng
 ../../lib/Biber/LaTeX/recode_data.xml;lib/Biber/LaTeX/recode_data.xml
 ../../data/bcf.xsl;lib/Biber/bcf.xsl
-../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
 /usr/lib/perl5/vendor_perl/5.22/x86_64-cygwin-threads/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
 /usr/lib/perl5/vendor_perl/5.22/x86_64-cygwin-threads/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
 /usr/lib/perl5/vendor_perl/5.22/x86_64-cygwin-threads/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt

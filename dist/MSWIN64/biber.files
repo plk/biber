@@ -5,7 +5,6 @@
 ../../data/schemata/bcf.rng;lib/Biber/bcf.rng
 ../../lib/Biber/LaTeX/recode_data.xml;lib/Biber/LaTeX/recode_data.xml
 ../../data/bcf.xsl;lib/Biber/bcf.xsl
-../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
 C:/strawberry/perl/lib/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
 C:/strawberry/perl/lib/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
 C:/strawberry/perl/lib/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt

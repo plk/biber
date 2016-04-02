@@ -30,22 +30,20 @@ sub new {
   my ($thislocale, %collopts) = @_;
 
   # Add tailoring locale for Unicode::Collate
+  # Ignore table as this is not valid for U::C::Locale objects
   if ($thislocale and not $collopts{locale}) {
     $collopts{locale} = $thislocale;
+    if ($collopts{table}) {
+      my $t = delete $collopts{table};
+      $logger->info("Ignoring collation table '$t' as locale is set ($thislocale)");
+    }
   }
 
   # Remove locale from options as we need this to make the object
   my $coll_locale = delete $collopts{locale};
 
-  # Remove table from options as we need this to make the object
-  my $coll_table;
-  if (my $t = $collopts{table}) {
-    delete $collopts{table};
-    $coll_table = "table => '$t'";
-  }
-
   # Now create the collator object
-  my $Collator = $class->SUPER::new(locale => $coll_locale, $coll_table)
+  my $Collator = $class->SUPER::new(locale => $coll_locale)
     or $logger->logcarp("Problem creating Unicode::Collate::Locale object: $@");
 
   # Fix the old "alternate" alias otherwise we have problems as U::C->change() always

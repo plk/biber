@@ -3,7 +3,6 @@ Build.PL
 Changes
 data/bcf.xsl
 data/biber-tool.conf
-data/latinkeys.txt
 data/schemata/bcf.rnc
 data/schemata/bcf.rng
 data/schemata/config.rnc
