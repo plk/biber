@@ -3285,6 +3285,10 @@ sub sort_list {
         $Y = '$a';
       }
 
+      # The overhead of detecting and switching to <=> for numeric fields is
+      # probably not worth it. It's also possible that some fields in the
+      # datamodel can sometimes be integer, sometimes not. The padding options in
+      # sorting schemes make this work anyway.
       $sorter .= '($cache->{' .
         $num_sorts .
           '}{' . $X . '->[' .
