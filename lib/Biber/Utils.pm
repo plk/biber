@@ -284,8 +284,7 @@ sub normalise_string_label {
     my $re = $nolabel->{value};
     $str =~ s/$re//gxms;           # remove nolabel items
   }
-  $str =~ s/^\s+//;                # Remove leading spaces
-  $str =~ s/\s+$//;                # Remove trailing spaces
+  $str =~ s/(?:^\s+|\s+$)//g;      # Remove leading and trailing spaces
   $str =~ s/\s+/ /g;               # collapse spaces
   return $str;
 }
@@ -334,10 +333,9 @@ sub normalise_string {
 
 sub normalise_string_common {
   my $str = shift;
-  $str =~ s/\\[A-Za-z]+//g;       # remove latex macros (assuming they have only ASCII letters)
+  $str =~ s/\\[A-Za-z]+//g;        # remove latex macros (assuming they have only ASCII letters)
   $str =~ s/[\p{P}\p{S}\p{C}]+//g; # remove punctuation, symbols, separator and control
-  $str =~ s/^\s+//;                # Remove leading spaces
-  $str =~ s/\s+$//;                # Remove trailing spaces
+  $str =~ s/^\s+|\s+$//g;          # Remove leading and trailing spaces
   $str =~ s/\s+/ /g;               # collapse spaces
   return $str;
 }

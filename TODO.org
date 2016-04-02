@@ -27,10 +27,11 @@
 * DONE Document example in biblatex manual of compound keypart
 * DONE implement patronymic namepart example
 * DONE Document year/month (datepart fields) are not allowed in bltxml
-* TODO Transliteration interface
-** Waiting for L::T release then make this a dep.
-* TODO Sorting
+* DONE Sorting
 ** OM/GRT enhancememts?
 ** Some integer tests with <=>?
+* TODO Transliteration interface
+** Waiting for L::T release then make this a dep.
+
 
 

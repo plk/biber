@@ -1440,8 +1440,8 @@ sub process_entries_pre {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  $logger->debug("Postprocessing entries in section $secnum (before uniqueness)");
   foreach my $citekey ( $section->get_citekeys ) {
-    $logger->debug("Postprocessing entry '$citekey' from section $secnum (before uniqueness)");
 
     # process set entries
     $self->process_sets($citekey);
@@ -1480,8 +1480,8 @@ sub process_entries_post {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  $logger->debug("Postprocessing entries in section $secnum (after uniqueness)");
   foreach my $citekey ( $section->get_citekeys ) {
-    $logger->debug("Postprocessing entry '$citekey' from section $secnum (after uniqueness)");
 
     # generate labelalpha information
     $self->process_labelalpha($citekey);
@@ -2036,8 +2036,8 @@ sub process_visible_names {
   my $section = $self->sections->get_section($secnum);
   my $dm = Biber::Config->get_dm;
 
+  $logger->debug("Postprocessing visible names for section $secnum");
   foreach my $citekey ( $section->get_citekeys ) {
-    $logger->debug("Postprocessing visible names for key '$citekey'");
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
 
@@ -2256,7 +2256,6 @@ sub process_lists {
       my $flist = [];
 KEYLOOP: foreach my $k ($list->get_keys) {
 
-        $logger->debug("Checking key '$k' in list '$lname' against list filters");
         my $be = $section->bibentry($k);
         foreach my $f (@$filters) {
           # Filter disjunction is ok if any of the checks are ok, hence the grep()
@@ -3317,19 +3316,32 @@ sub sort_list {
     # cache for OM in ST sorter
     my $cache;
 
-    # ST multi-field sort with OM in sorter
+    # Multi-field ST sort with OM in sorter
     # Normally ST needs no OM because the extractor is a vanilla ->[] but
     # here it isn't - it's an expensive call to U::C around ->[] which often
     # returns the same thing and so benefits from an OM cache.
+    # The U::C key generation is basically doing what a pack() or similar does
+    # in GRT and so there is not so much benefit in over-complicating this for
+    # potentially a little bit more performance.
     @keys = map  { eval $sort_extractor }
             sort { eval $sorter }
             map  { eval $data_extractor } @keys;
   }
 
   $logger->debug("Keys after sort:\n");
-  foreach my $k (@keys) {
-    $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
+  if($logger->is_debug()) {# performance tune for large @keys
+    foreach my $k (@keys) {
+      $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
+    }
   }
+
+  # There is no point in trying to share this cache with additional sortlists
+  # because they would have to have the same sortscheme and sortnamekeyscheme
+  # and this is already covered more efficiently in process_lists() because
+  # there it is ensured that, in such cases, no sorting is invoked at all.
+  $logger->trace("Sorting OM cache:\n");
+  $logger->trace(Data::Dump::pp($cache));
+
   $list->set_keys([ @keys ]);
 
   return;

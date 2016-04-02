@@ -1172,13 +1172,11 @@ sub preprocess_file {
 
 sub parsename {
   my ($namestr, $fieldname, $opts, $testing) = @_;
-  $logger->debug("Parsing namestring '$namestr'");
   my $usepre = $opts->{useprefix};
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
-  $namestr =~ s/\A\s*//xms; # leading whitespace
-  $namestr =~ s/\s*\z//xms; # trailing whitespace
-  $namestr =~ s/\s+/ /g;    # Collapse internal whitespace
-  $namestr =~ s/\\\s/ /g;   # Remove escaped spaces like in "Christina A. L.\ Thiele"
+  $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
+  # Collapse internal whitespace and escaped spaces like in "Christina A. L.\ Thiele"
+  $namestr =~ s/\s+|\\\s/ /g;
   $namestr =~ s/\A\{\{+([^{}]+)\}+\}\z/{$1}/xms; # Allow only one enveloping set of braces
 
   # If requested, try to correct broken initials with no space between them.
@@ -1246,10 +1244,9 @@ sub parsename {
 
   my $namestring = '';
 
-
-  # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
-  # which should only care about family + any prefix (if useprefix=true). See biblatex github
-  # tracker #306.
+  # Don't add suffix to namestring or nameinitstring as these are used for uniquename
+  # disambiguation which should only care about family + any prefix (if useprefix=true).
+  # See biblatex github tracker #306.
 
   # prefix
   my $ps;
@@ -1301,8 +1298,7 @@ sub parsename {
   $nameinitstr .= join('', @$prefix_i) . '_' if ( $usepre and $prefix );
   $nameinitstr .= $family if $family;
   $nameinitstr .= '_' . join('', @$given_i) if $given;
-  $nameinitstr =~ s/\s+/_/g;
-  $nameinitstr =~ s/~/_/g;
+  $nameinitstr =~ s/\s+|~/_/g;
 
   # output is always NFC and so when testing the output of this routine, need NFC
   if ($testing) {
