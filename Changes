@@ -1,6 +1,10 @@
 Revision history for Biber
 
 2.5    (2016-03-)
+       * Removed the "latinkeys.txt" Unicode::Collate table. This is now
+         pointless because the compiled 'allkeys.txt' is faster and complete.
+       * Incompatible biblatex/biber version is now a fatal error.
+       * Significant performance improvements, particularly in sorting subsystem.
        * Addition of new bblXML output format and associated RelaxNG XML
          schema based on active datamodel.
        * Integration with new biblatex 3.4 labelprefix name change and

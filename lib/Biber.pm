@@ -3285,10 +3285,9 @@ sub sort_list {
         $Y = '$a';
       }
 
-      # The overhead of detecting and switching to <=> for numeric fields is
-      # probably not worth it. It's also possible that some fields in the
-      # datamodel can sometimes be integer, sometimes not. The padding options in
-      # sorting schemes make this work anyway.
+      # This cmp is between U::C binary keys, not fields and so there is no point
+      # thinking about switching to <=> for numeric sorting fields as that is completely
+      # invisible at this point.
       $sorter .= '($cache->{' .
         $num_sorts .
           '}{' . $X . '->[' .
