@@ -3277,44 +3277,30 @@ sub sort_list {
       $sorter .= ' || ' if $num_sorts; # don't add separator before first field
 
       my $sd = $sortset->[0]{sort_direction};
+
+      my $X = '$a';
+      my $Y = '$b';
       if (defined($sd) and $sd eq 'descending') {
-        # descending field
-        $sorter .= '($cache->{' .
-          $num_sorts .
-            '}{$b->[' .
-              $num_sorts .
-                ']} ||= ' .
-                  $cobj . $fc . '->getSortKey($b->[' .
-                    $num_sorts .
-                      '])) cmp ($cache->{' .
-                        $num_sorts .
-                          '}{$a->[' .
-                            $num_sorts .
-                              ']} ||= '.
-                                $cobj . $fc .
-                                  '->getSortKey($a->[' .
-                                    $num_sorts .
-                                   ']))';
+        $X = '$b';
+        $Y = '$a';
       }
-      else {
-        # ascending field
-        $sorter .= '($cache->{' .
-          $num_sorts .
-            '}{$a->[' .
-              $num_sorts .
-                ']} ||= ' .
-                  $cobj . $fc . '->getSortKey($a->[' .
-                    $num_sorts .
-                      '])) cmp ($cache->{' .
-                        $num_sorts .
-                          '}{$b->[' .
-                            $num_sorts .
-                              ']} ||= '.
-                                $cobj . $fc .
-                                  '->getSortKey($b->[' .
-                                    $num_sorts .
-                                   ']))';
-      }
+
+      $sorter .= '($cache->{' .
+        $num_sorts .
+          '}{' . $X . '->[' .
+            $num_sorts .
+              ']} ||= ' .
+                $cobj . $fc . '->getSortKey(' . $X . '->[' .
+                  $num_sorts .
+                    '])) cmp ($cache->{' .
+                      $num_sorts .
+                        '}{' . $Y . '->[' .
+                          $num_sorts .
+                            ']} ||= '.
+                              $cobj . $fc .
+                                '->getSortKey(' . $Y . '->[' .
+                                  $num_sorts .
+                                    ']))';
       $num_sorts++;
     }
     $data_extractor .= '$_]';
