@@ -28,5 +28,9 @@
 * DONE implement patronymic namepart example
 * DONE Document year/month (datepart fields) are not allowed in bltxml
 * TODO Transliteration interface
+** Waiting for L::T release then make this a dep.
+* TODO Sorting
+** OM/GRT enhancememts?
+** Some integer tests with <=>?
 
 
