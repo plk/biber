@@ -59,7 +59,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # So, all names are the same and it depends on title
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 is_deeply([$main->get_keys], ['CS3','CS2','CS1'], 'U::C case - 2');
 
