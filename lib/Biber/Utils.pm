@@ -50,7 +50,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
   locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean parse_range
-  parse_range_alt maploopreplace get_transliterator call_transliterator};
+  parse_range_alt maploopreplace get_transliterator call_transliterator normalise_string_bblxml};
 
 =head1 FUNCTIONS
 
@@ -307,6 +307,21 @@ sub normalise_string_sort {
   # Then replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   return normalise_string_common($str);
+}
+
+=head2 normalise_string_bblxml
+
+Some string normalisation for bblxml output
+
+=cut
+
+sub normalise_string_bblxml {
+  my $str = shift;
+  return '' unless $str; # Sanitise missing data
+  $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
+  $str =~ s/\{([^{}]+)\}/$1/g; # remove pointless braces
+  $str =~ s/~/ /g; # replace ties with spaces
+  return $str;
 }
 
 =head2 normalise_string

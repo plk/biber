@@ -444,8 +444,8 @@ sub name_to_bblxml {
   $xml->startTag([$xml_prefix, 'name'], sort keys %pno);
   foreach my $key (sort keys %names) {
     my $value = $names{$key};
-    $xml->startTag([$xml_prefix, 'namepart'], type => $key, initials => NFC($value->[1]));
-    $xml->characters(NFC($value->[0]));
+    $xml->startTag([$xml_prefix, 'namepart'], type => $key, initials => NFC(Biber::Utils::normalise_string_bblxml($value->[1])));
+    $xml->characters(NFC(Biber::Utils::normalise_string_bblxml($value->[0])));
     $xml->endTag();# namepart
   }
   $xml->endTag();# names

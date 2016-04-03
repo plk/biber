@@ -123,11 +123,11 @@ sub set_output_entry {
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
 
-  $xml->startTag([$xml_prefix, 'entry'], key => NFC($key), type => NFC($bee));
+  $xml->startTag([$xml_prefix, 'entry'], key => _bblxml_norm($key), type => _bblxml_norm($bee));
   if (my $opts = $be->get_field('options')) {
     $xml->startTag([$xml_prefix, 'options']);
     foreach my $opt (@{filter_entry_options($opts)}) {
-      $xml->dataElement([$xml_prefix, 'option'], NFC($opt));
+      $xml->dataElement([$xml_prefix, 'option'], _bblxml_norm($opt));
     }
     $xml->endTag();# options
   }
@@ -135,7 +135,7 @@ sub set_output_entry {
   if ($bee eq 'set') {# Set parents get <set> entry ...
     $xml->startTag([$xml_prefix, 'set']);
     foreach my $m (@{$be->get_field('entryset')}) {
-      $xml->dataElement([$xml_prefix, 'member'], NFC($m));
+      $xml->dataElement([$xml_prefix, 'member'], _bblxml_norm($m));
     }
     $xml->endTag();# set
   }
@@ -143,7 +143,7 @@ sub set_output_entry {
     if (my $es = $be->get_field('entryset')) { # ... gets a <inset> if it's a set member
       $xml->startTag([$xml_prefix, 'inset']);
       foreach my $m (@$es) {
-        $xml->dataElement([$xml_prefix, 'member'], NFC($m));
+        $xml->dataElement([$xml_prefix, 'member'], _bblxml_norm($m));
       }
       $xml->endTag();# inset
     }
@@ -215,21 +215,21 @@ sub set_output_entry {
       my $total = $#$lf + 1;
       $xml->startTag([$xml_prefix, 'list'], name => $listfield, count => $total, sort keys %plo);
       foreach my $f (@$lf) {
-        $xml->dataElement([$xml_prefix, 'item'], NFC($f));
+        $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
       $xml->endTag();# list
     }
   }
 
   my $namehash = $be->get_field('namehash');
-  $xml->dataElement([$xml_prefix, 'field'], NFC($namehash), name => 'namehash') if $namehash;
+  $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($namehash), name => 'namehash') if $namehash;
   my $fullhash = $be->get_field('fullhash');
-  $xml->dataElement([$xml_prefix, 'field'], NFC($fullhash), name => 'fullhash') if $fullhash;
+  $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($fullhash), name => 'fullhash') if $fullhash;
 
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
     # Might not have been set due to skiplab/dataonly
     if (my $label = $be->get_field('labelalpha')) {
-      $xml->dataElement([$xml_prefix, 'field'], NFC($label), name => 'labelalpha');
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($label), name => 'labelalpha');
     }
   }
 
@@ -247,16 +247,16 @@ sub set_output_entry {
       }
     }
     if (my $ly = $be->get_field('labelyear')) {
-      $xml->dataElement([$xml_prefix, 'field'], NFC($ly), name => 'labelyear');
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($ly), name => 'labelyear');
     }
     if (my $lm = $be->get_field('labelmonth')) {
-      $xml->dataElement([$xml_prefix, 'field'], NFC($lm), name => 'labelmonth');
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lm), name => 'labelmonth');
     }
     if (my $ld = $be->get_field('labelday')) {
-      $xml->dataElement([$xml_prefix, 'field'], NFC($ld), name => 'labelday');
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($ld), name => 'labelday');
     }
     if ($be->field_exists('datelabelsource')) {
-      $xml->dataElement([$xml_prefix, 'field'], NFC($be->get_field('datelabelsource')), name => 'datelabelsource');
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($be->get_field('datelabelsource')), name => 'datelabelsource');
     }
   }
 
@@ -306,16 +306,16 @@ sub set_output_entry {
 
   # The source field for labelname
   if (my $lni = $be->get_labelname_info) {
-    $xml->dataElement([$xml_prefix, 'field'], NFC($lni), name => 'labelnamesource');
+    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lni), name => 'labelnamesource');
   }
 
   # The source field for labeltitle
   if (my $lti = $be->get_labeltitle_info) {
-    $xml->dataElement([$xml_prefix, 'field'], NFC($lti), name => 'labeltitlesource');
+    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lti), name => 'labeltitlesource');
   }
 
   if (my $ck = $be->get_field('clonesourcekey')) {
-    $xml->dataElement([$xml_prefix, 'field'], NFC($ck), name => 'clonesourcekey');
+    $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($ck), name => 'clonesourcekey');
   }
 
   foreach my $field (sort @{$dm->get_fields_of_type('field',
@@ -341,7 +341,7 @@ sub set_output_entry {
         next if ($field eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
-      $xml->dataElement([$xml_prefix, 'field'], NFC($be->get_field($field)), name => $field);
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($be->get_field($field)), name => $field);
     }
   }
 
@@ -351,7 +351,7 @@ sub set_output_entry {
       next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
       $xml->startTag([$xml_prefix, 'field'], name => $field, format => 'xsv');
       foreach my $f (@$f) {
-        $xml->dataElement([$xml_prefix, 'item'], NFC($f));
+        $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
       $xml->endTag();# field
     }
@@ -366,9 +366,9 @@ sub set_output_entry {
       $xml->startTag([$xml_prefix, 'range'], name => $rfield);
       foreach my $f (@$rf) {
         $xml->startTag([$xml_prefix, 'item'], length => rangelen($rf));
-        $xml->dataElement([$xml_prefix, 'start'], NFC($f->[0]));
+        $xml->dataElement([$xml_prefix, 'start'], _bblxml_norm($f->[0]));
         if (defined($f->[1])) {
-          $xml->dataElement([$xml_prefix, 'end'], NFC($f->[1]));
+          $xml->dataElement([$xml_prefix, 'end'], _bblxml_norm($f->[1]));
         }
         $xml->endTag();# item
       }
@@ -380,7 +380,7 @@ sub set_output_entry {
   foreach my $uri (@{$dm->get_fields_of_type('field', 'uri')}) {
     if ( my $f = $be->get_field($uri) ) {
       next if $dm->field_is_skipout($uri);
-      $xml->dataElement([$xml_prefix, 'field'], NFC($f), name => $uri);
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($f), name => $uri);
     }
   }
 
@@ -397,7 +397,7 @@ sub set_output_entry {
       $xml->startTag([$xml_prefix, 'list'], name => $uril, count => $total, sort keys %plo);
 
       foreach my $f (@$urilf) {
-        $xml->dataElement([$xml_prefix, 'item'], NFC($f));
+        $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
       $xml->endTag();# list
     }
@@ -406,7 +406,7 @@ sub set_output_entry {
   if ( my $kws = $be->get_field('keywords') ) {
     $xml->startTag([$xml_prefix, 'keywords']);
     foreach my $k (@$kws) {
-      $xml->dataElement([$xml_prefix, 'keyword'], NFC($k));
+      $xml->dataElement([$xml_prefix, 'keyword'], _bblxml_norm($k));
     }
     $xml->endTag();# keywords
   }
@@ -414,7 +414,7 @@ sub set_output_entry {
   # Append any warnings to the entry, if any
   if (my $w = $be->get_field('warnings')) {
     foreach my $warning (@$w) {
-      $xml->dataElement([$xml_prefix, 'warning'], NFC($warning));
+      $xml->dataElement([$xml_prefix, 'warning'], _bblxml_norm($warning));
     }
   }
   $xml->endTag();# entry
@@ -518,13 +518,13 @@ sub output {
     # alias citekeys are global to a section
     foreach my $k ($section->get_citekey_aliases) {
       my $realkey = $section->get_citekey_alias($k);
-      $xml->dataElement([$xml_prefix, 'keyalias'], NFC($k), key => $realkey);
+      $xml->dataElement([$xml_prefix, 'keyalias'], _bblxml_norm($k), key => $realkey);
     }
 
     # undef citekeys are global to a section
     # Missing citekeys
     foreach my $k ($section->get_undef_citekeys) {
-      $xml->dataElement([$xml_prefix, 'missing'], NFC($k));
+      $xml->dataElement([$xml_prefix, 'missing'], _bblxml_norm($k));
     }
 
     $xml->endTag();    # refsection
@@ -582,7 +582,9 @@ sub create_output_section {
   return;
 }
 
-
+sub _bblxml_norm {
+  return NFC(normalise_string_bblxml(shift));
+}
 1;
 
 __END__
