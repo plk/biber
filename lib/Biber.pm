@@ -3326,6 +3326,14 @@ sub sort_list {
     @keys = map  { eval $sort_extractor }
             sort { eval $sorter }
             map  { eval $data_extractor } @keys;
+
+    # There is no point in trying to share this cache with additional sortlists
+    # because they would have to have the same sortscheme and sortnamekeyscheme
+    # and this is already covered more efficiently in process_lists() because
+    # there it is ensured that, in such cases, no sorting is invoked at all.
+    $logger->trace("Sorting OM cache:\n");
+    $logger->trace(Data::Dump::pp($cache));
+
   }
 
   $logger->debug("Keys after sort:\n");
@@ -3334,13 +3342,6 @@ sub sort_list {
       $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
     }
   }
-
-  # There is no point in trying to share this cache with additional sortlists
-  # because they would have to have the same sortscheme and sortnamekeyscheme
-  # and this is already covered more efficiently in process_lists() because
-  # there it is ensured that, in such cases, no sorting is invoked at all.
-  $logger->trace("Sorting OM cache:\n");
-  $logger->trace(Data::Dump::pp($cache));
 
   $list->set_keys([ @keys ]);
 
