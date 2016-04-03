@@ -23,7 +23,7 @@
             <bbl:namepart type="given" initials="L">Levent</bbl:namepart>
           </bbl:name>
           <bbl:name hash="uniquename">
-            <bbl:namepart type="family" initials="C̨">C̨etinkaya</bbl:namepart>
+            <bbl:namepart type="family" initials="Ç">Çetinkaya</bbl:namepart>
             <bbl:namepart type="given" initials="B">Bekir</bbl:namepart>
           </bbl:name>
           <bbl:name hash="uniquename">
@@ -40,7 +40,7 @@
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">350c1258034a7da03092d563be673f84</bbl:field>
-        <bbl:field name="fullhash">5105237f5784613de8a232c9260b3133</bbl:field>
+        <bbl:field name="fullhash">562d8cda005e7c37bc696e0d0edc306e</bbl:field>
         <bbl:field name="labelalpha">Aks\textbf{+}06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">b685c7856330eaee22789815b49de9bb</bbl:field>
