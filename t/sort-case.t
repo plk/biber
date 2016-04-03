@@ -35,18 +35,17 @@ Biber::Config->setoption('sortcase', 1);
 Biber::Config->setoption('sortupper', 1);
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
-$S =  [
-                                                [
-                                                 {},
-                                                 {'author'     => {}},
-                                                ],
-                                               ];
-Biber::Config->setblxoption('sorting', $S);
+$S = { spec => [
+                [
+                 {},
+                 {'author'     => {}},
+                ],
+               ]};
+
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+$main->set_sortscheme($S);
 
 $biber->prepare;
-my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
-
 is_deeply([$main->get_keys], ['CS1','CS3','CS2'], 'U::C case - 1');
 
 $biber = Biber->new(noconf => 1);
@@ -58,7 +57,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # title is sortcase=1, sortupper=0
 # So, all names are the same and it depends on title
 $biber->prepare;
-$section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 is_deeply([$main->get_keys], ['CS3','CS2','CS1'], 'U::C case - 2');
 
