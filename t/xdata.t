@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 6;
+use Test::More tests => 5;
 use Test::Differences;
 unified_diff;
 
@@ -110,12 +110,6 @@ my $xd2 = q|    \entry{xd2}{book}{}
     \endentry
 |;
 
-my $xds1 = q|    \entry{xds1}{book}{noinherit}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
-    \endentry
-|;
-
 # Test::Differences doesn't like utf8 unless it's encoded here
 eq_or_diff($out->get_output_entry('xd1', $main), $xd1, 'xdata test - 1');
 eq_or_diff(encode_utf8($out->get_output_entry('xd2', $main)), encode_utf8($xd2), 'xdata test - 2');
@@ -126,5 +120,5 @@ chomp $stderr;
 eq_or_diff($stderr, "ERROR - Circular XDATA inheritance between 'loop'<->'loop:3'", 'Cyclic xdata error check');
 #print $stdout;
 #print $stderr;
-eq_or_diff($out->get_output_entry('xds1', $main), $xds1, 'xdata noinherit test');
+
 
