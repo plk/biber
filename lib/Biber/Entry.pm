@@ -612,9 +612,6 @@ sub inherit_from {
   my $target_key = $self->get_field('citekey'); # target/child key
   my $source_key = $parent->get_field('citekey'); # source/parent key
 
-  # shortcut for per-entry noinherit option
-  return if (Biber::Config->getblxoption('noinherit', undef, $target_key));
-
   # record the inheritance between these entries to prevent loops and repeats.
   Biber::Config->set_inheritance('crossref', $source_key, $target_key);
 

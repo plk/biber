@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 32;
+use Test::More tests => 31;
 use Test::Differences;
 unified_diff;
 
@@ -564,14 +564,6 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
     \endentry
 |;
 
-my $s2 = q|    \entry{s2}{inbook}{noinherit}
-      \field{sortinit}{t}
-      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
-      \field{labeltitlesource}{title}
-      \strng{crossref}{s1}
-      \field{title}{title}
-    \endentry
-|;
 
 eq_or_diff($out->get_output_entry('cr1', $main0), $cr1, 'crossref test 1');
 eq_or_diff($out->get_output_entry('cr2', $main0), $cr2, 'crossref test 2');
@@ -605,5 +597,5 @@ eq_or_diff($section0->has_citekey('r3'), 0,'Recursive crossref test 5');
 ok(defined($section0->bibentry('r3')),'Recursive crossref test 6');
 eq_or_diff($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
 ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
-eq_or_diff($out->get_output_entry('s2', $main0), $s2, 'per-entry inherit blocking');
+
 
