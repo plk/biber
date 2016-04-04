@@ -226,7 +226,6 @@
 }
 
 % Testing circular refs detection
-
 @BOOK{circ1,
   DATE      = {1911},
   CROSSREF  = {circ3}
@@ -243,7 +242,6 @@
 }
 
 % Test of dependency calculations for non-cited entries
-
 @BOOK{r1,
   DATE      = {1911},
   CROSSREF  = {r2}
@@ -261,4 +259,15 @@
 
 @BOOK{r4,
   DATE      = {1911},
+}
+
+% Test of per-entry noinherit
+@BOOK{s1,
+  TITLE   = {booktitle}
+}
+
+@INBOOK{s2,
+  OPTIONS  = {noinherit},
+  TITLE    = {title},
+  CROSSREF = {s1}
 }
