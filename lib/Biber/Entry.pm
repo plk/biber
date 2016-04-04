@@ -543,6 +543,9 @@ sub resolve_xdata {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $entry_key = $self->get_field('citekey');
 
+  # shortcut for per-entry noinherit option
+  return if (Biber::Config->getblxoption('noinherit', undef, $entry_key));
+
   foreach my $xdatum (@$xdata) {
     unless (my $xdatum_entry = $section->bibentry($xdatum)) {
       biber_warn("Entry '$entry_key' references XDATA entry '$xdatum' which does not exist in section $secnum");

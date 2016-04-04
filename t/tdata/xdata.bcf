@@ -2017,6 +2017,7 @@
     <bcf:citekey order="1">xd1</bcf:citekey>
     <bcf:citekey order="2">xd2</bcf:citekey>
     <bcf:citekey order="3">xd3</bcf:citekey>
+    <bcf:citekey order="3">xds1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>
