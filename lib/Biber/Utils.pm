@@ -1209,7 +1209,7 @@ sub call_transliterator {
   my ($target, $from, $to, $text) = @_;
   if (my $tr = get_transliterator($target, $from, $to)) {
     # using Lingua::Translit
-    return NFD($tr->translit(NFC($text)));# NFC/NFD boundary
+    return $tr->translit($text);
   }
   else {
     return $text;
