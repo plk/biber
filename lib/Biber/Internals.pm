@@ -44,10 +44,11 @@ sub _getnamehash {
   my $count = $names->count_names;
   my $visible = $names->get_visible_cite;
   my $dm = Biber::Config->get_dm;
+  my @nps = $dm->get_constant_value('nameparts');
 
   # namehash obeys list truncations but not uniquename
   foreach my $n (@{$names->first_n_names($visible)}) {
-    foreach my $nt ($dm->get_constant_value('nameparts')) {# list type so returns list
+    foreach my $nt (@nps) {# list type so returns list
       if (my $np = $n->get_namepart($nt)) {
         $hashkey .= $np;
       }
@@ -59,7 +60,9 @@ sub _getnamehash {
     $hashkey .= '+';
   }
 
-  $logger->trace("Creating MD5 namehash using '$hashkey'");
+  if ($logger->is_trace()) { # performance shortcut
+    $logger->trace("Creating MD5 namehash using '$hashkey'");
+  }
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
@@ -76,10 +79,11 @@ sub _getnamehash_u {
   my $count = $names->count_names;
   my $visible = $names->get_visible_cite;
   my $dm = Biber::Config->get_dm;
+  my @nps = $dm->get_constant_value('nameparts');
 
   # namehash obeys list truncations
   foreach my $n (@{$names->first_n_names($visible)}) {
-    foreach my $nt ($dm->get_constant_value('nameparts')) {# list type so returns list
+    foreach my $nt (@nps) {# list type so returns list
       if (my $np = $n->get_namepart($nt)) {
         if ($nt eq 'given') {
           if (defined($n->get_uniquename)) {
@@ -103,7 +107,9 @@ sub _getnamehash_u {
     $hashkey .= '+';
   }
 
-  $logger->trace("Creating MD5 namehash_u using '$hashkey'");
+  if ($logger->is_trace()) { # performance shortcut
+    $logger->trace("Creating MD5 namehash_u using '$hashkey'");
+  }
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
@@ -116,9 +122,10 @@ sub _getfullhash {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
+  my @nps = $dm->get_constant_value('nameparts');
 
   foreach my $n (@{$names->names}) {
-    foreach my $nt ($dm->get_constant_value('nameparts')) {# list type so returns list
+    foreach my $nt (@nps) {# list type so returns list
       if (my $np = $n->get_namepart($nt)) {
         $hashkey .= $np;
       }
@@ -130,7 +137,9 @@ sub _getfullhash {
     $hashkey .= '+'
   }
 
-  $logger->trace("Creating MD5 fullhash using '$hashkey'");
+  if ($logger->is_trace()) { # performance shortcut
+    $logger->trace("Creating MD5 fullhash using '$hashkey'");
+  }
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
@@ -145,14 +154,17 @@ sub _genpnhash {
   my $bee = $be->get_field('entrytype');
   my $hashkey = '';
   my $dm = Biber::Config->get_dm;
+  my @nps = $dm->get_constant_value('nameparts');
 
-  foreach my $nt ($dm->get_constant_value('nameparts')) {# list type so returns list
+  foreach my $nt (@nps) {# list type so returns list
     if (my $np = $n->get_namepart($nt)) {
       $hashkey .= $np;
     }
   }
 
-  $logger->trace("Creating MD5 pnhash using '$hashkey'");
+  if ($logger->is_trace()) { # performance shortcut
+    $logger->trace("Creating MD5 pnhash using '$hashkey'");
+  }
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
@@ -953,7 +965,9 @@ sub _generatesortinfo {
   # for debugging purposes
   my $ss = join($sorting_sep, @$sortobj);
   $sortlist->set_sortdata($citekey, [$ss, $sortobj]);
-  $logger->debug("Sorting object for key '$citekey' -> " . Data::Dump::pp($sortobj));
+  if ($logger->is_debug()) { # performance shortcut
+    $logger->debug("Sorting object for key '$citekey' -> " . Data::Dump::pp($sortobj));
+  }
 
   # Generate sortinit. Skip if there is no sortstring, which is possible in tests
   if ($ss) {

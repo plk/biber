@@ -226,7 +226,7 @@ sub extract_entries {
   }
 
   if ($section->is_allkeys) {
-    $logger->debug("All cached citekeys will be used for section '$secnum'");
+    $logger->debug("All citekeys will be used for section '$secnum'");
     # Loop over all entries, creating objects
     while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
 
@@ -356,7 +356,6 @@ sub create_entry {
   my ($key, $entry, $datasource, $smaps, $rkeys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
 
   if ( $entry->metatype == BTE_REGULAR ) {
     my %newentries; # In case we create a new entry in a map
@@ -367,12 +366,6 @@ sub create_entry {
       my $level = $smap->{level};
 
       MAP: foreach my $map (@{$smap->{map}}) {
-
-        my $last_type = $entry->type; # defaults to the entrytype unless changed below
-        my $last_field = undef;
-        my $last_fieldval = undef;
-
-        my @imatches; # For persisting parenthetical matches over several steps
 
         # Check pertype restrictions
         # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
@@ -396,6 +389,12 @@ sub create_entry {
                 first {$_->{content} eq $datasource} @{$map->{per_datasource}}) {
           next;
         }
+
+        my $last_type = $entry->type; # defaults to the entrytype unless changed below
+        my $last_field = undef;
+        my $last_fieldval = undef;
+
+        my @imatches; # For persisting parenthetical matches over several steps
 
         # Set up any mapping foreach loop
         my @maploop = ('');
@@ -455,8 +454,8 @@ sub create_entry {
               # have "found" it by creating it along with its clone parent
               $logger->debug("Source mapping (type=$level, key=$key): created '$prefix$key', removing from dependent list");
               @$rkeys = grep {"$prefix$key" ne $_} @$rkeys;
-              # Need to add the clone key to the section if allkeys is set since all keys are cleared
-              # for allkeys sections initially
+              # Need to add the clone key to the section if allkeys is set since all keys
+              # are cleared for allkeys sections initially
               if ($section->is_allkeys) {
                 $section->add_citekeys("$prefix$key");
               }
@@ -664,7 +663,6 @@ sub _create_entry {
   return unless $e; # newentry might be undef
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
   my $ds = $section->get_keytods($k);
 
   my $bibentry = new Biber::Entry;
@@ -711,7 +709,7 @@ sub _create_entry {
   $bibentry->set_field('entrytype', $entrytype);
   $bibentry->set_field('datatype', 'bibtex');
   $logger->debug("Adding entry with key '$k' to entry list");
-  $bibentries->add_entry($k, $bibentry);
+  $section->bibentries->add_entry($k, $bibentry);
 }
 
 # HANDLERS
@@ -1036,7 +1034,7 @@ sub cache_data {
     }
 
     # Any secondary keys?
-    # We can't do this with a driver entry for the IDS field as this needs
+    # We can't do this with a driver dispatch for the IDS field as this needs
     # an entry object creating first and the whole point of aliases is that
     # there is no entry object
     if (my $ids = biber_decode_utf8($entry->get('ids'))) {
@@ -1093,7 +1091,7 @@ sub cache_data {
     # Two reasons - So we avoid T::B macro redef warnings and speed
     # Create a global "all datasources" cache too as this is useful in places
     $cache->{data}{GLOBALDS}{$key} = $cache->{data}{$filename}{$key} = $entry;
-    # We do this as otherwise we have no way of determining the origing .bib entry order
+    # We do this as otherwise we have no way of determining the original .bib entry order
     # We need this in order to do sorting=none + allkeys because in this case, there is no
     # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
     push @{$cache->{orig_key_order}{$filename}}, $key;
@@ -1184,8 +1182,7 @@ sub parsename {
   # btparse can't do this so we do it before name parsing
   $namestr =~ s/(\w)\.(\w)/$1. $2/g if Biber::Config->getoption('fixinits');
 
-  # We use NFC here as we are "outputting" to an external module
-  my $name = new Text::BibTeX::Name(NFC($namestr));
+  my $name = new Text::BibTeX::Name($namestr);
 
   # Formats so we can get BibTeX compatible nbsp inserted
   my $l_f = new Text::BibTeX::NameFormat('l', 0);
@@ -1218,8 +1215,7 @@ sub parsename {
   # spaces - this is fine as we are just generating initials
   $nd_namestr =~ s/\.~\s*/. /g;
 
-  # We use NFC here as we are "outputting" to an external module
-  my $nd_name = new Text::BibTeX::Name(NFC($nd_namestr), $fieldname);
+  my $nd_name = new Text::BibTeX::Name($nd_namestr, $fieldname);
 
   # Initials formats
   my $li_f = new Text::BibTeX::NameFormat('l', 1);

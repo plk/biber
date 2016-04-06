@@ -776,8 +776,8 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
       $logger->info('Found ', $#keys+1 , " citekeys in bib section $secnum");
     }
 
-    if (Biber::Config->getoption('debug')) {
-      unless ($bib_section->is_allkeys) {
+    unless ($bib_section->is_allkeys) {
+      if ($logger->is_debug()) { # performance shortcut
         $logger->debug("The citekeys for section $secnum are: ", join(', ', sort @keys), "\n");
       }
     }
@@ -1151,7 +1151,6 @@ sub nullable_check {
   my $dm = Biber::Config->get_dm;
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
-    my $bee = $be->get_field('entrytype');
     foreach my $f ($be->datafields) {
       if (is_null($be->get_datafield($f))) {
         unless ($dm->field_is_nullok($f)) {
@@ -1755,16 +1754,16 @@ sub process_sets {
 =cut
 
 sub process_labelname {
-  my $self = shift;
-  my $citekey = shift;
+  my ($self, $citekey) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $lnamespec = Biber::Config->getblxoption('labelnamespec', $bee);
   my $dm = Biber::Config->get_dm;
+  my $dmnames = $dm->get_fields_of_type('list', 'name');
 
-  # First we set the normal labelname name
+    # First we set the normal labelname name
   foreach my $h_ln ( @$lnamespec ) {
     my $lnameopt;
     my $ln = $h_ln->{content};
@@ -1775,7 +1774,7 @@ sub process_labelname {
       $lnameopt = $ln;
     }
 
-    unless (first {$ln eq $_} @{$dm->get_fields_of_type('list', 'name')}) {
+    unless (first {$ln eq $_} @$dmnames) {
       biber_warn("Labelname candidate '$ln' is not a name field - skipping");
       next;
     }
@@ -1802,7 +1801,7 @@ sub process_labelname {
     }
 
     # We have already warned about this above
-    unless (first {$ln eq $_} @{$dm->get_fields_of_type('list', 'name')}) {
+    unless (first {$ln eq $_} @$dmnames) {
       next;
     }
 
@@ -2039,7 +2038,7 @@ sub process_visible_names {
   my $dm = Biber::Config->get_dm;
 
   $logger->debug("Postprocessing visible names for section $secnum");
-  foreach my $citekey ( $section->get_citekeys ) {
+  foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
 
@@ -2104,9 +2103,12 @@ sub process_visible_names {
         $visible_names_bib = $count;
       }
 
-      $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
-      $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
-      $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
+      if ($logger->is_trace()) { # performance shortcut
+        $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
+        $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
+        $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
+      }
+
       # Need to set these on all name forms
       my $ns = $be->get_field($n);
       $ns->set_visible_cite($visible_names_cite);
@@ -3124,8 +3126,9 @@ sub sort_list {
     $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
   }
 
-  $logger->trace("Sorting sortlist '$lname' of type '$ltype' with sortscheme '$lssn'. Scheme is\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
-
+  if ($logger->is_trace()) { # performance shortcut
+    $logger->trace("Sorting sortlist '$lname' of type '$ltype' with sortscheme '$lssn'. Scheme is\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
+  }
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
   # 2. Biber sortlocale option
@@ -3334,8 +3337,9 @@ sub sort_list {
     # and this is already covered more efficiently in process_lists() because
     # there it is ensured that, in such cases, no sorting is invoked at all.
     $logger->trace("Sorting OM cache:\n");
-    $logger->trace(Data::Dump::pp($cache));
-
+    if ($logger->is_trace()) { # performance shortcut
+      $logger->trace(Data::Dump::pp($cache));
+    }
   }
 
   $logger->debug("Keys after sort:\n");
