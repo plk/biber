@@ -484,6 +484,7 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
                          INPUT  => ['maxcitenames', 'maxbibnames']},
    minnames          => {OUTPUT => ['mincitenames', 'minbibnames'],
                          INPUT  => ['mincitenames', 'minbibnames']},
+   noinherit         => {OUTPUT => 0},
    presort           => {OUTPUT => 0},
    skipbib           => {OUTPUT => 1},
    skipbiblist       => {OUTPUT => 1},

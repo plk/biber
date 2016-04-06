@@ -567,7 +567,7 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
     \endentry
 |;
 
-my $s1 = q|    \entry{s1}{inbook}{noinherit=nobtitle}
+my $s1 = q|    \entry{s1}{inbook}{}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labeltitlesource}{title}
