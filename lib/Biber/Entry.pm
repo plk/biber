@@ -651,6 +651,12 @@ sub inherit_from {
       if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
           ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
         foreach my $field (@{$inherit->{field}}) {
+          # Skip for fields in the per-entry noinerit datafield set
+          if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key)) {
+            if (first {$field->{target} eq $_} @{$DATAFIELD_SETS{$niset}}) {
+              next;
+            }
+          }
           next unless $parent->field_exists($field->{source});
           $processed{$field->{source}} = 1;
           # localise defaults according to field, if specified
@@ -695,6 +701,12 @@ sub inherit_from {
       @fields = $parent->datafields;
     }
     foreach my $field (@fields) {
+      # Skip for fields in the per-entry noinerit datafield set
+      if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key)) {
+        if (first {$field eq $_} @{$DATAFIELD_SETS{$niset}}) {
+          next;
+        }
+      }
       next if $processed{$field}; # Skip if we have already dealt with this field above
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {

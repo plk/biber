@@ -357,6 +357,7 @@
     <bcf:option datatype="boolean">dataonly</bcf:option>
     <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
     <bcf:option datatype="string">presort</bcf:option>
+    <bcf:option datatype="string">noinherit</bcf:option>
     <bcf:option datatype="integer">maxnames</bcf:option>
     <bcf:option datatype="integer">minnames</bcf:option>
     <bcf:option datatype="integer">maxbibnames</bcf:option>

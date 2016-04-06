@@ -262,3 +262,15 @@
 @BOOK{r4,
   DATE      = {1911},
 }
+
+% Test if per-entry inheritance suppression
+
+@INBOOK{s1,
+  OPTIONS  = {noinherit=nobtitle},
+  TITLE    = {Subtitle},
+  CROSSREF = {s2}
+}
+
+@BOOK{s2,
+  TITLE = {Title}
+}

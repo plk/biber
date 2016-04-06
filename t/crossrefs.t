@@ -4,11 +4,12 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 31;
+use Test::More tests => 32;
 use Test::Differences;
 unified_diff;
 
 use Biber;
+use Biber::Constants;
 use Biber::Output::bbl;
 use Log::Log4perl;
 use Capture::Tiny qw(capture);
@@ -38,6 +39,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
+
+$DATAFIELD_SETS{'nobtitle'} = ['booktitle'];
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
@@ -564,6 +567,14 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
     \endentry
 |;
 
+my $s1 = q|    \entry{s1}{inbook}{noinherit=nobtitle}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labeltitlesource}{title}
+      \strng{crossref}{s2}
+      \field{title}{Subtitle}
+    \endentry
+|;
 
 eq_or_diff($out->get_output_entry('cr1', $main0), $cr1, 'crossref test 1');
 eq_or_diff($out->get_output_entry('cr2', $main0), $cr2, 'crossref test 2');
@@ -597,5 +608,5 @@ eq_or_diff($section0->has_citekey('r3'), 0,'Recursive crossref test 5');
 ok(defined($section0->bibentry('r3')),'Recursive crossref test 6');
 eq_or_diff($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
 ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
-
+eq_or_diff($out->get_output_entry('s1', $main0), $s1, 'per-entry noinherit');
 
