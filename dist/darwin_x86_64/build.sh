@@ -33,6 +33,7 @@ PAR_VERBATIM=1 pp \
   --link=/opt/local/lib/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
   --link=/opt/local/libexec/perl5.22/sitebin/libbtparse.dylib \
+  --link=/opt/local/lib/perl5/5.22/darwin-thread-multi-2level/CORE/libperl.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
   --link=/opt/local/lib/libxslt.1.dylib \
   --link=/opt/local/lib/libgdbm.4.dylib \
