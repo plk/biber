@@ -652,7 +652,8 @@ sub inherit_from {
           ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
         foreach my $field (@{$inherit->{field}}) {
           # Skip for fields in the per-entry noinerit datafield set
-          if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key)) {
+          if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key) and
+             exists($field->{target})) {
             if (first {$field->{target} eq $_} @{$DATAFIELD_SETS{$niset}}) {
               next;
             }
