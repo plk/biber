@@ -949,7 +949,8 @@ sub set_graph {
   else {
     my ($source_key, $target_key, $source_field, $target_field) = @_;
     $logger->debug("Saving DOT graph information type '$type' with SOURCEKEY=$source_key, TARGETKEY=$target_key, SOURCEFIELD=$source_field, TARGETFIELD=$target_field");
-    $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key} = $target_field;
+    # source can go to more than one target (and does in default rules) so need array here
+    push @{$CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key}}, $target_field;
   }
   return;
 }

@@ -327,10 +327,11 @@ sub _graph_inheritance {
         foreach my $f_field (sort keys %$v) {
           my $w = $v->{$f_field};
           foreach my $t_entry (sort keys %$w) {
-            my $t_field = $w->{$t_entry};
-            next unless $state->{$secnum}{"${secnum}/${f_entry}"};
-            next unless $state->{$secnum}{"${secnum}/${t_entry}"};
-            $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_field}\" -> \"section${secnum}/${t_entry}/${t_field}\" [ penwidth=\"2.0\", color=\"${edgecolor}\", tooltip=\"${t_entry}/" . uc($t_field) . " inherited via " . uc($type) . " from ${f_entry}/" . uc($f_field) . "\" ]\n";
+            foreach my $t_field (@{$w->{$t_entry}}) {
+              next unless $state->{$secnum}{"${secnum}/${f_entry}"};
+              next unless $state->{$secnum}{"${secnum}/${t_entry}"};
+              $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_field}\" -> \"section${secnum}/${t_entry}/${t_field}\" [ penwidth=\"2.0\", color=\"${edgecolor}\", tooltip=\"${t_entry}/" . uc($t_field) . " inherited via " . uc($type) . " from ${f_entry}/" . uc($f_field) . "\" ]\n";
+            }
           }
         }
       }

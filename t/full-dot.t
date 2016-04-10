@@ -29,8 +29,8 @@ my $stdout;
 my $stderr;
 
 run3  [ $perl, 'bin/biber', '--noconf', '--nolog', '-dot-include=section,field,xdata,crossref,xref,related', '--output-format=dot', "--output-file=$dot", 't/tdata/full-dot.bcf' ], \undef, \$stdout, \$stderr;
-# say $stdout;
-# say $stderr;
+#say $stdout;
+#say $stderr;
 
 is($? >> 8, 0, 'Full test has zero exit status');
 ok(compare($dot, 't/tdata/full-dot.dot') == 0, 'Testing dot output');

@@ -801,6 +801,7 @@ digraph Biberdata {
     "section0/ccr1/author" -> "section0/ccr2/author" [ penwidth="2.0", color="#7d7879", tooltip="ccr2/AUTHOR inherited via CROSSREF from ccr1/AUTHOR" ]
     "section0/ccr1/editor" -> "section0/ccr2/editor" [ penwidth="2.0", color="#7d7879", tooltip="ccr2/EDITOR inherited via CROSSREF from ccr1/EDITOR" ]
     "section0/ccr1/title" -> "section0/ccr2/maintitle" [ penwidth="2.0", color="#7d7879", tooltip="ccr2/MAINTITLE inherited via CROSSREF from ccr1/TITLE" ]
+    "section0/ccr2/author" -> "section0/ccr3/author" [ penwidth="2.0", color="#7d7879", tooltip="ccr3/AUTHOR inherited via CROSSREF from ccr2/AUTHOR" ]
     "section0/ccr2/author" -> "section0/ccr3/bookauthor" [ penwidth="2.0", color="#7d7879", tooltip="ccr3/BOOKAUTHOR inherited via CROSSREF from ccr2/AUTHOR" ]
     "section0/ccr2/editor" -> "section0/ccr3/editor" [ penwidth="2.0", color="#7d7879", tooltip="ccr3/EDITOR inherited via CROSSREF from ccr2/EDITOR" ]
     "section0/ccr2/maintitle" -> "section0/ccr3/maintitle" [ penwidth="2.0", color="#7d7879", tooltip="ccr3/MAINTITLE inherited via CROSSREF from ccr2/MAINTITLE" ]
