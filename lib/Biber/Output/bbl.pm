@@ -538,7 +538,7 @@ sub output {
         if (Biber::Config->getoption('output_safechars')) {
           $entry_string = latex_recode_output($entry_string);
         }
-        else {       # ... or, check for encoding problems and force macros
+        else { # ... or, check for encoding problems and force macros
           my $outenc = Biber::Config->getoption('output_encoding');
           if ($outenc ne 'UTF-8') {
             # Can this entry be represented in the output encoding?

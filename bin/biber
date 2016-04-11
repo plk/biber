@@ -350,6 +350,10 @@ else {
   $biber->parse_ctrlfile($bcf);
 }
 
+# Reset output filename now we have the output coding from the .bcf
+# because set_output_target_file() set output encoding from information in .bcf
+$outfileobj = $biberoutput->set_output_target_file($outfile);
+
 # Postprocess biber options now that they are all read from the various places
 Biber::Config->postprocess_biber_opts;
 
