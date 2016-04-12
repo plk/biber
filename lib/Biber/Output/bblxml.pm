@@ -300,6 +300,10 @@ sub set_output_entry {
     $xml->emptyTag([$xml_prefix, 'singletitle']);
   }
 
+  if (defined($be->get_field('uniqueprimaryauthor'))) {
+    $xml->emptyTag([$xml_prefix, 'uniqueprimaryauthor']);
+  }
+
   if (defined($be->get_field('uniquetitle'))) {
     $xml->emptyTag([$xml_prefix, 'uniquetitle']);
   }

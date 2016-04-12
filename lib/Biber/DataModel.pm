@@ -1385,6 +1385,12 @@ sub generate_bblxml_schema {
   $writer->endTag();    # optional
 
   $writer->startTag('optional');
+  $writer->startTag('element', 'name' => "$bbl:uniqueprimaryauthor");
+  $writer->emptyTag('empty');# text
+  $writer->endTag();    # uniqueprimaryauthor
+  $writer->endTag();    # optional
+
+  $writer->startTag('optional');
   $writer->startTag('element', 'name' => "$bbl:uniquetitle");
   $writer->emptyTag('empty');# text
   $writer->endTag();    # uniquetitle

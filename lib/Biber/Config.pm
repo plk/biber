@@ -1256,6 +1256,33 @@ sub incr_seenwork {
   return;
 }
 
+=head2 incr_seenpa
+
+    Increment the count of occurences of a primary author family name
+
+=cut
+
+sub incr_seenpa {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  $CONFIG->{state}{seenpa}{$identifier}++;
+  return;
+}
+
+
+=head2 get_seenpa
+
+    Get the count of occurences of a primary author family name
+
+=cut
+
+sub get_seenpa {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  return $CONFIG->{state}{seenpa}{$identifier};
+}
+
+
 =head2 get_seentitle
 
     Get the count of occurences of a labeltitle

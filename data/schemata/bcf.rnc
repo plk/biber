@@ -48,6 +48,7 @@ start =
       sortscheme,
       uniquelist,
       uniquename,
+      uniqueprimaryauthor,
       uniquetitle,
       useprefix,
       usenames
@@ -548,6 +549,12 @@ uniquename =
     attribute type { "singlevalued" },
     element bcf:key { "uniquename" },
     element bcf:value { "0" | "1" | "2" | "3" | "4" | "5" | "6" }
+  }
+uniqueprimaryauthor =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "uniqueprimaryauthor" },
+    element bcf:value { "0" | "1" }
   }
 uniquetitle =
   element bcf:option {

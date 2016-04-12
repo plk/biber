@@ -350,6 +350,10 @@ sub set_output_entry {
     $acc .= "      \\true{singletitle}\n";
   }
 
+  if (defined($be->get_field('uniqueprimaryauthor'))) {
+    $acc .= "      \\true{uniqueprimaryauthor}\n";
+  }
+
   if (defined($be->get_field('uniquetitle'))) {
     $acc .= "      \\true{uniquetitle}\n";
   }

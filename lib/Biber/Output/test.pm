@@ -225,6 +225,14 @@ sub set_output_entry {
     $acc .= "      \\true{singletitle}\n";
   }
 
+  if (defined($be->get_field('uniqueprimaryauthor'))) {
+    $acc .= "      \\true{uniqueprimaryauthor}\n";
+  }
+
+  if (defined($be->get_field('uniquetitle'))) {
+    $acc .= "      \\true{uniquetitle}\n";
+  }
+
   # The source field for labelname
   if (my $lni = $be->get_labelname_info) {
     $acc .= "      \\field{labelnamesource}{$lni}\n";

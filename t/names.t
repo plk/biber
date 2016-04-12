@@ -4,11 +4,12 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 55;
+use Test::More tests => 58;
 use Test::Differences;
 unified_diff;
 
 use Biber;
+use Biber::Utils;
 use Biber::Output::bbl;
 use Log::Log4perl;
 use Unicode::Normalize;
@@ -439,6 +440,7 @@ my $l12 = q|    \entry{L12}{book}{}
       \strng{fullhash}{5bb094a9232384acc478f1aa54e8cf3c}
       \field{sortinit}{d}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -751,6 +753,7 @@ my $l31 = q|    \entry{L31}{book}{}
       \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \field{sortinit}{\~{Z}}
       \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
+      \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -820,6 +823,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('output_encoding', 'latin1');
 # If you change the encoding options, you have to re-read the T::B data from the datasource
 # This won't happen unless you invalidate the T::B cache.
+Biber::Config->setblxoption('uniqueprimaryauthor', 1);
+Biber::Config->setoption('namesep', 'and'); # revert custom name sep
 Biber::Input::file::bibtex->init_cache;
 
 # Now generate the information
@@ -834,4 +839,9 @@ eq_or_diff( encode_utf8($out->get_output_entry('L12', $main)), encode_utf8($l12)
 eq_or_diff( $out->get_output_entry('L21', $main), $l21, 'LaTeX encoded unicode given name');
 eq_or_diff( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode family name - 2');
 eq_or_diff( $out->get_output_entry('L31', $main), $l31, 'LaTeX encoded unicode family name with tie char');
+
+# uniqueprimaryauthor tests
+eq_or_diff($section->bibentry('upa1')->get_field('uniqueprimaryauthor'), 1, 'Unique primary author - 1');
+ok(is_undef($bibentries->entry('upa2')->get_field('uniqueprimaryauthor')), 'Unique primary author - 2');
+ok(is_undef($bibentries->entry('upa3')->get_field('uniqueprimaryauthor')), 'Unique primary author - 3');
 

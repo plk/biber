@@ -70,6 +70,7 @@
         <ref name="sortscheme"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
+        <ref name="uniqueprimaryauthor"/>
         <ref name="uniquetitle"/>
         <ref name="useprefix"/>
         <ref name="usenames"/>
@@ -1420,6 +1421,22 @@
           <value>4</value>
           <value>5</value>
           <value>6</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="uniqueprimaryauthor">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>uniqueprimaryauthor</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
         </choice>
       </element>
     </element>

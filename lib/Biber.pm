@@ -1502,6 +1502,9 @@ sub process_entries_post {
     # generate information for tracking singletitle and uniquetitle
     $self->process_xtitle($citekey);
 
+    # generate information for tracking uniqueprimaryauthor
+    $self ->process_uniqueprimaryauthor($citekey);
+
     # generate namehash
     $self->process_namehash($citekey);
 
@@ -1515,6 +1518,29 @@ sub process_entries_post {
   return;
 }
 
+=head2 process_uniqueprimaryauthor
+
+    Track seen primary author family names for generation of uniqueprimaryauthor
+
+=cut
+
+sub process_uniqueprimaryauthor {
+  my $self = shift;
+  my $citekey = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+
+  if (my $lni = $be->get_labelname_info) {
+    if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
+      my $nl = $be->get_field($lni);
+      $logger->trace("Creating uniqueprimaryauthor information for '$citekey'");
+      my $paf = $nl->nth_name(1)->get_namepart('family');
+      $be->set_field('seenprimaryauthor', $paf);
+      Biber::Config->incr_seenpa($paf);
+    }
+  }
+}
 
 =head2 process_xtitle
 
@@ -3067,6 +3093,35 @@ sub generate_singletitle {
   return;
 }
 
+=head2 generate_uniquepa
+
+    Generate the uniqueprimaryauthor field, if requested. The information for generating
+    this is gathered in create_uniquename_info()
+
+=cut
+
+sub generate_uniquepa {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+
+  foreach my $citekey ( $section->get_citekeys ) {
+    my $be = $bibentries->entry($citekey);
+    if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
+      if ($be->get_field('seenprimaryauthor') and
+          Biber::Config->get_seenpa($be->get_field('seenprimaryauthor')) < 2 ) {
+        $logger->trace("Setting uniqueprimaryauthor for '$citekey'");
+        $be->set_field('uniqueprimaryauthor', 1);
+      }
+      else {
+        $logger->trace("Not setting uniqueprimaryauthor for '$citekey'");
+      }
+    }
+  }
+  return;
+}
+
 =head2 generate_uniquetitle
 
     Generate the uniquetitle field, if requested. The information for generating
@@ -3432,6 +3487,7 @@ sub prepare {
     $self->process_lists;                # process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
     $self->generate_uniquetitle;         # Generate uniquetitle field if requested
+    $self->generate_uniquepa;            # Generate uniqueprimaryauthor if requested
     $out->create_output_section;         # Generate and push the section output into the
                                          # output object ready for writing
   }
