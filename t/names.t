@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 58;
+use Test::More tests => 59;
 use Test::Differences;
 unified_diff;
 
@@ -844,4 +844,5 @@ eq_or_diff( $out->get_output_entry('L31', $main), $l31, 'LaTeX encoded unicode f
 eq_or_diff($section->bibentry('upa1')->get_field('uniqueprimaryauthor'), 1, 'Unique primary author - 1');
 ok(is_undef($bibentries->entry('upa2')->get_field('uniqueprimaryauthor')), 'Unique primary author - 2');
 ok(is_undef($bibentries->entry('upa3')->get_field('uniqueprimaryauthor')), 'Unique primary author - 3');
+eq_or_diff($section->bibentry('upa4')->get_field('uniqueprimaryauthor'), 1, 'Unique primary author - 4');
 
