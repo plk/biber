@@ -216,6 +216,12 @@ sub set_output_entry {
       # Did we have "and others" in the data?
       if ( $nf->get_morenames ) {
         $acc .= "      \\true{more$namefield}\n";
+        # Is this name labelname? If so, provide \morelabelname
+        if (my $lni = $be->get_labelname_info) {
+          if ( $lni eq $namefield ) {
+            $acc .= "      \\true{morelabelname}\n";
+          }
+        }
       }
 
       my $total = $nf->count_names;

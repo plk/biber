@@ -53,6 +53,7 @@ my $bibentries = $section->bibentries;
 
 my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \true{moreauthor}
+      \true{morelabelname}
       \name{author}{3}{useprefix=true}{%
         {{hash=d16c52bc219d448d5f07dc865d5c4f54}{%
            prefix={von},

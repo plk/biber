@@ -102,6 +102,7 @@ my $ss = { locale => 'en-US',
 
 my $l4 = q|    \entry{L4}{book}{}
       \true{moreauthor}
+      \true{morelabelname}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
@@ -211,6 +212,7 @@ my $l3 = q|    \entry{L3}{book}{}
 
 my $l5 = q|    \entry{L5}{book}{}
       \true{moreauthor}
+      \true{morelabelname}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
