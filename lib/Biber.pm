@@ -1298,7 +1298,7 @@ sub cite_setmembers {
     1. Records the set information for use later
     2. Ensures proper inheritance of data from cross-references.
     3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
-       at least mincrossrefs times are included in the bibliography.
+       at least mincrossrefs/minxrefs times are included in the bibliography.
 
 =cut
 
@@ -1327,13 +1327,19 @@ sub process_interentry {
     # Loop over cited keys and count the cross/xrefs
     # Can't do this when parsing entries as this would count them
     # for potentially uncited children
-    if ($refkey = $be->get_field('xref') or $refkey = $be->get_field('crossref')) {
-      $logger->debug("Incrementing cross/xrefkey count for entry '$refkey' via entry '$citekey'");
+    if ($refkey = $be->get_field('crossref')) {
+      $logger->debug("Incrementing crossrefkey count for entry '$refkey' via entry '$citekey'");
       Biber::Config->incr_crossrefkey($refkey);
     }
 
+    if ($refkey = $be->get_field('xref')) {
+      $logger->debug("Incrementing xrefkey count for entry '$refkey' via entry '$citekey'");
+      Biber::Config->incr_xrefkey($refkey);
+    }
+
     # Record xref inheritance for graphing if required
-    if (Biber::Config->getoption('output_format') eq 'dot' and my $xref = $be->get_field('xref')) {
+    if (Biber::Config->getoption('output_format') eq 'dot' and
+        my $xref = $be->get_field('xref')) {
       Biber::Config->set_graph('xref', $citekey, $xref);
     }
 
@@ -1354,12 +1360,22 @@ sub process_interentry {
   }
 
   # We make sure that crossrefs that are directly cited or cross-referenced
-  # at least $mincrossrefs times are included in the bibliography.
+  # at least mincrossrefs times are included in the bibliography.
   foreach my $k ( @{Biber::Config->get_crossrefkeys} ) {
     # If parent has been crossref'ed more than mincrossref times, upgrade it
     # to cited crossref status and add it to the citekeys list
     if (Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs')) {
-      $logger->debug("cross/xref key '$k' is cross/xref'ed >= mincrossrefs, adding to citekeys");
+      $logger->debug("cross key '$k' is crossref'ed >= mincrossrefs, adding to citekeys");
+      $section->add_citekeys($k);
+    }
+  }
+  # We make sure that xrefs that are directly cited or x-referenced
+  # at least minxrefs times are included in the bibliography.
+  foreach my $k ( @{Biber::Config->get_xrefkeys} ) {
+    # If parent has been xref'ed more than minxref times, upgrade it
+    # to cited xref status and add it to the citekeys list
+    if (Biber::Config->get_xrefkey($k) >= Biber::Config->getoption('minxrefs')) {
+      $logger->debug("xref key '$k' is xref'ed >= minxrefs, adding to citekeys");
       $section->add_citekeys($k);
     }
   }

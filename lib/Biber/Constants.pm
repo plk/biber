@@ -94,6 +94,7 @@ our $CONFIG_DEFAULT_BIBER = {
   isbn_normalise      => { content => 0 },
   listsep             => { content => 'and' },
   mincrossrefs        => { content => 2 },
+  minxrefs            => { content => 2 },
   namesep             => { content => 'and' },
   no_bblxml_schema    => { content => 0 },
   no_bltxml_schema    => { content => 0 },

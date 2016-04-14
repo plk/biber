@@ -31,6 +31,7 @@
         <ref name="input_encoding"/>
         <ref name="debug"/>
         <ref name="mincrossrefs"/>
+        <ref name="minxrefs"/>
         <ref name="sortcase"/>
         <ref name="sortgiveninits"/>
         <ref name="sortupper"/>
@@ -1615,6 +1616,19 @@
       </attribute>
       <element name="bcf:key">
         <value>mincrossrefs</value>
+      </element>
+      <element name="bcf:value">
+        <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="minxrefs">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>minxrefs</value>
       </element>
       <element name="bcf:value">
         <data type="integer"/>

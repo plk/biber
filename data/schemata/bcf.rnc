@@ -16,6 +16,7 @@ start =
       input_encoding,
       debug,
       mincrossrefs,
+      minxrefs,
       sortcase,
       sortgiveninits,
       sortupper
@@ -636,6 +637,12 @@ mincrossrefs =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "mincrossrefs" },
+    element bcf:value { xsd:integer }
+  }
+minxrefs =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "minxrefs" },
     element bcf:value { xsd:integer }
   }
 debug =

@@ -54,6 +54,7 @@ Biber::Config - Configuration items which need to be saved across the
 our $CONFIG;
 
 $CONFIG->{state}{crossrefkeys} = {};
+$CONFIG->{state}{xrefkeys} = {};
 $CONFIG->{state}{seenwork} = {};
 $CONFIG->{state}{seentitle} = {};
 
@@ -129,6 +130,7 @@ sub _init {
   $CONFIG->{state}{seenwork} = {};
   $CONFIG->{state}{seentitle} = {};
   $CONFIG->{state}{crossrefkeys} = {};
+  $CONFIG->{state}{xrefkeys} = {};
   $CONFIG->{state}{ladisambiguation} = {};
   $CONFIG->{state}{uniquenamecount} = {};
   $CONFIG->{state}{uniquenamecount_all} = {};
@@ -1819,6 +1821,19 @@ sub get_crossrefkeys {
   return [ keys %{$CONFIG->{state}{crossrefkeys}} ];
 }
 
+=head1 xrefkeys
+
+=head2 get_xrefkeys
+
+    Return ref to array of keys which are xref targets
+
+=cut
+
+sub get_xrefkeys {
+  shift; # class method so don't care about class name
+  return [ keys %{$CONFIG->{state}{xrefkeys}} ];
+}
+
 =head2 get_crossrefkey
 
     Return an integer representing the number of times a
@@ -1830,6 +1845,19 @@ sub get_crossrefkey {
   shift; # class method so don't care about class name
   my $k = shift;
   return $CONFIG->{state}{crossrefkeys}{$k};
+}
+
+=head2 get_xrefkey
+
+    Return an integer representing the number of times a
+    xref target key has been ref'ed
+
+=cut
+
+sub get_xrefkey {
+  shift; # class method so don't care about class name
+  my $k = shift;
+  return $CONFIG->{state}{xrefkeys}{$k};
 }
 
 =head2 del_crossrefkey
@@ -1847,6 +1875,22 @@ sub del_crossrefkey {
   return;
 }
 
+=head2 del_xrefkey
+
+    Remove a xref target key from the xrefkeys state
+
+=cut
+
+sub del_xrefkey {
+  shift; # class method so don't care about class name
+  my $k = shift;
+  if (exists($CONFIG->{state}{xrefkeys}{$k})) {
+    delete $CONFIG->{state}{xrefkeys}{$k};
+  }
+  return;
+}
+
+
 =head2 incr_crossrefkey
 
     Increment the crossreferences count for a target crossref key
@@ -1857,6 +1901,19 @@ sub incr_crossrefkey {
   shift; # class method so don't care about class name
   my $k = shift;
   $CONFIG->{state}{crossrefkeys}{$k}++;
+  return;
+}
+
+=head2 incr_xrefkey
+
+    Increment the xreferences count for a target xref key
+
+=cut
+
+sub incr_xrefkey {
+  shift; # class method so don't care about class name
+  my $k = shift;
+  $CONFIG->{state}{xrefkeys}{$k}++;
   return;
 }
 
