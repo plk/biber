@@ -411,6 +411,7 @@ sub create_entry {
         }
 
         foreach my $maploop (@maploop) {
+        my $MAPUNIQVAL;
           # loop over mapping steps
           foreach my $step (@{$map->{map_step}}) {
 

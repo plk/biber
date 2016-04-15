@@ -1165,11 +1165,18 @@ sub parse_range_alt {
 =cut
 
 sub maploopreplace {
+  # $MAPUNIQVAL is lexical here
+  no strict 'vars';
   my ($string, $maploop) = @_;
   return undef unless defined($string);
   return $string unless $maploop;
   $string =~ s/\$MAPLOOP/$maploop/g;
-  $string =~ s/\$MAPUNIQ/suniqid/eg;
+  $string =~ s/\$MAPUNIQVAL/$MAPUNIQVAL/g;
+  if ($string =~ m/\$MAPUNIQ/) {
+    my $MAPUNIQ = suniqid;
+    $string =~ s/\$MAPUNIQ/$MAPUNIQ/g;
+    $MAPUNIQVAL = $MAPUNIQ;
+  }
   return $string;
 }
 

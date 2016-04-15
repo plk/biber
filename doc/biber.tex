@@ -838,10 +838,12 @@ examples. A \opt{map} element looks like this:
   comma-separated values list or an explicit comma-separated values list
   itself (and \textcolor{red}{\texttt{loopval}} is determined in that
   order). This allows the user to repeat a group of \opt{map\_step}s for
-  each value of \textcolor{red}{\texttt{loopval}}.q The special variable
-  \verb+$MAPUNIQ+ may also be used the \opt{map\_step}s to generate a
+  each value of \textcolor{red}{\texttt{loopval}}. The special variable
+  \verb+$MAPUNIQ+ may also be used in the \opt{map\_step}s to generate a
   random unique string. This can be useful when creating keys for new
-  entries.
+  entries. The special variable \verb+$MAPUNIQVAL+ may be used the
+  \opt{map\_step}s to refer to the value of the last random unique string
+  generated with \verb+$MAPUNIQ+.
 \end{itemize}
 
 \noindent Each \opt{map\_step} is looked at in turn and compared with the

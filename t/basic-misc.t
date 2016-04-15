@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 65;
+use Test::More tests => 66;
 use Test::Differences;
 unified_diff;
 
@@ -674,6 +674,7 @@ eq_or_diff($out->get_output_entry('newtestkey', $main), $new1, 'New key mapping 
 
 # Should be three new ids in here with random keys
 is(3, scalar(grep {$_ =~ m/^loopkey:/} $section->get_citekeys), 'New key loop mapping - 1');
+eq_or_diff($bibentries->entry([grep {$_ =~ m/^loopkey:/} $section->get_citekeys]->[0])->get_field('note'), 'note', 'New key loop mapping - 2');
 
 # uniquetitle test
 eq_or_diff($bibentries->entry('m1')->get_field('uniquetitle'), '1', 'uniquetitle test - 1');
