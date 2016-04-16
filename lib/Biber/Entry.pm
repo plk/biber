@@ -29,7 +29,7 @@ Biber::Entry
              Such fields are used for tool mode where we don't want to alter the fields as they
              need to go back into the output as they are
     * data - These are fields which derive directly from or are themselves fields in the
-             data souce. Things like YEAR, MONTH, DAY etc. are such fields which are derived from,
+             data source. Things like YEAR, MONTH, DAY etc. are such fields which are derived from,
              for example, the DATE field (which is itself a "raw" field). They are part of the
              original data implicitly, derived from a "raw" field.
     * other - These are fields, often meta-information like labelname, labelalpha etc. which are
@@ -174,7 +174,7 @@ sub notnull {
 =head2 set_labelname_info
 
   Record the labelname information. This is special
-  meta-information so we have a seperate method for this
+  meta-information so we have a separate method for this
   Takes a hash ref with the information.
 
 =cut
@@ -188,7 +188,7 @@ sub set_labelname_info {
 =head2 get_labelname_info
 
   Retrieve the labelname information. This is special
-  meta-information so we have a seperate method for this
+  meta-information so we have a separate method for this
   Returns a hash ref with the information.
 
 =cut
@@ -201,7 +201,7 @@ sub get_labelname_info {
 =head2 set_labelnamefh_info
 
   Record the fullhash labelname information. This is special
-  meta-information so we have a seperate method for this
+  meta-information so we have a separate method for this
   Takes a hash ref with the information.
 
 =cut
@@ -215,7 +215,7 @@ sub set_labelnamefh_info {
 =head2 get_labelnamefh_info
 
   Retrieve the fullhash labelname information. This is special
-  meta-information so we have a seperate method for this
+  meta-information so we have a separate method for this
   Returns a hash ref with the information.
 
 =cut
@@ -228,7 +228,7 @@ sub get_labelnamefh_info {
 =head2 set_labeltitle_info
 
   Record the labeltitle information. This is special
-  meta-information so we have a seperate method for this
+  meta-information so we have a separate method for this
   Takes a hash ref with the information.
 
 =cut
@@ -242,7 +242,7 @@ sub set_labeltitle_info {
 =head2 get_labeltitle_info
 
   Retrieve the labeltitle information. This is special
-  meta-information so we have a seperate method for this
+  meta-information so we have a separate method for this
   Returns a hash ref with the information.
 
 =cut
@@ -256,7 +256,7 @@ sub get_labeltitle_info {
 =head2 set_labeldate_info
 
   Record the labeldate information. This is special
-  meta-information so we have a seperate method for this
+  meta-information so we have a separate method for this
   Takes a hash ref with the information.
 
 =cut
@@ -270,7 +270,7 @@ sub set_labeldate_info {
 =head2 get_labeldate_info
 
   Retrieve the labeldate information. This is special
-  meta-information so we have a seperate method for this
+  meta-information so we have a separate method for this
   Returns a hash ref with the information.
 
 =cut

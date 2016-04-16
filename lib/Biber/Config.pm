@@ -1235,7 +1235,7 @@ sub incr_seenkey {
 
 =head2 get_seenwork
 
-    Get the count of occurences of a labelname or labeltitle
+    Get the count of occurrences of a labelname or labeltitle
 
 =cut
 
@@ -1247,7 +1247,7 @@ sub get_seenwork {
 
 =head2 incr_seenwork
 
-    Increment the count of occurences of a labelname or labeltitle
+    Increment the count of occurrences of a labelname or labeltitle
 
 =cut
 
@@ -1260,7 +1260,7 @@ sub incr_seenwork {
 
 =head2 incr_seenpa
 
-    Increment the count of occurences of a primary author family name
+    Increment the count of occurrences of a primary author family name
 
 =cut
 
@@ -1274,7 +1274,7 @@ sub incr_seenpa {
 
 =head2 get_seenpa
 
-    Get the count of occurences of a primary author family name
+    Get the count of occurrences of a primary author family name
 
 =cut
 
@@ -1287,7 +1287,7 @@ sub get_seenpa {
 
 =head2 get_seentitle
 
-    Get the count of occurences of a labeltitle
+    Get the count of occurrences of a labeltitle
 
 =cut
 
@@ -1299,7 +1299,7 @@ sub get_seentitle {
 
 =head2 incr_seentitle
 
-    Increment the count of occurences of a labeltitle
+    Increment the count of occurrences of a labeltitle
 
 =cut
 
@@ -1396,7 +1396,7 @@ sub get_seen_nameyear {
 
     Increment the count of an labelname/labelyear combination for extrayear
 
-    We pass in the name and year strings seperately as we have to
+    We pass in the name and year strings separately as we have to
     be careful and only increment this counter beyond 1 if there is
     a name component. Otherwise, extrayear gets defined for all
     entries with no name but the same year etc.
@@ -1442,7 +1442,7 @@ sub get_seen_nametitle {
 
     Increment the count of an labelname/labeltitle combination for extratitle
 
-    We pass in the name and year strings seperately as we have to
+    We pass in the name and year strings separately as we have to
     be careful and only increment this counter beyond 1 if there is
     a title component. Otherwise, extratitle gets defined for all
     entries with no title.
@@ -1486,7 +1486,7 @@ sub get_seen_titleyear {
 
     Increment the count of an labeltitle/labelyear combination for extratitleyear
 
-    We pass in the title and year strings seperately as we have to
+    We pass in the title and year strings separately as we have to
     be careful and only increment this counter beyond 1 if there is
     a title component. Otherwise, extratitleyear gets defined for all
     entries with no title.
