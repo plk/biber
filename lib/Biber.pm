@@ -2476,12 +2476,12 @@ sub uniqueness {
     Gather the uniquename information as we look through the names
 
     What is happening in here is the following:
-    We are registering the number of occurences of each name, name+init and fullname
+    We are registering the number of occurrences of each name, name+init and fullname
     within a specific context. For example, the context is "global" with uniquename < 5
     and "name list" for uniquename=5 or 6. The keys we store to count this are the most specific
     information for the context, so, for uniquename < 5, this is the full name and for
     uniquename=5 or 6, this is the complete list of full names. These keys have values in a hash
-    which are ignored. They serve only to accumulate repeated occurences with the context
+    which are ignored. They serve only to accumulate repeated occurrences with the context
     and we don't care about this and so the values are a useful sinkhole for such repetition.
 
     For example, if we find in the global context a family name "Smith" in two different entries
