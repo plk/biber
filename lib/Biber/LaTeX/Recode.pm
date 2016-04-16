@@ -343,7 +343,7 @@ sub latex_encode {
     }
     elsif ($type eq 'diacritics') {
       # special case such as "i\x{304}" -> '\={\i}' -> "i" needs the dot removing for accents
-      $text =~ s/i($re)/"\\" . $map->{$1} . '\i{}'/ge;
+      $text =~ s/i($re)/"\\" . $map->{$1} . '{\i}'/ge;
 
       $text =~ s/\{(\pL\pM*)\}($re)/"\\" . $map->{$2} . "{$1}"/ge;
       $text =~ s/(\pL\pM*)($re)/"\\" . $map->{$2} . "{$1}"/ge;

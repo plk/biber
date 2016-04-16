@@ -144,7 +144,7 @@ my $sourcemap = [
         map_step => [
         { map_field_source => "TYPE", map_match => "resreport", map_final => "1" },
         { map_entry_new => "loopkey:\$MAPLOOP:\$MAPUNIQ", map_entry_newtype => "book" },
-        ],
+        { map_entrytarget => "loopkey:\$MAPLOOP:\$MAPUNIQVAL", map_field_set => "NOTE", map_field_value => "note"} ],
         map_foreach => "USERA",
       },
       {
