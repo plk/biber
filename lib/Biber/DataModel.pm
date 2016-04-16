@@ -883,7 +883,7 @@ sub generate_bltxml_schema {
         # Name lists element definition
         # =============================
         if ($ft eq 'list' and $dt eq 'name') {
-          $writer->startTag('optional');
+          $writer->startTag('oneOrMore');
           $writer->startTag('element', 'name' => "$bltx:names");
 
           # useprefix attribute
@@ -919,6 +919,9 @@ sub generate_bltxml_schema {
           $writer->endTag();    # attribute
           $writer->endTag();    # optional
 
+          # generic options attribute
+          $writer->emptyTag('ref', 'name' => "options");
+
           $writer->startTag('oneOrMore');
 
           # Individual name element
@@ -943,6 +946,9 @@ sub generate_bltxml_schema {
           # gender attribute ref
           $writer->emptyTag('ref', 'name' => 'gender');
 
+          # generic options attribute
+          $writer->emptyTag('ref', 'name' => "options");
+
           # namepart element
           $writer->startTag('oneOrMore');
           $writer->startTag('element', 'name' => "$bltx:namepart");
@@ -956,6 +962,10 @@ sub generate_bltxml_schema {
           $writer->startTag('optional');
           $writer->emptyTag('attribute', 'name' => 'initial');
           $writer->endTag();    # optional
+
+          # generic options attribute
+          $writer->emptyTag('ref', 'name' => "options");
+
           $writer->startTag('choice');
           $writer->emptyTag('text');# text
           $writer->startTag('oneOrMore');
@@ -972,7 +982,7 @@ sub generate_bltxml_schema {
           $writer->endTag();    # name element
           $writer->endTag();    # oneOrMore
           $writer->endTag();    # names element
-          $writer->endTag();# optional
+          $writer->endTag();    # oneOrMore
           # ========================
         }
         elsif ($ft eq 'list') {
@@ -982,6 +992,10 @@ sub generate_bltxml_schema {
           foreach my $list (@{$dm->get_fields_of_type($ft, $dt)}) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$list");
+
+            # generic options attribute
+            $writer->emptyTag('ref', 'name' => "options");
+
             $writer->startTag('choice');
             $writer->emptyTag('text');# text
             $writer->startTag('oneOrMore');
@@ -1003,6 +1017,10 @@ sub generate_bltxml_schema {
           foreach my $field (@{$dm->get_fields_of_type($ft, $dt)}) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
+
+            # generic options attribute
+            $writer->emptyTag('ref', 'name' => "options");
+
             $writer->emptyTag('data', 'type' => 'anyURI');
             $writer->endTag();   # $field element
             $writer->endTag();# optional
@@ -1017,6 +1035,10 @@ sub generate_bltxml_schema {
           foreach my $field (@{$dm->get_fields_of_type($ft, $dt)}) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
+
+            # generic options attribute
+            $writer->emptyTag('ref', 'name' => "options");
+
             $writer->startTag('oneOrMore');
             $writer->startTag('element', 'name' => "$bltx:item");
             $writer->startTag('element', 'name' => "$bltx:start");
@@ -1050,17 +1072,22 @@ sub generate_bltxml_schema {
               $writer->emptyTag('attribute', 'name' => 'type');
               $writer->emptyTag('attribute', 'name' => 'ids');
               $writer->startTag('optional');
-              $writer->emptyTag('attribute', 'name' => 'options');
-              $writer->endTag(); # optional
-              $writer->startTag('optional');
               $writer->emptyTag('attribute', 'name' => 'string');
               $writer->endTag(); # optional
+
+              # generic options attribute
+              $writer->emptyTag('ref', 'name' => "options");
+
               $writer->endTag(); # item element
               $writer->endTag(); # oneOrMore
               $writer->endTag(); # $field element
             }
             else {
               $writer->startTag('element', 'name' => "$bltx:$field");
+
+              # generic options attribute
+              $writer->emptyTag('ref', 'name' => "options");
+
               $writer->startTag('choice');
               $writer->startTag('list');
               $writer->startTag('oneOrMore');
@@ -1094,6 +1121,10 @@ sub generate_bltxml_schema {
           }
           $writer->endTag(); # choice
           $writer->endTag(); # attribute
+
+          # generic options attribute
+          $writer->emptyTag('ref', 'name' => "options");
+
           $writer->endTag(); # optional
           $writer->startTag('choice');
           $writer->emptyTag('data', 'type' => 'date');
@@ -1121,6 +1152,10 @@ sub generate_bltxml_schema {
           foreach my $field (@{$dm->get_fields_of_type($ft, $dt)}) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
+
+            # generic options attribute
+            $writer->emptyTag('ref', 'name' => "options");
+
             $writer->emptyTag('text');# text
             $writer->endTag(); # $field element
             $writer->endTag();# optional
@@ -1137,7 +1172,7 @@ sub generate_bltxml_schema {
   # ===========================
   $writer->comment('gender attribute definition');
   $writer->startTag('define', 'name' => 'gender');
-  $writer->startTag('zeroOrMore');
+  $writer->startTag('optional');
   $writer->startTag('attribute', 'name' => 'gender');
   $writer->startTag('choice');
   foreach my $gender ($dm->get_constant_value('gender')) {# list type so returns list
@@ -1145,7 +1180,17 @@ sub generate_bltxml_schema {
   }
   $writer->endTag();# choice
   $writer->endTag();# attribute
-  $writer->endTag();# zeroOrMore
+  $writer->endTag();# optional
+  $writer->endTag();# define
+  # ===========================
+
+  # generic options attribute definition
+  # =====================================
+  $writer->comment('generic options attribute definition');
+  $writer->startTag('define', 'name' => 'options');
+  $writer->startTag('optional');
+  $writer->emptyTag('attribute', 'name' => 'options');
+  $writer->endTag(); # optional
   $writer->endTag();# define
   # ===========================
 
