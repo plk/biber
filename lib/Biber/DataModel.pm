@@ -919,8 +919,8 @@ sub generate_bltxml_schema {
           $writer->endTag();    # attribute
           $writer->endTag();    # optional
 
-          # generic options attribute
-          $writer->emptyTag('ref', 'name' => "options");
+          # generic annotation attribute
+          $writer->emptyTag('ref', 'name' => "annotation");
 
           $writer->startTag('oneOrMore');
 
@@ -946,8 +946,8 @@ sub generate_bltxml_schema {
           # gender attribute ref
           $writer->emptyTag('ref', 'name' => 'gender');
 
-          # generic options attribute
-          $writer->emptyTag('ref', 'name' => "options");
+          # generic annotation attribute
+          $writer->emptyTag('ref', 'name' => "annotation");
 
           # namepart element
           $writer->startTag('oneOrMore');
@@ -963,8 +963,8 @@ sub generate_bltxml_schema {
           $writer->emptyTag('attribute', 'name' => 'initial');
           $writer->endTag();    # optional
 
-          # generic options attribute
-          $writer->emptyTag('ref', 'name' => "options");
+          # generic annotation attribute
+          $writer->emptyTag('ref', 'name' => "annotation");
 
           $writer->startTag('choice');
           $writer->emptyTag('text');# text
@@ -993,8 +993,8 @@ sub generate_bltxml_schema {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$list");
 
-            # generic options attribute
-            $writer->emptyTag('ref', 'name' => "options");
+            # generic annotation attribute
+            $writer->emptyTag('ref', 'name' => "annotation");
 
             $writer->startTag('choice');
             $writer->emptyTag('text');# text
@@ -1018,8 +1018,8 @@ sub generate_bltxml_schema {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
 
-            # generic options attribute
-            $writer->emptyTag('ref', 'name' => "options");
+            # generic annotation attribute
+            $writer->emptyTag('ref', 'name' => "annotation");
 
             $writer->emptyTag('data', 'type' => 'anyURI');
             $writer->endTag();   # $field element
@@ -1036,8 +1036,8 @@ sub generate_bltxml_schema {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
 
-            # generic options attribute
-            $writer->emptyTag('ref', 'name' => "options");
+            # generic annotation attribute
+            $writer->emptyTag('ref', 'name' => "annotation");
 
             $writer->startTag('oneOrMore');
             $writer->startTag('element', 'name' => "$bltx:item");
@@ -1074,9 +1074,12 @@ sub generate_bltxml_schema {
               $writer->startTag('optional');
               $writer->emptyTag('attribute', 'name' => 'string');
               $writer->endTag(); # optional
+              $writer->startTag('optional');
+              $writer->emptyTag('attribute', 'name' => 'options');
+              $writer->endTag(); # optional
 
-              # generic options attribute
-              $writer->emptyTag('ref', 'name' => "options");
+              # generic annotation attribute
+              $writer->emptyTag('ref', 'name' => "annotation");
 
               $writer->endTag(); # item element
               $writer->endTag(); # oneOrMore
@@ -1085,8 +1088,8 @@ sub generate_bltxml_schema {
             else {
               $writer->startTag('element', 'name' => "$bltx:$field");
 
-              # generic options attribute
-              $writer->emptyTag('ref', 'name' => "options");
+              # generic annotation attribute
+              $writer->emptyTag('ref', 'name' => "annotation");
 
               $writer->startTag('choice');
               $writer->startTag('list');
@@ -1122,8 +1125,8 @@ sub generate_bltxml_schema {
           $writer->endTag(); # choice
           $writer->endTag(); # attribute
 
-          # generic options attribute
-          $writer->emptyTag('ref', 'name' => "options");
+          # generic annotation attribute
+          $writer->emptyTag('ref', 'name' => "annotation");
 
           $writer->endTag(); # optional
           $writer->startTag('choice');
@@ -1153,8 +1156,8 @@ sub generate_bltxml_schema {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
 
-            # generic options attribute
-            $writer->emptyTag('ref', 'name' => "options");
+            # generic annotation attribute
+            $writer->emptyTag('ref', 'name' => "annotation");
 
             $writer->emptyTag('text');# text
             $writer->endTag(); # $field element
@@ -1184,12 +1187,12 @@ sub generate_bltxml_schema {
   $writer->endTag();# define
   # ===========================
 
-  # generic options attribute definition
+  # generic annotation attribute definition
   # =====================================
-  $writer->comment('generic options attribute definition');
-  $writer->startTag('define', 'name' => 'options');
+  $writer->comment('generic annotation attribute definition');
+  $writer->startTag('define', 'name' => 'annotation');
   $writer->startTag('optional');
-  $writer->emptyTag('attribute', 'name' => 'options');
+  $writer->emptyTag('attribute', 'name' => 'annotation');
   $writer->endTag(); # optional
   $writer->endTag();# define
   # ===========================
