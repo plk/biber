@@ -1311,7 +1311,6 @@ sub process_interentry {
 
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
-    my $refkey;
 
     # Record set information
     # It's best to do this in the loop here as every entry needs the information
@@ -1327,12 +1326,12 @@ sub process_interentry {
     # Loop over cited keys and count the cross/xrefs
     # Can't do this when parsing entries as this would count them
     # for potentially uncited children
-    if ($refkey = $be->get_field('crossref')) {
+    if (my $refkey = $be->get_field('crossref')) {
       $logger->debug("Incrementing crossrefkey count for entry '$refkey' via entry '$citekey'");
       Biber::Config->incr_crossrefkey($refkey);
     }
 
-    if ($refkey = $be->get_field('xref')) {
+    if (my $refkey = $be->get_field('xref')) {
       $logger->debug("Incrementing xrefkey count for entry '$refkey' via entry '$citekey'");
       Biber::Config->incr_xrefkey($refkey);
     }
@@ -3727,13 +3726,19 @@ sub get_dependents {
         }
       }
 
-      # crossrefs/xrefs
-      my $refkey;
-      if ($refkey = $be->get_field('xref') or
-          $refkey = $be->get_field('crossref')) {
+      # xrefs
+      if (my $refkey = $be->get_field('xref')) {
         # skip looking for dependent if it's already there (loop suppression)
         push @$new_deps, $refkey unless $section->bibentry($refkey);
-        $logger->debug("Entry '$citekey' has cross/xref '$refkey'");
+        $logger->debug("Entry '$citekey' has xref '$refkey'");
+        push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
+      }
+
+      # crossrefs
+      if (my $refkey = $be->get_field('crossref')) {
+        # skip looking for dependent if it's already there (loop suppression)
+        push @$new_deps, $refkey unless $section->bibentry($refkey);
+        $logger->debug("Entry '$citekey' has crossref '$refkey'");
         push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
       }
 
