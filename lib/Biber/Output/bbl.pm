@@ -458,7 +458,7 @@ sub set_output_entry {
   foreach my $scope ('field', 'list', 'names') {
     foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
       my $v = Biber::Annotation->get_annotation($scope, $key, $f);
-      $acc .= "      \\annotation{$scope}{$f}{$v}\n";
+      $acc .= "      \\annotation{$scope}{$f}{}{}{$v}\n";
     }
   }
 
@@ -466,7 +466,7 @@ sub set_output_entry {
     foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
       foreach my $c (Biber::Annotation->get_annotated_items($scope, $key, $f)) {
         my $v = Biber::Annotation->get_annotation($scope, $key, $f, $c);
-        $acc .= "      \\annotation{$scope}{$f}{$c}{$v}\n";
+        $acc .= "      \\annotation{$scope}{$f}{$c}{}{$v}\n";
       }
     }
   }
