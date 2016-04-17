@@ -39,6 +39,7 @@ lib/Biber/UCollate.pm
 lib/Biber/Utils.pm
 MANIFEST
 README
+t/annotations.t
 t/basic-misc.t
 t/bcfvalidation.t
 t/biblatexml.t
@@ -80,6 +81,8 @@ t/sort-uc.t
 t/tool.t
 t/tool-bltxml.t
 t/tool-bltxml-inout.t
+t/tdata/annotations.bib
+t/tdata/annotations.bcf
 t/tdata/basic-misc.bcf
 t/tdata/biber-test.conf
 t/tdata/tool-test.conf

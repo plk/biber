@@ -69,6 +69,7 @@ my $b2 = q|@BOOK{b1,
   MAINTITLE      = {Maintitle},
   MAINTITLEADDON = {Maintitleaddon},
   TITLE          = {Booktitle},
+  TITLE+AN       = {ann1, ann2},
   YEAR           = {1999},
 }
 

@@ -8,6 +8,7 @@ use Carp;
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
+use Biber::Annotation;
 use Biber::Constants;
 use Biber::DataModel;
 use Biber::Entries;
@@ -48,6 +49,7 @@ sub init_cache {
 # Determine handlers from data model
 my $dm = Biber::Config->get_dm;
 my $handlers = {
+                'CUSTOM' => {'annotation' => \&_annotation},
                 'field' => {
                             'default'  => {
                                            'code'     => \&_literal,
@@ -716,6 +718,27 @@ sub _create_entry {
 # HANDLERS
 # ========
 
+# Data annotation fields
+sub _annotation {
+  my ($bibentry, $entry, $field, $key) = @_;
+  my $value = biber_decode_utf8($entry->get($field));
+  my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
+  $field =~ s/$ann$//;
+  foreach my $a (split(/\s*;\s*/, $value)) {
+    my ($count, $part, $annotations) = $a =~ /^\s*(\d+)?:?([^=]+)?=(.+)/;
+    if ($part) {
+      Biber::Annotation->set_annotation('part', $key, $field, $annotations, $count, $part);
+    }
+    elsif ($count) {
+      Biber::Annotation->set_annotation('item', $key, $field, $annotations, $count);
+    }
+    else {
+      Biber::Annotation->set_annotation('field', $key, $field, $annotations);
+    }
+  }
+  return;
+}
+
 # Literal fields
 sub _literal {
   my ($bibentry, $entry, $field, $key) = @_;
@@ -1024,7 +1047,7 @@ sub cache_data {
       next;
     }
 
-    # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing utf8 keys
+    # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing UTF-8 keys
     my $key = biber_decode_utf8($entry->key);
 
     # Check if this key has already been registered as a citekey alias, if
@@ -1373,8 +1396,9 @@ sub _hack_month {
 
 sub _get_handler {
   my $field = shift;
-  if (my $h = $handlers->{CUSTOM}{$field}) {
-    return $h;
+  my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
+  if ($field =~ qr/$ann$/) {
+    return $handlers->{CUSTOM}{annotation};
   }
   else {
     return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field) || 'default'}{$dm->get_datatype($field)};

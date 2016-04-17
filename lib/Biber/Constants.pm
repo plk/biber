@@ -77,6 +77,7 @@ our %DS_EXTENSIONS = (
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 
 our $CONFIG_DEFAULT_BIBER = {
+  annotation_marker   => { content => '+an' },
   clrmacros           => { content => 0 },
   collate             => { content => 1 },
   collate_options     => { option => {level => 4, variable => 'non-ignorable', normalization => 'prenormalized' }},

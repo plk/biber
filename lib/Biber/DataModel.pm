@@ -6,6 +6,7 @@ use warnings;
 no autovivification;
 
 use List::Util qw( first );
+use Biber::Config;
 use Biber::Utils;
 use Biber::Constants;
 use Data::Dump qw( pp );
@@ -233,20 +234,17 @@ sub datatypes {
 
 =head2 is_field
 
-    Returns boolean to say if a field is a legal field
-    Allows intermediate temp custom fields which are used
-    when a driver source field doesn't have an obvious 1:1 mapping
-    to a datamodel field. Such intermediates are defined in the target
-    field mapping of a sourcemap.
-
-    Also allows for fields with script form and optional lang suffix
+    Returns boolean to say if a field is a legal field. We always
+    allow annotation fields as these are not part of the datamodel.
 
 =cut
 
 sub is_field {
   my $self = shift;
   my $field = shift;
-  if ($field =~ m/^BIBERCUSTOM/o) {
+  my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
+
+  if ($field =~ m/$ann$/) {
     return 1;
   }
   else {

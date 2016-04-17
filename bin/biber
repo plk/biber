@@ -24,6 +24,7 @@ use Getopt::Long qw/:config no_ignore_case/;
 my $opts = {};
 GetOptions(
            $opts,
+           'annotation_marker|annotation-marker=s',
            'bibencoding=s', # legacy alias for input_encoding
            'bblencoding=s', # legacy alias for output_encoding
            'bblsafechars',  # legacy alias for output_safechars
@@ -427,6 +428,11 @@ C<biber> provides a replacement of the bibtex processor for users of biblatex.
 =head1 OPTIONS
 
 =over 4
+
+=item B<--annotation-marker=[marker]>
+
+Sets the suffix which can be appended to a BibTeX data source field name to
+indicate that the value of the field is a data annotation. The default is C<+an>.
 
 =item B<--cache>
 
