@@ -274,7 +274,7 @@ sub name_to_biblatexml {
   }
 
   # name scope annotation
-  if (my $ann = Biber::Annotation->get_annotation('name', $key, $namefield, $count)) {
+  if (my $ann = Biber::Annotation->get_annotation('item', $key, $namefield, $count)) {
     push @attrs, ('annotation' => $ann);
   }
 
@@ -302,7 +302,7 @@ sub name_part_to_bltxml {
     my @attrs;
 
     # namepart scope annotation
-    if (my $ann = Biber::Annotation->get_annotation('namepart', $key, $namefield, $count, $npn)) {
+    if (my $ann = Biber::Annotation->get_annotation('part', $key, $namefield, $count, $npn)) {
       push @attrs, ('annotation' => $ann);
     }
 

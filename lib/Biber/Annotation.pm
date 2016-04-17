@@ -30,13 +30,13 @@ Biber::Entry::Annotation
 sub set_annotation {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $value, $count, $part) = @_;
-  if ($scope eq 'field' or $scope eq 'list' or $scope eq 'names') {
+  if ($scope eq 'field' or $scope eq 'list') {
     $ANN->{$scope}{$key}{$field} = $value;
   }
-  elsif ($scope eq 'item' or $scope eq 'name') {
+  elsif ($scope eq 'item') {
     $ANN->{$scope}{$key}{$field}{$count} = $value;
   }
-  elsif ($scope eq 'namepart') {
+  elsif ($scope eq 'part') {
     $ANN->{$scope}{$key}{$field}{$count}{$part} = $value;
   }
   return;
@@ -51,13 +51,13 @@ sub set_annotation {
 sub get_annotation {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $count, $part) = @_;
-  if ($scope eq 'field' or $scope eq 'list' or $scope eq 'names') {
+  if ($scope eq 'field' or $scope eq 'list') {
     return $ANN->{$scope}{$key}{$field};
   }
-  elsif ($scope eq 'item' or $scope eq 'name') {
+  elsif ($scope eq 'item') {
     return $ANN->{$scope}{$key}{$field}{$count};
   }
-  elsif ($scope eq 'namepart') {
+  elsif ($scope eq 'part') {
     return $ANN->{$scope}{$key}{$field}{$count}{$part};
   }
   return undef;

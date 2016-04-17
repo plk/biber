@@ -163,7 +163,7 @@ sub set_output_entry {
       }
 
       # names scope annotation
-      if (my $ann = Biber::Annotation->get_annotation('names', $key, $namefield)) {
+      if (my $ann = Biber::Annotation->get_annotation('list', $key, $namefield)) {
         push @attrs, ('annotation' => $ann);
       }
 

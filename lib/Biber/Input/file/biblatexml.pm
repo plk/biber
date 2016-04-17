@@ -894,7 +894,7 @@ sub _name {
 
     # generic annotation attribute
     if (my $string = $node->getAttribute('annotation')) {
-      Biber::Annotation->set_annotation('names', $key, _norm($f), $string);
+      Biber::Annotation->set_annotation('list', $key, _norm($f), $string);
     }
   }
   return;
@@ -935,7 +935,7 @@ sub parsename {
 
   # generic annotation attribute - individual name scope
   if (my $string = $node->getAttribute('annotation')) {
-    Biber::Annotation->set_annotation('name', $key, _norm($fieldname), $string, $count);
+    Biber::Annotation->set_annotation('item', $key, _norm($fieldname), $string, $count);
   }
 
   my %namec;
@@ -946,7 +946,7 @@ sub parsename {
 
       # generic annotation attribute - namepart scope
       if (my $string = $npnode->getAttribute('annotation')) {
-        Biber::Annotation->set_annotation('namepart', $key, _norm($fieldname), $string, $count, $n);
+        Biber::Annotation->set_annotation('part', $key, _norm($fieldname), $string, $count, $n);
       }
 
       # name component with parts

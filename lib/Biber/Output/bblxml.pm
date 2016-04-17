@@ -417,7 +417,7 @@ sub set_output_entry {
 
 
   # Output annotations
-  foreach my $scope ('field', 'list', 'names') {
+  foreach my $scope ('field', 'list') {
     foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
       my $v = Biber::Annotation->get_annotation($scope, $key, $f);
       $xml->dataElement([$xml_prefix, 'annotation'],
@@ -428,7 +428,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $scope ('item', 'name') {
+  foreach my $scope ('item') {
     foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
       foreach my $c (Biber::Annotation->get_annotated_items($scope, $key, $f)) {
         my $v = Biber::Annotation->get_annotation($scope, $key, $f, $c);
@@ -442,7 +442,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $scope ('namepart') {
+  foreach my $scope ('part') {
     foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
       foreach my $c (Biber::Annotation->get_annotated_items($scope, $key, $f)) {
         foreach my $p (Biber::Annotation->get_annotated_parts($scope, $key, $f, $c)) {
