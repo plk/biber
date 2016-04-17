@@ -455,29 +455,23 @@ sub set_output_entry {
   }
 
   # Output annotations
-  foreach my $scope ('field', 'list') {
-    foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
-      my $v = Biber::Annotation->get_annotation($scope, $key, $f);
-      $acc .= "      \\annotation{$scope}{$f}{}{}{$v}\n";
+  foreach my $f (Biber::Annotation->get_annotated_fields('field', $key)) {
+    my $v = Biber::Annotation->get_annotation('field', $key, $f);
+    $acc .= "      \\annotation{field}{$f}{}{}{$v}\n";
+  }
+
+  foreach my $f (Biber::Annotation->get_annotated_fields('item', $key)) {
+    foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f)) {
+      my $v = Biber::Annotation->get_annotation('item', $key, $f, $c);
+      $acc .= "      \\annotation{item}{$f}{$c}{}{$v}\n";
     }
   }
 
-  foreach my $scope ('item') {
-    foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
-      foreach my $c (Biber::Annotation->get_annotated_items($scope, $key, $f)) {
-        my $v = Biber::Annotation->get_annotation($scope, $key, $f, $c);
-        $acc .= "      \\annotation{$scope}{$f}{$c}{}{$v}\n";
-      }
-    }
-  }
-
-  foreach my $scope ('part') {
-    foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
-      foreach my $c (Biber::Annotation->get_annotated_items($scope, $key, $f)) {
-        foreach my $p (Biber::Annotation->get_annotated_parts($scope, $key, $f, $c)) {
-          my $v = Biber::Annotation->get_annotation($scope, $key, $f, $c, $p);
-          $acc .= "      \\annotation{$scope}{$f}{$c}{$p}{$v}\n";
-        }
+  foreach my $f (Biber::Annotation->get_annotated_fields('part', $key)) {
+    foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f)) {
+      foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $c)) {
+        my $v = Biber::Annotation->get_annotation('part', $key, $f, $c, $p);
+        $acc .= "      \\annotation{part}{$f}{$c}{$p}{$v}\n";
       }
     }
   }

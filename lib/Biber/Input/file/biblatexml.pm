@@ -768,7 +768,7 @@ sub _list {
 
     # generic annotation attribute
     if (my $string = $node->getAttribute('annotation')) {
-      Biber::Annotation->set_annotation('list', $key, _norm($f), $string);
+      Biber::Annotation->set_annotation('field', $key, _norm($f), $string);
     }
   }
   return;
@@ -894,7 +894,7 @@ sub _name {
 
     # generic annotation attribute
     if (my $string = $node->getAttribute('annotation')) {
-      Biber::Annotation->set_annotation('list', $key, _norm($f), $string);
+      Biber::Annotation->set_annotation('field', $key, _norm($f), $string);
     }
   }
   return;

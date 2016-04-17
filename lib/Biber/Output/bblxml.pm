@@ -417,44 +417,38 @@ sub set_output_entry {
 
 
   # Output annotations
-  foreach my $scope ('field', 'list') {
-    foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
-      my $v = Biber::Annotation->get_annotation($scope, $key, $f);
+  foreach my $f (Biber::Annotation->get_annotated_fields('field', $key)) {
+    my $v = Biber::Annotation->get_annotation('field', $key, $f);
+    $xml->dataElement([$xml_prefix, 'annotation'],
+                      scope => 'field',
+                      field => _bblxml_norm($f),
+                      value => _bblxml_norm($v)
+                     );
+  }
+
+  foreach my $f (Biber::Annotation->get_annotated_fields('item', $key)) {
+    foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f)) {
+      my $v = Biber::Annotation->get_annotation('item', $key, $f, $c);
       $xml->dataElement([$xml_prefix, 'annotation'],
-                        scope => _bblxml_norm($scope),
+                        scope => 'item',
                         field => _bblxml_norm($f),
+                        item  => _bblxml_norm($c),
                         value => _bblxml_norm($v)
-                        );
+                       );
     }
   }
 
-  foreach my $scope ('item') {
-    foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
-      foreach my $c (Biber::Annotation->get_annotated_items($scope, $key, $f)) {
-        my $v = Biber::Annotation->get_annotation($scope, $key, $f, $c);
+  foreach my $f (Biber::Annotation->get_annotated_fields('part', $key)) {
+    foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f)) {
+      foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $c)) {
+        my $v = Biber::Annotation->get_annotation('part', $key, $f, $c, $p);
         $xml->dataElement([$xml_prefix, 'annotation'],
-                          scope => _bblxml_norm($scope),
+                          scope => 'part',
                           field => _bblxml_norm($f),
                           item  => _bblxml_norm($c),
+                          part  => _bblxml_norm($p),
                           value => _bblxml_norm($v)
                          );
-      }
-    }
-  }
-
-  foreach my $scope ('part') {
-    foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
-      foreach my $c (Biber::Annotation->get_annotated_items($scope, $key, $f)) {
-        foreach my $p (Biber::Annotation->get_annotated_parts($scope, $key, $f, $c)) {
-          my $v = Biber::Annotation->get_annotation($scope, $key, $f, $c, $p);
-          $xml->dataElement([$xml_prefix, 'annotation'],
-                            scope => _bblxml_norm($scope),
-                            field => _bblxml_norm($f),
-                            item  => _bblxml_norm($c),
-                            part  => _bblxml_norm($p),
-                            value => _bblxml_norm($v)
-                           );
-        }
       }
     }
   }

@@ -30,7 +30,7 @@ Biber::Entry::Annotation
 sub set_annotation {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $value, $count, $part) = @_;
-  if ($scope eq 'field' or $scope eq 'list') {
+  if ($scope eq 'field') {
     $ANN->{$scope}{$key}{$field} = $value;
   }
   elsif ($scope eq 'item') {
@@ -51,7 +51,7 @@ sub set_annotation {
 sub get_annotation {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $count, $part) = @_;
-  if ($scope eq 'field' or $scope eq 'list') {
+  if ($scope eq 'field') {
     return $ANN->{$scope}{$key}{$field};
   }
   elsif ($scope eq 'item') {
