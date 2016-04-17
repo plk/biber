@@ -1000,6 +1000,10 @@ sub generate_bltxml_schema {
             $writer->emptyTag('text');# text
             $writer->startTag('oneOrMore');
             $writer->startTag('element', 'name' => "$bltx:item");
+
+            # generic annotation attribute
+            $writer->emptyTag('ref', 'name' => "annotation");
+
             $writer->emptyTag('text');# text
             $writer->endTag(); # item element
             $writer->endTag(); # oneOrMore element
@@ -1077,10 +1081,6 @@ sub generate_bltxml_schema {
               $writer->startTag('optional');
               $writer->emptyTag('attribute', 'name' => 'options');
               $writer->endTag(); # optional
-
-              # generic annotation attribute
-              $writer->emptyTag('ref', 'name' => "annotation");
-
               $writer->endTag(); # item element
               $writer->endTag(); # oneOrMore
               $writer->endTag(); # $field element

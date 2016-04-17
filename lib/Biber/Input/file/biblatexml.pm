@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Carp;
+use Biber::Annotation;
 use Biber::Constants;
 use Biber::DataModel;
 use Biber::Entries;
@@ -716,15 +717,23 @@ sub _literal {
     else {
       $bibentry->set_datafield(_norm($f), $node->textContent());
     }
+    # generic annotation attribute
+    if (my $string = $node->getAttribute('annotation')) {
+      Biber::Annotation->set_annotation('field', $key, _norm($f), $string);
+    }
   }
   return;
 }
 
 # xSV field
 sub _xsv {
-  my ($bibentry, $entry, $f) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
-    $bibentry->set_datafield(_norm($f), _split_list($node));
+    $bibentry->set_datafield(_norm($f), _split_list($node, $key, $f));
+    # generic annotation attribute
+    if (my $string = $node->getAttribute('annotation')) {
+      Biber::Annotation->set_annotation('field', $key, _norm($f), $string);
+    }
   }
   return;
 }
@@ -743,6 +752,10 @@ sub _uri {
    $value = URI->new($value)->as_string;
   }
   $bibentry->set_datafield(_norm($f), $value);
+  # generic annotation attribute
+  if (my $string = $node->getAttribute('annotation')) {
+    Biber::Annotation->set_annotation('field', $key, _norm($f), $string);
+  }
   return;
 }
 
@@ -751,7 +764,12 @@ sub _uri {
 sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
-    $bibentry->set_datafield(_norm($f), _split_list($node));
+    $bibentry->set_datafield(_norm($f), _split_list($node, $key, $f));
+
+    # generic annotation attribute
+    if (my $string = $node->getAttribute('annotation')) {
+      Biber::Annotation->set_annotation('list', $key, _norm($f), $string);
+    }
   }
   return;
 }
@@ -851,6 +869,7 @@ sub _name {
       $names->set_sortnamekeyscheme($node->getAttribute('sortnamekeyscheme'));
     }
 
+    my $numname = 0;
     foreach my $namenode ($node->findnodes("./$NS:name")) {
 
       my $useprefix;
@@ -863,7 +882,7 @@ sub _name {
         $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
       }
 
-      $names->add_name(parsename($namenode,$f, {useprefix => $useprefix}));
+      $names->add_name(parsename($namenode, $f, $key, $numname++, {useprefix => $useprefix}));
     }
 
     # Deal with explicit "moreenames" in data source
@@ -872,6 +891,11 @@ sub _name {
     }
 
     $bibentry->set_datafield(_norm($f), $names);
+
+    # generic annotation attribute
+    if (my $string = $node->getAttribute('annotation')) {
+      Biber::Annotation->set_annotation('names', $key, _norm($f), $string);
+    }
   }
   return;
 }
@@ -897,7 +921,7 @@ sub _name {
 =cut
 
 sub parsename {
-  my ($node, $fieldname, $opts) = @_;
+  my ($node, $fieldname, $key, $count, $opts) = @_;
   $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
   # We have to pass this in from higher scopes as we need to actually use the scoped
   # value in this sub as well as set the name local value in the object
@@ -909,16 +933,26 @@ sub parsename {
     $useprefix = $namescope_useprefix = map_boolean($node->getAttribute('useprefix'), 'tonum');
   }
 
+  # generic annotation attribute - individual name scope
+  if (my $string = $node->getAttribute('annotation')) {
+    Biber::Annotation->set_annotation('name', $key, _norm($fieldname), $string, $count);
+  }
 
   my %namec;
 
   foreach my $n ($dm->get_constant_value('nameparts')) { # list type so returns list
-    # If there is a name component node for this component ...
-    if (my $nc_node = $node->findnodes("./$NS:namepart[\@type='$n']")->get_node(1)) {
+    # If there is a namepart node for this component ...
+    if (my $npnode = $node->findnodes("./$NS:namepart[\@type='$n']")->get_node(1)) {
+
+      # generic annotation attribute - namepart scope
+      if (my $string = $npnode->getAttribute('annotation')) {
+        Biber::Annotation->set_annotation('namepart', $key, _norm($fieldname), $string, $count, $n);
+      }
+
       # name component with parts
-      if (my @parts = map {$_->textContent()} $nc_node->findnodes("./$NS:namepart")) {
+      if (my @parts = map {$_->textContent()} $npnode->findnodes("./$NS:namepart")) {
         $namec{$n} = _join_name_parts(\@parts);
-        $logger->debug("Found name component '$n': " . $namec{$n});
+        $logger->debug("Found namepart '$n': " . $namec{$n});
         if (my $ni = $node->getAttribute('initial')) {
           $namec{"${n}_i"} = [$ni];
         }
@@ -927,9 +961,9 @@ sub parsename {
         }
       }
       # with no parts
-      elsif (my $t = $nc_node->textContent()) {
+      elsif (my $t = $npnode->textContent()) {
         $namec{$n} = $t;
-        $logger->debug("Found name component '$n': $t");
+        $logger->debug("Found namepart '$n': $t");
         if (my $ni = $node->getAttribute('initial')) {
           $namec{"${n}_i"} = [$ni];
         }
@@ -1060,8 +1094,16 @@ sub _parse_range_list {
 
 # Splits a list field into an array ref
 sub _split_list {
-  my $node = shift;
+  my ($node, $key, $f) = @_;
   if (my @list = $node->findnodes("./$NS:item")) {
+
+    for (my $i = 0; $i <= $#list; $i++) {
+      # generic annotation attribute
+      if (my $string = $list[$i]->getAttribute('annotation')) {
+        Biber::Config->set_annotation('listitem', $key, _norm($f), $string, $i+1);
+      }
+    }
+
     return [ map {$_->textContent()} @list ];
   }
   else {

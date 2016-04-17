@@ -10,6 +10,7 @@ data/schemata/config.rng
 data/schemata/texmap.rnc
 data/texmap.xsl
 doc/biber.tex
+lib/Biber/Annotation.pm
 lib/Biber/Config.pm
 lib/Biber/Constants.pm
 lib/Biber/DataModel.pm
