@@ -1509,6 +1509,27 @@ sub generate_bblxml_schema {
   $writer->endTag();# keywords
   $writer->endTag();# optional
 
+  # annotations
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:annotation");
+  $writer->startTag('attribute', 'name' => 'scope');
+  $writer->startTag('choice');
+  foreach my $s ('field', 'list', 'names', 'item', 'name', 'namepart') {
+    $writer->dataElement('value', $s);
+  }
+  $writer->endTag();# choice
+  $writer->endTag();# scope attribute
+  $writer->emptyTag('attribute', 'name' => 'field');
+  $writer->emptyTag('attribute', 'name' => 'value');
+  $writer->startTag('optional');
+  $writer->emptyTag('attribute', 'name' => 'item');
+  $writer->endTag();# optional
+  $writer->startTag('optional');
+  $writer->emptyTag('attribute', 'name' => 'part');
+  $writer->endTag();# optional
+  $writer->endTag();# annotation
+  $writer->endTag();# zeroOrMore
+
   # warnings
   $writer->startTag('zeroOrMore');
   $writer->startTag('element', 'name' => "$bbl:warning");

@@ -5,6 +5,7 @@ use warnings;
 use parent qw(Biber::Output::base);
 
 use Biber;
+use Biber::Annotation;
 use Biber::Config;
 use Biber::Constants;
 use Biber::Utils;
@@ -161,10 +162,15 @@ sub set_output_entry {
         }
       }
 
+      # names scope annotation
+      if (my $ann = Biber::Annotation->get_annotation('names', $key, $namefield)) {
+        push @attrs, ('annotation' => $ann);
+      }
+
       $xml->startTag([$xml_prefix, 'names'], @attrs);
 
       foreach my $n (@{$nf->names}) {
-        $n->name_to_biblatexml($xml, $self);
+        $n->name_to_biblatexml($self, $xml, $key, $namefield, $n->get_index);
       }
       $xml->endTag();           # Names
     }
@@ -184,11 +190,23 @@ sub set_output_entry {
         pop @$lf;               # remove the last element in the array
       }
 
+      # list scope annotation
+      if (my $ann = Biber::Annotation->get_annotation('list', $key, $listfield)) {
+        push @attrs, ('annotation' => $ann);
+      }
+
       $xml->startTag([$xml_prefix, $listfield], @attrs);
 
       # List loop
+      my $itemcount = 1;
       foreach my $f (@$lf) {
-        $xml->dataElement([$xml_prefix, 'item'], NFC($f));
+        my @lattrs;
+        # item scope annotation
+        if (my $ann = Biber::Annotation->get_annotation('item', $key, $listfield, $itemcount++)) {
+          push @lattrs, ('annotation' => $ann);
+        }
+
+        $xml->dataElement([$xml_prefix, 'item'], NFC($f), @lattrs);
       }
       $xml->endTag();           # List
     }
@@ -209,8 +227,13 @@ sub set_output_entry {
 
       next if $dm->get_fieldformat($field) eq 'xsv';
       if (my $f = $be->get_field($field)) {
-
         my @attrs;
+
+        # field scope annotation
+        if (my $ann = Biber::Annotation->get_annotation('field', $key, $field)) {
+          push @attrs, ('annotation' => $ann);
+        }
+
         $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs);
       }
     }
@@ -221,6 +244,12 @@ sub set_output_entry {
     if (my $f = $be->get_field($xsvf)) {
       next if $xsvf eq 'ids'; # IDS is special
       next if $xsvf eq 'xdata'; # XDATA is special
+
+      my @attrs;
+      # field scope annotation
+      if (my $ann = Biber::Annotation->get_annotation('field', $key, $xsvf)) {
+        push @attrs, ('annotation' => $ann);
+      }
 
       $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',@$f)));
     }
@@ -306,7 +335,6 @@ sub set_output_entry {
 
   return;
 }
-
 
 =head2 output
 

@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use parent qw(Biber::Output::base);
 
+use Biber::Annotation;
 use Biber::Config;
 use Biber::Constants;
 use Biber::Entry;
@@ -451,6 +452,34 @@ sub set_output_entry {
   if ( my $k = $be->get_field('keywords') ) {
     $k = join(',', @$k);
     $acc .= "      \\keyw{$k}\n";
+  }
+
+  # Output annotations
+  foreach my $scope ('field', 'list', 'names') {
+    foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
+      my $v = Biber::Annotation->get_annotation($scope, $key, $f);
+      $acc .= "      \\annotation{$scope}{$f}{$v}\n";
+    }
+  }
+
+  foreach my $scope ('item', 'name') {
+    foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
+      foreach my $c (Biber::Annotation->get_annotated_items($scope, $key, $f)) {
+        my $v = Biber::Annotation->get_annotation($scope, $key, $f, $c);
+        $acc .= "      \\annotation{$scope}{$f}{$c}{$v}\n";
+      }
+    }
+  }
+
+  foreach my $scope ('namepart') {
+    foreach my $f (Biber::Annotation->get_annotated_fields($scope, $key)) {
+      foreach my $c (Biber::Annotation->get_annotated_items($scope, $key, $f)) {
+        foreach my $p (Biber::Annotation->get_annotated_parts($scope, $key, $f, $c)) {
+          my $v = Biber::Annotation->get_annotation($scope, $key, $f, $c, $p);
+          $acc .= "      \\annotation{$scope}{$f}{$c}{$p}{$v}\n";
+        }
+      }
+    }
   }
 
   # Append any warnings to the entry, if any

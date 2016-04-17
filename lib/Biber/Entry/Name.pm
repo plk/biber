@@ -6,6 +6,7 @@ use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
 use Regexp::Common qw( balanced );
+use Biber::Annotation;
 use Biber::Config;
 use Biber::Constants;
 use Biber::Utils;
@@ -18,6 +19,7 @@ my $logger = Log::Log4perl::get_logger('main');
 
 # Names of simple package accessor attributes
 __PACKAGE__->mk_accessors(qw (
+                               gender
                                hash
                                index
                                namestring
@@ -42,6 +44,7 @@ sub new {
   if (%params) {
     my $name = {};
     foreach my $attr (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}},
+                      'gender',
                       'namestring',
                       'nameinitstring',
                       'strip',
@@ -246,10 +249,9 @@ sub set_namepart_initial {
 =cut
 
 sub name_to_biblatexml {
-  my $self = shift;
-  my $xml = shift;
-  my $out = shift;
+  my ($self, $out, $xml, $key, $namefield, $count) = @_;
   my $xml_prefix = $out->{xml_prefix};
+  my $dm = Biber::Config->get_dm;
   my @attrs;
 
   # Add per-name options
@@ -266,19 +268,21 @@ sub name_to_biblatexml {
     }
   }
 
+  # gender
+  if (my $g = $self->get_gender) {
+    push @attrs, ('gender' => $g);
+  }
+
+  # name scope annotation
+  if (my $ann = Biber::Annotation->get_annotation('name', $key, $namefield, $count)) {
+    push @attrs, ('annotation' => $ann);
+  }
+
   $xml->startTag([$xml_prefix, 'name'], @attrs);
 
-  # family name
-  $self->name_part_to_bltxml($xml, $xml_prefix, 'family');
-
-  # given name
-  $self->name_part_to_bltxml($xml, $xml_prefix, 'given');
-
-  # prefix
-  $self->name_part_to_bltxml($xml, $xml_prefix, 'prefix');
-
-  # suffix
-  $self->name_part_to_bltxml($xml, $xml_prefix, 'suffix');
+  foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
+    $self->name_part_to_bltxml($xml, $xml_prefix, $key, $namefield, $np, $count);
+  }
 
   $xml->endTag(); # Name
 }
@@ -290,14 +294,21 @@ sub name_to_biblatexml {
 =cut
 
 sub name_part_to_bltxml {
-  my ($self, $xml, $xml_prefix, $npn) = @_;
+  my ($self, $xml, $xml_prefix, $key, $namefield, $npn, $count) = @_;
   my $np = $self->get_namepart($npn);
   my $nip = $self->get_namepart_initial($npn);
   if ($np) {
     my $parts = [split(/[\s~]/, $np)];
+    my @attrs;
+
+    # namepart scope annotation
+    if (my $ann = Biber::Annotation->get_annotation('namepart', $key, $namefield, $count, $npn)) {
+      push @attrs, ('annotation' => $ann);
+    }
+
     # Compound name part
     if ($#$parts > 0) {
-      $xml->startTag([$xml_prefix, 'namepart'], type => $npn);
+      $xml->startTag([$xml_prefix, 'namepart'], type => $npn, @attrs);
       for (my $i=0;$i <= $#$parts;$i++) {
         if (my $init = $nip->[$i]) {
           $xml->startTag([$xml_prefix, 'namepart'], initial => $init);
@@ -312,7 +323,7 @@ sub name_part_to_bltxml {
     }
     else { # simple name part
       if (my $init = $nip->[0]) {
-        $xml->startTag([$xml_prefix, 'namepart'], type => $npn, initial => $init);
+        $xml->startTag([$xml_prefix, 'namepart'], type => $npn, initial => $init, @attrs);
       }
       else {
         $xml->startTag([$xml_prefix, 'namepart']);

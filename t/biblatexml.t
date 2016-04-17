@@ -131,6 +131,14 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{year}{1983}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}
+      \annotation{field}{title}{field-ann1}
+      \annotation{list}{language}{list-ann1}
+      \annotation{names}{author}{names-ann}
+      \annotation{item}{language}{1}{item-ann1}
+      \annotation{name}{author}{1}{name-ann1}
+      \annotation{name}{author}{3}{name-ann2}
+      \annotation{namepart}{author}{1}{given}{namepart-ann1}
+      \annotation{namepart}{author}{2}{family}{namepart-ann2}
     \endentry
 |;
 

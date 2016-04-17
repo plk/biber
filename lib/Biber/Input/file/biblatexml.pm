@@ -869,7 +869,7 @@ sub _name {
       $names->set_sortnamekeyscheme($node->getAttribute('sortnamekeyscheme'));
     }
 
-    my $numname = 0;
+    my $numname = 1;
     foreach my $namenode ($node->findnodes("./$NS:name")) {
 
       my $useprefix;
@@ -1100,7 +1100,7 @@ sub _split_list {
     for (my $i = 0; $i <= $#list; $i++) {
       # generic annotation attribute
       if (my $string = $list[$i]->getAttribute('annotation')) {
-        Biber::Config->set_annotation('listitem', $key, _norm($f), $string, $i+1);
+        Biber::Annotation->set_annotation('item', $key, _norm($f), $string, $i+1);
       }
     }
 

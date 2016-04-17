@@ -5,39 +5,21 @@ use warnings;
 
 use Biber::Config;
 use Biber::Constants;
+use Data::Dump;
 use Biber::Utils;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
 no autovivification;
 my $logger = Log::Log4perl::get_logger('main');
 
+# Static class data
+my $ANN = {};
+
 =encoding utf-8
 
 =head1 ANNOTATION
 
 Biber::Entry::Annotation
-
-=head2 new
-
-    Initialise a Biber::Annotation object, optionally with key=>value arguments.
-
-=cut
-
-sub new {
-  my ($class, %params) = @_;
-  if (%params) {
-    my $ann = {};
-    foreach my $attr ('scope', 'key', 'value') {
-      if (exists $params{$attr}) {
-        $ann->{$attr} = $params{$attr};
-      }
-    }
-    return bless $ann, $class;
-  } else {
-    return bless {}, $class;
-  }
-}
-
 
 =head2 set_annotation
 
@@ -46,15 +28,16 @@ sub new {
 =cut
 
 sub set_annotation {
-  my ($self, $scope, $key, $field, $value, $count, $part) = @_;
+  shift; # class method so don't care about class name
+  my ($scope, $key, $field, $value, $count, $part) = @_;
   if ($scope eq 'field' or $scope eq 'list' or $scope eq 'names') {
-    $self->{$scope}{$key}{$field} = $value;
+    $ANN->{$scope}{$key}{$field} = $value;
   }
-  elsif ($scope eq 'listitem' or $scope eq 'name') {
-    $self->{$scope}{$key}{$field}{$count} = $value;
+  elsif ($scope eq 'item' or $scope eq 'name') {
+    $ANN->{$scope}{$key}{$field}{$count} = $value;
   }
   elsif ($scope eq 'namepart') {
-    $self->{$scope}{$key}{$field}{$count}{$part} = $value;
+    $ANN->{$scope}{$key}{$field}{$count}{$part} = $value;
   }
   return;
 }
@@ -66,17 +49,65 @@ sub set_annotation {
 =cut
 
 sub get_annotation {
-  my ($self, $scope, $key, $field, $value, $count, $part) = @_;
-  if ($scope eq 'field' or $scope eq 'plainlist' or $scope eq 'namelist') {
-    return $self->{$scope}{$key}{$field};
+  shift; # class method so don't care about class name
+  my ($scope, $key, $field, $count, $part) = @_;
+  if ($scope eq 'field' or $scope eq 'list' or $scope eq 'names') {
+    return $ANN->{$scope}{$key}{$field};
   }
-  elsif ($scope eq 'listitem' or $scope eq 'name') {
-    return $self->{$scope}{$key}{$field}{$count};
+  elsif ($scope eq 'item' or $scope eq 'name') {
+    return $ANN->{$scope}{$key}{$field}{$count};
   }
   elsif ($scope eq 'namepart') {
-    return $self->{$scope}{$key}{$field}{$count}{$part};
+    return $ANN->{$scope}{$key}{$field}{$count}{$part};
   }
   return undef;
+}
+
+=head2 get_annotated_fields
+
+  Retrieve all annotated fields for a particular scope for a key
+
+=cut
+
+sub get_annotated_fields {
+  shift; # class method so don't care about class name
+  my ($scope, $key) = @_;
+  return sort keys %{$ANN->{$scope}{$key}};
+}
+
+=head2 get_annotated_items
+
+  Retrieve the itemcounts for for a particular scope, key and field
+
+=cut
+
+sub get_annotated_items {
+  shift; # class method so don't care about class name
+  my ($scope, $key, $field) = @_;
+  return sort keys %{$ANN->{$scope}{$key}{$field}};
+}
+
+=head2 get_annotated_parts
+
+  Retrieve the parts for for a particular scope, key, field and itemcount
+
+=cut
+
+sub get_annotated_parts {
+  shift; # class method so don't care about class name
+  my ($scope, $key, $field, $count) = @_;
+  return sort keys %{$ANN->{$scope}{$key}{$field}{$count}};
+}
+
+=head2 dump
+
+    Dump config information (for debugging)
+
+=cut
+
+sub dump {
+  shift; # class method so don't care about class name
+  dd($ANN);
 }
 
 
