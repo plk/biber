@@ -413,7 +413,7 @@ sub create_entry {
         }
 
         foreach my $maploop (@maploop) {
-        my $MAPUNIQVAL;
+          my $MAPUNIQVAL;
           # loop over mapping steps
           foreach my $step (@{$map->{map_step}}) {
 
@@ -438,9 +438,11 @@ sub create_entry {
 
               # found a new entry key, remove it from the list of keys we want since we
               # have "found" it by creating it
+              $logger->debug("Source mapping (type=$level, key=$key): created '$newkey', removing from dependent list");
               @$rkeys = grep {$newkey ne $_} @$rkeys;
 
-              # for allkeys sections initially
+              # Need to add the clone key to the section if allkeys is set since all keys
+              # are cleared for allkeys sections initially
               if ($section->is_allkeys) {
                 $section->add_citekeys($newkey);
               }
@@ -450,22 +452,21 @@ sub create_entry {
             # entry clone
             if (my $prefix = maploopreplace($step->{map_entry_clone}, $maploop)) {
               $logger->debug("Source mapping (type=$level, key=$key): cloning entry with prefix '$prefix'");
-              # Create entry
-              _create_entry("$prefix$key", $entry);
-
               # found a prefix clone key, remove it from the list of keys we want since we
               # have "found" it by creating it along with its clone parent
               $logger->debug("Source mapping (type=$level, key=$key): created '$prefix$key', removing from dependent list");
               @$rkeys = grep {"$prefix$key" ne $_} @$rkeys;
+
               # Need to add the clone key to the section if allkeys is set since all keys
               # are cleared for allkeys sections initially
               if ($section->is_allkeys) {
                 $section->add_citekeys("$prefix$key");
               }
+              $newentries{"$prefix$key"} = $entry;
             }
 
-            # An entry created by map_entry_new previously can be the target for field setting
-            # options
+            # An entry created by map_entry_new or map_entry_clone previously can be
+            # the target for field setting options
             # A newly created entry as target of operations doesn't make sense in all situations
             # so it's limited to being the target for field sets
             my $etarget;
@@ -654,8 +655,8 @@ sub create_entry {
     _create_entry($key, $entry);
 
     # Need to also instantiate fields in any new entries created by map
-    foreach my $e (values %newentries) {
-      _create_entry(biber_decode_utf8($e->key), $e);
+    while (my ($k, $e) = each %newentries) {
+      _create_entry($k, $e);
     }
   }
   return 1;
@@ -713,6 +714,7 @@ sub _create_entry {
   $bibentry->set_field('datatype', 'bibtex');
   $logger->debug("Adding entry with key '$k' to entry list");
   $section->bibentries->add_entry($k, $bibentry);
+  return;
 }
 
 # HANDLERS

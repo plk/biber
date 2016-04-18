@@ -663,6 +663,7 @@ my $clone1 = q|    \entry{clone-snk1}{book}{}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{extraalpha}{1}
       \field{labelnamesource}{author}
+      \field{note}{note}
     \endentry
 |;
 
