@@ -463,23 +463,23 @@ sub create_entry {
           # Entrytype map
           if (my $typesource = maploopreplace($step->{map_type_source}, $maploop)) {
             $typesource = lc($typesource);
-            unless ($entry->getAttribute('entrytype') eq $typesource) {
+            unless ($etarget->getAttribute('entrytype') eq $typesource) {
               # Skip the rest of the map if this step doesn't match and match is final
               if ($step->{map_final}) {
-                $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->getAttribute('entrytype') . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->getAttribute('entrytype') . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
                 next MAP;
               }
               else {
                 # just ignore this step
-                $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->getAttribute('entrytype') . "' but map wants '$typesource', skipping step ...");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->getAttribute('entrytype') . "' but map wants '$typesource', skipping step ...");
                 next;
               }
             }
             # Change entrytype if requested
-            $last_type = $entry->getAttribute('entrytype');
+            $last_type = $etarget->getAttribute('entrytype');
             my $t = lc(maploopreplace($step->{map_type_target}, $maploop));
-            $logger->debug("Source mapping (type=$level, key=$key): Changing entry type from '$last_type' to $t");
-            $entry->setAttribute('entrytype', NFC($t));
+            $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
+            $etarget->setAttribute('entrytype', NFC($t));
           }
 
           # Field map
@@ -488,21 +488,21 @@ sub create_entry {
 
             # key is a pseudo-field. It's guaranteed to exist so
             # just check if that's what's being asked for
-            unless ($entry->exists($xp_fieldsource)) {
+            unless ($etarget->exists($xp_fieldsource)) {
               # Skip the rest of the map if this step doesn't match and match is final
               if ($step->{map_final}) {
-                $logger->debug("Source mapping (type=$level, key=$key): No field xpath '$xp_fieldsource_s' and step has 'final' set, skipping rest of map ...");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): No field xpath '$xp_fieldsource_s' and step has 'final' set, skipping rest of map ...");
                 next MAP;
               }
               else {
                 # just ignore this step
-                $logger->debug("Source mapping (type=$level, key=$key): No field xpath '$xp_fieldsource_s', skipping step ...");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): No field xpath '$xp_fieldsource_s', skipping step ...");
                 next;
               }
             }
 
-            $last_field = $entry->findnodes($xp_fieldsource)->get_node(1)->nodeName;
-            $last_fieldval = $entry->findvalue($xp_fieldsource);
+            $last_field = $etarget->findnodes($xp_fieldsource)->get_node(1)->nodeName;
+            $last_fieldval = $etarget->findvalue($xp_fieldsource);
 
             my $negmatch = 0;
             # Negated matches are a normal match with a special flag
@@ -517,15 +517,15 @@ sub create_entry {
 
                 # Can't modify entrykey
                 if (lc($xp_fieldsource_s) eq './@id') {
-                  $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$xp_fieldsource_s' is entrykey- cannot remap the value of this field, skipping ...");
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' is entrykey- cannot remap the value of this field, skipping ...");
                   next;
                 }
 
                 my $r = maploopreplace($step->{map_replace}, $maploop);
-                $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field xpath '$xp_fieldsource_s'");
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field xpath '$xp_fieldsource_s'");
 
-                unless (_changenode($entry, $xp_fieldsource_s, ireplace($last_fieldval, $m, $r)), \$cnerror) {
-                  biber_warn("Source mapping (type=$level, key=$key): $cnerror");
+                unless (_changenode($etarget, $xp_fieldsource_s, ireplace($last_fieldval, $m, $r)), \$cnerror) {
+                  biber_warn("Source mapping (type=$level, key=$etargetkey): $cnerror");
                 }
               }
               else {
@@ -538,12 +538,12 @@ sub create_entry {
                 unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
                   # Skip the rest of the map if this step doesn't match and match is final
                   if ($step->{map_final}) {
-                    $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$xp_fieldsource_s' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' does not match '$m' and step has 'final' set, skipping rest of map ...");
                     next MAP;
                   }
                   else {
                     # just ignore this step
-                    $logger->debug("Source mapping (type=$level, key=$key): Field xpath '$xp_fieldsource_s' does not match '$m', skipping step ...");
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' does not match '$m', skipping step ...");
                     next;
                   }
                 }
@@ -582,8 +582,8 @@ sub create_entry {
 
             # Deal with special tokens
             if ($step->{map_null}) {
-              $logger->debug("Source mapping (type=$level, key=$key): Deleting field xpath '$xp_node_s'");
-              $entry->findnodes($xp_node)->get_node(1)->unbindNode();
+              $logger->debug("Source mapping (type=$level, key=$etargetkey): Deleting field xpath '$xp_node_s'");
+              $etarget->findnodes($xp_node)->get_node(1)->unbindNode();
             }
             else {
               if ($etarget->exists($xp_node)) {
@@ -616,14 +616,14 @@ sub create_entry {
                 next unless $last_fieldval;
                 $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_fieldval}'");
                 unless (_changenode($etarget, $xp_node_s, $orig . $last_fieldval, \$cnerror)) {
-                  biber_warn("Source mapping (type=$level, key=$key): $cnerror");
+                  biber_warn("Source mapping (type=$level, key=$etargetkey): $cnerror");
                 }
               }
               elsif ($step->{map_origfield}) {
                 next unless $last_field;
                 $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_field}'");
                 unless (_changenode($etarget, $xp_node_s, $orig . $last_field, \$cnerror)) {
-                  biber_warn("Source mapping (type=$level, key=$key): $cnerror");
+                  biber_warn("Source mapping (type=$level, key=$etargetkey): $cnerror");
                 }
               }
               else {
