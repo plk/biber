@@ -126,8 +126,8 @@
 }
 
 
-% Testing mincrossrefs. xr1 and xr2 xrefs should trigger inclusion of xrm and also
-% the xreffields in both of them
+% Testing minxrefs. xr1 and xr2 xrefs should trigger inclusion of xrm and also
+% the xref fields in both of them
 @INBOOK{xr1,
   AUTHOR    = {Zoe Zentrum},
   TITLE     = {Moods Mildly Modified},
@@ -164,8 +164,8 @@
   YEAR      = {1977}
 }
 
-% Testing mincrossrefs not reached. cr4 is cited, cr5 isn't, therefore mincrossrefs (2) for
-% crn not reached
+% Testing minxrefs reached. xr4 is cited, xr5 isn't, but minxrefs=1 so xrn
+% is included
 @INBOOK{xr4,
   AUTHOR    = {Megan Mistrel},
   TITLE     = {Lumbering Lunatics},
@@ -210,6 +210,22 @@
   EDITOR    = {Edward Editor},
   TITLE     = {Stuff Concerning Varia},
   DATE      = {1934}
+}
+
+% Test of cascading xref+crossref
+@MISC{xc1,
+  AUTHOR    = {Xavier Crust},
+  XREF      = {xc2}
+}
+
+@INBOOK{xc2,
+  AUTHOR    = {Xavier Crust},
+  CROSSREF  = {xc3}
+}
+
+@BOOK{xc3,
+  AUTHOR    = {Xavier Crust},
+  TITLE     = {Title}
 }
 
 % using alias
@@ -274,3 +290,4 @@
 @BOOK{s2,
   TITLE = {Title}
 }
+

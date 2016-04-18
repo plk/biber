@@ -22,7 +22,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>minxrefs</bcf:key>
-      <bcf:value>2</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortcase</bcf:key>
@@ -1952,6 +1952,7 @@
     <bcf:citekey order="23">r1</bcf:citekey>
     <bcf:citekey order="24">s1</bcf:citekey>
     <bcf:citekey order="25">s2</bcf:citekey>
+    <bcf:citekey order="26">xc1</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">

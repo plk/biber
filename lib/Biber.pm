@@ -1307,7 +1307,7 @@ sub process_interentry {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->debug("Processing explicit and implicit crossrefs for section $secnum");
+  $logger->debug("Processing explicit and implicit xref/crossrefs for section $secnum");
 
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
@@ -1341,21 +1341,6 @@ sub process_interentry {
         my $xref = $be->get_field('xref')) {
       Biber::Config->set_graph('xref', $citekey, $xref);
     }
-
-    # Do crossref inheritance
-    if (my $cr = $be->get_field('crossref')) {
-      # Skip inheritance if we've already done it
-      next if Biber::Config->get_inheritance('crossref', $cr, $be->get_field('citekey'));
-
-      my $parent = $section->bibentry($cr);
-      $logger->debug("Entry $citekey inheriting fields from parent $cr");
-      unless ($parent) {
-        biber_warn("Cannot inherit from crossref key '$cr' - does it exist?", $be);
-      }
-      else {
-        $be->inherit_from($parent);
-      }
-    }
   }
 
   # We make sure that crossrefs that are directly cited or cross-referenced
@@ -1376,6 +1361,26 @@ sub process_interentry {
     if (Biber::Config->get_xrefkey($k) >= Biber::Config->getoption('minxrefs')) {
       $logger->debug("xref key '$k' is xref'ed >= minxrefs, adding to citekeys");
       $section->add_citekeys($k);
+    }
+  }
+
+  # This must come after doing implicit inclusion based on minref/mincrossref
+  # otherwise cascading xref->crossref wont' work
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
+
+    # Do crossref inheritance
+    if (my $cr = $be->get_field('crossref')) {
+      # Skip inheritance if we've already done it
+      next if Biber::Config->get_inheritance('crossref', $cr, $be->get_field('citekey'));
+      my $parent = $section->bibentry($cr);
+      $logger->debug("Entry $citekey inheriting fields from parent $cr");
+      unless ($parent) {
+        biber_warn("Cannot inherit from crossref key '$cr' - does it exist?", $be);
+      }
+      else {
+        $be->inherit_from($parent);
+      }
     }
   }
 }
