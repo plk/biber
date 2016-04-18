@@ -1819,15 +1819,14 @@
                 </data>
               </attribute>
             </group>
-            <attribute name="map_entry_null">
-              <value>1</value>
-            </attribute>
             <group>
-              <attribute name="map_type_source">
-                <data type="string">
-                  <param name="minLength">1</param>
-                </data>
-              </attribute>
+              <optional>
+                <attribute name="map_type_source">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
               <optional>
                 <attribute name="map_type_target">
                   <data type="string">
@@ -1836,22 +1835,41 @@
                 </attribute>
               </optional>
               <optional>
-                <attribute name="map_final">
-                  <value>1</value>
+                <attribute name="map_field_source">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
                 </attribute>
               </optional>
-            </group>
-            <group>
-              <attribute name="map_field_source">
-                <data type="string">
-                  <param name="minLength">1</param>
-                </data>
-              </attribute>
               <optional>
                 <attribute name="map_field_target">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_entrytarget">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_field_set">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_entry_null">
+                  <value>1</value>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_append">
+                  <value>1</value>
                 </attribute>
               </optional>
               <optional>
@@ -1878,58 +1896,27 @@
                   <data type="string"/>
                 </attribute>
               </optional>
-            </group>
-            <group>
               <optional>
-                <attribute name="map_field_source">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </attribute>
+                <choice>
+                  <attribute name="map_null">
+                    <value>1</value>
+                  </attribute>
+                  <attribute name="map_origfield">
+                    <value>1</value>
+                  </attribute>
+                  <attribute name="map_origfieldval">
+                    <value>1</value>
+                  </attribute>
+                  <attribute name="map_origentrytype">
+                    <value>1</value>
+                  </attribute>
+                  <attribute name="map_field_value">
+                    <data type="string">
+                      <param name="minLength">1</param>
+                    </data>
+                  </attribute>
+                </choice>
               </optional>
-              <optional>
-                <attribute name="map_entrytarget">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </attribute>
-              </optional>
-              <optional>
-                <attribute name="map_field_set">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </attribute>
-              </optional>
-              <optional>
-                <attribute name="map_append">
-                  <value>1</value>
-                </attribute>
-              </optional>
-              <optional>
-                <attribute name="map_final">
-                  <value>1</value>
-                </attribute>
-              </optional>
-              <choice>
-                <attribute name="map_null">
-                  <value>1</value>
-                </attribute>
-                <attribute name="map_origfield">
-                  <value>1</value>
-                </attribute>
-                <attribute name="map_origfieldval">
-                  <value>1</value>
-                </attribute>
-                <attribute name="map_origentrytype">
-                  <value>1</value>
-                </attribute>
-                <attribute name="map_field_value">
-                  <data type="string">
-                    <param name="minLength">1</param>
-                  </data>
-                </attribute>
-              </choice>
             </group>
           </choice>
           <empty/>

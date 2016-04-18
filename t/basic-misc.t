@@ -663,7 +663,7 @@ my $clone1 = q|    \entry{clone-snk1}{book}{}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{extraalpha}{1}
       \field{labelnamesource}{author}
-      \field{note}{note}
+      \field{addendum}{add}
     \endentry
 |;
 
@@ -675,7 +675,7 @@ eq_or_diff($out->get_output_entry('newtestkey', $main), $new1, 'New key mapping 
 
 # Should be three new ids in here with random keys
 is(3, scalar(grep {$_ =~ m/^loopkey:/} $section->get_citekeys), 'New key loop mapping - 1');
-eq_or_diff($bibentries->entry([grep {$_ =~ m/^loopkey:/} $section->get_citekeys]->[0])->get_field('note'), 'note', 'New key loop mapping - 2');
+eq_or_diff($bibentries->entry([grep {$_ =~ m/^loopkey:/} $section->get_citekeys]->[0])->get_field('note'), 'NOTEreplaced', 'New key loop mapping - 2');
 
 # uniquetitle test
 eq_or_diff($bibentries->entry('m1')->get_field('uniquetitle'), '1', 'uniquetitle test - 1');

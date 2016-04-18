@@ -485,23 +485,23 @@ sub create_entry {
             # Entrytype map
             if (my $typesource = maploopreplace($step->{map_type_source}, $maploop)) {
               $typesource = lc($typesource);
-              unless ($entry->type eq $typesource) {
+              unless ($etarget->type eq $typesource) {
                 # Skip the rest of the map if this step doesn't match and match is final
                 if ($step->{map_final}) {
-                  $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->type . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
                   next MAP;
                 }
                 else {
                   # just ignore this step
-                  $logger->debug("Source mapping (type=$level, key=$key): Entry type is '" . $entry->type . "' but map wants '$typesource', skipping step ...");
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource', skipping step ...");
                   next;
                 }
               }
               # Change entrytype if requested
-              $last_type = $entry->type;
+              $last_type = $etarget->type;
               my $t = lc(maploopreplace($step->{map_type_target}, $maploop));
-              $logger->debug("Source mapping (type=$level, key=$key): Changing entry type from '$last_type' to $t");
-              $entry->set_type(encode('UTF-8', NFC($t)));
+              $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
+              $etarget->set_type(encode('UTF-8', NFC($t)));
             }
 
             # Field map
@@ -511,21 +511,21 @@ sub create_entry {
               # key is a pseudo-field. It's guaranteed to exist so
               # just check if that's what's being asked for
               unless ($fieldsource eq 'entrykey' or
-                      $entry->exists($fieldsource)) {
+                      $etarget->exists($fieldsource)) {
                 # Skip the rest of the map if this step doesn't match and match is final
                 if ($step->{map_final}) {
-                  $logger->debug("Source mapping (type=$level, key=$key): No field '$fieldsource' and step has 'final' set, skipping rest of map ...");
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource' and step has 'final' set, skipping rest of map ...");
                   next MAP;
                 }
                 else {
                   # just ignore this step
-                  $logger->debug("Source mapping (type=$level, key=$key): No field '$fieldsource', skipping step ...");
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource', skipping step ...");
                   next;
                 }
               }
 
               $last_field = $fieldsource;
-              $last_fieldval = $fieldsource eq 'entrykey' ? biber_decode_utf8($entry->key) : biber_decode_utf8($entry->get($fieldsource));
+              $last_fieldval = $fieldsource eq 'entrykey' ? biber_decode_utf8($etarget->key) : biber_decode_utf8($etarget->get($fieldsource));
 
               my $negmatch = 0;
               # Negated matches are a normal match with a special flag
@@ -540,13 +540,13 @@ sub create_entry {
 
                   # Can't modify entrykey
                   if ($fieldsource eq 'entrykey') {
-                    $logger->debug("Source mapping (type=$level, key=$key): Field '$fieldsource' is 'entrykey'- cannot remap the value of this field, skipping ...");
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot remap the value of this field, skipping ...");
                     next;
                   }
 
                   my $r = maploopreplace($step->{map_replace}, $maploop);
-                  $logger->debug("Source mapping (type=$level, key=$key): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
-                  $entry->set($fieldsource,
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
+                  $etarget->set($fieldsource,
                               encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
                 }
                 else {
@@ -559,12 +559,12 @@ sub create_entry {
                   unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
                     # Skip the rest of the map if this step doesn't match and match is final
                     if ($step->{map_final}) {
-                      $logger->debug("Source mapping (type=$level, key=$key): Field '$fieldsource' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m' and step has 'final' set, skipping rest of map ...");
                       next MAP;
                     }
                     else {
                       # just ignore this step
-                      $logger->debug("Source mapping (type=$level, key=$key): Field '$fieldsource' does not match '$m', skipping step ...");
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m', skipping step ...");
                       next;
                     }
                   }
@@ -599,8 +599,8 @@ sub create_entry {
               $field = lc($field);
               # Deal with special tokens
               if ($step->{map_null}) {
-                $logger->debug("Source mapping (type=$level, key=$key): Deleting field '$field'");
-                $entry->delete($field);
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Deleting field '$field'");
+                $etarget->delete($field);
               }
               else {
                 if ($etarget->exists($field)) {

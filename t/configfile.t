@@ -144,14 +144,17 @@ my $sourcemap = [
         map_step => [
         { map_field_source => "TYPE", map_match => "resreport", map_final => "1" },
         { map_entry_new => "loopkey:\$MAPLOOP:\$MAPUNIQ", map_entry_newtype => "book" },
-        { map_entrytarget => "loopkey:\$MAPLOOP:\$MAPUNIQVAL", map_field_set => "NOTE", map_field_value => "note"} ],
-        map_foreach => "USERA",
+        { map_entrytarget => "loopkey:\$MAPLOOP:\$MAPUNIQVAL", map_field_set => "NOTE", map_field_value => "note"},
+        { map_entrytarget => "loopkey:\$MAPLOOP:\$MAPUNIQVAL", map_field_source => "NOTE", map_match => "note", map_replace => "NOTEreplaced"} ],
+       map_foreach => "USERA",
       },
       {
         map_step => [
         { map_field_source => "ENTRYKEY", map_match => "snk1", map_final => "1" },
         { map_entry_clone => "clone-" },
         { map_entrytarget => "clone-snk1", map_field_set => "NOTE", map_field_value => "note" },
+        { map_entrytarget => "clone-snk1", map_field_set => "ADDENDUM", map_field_value => "add" },
+        { map_entrytarget => "clone-snk1", map_field_set => "NOTE", map_null => "1" },
                     ],
       },
       {
