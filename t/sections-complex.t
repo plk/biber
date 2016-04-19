@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 64;
+use Test::More tests => 65;
 use Test::Differences;
 unified_diff;
 
@@ -192,4 +192,4 @@ eq_or_diff($bibentries1->entry('L7')->get_field('sortlabelalpha'), 'DSJ95', 'max
 ok(is_undef($main1->get_extraalphadata('L7')), 'maxalphanames=3 minalphanames=1 entry L7 extraalpha');
 eq_or_diff($bibentries1->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=3 minalphanames=1 entry L8 labelalpha');
 ok(is_undef($main1->get_extraalphadata('L8')), 'maxalphanames=3 minalphanames=1 entry L8 extraalpha');
-
+eq_or_diff($bibentries1->entry('m1')->get_field('keywords'), ['thing'], 'map idempotency - 1');

@@ -409,6 +409,12 @@
   </bcf:datafieldset>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
+    <bcf:maps datatype="bibtex" level="user">
+      <bcf:map map_overwrite="1">
+        <bcf:per_type>MOVIE</bcf:per_type>
+        <bcf:map_step map_field_set="keywords" map_field_value="thing" map_append="1"/>
+      </bcf:map>
+    </bcf:maps>
     <bcf:maps datatype="bibtex" level="driver">
       <bcf:map>
         <bcf:map_step map_type_source="conference" map_type_target="inproceedings" map_final="1"/>
@@ -2041,7 +2047,9 @@
     <bcf:citekey order="2">L2</bcf:citekey>
     <bcf:citekey order="3">L3</bcf:citekey>
     <bcf:citekey order="4">L4</bcf:citekey>
+    <bcf:citekey order="5">m1</bcf:citekey>
   </bcf:section>
+  <!-- SECTION 1 -->
   <bcf:bibdata section="1">
     <bcf:datasource type="file" datatype="bibtex">labelalpha.bib</bcf:datasource>
   </bcf:bibdata>
@@ -2050,6 +2058,7 @@
     <bcf:citekey order="2">L6</bcf:citekey>
     <bcf:citekey order="3">L7</bcf:citekey>
     <bcf:citekey order="4">L8</bcf:citekey>
+    <bcf:citekey order="5">m1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>
