@@ -151,7 +151,8 @@ my $sourcemap = [
       {
         map_step => [
         { map_field_source => "ENTRYKEY", map_match => "snk1", map_final => "1" },
-        { map_entry_clone => "clone-" },
+        { map_field_source => "entrykey", map_match => "(.+)"},
+        { map_entry_clone => "clone-\$1" },
         { map_entrytarget => "clone-snk1", map_field_set => "NOTE", map_field_value => "note" },
         { map_entrytarget => "clone-snk1", map_field_set => "ADDENDUM", map_field_value => "add" },
         { map_entrytarget => "clone-snk1", map_field_set => "NOTE", map_null => "1" },
