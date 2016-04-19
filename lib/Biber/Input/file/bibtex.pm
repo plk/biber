@@ -656,7 +656,7 @@ sub create_entry {
         }
       }
 
-      # Register that we've processed mapd for this entry
+      # Register that we've processed maps for this entry
       $cache->{data}{$key}{mapdone} = 1;
     }
 

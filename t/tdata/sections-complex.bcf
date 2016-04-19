@@ -413,6 +413,7 @@
       <bcf:map map_overwrite="1">
         <bcf:per_type>MOVIE</bcf:per_type>
         <bcf:map_step map_field_set="keywords" map_field_value="thing" map_append="1"/>
+        <bcf:map_step map_field_source="title" map_match="1" map_replace="11"/>
       </bcf:map>
     </bcf:maps>
     <bcf:maps datatype="bibtex" level="driver">
