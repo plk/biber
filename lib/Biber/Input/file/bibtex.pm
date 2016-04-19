@@ -429,6 +429,11 @@ sub create_entry {
 
               # new entry
               if (my $newkey = maploopreplace($step->{map_entry_new}, $maploop)) {
+                # Now re-instate any unescaped $1 .. $9 to get round these being
+                # dynamically scoped and being null when we get here from any
+                # previous map_match
+                $newkey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+
                 my $newentrytype;
                 unless ($newentrytype = maploopreplace($step->{map_entry_newtype}, $maploop)) {
                   biber_warn("Source mapping (type=$level, key=$key): Missing type for new entry '$newkey', skipping step ...");
@@ -454,19 +459,24 @@ sub create_entry {
               }
 
               # entry clone
-              if (my $prefix = maploopreplace($step->{map_entry_clone}, $maploop)) {
-                $logger->debug("Source mapping (type=$level, key=$key): cloning entry with prefix '$prefix'");
-                # found a prefix clone key, remove it from the list of keys we want since we
+              if (my $clonekey = maploopreplace($step->{map_entry_clone}, $maploop)) {
+                # Now re-instate any unescaped $1 .. $9 to get round these being
+                # dynamically scoped and being null when we get here from any
+                # previous map_match
+                $clonekey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+
+                $logger->debug("Source mapping (type=$level, key=$key): cloning entry with new key '$clonekey'");
+                # found a clone key, remove it from the list of keys we want since we
                 # have "found" it by creating it along with its clone parent
-                $logger->debug("Source mapping (type=$level, key=$key): created '$prefix$key', removing from dependent list");
-                @$rkeys = grep {"$prefix$key" ne $_} @$rkeys;
+                $logger->debug("Source mapping (type=$level, key=$key): created '$clonekey', removing from dependent list");
+                @$rkeys = grep {$clonekey ne $_} @$rkeys;
 
                 # Need to add the clone key to the section if allkeys is set since all keys
                 # are cleared for allkeys sections initially
                 if ($section->is_allkeys) {
-                  $section->add_citekeys("$prefix$key");
+                  $section->add_citekeys($clonekey);
                 }
-                $newentries{"$prefix$key"} = $entry;
+                $newentries{$clonekey} = $entry->clone;
               }
 
               # An entry created by map_entry_new or map_entry_clone previously can be

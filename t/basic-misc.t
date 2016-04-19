@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 66;
+use Test::More tests => 67;
 use Test::Differences;
 unified_diff;
 
@@ -644,7 +644,29 @@ my $new1 = q|    \entry{newtestkey}{book}{}
     \endentry
 |;
 
-my $clone1 = q|    \entry{clone-snk1}{book}{}
+my $clone1 = q|    \entry{snk1}{book}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=628a4e272572f13a643dc1039e67a9a8}{%
+           prefix={von},
+           prefix_i={v\\bibinitperiod},
+           family={Doe},
+           family_i={D\\bibinitperiod},
+           suffix={Jr},
+           suffix_i={J\\bibinitperiod},
+           given={John},
+           given_i={J\\bibinitperiod}}}%
+      }
+      \strng{namehash}{628a4e272572f13a643dc1039e67a9a8}
+      \strng{fullhash}{628a4e272572f13a643dc1039e67a9a8}
+      \field{labelalpha}{vDoe}
+      \field{sortinit}{v}
+      \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
+      \field{extraalpha}{2}
+      \field{labelnamesource}{author}
+    \endentry
+|;
+
+my $clone2 = q|    \entry{clone-snk1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=628a4e272572f13a643dc1039e67a9a8}{%
            prefix={von},
@@ -668,7 +690,8 @@ my $clone1 = q|    \entry{clone-snk1}{book}{}
 |;
 
 # clone test
-eq_or_diff($out->get_output_entry('clone-snk1', $main), $clone1, 'Clone - 1');
+eq_or_diff($out->get_output_entry('snk1', $main), $clone1, 'Clone - 1');
+eq_or_diff($out->get_output_entry('clone-snk1', $main), $clone2, 'Clone - 2');
 
 # New entry map test
 eq_or_diff($out->get_output_entry('newtestkey', $main), $new1, 'New key mapping - 1');
