@@ -486,6 +486,11 @@ sub create_entry {
               my $etarget;
               my $etargetkey;
               if ($etargetkey = maploopreplace($step->{map_entrytarget}, $maploop)) {
+                # Now re-instate any unescaped $1 .. $9 to get round these being
+                # dynamically scoped and being null when we get here from any
+                # previous map_match
+                $etargetkey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+
                 unless ($etarget = $newentries{$etargetkey}) {
                   biber_warn("Source mapping (type=$level, key=$key): Dynamically created entry target '$etargetkey' does not exist skipping step ...");
                   next;
