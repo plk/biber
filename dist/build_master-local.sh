@@ -137,12 +137,12 @@ fi
 
 # Build farm Linux 32
 if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
-  vmon jj32
+  vmon l32
   sleep 10
-  ssh philkime@bbf-jj32 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
-  scp philkime@bbf-jj32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
-  ssh philkime@bbf-jj32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
-  vmoff jj32
+  ssh philkime@bbf-l32 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  scp philkime@bbf-l32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
+  ssh philkime@bbf-l32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
+  vmoff l32
   cd $DIR
   mv biber-linux_x86_32 biber
   chmod +x biber
@@ -154,12 +154,12 @@ fi
 
 # Build farm Linux 64
 if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
-  vmon jj64
+  vmon l64
   sleep 10
-  ssh philkime@bbf-jj64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_64;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
-  scp philkime@bbf-jj64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
-  ssh philkime@bbf-jj64 "\\rm -f biblatex-biber/dist/linux_x86_64/biber-linux_x86_64"
-  vmoff jj64
+  ssh philkime@bbf-l64 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_64;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  scp philkime@bbf-l64:biblatex-biber/dist/linux_x86_64/biber-linux_x86_64 $DIR/
+  ssh philkime@bbf-l64 "\\rm -f biblatex-biber/dist/linux_x86_64/biber-linux_x86_64"
+  vmoff l64
   cd $DIR
   mv biber-linux_x86_64 biber
   chmod +x biber
