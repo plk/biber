@@ -296,6 +296,14 @@ sub set_output_entry {
     }
   }
 
+  if (defined($be->get_field('crossrefsource'))) {
+    $xml->emptyTag([$xml_prefix, 'crossrefsource']);
+  }
+
+  if (defined($be->get_field('xrefsource'))) {
+    $xml->emptyTag([$xml_prefix, 'xrefsource']);
+  }
+
   if (defined($be->get_field('singletitle'))) {
     $xml->emptyTag([$xml_prefix, 'singletitle']);
   }

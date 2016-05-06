@@ -353,6 +353,14 @@ sub set_output_entry {
     }
   }
 
+  if (defined($be->get_field('crossrefsource'))) {
+    $acc .= "      \\true{crossrefsource}\n";
+  }
+
+  if (defined($be->get_field('xrefsource'))) {
+    $acc .= "      \\true{xrefsource}\n";
+  }
+
   if (defined($be->get_field('singletitle'))) {
     $acc .= "      \\true{singletitle}\n";
   }

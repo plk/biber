@@ -1351,8 +1351,10 @@ sub process_interentry {
     if (Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs')) {
       $logger->debug("cross key '$k' is crossref'ed >= mincrossrefs, adding to citekeys");
       $section->add_citekeys($k);
+      $section->bibentry($k)->set_field('crossrefsource', 1);
     }
   }
+
   # We make sure that xrefs that are directly cited or x-referenced
   # at least minxrefs times are included in the bibliography.
   foreach my $k ( @{Biber::Config->get_xrefkeys} ) {
@@ -1361,6 +1363,7 @@ sub process_interentry {
     if (Biber::Config->get_xrefkey($k) >= Biber::Config->getoption('minxrefs')) {
       $logger->debug("xref key '$k' is xref'ed >= minxrefs, adding to citekeys");
       $section->add_citekeys($k);
+      $section->bibentry($k)->set_field('xrefsource', 1);
     }
   }
 

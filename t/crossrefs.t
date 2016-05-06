@@ -141,6 +141,7 @@ my $cr_m = q|    \entry{cr_m}{book}{}
       }
       \field{sortinit}{G}
       \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \true{crossrefsource}
       \field{labeltitlesource}{title}
       \field{title}{Graphs of the Continent}
       \field{year}{1974}
@@ -343,7 +344,7 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
     \endentry
 |;
 
-# This is included as it is crossrefed >= mincrossrefs times
+# This is included as it is xref'd >= minxrefs times
 # Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
 my $xrm = q|    \entry{xrm}{book}{}
       \name{editor}{1}{}{%
@@ -358,6 +359,7 @@ my $xrm = q|    \entry{xrm}{book}{}
       }
       \field{sortinit}{C}
       \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
+      \true{xrefsource}
       \field{labeltitlesource}{title}
       \field{title}{Calligraphy, Calisthenics, Culture}
       \field{year}{1970}
@@ -399,6 +401,7 @@ my $xrt = q|    \entry{xrt}{book}{}
       }
       \field{sortinit}{K}
       \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
+      \true{xrefsource}
       \field{labeltitlesource}{title}
       \field{title}{Kings, Cork and Calculation}
       \field{year}{1977}
@@ -596,6 +599,7 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
       \strng{fullhash}{1a0f7d518cccdad859a74412ef956474}
       \field{sortinit}{C}
       \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
+      \true{xrefsource}
       \field{labelnamesource}{author}
       \field{booktitle}{Title}
     \endentry
