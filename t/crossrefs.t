@@ -401,7 +401,6 @@ my $xrt = q|    \entry{xrt}{book}{}
       }
       \field{sortinit}{K}
       \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
-      \true{xrefsource}
       \field{labeltitlesource}{title}
       \field{title}{Kings, Cork and Calculation}
       \field{year}{1977}

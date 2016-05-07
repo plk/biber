@@ -1350,8 +1350,9 @@ sub process_interentry {
     # to cited crossref status and add it to the citekeys list
     if (Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs')) {
       $logger->debug("cross key '$k' is crossref'ed >= mincrossrefs, adding to citekeys");
+      # Don't add this flag if the entry is also cited directly
+      $section->bibentry($k)->set_field('crossrefsource', 1) unless $section->has_citekey($k);
       $section->add_citekeys($k);
-      $section->bibentry($k)->set_field('crossrefsource', 1);
     }
   }
 
@@ -1362,8 +1363,9 @@ sub process_interentry {
     # to cited xref status and add it to the citekeys list
     if (Biber::Config->get_xrefkey($k) >= Biber::Config->getoption('minxrefs')) {
       $logger->debug("xref key '$k' is xref'ed >= minxrefs, adding to citekeys");
+      # Don't add this flag if the entry is also cited directly
+      $section->bibentry($k)->set_field('xrefsource', 1) unless $section->has_citekey($k);
       $section->add_citekeys($k);
-      $section->bibentry($k)->set_field('xrefsource', 1);
     }
   }
 
