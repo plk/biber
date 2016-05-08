@@ -123,7 +123,28 @@ sub set_output_entry {
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
 
-  $xml->startTag([$xml_prefix, 'entry'], key => _bblxml_norm($key), type => _bblxml_norm($bee));
+  my @entryopts;
+  if (defined($be->get_field('crossrefsource'))) {
+    push @entryopts, ('source', 'crossref');
+  }
+
+  if (defined($be->get_field('xrefsource'))) {
+    push @entryopts, ('source', 'xref');
+  }
+
+  if (defined($be->get_field('singletitle'))) {
+    push @entryopts, ('singletitle', 'true');
+  }
+
+  if (defined($be->get_field('uniqueprimaryauthor'))) {
+    push @entryopts, ('uniqueprimaryauthor', 'true');
+  }
+
+  if (defined($be->get_field('uniquetitle'))) {
+    push @entryopts, ('uniquetitle', 'true');
+  }
+
+  $xml->startTag([$xml_prefix, 'entry'], key => _bblxml_norm($key), type => _bblxml_norm($bee), @entryopts);
   if (my $opts = $be->get_field('options')) {
     $xml->startTag([$xml_prefix, 'options']);
     foreach my $opt (@{filter_entry_options($opts)}) {
@@ -294,26 +315,6 @@ sub set_output_entry {
         $xml->dataElement('BDS', 'EXTRAALPHA');
       }
     }
-  }
-
-  if (defined($be->get_field('crossrefsource'))) {
-    $xml->emptyTag([$xml_prefix, 'crossrefsource']);
-  }
-
-  if (defined($be->get_field('xrefsource'))) {
-    $xml->emptyTag([$xml_prefix, 'xrefsource']);
-  }
-
-  if (defined($be->get_field('singletitle'))) {
-    $xml->emptyTag([$xml_prefix, 'singletitle']);
-  }
-
-  if (defined($be->get_field('uniqueprimaryauthor'))) {
-    $xml->emptyTag([$xml_prefix, 'uniqueprimaryauthor']);
-  }
-
-  if (defined($be->get_field('uniquetitle'))) {
-    $xml->emptyTag([$xml_prefix, 'uniquetitle']);
   }
 
   # The source field for labelname

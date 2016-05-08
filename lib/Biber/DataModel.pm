@@ -1256,6 +1256,44 @@ sub generate_bblxml_schema {
   }
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
+
+  # source
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'source');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'crossref');
+  $writer->dataElement('value', 'xref');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+
+  # singletitle
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'singletitle');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+
+  # uniqueprimaryauthor
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'uniqueprimaryauthor');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+
+  # uniquetitle
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'uniquetitle');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+
   $writer->startTag('interleave');
 
   # sets
@@ -1424,24 +1462,6 @@ sub generate_bblxml_schema {
   $writer->emptyTag('text');# text
   $writer->endTag();    # field
   $writer->endTag();    #
-
-  $writer->startTag('optional');
-  $writer->startTag('element', 'name' => "$bbl:singletitle");
-  $writer->emptyTag('empty');# text
-  $writer->endTag();    # singletitle
-  $writer->endTag();    # optional
-
-  $writer->startTag('optional');
-  $writer->startTag('element', 'name' => "$bbl:uniqueprimaryauthor");
-  $writer->emptyTag('empty');# text
-  $writer->endTag();    # uniqueprimaryauthor
-  $writer->endTag();    # optional
-
-  $writer->startTag('optional');
-  $writer->startTag('element', 'name' => "$bbl:uniquetitle");
-  $writer->emptyTag('empty');# text
-  $writer->endTag();    # uniquetitle
-  $writer->endTag();    # oneOrMore
 
   # ranges
   my @ranges = grep {not $dm->field_is_skipout($_)} @{$dm->get_fields_of_datatype('range')};

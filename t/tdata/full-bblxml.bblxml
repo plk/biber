@@ -5,7 +5,7 @@
 <bbl:refsections xmlns:bbl="https://sourceforge.net/projects/biblatex/bblxml">
   <bbl:refsection id="0">
     <bbl:sortlist type="entry" id="nty/global/">
-      <bbl:entry key="set:aksin" type="article">
+      <bbl:entry key="set:aksin" type="article" singletitle="true">
         <bbl:inset>
           <bbl:member>set</bbl:member>
         </bbl:inset>
@@ -44,7 +44,6 @@
         <bbl:field name="labelalpha">Aks+06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">b685c7856330eaee22789815b49de9bb</bbl:field>
-        <bbl:singletitle />
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
@@ -61,7 +60,7 @@
           </bbl:item>
         </bbl:range>
       </bbl:entry>
-      <bbl:entry key="angenendt" type="article">
+      <bbl:entry key="angenendt" type="article" singletitle="true">
         <bbl:names type="author" count="1">
           <bbl:name hash="uniquename">
             <bbl:namepart type="family" initials="A">Angenendt</bbl:namepart>
@@ -73,7 +72,6 @@
         <bbl:field name="labelalpha">Ang02</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">b685c7856330eaee22789815b49de9bb</bbl:field>
-        <bbl:singletitle />
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
         <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical article entry. Note the indextitle field</bbl:field>
@@ -215,7 +213,7 @@
         <bbl:field name="volume">C</bbl:field>
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
-      <bbl:entry key="reese" type="article">
+      <bbl:entry key="reese" type="article" singletitle="true">
         <bbl:names type="author" count="1">
           <bbl:name hash="uniquename">
             <bbl:namepart type="family" initials="R">Reese</bbl:namepart>
@@ -227,7 +225,6 @@
         <bbl:field name="labelalpha">Ree58</bbl:field>
         <bbl:field name="sortinit">R</bbl:field>
         <bbl:field name="sortinithash">c7387613477035a752d935acfc3e3ea2</bbl:field>
-        <bbl:singletitle />
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with a series and a volume field. Note the format of the series. If the value of the series field is an integer, this number is printed as an ordinal and the string *series is appended automatically</bbl:field>
@@ -245,7 +242,7 @@
           </bbl:item>
         </bbl:range>
       </bbl:entry>
-      <bbl:entry key="stdmodel:salam" type="inproceedings">
+      <bbl:entry key="stdmodel:salam" type="inproceedings" singletitle="true">
         <bbl:inset>
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
@@ -271,7 +268,6 @@
         <bbl:field name="fullhash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">fd1e7c5ab79596b13dbbb67f8d70fb5a</bbl:field>
-        <bbl:singletitle />
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="booksubtitle">Relativistic groups and analyticity</bbl:field>
@@ -287,7 +283,7 @@
         </bbl:range>
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:salam'</bbl:warning>
       </bbl:entry>
-      <bbl:entry key="shore" type="article">
+      <bbl:entry key="shore" type="article" singletitle="true">
         <bbl:names type="author" count="1">
           <bbl:name hash="uniquename">
             <bbl:namepart type="family" initials="S">Shore</bbl:namepart>
@@ -299,7 +295,6 @@
         <bbl:field name="labelalpha">Sho91</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">fd1e7c5ab79596b13dbbb67f8d70fb5a</bbl:field>
-        <bbl:singletitle />
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
@@ -318,7 +313,7 @@
           </bbl:item>
         </bbl:range>
       </bbl:entry>
-      <bbl:entry key="stdmodel:weinberg" type="article">
+      <bbl:entry key="stdmodel:weinberg" type="article" singletitle="true">
         <bbl:inset>
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
@@ -332,7 +327,6 @@
         <bbl:field name="fullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="sortinit">W</bbl:field>
         <bbl:field name="sortinithash">99e3ba1b3f78bb6f073e7fa7ac11636b</bbl:field>
-        <bbl:singletitle />
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="journaltitle">Phys. Rev. Lett.</bbl:field>
