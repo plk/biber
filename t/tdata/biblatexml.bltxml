@@ -54,7 +54,9 @@
     <bltx:location>Москва</bltx:location>
     <bltx:publisher>Наука</bltx:publisher>
     <bltx:language annotation="list-ann1">
-      <bltx:item annotation="item-ann1">russian</bltx:item>
+      <bltx:list>
+        <bltx:item annotation="item-ann1">russian</bltx:item>
+      </bltx:list>
     </bltx:language>
     <bltx:series>Научно-биографическая литература</bltx:series>
     <bltx:usera>usera</bltx:usera>
@@ -74,17 +76,21 @@
     </bltx:date>
     <bltx:pagetotal>240</bltx:pagetotal>
     <bltx:pages>
-      <bltx:item>
-        <bltx:start>1</bltx:start>
-        <bltx:end>10</bltx:end>
-      </bltx:item>
-      <bltx:item>
-        <bltx:start>30</bltx:start>
-        <bltx:end>34</bltx:end>
-      </bltx:item>
-    </bltx:pages>
+      <bltx:list>
+        <bltx:item>
+          <bltx:start>1</bltx:start>
+          <bltx:end>10</bltx:end>
+        </bltx:item>
+        <bltx:item>
+          <bltx:start>30</bltx:start>
+          <bltx:end>34</bltx:end>
+        </bltx:item>
+      </bltx:list>
+      </bltx:pages>
     <bltx:related>
-      <bltx:item type="reprint" string="Somestring" ids="rel1,rel2"/>
+      <bltx:list>
+        <bltx:item type="reprint" string="Somestring" ids="rel1,rel2"/>
+      </bltx:list>
     </bltx:related>
   </bltx:entry>
 </bltx:entries>

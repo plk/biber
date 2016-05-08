@@ -820,8 +820,15 @@ sub dump {
 sub generate_bltxml_schema {
   my ($dm, $outfile) = @_;
   return if $dm->{bltxml_schema_gen_done};
+
+  # Set the .rng path to the output dir, if specified
+  if (my $outdir = Biber::Config->getoption('output_directory')) {
+    my (undef, undef, $file) = File::Spec->splitpath($outfile);
+    $outfile = File::Spec->catfile($outdir, $file)
+  }
   my $rng = IO::File->new($outfile, '>:encoding(UTF-8)');
   $rng->autoflush;# Needed for running tests to string refs
+
   $logger->info("Writing BibLaTeXML RNG schema '$outfile' for datamodel");
   require XML::Writer;
   my $bltx_ns = 'http://biblatex-biber.sourceforge.net/biblatexml';
@@ -881,7 +888,7 @@ sub generate_bltxml_schema {
         # Name lists element definition
         # =============================
         if ($ft eq 'list' and $dt eq 'name') {
-          $writer->startTag('oneOrMore');
+          $writer->startTag('zeroOrMore');# for example, XDATA doesn't need a name
           $writer->startTag('element', 'name' => "$bltx:names");
 
           # useprefix attribute
@@ -980,7 +987,7 @@ sub generate_bltxml_schema {
           $writer->endTag();    # name element
           $writer->endTag();    # oneOrMore
           $writer->endTag();    # names element
-          $writer->endTag();    # oneOrMore
+          $writer->endTag();    # zeroOrMore
           # ========================
         }
         elsif ($ft eq 'list') {
@@ -996,6 +1003,7 @@ sub generate_bltxml_schema {
 
             $writer->startTag('choice');
             $writer->emptyTag('text');# text
+            $writer->startTag('element', 'name' => "$bltx:list");
             $writer->startTag('oneOrMore');
             $writer->startTag('element', 'name' => "$bltx:item");
 
@@ -1005,6 +1013,7 @@ sub generate_bltxml_schema {
             $writer->emptyTag('text');# text
             $writer->endTag(); # item element
             $writer->endTag(); # oneOrMore element
+            $writer->endTag(); # list element
             $writer->endTag(); # choice
             $writer->endTag(); # $list element
             $writer->endTag(); # optional
@@ -1041,6 +1050,7 @@ sub generate_bltxml_schema {
             # generic annotation attribute
             $writer->emptyTag('ref', 'name' => "annotation");
 
+            $writer->startTag('element', 'name' => "$bltx:list");
             $writer->startTag('oneOrMore');
             $writer->startTag('element', 'name' => "$bltx:item");
             $writer->startTag('element', 'name' => "$bltx:start");
@@ -1054,6 +1064,7 @@ sub generate_bltxml_schema {
             $writer->endTag();  # end element
             $writer->endTag(); # item element
             $writer->endTag();   # oneOrMore element
+            $writer->endTag();  # list element
             $writer->endTag();   # $field element
             $writer->endTag();# optional
           }
@@ -1069,6 +1080,7 @@ sub generate_bltxml_schema {
             # related field is special
             if ($field eq 'related') {
               $writer->startTag('element', 'name' => "$bltx:$field");
+              $writer->startTag('element', 'name' => "$bltx:list");
               $writer->startTag('oneOrMore');
               $writer->startTag('element', 'name' => "$bltx:item");
               $writer->emptyTag('attribute', 'name' => 'type');
@@ -1081,6 +1093,7 @@ sub generate_bltxml_schema {
               $writer->endTag(); # optional
               $writer->endTag(); # item element
               $writer->endTag(); # oneOrMore
+              $writer->endTag(); # list element
               $writer->endTag(); # $field element
             }
             else {
@@ -1132,11 +1145,15 @@ sub generate_bltxml_schema {
           $writer->emptyTag('data', 'type' => 'gYear');
           $writer->startTag('group');
           $writer->startTag('element', 'name' => "$bltx:start");
+          $writer->startTag('choice');
           $writer->emptyTag('data', 'type' => 'date');
+          $writer->emptyTag('data', 'type' => 'gYear');
+          $writer->endTag(); # choice
           $writer->endTag(); # start element
           $writer->startTag('element', 'name' => "$bltx:end");
           $writer->startTag('choice');
           $writer->emptyTag('data', 'type' => 'date');
+          $writer->emptyTag('data', 'type' => 'gYear');
           $writer->emptyTag('empty');
           $writer->endTag(); # choice
           $writer->endTag(); # end element
@@ -1211,8 +1228,15 @@ sub generate_bltxml_schema {
 
 sub generate_bblxml_schema {
   my ($dm, $outfile) = @_;
+
+  # Set the .rng path to the output dir, if specified
+  if (my $outdir = Biber::Config->getoption('output_directory')) {
+    my (undef, undef, $file) = File::Spec->splitpath($outfile);
+    $outfile = File::Spec->catfile($outdir, $file)
+  }
   my $rng = IO::File->new($outfile, '>:encoding(UTF-8)');
   $rng->autoflush;# Needed for running tests to string refs
+
   $logger->info("Writing bblXML RNG schema '$outfile' for datamodel");
   require XML::Writer;
   my $bbl_ns = 'https://sourceforge.net/projects/biblatex/bblxml';

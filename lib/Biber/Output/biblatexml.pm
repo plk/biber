@@ -122,7 +122,7 @@ sub set_output_entry {
     if (my $xdata = $be->get_field('xdata')) {
       $xml->startTag([$xml_prefix, 'xdata']);
       foreach my $xd (@$xdata) {
-        $xml->dataElement([$xml_prefix, 'item'], NFC($xd));
+        $xml->dataElement([$xml_prefix, 'key'], NFC($xd));
       }
       $xml->endTag();
     }
@@ -196,6 +196,7 @@ sub set_output_entry {
       }
 
       $xml->startTag([$xml_prefix, $listfield], @attrs);
+      $xml->startTag([$xml_prefix, 'list']);
 
       # List loop
       my $itemcount = 1;
@@ -208,7 +209,8 @@ sub set_output_entry {
 
         $xml->dataElement([$xml_prefix, 'item'], NFC($f), @lattrs);
       }
-      $xml->endTag();           # List
+      $xml->endTag();           # list
+      $xml->endTag();           # listfield
     }
   }
 
@@ -226,6 +228,7 @@ sub set_output_entry {
          $be->get_field($field) ) {
 
       next if $dm->get_fieldformat($field) eq 'xsv';
+      next if $field eq 'crossref'; # this is handled above
       if (my $f = $be->get_field($field)) {
         my @attrs;
 

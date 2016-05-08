@@ -115,13 +115,19 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       </bltx:name>
     </bltx:names>
     <bltx:language annotation="list-ann1">
-      <bltx:item annotation="item-ann1">russian</bltx:item>
+      <bltx:list>
+        <bltx:item annotation="item-ann1">russian</bltx:item>
+      </bltx:list>
     </bltx:language>
     <bltx:location>
-      <bltx:item>Москва</bltx:item>
+      <bltx:list>
+        <bltx:item>Москва</bltx:item>
+      </bltx:list>
     </bltx:location>
     <bltx:publisher>
-      <bltx:item>Наука</bltx:item>
+      <bltx:list>
+        <bltx:item>Наука</bltx:item>
+      </bltx:list>
     </bltx:publisher>
     <bltx:pagetotal>240</bltx:pagetotal>
     <bltx:relatedstring>Somestring</bltx:relatedstring>

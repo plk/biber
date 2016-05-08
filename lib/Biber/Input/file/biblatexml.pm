@@ -689,7 +689,7 @@ sub _related {
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
   my $node = $entry->findnodes("./$f")->get_node(1);
-  foreach my $item ($node->findnodes("./$NS:item")) {
+  foreach my $item ($node->findnodes("./$NS:list/$NS:item")) {
     $bibentry->set_datafield('related', [ split(/$S/, $item->getAttribute('ids')) ]);
     $bibentry->set_datafield('relatedtype', $item->getAttribute('type'));
     if (my $string = $item->getAttribute('string')) {
@@ -779,7 +779,7 @@ sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
     # List of ranges/values
-    if (my @rangelist = $node->findnodes("./$NS:item")) {
+    if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
       my $rl;
       foreach my $range (@rangelist) {
         push @$rl, _parse_range_list($range);
@@ -1095,7 +1095,7 @@ sub _parse_range_list {
 # Splits a list field into an array ref
 sub _split_list {
   my ($node, $key, $f) = @_;
-  if (my @list = $node->findnodes("./$NS:item")) {
+  if (my @list = $node->findnodes("./$NS:list/$NS:item")) {
 
     for (my $i = 0; $i <= $#list; $i++) {
       # generic annotation attribute

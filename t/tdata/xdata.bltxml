@@ -4,8 +4,10 @@
   <bltx:entry id="bltxxd1" entrytype="xdata">
     <bltx:addendum>Москва</bltx:addendum>
     <bltx:xdata>
-      <bltx:item>bltxxd2</bltx:item>
-      <bltx:item>bltxxd3</bltx:item>
+      <bltx:list>
+        <bltx:item>bltxxd2</bltx:item>
+        <bltx:item>bltxxd3</bltx:item>
+      </bltx:list>
     </bltx:xdata>
   </bltx:entry>
   <bltx:entry id="bltxxd2" entrytype="xdata">

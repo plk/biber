@@ -84,19 +84,27 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       </bltx:name>
     </bltx:names>
     <bltx:institution>
-      <bltx:item>REPlaCEDte</bltx:item>
-      <bltx:item>early</bltx:item>
+      <bltx:list>
+        <bltx:item>REPlaCEDte</bltx:item>
+        <bltx:item>early</bltx:item>
+      </bltx:list>
     </bltx:institution>
     <bltx:lista>
-      <bltx:item>list test</bltx:item>
+      <bltx:list>
+        <bltx:item>list test</bltx:item>
+      </bltx:list>
     </bltx:lista>
     <bltx:listb>
-      <bltx:item>late</bltx:item>
-      <bltx:item>early</bltx:item>
+      <bltx:list>
+        <bltx:item>late</bltx:item>
+        <bltx:item>early</bltx:item>
+      </bltx:list>
     </bltx:listb>
     <bltx:location>
-      <bltx:item>one</bltx:item>
-      <bltx:item>two</bltx:item>
+      <bltx:list>
+        <bltx:item>one</bltx:item>
+        <bltx:item>two</bltx:item>
+      </bltx:list>
     </bltx:location>
     <bltx:abstract>Some abstract %50 of which is useless</bltx:abstract>
     <bltx:note>i3Š</bltx:note>
@@ -115,11 +123,15 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       </bltx:name>
     </bltx:names>
     <bltx:location>
-      <bltx:item>New York</bltx:item>
-      <bltx:item>London</bltx:item>
+      <bltx:list>
+        <bltx:item>New York</bltx:item>
+        <bltx:item>London</bltx:item>
+      </bltx:list>
     </bltx:location>
     <bltx:publisher>
-      <bltx:item>Macmillan</bltx:item>
+      <bltx:list>
+        <bltx:item>Macmillan</bltx:item>
+      </bltx:list>
     </bltx:publisher>
     <bltx:note>A Note</bltx:note>
     <bltx:date>2001</bltx:date>
@@ -129,11 +141,15 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:key>macmillanalias</bltx:key>
     </bltx:ids>
     <bltx:location>
-      <bltx:item>New York</bltx:item>
-      <bltx:item>London</bltx:item>
+      <bltx:list>
+        <bltx:item>New York</bltx:item>
+        <bltx:item>London</bltx:item>
+      </bltx:list>
     </bltx:location>
     <bltx:publisher>
-      <bltx:item>Macmillan</bltx:item>
+      <bltx:list>
+        <bltx:item>Macmillan</bltx:item>
+      </bltx:list>
     </bltx:publisher>
     <bltx:note>A Note</bltx:note>
     <bltx:date>2001</bltx:date>
@@ -143,18 +159,21 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:key>macmillan:pubALIAS</bltx:key>
     </bltx:ids>
     <bltx:publisher>
-      <bltx:item>Macmillan</bltx:item>
+      <bltx:list>
+        <bltx:item>Macmillan</bltx:item>
+      </bltx:list>
     </bltx:publisher>
   </bltx:entry>
   <bltx:entry id="macmillan:loc" entrytype="xdata">
     <bltx:location>
-      <bltx:item>New York</bltx:item>
-      <bltx:item>London</bltx:item>
+      <bltx:list>
+        <bltx:item>New York</bltx:item>
+        <bltx:item>London</bltx:item>
+      </bltx:list>
     </bltx:location>
     <bltx:note>A Note</bltx:note>
   </bltx:entry>
   <bltx:entry id="b1" entrytype="book">
-    <bltx:crossref>mv1</bltx:crossref>
     <bltx:mainsubtitle>Mainsubtitle</bltx:mainsubtitle>
     <bltx:maintitle>Maintitle</bltx:maintitle>
     <bltx:maintitleaddon>Maintitleaddon</bltx:maintitleaddon>
