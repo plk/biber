@@ -38,7 +38,7 @@ lib/Biber/SortLists.pm
 lib/Biber/UCollate.pm
 lib/Biber/Utils.pm
 MANIFEST
-README
+README.md
 t/annotations.t
 t/basic-misc.t
 t/bcfvalidation.t
