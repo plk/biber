@@ -2736,23 +2736,23 @@ linux» if unsure about this. There are many pages about this, for example:
 
 Instructions for those who want/need to build an executable from the
 Perl version. For this, you will need to have Perl 5.16+ with
-the following modules:
+the following modules (best installed in this order):
 
 \begin{itemize}
+\item \verb+Module::Build+ and all dependencies
 \item All \biber\ pre-requisites
 \item \verb+PAR::Packer+ and all dependencies
 \end{itemize}
 
-\noindent You should have the latest CPAN versions of all required modules
-as \biber\ is very specific in some cases about module versions and
+\noindent \biber\ is very specific in some cases about module versions and
 sometimes depends on recent fixes. You can see if you have the
-\biber\ Perl dependencies by the usual
+\biber\ Perl dependencies by the usual \verb+Module::Build+ command:
 
 \begin{verbatim}
 perl ./Build.PL
 \end{verbatim}
 
-\noindent invocation in the \biber\ Perl distribution tree
+\noindent run at the root of the \biber\ Perl distribution
 directory. Normally, the build procedure for the binaries is as
 follows\footnote{On Unix-like systems, you may need to specify a full
   path to the scripts e.g. \texttt{./Build}}:
@@ -2761,10 +2761,12 @@ follows\footnote{On Unix-like systems, you may need to specify a full
 \item Get the \biber\ source tree from SF and put it on the architecture
   you are building for
 \item cd to the root of the source tree
-\item \verb+perl Build.PL+ (this will check your module
-  dependencies)
-\item \verb+Build test+
-\item \verb+Build install+ (may need to run this as sudo on
+\item \verb+perl Build.PL+ (this will check your module dependencies)
+\item If you are missing dependencies, you will be informed and then you
+  should run \verb+Build installdeps+ (may need to run this with sudo on
+  Unix-like systems)
+\item Run the test suite with \verb+Build test+
+\item Install with \verb+Build install+ (may need to run this with sudo on
   Unix-like systems)
 \item \verb+cd dist/<arch>+
 \item \verb+build.sh+ (\verb+build.bat+ on Windows)
@@ -2772,7 +2774,7 @@ follows\footnote{On Unix-like systems, you may need to specify a full
 
 \noindent This leaves a binary called «\verb+biber-<arch>+» (also with
 a «\verb+.exe+» extension on Windows/Cygwin) in your current directory.
-The tricky part is constructing the information for the build
+The important part is constructing the information for the build
 script. There are two things that need to be configured, both of
 which are required by the \verb+PAR::Packer+ module:
 
@@ -2807,20 +2809,20 @@ define these two things as part of constructing new build scripts:
 \item Run the build script
 \end{itemize}
 
-\noindent The \opt{--link} options can be a little tricky
-sometimes. It is usually best to build without them once and then run
-\verb+ldd+ (or OS equivalent) on the binary to see which
-version/location of a library you should link to. You can also try
-just running the binary and it should complain about missing libraries
-and where it expected to find them. Put this path into the
-\opt{--link} option. The \opt{--module} options are the same for all
-architectures and do not need to be modified.
-On architectures which have or can have case-insensitive file systems,
-you should use the build script from either Windows or OSX as a reference
-as these include a step to copy the main \biber\ script to a new name
-before packing the binary. This is required as otherwise a spurious
-error is reported to the user on first run of the binary due to a name
-collision when it unpacks itself.
+\noindent The \opt{--link} options can be a little tricky sometimes. It is
+usually best to build without them once and then run
+\verb+ldd+\footnote{\verb+otool+ on OSX and \verb+depends.exe+ on Windows}
+on the binary to see which version/location of a library you should link
+to. You can also try just running the binary and it should complain about
+missing libraries and where it expected to find them. Put missing library
+paths into \opt{--link} options. The \opt{--module} options are the same
+for all architectures and do not need to be modified. On architectures
+which have or can have case-insensitive file systems, you should use the
+build script from either Windows or OSX as a reference as these include a
+step to copy the main \biber\ script to a new name before packing the
+binary. This is required as otherwise a spurious error is reported to the
+user on first run of the binary due to a name collision when it unpacks
+itself.
 
 See the \verb+PAR+ wiki
 page\footnote{\url{http://par.perl.org/wiki/Main_Page}} for FAQs and help
