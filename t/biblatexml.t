@@ -73,7 +73,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
            family={Aхмедов},
            family_i={A\\bibinitperiod},
            given={Ашраф\\bibnamedelima Ахмедович},
-           given_i={А\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
+           given_i={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
       }
       \name{foreword}{1}{}{%
         {{hash=0ee59e598dae22fac8e6d9d2df7e79ec}{%

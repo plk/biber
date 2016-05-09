@@ -97,7 +97,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:name annotation="name-ann2">
         <bltx:namepart type="family" initial="A">Aхмедов</bltx:namepart>
         <bltx:namepart type="given">
-          <bltx:namepart initial="А">Ашраф</bltx:namepart>
+          <bltx:namepart initial="A">Ашраф</bltx:namepart>
           <bltx:namepart initial="А">Ахмедович</bltx:namepart>
         </bltx:namepart>
       </bltx:name>

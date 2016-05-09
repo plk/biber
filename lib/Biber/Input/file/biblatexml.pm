@@ -950,15 +950,20 @@ sub parsename {
       }
 
       # name component with parts
-      if (my @parts = map {$_->textContent()} $npnode->findnodes("./$NS:namepart")) {
+      if (my @npnodes =  $npnode->findnodes("./$NS:namepart")) {
+        my @parts = map {$_->textContent()} @npnodes;
         $namec{$n} = _join_name_parts(\@parts);
         $logger->debug("Found namepart '$n': " . $namec{$n});
-        if (my $ni = $node->getAttribute('initial')) {
-          $namec{"${n}_i"} = [$ni];
+        my @partinits;
+        foreach my $part (@npnodes) {
+          if (my $pi = $part->getAttribute('initial')) {
+            push @partinits, $pi;
+          }
+          else {
+            push @partinits, _gen_initials($part->textContent());
+          }
         }
-        else {
-          $namec{"${n}_i"} = [_gen_initials(@parts)];
-        }
+        $namec{"${n}_i"} = \@partinits;
       }
       # with no parts
       elsif (my $t = $npnode->textContent()) {
@@ -1052,7 +1057,7 @@ sub _join_name_parts {
   return $namestring;
 }
 
-# Passed an array ref of strings, returns an array ref of initials
+# Passed an array of strings, returns an array of initials
 sub _gen_initials {
   my @strings = @_;
   my @strings_out;
