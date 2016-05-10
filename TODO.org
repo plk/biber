@@ -30,7 +30,7 @@
 * DONE Sorting
 ** OM/GRT enhancememts?
 ** Some integer tests with <=>?
-* TODO Transliteration interface
+* DONE Transliteration interface
 ** Waiting for L::T release then make this a dep.
 
 

@@ -1,6 +1,7 @@
 Revision history for Biber
 
-2.5    (2016-03-)
+2.5    (2016-05-10)
+       * Added data annotations feature - see biblatex documentation.
        * Removed the "latinkeys.txt" Unicode::Collate table. This is now
          pointless because the compiled 'allkeys.txt' is faster and complete.
        * Incompatible biblatex/biber version is now a fatal error.

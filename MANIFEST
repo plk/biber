@@ -185,3 +185,5 @@ t/uniqueness.t
 t/utils.t
 t/xdata.t
 visual.pl
+META.yml
+META.json

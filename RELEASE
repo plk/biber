@@ -1,7 +1,7 @@
 Things to remember when releasing new version:
 
 * If first release in a new year, update copyright and licensing in files
-* Change content, if necessary, of README
+* Change content, if necessary, of README.md
 * Change version string in and content of "Changes" file
 * Change version strings in doc and update volatile doc info (e.g. compat matrix)
 * Update main html page 
