@@ -21,8 +21,11 @@ function vmoff {
   VBoxManage controlvm bbf-$1 savestate
 }
 
+# get dir of script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # Things to do on each server. In an external file ignored by git
-. build-env-cmds
+. $DIR/build-env-cmds
 
 # Build farm OSX 64-bit intel
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
