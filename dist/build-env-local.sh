@@ -21,10 +21,8 @@ function vmoff {
   VBoxManage controlvm bbf-$1 savestate
 }
 
-# Things to do on each server
-COMMANDS_OSX="sudo cpan Module::ScanDeps"
-COMMANDS_WINDOWS=""
-COMMANDS_LINUX="sudo /usr/local/perl/bin/cpan Module::ScanDeps"
+# Things to do on each server. In an external file ignored by git
+. build-env-cmds
 
 # Build farm OSX 64-bit intel
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
