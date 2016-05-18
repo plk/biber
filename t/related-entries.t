@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::Differences;
 unified_diff;
 
@@ -243,7 +243,22 @@ my $c3k = q|    \entry{0a3d72134fb3d6c024db4c510bc1605b}{book}{dataonly}
     \endentry
 |;
 
-my $m1 = q||;
+my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{dataonly,skipbib=false}
+      \name{author}{1}{}{%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
+           family={Author},
+           family_i={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{clonesourcekey}{s1}
+      \field{title}{Title 1}
+    \endentry
+|;
 
 eq_or_diff( $out->get_output_entry('key1', $main), $k1, 'Related entry test 1' ) ;
 eq_or_diff( $out->get_output_entry('key2', $main), $k2, 'Related entry test 2' ) ;
@@ -269,3 +284,6 @@ is_deeply([$shs->get_keys], [
 eq_or_diff( $out->get_output_entry('c1', $main), $c1, 'Related entry test 10' ) ;
 eq_or_diff( $out->get_output_entry('9ab62b5ef34a985438bfdf7ee0102229', $main), $c2k, 'Related entry test 11' ) ;
 eq_or_diff( $out->get_output_entry('0a3d72134fb3d6c024db4c510bc1605b', $main), $c3k, 'Related entry test 12' ) ;
+
+# Testing custom relatedoptions
+eq_or_diff( $out->get_output_entry('8ddf878039b70767c4a5bcf4f0c4f65e', $main), $s1, 'Custom options - 1' ) ;

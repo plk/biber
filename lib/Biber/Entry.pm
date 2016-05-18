@@ -101,7 +101,7 @@ sub relclone {
           # Check if this clone was also directly cited. If so, set skipbib/skipbiblist
           # if they are unset as otherwise this entry would appear twice in bibliographies
           # but with different keys.
-          if ($section->has_everykey($relkey)) {
+          if ($section->has_citekey($relkey)) {
             $relopts = remove_entry_options($relopts, {skipbib => 1, skipbiblist => 1});
             push @$relopts, ('skipbib=true', 'skipbiblist=true');
           }
