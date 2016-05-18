@@ -48,9 +48,10 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
-  process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean parse_range
-  parse_range_alt maploopreplace get_transliterator call_transliterator normalise_string_bblxml};
+  process_entry_options remove_entry_options escape_label unescape_label biber_decode_utf8 out
+  parse_date locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean
+  parse_range parse_range_alt maploopreplace get_transliterator call_transliterator
+  normalise_string_bblxml};
 
 =head1 FUNCTIONS
 
@@ -893,6 +894,26 @@ sub map_boolean {
     %map = reverse %map;
     return $map{$b};
   }
+}
+
+=head2 remove_entry_options
+
+    Remove per-entry options
+
+=cut
+
+sub remove_entry_options {
+  my $options = shift;
+  my $mods = shift;
+  my $changed_opts;
+  foreach (@$options) {
+    s/\s+=\s+/=/g; # get rid of spaces around any "="
+    m/^([^=]+)(=?)(.+)?$/;
+    unless ($mods->{$1}) {
+      push @$changed_opts, ($1 . $2 // '' . $3 // '');
+    }
+  }
+  return $changed_opts;
 }
 
 =head2 process_entry_options

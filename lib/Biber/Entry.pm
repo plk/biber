@@ -98,11 +98,19 @@ sub relclone {
 
         # Set related clone options
         if (my $relopts = $self->get_field('relatedoptions')) {
+          # Check if this clone was also directly cited. If so, set skipbib/skipbiblist
+          # if they are unset as otherwise this entry would appear twice in bibliographies
+          # but with different keys.
+          if ($section->has_everykey($relkey)) {
+            $relopts = remove_entry_options($relopts, {skipbib => 1, skipbiblist => 1});
+            push @$relopts, ('skipbib=true', 'skipbiblist=true');
+          }
+
           process_entry_options($clonekey, $relopts);
           $relclone->set_datafield('options', $relopts);
         }
         else {
-          process_entry_options($clonekey, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
+          process_entry_options($clonekey, ['skiplab','skipbiblist','uniquename=0','uniquelist=0']);
           $relclone->set_datafield('options', [ 'dataonly' ]);
         }
 
