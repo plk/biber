@@ -204,7 +204,22 @@ my $sourcemap = [
                      { map_field_set => "TITLE", map_null => 1 }],
         per_type => [{ content => "ONLINE" }],
       },
-    ],
+      {
+        map_overwrite => 1,
+        per_type => [{ content => "ONLINE" }],
+        map_step => [{map_notfield => "EDITOR",
+                      map_field_set => "ADDENDUM",
+                      map_field_value =>"NF1" }]
+      },
+      {
+        map_overwrite => 1,
+        per_type => [{ content => "ONLINE" }],
+        map_step => [{map_notfield => "AUTHOR",
+                      map_final => 1},
+                     {map_field_set => "USERB",
+                      map_field_value => "NF2"}]
+      }
+   ],
     map_overwrite => 1,
   },
   {

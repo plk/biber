@@ -523,8 +523,28 @@ sub create_entry {
                 $etarget->set_type(encode('UTF-8', NFC($t)));
               }
 
+              my $fieldcontinue = 0;
+              my $fieldsource;
+              my $nfieldsource;
+              # Negated source field map
+              if ($nfieldsource = maploopreplace($step->{map_notfield}, $maploop)) {
+                $nfieldsource = lc($nfieldsource);
+                if ($etarget->exists($nfieldsource)) {
+                  if ($step->{map_final}) {
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists and step has 'final' set, skipping rest of map ...");
+                    next MAP;
+                  }
+                  else {
+                    # just ignore this step
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists, skipping step ...");
+                    next;
+                  }
+                }
+                $fieldcontinue = 1;
+              }
+
               # Field map
-              if (my $fieldsource = maploopreplace($step->{map_field_source}, $maploop)) {
+              if ($fieldsource = maploopreplace($step->{map_field_source}, $maploop)) {
                 $fieldsource = lc($fieldsource);
 
                 # key is a pseudo-field. It's guaranteed to exist so
@@ -542,7 +562,10 @@ sub create_entry {
                     next;
                   }
                 }
+                $fieldcontinue = 1;
+              }
 
+              if ($fieldcontinue) {
                 $last_field = $fieldsource;
                 $last_fieldval = $fieldsource eq 'entrykey' ? biber_decode_utf8($etarget->key) : biber_decode_utf8($etarget->get($fieldsource));
 

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 67;
+use Test::More tests => 69;
 use Test::Differences;
 unified_diff;
 
@@ -57,7 +57,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 m1 m2 m3};
+my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 m1 m2 m3 markey};
 
 # entry "loh" is missing as the biber.conf map removes it with map_entry_null
 my @allkeys = sort map {lc()} qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
@@ -704,3 +704,7 @@ eq_or_diff($bibentries->entry([grep {$_ =~ m/^loopkey:/} $section->get_citekeys]
 eq_or_diff($bibentries->entry('m1')->get_field('uniquetitle'), '1', 'uniquetitle test - 1');
 ok(is_undef($bibentries->entry('m2')->get_field('uniquetitle')),  'uniquetitle test - 2');
 ok(is_undef($bibentries->entry('m3')->get_field('uniquetitle')),  'uniquetitle test - 3');
+
+# notfield test
+eq_or_diff($bibentries->entry('markey')->get_field('addendum'), 'NF1', 'notfield - 1');
+ok(is_undef($bibentries->entry('markey')->get_field('userb')),  'notfield - 2');

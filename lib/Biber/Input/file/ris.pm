@@ -346,12 +346,30 @@ sub create_entry {
           $entry->{TY} = $step->{map_type_target};
         }
 
+        my $fieldcontinue = 0;
+        my $source;
+        # Negated source field map
+        if ($source = $step->{map_notfield}) {
+          if (exists($entry->{$source})) {
+            if ($step->{map_final}) {
+              $logger->debug("Source mapping (type=$level, key=$key): Field '$source' exists and step has 'final' set, skipping rest of map ...");
+              next MAP;
+            }
+            else {
+              # just ignore this step
+              $logger->debug("Source mapping (type=$level, key=$key): Field '$source' exists, skipping step ...");
+              next;
+            }
+          }
+          $fieldcontinue = 1;
+        }
+
         # Field map
-        if (my $source = $step->{map_field_source}) {
-           # key is a psudo-field. It's guaranteed to exist so
-           # just check if that's what's being asked for
-           unless (lc($source) eq 'entrykey' or
-                   exists($entry->{$source})) {
+        if ($source = $step->{map_field_source}) {
+          # key is a psudo-field. It's guaranteed to exist so
+          # just check if that's what's being asked for
+          unless (lc($source) eq 'entrykey' or
+                  exists($entry->{$source})) {
             # Skip the rest of the map if this step doesn't match and match is final
             if ($step->{map_final}) {
               $logger->debug("Source mapping (type=$level, key=$key): No field '$source' and step has 'final' set, skipping rest of map ...");
@@ -363,7 +381,10 @@ sub create_entry {
               next;
             }
           }
+          $fieldcontinue = 1;
+        }
 
+        if ($fieldcontinue) {
           $last_field = $source;
           $last_fieldval = lc($source) eq 'entrykey' ? $entry->{ID} : $entry->{$source};
 

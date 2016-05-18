@@ -720,6 +720,7 @@ map =
         ( attribute map_type_source { xsd:string {minLength="1"} }?,
           attribute map_type_target { xsd:string {minLength="1"} }?,
           attribute map_field_source { xsd:string {minLength="1"} }?,
+          attribute map_notfield { xsd:string {minLength="1"} }?,
           attribute map_field_target { xsd:string {minLength="1"} }?,
           attribute map_entrytarget { xsd:string {minLength="1"} }?,
           attribute map_field_set { xsd:string {minLength="1"} }?,

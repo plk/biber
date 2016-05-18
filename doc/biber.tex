@@ -793,6 +793,7 @@ examples. A \opt{map} element looks like this:
   +\textcolor{blue}{<per\_nottype>\textcolor{red}{entrytype}</per\_nottype>}+
   <map_step  +\textcolor{blue}{map\_type\_source="\textcolor{red}{source-entrytype}"}+
              +\textcolor{blue}{map\_field\_source="\textcolor{red}{source-field}"}+
+             +\textcolor{blue}{map\_notfield="\textcolor{red}{source-field}"}+
              +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-entrytype}"}+
              +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
              +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
@@ -891,6 +892,8 @@ datasource entry being processed. A \opt{map\_step} works like this:
   \textcolor{blue}{\texttt{map\_final}} is set, then if there is no
   \textcolor{red}{\texttt{source-field}} field in the entry, processing of
   this \opt{map} immediately terminates.
+\item If \textcolor{blue}{\texttt{map\_notfield}} is used then only apply
+  the step if the \textcolor{red}{\texttt{source-field}} does not exist.
 \item If \textcolor{blue}{\texttt{map\_match}} is defined but
   \textcolor{blue}{\texttt{map\_replace}} is not, only apply the
   step if the \textcolor{red}{\texttt{source-field}} matches

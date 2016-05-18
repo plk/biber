@@ -482,9 +482,32 @@ sub create_entry {
             $etarget->setAttribute('entrytype', NFC($t));
           }
 
+          my $fieldcontinue = 0;
+          my $xp_nfieldsource_s;
+          my $xp_nfieldsource;
+          my $xp_fieldsource_s;
+          my $xp_fieldsource;
+          # Negated source field map
+          if ($xp_nfieldsource_s = _getpath(maploopreplace($step->{map_notfield}, $maploop))) {
+            $xp_nfieldsource = XML::LibXML::XPathExpression->new($xp_nfieldsource_s);
+
+            if ($etarget->exists($xp_nfieldsource)) {
+              if ($step->{map_final}) {
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_nfieldsource_s' exists and step has 'final' set, skipping rest of map ...");
+                next MAP;
+              }
+              else {
+                # just ignore this step
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_nfieldsource_s' exists, skipping step ...");
+                next;
+              }
+            }
+            $fieldcontinue = 1;
+          }
+
           # Field map
-          if (my $xp_fieldsource_s = _getpath(maploopreplace($step->{map_field_source}, $maploop))) {
-            my $xp_fieldsource = XML::LibXML::XPathExpression->new($xp_fieldsource_s);
+          if ($xp_fieldsource_s = _getpath(maploopreplace($step->{map_field_source}, $maploop))) {
+            $xp_fieldsource = XML::LibXML::XPathExpression->new($xp_fieldsource_s);
 
             # key is a pseudo-field. It's guaranteed to exist so
             # just check if that's what's being asked for
@@ -500,7 +523,10 @@ sub create_entry {
                 next;
               }
             }
+            $fieldcontinue = 1;
+          }
 
+          if ($fieldcontinue) {
             $last_field = $etarget->findnodes($xp_fieldsource)->get_node(1)->nodeName;
             $last_fieldval = $etarget->findvalue($xp_fieldsource);
 
