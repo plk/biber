@@ -111,7 +111,8 @@ sub relclone {
         }
         else {
           process_entry_options($clonekey, ['skiplab','skipbiblist','uniquename=0','uniquelist=0']);
-          $relclone->set_datafield('options', [ 'dataonly' ]);
+          # Preserve options already in the clone but add 'dataonly'
+          $relclone->set_datafield('options', [ 'dataonly', @{$relclone->get_datafield('options') || []} ]);
         }
 
         $section->bibentries->add_entry($clonekey, $relclone);

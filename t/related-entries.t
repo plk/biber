@@ -192,7 +192,7 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
     \endentry
 |;
 
-my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
+my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly,useeditor=false,uniquename=false}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
