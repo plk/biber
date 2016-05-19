@@ -910,7 +910,7 @@ sub remove_entry_options {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)(=?)(.+)?$/;
     unless ($mods->{$1}) {
-      push @$changed_opts, ($1 . $2 // '' . $3 // '');
+      push @$changed_opts, ($1 . ($2 // '') . ($3 // ''));
     }
   }
   return $changed_opts;

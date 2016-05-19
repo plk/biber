@@ -105,7 +105,6 @@ sub relclone {
             $relopts = remove_entry_options($relopts, {skipbib => 1, skipbiblist => 1});
             push @$relopts, ('skipbib=true', 'skipbiblist=true');
           }
-
           process_entry_options($clonekey, $relopts);
           $relclone->set_datafield('options', $relopts);
         }
