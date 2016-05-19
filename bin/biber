@@ -209,7 +209,18 @@ if (my $of = $opts->{output_format}) {
     exit EXIT_ERROR;
   }
 }
+# Auto-detect input-format from extension if not given
+if (exists($opts->{tool}) and
+    not exists($opts->{input_format})) {
+  if ($ARGV[0] =~ m/\.bib$/) {
+    $opts->{input_format} = 'bibtex';
+  }
+  elsif ($ARGV[0] =~ m/\.bltxml$/) {
+    $opts->{input_format} = 'biblatexml';
+  }
+}
 
+# Check output-format value
 if (exists($opts->{tool}) and
     exists($opts->{output_format}) and
     $opts->{output_format} !~ /\A(?:bibtex|biblatexml)\z/xms) {
@@ -274,7 +285,6 @@ if (exists($opts->{input_format}) and
   say STDERR 'Biber: ' . $opts->{input_format} . ' is an invalid input format in tool mode';
   exit EXIT_ERROR;
 }
-
 
 # Create Biber object, passing command-line options
 my $biber = Biber->new(%$opts);
