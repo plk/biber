@@ -100,6 +100,7 @@ GetOptions(
            'validate_datamodel|validate-datamodel|V',
            'version|v',
            'wraplines|w',
+           'xname_marker|xname-marker=s',
            'xsvsep=s',
           ) or pod2usage(-verbose => 0,
                          -exitval => EXIT_ERROR);
@@ -818,6 +819,11 @@ Display version number.
 =item B<--wraplines|-w>
 
 Wrap lines in the F<.bbl> file.
+
+=item B<--xname-marker=[marker]>
+
+Sets the suffix which can be appended to a BibTeX data source field name to
+indicate that the value of the field is an extended name field. The default is C<+x>.
 
 =item B<--xsvsep=[sep]>
 

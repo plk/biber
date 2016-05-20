@@ -51,7 +51,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   process_entry_options remove_entry_options escape_label unescape_label biber_decode_utf8 out
   parse_date locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator call_transliterator
-  normalise_string_bblxml};
+  normalise_string_bblxml gen_initials};
 
 =head1 FUNCTIONS
 
@@ -454,13 +454,15 @@ sub reduce_array {
     but not
         '{string} {string}' -> 'string} {string'
 
+    Return (boolean if stripped, string)
+
 =cut
 
 sub remove_outer {
   my $str = shift;
-  return $str if $str =~ m/}\s*{/;
-  $str =~ s/^{(\X+)}$/$1/;
-  return $str;
+  return (0, $str) if $str =~ m/}\s*{/;
+  my $r = $str =~ s/^{(\X+)}$/$1/;
+  return (($r ? 1 : 0), $str);
 }
 
 =head2 add_outer
@@ -1244,6 +1246,29 @@ sub call_transliterator {
   }
 }
 
+# Passed an array of strings, returns an array of initials
+sub gen_initials {
+  my @strings = @_;
+  my @strings_out;
+  foreach my $str (@strings) {
+    # Deal with hyphenated name parts and normalise to a '-' character for easy
+    # replacement with macro later
+    if ($str =~ m/\p{Dash}/) {
+      push @strings_out, join('-', gen_initials(split(/\p{Dash}/, $str)));
+    }
+    else {
+      my $chr = Unicode::GCString->new($str)->substr(0, 1)->as_string;
+      # Keep diacritics with their following characters
+      if ($chr =~ m/\p{Dia}/) {
+        push @strings_out, Unicode::GCString->new($str)->substr(0, 2)->as_string;
+      }
+      else {
+        push @strings_out, $chr;
+      }
+    }
+  }
+  return @strings_out;
+}
 
 1;
 

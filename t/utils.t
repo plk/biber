@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 70;
+use Test::More tests => 71;
 use Test::Differences;
 unified_diff;
 
@@ -119,7 +119,8 @@ my @AminusBexpected = qw/ a b d f /;
 
 is_deeply(\@AminusB, \@AminusBexpected, 'reduce_array') ;
 
-eq_or_diff(remove_outer('{Some string}'), 'Some string', 'remove_outer') ;
+eq_or_diff((remove_outer('{Some string}'))[0], 1, 'remove_outer - 1') ;
+eq_or_diff((remove_outer('{Some string}'))[1], 'Some string', 'remove_outer - 2') ;
 
 eq_or_diff(normalise_string_hash('Ä.~{\c{C}}.~{\c S}.'), 'Äc:Cc:S', 'normalise_string_lite' ) ;
 

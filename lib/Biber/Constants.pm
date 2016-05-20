@@ -132,6 +132,7 @@ our $CONFIG_DEFAULT_BIBER = {
   validate_control    => { content => 0 },
   validate_datamodel  => { content => 0 },
   wraplines           => { content => 0 },
+  xname_marker        => { content => '+x' },
   xsvsep              => { content => q/\s*,\s*/ },
 };
 

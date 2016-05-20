@@ -986,7 +986,7 @@ sub parsename {
             push @partinits, $pi;
           }
           else {
-            push @partinits, _gen_initials($part->textContent());
+            push @partinits, gen_initials($part->textContent());
           }
         }
         $namec{"${n}_i"} = \@partinits;
@@ -999,13 +999,15 @@ sub parsename {
           $namec{"${n}_i"} = [$ni];
         }
         else {
-          $namec{"${n}_i"} = [_gen_initials($t)];
+          $namec{"${n}_i"} = [gen_initials($t)];
         }
       }
     }
   }
 
   my $namestring = '';
+  # Generate list of extra nameparts beyond the basic set
+  my @nps_nonbase = map {$_ !~ m/prefix|suffix|family|given/} $dm->get_constant_value('nameparts');
 
   # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
   # which should only care about family name + any prefix (if useprefix=1). See biblatex github
@@ -1023,10 +1025,17 @@ sub parsename {
 
   # given name
   if (my $f = $namec{given}) {
-    $namestring .= "$f";
+    $namestring .= "$f, ";
   }
 
-  # Remove any trailing comma and space if, e.g. missing given name
+  # Custom name parts
+  foreach my $nbnp (@nps_nonbase) {
+    if (my $np = $namec{$nbnp}) {
+      $namestring .= "$np, ";
+    }
+  }
+
+  # Remove any trailing comma and space
   $namestring =~ s/,\s+\z//xms;
 
   # Construct $nameinitstring
@@ -1034,6 +1043,9 @@ sub parsename {
   $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $useprefix and exists($namec{prefix}) );
   $nameinitstr .= $namec{family} if exists($namec{family});
   $nameinitstr .= '_' . join('', @{$namec{given_i}}) if exists($namec{given});
+  foreach my $nbnp (@nps_nonbase) {
+    $nameinitstr .= '_' . join('', @{$namec{"${nbnp}_i"}}) if exists($namec{$nbnp});
+  }
   $nameinitstr =~ s/\s+/_/g;
 
   my %nps;
@@ -1081,30 +1093,6 @@ sub _join_name_parts {
   $namestring .= join(' ', @$parts[1 .. ($#{$parts} - 1)]);
   $namestring .= '~' . $parts->[$#{$parts}];
   return $namestring;
-}
-
-# Passed an array of strings, returns an array of initials
-sub _gen_initials {
-  my @strings = @_;
-  my @strings_out;
-  foreach my $str (@strings) {
-    # Deal with hyphenated name parts and normalise to a '-' character for easy
-    # replacement with macro later
-    if ($str =~ m/\p{Dash}/) {
-      push @strings_out, join('-', _gen_initials(split(/\p{Dash}/, $str)));
-    }
-    else {
-      my $chr = Unicode::GCString->new($str)->substr(0, 1)->as_string;
-      # Keep diacritics with their following characters
-      if ($chr =~ m/\p{Dia}/) {
-        push @strings_out, Unicode::GCString->new($str)->substr(0, 2)->as_string;
-      }
-      else {
-        push @strings_out, $chr;
-      }
-    }
-  }
-  return @strings_out;
 }
 
 # parses a range and returns a ref to an array of start and end values

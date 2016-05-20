@@ -49,7 +49,8 @@ sub init_cache {
 # Determine handlers from data model
 my $dm = Biber::Config->get_dm;
 my $handlers = {
-                'CUSTOM' => {'annotation' => \&_annotation},
+                'custom' => {'annotation' => \&_annotation,
+                             'xname'      => \&_xname},
                 'field' => {
                             'default'  => {
                                            'code'     => \&_literal,
@@ -766,6 +767,113 @@ sub _create_entry {
 # HANDLERS
 # ========
 
+
+# Extended name fields
+sub _xname {
+  my ($bibentry, $entry, $field, $key) = @_;
+  my $value = biber_decode_utf8($entry->get($field));
+  my $xname = quotemeta(Biber::Config->getoption('xname_marker'));
+  $field =~ s/$xname$//;
+  my %nps = map {$_ => 1} $dm->get_constant_value('nameparts');
+
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
+  my $names = new Biber::Entry::Names;
+
+  # @tmp is bytes again now
+  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
+
+  foreach my $rawname (@tmp) {
+    $rawname = biber_decode_utf8($rawname);
+    my $name = new Biber::Entry::Name;
+    my %namec;
+    foreach my $np (split(/\s*,\s*/, $rawname)) {
+      my ($npn, $npv) = m/^\s*(\S+)\s*=\s*(.+)\s*$/;
+      $npn = lc($npn);
+      unless ($nps{$npn =~ s/-i$//r}) {
+        biber_warn("Invalid namepart '$npn' found in extended name format name '$field' in entry '$key', ignoring");
+        next;
+      }
+      if ($npn =~ m/-i$/) {
+        $namec{lc($npn)} = [$npv];
+      }
+      else {
+        $namec{lc($npn)} = $npv;
+      }
+    }
+    # Generate any initials which are missing
+    foreach my $np (keys %nps) {
+      if (exists($namec{$np}) and not exists($namec{"${np}-i"})) {
+        $namec{"${np}-i"} = [gen_initials($namec{$np})];
+      }
+    }
+
+    my $namestring = '';
+    # Generate list of extra nameparts beyond the basic set
+    my @nps_nonbase = map {$_ !~ m/prefix|suffix|family|given/} $dm->get_constant_value('nameparts');
+
+    # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
+    # which should only care about family name + any prefix (if useprefix=1). See biblatex github
+    # tracker #306.
+
+    # prefix
+    if (my $p = $namec{prefix}) {
+      $namestring .= "$p ";
+    }
+
+    # family name
+    if (my $l = $namec{family}) {
+      $namestring .= "$l, ";
+    }
+
+    # given name
+    if (my $f = $namec{given}) {
+      $namestring .= "$f, ";
+    }
+
+    # Custom name parts
+    foreach my $nbnp (@nps_nonbase) {
+      if (my $np = $namec{$nbnp}) {
+        $namestring .= "$np, ";
+      }
+    }
+
+    # Remove any trailing comma and space
+    $namestring =~ s/,\s+\z//xms;
+
+    # Construct $nameinitstring
+    my $nameinitstr = '';
+    $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $useprefix and exists($namec{prefix}) );
+    $nameinitstr .= $namec{family} if exists($namec{family});
+    $nameinitstr .= '_' . join('', @{$namec{given_i}}) if exists($namec{given});
+    foreach my $nbnp (@nps_nonbase) {
+      $nameinitstr .= '_' . join('', @{$namec{"${nbnp}_i"}}) if exists($namec{$nbnp});
+    }
+    $nameinitstr =~ s/\s+/_/g;
+
+    my %tmp;
+    foreach my $n (keys %nps) {
+      $tmp{$n} = {string  => $namec{$n} // undef,
+                  initial => exists($namec{$n}) ? $namec{"${n}_i"} : undef};
+
+    }
+    my $no = Biber::Entry::Name->new(
+                                     %tmp,
+                                     namestring      => $namestring,
+                                     nameinitstring  => $nameinitstr,
+                                    );
+
+    # Deal with implied "et al" in data source
+    if (lc($no->get_namestring) eq Biber::Config->getoption('others_string')) {
+      $names->set_morenames;
+    }
+    else {
+      $names->add_name($no);
+    }
+  }
+  $bibentry->set_datafield($field, $names);
+  return;
+}
+
 # Data annotation fields
 sub _annotation {
   my ($bibentry, $entry, $field, $key) = @_;
@@ -1019,7 +1127,7 @@ sub _list {
 
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
   @tmp = map { biber_decode_utf8($_) } @tmp;
-  @tmp = map { remove_outer($_) } @tmp;
+  @tmp = map { (remove_outer($_))[1] } @tmp;
   $bibentry->set_datafield($field, [ @tmp ]);
   return;
 }
@@ -1322,8 +1430,7 @@ sub parsename {
   my $prefix_i;
   if ($prefix) {
     $prefix_i        = $gen_prefix_i;
-    $prefix_stripped = remove_outer($prefix);
-    $ps = $prefix ne $prefix_stripped ? 1 : 0;
+    ($ps, $prefix_stripped) = remove_outer($prefix);
     $namestring .= "$prefix_stripped ";
   }
   # family name
@@ -1332,8 +1439,7 @@ sub parsename {
   my $family_i;
   if ($family) {
     $family_i        = $gen_family_i;
-    $family_stripped = remove_outer($family);
-    $fs = $family ne $family_stripped ? 1 : 0;
+    ($fs, $family_stripped) = remove_outer($family);
     $namestring .= "$family_stripped, ";
   }
   # suffix
@@ -1342,8 +1448,7 @@ sub parsename {
   my $suffix_i;
   if ($suffix) {
     $suffix_i        = $gen_suffix_i;
-    $suffix_stripped = remove_outer($suffix);
-    $ss = $suffix ne $suffix_stripped ? 1 : 0;
+    ($ss, $suffix_stripped) = remove_outer($suffix);
   }
   # given name
   my $gs;
@@ -1351,8 +1456,7 @@ sub parsename {
   my $given_i;
   if ($given) {
     $given_i        = $gen_given_i;
-    $given_stripped = remove_outer($given);
-    $gs = $given ne $given_stripped ? 1 : 0;
+    ($gs, $given_stripped) = remove_outer($given);
     $namestring .= "$given_stripped";
   }
 
@@ -1445,8 +1549,12 @@ sub _hack_month {
 sub _get_handler {
   my $field = shift;
   my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
-  if ($field =~ qr/$ann$/) {
-    return $handlers->{CUSTOM}{annotation};
+  my $xname = quotemeta(Biber::Config->getoption('xname_marker'));
+  if ($field =~ qr/$xname$/) {
+    return $handlers->{custom}{xname};
+  }
+  elsif ($field =~ qr/$ann$/) {
+    return $handlers->{custom}{annotation};
   }
   else {
     return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field) || 'default'}{$dm->get_datatype($field)};
