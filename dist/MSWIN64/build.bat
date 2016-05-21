@@ -43,6 +43,7 @@ CALL pp ^
   --module=Encode:: ^
   --module=IO::Socket::SSL ^
   --module=File::Find::Rule ^
+  --module=Text::CSV_XS ^
   --link=C:\strawberry\c\bin\libbtparse.dll ^
   --link=C:\strawberry\c\bin\libxslt-1__.dll ^
   --link=C:\strawberry\c\bin\libexslt-0__.dll ^

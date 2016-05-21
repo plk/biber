@@ -61,6 +61,7 @@ THANKS
 t/labelalpha.t
 t/labelname.t
 t/names.t
+t/names_x.t
 TODO.org
 t/options.t
 t/related-entries.t
@@ -132,8 +133,9 @@ t/tdata/labelalpha.bcf
 t/tdata/labelalpha.bib
 t/tdata/labelalpha.bib
 t/tdata/names.bcf
+t/tdata/names_x.bcf
 t/tdata/names.bib
-t/tdata/names.bib
+t/tdata/names_x.bib
 t/tdata/options.bcf
 t/tdata/options.bib
 t/tdata/options.bib

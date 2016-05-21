@@ -49,8 +49,7 @@ sub init_cache {
 # Determine handlers from data model
 my $dm = Biber::Config->get_dm;
 my $handlers = {
-                'custom' => {'annotation' => \&_annotation,
-                             'xname'      => \&_xname},
+                'custom' => {'annotation' => \&_annotation},
                 'field' => {
                             'default'  => {
                                            'code'     => \&_literal,
@@ -767,113 +766,6 @@ sub _create_entry {
 # HANDLERS
 # ========
 
-
-# Extended name fields
-sub _xname {
-  my ($bibentry, $entry, $field, $key) = @_;
-  my $value = biber_decode_utf8($entry->get($field));
-  my $xname = quotemeta(Biber::Config->getoption('xname_marker'));
-  $field =~ s/$xname$//;
-  my %nps = map {$_ => 1} $dm->get_constant_value('nameparts');
-
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
-  my $names = new Biber::Entry::Names;
-
-  # @tmp is bytes again now
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
-
-  foreach my $rawname (@tmp) {
-    $rawname = biber_decode_utf8($rawname);
-    my $name = new Biber::Entry::Name;
-    my %namec;
-    foreach my $np (split(/\s*,\s*/, $rawname)) {
-      my ($npn, $npv) = m/^\s*(\S+)\s*=\s*(.+)\s*$/;
-      $npn = lc($npn);
-      unless ($nps{$npn =~ s/-i$//r}) {
-        biber_warn("Invalid namepart '$npn' found in extended name format name '$field' in entry '$key', ignoring");
-        next;
-      }
-      if ($npn =~ m/-i$/) {
-        $namec{lc($npn)} = [$npv];
-      }
-      else {
-        $namec{lc($npn)} = $npv;
-      }
-    }
-    # Generate any initials which are missing
-    foreach my $np (keys %nps) {
-      if (exists($namec{$np}) and not exists($namec{"${np}-i"})) {
-        $namec{"${np}-i"} = [gen_initials($namec{$np})];
-      }
-    }
-
-    my $namestring = '';
-    # Generate list of extra nameparts beyond the basic set
-    my @nps_nonbase = map {$_ !~ m/prefix|suffix|family|given/} $dm->get_constant_value('nameparts');
-
-    # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
-    # which should only care about family name + any prefix (if useprefix=1). See biblatex github
-    # tracker #306.
-
-    # prefix
-    if (my $p = $namec{prefix}) {
-      $namestring .= "$p ";
-    }
-
-    # family name
-    if (my $l = $namec{family}) {
-      $namestring .= "$l, ";
-    }
-
-    # given name
-    if (my $f = $namec{given}) {
-      $namestring .= "$f, ";
-    }
-
-    # Custom name parts
-    foreach my $nbnp (@nps_nonbase) {
-      if (my $np = $namec{$nbnp}) {
-        $namestring .= "$np, ";
-      }
-    }
-
-    # Remove any trailing comma and space
-    $namestring =~ s/,\s+\z//xms;
-
-    # Construct $nameinitstring
-    my $nameinitstr = '';
-    $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $useprefix and exists($namec{prefix}) );
-    $nameinitstr .= $namec{family} if exists($namec{family});
-    $nameinitstr .= '_' . join('', @{$namec{given_i}}) if exists($namec{given});
-    foreach my $nbnp (@nps_nonbase) {
-      $nameinitstr .= '_' . join('', @{$namec{"${nbnp}_i"}}) if exists($namec{$nbnp});
-    }
-    $nameinitstr =~ s/\s+/_/g;
-
-    my %tmp;
-    foreach my $n (keys %nps) {
-      $tmp{$n} = {string  => $namec{$n} // undef,
-                  initial => exists($namec{$n}) ? $namec{"${n}_i"} : undef};
-
-    }
-    my $no = Biber::Entry::Name->new(
-                                     %tmp,
-                                     namestring      => $namestring,
-                                     nameinitstring  => $nameinitstr,
-                                    );
-
-    # Deal with implied "et al" in data source
-    if (lc($no->get_namestring) eq Biber::Config->getoption('others_string')) {
-      $names->set_morenames;
-    }
-    else {
-      $names->add_name($no);
-    }
-  }
-  $bibentry->set_datafield($field, $names);
-  return;
-}
-
 # Data annotation fields
 sub _annotation {
   my ($bibentry, $entry, $field, $key) = @_;
@@ -1017,7 +909,6 @@ sub _range {
   return;
 }
 
-
 # Names
 sub _name {
   my ($bibentry, $entry, $field, $key) = @_;
@@ -1030,6 +921,7 @@ sub _name {
 
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
+
   foreach my $name (@tmp) {
 
     # Consecutive "and" causes Text::BibTeX::Name to segfault
@@ -1041,28 +933,36 @@ sub _name {
 
     $name = biber_decode_utf8($name);
 
-    # Check for malformed names in names which aren't completely escaped
+    my $nps = join('|', $dm->get_constant_value('nameparts'));
+    my $no;
 
-    # Too many commas
-    unless ($name =~ m/\A\{\X+\}\z/xms) { # Ignore these tests for escaped names
-      my @commas = $name =~ m/,/g;
-      if ($#commas > 1) {
-        biber_warn("Name \"$name\" has too many commas: skipping name", $bibentry);
-        $section->del_citekey($key);
-        next;
-      }
-
-      # Consecutive commas cause Text::BibTeX::Name to segfault
-      if ($name =~ /,,/) {
-        biber_warn("Name \"$name\" is malformed (consecutive commas): skipping name", $bibentry);
-        $section->del_citekey($key);
-        next;
-      }
+    # extended name format
+    if ($name =~ m/(?:$nps)\s*=/ and not Biber::Config->getoption('noxname')) {
+      # Skip names that don't parse for some reason
+      next unless $no = parsename_x($name, $field, {useprefix => $useprefix}, $key);
     }
+    else { # Normal bibtex name format
+      # Check for malformed names in names which aren't completely escaped
+      # Too many commas
+      unless ($name =~ m/\A\{\X+\}\z/xms) { # Ignore these tests for escaped names
+        my @commas = $name =~ m/,/g;
+        if ($#commas > 1) {
+          biber_warn("Name \"$name\" has too many commas: skipping name", $bibentry);
+          $section->del_citekey($key);
+          next;
+        }
 
-    # Skip names that don't parse for some reason (like no family found - see parsename())
-    next unless my $no = parsename($name, $field, {useprefix => $useprefix});
+        # Consecutive commas cause Text::BibTeX::Name to segfault
+        if ($name =~ /,,/) {
+          biber_warn("Name \"$name\" is malformed (consecutive commas): skipping name", $bibentry);
+          $section->del_citekey($key);
+          next;
+        }
+      }
 
+      # Skip names that don't parse for some reason
+      next unless $no = parsename($name, $field, {useprefix => $useprefix});
+    }
     # Deal with implied "et al" in data source
     if (lc($no->get_namestring) eq Biber::Config->getoption('others_string')) {
       $names->set_morenames;
@@ -1350,7 +1250,7 @@ sub preprocess_file {
 
 sub parsename {
   my ($namestr, $fieldname, $opts, $testing) = @_;
-  my $usepre = $opts->{useprefix};
+  my $useprefix = $opts->{useprefix};
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
   $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
   # Collapse internal whitespace and escaped spaces like in "Christina A. L.\ Thiele"
@@ -1467,8 +1367,8 @@ sub parsename {
 
   # Construct $nameinitstring
   my $nameinitstr = '';
-  $nameinitstr .= join('', @$prefix_i) . '_' if ( $usepre and $prefix );
-  $nameinitstr .= $family if $family;
+  $nameinitstr .= join('', @$prefix_i) . '_' if ( $useprefix and $prefix );
+  $nameinitstr .= $family_stripped if $family;
   $nameinitstr .= '_' . join('', @$given_i) if $given;
   $nameinitstr =~ s/\s+|~/_/g;
 
@@ -1519,6 +1419,138 @@ sub parsename {
     );
 }
 
+=head2 parsename_x
+
+    Given a name string in extended format, this function returns a Biber::Entry::Name object
+    with all parts of the name resolved according to the BibTeX conventions.
+
+    parsename_x('given=John, family=Doe')
+    returns an object which internally looks a bit like this:
+
+    { given          => {string => 'John', initial => ['J']},
+      family         => {string => 'Doe', initial => ['D']},
+      prefix         => {string => undef, initial => undef},
+      suffix         => {string => undef, initial => undef},
+      namestring     => 'Doe, John',
+      nameinitstring => 'Doe_J',
+      strip          => {'given'  => 0,
+                         'family' => 0,
+                         'prefix' => 0,
+                         'suffix' => 0}
+      }
+
+=cut
+
+sub parsename_x {
+  my ($namestr, $fieldname, $opts, $key) = @_;
+  my $useprefix = $opts->{useprefix};
+
+  my %nps = map {$_ => 1} $dm->get_constant_value('nameparts');
+
+  my %namec;
+  foreach my $np (split_xsv($namestr)) {# Can have x inside records so use Text::CSV
+    my ($npn, $npv) = $np =~ m/^(.+)\s*=\s*(.+)$/;
+    $npn = lc($npn);
+    unless ($nps{$npn =~ s/-i$//r}) {
+      biber_warn("Invalid namepart '$npn' found in extended name format name '$fieldname' in entry '$key', ignoring");
+      next;
+    }
+
+    if ($npn =~ m/-i$/) {
+      $namec{$npn} = [split(//,$npv)];
+    }
+    else {
+      # Don't tie according to bibtex rules if the namepart is protected with braces
+      if (has_outer($npv)) {
+        $namec{$npn} = $npv;
+      }
+      else {
+        $namec{$npn} = join_name_parts([split(/\s+/,$npv)]);
+      }
+    }
+  }
+
+  foreach my $np (keys %nps) {
+    if (exists($namec{$np})) {
+      # Generate any stripped information
+      (my $s, $namec{$np}) = remove_outer($namec{$np});
+
+      # Protect spaces inside {} when splitting to produce intials
+      my $part = $namec{$np};
+      if ($s) {
+        $part = $namec{$np} =~ s/\s+/_/gr;
+      }
+
+      # strip noinit
+      $part = strip_noinit($part);
+
+      # Generate any initials which are missing
+      if (not exists($namec{"${np}-i"})) {
+        $namec{"${np}-i"} = [gen_initials(split(/[\s~]+/, $part))];
+      }
+    }
+  }
+
+  my $namestring = '';
+  # Generate list of extra nameparts beyond the basic set
+  my @nps_nonbase = map {$_ !~ m/prefix|suffix|family|given/} $dm->get_constant_value('nameparts');
+
+  # Don't add suffix to namestring or nameinitstring as these are used for uniquename
+  # disambiguation which should only care about family name + any prefix (if useprefix=1).
+  # See biblatex github tracker #306.
+
+  # prefix
+  if (my $p = $namec{prefix}) {
+    $namestring .= "$p ";
+  }
+
+  # family name
+  if (my $l = $namec{family}) {
+    $namestring .= "$l, ";
+  }
+
+  # given name
+  if (my $f = $namec{given}) {
+    $namestring .= "$f, ";
+  }
+
+  # Custom name parts
+  foreach my $nbnp (@nps_nonbase) {
+    if (my $np = $namec{$nbnp}) {
+      $namestring .= "$np, ";
+    }
+  }
+
+  # Remove any trailing comma and space and nbsp
+  $namestring =~ s/,\s+$//;
+  $namestring =~ s/~/ /g;
+
+  # Construct $nameinitstring
+  my $nameinitstr = '';
+  $nameinitstr .= join('', @{$namec{'prefix-i'}}) . '_' if ( $useprefix and exists($namec{prefix}) );
+  $nameinitstr .= $namec{family} if exists($namec{family});
+  $nameinitstr .= '_' . join('', @{$namec{'given-i'}}) if exists($namec{given});
+  foreach my $nbnp (@nps_nonbase) {
+    $nameinitstr .= '_' . join('', @{$namec{"${nbnp}-i"}}) if exists($namec{$nbnp});
+  }
+  $nameinitstr =~ s/(?:\s+|~)/_/g;
+
+  my %nameparts;
+  foreach my $n (keys %nps) {
+    $nameparts{$n} = {string  => $namec{$n} // undef,
+                      initial => exists($namec{$n}) ? $namec{"${n}-i"} : undef};
+  }
+
+  # The "strip" entry tells us which of the name parts had outer braces
+  # stripped during processing so we can add them back when printing the
+  # .bbl so as to maintain maximum BibTeX compatibility
+  return  Biber::Entry::Name->new(
+                                  %nameparts,
+                                  namestring     => $namestring,
+                                  nameinitstring => $nameinitstr
+                                 );
+}
+
 # Routine to try to hack month into the right biblatex format
 # Especially since we support remote .bibs which we potentially have no control over
 my %months = (
@@ -1548,12 +1580,7 @@ sub _hack_month {
 
 sub _get_handler {
   my $field = shift;
-  my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
-  my $xname = quotemeta(Biber::Config->getoption('xname_marker'));
-  if ($field =~ qr/$xname$/) {
-    return $handlers->{custom}{xname};
-  }
-  elsif ($field =~ qr/$ann$/) {
+  if ($field =~ m/$CONFIG_META_MARKERS{annotation}$/) {
     return $handlers->{custom}{annotation};
   }
   else {

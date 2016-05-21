@@ -1,6 +1,3 @@
-% To make this maximally compatible with older PDF readers, it uses
-% PDF 1.4
-\pdfminorversion=4
 \documentclass{ltxdockit}
 \usepackage{btxdockit}
 \usepackage[british]{babel}
@@ -29,8 +26,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{2.5}    % BIBER VERSION
-\gdef\biblatexversion{3.4}   % BIBLATEX VERSION
+\gdef\biberversion{2.6}    % BIBER VERSION
+\gdef\biblatexversion{3.5}   % BIBLATEX VERSION
 
 % colour for tables
 \definecolor{Gray}{gray}{0.85}
@@ -237,6 +234,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
+2.6 & 3.5\\
 2.5 & 3.4\\
 2.4 & 3.3\\
 2.3 & 3.2\\
@@ -2123,6 +2121,54 @@ hard-coded «and» and «others». Hopefully this will change as these two
 hard-coded English terms look really rather bad in the context of
 multilingual bibliographies.
 \bigskip
+\subsection{Extended Name Format}
+The parsing rules for \bibtex names are rather archaic and not suited to
+many international name formats. \biber supports an extended name format
+which allows explicit specification of the parts of names. This allows the
+use of custom name parts apart from the four standard \bibtex parts. Extended
+name formats are supported in all name fields and can be used along with
+the usual \bibtex name format. Recognition of extended name format can be
+disabled with the \biber option \opt{--noxname} in case you do not need the
+extended format and the auto-detection causes problems with normal name
+parsing. Here is an example:
+\begin{verbatim}
+AUTHOR = {Hans Harman and Simon de Beumont}
+AUTHOR = {given=Hans, family=Harman and given=Simon, prefix=de, family=Beumont}
+\end{verbatim}
+%
+These two name specifications are equivalent but the extended format
+explicitly names the parts. The supported parts are those specified by the
+\biblatex data mode constant \opt{nameparts}, the default value of which
+is:
+\begin{verbatim}
+\DeclareDatamodelConstant[type=list]{nameparts}{prefix,family,suffix,given}
+\end{verbatim}
+%
+As with traditional \bibtex name parsing, initials are automatically
+generated but it is also possible to specify these explicitly:
+\begin{verbatim}
+AUTHOR = {given=Jean, prefix=de la, prefix-i=d, family=Rousse}
+AUTHOR = {given={Jean Pierre Simon}, given-i=JPS}
+\end{verbatim}
+%
+Initials are specified by adding the suffix \verb+-i+ to the namepart name.
+Compound parts may be protected with braces:
+\begin{verbatim}
+AUTHOR = {given={Jean Pierre}}
+\end{verbatim}
+%
+If a namepart contains a comma, the whole namepart should be protected with
+quotes:
+\begin{verbatim}
+AUTHOR = {"family={Robert and Sons, Inc.}"}
+\end{verbatim}
+%
+Traditional \bibtex name formats and the extended form may be used together:
+\begin{verbatim}
+AUTHOR = {Hans Harman and given=Simon, prefix=de, family=Beumont}
+\end{verbatim}
+
+\bigskip
 \subsection{Editor Integration}
 
 Visit \url{http://tex.stackexchange.com/questions/154751/} for a
@@ -2814,7 +2860,7 @@ define these two things as part of constructing new build scripts:
 
 \noindent The \opt{--link} options can be a little tricky sometimes. It is
 usually best to build without them once and then run
-\verb+ldd+\footnote{\verb+otool+ on OSX and \verb+depends.exe+ on Windows}
+\verb+ldd+\footnote{\texttt{otool} on OSX and \texttt{depends.exe} on Windows}
 on the binary to see which version/location of a library you should link
 to. You can also try just running the binary and it should complain about
 missing libraries and where it expected to find them. Put missing library
@@ -2855,7 +2901,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.5
+INFO - This is Biber 2.6
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

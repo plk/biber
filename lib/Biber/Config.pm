@@ -262,6 +262,10 @@ sub _initopts {
     $biberlog = File::Spec->catfile($outdir, $biberlog);
   }
 
+  # cache meta markers since they are referenced in the oft-called _get_handler
+  $CONFIG_META_MARKERS{annotation} = quotemeta(Biber::Config->getoption('annotation_marker'));
+  $CONFIG_META_MARKERS{xname} = quotemeta(Biber::Config->getoption('xname_marker'));
+
   # Setting up Log::Log4perl
   my $LOGLEVEL;
   if (Biber::Config->getoption('trace')) {

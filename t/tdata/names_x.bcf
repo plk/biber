@@ -44,7 +44,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labelalpha</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labelnamespec</bcf:key>
@@ -109,7 +109,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortalphaothers</bcf:key>
@@ -129,7 +129,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniqueprimaryauthor</bcf:key>
@@ -149,17 +149,23 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useeditor</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
   </bcf:options>
-  <bcf:options component="biblatex" type="movie">
+  <bcf:options component="biblatex" type="collection">
+    <bcf:option type="multivalued">
+      <bcf:key>labelnamespec</bcf:key>
+      <bcf:value order="1">shorteditor</bcf:value>
+      <bcf:value order="2">editor</bcf:value>
+      <bcf:value order="3">translator</bcf:value>
+    </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>uniquetitle</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>0</bcf:value>
     </bcf:option>
   </bcf:options>
   <!-- BIBLATEX OPTION SCOPE -->
@@ -403,11 +409,6 @@
   </bcf:datafieldset>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
-    <bcf:maps datatype="bibtex" level="style">
-      <bcf:map>
-        <bcf:map_step map_type_source="customc" map_type_target="customa"/>
-      </bcf:map>
-    </bcf:maps>
     <bcf:maps datatype="bibtex" level="driver">
       <bcf:map>
         <bcf:map_step map_type_source="conference" map_type_target="inproceedings" map_final="1"/>
@@ -662,6 +663,9 @@
       <bcf:sortitem order="1">sortkey</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="3">
+      <bcf:sortitem order="1">labelalpha</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
       <bcf:sortitem order="1">sortname</bcf:sortitem>
       <bcf:sortitem order="2">author</bcf:sortitem>
       <bcf:sortitem order="3">editor</bcf:sortitem>
@@ -669,17 +673,17 @@
       <bcf:sortitem order="5">sorttitle</bcf:sortitem>
       <bcf:sortitem order="6">title</bcf:sortitem>
     </bcf:sort>
-    <bcf:sort order="4">
-      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
-      <bcf:sortitem order="2">title</bcf:sortitem>
-    </bcf:sort>
-    <bcf:sort order="5">
+    <bcf:sort order="5" sort_direction="descending">
       <bcf:sortitem order="1">sortyear</bcf:sortitem>
-      <bcf:sortitem order="2">year</bcf:sortitem>
+      <bcf:sortitem substring_side="right" substring_width="4" order="2">year</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="6">
-      <bcf:sortitem order="1">volume</bcf:sortitem>
+      <bcf:sortitem order="1" pad_char="0">volume</bcf:sortitem>
       <bcf:sortitem order="2">0000</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="7">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
   </bcf:sorting>
   <!-- DATA MODEL -->
@@ -832,6 +836,7 @@
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortyear</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">sortkey</bcf:field>
       <bcf:field fieldtype="field" datatype="literal" skip_output="true">presort</bcf:field>
+      <bcf:field fieldtype="field" format="xsv" datatype="entrykey" skip_output="true">entryset</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">institution</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">lista</bcf:field>
       <bcf:field fieldtype="list" datatype="literal">listb</bcf:field>
@@ -881,7 +886,6 @@
       <bcf:field fieldtype="field" datatype="entrykey">xref</bcf:field>
       <bcf:field fieldtype="field" format="xsv" datatype="entrykey" skip_output="true">xdata</bcf:field>
       <bcf:field fieldtype="field" format="xsv" datatype="entrykey" skip_output="true">ids</bcf:field>
-      <bcf:field fieldtype="field" format="xsv" datatype="entrykey" skip_output="true">entryset</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">date</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">eventdate</bcf:field>
       <bcf:field fieldtype="field" datatype="date" skip_output="true">origdate</bcf:field>
@@ -911,7 +915,6 @@
       <bcf:field fieldtype="field" datatype="literal">newspaper</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">urldescription</bcf:field>
       <bcf:field fieldtype="field" datatype="verbatim">abstracturl</bcf:field>
-      <bcf:field fieldtype="list" datatype="uri">urls</bcf:field>
     </bcf:fields>
     <bcf:entryfields>
       <bcf:field>abstract</bcf:field>
@@ -1028,7 +1031,6 @@
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
       <bcf:field>url</bcf:field>
-      <bcf:field>urls</bcf:field>
       <bcf:field>urlday</bcf:field>
       <bcf:field>urlendday</bcf:field>
       <bcf:field>urlendmonth</bcf:field>
@@ -2032,39 +2034,12 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">examples.bib</bcf:datasource>
-    <bcf:datasource type="file" datatype="bibtex">examples.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">names.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">murray</bcf:citekey>
-    <bcf:citekey order="2">t1</bcf:citekey>
-    <bcf:citekey order="3">t2</bcf:citekey>
-    <bcf:citekey order="4">kant:ku</bcf:citekey>
-    <bcf:citekey order="5">kant:kpv</bcf:citekey>
-    <bcf:citekey order="6">shore</bcf:citekey>
-    <bcf:citekey order="7">missing1</bcf:citekey>
-    <bcf:citekey order="8">missing2</bcf:citekey>
-    <bcf:citekey order="9">anon1</bcf:citekey>
-    <bcf:citekey order="10">anon2</bcf:citekey>
-    <bcf:citekey order="11">u1</bcf:citekey>
-    <bcf:citekey order="12">u2</bcf:citekey>
-    <bcf:citekey order="13">alias1</bcf:citekey>
-    <bcf:citekey order="14">alias2</bcf:citekey>
-    <bcf:citekey order="15">alias6</bcf:citekey>
-    <bcf:citekey order="16">us1</bcf:citekey>
-    <bcf:citekey order="17">list1</bcf:citekey>
-    <bcf:citekey order="18">isbn1</bcf:citekey>
-    <bcf:citekey order="19">isbn2</bcf:citekey>
-    <bcf:citekey order="20">issn1</bcf:citekey>
-    <bcf:citekey order="21">m1</bcf:citekey>
-    <bcf:citekey order="22">m2</bcf:citekey>
-    <bcf:citekey order="23">m3</bcf:citekey>
-    <bcf:citekey order="24">markey</bcf:citekey>
-    <bcf:citekey order="25">ent1</bcf:citekey>
+    <bcf:citekey order="0">*</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="shorthands/global/" sortscheme="shorthands" type="list" labelprefix="">
-    <bcf:filter type="field">shorthand</bcf:filter>
-  </bcf:sortlist>
 </bcf:controlfile>
+

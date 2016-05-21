@@ -1,5 +1,8 @@
 Revision history for Biber
 
+2.6    (2016)
+       * Added extended name format - see documentation
+       * Added notfield function to sourcemaps - see documentation
 2.5    (2016-05-10)
        * Added data annotations feature - see biblatex documentation.
        * Removed the "latinkeys.txt" Unicode::Collate table. This is now

@@ -100,7 +100,7 @@ GetOptions(
            'validate_datamodel|validate-datamodel|V',
            'version|v',
            'wraplines|w',
-           'xname_marker|xname-marker=s',
+           'noxname',
            'xsvsep=s',
           ) or pod2usage(-verbose => 0,
                          -exitval => EXIT_ERROR);
@@ -820,10 +820,11 @@ Display version number.
 
 Wrap lines in the F<.bbl> file.
 
-=item B<--xname-marker=[marker]>
+=item B<--noxname>
 
-Sets the suffix which can be appended to a BibTeX data source field name to
-indicate that the value of the field is an extended name field. The default is C<+x>.
+Disable exended name processing in bibtex data sources. Can be useful if
+you don't use this and it causes problems due to auto-detection of extended
+name format.
 
 =item B<--xsvsep=[sep]>
 

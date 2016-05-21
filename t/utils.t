@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 71;
+use Test::More tests => 72;
 use Test::Differences;
 unified_diff;
 
@@ -98,7 +98,6 @@ eq_or_diff(NFC(latex_decode("\\u\\i")), 'ı̆', 'latex decode 8'); # checking i/
 eq_or_diff(latex_decode('\i'), 'ı', 'latex decode 9'); # checking dotless i
 eq_or_diff(latex_decode('\j'), 'ȷ', 'latex decode 10'); # checking dotless j
 eq_or_diff(latex_decode('\textdiv'), '÷', 'latex decode 11'); # checking multiple set for types
-eq_or_diff(latex_decode('\textbackslash'), "\\", 'latex decode 12'); # checking multiple set for types
 eq_or_diff(latex_decode('--'), '--', 'latex decode 13'); # Testing raw
 
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
@@ -157,3 +156,7 @@ eq_or_diff(parse_range('-2'), [1,2], 'Range parsing - 2');
 eq_or_diff(parse_range('3-'), [3,undef], 'Range parsing - 3');
 eq_or_diff(parse_range('5'), [1,5], 'Range parsing - 4');
 eq_or_diff(parse_range('3--+'), [3,'+'], 'Range parsing - 5');
+
+# split_xsv
+eq_or_diff([split_xsv('family=a, given=a b, given-i=a b c')], ['family=a', 'given=a b', 'given-i=a b c'], 'split_xsv - 1');
+eq_or_diff([split_xsv('"family={Something, here}", given=b')], ['family={Something, here}', 'given=b'], 'split_xsv - 2');

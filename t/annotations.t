@@ -30,7 +30,10 @@ my $l4pconf = qq|
 |;
 Log::Log4perl->init(\$l4pconf);
 
+
 Biber::Config->setoption('annotation_marker', '-an');
+# This is cached at load time so we need to alter the cache too
+$Biber::Config::CONFIG_META_MARKERS{annotation} = quotemeta(Biber::Config->getoption('annotation_marker'));
 $biber->parse_ctrlfile('annotations.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 

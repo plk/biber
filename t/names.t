@@ -89,7 +89,7 @@ my $name4 =
 my $name5 =
    {  given          => {string => undef, initial => undef},
       family         => {string => 'Robert and Sons, Inc.', initial => ['R']},
-      nameinitstring => '{Robert_and_Sons,_Inc.}',
+      nameinitstring => 'Robert_and_Sons,_Inc.',
       namestring     => 'Robert and Sons, Inc.',
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
@@ -138,7 +138,7 @@ my $name10 =
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 1, prefix => 0, suffix => undef },
       namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => '{Vallée_Poussin}_JCG' } ;
+      nameinitstring => 'Vallée_Poussin_JCG' } ;
 
 my $name11 =
    {  given          => {string => 'Jean Charles Gabriel', initial => ['J']},
@@ -147,7 +147,7 @@ my $name11 =
       suffix         => {string => undef, initial => undef},
       strip          => { given => 1, family => 1, prefix => 0, suffix => undef },
       namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => '{Vallée_Poussin}_J' } ;
+      nameinitstring => 'Vallée_Poussin_J' } ;
 
 my $name12 =
    {  given          => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
@@ -165,7 +165,7 @@ my $name13 =
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 1, prefix => undef, suffix => undef },
       namestring     => 'Poussin Lecoq, Jean Charles',
-      nameinitstring => '{Poussin_Lecoq}_JC' } ;
+      nameinitstring => 'Poussin_Lecoq_JC' } ;
 
 my $name14 =
    {  given          => {string => 'J.~C.~G.', initial => ['J', 'C', 'G']},
@@ -213,7 +213,7 @@ my $name18 =
       suffix         => {string => undef, initial => undef},
       strip          => { given => undef, family => 1, prefix => undef, suffix => undef },
       namestring     => 'British National Corpus',
-      nameinitstring => '{British_National_Corpus}' } ;
+      nameinitstring => 'British_National_Corpus' } ;
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
@@ -808,12 +808,12 @@ eq_or_diff( $out->get_output_entry('L28', $main), $l28, 'Bad name with consecuti
 eq_or_diff( $out->get_output_entry('L29', $main), $l29, 'Escaped name with 3 commas');
 
 # Checking visibility
-# Count does not include the "and others" as this "name" is delete in the output driver
+# Count does not include the "and others" as this "name" is deleted in the output driver
 eq_or_diff($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->count_names, '2', 'Name count for "and others" - 1');
 eq_or_diff($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->get_visible_cite, '2', 'Visibility for "and others" - 1');
 eq_or_diff($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_labelname_info)->get_visible_cite, '1', 'Visibility for "and others" - 2');
 
-# A few tests depend set to non UTF-8 output
+# A few tests depend on non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
 # dealt with in ->prepare
 $biber->parse_ctrlfile('names.bcf');

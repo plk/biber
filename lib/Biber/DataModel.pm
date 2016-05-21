@@ -234,18 +234,19 @@ sub datatypes {
 
 =head2 is_field
 
-    Returns boolean to say if a field is a legal field. We always
-    allow annotation fields as these are not part of the datamodel.
+    Returns boolean to say if a field is a legal field.
+    Allows for fields with meta markers whose marked field should be in
+    the datamodel.
 
 =cut
 
 sub is_field {
   my $self = shift;
   my $field = shift;
-  my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
+  my $ann = $CONFIG_META_MARKERS{annotation};
 
-  if ($field =~ m/$ann$/) {
-    return 1;
+  if ($field =~ m/^(.+)(?:$ann)$/) {
+    return $self->{fieldsbyname}{$1} ? 1 : 0;
   }
   else {
     return $self->{fieldsbyname}{$field} ? 1 : 0;

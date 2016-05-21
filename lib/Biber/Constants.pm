@@ -6,6 +6,7 @@ use warnings;
 use Encode::Alias;
 
 use parent qw(Exporter);
+use Text::CSV;
 
 our @EXPORT = qw{
                   $CONFIG_DEFAULT_BIBER
@@ -14,12 +15,14 @@ our @EXPORT = qw{
                   %CONFIG_SCOPEOPT_BIBLATEX
                   %CONFIG_OPTTYPE_BIBLATEX
                   %CONFIG_BIBLATEX_ENTRY_OPTIONS
+                  %CONFIG_META_MARKERS
                   %DATAFIELD_SETS
                   %DM_DATATYPES
                   %LOCALE_MAP
                   %LOCALE_MAP_R
                   %REMOTE_MAP
                   %DS_EXTENSIONS
+                  $CONFIG_CSV_PARSER
                   $BIBER_CONF_NAME
                   $BCF_VERSION
                   $BBL_VERSION
@@ -77,7 +80,7 @@ our %DS_EXTENSIONS = (
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 
 our $CONFIG_DEFAULT_BIBER = {
-  annotation_marker   => { content => '+an' },
+  annotation_marker   => { content => q/+an/ },
   clrmacros           => { content => 0 },
   collate             => { content => 1 },
   collate_options     => { option => {level => 4, variable => 'non-ignorable', normalization => 'prenormalized' }},
@@ -132,9 +135,14 @@ our $CONFIG_DEFAULT_BIBER = {
   validate_control    => { content => 0 },
   validate_datamodel  => { content => 0 },
   wraplines           => { content => 0 },
-  xname_marker        => { content => '+x' },
   xsvsep              => { content => q/\s*,\s*/ },
 };
+
+our $CONFIG_CSV_PARSER = Text::CSV->new ( { binary           => 1,
+                                            allow_whitespace => 1,
+                                            always_quote     => 1  } );
+
+our %CONFIG_META_MARKERS = ();
 
 # default global options for biblatex
 # Used to set:

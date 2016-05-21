@@ -23,6 +23,7 @@ use Regexp::Common qw( balanced );
 use List::AllUtils qw( first );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Scalar::Util qw(looks_like_number);
+use Text::CSV;
 use Text::Roman qw(isroman roman2int);
 use Unicode::Normalize;
 use Unicode::GCString;
@@ -44,14 +45,14 @@ All functions are exported by default.
 
 our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
-  normalise_string_label reduce_array remove_outer add_outer ucinit strip_nosort strip_noinit
-  is_def is_undef is_def_and_notnull is_def_and_null
+  normalise_string_label reduce_array remove_outer has_outer add_outer ucinit strip_nosort
+  strip_noinit is_def is_undef is_def_and_notnull is_def_and_null
   is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
   filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
   process_entry_options remove_entry_options escape_label unescape_label biber_decode_utf8 out
   parse_date locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator call_transliterator
-  normalise_string_bblxml gen_initials};
+  normalise_string_bblxml gen_initials join_name_parts split_xsv};
 
 =head1 FUNCTIONS
 
@@ -463,6 +464,18 @@ sub remove_outer {
   return (0, $str) if $str =~ m/}\s*{/;
   my $r = $str =~ s/^{(\X+)}$/$1/;
   return (($r ? 1 : 0), $str);
+}
+
+=head2 has_outer
+
+    Return (boolean if surrounded in braces
+
+=cut
+
+sub has_outer {
+  my $str = shift;
+  return 0 if $str =~ m/}\s*{/;
+  return $str =~ m/^{\X+}$/;
 }
 
 =head2 add_outer
@@ -1268,6 +1281,37 @@ sub gen_initials {
     }
   }
   return @strings_out;
+}
+
+# Joins name parts using BibTeX tie algorithm. Ties are added:
+#
+# 1. After the first part if it is less than three characters long
+# 2. Before the family part
+sub join_name_parts {
+  my $parts = shift;
+  # special case - 1 part
+  if ($#{$parts} == 0) {
+    return $parts->[0];
+  }
+  # special case - 2 parts
+  if ($#{$parts} == 1) {
+    return $parts->[0] . '~' . $parts->[1];
+  }
+  my $namestring = $parts->[0];
+  $namestring .= Unicode::GCString->new($parts->[0])->length < 3 ? '~' : ' ';
+  $namestring .= join(' ', @$parts[1 .. ($#{$parts} - 1)]);
+  $namestring .= '~' . $parts->[$#{$parts}];
+  return $namestring;
+}
+
+# Split an xsv using Text::CSV because it is fast and can handle quoting
+sub split_xsv {
+  my ($string, $sep) = @_;
+  if ($sep) {
+    $CONFIG_CSV_PARSER->sep_char($sep);
+  }
+  $CONFIG_CSV_PARSER->parse($string);
+  return $CONFIG_CSV_PARSER->fields();
 }
 
 1;

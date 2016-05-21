@@ -45,6 +45,7 @@ PAR_VERBATIM=1 /usr/local/perl/bin/pp \
   --module=Encode:: \
   --module=File::Find::Rule \
   --module=IO::Socket::SSL \
+  --module=Text::CSV_XS \
   --link=/usr/local/perl/lib/libbtparse.so \
   --link=/usr/local/lib/libxml2.so.2 \
   --link=/usr/local/lib/libz.so.1 \

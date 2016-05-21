@@ -978,7 +978,7 @@ sub parsename {
       # name component with parts
       if (my @npnodes =  $npnode->findnodes("./$NS:namepart")) {
         my @parts = map {$_->textContent()} @npnodes;
-        $namec{$n} = _join_name_parts(\@parts);
+        $namec{$n} = join_name_parts(\@parts);
         $logger->debug("Found namepart '$n': " . $namec{$n});
         my @partinits;
         foreach my $part (@npnodes) {
@@ -1036,7 +1036,8 @@ sub parsename {
   }
 
   # Remove any trailing comma and space
-  $namestring =~ s/,\s+\z//xms;
+  $namestring =~ s/,\s+$//;
+  $namestring =~ s/~/ /g;
 
   # Construct $nameinitstring
   my $nameinitstr = '';
@@ -1046,7 +1047,7 @@ sub parsename {
   foreach my $nbnp (@nps_nonbase) {
     $nameinitstr .= '_' . join('', @{$namec{"${nbnp}_i"}}) if exists($namec{$nbnp});
   }
-  $nameinitstr =~ s/\s+/_/g;
+  $nameinitstr =~ s/(?:\s+|~)/_/g;
 
   my %nps;
   foreach my $n ($dm->get_constant_value('nameparts')) { # list type so returns list
@@ -1072,27 +1073,6 @@ sub parsename {
   }
 
   return $newname;
-}
-
-# Joins name parts using BibTeX tie algorithm. Ties are added:
-#
-# 1. After the first part if it is less than three characters long
-# 2. Before the family part
-sub _join_name_parts {
-  my $parts = shift;
-  # special case - 1 part
-  if ($#{$parts} == 0) {
-    return $parts->[0];
-  }
-  # special case - 2 parts
-  if ($#{$parts} == 1) {
-    return $parts->[0] . '~' . $parts->[1];
-  }
-  my $namestring = $parts->[0];
-  $namestring .= Unicode::GCString->new($parts->[0])->length < 3 ? '~' : ' ';
-  $namestring .= join(' ', @$parts[1 .. ($#{$parts} - 1)]);
-  $namestring .= '~' . $parts->[$#{$parts}];
-  return $namestring;
 }
 
 # parses a range and returns a ref to an array of start and end values
