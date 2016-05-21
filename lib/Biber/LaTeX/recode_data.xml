@@ -317,7 +317,6 @@
     <map><from>textless</from>                         <to hex="3C">&lt;</to></map>
     <map><from>textequals</from>                       <to hex="3D">=</to></map>
     <map><from>textgreater</from>                      <to hex="3E">&gt;</to></map>
-    <map><from>textbackslash</from>                    <to hex="5C">\</to></map>
     <map><from>textasciicircum</from>                  <to hex="5E">^</to></map>
     <map><from>textunderscore</from>                   <to hex="5F">_</to></map>
     <map><from>textasciigrave</from>                   <to hex="60">`</to></map>
