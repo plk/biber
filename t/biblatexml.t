@@ -109,21 +109,21 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{addendum}{userc}
       \field{eventday}{16}
       \field{eventendday}{17}
-      \field{eventendmonth}{05}
+      \field{eventendmonth}{5}
       \field{eventendyear}{1990}
-      \field{eventmonth}{05}
+      \field{eventmonth}{5}
       \field{eventyear}{1990}
-      \field{origday}{02}
-      \field{origmonth}{04}
+      \field{origday}{2}
+      \field{origmonth}{4}
       \field{origyear}{1985}
       \field{pagetotal}{240}
       \field{relatedstring}{Somestring}
       \field{relatedtype}{reprint}
       \field{series}{Научно-биографическая литература}
       \field{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
-      \field{urlday}{01}
+      \field{urlday}{1}
       \field{urlendyear}{}
-      \field{urlmonth}{07}
+      \field{urlmonth}{7}
       \field{urlyear}{1991}
       \field{userb}{usera}
       \field{userd}{userc}

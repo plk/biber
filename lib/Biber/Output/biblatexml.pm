@@ -313,12 +313,12 @@ sub set_output_entry {
     my @e;
 
     push @s, $dinfo{$dp}{begin}{year} if exists($dinfo{$dp}{begin}{year});
-    push @s, $dinfo{$dp}{begin}{month} if exists($dinfo{$dp}{begin}{month});
-    push @s, $dinfo{$dp}{begin}{day} if exists($dinfo{$dp}{begin}{day});
+    push @s, iso8601_monthday($dinfo{$dp}{begin}{month}) if exists($dinfo{$dp}{begin}{month});
+    push @s, iso8601_monthday($dinfo{$dp}{begin}{day}) if exists($dinfo{$dp}{begin}{day});
 
     push @e, $dinfo{$dp}{end}{year} if exists($dinfo{$dp}{end}{year});
-    push @e, $dinfo{$dp}{end}{month} if exists($dinfo{$dp}{end}{month});
-    push @e, $dinfo{$dp}{end}{day} if exists($dinfo{$dp}{end}{day});
+    push @e, iso8601_monthday($dinfo{$dp}{end}{month}) if exists($dinfo{$dp}{end}{month});
+    push @e, iso8601_monthday($dinfo{$dp}{end}{day}) if exists($dinfo{$dp}{end}{day});
 
     my $end = join('-', @e);
 

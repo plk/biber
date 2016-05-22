@@ -824,33 +824,38 @@ sub _date {
   my $ds = $section->get_keytods($key);
   foreach my $node ($entry->findnodes("./$f")) {
     my $datetype = $node->getAttribute('type') // '';
-    # We are not validating dates here, just syntax parsing
-    my $date_re = qr/(\d{4}) # year
-                     (?:-(\d{2}))? # month
-                     (?:-(\d{2}))? # day
-                    /xms;
     if (my $start = $node->findnodes("./$NS:start")) { # Date range
       my $end = $node->findnodes("./$NS:end");
+
       # Start of range
-      if (my ($byear, $bmonth, $bday) =
-          $start->get_node(1)->textContent() =~ m|\A$date_re\z|xms) {
-        $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
-        $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
-        $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
+      if (my $sdate = parse_date_start($start->get_node(1)->textContent())) {
+        $bibentry->set_datafield($datetype . 'year', $sdate->year)
+          unless $CONFIG_DATE_PARSERS{start}->missing('year');
+
+        $bibentry->set_datafield($datetype . 'month', $sdate->month)
+          unless $CONFIG_DATE_PARSERS{start}->missing('month');
+
+        $bibentry->set_datafield($datetype . 'day', $sdate->day)
+          unless $CONFIG_DATE_PARSERS{start}->missing('day');
       }
       else {
         biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start - ignoring", $bibentry);
       }
 
       # End of range
-      if (my ($eyear, $emonth, $eday) =
-          $end->get_node(1)->textContent() =~ m|\A(?:$date_re)?\z|xms) {
-        $bibentry->set_datafield($datetype . 'endmonth', $emonth)    if $emonth;
-        $bibentry->set_datafield($datetype . 'endday', $eday)        if $eday;
-        if ($eyear) {           # normal range
-          $bibentry->set_datafield($datetype . 'endyear', $eyear);
+      my $edate = parse_date_end($end->get_node(1)->textContent());
+      if (defined($edate)) { # no parse error
+        if ($edate) { # not an empty range
+          $bibentry->set_datafield($datetype . 'endyear', $edate->year)
+            unless $CONFIG_DATE_PARSERS{end}->missing('year');
+
+          $bibentry->set_datafield($datetype . 'endmonth', $edate->month)
+            unless $CONFIG_DATE_PARSERS{end}->missing('month');
+
+          $bibentry->set_datafield($datetype . 'endday', $edate->day)
+            unless $CONFIG_DATE_PARSERS{end}->missing('day');
         }
-        else {            # open ended range - endyear is defined but empty
+        else { # open ended range - edate is defined but empty
           $bibentry->set_datafield($datetype . 'endyear', '');
         }
       }
@@ -859,16 +864,20 @@ sub _date {
       }
     }
     else { # Simple date
-      if (my ($byear, $bmonth, $bday) =
-          $node->textContent() =~ m|\A$date_re\z|xms) {
+      if (my $sdate = parse_date_start($node->textContent())) {
         # did this entry get its year/month fields from splitting an ISO8601 date field?
         # We only need to know this for date, year/month as year/month can also
         # be explicitly set. It makes a difference on how we do any potential future
         # date validation
         $bibentry->set_field('datesplit', 1) if $datetype eq '';
-        $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
-        $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
-        $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
+        $bibentry->set_datafield($datetype . 'year', $sdate->year)
+          unless $CONFIG_DATE_PARSERS{start}->missing('year');
+
+        $bibentry->set_datafield($datetype . 'month', $sdate->month)
+          unless $CONFIG_DATE_PARSERS{start}->missing('month');
+
+        $bibentry->set_datafield($datetype . 'day', $sdate->day)
+          unless $CONFIG_DATE_PARSERS{start}->missing('day');
       }
       else {
         biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $node->textContent() . "' of date field '$f' - ignoring", $bibentry);

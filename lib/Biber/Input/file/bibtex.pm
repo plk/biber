@@ -985,7 +985,7 @@ sub _date {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
 
-  my ($sdate, $edate, $sep) = parse_date($date);
+  my ($sdate, $edate, $sep) = parse_date_range($date);
   if ($sdate) {# Start date was successfully parsed
     # Did this entry get its year/month fields from splitting an ISO8601 date field?
     # We only need to know this for date, year/month as year/month can also
@@ -1003,25 +1003,35 @@ sub _date {
       biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
     }
 
-    $bibentry->set_datafield($datetype . 'year', $sdate->year) unless $CONFIG_DATE_PARSERS{start}->missing('year');
-    $bibentry->set_datafield($datetype . 'month', $sdate->month) unless $CONFIG_DATE_PARSERS{start}->missing('month');
-    $bibentry->set_datafield($datetype . 'day', $sdate->day) unless $CONFIG_DATE_PARSERS{start}->missing('day');
+    $bibentry->set_datafield($datetype . 'year', $sdate->year)
+      unless $CONFIG_DATE_PARSERS{start}->missing('year');
+
+    $bibentry->set_datafield($datetype . 'month', $sdate->month)
+      unless $CONFIG_DATE_PARSERS{start}->missing('month');
+
+    $bibentry->set_datafield($datetype . 'day', $sdate->day)
+      unless $CONFIG_DATE_PARSERS{start}->missing('day');
 
     # End date can be missing
-    if ($edate) {
-      unless ($CONFIG_DATE_PARSERS{end}->missing('month')) {
-        $bibentry->set_datafield($datetype . 'endmonth', $edate->month);
-      }
-      unless ($CONFIG_DATE_PARSERS{end}->missing('day')) {
-        $bibentry->set_datafield($datetype . 'endday', $edate->day);
-      }
-    }
+    if ($sep) {
+      if (defined($edate)) {
+        if ($edate) {
+          $bibentry->set_datafield($datetype . 'endyear', $edate->year)
+            unless $CONFIG_DATE_PARSERS{end}->missing('year');
 
-    if ($sep and $edate and $edate->year) { # normal range
-      $bibentry->set_datafield($datetype . 'endyear', $edate->year);
-    }
-    elsif ($sep and not $edate) { # open ended range - enddate is defined but empty
-      $bibentry->set_datafield($datetype . 'endyear', '');
+          $bibentry->set_datafield($datetype . 'endmonth', $edate->month)
+            unless $CONFIG_DATE_PARSERS{end}->missing('month');
+
+          $bibentry->set_datafield($datetype . 'endday', $edate->day)
+            unless $CONFIG_DATE_PARSERS{end}->missing('day');
+        }
+        else { # open ended range - enddate is defined but empty
+          $bibentry->set_datafield($datetype . 'endyear', '');
+        }
+      }
+      else {
+        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of end date field '$field' - ignoring", $bibentry);
+      }
     }
   }
   else {

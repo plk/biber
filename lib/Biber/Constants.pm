@@ -146,8 +146,11 @@ our $CONFIG_CSV_PARSER = Text::CSV->new ( { binary           => 1,
                                             always_quote     => 1  } );
 
 # Set up some re-usable Date parsers here for efficiency reasons
+# We need two as the missing component data is in these objects, not
+# in the DT objects returned by ->parse_datetime() and this data will
+# likely be different for start/end
 our %CONFIG_DATE_PARSERS = ('start' => Biber::Date::Format->new(),
-                            'end' => Biber::Date::Format->new());
+                            'end'   => Biber::Date::Format->new());
 
 our %CONFIG_META_MARKERS = ();
 

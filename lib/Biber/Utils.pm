@@ -44,15 +44,18 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
-  normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
-  normalise_string_label reduce_array remove_outer has_outer add_outer ucinit strip_nosort
-  strip_noinit is_def is_undef is_def_and_notnull is_def_and_null
-  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
-  process_entry_options remove_entry_options escape_label unescape_label biber_decode_utf8 out
-  parse_date locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean
-  parse_range parse_range_alt maploopreplace get_transliterator call_transliterator
-  normalise_string_bblxml gen_initials join_name_parts split_xsv};
+  normalise_string normalise_string_hash normalise_string_underscore
+  normalise_string_sort normalise_string_label reduce_array remove_outer
+  has_outer add_outer ucinit strip_nosort strip_noinit is_def is_undef
+  is_def_and_notnull is_def_and_null is_undef_or_null is_notnull is_null
+  normalise_utf8 inits join_name latex_recode_output filter_entry_options
+  biber_error biber_warn ireplace imatch validate_biber_xml
+  process_entry_options remove_entry_options escape_label unescape_label
+  biber_decode_utf8 out parse_date_start parse_date_end parse_date_range locale2bcp47
+  bcp472locale rangelen match_indices process_comment map_boolean
+  parse_range parse_range_alt maploopreplace get_transliterator
+  call_transliterator normalise_string_bblxml gen_initials join_name_parts
+  split_xsv iso8601_monthday};
 
 =head1 FUNCTIONS
 
@@ -982,23 +985,59 @@ sub _expand_option {
   return;
 }
 
+=head2 parse_date_range
+
+  Parse of ISO8601 date range
+  Returns two-element array ref: [start DT object, end DT object]
+
+=cut
+
+sub parse_date_range {
+  shift =~ m|^([^/]+)(/)?([^/]+)?$|;
+  return (parse_date_start($1), parse_date_end($3), $2);
+}
+
+=head2 parse_date_start
+
+  Convenience wrapper
+
+=cut
+
+sub parse_date_start {
+  return parse_date($CONFIG_DATE_PARSERS{start}, shift);
+}
+
+=head2 parse_date_end
+
+  Convenience wrapper
+
+=cut
+
+sub parse_date_end {
+  return parse_date($CONFIG_DATE_PARSERS{end}, shift);
+}
+
 =head2 parse_date
 
   Parse of ISO8601 dates using subclass of Date::Format::ISO8601 which handles
   missing data and ignores times.
 
-  Returns two-element array ref: [start DT object, end DT object]
-
 =cut
 
 sub parse_date {
-  shift =~ m|^([^/]+)(/)?([^/]+)?$|;
-  my $sdt = eval {$CONFIG_DATE_PARSERS{start}->parse_datetime($1)};
-  my $edt;
-  if ($3) {
-    $edt = eval {$CONFIG_DATE_PARSERS{end}->parse_datetime($3)};
-  }
-  return ($sdt, $edt, $2);
+  my ($obj, $string) = @_;
+  return 0 unless $string;
+  return eval {$obj->parse_datetime($string)};
+}
+
+=head2 iso8601_monthday
+
+  Force month/day to ISO8601 format with leading zero
+
+=cut
+
+sub iso8601_monthday {
+  return sprintf('%.2d', shift);
 }
 
 =head2 biber_decode_utf8
