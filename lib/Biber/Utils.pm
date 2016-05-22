@@ -992,7 +992,7 @@ sub _expand_option {
 =cut
 
 sub parse_date {
-  shift =~ m/\A([^\/]+)(\/|\p{Pd}{2})?([^\/]+)?\z/xms;
+  shift =~ m|^([^/]+)(/)?([^/]+)?$|;
   my $sdt = eval {$CONFIG_DATE_PARSERS{start}->parse_datetime($1)};
   my $edt;
   if ($3) {

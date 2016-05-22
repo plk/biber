@@ -986,7 +986,6 @@ sub _date {
   my $ds = $section->get_keytods($key);
 
   my ($sdate, $edate, $sep) = parse_date($date);
-
   if ($sdate) {# Start date was successfully parsed
     # Did this entry get its year/month fields from splitting an ISO8601 date field?
     # We only need to know this for date, year/month as year/month can also
@@ -1009,12 +1008,15 @@ sub _date {
     $bibentry->set_datafield($datetype . 'day', $sdate->day) unless $CONFIG_DATE_PARSERS{start}->missing('day');
 
     # End date can be missing
-    if ($edate and not $CONFIG_DATE_PARSERS{end}->missing('month')) {
-      $bibentry->set_datafield($datetype . 'endmonth', $edate->month);
+    if ($edate) {
+      unless ($CONFIG_DATE_PARSERS{end}->missing('month')) {
+        $bibentry->set_datafield($datetype . 'endmonth', $edate->month);
+      }
+      unless ($CONFIG_DATE_PARSERS{end}->missing('day')) {
+        $bibentry->set_datafield($datetype . 'endday', $edate->day);
+      }
     }
-    if ($edate and not $CONFIG_DATE_PARSERS{end}->missing('day')) {
-      $bibentry->set_datafield($datetype . 'endday', $edate->day);
-    }
+
     if ($sep and $edate and $edate->year) { # normal range
       $bibentry->set_datafield($datetype . 'endyear', $edate->year);
     }
