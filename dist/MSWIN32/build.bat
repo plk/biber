@@ -44,6 +44,7 @@ CALL pp ^
   --module=IO::Socket::SSL ^
   --module=File::Find::Rule ^
   --module=Text::CSV_XS ^
+  --module=DateTime ^
   --link=C:\WINDOWS\system32\libbtparse.dll ^
   --link=C:\strawberry\c\bin\libxslt-1_.dll ^
   --link=C:\strawberry\c\bin\libexslt-0_.dll ^

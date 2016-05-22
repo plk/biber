@@ -31,6 +31,7 @@ PAR_VERBATIM=1 pp \
   --module=File::Find::Rule \
   --module=IO::Socket::SSL \
   --module=Text::CSV_XS \
+  --module=DateTime \
   --link=/opt/local/lib/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
   --link=/opt/local/libexec/perl5.22/sitebin/libbtparse.dylib \

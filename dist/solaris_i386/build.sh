@@ -25,6 +25,7 @@ PAR_VERBATIM=1 /opt/gnu/perl5/5.22.0/bin/pp \
   --module=File::Find::Rule \
   --module=IO::Socket::SSL \
   --module=Text::CSV_XS \
+  --module=DateTime \
   --link=/opt/gnu/perl5/5.22.0/lib/libbtparse.so \
   --link=/usr/lib/libxml2.so.2 \
   --link=/usr/lib/libz.so.1 \

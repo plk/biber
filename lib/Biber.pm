@@ -3598,15 +3598,15 @@ sub fetch_data {
 
   # (Re-)define the old BibTeX month macros to what biblatex wants unless user stops this
   unless (Biber::Config->getoption('nostdmacros')) {
-    my %months = ('jan' => '01',
-                  'feb' => '02',
-                  'mar' => '03',
-                  'apr' => '04',
-                  'may' => '05',
-                  'jun' => '06',
-                  'jul' => '07',
-                  'aug' => '08',
-                  'sep' => '09',
+    my %months = ('jan' => '1',
+                  'feb' => '2',
+                  'mar' => '3',
+                  'apr' => '4',
+                  'may' => '5',
+                  'jun' => '6',
+                  'jul' => '7',
+                  'aug' => '8',
+                  'sep' => '9',
                   'oct' => '10',
                   'nov' => '11',
                   'dec' => '12');

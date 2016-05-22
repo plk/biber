@@ -228,9 +228,9 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \field{booktitle}{Manual booktitle}
       \field{eventday}{21}
       \field{eventendday}{24}
-      \field{eventendmonth}{08}
+      \field{eventendmonth}{8}
       \field{eventendyear}{2009}
-      \field{eventmonth}{08}
+      \field{eventmonth}{8}
       \field{eventtitle}{Title of the event}
       \field{eventyear}{2009}
       \field{title}{Title of inproceeding}

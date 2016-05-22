@@ -6,6 +6,7 @@ use warnings;
 use Encode::Alias;
 
 use parent qw(Exporter);
+use Biber::Date::Format;
 use Text::CSV;
 
 our @EXPORT = qw{
@@ -16,6 +17,7 @@ our @EXPORT = qw{
                   %CONFIG_OPTTYPE_BIBLATEX
                   %CONFIG_BIBLATEX_ENTRY_OPTIONS
                   %CONFIG_META_MARKERS
+                  %CONFIG_DATE_PARSERS
                   %DATAFIELD_SETS
                   %DM_DATATYPES
                   %LOCALE_MAP
@@ -138,9 +140,14 @@ our $CONFIG_DEFAULT_BIBER = {
   xsvsep              => { content => q/\s*,\s*/ },
 };
 
+# Set up some re-usable CSV parsers here for efficiency reasons
 our $CONFIG_CSV_PARSER = Text::CSV->new ( { binary           => 1,
                                             allow_whitespace => 1,
                                             always_quote     => 1  } );
+
+# Set up some re-usable Date parsers here for efficiency reasons
+our %CONFIG_DATE_PARSERS = ('start' => Biber::Date::Format->new(),
+                            'end' => Biber::Date::Format->new());
 
 our %CONFIG_META_MARKERS = ();
 

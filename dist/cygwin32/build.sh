@@ -35,6 +35,7 @@ PAR_VERBATIM=1 pp \
    --module=IO::Socket::SSL \
    --module=File::Find::Rule \
    --module=Text::CSV_XS \
+   --module=DateTime \
    --link=/usr/bin/cygz.dll \
    --link=/usr/bin/cyggcrypt-20.dll \
    --link=/usr/bin/cygiconv-2.dll \

@@ -984,19 +984,21 @@ sub _expand_option {
 
 =head2 parse_date
 
-  Simple parse of ISO8601 dates because not decent module exists for this that
-  doesn't default the missing components
+  Parse of ISO8601 dates using subclass of Date::Format::ISO8601 which handles
+  missing data and ignores times.
+
+  Returns two-element array ref: [start DT object, end DT object]
 
 =cut
 
 sub parse_date {
-  my $date = shift;
-  # We are not validating dates here, just syntax parsing
-  my $date_re = qr/(\d{4}) # year
-                   (?:-(\d{2}))? # month
-                   (?:-(\d{2}))? # day
-                  /xms;
-  return $date =~ m|\A$date_re(/)?(?:$date_re)?\z|xms;
+  shift =~ m/\A([^\/]+)(\/|\p{Pd}{2})?([^\/]+)?\z/xms;
+  my $sdt = eval {$CONFIG_DATE_PARSERS{start}->parse_datetime($1)};
+  my $edt;
+  if ($3) {
+    $edt = eval {$CONFIG_DATE_PARSERS{end}->parse_datetime($3)};
+  }
+  return ($sdt, $edt, $2);
 }
 
 =head2 biber_decode_utf8

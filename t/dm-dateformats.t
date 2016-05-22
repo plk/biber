@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 33;
+use Test::More tests => 32;
 use Test::Differences;
 unified_diff;
 
@@ -49,16 +49,16 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $bibentries = $section->bibentries;
 my $l1 = [ "Datamodel: Entry 'L1' (dm-dateformats.bib): Invalid format '1985-1030' of date field 'origdate' - ignoring",
-           "Datamodel: Entry 'L1' (dm-dateformats.bib): Invalid format '1.5.1998' of date field 'urldate' - ignoring",
-           "Datamodel: Entry 'L1' (dm-dateformats.bib): Invalid date value 'YYYY/14/DD' - ignoring its components" ];
+           "Datamodel: Entry 'L1' (dm-dateformats.bib): Invalid format '1.5.1998' of date field 'urldate' - ignoring" ];
 my $l2 = [ "Datamodel: Entry 'L2' (dm-dateformats.bib): Invalid format '1995-1230' of date field 'origdate' - ignoring" ];
 my $l3 = [ "Datamodel: Entry 'L3' (dm-dateformats.bib): Invalid format '1.5.1988' of date field 'urldate' - ignoring" ];
 my $l4 = [ "Datamodel: Entry 'L4' (dm-dateformats.bib): Invalid format '1995-1-04' of date field 'date' - ignoring",
            "Datamodel: Entry 'L4' (dm-dateformats.bib): Missing mandatory field - one of 'date, year' must be defined" ];
 my $l5 = [ "Datamodel: Entry 'L5' (dm-dateformats.bib): Invalid format '1995-10-4' of date field 'date' - ignoring",
            "Datamodel: Entry 'L5' (dm-dateformats.bib): Missing mandatory field - one of 'date, year' must be defined" ];
-my $l6 = [ "Datamodel: Entry 'L6' (dm-dateformats.bib): Invalid date value '1996/13/03' - ignoring its components" ];
-my $l7 = [ "Datamodel: Entry 'L7' (dm-dateformats.bib): Invalid date value '1996/10/35' - ignoring its components" ];
+my $l6 = [ "Datamodel: Entry 'L6' (dm-dateformats.bib): Invalid format '1996-13-03' of date field 'date' - ignoring",
+         "Datamodel: Entry 'L6' (dm-dateformats.bib): Missing mandatory field - one of 'date, year' must be defined"];
+my $l7 = [ "Datamodel: Entry 'L7' (dm-dateformats.bib): Invalid format '1996-10-35' of date field 'eventdate' - ignoring" ];
 my $l11 = [ "Overwriting field 'year' with year value from field 'date' for entry 'L11'"];
 my $l12 = [ "Overwriting field 'month' with month value from field 'date' for entry 'L12'" ];
 
@@ -83,14 +83,14 @@ my $l13c = q|    \entry{L13}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labelyear}{1996\bibdatedash }
-      \field{labelmonth}{01}
-      \field{labelday}{01}
+      \field{labelmonth}{1}
+      \field{labelday}{1}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{day}{01}
+      \field{day}{1}
       \field{endyear}{}
-      \field{month}{01}
+      \field{month}{1}
       \field{title}{Title 2}
       \field{year}{1996}
     \endentry
@@ -181,15 +181,15 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
-      \field{extrayear}{5}
+      \field{extrayear}{4}
       \field{labelyear}{1996}
-      \field{labelmonth}{01}
-      \field{labelday}{01}
+      \field{labelmonth}{1}
+      \field{labelday}{1}
       \field{datelabelsource}{event}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
-      \field{eventday}{01}
-      \field{eventmonth}{01}
+      \field{eventday}{1}
+      \field{eventmonth}{1}
       \field{eventyear}{1996}
       \field{title}{Title 2}
       \warn{\item Datamodel: Entry 'L16' (dm-dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
@@ -216,7 +216,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
-      \field{extrayear}{4}
+      \field{extrayear}{5}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
@@ -347,20 +347,19 @@ my $l17e = q|    \entry{L17}{proceedings}{}
 is_deeply($bibentries->entry('L1')->get_field('warnings'), $l1, 'Date values test 1' ) ;
 ok(is_undef($bibentries->entry('L1')->get_field('origyear')), 'Date values test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
 ok(is_undef($bibentries->entry('L1')->get_field('urlyear')), 'Date values test 1b - URLYEAR undef since URLDATE is bad' ) ;
-ok(is_undef($bibentries->entry('L1')->get_field('month')), 'Date values test 1c - MONTH undef since not integer' ) ;
 is_deeply($bibentries->entry('L2')->get_field('warnings'), $l2, 'Date values test 2' ) ;
 is_deeply($bibentries->entry('L3')->get_field('warnings'), $l3, 'Date values test 3' ) ;
 is_deeply($bibentries->entry('L4')->get_field('warnings'), $l4, 'Date values test 4' ) ;
 is_deeply($bibentries->entry('L5')->get_field('warnings'), $l5, 'Date values test 5' ) ;
 is_deeply($bibentries->entry('L6')->get_field('warnings'), $l6, 'Date values test 6' ) ;
 is_deeply($bibentries->entry('L7')->get_field('warnings'), $l7, 'Date values test 7' ) ;
-eq_or_diff($bibentries->entry('L8')->get_field('month'), '01', 'Date values test 8b - MONTH hacked to integer' ) ;
+eq_or_diff($bibentries->entry('L8')->get_field('month'), '1', 'Date values test 8b - MONTH hacked to integer' ) ;
 ok(is_undef($bibentries->entry('L9')->get_field('warnings')), 'Date values test 9' ) ;
 ok(is_undef($bibentries->entry('L10')->get_field('warnings')), 'Date values test 10' ) ;
 is_deeply($bibentries->entry('L11')->get_field('warnings'), $l11, 'Date values test 11' );
 eq_or_diff($bibentries->entry('L11')->get_field('year'), '1996', 'Date values test 11a - DATE overrides YEAR' ) ;
 is_deeply($bibentries->entry('L12')->get_field('warnings'), $l12, 'Date values test 12' );
-eq_or_diff($bibentries->entry('L12')->get_field('month'), '01', 'Date values test 12a - DATE overrides MONTH' ) ;
+eq_or_diff($bibentries->entry('L12')->get_field('month'), '1', 'Date values test 12a - DATE overrides MONTH' ) ;
 # it means something if endyear is defined but null ("1935-")
 ok(is_def_and_null($bibentries->entry('L13')->get_field('endyear')), 'Date values test 13 - range with no end' ) ;
 ok(is_undef($bibentries->entry('L13')->get_field('endmonth')), 'Date values test 13a - ENDMONTH undef for open-ended range' ) ;

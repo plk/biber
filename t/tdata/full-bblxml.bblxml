@@ -299,7 +299,7 @@
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
         <bbl:field name="journaltitle">American Anthropologist</bbl:field>
-        <bbl:field name="month">03</bbl:field>
+        <bbl:field name="month">3</bbl:field>
         <bbl:field name="number">1</bbl:field>
         <bbl:field name="series">newseries</bbl:field>
         <bbl:field name="subtitle">Meaning Construction and Cultural Cognition</bbl:field>

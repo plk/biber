@@ -985,32 +985,40 @@ sub _date {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
 
-  if (my ($byear, $bmonth, $bday, $r, $eyear, $emonth, $eday) = parse_date($date)) {
+  my ($sdate, $edate, $sep) = parse_date($date);
+
+  if ($sdate) {# Start date was successfully parsed
     # Did this entry get its year/month fields from splitting an ISO8601 date field?
     # We only need to know this for date, year/month as year/month can also
     # be explicitly set. This is useful to know in various places.
     $bibentry->set_field('datesplit', 1) if $datetype eq '';
     # Some warnings for overwriting YEAR and MONTH from DATE
-    if ($byear and
+    if ($sdate->year and
         ($datetype . 'year' eq 'year') and
         $entry->get('year')) {
       biber_warn("Overwriting field 'year' with year value from field 'date' for entry '$key'", $bibentry);
     }
-    if ($bmonth and
+    if ($sdate->month and
         ($datetype . 'month' eq 'month') and
         $entry->get('month')) {
       biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
     }
 
-    $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
-    $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
-    $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
-    $bibentry->set_datafield($datetype . 'endmonth', $emonth) if $emonth;
-    $bibentry->set_datafield($datetype . 'endday', $eday)     if $eday;
-    if ($r and $eyear) {        # normal range
-      $bibentry->set_datafield($datetype . 'endyear', $eyear);
+    $bibentry->set_datafield($datetype . 'year', $sdate->year) unless $CONFIG_DATE_PARSERS{start}->missing('year');
+    $bibentry->set_datafield($datetype . 'month', $sdate->month) unless $CONFIG_DATE_PARSERS{start}->missing('month');
+    $bibentry->set_datafield($datetype . 'day', $sdate->day) unless $CONFIG_DATE_PARSERS{start}->missing('day');
+
+    # End date can be missing
+    if ($edate and not $CONFIG_DATE_PARSERS{end}->missing('month')) {
+      $bibentry->set_datafield($datetype . 'endmonth', $edate->month);
     }
-    elsif ($r and not $eyear) { # open ended range - endyear is defined but empty
+    if ($edate and not $CONFIG_DATE_PARSERS{end}->missing('day')) {
+      $bibentry->set_datafield($datetype . 'endday', $edate->day);
+    }
+    if ($sep and $edate and $edate->year) { # normal range
+      $bibentry->set_datafield($datetype . 'endyear', $edate->year);
+    }
+    elsif ($sep and not $edate) { # open ended range - enddate is defined but empty
       $bibentry->set_datafield($datetype . 'endyear', '');
     }
   }
@@ -1554,15 +1562,15 @@ sub parsename_x {
 # Routine to try to hack month into the right biblatex format
 # Especially since we support remote .bibs which we potentially have no control over
 my %months = (
-              'jan' => '01',
-              'feb' => '02',
-              'mar' => '03',
-              'apr' => '04',
-              'may' => '05',
-              'jun' => '06',
-              'jul' => '07',
-              'aug' => '08',
-              'sep' => '09',
+              'jan' => '1',
+              'feb' => '2',
+              'mar' => '3',
+              'apr' => '4',
+              'may' => '5',
+              'jun' => '6',
+              'jul' => '7',
+              'aug' => '8',
+              'sep' => '9',
               'oct' => '10',
               'nov' => '11',
               'dec' => '12'

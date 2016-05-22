@@ -98,13 +98,13 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labelyear}{1998}
-      \field{labelmonth}{04}
-      \field{labelday}{05}
+      \field{labelmonth}{4}
+      \field{labelday}{5}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{day}{05}
-      \field{month}{04}
+      \field{day}{5}
+      \field{month}{4}
       \field{origday}{30}
       \field{origmonth}{10}
       \field{origyear}{1985}
@@ -130,13 +130,13 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{1998}
-      \field{labelmonth}{04}
-      \field{labelday}{05}
+      \field{labelmonth}{4}
+      \field{labelday}{5}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{day}{05}
-      \field{month}{04}
+      \field{day}{5}
+      \field{month}{4}
       \field{title}{Title 2}
       \field{year}{1998}
     \endentry
@@ -158,13 +158,13 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
       \field{labelyear}{1999}
-      \field{labelmonth}{04}
-      \field{labelday}{05}
+      \field{labelmonth}{4}
+      \field{labelday}{5}
       \field{datelabelsource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{day}{05}
-      \field{month}{04}
+      \field{day}{5}
+      \field{month}{4}
       \field{title}{Title 3}
       \field{year}{1999}
     \endentry
