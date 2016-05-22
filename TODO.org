@@ -33,7 +33,7 @@
 * DONE Transliteration interface
 ** Waiting for L::T release then make this a dep.
 * TODO Year is missing for knuth:ct in sorting.t?
-* TODO When dates are all DT, sorting must be numeric on ->epoc due to single-digit returns from DT methods. Put in new cmp operator spec in DM or generate from DM types.
+* TODO When dates are all DT, sorting must be numeric on ->epoc due to single-digit returns from DT methods. Put in new cmp operator spec in DM or generate from DM types. citeorder in internals also talks about cmp padding.
 * TODO bibaltexml.pm date parsing
 * TODO Decomm RIS?
 
