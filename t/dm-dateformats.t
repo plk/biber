@@ -181,7 +181,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
-      \field{extrayear}{4}
+      \field{extrayear}{5}
       \field{labelyear}{1996}
       \field{labelmonth}{1}
       \field{labelday}{1}
@@ -216,7 +216,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
-      \field{extrayear}{5}
+      \field{extrayear}{4}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}

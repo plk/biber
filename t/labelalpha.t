@@ -419,7 +419,7 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 $bibentries = $section->bibentries;
 
-eq_or_diff($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '20050302', 'labeldate test - 1');
+eq_or_diff($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '200532', 'labeldate test - 1');
 eq_or_diff($bibentries->entry('padtest')->get_field('labelalpha'), '\&Al\_\_{\textasciitilde}{\textasciitilde}T07', 'pad test - 1');
 eq_or_diff($bibentries->entry('padtest')->get_field('sortlabelalpha'), '&Al__~~T07', 'pad test - 2');
 

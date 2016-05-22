@@ -58,6 +58,7 @@ my $builder = $class->new(
                  'Log::Log4perl' => 0,
                  'Unicode::Collate' => '1.14',
                  'Unicode::Normalize' => '1.25',
+                 'Unicode::LineBreak' => '2016.003',
                  'Unicode::GCString' => 0,
                  'Encode::EUCJPASCII' => 0,
                  'Encode::JIS2K' => 0,
