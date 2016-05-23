@@ -108,7 +108,7 @@ our $CONFIG_DEFAULT_BIBER = {
   noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},
                                        {value => q/[\x{2bf}\x{2018}]/} ] },
   nolabel             => { option => [ {value => q/[\p{P}\p{S}\p{C}]+/} ] },
-  nolabelwidthcount   => { option => [ {value => q//} ] },
+#  nolabelwidthcount   => { option =>  }, # default is nothing
   nolog               => { content => 0 },
   nostdmacros         => { content => 0 },
   nosort              => { option => [ { name => 'setnames', value => q/\A\p{L}{2}\p{Pd}/ },

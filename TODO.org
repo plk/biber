@@ -35,5 +35,7 @@
 * DONE Year is missing for knuth:ct in sorting.t?
 * DONE bibaltexml.pm date parsing
 * TODO When dates are all DT, sorting must be numeric on ->epoc due to single-digit returns from DT methods. Put in new cmp operator spec in DM or generate from DM types. citeorder in internals also talks about cmp padding.
+* TODO BCE, circa etc.
 * TODO Decomm RIS
+* TODO bibtex output only works on bibtex input data as is uses ->rawfields
 

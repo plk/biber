@@ -603,17 +603,20 @@ sub _process_label_attributes {
         $subs_offset = 0 - $subs_width;
       }
 
-      # Get map of regexps to not count against stringth width and record their place in the string
+      # Get map of regexps to not count against string width and record their place in the
+      # string
       my $nolabelwcs = Biber::Config->getoption('nolabelwidthcount');
-      my $nolabelwcis = match_indices([map {$_->{value}} @$nolabelwcs], $field_string);
+      my $nolabelwcis;
+      if ($nolabelwcs) {
+        $nolabelwcis = match_indices([map {$_->{value}} @$nolabelwcs], $field_string);
+        $logger->trace('Saved indices for nolabelwidthcount: ' . Data::Dump::pp($nolabelwcis));
 
-      $logger->trace('Saved indices for nolabelwidthcount: ' . Data::Dump::pp($nolabelwcis));
-
-      # Then remove the nolabelwidthcount chars for now
-      foreach my $nolabelwc (@$nolabelwcs) {
-        my $nlwcopt = $nolabelwc->{value};
-        my $re = qr/$nlwcopt/;
-        $field_string =~ s/$re//gxms;           # remove nolabelwidthcount items
+        # Then remove the nolabelwidthcount chars for now
+        foreach my $nolabelwc (@$nolabelwcs) {
+          my $nlwcopt = $nolabelwc->{value};
+          my $re = qr/$nlwcopt/;
+          $field_string =~ s/$re//gxms; # remove nolabelwidthcount items
+        }
       }
 
       # If desired, do the substring on all parts of compound strings
@@ -646,18 +649,16 @@ sub _process_label_attributes {
       }
 
       # Now reinstate any nolabelwidthcount regexps
-      # Unicode::GCString->substr() with 3 args doesn't seem to work
-      my $subslength = Unicode::GCString->new($field_string)->length;
-      my @gca = Unicode::GCString->new($field_string)->as_array;
-      my $splicelen = 0;
-      foreach my $nolabelwci (@$nolabelwcis) {
-        if (($nolabelwci->[1] + 1) <= $subslength) {
-          splice(@gca, $nolabelwci->[1] + $splicelen, 0, $nolabelwci->[0]);
-          # - 1 here as we are using a length as a 0-based index calculation later on
-          $splicelen += (Unicode::GCString->new($nolabelwci->[0])->length - 1);
+      if ($nolabelwcis) {
+        my $gc_string = Unicode::GCString->new($field_string);
+        foreach my $nolabelwci (@$nolabelwcis) {
+          # Don't put back anything at positions which are no longer in the string
+          if ($nolabelwci->[1] +1 <= $gc_string->length) {
+            $gc_string->substr($nolabelwci->[1], 0, $nolabelwci->[0]);
+          }
         }
+        $field_string = $gc_string->as_string;
       }
-      $field_string = join('', @gca);
     }
   }
 

@@ -1182,18 +1182,20 @@ sub rangelen {
 
 sub match_indices {
   my ($regexes, $string) = @_;
-  my $ret;
+  my @ret;
   my $relen = 0;
   foreach my $regex (@$regexes) {
     my $len = 0;
     while ($string =~ /$regex/g) {
       my $gcs = Unicode::GCString->new($string)->substr($-[0], $+[0]-$-[0]);
-      push @$ret, [ $gcs->as_string, $-[0] - $relen ];
+      push @ret, [ $gcs->as_string, $-[0] - $relen ];
       $len = $gcs->length;
     }
     $relen += $len;
   }
-  return $ret
+  # Return last index first so replacements can be done without recalculating
+  # indices changed by earlier index replacements
+  return scalar(@ret) ? [reverse @ret] : undef;
 }
 
 =head2 parse_range
