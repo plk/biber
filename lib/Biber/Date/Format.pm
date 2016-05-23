@@ -3,7 +3,6 @@ use v5.16;
 
 use strict;
 use Carp;
-use Data::Dump;
 use parent qw(DateTime::Format::ISO8601);
 
 =encoding utf-8
@@ -19,14 +18,6 @@ Biber::Date::Format
   Also added a ->missing() method to detect when month/year are missing.
 
 =cut
-
-# sub new {
-#   my $class = shift;
-#   my $self = $class->SUPER::new();
-#   # Initialise missing tracker
-#   $self->{missing} = {};
-#   return $self;
-# }
 
 sub missing {
   my $self = shift;
@@ -45,7 +36,7 @@ DateTime::Format::Builder->create_class(
                 params => [ qw( year month day ) ],
             },
             {
-                # uncombined with above because 
+                # uncombined with above because
                 #regex => qr/^ (\d{4}) -??  (\d\d) -?? (\d\d) $/x,
                 # was matching 152746-05
 
@@ -66,14 +57,17 @@ DateTime::Format::Builder->create_class(
                 length => 4,
                 regex  => qr/^ (\d{4}) $/x,
                 params => [ qw( year ) ],
-                postprocess => [ \&_missing_month, \&_missing_day ],
+                postprocess => [ \&_missing_month,
+                                 \&_missing_day ],
             },
             {
                 #YY 19 (century)
                 length => 2,
                 regex  => qr/^ (\d\d) $/x,
                 params => [ qw( year ) ],
-                postprocess => [ \&_normalize_century, \&_missing_month, \&_missing_day ],
+                postprocess => [ \&DateTime::Format::ISO8601::_normalize_century,
+                                 \&_missing_month,
+                                 \&_missing_day ],
             },
             {
                 #YYMMDD 850412
@@ -81,22 +75,36 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 6 8 ) ],
                 regex  => qr/^ (\d\d) -??  (\d\d) -?? (\d\d) $/x,
                 params => [ qw( year month day ) ],
-                postprocess => \&_fix_2_digit_year,
+                postprocess => \&DateTime::Format::ISO8601::_fix_2_digit_year,
             },
             {
-                #-YYMM -8504
-                #-YY-MM -85-04
-                length => [ qw( 5 6 ) ],
-                regex  => qr/^ - (\d\d) -??  (\d\d) $/x,
-                params => [ qw( year month ) ],
-                postprocess => [ \&_fix_2_digit_year, \&_missing_month ],
+                #-YYYYMMDD -03790201
+                #-YYYY-MM-DD -0379-02-01
+                length => [ qw( 9 11 ) ],
+                regex  => qr/^ (-\d{4}) -?? (\d\d) -?? (\d\d) $/x,
+                params => [ qw( year month day) ],
+            },
+            {
+                #-YYYYMM 037902
+                #-YYYY-MM -0379-02
+                length => [ qw( 7 8 ) ],
+                regex  => qr/^ (-\d{4}) -?? (\d\d) $/x,
+                params => [ qw( year month) ],
+            },
+            {
+                #-YYYY -00379
+                length => [ qw( 5 ) ],
+                regex  => qr/^ (-\d{4}) $/x,
+                params => [ qw( year ) ],
             },
             {
                 #-YY -85
                 length   => 3,
                 regex    => qr/^ - (\d\d) $/x,
                 params   => [ qw( year ) ],
-                postprocess => [ \&_fix_2_digit_year, \&_missing_month, \&_missing_day ],
+                postprocess => [ \&DateTime::Format::ISO8601::_fix_2_digit_year,
+                                 \&_missing_month,
+                                 \&_missing_day ],
             },
             {
                 #--MMDD --0412
@@ -104,21 +112,27 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 6 7 ) ],
                 regex  => qr/^ -- (\d\d) -??  (\d\d) $/x,
                 params => [ qw( month day ) ],
-                postprocess => [ \&_add_year, \&_missing_year ],
+                postprocess => [ \&DateTime::Format::ISO8601::_add_year,
+                                 \&_missing_year ],
             },
             {
                 #--MM --04
                 length => 4,
                 regex  => qr/^ -- (\d\d) $/x,
                 params => [ qw( month ) ],
-                postprocess => [ \&_add_year, \&_missing_year, \&_missing_day ],
+                postprocess => [ \&DateTime::Format::ISO8601::_add_year,
+                                 \&_missing_year,
+                                 \&_missing_day ],
             },
             {
                 #---DD ---12
                 length => 5,
                 regex  => qr/^ --- (\d\d) $/x,
                 params => [ qw( day ) ],
-                postprocess => [ \&_add_year, \&_add_month, \&_missing_year, \&_missing_month ],
+                postprocess => [ \&DateTime::Format::ISO8601::_add_year,
+                                 \&DateTime::Format::ISO8601::_add_month,
+                                 \&_missing_year,
+                                 \&_missing_month ],
             },
             {
                 #+[YY]YYYYMMDD +0019850412
@@ -144,7 +158,7 @@ DateTime::Format::Builder->create_class(
                 length => 5,
                 regex  => qr/^ \+ (\d{4}) $/x,
                 params => [ qw( year ) ],
-                postprocess => \&_normalize_century,
+                postprocess => \&DateTime::Format::ISO8601::_normalize_century,
             },
             {
                 #YYYYDDD 1985102
@@ -160,7 +174,7 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 5 6 ) ],
                 regex  => qr/^ (\d\d) -?? (\d{3}) $/x,
                 params => [ qw( year day_of_year ) ],
-                postprocess => [ \&_fix_2_digit_year ],
+                postprocess => [ \&DateTime::Format::ISO8601::_fix_2_digit_year ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -168,7 +182,7 @@ DateTime::Format::Builder->create_class(
                 length => 4,
                 regex  => qr/^ - (\d{3}) $/x,
                 params => [ qw( day_of_year ) ],
-                postprocess => [ \&_add_year ],
+                postprocess => [ \&DateTime::Format::ISO8601::_add_year ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -185,7 +199,7 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 8 10 ) ],
                 regex  => qr/^ (\d{4}) -?? W (\d\d) -?? (\d) $/x,
                 params => [ qw( year week day_of_year ) ],
-                postprocess => [ \&_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -194,7 +208,7 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 7 8 ) ],
                 regex  => qr/^ (\d{4}) -?? W (\d\d) $/x,
                 params => [ qw( year week ) ],
-                postprocess => [ \&_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -203,7 +217,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 6 8 ) ],
                 regex  => qr/^ (\d\d) -?? W (\d\d) -?? (\d) $/x,
                 params => [ qw( year week day_of_year ) ],
-                postprocess => [ \&_fix_2_digit_year, \&_normalize_week ],
+             postprocess => [ \&DateTime::Format::ISO8601::_fix_2_digit_year,
+                              \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -212,7 +227,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 5 6 ) ],
                 regex  => qr/^ (\d\d) -?? W (\d\d) $/x,
                 params => [ qw( year week ) ],
-                postprocess => [ \&_fix_2_digit_year, \&_normalize_week ],
+             postprocess => [ \&DateTime::Format::ISO8601::_fix_2_digit_year,
+                              \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -221,7 +237,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 6 8 ) ],
                 regex  => qr/^ - (\d) -?? W (\d\d) -?? (\d) $/x,
                 params => [ qw( year week day_of_year ) ],
-                postprocess => [ \&_fix_1_digit_year, \&_normalize_week ],
+             postprocess => [ \&DateTime::Format::ISO8601::_fix_1_digit_year,
+                              \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -230,7 +247,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 5 6 ) ],
                 regex  => qr/^ - (\d) -?? W (\d\d) $/x,
                 params => [ qw( year week ) ],
-                postprocess => [ \&_fix_1_digit_year, \&_normalize_week ],
+             postprocess => [ \&DateTime::Format::ISO8601::_fix_1_digit_year,
+                              \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -239,7 +257,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 5 6 ) ],
                 regex  => qr/^ - W (\d\d) -?? (\d) $/x,
                 params => [ qw( week day_of_year ) ],
-                postprocess => [ \&_add_year, \&_normalize_week ],
+             postprocess => [ \&DateTime::Format::ISO8601::_add_year,
+                              \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -247,7 +266,8 @@ DateTime::Format::Builder->create_class(
                 length => 4,
                 regex  => qr/^ - W (\d\d) $/x,
                 params => [ qw( week ) ],
-                postprocess => [ \&_add_year, \&_normalize_week ],
+             postprocess => [ \&DateTime::Format::ISO8601::_add_year,
+                              \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -256,9 +276,9 @@ DateTime::Format::Builder->create_class(
                 regex  => qr/^ - W - (\d) $/x,
                 params => [ qw( day_of_year ) ],
                 postprocess => [
-                    \&_add_year,
-                    \&_add_week,
-                    \&_normalize_week,
+                                \&DateTime::Format::ISO8601::_add_year,
+                                \&DateTime::Format::ISO8601::_add_week,
+                                \&DateTime::Format::ISO8601::_normalize_week,
                 ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
@@ -268,7 +288,7 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 11 13 ) ],
                 regex  => qr/^ \+ (\d{6}) -?? W (\d\d) -?? (\d) $/x,
                 params => [ qw( year week day_of_year ) ],
-                postprocess => [ \&_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -277,7 +297,7 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 10 11 ) ],
                 regex  => qr/^ \+ (\d{6}) -?? W (\d\d) $/x,
                 params => [ qw( year week ) ],
-                postprocess => [ \&_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
         ],
@@ -308,7 +328,6 @@ sub _missing_day {
   $p{self}{missing}{day} = 1;
   return 1;
 }
-
 
 
 1;
