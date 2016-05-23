@@ -17,6 +17,11 @@ Biber::Date::Format
   with time parsers removed as they are not needed.
   Also added a ->missing() method to detect when month/year are missing.
 
+  Does not support the "truncated" formats from ISO8601v2000, section 5.2.1.3 as these are
+  not in the later ISO8601v2004 and are not really suited to bibliographies.
+
+  Supports ISO8601v2004 negative date specifications
+
 =cut
 
 sub missing {
@@ -70,14 +75,6 @@ DateTime::Format::Builder->create_class(
                                  \&_missing_day ],
             },
             {
-                #YYMMDD 850412
-                #YY-MM-DD 85-04-12
-                length => [ qw( 6 8 ) ],
-                regex  => qr/^ (\d\d) -??  (\d\d) -?? (\d\d) $/x,
-                params => [ qw( year month day ) ],
-                postprocess => \&DateTime::Format::ISO8601::_fix_2_digit_year,
-            },
-            {
                 #-YYYYMMDD -03790201
                 #-YYYY-MM-DD -0379-02-01
                 length => [ qw( 9 11 ) ],
@@ -105,34 +102,6 @@ DateTime::Format::Builder->create_class(
                 postprocess => [ \&DateTime::Format::ISO8601::_fix_2_digit_year,
                                  \&_missing_month,
                                  \&_missing_day ],
-            },
-            {
-                #--MMDD --0412
-                #--MM-DD --04-12
-                length => [ qw( 6 7 ) ],
-                regex  => qr/^ -- (\d\d) -??  (\d\d) $/x,
-                params => [ qw( month day ) ],
-                postprocess => [ \&DateTime::Format::ISO8601::_add_year,
-                                 \&_missing_year ],
-            },
-            {
-                #--MM --04
-                length => 4,
-                regex  => qr/^ -- (\d\d) $/x,
-                params => [ qw( month ) ],
-                postprocess => [ \&DateTime::Format::ISO8601::_add_year,
-                                 \&_missing_year,
-                                 \&_missing_day ],
-            },
-            {
-                #---DD ---12
-                length => 5,
-                regex  => qr/^ --- (\d\d) $/x,
-                params => [ qw( day ) ],
-                postprocess => [ \&DateTime::Format::ISO8601::_add_year,
-                                 \&DateTime::Format::ISO8601::_add_month,
-                                 \&_missing_year,
-                                 \&_missing_month ],
             },
             {
                 #+[YY]YYYYMMDD +0019850412

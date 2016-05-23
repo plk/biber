@@ -829,8 +829,12 @@ sub _date {
 
       # Start of range
       if (my $sdate = parse_date_start($start->get_node(1)->textContent())) {
-        $bibentry->set_datafield($datetype . 'year', $sdate->year)
-          unless $CONFIG_DATE_PARSERS{start}->missing('year');
+        unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
+          $bibentry->set_datafield($datetype . 'year', $sdate->year);
+          $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
+          $bibentry->set_field($datetype . 'era', $sdate->secular_era);
+        }
+
 
         $bibentry->set_datafield($datetype . 'month', $sdate->month)
           unless $CONFIG_DATE_PARSERS{start}->missing('month');
@@ -846,8 +850,10 @@ sub _date {
       my $edate = parse_date_end($end->get_node(1)->textContent());
       if (defined($edate)) { # no parse error
         if ($edate) { # not an empty range
-          $bibentry->set_datafield($datetype . 'endyear', $edate->year)
-            unless $CONFIG_DATE_PARSERS{end}->missing('year');
+          unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
+            $bibentry->set_datafield($datetype . 'endyear', $edate->year);
+            $bibentry->set_field($datetype . 'endyearabs', abs($edate->ce_year));
+          }
 
           $bibentry->set_datafield($datetype . 'endmonth', $edate->month)
             unless $CONFIG_DATE_PARSERS{end}->missing('month');
@@ -870,8 +876,12 @@ sub _date {
         # be explicitly set. It makes a difference on how we do any potential future
         # date validation
         $bibentry->set_field('datesplit', 1) if $datetype eq '';
-        $bibentry->set_datafield($datetype . 'year', $sdate->year)
-          unless $CONFIG_DATE_PARSERS{start}->missing('year');
+
+        unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
+          $bibentry->set_datafield($datetype . 'year', $sdate->year);
+          $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
+          $bibentry->set_field($datetype . 'era', $sdate->secular_era);
+        }
 
         $bibentry->set_datafield($datetype . 'month', $sdate->month)
           unless $CONFIG_DATE_PARSERS{start}->missing('month');
