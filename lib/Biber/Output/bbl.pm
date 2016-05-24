@@ -110,6 +110,11 @@ sub _printfield {
     $field_type = 'strng';
   }
 
+  # *year should print *yearabs if it exists and was split from date field
+  if ($be->get_field('datesplit') and $field =~ m/^(.*)(?!end)year$/) {
+    $str = $be->get_field("$1yearabs") || $str;
+  }
+
   # auto-escape TeX special chars if:
   # * The entry is not a BibTeX entry (no auto-escaping for BibTeX data)
   # * It's not a string field
@@ -407,6 +412,23 @@ sub set_output_entry {
     }
   }
 
+  # Date eras
+  foreach my $datefield (@{$dmh->{datefields}}) {
+    my ($d) = $datefield =~ m/^(.*)date$/;
+    my $e = '';
+    # Only output era for date if:
+    # The field is "year" and it came from splitting a date
+    # The field is any other startyear
+    if ($be->get_field("${d}year")) {
+      next if ($d eq '' and not $be->get_field('datesplit'));
+      if ($be->get_field("${d}era") and $be->get_field("${d}era") eq 'BCE') {
+        $e = 'before';
+      }
+      $acc .= _printfield($be, "$1era", "${e}commonera");
+    }
+  }
+
+  # XSV fields
   foreach my $field (@{$dmh->{xsv}}) {
     if (my $f = $be->get_field($field)) {
       $acc .= _printfield($be, $field, join(',', @$f) );

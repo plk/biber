@@ -66,6 +66,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \field{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
+      \field{era}{commonera}
       \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{pages}{125\bibrangedash 150}
       \range{pages}{26}
@@ -98,6 +99,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \field{shorthand}{RK2}
       \field{title}{Reprint Title}
       \field{year}{2009}
+      \field{era}{commonera}
       \field{related}{c2add694bf942dc77b376592d9c862cd}
       \field{pages}{34\bibrangedash 60}
       \range{pages}{27}
@@ -125,6 +127,7 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \field{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
+      \field{era}{commonera}
       \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{pages}{125\bibrangedash 150}
       \range{pages}{26}
@@ -156,6 +159,7 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       \field{shorthand}{RK2}
       \field{title}{Reprint Title}
       \field{year}{2009}
+      \field{era}{commonera}
       \field{related}{c2add694bf942dc77b376592d9c862cd}
       \field{pages}{34\bibrangedash 60}
       \range{pages}{27}
@@ -186,6 +190,7 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       \field{shorthand}{RK3}
       \field{title}{Reprint Title}
       \field{year}{2010}
+      \field{era}{commonera}
       \field{related}{caf8e34be07426ae7127c1b4829983c1}
       \field{pages}{33\bibrangedash 57}
       \range{pages}{25}
@@ -215,6 +220,7 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly,useed
       \field{shorthand}{RK4}
       \field{title}{Orig Language Title}
       \field{year}{2011}
+      \field{era}{commonera}
       \field{pages}{33\bibrangedash 57}
       \range{pages}{25}
     \endentry

@@ -98,6 +98,7 @@ my $u1 = q|    \entry{u1}{misc}{}
       \field{labeltitlesource}{title}
       \field{title}{A title}
       \field{year}{2000}
+      \field{era}{commonera}
     \endentry
 |;
 
@@ -447,6 +448,7 @@ my $url1 = q|    \entry{url1}{misc}{}
       \field{extraalpha}{4}
       \field{labelnamesource}{author}
       \field{year}{2005}
+      \field{era}{commonera}
       \verb{url}
       \verb http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0
       \endverb

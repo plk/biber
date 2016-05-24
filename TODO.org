@@ -36,8 +36,8 @@
 * DONE bibaltexml.pm date parsing
 * TODO BCE, circa etc.
 ** In bbl/bblxml output
-*** new *dateera={beforecommonera/commonera} and these should be localisation strings
 *** year should be yearabs
+*** new *dateera={beforecommonera/commonera} and these should be localisation strings
 ** datezeros needs to force zeros, not just assume, then testoutput again
 * TODO Decomm RIS
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields

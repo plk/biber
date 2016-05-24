@@ -990,6 +990,7 @@ sub process_setup {
                                                                'datepart',
                                                                'literal',
                                                                'code'])}],
+                      datefields    => [sort @{$dm->get_fields_of_type('field', 'date')}],
                       xsv       => [sort grep
                                     {
                                       not $dm->field_is_skipout($_) and

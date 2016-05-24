@@ -1418,17 +1418,38 @@ sub generate_bblxml_schema {
 
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:field");
+  $writer->startTag('choice'); # start choice of normal vs datepart fields
+  $writer->startTag('group'); #
   $writer->startTag('attribute', 'name' => 'name');
 
   $writer->startTag('choice');
   foreach my $f (@fs1, @fs2, @fs3) {
-      $writer->dataElement('value', $f);
-    }
+    $writer->dataElement('value', $f);
+  }
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
+  $writer->endTag();    # group
+  $writer->startTag('group'); #
+  $writer->startTag('attribute', 'name' => 'name');
+
+  $writer->startTag('choice');
+  foreach my $dp (@{$dm->get_fields_of_type('field','datepart')}) {
+    $writer->dataElement('value', $dp);
+  }
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  # dateparts have an extra era attribute
+  $writer->startTag('attribute', 'name' => 'era');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'commonera');
+  $writer->dataElement('value', 'beforecommonera');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # group
+  $writer->endTag();    # choice (normal vs datepart)
   $writer->emptyTag('text');# text
   $writer->endTag();    # field
-  $writer->endTag();    #
+  $writer->endTag();    # oneOrMore
 
   # ranges
   my @ranges = grep {not $dm->field_is_skipout($_)} @{$dm->get_fields_of_datatype('range')};

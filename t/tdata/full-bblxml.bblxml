@@ -48,10 +48,10 @@
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
         <bbl:field name="journaltitle">J. Organomet. Chem.</bbl:field>
-        <bbl:field name="month">02</bbl:field>
         <bbl:field name="number">13</bbl:field>
         <bbl:field name="title">Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions</bbl:field>
         <bbl:field name="volume">691</bbl:field>
+        <bbl:field name="month">02</bbl:field>
         <bbl:field name="year">2006</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="10">
@@ -299,13 +299,13 @@
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
         <bbl:field name="journaltitle">American Anthropologist</bbl:field>
-        <bbl:field name="month">3</bbl:field>
         <bbl:field name="number">1</bbl:field>
         <bbl:field name="series">newseries</bbl:field>
         <bbl:field name="subtitle">Meaning Construction and Cultural Cognition</bbl:field>
         <bbl:field name="title">Twice-Born, Once Conceived</bbl:field>
         <bbl:field name="volume">93</bbl:field>
-        <bbl:field name="year">1991</bbl:field>
+        <bbl:field name="month">3</bbl:field>
+        <bbl:field name="year" era="commonera">1991</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="19">
             <bbl:start>9</bbl:start>

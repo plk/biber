@@ -107,6 +107,7 @@ sub set_output_entry {
   my $bee = $be->get_field('entrytype');
   my $section = shift; # Section object the entry occurs in
   my $dm = shift; # Data Model object
+  my $dmh = Biber::Config->get_dm_helpers;
   my $acc = '';
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
@@ -260,7 +261,7 @@ sub set_output_entry {
   $xml->dataElement('BDS', 'SORTINITHASH');
 
   # The labeldate option determines whether "extrayear" is output
-  if ( Biber::Config->getblxoption('labeldate', $bee)) {
+  if (Biber::Config->getblxoption('labeldate', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear = $be->get_field('nameyear')) {
       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
@@ -288,7 +289,7 @@ sub set_output_entry {
   }
 
   # The labeltitle option determines whether "extratitle" is output
-  if ( Biber::Config->getblxoption('labeltitle', $bee)) {
+  if (Biber::Config->getblxoption('labeltitle', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $nametitle = $be->get_field('nametitle')) {
       if ( Biber::Config->get_seen_nametitle($nametitle) > 1) {
@@ -298,7 +299,7 @@ sub set_output_entry {
   }
 
   # The labeltitleyear option determines whether "extratitleyear" is output
-  if ( Biber::Config->getblxoption('labeltitleyear', $bee)) {
+  if (Biber::Config->getblxoption('labeltitleyear', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $titleyear = $be->get_field('titleyear')) {
       if ( Biber::Config->get_seen_titleyear($titleyear) > 1) {
@@ -308,7 +309,7 @@ sub set_output_entry {
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  if ( Biber::Config->getblxoption('labelalpha', $bee)) {
+  if (Biber::Config->getblxoption('labelalpha', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $la = $be->get_field('labelalpha')) {
       if (Biber::Config->get_la_disambiguation($la) > 1) {
@@ -335,7 +336,6 @@ sub set_output_entry {
                                                     ['entrykey',
                                                      'key',
                                                      'integer',
-                                                     'datepart',
                                                      'literal',
                                                      'code',
                                                      'verbatim'])}) {
@@ -354,11 +354,44 @@ sub set_output_entry {
         next if ($field eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
-      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($be->get_field($field)), name => $field);
+
+      $xml->dataElement([$xml_prefix, 'field'],
+                        _bblxml_norm($be->get_field($field)), name => $field);
     }
   }
 
-  foreach my $field (sort @{$dm->get_fields_of_fieldformat('xsv')}) {
+  # Date parts
+  foreach my $field (sort @{$dm->get_fields_of_type('field', 'datepart')}) {
+    if ( ($dm->field_is_nullok($field) and
+          $be->field_exists($field)) or
+         $be->get_field($field) ) {
+      my @attrs = ('name', $field);
+      # *year should print *yearabs if it exists and was split from date field
+      my $str;
+      my $e = '';
+      # Only output era for date if:
+      # The field is "year" and it came from splitting a date
+      # The field is any other startyear
+      if (my ($d) = $field =~ m/^(.*)(?!end)year$/) {
+        if ($d eq '' and $be->get_field('datesplit')) {
+          if ($be->get_field("${d}era") and $be->get_field("${d}era") eq 'BCE') {
+            $e = 'before';
+          }
+          push @attrs, ('era', "${e}commonera");
+          $str = _bblxml_norm($be->get_field("${d}yearabs"));
+        }
+        else {
+          $str = _bblxml_norm($be->get_field($field));
+        }
+      }
+      else {
+        $str = _bblxml_norm($be->get_field($field));
+      }
+      $xml->dataElement([$xml_prefix, 'field'], $str, @attrs);
+    }
+  }
+
+  foreach my $field (@{$dmh->{xsv}}) {
     if (my $f = $be->get_field($field)) {
       next if $dm->field_is_skipout($field);
       next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
@@ -370,7 +403,7 @@ sub set_output_entry {
     }
   }
 
-  foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
+  foreach my $rfield (@{$dmh->{ranges}}) {
     if ( my $rf = $be->get_field($rfield) ) {
       next if $dm->field_is_skipout($rfield);
       # range fields are an array ref of two-element array refs [range_start, range_end]
@@ -390,7 +423,7 @@ sub set_output_entry {
   }
 
   # uri fields
-  foreach my $uri (@{$dm->get_fields_of_type('field', 'uri')}) {
+  foreach my $uri (@{$dmh->{uris}}) {
     if ( my $f = $be->get_field($uri) ) {
       next if $dm->field_is_skipout($uri);
       $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($f), name => $uri);
@@ -398,7 +431,7 @@ sub set_output_entry {
   }
 
   # uri lists
-  foreach my $uril (@{$dm->get_fields_of_type('list', 'uri')}) {
+  foreach my $uril (@{$dmh->{urils}}) {
     if ( my $urilf = $be->get_field($uril) ) {
       next if $dm->field_is_skipout($uril);
       my %plo;

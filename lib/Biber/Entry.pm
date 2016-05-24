@@ -96,6 +96,12 @@ sub relclone {
         my $relclone = $relentry->clone($clonekey);
         $logger->debug("Created new related clone for '$relkey' with clone key '$clonekey'");
 
+        # Datesplit is a special non datafield and needs to be copied for things like era
+        # output
+        if (my $ds = $self->get_field('datesplit')) {
+          $relclone->set_field('datesplit', $ds);
+        }
+
         # Set related clone options
         if (my $relopts = $self->get_field('relatedoptions')) {
           # Check if this clone was also directly cited. If so, set skipbib/skipbiblist
