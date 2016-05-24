@@ -33,7 +33,7 @@ sub missing {
 DateTime::Format::Builder->create_class(
     parsers => {
         parse_datetime => [
-            [ preprocess => \&_reset_missing ],
+            [ preprocess => [\&_reset_missing, \&_erayear ] ],
             {
                 #YYYYMMDD 19850412
                 length => 8,
@@ -82,7 +82,7 @@ DateTime::Format::Builder->create_class(
                 params => [ qw( year month day) ],
             },
             {
-                #-YYYYMM 037902
+                #-YYYYMM -037902
                 #-YYYY-MM -0379-02
                 length => [ qw( 7 8 ) ],
                 regex  => qr/^ (-\d{4}) -?? (\d\d) $/x,
@@ -272,6 +272,20 @@ DateTime::Format::Builder->create_class(
         ],
     }
 );
+
+# Convert explicit era to negative ISO8601 format before parsing
+sub _erayear {
+  my %p = @_;
+  if ($p{input} =~ m/^\s*(\d{1,4})\s*BCE?\s*$/i) {
+    return '-' . sprintf('%.4d', $1-1);
+  }
+  elsif ($p{input} =~ m/^\s*(\d{1,4})\s*(?:AD|CE)\s*$/i) {
+    return sprintf('%.4d', $1);
+  }
+  else {
+    return $p{input};
+  }
+}
 
 sub _reset_missing {
   my %args = @_;
