@@ -39,6 +39,8 @@
 *** year should be yearabs
 *** new *dateera={beforecommonera/commonera} and these should be localisation strings
 ** datezeros needs to force zeros, not just assume, then testoutput again
+* TODO docs - negs 4-digit, explicit BC versions, bce bool, locale strings
+* TODO datezeros needs to force zeros
 * TODO Decomm RIS
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields
 
