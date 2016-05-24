@@ -423,4 +423,5 @@ Biber::Config->setblxoption('labeldatespec', [ {content => 'pubstate', type => '
 $bibentries->del_entry('L17');
 $biber->prepare;
 $out = $biber->get_output_obj;
-eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubstate', 'Source is non-date field' );
+eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubstate', 'Source is non-date field');
+

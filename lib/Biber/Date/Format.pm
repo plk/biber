@@ -87,12 +87,15 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 7 8 ) ],
                 regex  => qr/^ (-\d{4}) -?? (\d\d) $/x,
                 params => [ qw( year month) ],
+                postprocess => \&_missing_day,
             },
             {
                 #-YYYY -00379
                 length => [ qw( 5 ) ],
                 regex  => qr/^ (-\d{4}) $/x,
                 params => [ qw( year ) ],
+                postprocess => [ \&_missing_month,
+                                 \&_missing_day ],
             },
             {
                 #-YY -85

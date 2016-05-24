@@ -34,7 +34,7 @@
 ** Waiting for L::T release then make this a dep.
 * DONE Year is missing for knuth:ct in sorting.t?
 * DONE bibaltexml.pm date parsing
-* TODO BCE, circa etc.
+* DONE BCE, circa etc.
 ** In bbl/bblxml output
 *** year should be yearabs
 *** new *dateera={beforecommonera/commonera} and these should be localisation strings
