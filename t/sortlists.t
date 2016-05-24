@@ -89,7 +89,6 @@ my $K11 = q|    \entry{K11}{book}{}
       \field{labeltitlesource}{title}
       \field{title}{One}
       \field{year}{1983}
-      \field{era}{commonera}
     \endentry
 |;
 
@@ -117,7 +116,6 @@ my $K12 = q|    \entry{K12}{book}{}
       \field{labeltitlesource}{title}
       \field{title}{Two}
       \field{year}{1983}
-      \field{era}{commonera}
     \endentry
 |;
 

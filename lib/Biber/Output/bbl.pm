@@ -415,16 +415,14 @@ sub set_output_entry {
   # Date eras
   foreach my $datefield (@{$dmh->{datefields}}) {
     my ($d) = $datefield =~ m/^(.*)date$/;
-    my $e = '';
     # Only output era for date if:
     # The field is "year" and it came from splitting a date
     # The field is any other startyear
     if ($be->get_field("${d}year")) {
       next if ($d eq '' and not $be->get_field('datesplit'));
       if ($be->get_field("${d}era") and $be->get_field("${d}era") eq 'BCE') {
-        $e = 'before';
+        $acc .= "      \\true{${d}yearerabce}\n";
       }
-      $acc .= _printfield($be, "$1era", "${e}commonera");
     }
   }
 

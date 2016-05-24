@@ -93,7 +93,6 @@ my $l13c = q|    \entry{L13}{book}{}
       \field{month}{1}
       \field{title}{Title 2}
       \field{year}{1996}
-      \field{era}{commonera}
     \endentry
 |;
 
@@ -131,7 +130,6 @@ my $l14 = q|    \entry{L14}{book}{}
       \field{month}{12}
       \field{title}{Title 2}
       \field{year}{1996}
-      \field{era}{commonera}
     \endentry
 |;
 
@@ -194,7 +192,6 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{eventmonth}{1}
       \field{eventyear}{1996}
       \field{title}{Title 2}
-      \field{eventera}{commonera}
       \warn{\item Datamodel: Entry 'L16' (dm-dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;
@@ -246,9 +243,6 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
-      \field{era}{commonera}
-      \field{eventera}{commonera}
-      \field{origera}{commonera}
     \endentry
 |;
 
@@ -298,9 +292,6 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
-      \field{era}{commonera}
-      \field{eventera}{commonera}
-      \field{origera}{commonera}
     \endentry
 |;
 
@@ -350,9 +341,6 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
-      \field{era}{commonera}
-      \field{eventera}{commonera}
-      \field{origera}{commonera}
     \endentry
 |;
 

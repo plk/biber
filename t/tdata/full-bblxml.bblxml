@@ -305,7 +305,7 @@
         <bbl:field name="title">Twice-Born, Once Conceived</bbl:field>
         <bbl:field name="volume">93</bbl:field>
         <bbl:field name="month">3</bbl:field>
-        <bbl:field name="year" era="commonera">1991</bbl:field>
+        <bbl:field name="year">1991</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="19">
             <bbl:start>9</bbl:start>

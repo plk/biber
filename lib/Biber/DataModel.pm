@@ -1433,18 +1433,19 @@ sub generate_bblxml_schema {
   $writer->startTag('attribute', 'name' => 'name');
 
   $writer->startTag('choice');
-  foreach my $dp (@{$dm->get_fields_of_type('field','datepart')}) {
+  foreach my $dp (@{$dm->get_fields_of_type('field', 'datepart')}) {
     $writer->dataElement('value', $dp);
   }
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
-  # dateparts have an extra era attribute
-  $writer->startTag('attribute', 'name' => 'era');
+  # dateparts may have an extra era attribute
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'erabce');
   $writer->startTag('choice');
-  $writer->dataElement('value', 'commonera');
-  $writer->dataElement('value', 'beforecommonera');
+  $writer->dataElement('value', 'true');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
+  $writer->endTag();    # optional
   $writer->endTag();    # group
   $writer->endTag();    # choice (normal vs datepart)
   $writer->emptyTag('text');# text

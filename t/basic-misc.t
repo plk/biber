@@ -98,7 +98,6 @@ my $u1 = q|    \entry{u1}{misc}{}
       \field{labeltitlesource}{title}
       \field{title}{A title}
       \field{year}{2000}
-      \field{era}{commonera}
     \endentry
 |;
 
@@ -448,7 +447,6 @@ my $url1 = q|    \entry{url1}{misc}{}
       \field{extraalpha}{4}
       \field{labelnamesource}{author}
       \field{year}{2005}
-      \field{era}{commonera}
       \verb{url}
       \verb http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0
       \endverb
@@ -757,8 +755,8 @@ my $era1 = q|    \entry{era1}{book}{}
       \field{origendyear}{220}
       \field{origyear}{222}
       \field{year}{380}
-      \field{era}{beforecommonera}
-      \field{origera}{beforecommonera}
+      \true{yearerabce}
+      \true{origyearerabce}
     \endentry
 |;
 
@@ -780,9 +778,9 @@ my $era2 = q|    \\entry{era2}{book}{}
       \field{origendyear}{45}
       \field{origyear}{50}
       \field{year}{197}
-      \field{era}{beforecommonera}
-      \field{eventera}{beforecommonera}
-      \field{origera}{beforecommonera}
+      \true{yearerabce}
+      \true{eventyearerabce}
+      \true{origyearerabce}
     \endentry
 |;
 

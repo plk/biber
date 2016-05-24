@@ -110,8 +110,6 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{origyear}{1985}
       \field{title}{Title 1}
       \field{year}{1998}
-      \field{era}{commonera}
-      \field{origera}{commonera}
       \keyw{one,two,three}
     \endentry
 |;
@@ -141,7 +139,6 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \field{month}{4}
       \field{title}{Title 2}
       \field{year}{1998}
-      \field{era}{commonera}
     \endentry
 |;
 
@@ -170,7 +167,6 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \field{month}{4}
       \field{title}{Title 3}
       \field{year}{1999}
-      \field{era}{commonera}
     \endentry
 |;
 
