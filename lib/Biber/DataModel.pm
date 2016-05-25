@@ -68,7 +68,7 @@ sub new {
     if ($f->{nullok}) {
       $self->{fieldsbyname}{$f->{content}}{nullok} = 1;
     }
-    # check skips - fields we don't want to output to BBL
+    # check skips - fields we don't want to output to .bbl
     if ($f->{skip_output}) {
       $self->{fieldsbyname}{$f->{content}}{skipout} = 1;
     }
@@ -164,6 +164,69 @@ sub new {
     $leg_ents->{$es}{constraints} = $constraints;
   }
   $self->{entrytypesbyname} = $leg_ents;
+
+  # Calculate and store some convenient lists of DM fields. This is to save the expense
+  # of constructing these in dense loops like entry processing/output.
+  # Mostly only used for .bbl output since that's the most commonly used one and so
+  # we care about performance there. Other output formats are not often used and so a few
+  # seconds difference is irrelevant.
+  $self->{helpers} = {namelists => [sort grep
+                                    {not $self->field_is_skipout($_)}
+                                    @{$self->get_fields_of_type('list', 'name')}],
+                      lists     => [sort grep
+                                    {
+                                      not $self->field_is_datatype('name', $_) and
+                                        not $self->field_is_skipout($_) and
+                                          not $self->field_is_datatype('verbatim', $_) and
+                                            not $self->field_is_datatype('uri', $_)
+                                    }
+                                    @{$self->get_fields_of_fieldtype('list')}],
+                      fields    => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_) and
+                                        not $self->get_fieldformat($_) eq 'xsv'
+                                    }
+                                    @{$self->get_fields_of_type('field',
+                                                              ['entrykey',
+                                                               'key',
+                                                               'integer',
+                                                               'datepart',
+                                                               'literal',
+                                                               'code'])}],
+                      datefields   => [sort @{$self->get_fields_of_type('field', 'date')}],
+                      dateparts    => [sort @{$self->get_fields_of_type('field', 'datepart')}],
+                      xsv       => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_) and
+                                        not $self->get_datatype($_) eq 'keyword'
+                                    }
+                                    @{$self->get_fields_of_fieldformat('xsv')}],
+                      ranges    => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_)
+                                    }
+                                    @{$self->get_fields_of_datatype('range')}],
+                      uris      => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_);
+                                    }
+                                    @{$self->get_fields_of_type('field', 'uri')}],
+                      urils     => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_);
+                                    }
+                                    @{$self->get_fields_of_type('list', 'uri')}],
+                      vfields   => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_);
+                                    }
+                                    @{$self->get_fields_of_type('field', ['verbatim', 'uri'])}],
+                      vlists    => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_);
+                                    }
+                                    @{$self->get_fields_of_type('list', ['verbatim', 'uri'])}]
+                     };
 
 #  use Data::Dump;dd($self);exit 0;
   return $self;

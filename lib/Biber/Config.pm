@@ -710,19 +710,6 @@ sub get_dm {
   return $CONFIG->{dm};
 }
 
-=head2 set_dm_helpers
-
-    Sets some datamodel helper lists
-
-=cut
-
-sub set_dm_helpers {
-  shift;
-  my $obj = shift;
-  $CONFIG->{dmhelpers} = $obj;
-  return;
-}
-
 =head2 get_dm_helpers
 
     Sets the datamodel helper lists
@@ -731,9 +718,8 @@ sub set_dm_helpers {
 
 sub get_dm_helpers {
   shift;
-  return $CONFIG->{dmhelpers};
+  return $CONFIG->{dm}{helpers};
 }
-
 
 =head2 set_ctrlfile_path
 
