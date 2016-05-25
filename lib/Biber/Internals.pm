@@ -334,6 +334,12 @@ sub _label_citekey {
 sub _label_basic {
   my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs) = @_;
   my $e = $args->[0];
+
+  # Use absolute year if it exists as we could have parsed from BCE date
+  if ($e =~ m/(.*)year/) {
+    $e .= 'abs' if $be->get_field("${e}abs");
+  }
+
   my $f;
   if ($args->[1] and
       $args->[1] eq 'nostrip') {

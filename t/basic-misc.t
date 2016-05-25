@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 72;
+use Test::More tests => 74;
 use Test::Differences;
 unified_diff;
 
@@ -71,7 +71,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey m1 m2 m3 ent1 era1 era2} ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey m1 m2 m3 ent1 era1 era2 era3 era4} ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
@@ -747,7 +747,7 @@ my $era1 = q|    \entry{era1}{book}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
-      \field{labelalpha}{Smi79}
+      \field{labelalpha}{Smi80}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
@@ -770,20 +770,69 @@ my $era2 = q|    \\entry{era2}{book}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
-      \field{labelalpha}{Smi96}
+      \field{labelalpha}{Smi98}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
       \field{eventyear}{250}
       \field{origendyear}{45}
       \field{origyear}{50}
-      \field{year}{197}
+      \field{year}{198}
       \true{dateerabce}
       \true{eventdateerabce}
       \true{origdateerabce}
     \endentry
 |;
 
+my $era3 = q|    \entry{era3}{book}{}
+      \name{author}{1}{}{%
+        {{uniquename=1,hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           family_i={S\\bibinitperiod},
+           given={Alan},
+           given_i={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{labelalpha}{Smi97}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelnamesource}{author}
+      \field{eventday}{2}
+      \field{eventmonth}{3}
+      \field{eventyear}{250}
+      \field{month}{2}
+      \field{year}{197}
+      \true{dateerabce}
+    \endentry
+|;
+
+my $era4 = q|    \entry{era4}{book}{}
+      \name{author}{1}{}{%
+        {{uniquename=1,hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           family_i={S\\bibinitperiod},
+           given={Alan},
+           given_i={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{labelalpha}{Smi34}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelnamesource}{author}
+      \field{eventyear}{1565}
+      \field{urlendyear}{1490}
+      \field{urlyear}{1487}
+      \field{year}{1034}
+      \true{datecirca}
+      \true{eventdateuncertain}
+      \true{urldatecirca}
+    \endentry
+|;
+
 # Test negative dates and eras
-eq_or_diff($out->get_output_entry('era1', $main), $era1, 'Negative dates and eras - 1');
-eq_or_diff($out->get_output_entry('era2', $main), $era2, 'Negative dates and eras - 2');
+eq_or_diff($out->get_output_entry('era1', $main), $era1, 'Date meta information - 1');
+eq_or_diff($out->get_output_entry('era2', $main), $era2, 'Date meta information - 2');
+eq_or_diff($out->get_output_entry('era3', $main), $era3, 'Date meta information - 3');
+eq_or_diff($out->get_output_entry('era4', $main), $era4, 'Date meta information - 4');

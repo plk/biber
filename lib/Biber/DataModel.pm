@@ -1078,11 +1078,38 @@ sub generate_bltxml_schema {
           }
           $writer->endTag(); # choice
           $writer->endTag(); # attribute
+          $writer->endTag(); # optional
+
+          # optional circa attribute
+          $writer->startTag('optional');
+          $writer->startTag('attribute', 'name' => 'circa');
+          $writer->startTag('choice');
+          $writer->dataElement('value', 'true');
+          $writer->endTag(); # choice
+          $writer->endTag(); # attribute
+          $writer->endTag(); # optional
+
+          # optional uncertain attribute
+          $writer->startTag('optional');
+          $writer->startTag('attribute', 'name' => 'uncertain');
+          $writer->startTag('choice');
+          $writer->dataElement('value', 'true');
+          $writer->endTag(); # choice
+          $writer->endTag(); # attribute
+          $writer->endTag(); # optional
+
+          # optional bceera attribute
+          $writer->startTag('optional');
+          $writer->startTag('attribute', 'name' => 'erabce');
+          $writer->startTag('choice');
+          $writer->dataElement('value', 'true');
+          $writer->endTag(); # choice
+          $writer->endTag(); # attribute
+          $writer->endTag(); # optional
 
           # generic annotation attribute
           $writer->emptyTag('ref', 'name' => "annotation");
 
-          $writer->endTag(); # optional
           $writer->startTag('choice');
           $writer->emptyTag('data', 'type' => 'date');
           $writer->emptyTag('data', 'type' => 'gYear');
@@ -1438,9 +1465,25 @@ sub generate_bblxml_schema {
   }
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
-  # dateparts may have an extra era attribute
+  # dateparts may have an era attribute
   $writer->startTag('optional');
   $writer->startTag('attribute', 'name' => 'erabce');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  # dateparts may have a circa attribute
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'circa');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  # dateparts may have an uncertain attribute
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'uncertain');
   $writer->startTag('choice');
   $writer->dataElement('value', 'true');
   $writer->endTag();    # choice

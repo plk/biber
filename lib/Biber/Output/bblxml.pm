@@ -372,6 +372,17 @@ sub set_output_entry {
       # The field is "year" and it came from splitting a date
       # The field is any other startyear
       if (my ($d) = $field =~ m/^(.*)(?!end)year$/) {
+
+        # Circa dates
+        if ($be->get_field("${d}datecirca")) {
+          push @attrs, ('circa', 'true');
+        }
+
+        # Uncertain dates
+        if ($be->get_field("${d}dateuncertain")) {
+          push @attrs, ('uncertain', 'true');
+        }
+
         if ($d eq '' and $be->get_field('datesplit')) {
           if ($be->get_field("${d}era") and $be->get_field("${d}era") eq 'BCE') {
             push @attrs, ('erabce', 'true');

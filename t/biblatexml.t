@@ -113,22 +113,20 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{eventendyear}{1990}
       \field{eventmonth}{5}
       \field{eventyear}{1990}
-      \field{origday}{2}
-      \field{origmonth}{4}
-      \field{origyear}{1985}
+      \field{origyear}{356}
       \field{pagetotal}{240}
       \field{relatedstring}{Somestring}
       \field{relatedtype}{reprint}
       \field{series}{Научно-биографическая литература}
       \field{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
-      \field{urlday}{1}
       \field{urlendyear}{}
-      \field{urlmonth}{7}
       \field{urlyear}{1991}
       \field{userb}{usera}
       \field{userd}{userc}
       \field{usere}{a}
       \field{year}{1983}
+      \true{origdateerabce}
+      \true{urldatecirca}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}
       \annotation{field}{author}{}{}{names-ann}

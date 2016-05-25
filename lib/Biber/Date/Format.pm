@@ -30,10 +30,20 @@ sub missing {
   return $self->{missing}{$part};
 }
 
+sub circa {
+  my $self = shift;
+  return $self->{circa};
+}
+
+sub uncertain {
+  my $self = shift;
+  return $self->{uncertain};
+}
+
 DateTime::Format::Builder->create_class(
     parsers => {
         parse_datetime => [
-            [ preprocess => [\&_reset_missing, \&_erayear ] ],
+            [ preprocess => \&_pre ],
             {
                 #YYYYMMDD 19850412
                 length => 8,
@@ -61,6 +71,14 @@ DateTime::Format::Builder->create_class(
                 #YYYY 1985
                 length => 4,
                 regex  => qr/^ (\d{4}) $/x,
+                params => [ qw( year ) ],
+                postprocess => [ \&_missing_month,
+                                 \&_missing_day ],
+            },
+            {
+                #YYY 758
+                length => 3,
+                regex  => qr/^ (\d{3}) $/x,
                 params => [ qw( year ) ],
                 postprocess => [ \&_missing_month,
                                  \&_missing_day ],
@@ -276,14 +294,30 @@ DateTime::Format::Builder->create_class(
     }
 );
 
+
 # Convert explicit era to negative ISO8601 format before parsing
-sub _erayear {
+sub _pre {
   my %p = @_;
-  if ($p{input} =~ m/^\s*(\d{1,4})\s*BCE?\s*$/i) {
-    return '-' . sprintf('%.4d', $1-1);
+  delete $p{self}{missing};
+  delete $p{self}{circa};
+  delete $p{self}{uncertain};
+
+  # circa dates - strip circa marker and save flag
+  if ($p{input} =~ s/^\s*c(?:irca)?\.?\s*(.+?)\s*$/$1/i) {
+    $p{self}{circa} = 1;
   }
-  elsif ($p{input} =~ m/^\s*(\d{1,4})\s*(?:AD|CE)\s*$/i) {
-    return sprintf('%.4d', $1);
+
+  # uncertain dates - strip uncertain marker and save flag
+  if ($p{input} =~ s/^\s*(.+?)\s*\?\s*$/$1/i) {
+    $p{self}{uncertain} = 1;
+  }
+
+  # explicit eras - strip era marker and save flag
+  if ($p{input} =~ m/^\s*(\d{1,4})-??(\d\d)?-??(\d\d)?\s*BCE?\s*$/i) {
+    return '-' . sprintf('%.4d', $1-1) . "$2$3";
+  }
+  elsif ($p{input} =~ m/^\s*(\d{1,4})-??(\d\d)?-??(\d\d)?\s*(?:AD|CE)\s*$/i) {
+    return sprintf('%.4d', $1) . "$2$3";
   }
   else {
     return $p{input};

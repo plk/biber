@@ -1037,7 +1037,8 @@ sub parse_date {
 =cut
 
 sub iso8601_monthday {
-  return sprintf('%.2d', shift);
+  my $md = shift;
+  return $md ? sprintf('%.2d', $md) : undef;
 }
 
 =head2 biber_decode_utf8

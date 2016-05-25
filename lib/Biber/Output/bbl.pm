@@ -412,9 +412,20 @@ sub set_output_entry {
     }
   }
 
-  # Date eras
+  # Date meta-information
   foreach my $datefield (@{$dmh->{datefields}}) {
     my ($d) = $datefield =~ m/^(.*)date$/;
+
+    # Circa dates
+    if ($be->get_field("${d}datecirca")) {
+      $acc .= "      \\true{${d}datecirca}\n";
+    }
+
+    # Uncertain dates
+    if ($be->get_field("${d}dateuncertain")) {
+      $acc .= "      \\true{${d}dateuncertain}\n";
+    }
+
     # Only output era for date if:
     # The field is "year" and it came from splitting a date
     # The field is any other startyear

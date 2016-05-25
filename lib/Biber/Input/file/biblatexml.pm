@@ -822,8 +822,26 @@ sub _date {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
+  $bibentry->set_field('datesplit', 1); # biblatexml date fields are always "split"
   foreach my $node ($entry->findnodes("./$f")) {
+
     my $datetype = $node->getAttribute('type') // '';
+
+    # Save circa information
+    if ($node->getAttribute('circa')) {
+      $bibentry->set_field($datetype . 'datecirca', 1);
+    }
+
+    # Save uncertain date information
+    if ($node->getAttribute('uncertain')) {
+      $bibentry->set_field($datetype . 'dateuncertain', 1);
+    }
+
+    # Save era date information
+    if ($node->getAttribute('erabce')) {
+      $bibentry->set_field($datetype . 'era', 'BCE');
+    }
+
     if (my $start = $node->findnodes("./$NS:start")) { # Date range
       my $end = $node->findnodes("./$NS:end");
 
@@ -832,9 +850,7 @@ sub _date {
         unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
           $bibentry->set_datafield($datetype . 'year', $sdate->year);
           $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
-          $bibentry->set_field($datetype . 'era', $sdate->secular_era);
         }
-
 
         $bibentry->set_datafield($datetype . 'month', $sdate->month)
           unless $CONFIG_DATE_PARSERS{start}->missing('month');
@@ -871,16 +887,10 @@ sub _date {
     }
     else { # Simple date
       if (my $sdate = parse_date_start($node->textContent())) {
-        # did this entry get its year/month fields from splitting an ISO8601 date field?
-        # We only need to know this for date, year/month as year/month can also
-        # be explicitly set. It makes a difference on how we do any potential future
-        # date validation
-        $bibentry->set_field('datesplit', 1) if $datetype eq '';
 
         unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
           $bibentry->set_datafield($datetype . 'year', $sdate->year);
           $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
-          $bibentry->set_field($datetype . 'era', $sdate->secular_era);
         }
 
         $bibentry->set_datafield($datetype . 'month', $sdate->month)

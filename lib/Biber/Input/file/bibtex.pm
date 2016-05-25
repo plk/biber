@@ -1003,6 +1003,16 @@ sub _date {
       biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
     }
 
+    # Save circa information
+    if ($CONFIG_DATE_PARSERS{start}->circa) {
+      $bibentry->set_field($datetype . 'datecirca', 1);
+    }
+
+    # Save uncertain date information
+    if ($CONFIG_DATE_PARSERS{start}->uncertain) {
+      $bibentry->set_field($datetype . 'dateuncertain', 1);
+    }
+
     unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
       $bibentry->set_datafield($datetype . 'year', $sdate->year);
       $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));

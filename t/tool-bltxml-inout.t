@@ -156,8 +156,11 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:start>1990-05-16</bltx:start>
       <bltx:end>1990-05-17</bltx:end>
     </bltx:date>
-    <bltx:date type="orig">1985-04-02</bltx:date>
-    <bltx:date type="url">1991-07-01</bltx:date>
+    <bltx:date type="orig" erabce="true">356</bltx:date>
+    <bltx:date type="url" circa="true">
+      <bltx:start>1991</bltx:start>
+      <bltx:end></bltx:end>
+    </bltx:date>
   </bltx:entry>
 </bltx:entries>
 |;

@@ -96,6 +96,7 @@ sub set_output_entry {
   my $bee = $be->get_field('entrytype');
   my $section = shift; # Section object the entry occurs in
   my $dm = shift; # Data Model object
+  my $dmh = Biber::Config->get_dm_helpers;
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
   my $xml = $self->{output_target};
@@ -284,54 +285,54 @@ sub set_output_entry {
 
   # Date fields
   my %dinfo;
-  foreach my $dfield (@{$dm->get_fields_of_datatype('datepart')}) {
-    if ( my $df = $be->get_field($dfield) ) {
-      # There are some assumptions here about field names which is not nice but
-      # they are part of the default biblatex data model which is unlikely to be
-      # changed by users
-      if ($dfield =~ /^(url|orig|event)?(end)?(.+)$/) {
-        my $dt = $1 || 'MAIN'; # Normal data has no qualifier prefix like "url" etc.
-        if ($2) {
-          $dinfo{$dt}{end}{$3} = $df;
-        }
-        else {
-          $dinfo{$dt}{begin}{$3} = $df; # beginning of ranges have no qualifier like "end"
-        }
+  foreach my $datefield (sort @{$dm->get_fields_of_datatype('date')}) {
+    my @attrs;
+    my @start;
+    my @end;
+    my ($d) = $datefield =~ m/^(.*)date$/;
+    if (my $sf = $be->get_field("${d}year") ) { # date exists if there is a year
+
+      push @attrs, ('type', $d) if $d; # ignore for main date
+
+      # Circa dates
+      if ($be->get_field("${d}datecirca")) {
+        push @attrs, ('circa', 'true');
       }
+
+      # Uncertain dates
+      if ($be->get_field("${d}dateuncertain")) {
+        push @attrs, ('uncertain', 'true');
+      }
+
+      # BCE dates
+      if ($be->get_field("${d}era") and $be->get_field("${d}era") eq 'BCE') {
+        push @attrs, ('erabce', 'true');
+      }
+
+      $xml->startTag([$xml_prefix, 'date'], @attrs);
+
+      # strip undefs
+      push @start,
+        grep {$_}
+          $sf,
+            iso8601_monthday($be->get_field("${d}month")),
+              iso8601_monthday($be->get_field("${d}day"));
+      push @end,
+        grep {defined($_)} # because end can be def but empty
+          $be->get_field("${d}endyear"),
+            iso8601_monthday($be->get_field("${d}endmonth")),
+              iso8601_monthday($be->get_field("${d}endday"));
+      # Date range
+      if (@end) {
+#        if ($end or $dm->field_is_nullok("${d}enddate")) {
+        $xml->dataElement([$xml_prefix, 'start'], NFC(join('-', @start)));
+        $xml->dataElement([$xml_prefix, 'end'], NFC(join('-', @end)));
+      }
+      else { # simple date
+        $xml->characters(NFC(join('-', @start)))
+      }
+      $xml->endTag();# date
     }
-  }
-
-  foreach my $dp (sort keys %dinfo) {
-    if ($dp eq 'MAIN') {
-      $xml->startTag([$xml_prefix, 'date']);
-    }
-    else {
-      $xml->startTag([$xml_prefix, 'date'], type => $dp);
-    }
-
-    my @s;
-    my @e;
-
-    push @s, $dinfo{$dp}{begin}{year} if exists($dinfo{$dp}{begin}{year});
-    push @s, iso8601_monthday($dinfo{$dp}{begin}{month}) if exists($dinfo{$dp}{begin}{month});
-    push @s, iso8601_monthday($dinfo{$dp}{begin}{day}) if exists($dinfo{$dp}{begin}{day});
-
-    push @e, $dinfo{$dp}{end}{year} if exists($dinfo{$dp}{end}{year});
-    push @e, iso8601_monthday($dinfo{$dp}{end}{month}) if exists($dinfo{$dp}{end}{month});
-    push @e, iso8601_monthday($dinfo{$dp}{end}{day}) if exists($dinfo{$dp}{end}{day});
-
-    my $end = join('-', @e);
-
-    # date range
-    if ($end or $dm->field_is_nullok("${dp}enddate")) {
-      $xml->dataElement([$xml_prefix, 'start'], NFC(join('-', @s)));
-      $xml->dataElement([$xml_prefix, 'end'], NFC(join('-', @e)));
-
-    }
-    else { # simple date
-      $xml->characters(NFC(join('-', @s)));
-    }
-    $xml->endTag();# date
   }
 
   $xml->endTag();

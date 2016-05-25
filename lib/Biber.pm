@@ -990,7 +990,8 @@ sub process_setup {
                                                                'datepart',
                                                                'literal',
                                                                'code'])}],
-                      datefields    => [sort @{$dm->get_fields_of_type('field', 'date')}],
+                      datefields   => [sort @{$dm->get_fields_of_type('field', 'date')}],
+                      dateparts    => [sort @{$dm->get_fields_of_type('field', 'datepart')}],
                       xsv       => [sort grep
                                     {
                                       not $dm->field_is_skipout($_) and
@@ -1932,7 +1933,11 @@ sub process_labeldate {
     # Might not have been set due to skiplab/dataonly
     if (my $ldi = $be->get_labeldate_info) {
       if (my $df = $ldi->{field}) { # set labelyear to a field value
-        $be->set_field('labelyear', $be->get_field($df->{year}));
+
+        # In case we parsed a BC data, we should use the abs value
+        my $yearstring = $be->get_field($df->{year} . 'abs') || $be->get_field($df->{year});
+        $be->set_field('labelyear', $yearstring);
+
         $be->set_field('labelmonth', $be->get_field($df->{month})) if $df->{month};
         $be->set_field('labelday', $be->get_field($df->{day})) if $df->{day};
         $be->set_field('datelabelsource', $df->{source});
