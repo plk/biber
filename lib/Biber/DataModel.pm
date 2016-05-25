@@ -35,6 +35,17 @@ sub new {
   my $dm = shift;
   my $self;
   $self = bless {}, $class;
+#  use Data::Dump;dd($dm);exit 0;
+
+  # Early check for fatal datamodel errors
+
+  # Make sure dates are named *date. A lot of code relies on this.
+  foreach my $date (grep {$_->{datatype} eq 'date'} @{$dm->{fields}{field}}) {
+    unless ($date->{content} =~ m/date$/) {
+      biber_error("Fatal datamodel error: date field '" . $date->{content} . "' must end with string 'date'");
+    }
+  }
+
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
   foreach my $f (@{$dm->{fields}{field}}) {
