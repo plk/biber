@@ -311,7 +311,7 @@ sub _pre {
   delete $p{self}{uncertain};
 
   # circa dates - strip circa marker and save flag
-  if ($p{input} =~ s/^\s*c(?:irca)?\.?\s*(.+?)\s*$/$1/i) {
+  if ($p{input} =~ s/^\s*c(?:irc)?(?:a)?\.?\s*(.+?)\s*$/$1/i) {
     $p{self}{circa} = 1;
   }
 
