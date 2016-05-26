@@ -215,8 +215,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 6 8 ) ],
                 regex  => qr/^ (\d\d) -?? W (\d\d) -?? (\d) $/x,
                 params => [ qw( year week day_of_year ) ],
-             postprocess => [ \&DateTime::Format::ISO8601::_fix_2_digit_year,
-                              \&DateTime::Format::ISO8601::_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_fix_2_digit_year,
+                                 \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -225,8 +225,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 5 6 ) ],
                 regex  => qr/^ (\d\d) -?? W (\d\d) $/x,
                 params => [ qw( year week ) ],
-             postprocess => [ \&DateTime::Format::ISO8601::_fix_2_digit_year,
-                              \&DateTime::Format::ISO8601::_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_fix_2_digit_year,
+                                 \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -235,8 +235,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 6 8 ) ],
                 regex  => qr/^ - (\d) -?? W (\d\d) -?? (\d) $/x,
                 params => [ qw( year week day_of_year ) ],
-             postprocess => [ \&DateTime::Format::ISO8601::_fix_1_digit_year,
-                              \&DateTime::Format::ISO8601::_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_fix_1_digit_year,
+                                 \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -245,8 +245,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 5 6 ) ],
                 regex  => qr/^ - (\d) -?? W (\d\d) $/x,
                 params => [ qw( year week ) ],
-             postprocess => [ \&DateTime::Format::ISO8601::_fix_1_digit_year,
-                              \&DateTime::Format::ISO8601::_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_fix_1_digit_year,
+                                 \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -255,8 +255,8 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 5 6 ) ],
                 regex  => qr/^ - W (\d\d) -?? (\d) $/x,
                 params => [ qw( week day_of_year ) ],
-             postprocess => [ \&DateTime::Format::ISO8601::_add_year,
-                              \&DateTime::Format::ISO8601::_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_add_year,
+                                 \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -264,8 +264,8 @@ DateTime::Format::Builder->create_class(
                 length => 4,
                 regex  => qr/^ - W (\d\d) $/x,
                 params => [ qw( week ) ],
-             postprocess => [ \&DateTime::Format::ISO8601::_add_year,
-                              \&DateTime::Format::ISO8601::_normalize_week ],
+                postprocess => [ \&DateTime::Format::ISO8601::_add_year,
+                                 \&DateTime::Format::ISO8601::_normalize_week ],
                 constructor => [ 'DateTime', 'from_day_of_year' ],
             },
             {
@@ -325,18 +325,12 @@ sub _pre {
     return '-' . sprintf('%.4d', $1-1) . "$2$3";
   }
   elsif ($p{input} =~ m/^\s*(\d{1,4})-??(\d\d)?-??(\d\d)?\s*(?:AD|CE)\s*$/i) {
-    return sprintf('%.4d', $1) . "$2$3";
+    # YYYYMM is no a valid ISO8601v2004 format
+    return sprintf('%.4d', $1) . ($2 ? "-$2" : '') . ($3 ? "-$3" : '');
   }
   else {
     return $p{input};
   }
-}
-
-sub _reset_missing {
-  my %args = @_;
-  my ($date, $self) = @args{qw( input self )};
-  delete $self->{missing};
-  return $date;
 }
 
 sub _missing_year {
