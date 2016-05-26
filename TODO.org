@@ -43,8 +43,8 @@
 * DONE biblatex input for date metadata
 * DONE enforce date field naming - where?
 * TODO datezeros needs to force zeros
-* TODO biblatex new test doc
-* TODO docs - negs, explicit era versions, bce bool, locale strings, circa/uncertain format and bools
+* DONE biblatex new test doc
+* DONE docs - negs, explicit era versions, bce bool, locale strings, circa/uncertain format and bools
 * TODO Decomm RIS
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 
