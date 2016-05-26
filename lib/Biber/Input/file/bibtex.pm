@@ -1016,7 +1016,8 @@ sub _date {
     unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
       $bibentry->set_datafield($datetype . 'year', $sdate->year);
       $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
-      $bibentry->set_field($datetype . 'era', $sdate->secular_era);
+      my $era = lc($sdate->secular_era);
+      $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce'; # CE is assumed
     }
 
     $bibentry->set_datafield($datetype . 'month', $sdate->month)

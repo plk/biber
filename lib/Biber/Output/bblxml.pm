@@ -368,9 +368,6 @@ sub set_output_entry {
       my @attrs = ('name', $field);
       # *year should print *yearabs if it exists and was split from date field
       my $str;
-      # Only output era for date if:
-      # The field is "year" and it came from splitting a date
-      # The field is any other startyear
       if (my ($d) = $field =~ m/^(.*)(?!end)year$/) {
 
         # Circa dates
@@ -383,9 +380,12 @@ sub set_output_entry {
           push @attrs, ('uncertain', 'true');
         }
 
+        # Only output era for date if:
+        # The field is "year" and it came from splitting a date
+        # The field is any other startyear
         if ($d eq '' and $be->get_field('datesplit')) {
-          if ($be->get_field("${d}era") and $be->get_field("${d}era") eq 'BCE') {
-            push @attrs, ('erabce', 'true');
+          if (my $era = $be->get_field("${d}era")) {
+            push @attrs, ('era', $era);
           }
           $str = _bblxml_norm($be->get_field("${d}yearabs"));
         }

@@ -1172,11 +1172,11 @@ sub generate_bltxml_schema {
           $writer->endTag(); # attribute
           $writer->endTag(); # optional
 
-          # optional bceera attribute
+          # optional era attribute
           $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'erabce');
+          $writer->startTag('attribute', 'name' => 'era');
           $writer->startTag('choice');
-          $writer->dataElement('value', 'true');
+          $writer->dataElement('value', 'bce');
           $writer->endTag(); # choice
           $writer->endTag(); # attribute
           $writer->endTag(); # optional
@@ -1541,9 +1541,9 @@ sub generate_bblxml_schema {
   $writer->endTag();    # attribute
   # dateparts may have an era attribute
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'erabce');
+  $writer->startTag('attribute', 'name' => 'era');
   $writer->startTag('choice');
-  $writer->dataElement('value', 'true');
+  $writer->dataElement('value', 'bce');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # optional

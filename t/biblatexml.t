@@ -125,7 +125,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{userd}{userc}
       \field{usere}{a}
       \field{year}{1983}
-      \true{origdateerabce}
+      \field{origdateera}{bce}
       \true{urldatecirca}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}

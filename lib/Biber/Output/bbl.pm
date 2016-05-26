@@ -431,8 +431,8 @@ sub set_output_entry {
     # The field is any other startyear
     if ($be->get_field("${d}year")) {
       next if ($d eq '' and not $be->get_field('datesplit'));
-      if ($be->get_field("${d}era") and $be->get_field("${d}era") eq 'BCE') {
-        $acc .= "      \\true{${d}dateerabce}\n";
+      if (my $era = $be->get_field("${d}era")) {
+        $acc .= "      \\field{${d}dateera}{$era}\n";
       }
     }
   }

@@ -755,8 +755,8 @@ my $era1 = q|    \entry{era1}{book}{}
       \field{origendyear}{220}
       \field{origyear}{222}
       \field{year}{380}
-      \true{dateerabce}
-      \true{origdateerabce}
+      \field{dateera}{bce}
+      \field{origdateera}{bce}
     \endentry
 |;
 
@@ -778,9 +778,9 @@ my $era2 = q|    \\entry{era2}{book}{}
       \field{origendyear}{45}
       \field{origyear}{50}
       \field{year}{198}
-      \true{dateerabce}
-      \true{eventdateerabce}
-      \true{origdateerabce}
+      \field{dateera}{bce}
+      \field{eventdateera}{bce}
+      \field{origdateera}{bce}
     \endentry
 |;
 
@@ -803,7 +803,7 @@ my $era3 = q|    \entry{era3}{book}{}
       \field{eventyear}{250}
       \field{month}{2}
       \field{year}{197}
-      \true{dateerabce}
+      \field{dateera}{bce}
     \endentry
 |;
 

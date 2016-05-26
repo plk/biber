@@ -837,9 +837,11 @@ sub _date {
       $bibentry->set_field($datetype . 'dateuncertain', 1);
     }
 
-    # Save era date information
-    if ($node->getAttribute('erabce')) {
-      $bibentry->set_field($datetype . 'era', 'BCE');
+    # Save date era information
+    # Possible values are specified in the schema and should be compatible
+    # with lc(DateTime->secular_era)
+    if (my $era = $node->getAttribute('era')) {
+      $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce';# CE is assumed
     }
 
     if (my $start = $node->findnodes("./$NS:start")) { # Date range

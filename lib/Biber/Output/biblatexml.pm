@@ -305,8 +305,8 @@ sub set_output_entry {
       }
 
       # BCE dates
-      if ($be->get_field("${d}era") and $be->get_field("${d}era") eq 'BCE') {
-        push @attrs, ('erabce', 'true');
+      if (my $era = $be->get_field("${d}era")) {
+        push @attrs, ('era', $era);
       }
 
       $xml->startTag([$xml_prefix, 'date'], @attrs);
