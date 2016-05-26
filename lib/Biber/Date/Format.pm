@@ -108,9 +108,17 @@ DateTime::Format::Builder->create_class(
                 postprocess => \&_missing_day,
             },
             {
-                #-YYYY -00379
-                length => [ qw( 5 ) ],
+                #-YYYY -0379
+                length => 5,
                 regex  => qr/^ (-\d{4}) $/x,
+                params => [ qw( year ) ],
+                postprocess => [ \&_missing_month,
+                                 \&_missing_day ],
+            },
+            {
+                #-YYY -379
+                length => 4,
+                regex  => qr/^ (-\d{3}) $/x,
                 params => [ qw( year ) ],
                 postprocess => [ \&_missing_month,
                                  \&_missing_day ],
