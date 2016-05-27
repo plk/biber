@@ -110,8 +110,8 @@ sub _printfield {
     $field_type = 'strng';
   }
 
-  # *year should print *yearabs if it exists and was split from date field
-  if ($be->get_field('datesplit') and $field =~ m/^(.*)(?!end)year$/) {
+  # *year should print *yearabs if it exists
+  if ($field =~ m/^(.*)(?!end)year$/) {
     $str = $be->get_field("$1yearabs") || $str;
   }
 
