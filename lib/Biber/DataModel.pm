@@ -1492,7 +1492,7 @@ sub generate_bblxml_schema {
               labelyear
               labelmonth
               labelday
-              datelabelsource
+              labeldatesource
               labelprefix
               extratitle
               extratitleyear

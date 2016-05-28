@@ -57,7 +57,7 @@ my $string1 = q|    \entry{Static1}{set}{}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2001}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{Some notes}
@@ -142,7 +142,7 @@ my $string5 = q|    \entry{Static2}{book}{}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2001}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{Some Blessed Note}

@@ -318,8 +318,8 @@ sub set_output_entry {
     if (my $ld = $be->get_field('labelday')) {
       $acc .= "      \\field{labelday}{$ld}\n";
     }
-    if ($be->field_exists('datelabelsource')) {
-      $acc .= "      \\field{datelabelsource}{" . $be->get_field('datelabelsource') .  "}\n";
+    if ($be->field_exists('labeldatesource')) {
+      $acc .= "      \\field{labeldatesource}{" . $be->get_field('labeldatesource') .  "}\n";
     }
   }
 

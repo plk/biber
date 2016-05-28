@@ -56,7 +56,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{1998}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Journal Title}
@@ -89,7 +89,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2009}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Booktitle}

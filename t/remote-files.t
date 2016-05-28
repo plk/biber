@@ -82,7 +82,7 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelyear}{1999}
       \field{labelmonth}{5}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{abstract}{{BACKGROUND}: The evolutionary consequences of love are so important that there must be some long-established biological process regulating it. Recent findings suggest that the serotonin ({5-HT}) transporter might be linked to both neuroticism and sexual behaviour as well as to obsessive-compulsive disorder ({OCD}). The similarities between an overvalued idea, such as that typical of subjects in the early phase of a love relationship, and obsession, prompted us to explore the possibility that the two conditions might share alterations at the level of the {5-HT} transporter. {METHODS}: Twenty subjects who had recently (within the previous 6 months) fallen in love, 20 unmedicated {OCD} patients and 20 normal controls, were included in the study. The {5-HT} transporter was evaluated with the specific binding of {3H}-paroxetine ({3H}-Par) to platelet membranes. {RESULTS}: The results showed that the density of {3H}-Par binding sites was significantly lower in subjects who had recently fallen in love and in {OCD} patients than in controls. {DISCUSSION}: The main finding of the present study is that subjects who were in the early romantic phase of a love relationship were not different from {OCD} patients in terms of the density of the platelet {5-HT} transporter, which proved to be significantly lower than in the normal controls. This would suggest common neurochemical changes involving the {5-HT} system, linked to psychological dimensions shared by the two conditions, perhaps at an ideational level.}
@@ -120,7 +120,7 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \field{labelyear}{1998}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Artificial Intelligence}
@@ -161,7 +161,7 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelyear}{2010}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Œuvres}

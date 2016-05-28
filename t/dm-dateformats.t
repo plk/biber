@@ -85,7 +85,7 @@ my $l13c = q|    \entry{L13}{book}{}
       \field{labelyear}{1996\bibdatedash }
       \field{labelmonth}{1}
       \field{labelday}{1}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{day}{1}
@@ -120,7 +120,7 @@ my $l14 = q|    \entry{L14}{book}{}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{day}{10}
@@ -185,7 +185,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{labelyear}{1996}
       \field{labelmonth}{1}
       \field{labelday}{1}
-      \field{datelabelsource}{event}
+      \field{labeldatesource}{event}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
       \field{eventday}{1}
@@ -220,7 +220,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{labelyear}{1996}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
       \field{day}{10}
@@ -269,7 +269,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{labelyear}{1998}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
-      \field{datelabelsource}{orig}
+      \field{labeldatesource}{orig}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
       \field{day}{10}
@@ -318,7 +318,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{labelyear}{1998\bibdatedash 2004}
       \field{labelmonth}{12}
       \field{labelday}{10\bibdatedash 12}
-      \field{datelabelsource}{event}
+      \field{labeldatesource}{event}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
       \field{day}{10}

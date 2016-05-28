@@ -84,7 +84,7 @@ my $K11 = q|    \entry{K11}{book}{}
       \field{sortinit}{a}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \field{labelyear}{1983}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{One}
@@ -111,7 +111,7 @@ my $K12 = q|    \entry{K12}{book}{}
       \field{sortinit}{Z}
       \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
       \field{labelyear}{1983}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Two}

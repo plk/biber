@@ -277,8 +277,8 @@ sub set_output_entry {
     if (my $ld = $be->get_field('labelday')) {
       $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($ld), name => 'labelday');
     }
-    if ($be->field_exists('datelabelsource')) {
-      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($be->get_field('datelabelsource')), name => 'datelabelsource');
+    if ($be->field_exists('labeldatesource')) {
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($be->get_field('labeldatesource')), name => 'labeldatesource');
     }
   }
 

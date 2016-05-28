@@ -73,7 +73,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
       \field{labelyear}{2007}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{note}{A Note}
       \field{year}{2007}
@@ -100,7 +100,7 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \field{sortinit}{P}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
       \field{labelyear}{2003}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{abstract}{An abstract}
       \field{addendum}{Москва}

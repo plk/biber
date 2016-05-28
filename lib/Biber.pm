@@ -1875,7 +1875,7 @@ sub process_labeldate {
 
         $be->set_field('labelmonth', $be->get_field($df->{month})) if $df->{month};
         $be->set_field('labelday', $be->get_field($df->{day})) if $df->{day};
-        $be->set_field('datelabelsource', $df->{source});
+        $be->set_field('labeldatesource', $df->{source});
         # ignore endyear if it's the same as year
         my ($ytype) = $df->{year} =~ /\A(\X*)year\z/xms;
         $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef

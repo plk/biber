@@ -61,7 +61,7 @@ my $string1 = q|    \entry{DynSet}{set}{}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2002}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{Some Dynamic Note}
@@ -150,7 +150,7 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelyear}{2000}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{shorthand}{d3}

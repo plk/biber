@@ -100,7 +100,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{labelyear}{1998}
       \field{labelmonth}{4}
       \field{labelday}{5}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{day}{5}
@@ -132,7 +132,7 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \field{labelyear}{1998}
       \field{labelmonth}{4}
       \field{labelday}{5}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{day}{5}
@@ -160,7 +160,7 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \field{labelyear}{1999}
       \field{labelmonth}{4}
       \field{labelday}{5}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{day}{5}

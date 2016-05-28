@@ -79,7 +79,7 @@ my $l1 = q|    \entry{test1}{report}{}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
       \field{labelyear}{1996}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{J.Neurosurgery}
@@ -116,7 +116,7 @@ my $l2 = q|    \entry{test2}{inbook}{}
       \field{labelyear}{1996}
       \field{labelmonth}{03}
       \field{labelday}{12}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{day}{12}
