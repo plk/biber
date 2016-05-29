@@ -33,7 +33,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # relying on here for tests
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('fastsort', 1);
-Biber::Config->setblxoption('labelyear', undef);
+Biber::Config->setblxoption('labeldate', undef);
 Biber::Config->setblxoption('labelalpha', 0);
 
 # (re)generate informtion based on option settings

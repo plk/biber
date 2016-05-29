@@ -72,7 +72,6 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \strng{fullhash}{51db4bfd331cba22959ce2d224c517cd}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labelyear}{2007}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{note}{A Note}
@@ -99,7 +98,6 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \strng{fullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \field{sortinit}{P}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
-      \field{labelyear}{2003}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{abstract}{An abstract}

@@ -300,23 +300,13 @@ sub set_output_entry {
   $acc .= "      <BDS>SORTINIT</BDS>\n";
   $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
-  # The labeldate option determines whether labelyear, labelmonth, labelday and extrayear
-  # are output
+  # The labeldate option determines whether labeldate information is output
   if ( Biber::Config->getblxoption('labeldate', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear = $be->get_field('nameyear')) {
       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
         $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
       }
-    }
-    if (my $ly = $be->get_field('labelyear')) {
-      $acc .= "      \\field{labelyear}{$ly}\n";
-    }
-    if (my $lm = $be->get_field('labelmonth')) {
-      $acc .= "      \\field{labelmonth}{$lm}\n";
-    }
-    if (my $ld = $be->get_field('labelday')) {
-      $acc .= "      \\field{labelday}{$ld}\n";
     }
     if ($be->field_exists('labeldatesource')) {
       $acc .= "      \\field{labeldatesource}{" . $be->get_field('labeldatesource') .  "}\n";

@@ -60,7 +60,6 @@ my $set1 = q|    \entry{seta}{set}{}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{1}
-      \field{labelyear}{2010}
       \field{labeldatesource}{}
       \field{extraalpha}{1}
       \field{labelnamesource}{author}
@@ -146,7 +145,6 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{2}
-      \field{labelyear}{2010}
       \field{labeldatesource}{}
       \field{extraalpha}{2}
       \field{labelnamesource}{author}
@@ -170,7 +168,6 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{3}
-      \field{labelyear}{2010}
       \field{labeldatesource}{}
       \field{extraalpha}{3}
       \field{labelnamesource}{author}
@@ -194,7 +191,6 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{extrayear}{4}
-      \field{labelyear}{2010}
       \field{labeldatesource}{}
       \field{extraalpha}{4}
       \field{labelnamesource}{author}

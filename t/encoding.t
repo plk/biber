@@ -49,7 +49,6 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labelyear}{1999}
       \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -75,7 +74,6 @@ my $encode2 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labelyear}{1999}
       \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -101,7 +99,6 @@ my $encode3 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labelyear}{1999}
       \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -127,7 +124,6 @@ my $encode5 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labelyear}{1999}
       \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -153,7 +149,6 @@ my $encode6 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labelyear}{1999}
       \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -179,7 +174,6 @@ my $encode7 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labelyear}{1999}
       \field{labeldatesource}{}
       \true{singletitle}
       \field{labelnamesource}{author}

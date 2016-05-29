@@ -56,7 +56,6 @@ my $string1 = q|    \entry{Static1}{set}{}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2001}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -141,7 +140,6 @@ my $string5 = q|    \entry{Static2}{book}{}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2001}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

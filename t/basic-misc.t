@@ -822,11 +822,14 @@ my $era4 = q|    \entry{era4}{book}{}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
       \field{eventyear}{1565}
+      \field{origendyear}{1488}
+      \field{origyear}{1487}
       \field{urlendyear}{1490}
       \field{urlyear}{1487}
       \field{year}{1034}
       \true{datecirca}
       \true{eventdateuncertain}
+      \true{origdatecirca}
       \true{urldatecirca}
     \endentry
 |;

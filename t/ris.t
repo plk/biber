@@ -78,7 +78,6 @@ my $l1 = q|    \entry{test1}{report}{}
       \strng{fullhash}{bde87bef9bb3834837786f78acfebc54}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
-      \field{labelyear}{1996}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -113,9 +112,6 @@ my $l2 = q|    \entry{test2}{inbook}{}
       \strng{fullhash}{f2574dc91f1242eb0e7507a71730631b}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
-      \field{labelyear}{1996}
-      \field{labelmonth}{03}
-      \field{labelday}{12}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

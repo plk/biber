@@ -80,8 +80,6 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \strng{fullhash}{ee363ce5e21ebe022f83aae896dd47f9}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
-      \field{labelyear}{1999}
-      \field{labelmonth}{5}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -119,7 +117,6 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \strng{fullhash}{01599a4cb58316d64208b12a07741765}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
-      \field{labelyear}{1998}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -160,7 +157,6 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       \strng{fullhash}{83d062f99d033839537243075d75bad2}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
-      \field{labelyear}{2010}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

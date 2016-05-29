@@ -55,7 +55,6 @@ my $k1 = q|    \entry{key1}{article}{}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{1998}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -88,7 +87,6 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2009}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

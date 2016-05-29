@@ -1851,10 +1851,10 @@ sub process_labeldate {
         }
         if ($be->get_field($ldy)) { # did we find a labeldate?
           # set source to field or date field prefix for a real date field
-          $be->set_labeldate_info({'field' => { 'year'  => $ldy,
-                                                'month' => $ldm,
-                                                'day'   => $ldd,
-                                                'source' => $pseudodate ? $ldy : $datetype }});
+          $be->set_labeldate_info({'field' => {year   => $ldy,
+                                               month  => $ldm,
+                                               day    => $ldd,
+                                               source => $pseudodate ? $ldy : $datetype }});
           last;
         }
       }
@@ -1900,8 +1900,8 @@ sub process_labeldate {
                          $be->get_field('labelday') . '\bibdatedash ' . $be->get_field($ytype . 'endday'));
         }
       }
-      elsif (my $ys = $ldi->{string}) { # set labelyear to a fallback string
-        $be->set_field('labelyear', $ys);
+      elsif (my $ys = $ldi->{string}) { # set labeldatesource to a fallback string
+        $be->set_field('labeldatesource', $ys);
       }
     }
     else {

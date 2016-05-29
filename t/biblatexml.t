@@ -102,7 +102,6 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \strng{fullhash}{676e5835f2422c4d02b9107e530be190}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
-      \field{labelyear}{1983}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

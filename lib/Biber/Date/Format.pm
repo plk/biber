@@ -315,6 +315,11 @@ sub _pre {
     $p{self}{circa} = 1;
   }
 
+  # circa dates - EDTF marker
+  if ($p{input} =~ s/^\s*(.+?)\s*\~\s*$/$1/i) {
+    $p{self}{circa} = 1;
+  }
+
   # uncertain dates - strip uncertain marker and save flag
   if ($p{input} =~ s/^\s*(.+?)\s*\?\s*$/$1/i) {
     $p{self}{uncertain} = 1;

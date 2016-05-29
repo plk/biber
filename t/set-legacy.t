@@ -56,8 +56,6 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{1955}
-      \field{labelmonth}{3}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

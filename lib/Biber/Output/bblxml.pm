@@ -260,22 +260,13 @@ sub set_output_entry {
   $xml->dataElement('BDS', 'SORTINIT');
   $xml->dataElement('BDS', 'SORTINITHASH');
 
-  # The labeldate option determines whether "extrayear" is output
+  # The labeldate option determines whether labeldate information is output
   if (Biber::Config->getblxoption('labeldate', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear = $be->get_field('nameyear')) {
       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
         $xml->dataElement('BDS', 'EXTRAYEAR');
       }
-    }
-    if (my $ly = $be->get_field('labelyear')) {
-      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($ly), name => 'labelyear');
-    }
-    if (my $lm = $be->get_field('labelmonth')) {
-      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lm), name => 'labelmonth');
-    }
-    if (my $ld = $be->get_field('labelday')) {
-      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($ld), name => 'labelday');
     }
     if ($be->field_exists('labeldatesource')) {
       $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($be->get_field('labeldatesource')), name => 'labeldatesource');

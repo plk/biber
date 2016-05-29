@@ -60,7 +60,6 @@ my $string1 = q|    \entry{DynSet}{set}{}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2002}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -149,7 +148,6 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{0}
       \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2000}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

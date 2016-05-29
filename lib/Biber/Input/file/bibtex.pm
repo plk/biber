@@ -1003,8 +1003,10 @@ sub _date {
       biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
     }
 
-    # Save circa information
-    if ($CONFIG_DATE_PARSERS{start}->circa) {
+    # Save circa information - marker can be attached to start date ("circa") or
+    # end data "~" (EDTF).
+    if ($CONFIG_DATE_PARSERS{start}->circa or
+        $CONFIG_DATE_PARSERS{end}->circa) {
       $bibentry->set_field($datetype . 'datecirca', 1);
     }
 
