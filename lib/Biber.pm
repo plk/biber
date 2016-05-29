@@ -248,6 +248,11 @@ sub tool_mode_setup {
   $bib_section->set_allkeys(1);
   $bib_sections->add_section($bib_section);
 
+  # Always resolve date meta-information in tool mode
+  Biber::Config->setblxoption('datecirca', 1);
+  Biber::Config->setblxoption('dateera', 1);
+  Biber::Config->setblxoption('dateuncertain', 1);
+
   # Add the Biber::Sections object to the Biber object
   $self->add_sections($bib_sections);
 

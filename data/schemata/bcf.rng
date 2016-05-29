@@ -48,6 +48,15 @@
           <value>global</value>
         </attribute>
         <ref name="alphaothers"/>
+        <optional>
+          <ref name="datecirca"/>
+        </optional>
+        <optional>
+          <ref name="dateera"/>
+        </optional>
+        <optional>
+          <ref name="dateuncertain"/>
+        </optional>
         <ref name="labelalpha"/>
         <ref name="labelnamespec"/>
         <ref name="labeltitle"/>
@@ -1734,6 +1743,54 @@
         <data type="normalizedString">
           <param name="pattern">\S+</param>
         </data>
+      </element>
+    </element>
+  </define>
+  <define name="datecirca">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>datecirca</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="dateera">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>dateera</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="dateuncertain">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>dateuncertain</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
       </element>
     </element>
   </define>

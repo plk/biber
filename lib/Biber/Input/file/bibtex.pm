@@ -1003,15 +1003,17 @@ sub _date {
       biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
     }
 
-    # Save circa information - marker can be attached to start date ("circa") or
+    # Save circa information if requested - marker can be attached to start date ("circa") or
     # end data "~" (EDTF).
-    if ($CONFIG_DATE_PARSERS{start}->circa or
-        $CONFIG_DATE_PARSERS{end}->circa) {
+    if (Biber::Config->getblxoption('datecirca') and
+        ($CONFIG_DATE_PARSERS{start}->circa or
+         $CONFIG_DATE_PARSERS{end}->circa)) {
       $bibentry->set_field($datetype . 'datecirca', 1);
     }
 
-    # Save uncertain date information
-    if ($CONFIG_DATE_PARSERS{start}->uncertain) {
+    # Save uncertain date information if requested
+    if (Biber::Config->getblxoption('dateuncertain') and
+        $CONFIG_DATE_PARSERS{start}->uncertain) {
       $bibentry->set_field($datetype . 'dateuncertain', 1);
     }
 
@@ -1019,7 +1021,10 @@ sub _date {
       $bibentry->set_datafield($datetype . 'year', $sdate->year);
       $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
       my $era = lc($sdate->secular_era);
-      $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce'; # CE is assumed
+      # Save era information if requested
+      if (Biber::Config->getblxoption('dateera')) {
+        $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce'; # CE is assumed
+      }
     }
 
     $bibentry->set_datafield($datetype . 'month', $sdate->month)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
 <?xml-model href="../../data/schemata/bcf.rnc" type="application/relax-ng-compact-syntax"?>
-<bcf:controlfile version="3.2" bltxversion="3.4" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="3.2" bltxversion="3.5" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -188,6 +188,7 @@
     <bcf:option datatype="string">block</bcf:option>
     <bcf:option datatype="string">date</bcf:option>
     <bcf:option datatype="string">datelabel</bcf:option>
+    <bcf:option datatype="string">dateera</bcf:option>
     <bcf:option datatype="string">urldate</bcf:option>
     <bcf:option datatype="string">eventdate</bcf:option>
     <bcf:option datatype="string">origdate</bcf:option>
@@ -242,6 +243,8 @@
     <bcf:option datatype="boolean">opcittracker</bcf:option>
     <bcf:option datatype="boolean">loccittracker</bcf:option>
     <bcf:option datatype="boolean">parentracker</bcf:option>
+    <bcf:option datatype="boolean">datecirca</bcf:option>
+    <bcf:option datatype="boolean">dateuncertain</bcf:option>
     <bcf:option datatype="boolean">datezeros</bcf:option>
     <bcf:option datatype="boolean">autopunct</bcf:option>
     <bcf:option datatype="boolean">punctfont</bcf:option>
