@@ -1020,12 +1020,14 @@ sub parse_date_end {
 =head2 parse_date
 
   Parse of ISO8601 dates using subclass of Date::Format::ISO8601 which handles
-  missing data and ignores times.
+  missing data
 
 =cut
 
 sub parse_date {
   my ($obj, $string) = @_;
+  # Must do this to make sure meta-information from sub-class Biber::Date::Format is reset
+  $obj->init();
   return 0 unless $string;
   return eval {$obj->parse_datetime($string)};
 }

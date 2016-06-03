@@ -24,6 +24,16 @@ Biber::Date::Format
 
 =cut
 
+# Needed as a rest of subclass information between parses as this isn't reset
+# by a new parse of SUPER::parse_datetime
+sub init {
+  my $self = shift;
+  delete $self->{missing};
+  delete $self->{circa};
+  delete $self->{uncertain};
+  return $self;
+}
+
 sub missing {
   my $self = shift;
   my $part = shift;
