@@ -953,7 +953,7 @@ sub _generatesortinfo {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $sortobj;
-  $BIBER_SORT_FINAL = 0;
+  $BIBER_SORT_NULL = 0;
   $BIBER_SORT_FINAL = '';
   foreach my $sortset (@{$sortscheme->{spec}}) {
     my $s = $self->_sortset($sortset, $citekey, $secnum, $section, $be, $sortlist);
