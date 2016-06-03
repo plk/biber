@@ -24,11 +24,13 @@ our @EXPORT = qw{
                   %LOCALE_MAP_R
                   %REMOTE_MAP
                   %DS_EXTENSIONS
+                  %SORT_DATATYPES
                   $CONFIG_CSV_PARSER
                   $BIBER_CONF_NAME
                   $BCF_VERSION
                   $BBL_VERSION
                   $BIBER_SORT_FINAL
+                  $BIBER_SORTDATA_FINAL
                   $BIBER_SORT_NULL
                   $LABEL_FINAL
               };
@@ -40,8 +42,9 @@ our $BCF_VERSION = '3.2';
 our $BBL_VERSION = '2.8';
 
 # Global flags needed for sorting
-our $BIBER_SORT_FINAL = 0;
-our $BIBER_SORT_NULL  = 0;
+our $BIBER_SORT_FINAL;
+our $BIBER_SORTDATA_FINAL;
+our $BIBER_SORT_NULL;
 
 # the name of the Biber configuration file, which should be
 # either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
@@ -79,8 +82,14 @@ our %DS_EXTENSIONS = (
                       ris        => 'ris'
                       );
 
-# Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
+# Mapping of sorting fields to Sort::Key sort data types which are not 'str'
+our %SORT_DATATYPES = (
+                   year    => 'int', # integer
+                   month   => 'int', # integer
+                   day     => 'int'  # integer
+                  );
 
+# Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 our $CONFIG_DEFAULT_BIBER = {
   annotation_marker   => { content => q/+an/ },
   clrmacros           => { content => 0 },

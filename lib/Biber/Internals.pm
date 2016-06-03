@@ -953,17 +953,21 @@ sub _generatesortinfo {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $sortobj;
+  my $sortdataschema;
   $BIBER_SORT_NULL = 0;
   $BIBER_SORT_FINAL = '';
+  $BIBER_SORTDATA_FINAL = '';
   foreach my $sortset (@{$sortscheme->{spec}}) {
     my $s = $self->_sortset($sortset, $citekey, $secnum, $section, $be, $sortlist);
     # We have already found a "final" item so if this item returns null,
     # copy in the "final" item string as it's the master key for this entry now
     if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
       push @$sortobj, $BIBER_SORT_FINAL;
+      push @$sortdataschema, $BIBER_SORTDATA_FINAL;
     }
     else {
-      push @$sortobj, $s;
+      push @$sortobj, $s->[0];
+      push @$sortdataschema, $s->[1];
     }
   }
 
@@ -971,7 +975,7 @@ sub _generatesortinfo {
   # sortstring isn't actually used to sort, it's used to generate sortinit and
   # for debugging purposes
   my $ss = join($sorting_sep, @$sortobj);
-  $sortlist->set_sortdata($citekey, [$ss, $sortobj]);
+  $sortlist->set_sortdata($citekey, [$ss, $sortobj, $sortdataschema]);
   if ($logger->is_debug()) { # performance shortcut
     $logger->debug("Sorting object for key '$citekey' -> " . Data::Dump::pp($sortobj));
   }
@@ -1006,13 +1010,14 @@ sub _sortset {
         # that we sort correctly against all other entries without a value
         # for this "final" field
         $BIBER_SORT_FINAL = $string;
+        $BIBER_SORTDATA_FINAL = $SORT_DATATYPES{$sortelementname} || 'str';
         last;
       }
-      return $string;
+      return [$string, $SORT_DATATYPES{$sortelementname} || 'str']
     }
   }
   $BIBER_SORT_NULL = 1; # set null flag - need this to deal with some cases
-  return '';
+  return ['', 'str'];
 }
 
 ##############################################
