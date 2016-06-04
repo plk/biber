@@ -37,6 +37,7 @@ use Data::Compare;
 use Text::BibTeX qw(:macrosubs);
 use Unicode::Normalize;
 use POSIX qw( locale_h ); # for lc()
+use Scalar::Util qw(looks_like_number);
 use Sort::Key qw ( multikeysorter );
 
 =encoding utf-8
@@ -3353,92 +3354,32 @@ sub sort_list {
               . $collopts->{upper_before_lower}
                 . ')';
       }
+
       push @collateobjs, $cobj . $fc;
 
-      # $data_extractor .= '$list->get_sortdata($_)->[1][' . $num_sorts . '],';
-      # $sorter .= ' || ' if $num_sorts; # don't add separator before first field
-
-      # my $sd = $sortset->[0]{sort_direction};
-
-      # my $X = '$a';
-      # my $Y = '$b';
-      # if (defined($sd) and $sd eq 'descending') {
-      #   $X = '$b';
-      #   $Y = '$a';
-      # }
-
-      # # This cmp is between U::C binary keys, not fields and so there is no point
-      # # thinking about switching to <=> for numeric sorting fields as that is completely
-      # # invisible at this point.
-      # $sorter .= '($cache->{' .
-      #   $num_sorts .
-      #     '}{' . $X . '->[' .
-      #       $num_sorts .
-      #         ']} ||= ' .
-      #           $cobj . $fc . '->getSortKey(' . $X . '->[' .
-      #             $num_sorts .
-      #               '])) cmp ($cache->{' .
-      #                 $num_sorts .
-      #                   '}{' . $Y . '->[' .
-      #                     $num_sorts .
-      #                       ']} ||= '.
-      #                         $cobj . $fc .
-      #                           '->getSortKey(' . $Y . '->[' .
-      #                             $num_sorts .
-      #                               ']))';
-      # $num_sorts++;
     }
-#    $data_extractor .= '$_]';
 
-#    say "HERE0:" . join(',', @$lsds);
+    my $cache;
     my $extract = sub {
       my @d;
-#      say "HERE0:$_";
-#      say "HERE0:" . join(',', @{$list->get_sortdata($keys[$_])->[1]});
       for (my $i=0;$i<=$#{$list->get_sortdata($keys[$_])->[1]};$i++) {
         my $sortfield = $list->get_sortdata($keys[$_])->[1][$i];
-#        say "HERE2:$sortfield:" . $lsds->[$i];
         if ($lsds->[$i] !~ m/int$/) {
-          push @d, eval ($collateobjs[$i] . "->getSortKey('$sortfield')");
+          my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
+          push @d, $cache->{$a} ||= eval $a;
         }
         else {
-          push @d, $sortfield || 0; # "" isn't numeric and so make sure "" is 0 for ints
+          # There are some special cases to be careful of here:
+          #   "" is possible and this needs to be converted to 0 for int tests
+          #   "final" elements in sorting copy themselves as strings to further fields
+          #   and therefore need coercing to 0 for int tests
+          push @d, looks_like_number($sortfield) ? $sortfield : 0;
         }
       }
       return @d;
     };
 
     @keys = map {$keys[$_]} &$sorter($extract, 0..$#keys);
-
-    # Handily, $num_sorts is now one larger than the number of fields which is the
-    # correct index for the actual data in the sort array
-    # $sort_extractor = '$_->[' . $num_sorts . ']';
-    # $logger->trace("Sorting extractor is: $sort_extractor");
-    # $logger->trace("Sorting structure is: $sorter");
-    # $logger->trace("Data extractor is: $data_extractor");
-
-    # cache for OM in ST sorter
-#    my $cache;
-
-    # Multi-field ST sort with OM in sorter
-    # Normally ST needs no OM because the extractor is a vanilla ->[] but
-    # here it isn't - it's an expensive call to U::C around ->[] which often
-    # returns the same thing and so benefits from an OM cache.
-    # The U::C key generation is basically doing what a pack() or similar does
-    # in GRT and so there is not so much benefit in over-complicating this for
-    # potentially a little bit more performance.
-    # @keys = map  { eval $sort_extractor }
-    #         sort { eval $sorter }
-    #         map  { eval $data_extractor } @keys;
-
-    # There is no point in trying to share this cache with additional sortlists
-    # because they would have to have the same sortscheme and sortnamekeyscheme
-    # and this is already covered more efficiently in process_lists() because
-    # there it is ensured that, in such cases, no sorting is invoked at all.
-    # $logger->trace("Sorting OM cache:\n");
-    # if ($logger->is_trace()) { # performance shortcut
-    #   $logger->trace(Data::Dump::pp($cache));
-    # }
   }
 
   $logger->debug("Keys after sort:\n");

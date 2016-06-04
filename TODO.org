@@ -46,6 +46,7 @@
 * DONE biblatex new test doc
 * DONE docs - negs, explicit era versions, bce bool, locale strings, circa/uncertain format and bools
 * TODO Enforce year/month format as ints - sortyear should be int only and documented so. Enforce in biber (not datamodel as it's not part of that)
+* DONE final sort elements copy string into all further fields which dies on int schema
 * TODO Decomm RIS
 * TODO Remove fastsort?
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
