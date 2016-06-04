@@ -243,8 +243,8 @@ $S = {spec => [
        {'endday'       => {}},
       ],
       [
-       {},
-       {'origyear'   => {'sort_direction'  => 'descending'}}
+       {'sort_direction'  => 'descending'},
+       {'origyear'   => {}}
       ],
       [
        {},
@@ -643,10 +643,9 @@ $S = {spec => [
        {'title'      => {}}
       ],
       [
-       {},
+       {'sort_direction'  => 'descending'},
        {'year'       => {'substring_side'  => 'left',
-                         'substring_width' => 4,
-                         'sort_direction'  => 'descending'}}
+                         'substring_width' => 4}}
       ],
       [
        {},
@@ -687,10 +686,9 @@ $S = {spec => [
        {'title'      => {}}
       ],
       [
-       {},
+       {'sort_direction'  => 'descending'},
        {'year'       => {'substring_side'  => 'left',
-                         'substring_width' => 3,
-                         'sort_direction'  => 'descending'}}
+                         'substring_width' => 3}}
       ],
       [
        {},
@@ -731,10 +729,9 @@ $S = {spec => [
        {'title'      => {}}
       ],
       [
-       {},
+       {'sort_direction'  => 'descending'},
        {'year'       => {'substring_side'  => 'right',
-                         'substring_width' => 4,
-                         'sort_direction'  => 'descending'}}
+                         'substring_width' => 4}}
       ],
       [
        {},
@@ -775,10 +772,9 @@ $S = {spec => [
        {'title'      => {}}
       ],
       [
-       {},
+       {'sort_direction'  => 'descending'},
        {'year'       => {'substring_side' => 'right',
-                         'substring_width' => 3,
-                         'sort_direction'  => 'descending'}}
+                         'substring_width' => 3}}
       ],
       [
        {},
