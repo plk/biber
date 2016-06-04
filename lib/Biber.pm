@@ -15,11 +15,11 @@ use File::Copy;
 use File::Spec;
 use File::Temp;
 use IO::File;
+use List::AllUtils qw( first uniq max );
 use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Biber::Config;
-use Biber::Constants;
-use List::AllUtils qw( first uniq max );
 use Biber::DataModel;
+use Biber::Constants;
 use Biber::Internals;
 use Biber::Entries;
 use Biber::Entry;
@@ -37,6 +37,7 @@ use Data::Compare;
 use Text::BibTeX qw(:macrosubs);
 use Unicode::Normalize;
 use POSIX qw( locale_h ); # for lc()
+use Sort::Key qw ( multikeysorter );
 
 =encoding utf-8
 
@@ -2235,6 +2236,7 @@ sub process_lists {
         $list->set_extraalphadata($cacheitem->[6]);
         $list->set_extratitledata($cacheitem->[7]);
         $list->set_extratitleyeardata($cacheitem->[8]);
+        $list->set_sortdataschema($cacheitem->[9]);
         $cache_flag = 1;
         last;
       }
@@ -2243,6 +2245,7 @@ sub process_lists {
     unless ($cache_flag) {
       $logger->debug("No sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
       # Sorting
+      $self->generate_sortdataschema($list); # generate the sort information
       $self->generate_sortinfo($list);       # generate the sort information
       $self->sort_list($list);               # sort the list
       $self->generate_extra($list) unless Biber::Config->getoption('tool'); # generate the extra* fields
@@ -2353,6 +2356,51 @@ sub check_list_filter {
     }
   }
   return 1;
+}
+
+=head2 generate_sortdataschema
+
+    Generate sort data schema for Sort::Key from sort spec like this:
+
+  spec   => [
+              [undef, { presort => {} }],
+              [{ final => 1 }, { sortkey => {} }],
+              [
+                {'sort_direction'  => 'descending'},
+                { sortname => {} },
+                { author => {} },
+                { editor => {} },
+                { translator => {} },
+                { sorttitle => {} },
+                { title => {} },
+              ],
+              [undef, { sortyear => {} }, { year => {} }],
+              [undef, { sorttitle => {} }, { title => {} }],
+              [undef, { volume => {} }, { "0000" => {} }],
+            ],
+
+
+=cut
+
+sub generate_sortdataschema {
+  my ($self, $list) = @_;
+  my $dm = Biber::Config->get_dm;
+  my $ds;
+  foreach my $sort (@{$list->get_sortscheme->{spec}}) {
+    # Assume here that every item in a sorting spec section is the same datatype
+    # See header for data structure
+    my $direction = '';
+    while (my ($sopt, $val) = each %{$sort->[0]}) {
+      if ($sopt eq 'sort_direction') {
+        if ($val eq 'descending') {
+          $direction = '-';
+        }
+      }
+    }
+    push @$ds, $direction . &{$dm->{sortdataschema}}([keys %{$sort->[1]}]->[0]);
+  }
+  $list->set_sortdataschema($ds);
+  return;
 }
 
 =head2 generate_sortinfo
@@ -3133,6 +3181,7 @@ sub sort_list {
   my $self = shift;
   my $list = shift;
   my $sortscheme = $list->get_sortscheme;
+  my $lsds  = $list->get_sortdataschema;
   my @keys = $list->get_keys;
   my $lssn = $list->get_sortschemename;
   my $ltype = $list->get_type;
@@ -3261,8 +3310,10 @@ sub sort_list {
     # extractions into a string representing an array ref as we musn't eval this yet
     my $num_sorts = 0;
     my $data_extractor = '[';
-    my $sorter;
     my $sort_extractor;
+    my @collateobjs;
+    my $sorter = multikeysorter(@$lsds);
+
     foreach my $sortset (@{$sortscheme->{spec}}) {
       my $fc = '';
       my @fc;
@@ -3302,50 +3353,72 @@ sub sort_list {
               . $collopts->{upper_before_lower}
                 . ')';
       }
+      push @collateobjs, $cobj . $fc;
 
-      $data_extractor .= '$list->get_sortdata($_)->[1][' . $num_sorts . '],';
-      $sorter .= ' || ' if $num_sorts; # don't add separator before first field
+      # $data_extractor .= '$list->get_sortdata($_)->[1][' . $num_sorts . '],';
+      # $sorter .= ' || ' if $num_sorts; # don't add separator before first field
 
-      my $sd = $sortset->[0]{sort_direction};
+      # my $sd = $sortset->[0]{sort_direction};
 
-      my $X = '$a';
-      my $Y = '$b';
-      if (defined($sd) and $sd eq 'descending') {
-        $X = '$b';
-        $Y = '$a';
-      }
+      # my $X = '$a';
+      # my $Y = '$b';
+      # if (defined($sd) and $sd eq 'descending') {
+      #   $X = '$b';
+      #   $Y = '$a';
+      # }
 
-      # This cmp is between U::C binary keys, not fields and so there is no point
-      # thinking about switching to <=> for numeric sorting fields as that is completely
-      # invisible at this point.
-      $sorter .= '($cache->{' .
-        $num_sorts .
-          '}{' . $X . '->[' .
-            $num_sorts .
-              ']} ||= ' .
-                $cobj . $fc . '->getSortKey(' . $X . '->[' .
-                  $num_sorts .
-                    '])) cmp ($cache->{' .
-                      $num_sorts .
-                        '}{' . $Y . '->[' .
-                          $num_sorts .
-                            ']} ||= '.
-                              $cobj . $fc .
-                                '->getSortKey(' . $Y . '->[' .
-                                  $num_sorts .
-                                    ']))';
-      $num_sorts++;
+      # # This cmp is between U::C binary keys, not fields and so there is no point
+      # # thinking about switching to <=> for numeric sorting fields as that is completely
+      # # invisible at this point.
+      # $sorter .= '($cache->{' .
+      #   $num_sorts .
+      #     '}{' . $X . '->[' .
+      #       $num_sorts .
+      #         ']} ||= ' .
+      #           $cobj . $fc . '->getSortKey(' . $X . '->[' .
+      #             $num_sorts .
+      #               '])) cmp ($cache->{' .
+      #                 $num_sorts .
+      #                   '}{' . $Y . '->[' .
+      #                     $num_sorts .
+      #                       ']} ||= '.
+      #                         $cobj . $fc .
+      #                           '->getSortKey(' . $Y . '->[' .
+      #                             $num_sorts .
+      #                               ']))';
+      # $num_sorts++;
     }
-    $data_extractor .= '$_]';
+#    $data_extractor .= '$_]';
+
+#    say "HERE0:" . join(',', @$lsds);
+    my $extract = sub {
+      my @d;
+#      say "HERE0:$_";
+#      say "HERE0:" . join(',', @{$list->get_sortdata($keys[$_])->[1]});
+      for (my $i=0;$i<=$#{$list->get_sortdata($keys[$_])->[1]};$i++) {
+        my $sortfield = $list->get_sortdata($keys[$_])->[1][$i];
+#        say "HERE2:$sortfield:" . $lsds->[$i];
+        if ($lsds->[$i] !~ m/int$/) {
+          push @d, eval ($collateobjs[$i] . "->getSortKey('$sortfield')");
+        }
+        else {
+          push @d, $sortfield || 0; # "" isn't numeric and so make sure "" is 0 for ints
+        }
+      }
+      return @d;
+    };
+
+    @keys = map {$keys[$_]} &$sorter($extract, 0..$#keys);
+
     # Handily, $num_sorts is now one larger than the number of fields which is the
     # correct index for the actual data in the sort array
-    $sort_extractor = '$_->[' . $num_sorts . ']';
-    $logger->trace("Sorting extractor is: $sort_extractor");
-    $logger->trace("Sorting structure is: $sorter");
-    $logger->trace("Data extractor is: $data_extractor");
+    # $sort_extractor = '$_->[' . $num_sorts . ']';
+    # $logger->trace("Sorting extractor is: $sort_extractor");
+    # $logger->trace("Sorting structure is: $sorter");
+    # $logger->trace("Data extractor is: $data_extractor");
 
     # cache for OM in ST sorter
-    my $cache;
+#    my $cache;
 
     # Multi-field ST sort with OM in sorter
     # Normally ST needs no OM because the extractor is a vanilla ->[] but
@@ -3354,18 +3427,18 @@ sub sort_list {
     # The U::C key generation is basically doing what a pack() or similar does
     # in GRT and so there is not so much benefit in over-complicating this for
     # potentially a little bit more performance.
-    @keys = map  { eval $sort_extractor }
-            sort { eval $sorter }
-            map  { eval $data_extractor } @keys;
+    # @keys = map  { eval $sort_extractor }
+    #         sort { eval $sorter }
+    #         map  { eval $data_extractor } @keys;
 
     # There is no point in trying to share this cache with additional sortlists
     # because they would have to have the same sortscheme and sortnamekeyscheme
     # and this is already covered more efficiently in process_lists() because
     # there it is ensured that, in such cases, no sorting is invoked at all.
-    $logger->trace("Sorting OM cache:\n");
-    if ($logger->is_trace()) { # performance shortcut
-      $logger->trace(Data::Dump::pp($cache));
-    }
+    # $logger->trace("Sorting OM cache:\n");
+    # if ($logger->is_trace()) { # performance shortcut
+    #   $logger->trace(Data::Dump::pp($cache));
+    # }
   }
 
   $logger->debug("Keys after sort:\n");

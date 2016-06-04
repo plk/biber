@@ -247,7 +247,8 @@ sub get_listdata {
            $self->{extrayeardata},
            $self->{extraalphadata},
            $self->{extratitledata},
-           $self->{extratitleyeardata} ];
+           $self->{extratitleyeardata},
+           $self->{sortdataschema} ];
 }
 
 =head2 set_extrayeardata_for_key
@@ -401,6 +402,29 @@ sub get_extraalphadata {
   my ($self, $key) = @_;
   return unless defined($key);
   return $self->{extraalphadata}{$key};
+}
+
+=head2 get_sortdataschema
+
+    Gets the sortdata schema for a sortlist
+
+=cut
+
+sub get_sortdataschema {
+  my ($self) = @_;
+  return $self->{sortdataschema};
+}
+
+=head2 set_sortdataschema
+
+    Saves the sortdata schema for a sortlist
+
+=cut
+
+sub set_sortdataschema {
+  my ($self, $ss) = @_;
+  $self->{sortdataschema} = $ss;
+  return;
 }
 
 =head2 set_sortdata

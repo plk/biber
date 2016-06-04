@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 44;
+use Test::More tests => 46;
 use Test::Differences;
 unified_diff;
 
@@ -85,6 +85,10 @@ my $snk1        = 'mm,,John John!von!Doe!Jr,,,0000';
 my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0000';
 my $useprefix2  = 'ww,,Bobble!Terrence!von,,,0000';
 
+# Sorting data schemata
+my $ssd1 = ['str', 'str','str', 'int', 'str', 'str'];
+my $ssd2 = ['int', 'int', 'int', 'int', 'int', 'int', '-int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', '-int', 'int', 'int', 'int', 'int', 'int'];
+
 Biber::Config->setblxoption('useprefix', 1);
 
 # regenerate information
@@ -95,6 +99,8 @@ my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global
 
 eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 
+# Testing sorting data schema generation
+is_deeply($main->get_sortdataschema, $ssd1, 'Sorting data schemata - 1' );
 
 # Testing custom name sorting key
 my $SNK;
@@ -322,6 +328,9 @@ $main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
+
+# Testing sorting data schema generation
+is_deeply($main->get_sortdataschema, $ssd2, 'Sorting data schemata - 2' );
 
 eq_or_diff($main->get_sortdata('moraux')->[0], $dates1, 'Very contrived but thorough test of date sorting' );
 

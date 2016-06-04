@@ -239,6 +239,18 @@ sub new {
                                     @{$self->get_fields_of_type('list', ['verbatim', 'uri'])}]
                      };
 
+  # Mapping of sorting fields to Sort::Key sort data types which are not 'str'
+  $self->{sortdataschema} = sub {
+    my $field = shift;
+    if ($field eq 'sortyear' or
+        $self->field_is_type($field, 'field', 'datepart')) {
+      return 'int';
+    }
+    else {
+      return 'str';
+    }
+  };
+
 #  use Data::Dump;dd($self);exit 0;
   return $self;
 }
@@ -539,6 +551,25 @@ sub field_is_datatype {
   return $self->{fieldsbyname}{$field}{datatype} eq $datatype ? 1 : 0;
 }
 
+
+=head2 field_is_type
+
+    Returns boolean depending on whether a field is a certain biblatex fieldtype
+    and datatype
+
+=cut
+
+sub field_is_type {
+  my ($self, $field, $fieldtype, $datatype) = @_;
+  if ($self->{fieldsbyname}{$field} and
+      $self->{fieldsbyname}{$field}{fieldtype} eq $fieldtype and
+      $self->{fieldsbyname}{$field}{datatype} eq $datatype) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
 
 =head2 field_is_nullok
 

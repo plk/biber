@@ -11,6 +11,13 @@ use Text::CSV;
 
 our @EXPORT = qw{
                   $CONFIG_DEFAULT_BIBER
+                  $CONFIG_CSV_PARSER
+                  $BIBER_CONF_NAME
+                  $BCF_VERSION
+                  $BBL_VERSION
+                  $BIBER_SORT_FINAL
+                  $BIBER_SORT_NULL
+                  $LABEL_FINAL
                   %CONFIG_DEFAULT_BIBLATEX
                   %CONFIG_OPTSCOPE_BIBLATEX
                   %CONFIG_SCOPEOPT_BIBLATEX
@@ -24,15 +31,6 @@ our @EXPORT = qw{
                   %LOCALE_MAP_R
                   %REMOTE_MAP
                   %DS_EXTENSIONS
-                  %SORT_DATATYPES
-                  $CONFIG_CSV_PARSER
-                  $BIBER_CONF_NAME
-                  $BCF_VERSION
-                  $BBL_VERSION
-                  $BIBER_SORT_FINAL
-                  $BIBER_SORTDATA_FINAL
-                  $BIBER_SORT_NULL
-                  $LABEL_FINAL
               };
 
 # Version of biblatex control file which this release expects. Matched against version
@@ -43,7 +41,6 @@ our $BBL_VERSION = '2.8';
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL;
-our $BIBER_SORTDATA_FINAL;
 our $BIBER_SORT_NULL;
 
 # the name of the Biber configuration file, which should be
@@ -81,13 +78,6 @@ our %DS_EXTENSIONS = (
                       biblatexml => 'bltxml',
                       ris        => 'ris'
                       );
-
-# Mapping of sorting fields to Sort::Key sort data types which are not 'str'
-our %SORT_DATATYPES = (
-                   year    => 'int', # integer
-                   month   => 'int', # integer
-                   day     => 'int'  # integer
-                  );
 
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 our $CONFIG_DEFAULT_BIBER = {
