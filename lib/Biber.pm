@@ -3307,14 +3307,13 @@ sub sort_list {
       $logger->info("No sort tailoring available for locale '$thislocale'");
     }
 
-    # Construct a multi-field Schwartzian Transform with the right number of
-    # extractions into a string representing an array ref as we musn't eval this yet
-    my $num_sorts = 0;
-    my $data_extractor = '[';
-    my $sort_extractor;
+    # For collecting the collation object settings for retrieval in the sort key extractor
     my @collateobjs;
+
+    # Instantiate Sort::Key sorter with correct data schema
     my $sorter = multikeysorter(@$lsds);
 
+    # Construct data needed for sort key extractor
     foreach my $sortset (@{$sortscheme->{spec}}) {
       my $fc = '';
       my @fc;
@@ -3356,7 +3355,6 @@ sub sort_list {
       }
 
       push @collateobjs, $cobj . $fc;
-
     }
 
     my $cache;
