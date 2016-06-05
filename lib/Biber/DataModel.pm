@@ -236,14 +236,13 @@ sub new {
                                     {
                                       not $self->field_is_skipout($_);
                                     }
-                                    @{$self->get_fields_of_type('list', ['verbatim', 'uri'])}]
+                                    @{$self->get_fields_of_type('list', ['verbatim', 'uri'])}],
+                      integers  => [sort 'sortyear', @{$self->get_fields_of_datatype(['datepart', 'integer'])}]
                      };
-
   # Mapping of sorting fields to Sort::Key sort data types which are not 'str'
   $self->{sortdataschema} = sub {
-    my $field = shift;
-    if ($field eq 'sortyear' or
-        $self->field_is_type($field, 'field', 'datepart')) {
+    my $f = shift;
+    if (first {$f eq $_} @{$self->{helpers}{integers}}) {
       return 'int';
     }
     else {
@@ -430,8 +429,21 @@ sub get_fields_of_fieldformat {
 
 sub get_fields_of_datatype {
   my ($self, $datatype) = @_;
-  my $f = $self->{fieldsbydatatype}{$datatype};
-  return $f ? [ sort @$f ] : [];
+  my @f;
+  # datatype can be array ref of datatypes - makes some calls cleaner
+  if (ref($datatype) eq 'ARRAY') {
+    foreach my $dt (@$datatype) {
+      if (my $fs = $self->{fieldsbydatatype}{$dt}) {
+        push @f, @$fs;
+      }
+    }
+  }
+  else {
+    if (my $fs = $self->{fieldsbydatatype}{$datatype}) {
+      push @f, @$fs;
+    }
+  }
+  return [ sort @f ];
 }
 
 
@@ -445,24 +457,24 @@ sub get_fields_of_datatype {
 
 sub get_fields_of_type {
   my ($self, $fieldtype, $datatype, $format) = @_;
-  my $f;
+  my @f;
   $format //= '*';
 
   # datatype can be array ref of datatypes - makes some calls cleaner
   if (ref($datatype) eq 'ARRAY') {
     foreach my $dt (@$datatype) {
       if (my $fs = $self->{fieldsbytype}{$fieldtype}{$dt}{$format}) {
-        push @$f, @$fs;
+        push @f, @$fs;
       }
     }
   }
   else {
     if (my $fs = $self->{fieldsbytype}{$fieldtype}{$datatype}{$format}) {
-      push @$f, @$fs;
+      push @f, @$fs;
     }
   }
 
-  return $f ? [ sort @$f ] : [];
+  return [ sort @f ];
 }
 
 =head2 is_fields_of_type
@@ -560,7 +572,7 @@ sub field_is_datatype {
 =cut
 
 sub field_is_type {
-  my ($self, $field, $fieldtype, $datatype) = @_;
+  my ($self, $fieldtype, $datatype, $field) = @_;
   if ($self->{fieldsbyname}{$field} and
       $self->{fieldsbyname}{$field}{fieldtype} eq $fieldtype and
       $self->{fieldsbyname}{$field}{datatype} eq $datatype) {

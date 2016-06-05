@@ -463,8 +463,8 @@ my $list1 = q|    \entry{list1}{book}{}
         {AAA}%
         {BBB}%
       }
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{sortinit}{}
+      \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
     \endentry
 |;
 
@@ -636,8 +636,8 @@ eq_or_diff($out->get_output_entry('isbn1', $main), $isbn1, 'ISBN options - 1');
 eq_or_diff($out->get_output_entry('isbn2', $main), $isbn2, 'ISBN options - 2');
 
 my $new1 = q|    \entry{newtestkey}{book}{}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{sortinit}{}
+      \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
       \field{note}{note}
       \field{usera}{RC-6947}
       \field{userb}{RC}

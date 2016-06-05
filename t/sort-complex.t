@@ -93,10 +93,7 @@ my $ss = { locale => 'en-US',
            ],
            [
             {},
-            {'volume'     => {pad_char => '0',
-                              pad_side => 'left',
-                              pad_width => '4'}},
-            {'0000'       => {}}
+            {'volume'     => {}},
            ],
           ]};
 

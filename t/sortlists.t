@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Test::Differences;
 unified_diff;
 
@@ -119,3 +119,6 @@ my $K12 = q|    \entry{K12}{book}{}
 
 eq_or_diff($out->get_output_entry('K11', $main), $K11, 'sortlist output - 1');
 eq_or_diff($out->get_output_entry('K12', $main), $K12, 'sortlist output - 2');
+
+# Testing dates
+is_deeply([$biber->sortlists->get_list(1, 'ldates', 'entry', 'ldates', 'global', '')->get_keys], ['D3', 'D2', 'D1', 'D5', 'D4'], 'List - dates');

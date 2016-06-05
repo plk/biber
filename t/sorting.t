@@ -38,23 +38,23 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
-my $yearoff1    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff2    = 'mm,,Knuth!Donald E,Computers Typesetting,198,0000';
-my $yearoff3    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff4    = 'mm,,Knuth!Donald E,Computers Typesetting,984,0000';
-my $yearoff5    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff6    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff7    = 'mm,,Knuth!Donald E,Computers Typesetting,198,0000';
-my $yearoff8    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff9    = 'mm,,Knuth!Donald E,Computers Typesetting,984,0000';
+my $yearoff1    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff2    = 'mm,,Knuth!Donald E,Computers Typesetting,198,';
+my $yearoff3    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff4    = 'mm,,Knuth!Donald E,Computers Typesetting,984,';
+my $yearoff5    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff6    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff7    = 'mm,,Knuth!Donald E,Computers Typesetting,198,';
+my $yearoff8    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff9    = 'mm,,Knuth!Donald E,Computers Typesetting,984,';
 my $vol1        = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,2200';
 my $vol2        = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,2200000';
 my $vol3        = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,ĐĐĐ22';
 my $nty         = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,22';
 my $nyt         = 'mm,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,22';
 my $nyvt        = 'mm,,Glashow!Sheldon,1961,22,Partial Symmetries of Weak Interactions';
-my $anyt_la     = 'mm,Gla61,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,0000';
-my $anyt        = 'mm,,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,0000';
+my $anyt_la     = 'mm,Gla61,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,';
+my $anyt        = 'mm,,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,';
 my $anyvt_la    = 'mm,Gla61,,Glashow!Sheldon,1961,0022,Partial Symmetries of Weak Interactions';
 my $anyvt_la2   = "mm,Hos+98,,Hostetler!Michael J\x{10FFFD},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm";
 my $anyvt_la3   = "mm,HW98,,Hostetler!Michael J#Wingate!Julia E\x{10FFFD},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm";
@@ -75,18 +75,18 @@ my $lists4      = "IBM!HP\x{10FFFD}";
 my $lists5      = 'IBM!HP!Sun!Sony';
 my $dates1      = '1979,1,2000000,1980,4,8,1924,6,7,1924,7,9,1924,0002,5,192,2,3,1979,3,4,79,3,3';
 my $edtypeclass1 = 'redactor,Jaffé!Philipp,Loewenfeld!Samuel#Kaltenbrunner!Ferdinand#Ewald!Paul';
-my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
-my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,0000';
+my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah ḥiburim,2000,';
+my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,';
 my $labels      = '2005,3,2';
 my $sn1         = '';
-my $snk1        = 'mm,,John John!von!Doe!Jr,,,0000';
+my $snk1        = 'mm,,John John!von!Doe!Jr,,,';
 
 # These have custom presort and also an exclusion on year and title set
-my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0000';
-my $useprefix2  = 'ww,,Bobble!Terrence!von,,,0000';
+my $useprefix1  = 'ww,,von!Bobble!Terrence,,,';
+my $useprefix2  = 'ww,,Bobble!Terrence!von,,,';
 
 # Sorting data schemata
-my $ssd1 = ['str', 'str','str', 'int', 'str', 'str'];
+my $ssd1 = ['str', 'str','str', 'int', 'str', 'int'];
 my $ssd2 = ['int', 'int', 'int', 'int', 'int', 'int', '-int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', '-int', 'int', 'int', 'int', 'int', 'int'];
 
 Biber::Config->setblxoption('useprefix', 1);
@@ -175,7 +175,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -443,7 +442,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -486,7 +484,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -530,7 +527,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -573,7 +569,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -616,7 +611,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -659,7 +653,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -702,7 +695,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -745,7 +737,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -788,7 +779,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -831,7 +821,7 @@ $S = {spec => [
       [
        {},
        {'volume'     => {pad_side => 'right'}},
-       {'0000'       => {}}
+       {'0'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -874,8 +864,7 @@ $S = {spec => [
       [
        {},
        {'volume'     => {pad_side => 'right',
-                         pad_width => 7}},
-       {'0000'       => {}}
+                         pad_width => 7}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -921,7 +910,6 @@ $S = {spec => [
        {'volume'     => {pad_side => 'left',
                          pad_width => 5,
                          pad_char => 'Đ'}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -965,7 +953,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -1010,7 +997,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -1048,7 +1034,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ],
       [
        {},
@@ -1101,7 +1086,6 @@ $S = {spec => [
       [
        {},
        {'sorttitle'  => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -1155,7 +1139,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {pad_width => 4}},
-       {'0000'       => {}}
       ],
       [
        {},
@@ -1338,7 +1321,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -1383,7 +1365,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 

@@ -788,7 +788,7 @@
       <bcf:field fieldtype="field" datatype="literal">maintitleaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">nameaddon</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">note</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">number</bcf:field>
+      <bcf:field fieldtype="field" datatype="integer">number</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">origtitle</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">pagetotal</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">part</bcf:field>
@@ -812,8 +812,8 @@
       <bcf:field fieldtype="field" datatype="literal">userf</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">venue</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">version</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">volume</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">volumes</bcf:field>
+      <bcf:field fieldtype="field" datatype="integer">volume</bcf:field>
+      <bcf:field fieldtype="field" datatype="integer">volumes</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">month</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">year</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart" nullok="true">urlendyear</bcf:field>
@@ -2040,6 +2040,17 @@
     <bcf:citekey order="11">K11</bcf:citekey>
     <bcf:citekey order="12">K12</bcf:citekey>
   </bcf:section>
+  <!-- SECTION 1 -->
+  <bcf:bibdata section="1">
+    <bcf:datasource type="file" datatype="bibtex">sortlists.bib</bcf:datasource>
+  </bcf:bibdata>
+  <bcf:section number="1">
+    <bcf:citekey order="1">D1</bcf:citekey>
+    <bcf:citekey order="2">D2</bcf:citekey>
+    <bcf:citekey order="3">D3</bcf:citekey>
+    <bcf:citekey order="4">D4</bcf:citekey>
+    <bcf:citekey order="5">D5</bcf:citekey>
+  </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="lname" sortscheme="lname" type="entry" labelprefix="">
     <bcf:sorting>
@@ -2147,6 +2158,14 @@
     <bcf:sorting>
       <bcf:sort order="1">
         <bcf:sortitem order="1">author</bcf:sortitem>
+      </bcf:sort>
+    </bcf:sorting>
+  </bcf:sortlist>
+  <!-- Testing dates -->
+  <bcf:sortlist sortnamekeyscheme="global" section="1" name="ldates" sortscheme="ldates" type="entry" labelprefix="">
+    <bcf:sorting>
+      <bcf:sort order="1">
+        <bcf:sortitem order="1">year</bcf:sortitem>
       </bcf:sort>
     </bcf:sorting>
   </bcf:sortlist>

@@ -3357,10 +3357,16 @@ sub sort_list {
       push @collateobjs, $cobj . $fc;
     }
 
+    # A cache is needed to speed things up as U::C key calculation is a part of
+    # sort key extraction and is expensive
     my $cache;
+
+    # Sort::Key sort key extractor called on each element of array to be sorted and
+    # returns array to sort and returns an array of the sorting keys for each sorting field
     my $extract = sub {
       my @d;
-      for (my $i=0;$i<=$#{$list->get_sortdata($keys[$_])->[1]};$i++) {
+      # Loop over all sorting fields
+      for (my $i=0; $i<=$#{$list->get_sortdata($keys[$_])->[1]}; $i++) {
         my $sortfield = $list->get_sortdata($keys[$_])->[1][$i];
         if ($lsds->[$i] !~ m/int$/) {
           my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
@@ -3368,15 +3374,18 @@ sub sort_list {
         }
         else {
           # There are some special cases to be careful of here:
-          #   "" is possible and this needs to be converted to 0 for int tests
-          #   "final" elements in sorting copy themselves as strings to further fields
-          #   and therefore need coercing to 0 for int tests
+          # 1. "" is possible and this needs to be converted to 0 for int tests
+          # 2. "final" elements in sorting copy themselves as strings to further fields
+          #    and therefore need coercing to 0 for int tests
           push @d, looks_like_number($sortfield) ? $sortfield : 0;
         }
       }
       return @d;
     };
 
+    # We actually sort the indices of the keys array, as we need these in the extractor.
+    # Then we extract the real keys with a map. This therefore follows the typical ST sort
+    # semantics (plus an OM cache above due to expensive extraction).
     @keys = map {$keys[$_]} &$sorter($extract, 0..$#keys);
   }
 
