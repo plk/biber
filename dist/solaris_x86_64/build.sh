@@ -9,7 +9,6 @@ PAR_VERBATIM=1 /usr/perl5/5.22.0/bin/pp \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
-  --module=Biber::Input::file::ris \
   --module=Biber::Output::dot \
   --module=Biber::Output::bbl \
   --module=Biber::Output::bblxml \

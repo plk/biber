@@ -1,6 +1,7 @@
 Revision history for Biber
 
 2.6    (2016)
+       * Removed RIS input driver due to lack of use
        * Added extended name format - see documentation
        * Added notfield function to sourcemaps - see documentation
 2.5    (2016-05-10)

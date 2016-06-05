@@ -935,7 +935,7 @@ datasource entry being processed. A \opt{map\_step} works like this:
   \end{itemize}
 \end{itemize}
 
-\noindent With \bibtex\ and RIS datasources, you can specify the
+\noindent With \bibtex\ datasources, you can specify the
 pseudo-field «entrykey» for \textcolor{red}{\texttt{source-field}}
 which is the citation key of the entry. Naturally, this «field» cannot
 be changed (used as \textcolor{red}{\texttt{set-field}},
@@ -944,7 +944,7 @@ be changed (used as \textcolor{red}{\texttt{set-field}},
 
 Note that for XML datasources like BibLaTeXML, the names of
 fields and entrytypes are matched in a case sensitive manner. For all other
-datasource types (\BibTeX, RIS etc.) entrytype and field name matching is
+datasource types, entrytype and field name matching is
 case insensitive.
 
 \noindent Here are some examples:
@@ -1122,23 +1122,10 @@ particular name, which presumably has some variants in the datasource.
 </map>
 \end{lstlisting}
 
-\noindent Any entry with a \bibfield{TITLE} field matching «A Title»
-will be completely ignored.
-\bigskip
-\minisec{Other datasource types}
-For datasources other than \BibTeX, (e.g. \verb+ris+ and
-\verb+biblatexml+), the source entrytypes and fields are usually very
-differently modelled and named. For example, here, dropping the
-\bibfield{N2} field from \verb+RIS+ datasources, which are commonly used
-for abstracts:
-
-\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<maps datatype="ris" map_overwrite="1">
-  <map>
-    <map_step map_field_set="N2" map_null="1"/>
-  </map>
-</maps>
-\end{lstlisting}
+\noindent Any entry with a \bibfield{TITLE} field matching «A Title» will
+be completely ignored. \bigskip \minisec{Other datasource types} For
+datasources other than \BibTeX, (e.g. \verb+biblatexml+), the source
+entrytypes and fields are usually very differently modelled and named.
 
 \noindent Here we use a loop to apply a regular expression replacement to
 several fields:
@@ -2215,7 +2202,6 @@ drivers are:
 \begin{itemize}
 \item \BibTeX\ --- \BibTeX\ data files
 \item \verb+biblatexml+ --- Experimental \biblatex\ XML format
-\item \verb+ris+ --- Research Information Systems format
 \end{itemize}
 
 \subsection{Visualising the Output}\label{ref:vis}

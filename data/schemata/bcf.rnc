@@ -114,7 +114,7 @@ start =
     # user field/entrytype mapping
     element bcf:sourcemap {
       element bcf:maps {
-        attribute datatype { "bibtex" | "biblatexml" | "ris" },
+        attribute datatype { "bibtex" | "biblatexml" },
         attribute map_overwrite { "0" | "1" }?,
         attribute level { "user" | "style" | "driver" }?,
         map+
@@ -418,7 +418,7 @@ secspec =
     attribute section { xsd:integer },
     element bcf:datasource {
       attribute type { "file" },
-      attribute datatype { "bibtex" | "biblatexml" | "ris" }?,
+      attribute datatype { "bibtex" | "biblatexml" }?,
       xsd:anyURI
     }*
   }?,

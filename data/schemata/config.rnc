@@ -95,7 +95,7 @@ start =
     element sortupper            { "0" | "1" }? &
     element sourcemap            {
       element maps {
-        attribute datatype { "bibtex" | "biblatexml" | "ris" },
+        attribute datatype { "bibtex" | "biblatexml" },
         attribute map_overwrite { "0" | "1" }?,
         map+
       }+
