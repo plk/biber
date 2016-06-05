@@ -53,7 +53,9 @@ sub new {
   }
 
   # Show the collation options when debugging
-  $logger->debug('Collation options: ' . Data::Dump::pp(%collopts));
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Collation options: ' . Data::Dump::pp(%collopts));
+  }
 
   # Tailor the collation object and report differences from defaults for locale
   # Have to do this in ->change method as ->new can croak with conflicting tailoring

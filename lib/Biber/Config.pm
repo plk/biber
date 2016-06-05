@@ -923,24 +923,32 @@ sub set_graph {
   my $type = shift;
   if ($type eq 'set') {
     my ($source_key, $target_key) = @_;
-    $logger->debug("Saving DOT graph information type 'set' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Saving DOT graph information type 'set' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
+    }
     $CONFIG->{state}{graph}{$type}{settomem}{$source_key}{$target_key} = 1;
     $CONFIG->{state}{graph}{$type}{memtoset}{$target_key} = $source_key;
   }
   elsif ($type eq 'xref') {
     my ($source_key, $target_key) = @_;
-    $logger->debug("Saving DOT graph information type 'xref' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Saving DOT graph information type 'xref' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
+    }
     $CONFIG->{state}{graph}{$type}{$source_key} = $target_key;
   }
   elsif ($type eq 'related') {
     my ($clone_key, $related_key, $target_key) = @_;
-    $logger->debug("Saving DOT graph information type 'related' with CLONEKEY=$clone_key, RELATEDKEY=$related_key, TARGETKEY=$target_key");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Saving DOT graph information type 'related' with CLONEKEY=$clone_key, RELATEDKEY=$related_key, TARGETKEY=$target_key");
+    }
     $CONFIG->{state}{graph}{$type}{reltoclone}{$related_key}{$clone_key} = 1;
     $CONFIG->{state}{graph}{$type}{clonetotarget}{$clone_key}{$target_key} = 1;
   }
   else {
     my ($source_key, $target_key, $source_field, $target_field) = @_;
-    $logger->debug("Saving DOT graph information type '$type' with SOURCEKEY=$source_key, TARGETKEY=$target_key, SOURCEFIELD=$source_field, TARGETFIELD=$target_field");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Saving DOT graph information type '$type' with SOURCEKEY=$source_key, TARGETKEY=$target_key, SOURCEFIELD=$source_field, TARGETFIELD=$target_field");
+    }
     # source can go to more than one target (and does in default rules) so need array here
     push @{$CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key}}, $target_field;
   }
@@ -1631,7 +1639,9 @@ sub list_differs_nth {
     next if ($list_one[$n-1] eq $l[$n-1]);
     # If list doesn't match up to $n - 1, it's irrelevant
     next unless Compare([@list_one[0 .. $n-2]], [@l[0 .. $n-2]]);
-    $logger->trace("list_differs_nth() returning true: " . join(',', @list_one) . " vs " . join(',', @l));
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("list_differs_nth() returning true: " . join(',', @list_one) . " vs " . join(',', @l));
+    }
     return 1;
   }
   return 0;
@@ -1670,7 +1680,9 @@ sub list_differs_last {
     # pop off the last element which is the potential point of difference
     my $ln_last = pop @ln;
     if (Compare(\@list_one, \@ln) and ($list_last ne $ln_last)) {
-      $logger->trace("list_differs_last() returning true: (" . join(',', @list_one) . " vs " . join(',', @ln) . " -> $list_last vs $ln_last)");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("list_differs_last() returning true: (" . join(',', @list_one) . " vs " . join(',', @ln) . " -> $list_last vs $ln_last)");
+      }
       return 1;
     }
   }
@@ -1704,7 +1716,9 @@ sub list_differs_superset {
     # get the list elements up to length of the list we are checking
     my @ln = @l[0 .. $#$list];
     if (Compare($list, \@ln)) {
-      $logger->trace("list_differs_superset() returning true: (" . join(',', @$list) . " vs " . join(',', @l) . ")");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("list_differs_superset() returning true: (" . join(',', @$list) . " vs " . join(',', @l) . ")");
+        }
       return 1;
     }
   }
@@ -1724,7 +1738,9 @@ sub get_numofuniquenames {
   shift; # class method so don't care about class name
   my ($name, $namecontext) = @_;
   my $return = scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
-  $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  }
   return $return;
 }
 
@@ -1738,7 +1754,9 @@ sub get_numofuniquenames_all {
   shift; # class method so don't care about class name
   my ($name, $namecontext) = @_;
   my $return = scalar keys %{$CONFIG->{state}{uniquenamecount_all}{$name}{$namecontext}};
-  $logger->trace("get_numofuniquenames_all() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("get_numofuniquenames_all() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  }
   return $return;
 }
 

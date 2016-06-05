@@ -541,7 +541,9 @@ sub output {
     $target = new IO::File '>-';
   }
 
-  $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  }
 
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
   $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('output_safechars');
@@ -549,7 +551,9 @@ sub output {
   out($target, $data->{HEAD});
 
   foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
-    $logger->debug("Writing entries for section $secnum");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Writing entries for section $secnum");
+    }
 
     out($target, "\n\\refsection{$secnum}\n");
     my $section = $self->get_output_section($secnum);
@@ -582,13 +586,17 @@ sub output {
       my $listtype = $list->get_type;
       my $listname = $list->get_name;
 
-      $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn', sort name key scheme '$listsnksn' and labelprefix '$listpn'");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn', sort name key scheme '$listsnksn' and labelprefix '$listpn'");
+      }
 
       out($target, "  \\sortlist[$listtype]{$listname}\n");
 
       # The order of this array is the sorted order
       foreach my $k ($list->get_keys) {
-        $logger->debug("Writing entry for key '$k'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Writing entry for key '$k'");
+        }
 
         my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
 

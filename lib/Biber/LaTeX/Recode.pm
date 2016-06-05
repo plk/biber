@@ -206,7 +206,9 @@ sub latex_decode {
     # Optimisation - if virtual null set was specified, do nothing
     return $text if $set_d eq 'null';
 
-    $logger->trace("String before latex_decode() -> '$text'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("String before latex_decode() -> '$text'");
+    }
 
     my %opts      = @_;
     my $norm      = exists $opts{normalize} ? $opts{normalize} : 1;
@@ -294,7 +296,9 @@ sub latex_decode {
     $text = reverse $text;
     $text =~ s/}(\pM+\pL){(?!\pL+\\)/$1/g;
     $text = reverse $text;
-    $logger->trace("String in latex_decode() now -> '$text'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->trace("String in latex_decode() now -> '$text'");
+    }
 
     if ($norm) {
       return Unicode::Normalize::normalize( $norm_form, $text );

@@ -191,14 +191,18 @@ sub output {
     $target = new IO::File '>-';
   }
 
-  $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  }
 
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
   $logger->info('Converting UTF-8 to TeX macros on output') if Biber::Config->getoption('output_safechars');
 
   out($target, $data->{HEAD});
 
-  $logger->debug("Writing entries in bibtex format");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Writing entries in bibtex format");
+  }
 
   # Bibtex output uses just one special section, always sorted by global sorting spec
   foreach my $key ($Biber::MASTER->sortlists->get_list(99999, Biber::Config->getblxoption('sortscheme') . '/global/', 'entry', Biber::Config->getblxoption('sortscheme'), 'global', '')->get_keys) {

@@ -269,7 +269,9 @@ sub tool_mode_setup {
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
   # Locale just needs a default here - there is no biblatex option to take it from
   Biber::Config->setblxoption('sortlocale', 'en_US');
-  $logger->debug("Adding 'entry' list 'tool' for pseudo-section 99999");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Adding 'entry' list 'tool' for pseudo-section 99999");
+  }
   $sortlists->add_list($seclist);
   $self->{sortlists} = $sortlists;
 
@@ -809,7 +811,9 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
 
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
     if ($sortlists->get_list($lsection, $lname, $ltype, $lssn, $lsnksn, $lpn)) {
-      $logger->debug("Section sortlist '$lname' of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn' and labelprefix '$lpn' is repeated for section $lsection - ignoring");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Section sortlist '$lname' of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn' and labelprefix '$lpn' is repeated for section $lsection - ignoring");
+      }
       next;
     }
 
@@ -848,7 +852,9 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
     # determine sortinithash in SortList.pm and that only changes \bibinitsep in biblatex.
     $sortlist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $sortlist->get_sortscheme->{locale}, level => 1));
 
-    $logger->debug("Adding sortlist of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn', labelprefix '$lpn' and name '$lname' for section $lsection");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Adding sortlist of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn', labelprefix '$lpn' and name '$lname' for section $lsection");
+    }
     $sortlists->add_list($sortlist);
   }
 
@@ -926,7 +932,9 @@ SECTION: foreach my $section (@{$bcfxml->{section}}) {
                                {'citeorder'    => {}}
                               ]
                              ]});
-    $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
+    }
     $self->{sortlists}->add_list($sortlist);
   }
 
@@ -1077,7 +1085,9 @@ sub process_citekey_aliases {
   my $section = $self->sections->get_section($secnum);
   foreach my $citekey ($section->get_citekeys) {
     if (my $a = $section->get_citekey_alias($citekey)) {
-      $logger->debug("Pruning citekey alias '$citekey' from citekeys");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Pruning citekey alias '$citekey' from citekeys");
+      }
       $section->del_citekey($citekey);
     }
   }
@@ -1123,7 +1133,9 @@ sub instantiate_dynamic {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->debug("Creating dynamic entries (sets/related) for section $secnum");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Creating dynamic entries (sets/related) for section $secnum");
+  }
 
   # Instantiate any dynamic set entries before we do anything else
   foreach my $dset (@{$section->dynamic_set_keys}) {
@@ -1143,7 +1155,9 @@ sub instantiate_dynamic {
     $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
-    $logger->debug("Created dynamic set entry '$dset' in section $secnum");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Created dynamic set entry '$dset' in section $secnum");
+    }
 
     # Save graph information if requested
     if (Biber::Config->getoption('output_format') eq 'dot') {
@@ -1172,7 +1186,9 @@ sub resolve_xdata {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  $logger->debug("Resolving XDATA entries for section $secnum");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Resolving XDATA entries for section $secnum");
+  }
 
   # We are not looping over citekeys here as XDATA entries are not cited.
   # They may have been added to the section as entries, however.
@@ -1198,7 +1214,9 @@ sub cite_setmembers {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->debug("Adding set members to citekeys for section $secnum");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Adding set members to citekeys for section $secnum");
+  }
 
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
@@ -1216,7 +1234,9 @@ sub cite_setmembers {
       $be->set_datafield('entryset', $inset_keys);
 
       foreach my $inset_key (@$inset_keys) {
-        $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
+        }
         $section->add_citekeys($inset_key);
 
         # Save graph information if requested
@@ -1252,7 +1272,9 @@ sub process_interentry {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  $logger->debug("Processing explicit and implicit xref/crossrefs for section $secnum");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Processing explicit and implicit xref/crossrefs for section $secnum");
+  }
 
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
@@ -1272,12 +1294,16 @@ sub process_interentry {
     # Can't do this when parsing entries as this would count them
     # for potentially uncited children
     if (my $refkey = $be->get_field('crossref')) {
-      $logger->debug("Incrementing crossrefkey count for entry '$refkey' via entry '$citekey'");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Incrementing crossrefkey count for entry '$refkey' via entry '$citekey'");
+      }
       Biber::Config->incr_crossrefkey($refkey);
     }
 
     if (my $refkey = $be->get_field('xref')) {
-      $logger->debug("Incrementing xrefkey count for entry '$refkey' via entry '$citekey'");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Incrementing xrefkey count for entry '$refkey' via entry '$citekey'");
+      }
       Biber::Config->incr_xrefkey($refkey);
     }
 
@@ -1294,7 +1320,9 @@ sub process_interentry {
     # If parent has been crossref'ed more than mincrossref times, upgrade it
     # to cited crossref status and add it to the citekeys list
     if (Biber::Config->get_crossrefkey($k) >= Biber::Config->getoption('mincrossrefs')) {
-      $logger->debug("cross key '$k' is crossref'ed >= mincrossrefs, adding to citekeys");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("cross key '$k' is crossref'ed >= mincrossrefs, adding to citekeys");
+      }
       # Don't add this flag if the entry is also cited directly
       $section->bibentry($k)->set_field('crossrefsource', 1) unless $section->has_citekey($k);
       $section->add_citekeys($k);
@@ -1307,7 +1335,9 @@ sub process_interentry {
     # If parent has been xref'ed more than minxref times, upgrade it
     # to cited xref status and add it to the citekeys list
     if (Biber::Config->get_xrefkey($k) >= Biber::Config->getoption('minxrefs')) {
-      $logger->debug("xref key '$k' is xref'ed >= minxrefs, adding to citekeys");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("xref key '$k' is xref'ed >= minxrefs, adding to citekeys");
+      }
       # Don't add this flag if the entry is also cited directly
       $section->bibentry($k)->set_field('xrefsource', 1) unless $section->has_citekey($k);
       $section->add_citekeys($k);
@@ -1324,7 +1354,9 @@ sub process_interentry {
       # Skip inheritance if we've already done it
       next if Biber::Config->get_inheritance('crossref', $cr, $be->get_field('citekey'));
       my $parent = $section->bibentry($cr);
-      $logger->debug("Entry $citekey inheriting fields from parent $cr");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Entry $citekey inheriting fields from parent $cr");
+      }
       unless ($parent) {
         biber_warn("Cannot inherit from crossref key '$cr' - does it exist?", $be);
       }
@@ -1411,7 +1443,9 @@ sub process_entries_pre {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  $logger->debug("Postprocessing entries in section $secnum (before uniqueness)");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Postprocessing entries in section $secnum (before uniqueness)");
+  }
   foreach my $citekey ( $section->get_citekeys ) {
 
     # process set entries
@@ -1434,7 +1468,9 @@ sub process_entries_pre {
 
   }
 
-  $logger->debug("Finished processing entries in section $secnum (before uniqueness)");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Finished processing entries in section $secnum (before uniqueness)");
+  }
 
   return;
 }
@@ -1451,7 +1487,9 @@ sub process_entries_post {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  $logger->debug("Postprocessing entries in section $secnum (after uniqueness)");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Postprocessing entries in section $secnum (after uniqueness)");
+  }
   foreach my $citekey ( $section->get_citekeys ) {
 
     # generate labelalpha information
@@ -1483,7 +1521,9 @@ sub process_entries_post {
 
   }
 
-  $logger->debug("Finished processing entries in section $secnum (after uniqueness)");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Finished processing entries in section $secnum (after uniqueness)");
+  }
 
   return;
 }
@@ -1504,7 +1544,9 @@ sub process_uniqueprimaryauthor {
   if (my $lni = $be->get_labelname_info) {
     if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
       my $nl = $be->get_field($lni);
-      $logger->trace("Creating uniqueprimaryauthor information for '$citekey'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Creating uniqueprimaryauthor information for '$citekey'");
+      }
       my $paf = $nl->nth_name(1)->get_namepart('family');
       $be->set_field('seenprimaryauthor', $paf);
       Biber::Config->incr_seenpa($paf);
@@ -1538,9 +1580,13 @@ sub process_xtitle {
 
   # Don't generate singletitle information for entries with no labelname or labeltitle
   if ($identifier and Biber::Config->getblxoption('singletitle', $bee)) {
-    $logger->trace("Creating singletitle information for '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Creating singletitle information for '$citekey'");
+    }
     Biber::Config->incr_seenwork($identifier);
-    $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
+    }
     $be->set_field('seenwork', $identifier);
   }
 
@@ -1549,7 +1595,9 @@ sub process_xtitle {
     if (my $lti = $be->get_labeltitle_info) {
       my $identifier = $be->get_field($lti);
       Biber::Config->incr_seentitle($identifier);
-      $logger->trace("Setting seentitle for '$citekey' to '$identifier'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Setting seentitle for '$citekey' to '$identifier'");
+      }
       $be->set_field('seentitle', $identifier);
     }
   }
@@ -1586,7 +1634,9 @@ sub process_extrayear {
       return;
     }
 
-    $logger->trace("Creating extrayear information for '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Creating extrayear information for '$citekey'");
+    }
 
     my $name_string = '';
     if (my $lni = $be->get_labelname_info) {
@@ -1597,9 +1647,13 @@ sub process_extrayear {
     my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
 
     my $nameyear_string = "$name_string,$year_string";
-    $logger->trace("Setting nameyear to '$nameyear_string' for entry '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Setting nameyear to '$nameyear_string' for entry '$citekey'");
+    }
     $be->set_field('nameyear', $nameyear_string);
-    $logger->trace("Incrementing nameyear for '$name_string'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Incrementing nameyear for '$name_string'");
+    }
     Biber::Config->incr_seen_nameyear($name_string, $year_string);
   }
 
@@ -1633,7 +1687,9 @@ sub process_extratitle {
       return;
     }
 
-    $logger->trace("Creating extratitle information for '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Creating extratitle information for '$citekey'");
+    }
 
     my $name_string = '';
     if (my $lni = $be->get_labelname_info) {
@@ -1644,9 +1700,13 @@ sub process_extratitle {
     my $title_string = $be->get_field($lti) // '';
 
     my $nametitle_string = "$name_string,$title_string";
-    $logger->trace("Setting nametitle to '$nametitle_string' for entry '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Setting nametitle to '$nametitle_string' for entry '$citekey'");
+    }
     $be->set_field('nametitle', $nametitle_string);
-    $logger->trace("Incrementing nametitle for '$name_string'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Incrementing nametitle for '$name_string'");
+    }
     Biber::Config->incr_seen_nametitle($name_string, $title_string);
   }
 
@@ -1679,7 +1739,9 @@ sub process_extratitleyear {
       return;
     }
 
-    $logger->trace("Creating extratitleyear information for '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Creating extratitleyear information for '$citekey'");
+    }
 
     my $lti = $be->get_labeltitle_info;
     my $title_string = $be->get_field($lti) // '';
@@ -1688,9 +1750,13 @@ sub process_extratitleyear {
     my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
 
     my $titleyear_string = "$title_string,$year_string";
-    $logger->trace("Setting titleyear to '$titleyear_string' for entry '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Setting titleyear to '$titleyear_string' for entry '$citekey'");
+    }
     $be->set_field('titleyear', $titleyear_string);
-    $logger->trace("Incrementing titleyear for '$title_string'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Incrementing titleyear for '$title_string'");
+    }
     Biber::Config->incr_seen_titleyear($title_string, $year_string);
   }
 
@@ -1814,7 +1880,9 @@ sub process_labelname {
   }
 
   unless ($be->get_labelname_info) {
-    $logger->debug("Could not determine the labelname source of entry $citekey");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Could not determine the labelname source of entry $citekey");
+    }
   }
 }
 
@@ -1913,7 +1981,9 @@ sub process_labeldate {
       }
     }
     else {
-      $logger->debug("labeldate information of entry $citekey is unset");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("labeldate information of entry $citekey is unset");
+      }
     }
   }
 }
@@ -1946,7 +2016,9 @@ sub process_labeltitle {
       $be->set_field('labeltitle', $lt);
       last;
     }
-    $logger->debug("labeltitle information of entry $citekey is unset");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("labeltitle information of entry $citekey is unset");
+    }
   }
 }
 
@@ -2037,7 +2109,9 @@ sub process_visible_names {
   my $section = $self->sections->get_section($secnum);
   my $dm = Biber::Config->get_dm;
 
-  $logger->debug("Postprocessing visible names for section $secnum");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Postprocessing visible names for section $secnum");
+  }
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
@@ -2104,9 +2178,11 @@ sub process_visible_names {
       }
 
       if ($logger->is_trace()) { # performance shortcut
-        $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
-        $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
-        $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
+          $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
+          $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
+        }
       }
 
       # Need to set these on all name forms
@@ -2207,7 +2283,9 @@ sub process_lists {
     $list->set_sortnamekeyschemename('global') unless $list->get_sortnamekeyschemename;
 
     $list->set_keys([ $section->get_citekeys ]);
-    $logger->debug("Populated sortlist '$lname' of type '$ltype' with sortscheme '$lssn' and sorting name key scheme '$lsnksn' in section $secnum with keys: " . join(', ', $list->get_keys));
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Populated sortlist '$lname' of type '$ltype' with sortscheme '$lssn' and sorting name key scheme '$lsnksn' in section $secnum with keys: " . join(', ', $list->get_keys));
+    }
 
     # Now we check the sorting cache to see if we already have results
     # for this scheme since sorting is computationally expensive.
@@ -2221,15 +2299,21 @@ sub process_lists {
     # * extra* data
 
     my $cache_flag = 0;
-    $logger->debug("Checking sorting cache for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Checking sorting cache for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+    }
     foreach my $cacheitem (@{$section->get_sort_cache}) {
       # This conditional checks for identity of the data elements which constitute
       # a biblatex refcontext since a sortlist is conceptually part of a refcontext
       if (Compare($list->get_sortscheme, $cacheitem->[0]) and
           $list->get_sortnamekeyschemename eq $cacheitem->[1] and
           $list->get_labelprefix eq $cacheitem->[2]) {
-        $logger->debug("Found sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
-        $logger->trace("Sorting list cache for scheme '$lssn' with sorting name key scheme '$lsnksn':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Found sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+        }
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Sorting list cache for scheme '$lssn' with sorting name key scheme '$lsnksn':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
+        }
         $list->set_sortnamekeyschemename($cacheitem->[1]);
         $list->set_labelprefix($cacheitem->[2]);
         $list->set_keys($cacheitem->[3]);
@@ -2245,7 +2329,9 @@ sub process_lists {
     }
 
     unless ($cache_flag) {
-      $logger->debug("No sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("No sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+      }
       # Sorting
       $self->generate_sortdataschema($list); # generate the sort information
       $self->generate_sortinfo($list);       # generate the sort information
@@ -2253,7 +2339,9 @@ sub process_lists {
       $self->generate_extra($list) unless Biber::Config->getoption('tool'); # generate the extra* fields
 
       # Cache the results
-      $logger->debug("Adding sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Adding sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+      }
       $section->add_sort_cache($list->get_listdata);
     }
 
@@ -2274,7 +2362,9 @@ KEYLOOP: foreach my $k ($list->get_keys) {
         }
         push @$flist, $k;
       }
-      $logger->debug("Keys after filtering list '$lname' in section $secnum: " . join(', ', @$flist));
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Keys after filtering list '$lname' in section $secnum: " . join(', ', @$flist));
+      }
       $list->set_keys($flist); # Now save the sorted list in the list object
     }
   }
@@ -2290,10 +2380,14 @@ KEYLOOP: foreach my $k ($list->get_keys) {
 
 sub check_list_filter {
   my ($k, $t, $fs, $be) = @_;
-  $logger->debug("Checking key '$k' against filter '$t=$fs'");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Checking key '$k' against filter '$t=$fs'");
+  }
   if ($t eq 'type') {
     if ($be->get_field('entrytype') eq lc($fs)) {
-      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      }
     }
     else {
       return 0;
@@ -2304,13 +2398,17 @@ sub check_list_filter {
       return 0;
     }
     else {
-      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      }
     }
   }
   elsif ($t eq 'subtype') {
     if ($be->field_exists('entrysubtype') and
         $be->get_field('entrysubtype') eq lc($fs)) {
-      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      }
     }
     else {
       return 0;
@@ -2322,12 +2420,16 @@ sub check_list_filter {
       return 0;
     }
     else {
-      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      }
     }
   }
   elsif ($t eq 'keyword') {
     if ($be->has_keyword($fs)) {
-      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      }
     }
     else {
       return 0;
@@ -2338,12 +2440,16 @@ sub check_list_filter {
       return 0;
     }
     else {
-      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      }
     }
   }
   elsif ($t eq 'field') {
     if ($be->field_exists($fs)) {
-      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      }
     }
     else {
       return 0;
@@ -2354,7 +2460,9 @@ sub check_list_filter {
       return 0;
     }
     else {
-      $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Key '$k' passes against filter '$t=$fs'");
+      }
     }
   }
   return 1;
@@ -2539,7 +2647,9 @@ sub create_uniquename_info {
 
     next unless my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey);
 
-    $logger->trace("Generating uniquename information for '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Generating uniquename information for '$citekey'");
+    }
 
     if (my $lni = $be->get_labelname_info) {
 
@@ -2725,7 +2835,9 @@ sub generate_uniquename {
 
     my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
 
-    $logger->trace("Setting uniquename for '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Setting uniquename for '$citekey'");
+    }
 
     if (my $lni = $be->get_labelname_info) {
       # Set the index limit beyond which we don't look for disambiguating information
@@ -2876,7 +2988,9 @@ sub create_uniquelist_info {
 
     next unless my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey);
 
-    $logger->trace("Generating uniquelist information for '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Generating uniquelist information for '$citekey'");
+    }
 
     if (my $lni = $be->get_labelname_info) {
       my $nl = $be->get_field($lni);
@@ -2962,7 +3076,9 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 
     next unless my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey);
 
-    $logger->trace("Creating uniquelist for '$citekey'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Creating uniquelist for '$citekey'");
+    }
 
     if (my $lni = $be->get_labelname_info) {
       my $nl = $be->get_field($lni);
@@ -2999,7 +3115,9 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
             $num_names > $maxcn and
             $name->get_index <= $mincn and
             Biber::Config->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
-          $logger->trace("Not setting uniquelist=minyear for '$citekey'");
+          if ($logger->is_trace()) {# performance tune
+            $logger->trace("Not setting uniquelist=minyear for '$citekey'");
+          }
           next LOOP;
         }
 
@@ -3011,8 +3129,10 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
         }
       }
 
-      $logger->trace("Setting uniquelist for '$citekey' using " . join(',', @$namelist));
-      $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount_final($namelist) . "'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Setting uniquelist for '$citekey' using " . join(',', @$namelist));
+        $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount_final($namelist) . "'");
+      }
       $nl->set_uniquelist($namelist, $maxcn, $mincn);
     }
   }
@@ -3051,7 +3171,9 @@ sub generate_extra {
       if (Biber::Config->getblxoption('labeldate', $bee)) {
         my $nameyear = $be->get_field('nameyear');
         if (Biber::Config->get_seen_nameyear($nameyear) > 1) {
-          $logger->trace("nameyear for '$nameyear': " . Biber::Config->get_seen_nameyear($nameyear));
+          if ($logger->is_trace()) {# performance tune
+            $logger->trace("nameyear for '$nameyear': " . Biber::Config->get_seen_nameyear($nameyear));
+          }
           my $v = Biber::Config->incr_seen_extrayear($nameyear);
           $list->set_extrayeardata_for_key($key, $v);
         }
@@ -3060,7 +3182,9 @@ sub generate_extra {
       if (Biber::Config->getblxoption('labeltitle', $bee)) {
         my $nametitle = $be->get_field('nametitle');
         if (Biber::Config->get_seen_nametitle($nametitle) > 1) {
-          $logger->trace("nametitle for '$nametitle': " . Biber::Config->get_seen_nametitle($nametitle));
+          if ($logger->is_trace()) {# performance tune
+            $logger->trace("nametitle for '$nametitle': " . Biber::Config->get_seen_nametitle($nametitle));
+          }
           my $v = Biber::Config->incr_seen_extratitle($nametitle);
           $list->set_extratitledata_for_key($key, $v);
         }
@@ -3069,7 +3193,9 @@ sub generate_extra {
       if (Biber::Config->getblxoption('labeltitleyear', $bee)) {
         my $titleyear = $be->get_field('titleyear');
         if (Biber::Config->get_seen_titleyear($titleyear) > 1) {
-          $logger->trace("titleyear for '$titleyear': " . Biber::Config->get_seen_titleyear($titleyear));
+          if ($logger->is_trace()) {# performance tune
+            $logger->trace("titleyear for '$titleyear': " . Biber::Config->get_seen_titleyear($titleyear));
+          }
           my $v = Biber::Config->incr_seen_extratitleyear($titleyear);
           $list->set_extratitleyeardata_for_key($key, $v);
         }
@@ -3078,7 +3204,9 @@ sub generate_extra {
       if (Biber::Config->getblxoption('labelalpha', $bee)) {
         my $la = $be->get_field('labelalpha');
         if (Biber::Config->get_la_disambiguation($la) > 1) {
-          $logger->trace("labelalpha disambiguation for '$la': " . Biber::Config->get_la_disambiguation($la));
+          if ($logger->is_trace()) {# performance tune
+            $logger->trace("labelalpha disambiguation for '$la': " . Biber::Config->get_la_disambiguation($la));
+          }
           my $v = Biber::Config->incr_seen_extraalpha($la);
           $list->set_extraalphadata_for_key($key, $v);
         }
@@ -3106,11 +3234,15 @@ sub generate_singletitle {
     if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))) {
       if ($be->get_field('seenwork') and
           Biber::Config->get_seenwork($be->get_field('seenwork')) < 2 ) {
-        $logger->trace("Setting singletitle for '$citekey'");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Setting singletitle for '$citekey'");
+        }
         $be->set_field('singletitle', 1);
       }
       else {
-        $logger->trace("Not setting singletitle for '$citekey'");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Not setting singletitle for '$citekey'");
+        }
       }
     }
   }
@@ -3135,11 +3267,15 @@ sub generate_uniquepa {
     if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
       if ($be->get_field('seenprimaryauthor') and
           Biber::Config->get_seenpa($be->get_field('seenprimaryauthor')) < 2 ) {
-        $logger->trace("Setting uniqueprimaryauthor for '$citekey'");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Setting uniqueprimaryauthor for '$citekey'");
+        }
         $be->set_field('uniqueprimaryauthor', 1);
       }
       else {
-        $logger->trace("Not setting uniqueprimaryauthor for '$citekey'");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Not setting uniqueprimaryauthor for '$citekey'");
+        }
       }
     }
   }
@@ -3164,11 +3300,15 @@ sub generate_uniquetitle {
     if (Biber::Config->getblxoption('uniquetitle', $be->get_field('entrytype'))) {
       if ($be->get_field('seentitle') and
           Biber::Config->get_seentitle($be->get_field('seentitle')) < 2 ) {
-        $logger->trace("Setting uniquetitle for '$citekey'");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Setting uniquetitle for '$citekey'");
+        }
         $be->set_field('uniquetitle', 1);
       }
       else {
-        $logger->trace("Not setting uniquetitle for '$citekey'");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Not setting uniquetitle for '$citekey'");
+        }
       }
     }
   }
@@ -3195,15 +3335,17 @@ sub sort_list {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
-  if (Biber::Config->getoption('sortcase')) {
-    $logger->debug("Sorting is by default case-SENSITIVE");
-  }
-  else {
-    $logger->debug("Sorting is by default case-INSENSITIVE");
-  }
-  $logger->debug("Keys before sort:\n");
-  foreach my $k (@keys) {
-    $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
+  if ($logger->is_debug()) {# performance tune
+    if (Biber::Config->getoption('sortcase')) {
+      $logger->debug("Sorting is by default case-SENSITIVE");
+    }
+    else {
+      $logger->debug("Sorting is by default case-INSENSITIVE");
+    }
+    $logger->debug("Keys before sort:\n");
+    foreach my $k (@keys) {
+      $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
+    }
   }
 
   if ($logger->is_trace()) { # performance shortcut
@@ -3216,7 +3358,9 @@ sub sort_list {
   # 4. Global biblatex 'sortlocale' option
 
   my $thislocale = Biber::Config->getoption('sortlocale') || $llocale;
-  $logger->debug("Locale for sorting is '$thislocale'");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Locale for sorting is '$thislocale'");
+  }
 
   if ( Biber::Config->getoption('fastsort') ) {
     biber_warn("fastsort option no longer required/supported, defaulting to UCA");
@@ -3238,7 +3382,9 @@ sub sort_list {
 
   my $UCAversion = $Collator->version();
   $logger->info("Sorting list '$lname' of type '$ltype' with scheme '$lssn' and locale '$thislocale'");
-  $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion, Locale: " . $Collator->getlocale . ")");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion, Locale: " . $Collator->getlocale . ")");
+  }
 
   # Log if U::C::L currently has no tailoring for used locale
   if ($Collator->getlocale eq 'default') {
@@ -3332,7 +3478,7 @@ sub sort_list {
   # semantics (plus an OM cache above due to expensive UCA key extraction).
   @keys = map {$keys[$_]} &$sorter($extract, 0..$#keys);
 
-  if($logger->is_debug()) {# performance tune for large @keys
+  if ($logger->is_debug()) {# performance tune for large @keys
     $logger->debug("Keys after sort:\n");
     foreach my $k (@keys) {
       $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
@@ -3502,7 +3648,9 @@ sub fetch_data {
 
   # Clear all T::B macro definitions between sections if asked as T::B never clears these
   if (Biber::Config->getoption('clrmacros')) {
-    $logger->debug('Clearing Text::BibTeX macros definitions');
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug('Clearing Text::BibTeX macros definitions');
+    }
     Text::BibTeX::delete_all_macros();
   }
 
@@ -3529,7 +3677,9 @@ sub fetch_data {
 
   # First we look for the directly cited keys in each datasource
   my @remaining_keys = @citekeys;
-  $logger->debug('Looking for directly cited keys: ' . join(', ', @remaining_keys));
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Looking for directly cited keys: ' . join(', ', @remaining_keys));
+  }
   foreach my $datasource (@{$section->get_datasources}) {
     # shortcut if we have found all the keys now
     last unless (@remaining_keys or $section->is_allkeys);
@@ -3571,7 +3721,9 @@ sub fetch_data {
   }
 
   # error reporting
-  $logger->debug("Directly cited keys not found for section '$secnum': " . join(',', @remaining_keys));
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Directly cited keys not found for section '$secnum': " . join(',', @remaining_keys));
+  }
   foreach my $citekey (@remaining_keys) {
     biber_warn("I didn't find a database entry for '$citekey' (section $secnum)");
     $section->del_citekey($citekey);
@@ -3587,12 +3739,16 @@ sub fetch_data {
     return;
   }
 
-  $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
+  }
 
   # dependent key list generation - has to be a sub as it's recursive to catch
   # nested crossrefs, xdata etc.
   get_dependents($self, [$section->get_citekeys]);
-  $logger->debug("Citekeys for section '$secnum' after fetching data: " . join(', ', $section->get_citekeys));
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Citekeys for section '$secnum' after fetching data: " . join(', ', $section->get_citekeys));
+  }
   return;
 }
 
@@ -3617,7 +3773,9 @@ sub get_dependents {
   foreach my $citekey (@$keys) {
     # aliases need resolving here and are treated as dependents
     if (my $real = $section->get_citekey_alias($citekey)) {
-      $logger->debug("Alias '$citekey' requires real key '$real'");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Alias '$citekey' requires real key '$real'");
+      }
       push @$new_deps, $real;
       push @$keyswithdeps, $real unless first {$real eq $_} @$keyswithdeps;
     }
@@ -3630,7 +3788,9 @@ sub get_dependents {
           push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
         }
       }
-      $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Dynamic set entry '$citekey' has members: " . join(', ', @dmems));
+      }
     }
     else {
       # This must exist for all but dynamic sets
@@ -3641,7 +3801,9 @@ sub get_dependents {
         foreach my $xdatum (@$xdata) {
           # skip looking for dependent if it's already there (loop suppression)
           push @$new_deps, $xdatum unless $section->bibentry($xdatum);
-          $logger->debug("Entry '$citekey' has xdata '$xdatum'");
+          if ($logger->is_debug()) {# performance tune
+            $logger->debug("Entry '$citekey' has xdata '$xdatum'");
+          }
           push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
         }
       }
@@ -3650,7 +3812,9 @@ sub get_dependents {
       if (my $refkey = $be->get_field('xref')) {
         # skip looking for dependent if it's already there (loop suppression)
         push @$new_deps, $refkey unless $section->bibentry($refkey);
-        $logger->debug("Entry '$citekey' has xref '$refkey'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Entry '$citekey' has xref '$refkey'");
+        }
         push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
       }
 
@@ -3658,7 +3822,9 @@ sub get_dependents {
       if (my $refkey = $be->get_field('crossref')) {
         # skip looking for dependent if it's already there (loop suppression)
         push @$new_deps, $refkey unless $section->bibentry($refkey);
-        $logger->debug("Entry '$citekey' has crossref '$refkey'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Entry '$citekey' has crossref '$refkey'");
+        }
         push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
       }
 
@@ -3672,7 +3838,9 @@ sub get_dependents {
             push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
           }
         }
-        $logger->debug("Static set entry '$citekey' has members: " . join(', ', @$smems));
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Static set entry '$citekey' has members: " . join(', ', @$smems));
+        }
       }
 
       # Related entries
@@ -3686,7 +3854,9 @@ sub get_dependents {
             push @$keyswithdeps, $citekey unless first {$citekey eq $_} @$keyswithdeps;
           }
         }
-        $logger->debug("Entry '$citekey' has related entries: " . join(', ', @$relkeys));
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Entry '$citekey' has related entries: " . join(', ', @$relkeys));
+        }
       }
     }
   }
@@ -3696,7 +3866,9 @@ sub get_dependents {
 
   if (@$new_deps) {
     # Now look for the dependents of the directly cited keys
-    $logger->debug('Looking for dependent keys: ' . join(', ', @$new_deps));
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug('Looking for dependent keys: ' . join(', ', @$new_deps));
+    }
 
     # No need to go back to the datasource if allkeys, just see if the keys
     # are in section
@@ -3720,7 +3892,9 @@ sub get_dependents {
       }
     }
 
-    $logger->debug("Dependent keys not found for section '$secnum': " . join(', ', @$missing));
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Dependent keys not found for section '$secnum': " . join(', ', @$missing));
+    }
     foreach my $missing_key (@$missing) {
       # Remove the missing key from the list to recurse with
       @$new_deps = grep { $_ ne $missing_key } @$new_deps;
@@ -3728,7 +3902,9 @@ sub get_dependents {
   }
 
   # recurse if there are more things to find
-  $logger->trace('Recursing in get_dependents with: ' . join(', ', @$new_deps));
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace('Recursing in get_dependents with: ' . join(', ', @$new_deps));
+  }
   get_dependents($self, $new_deps, $keyswithdeps) if @$new_deps;
 
   # Now remove any missing entries from various places in all entries we have flagged
@@ -3756,13 +3932,17 @@ sub remove_undef_dependent {
   my ($citekey, $missing_key) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  $logger->debug("Removing dependency on missing key '$missing_key' from '$citekey' in section '$secnum'");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Removing dependency on missing key '$missing_key' from '$citekey' in section '$secnum'");
+  }
 
   # remove from any dynamic keys
   if (my @dmems = $section->get_dynamic_set($citekey)){
     if (first {$missing_key eq $_} @dmems) {
       $section->set_dynamic_set($citekey, grep {$_ ne $missing_key} @dmems);
-      $logger->trace("Removed dynamic set dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Removed dynamic set dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+      }
       biber_warn("I didn't find a database entry for dynamic set member '$missing_key' - ignoring (section $secnum)");
     }
   }
@@ -3777,7 +3957,9 @@ sub remove_undef_dependent {
     # remove any crossrefs
     if ($be->get_field('crossref') and ($be->get_field('crossref') eq $missing_key)) {
       $be->del_field('crossref');
-      $logger->trace("Removed crossref dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Removed crossref dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+      }
       biber_warn("I didn't find a database entry for crossref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
 
@@ -3785,7 +3967,9 @@ sub remove_undef_dependent {
     if (my $xdata = $be->get_field('xdata')) {
       if (first {$missing_key eq $_} @$xdata) {
         $be->set_datafield('xdata', [ grep {$_ ne $missing_key} @$xdata ]) ;
-        $logger->trace("Removed xdata dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Removed xdata dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+        }
         biber_warn("I didn't find a database entry for xdata entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
     }
@@ -3795,7 +3979,9 @@ sub remove_undef_dependent {
       my $smems = $be->get_field('entryset');
       if (first {$missing_key eq $_} @$smems) {
         $be->set_datafield('entryset', [ grep {$_ ne $missing_key} @$smems ]);
-        $logger->trace("Removed static set dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Removed static set dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+        }
         biber_warn("I didn't find a database entry for static set member '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
     }
@@ -3808,7 +3994,9 @@ sub remove_undef_dependent {
         unless ($be->get_field('related')) {
           $be->del_field('relatedtype');
           $be->del_field('relatedstring');
-          $logger->trace("Removed related entry dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+          if ($logger->is_trace()) {# performance tune
+            $logger->trace("Removed related entry dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
+          }
         }
         biber_warn("I didn't find a database entry for related entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }

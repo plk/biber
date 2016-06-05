@@ -242,7 +242,7 @@ sub new {
   # Mapping of sorting fields to Sort::Key sort data types which are not 'str'
   $self->{sortdataschema} = sub {
     my $f = shift;
-    if (first {$f eq $_} @{$self->{helpers}{integers}}) {
+    if (first {$f eq $_} ('citeorder', @{$self->{helpers}{integers}})) {
       return 'int';
     }
     else {

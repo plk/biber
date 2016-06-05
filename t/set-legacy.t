@@ -53,8 +53,8 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{sortinit}{1}
+      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -85,8 +85,6 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{0096-1000}
@@ -116,8 +114,6 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{0096-1000}

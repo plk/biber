@@ -114,7 +114,9 @@ sub set_uniquename {
   if (not defined($currval) or $currval != $uniquename) {
     Biber::Config->set_unul_changed(1);
   }
-  $logger->trace('Setting uniquename for "' . $self->get_namestring . '" to ' . $uniquename);
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace('Setting uniquename for "' . $self->get_namestring . '" to ' . $uniquename);
+  }
   $self->{uniquename} = $uniquename;
   return;
 }
@@ -128,7 +130,9 @@ sub set_uniquename {
 sub set_uniquename_all {
   my ($self, $uniquename) = @_;
 
-  $logger->trace('Setting uniquename_all for "' . $self->get_namestring . '" to ' . $uniquename);
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace('Setting uniquename_all for "' . $self->get_namestring . '" to ' . $uniquename);
+  }
   $self->{uniquename_all} = $uniquename;
   return;
 }

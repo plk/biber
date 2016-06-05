@@ -119,23 +119,33 @@ sub locate_biber_file {
 
   # File is in kpse path
   if (can_run('kpsewhich')) {
-    $logger->debug("Looking for file '$filename' via kpsewhich");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Looking for file '$filename' via kpsewhich");
+    }
     my $found;
     my $err;
     run3  [ 'kpsewhich', $filename ], \undef, \$found, \$err, { return_if_system_error => 1};
     if ($?) {
-      $logger->debug("kpsewhich returned error: $err ($!)");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("kpsewhich returned error: $err ($!)");
+      }
     }
-    $logger->trace("kpsewhich returned '$found'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("kpsewhich returned '$found'");
+    }
     if ($found) {
-      $logger->debug("Found '$filename' via kpsewhich");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Found '$filename' via kpsewhich");
+      }
       chomp $found;
       $found =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
       # filename can be UTF-8 and run3() isn't clever with UTF-8
       return decode_utf8($found);
     }
     else {
-      $logger->debug("Could not find '$filename' via kpsewhich");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Could not find '$filename' via kpsewhich");
+      }
     }
   }
   return undef;
@@ -878,7 +888,9 @@ sub validate_biber_xml {
   # Validate against schema. Dies if it fails.
   eval { $xmlschema->validate($doc) };
   if (ref($@)) {
-    $logger->debug( $@->dump() );
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug( $@->dump() );
+    }
     biber_error("'$file' failed to validate against schema '$schema'");
   }
   elsif ($@) {
@@ -1281,7 +1293,9 @@ sub get_transliterator {
   require Lingua::Translit;
   # List pairs explicitly as we don't expect there to be to many of these ever
   if ($from eq 'iast' and $to eq 'devanagari') {
-    $logger->debug("Using 'iast -> devanagari' transliteration for sorting '$target'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Using 'iast -> devanagari' transliteration for sorting '$target'");
+    }
     return new Lingua::Translit('IAST Devanagari');
   }
   return undef;

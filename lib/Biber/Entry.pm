@@ -69,19 +69,25 @@ sub relclone {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   if (my $relkeys = $self->get_field('related')) {
-    $logger->debug("Found RELATED field in '$citekey' with contents " . join(',', @$relkeys));
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Found RELATED field in '$citekey' with contents " . join(',', @$relkeys));
+    }
     my @clonekeys;
     foreach my $relkey (@$relkeys) {
       # Resolve any alias
       my $nrelkey = $section->get_citekey_alias($relkey) // $relkey;
-      $logger->debug("Resolved RELATED key alias '$relkey' to '$nrelkey'") if $relkey ne $nrelkey;
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Resolved RELATED key alias '$relkey' to '$nrelkey'") if $relkey ne $nrelkey;
+        $logger->debug("Looking at RELATED key '$relkey'");
+      }
       $relkey = $nrelkey;
-      $logger->debug("Looking at RELATED key '$relkey'");
 
       # Loop avoidance, in case we are back in an entry again in the guise of a clone
       # We can record the related clone but don't create it again
       if (my $ck = $section->get_keytorelclone($relkey)) {
-        $logger->debug("Found RELATED key '$relkey' already has clone '$ck'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Found RELATED key '$relkey' already has clone '$ck'");
+        }
         push @clonekeys, $ck;
 
         # Save graph information if requested
@@ -94,7 +100,9 @@ sub relclone {
         my $clonekey = md5_hex($relkey);
         push @clonekeys, $clonekey;
         my $relclone = $relentry->clone($clonekey);
-        $logger->debug("Created new related clone for '$relkey' with clone key '$clonekey'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Created new related clone for '$relkey' with clone key '$clonekey'");
+        }
 
         # Datesplit is a special non datafield and needs to be copied for things like era
         # output
@@ -129,7 +137,9 @@ sub relclone {
         }
 
         # recurse so we can do cascading related entries
-        $logger->debug("Recursing into RELATED entry '$clonekey'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Recursing into RELATED entry '$clonekey'");
+        }
         $relclone->relclone;
       }
     }
@@ -583,7 +593,9 @@ sub resolve_xdata {
           foreach my $field ($xdatum_entry->rawfields()) { # set raw fields
             next if $field eq 'ids'; # Never inherit aliases
             $self->set_rawfield($field, $xdatum_entry->get_rawfield($field));
-            $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+            if ($logger->is_debug()) {# performance tune
+              $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+            }
           }
         }
         else {
@@ -595,7 +607,9 @@ sub resolve_xdata {
             if (Biber::Config->getoption('output_format') eq 'dot') {
               Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
             }
-            $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+            if ($logger->is_debug()) {# performance tune
+              $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+            }
           }
         }
       }
@@ -683,11 +697,13 @@ sub inherit_from {
           # Set the field if it doesn't exist or override is requested
           elsif (not $self->field_exists($field->{target}) or
                  $field_override_target eq 'true') {
-            $logger->debug("Entry '$target_key' is inheriting field '" .
-                           $field->{source}.
-                           "' as '" .
-                           $field->{target} .
-                           "' from entry '$source_key'");
+            if ($logger->is_debug()) {# performance tune
+              $logger->debug("Entry '$target_key' is inheriting field '" .
+                             $field->{source}.
+                             "' as '" .
+                             $field->{target} .
+                             "' from entry '$source_key'");
+            }
             # For tool mode with bibtex output we need to copy the raw fields
             if (Biber::Config->getoption('tool') and
                 Biber::Config->getoption('output_format') eq 'bibtex') {
@@ -725,7 +741,9 @@ sub inherit_from {
       next if $processed{$field}; # Skip if we have already dealt with this field above
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
-            $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
+        }
             # For tool mode with bibtex output we need to copy the raw fields
             if (Biber::Config->getoption('tool') and
                 Biber::Config->getoption('output_format') eq 'bibtex') {

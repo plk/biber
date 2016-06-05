@@ -356,8 +356,10 @@ sub output {
     $target_string = $self->{output_target_file};
   }
 
-  $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
-  $logger->debug("Writing entries in tool mode");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+    $logger->debug("Writing entries in tool mode");
+  }
   $xml->endTag();
   $xml->end();
 

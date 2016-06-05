@@ -110,7 +110,9 @@ sub extract_entries {
   my $filename;
   my @rkeys = @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've used it
-  $logger->trace("Entering extract_entries() in driver 'bibtex'");
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("Entering extract_entries() in driver 'bibtex'");
+  }
 
   # Get a reference to the correct sourcemap sections, if they exist
   my $smaps = [];
@@ -221,15 +223,21 @@ sub extract_entries {
 
   # Don't read the file again if it's already cached
   unless ($cache->{data}{$filename}) {
-    $logger->debug("Caching data for BibTeX format file '$filename' for section $secnum");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Caching data for BibTeX format file '$filename' for section $secnum");
+    }
     cache_data($filename);
   }
   else {
-    $logger->debug("Using cached data for BibTeX format file '$filename' for section $secnum");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Using cached data for BibTeX format file '$filename' for section $secnum");
+    }
   }
 
   if ($section->is_allkeys) {
-    $logger->debug("All citekeys will be used for section '$secnum'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("All citekeys will be used for section '$secnum'");
+    }
     # Loop over all entries, creating objects
     while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
 
@@ -256,26 +264,36 @@ sub extract_entries {
     # the .bib as in this case the sorting sub "citeorder" means "bib order" as there are
     # no explicitly cited keys
     $section->add_citekeys(@{$cache->{orig_key_order}{$filename}});
-    $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
+    }
     # Special case when allkeys but also some dynamic set entries. These keys must also be
     # in the section or they will be missed on output.
     if ($section->has_dynamic_sets) {
       $section->add_citekeys(@{$section->dynamic_set_keys});
-      $logger->debug("Added dynamic sets to section '$secnum': " . join(', ', @{$section->dynamic_set_keys}));
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Added dynamic sets to section '$secnum': " . join(', ', @{$section->dynamic_set_keys}));
+      }
     }
   }
   else {
     # loop over all keys we're looking for and create objects
-    $logger->debug('Text::BibTeX cache keys: ' . join(', ', keys %{$cache->{data}{$filename}}));
-    $logger->debug('Wanted keys: ' . join(', ', @$keys));
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug('Text::BibTeX cache keys: ' . join(', ', keys %{$cache->{data}{$filename}}));
+      $logger->debug('Wanted keys: ' . join(', ', @$keys));
+    }
     foreach my $wanted_key (@$keys) {
-      $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
+      }
 
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($wanted_key, $filename);
 
       if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
-        $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
+        }
 
         # Skip creation if it's already been done, for example, via a citekey alias
         unless ($section->bibentries->entry_exists($wanted_key)) {
@@ -305,7 +323,9 @@ sub extract_entries {
         biber_warn("Possible typo (case mismatch) between citation and datasource keys: '$wanted_key' and '$okey' in file '$filename'");
       }
 
-      $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
+      }
     }
   }
 
@@ -424,8 +444,10 @@ sub create_entry {
 
               # entry deletion. Really only useful with allkeys or tool mode
               if ($step->{map_entry_null}) {
-                $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
-                return 0;       # don't create an entry at all
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
+                }
+                  return 0;       # don't create an entry at all
               }
 
               # new entry
@@ -440,7 +462,9 @@ sub create_entry {
                   biber_warn("Source mapping (type=$level, key=$key): Missing type for new entry '$newkey', skipping step ...");
                   next;
                 }
-                $logger->debug("Source mapping (type=$level, key=$key): Creating new entry with key '$newkey'");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Creating new entry with key '$newkey'");
+                }
                 my $newentry = new Text::BibTeX::Entry;
                 $newentry->set_metatype(BTE_REGULAR);
                 $newentry->set_key(encode('UTF-8', NFC($newkey)));
@@ -448,7 +472,9 @@ sub create_entry {
 
                 # found a new entry key, remove it from the list of keys we want since we
                 # have "found" it by creating it
-                $logger->debug("Source mapping (type=$level, key=$key): created '$newkey', removing from dependent list");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): created '$newkey', removing from dependent list");
+                }
                 @$rkeys = grep {$newkey ne $_} @$rkeys;
 
                 # Need to add the clone key to the section if allkeys is set since all keys
@@ -466,10 +492,14 @@ sub create_entry {
                 # previous map_match
                 $clonekey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
 
-                $logger->debug("Source mapping (type=$level, key=$key): cloning entry with new key '$clonekey'");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): cloning entry with new key '$clonekey'");
+                }
                 # found a clone key, remove it from the list of keys we want since we
                 # have "found" it by creating it along with its clone parent
-                $logger->debug("Source mapping (type=$level, key=$key): created '$clonekey', removing from dependent list");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): created '$clonekey', removing from dependent list");
+                }
                 @$rkeys = grep {$clonekey ne $_} @$rkeys;
 
                 # Need to add the clone key to the section if allkeys is set since all keys
@@ -508,19 +538,25 @@ sub create_entry {
                 unless ($etarget->type eq $typesource) {
                   # Skip the rest of the map if this step doesn't match and match is final
                   if ($step->{map_final}) {
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
+                    }
                     next MAP;
                   }
                   else {
                     # just ignore this step
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource', skipping step ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource', skipping step ...");
+                    }
                     next;
                   }
                 }
                 # Change entrytype if requested
                 $last_type = $etarget->type;
                 my $t = lc(maploopreplace($step->{map_type_target}, $maploop));
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
+                }
                 $etarget->set_type(encode('UTF-8', NFC($t)));
               }
 
@@ -532,12 +568,16 @@ sub create_entry {
                 $nfieldsource = lc($nfieldsource);
                 if ($etarget->exists($nfieldsource)) {
                   if ($step->{map_final}) {
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists and step has 'final' set, skipping rest of map ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists and step has 'final' set, skipping rest of map ...");
+                    }
                     next MAP;
                   }
                   else {
                     # just ignore this step
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists, skipping step ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists, skipping step ...");
+                    }
                     next;
                   }
                 }
@@ -554,12 +594,16 @@ sub create_entry {
                         $etarget->exists($fieldsource)) {
                   # Skip the rest of the map if this step doesn't match and match is final
                   if ($step->{map_final}) {
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource' and step has 'final' set, skipping rest of map ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource' and step has 'final' set, skipping rest of map ...");
+                    }
                     next MAP;
                   }
                   else {
                     # just ignore this step
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource', skipping step ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource', skipping step ...");
+                    }
                     next;
                   }
                 }
@@ -583,12 +627,16 @@ sub create_entry {
 
                     # Can't modify entrykey
                     if ($fieldsource eq 'entrykey') {
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot remap the value of this field, skipping ...");
+                      if ($logger->is_debug()) {# performance tune
+                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot remap the value of this field, skipping ...");
+                      }
                       next;
                     }
 
                     my $r = maploopreplace($step->{map_replace}, $maploop);
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
+                    }
                     $etarget->set($fieldsource,
                                   encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
                   }
@@ -602,12 +650,16 @@ sub create_entry {
                     unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
                       # Skip the rest of the map if this step doesn't match and match is final
                       if ($step->{map_final}) {
-                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                        if ($logger->is_debug()) {# performance tune
+                          $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                        }
                         next MAP;
                       }
                       else {
                         # just ignore this step
-                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m', skipping step ...");
+                        if ($logger->is_debug()) {# performance tune
+                          $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m', skipping step ...");
+                        }
                         next;
                       }
                     }
@@ -619,16 +671,22 @@ sub create_entry {
                   $target = lc($target);
                   # Can't remap entry key pseudo-field
                   if ($fieldsource eq 'entrykey') {
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot map this to a new field as you must have an entrykey, skipping ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot map this to a new field as you must have an entrykey, skipping ...");
+                    }
                     next;
                   }
 
                   if ($etarget->exists($target)) {
                     if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field '$target'");
+                      if ($logger->is_debug()) {# performance tune
+                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field '$target'");
+                      }
                     }
                     else {
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is mapped to field '$target' but both are defined, skipping ...");
+                      if ($logger->is_debug()) {# performance tune
+                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is mapped to field '$target' but both are defined, skipping ...");
+                      }
                       next;
                     }
                   }
@@ -642,7 +700,9 @@ sub create_entry {
                 $field = lc($field);
                 # Deal with special tokens
                 if ($step->{map_null}) {
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Deleting field '$field'");
+                  if ($logger->is_debug()) {# performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Deleting field '$field'");
+                  }
                   $etarget->delete($field);
                 }
                 else {
@@ -650,12 +710,16 @@ sub create_entry {
                     unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
                       if ($step->{map_final}) {
                         # map_final is set, ignore and skip rest of step
-                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
+                        if ($logger->is_debug()) {# performance tune
+                          $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
+                        }
                         next MAP;
                       }
                       else {
                         # just ignore this step
-                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists and overwrite is not set, skipping step ...");
+                        if ($logger->is_debug()) {# performance tune
+                          $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists and overwrite is not set, skipping step ...");
+                        }
                         next;
                       }
                     }
@@ -666,17 +730,23 @@ sub create_entry {
 
                   if ($step->{map_origentrytype}) {
                     next unless $last_type;
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_type}'");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_type}'");
+                    }
                     $etarget->set($field, encode('UTF-8', NFC($orig . $last_type)));
                   }
                   elsif ($step->{map_origfieldval}) {
                     next unless $last_fieldval;
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_fieldval}'");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_fieldval}'");
+                    }
                     $etarget->set($field, encode('UTF-8', NFC($orig . $last_fieldval)));
                   }
                   elsif ($step->{map_origfield}) {
                     next unless $last_field;
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_field}'");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_field}'");
+                    }
                     $etarget->set($field, encode('UTF-8', NFC($orig . $last_field)));
                   }
                   else {
@@ -685,7 +755,9 @@ sub create_entry {
                     # dynamically scoped and being null when we get here from any
                     # previous map_match
                     $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${fv}'");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${fv}'");
+                    }
                     $etarget->set($field, encode('UTF-8', NFC($orig . $fv)));
                   }
                 }
@@ -719,7 +791,9 @@ sub _create_entry {
   my $bibentry = new Biber::Entry;
 
   $bibentry->set_field('citekey', $k);
-  $logger->debug("Creating biber Entry object with key '$k'");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Creating biber Entry object with key '$k'");
+  }
 
   # Save pre-mapping data. Might be useful somewhere
   $bibentry->set_field('rawdata', biber_decode_utf8($e->print_s));
@@ -759,7 +833,9 @@ sub _create_entry {
 
   $bibentry->set_field('entrytype', $entrytype);
   $bibentry->set_field('datatype', 'bibtex');
-  $logger->debug("Adding entry with key '$k' to entry list");
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Adding entry with key '$k' to entry list");
+  }
   $section->bibentries->add_entry($k, $bibentry);
   return;
 }
@@ -1196,7 +1272,9 @@ sub cache_data {
         }
         else {
           $cache->{data}{citekey_aliases}{$id} = $key;
-          $logger->debug("Citekey '$id' is an alias for citekey '$key'");
+          if ($logger->is_debug()) {# performance tune
+            $logger->debug("Citekey '$id' is an alias for citekey '$key'");
+          }
         }
       }
     }
@@ -1234,7 +1312,9 @@ sub cache_data {
     # We need this in order to do sorting=none + allkeys because in this case, there is no
     # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
     push @{$cache->{orig_key_order}{$filename}}, $key;
-    $logger->debug("Cached Text::BibTeX entry for key '$key' from BibTeX file '$filename'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Cached Text::BibTeX entry for key '$key' from BibTeX file '$filename'");
+    }
   }
 
   $bib->close; # If we don't do this, we can't unlink the temp file on Windows
@@ -1275,9 +1355,13 @@ sub preprocess_file {
   $lbuf = NFD(decode('UTF-8', $lbuf));# Unicode NFD boundary
 
   $logger->info('Decoding LaTeX character macros into UTF-8');
-  $logger->trace("Buffer before decoding -> '$lbuf'");
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("Buffer before decoding -> '$lbuf'");
+  }
   $lbuf = Biber::LaTeX::Recode::latex_decode($lbuf);
-  $logger->trace("Buffer after decoding -> '$lbuf'");
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("Buffer after decoding -> '$lbuf'");
+  }
 
   File::Slurp::write_file($ufilename, encode('UTF-8', NFC($lbuf))) or
       biber_error("Can't write $ufilename");# Unicode NFC boundary

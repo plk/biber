@@ -496,7 +496,9 @@ sub _process_label_attributes {
     if ($labelattrs->{substring_width} =~ /v/ and $field) {
       # Use the cache if there is one
       if (my $lcache = $section->get_labelcache_v($field)) {
-        $logger->debug("Using label disambiguation cache (name) for '$field' in section $secnum");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Using label disambiguation cache (name) for '$field' in section $secnum");
+        }
         # Use the global index override if set (substring_width =~ /f/)
         $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} || $lcache->{$field_string}{index}];
       }
@@ -564,12 +566,16 @@ sub _process_label_attributes {
 
         # Use the global index override if set (substring_width =~ /f/)
         $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} || $lcache->{$field_string}{index}];
-        $logger->debug("Creating label disambiguation cache for '$field' " .
-                       ($namepart ? "($namepart) " : '') .
-                       "in section $secnum");
-        $logger->trace("Label disambiguation cache for '$field' " .
-                       ($namepart ? "($namepart) " : '') .
-                       "in section $secnum:\n " . Data::Dump::pp($lcache));
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Creating label disambiguation cache for '$field' " .
+                         ($namepart ? "($namepart) " : '') .
+                         "in section $secnum");
+        }
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Label disambiguation cache for '$field' " .
+                         ($namepart ? "($namepart) " : '') .
+                         "in section $secnum:\n " . Data::Dump::pp($lcache));
+        }
         $section->set_labelcache_v($field, $lcache);
       }
     }
@@ -577,7 +583,9 @@ sub _process_label_attributes {
     elsif ($labelattrs->{substring_width} =~ /l/ and $field) {
       # Use the cache if there is one
       if (my $lcache = $section->get_labelcache_l($field)) {
-        $logger->debug("Using label disambiguation cache (list) for '$field' in section $secnum");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Using label disambiguation cache (list) for '$field' in section $secnum");
+        }
         $field_string = $lcache->{data}[$nindex][$index];
       }
       else {
@@ -589,12 +597,16 @@ sub _process_label_attributes {
         my $lcache = _label_listdisambiguation($strings);
 
         $field_string = $lcache->{data}[$nindex][$index];
-        $logger->debug("Creating label disambiguation (list) cache for '$field' " .
-                       ($namepart ? "($namepart) " : '') .
-                       "in section $secnum");
-        $logger->trace("Label disambiguation (list) cache for '$field' " .
-                       ($namepart ? "($namepart) " : '') .
-                       "in section $secnum:\n " . Data::Dump::pp($lcache));
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Creating label disambiguation (list) cache for '$field' " .
+                         ($namepart ? "($namepart) " : '') .
+                         "in section $secnum");
+        }
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Label disambiguation (list) cache for '$field' " .
+                         ($namepart ? "($namepart) " : '') .
+                         "in section $secnum:\n " . Data::Dump::pp($lcache));
+        }
         $section->set_labelcache_l($field, $lcache);
       }
     }
@@ -979,13 +991,12 @@ sub _generatesortinfo {
 
   # Generate sortinit. Skip if there is no sortstring, which is possible in tests
   if ($ss) {
-  # This must ignore the presort characters, naturally
+    # This must ignore the presort characters, naturally
     my $pre = Biber::Config->getblxoption('presort', $be->get_field('entrytype'), $citekey);
 
     # Strip off the prefix
     $ss =~ s/\A$pre$sorting_sep+//;
     my $init = Unicode::GCString->new(normalise_string($ss))->substr(0, 1)->as_string;
-
     $sortlist->set_sortinitdata_for_key($citekey, $init);
   }
   return;
@@ -998,8 +1009,8 @@ sub _sortset {
   foreach my $sortelement (@$sortset[1..$#$sortset]) {
     my ($sortelementname, $sortelementattributes) = %$sortelement;
     $BIBER_SORT_NULL = 0; # reset this per sortset
-    my $string = $self->_dispatch_sorting($sortelementname, $citekey, $secnum, $section, $be, $sortlist, $sortelementattributes);
-    if ($string) { # sort returns something for this key
+    my $out = $self->_dispatch_sorting($sortelementname, $citekey, $secnum, $section, $be, $sortlist, $sortelementattributes);
+    if ($out) { # sort returns something for this key
       if ($sortset->[0]{final}) {
         # If we encounter a "final" element, we return an empty sort
         # string and save the string so it can be copied into all further
@@ -1007,10 +1018,10 @@ sub _sortset {
         # where we found it in order to preserve sort field order and so
         # that we sort correctly against all other entries without a value
         # for this "final" field
-        $BIBER_SORT_FINAL = $string;
+        $BIBER_SORT_FINAL = $out;
         last;
       }
-      return $string;
+      return $out;
     }
   }
   $BIBER_SORT_NULL = 1; # set null flag - need this to deal with some cases
@@ -1023,8 +1034,6 @@ sub _sortset {
 
 sub _sort_citeorder {
   my ($self, $citekey, $secnum, $section, $be, $sortlist, $sortelementattributes) = @_;
-  # Pad the numbers so that they sort with "cmp" properly. Assume here max of
-  # a million bib entries. Probably enough ...
   # Allkeys and sorting=none means use bib order which is in orig_order_citekeys
   # However, someone might do:
   # \cite{b,a}
@@ -1034,22 +1043,21 @@ sub _sort_citeorder {
   # for the nocite ones.
   my $ko = Biber::Config->get_keyorder($secnum, $citekey);# only for \cited keys
   if ($section->is_allkeys) {
-    return sprintf('%.7d', $ko ||
-                   (Biber::Config->get_keyorder_max($secnum) +
-                    (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1));
+    return $ko || (Biber::Config->get_keyorder_max($secnum) +
+                   (first_index {$_ eq $citekey} $section->get_orig_order_citekeys) + 1);
   }
   # otherwise, we need to take account of citations with simulataneous order like
   # \cite{key1, key2} so this tied sorting order can be further sorted with other fields
   # Note the fallback of "0" - this is for auto-generated entries which are not cited
   # and so never have a keyorder entry
   else {
-    return sprintf('%.7d', $ko || 0);
+    return $ko || '';
   }
 }
 
 sub _sort_integer {
   my ($self, $citekey, $secnum, $section, $be, $sortlist, $sortelementattributes, $args) = @_;
-  my $dmtype = $args->[0]; # get day/month field type
+  my $dmtype = $args->[0]; # get int field type
   my $bee = $be->get_field('entrytype');
   if (my $field = $be->get_field($dmtype)) {
     return _translit($dmtype, $bee, _process_sort_attributes($field, $sortelementattributes));

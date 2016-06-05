@@ -113,7 +113,9 @@ sub output {
     $target = new IO::File '>-';
   }
 
-  $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  }
 
   $logger->info("Writing '$target_string' with encoding 'UTF-8'");
 
