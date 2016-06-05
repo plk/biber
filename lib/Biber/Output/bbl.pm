@@ -159,9 +159,7 @@ sub set_output_keyalias {
   $self->{output_data}{ALIAS_ENTRIES}{$secnum}{index}{$alias} = \$acc;
 
   return;
-
 }
-
 
 =head2 set_output_undefkey
 
