@@ -51,6 +51,6 @@
 * DONE final sort elements copy string into all further fields which dies on int schema
 * TODO Tune ...
 * TODO Remove/convert fastsort?
-* TODO Decomm RIS
+* DONE Decomm RIS
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 

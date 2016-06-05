@@ -434,65 +434,6 @@
         <bcf:map_step map_field_source="pdf" map_field_target="file"/>
       </bcf:map>
     </bcf:maps>
-    <bcf:maps datatype="ris" level="driver">
-      <bcf:map>
-        <bcf:map_step map_type_source="ART" map_type_target="artwork" map_final="1"/>
-        <bcf:map_step map_type_source="BILL" map_type_target="jurisdiction" map_final="1"/>
-        <bcf:map_step map_type_source="BOOK" map_type_target="book" map_final="1"/>
-        <bcf:map_step map_type_source="CHAP" map_type_target="inbook" map_final="1"/>
-        <bcf:map_step map_type_source="COMP" map_type_target="software" map_final="1"/>
-        <bcf:map_step map_type_source="CONF" map_type_target="proceedings" map_final="1"/>
-        <bcf:map_step map_type_source="GEN" map_type_target="misc" map_final="1"/>
-        <bcf:map_step map_type_source="JFULL" map_type_target="article" map_final="1"/>
-        <bcf:map_step map_type_source="JOUR" map_type_target="article" map_final="1"/>
-        <bcf:map_step map_type_source="MGZN" map_type_target="misc" map_final="1"/>
-        <bcf:map_step map_type_source="MPCT" map_type_target="movie" map_final="1"/>
-        <bcf:map_step map_type_source="NEWS" map_type_target="misc" map_final="1"/>
-        <bcf:map_step map_type_source="PAMP" map_type_target="misc" map_final="1"/>
-        <bcf:map_step map_type_source="PAT" map_type_target="patent" map_final="1"/>
-        <bcf:map_step map_type_source="PCOMM" map_type_target="misc" map_final="1"/>
-        <bcf:map_step map_type_source="RPRT" map_type_target="report" map_final="1"/>
-        <bcf:map_step map_type_source="SER" map_type_target="misc" map_final="1"/>
-        <bcf:map_step map_type_source="SLIDE" map_type_target="misc" map_final="1"/>
-        <bcf:map_step map_type_source="SOUND" map_type_target="audio" map_final="1"/>
-        <bcf:map_step map_type_source="STAT" map_type_target="legal" map_final="1"/>
-        <bcf:map_step map_type_source="THES" map_type_target="thesis" map_final="1"/>
-        <bcf:map_step map_type_source="UNBILL" map_type_target="jurisdiction" map_final="1"/>
-        <bcf:map_step map_type_source="UNPB" map_type_target="unpublished" map_final="1"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:map_step map_field_source="Y1" map_field_target="date"/>
-        <bcf:map_step map_field_source="PY" map_field_target="date"/>
-        <bcf:map_step map_field_source="Y2" map_field_target="eventdate"/>
-        <bcf:map_step map_field_source="A1" map_field_target="author"/>
-        <bcf:map_step map_field_source="AU" map_field_target="author"/>
-        <bcf:map_step map_field_source="A2" map_field_target="editor"/>
-        <bcf:map_step map_field_source="A3" map_field_target="editor"/>
-        <bcf:map_step map_field_source="ED" map_field_target="editor"/>
-        <bcf:map_step map_field_source="SPEP" map_field_target="pages"/>
-        <bcf:map_step map_field_source="N1" map_field_target="note"/>
-        <bcf:map_step map_field_source="N2" map_field_target="abstract"/>
-        <bcf:map_step map_field_source="AB" map_field_target="abstract"/>
-        <bcf:map_step map_field_source="JO" map_field_target="journaltitle"/>
-        <bcf:map_step map_field_source="JF" map_field_target="journaltitle"/>
-        <bcf:map_step map_field_source="JA" map_field_target="shortjournal"/>
-        <bcf:map_step map_field_source="VL" map_field_target="volume"/>
-        <bcf:map_step map_field_source="IS" map_field_target="issue"/>
-        <bcf:map_step map_field_source="CP" map_field_target="issue"/>
-        <bcf:map_step map_field_source="CY" map_field_target="location"/>
-        <bcf:map_step map_field_source="SN" map_field_target="isbn"/>
-        <bcf:map_step map_field_source="PB" map_field_target="publisher"/>
-        <bcf:map_step map_field_source="KW" map_field_target="keywords"/>
-        <bcf:map_step map_field_source="TI" map_field_target="title"/>
-        <bcf:map_step map_field_source="U1" map_field_target="usera"/>
-        <bcf:map_step map_field_source="U2" map_field_target="userb"/>
-        <bcf:map_step map_field_source="U3" map_field_target="userc"/>
-        <bcf:map_step map_field_source="U4" map_field_target="userd"/>
-        <bcf:map_step map_field_source="U5" map_field_target="usere"/>
-        <bcf:map_step map_field_source="UR" map_field_target="url"/>
-        <bcf:map_step map_field_source="L1" map_field_target="file"/>
-      </bcf:map>
-    </bcf:maps>
   </bcf:sourcemap>
   <!-- LABELALPHA TEMPLATE -->
   <bcf:labelalphatemplate type="global">

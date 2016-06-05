@@ -2398,7 +2398,10 @@ sub generate_sortdataschema {
         }
       }
     }
-    push @$ds, $direction . &{$dm->{sortdataschema}}([keys %{$sort->[1]}]->[0]);
+    my $spec = &{$dm->{sortdataschema}}([keys %{$sort->[1]}]->[0]);
+    push @$ds, {spec  => "$direction$spec",
+                $spec => 1}; # Speed shortcut for sortkey extraction sub
+
   }
   $list->set_sortdataschema($ds);
   return;
@@ -3311,7 +3314,7 @@ sub sort_list {
     my @collateobjs;
 
     # Instantiate Sort::Key sorter with correct data schema
-    my $sorter = multikeysorter(@$lsds);
+    my $sorter = multikeysorter(map {$_->{spec}} @$lsds);
 
     # Sorting cache to shortcut expensive UCA keygen
     my $cache;
@@ -3372,19 +3375,19 @@ sub sort_list {
       # Loop over all sorting fields
       for (my $i=0; $i<=$#{$list->get_sortdata($key)->[1]}; $i++) {
         my $sortfield = $list->get_sortdata($key)->[1][$i];
-        if ($lsds->[$i] !~ m/int$/) {
-          my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
-          $logger->trace("Collation object for key '$key' is '$a'");
-          # Cache index is just the collation object opts and key gen call in string form
-          # since this should be unique for a key/collopts combination
-          push @d, $cache->{$a} ||= eval $a;
-        }
-        else {
+        if ($lsds->[$i]{int}) {
           # There are some special cases to be careful of here:
           # 1. "" is possible and this needs to be converted to 0 for int tests
           # 2. "final" elements in sorting copy themselves as strings to further fields
           #    and therefore need coercing to 0 for int tests
           push @d, looks_like_number($sortfield) ? $sortfield : 0;
+        }
+        else {
+          my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
+          $logger->trace("Collation object for key '$key' is '$a'");
+          # Cache index is just the collation object opts and key gen call in string form
+          # since this should be unique for a key/collopts combination
+          push @d, $cache->{$a} ||= eval $a;
         }
       }
       return @d;
