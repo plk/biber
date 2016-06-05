@@ -3384,7 +3384,6 @@ sub sort_list {
         }
         else {
           my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
-          $logger->trace("Collation object for key '$key' is '$a'");
           # Cache index is just the collation object opts and key gen call in string form
           # since this should be unique for a key/collopts combination
           push @d, $cache->{$a} ||= eval $a;
@@ -3399,8 +3398,8 @@ sub sort_list {
     @keys = map {$keys[$_]} &$sorter($extract, 0..$#keys);
   }
 
-  $logger->debug("Keys after sort:\n");
   if($logger->is_debug()) {# performance tune for large @keys
+    $logger->debug("Keys after sort:\n");
     foreach my $k (@keys) {
       $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
     }

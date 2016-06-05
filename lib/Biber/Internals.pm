@@ -308,14 +308,15 @@ sub _dispatch_label {
   my $slp;
   my $dm = Biber::Config->get_dm;
 
-  # if the field is not found in the dispatch table, assume it's a literal string
-  unless (_dispatch_table_label($part->{content}, $dm)) {
+
+  # real label field
+  if (my $d = _dispatch_table_label($part->{content}, $dm)) {
+    $code_ref = $d->[0];
+    $code_args_ref = $d->[1];
+  }
+  else { # if the field is not found in the dispatch table, assume it's a literal string
     $code_ref = \&_label_literal;
     $code_args_ref = [$part->{content}];
-  }
-  else { # real label field
-    $code_ref = ${_dispatch_table_label($part->{content}, $dm)}[0];
-    $code_args_ref = ${_dispatch_table_label($part->{content}, $dm)}[1];
   }
   return &{$code_ref}($self, $citekey, $secnum, $section, $be, $code_args_ref, $part);
 }
@@ -933,14 +934,14 @@ sub _dispatch_sorting {
     }
   }
 
-  # if the field is not found in the dispatch table, assume it's a literal string
-  unless (_dispatch_table_sorting($sortfield, $dm)) {
+  # real sorting field
+  if (my $d = _dispatch_table_sorting($sortfield, $dm)) {
+    $code_ref = $d->[0];
+    $code_args_ref  = $d->[1];
+  }
+  else { # if the field is not found in the dispatch table, assume it's a literal string
     $code_ref = \&_sort_string;
     $code_args_ref = [$sortfield];
-  }
-  else { # real sorting field
-    $code_ref = ${_dispatch_table_sorting($sortfield, $dm)}[0];
-    $code_args_ref  = ${_dispatch_table_sorting($sortfield, $dm)}[1];
   }
   return &{$code_ref}($self, $citekey, $secnum, $section, $be, $sortlist, $sortelementattributes, $code_args_ref);
 }
