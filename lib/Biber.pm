@@ -3313,6 +3313,9 @@ sub sort_list {
     # Instantiate Sort::Key sorter with correct data schema
     my $sorter = multikeysorter(@$lsds);
 
+    # Sorting cache to shortcut expensive UCA keygen
+    my $cache;
+
     # Construct data needed for sort key extractor
     foreach my $sortset (@{$sortscheme->{spec}}) {
       my $fc = '';
@@ -3374,7 +3377,7 @@ sub sort_list {
           $logger->trace("Collation object for key '$key' is '$a'");
           # Cache index is just the collation object opts and key gen call in string form
           # since this should be unique for a key/collopts combination
-          push @d, $SORT_KEYCACHE->{$a} ||= eval $a;
+          push @d, $cache->{$a} ||= eval $a;
         }
         else {
           # There are some special cases to be careful of here:
