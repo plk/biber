@@ -237,7 +237,7 @@ sub new {
                                       not $self->field_is_skipout($_);
                                     }
                                     @{$self->get_fields_of_type('list', ['verbatim', 'uri'])}],
-                      integers  => [sort 'sortyear', @{$self->get_fields_of_datatype(['datepart', 'integer'])}]
+                      integers  => [sort @{$self->get_fields_of_datatype(['datepart', 'integer'])}]
                      };
   # Mapping of sorting fields to Sort::Key sort data types which are not 'str'
   $self->{sortdataschema} = sub {

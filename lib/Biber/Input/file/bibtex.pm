@@ -25,6 +25,7 @@ use File::Slurp;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( :all );
+use Scalar::Util qw(looks_like_number);
 use URI;
 use Unicode::Normalize;
 use Unicode::GCString;
@@ -795,8 +796,18 @@ sub _literal {
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
-  return if ($field eq 'year' and $bibentry->get_datafield('year'));
-  return if ($field eq 'month' and $bibentry->get_datafield('month'));
+  if ($field eq 'year') {
+    return if $bibentry->get_datafield('year');
+    unless (looks_like_number($bibentry->get_datafield('year'))) {
+      biber_warn("'year' field is not an integer - this will probably not sort properly.");
+    }
+  }
+  if ($field eq 'month') {
+    return if $bibentry->get_datafield('month');
+    unless (looks_like_number($bibentry->get_datafield('month'))) {
+      biber_warn("'month' field is not an integer - this will probably not sort properly.");
+    }
+  }
 
   # Deal with ISBN options
   if ($field eq 'isbn') {
