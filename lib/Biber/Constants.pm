@@ -83,7 +83,6 @@ our %DS_EXTENSIONS = (
 our $CONFIG_DEFAULT_BIBER = {
   annotation_marker   => { content => q/+an/ },
   clrmacros           => { content => 0 },
-  collate             => { content => 1 },
   collate_options     => { option => {level => 4, variable => 'non-ignorable', normalization => 'prenormalized' }},
   graph               => { content => 0 },
   debug               => { content => 0 },

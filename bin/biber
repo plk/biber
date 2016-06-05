@@ -31,7 +31,6 @@ GetOptions(
            'bblsafecharsset=s', # legacy alias for output_safecharsset
            'cache',
            'clrmacros',
-           'collate|C',
            'collate_options|collate-options|c=s',
            'configfile|g=s',
            'convert_control|convert-control',
@@ -449,11 +448,6 @@ If running as a PAR::Packer binary, show the cache location and exit.
 Clears any BibTeX macros (@STRING) between BibLaTeX refsections. This prevents
 BibTeX warnings about macro redefinitions if you are using the same datasource
 several times for different refsections.
-
-=item B<--collate|-C>
-
-Sort with C<Unicode::Collate> instead of the built-in sort function.
-This is the default.
 
 =item B<--collate-options|-c [options]>
 
