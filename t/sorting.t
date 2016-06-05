@@ -86,8 +86,40 @@ my $useprefix1  = 'ww,,von!Bobble!Terrence,,,';
 my $useprefix2  = 'ww,,Bobble!Terrence!von,,,';
 
 # Sorting data schemata
-my $ssd1 = ['str', 'str','str', 'int', 'str', 'int'];
-my $ssd2 = ['int', 'int', 'int', 'int', 'int', 'int', '-int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', '-int', 'int', 'int', 'int', 'int', 'int'];
+my $ssd1 = [
+  { spec => "str", str => 1 },
+  { spec => "str", str => 1 },
+  { spec => "str", str => 1 },
+  { int => 1, spec => "int" },
+  { spec => "str", str => 1 },
+  { int => 1, spec => "int" },
+];
+my $ssd2 = [
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "-int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "-int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+];
 
 Biber::Config->setblxoption('useprefix', 1);
 
