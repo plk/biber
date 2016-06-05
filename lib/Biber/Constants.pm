@@ -18,6 +18,7 @@ our @EXPORT = qw{
                   $BIBER_SORT_FINAL
                   $BIBER_SORT_NULL
                   $LABEL_FINAL
+                  $SORT_KEYCACHE
                   %CONFIG_DEFAULT_BIBLATEX
                   %CONFIG_OPTSCOPE_BIBLATEX
                   %CONFIG_SCOPEOPT_BIBLATEX
@@ -38,6 +39,9 @@ our @EXPORT = qw{
 our $BCF_VERSION = '3.2';
 # Format version of the .bbl. Used when writing the .bbl
 our $BBL_VERSION = '2.8';
+
+# Global sorting cache of collator settings to UCA keys
+our $SORT_KEYCACHE;
 
 # Global flags needed for sorting
 our $BIBER_SORT_FINAL;

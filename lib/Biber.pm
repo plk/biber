@@ -3357,20 +3357,24 @@ sub sort_list {
       push @collateobjs, $cobj . $fc;
     }
 
-    # A cache is needed to speed things up as U::C key calculation is a part of
-    # sort key extraction and is expensive
-    my $cache;
-
     # Sort::Key sort key extractor called on each element of array to be sorted and
-    # returns array to sort and returns an array of the sorting keys for each sorting field
+    # returns an array of the sorting keys for each sorting field. We have to construct
+    # the collator strings and then eval() because passing the collation
+    # objects in directly by reference means that the wrong settings are present on some of them
+    # since they point to the same object and the ->change() calls in later references
+    # therefore change earlier sorting field sorts. So, we have to defer until actual use time.
     my $extract = sub {
       my @d;
+      my $key = $keys[$_];
       # Loop over all sorting fields
-      for (my $i=0; $i<=$#{$list->get_sortdata($keys[$_])->[1]}; $i++) {
-        my $sortfield = $list->get_sortdata($keys[$_])->[1][$i];
+      for (my $i=0; $i<=$#{$list->get_sortdata($key)->[1]}; $i++) {
+        my $sortfield = $list->get_sortdata($key)->[1][$i];
         if ($lsds->[$i] !~ m/int$/) {
           my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
-          push @d, $cache->{$a} ||= eval $a;
+          $logger->trace("Collation object for key '$key' is '$a'");
+          # Cache index is just the collation object opts and key gen call in string form
+          # since this should be unique for a key/collopts combination
+          push @d, $SORT_KEYCACHE->{$a} ||= eval $a;
         }
         else {
           # There are some special cases to be careful of here:
@@ -3385,7 +3389,7 @@ sub sort_list {
 
     # We actually sort the indices of the keys array, as we need these in the extractor.
     # Then we extract the real keys with a map. This therefore follows the typical ST sort
-    # semantics (plus an OM cache above due to expensive extraction).
+    # semantics (plus an OM cache above due to expensive UCA key extraction).
     @keys = map {$keys[$_]} &$sorter($extract, 0..$#keys);
   }
 

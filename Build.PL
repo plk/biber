@@ -67,6 +67,7 @@ my $builder = $class->new(
                  'XML::LibXML::Simple' => 0,
                  'XML::LibXSLT' => 0,
                  'XML::Writer' => 0,
+                 'Sort::Key' => 0,
                  'Text::CSV' => 0,
                  'Text::CSV_XS' => 0,
                  'Text::Roman' => 0,
