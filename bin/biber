@@ -39,7 +39,7 @@ GetOptions(
            'decodecharsset=s',
            'dieondatamodel',
            'dot_include|dot-include:s@',
-           'fastsort|f',
+           'fastsort|f', # does nothing now
            'fixinits',
            'help|h|?',
            'input_directory|input-directory=s',
@@ -142,11 +142,6 @@ if (exists $opts->{'tool_config'}) {
 unless (@ARGV) {
   pod2usage(-verbose => 0,
             -exitval => EXIT_ERROR);
-}
-
-# Sanitise collate option if fastsort is specified
-if ($opts->{fastsort}) {
-  delete $opts->{collate};
 }
 
 # Resolve some option shortcuts and legacy aliases
@@ -509,11 +504,6 @@ Specifies the element to include in GraphViz DOT output format if the output for
 You can also choose to display crossref, xref, xdata and/or related entry connections.
 The default if not specified is C<--dot_include=section,xdata,crossref,xref>.
 
-=item B<--fastsort|-f>
-
-Use Perl's sort instead of C<Unicode::Collate> for sorting. Also uses
-OS locale definitions (which may be broken for some languages ...).
-
 =item B<--fixinits>
 
 Try to fix broken multiple initials when they have no space between them in BibTeX
@@ -731,17 +721,12 @@ users, for example, need to show only initials but sort with full given names (d
 
 =item B<--sortlocale|-l [locale]>
 
-Set the locale to be used for sorting.  With default sorting
-(B<--collate|-C>), the locale is used to add CLDR
-tailoring to the sort (if available for the locale). With
-B<--fastsort|-f> this sets the OS locale for sorting.
+Set the locale to be used for sorting. The locale is used to add CLDR
+tailoring to the sort (if available for the locale).
 
 =item B<--sortupper=true|false>
 
-Whether to sort uppercase before lowercase when using
-default sorting (B<--collate|-C>). When
-using B<--fastsort|-f>, your OS collation locale determines
-this and this option is ignored (default is true).
+Whether to sort uppercase before lowercase when sorting (default is true).
 
 =item B<--ssl-nointernalca>
 

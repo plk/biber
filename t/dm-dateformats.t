@@ -36,7 +36,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('validate_datamodel', 1);
 
 # Biblatex options

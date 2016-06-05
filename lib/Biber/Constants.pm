@@ -90,7 +90,6 @@ our $CONFIG_DEFAULT_BIBER = {
   dieondatamodel      => { content => 0 },
   decodecharsset      => { content => 'base' },
   dot_include         => { option => {section => 1, xdata => 1, crossref => 1, xref => 1 }},
-  fastsort            => { content => 0 },
   fixinits            => { content => 0 },
   input_encoding      => { content => 'UTF-8' },
   input_format        => { content => 'bibtex' },

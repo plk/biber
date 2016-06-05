@@ -35,7 +35,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 # Want to ignore SHORTHAND* fields for the first few tests
 Biber::Config->setoption('sourcemap', [
   {
@@ -259,7 +258,6 @@ Biber::Config->setoption('sourcemap', undef); # no longer ignore shorthand*
 $bibentries->del_entries;
 $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
-Biber::Config->setoption('fastsort', 0);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $shs = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');

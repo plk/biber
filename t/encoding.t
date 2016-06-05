@@ -31,7 +31,6 @@ my $l4pconf = qq|
 Log::Log4perl->init(\$l4pconf);
 
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 
 my $encode1 = q|    \entry{testŠ}{book}{}
       \name{author}{1}{}{%

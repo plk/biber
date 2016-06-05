@@ -44,7 +44,6 @@ $DATAFIELD_SETS{'nobtitle'} = ['booktitle'];
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('nodieonerror', 1); # because there is a failing cyclic crossref check
 
 # Now generate the information

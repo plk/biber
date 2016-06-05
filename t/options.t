@@ -35,7 +35,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 
 # Testing customg xsv format sep
 Biber::Config->setoption('xsvsep', '\s*\|\s*');

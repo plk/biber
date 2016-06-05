@@ -38,7 +38,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('maxcitenames', 3);
 Biber::Config->setblxoption('mincitenames', 1);

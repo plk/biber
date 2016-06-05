@@ -30,6 +30,7 @@ use Biber::Section;
 use Biber::LaTeX::Recode;
 use Biber::SortLists;
 use Biber::SortList;
+use Biber::UCollate;
 use Biber::Utils;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Data::Dump;
@@ -3218,185 +3219,118 @@ sub sort_list {
   $logger->debug("Locale for sorting is '$thislocale'");
 
   if ( Biber::Config->getoption('fastsort') ) {
-    use locale;
-    $logger->info("Sorting list '$lname' of type '$ltype' with scheme '$lssn'");
-    $logger->debug("Sorting with fastsort (locale $thislocale)");
-    unless (setlocale(LC_ALL, $thislocale)) {
-      biber_warn("Unavailable locale $thislocale");
-    }
-
-    # Construct a multi-field Schwartzian Transform with the right number of
-    # extractions into a string representing an array ref as we musn't eval this yet
-    my $num_sorts = 0;
-    my $data_extractor = '[';
-    my $sorter;
-    my $sort_extractor;
-    # Global lowercase setting
-    my $glc = Biber::Config->getoption('sortcase') ? '' : 'lc ';
-
-    foreach my $sortset (@{$sortscheme->{spec}}) {
-      $data_extractor .= '$list->get_sortdata($_)->[1][' . $num_sorts . '],';
-      $sorter .= ' || ' if $num_sorts; # don't add separator before first field
-      my $lc = $glc; # Casing defaults to global default ...
-      my $sc = $sortset->[0]{sortcase};
-      # but is overriden by field setting if it exists
-      if (defined($sc) and $sc != Biber::Config->getoption('sortcase')) {
-        unless ($sc) {
-          $lc = 'lc ';
-        }
-        else {
-          $lc = '';
-        }
-      }
-
-      my $sd = $sortset->[0]{sort_direction};
-      if (defined($sd) and $sd eq 'descending') {
-        # descending field
-        $sorter .= $lc
-          . '$b->['
-            . $num_sorts
-              . '] cmp '
-                . $lc
-                  . '$a->['
-                    . $num_sorts
-                      . ']';
-      }
-      else {
-        # ascending field
-        $sorter .= $lc
-          . '$a->['
-            . $num_sorts
-              . '] cmp '
-                . $lc
-                  . '$b->['
-                    . $num_sorts
-                      . ']';
-      }
-      $num_sorts++;
-    }
-    $data_extractor .= '$_]';
-    # Handily, $num_sorts is now one larger than the number of fields which is the
-    # correct index for the actual data in the sort array
-    $sort_extractor = '$_->[' . $num_sorts . ']';
-    $logger->trace("Sorting structure is: $sorter");
-
-    # Schwartzian transform multi-field sort
-    @keys = map  { eval $sort_extractor }
-            sort { eval $sorter }
-            map  { eval $data_extractor } @keys;
+    biber_warn("fastsort option no longer required/supported, defaulting to UCA");
   }
-  else {
-    require Biber::UCollate;
-    my $collopts = Biber::Config->getoption('collate_options');
 
-    # UCA level 2 if case insensitive sorting is requested
-    unless (Biber::Config->getoption('sortcase')) {
-      $collopts->{level} = 2;
-    }
+  my $collopts = Biber::Config->getoption('collate_options');
 
-    # Add upper_before_lower option
-    $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
-
-    # Create collation object
-
-    my $Collator = Biber::UCollate->new($thislocale, %$collopts);
-
-    my $UCAversion = $Collator->version();
-    $logger->info("Sorting list '$lname' of type '$ltype' with scheme '$lssn' and locale '$thislocale'");
-    $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion, Locale: " . $Collator->getlocale . ")");
-
-    # Log if U::C::L currently has no tailoring for used locale
-    if ($Collator->getlocale eq 'default') {
-      $logger->info("No sort tailoring available for locale '$thislocale'");
-    }
-
-    # For collecting the collation object settings for retrieval in the sort key extractor
-    my @collateobjs;
-
-    # Instantiate Sort::Key sorter with correct data schema
-    my $sorter = multikeysorter(map {$_->{spec}} @$lsds);
-
-    # Sorting cache to shortcut expensive UCA keygen
-    my $cache;
-
-    # Construct data needed for sort key extractor
-    foreach my $sortset (@{$sortscheme->{spec}}) {
-      my $fc = '';
-      my @fc;
-
-      # Re-instantiate collation object if a different locale is required for this sort item.
-      # This can't be done in a ->change() method, has to be a new object.
-      my $cobj;
-      my $sl = locale2bcp47($sortset->[0]{locale});
-      if (defined($sl) and $sl ne $thislocale) {
-        $cobj = 'Biber::UCollate->new(' . "'$sl'" . ",'" . join("','", %$collopts) . "')";
-      }
-      else {
-        $cobj = '$Collator';
-      }
-
-      # If the case or upper option on a field is not the global default
-      # set it locally on the $Collator by constructing a change() method call
-      my $sc = $sortset->[0]{sortcase};
-      if (defined($sc) and $sc != Biber::Config->getoption('sortcase')) {
-        push @fc, $sc ? 'level => 4' : 'level => 2';
-      }
-      my $su = $sortset->[0]{sortupper};
-      if (defined($su) and $su != Biber::Config->getoption('sortupper')) {
-        push @fc, $su ? 'upper_before_lower => 1' : 'upper_before_lower => 0';
-      }
-
-      if (@fc) {
-        # This field has custom collation options
-        $fc = '->change(' . join(',', @fc) . ')';
-      }
-      else {
-        # Reset collation options to global defaults if there are no field options
-        # We have to do this as ->change modifies the Collation object
-        $fc = '->change(level => '
-          . $collopts->{level}
-            . ' ,upper_before_lower => '
-              . $collopts->{upper_before_lower}
-                . ')';
-      }
-
-      push @collateobjs, $cobj . $fc;
-    }
-
-    # Sort::Key sort key extractor called on each element of array to be sorted and
-    # returns an array of the sorting keys for each sorting field. We have to construct
-    # the collator strings and then eval() because passing the collation
-    # objects in directly by reference means that the wrong settings are present on some of them
-    # since they point to the same object and the ->change() calls in later references
-    # therefore change earlier sorting field sorts. So, we have to defer until actual use time.
-    my $extract = sub {
-      my @d;
-      my $key = $keys[$_];
-      # Loop over all sorting fields
-      for (my $i=0; $i<=$#{$list->get_sortdata($key)->[1]}; $i++) {
-        my $sortfield = $list->get_sortdata($key)->[1][$i];
-        if ($lsds->[$i]{int}) {
-          # There are some special cases to be careful of here:
-          # 1. "" is possible and this needs to be converted to 0 for int tests
-          # 2. "final" elements in sorting copy themselves as strings to further fields
-          #    and therefore need coercing to 0 for int tests
-          push @d, looks_like_number($sortfield) ? $sortfield : 0;
-        }
-        else {
-          my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
-          # Cache index is just the collation object opts and key gen call in string form
-          # since this should be unique for a key/collopts combination
-          push @d, $cache->{$a} ||= eval $a;
-        }
-      }
-      return @d;
-    };
-
-    # We actually sort the indices of the keys array, as we need these in the extractor.
-    # Then we extract the real keys with a map. This therefore follows the typical ST sort
-    # semantics (plus an OM cache above due to expensive UCA key extraction).
-    @keys = map {$keys[$_]} &$sorter($extract, 0..$#keys);
+  # UCA level 2 if case insensitive sorting is requested
+  unless (Biber::Config->getoption('sortcase')) {
+    $collopts->{level} = 2;
   }
+
+  # Add upper_before_lower option
+  $collopts->{upper_before_lower} = Biber::Config->getoption('sortupper');
+
+  # Create collation object
+
+  my $Collator = Biber::UCollate->new($thislocale, %$collopts);
+
+  my $UCAversion = $Collator->version();
+  $logger->info("Sorting list '$lname' of type '$ltype' with scheme '$lssn' and locale '$thislocale'");
+  $logger->debug("Sorting with Unicode::Collate (" . stringify_hash($collopts) . ", UCA version: $UCAversion, Locale: " . $Collator->getlocale . ")");
+
+  # Log if U::C::L currently has no tailoring for used locale
+  if ($Collator->getlocale eq 'default') {
+    $logger->info("No sort tailoring available for locale '$thislocale'");
+  }
+
+  # For collecting the collation object settings for retrieval in the sort key extractor
+  my @collateobjs;
+
+  # Instantiate Sort::Key sorter with correct data schema
+  my $sorter = multikeysorter(map {$_->{spec}} @$lsds);
+
+  # Sorting cache to shortcut expensive UCA keygen
+  my $cache;
+
+  # Construct data needed for sort key extractor
+  foreach my $sortset (@{$sortscheme->{spec}}) {
+    my $fc = '';
+    my @fc;
+
+    # Re-instantiate collation object if a different locale is required for this sort item.
+    # This can't be done in a ->change() method, has to be a new object.
+    my $cobj;
+    my $sl = locale2bcp47($sortset->[0]{locale});
+    if (defined($sl) and $sl ne $thislocale) {
+      $cobj = 'Biber::UCollate->new(' . "'$sl'" . ",'" . join("','", %$collopts) . "')";
+    }
+    else {
+      $cobj = '$Collator';
+    }
+
+    # If the case or upper option on a field is not the global default
+    # set it locally on the $Collator by constructing a change() method call
+    my $sc = $sortset->[0]{sortcase};
+    if (defined($sc) and $sc != Biber::Config->getoption('sortcase')) {
+      push @fc, $sc ? 'level => 4' : 'level => 2';
+    }
+    my $su = $sortset->[0]{sortupper};
+    if (defined($su) and $su != Biber::Config->getoption('sortupper')) {
+      push @fc, $su ? 'upper_before_lower => 1' : 'upper_before_lower => 0';
+    }
+
+    if (@fc) {
+      # This field has custom collation options
+      $fc = '->change(' . join(',', @fc) . ')';
+    }
+    else {
+      # Reset collation options to global defaults if there are no field options
+      # We have to do this as ->change modifies the Collation object
+      $fc = '->change(level => '
+        . $collopts->{level}
+          . ' ,upper_before_lower => '
+            . $collopts->{upper_before_lower}
+              . ')';
+    }
+
+    push @collateobjs, $cobj . $fc;
+  }
+
+  # Sort::Key sort key extractor called on each element of array to be sorted and
+  # returns an array of the sorting keys for each sorting field. We have to construct
+  # the collator strings and then eval() because passing the collation
+  # objects in directly by reference means that the wrong settings are present on some of them
+  # since they point to the same object and the ->change() calls in later references
+  # therefore change earlier sorting field sorts. So, we have to defer until actual use time.
+  my $extract = sub {
+    my @d;
+    my $key = $keys[$_];
+    # Loop over all sorting fields
+    for (my $i=0; $i<=$#{$list->get_sortdata($key)->[1]}; $i++) {
+      my $sortfield = $list->get_sortdata($key)->[1][$i];
+      if ($lsds->[$i]{int}) {
+        # There are some special cases to be careful of here:
+        # 1. "" is possible and this needs to be converted to 0 for int tests
+        # 2. "final" elements in sorting copy themselves as strings to further fields
+        #    and therefore need coercing to 0 for int tests
+        push @d, looks_like_number($sortfield) ? $sortfield : 0;
+      }
+      else {
+        my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
+        # Cache index is just the collation object opts and key gen call in string form
+        # since this should be unique for a key/collopts combination
+        push @d, $cache->{$a} ||= eval $a;
+      }
+    }
+    return @d;
+  };
+
+  # We actually sort the indices of the keys array, as we need these in the extractor.
+  # Then we extract the real keys with a map. This therefore follows the typical ST sort
+  # semantics (plus an OM cache above due to expensive UCA key extraction).
+  @keys = map {$keys[$_]} &$sorter($extract, 0..$#keys);
 
   if($logger->is_debug()) {# performance tune for large @keys
     $logger->debug("Keys after sort:\n");

@@ -49,8 +49,8 @@
 * DONE Volume and ? to ints and remove padding?
 * DONE Enforce year/month format as ints - sortyear should be int only and documented so. Enforce in biber (not datamodel as it's not part of that)
 * DONE final sort elements copy string into all further fields which dies on int schema
-* TODO Tune ...
-* TODO Remove/convert fastsort?
+* DONE Tune ...
+* DONE Remove/convert fastsort?
 * DONE Decomm RIS
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 
