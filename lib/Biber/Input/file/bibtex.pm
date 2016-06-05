@@ -935,6 +935,12 @@ sub _name {
 
   foreach my $name (@tmp) {
 
+    # namelist scope sortnamekeyscheme
+    if ($name =~ m/^sortnamekeyscheme=(.+)$/) {
+      $names->set_sortnamekeyscheme($1);
+      next;
+    }
+
     # Consecutive "and" causes Text::BibTeX::Name to segfault
     unless ($name) {
       biber_warn("Name in key '$key' is empty (probably consecutive 'and'): skipping name", $bibentry);
@@ -981,7 +987,6 @@ sub _name {
     else {
       $names->add_name($no);
     }
-
   }
   $bibentry->set_datafield($field, $names);
   return;
@@ -1490,7 +1495,8 @@ sub parsename {
       strip          => {'given'  => 0,
                          'family' => 0,
                          'prefix' => 0,
-                         'suffix' => 0}
+                         'suffix' => 0},
+      sortnamekeyscheme => 'scheme' }
       }
 
 =cut
@@ -1502,9 +1508,17 @@ sub parsename_x {
   my %nps = map {$_ => 1} $dm->get_constant_value('nameparts');
 
   my %namec;
+  my %snks;
   foreach my $np (split_xsv($namestr)) {# Can have x inside records so use Text::CSV
     my ($npn, $npv) = $np =~ m/^(.+)\s*=\s*(.+)$/;
     $npn = lc($npn);
+
+    # name scope sortnamekeyscheme
+    if ($npn eq 'sortnamekeyscheme') {
+      $snks{sortnamekeyscheme} = $npv;
+      next;
+    }
+
     unless ($nps{$npn =~ s/-i$//r}) {
       biber_warn("Invalid namepart '$npn' found in extended name format name '$fieldname' in entry '$key', ignoring");
       next;
@@ -1601,7 +1615,8 @@ sub parsename_x {
   return  Biber::Entry::Name->new(
                                   %nameparts,
                                   namestring     => $namestring,
-                                  nameinitstring => $nameinitstr
+                                  nameinitstring => $nameinitstr,
+                                  %snks
                                  );
 }
 

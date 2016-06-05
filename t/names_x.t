@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 18;
+use Test::More tests => 19;
 use Test::Differences;
 unified_diff;
 
@@ -198,6 +198,14 @@ my $name18 =
       namestring     => 'British National Corpus',
       nameinitstring => 'British_National_Corpus' } ;
 
+my $name19 =
+   {  given          => {string => 'Bill', initial => ['B']},
+      family         => {string => 'Smith', initial => ['S']},
+      prefix         => {string => undef, initial => undef},
+      suffix         => {string => undef, initial => undef},
+      namestring     => 'Smith, Bill',
+      nameinitstring => 'Smith_B',
+      sortnamekeyscheme => 'test' } ;
 
 is_deeply(Biber::Input::file::bibtex::parsename_x('given=John,family=Doe', 'author'), $name1, 'parsename_x 1');
 is_deeply(Biber::Input::file::bibtex::parsename_x('family=Doe, suffix=Jr, given=John, given-i=J', 'author'), $name2, 'parsename_x 2');
@@ -217,4 +225,5 @@ is_deeply(Biber::Input::file::bibtex::parsename_x('given=E. S., family=El-Mallah
 is_deeply(Biber::Input::file::bibtex::parsename_x('given=E. S., family=Kent-Boswell', 'author'), $name16, 'parsename_x 16');
 is_deeply(Biber::Input::file::bibtex::parsename_x('family=Other, given=A.~N.', 'author'), $name17, 'parsename_x 17');
 is_deeply(Biber::Input::file::bibtex::parsename_x('family={British National Corpus}', 'author'), $name18, 'parsename_x 18');
+is_deeply(Biber::Input::file::bibtex::parsename_x('sortnamekeyscheme=test, family=Smith, given=Bill', 'author'), $name19, 'parsename_x 19');
 

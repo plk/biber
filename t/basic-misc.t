@@ -690,13 +690,13 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
 |;
 
 my $ent1 = q|    \entry{ent1}{book}{}
-      \name{author}{2}{}{%
+      \name{author}{2}{sortnamekeyscheme=snks1}{%
         {{uniquename=1,hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
            family_i={S\\bibinitperiod},
            given={Simon},
            given_i={S\\bibinitperiod}}}%
-        {{uniquename=0,hash=d96ae30c7c6de3f0310b98a367a49334}{%
+        {{uniquename=0,sortnamekeyscheme=snks2,hash=d96ae30c7c6de3f0310b98a367a49334}{%
            prefix={de},
            prefix_i={d\\bibinitperiod},
            family={Brown},
