@@ -1030,7 +1030,8 @@ sub _name {
     my $no;
 
     # extended name format
-    if ($name =~ m/(?:$nps)\s*=/ and not Biber::Config->getoption('noxname')) {
+    my $xnamesep = Biber::Config->getoption('xnamesep');
+    if ($name =~ m/(?:$nps)\s*$xnamesep/ and not Biber::Config->getoption('noxname')) {
       # Skip names that don't parse for some reason
       next unless $no = parsename_x($name, $field, {useprefix => $useprefix}, $key);
     }
