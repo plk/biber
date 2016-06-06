@@ -3461,6 +3461,11 @@ sub sort_list {
         # 1. "" is possible and this needs to be converted to 0 for int tests
         # 2. "final" elements in sorting copy themselves as strings to further fields
         #    and therefore need coercing to 0 for int tests
+
+        # normalise '' to 0
+        $sortfield ||= 0;
+        # normalise all other strings to a large int so that they sort after real ints
+        # as a fallback
         push @d, looks_like_number($sortfield) ? $sortfield : 2000000000;
       }
       else {

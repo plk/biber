@@ -262,9 +262,9 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-# Note that L5 is first because it has a final sortkey which maps to '0' in
-# int sort fields
-is_deeply([$main->get_keys], ['L5','L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9'], 'ynt');
+# Note that L5 is last because it has a final sortkey which maps to a  large
+# int in sort fields
+is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
 
 # ynt with year substring
 $S = { spec => [
@@ -305,9 +305,9 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-# Note that L5 is first because it has a final sortkey which maps to '0' in
-# int sort fields
-is_deeply([$main->get_keys], ['L5','L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9'], 'ynt with year substring');
+# Note that L5 is last because it has a final sortkey which maps to a  large
+# int in sort fields
+is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5'], 'ynt with year substring');
 
 # ydnt
 $S = { spec => [
@@ -347,9 +347,9 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-# Note that L5 is last because it has a final sortkey which maps to '0' in
-# int sort fields
-is_deeply([$main->get_keys], ['L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3','L5'], 'ydnt');
+# Note that L5 is first because it has a final sortkey which maps to a
+# large int in sort fields
+is_deeply([$main->get_keys], ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
 
 # anyt
 $S = { spec => [
