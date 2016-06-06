@@ -2091,7 +2091,9 @@ name formats are supported in all name fields and can be used along with
 the usual \bibtex name format. Recognition of extended name format can be
 disabled with the \biber option \opt{--noxname} in case you do not need the
 extended format and the auto-detection causes problems with normal name
-parsing. Here is an example:
+parsing. The separator \verb+=+ which comes between the namepart names and
+values is customisable with the \biber option \verb+--xnamesep+. Here is an
+example:
 \begin{verbatim}
 AUTHOR = {Hans Harman and Simon de Beumont}
 AUTHOR = {given=Hans, family=Harman and given=Simon, prefix=de, family=Beumont}

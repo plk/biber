@@ -645,18 +645,18 @@ my $new1 = q|    \entry{newtestkey}{book}{}
 
 my $clone1 = q|    \entry{snk1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=628a4e272572f13a643dc1039e67a9a8}{%
-           prefix={von},
-           prefix_i={v\\bibinitperiod},
+        {{uniquename=0,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
            family_i={D\\bibinitperiod},
-           suffix={Jr},
-           suffix_i={J\\bibinitperiod},
            given={John},
-           given_i={J\\bibinitperiod}}}%
+           given_i={J\\bibinitperiod},
+           prefix={von},
+           prefix_i={v\\bibinitperiod},
+           suffix={Jr},
+           suffix_i={J\\bibinitperiod}}}%
       }
-      \strng{namehash}{628a4e272572f13a643dc1039e67a9a8}
-      \strng{fullhash}{628a4e272572f13a643dc1039e67a9a8}
+      \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
@@ -667,18 +667,18 @@ my $clone1 = q|    \entry{snk1}{book}{}
 
 my $clone2 = q|    \entry{clone-snk1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=628a4e272572f13a643dc1039e67a9a8}{%
-           prefix={von},
-           prefix_i={v\\bibinitperiod},
+        {{uniquename=0,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
            family_i={D\\bibinitperiod},
-           suffix={Jr},
-           suffix_i={J\\bibinitperiod},
            given={John},
-           given_i={J\\bibinitperiod}}}%
+           given_i={J\\bibinitperiod},
+           prefix={von},
+           prefix_i={v\\bibinitperiod},
+           suffix={Jr},
+           suffix_i={J\\bibinitperiod}}}%
       }
-      \strng{namehash}{628a4e272572f13a643dc1039e67a9a8}
-      \strng{fullhash}{628a4e272572f13a643dc1039e67a9a8}
+      \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
@@ -695,16 +695,16 @@ my $ent1 = q|    \entry{ent1}{book}{}
            family_i={S\\bibinitperiod},
            given={Simon},
            given_i={S\\bibinitperiod}}}%
-        {{uniquename=0,sortnamekeyscheme=snks2,hash=d96ae30c7c6de3f0310b98a367a49334}{%
-           prefix={de},
-           prefix_i={d\\bibinitperiod},
+        {{uniquename=0,sortnamekeyscheme=snks2,hash=878a51e6f69e95562d15cb8a3ead5c95}{%
            family={Brown},
            family_i={B\\bibinitperiod},
            given={Brian},
-           given_i={B\\bibinitperiod}}}%
+           given_i={B\\bibinitperiod},
+           prefix={de},
+           prefix_i={d\\bibinitperiod}}}%
       }
-      \strng{namehash}{05c3e0296f7d96520075f1c495b6a0fc}
-      \strng{fullhash}{05c3e0296f7d96520075f1c495b6a0fc}
+      \strng{namehash}{b2536a425d549b46de5f21c4d468050a}
+      \strng{fullhash}{b2536a425d549b46de5f21c4d468050a}
       \field{labelalpha}{SdB}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}

@@ -280,16 +280,16 @@ my $l4 = q|    \entry{L4}{book}{}
 
 my $l5 = q|    \entry{L5}{book}{}
       \name{author}{1}{}{%
-        {{hash=c2d41bb75b01ec2339c1050981f9c2cc}{%
-           prefix={von},
-           prefix_i={v\bibinitperiod},
+        {{hash=c6b9d281cc1ff3f35570f76f463d4244}{%
            family={Eel},
-           family_i={E\bibinitperiod},
+           family_i={E\\bibinitperiod},
            given={Egbert},
-           given_i={E\bibinitperiod}}}%
+           given_i={E\\bibinitperiod},
+           prefix={von},
+           prefix_i={v\\bibinitperiod}}}%
       }
-      \strng{namehash}{c2d41bb75b01ec2339c1050981f9c2cc}
-      \strng{fullhash}{c2d41bb75b01ec2339c1050981f9c2cc}
+      \strng{namehash}{c6b9d281cc1ff3f35570f76f463d4244}
+      \strng{fullhash}{c6b9d281cc1ff3f35570f76f463d4244}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelnamesource}{author}
@@ -298,16 +298,16 @@ my $l5 = q|    \entry{L5}{book}{}
 
 my $l6 = q|    \entry{L6}{book}{}
       \name{author}{1}{}{%
-        {{hash=68e9105aa98379a85ef6cd2e7ac29c00}{%
-           prefix={van\bibnamedelimb der\bibnamedelima valt},
-           prefix_i={v\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim v\bibinitperiod},
+        {{hash=dd96e3fc645eb4685988366f233403df}{%
            family={Frome},
-           family_i={F\bibinitperiod},
+           family_i={F\\bibinitperiod},
            given={Francis},
-           given_i={F\bibinitperiod}}}%
+           given_i={F\\bibinitperiod},
+           prefix={van\\bibnamedelimb der\\bibnamedelima valt},
+           prefix_i={v\\bibinitperiod\\bibinitdelim d\\bibinitperiod\\bibinitdelim v\\bibinitperiod}}}%
       }
-      \strng{namehash}{68e9105aa98379a85ef6cd2e7ac29c00}
-      \strng{fullhash}{68e9105aa98379a85ef6cd2e7ac29c00}
+      \strng{namehash}{dd96e3fc645eb4685988366f233403df}
+      \strng{fullhash}{dd96e3fc645eb4685988366f233403df}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelnamesource}{author}
@@ -316,16 +316,16 @@ my $l6 = q|    \entry{L6}{book}{}
 
 my $l7 = q|    \entry{L7}{book}{}
       \name{author}{1}{}{%
-        {{hash=4dbef3c5464f951b537a49ba93676a9a}{%
-           prefix={van},
-           prefix_i={v\bibinitperiod},
+        {{hash=1e802cc32f10930a9567712b8febdf19}{%
            family={Gloom},
-           family_i={G\bibinitperiod},
-           given={Gregory\bibnamedelima R.},
-           given_i={G\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+           family_i={G\\bibinitperiod},
+           given={Gregory\\bibnamedelima R.},
+           given_i={G\\bibinitperiod\\bibinitdelim R\\bibinitperiod},
+           prefix={van},
+           prefix_i={v\\bibinitperiod}}}%
       }
-      \strng{namehash}{4dbef3c5464f951b537a49ba93676a9a}
-      \strng{fullhash}{4dbef3c5464f951b537a49ba93676a9a}
+      \strng{namehash}{1e802cc32f10930a9567712b8febdf19}
+      \strng{fullhash}{1e802cc32f10930a9567712b8febdf19}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelnamesource}{author}
@@ -334,16 +334,16 @@ my $l7 = q|    \entry{L7}{book}{}
 
 my $l8 = q|    \entry{L8}{book}{}
       \name{author}{1}{}{%
-        {{hash=9fb4d242b62f047e4255282864eedb97}{%
-           prefix={van},
-           prefix_i={v\bibinitperiod},
+        {{hash=076a9b62b331eb2cdfba234d9ad7bca9}{%
            family={Henkel},
-           family_i={H\bibinitperiod},
-           given={Henry\bibnamedelima F.},
-           given_i={H\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+           family_i={H\\bibinitperiod},
+           given={Henry\\bibnamedelima F.},
+           given_i={H\\bibinitperiod\\bibinitdelim F\\bibinitperiod},
+           prefix={van},
+           prefix_i={v\\bibinitperiod}}}%
       }
-      \strng{namehash}{9fb4d242b62f047e4255282864eedb97}
-      \strng{fullhash}{9fb4d242b62f047e4255282864eedb97}
+      \strng{namehash}{076a9b62b331eb2cdfba234d9ad7bca9}
+      \strng{fullhash}{076a9b62b331eb2cdfba234d9ad7bca9}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelnamesource}{author}
@@ -369,16 +369,16 @@ my $l9 = q|    \entry{L9}{book}{}
 
 my $l10 = q|    \entry{L10}{book}{}
       \name{author}{1}{}{%
-        {{hash=758a11cc45860d7635b1f6091b2d95a9}{%
+        {{hash=37b4325752e394ddfb2fc810f6c88e27}{%
            family={Jolly},
-           family_i={J\bibinitperiod},
-           suffix={III},
-           suffix_i={I\bibinitperiod},
+           family_i={J\\bibinitperiod},
            given={James},
-           given_i={J\bibinitperiod}}}%
+           given_i={J\\bibinitperiod},
+           suffix={III},
+           suffix_i={I\\bibinitperiod}}}%
       }
-      \strng{namehash}{758a11cc45860d7635b1f6091b2d95a9}
-      \strng{fullhash}{758a11cc45860d7635b1f6091b2d95a9}
+      \strng{namehash}{37b4325752e394ddfb2fc810f6c88e27}
+      \strng{fullhash}{37b4325752e394ddfb2fc810f6c88e27}
       \field{sortinit}{J}
       \field{sortinithash}{ec3950a647c092421b9fcca6d819504a}
       \field{labelnamesource}{author}
@@ -388,16 +388,16 @@ my $l10 = q|    \entry{L10}{book}{}
 
 my $l10a = q|    \entry{L10a}{book}{}
       \name{author}{1}{}{%
-        {{hash=5e60d697e6432558eab7dccf9890eb79}{%
+        {{hash=264cb53d2295644c1c99523e254d9b0e}{%
            family={Pimentel},
-           family_i={P\bibinitperiod},
+           family_i={P\\bibinitperiod},
+           given={Joseph\\bibnamedelima J.},
+           given_i={J\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
            suffix={Jr.},
-           suffix_i={J\bibinitperiod},
-           given={Joseph\bibnamedelima J.},
-           given_i={J\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+           suffix_i={J\\bibinitperiod}}}%
       }
-      \strng{namehash}{5e60d697e6432558eab7dccf9890eb79}
-      \strng{fullhash}{5e60d697e6432558eab7dccf9890eb79}
+      \strng{namehash}{264cb53d2295644c1c99523e254d9b0e}
+      \strng{fullhash}{264cb53d2295644c1c99523e254d9b0e}
       \field{sortinit}{P}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
       \field{labelnamesource}{author}
@@ -407,18 +407,18 @@ my $l10a = q|    \entry{L10a}{book}{}
 
 my $l11 = q|    \entry{L11}{book}{}
       \name{author}{1}{}{%
-        {{hash=ef4ab7eba5cd140b54ba4329e1dda90b}{%
-           prefix={van},
-           prefix_i={v\bibinitperiod},
+        {{hash=c536dd808dc9193fda59ba1ff2afb38f}{%
            family={Kluster},
-           family_i={K\bibinitperiod},
-           suffix={Jr.},
-           suffix_i={J\bibinitperiod},
+           family_i={K\\bibinitperiod},
            given={Kevin},
-           given_i={K\bibinitperiod}}}%
+           given_i={K\\bibinitperiod},
+           prefix={van},
+           prefix_i={v\\bibinitperiod},
+           suffix={Jr.},
+           suffix_i={J\\bibinitperiod}}}%
       }
-      \strng{namehash}{ef4ab7eba5cd140b54ba4329e1dda90b}
-      \strng{fullhash}{ef4ab7eba5cd140b54ba4329e1dda90b}
+      \strng{namehash}{c536dd808dc9193fda59ba1ff2afb38f}
+      \strng{fullhash}{c536dd808dc9193fda59ba1ff2afb38f}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelnamesource}{author}
@@ -427,16 +427,16 @@ my $l11 = q|    \entry{L11}{book}{}
 
 my $l12 = q|    \entry{L12}{book}{}
       \name{author}{1}{}{%
-        {{hash=5bb094a9232384acc478f1aa54e8cf3c}{%
-           prefix={de\bibnamedelima la},
-           prefix_i={d\bibinitperiod\bibinitdelim l\bibinitperiod},
-           family={Vallée\bibnamedelima Poussin},
-           family_i={V\bibinitperiod\bibinitdelim P\bibinitperiod},
-           given={Charles\bibnamedelimb Louis\bibnamedelimb Xavier\bibnamedelima Joseph},
-           given_i={C\bibinitperiod\bibinitdelim L\bibinitperiod\bibinitdelim X\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=7e7640f3cb87a1cf11a86307a186ec0f}{%
+           family={Vallée\\bibnamedelima Poussin},
+           family_i={V\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
+           given={Charles\\bibnamedelimb Louis\\bibnamedelimb Xavier\\bibnamedelima Joseph},
+           given_i={C\\bibinitperiod\\bibinitdelim L\\bibinitperiod\\bibinitdelim X\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
+           prefix={de\\bibnamedelima la},
+           prefix_i={d\\bibinitperiod\\bibinitdelim l\\bibinitperiod}}}%
       }
-      \strng{namehash}{5bb094a9232384acc478f1aa54e8cf3c}
-      \strng{fullhash}{5bb094a9232384acc478f1aa54e8cf3c}
+      \strng{namehash}{7e7640f3cb87a1cf11a86307a186ec0f}
+      \strng{fullhash}{7e7640f3cb87a1cf11a86307a186ec0f}
       \field{sortinit}{d}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \true{uniqueprimaryauthor}
@@ -478,16 +478,16 @@ my $l14 = q|    \entry{L14}{book}{}
 
 my $l15 = q|    \entry{L15}{book}{}
       \name{author}{1}{}{%
-        {{hash=379b415d869a4751678a5eee23b07e48}{%
-           prefix={van},
-           prefix_i={v\bibinitperiod},
+        {{hash=b30b0fc69681fd11ad5d75a880124091}{%
            family={Gompel},
-           family_i={G\bibinitperiod},
-           given={Roger\bibnamedelima P.{\,}G.},
-           given_i={R\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+           family_i={G\\bibinitperiod},
+           given={Roger\\bibnamedelima P.{\\,}G.},
+           given_i={R\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
+           prefix={van},
+           prefix_i={v\\bibinitperiod}}}%
       }
-      \strng{namehash}{379b415d869a4751678a5eee23b07e48}
-      \strng{fullhash}{379b415d869a4751678a5eee23b07e48}
+      \strng{namehash}{b30b0fc69681fd11ad5d75a880124091}
+      \strng{fullhash}{b30b0fc69681fd11ad5d75a880124091}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelnamesource}{author}
@@ -496,16 +496,16 @@ my $l15 = q|    \entry{L15}{book}{}
 
 my $l16 = q|    \entry{L16}{book}{}
       \name{author}{1}{}{%
-        {{hash=0a9532fa161f6305ec403c1c85951bdf}{%
-           prefix={van},
-           prefix_i={v\bibinitperiod},
+        {{hash=2b17c50dc666b9cc73d132da9ef08c7b}{%
            family={Gompel},
-           family_i={G\bibinitperiod},
-           given={Roger\bibnamedelima {P.\,G.}},
-           given_i={R\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+           family_i={G\\bibinitperiod},
+           given={Roger\\bibnamedelima {P.\\,G.}},
+           given_i={R\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
+           prefix={van},
+           prefix_i={v\\bibinitperiod}}}%
       }
-      \strng{namehash}{0a9532fa161f6305ec403c1c85951bdf}
-      \strng{fullhash}{0a9532fa161f6305ec403c1c85951bdf}
+      \strng{namehash}{2b17c50dc666b9cc73d132da9ef08c7b}
+      \strng{fullhash}{2b17c50dc666b9cc73d132da9ef08c7b}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelnamesource}{author}

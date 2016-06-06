@@ -54,20 +54,20 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{3}{useprefix=true}{%
-        {{hash=d16c52bc219d448d5f07dc865d5c4f54}{%
-           prefix={von},
-           prefix_i={v\\bibinitperiod},
+        {{hash=633a0b6ab963c5f044b56f06c6091c27}{%
            family={Булгаков},
            family_i={Б\\bibinitperiod},
            given={Павел\\bibnamedelima Георгиевич},
-           given_i={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}}}%
-        {{useprefix=false,hash=a3dd54ba13bec8a96a9d9b9804fc7927}{%
+           given_i={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod},
            prefix={von},
-           prefix_i={v\\bibinitperiod},
+           prefix_i={v\\bibinitperiod}}}%
+        {{useprefix=false,hash=0ffcce4df8f0d0eedf2c614091ba2355}{%
            family={РРозенфельд},
            family_i={Р\\bibinitperiod},
            given={Борис-ZZ\\bibnamedelima Aбрамович},
-           given_i={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}}}%
+           given_i={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod},
+           prefix={von},
+           prefix_i={v\\bibinitperiod}}}%
         {{hash=e708d5a31534e937578abf161c867a25}{%
            family={Aхмедов},
            family_i={A\\bibinitperiod},
@@ -97,8 +97,8 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \list{publisher}{1}{%
         {Наука}%
       }
-      \strng{namehash}{b5cf3ab49063f1ac8cf913eb3527f38e}
-      \strng{fullhash}{676e5835f2422c4d02b9107e530be190}
+      \strng{namehash}{f29948d2b7207cd79c4466d823d8627c}
+      \strng{fullhash}{835d3352054f77020fc38705080e4596}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labeldatesource}{}

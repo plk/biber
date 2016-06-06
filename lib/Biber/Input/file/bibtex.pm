@@ -1645,7 +1645,7 @@ sub parsename_x {
 
   my $namestring = '';
   # Generate list of extra nameparts beyond the basic set
-  my @nps_nonbase = map {$_ !~ m/prefix|suffix|family|given/} $dm->get_constant_value('nameparts');
+  my @nps_nonbase = map {$_ !~ m/family|given|prefix|suffix/} $dm->get_constant_value('nameparts');
 
   # Don't add suffix to namestring or nameinitstring as these are used for uniquename
   # disambiguation which should only care about family name + any prefix (if useprefix=1).
