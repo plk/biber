@@ -199,7 +199,6 @@ sub get_minimal_info {
   return $self->{familynames_string};
 }
 
-
 =head2 get_namepart
 
     Get a namepart by passed name
@@ -208,7 +207,8 @@ sub get_minimal_info {
 
 sub get_namepart {
   my ($self, $namepart) = @_;
-  return $self->{$namepart}{string};
+  # prevent warnings when concating arbitrary nameparts
+  return $self->{$namepart}{string} || '';
 }
 
 =head2 set_namepart
