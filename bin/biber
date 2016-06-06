@@ -75,6 +75,7 @@ GetOptions(
            'quiet|q+',
            'recodedata=s',
            'noskipduplicates',
+           'noxname',
            'sortdebug',
            'sortcase=s',
            'sortgiveninits|sortfirstinits=s',
@@ -100,7 +101,7 @@ GetOptions(
            'validate_datamodel|validate-datamodel|V',
            'version|v',
            'wraplines|w',
-           'noxname',
+           'xnamesep=s',
            'xsvsep=s',
           ) or pod2usage(-verbose => 0,
                          -exitval => EXIT_ERROR);
@@ -594,6 +595,12 @@ Don't automatically define any standard macros like month abbreviations.
 If you also define these yourself, this option can be used to suppress
 macro redefinition warnings.
 
+=item B<--noxname>
+
+Disable exended name processing in bibtex data sources. Can be useful if
+you don't use this and it causes problems due to auto-detection of extended
+name format.
+
 =item B<--onlylog>
 
 Do not write any message to screen.
@@ -804,11 +811,10 @@ Display version number.
 
 Wrap lines in the F<.bbl> file.
 
-=item B<--noxname>
+=item B<--xnamesep=[sep]>
 
-Disable exended name processing in bibtex data sources. Can be useful if
-you don't use this and it causes problems due to auto-detection of extended
-name format.
+Use F<sep> as the separator between namepart names and the namepart values
+in the eXtended name format. See biber docs. Default is '='.
 
 =item B<--xsvsep=[sep]>
 

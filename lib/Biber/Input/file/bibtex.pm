@@ -1588,13 +1588,13 @@ sub parsename {
 sub parsename_x {
   my ($namestr, $fieldname, $opts, $key) = @_;
   my $useprefix = $opts->{useprefix};
-
+  my $xnamesep = Biber::Config->getoption('xnamesep');
   my %nps = map {$_ => 1} $dm->get_constant_value('nameparts');
 
   my %namec;
   my %snks;
   foreach my $np (split_xsv($namestr)) {# Can have x inside records so use Text::CSV
-    my ($npn, $npv) = $np =~ m/^(.+)\s*=\s*(.+)$/;
+    my ($npn, $npv) = $np =~ m/^(.+)\s*$xnamesep\s*(.+)$/x;
     $npn = lc($npn);
 
     # name scope sortnamekeyscheme
