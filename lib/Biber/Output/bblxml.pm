@@ -596,6 +596,11 @@ sub output {
         # Instantiate any dynamic, list specific entry information
         my $entry_string = $list->instantiate_entry($entry, $k, 'bblxml');
 
+        # If requested, add a printable sorting key to the output - useful for debugging
+        if (Biber::Config->getoption('sortdebug')) {
+          $entry_string = "      <!-- sorting key for '$k':\n           " . $list->get_sortdata($k)->[0] . " -->\n" . $entry_string;
+        }
+
         # Now output
         # this requires UNSAFE set on the main xml writer object but
         # this is ok as the ->raw() call only adds XML written by another writer

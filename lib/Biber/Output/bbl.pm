@@ -621,6 +621,11 @@ sub output {
           }
         }
 
+        # If requested, add a printable sorting key to the output - useful for debugging
+        if (Biber::Config->getoption('sortdebug')) {
+          $entry_string = "    % sorting key for '$k':\n    % " . $list->get_sortdata($k)->[0] . "\n" . $entry_string;
+        }
+
         # Now output
         out($target, $entry_string);
       }

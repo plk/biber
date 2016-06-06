@@ -75,6 +75,7 @@ GetOptions(
            'quiet|q+',
            'recodedata=s',
            'noskipduplicates',
+           'sortdebug',
            'sortcase=s',
            'sortgiveninits|sortfirstinits=s',
            'sortlocale|l=s',
@@ -702,6 +703,10 @@ used, then F<file> should be somewhere C<kpsewhich> can find it.
 Don't skip duplicate bibliography keys if found. The detection of duplicate keys is done across
 all data sources. Sometimes you might need duplicates when using several data sources
 across several refsections in which case you might need to use this option.
+
+=item B<--sortdebug>
+
+Add comments to output with sorting keys. Useful for debugging.
 
 =item B<--sortcase=true|false>
 

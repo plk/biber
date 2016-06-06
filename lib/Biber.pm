@@ -3461,7 +3461,7 @@ sub sort_list {
         # 1. "" is possible and this needs to be converted to 0 for int tests
         # 2. "final" elements in sorting copy themselves as strings to further fields
         #    and therefore need coercing to 0 for int tests
-        push @d, looks_like_number($sortfield) ? $sortfield : 0;
+        push @d, looks_like_number($sortfield) ? $sortfield : 2000000000;
       }
       else {
         my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
