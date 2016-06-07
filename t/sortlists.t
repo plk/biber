@@ -42,7 +42,7 @@ my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
 is_deeply([$biber->sortlists->get_list(0, 'lname', 'entry', 'lname', 'global', '')->get_keys], ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K12', 'K5', 'K6'], 'List - name order');
-is_deeply([$biber->sortlists->get_list(0, 'lyear', 'entry', 'lyear', 'global', '')->get_keys], ['K4', 'K1', 'K11', 'K12', 'K2', 'K3', 'K6', 'K5', 'K7', 'K8', 'K9', 'K10'], 'List - year order');
+is_deeply([$biber->sortlists->get_list(0, 'lyear', 'entry', 'lyear', 'global', '')->get_keys], ['K8', 'K9', 'K10', 'K4', 'K1', 'K11', 'K12', 'K2', 'K3', 'K6', 'K5', 'K7'], 'List - year order');
 is_deeply([$biber->sortlists->get_list(0, 'ltitle', 'entry', 'ltitle', 'global', '')->get_keys], ['K1', 'K7', 'K8', 'K9', 'K4', 'K10', 'K2', 'K11', 'K6', 'K5', 'K12', 'K3'], 'List - title order');
 is_deeply([$biber->sortlists->get_list(0, 'lnamef1', 'entry', 'lnamef1', 'global', '')->get_keys], ['K11', 'K2', 'K4', 'K12', 'K5', 'K6'], 'List - name order (filtered) - 1');
 is_deeply([$biber->sortlists->get_list(0, 'lnamef2', 'entry', 'lnamef2', 'global', '')->get_keys], ['K4'], 'List - name order (filtered) - 2');

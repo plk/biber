@@ -52,7 +52,7 @@
 * DONE Tune ...
 * DONE Remove/convert fastsort?
 * DONE Decomm RIS
-* TODO Eras/circa/uncertain in cites
+* DONE Eras/circa/uncertain in cites
 * TODO uniquename and initstrings etc. for xname should use DM and no explicit nameparts.
 * TODO Implement Times
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output

@@ -174,7 +174,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
-      \field{extrayear}{5}
+      \field{extrayear}{1}
       \field{labeldatesource}{event}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
@@ -206,7 +206,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \strng{fullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
-      \field{extrayear}{4}
+      \field{extrayear}{5}
       \field{labeldatesource}{}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}

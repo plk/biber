@@ -110,6 +110,7 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{key1}
@@ -140,6 +141,7 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{key2}
@@ -169,6 +171,7 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{key3}
@@ -197,6 +200,7 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly,useed
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{key4}
@@ -256,12 +260,12 @@ eq_or_diff( $out->get_output_entry('caf8e34be07426ae7127c1b4829983c1', $main), $
 # it shouldn't be in the .bbl
 eq_or_diff( $out->get_output_entry('key4', $main), undef, 'Related entry test 8' ) ;
 is_deeply([$shs->get_keys], [
-    "caf8e34be07426ae7127c1b4829983c1",
-    "78f825aaa0103319aaa1a30bf4fe3ada",
-    "3631578538a2d6ba5879b31a9a42f290",
-    "c2add694bf942dc77b376592d9c862cd",
-    "key1",
-    "key2",
+                             "key1",
+                             "key2",
+                             "caf8e34be07426ae7127c1b4829983c1",
+                             "78f825aaa0103319aaa1a30bf4fe3ada",
+                             "3631578538a2d6ba5879b31a9a42f290",
+                             "c2add694bf942dc77b376592d9c862cd",
   ], 'Related entry test 9');
 # Testing circular dependencies
 eq_or_diff( $out->get_output_entry('c1', $main), $c1, 'Related entry test 10' ) ;

@@ -77,6 +77,7 @@ my $string2 = q|    \entry{Static2}{book}{}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}
       \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{Some Blessed Note}
@@ -96,6 +97,7 @@ my $string3 = q|    \entry{Static3}{book}{}
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Castles and Crime}
@@ -114,6 +116,7 @@ my $string4 = q|    \entry{Static4}{book}{}
       }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Dungeons, Dark and Dangerous}

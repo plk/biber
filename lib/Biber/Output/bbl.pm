@@ -299,7 +299,7 @@ sub set_output_entry {
   $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
   # The labeldate option determines whether labeldate information is output
-  if ( Biber::Config->getblxoption('labeldate', $bee)) {
+  if (Biber::Config->getblxoption('labeldate', $bee)) {
     # Might not have been set due to skiplab/dataonly
     if (my $nameyear = $be->get_field('nameyear')) {
       if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {

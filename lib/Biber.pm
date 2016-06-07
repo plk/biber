@@ -1825,7 +1825,7 @@ sub process_labelname {
   my $dm = Biber::Config->get_dm;
   my $dmnames = $dm->get_fields_of_type('list', 'name');
 
-    # First we set the normal labelname name
+  # First we set the normal labelname name
   foreach my $h_ln ( @$lnamespec ) {
     my $lnameopt;
     my $ln = $h_ln->{content};
@@ -1902,10 +1902,6 @@ sub process_labeldate {
   my $dm = Biber::Config->get_dm;
 
   if (Biber::Config->getblxoption('labeldate', $bee)) {
-    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
-      return;
-    }
-
     my $pseudodate;
     my $ldatespec = Biber::Config->getblxoption('labeldatespec', $bee);
     foreach my $h_ly (@$ldatespec) {
@@ -3462,9 +3458,7 @@ sub sort_list {
         # 2. "final" elements in sorting copy themselves as strings to further fields
         #    and therefore need coercing to 0 for int tests
 
-        # normalise '' to 0
-        $sortfield ||= 0;
-        # normalise all other strings to a large int so that they sort after real ints
+        # normalise all strings to a large int so that they sort after real ints
         # as a fallback
         push @d, looks_like_number($sortfield) ? $sortfield : 2000000000;
       }
