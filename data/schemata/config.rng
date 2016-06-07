@@ -362,6 +362,9 @@
           <ref name="translit"/>
         </zeroOrMore>
         <optional>
+          <ref name="uniquenametemplate"/>
+        </optional>
+        <optional>
           <ref name="sortingnamekey"/>
         </optional>
         <optional>
@@ -1044,6 +1047,26 @@
             </group>
           </choice>
           <empty/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="uniquenametemplate">
+    <element name="uniquenametemplate">
+      <oneOrMore>
+        <element name="namepart">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <optional>
+            <attribute name="use">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <text/>
         </element>
       </oneOrMore>
     </element>

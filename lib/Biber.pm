@@ -398,6 +398,7 @@ sub parse_ctrlfile {
                                                            qr/\Apresort\z/,
                                                            qr/\Atype_pair\z/,
                                                            qr/\Ainherit\z/,
+                                                           qr/\Anamepart\z/,
                                                            qr/\Afieldor\z/,
                                                            qr/\Afieldxor\z/,
                                                            qr/\Afield\z/,
@@ -626,6 +627,13 @@ sub parse_ctrlfile {
   }
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nosort', $nosort) if $nosort;
+
+  # UNIQUENAME TEMPLATE
+  my $unkt;
+  foreach my $np (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{uniquenametemplate}{namepart}}) {
+    push @$unkt, {name => $np->{content}, use => $np->{use} || 0}
+  }
+  Biber::Config->setblxoption('uniquenametemplate', $unkt);
 
   # SORTING NAME KEY
 

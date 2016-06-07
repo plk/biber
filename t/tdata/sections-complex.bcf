@@ -172,6 +172,7 @@
   <bcf:optionscope type="GLOBAL">
     <bcf:option datatype="xml">translit</bcf:option>
     <bcf:option datatype="xml">datamodel</bcf:option>
+    <bcf:option datatype="xml">uniquenametemplate</bcf:option>
     <bcf:option datatype="xml">labelalphatemplate</bcf:option>
     <bcf:option datatype="xml">inheritance</bcf:option>
     <bcf:option datatype="xml">sortingnamekey</bcf:option>
@@ -586,6 +587,12 @@
       <bcf:field source="sortkey" skip="true"/>
     </bcf:inherit>
   </bcf:inheritance>
+  <!-- UNIQUENAME TEMPLATE -->
+  <bcf:uniquenametemplate>
+    <bcf:namepart order="1" use="1">prefix</bcf:namepart>
+    <bcf:namepart order="2">family</bcf:namepart>
+    <bcf:namepart order="3">given</bcf:namepart>
+  </bcf:uniquenametemplate>
   <!-- SORTING NAME KEY -->
   <bcf:sortingnamekey keyscheme="global">
     <bcf:keypart order="1">

@@ -211,6 +211,8 @@ start =
     }?,
     # Transliteration specification(s)
     translit*,
+    # Uniquename template
+    uniquenametemplate,
     # Sorting name key specification
     sortingnamekey,
     # Global sorting specification
@@ -346,6 +348,15 @@ translit =
       attribute target { "*" | xsd:string {minLength="1"} },
       attribute from { xsd:string {minLength="1"} },
       attribute to { xsd:string {minLength="1"} }
+    }+
+  }
+
+uniquenametemplate = 
+  element bcf:uniquenametemplate {
+    element bcf:namepart {
+     attribute order { xsd:integer },
+      attribute use { "0" | "1" }?,
+      text
     }+
   }
 

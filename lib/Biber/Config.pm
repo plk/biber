@@ -449,9 +449,16 @@ sub _config_file_set {
 
   # Set options from config file
   while (my ($k, $v) = each %$userconf) {
+    if (lc($k) eq 'uniquenametemplate') {
+      my $unkt;
+      foreach my $np (sort {$a->{order} <=> $b->{order}} @{$v->{namepart}}) {
+        push @$unkt, {name => $np->{content}, use => $np->{use} || 0}
+      }
+      Biber::Config->setblxoption('uniquenametemplate', $unkt);
+    }
     # sortingnamekey is special and has to be an array ref and so must come before
     # the later options tests which assume hash refs
-    if (lc($k) eq 'sortingnamekey') {
+    elsif (lc($k) eq 'sortingnamekey') {
       my $snss;
       foreach my $sns (@$v) {
         my $snkps;

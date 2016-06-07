@@ -54,6 +54,8 @@
 * DONE Decomm RIS
 * DONE Eras/circa/uncertain in cites
 * TODO uniquename and initstrings etc. for xname should use DM and no explicit nameparts.
+  ** Config.pm read for unt
+  ** Document \DeclareUniquenameTemplate, add to release notes, add to XSLT
 * TODO Implement Times
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 

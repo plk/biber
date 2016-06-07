@@ -89,6 +89,7 @@ start =
     element sortcase             { "0" | "1" }? &
     element sortfirstinits       { "0" | "1" }? &
     translit* &
+    uniquenametemplate? &
     sortingnamekey? &
     sorting? &
     element sortlocale           { text }? &
@@ -303,6 +304,15 @@ map =
         )
       ),
       empty
+    }+
+  }
+
+uniquenametemplate = 
+  element uniquenametemplate {
+    element namepart {
+     attribute order { xsd:integer },
+      attribute use { "0" | "1" }?,
+      text
     }+
   }
 
