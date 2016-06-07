@@ -885,6 +885,8 @@ sub _range {
 }
 
 # Date fields
+# NOTE - the biblatex options controlling era, circa and uncertain meta-information
+# output are in the .bcf but biber does not used them as it always outputs this information
 sub _date {
   my ($bibentry, $entry, $f, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
@@ -895,23 +897,20 @@ sub _date {
 
     my $datetype = $node->getAttribute('type') // '';
 
-    # Save circa information if requested
-    if (Biber::Config->getblxoption('datecirca') and
-        $node->getAttribute('circa')) {
+    # Save circa information
+    if ($node->getAttribute('circa')) {
       $bibentry->set_field($datetype . 'datecirca', 1);
     }
 
-    # Save uncertain date information if requested
-    if (Biber::Config->getblxoption('dateuncertain') and
-        $node->getAttribute('uncertain')) {
+    # Save uncertain date information
+    if ($node->getAttribute('uncertain')) {
       $bibentry->set_field($datetype . 'dateuncertain', 1);
     }
 
-    # Save date era information if requested
+    # Save era  date information
     # Possible values are specified in the schema and should be compatible
     # with lc(DateTime->secular_era)
-    if (Biber::Config->getblxoption('dateera') and
-        my $era = $node->getAttribute('era')) {
+    if (my $era = $node->getAttribute('era')) {
       $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce';# CE is assumed
     }
 

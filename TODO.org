@@ -33,7 +33,7 @@
 * DONE Transliteration interface
 ** Waiting for L::T release then make this a dep.
 * DONE Year is missing for knuth:ct in sorting.t?
-* DONE bibaltexml.pm date parsing
+* DONE biblatexml.pm date parsing
 * DONE BCE, circa etc.
 ** In bbl/bblxml output
 *** year should be yearabs
@@ -52,5 +52,8 @@
 * DONE Tune ...
 * DONE Remove/convert fastsort?
 * DONE Decomm RIS
+* TODO Eras/circa/uncertain in cites
+* TODO uniquename and initstrings etc. for xname should use DM and no explicit nameparts.
+* TODO Implement Times
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 
