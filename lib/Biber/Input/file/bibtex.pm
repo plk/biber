@@ -54,7 +54,7 @@ my $handlers = {
                 'field' => {
                             'default'  => {
                                            'code'     => \&_literal,
-                                           'date'     => \&_date,
+                                           'date'     => \&_datetime,
                                            'datepart' => \&_literal,
                                            'entrykey' => \&_literal,
                                            'integer'  => \&_literal,
@@ -1072,7 +1072,7 @@ sub _name {
 # Dates
 # NOTE - the biblatex options controlling era, circa and uncertain meta-information
 # output are in the .bcf but biber does not used them as it always outputs this information
-sub _date {
+sub _datetime {
   my ($bibentry, $entry, $field, $key) = @_;
   my $datetype = $field =~ s/date\z//xmsr;
   my $date = biber_decode_utf8($entry->get($field));
@@ -1098,8 +1098,7 @@ sub _date {
       biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
     }
 
-    # Save circa information - marker can be attached to start date ("circa") or
-    # end data "~" (EDTF).
+    # Save circa information
     if ($CONFIG_DATE_PARSERS{start}->circa or
          $CONFIG_DATE_PARSERS{end}->circa) {
       $bibentry->set_field($datetype . 'datecirca', 1);
@@ -1124,6 +1123,11 @@ sub _date {
     $bibentry->set_datafield($datetype . 'day', $sdate->day)
       unless $CONFIG_DATE_PARSERS{start}->missing('day');
 
+    $bibentry->set_datafield($datetype . 'hour', $sdate->hour) if $sdate->hour;
+    $bibentry->set_datafield($datetype . 'minute', $sdate->minute) if $sdate->minute;
+    $bibentry->set_datafield($datetype . 'second', $sdate->second) if $sdate->second;
+    $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name) if $sdate->hour;
+
     # End date can be missing
     if ($sep) {
       if (defined($edate)) {
@@ -1138,6 +1142,11 @@ sub _date {
 
           $bibentry->set_datafield($datetype . 'endday', $edate->day)
             unless $CONFIG_DATE_PARSERS{end}->missing('day');
+
+          $bibentry->set_datafield($datetype . 'endhour', $edate->hour) if $edate->hour;
+          $bibentry->set_datafield($datetype . 'endminute', $edate->minute) if $edate->minute;
+          $bibentry->set_datafield($datetype . 'endsecond', $edate->second) if $edate->second;
+          $bibentry->set_datafield($datetype . 'endtimezone', $edate->time_zone->name) if $edate->hour;
         }
         else { # open ended range - enddate is defined but empty
           $bibentry->set_datafield($datetype . 'endyear', '');

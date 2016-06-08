@@ -314,13 +314,13 @@ sub set_output_entry {
       push @start,
         grep {$_}
           $sf,
-            iso8601_monthday($be->get_field("${d}month")),
-              iso8601_monthday($be->get_field("${d}day"));
+            edtf_monthday($be->get_field("${d}month")),
+              edtf_monthday($be->get_field("${d}day"));
       push @end,
         grep {defined($_)} # because end can be def but empty
           $be->get_field("${d}endyear"),
-            iso8601_monthday($be->get_field("${d}endmonth")),
-              iso8601_monthday($be->get_field("${d}endday"));
+            edtf_monthday($be->get_field("${d}endmonth")),
+              edtf_monthday($be->get_field("${d}endday"));
       # Date range
       if (@end) {
 #        if ($end or $dm->field_is_nullok("${d}enddate")) {

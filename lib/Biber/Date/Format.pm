@@ -76,7 +76,7 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 7 8 ) ],
                 regex  => qr/^ (-?\d{4}) - (\d\d) $/x,
                 params => [ qw( year month ) ],
-                postprocess => \&_missing_day,
+                postprocess => \&_missing_day
             },
             {# EDTF 5.1.1
                 #[-]YYYY 1985
@@ -105,6 +105,7 @@ sub _pre {
   delete $p{self}{circa};
   delete $p{self}{uncertain};
   delete $p{self}{season};
+
   my %seasons = ( 21 => 'spring',
                   22 => 'summer',
                   23 => 'autumn',

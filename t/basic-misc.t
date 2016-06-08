@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 74;
+use Test::More tests => 75;
 use Test::Differences;
 unified_diff;
 
@@ -70,7 +70,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey m1 m2 m3 ent1 era1 era2 era3 era4} ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey m1 m2 m3 ent1 era1 era2 era3 era4 time1} ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
@@ -647,13 +647,13 @@ my $clone1 = q|    \entry{snk1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
-           family_i={D\\bibinitperiod},
+           family_i={D\bibinitperiod},
            given={John},
-           given_i={J\\bibinitperiod},
+           given_i={J\bibinitperiod},
            prefix={von},
-           prefix_i={v\\bibinitperiod},
+           prefix_i={v\bibinitperiod},
            suffix={Jr},
-           suffix_i={J\\bibinitperiod}}}%
+           suffix_i={J\bibinitperiod}}}%
       }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
@@ -669,13 +669,13 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
-           family_i={D\\bibinitperiod},
+           family_i={D\bibinitperiod},
            given={John},
-           given_i={J\\bibinitperiod},
+           given_i={J\bibinitperiod},
            prefix={von},
-           prefix_i={v\\bibinitperiod},
+           prefix_i={v\bibinitperiod},
            suffix={Jr},
-           suffix_i={J\\bibinitperiod}}}%
+           suffix_i={J\bibinitperiod}}}%
       }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
@@ -692,16 +692,16 @@ my $ent1 = q|    \entry{ent1}{book}{}
       \name{author}{2}{sortnamekeyscheme=snks1}{%
         {{uniquename=1,hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
-           family_i={S\\bibinitperiod},
+           family_i={S\bibinitperiod},
            given={Simon},
-           given_i={S\\bibinitperiod}}}%
+           given_i={S\bibinitperiod}}}%
         {{uniquename=0,sortnamekeyscheme=snks2,hash=878a51e6f69e95562d15cb8a3ead5c95}{%
            family={Brown},
-           family_i={B\\bibinitperiod},
+           family_i={B\bibinitperiod},
            given={Brian},
-           given_i={B\\bibinitperiod},
+           given_i={B\bibinitperiod},
            prefix={de},
-           prefix_i={d\\bibinitperiod}}}%
+           prefix_i={d\bibinitperiod}}}%
       }
       \strng{namehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{fullhash}{b2536a425d549b46de5f21c4d468050a}
@@ -740,9 +740,9 @@ my $era1 = q|    \entry{era1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=1,hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           family_i={S\\bibinitperiod},
+           family_i={S\bibinitperiod},
            given={Alan},
-           given_i={A\\bibinitperiod}}}%
+           given_i={A\bibinitperiod}}}%
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -759,13 +759,13 @@ my $era1 = q|    \entry{era1}{book}{}
     \endentry
 |;
 
-my $era2 = q|    \\entry{era2}{book}{}
+my $era2 = q|    \entry{era2}{book}{}
       \name{author}{1}{}{%
         {{uniquename=1,hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           family_i={S\\bibinitperiod},
+           family_i={S\bibinitperiod},
            given={Alan},
-           given_i={A\\bibinitperiod}}}%
+           given_i={A\bibinitperiod}}}%
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -787,9 +787,9 @@ my $era3 = q|    \entry{era3}{book}{}
       \name{author}{1}{}{%
         {{uniquename=1,hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           family_i={S\\bibinitperiod},
+           family_i={S\bibinitperiod},
            given={Alan},
-           given_i={A\\bibinitperiod}}}%
+           given_i={A\bibinitperiod}}}%
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -810,9 +810,9 @@ my $era4 = q|    \entry{era4}{book}{}
       \name{author}{1}{}{%
         {{uniquename=1,hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           family_i={S\\bibinitperiod},
+           family_i={S\bibinitperiod},
            given={Alan},
-           given_i={A\\bibinitperiod}}}%
+           given_i={A\bibinitperiod}}}%
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -833,8 +833,49 @@ my $era4 = q|    \entry{era4}{book}{}
     \endentry
 |;
 
+my $time1 = q|    \entry{time1}{book}{}
+      \name{author}{1}{}{%
+        {{uniquename=1,hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           family_i={S\bibinitperiod},
+           given={Alan},
+           given_i={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{labelalpha}{Smi01}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \field{labelnamesource}{author}
+      \field{day}{3}
+      \field{eventday}{3}
+      \field{eventhour}{17}
+      \field{eventminute}{7}
+      \field{eventmonth}{1}
+      \field{eventsecond}{34}
+      \field{eventtimezone}{UTC}
+      \field{eventyear}{2001}
+      \field{hour}{15}
+      \field{minute}{5}
+      \field{month}{1}
+      \field{second}{3}
+      \field{timezone}{floating}
+      \field{urlday}{3}
+      \field{urlhour}{17}
+      \field{urlminute}{7}
+      \field{urlmonth}{1}
+      \field{urlsecond}{34}
+      \field{urltimezone}{+0500}
+      \field{urlyear}{2001}
+      \field{year}{2001}
+    \endentry
+|;
+
 # Test negative dates and eras
 eq_or_diff($out->get_output_entry('era1', $main), $era1, 'Date meta information - 1');
 eq_or_diff($out->get_output_entry('era2', $main), $era2, 'Date meta information - 2');
 eq_or_diff($out->get_output_entry('era3', $main), $era3, 'Date meta information - 3');
 eq_or_diff($out->get_output_entry('era4', $main), $era4, 'Date meta information - 4');
+
+# Test times
+eq_or_diff($out->get_output_entry('time1', $main), $time1, 'Times - 1');

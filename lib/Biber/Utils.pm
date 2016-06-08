@@ -55,7 +55,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
-  split_xsv iso8601_monthday};
+  split_xsv edtf_monthday};
 
 =head1 FUNCTIONS
 
@@ -999,7 +999,7 @@ sub _expand_option {
 
 =head2 parse_date_range
 
-  Parse of ISO8601 date range
+  Parse of EDTF date range
   Returns two-element array ref: [start DT object, end DT object]
 
 =cut
@@ -1045,13 +1045,13 @@ sub parse_date {
   return eval {$obj->parse_datetime($string)};
 }
 
-=head2 iso8601_monthday
+=head2 edtf_monthday
 
-  Force month/day to ISO8601 format with leading zero
+  Force month/day to EDTF format with leading zero
 
 =cut
 
-sub iso8601_monthday {
+sub edtf_monthday {
   my $md = shift;
   return $md ? sprintf('%.2d', $md) : undef;
 }
