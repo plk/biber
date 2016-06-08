@@ -1055,7 +1055,7 @@ sub _name {
       }
 
       # Skip names that don't parse for some reason
-      next unless $no = parsename($name, $field, {useprefix => $useprefix});
+      next unless $no = parsename($name, $field, {useprefix => $useprefix}, $key);
     }
     # Deal with implied "et al" in data source
     if (lc($no->get_namestring) eq Biber::Config->getoption('others_string')) {
@@ -1391,8 +1391,8 @@ sub preprocess_file {
 =cut
 
 sub parsename {
-  my ($namestr, $fieldname, $opts, $testing) = @_;
-  my $useprefix = $opts->{useprefix};
+  my ($namestr, $fieldname, $opts, $key, $testing) = @_;
+
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
   $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
   # Collapse internal whitespace and escaped spaces like in "Christina A. L.\ Thiele"
@@ -1404,6 +1404,7 @@ sub parsename {
   # btparse can't do this so we do it before name parsing
   $namestr =~ s/(\w)\.(\w)/$1. $2/g if Biber::Config->getoption('fixinits');
 
+  my %namec;
   my $name = new Text::BibTeX::Name($namestr);
 
   # Formats so we can get BibTeX compatible nbsp inserted
@@ -1417,16 +1418,10 @@ sub parsename {
   $s_f->set_options(BTN_JR,    0, BTJ_MAYTIE, BTJ_NOTHING);
 
   # Generate name parts
-  my $family = biber_decode_utf8($name->format($l_f));
-  my $given  = biber_decode_utf8($name->format($f_f));
-  my $prefix = biber_decode_utf8($name->format($p_f));
-  my $suffix = biber_decode_utf8($name->format($s_f));
-
-  # Variables to hold the Text::BibTeX::NameFormat generated initials string
-  my $gen_family_i;
-  my $gen_given_i;
-  my $gen_prefix_i;
-  my $gen_suffix_i;
+  $namec{family} = biber_decode_utf8($name->format($l_f));
+  $namec{given}  = biber_decode_utf8($name->format($f_f));
+  $namec{prefix} = biber_decode_utf8($name->format($p_f));
+  $namec{suffix} = biber_decode_utf8($name->format($s_f));
 
   # Use a copy of $name so that when we generate the
   # initials, we do so without certain things. This is easier than trying
@@ -1455,82 +1450,47 @@ sub parsename {
   $pi_f->set_options(BTN_VON,   1, BTJ_FORCETIE, BTJ_NOTHING);
   $si_f->set_options(BTN_JR,    1, BTJ_FORCETIE, BTJ_NOTHING);
 
-  $gen_family_i = inits(biber_decode_utf8($nd_name->format($li_f)));
-  $gen_given_i  = inits(biber_decode_utf8($nd_name->format($fi_f)));
-  $gen_prefix_i = inits(biber_decode_utf8($nd_name->format($pi_f)));
-  $gen_suffix_i = inits(biber_decode_utf8($nd_name->format($si_f)));
+  $namec{'family-i'} = inits(biber_decode_utf8($nd_name->format($li_f)));
+  $namec{'given-i'}  = inits(biber_decode_utf8($nd_name->format($fi_f)));
+  $namec{'prefix-i'} = inits(biber_decode_utf8($nd_name->format($pi_f)));
+  $namec{'suffix-i'} = inits(biber_decode_utf8($nd_name->format($si_f)));
 
   my $namestring = '';
-
-  # Don't add suffix to namestring or nameinitstring as these are used for uniquename
-  # disambiguation which should only care about family + any prefix (if useprefix=true).
-  # See biblatex github tracker #306.
-
-  # prefix
-  my $ps;
-  my $prefix_stripped;
-  my $prefix_i;
-  if ($prefix) {
-    $prefix_i        = $gen_prefix_i;
-    ($ps, $prefix_stripped) = remove_outer($prefix);
-    $namestring .= "$prefix_stripped ";
-  }
-  # family name
-  my $fs;
-  my $family_stripped;
-  my $family_i;
-  if ($family) {
-    $family_i        = $gen_family_i;
-    ($fs, $family_stripped) = remove_outer($family);
-    $namestring .= "$family_stripped, ";
-  }
-  # suffix
-  my $ss;
-  my $suffix_stripped;
-  my $suffix_i;
-  if ($suffix) {
-    $suffix_i        = $gen_suffix_i;
-    ($ss, $suffix_stripped) = remove_outer($suffix);
-  }
-  # given name
-  my $gs;
-  my $given_stripped;
-  my $given_i;
-  if ($given) {
-    $given_i        = $gen_given_i;
-    ($gs, $given_stripped) = remove_outer($given);
-    $namestring .= "$given_stripped";
-  }
-
-  # Remove any trailing comma and space if, e.g. missing given
-  # Replace any nbspes
-  $namestring =~ s/,\s+\z//xms;
-  $namestring =~ s/\s*~\s*/ /gxms;
-
-  # Construct $nameinitstring
   my $nameinitstr = '';
-  $nameinitstr .= join('', @$prefix_i) . '_' if ( $useprefix and $prefix );
-  $nameinitstr .= $family_stripped if $family;
-  $nameinitstr .= '_' . join('', @$given_i) if $given;
-  $nameinitstr =~ s/\s+|~/_/g;
+
+  # basic bibtex names have a fixed data model
+  foreach my $np ('prefix', 'family', 'given', 'suffix') {
+    if ($namec{$np}) {
+      ($namec{"${np}-strippedflag"}, $namec{"${np}-stripped"}) = remove_outer($namec{$np});
+    }
+  }
+
+  foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
+    my $namepart = $np->{namepart};
+    my $useopt = exists($np->{use}) ? "use$namepart" : undef;
+    my $useoptval = $opts->{$useopt} || 0;
+
+    # No use attribute conditionals or the attribute is specified and matches the option
+    if ($namec{$namepart} and
+        (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
+      $namestring .= $namec{"${namepart}-stripped"};
+      if ($np->{base}) {# all of base part is included in initstr
+        $nameinitstr .= $namec{"${namepart}-stripped"};
+      }
+      else {
+        $nameinitstr .= join('', @{$namec{"${namepart}-i"}});
+      }
+    }
+  }
 
   # output is always NFC and so when testing the output of this routine, need NFC
   if ($testing) {
-    if ($given) {
-      $given_stripped = NFC($given_stripped);
-      $given_i        = [ map {NFC($_)} @$given_i ];
-    }
-    if ($family) {
-      $family_stripped  = NFC($family_stripped);
-      $family_i         = [ map {NFC($_)} @$family_i ];
-    }
-    if ($prefix) {
-      $prefix_stripped    = NFC($prefix_stripped);
-      $prefix_i           = [ map {NFC($_)} @$prefix_i ];
-    }
-    if ($suffix) {
-      $suffix_stripped    = NFC($suffix_stripped);
-      $suffix_i           = [ map {NFC($_)} @$suffix_i ];
+    # basic bibtex names have a fixed data model
+    foreach my $np ('prefix', 'family', 'given', 'suffix') {
+      if ($namec{$np}) {
+        $namec{"${np}-stripped"} = NFC($namec{"${np}-stripped"});
+        $namec{"${np}-i"}        = [ map {NFC($_)} @{$namec{"${np}-i"}} ];
+      }
     }
     if ($namestring) {
       $namestring = NFC($namestring);
@@ -1540,25 +1500,29 @@ sub parsename {
     }
   }
 
+  my %nameparts;
+  my $strip;
+  foreach my $np ('prefix', 'family', 'given', 'suffix') {
+    $nameparts{$np} = {string  => $namec{"${np}-stripped"} // undef,
+                       initial => $namec{$np} ? $namec{"${np}-i"} : undef};
+    $strip->{$np} = $namec{"${np}-strippedflag"};
+  }
+
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("namestring for '$key' (parsename): $namestring");
+    $logger->trace("nameinitstring for '$key' (parsename): $nameinitstr");
+  }
+
+
   # The "strip" entry tells us which of the name parts had outer braces
   # stripped during processing so we can add them back when printing the
   # .bbl so as to maintain maximum BibTeX compatibility
-  return Biber::Entry::Name->new(
-    given           => {string  => $given  eq '' ? undef : $given_stripped,
-                        initial => $given  eq '' ? undef : $given_i},
-    family          => {string  => $family eq '' ? undef : $family_stripped,
-                        initial => $family eq '' ? undef : $family_i},
-    prefix          => {string  => $prefix eq '' ? undef : $prefix_stripped,
-                        initial => $prefix eq '' ? undef : $prefix_i},
-    suffix          => {string  => $suffix eq '' ? undef : $suffix_stripped,
-                        initial => $suffix eq '' ? undef : $suffix_i},
-    namestring      => $namestring,
-    nameinitstring  => $nameinitstr,
-    strip           => {'given'  => $gs,
-                        'family' => $fs,
-                        'prefix' => $ps,
-                        'suffix' => $ss}
-    );
+  return  Biber::Entry::Name->new(
+                                  %nameparts,
+                                  namestring     => $namestring,
+                                  nameinitstring => $nameinitstr,
+                                  strip          => $strip
+                                 );
 }
 
 =head2 parsename_x
@@ -1586,7 +1550,6 @@ sub parsename {
 
 sub parsename_x {
   my ($namestr, $fieldname, $opts, $key) = @_;
-  my $useprefix = $opts->{useprefix};
   my $xnamesep = Biber::Config->getoption('xnamesep');
   my %nps = map {$_ => 1} $dm->get_constant_value('nameparts');
 
@@ -1643,53 +1606,41 @@ sub parsename_x {
   }
 
   my $namestring = '';
-  # Generate list of extra nameparts beyond the basic set
-  my @nps_nonbase = map {$_ !~ m/family|given|prefix|suffix/} $dm->get_constant_value('nameparts');
+  my $nameinitstr = '';
 
-  # Don't add suffix to namestring or nameinitstring as these are used for uniquename
-  # disambiguation which should only care about family name + any prefix (if useprefix=1).
-  # See biblatex github tracker #306.
+  foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
+    my $namepart = $np->{namepart};
+    my $useopt = exists($np->{use}) ? "use$namepart" : undef;
+    my $useoptval = $opts->{$useopt} || 0;
 
-  # prefix
-  if (my $p = $namec{prefix}) {
-    $namestring .= "$p ";
-  }
+    # useprefix can be name list or name local
+    if ($useopt and $useopt eq 'useprefix') {
+      $useoptval = $opts->{useprefix};
+    }
 
-  # family name
-  if (my $l = $namec{family}) {
-    $namestring .= "$l, ";
-  }
+    # No use attribute conditionals or the attribute is specified and matches the option
+    if (exists($namec{$namepart}) and
+        (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
+      $namestring .= $namec{$namepart};
+      if ($np->{base}) {# all of base part is included in initstr
+        $nameinitstr .= $namec{$namepart};
+      }
+      else {
+        $nameinitstr .= join('', @{$namec{"${namepart}-i"}});
+      }
 
-  # given name
-  if (my $f = $namec{given}) {
-    $namestring .= "$f, ";
-  }
-
-  # Custom name parts
-  foreach my $nbnp (@nps_nonbase) {
-    if (my $np = $namec{$nbnp}) {
-      $namestring .= "$np, ";
     }
   }
-
-  # Remove any trailing comma and space and nbsp
-  $namestring =~ s/,\s+$//;
-  $namestring =~ s/~/ /g;
-
-  # Construct $nameinitstring
-  my $nameinitstr = '';
-  $nameinitstr .= join('', @{$namec{'prefix-i'}}) . '_' if ( $useprefix and exists($namec{prefix}) );
-  $nameinitstr .= $namec{family} if exists($namec{family});
-  $nameinitstr .= '_' . join('', @{$namec{'given-i'}}) if exists($namec{given});
-  foreach my $nbnp (@nps_nonbase) {
-    $nameinitstr .= '_' . join('', @{$namec{"${nbnp}-i"}}) if exists($namec{$nbnp});
-  }
-  $nameinitstr =~ s/(?:\s+|~)/_/g;
 
   my %nameparts;
   foreach my $n (keys %nps) {
     $nameparts{$n} = {string  => $namec{$n} // undef,
                       initial => exists($namec{$n}) ? $namec{"${n}-i"} : undef};
+  }
+
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("namestring for '$key' (parsename_x): $namestring");
+    $logger->trace("nameinitstring for '$key' (parsename_x): $nameinitstr");
   }
 
   # The "strip" entry tells us which of the name parts had outer braces

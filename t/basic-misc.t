@@ -467,8 +467,8 @@ my $list1 = q|    \entry{list1}{book}{}
     \endentry
 |;
 
-my $Worman_N = [ 'Worman_N' ] ;
-my $Gennep = [ 'v_Gennep_A', 'v_Gennep_J' ] ;
+my $Worman_N = [ 'WormanN' ] ;
+my $Gennep = [ 'vGennepA', 'vGennepJ' ] ;
 
 eq_or_diff( $out->get_output_entry('t1', $main), $t1, 'bbl entry with maths in title 1');
 eq_or_diff( $bibentries->entry('shore')->get_field('month'), '3', 'default bib month macros');
@@ -476,7 +476,7 @@ ok( $bibentries->entry('t1')->has_keyword('primary'), 'Keywords test - 1');
 ok( $bibentries->entry('t1')->has_keyword('something'), 'Keywords test - 2');
 ok( $bibentries->entry('t1')->has_keyword('somethingelse'), 'Keywords test - 3');
 eq_or_diff( $out->get_output_entry('t2', $main), $t2, 'bbl entry with maths in title 2');
-is_deeply( Biber::Config->_get_uniquename('Worman_N', 'global'), $Worman_N, 'uniquename count 1');
+is_deeply( Biber::Config->_get_uniquename('WormanN', 'global'), $Worman_N, 'uniquename count 1');
 is_deeply( Biber::Config->_get_uniquename('vanGennep', 'global'), $Gennep, 'uniquename count 2');
 eq_or_diff( $out->get_output_entry('murray', $main), $murray1, 'bbl with > maxcitenames');
 eq_or_diff( $out->get_output_entry('missing1', $main), "  \\missing{missing1}\n", 'missing citekey 1');

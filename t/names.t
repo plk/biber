@@ -52,8 +52,8 @@ my $bibentries = $section->bibentries;
 my $name1 =
     { given          => {string => 'John', initial => ['J']},
       family         => {string => 'Doe', initial => ['D']},
-      nameinitstring => 'Doe_J',
-      namestring     => 'Doe, John',
+      nameinitstring => 'DoeJ',
+      namestring     => 'DoeJohn',
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef }};
@@ -61,8 +61,8 @@ my $name1 =
 my $name2 =
     { given          => {string => 'John', initial => ['J']},
       family         => {string => 'Doe', initial  => ['D']},
-      nameinitstring => 'Doe_J',
-      namestring     => 'Doe, John',
+      nameinitstring => 'DoeJ',
+      namestring     => 'DoeJohn',
       prefix         => {string => undef, initial => undef},
       suffix         => {string => 'Jr', initial => ['J']},
       strip          => { given => 0, family => 0, prefix => undef, suffix => 0 }};
@@ -70,8 +70,8 @@ my $name2 =
 my $name3 =
     { given          => {string => 'Johann~Gottfried', initial => ['J', 'G']},
       family         => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
-      nameinitstring => 'v_Berlichingen_zu_Hornberg_JG',
-      namestring     => 'von Berlichingen zu Hornberg, Johann Gottfried',
+      nameinitstring => 'vBerlichingen zu~HornbergJG',
+      namestring     => 'vonBerlichingen zu~HornbergJohann~Gottfried',
       prefix         => {string => 'von', initial => ['v']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => 0, suffix => undef }};
@@ -79,8 +79,8 @@ my $name3 =
 my $name4 =
     { given          => {string => 'Johann~Gottfried', initial => ['J', 'G']},
       family         => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
-      nameinitstring => 'Berlichingen_zu_Hornberg_JG',
-      namestring     => 'von Berlichingen zu Hornberg, Johann Gottfried',
+      nameinitstring => 'Berlichingen zu~HornbergJG',
+      namestring     => 'Berlichingen zu~HornbergJohann~Gottfried',
       prefix         => {string => 'von', initial => ['v']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => 0, suffix => undef }};
@@ -88,7 +88,7 @@ my $name4 =
 my $name5 =
    {  given          => {string => undef, initial => undef},
       family         => {string => 'Robert and Sons, Inc.', initial => ['R']},
-      nameinitstring => 'Robert_and_Sons,_Inc.',
+      nameinitstring => 'Robert and Sons, Inc.',
       namestring     => 'Robert and Sons, Inc.',
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
@@ -100,8 +100,8 @@ my $name6 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      namestring     => 'al-Ṣāliḥ, ʿAbdallāh',
-      nameinitstring => 'al-Ṣāliḥ_A' } ;
+      namestring     => 'al-ṢāliḥʿAbdallāh',
+      nameinitstring => 'al-ṢāliḥA'} ;
 
 my $name7 =
    {  given          => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
@@ -109,8 +109,8 @@ my $name7 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
-      namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
+      namestring     => 'de~laVallée~PoussinJean Charles~Gabriel',
+      nameinitstring => 'dlVallée~PoussinJCG' } ;
 
 my $name8 =
    {  given          => {string => 'Jean Charles Gabriel', initial => ['J']},
@@ -118,8 +118,8 @@ my $name8 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 1, family => 0, prefix => 0, suffix => undef },
-      namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => 'Vallée_Poussin_J' } ;
+      namestring     => 'Vallée~PoussinJean Charles Gabriel',
+      nameinitstring => 'Vallée~PoussinJ' } ;
 
 my $name9 =
    {  given          => {string => 'Jean Charles Gabriel {de la}~Vallée', initial => ['J', 'C', 'G', 'd', 'V']},
@@ -127,8 +127,8 @@ my $name9 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      namestring     => 'Poussin, Jean Charles Gabriel {de la} Vallée',
-      nameinitstring => 'Poussin_JCGdV' } ;
+      namestring     => 'PoussinJean Charles Gabriel {de la}~Vallée',
+      nameinitstring => 'PoussinJCGdV'} ;
 
 my $name10 =
    {  given          => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
@@ -136,8 +136,8 @@ my $name10 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 1, prefix => 0, suffix => undef },
-      namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => 'Vallée_Poussin_JCG' } ;
+      namestring     => 'Vallée PoussinJean Charles~Gabriel',
+      nameinitstring => 'Vallée PoussinJCG' } ;
 
 my $name11 =
    {  given          => {string => 'Jean Charles Gabriel', initial => ['J']},
@@ -145,8 +145,8 @@ my $name11 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 1, family => 1, prefix => 0, suffix => undef },
-      namestring     => 'de la Vallée Poussin, Jean Charles Gabriel',
-      nameinitstring => 'Vallée_Poussin_J' } ;
+      namestring     => 'Vallée PoussinJean Charles Gabriel',
+      nameinitstring => 'Vallée PoussinJ' } ;
 
 my $name12 =
    {  given          => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
@@ -154,8 +154,8 @@ my $name12 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      namestring     => 'Poussin, Jean Charles Gabriel',
-      nameinitstring => 'Poussin_JCG' } ;
+      namestring     => 'PoussinJean Charles~Gabriel',
+      nameinitstring => 'PoussinJCG' } ;
 
 my $name13 =
    {  given          => {string => 'Jean~Charles', initial => ['J', 'C']},
@@ -163,8 +163,8 @@ my $name13 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 1, prefix => undef, suffix => undef },
-      namestring     => 'Poussin Lecoq, Jean Charles',
-      nameinitstring => 'Poussin_Lecoq_JC' } ;
+      namestring     => 'Poussin LecoqJean~Charles',
+      nameinitstring => 'Poussin LecoqJC' } ;
 
 my $name14 =
    {  given          => {string => 'J.~C.~G.', initial => ['J', 'C', 'G']},
@@ -172,8 +172,8 @@ my $name14 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
-      namestring     => 'de la Vallée Poussin, J. C. G.',
-      nameinitstring => 'dl_Vallée_Poussin_JCG' } ;
+      namestring     => 'de~laVallée~PoussinJ.~C.~G.',
+      nameinitstring => 'dlVallée~PoussinJCG' } ;
 
 # Note that the family initials are wrong because the prefix "El-" was not stripped
 # This is because the default noinit regexp only strips lower-case prefices to protect
@@ -184,8 +184,8 @@ my $name15 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      namestring     => 'El-{M}allah, E. S.',
-      nameinitstring => 'El-{M}allah_ES' } ;
+      namestring     => 'El-{M}allahE.~S.',
+      nameinitstring => 'El-{M}allahES' } ;
 
 my $name16 =
    {  given          => {string => 'E.~S.', initial => ['E', 'S']},
@@ -193,8 +193,8 @@ my $name16 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      namestring     => '{K}ent-{B}oswell, E. S.',
-      nameinitstring => '{K}ent-{B}oswell_ES' } ;
+      namestring     => '{K}ent-{B}oswellE.~S.',
+      nameinitstring => '{K}ent-{B}oswellES' } ;
 
 my $name17 =
    {  given          => {string => 'A.~N.', initial => ['A', 'N']},
@@ -202,8 +202,8 @@ my $name17 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      namestring     => 'Other, A. N.',
-      nameinitstring => 'Other_AN' } ;
+      namestring     => 'OtherA.~N.',
+      nameinitstring => 'OtherAN' } ;
 
 my $name18 =
    {  given          => {string => undef, initial => undef},
@@ -212,7 +212,7 @@ my $name18 =
       suffix         => {string => undef, initial => undef},
       strip          => { given => undef, family => 1, prefix => undef, suffix => undef },
       namestring     => 'British National Corpus',
-      nameinitstring => 'British_National_Corpus' } ;
+      nameinitstring => 'British National Corpus' } ;
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
@@ -762,15 +762,15 @@ is_deeply(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author'), $nam
 is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 1}), $name3, 'parsename 3') ;
 is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 0}), $name4, 'parsename 4') ;
 is_deeply(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author'), $name5, 'parsename 5') ;
-is_deeply(Biber::Input::file::bibtex::parsename('al-Ṣāliḥ, ʿAbdallāh', 'author', undef, 1), $name6, 'parsename 6') ;
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1}, 1), $name7, 'parsename 7');
-is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author', undef, 1), $name8, 'parsename 8');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author', undef, 1), $name9, 'parsename 9');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author', undef, 1), $name10, 'parsename 10');
-is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la {Vallée Poussin}', 'author', undef, 1), $name11, 'parsename 11');
+is_deeply(Biber::Input::file::bibtex::parsename('al-Ṣāliḥ, ʿAbdallāh', 'author', undef, 'fakekey', 1), $name6, 'parsename 6') ;
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1}, 'fakekey', 1), $name7, 'parsename 7');
+is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author', undef, 'fakekey', 1), $name8, 'parsename 8');
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author', undef, 'fakekey', 1), $name9, 'parsename 9');
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author', undef, 'fakekey', 1), $name10, 'parsename 10');
+is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la {Vallée Poussin}', 'author', undef, 'fakekey', 1), $name11, 'parsename 11');
 is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel Poussin', 'author'), $name12, 'parsename 12');
 is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles {Poussin Lecoq}', 'author'), $name13, 'parsename 13');
-is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}, 1), $name14, 'parsename 14');
+is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1}, 'fakekey', 1), $name14, 'parsename 14');
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. El-{M}allah', 'author'), $name15, 'parsename 15');
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author'), $name16, 'parsename 16');
 is_deeply(Biber::Input::file::bibtex::parsename('Other, A.~N.', 'author'), $name17, 'parsename 17');

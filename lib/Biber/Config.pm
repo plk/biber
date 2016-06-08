@@ -449,10 +449,14 @@ sub _config_file_set {
 
   # Set options from config file
   while (my ($k, $v) = each %$userconf) {
+    # uniquenametemplate is special and has to be an array ref and so must come before
+    # the later options tests which assume hash refs
     if (lc($k) eq 'uniquenametemplate') {
       my $unkt;
       foreach my $np (sort {$a->{order} <=> $b->{order}} @{$v->{namepart}}) {
-        push @$unkt, {name => $np->{content}, use => $np->{use} || 0}
+        push @$unkt, {namepart => $np->{content},
+                      use => $np->{use} || 0,
+                      base => $np->{base} || 0}
       }
       Biber::Config->setblxoption('uniquenametemplate', $unkt);
     }

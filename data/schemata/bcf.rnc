@@ -356,6 +356,7 @@ uniquenametemplate =
     element bcf:namepart {
      attribute order { xsd:integer },
       attribute use { "0" | "1" }?,
+      attribute base { "0" | "1" }?,
       text
     }+
   }

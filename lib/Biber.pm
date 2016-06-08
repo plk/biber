@@ -631,12 +631,13 @@ sub parse_ctrlfile {
   # UNIQUENAME TEMPLATE
   my $unkt;
   foreach my $np (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{uniquenametemplate}{namepart}}) {
-    push @$unkt, {name => $np->{content}, use => $np->{use} || 0}
+    push @$unkt, {namepart => $np->{content},
+                  use => $np->{use} || 0,
+                  base => $np->{base} || 0}
   }
   Biber::Config->setblxoption('uniquenametemplate', $unkt);
 
   # SORTING NAME KEY
-
   # Use the order attributes to make sure things are in right order and create a data structure
   # we can use later
   my $snss;
@@ -3687,6 +3688,7 @@ sub fetch_data {
   if ($logger->is_debug()) {# performance tune
     $logger->debug('Looking for directly cited keys: ' . join(', ', @remaining_keys));
   }
+
   foreach my $datasource (@{$section->get_datasources}) {
     # shortcut if we have found all the keys now
     last unless (@remaining_keys or $section->is_allkeys);

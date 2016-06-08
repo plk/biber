@@ -913,6 +913,14 @@
               </choice>
             </attribute>
           </optional>
+          <optional>
+            <attribute name="base">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
           <text/>
         </element>
       </oneOrMore>
