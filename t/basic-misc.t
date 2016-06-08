@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 75;
+use Test::More tests => 76;
 use Test::Differences;
 unified_diff;
 
@@ -70,7 +70,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey m1 m2 m3 ent1 era1 era2 era3 era4 time1} ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey m1 m2 m3 ent1 era1 era2 era3 era4 time1 range1} ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
@@ -871,11 +871,38 @@ my $time1 = q|    \entry{time1}{book}{}
     \endentry
 |;
 
+my $range1 = q|    \entry{range1}{book}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=e71420afc24f7262a6c48ac55ac0cfb5}{%
+           family={Jones},
+           family_i={J\bibinitperiod},
+           given={Alan},
+           given_i={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{e71420afc24f7262a6c48ac55ac0cfb5}
+      \strng{fullhash}{e71420afc24f7262a6c48ac55ac0cfb5}
+      \field{labelalpha}{Jon34}
+      \field{sortinit}{J}
+      \field{sortinithash}{ec3950a647c092421b9fcca6d819504a}
+      \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{endyear}{}
+      \field{eventendyear}{}
+      \field{eventyear}{1565}
+      \field{origendyear}{}
+      \field{origyear}{2000}
+      \field{year}{1034}
+    \endentry
+|;
+
 # Test negative dates and eras
 eq_or_diff($out->get_output_entry('era1', $main), $era1, 'Date meta information - 1');
 eq_or_diff($out->get_output_entry('era2', $main), $era2, 'Date meta information - 2');
 eq_or_diff($out->get_output_entry('era3', $main), $era3, 'Date meta information - 3');
 eq_or_diff($out->get_output_entry('era4', $main), $era4, 'Date meta information - 4');
+
+# Test EDTF range markers
+eq_or_diff($out->get_output_entry('range1', $main), $range1, 'Range - 1');
 
 # Test times
 eq_or_diff($out->get_output_entry('time1', $main), $time1, 'Times - 1');

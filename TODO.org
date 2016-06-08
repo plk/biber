@@ -59,6 +59,7 @@
 * TODO Implement EDTF Date/Times
 ** 5.2.5 - seasons
 ** iso8601 -> EDTF in biblatex with fallback 
+** < year for BCE
 * TODO useprefix namelist and name scope with bibtex?
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 
