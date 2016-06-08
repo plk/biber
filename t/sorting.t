@@ -78,11 +78,11 @@ my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah
 my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,';
 my $labels      = '2005,3,2';
 my $sn1         = '';
-my $snk1        = 'mm,,John John!von!Doe!Jr,,,';
+my $snk1        = 'mm,,John John!von!Doe!Jr,,,0';
 
 # These have custom presort and also an exclusion on year and title set
-my $useprefix1  = 'ww,,von!Bobble!Terrence,,,';
-my $useprefix2  = 'ww,,Bobble!Terrence!von,,,';
+my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0';
+my $useprefix2  = 'ww,,Bobble!Terrence!von,,,0';
 
 # Sorting data schemata
 my $ssd1 = [

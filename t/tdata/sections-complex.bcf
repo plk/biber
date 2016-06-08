@@ -637,6 +637,7 @@
     </bcf:sort>
     <bcf:sort order="6">
       <bcf:sortitem order="1">volume</bcf:sortitem>
+      <bcf:sortitem order="2">0</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="7">
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>

@@ -3432,11 +3432,14 @@ sub sort_list {
     # Loop over all sorting fields
     for (my $i=0; $i<=$#{$list->get_sortdata($key)->[1]}; $i++) {
       my $sortfield = $list->get_sortdata($key)->[1][$i];
+      # Resolve real zeros back again
       if ($lsds->[$i]{int}) {
-        # There are some special cases to be careful of here:
-        # 1. "" is possible and this needs to be converted to 0 for int tests
-        # 2. "final" elements in sorting copy themselves as strings to further fields
-        #    and therefore need coercing to 0 for int tests
+        # There is special cases to be careful of here in that "final" elements
+        # in sorting copy themselves as strings to further sort fields and therefore
+        # need coercing to 0 for int tests. Fallback of '0' for int fields should
+        # be handled in the sorting spec otherwise this will be the default for missing
+        # int fields. This means that entries with missing data for an int sort field will
+        # always sort after int fields by default.
 
         # normalise all strings to a large int so that they sort after real ints
         # as a fallback

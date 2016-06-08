@@ -723,8 +723,8 @@ my $l26 = q|    \entry{L26}{book}{}
 
 # Malformed anyway but a decent test
 my $l28 = q|    \entry{L28}{book}{}
-      \field{sortinit}{}
-      \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \warn{\item Name "Deux et al.,, O." is malformed (consecutive commas): skipping name}
     \endentry
 |;

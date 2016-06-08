@@ -966,10 +966,19 @@ sub _generatesortinfo {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $sortobj;
+  my $szero = 0;
   $BIBER_SORT_NULL = 0;
   $BIBER_SORT_FINAL = '';
   foreach my $sortset (@{$sortscheme->{spec}}) {
     my $s = $self->_sortset($sortset, $citekey, $secnum, $section, $be, $sortlist);
+
+    # Did we get a real zero? This messes up tests below unless we are careful
+    # Don't try and make this more implicit, it is too subtle a problem
+    if ($s eq 'BIBERZERO') {
+      $szero = 1;
+      $s = 0;
+    }
+
     # We have already found a "final" item so if this item returns null,
     # copy in the "final" item string as it's the master key for this entry now
     if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
@@ -990,7 +999,7 @@ sub _generatesortinfo {
   }
 
   # Generate sortinit. Skip if there is no sortstring, which is possible in tests
-  if ($ss) {
+  if ($ss or $szero) {
     # This must ignore the presort characters, naturally
     my $pre = Biber::Config->getblxoption('presort', $be->get_field('entrytype'), $citekey);
 
@@ -1221,6 +1230,7 @@ sub _sort_string {
 
 sub _process_sort_attributes {
   my ($field_string, $sortelementattributes) = @_;
+  return 'BIBERZERO' if $field_string eq '0'; # preserve real zeros
   return $field_string unless $sortelementattributes;
   return $field_string unless $field_string;
   # process substring

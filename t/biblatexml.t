@@ -139,13 +139,13 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
 |;
 
 my $l2 = q|    \entry{loopkey:a}{book}{}
-      \field{sortinit}{}
-      \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
+      \field{sortinit}{0}
+      \field{sortinithash}{990108227b3316c02842d895999a0165}
     \endentry
 |;
 
 
-my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРозенфельд!БорисZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович,1983,,Мухаммад ибн муса алХорезми Около 783 около 850';
+my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРозенфельд!БорисZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович,1983,0,Мухаммад ибн муса алХорезми Около 783 около 850';
 
 # Test::Differences doesn't like utf8 unless it's encoded here
 eq_or_diff(encode_utf8($out->get_output_entry('bltx1', $main)), encode_utf8($l1), 'BibLaTeXML - 1');
