@@ -22,6 +22,7 @@ __PACKAGE__->mk_accessors(qw (
                                gender
                                hash
                                index
+                               basenamestring
                                namestring
                                nameinitstring
                             ));
@@ -47,6 +48,7 @@ sub new {
                       'gender',
                       'namestring',
                       'nameinitstring',
+                      'basenamestring',
                       'strip',
                       $dm->get_constant_value('nameparts')) {
       if (exists $params{$attr}) {

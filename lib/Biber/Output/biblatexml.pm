@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use parent qw(Biber::Output::base);
 
-use Biber;
 use Biber::Annotation;
 use Biber::Config;
 use Biber::Constants;

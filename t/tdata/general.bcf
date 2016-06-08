@@ -574,7 +574,7 @@
   </bcf:inheritance>
   <!-- UNIQUENAME TEMPLATE -->
   <bcf:uniquenametemplate>
-    <bcf:namepart order="1" use="1">prefix</bcf:namepart>
+    <bcf:namepart order="1" use="1" base="1">prefix</bcf:namepart>
     <bcf:namepart order="2" base="1">family</bcf:namepart>
     <bcf:namepart order="3">given</bcf:namepart>
   </bcf:uniquenametemplate>

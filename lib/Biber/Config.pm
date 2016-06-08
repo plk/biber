@@ -1,7 +1,6 @@
 package Biber::Config;
 use v5.16;
 
-use Biber;
 use Biber::Constants;
 use Biber::Utils;
 use IPC::Cmd qw( can_run );
@@ -453,11 +452,19 @@ sub _config_file_set {
     # the later options tests which assume hash refs
     if (lc($k) eq 'uniquenametemplate') {
       my $unkt;
+      my $bun;
       foreach my $np (sort {$a->{order} <=> $b->{order}} @{$v->{namepart}}) {
+
+        # useful later in uniqueness tests
+        if ($np->{base}) {
+          push @$bun, $np->{content};
+        }
+
         push @$unkt, {namepart => $np->{content},
                       use => $np->{use} || 0,
                       base => $np->{base} || 0}
       }
+      Biber::Config->setoption('baseuniquename', $bun);
       Biber::Config->setblxoption('uniquenametemplate', $unkt);
     }
     # sortingnamekey is special and has to be an array ref and so must come before

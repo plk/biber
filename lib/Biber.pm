@@ -55,7 +55,6 @@ my $logger = Log::Log4perl::get_logger('main');
 =head1 SYNOPSIS
 
     use Biber;
-
     my $biber = Biber->new();
     $biber->parse_ctrlfile("example.bcf");
     $biber->prepare;
@@ -630,11 +629,18 @@ sub parse_ctrlfile {
 
   # UNIQUENAME TEMPLATE
   my $unkt;
+  my $bun;
   foreach my $np (sort {$a->{order} <=> $b->{order}} @{$bcfxml->{uniquenametemplate}{namepart}}) {
+    # useful later in uniqueness tests
+    if ($np->{base}) {
+      push @$bun, $np->{content};
+    }
+
     push @$unkt, {namepart => $np->{content},
                   use => $np->{use} || 0,
                   base => $np->{base} || 0}
   }
+  Biber::Config->setoption('baseuniquename', $bun);
   Biber::Config->setblxoption('uniquenametemplate', $unkt);
 
   # SORTING NAME KEY
@@ -1539,7 +1545,7 @@ sub process_entries_post {
 
 =head2 process_uniqueprimaryauthor
 
-    Track seen primary author family names for generation of uniqueprimaryauthor
+    Track seen primary author base names for generation of uniqueprimaryauthor
 
 =cut
 
@@ -1556,7 +1562,7 @@ sub process_uniqueprimaryauthor {
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Creating uniqueprimaryauthor information for '$citekey'");
       }
-      my $paf = $nl->nth_name(1)->get_namepart('family');
+      my $paf = $nl->nth_name(1)->get_basenamestring;
       $be->set_field('seenprimaryauthor', $paf);
       Biber::Config->incr_seenpa($paf);
     }
@@ -2606,26 +2612,27 @@ sub uniqueness {
     which are ignored. They serve only to accumulate repeated occurrences with the context
     and we don't care about this and so the values are a useful sinkhole for such repetition.
 
-    For example, if we find in the global context a family name "Smith" in two different entries
+    For example, if we find in the global context a base name "Smith" in two different entries
     under the same form "Alan Smith", the data structure will look like:
 
     {Smith}->{global}->{Alan Smith} = 2
 
     We don't care about the value as this means that there are 2 "Alan Smith"s in the global
     context which need disambiguating identically anyway. So, we just count the keys for the
-    family name "Smith" in the global context to see how ambiguous the family name itself is. This
+    base name "Smith" in the global context to see how ambiguous the base name itself is. This
     would be "1" and so "Alan Smith" would get uniquename=0 because it's unambiguous as just
     "Smith".
 
     The same goes for "minimal" list context disambiguation for uniquename=5 or 6.
-    For example, if we had the family name "Smith" to disambiguate in two entries with labelname
+    For example, if we had the base name "Smith" to disambiguate in two entries with labelname
     "John Smith and Alan Jones", the data structure would look like:
 
     {Smith}->{Smith+Jones}->{John Smith+Alan Jones} = 2
 
-    Again, counting the keys of the context for the family name gives us "1" which means we
-    have uniquename=0 for "John Smith" in both entries because it's the same list. This also works
-    for repeated names in the same list "John Smith and Bert Smith". Disambiguating "Smith" in this:
+    Again, counting the keys of the context for the base name gives us "1" which means we
+    have uniquename=0 for "John Smith" in both entries because it's the same list. This also
+    works for repeated names in the same list "John Smith and Bert Smith". Disambiguating
+    "Smith" in this:
 
     {Smith}->{Smith+Smith}->{John Smith+Bert Smith} = 2
 
@@ -2648,8 +2655,6 @@ sub create_uniquename_info {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
-
     next unless my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey);
 
     if ($logger->is_trace()) {# performance tune
@@ -2671,8 +2676,8 @@ sub create_uniquename_info {
       # we can't, were still processing entries at this point.
       # Here we are just recording seen combinations of:
       #
-      # family name and how many name context keys contain this (uniquename = 0)
-      # familynames+initials and how many name context keys contain this (uniquename = 1)
+      # base name and how many name context keys contain this (uniquename = 0)
+      # basenames+initials and how many name context keys contain this (uniquename = 1)
       # Full name and how many name context keys contain this (uniquename = 2)
       #
       # A name context can be either a complete single name or a list of names
@@ -2689,14 +2694,9 @@ sub create_uniquename_info {
       my $morenames = $nl->get_morenames ? 1 : 0;
 
       my @truncnames;
-      my @familynames;
+      my @basenames;
       my @fullnames;
       my @initnames;
-
-      # Name list scope useprefix option
-      if (defined($nl->get_useprefix)) {
-        $useprefix = $nl->get_useprefix;
-      }
 
       foreach my $name (@$names) {
         # We need to track two types of uniquename disambiguation here:
@@ -2724,48 +2724,37 @@ sub create_uniquename_info {
 
           push @truncnames, $name;
           if ($un == 5 or $un == 6) {
-            push @familynames, $name->get_namepart('family');
+            push @basenames, $name->get_basenamestring;
             push @fullnames, $name->get_namestring;
             push @initnames, $name->get_nameinitstring;
           }
         }
       }
       # Information for mininit ($un=5) or minfull ($un=6)
-      my $familynames_string;
+      my $basenames_string;
       my $fullnames_string;
       my $initnames_string;
       if ($un == 5) {
-        $familynames_string = join("\x{10FFFD}", @familynames);
+        $basenames_string = join("\x{10FFFD}", @basenames);
         $initnames_string = join("\x{10FFFD}", @initnames);
-        if ($#familynames + 1 < $num_names or
+        if ($#basenames + 1 < $num_names or
             $morenames) {
-          $familynames_string .= "\x{10FFFD}et al"; # if truncated, record this
+          $basenames_string .= "\x{10FFFD}et al"; # if truncated, record this
           $initnames_string .= "\x{10FFFD}et al"; # if truncated, record this
         }
       }
       elsif ($un == 6) {
-        $familynames_string = join("\x{10FFFD}", @familynames);
+        $basenames_string = join("\x{10FFFD}", @basenames);
         $fullnames_string = join("\x{10FFFD}", @fullnames);
-        if ($#familynames + 1 < $num_names or
+        if ($#basenames + 1 < $num_names or
             $morenames) {
-          $familynames_string .= "\x{10FFFD}et al"; # if truncated, record this
+          $basenames_string .= "\x{10FFFD}et al"; # if truncated, record this
           $fullnames_string .= "\x{10FFFD}et al"; # if truncated, record this
         }
       }
 
       foreach my $name (@$names) {
-
-        # Name scope useprefix option
-        if (defined($name->get_useprefix)) {
-          $useprefix = $name->get_useprefix;
-        }
-
-        # we have to differentiate here between last names with and without
-        # prefices otherwise we end up falsely trying to disambiguate
-        # "X" and "von X" using initials/first names when there is no need.
-        my $familyname = ($useprefix and
-                          $name->get_namepart('prefix') ? $name->get_namepart('prefix') : '') .
-                          $name->get_namepart('family');
+        my $basename = $name->get_basenamestring;
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring     = $name->get_namestring;
         my $namecontext;
@@ -2781,22 +2770,22 @@ sub create_uniquename_info {
           $key = $namestring;
         }
         elsif ($un == 5) {
-          $namecontext = $familynames_string;
+          $namecontext = $basenames_string;
           $key = $initnames_string;
-          $name->set_minimal_info($familynames_string);
+          $name->set_minimal_info($basenames_string);
         }
         elsif ($un == 6) {
-          $namecontext = $familynames_string;
+          $namecontext = $basenames_string;
           $key = $fullnames_string;
-          $name->set_minimal_info($familynames_string);
+          $name->set_minimal_info($basenames_string);
         }
         if (first {Compare($_, $name)} @truncnames) {
-          # Record a uniqueness information entry for the family name showing that
-          # this family name has been seen in this name context
-          Biber::Config->add_uniquenamecount($familyname, $namecontext, $key);
+          # Record a uniqueness information entry for the base name showing that
+          # this base name has been seen in this name context
+          Biber::Config->add_uniquenamecount($basename, $namecontext, $key);
 
-          # Record a uniqueness information entry for the family name+initials showing that
-          # this familyname_initials has been seen in this name context
+          # Record a uniqueness information entry for the basename+initials showing that
+          # this basename_initials has been seen in this name context
           Biber::Config->add_uniquenamecount($nameinitstring, $namecontext, $key);
 
           # Record a uniqueness information entry for the fullname
@@ -2807,7 +2796,7 @@ sub create_uniquename_info {
         # As above but here we are collecting (separate) information for all
         # names, regardless of visibility (needed to track uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-          Biber::Config->add_uniquenamecount_all($familyname, $namecontext, $key);
+          Biber::Config->add_uniquenamecount_all($basename, $namecontext, $key);
           Biber::Config->add_uniquenamecount_all($nameinitstring, $namecontext, $key);
           Biber::Config->add_uniquenamecount_all($namestring, $namecontext, $key);
         }
@@ -2837,8 +2826,6 @@ sub generate_uniquename {
     my $bee = $be->get_field('entrytype');
 
     next unless my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey);
-
-    my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Setting uniquename for '$citekey'");
@@ -2875,24 +2862,8 @@ sub generate_uniquename {
         }
       }
 
-      # Name list scope useprefix option
-      if (defined($nl->get_useprefix)) {
-        $useprefix = $nl->get_useprefix;
-      }
-
       foreach my $name (@$names) {
-
-        # Name scope useprefix option
-        if (defined($name->get_useprefix)) {
-          $useprefix = $name->get_useprefix;
-        }
-
-        # we have to differentiate here between last names with and without
-        # prefices otherwise we end up falsely trying to disambiguate
-        # "X" and "von X" using initials/first names when there is no need.
-        my $familyname = ($useprefix and
-                          $name->get_namepart('prefix') ? $name->get_namepart('prefix') : '') .
-                          $name->get_namepart('family');
+        my $basename = $name->get_basenamestring;
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
         my $namecontext = 'global'; # default
@@ -2902,18 +2873,18 @@ sub generate_uniquename {
 
         if (first {Compare($_, $name)} @truncnames) {
 
-          # If there is one key for the family name, then it's unique using just family name
+          # If there is one key for the base name, then it's unique using just base name
           # because either:
-          # * There are no other identical family names
-          # * All identical family names have a family name+init ($un=5) or fullname ($un=6)
+          # * There are no other identical base names
+          # * All identical base names have a basename+init ($un=5) or fullname ($un=6)
           #   which is identical and therefore can't be disambiguated any further anyway
-          if (Biber::Config->get_numofuniquenames($familyname, $namecontext) == 1) {
+          if (Biber::Config->get_numofuniquenames($basename, $namecontext) == 1) {
             $name->set_uniquename(0);
           }
-          # Otherwise, if there is one key for the family name+inits, then it's unique
+          # Otherwise, if there is one key for the base name+inits, then it's unique
           # using initials because either:
-          # * There are no other identical  familyname+inits
-          # * All identical family name+inits have a fullname ($un=6) which is identical
+          # * There are no other identical  basename+inits
+          # * All identical basename+inits have a fullname ($un=6) which is identical
           #   and therefore can't be disambiguated any further anyway
           elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) == 1) {
             $name->set_uniquename(1);
@@ -2943,7 +2914,7 @@ sub generate_uniquename {
 
         # As above but not just for visible names (needed for uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-          if (Biber::Config->get_numofuniquenames_all($familyname, $namecontext) == 1) {
+          if (Biber::Config->get_numofuniquenames_all($basename, $namecontext) == 1) {
             $name->set_uniquename_all(0);
           }
           elsif (Biber::Config->get_numofuniquenames_all($nameinitstring, $namecontext) == 1) {
@@ -3005,7 +2976,7 @@ sub create_uniquelist_info {
 
       foreach my $name (@{$nl->names}) {
 
-        my $familyname   = $name->get_namepart('family');
+        my $basename = $name->get_basenamestring;
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
         my $ulminyearflag = 0;
@@ -3019,17 +2990,17 @@ sub create_uniquelist_info {
           }
         }
 
-        # uniquename is not set so generate uniquelist based on just family name
+        # uniquename is not set so generate uniquelist based on just base name
         if (not defined($name->get_uniquename_all)) {
-          push @$namelist, $familyname;
-          push @$ulminyear_namelist, $familyname if $ulminyearflag;
+          push @$namelist, $basename;
+          push @$ulminyear_namelist, $basename if $ulminyearflag;
         }
-        # uniquename indicates unique with just family name
+        # uniquename indicates unique with just base name
         elsif ($name->get_uniquename_all == 0) {
-          push @$namelist, $familyname;
-          push @$ulminyear_namelist, $familyname if $ulminyearflag;
+          push @$namelist, $basename;
+          push @$ulminyear_namelist, $basename if $ulminyearflag;
         }
-        # uniquename indicates unique with family name with initials
+        # uniquename indicates unique with base name with initials
         elsif ($name->get_uniquename_all == 1) {
           push @$namelist, $nameinitstring;
           push @$ulminyear_namelist, $nameinitstring if $ulminyearflag;
@@ -3092,19 +3063,19 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 
       foreach my $name (@{$nl->names}) {
 
-        my $familyname   = $name->get_namepart('family');
+        my $basename = $name->get_basenamestring;
         my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
 
-        # uniquename is not set so generate uniquelist based on just family name
+        # uniquename is not set so generate uniquelist based on just base name
         if (not defined($name->get_uniquename_all)) {
-          push @$namelist, $familyname;
+          push @$namelist, $basename;
         }
-        # uniquename indicates unique with just family name
+        # uniquename indicates unique with just base name
         elsif ($name->get_uniquename_all == 0) {
-          push @$namelist, $familyname;
+          push @$namelist, $basename;
         }
-        # uniquename indicates unique with family name with initials
+        # uniquename indicates unique with base name with initials
         elsif ($name->get_uniquename_all == 1) {
           push @$namelist, $nameinitstring;
         }

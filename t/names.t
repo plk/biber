@@ -52,6 +52,7 @@ my $bibentries = $section->bibentries;
 my $name1 =
     { given          => {string => 'John', initial => ['J']},
       family         => {string => 'Doe', initial => ['D']},
+      basenamestring => 'Doe',
       nameinitstring => 'DoeJ',
       namestring     => 'DoeJohn',
       prefix         => {string => undef, initial => undef},
@@ -61,6 +62,7 @@ my $name1 =
 my $name2 =
     { given          => {string => 'John', initial => ['J']},
       family         => {string => 'Doe', initial  => ['D']},
+      basenamestring => 'Doe',
       nameinitstring => 'DoeJ',
       namestring     => 'DoeJohn',
       prefix         => {string => undef, initial => undef},
@@ -70,7 +72,8 @@ my $name2 =
 my $name3 =
     { given          => {string => 'Johann~Gottfried', initial => ['J', 'G']},
       family         => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
-      nameinitstring => 'vBerlichingen zu~HornbergJG',
+      basenamestring => 'vonBerlichingen zu~Hornberg',
+      nameinitstring => 'vonBerlichingen zu~HornbergJG',
       namestring     => 'vonBerlichingen zu~HornbergJohann~Gottfried',
       prefix         => {string => 'von', initial => ['v']},
       suffix         => {string => undef, initial => undef},
@@ -79,6 +82,7 @@ my $name3 =
 my $name4 =
     { given          => {string => 'Johann~Gottfried', initial => ['J', 'G']},
       family         => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
+      basenamestring => 'Berlichingen zu~Hornberg',
       nameinitstring => 'Berlichingen zu~HornbergJG',
       namestring     => 'Berlichingen zu~HornbergJohann~Gottfried',
       prefix         => {string => 'von', initial => ['v']},
@@ -88,6 +92,7 @@ my $name4 =
 my $name5 =
    {  given          => {string => undef, initial => undef},
       family         => {string => 'Robert and Sons, Inc.', initial => ['R']},
+      basenamestring => 'Robert and Sons, Inc.',
       nameinitstring => 'Robert and Sons, Inc.',
       namestring     => 'Robert and Sons, Inc.',
       prefix         => {string => undef, initial => undef},
@@ -100,6 +105,7 @@ my $name6 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring => 'al-Ṣāliḥ',
       namestring     => 'al-ṢāliḥʿAbdallāh',
       nameinitstring => 'al-ṢāliḥA'} ;
 
@@ -109,8 +115,9 @@ my $name7 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
+      basenamestring => 'de~laVallée~Poussin',
       namestring     => 'de~laVallée~PoussinJean Charles~Gabriel',
-      nameinitstring => 'dlVallée~PoussinJCG' } ;
+      nameinitstring => 'de~laVallée~PoussinJCG' } ;
 
 my $name8 =
    {  given          => {string => 'Jean Charles Gabriel', initial => ['J']},
@@ -118,6 +125,7 @@ my $name8 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 1, family => 0, prefix => 0, suffix => undef },
+      basenamestring => 'Vallée~Poussin',
       namestring     => 'Vallée~PoussinJean Charles Gabriel',
       nameinitstring => 'Vallée~PoussinJ' } ;
 
@@ -127,6 +135,7 @@ my $name9 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring => 'Poussin',
       namestring     => 'PoussinJean Charles Gabriel {de la}~Vallée',
       nameinitstring => 'PoussinJCGdV'} ;
 
@@ -136,6 +145,7 @@ my $name10 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 1, prefix => 0, suffix => undef },
+      basenamestring => 'Vallée Poussin',
       namestring     => 'Vallée PoussinJean Charles~Gabriel',
       nameinitstring => 'Vallée PoussinJCG' } ;
 
@@ -145,6 +155,7 @@ my $name11 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 1, family => 1, prefix => 0, suffix => undef },
+      basenamestring => 'Vallée Poussin',
       namestring     => 'Vallée PoussinJean Charles Gabriel',
       nameinitstring => 'Vallée PoussinJ' } ;
 
@@ -154,6 +165,7 @@ my $name12 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring => 'Poussin',
       namestring     => 'PoussinJean Charles~Gabriel',
       nameinitstring => 'PoussinJCG' } ;
 
@@ -163,6 +175,7 @@ my $name13 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 1, prefix => undef, suffix => undef },
+      basenamestring => 'Poussin Lecoq',
       namestring     => 'Poussin LecoqJean~Charles',
       nameinitstring => 'Poussin LecoqJC' } ;
 
@@ -172,8 +185,9 @@ my $name14 =
       prefix         => {string => 'de~la', initial => ['d', 'l']},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
+      basenamestring => 'de~laVallée~Poussin',
       namestring     => 'de~laVallée~PoussinJ.~C.~G.',
-      nameinitstring => 'dlVallée~PoussinJCG' } ;
+      nameinitstring => 'de~laVallée~PoussinJCG' } ;
 
 # Note that the family initials are wrong because the prefix "El-" was not stripped
 # This is because the default noinit regexp only strips lower-case prefices to protect
@@ -184,6 +198,7 @@ my $name15 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring => 'El-{M}allah',
       namestring     => 'El-{M}allahE.~S.',
       nameinitstring => 'El-{M}allahES' } ;
 
@@ -193,6 +208,7 @@ my $name16 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring => '{K}ent-{B}oswell',
       namestring     => '{K}ent-{B}oswellE.~S.',
       nameinitstring => '{K}ent-{B}oswellES' } ;
 
@@ -202,6 +218,7 @@ my $name17 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring => 'Other',
       namestring     => 'OtherA.~N.',
       nameinitstring => 'OtherAN' } ;
 
@@ -211,6 +228,7 @@ my $name18 =
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => undef, family => 1, prefix => undef, suffix => undef },
+      basenamestring => 'British National Corpus',
       namestring     => 'British National Corpus',
       nameinitstring => 'British National Corpus' } ;
 

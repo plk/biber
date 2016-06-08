@@ -1038,6 +1038,7 @@ sub _name {
       middle            => {string => 'Fred', initial => ['F']},
       prefix            => {string => undef, initial => undef},
       suffix            => {string => undef, initial => undef},
+      basenamestring    => 'Doe',
       namestring        => 'Doe, John Fred',
       nameinitstring    => 'Doe_JF',
       gender            => sm,
@@ -1094,7 +1095,7 @@ sub parsename {
             push @partinits, gen_initials($part->textContent());
           }
         }
-        $namec{"${n}_i"} = \@partinits;
+        $namec{"${n}-i"} = \@partinits;
       }
       # with no parts
       elsif (my $t = $npnode->textContent()) {
@@ -1103,69 +1104,65 @@ sub parsename {
           $logger->debug("Found namepart '$n': $t");
         }
         if (my $ni = $node->getAttribute('initial')) {
-          $namec{"${n}_i"} = [$ni];
+          $namec{"${n}-i"} = [$ni];
         }
         else {
-          $namec{"${n}_i"} = [gen_initials($t)];
+          $namec{"${n}-i"} = [gen_initials($t)];
         }
       }
     }
   }
 
+  my $basenamestring = '';
   my $namestring = '';
-  # Generate list of extra nameparts beyond the basic set
-  my @nps_nonbase = map {$_ !~ m/prefix|suffix|family|given/} $dm->get_constant_value('nameparts');
+  my $nameinitstr = '';
 
-  # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
-  # which should only care about family name + any prefix (if useprefix=1). See biblatex github
-  # tracker #306.
+  # Loop over name parts required for constructing uniquename information
+  # and create the strings needed for this
+  #
+  # Note that with the defailt uniquenametemplate, we don't conditionalise the *position*
+  # of a prefix on the useprefix option but rather its inclusion at all. This is because, if
+  # useprefix determined the position of the prefix in the uniquename strings:
+  # * As a global setting, it would generate the same uniqueness information and is therefore
+  #   irrelevant
+  # * As a local setting (entry, namelist, name), it would lead to different uniqueness
+  #   information which would be confusing
+  foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
+    my $namepart = $np->{namepart};
+    my $useopt = exists($np->{use}) ? "use$namepart" : undef;
+    my $useoptval = $opts->{$useopt} || 0;
 
-  # prefix
-  if (my $p = $namec{prefix}) {
-    $namestring .= "$p ";
-  }
+    # useprefix can be name list or name local
+    if ($useopt and $useopt eq 'useprefix') {
+      $useoptval = $opts->{useprefix};
+    }
 
-  # family name
-  if (my $l = $namec{family}) {
-    $namestring .= "$l, ";
-  }
+    # No use attribute conditionals or the attribute is specified and matches the option
+    if (exists($namec{$namepart}) and
+        (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
+      $namestring .= $namec{$namepart};
+      if ($np->{base}) {# all of base part is included in initstr
+        $nameinitstr .= $namec{$namepart};
+        $basenamestring .= $namec{$namepart};
+      }
+      else {
+        $nameinitstr .= join('', @{$namec{"${namepart}-i"}});
+      }
 
-  # given name
-  if (my $f = $namec{given}) {
-    $namestring .= "$f, ";
-  }
-
-  # Custom name parts
-  foreach my $nbnp (@nps_nonbase) {
-    if (my $np = $namec{$nbnp}) {
-      $namestring .= "$np, ";
     }
   }
-
-  # Remove any trailing comma and space
-  $namestring =~ s/,\s+$//;
-  $namestring =~ s/~/ /g;
-
-  # Construct $nameinitstring
-  my $nameinitstr = '';
-  $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $useprefix and exists($namec{prefix}) );
-  $nameinitstr .= $namec{family} if exists($namec{family});
-  $nameinitstr .= '_' . join('', @{$namec{given_i}}) if exists($namec{given});
-  foreach my $nbnp (@nps_nonbase) {
-    $nameinitstr .= '_' . join('', @{$namec{"${nbnp}_i"}}) if exists($namec{$nbnp});
-  }
-  $nameinitstr =~ s/(?:\s+|~)/_/g;
 
   my %nps;
   foreach my $n ($dm->get_constant_value('nameparts')) { # list type so returns list
     $nps{$n} = {string  => $namec{$n} // undef,
-                initial => exists($namec{$n}) ? $namec{"${n}_i"} : undef};
+                initial => exists($namec{$n}) ? $namec{"${n}-i"} : undef};
   }
 
   my $newname = Biber::Entry::Name->new(
                                         %nps,
                                         namestring      => $namestring,
                                         nameinitstring  => $nameinitstr,
+                                        basenamestring  => $basenamestring,
                                         gender          => $node->getAttribute('gender')
                                        );
 

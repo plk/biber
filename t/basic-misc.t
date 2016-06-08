@@ -468,7 +468,7 @@ my $list1 = q|    \entry{list1}{book}{}
 |;
 
 my $Worman_N = [ 'WormanN' ] ;
-my $Gennep = [ 'vGennepA', 'vGennepJ' ] ;
+my $Gennep = [ 'vanGennepA', 'vanGennepJ' ] ;
 
 eq_or_diff( $out->get_output_entry('t1', $main), $t1, 'bbl entry with maths in title 1');
 eq_or_diff( $bibentries->entry('shore')->get_field('month'), '3', 'default bib month macros');

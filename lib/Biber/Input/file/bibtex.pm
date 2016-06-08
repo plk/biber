@@ -1380,6 +1380,7 @@ sub preprocess_file {
       family         => {string => 'Doe', initial => ['D']},
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
+      basenamestring => 'Doe',
       namestring     => 'Doe, John',
       nameinitstring => 'Doe_J',
       strip          => {'given'  => 0,
@@ -1455,8 +1456,9 @@ sub parsename {
   $namec{'prefix-i'} = inits(biber_decode_utf8($nd_name->format($pi_f)));
   $namec{'suffix-i'} = inits(biber_decode_utf8($nd_name->format($si_f)));
 
+  my $basenamestring = '';
   my $namestring = '';
-  my $nameinitstr = '';
+  my $nameinitstring = '';
 
   # basic bibtex names have a fixed data model
   foreach my $np ('prefix', 'family', 'given', 'suffix') {
@@ -1475,10 +1477,11 @@ sub parsename {
         (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
       $namestring .= $namec{"${namepart}-stripped"};
       if ($np->{base}) {# all of base part is included in initstr
-        $nameinitstr .= $namec{"${namepart}-stripped"};
+        $nameinitstring .= $namec{"${namepart}-stripped"};
+        $basenamestring .= $namec{"${namepart}-stripped"};
       }
       else {
-        $nameinitstr .= join('', @{$namec{"${namepart}-i"}});
+        $nameinitstring .= join('', @{$namec{"${namepart}-i"}});
       }
     }
   }
@@ -1492,11 +1495,14 @@ sub parsename {
         $namec{"${np}-i"}        = [ map {NFC($_)} @{$namec{"${np}-i"}} ];
       }
     }
+    if ($basenamestring) {
+      $basenamestring = NFC($basenamestring);
+    }
     if ($namestring) {
       $namestring = NFC($namestring);
     }
-    if ($nameinitstr) {
-      $nameinitstr = NFC($nameinitstr);
+    if ($nameinitstring) {
+      $nameinitstring = NFC($nameinitstring);
     }
   }
 
@@ -1510,7 +1516,7 @@ sub parsename {
 
   if ($logger->is_trace()) {# performance tune
     $logger->trace("namestring for '$key' (parsename): $namestring");
-    $logger->trace("nameinitstring for '$key' (parsename): $nameinitstr");
+    $logger->trace("nameinitstring for '$key' (parsename): $nameinitstring");
   }
 
 
@@ -1520,7 +1526,8 @@ sub parsename {
   return  Biber::Entry::Name->new(
                                   %nameparts,
                                   namestring     => $namestring,
-                                  nameinitstring => $nameinitstr,
+                                  nameinitstring => $nameinitstring,
+                                  basenamestring => $basenamestring,
                                   strip          => $strip
                                  );
 }
@@ -1537,6 +1544,7 @@ sub parsename {
       family         => {string => 'Doe', initial => ['D']},
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
+      basenamestring => 'Doe',
       namestring     => 'Doe, John',
       nameinitstring => 'Doe_J',
       strip          => {'given'  => 0,
@@ -1605,9 +1613,20 @@ sub parsename_x {
     }
   }
 
+  my $basenamestring = '';
   my $namestring = '';
-  my $nameinitstr = '';
+  my $nameinitstring = '';
 
+  # Loop over name parts required for constructing uniquename information
+  # and create the strings needed for this
+  #
+  # Note that with the defailt uniquenametemplate, we don't conditionalise the *position*
+  # of a prefix on the useprefix option but rather its inclusion at all. This is because, if
+  # useprefix determined the position of the prefix in the uniquename strings:
+  # * As a global setting, it would generate the same uniqueness information and is therefore
+  #   irrelevant
+  # * As a local setting (entry, namelist, name), it would lead to different uniqueness
+  #   information which would be confusing
   foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
     my $namepart = $np->{namepart};
     my $useopt = exists($np->{use}) ? "use$namepart" : undef;
@@ -1623,10 +1642,11 @@ sub parsename_x {
         (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
       $namestring .= $namec{$namepart};
       if ($np->{base}) {# all of base part is included in initstr
-        $nameinitstr .= $namec{$namepart};
+        $nameinitstring .= $namec{$namepart};
+        $basenamestring .= $namec{$namepart};
       }
       else {
-        $nameinitstr .= join('', @{$namec{"${namepart}-i"}});
+        $nameinitstring .= join('', @{$namec{"${namepart}-i"}});
       }
 
     }
@@ -1640,7 +1660,7 @@ sub parsename_x {
 
   if ($logger->is_trace()) {# performance tune
     $logger->trace("namestring for '$key' (parsename_x): $namestring");
-    $logger->trace("nameinitstring for '$key' (parsename_x): $nameinitstr");
+    $logger->trace("nameinitstring for '$key' (parsename_x): $nameinitstring");
   }
 
   # The "strip" entry tells us which of the name parts had outer braces
@@ -1649,7 +1669,8 @@ sub parsename_x {
   return  Biber::Entry::Name->new(
                                   %nameparts,
                                   namestring     => $namestring,
-                                  nameinitstring => $nameinitstr,
+                                  nameinitstring => $nameinitstring,
+                                  basenamestring => $basenamestring,
                                   %snks
                                  );
 }
