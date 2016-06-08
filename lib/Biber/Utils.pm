@@ -1031,8 +1031,7 @@ sub parse_date_end {
 
 =head2 parse_date
 
-  Parse of ISO8601 dates using subclass of Date::Format::ISO8601 which handles
-  missing data
+  Parse of EDTF dates
 
 =cut
 
@@ -1041,6 +1040,8 @@ sub parse_date {
   # Must do this to make sure meta-information from sub-class Biber::Date::Format is reset
   $obj->init();
   return 0 unless $string;
+  return 0 if $string eq 'unknown'; # EDTF 5.2.3
+  return 0 if $string eq 'open';    # EDTF 5.2.3
   return eval {$obj->parse_datetime($string)};
 }
 
