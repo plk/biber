@@ -53,7 +53,7 @@
 * DONE Remove/convert fastsort?
 * DONE Decomm RIS
 * DONE Eras/circa/uncertain in cites
-* TODO uniquename and initstrings etc. for xname should use DM and no explicit nameparts.
+* DONE uniquename and initstrings etc. for xname should use DM and no explicit nameparts.
   ** Config.pm read for unt
   ** Document \DeclareUniquenameTemplate, add to release notes, add to XSLT
 * TODO Implement Times

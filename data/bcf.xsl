@@ -797,6 +797,25 @@
             </xsl:for-each>
           </tbody>
         </table>
+        <h4>Uniquename Template</h4>
+        <table>
+          <thead>
+            <tr><td colspan="2"><b><xsl:value-of select="./@keyscheme"/></b></td></tr>
+            <tr><td>Order</td><td>Base</td><td>Use option</td><td>Namepart</td></tr>
+          </thead>
+          <tbody>
+            <xsl:for-each select="/bcf:controlfile/bcf:uniquenametemplate/bcf:namepart">
+              <xsl:sort select="./@order"/>
+              <tr>
+                <td><xsl:value-of select="./@order"/></td>
+                <td><xsl:value-of select="./@base"/></td>
+                <td><xsl:value-of select="./@use"/></td>
+                <td><xsl:value-of select="./text()"/></td>
+              </tr>
+            </xsl:for-each>
+          </tbody>
+        </table>
+        <br/>
         <h4>Sorting Name Key Specification</h4>
         <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekey">
           <table>
