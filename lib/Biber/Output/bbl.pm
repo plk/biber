@@ -383,7 +383,8 @@ sub set_output_entry {
 
   foreach my $field (@{$dmh->{fields}}) {
     # Performance - as little as possible here - loop over DM fields for every entry
-    if ( $be->get_field($field) or
+    my $val = $be->get_field($field);
+    if ( length($val) or # length() catches '0' values, which we want
          ($dm->field_is_nullok($field) and
           $be->field_exists($field)) ) {
 
@@ -397,7 +398,7 @@ sub set_output_entry {
         next if ($field eq 'xref' and
                  not $section->has_citekey($be->get_field('xref')));
       }
-      $acc .= _printfield($be, $field, $be->get_field($field) );
+      $acc .= _printfield($be, $field, $val);
     }
   }
 

@@ -944,10 +944,13 @@ sub _datetime {
           $bibentry->set_field($datetype . 'season', $season);
         }
 
-        $bibentry->set_datafield($datetype . 'hour', $sdate->hour) if $sdate->hour;
-        $bibentry->set_datafield($datetype . 'minute', $sdate->minute) if $sdate->minute;
-        $bibentry->set_datafield($datetype . 'second', $sdate->second) if $sdate->second;
-        $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name) if $sdate->hour;
+        # must be an hour if there is a time but could be 00 so use defined()
+        unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
+          $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
+          $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
+          $bibentry->set_datafield($datetype . 'second', $sdate->second);
+          $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name);
+        }
       }
       else {
         biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start - ignoring", $bibentry);
@@ -973,10 +976,13 @@ sub _datetime {
             $bibentry->set_field($datetype . 'endseason', $season);
           }
 
-          $bibentry->set_datafield($datetype . 'endhour', $edate->hour) if $edate->hour;
-          $bibentry->set_datafield($datetype . 'endminute', $edate->minute) if $edate->minute;
-          $bibentry->set_datafield($datetype . 'endsecond', $edate->second) if $edate->second;
-          $bibentry->set_datafield($datetype . 'endtimezone', $edate->time_zone->name) if $edate->hour;
+          # must be an hour if there is a time but could be 00 so use defined()
+          unless ($CONFIG_DATE_PARSERS{end}->missing('time')) {
+            $bibentry->set_datafield($datetype . 'endhour', $edate->hour);
+            $bibentry->set_datafield($datetype . 'endminute', $edate->minute);
+            $bibentry->set_datafield($datetype . 'endsecond', $edate->second);
+            $bibentry->set_datafield($datetype . 'endtimezone', $edate->time_zone->name);
+          }
         }
         else { # open ended range - edate is defined but empty
           $bibentry->set_datafield($datetype . 'endyear', '');
@@ -1005,11 +1011,13 @@ sub _datetime {
           $bibentry->set_field($datetype . 'season', $season);
         }
 
-        $bibentry->set_datafield($datetype . 'hour', $sdate->hour) if $sdate->hour;
-        $bibentry->set_datafield($datetype . 'minute', $sdate->minute) if $sdate->minute;
-        $bibentry->set_datafield($datetype . 'second', $sdate->second) if $sdate->second;
-        $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name) if $sdate->hour;
-
+        # must be an hour if there is a time but could be 00 so use defined()
+        unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
+          $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
+          $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
+          $bibentry->set_datafield($datetype . 'second', $sdate->second);
+          $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name);
+        }
       }
       else {
         biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $node->textContent() . "' of date field '$f' - ignoring", $bibentry);

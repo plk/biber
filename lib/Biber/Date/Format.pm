@@ -70,13 +70,15 @@ DateTime::Format::Builder->create_class(
                 length => [ qw( 10 11 ) ],
                 regex  => qr/^ (-?\d{4}) - (\d\d) - (\d\d) $/x,
                 params => [ qw( year month day ) ],
+                postprocess => \&_missing_time
             },
             {# EDTF 5.1.1
                 #[-]YYYY-MM 1985-04
                 length => [ qw( 7 8 ) ],
                 regex  => qr/^ (-?\d{4}) - (\d\d) $/x,
                 params => [ qw( year month ) ],
-                postprocess => \&_missing_day
+                postprocess => [ \&_missing_day,
+                                 \&_missing_time ]
             },
             {# EDTF 5.1.1
                 #[-]YYYY 1985
@@ -84,14 +86,16 @@ DateTime::Format::Builder->create_class(
                 regex  => qr/^ (-?\d{4}) $/x,
                 params => [ qw( year ) ],
                 postprocess => [ \&_missing_month,
-                                 \&_missing_day ],
+                                 \&_missing_day,
+                                 \&_missing_time ]
             },
             {# EDTF 5.2.4
                 #y[-]YYYYY... y17000000002
                 regex  => qr/^ y(-?\d+) $/x,
                 params => [ qw( year ) ],
                 postprocess => [ \&_missing_month,
-                                 \&_missing_day ],
+                                 \&_missing_day,
+                                 \&_missing_time ]
             },
         ],
     }
@@ -138,12 +142,6 @@ sub _pre {
   return $p{input};
 }
 
-sub _missing_year {
-  my %p = @_;
-  $p{self}{missing}{year} = 1;
-  return 1;
-}
-
 sub _missing_month {
   my %p = @_;
   $p{self}{missing}{month} = 1;
@@ -156,5 +154,10 @@ sub _missing_day {
   return 1;
 }
 
+sub _missing_time {
+  my %p = @_;
+  $p{self}{missing}{time} = 1;
+  return 1;
+}
 
 1;

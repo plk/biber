@@ -330,9 +330,10 @@ sub set_output_entry {
                                                      'literal',
                                                      'code',
                                                      'verbatim'])}) {
-    if ( ($dm->field_is_nullok($field) and
-          $be->field_exists($field)) or
-         $be->get_field($field) ) {
+    my $val = $be->get_field($field);
+    if ( length($val) or # length() catches '0' values, which we want
+         ($dm->field_is_nullok($field) and
+          $be->field_exists($field))) {
       next if $dm->field_is_skipout($field);
       next if $dm->get_fieldformat($field) eq 'xsv';
       # we skip outputting the crossref or xref when the parent is not cited
@@ -347,15 +348,16 @@ sub set_output_entry {
       }
 
       $xml->dataElement([$xml_prefix, 'field'],
-                        _bblxml_norm($be->get_field($field)), name => $field);
+                        _bblxml_norm($val), name => $field);
     }
   }
 
   # Date parts
   foreach my $field (sort @{$dm->get_fields_of_type('field', 'datepart')}) {
-    if ( ($dm->field_is_nullok($field) and
-          $be->field_exists($field)) or
-         $be->get_field($field) ) {
+    my $val = $be->get_field($field);
+    if ( length($val) or # length() catches '0' values, which we want
+         ($dm->field_is_nullok($field) and
+          $be->field_exists($field))) {
       my @attrs = ('name', $field);
       # *year should print *yearabs if it exists and was split from date field
       my $str;
@@ -390,11 +392,11 @@ sub set_output_entry {
           $str = _bblxml_norm($be->get_field("${d}yearabs"));
         }
         else {
-          $str = _bblxml_norm($be->get_field($field));
+          $str = _bblxml_norm($val);
         }
       }
       else {
-        $str = _bblxml_norm($be->get_field($field));
+        $str = _bblxml_norm($val);
       }
       $xml->dataElement([$xml_prefix, 'field'], $str, @attrs);
     }

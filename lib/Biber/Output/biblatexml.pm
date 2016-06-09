@@ -223,22 +223,20 @@ sub set_output_entry {
                                                      'integer',
                                                      'verbatim',
                                                      'uri'])}) {
-    if ( ($dm->field_is_nullok($field) and
-          $be->field_exists($field)) or
-         $be->get_field($field) ) {
-
+    my $val = $be->get_field($field);
+    if (length($val) or # length() catches '0' values, which we want
+      ($dm->field_is_nullok($field) and
+       $be->field_exists($field))) {
       next if $dm->get_fieldformat($field) eq 'xsv';
       next if $field eq 'crossref'; # this is handled above
-      if (my $f = $be->get_field($field)) {
-        my @attrs;
+      my @attrs;
 
-        # field scope annotation
-        if (my $ann = Biber::Annotation->get_annotation('field', $key, $field)) {
-          push @attrs, ('annotation' => $ann);
-        }
-
-        $xml->dataElement([$xml_prefix, $field], NFC($f), @attrs);
+      # field scope annotation
+      if (my $ann = Biber::Annotation->get_annotation('field', $key, $field)) {
+        push @attrs, ('annotation' => $ann);
       }
+
+      $xml->dataElement([$xml_prefix, $field], NFC($val), @attrs);
     }
   }
 
@@ -323,7 +321,6 @@ sub set_output_entry {
               edtf_monthday($be->get_field("${d}endday"));
       # Date range
       if (@end) {
-#        if ($end or $dm->field_is_nullok("${d}enddate")) {
         $xml->dataElement([$xml_prefix, 'start'], NFC(join('-', @start)));
         $xml->dataElement([$xml_prefix, 'end'], NFC(join('-', @end)));
       }

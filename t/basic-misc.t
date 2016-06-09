@@ -858,9 +858,9 @@ my $time1 = q|    \entry{time1}{book}{}
       \field{eventtimezone}{UTC}
       \field{eventyear}{2001}
       \field{hour}{15}
-      \field{minute}{5}
+      \field{minute}{0}
       \field{month}{1}
-      \field{second}{3}
+      \field{second}{0}
       \field{timezone}{floating}
       \field{urlday}{3}
       \field{urlhour}{17}
