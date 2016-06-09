@@ -1109,6 +1109,11 @@ sub _datetime {
       $bibentry->set_field($datetype . 'dateuncertain', 1);
     }
 
+    # Save start season date information
+    if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
+      $bibentry->set_field($datetype . 'season', $season);
+    }
+
     unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
       $bibentry->set_datafield($datetype . 'year', $sdate->year);
       $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
@@ -1142,6 +1147,11 @@ sub _datetime {
 
           $bibentry->set_datafield($datetype . 'endday', $edate->day)
             unless $CONFIG_DATE_PARSERS{end}->missing('day');
+
+          # Save end season date information
+          if (my $season = $CONFIG_DATE_PARSERS{end}->season) {
+            $bibentry->set_field($datetype . 'endseason', $season);
+          }
 
           $bibentry->set_datafield($datetype . 'endhour', $edate->hour) if $edate->hour;
           $bibentry->set_datafield($datetype . 'endminute', $edate->minute) if $edate->minute;

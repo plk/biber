@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 76;
+use Test::More tests => 77;
 use Test::Differences;
 unified_diff;
 
@@ -70,7 +70,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey m1 m2 m3 ent1 era1 era2 era3 era4 time1 range1} ;
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey m1 m2 m3 ent1 era1 era2 era3 era4 time1 range1 season1} ;
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
@@ -895,6 +895,28 @@ my $range1 = q|    \entry{range1}{book}{}
     \endentry
 |;
 
+my $season1 = q|    \entry{season1}{book}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=12cae7a5437aee8989512ae17a6ea0ca}{%
+           family={Thing},
+           family_i={T\\bibinitperiod},
+           given={Ian},
+           given_i={I\\bibinitperiod}}}%
+      }
+      \strng{namehash}{12cae7a5437aee8989512ae17a6ea0ca}
+      \strng{fullhash}{12cae7a5437aee8989512ae17a6ea0ca}
+      \field{labelalpha}{Thi03}
+      \field{sortinit}{T}
+      \field{sortinithash}{423d138a005a533b47e6475e39378bf2}
+      \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{eventseason}{autumn}
+      \field{eventyear}{2002}
+      \field{season}{spring}
+      \field{year}{2003}
+    \endentry
+|;
+
 # Test negative dates and eras
 eq_or_diff($out->get_output_entry('era1', $main), $era1, 'Date meta information - 1');
 eq_or_diff($out->get_output_entry('era2', $main), $era2, 'Date meta information - 2');
@@ -904,5 +926,9 @@ eq_or_diff($out->get_output_entry('era4', $main), $era4, 'Date meta information 
 # Test EDTF range markers
 eq_or_diff($out->get_output_entry('range1', $main), $range1, 'Range - 1');
 
-# Test times
+# Test EDTF seasons
+eq_or_diff($out->get_output_entry('season1', $main), $season1, 'Seasons - 1');
+
+# Test EDTF times
 eq_or_diff($out->get_output_entry('time1', $main), $time1, 'Times - 1');
+

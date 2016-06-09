@@ -112,8 +112,8 @@ sub _pre {
                   24 => 'winter' );
 
   # EDTF 5.1.5 (season)
-  if ($p{input} =~ s/^-?\d{4}-(2[1234])$//) {
-    $p{self}{season} = $seasons{$1};
+  if ($p{input} =~ s/^(-?\d{4})-(2[1234])$/$1/) {
+    $p{self}{season} = $seasons{$2};
   }
 
   # EDTF 5.1.2 (time zone)

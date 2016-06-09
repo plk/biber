@@ -57,9 +57,11 @@
   ** Config.pm read for unt
   ** Document \DeclareUniquenameTemplate, add to release notes, add to XSLT
 * TODO Implement EDTF Date/Times
-** 5.2.5 - seasons
+** 5.2.5 - seasons - new field (not in DM, only from date parsing), containing localisation string
 ** iso8601 -> EDTF in biblatex with fallback 
 ** < year for BCE
+** Document *season and all label* new fields
+** times printing
 * TODO useprefix namelist and name scope with bibtex?
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 
