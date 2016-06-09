@@ -57,10 +57,10 @@
   ** Config.pm read for unt
   ** Document \DeclareUniquenameTemplate, add to release notes, add to XSLT
 * TODO Implement EDTF Date/Times
-** TODO circa/uncertain/era should apply to individual dates, not the range.
+** DONE circa/uncertain/era should apply to individual dates, not the range.
 ** DONE 5.2.5 - seasons - new field (not in DM, only from date parsing), containing localisation string
 ** DONE iso8601 -> EDTF in biblatex with fallback 
-** TODO < year for BCE
+** DONE < year for CE/AD
 ** DONE Document *season and all label* new fields
 ** TODO times printing
 * TODO useprefix namelist and name scope with bibtex?
