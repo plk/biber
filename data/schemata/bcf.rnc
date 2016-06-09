@@ -28,9 +28,6 @@ start =
       attribute component { "biblatex" },
       attribute type { "global" },
       alphaothers,
-      datecirca?,
-      dateera?,
-      dateuncertain?,
       labelalpha,
       labelnamespec,
       labeltitle,
@@ -704,25 +701,6 @@ alphaothers =
       xsd:normalizedString { pattern = "\S+" }
     }
   }
-datecirca =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "datecirca" },
-    element bcf:value { "0" | "1" }
-  }
-dateera =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "dateera" },
-    element bcf:value { "0" | "1" }
-  }
-dateuncertain =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "dateuncertain" },
-    element bcf:value { "0" | "1" }
-  }
-
 sortupper = 
   element bcf:option {
     attribute type { "singlevalued" },

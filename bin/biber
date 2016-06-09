@@ -562,9 +562,8 @@ Set threshold for crossrefs.
 
 =item B<--namesep=[sep]>
 
-Use F<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
+Use C<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
 'and'.
-
 
 =item B<--no-bblxml-schema>
 
