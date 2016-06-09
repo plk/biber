@@ -1197,27 +1197,48 @@ sub generate_bltxml_schema {
           $writer->endTag(); # attribute
           $writer->endTag(); # optional
 
-          # optional circa attribute
+          # optional circa attributes
           $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'circa');
+          $writer->startTag('attribute', 'name' => 'startcirca');
+          $writer->startTag('choice');
+          $writer->dataElement('value', 'true');
+          $writer->endTag(); # choice
+          $writer->endTag(); # attribute
+          $writer->endTag(); # optional
+          $writer->startTag('optional');
+          $writer->startTag('attribute', 'name' => 'endcirca');
           $writer->startTag('choice');
           $writer->dataElement('value', 'true');
           $writer->endTag(); # choice
           $writer->endTag(); # attribute
           $writer->endTag(); # optional
 
-          # optional uncertain attribute
+          # optional uncertain attributes
           $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'uncertain');
+          $writer->startTag('attribute', 'name' => 'startuncertain');
+          $writer->startTag('choice');
+          $writer->dataElement('value', 'true');
+          $writer->endTag(); # choice
+          $writer->endTag(); # attribute
+          $writer->endTag(); # optional
+          $writer->startTag('optional');
+          $writer->startTag('attribute', 'name' => 'enduncertain');
           $writer->startTag('choice');
           $writer->dataElement('value', 'true');
           $writer->endTag(); # choice
           $writer->endTag(); # attribute
           $writer->endTag(); # optional
 
-          # optional era attribute
+          # optional era attributes
           $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'era');
+          $writer->startTag('attribute', 'name' => 'startera');
+          $writer->startTag('choice');
+          $writer->dataElement('value', 'bce');
+          $writer->endTag(); # choice
+          $writer->endTag(); # attribute
+          $writer->endTag(); # optional
+          $writer->startTag('optional');
+          $writer->startTag('attribute', 'name' => 'endera');
           $writer->startTag('choice');
           $writer->dataElement('value', 'bce');
           $writer->endTag(); # choice
@@ -1582,25 +1603,46 @@ sub generate_bblxml_schema {
   }
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
-  # dateparts may have an era attribute
+  # dateparts may have an era attributes
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'era');
+  $writer->startTag('attribute', 'name' => 'startera');
   $writer->startTag('choice');
   $writer->dataElement('value', 'bce');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
-  # dateparts may have a circa attribute
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'circa');
+  $writer->startTag('attribute', 'name' => 'endera');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'bce');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  # dateparts may have a circa attributes
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'startcirca');
   $writer->startTag('choice');
   $writer->dataElement('value', 'true');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
-  # dateparts may have an uncertain attribute
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'uncertain');
+  $writer->startTag('attribute', 'name' => 'endcirca');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  # dateparts may have an uncertain attributes
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'startuncertain');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'enduncertain');
   $writer->startTag('choice');
   $writer->dataElement('value', 'true');
   $writer->endTag();    # choice

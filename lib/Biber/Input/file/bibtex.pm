@@ -1099,15 +1099,12 @@ sub _datetime {
     }
 
     # Save circa information
-    if ($CONFIG_DATE_PARSERS{start}->circa or
-         $CONFIG_DATE_PARSERS{end}->circa) {
-      $bibentry->set_field($datetype . 'datecirca', 1);
-    }
+    $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
+    $bibentry->set_field($datetype . 'enddatecirca', 1) if $CONFIG_DATE_PARSERS{end}->circa;
 
     # Save uncertain date information
-    if ($CONFIG_DATE_PARSERS{start}->uncertain) {
-      $bibentry->set_field($datetype . 'dateuncertain', 1);
-    }
+    $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
+    $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
 
     # Save start season date information
     if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
@@ -1118,8 +1115,8 @@ sub _datetime {
       $bibentry->set_datafield($datetype . 'year', $sdate->year);
       $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
       my $era = lc($sdate->secular_era);
-      # Save era date information
-      $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce'; # CE is assumed
+      # Save era date information - CE is assumed
+      $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce';
     }
 
     $bibentry->set_datafield($datetype . 'month', $sdate->month)
@@ -1140,6 +1137,9 @@ sub _datetime {
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
             $bibentry->set_datafield($datetype . 'endyear', $edate->year);
             $bibentry->set_field($datetype . 'endyearabs', abs($edate->ce_year));
+            my $era = lc($edate->secular_era);
+            # Save era date information - CE is assumed
+            $bibentry->set_field($datetype . 'endera', $era) unless $era eq 'ce';
           }
 
           $bibentry->set_datafield($datetype . 'endmonth', $edate->month)

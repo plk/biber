@@ -898,20 +898,29 @@ sub _datetime {
     my $datetype = $node->getAttribute('type') // '';
 
     # Save circa information
-    if ($node->getAttribute('circa')) {
+    if ($node->getAttribute('startcirca')) {
       $bibentry->set_field($datetype . 'datecirca', 1);
+    }
+    if ($node->getAttribute('endcirca')) {
+      $bibentry->set_field($datetype . 'enddatecirca', 1);
     }
 
     # Save uncertain date information
-    if ($node->getAttribute('uncertain')) {
+    if ($node->getAttribute('startuncertain')) {
       $bibentry->set_field($datetype . 'dateuncertain', 1);
+    }
+    if ($node->getAttribute('enduncertain')) {
+      $bibentry->set_field($datetype . 'enddateuncertain', 1);
     }
 
     # Save era  date information
     # Possible values are specified in the schema and should be compatible
     # with lc(DateTime->secular_era)
-    if (my $era = $node->getAttribute('era')) {
+    if (my $era = $node->getAttribute('startera')) {
       $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce';# CE is assumed
+    }
+    if (my $era = $node->getAttribute('endera')) {
+      $bibentry->set_field($datetype . 'endera', $era) unless $era eq 'ce';# CE is assumed
     }
 
     if (my $start = $node->findnodes("./$NS:start")) { # Date range

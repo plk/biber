@@ -756,6 +756,7 @@ my $era1 = q|    \entry{era1}{book}{}
       \field{year}{380}
       \field{dateera}{bce}
       \field{origdateera}{bce}
+      \field{origenddateera}{bce}
     \endentry
 |;
 
@@ -780,6 +781,7 @@ my $era2 = q|    \entry{era2}{book}{}
       \field{dateera}{bce}
       \field{eventdateera}{bce}
       \field{origdateera}{bce}
+      \field{origenddateera}{bce}
     \endentry
 |;
 
@@ -828,7 +830,7 @@ my $era4 = q|    \entry{era4}{book}{}
       \field{year}{1034}
       \true{datecirca}
       \true{eventdateuncertain}
-      \true{origdatecirca}
+      \true{origenddatecirca}
       \true{urldatecirca}
     \endentry
 |;

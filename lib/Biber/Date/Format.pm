@@ -111,18 +111,6 @@ sub _pre {
                   23 => 'autumn',
                   24 => 'winter' );
 
-  # EDTF 5.1.5 (season)
-  if ($p{input} =~ s/^(-?\d{4})-(2[1234])$/$1/) {
-    $p{self}{season} = $seasons{$2};
-  }
-
-  # EDTF 5.1.2 (time zone)
-  if ($p{input} =~ s/Z$//) {
-    $p{parsed}{time_zone} = 'UTC';
-  }
-  elsif ($p{input} =~ s/([+-]\d\d:\d\d)$//) {
-    $p{parsed}{time_zone} = $1;
-  }
 
   # EDTF 5.2.1 (approximate)
   if ($p{input} =~ s/^\s*(.+?)\s*\~\s*$/$1/i) {
@@ -133,6 +121,20 @@ sub _pre {
   if ($p{input} =~ s/^\s*(.+?)\s*\?\s*$/$1/i) {
     $p{self}{uncertain} = 1;
   }
+
+  # EDTF 5.1.2 (time zone)
+  if ($p{input} =~ s/Z$//) {
+    $p{parsed}{time_zone} = 'UTC';
+  }
+  elsif ($p{input} =~ s/([+-]\d\d:\d\d)$//) {
+    $p{parsed}{time_zone} = $1;
+  }
+
+  # EDTF 5.1.5 (season)
+  if ($p{input} =~ s/^(-?\d{4})-(2[1234])$/$1/) {
+    $p{self}{season} = $seasons{$2};
+  }
+
   return $p{input};
 }
 

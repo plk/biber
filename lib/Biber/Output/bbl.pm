@@ -409,10 +409,16 @@ sub set_output_entry {
     if ($be->get_field("${d}datecirca")) {
       $acc .= "      \\true{${d}datecirca}\n";
     }
+    if ($be->get_field("${d}enddatecirca")) {
+      $acc .= "      \\true{${d}enddatecirca}\n";
+    }
 
     # Uncertain dates
     if ($be->get_field("${d}dateuncertain")) {
       $acc .= "      \\true{${d}dateuncertain}\n";
+    }
+    if ($be->get_field("${d}enddateuncertain")) {
+      $acc .= "      \\true{${d}enddateuncertain}\n";
     }
 
     # Only output era for date if:
@@ -422,6 +428,9 @@ sub set_output_entry {
       next if ($d eq '' and not $be->get_field('datesplit'));
       if (my $era = $be->get_field("${d}era")) {
         $acc .= "      \\field{${d}dateera}{$era}\n";
+      }
+      if (my $era = $be->get_field("${d}endera")) {
+        $acc .= "      \\field{${d}enddateera}{$era}\n";
       }
     }
   }

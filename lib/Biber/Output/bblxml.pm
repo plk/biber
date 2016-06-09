@@ -363,12 +363,18 @@ sub set_output_entry {
 
         # Circa dates
         if ($be->get_field("${d}datecirca")) {
-          push @attrs, ('circa', 'true');
+          push @attrs, ('startcirca', 'true');
+        }
+        if ($be->get_field("${d}enddatecirca")) {
+          push @attrs, ('endcirca', 'true');
         }
 
         # Uncertain dates
         if ($be->get_field("${d}dateuncertain")) {
-          push @attrs, ('uncertain', 'true');
+          push @attrs, ('startuncertain', 'true');
+        }
+        if ($be->get_field("${d}enddateuncertain")) {
+          push @attrs, ('enduncertain', 'true');
         }
 
         # Only output era for date if:
@@ -376,7 +382,10 @@ sub set_output_entry {
         # The field is any other startyear
         if ($d eq '' and $be->get_field('datesplit')) {
           if (my $era = $be->get_field("${d}era")) {
-            push @attrs, ('era', $era);
+            push @attrs, ('startera', $era);
+          }
+          if (my $era = $be->get_field("${d}endera")) {
+            push @attrs, ('endera', $era);
           }
           $str = _bblxml_norm($be->get_field("${d}yearabs"));
         }
