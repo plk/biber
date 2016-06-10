@@ -438,7 +438,9 @@ sub _label_name {
       $nr_start = 1;
       $nr_end = $visibility; # Else use bib visibility
     }
-    $logger->trace("$realname/numnames=$numnames/visibility=$visibility/nr_start=$nr_start/nr_end=$nr_end");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("$realname/numnames=$numnames/visibility=$visibility/nr_start=$nr_start/nr_end=$nr_end");
+    }
     for (my $i = $nr_start-1; $i < $nr_end; $i++) {
       # Deal with prefix options
       if ($useprefices[$i] and $prefices[$i]) {

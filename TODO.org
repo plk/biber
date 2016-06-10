@@ -56,9 +56,9 @@
 * DONE uniquename and initstrings etc. for xname should use DM and no explicit nameparts.
   ** Config.pm read for unt
   ** Document \DeclareUniquenameTemplate, add to release notes, add to XSLT
-* TODO useprefix namelist and name scope with bibtex?
+* DONE useprefix namelist and name scope with bibtex
 * TODO Internals.pm still mentions explicit name parts - replace with base/non-base etc.
-** Opts mentioning names to move to new \DeclareLabelalphaNameTemplate which gives nameparts to labelling.
+** pstrwidth (pwidth), pcompound and compound to NameTemplate
 * TODO hash/fullhash for all names, bltx resolves namehash/fullhash from labelnamesource?
 * TODO Implement EDTF Date/Times
 ** DONE circa/uncertain/era should apply to individual dates, not the range.
