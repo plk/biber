@@ -181,7 +181,8 @@ sub new {
   # Mostly only used for .bbl output since that's the most commonly used one and so
   # we care about performance there. Other output formats are not often used and so a few
   # seconds difference is irrelevant.
-  $self->{helpers} = {namelists => [sort grep
+  $self->{helpers} = {namelistsall => [sort @{$self->get_fields_of_type('list', 'name')}],
+                      namelists => [sort grep
                                     {not $self->field_is_skipout($_)}
                                     @{$self->get_fields_of_type('list', 'name')}],
                       lists     => [sort grep

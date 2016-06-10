@@ -452,7 +452,7 @@
   <!-- LABELALPHA NAME TEMPLATE -->
   <bcf:labelalphanametemplate type="global">
     <bcf:namepart order="1" use="1" base="1" substring_width="1">prefix</bcf:namepart>
-    <bcf:namepart order="2" base="1" compound="1">family</bcf:namepart>
+    <bcf:namepart order="2" base="1" substring_compound="1">family</bcf:namepart>
     <bcf:namepart order="3">given</bcf:namepart>
   </bcf:labelalphanametemplate>
   <!-- LABELALPHA TEMPLATE -->

@@ -1837,8 +1837,7 @@ sub process_labelname {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $lnamespec = Biber::Config->getblxoption('labelnamespec', $bee);
-  my $dm = Biber::Config->get_dm;
-  my $dmnames = $dm->get_fields_of_type('list', 'name');
+  my $dmh = Biber::Config->get_dm_helpers;
 
   # First we set the normal labelname name
   foreach my $h_ln ( @$lnamespec ) {
@@ -1851,7 +1850,7 @@ sub process_labelname {
       $lnameopt = $ln;
     }
 
-    unless (first {$ln eq $_} @$dmnames) {
+    unless (first {$ln eq $_} @{$dmh->{namelistsall}}) {
       biber_warn("Labelname candidate '$ln' is not a name field - skipping");
       next;
     }
@@ -1878,7 +1877,7 @@ sub process_labelname {
     }
 
     # We have already warned about this above
-    unless (first {$ln eq $_} @$dmnames) {
+    unless (first {$ln eq $_} @{$dmh->{namelistsall}}) {
       next;
     }
 
@@ -2095,9 +2094,9 @@ sub process_pername_hashes {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $dm = Biber::Config->get_dm;
+  my $dmh = Biber::Config->get_dm_helpers;
 
-  foreach my $pn (@{$dm->get_fields_of_type('list', 'name')}) {
+  foreach my $pn (@{$dmh->{namelistsall}}) {
     next unless my $names = $be->get_field($pn);
     foreach my $n (@{$names->names}) {
       $n->set_hash($self->_genpnhash($citekey, $n));
@@ -2118,7 +2117,7 @@ sub process_visible_names {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  my $dm = Biber::Config->get_dm;
+  my $dmh = Biber::Config->get_dm_helpers;
 
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Postprocessing visible names for section $secnum");
@@ -2134,7 +2133,7 @@ sub process_visible_names {
     my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
     my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
 
-    foreach my $n (@{$dm->get_fields_of_type('list', 'name')}) {
+    foreach my $n (@{$dmh->{namelistsall}}) {
       next unless my $names = $be->get_field($n);
 
       my $count = $names->count_names;
