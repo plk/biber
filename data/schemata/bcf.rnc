@@ -118,6 +118,19 @@ start =
       }+
     }?,
 
+    # labelalpha nametemplate specification
+    element bcf:labelalphanametemplate {
+      attribute type { xsd:string }?, # per-type?
+      element bcf:namepart {
+        attribute order { xsd:integer },
+        attribute use { "0" | "1" }?,
+        attribute base { "0" | "1" }?,
+        attribute substring_width { xsd:integer }?,
+        attribute substring_compound { "0" | "1" }?,
+        text
+      }+
+    }+,
+    
     # labelalpha template specification
     element bcf:labelalphatemplate {
       attribute type { xsd:string }?, # per-type?
@@ -128,12 +141,9 @@ start =
           attribute pad_char { xsd:string {minLength="1"}}?,
           attribute pad_side { "left" | "right" }?,
           attribute substring_width { xsd:integer | "v" | "vf" | "l" }?,
-          attribute substring_pwidth { xsd:integer }?,
           attribute substring_fixed_threshold { xsd:integer }?,
           attribute substring_width_max { xsd:integer }?,
           attribute substring_side { "left" | "right" }?,
-          attribute substring_compound { "0" | "1" }?,
-          attribute substring_pcompound { "0" | "1" }?,
           attribute ifnames { text }?,
           attribute names { text }?,
           attribute namessep { string }?,

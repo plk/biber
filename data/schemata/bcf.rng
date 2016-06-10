@@ -257,6 +257,54 @@
         </element>
       </optional>
       <oneOrMore>
+        <!-- labelalpha nametemplate specification -->
+        <element name="bcf:labelalphanametemplate">
+          <optional>
+            <attribute name="type">
+              <data type="string"/>
+            </attribute>
+          </optional>
+          <oneOrMore>
+            <!-- per-type? -->
+            <element name="bcf:namepart">
+              <attribute name="order">
+                <data type="integer"/>
+              </attribute>
+              <optional>
+                <attribute name="use">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="base">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_width">
+                  <data type="integer"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_compound">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
+      <oneOrMore>
         <!-- labelalpha template specification -->
         <element name="bcf:labelalphatemplate">
           <optional>
@@ -306,11 +354,6 @@
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="substring_pwidth">
-                      <data type="integer"/>
-                    </attribute>
-                  </optional>
-                  <optional>
                     <attribute name="substring_fixed_threshold">
                       <data type="integer"/>
                     </attribute>
@@ -325,22 +368,6 @@
                       <choice>
                         <value>left</value>
                         <value>right</value>
-                      </choice>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="substring_compound">
-                      <choice>
-                        <value>0</value>
-                        <value>1</value>
-                      </choice>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="substring_pcompound">
-                      <choice>
-                        <value>0</value>
-                        <value>1</value>
                       </choice>
                     </attribute>
                   </optional>

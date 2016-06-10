@@ -362,6 +362,12 @@
           <ref name="translit"/>
         </zeroOrMore>
         <optional>
+          <ref name="labelalphanametemplate"/>
+        </optional>
+        <optional>
+          <ref name="labelalphatemplate"/>
+        </optional>
+        <optional>
           <ref name="uniquenametemplate"/>
         </optional>
         <optional>
@@ -1047,6 +1053,145 @@
             </group>
           </choice>
           <empty/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="labelalphanametemplate">
+    <element name="labelalphanametemplate">
+      <optional>
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <oneOrMore>
+        <!-- per-type? -->
+        <element name="namepart">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <optional>
+            <attribute name="use">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="base">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="substring_width">
+              <data type="integer"/>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="substring_compound">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="labelalphatemplate">
+    <element name="labelalphatemplate">
+      <optional>
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <oneOrMore>
+        <!-- per-type? -->
+        <element name="labelelement">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <oneOrMore>
+            <element name="labelpart">
+              <optional>
+                <attribute name="final">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="pad_char">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="pad_side">
+                  <choice>
+                    <value>left</value>
+                    <value>right</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_width">
+                  <choice>
+                    <data type="integer"/>
+                    <value>v</value>
+                    <value>vf</value>
+                    <value>l</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_fixed_threshold">
+                  <data type="integer"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_width_max">
+                  <data type="integer"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_side">
+                  <choice>
+                    <value>left</value>
+                    <value>right</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="ifnames"/>
+              </optional>
+              <optional>
+                <attribute name="names"/>
+              </optional>
+              <optional>
+                <attribute name="namessep">
+                  <data type="string" datatypeLibrary=""/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="noalphaothers">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <data type="string"/>
+            </element>
+          </oneOrMore>
         </element>
       </oneOrMore>
     </element>
