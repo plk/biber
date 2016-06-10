@@ -1168,7 +1168,7 @@ sub parsename {
   # Loop over name parts required for constructing uniquename information
   # and create the strings needed for this
   #
-  # Note that with the defailt uniquenametemplate, we don't conditionalise the *position*
+  # Note that with the default uniquenametemplate, we don't conditionalise the *position*
   # of a prefix on the useprefix option but rather its inclusion at all. This is because, if
   # useprefix determined the position of the prefix in the uniquename strings:
   # * As a global setting, it would generate the same uniqueness information and is therefore
@@ -1177,12 +1177,12 @@ sub parsename {
   #   information which would be confusing
   foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
     my $namepart = $np->{namepart};
-    my $useopt = exists($np->{use}) ? "use$namepart" : undef;
-    my $useoptval = $opts->{$useopt} || 0;
+    my $useopt;
+    my $useoptval;
 
-    # useprefix can be name list or name local
-    if ($useopt and $useopt eq 'useprefix') {
-      $useoptval = $opts->{useprefix};
+    if ($np->{use}) {# only ever defined as 1
+      $useopt = "use$namepart";
+      $useoptval = $opts->{$useopt};
     }
 
     # No use attribute conditionals or the attribute is specified and matches the option

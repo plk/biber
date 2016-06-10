@@ -464,7 +464,6 @@ sub _config_file_set {
                       use => $np->{use} || 0,
                       base => $np->{base} || 0}
       }
-      Biber::Config->setoption('baseuniquename', $bun);
       Biber::Config->setblxoption('uniquenametemplate', $unkt);
     }
     # sortingnamekey is special and has to be an array ref and so must come before

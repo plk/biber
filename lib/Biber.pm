@@ -410,7 +410,7 @@ sub parse_ctrlfile {
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
                                                            qr/\Asortlist\z/,
-                                                           qr/\Alabel(?:part|element|alphatemplate)\z/,
+                                                           qr/\Alabel(?:part|element|alpha(?:name)?template)\z/,
                                                            qr/\Acondition\z/,
                                                            qr/\Afilter(?:or)?\z/,
                                                            qr/\Aoptionscope\z/,
@@ -566,6 +566,27 @@ sub parse_ctrlfile {
     }
   }
 
+  # LABELALPHA NAME TEMPLATE
+  foreach my $t (@{$bcfxml->{labelalphanametemplate}}) {
+    my $lant;
+    my $lantype = $t->{type};
+    foreach my $np (sort {$a->{order} <=> $b->{order}} @{$t->{namepart}}) {
+      push @$lant, {namepart           => $np->{content},
+                    use                => $np->{use},
+                    base               => $np->{base},
+                    substring_compound => $np->{substring_compound},
+                    substring_width    => $np->{substring_width} };
+
+    }
+
+    if ($lantype eq 'global') {
+      Biber::Config->setblxoption('labelalphanametemplate', $lant);
+    }
+    else {
+      Biber::Config->setblxoption('labelalphanametemplate', $lant, 'ENTRYTYPE', $lantype);
+    }
+  }
+
   # LABELALPHA TEMPLATE
   foreach my $t (@{$bcfxml->{labelalphatemplate}}) {
     my $latype = $t->{type};
@@ -637,10 +658,9 @@ sub parse_ctrlfile {
     }
 
     push @$unkt, {namepart => $np->{content},
-                  use => $np->{use} || 0,
-                  base => $np->{base} || 0}
+                  use      => $np->{use},
+                  base     => $np->{base}};
   }
-  Biber::Config->setoption('baseuniquename', $bun);
   Biber::Config->setblxoption('uniquenametemplate', $unkt);
 
   # SORTING NAME KEY

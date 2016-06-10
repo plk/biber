@@ -1502,8 +1502,14 @@ sub parsename {
 
   foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
     my $namepart = $np->{namepart};
-    my $useopt = exists($np->{use}) ? "use$namepart" : undef;
-    my $useoptval = $opts->{$useopt} || 0;
+    my $useopt;
+    my $useoptval;
+
+    if ($np->{use}) {# only ever defined as 1
+      $useopt = "use$namepart";
+      $useoptval = $opts->{$useopt};
+    }
+
     # No use attribute conditionals or the attribute is specified and matches the option
     if ($namec{$namepart} and
         (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
@@ -1668,12 +1674,12 @@ sub parsename_x {
   #   information which would be confusing
   foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
     my $namepart = $np->{namepart};
-    my $useopt = exists($np->{use}) ? "use$namepart" : undef;
-    my $useoptval = $opts->{$useopt} || 0;
+    my $useopt;
+    my $useoptval;
 
-    # useprefix can be name list or name local
-    if ($useopt and $useopt eq 'useprefix') {
-      $useoptval = $opts->{useprefix};
+    if ($np->{use}) {# only ever defined as 1
+      $useopt = "use$namepart";
+      $useoptval = $opts->{$useopt};
     }
 
     # No use attribute conditionals or the attribute is specified and matches the option
