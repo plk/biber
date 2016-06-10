@@ -592,6 +592,18 @@
       <bcf:part type="namepart" order="1" use="0">prefix</bcf:part>
     </bcf:keypart>
   </bcf:sortingnamekey>
+  <!-- SORTING NAME KEY -->
+  <bcf:sortingnamekey keyscheme="snks1">
+    <bcf:keypart order="1">
+      <bcf:part type="namepart" order="1">family</bcf:part>
+    </bcf:keypart>
+  </bcf:sortingnamekey>
+  <!-- SORTING NAME KEY -->
+  <bcf:sortingnamekey keyscheme="snks2">
+    <bcf:keypart order="1">
+      <bcf:part type="namepart" order="1">given</bcf:part>
+    </bcf:keypart>
+  </bcf:sortingnamekey>
   <!-- SORTING -->
   <bcf:sorting> 
     <bcf:presort>mm</bcf:presort>
@@ -2048,6 +2060,9 @@
     <bcf:citekey order="20">labelstest</bcf:citekey>
     <bcf:citekey order="21">sn1</bcf:citekey>
     <bcf:citekey order="22">snk1</bcf:citekey>
+    <bcf:citekey order="23">ent1</bcf:citekey>
+    <bcf:citekey order="24">avona</bcf:citekey>
+    <bcf:citekey order="25">rvonr</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>

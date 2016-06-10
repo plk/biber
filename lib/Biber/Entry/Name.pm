@@ -25,6 +25,8 @@ __PACKAGE__->mk_accessors(qw (
                                basenamestring
                                namestring
                                nameinitstring
+                               useprefix
+                               sortnamekeyscheme
                             ));
 
 =encoding utf-8
@@ -49,6 +51,7 @@ sub new {
                       'namestring',
                       'nameinitstring',
                       'basenamestring',
+                      'useprefix',
                       'strip',
                       $dm->get_constant_value('nameparts')) {
       if (exists $params{$attr}) {

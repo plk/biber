@@ -1002,6 +1002,7 @@ sub _name {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $value = biber_decode_utf8($entry->get($field));
+  my $xnamesep = Biber::Config->getoption('xnamesep');
 
   # @tmp is bytes again now
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
@@ -1012,8 +1013,15 @@ sub _name {
   foreach my $name (@tmp) {
 
     # namelist scope sortnamekeyscheme
-    if ($name =~ m/^sortnamekeyscheme=(.+)$/) {
+    if ($name =~ m/^sortnamekeyscheme\s*$xnamesep\s*(\S+)$/) {
       $names->set_sortnamekeyscheme($1);
+      next;
+    }
+
+    # namelist scope useprefix
+    if ($name =~ m/^useprefix\s*$xnamesep\s*(\S+)$/) {
+      $useprefix = map_boolean($1, 'tonum');
+      $names->set_useprefix($useprefix);
       next;
     }
 
@@ -1496,7 +1504,6 @@ sub parsename {
     my $namepart = $np->{namepart};
     my $useopt = exists($np->{use}) ? "use$namepart" : undef;
     my $useoptval = $opts->{$useopt} || 0;
-
     # No use attribute conditionals or the attribute is specified and matches the option
     if ($namec{$namepart} and
         (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
@@ -1587,14 +1594,21 @@ sub parsename_x {
   my %nps = map {$_ => 1} $dm->get_constant_value('nameparts');
 
   my %namec;
-  my %snks;
+  my %pernameopts;
   foreach my $np (split_xsv($namestr)) {# Can have x inside records so use Text::CSV
     my ($npn, $npv) = $np =~ m/^(.+)\s*$xnamesep\s*(.+)$/x;
     $npn = lc($npn);
 
     # name scope sortnamekeyscheme
     if ($npn eq 'sortnamekeyscheme') {
-      $snks{sortnamekeyscheme} = $npv;
+      $pernameopts{sortnamekeyscheme} = $npv;
+      next;
+    }
+
+    # name scope useprefix
+    if ($npn eq 'useprefix') {
+      $opts->{useprefix} = map_boolean($npv, 'tonum');
+      $pernameopts{useprefix} = $npv;
       next;
     }
 
@@ -1645,7 +1659,7 @@ sub parsename_x {
   # Loop over name parts required for constructing uniquename information
   # and create the strings needed for this
   #
-  # Note that with the defailt uniquenametemplate, we don't conditionalise the *position*
+  # Note that with the default uniquenametemplate, we don't conditionalise the *position*
   # of a prefix on the useprefix option but rather its inclusion at all. This is because, if
   # useprefix determined the position of the prefix in the uniquename strings:
   # * As a global setting, it would generate the same uniqueness information and is therefore
@@ -1696,7 +1710,7 @@ sub parsename_x {
                                   namestring     => $namestring,
                                   nameinitstring => $nameinitstring,
                                   basenamestring => $basenamestring,
-                                  %snks
+                                  %pernameopts
                                  );
 }
 

@@ -31,7 +31,7 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 my $logger = Log::Log4perl::get_logger('main');
 
-# Hashes should not care about use* or sorting name key scheme etc. We want to generat hashes
+# Hashes should not care about use* or sorting name key scheme etc. We want to generate hashes
 # unique to a name, not a particular representation of a name. So, always statically concatenate
 # nameparts from the data model list of valid nameparts
 sub _getnamehash {
@@ -1336,7 +1336,7 @@ sub _namestring {
 
           # useprefix can be name list or name local
           if ($useopt and $useopt eq 'useprefix') {
-            $useoptval = $useprefix;
+            $useoptval = map_boolean($useprefix, 'tonum');
           }
 
           if (my $npstring = $n->get_namepart($namepart)) {

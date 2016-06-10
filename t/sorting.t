@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 46;
+use Test::More tests => 49;
 use Test::Differences;
 unified_diff;
 
@@ -79,10 +79,15 @@ my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,';
 my $labels      = '2005,3,2';
 my $sn1         = '';
 my $snk1        = 'mm,,John John!von!Doe!Jr,,,0';
+my $ent1        = 'mm,,Smith#Brian,,,0';
 
 # These have custom presort and also an exclusion on year and title set
 my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0';
-my $useprefix2  = 'ww,,Bobble!Terrence!von,,,0';
+my $useprefix4  = 'ww,,Bobble!Terrence!von,,,0';
+
+# These have namelist and name scope useprefix respectively
+my $useprefix2  = 'mm,,Animal!Alan!von,1998,Things,0';
+my $useprefix3  = 'mm,,von!Rabble!Richard,1998,Things,0';
 
 # Sorting data schemata
 my $ssd1 = [
@@ -129,13 +134,15 @@ my $bibentries = $section->bibentries;
 my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 
 eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
+eq_or_diff($main->get_sortdata('avona')->[0], $useprefix2, 'von with name list scope useprefix' );
+eq_or_diff($main->get_sortdata('rvonr')->[0], $useprefix3, 'von with name scope useprefix' );
 
 # Testing sorting data schema generation
 is_deeply($main->get_sortdataschema, $ssd1, 'Sorting data schemata - 1' );
 
 # Testing custom name sorting key
-my $SNK;
-$SNK = {global => [
+my $SNK = Biber::Config->getblxoption('sortingnamekey');
+$SNK->{global} = [
         [{ type => 'namepart', value => 'given' },
          { type => 'literal', value => ' ' },
          { type => 'namepart', value => 'given' }],
@@ -143,26 +150,26 @@ $SNK = {global => [
         [{ type => 'namepart', value => 'family'}],
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
-       ]};
+       ];
 Biber::Config->setblxoption('sortingnamekey', $SNK);
 $biber->prepare;
 eq_or_diff($main->get_sortdata('snk1')->[0], $snk1, 'Sorting name key - 1' );
-
+eq_or_diff($main->get_sortdata('ent1')->[0], $ent1, 'Sorting name key - 2' );
 
 # regenerate information
 Biber::Config->setblxoption('useprefix', 0);
 # Default name sorting key back again
-$SNK = {global => [
+$SNK->{global} = [
         [{ type => 'namepart', value => 'prefix', use => 1}],
         [{ type => 'namepart', value => 'family'}],
         [{ type => 'namepart', value => 'given' }],
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
-       ]};
+       ];
 Biber::Config->setblxoption('sortingnamekey', $SNK);
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix2, 'von with type-specific presort, exclusions and useprefix=false' );
+eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix4, 'von with type-specific presort, exclusions and useprefix=false' );
 
 my $S;
 
