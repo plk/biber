@@ -1163,7 +1163,7 @@ sub parsename {
 
   my $basenamestring = '';
   my $namestring = '';
-  my $nameinitstr = '';
+  my $nameinitstring = '';
 
   # Loop over name parts required for constructing uniquename information
   # and create the strings needed for this
@@ -1175,28 +1175,22 @@ sub parsename {
   #   irrelevant
   # * As a local setting (entry, namelist, name), it would lead to different uniqueness
   #   information which would be confusing
+
+  # Use nameuniqueness template to construct uniqueness strings
   foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
-    my $namepart = $np->{namepart};
-    my $useopt;
-    my $useoptval;
-
-    if ($np->{use}) {# only ever defined as 1
-      $useopt = "use$namepart";
-      $useoptval = $opts->{$useopt};
-    }
-
-    # No use attribute conditionals or the attribute is specified and matches the option
-    if (exists($namec{$namepart}) and
-        (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
-      $namestring .= $namec{$namepart};
-      if ($np->{base}) {# all of base part is included in initstr
-        $nameinitstr .= $namec{$namepart};
-        $basenamestring .= $namec{$namepart};
+    my $npn = $np->{namepart};
+    if ($namec{$npn}) {
+      if ($np->{use}) {         # only ever defined as 1
+        next unless $opts->{"use$npn"};
+      }
+      $namestring .= $namec{$npn};
+      if ($np->{base}) {
+        $nameinitstring .= $namec{$npn};
+        $basenamestring .= $namec{$npn};
       }
       else {
-        $nameinitstr .= join('', @{$namec{"${namepart}-i"}});
+        $nameinitstring .= join('', @{$namec{"${npn}-i"}});
       }
-
     }
   }
 
@@ -1209,7 +1203,7 @@ sub parsename {
   my $newname = Biber::Entry::Name->new(
                                         %nps,
                                         namestring      => $namestring,
-                                        nameinitstring  => $nameinitstr,
+                                        nameinitstring  => $nameinitstring,
                                         basenamestring  => $basenamestring,
                                         gender          => $node->getAttribute('gender')
                                        );

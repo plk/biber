@@ -1503,26 +1503,21 @@ sub parsename {
     }
   }
 
+  # Use nameuniqueness template to construct uniqueness strings
   foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
-    my $namepart = $np->{namepart};
-    my $useopt;
-    my $useoptval;
+    my $npn = $np->{namepart};
+    if ($namec{$npn}) {
+      if ($np->{use}) {         # only ever defined as 1
+        next unless $opts->{"use$npn"};
+      }
+      $namestring .= $namec{"${npn}-stripped"};
 
-    if ($np->{use}) {# only ever defined as 1
-      $useopt = "use$namepart";
-      $useoptval = $opts->{$useopt};
-    }
-
-    # No use attribute conditionals or the attribute is specified and matches the option
-    if ($namec{$namepart} and
-        (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
-      $namestring .= $namec{"${namepart}-stripped"};
-      if ($np->{base}) {# all of base part is included in initstr
-        $nameinitstring .= $namec{"${namepart}-stripped"};
-        $basenamestring .= $namec{"${namepart}-stripped"};
+      if ($np->{base}) {
+        $nameinitstring .= $namec{"${npn}-stripped"};
+        $basenamestring .= $namec{"${npn}-stripped"};
       }
       else {
-        $nameinitstring .= join('', @{$namec{"${namepart}-i"}});
+        $nameinitstring .= join('', @{$namec{"${npn}-i"}});
       }
     }
   }

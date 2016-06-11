@@ -573,10 +573,9 @@ sub parse_ctrlfile {
     foreach my $np (sort {$a->{order} <=> $b->{order}} @{$t->{namepart}}) {
       push @$lant, {namepart           => $np->{content},
                     use                => $np->{use},
-                    base               => $np->{base},
+                    pre                => $np->{pre},
                     substring_compound => $np->{substring_compound},
-                    substring_width    => $np->{substring_width} };
-
+                    substring_width    => $np->{substring_width}};
     }
 
     if ($lantype eq 'global') {

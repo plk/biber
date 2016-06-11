@@ -439,8 +439,8 @@
   </bcf:sourcemap>
   <!-- LABELALPHA NAME TEMPLATE -->
   <bcf:labelalphanametemplate type="global">
-    <bcf:namepart order="1" use="1" substring_width="1">prefix</bcf:namepart>
-    <bcf:namepart order="2" base="1" substring_compound="1">family</bcf:namepart>
+    <bcf:namepart order="1" use="1" pre="1" substring_width="1">prefix</bcf:namepart>
+    <bcf:namepart order="2" substring_compound="1">family</bcf:namepart>
   </bcf:labelalphanametemplate>
   <!-- LABELALPHA TEMPLATE -->
   <bcf:labelalphatemplate type="global">

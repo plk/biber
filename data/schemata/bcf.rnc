@@ -118,13 +118,13 @@ start =
       }+
     }?,
 
-    # labelalpha nametemplate specification
+    # labelalphanametemplate specification
     element bcf:labelalphanametemplate {
       attribute type { xsd:string }?, # per-type?
       element bcf:namepart {
         attribute order { xsd:integer },
         attribute use { "0" | "1" }?,
-        attribute base { "0" | "1" }?,
+        attribute pre { "0" | "1" }?,
         attribute substring_width { xsd:integer }?,
         attribute substring_compound { "0" | "1" }?,
         text

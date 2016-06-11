@@ -328,7 +328,7 @@ sub _dispatch_label {
 
 sub _label_citekey {
   my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs) = @_;
-  my $k = _process_label_attributes($self, $citekey, $citekey, $labelattrs, $args->[0]);
+  my $k = _process_label_attributes($self, $citekey, [[$citekey,undef]], $labelattrs, $args->[0]);
   return [$k, unescape_label($k)];
 }
 
@@ -350,7 +350,7 @@ sub _label_basic {
     $f = normalise_string_label($be->get_field($e));
   }
   if ($f) {
-    my $b = _process_label_attributes($self, $citekey, $f, $labelattrs, $e);
+    my $b = _process_label_attributes($self, $citekey, [[$f, undef]], $labelattrs, $e);
     return [$b, unescape_label($b)];
   }
   else {
@@ -368,9 +368,10 @@ sub _label_literal {
 # names
 sub _label_name {
   my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs) = @_;
-  my $useprefix = Biber::Config->getblxoption('useprefix', $be->get_field('entrytype'), $citekey);
-  my $alphaothers = Biber::Config->getblxoption('alphaothers', $be->get_field('entrytype'));
-  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $be->get_field('entrytype'));
+  my $bee = $be->get_field('entrytype');
+  my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
+  my $alphaothers = Biber::Config->getblxoption('alphaothers', $bee);
+  my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $bee);
 
   # Shortcut - if there is no labelname, don't do anything
   return ['',''] unless defined($be->get_labelname_info);
@@ -403,19 +404,16 @@ sub _label_name {
     $lnameopt = $realname;
   }
 
-  if (Biber::Config->getblxoption("use$lnameopt", $be->get_field('entrytype'), $citekey) and
+  if (Biber::Config->getblxoption("use$lnameopt", $bee, $citekey) and
     $names) {
 
+    # namelist scope useprefix
     if (defined($names->get_useprefix)) {
       $useprefix = $names->get_useprefix;
     }
 
     my $numnames  = $names->count_names;
     my $visibility = $names->get_visible_alpha;
-
-    my @familynames = map { normalise_string_label($_->get_namepart('family'), $realname) } @{$names->names};
-    my @prefices  = map { $_->get_namepart('prefix') } @{$names->names};
-    my @useprefices  = map { if (defined($_->get_useprefix)) {$_->get_useprefix} else {$useprefix} } @{$names->names};
 
     # Use name range override, if any
     my $nr_start;
@@ -438,26 +436,90 @@ sub _label_name {
       $nr_start = 1;
       $nr_end = $visibility; # Else use bib visibility
     }
+
     if ($logger->is_trace()) {# performance tune
       $logger->trace("$realname/numnames=$numnames/visibility=$visibility/nr_start=$nr_start/nr_end=$nr_end");
     }
+
+    # Now extract nameparts to use in label construction
+    my $lnat = Biber::Config->getblxoption('labelalphanametemplate', $bee);
+    my $parts;
+    my $opts;
+
+    foreach my $name (@{$names->names}) {
+
+      # name scope useprefix
+      if (defined($name->get_useprefix)) {
+        $useprefix = $name->get_useprefix;
+      }
+
+      # In future, perhaps there will be a need for more namepart use* options and
+      # therefore $opts will come from somewhere else
+      $opts->{useprefix} = $useprefix;
+
+      my $preacc; # arrayref accumulator for "pre" nameparts
+      my $mainacc; # arrayref accumulator for main non "pre" nameparts
+      my $mpns; # arrayref accumulator for main non "pre" namepart names
+      my $preopts; # arrayref accumulator for "pre" namepart options
+      my $mainopts; # arrayref accumulator for main non "pre" namepart options
+      foreach my $lnp (@$lnat) {
+        my $npn = $lnp->{namepart};
+        my $np;
+
+        if ($np = $name->get_namepart($npn)) {
+          if ($lnp->{use}) { # only ever defined as 1
+            next unless $opts->{"use$npn"};
+          }
+
+          if ($lnp->{pre}) {
+            push @$preacc,
+              [normalise_string_label($np),
+               {substring_width => $lnp->{substring_width},
+                substring_compound => $lnp->{substring_compound}}];
+          }
+          else {
+            push @$mpns, $npn;
+            push @$mainacc,
+              [normalise_string_label($np),
+               {substring_width => $lnp->{substring_width},
+                substring_compound => $lnp->{substring_compound}}];
+          }
+        }
+      }
+
+      push @{$parts->{pre}{strings}}, $preacc;
+      push @{$parts->{main}{strings}}, $mainacc;
+      push @{$parts->{main}{partnames}}, $mpns;
+    }
+
+    # Loop over names in range
     for (my $i = $nr_start-1; $i < $nr_end; $i++) {
       # Deal with prefix options
-      if ($useprefices[$i] and $prefices[$i]) {
-        my $w = $labelattrs->{substring_pwidth} // 1;
-        if ($labelattrs->{substring_pcompound}) {
+      foreach my $fieldinfo (@{$parts->{pre}{strings}[$i]}) {
+        my $np = $fieldinfo->[0];
+        my $npo = $fieldinfo->[1];
+        my $w = $npo->{substring_width} // 1;
+        if ($npo->{substring_compound}) {
           my $tmpstring;
           # Splitting on tilde too as libbtparse inserts these into compound prefices
-          foreach my $part (split(/[\s\p{Dash}~]+/, $prefices[$i])) {
+          foreach my $part (split(/[\s\p{Dash}~]+/, $np)) {
             $tmpstring .= Unicode::GCString->new($part)->substr(0, $w)->as_string;
           }
           $acc .= $tmpstring;
         }
         else {
-          $acc .= Unicode::GCString->new($prefices[$i])->substr(0, $w)->as_string;
+          $acc .= Unicode::GCString->new($np)->substr(0, $w)->as_string;
         }
       }
-      $acc .= _process_label_attributes($self, $citekey, $familynames[$i], $labelattrs, $realname, 'family', $i);
+
+      $acc .= _process_label_attributes($self,
+                                        $citekey,
+                                        $parts->{main}{strings}[$i],
+                                        $labelattrs,
+                                        $realname,
+                                        $parts->{main}{partnames}[$i],
+                                        $i);
+
       # put in names sep, if any
       if (my $nsep = $labelattrs->{namessep}) {
         $acc .= $nsep unless ($i == $nr_end-1);
@@ -485,202 +547,203 @@ sub _label_name {
 # Modify label string according to some attributes
 # We use different caches for the "v" and "l" schemes because they have a different format
 # internally and interfere with each other between resets in prepare() otherwise
+
+# Complicated due to various label disambiguation schemes and also due to dealing with
+# name fields
 sub _process_label_attributes {
-  my ($self, $citekey, $field_string, $labelattrs, $field, $namepart, $index) = @_;
-  return $field_string unless $labelattrs;
+  my ($self, $citekey, $fieldstrings, $labelattrs, $field, $nameparts, $index) = @_;
+
+  return join('', map {$_->[0]} @$fieldstrings) unless $labelattrs;
+  my $rfield_string;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my @citekeys = $section->get_citekeys;
   my $nindex = first_index {$_ eq $citekey} @citekeys;
 
-  if (defined($labelattrs->{substring_width})) {
-    # dynamically disambiguated width (individual name disambiguation)
-    if ($labelattrs->{substring_width} =~ /v/ and $field) {
-      # Use the cache if there is one
-      if (my $lcache = $section->get_labelcache_v($field)) {
-        if ($logger->is_debug()) {# performance tune
-          $logger->debug("Using label disambiguation cache (name) for '$field' in section $secnum");
-        }
-        # Use the global index override if set (substring_width =~ /f/)
-        $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} || $lcache->{$field_string}{index}];
-      }
-      else {
-        # This contains a mapping of strings to substrings of increasing lengths
-        my %substr_cache = ();
-        my $lcache = {};
+  foreach my $fieldinfo (@$fieldstrings) {
+    my $field_string = $fieldinfo->[0];
+    my $namepartopts = $fieldinfo->[1];
 
-        # Get the indices of each field (or namepart) we are dealing with
-        my %indices;
-        foreach my $key (@citekeys) {
-          if (my $f = $section->bibentry($key)->get_field($field)) {
-            if ($namepart) {
-              foreach my $n (@{$f->first_n_names($f->get_visible_alpha)}) {
-                # Do strip/nosort here as that's what we also do to the field contents
-                # we will use to look up in this hash later
-                $indices{normalise_string_sort($n->get_namepart($namepart), $field)} = $n->get_index;
+    if (defined($labelattrs->{substring_width})) {
+      # dynamically disambiguated width (individual name disambiguation)
+      if ($labelattrs->{substring_width} =~ /v/ and $field) {
+        # Use the cache if there is one
+        if (my $lcache = $section->get_labelcache_v($field)) {
+          if ($logger->is_debug()) { # performance tune
+            $logger->debug("Using label disambiguation cache (name) for '$field' in section $secnum");
+          }
+          # Use the global index override if set (substring_width =~ /f/)
+          $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} || $lcache->{$field_string}{index}];
+        }
+        else {
+          # This contains a mapping of strings to substrings of increasing lengths
+          my %substr_cache = ();
+          my $lcache = {};
+
+          # Get the indices of each field (or namepart) we are dealing with
+          my %indices;
+          foreach my $key (@citekeys) {
+            if (my $f = $section->bibentry($key)->get_field($field)) {
+              if ($nameparts) {
+                foreach my $n (@{$f->first_n_names($f->get_visible_alpha)}) {
+                  # Do strip/nosort here as that's what we also do to the field contents
+                  # we will use to look up in this hash later
+                  $indices{normalise_string_sort(join('',map {$n->get_namepart($_)} @$nameparts), $field)} = $n->get_index;
+                }
+              }
+              else {
+                $indices{$f} = 0;
               }
             }
-            else {
-              $indices{$f} = 0;
+          }
+
+          # This ends up as a flat list due to array interpolation
+          my @strings = uniq keys %indices;
+          # Look to the index of the longest string or the explicit max width if set
+          my $maxlen = $labelattrs->{substring_width_max} || max map {Unicode::GCString->new($_)->length} @strings;
+          for (my $i = 1; $i <= $maxlen; $i++) {
+            foreach my $map (map { my $s = Unicode::GCString->new($_)->substr(0, $i)->as_string; $substr_cache{$s}++; [$_, $s] } @strings) {
+              # We construct a list of all substrings, up to the length of the longest string
+              # or substring_width_max. Then we save the index of the list element which is
+              # the minimal disambiguation if it's not yet defined
+              push @{$lcache->{$map->[0]}{data}}, $map->[1];
+              $lcache->{$map->[0]}{nameindex} = $indices{$map->[0]};
+              if (not exists($lcache->{$map->[0]}{index}) and
+                  ($substr_cache{$map->[1]} == 1 or $i == $maxlen)) {
+                # -1 to make it into a clean array index
+                $lcache->{$map->[0]}{index} = Unicode::GCString->new($map->[1])->length - 1;
+              }
             }
           }
-        }
+          # We want to use a string width for all strings equal to the longest one needed
+          # to disambiguate this list. We do this by saving an override for the minimal
+          # disambiguation length per index
+          if ($labelattrs->{substring_width} =~ /f/) {
+            # Get the uniqueness indices of all of the strings and strip out those
+            # which don't occur at least substring_fixed_threshold times
 
-        # This ends up as a flat list due to array interpolation
-        my @strings = uniq keys %indices;
-        # Look to the index of the longest string or the explicit max width if set
-        my $maxlen = $labelattrs->{substring_width_max} || max map {Unicode::GCString->new($_)->length} @strings;
-        for (my $i = 1; $i <= $maxlen; $i++) {
-          foreach my $map (map { my $s = Unicode::GCString->new($_)->substr(0, $i)->as_string; $substr_cache{$s}++; [$_, $s] } @strings) {
-            # We construct a list of all substrings, up to the length of the longest string
-            # or substring_width_max. Then we save the index of the list element which is
-            # the minimal disambiguation if it's not yet defined
-            push @{$lcache->{$map->[0]}{data}}, $map->[1];
-            $lcache->{$map->[0]}{nameindex} = $indices{$map->[0]};
-            if (not exists($lcache->{$map->[0]}{index}) and
-                ($substr_cache{$map->[1]} == 1 or $i == $maxlen)) {
-              # -1 to make it into a clean array index
-              $lcache->{$map->[0]}{index} = Unicode::GCString->new($map->[1])->length - 1;
+            my $is;
+            foreach my $v (values %$lcache) {
+              $is->{$v->{nameindex}}{$v->{index}}++;
+            }
+
+            # Now set a new global index for the name part index which is the maximum of those
+            # occuring above a certain threshold
+            foreach my $s (keys %$lcache) {
+              foreach my $ind (keys %$is) {
+                next unless $indices{$s} == $ind;
+                $lcache->{globalindices}{$s} = max grep {$is->{$ind}{$_} >= $labelattrs->{substring_fixed_threshold} } keys %{$is->{$ind}};
+              }
             }
           }
-        }
-        # We want to use a string width for all strings equal to the longest one needed
-        # to disambiguate this list. We do this by saving an override for the minimal
-        # disambiguation length per index
-        if ($labelattrs->{substring_width} =~ /f/) {
-          # Get the uniqueness indices of all of the strings and strip out those
-          # which don't occur at least substring_fixed_threshold times
 
-          my $is;
-          foreach my $v (values %$lcache) {
-            $is->{$v->{nameindex}}{$v->{index}}++;
+          # Use the global index override if set (substring_width =~ /f/)
+          $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} || $lcache->{$field_string}{index}];
+          if ($logger->is_trace()) { # performance tune
+            $logger->trace("Label disambiguation cache for '$field' " .
+                           ($nameparts ? '(' . join(',', @$nameparts) . ') ' : '') .
+                           "in section $secnum:\n " . Data::Dump::pp($lcache));
           }
-
-          # Now set a new global index for the name part index which is the maximum of those
-          # occuring above a certain threshold
-          foreach my $s (keys %$lcache) {
-            foreach my $ind (keys %$is) {
-              next unless $indices{$s} == $ind;
-              $lcache->{globalindices}{$s} = max grep {$is->{$ind}{$_} >= $labelattrs->{substring_fixed_threshold} } keys %{$is->{$ind}};
-            }
-          }
+          $section->set_labelcache_v($field, $lcache);
         }
-
-        # Use the global index override if set (substring_width =~ /f/)
-        $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} || $lcache->{$field_string}{index}];
-        if ($logger->is_debug()) {# performance tune
-          $logger->debug("Creating label disambiguation cache for '$field' " .
-                         ($namepart ? "($namepart) " : '') .
-                         "in section $secnum");
-        }
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Label disambiguation cache for '$field' " .
-                         ($namepart ? "($namepart) " : '') .
-                         "in section $secnum:\n " . Data::Dump::pp($lcache));
-        }
-        $section->set_labelcache_v($field, $lcache);
       }
-    }
-    # dynamically disambiguated width (list disambiguation)
-    elsif ($labelattrs->{substring_width} =~ /l/ and $field) {
-      # Use the cache if there is one
-      if (my $lcache = $section->get_labelcache_l($field)) {
-        if ($logger->is_debug()) {# performance tune
-          $logger->debug("Using label disambiguation cache (list) for '$field' in section $secnum");
+      # dynamically disambiguated width (list disambiguation)
+      elsif ($labelattrs->{substring_width} =~ /l/ and $field) {
+        # Use the cache if there is one
+        if (my $lcache = $section->get_labelcache_l($field)) {
+          if ($logger->is_debug()) { # performance tune
+            $logger->debug("Using label disambiguation cache (list) for '$field' in section $secnum");
+          }
+          $field_string = $lcache->{data}[$nindex][$index];
         }
-        $field_string = $lcache->{data}[$nindex][$index];
+        else {
+          # This retains the structure of the entries for the "l" list disambiguation
+          # Have to be careful if field "$f" is not set for all entries
+          my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
+                              $f ? ($nameparts ? [map {my $n = $_;join('', map {$n->get_namepart($_)} @$nameparts)} @{$f->first_n_names($f->get_visible_alpha)}] : [$f]) : [''] }
+                         @citekeys];
+          my $lcache = _label_listdisambiguation($strings);
+
+          $field_string = $lcache->{data}[$nindex][$index];
+          if ($logger->is_trace()) { # performance tune
+            $logger->trace("Label disambiguation (list) cache for '$field' " .
+                           ($nameparts ? '(' . join(',', @$nameparts) . ') ' : '') .
+                           "in section $secnum:\n " . Data::Dump::pp($lcache));
+          }
+          $section->set_labelcache_l($field, $lcache);
+        }
       }
+      # static substring width
       else {
-        # This retains the structure of the entries for the "l" list disambiguation
-        # Have to be careful if field "$f" is not set for all entries
-        my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
-                            $f ? ($namepart ? [map {$_->get_namepart($namepart)} @{$f->first_n_names($f->get_visible_alpha)}] : [$f]) : ['']
-                          } @citekeys];
-        my $lcache = _label_listdisambiguation($strings);
+        my $subs_offset = 0;
+        my $default_substring_width = 1;
+        my $default_substring_side = 'left';
+        my $subs_width = ($labelattrs->{substring_width} or $default_substring_width);
+        my $subs_side = ($labelattrs->{substring_side} or $default_substring_side);
+        my $padchar = $labelattrs->{pad_char};
 
-        $field_string = $lcache->{data}[$nindex][$index];
-        if ($logger->is_debug()) {# performance tune
-          $logger->debug("Creating label disambiguation (list) cache for '$field' " .
-                         ($namepart ? "($namepart) " : '') .
-                         "in section $secnum");
+        # Set offset depending on subs side
+        if ($subs_side eq 'right') {
+          $subs_offset = 0 - $subs_width;
         }
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Label disambiguation (list) cache for '$field' " .
-                         ($namepart ? "($namepart) " : '') .
-                         "in section $secnum:\n " . Data::Dump::pp($lcache));
+
+        # Get map of regexps to not count against string width and record their place in the
+        # string
+        my $nolabelwcs = Biber::Config->getoption('nolabelwidthcount');
+        my $nolabelwcis;
+        if ($nolabelwcs) {
+          $nolabelwcis = match_indices([map {$_->{value}} @$nolabelwcs], $field_string);
+          $logger->trace('Saved indices for nolabelwidthcount: ' . Data::Dump::pp($nolabelwcis));
+          # Then remove the nolabelwidthcount chars for now
+          foreach my $nolabelwc (@$nolabelwcs) {
+            my $nlwcopt = $nolabelwc->{value};
+            my $re = qr/$nlwcopt/;
+            $field_string =~ s/$re//gxms; # remove nolabelwidthcount items
+          }
         }
-        $section->set_labelcache_l($field, $lcache);
+
+        # If desired, do the substring on all parts of compound names
+        # (with internal spaces or hyphens)
+        if ($nameparts and $namepartopts->{substring_compound}) {
+          my $tmpstring;
+          foreach my $part (split(/[\s\p{Dash}]+/, $field_string)) {
+            $tmpstring .= Unicode::GCString->new($part)->substr($subs_offset, $subs_width)->as_string;
+          }
+          $field_string = $tmpstring;
+        }
+        else {
+          $field_string = Unicode::GCString->new($field_string)->substr($subs_offset, $subs_width)->as_string;
+        }
+        # Padding
+        if ($padchar) {
+          $padchar = unescape_label($padchar);
+          my $pad_side = ($labelattrs->{pad_side} or 'right');
+          my $paddiff = $subs_width - Unicode::GCString->new($field_string)->length;
+          if ($paddiff > 0) {
+            if ($pad_side eq 'right') {
+              $field_string .= $padchar x $paddiff;
+            }
+            elsif ($pad_side eq 'left') {
+              $field_string = $padchar x $paddiff . $field_string;
+            }
+          }
+          $field_string = escape_label($field_string);
+        }
+
+        # Now reinstate any nolabelwidthcount regexps
+        if ($nolabelwcis) {
+          my $gc_string = Unicode::GCString->new($field_string);
+          foreach my $nolabelwci (@$nolabelwcis) {
+            # Don't put back anything at positions which are no longer in the string
+            if ($nolabelwci->[1] +1 <= $gc_string->length) {
+              $gc_string->substr($nolabelwci->[1], 0, $nolabelwci->[0]);
+            }
+          }
+          $field_string = $gc_string->as_string;
+        }
       }
     }
-    # static substring width
-    else {
-      my $subs_offset = 0;
-      my $default_substring_width = 1;
-      my $default_substring_side = 'left';
-      my $subs_width = ($labelattrs->{substring_width} or $default_substring_width);
-      my $subs_side = ($labelattrs->{substring_side} or $default_substring_side);
-      my $padchar = $labelattrs->{pad_char};
-      if ($subs_side eq 'right') {
-        $subs_offset = 0 - $subs_width;
-      }
-
-      # Get map of regexps to not count against string width and record their place in the
-      # string
-      my $nolabelwcs = Biber::Config->getoption('nolabelwidthcount');
-      my $nolabelwcis;
-      if ($nolabelwcs) {
-        $nolabelwcis = match_indices([map {$_->{value}} @$nolabelwcs], $field_string);
-        $logger->trace('Saved indices for nolabelwidthcount: ' . Data::Dump::pp($nolabelwcis));
-
-        # Then remove the nolabelwidthcount chars for now
-        foreach my $nolabelwc (@$nolabelwcs) {
-          my $nlwcopt = $nolabelwc->{value};
-          my $re = qr/$nlwcopt/;
-          $field_string =~ s/$re//gxms; # remove nolabelwidthcount items
-        }
-      }
-
-      # If desired, do the substring on all parts of compound strings
-      # (strings with internal spaces or hyphens)
-      if ($labelattrs->{substring_compound}) {
-        my $tmpstring;
-        foreach my $part (split(/[\s\p{Dash}]+/, $field_string)) {
-          $tmpstring .= Unicode::GCString->new($part)->substr($subs_offset, $subs_width)->as_string;
-        }
-        $field_string = $tmpstring;
-      }
-      else {
-        $field_string = Unicode::GCString->new($field_string)->substr($subs_offset, $subs_width)->as_string;
-      }
-
-      # Padding
-      if ($padchar) {
-        $padchar = unescape_label($padchar);
-        my $pad_side = ($labelattrs->{pad_side} or 'right');
-        my $paddiff = $subs_width - Unicode::GCString->new($field_string)->length;
-        if ($paddiff > 0) {
-          if ($pad_side eq 'right') {
-            $field_string .= $padchar x $paddiff;
-          }
-          elsif ($pad_side eq 'left') {
-            $field_string = $padchar x $paddiff . $field_string;
-          }
-        }
-        $field_string = escape_label($field_string);
-      }
-
-      # Now reinstate any nolabelwidthcount regexps
-      if ($nolabelwcis) {
-        my $gc_string = Unicode::GCString->new($field_string);
-        foreach my $nolabelwci (@$nolabelwcis) {
-          # Don't put back anything at positions which are no longer in the string
-          if ($nolabelwci->[1] +1 <= $gc_string->length) {
-            $gc_string->substr($nolabelwci->[1], 0, $nolabelwci->[0]);
-          }
-        }
-        $field_string = $gc_string->as_string;
-      }
-    }
+    $rfield_string .= $field_string;
   }
 
   # Case changes
@@ -689,13 +752,13 @@ sub _process_label_attributes {
     # do nothing if both are set, for sanity
   }
   elsif ($labelattrs->{uppercase}) {
-    $field_string = uc($field_string);
+    $rfield_string = uc($rfield_string);
   }
   elsif ($labelattrs->{lowercase}) {
-    $field_string = lc($field_string);
+    $rfield_string = lc($rfield_string);
   }
 
-  return $field_string;
+  return $rfield_string;
 }
 
 # This turns a list of label strings:

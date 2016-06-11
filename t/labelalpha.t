@@ -422,30 +422,46 @@ eq_or_diff($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '20053
 eq_or_diff($bibentries->entry('padtest')->get_field('labelalpha'), '\&Al\_\_{\textasciitilde}{\textasciitilde}T07', 'pad test - 1');
 eq_or_diff($bibentries->entry('padtest')->get_field('sortlabelalpha'), '&Al__~~T07', 'pad test - 2');
 
+Biber::Config->setblxoption('labelalphanametemplate',
+[
+ {
+    namepart => "prefix",
+    pre => 1,
+    substring_compound => 1,
+    substring_width => 2,
+    use => 1,
+  },
+  {
+    namepart => "family",
+    pre => undef,
+    substring_compound => 1,
+    substring_width => undef,
+    use => undef,
+  }
+]);
+
 Biber::Config->setblxoption('labelalphatemplate', {
   labelelement => [
                    {
                     labelpart => [
                                   {
-                   content         => "author",
-                   ifnames     => 1,
-                   substring_side  => "left",
-                   substring_width => 3,
-                   substring_pwidth => 2,
-                   substring_pcompound=> 1,
+                                   content         => "author",
+                                   ifnames         => 1,
+                                   substring_side  => "left",
+                                   substring_width => 3,
                                   },
-               ],
-                   order => 1,
+                                 ],
+                    order => 1,
                    },
                    {
-               labelpart => [
-                 {
-                   content         => "title",
-                   substring_side  => "left",
-                   substring_width => 4,
-                 },
-               ],
-              order => 2,
+                    labelpart => [
+                                  {
+                                   content         => "title",
+                                   substring_side  => "left",
+                                   substring_width => 4,
+                                  },
+                                 ],
+                    order => 2,
              },
            ],
   type  => "global",
@@ -465,7 +481,6 @@ $bibentries = $section->bibentries;
 
 eq_or_diff($bibentries->entry('skipwidthtest1')->get_field('sortlabelalpha'), 'OToolOToole', 'Skip width test - 1');
 eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'vadeVaaThin', 'compound and string length entry prefix1 labelalpha');
-
 
 Biber::Config->setblxoption('labelalphatemplate', {
   labelelement => [

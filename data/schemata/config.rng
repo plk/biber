@@ -1079,7 +1079,7 @@
             </attribute>
           </optional>
           <optional>
-            <attribute name="base">
+            <attribute name="pre">
               <choice>
                 <value>0</value>
                 <value>1</value>
