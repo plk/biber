@@ -60,11 +60,9 @@
 * TODO LabelalphaNameTemplate implementation
 ** DONE .bcf read
 ** DONE config.pm opt read
-** TODO compound, strwidth replace pstrwidth, pcompound and compound
-** TODO By default, prefix not base so it's appended in order before base regardless of base disambiguations which come later (which is the case now).
-** TODO xsl update
-** TODO doc new opt
-
+** DONE compound, strwidth replace pstrwidth, pcompound and compound
+** DONE xsl update
+** TODO Doc - move pstrwidth (remove) -> strwidth, pcompound (remove) -> compound, strwidth on lant overrides on lat
 * TODO sortgiveninits check in Internals - can be abstracted?
 * TODO 'given' in _getnamehash_u in Internals - can be abstracted?
 * DONE nullable_check in Biber.pm - needed? It's a deep loop

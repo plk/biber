@@ -678,9 +678,14 @@ sub _process_label_attributes {
         my $subs_offset = 0;
         my $default_substring_width = 1;
         my $default_substring_side = 'left';
-        my $subs_width = ($labelattrs->{substring_width} or $default_substring_width);
-        my $subs_side = ($labelattrs->{substring_side} or $default_substring_side);
         my $padchar = $labelattrs->{pad_char};
+        my $subs_side = ($labelattrs->{substring_side} or $default_substring_side);
+        my $subs_width = ($labelattrs->{substring_width} or $default_substring_width);
+
+        # Override subs width with namepart specific setting, if it exists
+        if ($nameparts and my $w = $namepartopts->{substring_width}) {
+          $subs_width = $w;
+        }
 
         # Set offset depending on subs side
         if ($subs_side eq 'right') {

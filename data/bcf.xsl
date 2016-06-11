@@ -494,6 +494,33 @@
           </ul>
           </div>
         </xsl:if>
+        <!-- LABELALPHANAME TEMPLATES -->
+        <xsl:if test="/bcf:controlfile/bcf:labelalphanametemplate">
+          <hr/>
+          <h4>Labelalpha Name Templates</h4>
+          <xsl:for-each select="/bcf:controlfile/bcf:labelalphanametemplate">
+            <h4>Template for type <xsl:value-of select="./@type"/></h4>
+            <table>
+              <thead>
+                <tr><td>Order</td><td>Pre</td><td>Use option</td><td>Width</td><td>Compound</td><td>Namepart</td></tr>
+              </thead>
+              <tbody>
+                <xsl:for-each select="./bcf:namepart">
+                  <xsl:sort select="./@order"/>
+                  <tr>
+                    <td><xsl:value-of select="./@order"/></td>
+                    <td><xsl:value-of select="./@pre"/></td>
+                    <td><xsl:value-of select="./@use"/></td>
+                    <td><xsl:value-of select="./@substring_width"/></td>
+                    <td><xsl:value-of select="./@substring_compound"/></td>
+                    <td><xsl:value-of select="./text()"/></td>
+                  </tr>
+                </xsl:for-each>
+              </tbody>
+            </table>
+            <br/>
+          </xsl:for-each>
+        </xsl:if>
         <!-- LABELALPHA TEMPLATES -->
         <xsl:if test="/bcf:controlfile/bcf:labelalphatemplate">
           <hr/>
@@ -800,7 +827,6 @@
         <h4>Uniquename Template</h4>
         <table>
           <thead>
-            <tr><td colspan="2"><b><xsl:value-of select="./@keyscheme"/></b></td></tr>
             <tr><td>Order</td><td>Base</td><td>Use option</td><td>Namepart</td></tr>
           </thead>
           <tbody>

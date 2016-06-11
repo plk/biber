@@ -464,7 +464,7 @@
                   substring_width="1">prefix</bcf:namepart>
     <bcf:namepart order="2" pre="1" substring_width="1">suffix</bcf:namepart>
     <bcf:namepart order="3">family</bcf:namepart>
-    <bcf:namepart order="4">given</bcf:namepart>
+    <bcf:namepart order="4" substring_width="2">given</bcf:namepart>
   </bcf:labelalphanametemplate>
   <!-- LABELALPHA TEMPLATE -->
   <bcf:labelalphatemplate type="global">
