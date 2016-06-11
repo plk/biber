@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 120;
+use Test::More tests => 121;
 use Test::Differences;
 unified_diff;
 
@@ -180,6 +180,7 @@ eq_or_diff($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxa
 ok(is_undef($main->get_extraalphadata('L8')), 'maxalphanames=3 minalphanames=1 entry L8 extraalpha');
 eq_or_diff($bibentries->entry('LDN1')->get_field('sortlabelalpha'), 'VUR89', 'Testing compound lastnames 1');
 eq_or_diff($bibentries->entry('LDN2')->get_field('sortlabelalpha'), 'VU45', 'Testing compound lastnames 2');
+eq_or_diff($bibentries->entry('LDN3')->get_field('sortlabelalpha'), 'VLvSJU45', 'Testing with multiple pre and main');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 4);

@@ -458,7 +458,13 @@
   <bcf:labelalphanametemplate type="customa">
     <bcf:namepart order="1" use="1" pre="1" substring_width="1">prefix</bcf:namepart>
     <bcf:namepart order="2">family</bcf:namepart>
-    <bcf:namepart order="3">given</bcf:namepart>
+  </bcf:labelalphanametemplate>
+  <bcf:labelalphanametemplate type="customd">
+    <bcf:namepart order="1" use="1" pre="1"
+                  substring_width="1">prefix</bcf:namepart>
+    <bcf:namepart order="2" pre="1" substring_width="1">suffix</bcf:namepart>
+    <bcf:namepart order="3">family</bcf:namepart>
+    <bcf:namepart order="4">given</bcf:namepart>
   </bcf:labelalphanametemplate>
   <!-- LABELALPHA TEMPLATE -->
   <bcf:labelalphatemplate type="global">
@@ -2156,14 +2162,15 @@
     <bcf:citekey order="32">Schnee2007a</bcf:citekey>
     <bcf:citekey order="33">LDN1</bcf:citekey>
     <bcf:citekey order="34">LDN2</bcf:citekey>
-    <bcf:citekey order="35">title1</bcf:citekey>
-    <bcf:citekey order="36">labelstest</bcf:citekey>
-    <bcf:citekey order="37">padtest</bcf:citekey>
-    <bcf:citekey order="38">ignore1</bcf:citekey>
-    <bcf:citekey order="39">ignore2</bcf:citekey>
-    <bcf:citekey order="40">skipwidthtest1</bcf:citekey>
-    <bcf:citekey order="41">prefix1</bcf:citekey>
-    <bcf:citekey order="42">rangetest1</bcf:citekey>
+    <bcf:citekey order="35">LDN3</bcf:citekey>
+    <bcf:citekey order="36">title1</bcf:citekey>
+    <bcf:citekey order="37">labelstest</bcf:citekey>
+    <bcf:citekey order="38">padtest</bcf:citekey>
+    <bcf:citekey order="39">ignore1</bcf:citekey>
+    <bcf:citekey order="40">ignore2</bcf:citekey>
+    <bcf:citekey order="41">skipwidthtest1</bcf:citekey>
+    <bcf:citekey order="42">prefix1</bcf:citekey>
+    <bcf:citekey order="43">rangetest1</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>
