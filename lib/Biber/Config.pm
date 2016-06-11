@@ -397,6 +397,7 @@ sub _config_file_set {
                                                             qr/\Asortexclusion\z/,
                                                             qr/\Aexclusion\z/,
                                                             qr/\Asort\z/,
+                                                            qr/\Alabelalpha(?:name)?template\z/,
                                                             qr/\Asortitem\z/,
                                                             qr/\Apresort\z/,
                                                             qr/\Aoptionscope\z/,
@@ -448,7 +449,7 @@ sub _config_file_set {
 
   # Set options from config file
   while (my ($k, $v) = each %$userconf) {
-    # uniquenametemplate is special and has to be an array ref and so must come before
+    # Has to be an array ref and so must come before
     # the later options tests which assume hash refs
     if (lc($k) eq 'uniquenametemplate') {
       my $unkt;
@@ -461,12 +462,49 @@ sub _config_file_set {
         }
 
         push @$unkt, {namepart => $np->{content},
-                      use => $np->{use} || 0,
-                      base => $np->{base} || 0}
+                      use => $np->{use},
+                      base => $np->{base}}
       }
       Biber::Config->setblxoption('uniquenametemplate', $unkt);
     }
-    # sortingnamekey is special and has to be an array ref and so must come before
+    # Has to be an array ref and so must come before
+    # the later options tests which assume hash refs
+    elsif (lc($k) eq 'labelalphatemplate') {
+      foreach my $t (@$v) {
+        my $latype = $t->{type};
+        if ($latype eq 'global') {
+          Biber::Config->setblxoption('labelalphatemplate', $t);
+        }
+        else {
+          Biber::Config->setblxoption('labelalphatemplate',
+                                      $t,
+                                      'ENTRYTYPE',
+                                      $latype);
+        }
+      }
+    }
+    elsif (lc($k) eq 'labelalphanametemplate') {
+      foreach my $t (@$v) {
+        my $lant;
+        my $lantype = $t->{type};
+        foreach my $np (sort {$a->{order} <=> $b->{order}} @{$t->{namepart}}) {
+          push @$lant, {namepart           => $np->{content},
+                        use                => $np->{use},
+                        base               => $np->{base},
+                        substring_compound => $np->{substring_compound},
+                        substring_width    => $np->{substring_width} };
+
+        }
+
+        if ($lantype eq 'global') {
+          Biber::Config->setblxoption('labelalphanametemplate', $lant);
+        }
+        else {
+          Biber::Config->setblxoption('labelalphanametemplate', $lant, 'ENTRYTYPE', $lantype);
+        }
+      }
+    }
+    # Has to be an array ref and so must come before
     # the later options tests which assume hash refs
     elsif (lc($k) eq 'sortingnamekey') {
       my $snss;
