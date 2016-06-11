@@ -104,6 +104,10 @@ sub create_output_misc {
 sub _printfield {
   my ($be, $field, $str) = @_;
   my $field_type = 'field';
+  my $dm = Biber::Config->get_dm;
+
+  return '' if is_null($str) and not $dm->field_is_nullok($field);
+
   # crossref and xref are of type 'strng' in the .bbl
   if (lc($field) eq 'crossref' or
       lc($field) eq 'xref') {
@@ -195,7 +199,7 @@ sub set_output_entry {
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
   my $acc = '';
-  my $dmh = Biber::Config->get_dm_helpers;
+  my $dmh = $dm->{helpers};
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);

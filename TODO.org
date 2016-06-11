@@ -58,9 +58,16 @@
   ** Document \DeclareUniquenameTemplate, add to release notes, add to XSLT
 * DONE useprefix namelist and name scope with bibtex
 * TODO Internals.pm still mentions explicit name parts - replace with base/non-base etc.
-** compound, strwidth replace pstrwidth, pcompound and compound
+** TODO test for opt read in (non-tool) .confs?
+** TODO .bcf read
+** TODO onfig.pm opt read
+** TODO xsl update
+** TODO doc new opt
+** TODO compound, strwidth replace pstrwidth, pcompound and compound
+** TODO By default, prefix not base so it's appended in order before base regardless of base disambiguations which come later (which is the case now).
 * TODO nullable_check in Biber.pm - needed? It's a deep loop
 * TODO hash/fullhash for all names, bltx resolves namehash/fullhash from labelnamesource?
+* TODO 5.2.2 EDTF? (see github comments).
 * TODO Implement EDTF Date/Times
 ** DONE circa/uncertain/era should apply to individual dates, not the range.
 ** DONE 5.2.5 - seasons - new field (not in DM, only from date parsing), containing localisation string

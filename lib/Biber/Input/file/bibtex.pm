@@ -1065,15 +1065,18 @@ sub _name {
       # Skip names that don't parse for some reason
       next unless $no = parsename($name, $field, {useprefix => $useprefix}, $key);
     }
+
     # Deal with implied "et al" in data source
     if (lc($no->get_namestring) eq Biber::Config->getoption('others_string')) {
       $names->set_morenames;
     }
     else {
-      $names->add_name($no);
+      $names->add_name($no) if $no;
     }
   }
-  $bibentry->set_datafield($field, $names);
+
+  # Don't set if there were no valid names due to special errors above
+  $bibentry->set_datafield($field, $names) if $names->count_names;
   return;
 }
 
@@ -1693,7 +1696,6 @@ sub parsename_x {
       else {
         $nameinitstring .= join('', @{$namec{"${namepart}-i"}});
       }
-
     }
   }
 
