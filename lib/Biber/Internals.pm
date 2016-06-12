@@ -1420,8 +1420,8 @@ sub _namestring {
             # No use attribute conditionals or the attribute is specified and matches the option
             if (not $useopt or
                 ($useopt and $useoptval == $np->{use})) {
-              # Given name part can be modified by sortgiveninits option
-              if ($namepart eq 'given' and Biber::Config->getoption('sortgiveninits')) {
+              # Do we only want initials for sorting?
+              if ($np->{inits}) {
                 my $npistring = $n->get_namepart_initial($namepart);
                 $kps .= normalise_string_sort(join('', @{$npistring}), $field);
               }

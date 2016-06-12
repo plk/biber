@@ -520,6 +520,9 @@ sub _config_file_set {
               if (exists($snp->{use})) {
                 $np->{use} = $snp->{use};
               }
+              if (exists($snp->{inits})) {
+                $np->{inits} = $snp->{inits};
+              }
             }
             elsif ($snp->{type} eq 'literal') {
               $np = { type => 'literal', value => $snp->{content} };
@@ -721,11 +724,11 @@ sub set_unul_changed {
 
 sub postprocess_biber_opts {
   shift; # class method so don't care about class name
-  # Turn sortcase, sortupper, sortgiveninits into booleans if they are not already
+  # Turn sortcase and sortupper into booleans if they are not already
   # They are not booleans on the command-line/config file so that they
   # mirror biblatex option syntax for users, for example
 
-  foreach my $opt ('sortgiveninits', 'sortcase', 'sortupper') {
+  foreach my $opt ('sortcase', 'sortupper') {
     if (exists($CONFIG->{options}{biber}{$opt})) {
       if ($CONFIG->{options}{biber}{$opt} eq 'true') {
         $CONFIG->{options}{biber}{$opt} = 1;

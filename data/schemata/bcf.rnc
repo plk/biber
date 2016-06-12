@@ -18,7 +18,6 @@ start =
       mincrossrefs,
       minxrefs,
       sortcase,
-      sortgiveninits,
       sortupper
     },
 
@@ -375,9 +374,10 @@ sortingnamekey =
     element bcf:keypart {
      attribute order { xsd:integer },
      element bcf:part {
-        attribute type { "namepart" | "literal" },
-        attribute order { xsd:integer },
-        attribute use { "0" | "1" }?,
+       attribute type { "namepart" | "literal" },
+       attribute order { xsd:integer },
+       attribute use { "0" | "1" }?,
+       attribute inits { "0" | "1" }?,
         text
       }+
     }+
@@ -696,12 +696,6 @@ sortcase =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "sortcase" },
-    element bcf:value { "0" | "1" }
-  }
-sortgiveninits =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "sortgiveninits" },
     element bcf:value { "0" | "1" }
   }
 alphaothers =

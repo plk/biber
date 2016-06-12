@@ -57,17 +57,18 @@
   ** Config.pm read for unt
   ** Document \DeclareUniquenameTemplate, add to release notes, add to XSLT
 * DONE useprefix namelist and name scope with bibtex
-* TODO LabelalphaNameTemplate implementation
+* DONE LabelalphaNameTemplate implementation
 ** DONE .bcf read
 ** DONE config.pm opt read
 ** DONE compound, strwidth replace pstrwidth, pcompound and compound
 ** DONE xsl update
-** TODO Doc - move pstrwidth (remove) -> strwidth, pcompound (remove) -> compound, strwidth on lant overrides on lat
+** DONE Doc - move pstrwidth (remove) -> strwidth, pcompound (remove) -> compound, strwidth on lant overrides on lat
 * TODO sortgiveninits
-** TODO Should be moved to option of \namepart in SNKS
-** TODO Remove biber option and make biblatex deprecated
+** DONE Should be moved to option of \namepart in SNKS
+** DONE Remove biber option and make biblatex deprecated
+** DONE Fix in Internals, Remove from Constants.pm and Config.pm
 ** TODO Change schema, .bcfs, xsl, doc
-** TODO Fix in Internals, Remove from Constants.pm and Config.pm
+* TODO giveninits should be autogen and <name>inits
 * TODO 'given' in _getnamehash_u in Internals - can be abstracted?
 * DONE nullable_check in Biber.pm - needed? It's a deep loop
 * TODO hash/fullhash for all names, bltx resolves namehash/fullhash from labelnamesource?
@@ -85,6 +86,4 @@
 *** TODO apx:opt - add time options 
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 ** TODO name to bib and name to xnamebib in Name.pm
-
-
 

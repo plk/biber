@@ -1300,13 +1300,33 @@ $main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
-
 eq_or_diff($main->get_sortdata('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
-Biber::Config->setoption('sortgiveninits', 1);
+
+
+$SNK = Biber::Config->getblxoption('sortingnamekey');
+$SNK->{global} = [
+        [{ type => 'namepart', value => 'prefix', use => 1}],
+        [{ type => 'namepart', value => 'family'}],
+        [{ type => 'namepart', value => 'given', inits => 1}],
+        [{ type => 'namepart', value => 'suffix'}],
+        [{ type => 'namepart', value => 'prefix', use => 0}]
+       ];
+Biber::Config->setblxoption('sortingnamekey', $SNK);
+
 $biber->prepare;
 eq_or_diff($main->get_sortdata('stdmodel')->[0], $sortinits, 'sort first name inits only' );
 
-Biber::Config->setoption('sortgiveninits', 0);
+$SNK = Biber::Config->getblxoption('sortingnamekey');
+# Default back again
+$SNK->{global} = [
+        [{ type => 'namepart', value => 'prefix', use => 1}],
+        [{ type => 'namepart', value => 'family'}],
+        [{ type => 'namepart', value => 'given'}],
+        [{ type => 'namepart', value => 'suffix'}],
+        [{ type => 'namepart', value => 'prefix', use => 0}]
+       ];
+Biber::Config->setblxoption('sortingnamekey', $SNK);
+
 Biber::Config->setblxoption('labelalpha', 0);
 
 # debug

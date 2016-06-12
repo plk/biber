@@ -33,7 +33,6 @@
         <ref name="mincrossrefs"/>
         <ref name="minxrefs"/>
         <ref name="sortcase"/>
-        <ref name="sortgiveninits"/>
         <ref name="sortupper"/>
       </element>
       <!--
@@ -980,6 +979,14 @@
                     </choice>
                   </attribute>
                 </optional>
+                <optional>
+                  <attribute name="inits">
+                    <choice>
+                      <value>0</value>
+                      <value>1</value>
+                    </choice>
+                  </attribute>
+                </optional>
                 <text/>
               </element>
             </oneOrMore>
@@ -1760,22 +1767,6 @@
       </attribute>
       <element name="bcf:key">
         <value>sortcase</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
-      </element>
-    </element>
-  </define>
-  <define name="sortgiveninits">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>sortgiveninits</value>
       </element>
       <element name="bcf:value">
         <choice>

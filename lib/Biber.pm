@@ -678,6 +678,9 @@ sub parse_ctrlfile {
           if (exists($snp->{use})) {
             $np->{use} = $snp->{use};
           }
+          if (exists($snp->{inits})) {
+            $np->{inits} = $snp->{inits};
+          }
         }
         elsif ($snp->{type} eq 'literal') {
           $np = { type => 'literal', value => $snp->{content} };

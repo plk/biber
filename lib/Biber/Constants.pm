@@ -124,7 +124,6 @@ our $CONFIG_DEFAULT_BIBER = {
   noskipduplicates    => { content => 0 },
   sortdebug           => { content => 0 },
   sortcase            => { content => 1 },
-  sortgiveninits      => { content => 0 },
   sortupper           => { content => 1 },
   strip_comments      => { content => 0 },
   tool                => { content => 0 },

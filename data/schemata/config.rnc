@@ -87,7 +87,6 @@ start =
     element quiet                { "0" | "1" }? &
     element recodedata           { text }? &
     element sortcase             { "0" | "1" }? &
-    element sortfirstinits       { "0" | "1" }? &
     translit* &
     labelalphanametemplate? &
     labelalphatemplate? &
@@ -366,6 +365,7 @@ sortingnamekey =
         attribute type { "namepart" | "literal" },
         attribute order { xsd:integer },
         attribute use { "0" | "1" }?,
+        attribute inits { "0" | "1" }?,
         text
       }+
     }+

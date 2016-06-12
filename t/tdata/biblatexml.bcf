@@ -29,10 +29,6 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>sortgiveninits</bcf:key>
-      <bcf:value>0</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
       <bcf:key>sortupper</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>

@@ -78,7 +78,6 @@ GetOptions(
            'noxname',
            'sortdebug',
            'sortcase=s',
-           'sortgiveninits|sortfirstinits=s',
            'sortlocale|l=s',
            'sortupper=s',
            'ssl-nointernalca',
@@ -717,12 +716,6 @@ Add comments to output with sorting keys. Useful for debugging.
 =item B<--sortcase=true|false>
 
 Case-sensitive sorting (default is true).
-
-=item B<--sortgiveninits=true|false>
-
-When sorting names, use only the given name initials, not full given name. Some people expect
-the biblatex B<giveninits> option to do this but it needs to be a separate option in case
-users, for example, need to show only initials but sort with full given names (default is false).
 
 =item B<--sortlocale|-l [locale]>
 
