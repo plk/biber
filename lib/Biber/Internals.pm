@@ -36,10 +36,6 @@ my $logger = Log::Log4perl::get_logger('main');
 # nameparts from the data model list of valid nameparts
 sub _getnamehash {
   my ($self, $citekey, $names) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
   my $hashkey = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_cite;
@@ -67,14 +63,36 @@ sub _getnamehash {
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
 
+sub _getfullhash {
+  my ($self, $citekey, $names) = @_;
+  my $hashkey = '';
+  my $dm = Biber::Config->get_dm;
+  my @nps = $dm->get_constant_value('nameparts');
+
+  foreach my $n (@{$names->names}) {
+    foreach my $nt (@nps) {# list type so returns list
+      if (my $np = $n->get_namepart($nt)) {
+        $hashkey .= $np;
+      }
+    }
+  }
+
+  # If we had an "and others"
+  if ($names->get_morenames) {
+    $hashkey .= '+'
+  }
+
+  if ($logger->is_trace()) { # performance shortcut
+    $logger->trace("Creating MD5 fullhash using '$hashkey'");
+  }
+  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
+  return md5_hex(encode_utf8(NFC($hashkey)));
+}
+
 # Same as _getnamehash but takes account of uniquename setting for firstname
 # It's used for extra* tracking only
 sub _getnamehash_u {
   my ($self, $citekey, $names) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
   my $hashkey = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_cite;
@@ -117,44 +135,9 @@ sub _getnamehash_u {
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
 
-sub _getfullhash {
-  my ($self, $citekey, $names) = @_;
-  my $hashkey = '';
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
-  my $dm = Biber::Config->get_dm;
-  my @nps = $dm->get_constant_value('nameparts');
-
-  foreach my $n (@{$names->names}) {
-    foreach my $nt (@nps) {# list type so returns list
-      if (my $np = $n->get_namepart($nt)) {
-        $hashkey .= $np;
-      }
-    }
-  }
-
-  # If we had an "and others"
-  if ($names->get_morenames) {
-    $hashkey .= '+'
-  }
-
-  if ($logger->is_trace()) { # performance shortcut
-    $logger->trace("Creating MD5 fullhash using '$hashkey'");
-  }
-  # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
-  return md5_hex(encode_utf8(NFC($hashkey)));
-}
-
-
 # Special hash to track per-name information
 sub _genpnhash {
   my ($self, $citekey, $n) = @_;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
   my $hashkey = '';
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');

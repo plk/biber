@@ -52,6 +52,8 @@ my $k1 = q|    \entry{key1}{article}{}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{1}
       \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
       \field{labeldatesource}{}
@@ -84,6 +86,8 @@ my $k2 = q|    \entry{key2}{inbook}{}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{2}
       \field{sortinithash}{8343b463aacf48517c044b4d2c9c45ed}
       \field{labeldatesource}{}
@@ -110,6 +114,8 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -141,6 +147,8 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -171,6 +179,8 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -200,6 +210,8 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly,useed
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -240,6 +252,8 @@ my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{dataonly,skipbib=f
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{s1}

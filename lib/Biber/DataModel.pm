@@ -1337,6 +1337,7 @@ sub generate_bltxml_schema {
 
 sub generate_bblxml_schema {
   my ($dm, $outfile) = @_;
+  my $dmh = $dm->{helpers};
 
   # Set the .rng path to the output dir, if specified
   if (my $outdir = Biber::Config->getoption('output_directory')) {
@@ -1582,6 +1583,10 @@ sub generate_bblxml_schema {
   # uri fields
   my @fs3 = @{$dm->get_fields_of_type('field', 'uri')};
 
+  # <namelist>namehash and <namelist>fullhash
+  my @fs4;
+  map {push @fs4, "${_}namehash";push @fs4, "${_}fullhash"} @{$dmh->{namelists}};
+
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:field");
   $writer->startTag('choice'); # start choice of normal vs datepart fields
@@ -1589,7 +1594,7 @@ sub generate_bblxml_schema {
   $writer->startTag('attribute', 'name' => 'name');
 
   $writer->startTag('choice');
-  foreach my $f (@fs1, @fs2, @fs3) {
+  foreach my $f (@fs1, @fs2, @fs3, @fs4) {
     $writer->dataElement('value', $f);
   }
   $writer->endTag();    # choice

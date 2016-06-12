@@ -243,10 +243,20 @@ sub set_output_entry {
     }
   }
 
+  # Output labelname hashes
   my $namehash = $be->get_field('namehash');
   $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($namehash), name => 'namehash') if $namehash;
   my $fullhash = $be->get_field('fullhash');
   $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($fullhash), name => 'fullhash') if $fullhash;
+
+  # Output namelist hashes
+  foreach my $namefield (@{$dmh->{namelists}}) {
+    if (my $namehash = $be->get_field("${namefield}namehash")) {
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($namehash), name => "${namefield}namehash");
+      my $fullhash = $be->get_field("${namefield}fullhash");
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($fullhash), name => "${namefield}fullhash");
+    }
+  }
 
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
     # Might not have been set due to skiplab/dataonly

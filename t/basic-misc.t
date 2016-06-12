@@ -89,6 +89,8 @@ my $u1 = q|    \entry{u1}{misc}{}
       }
       \strng{namehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
+      \strng{authornamehash}{b78abdc838d79b6576f2ed0021642766}
+      \strng{authorfullhash}{b78abdc838d79b6576f2ed0021642766}
       \field{labelalpha}{AAA\textbf{+}00}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
@@ -201,6 +203,8 @@ my $murray1 = q|    \entry{murray}{article}{}
       }
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
+      \strng{authornamehash}{7ba00ed438c44a2270c14ba95a7fc011}
+      \strng{authorfullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos\textbf{+}98}
       \field{sortinit}{H}
       \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
@@ -299,6 +303,8 @@ my $murray2 = q|    \entry{murray}{article}{}
       }
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
+      \strng{authornamehash}{7ba00ed438c44a2270c14ba95a7fc011}
+      \strng{authorfullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos98}
       \field{sortinit}{H}
       \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
@@ -333,6 +339,8 @@ my $t1 = q+    \entry{t1}{misc}{}
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{authornamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{authorfullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
@@ -356,6 +364,8 @@ my $t2 = q|    \entry{t2}{misc}{}
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{authornamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{authorfullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
@@ -381,6 +391,10 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       }
       \strng{namehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
+      \strng{authornamehash}{a66f357fe2fd356fe49959173522a651}
+      \strng{authorfullhash}{a66f357fe2fd356fe49959173522a651}
+      \strng{shortauthornamehash}{9873a6cc65c553faa2b21aaad626fe4b}
+      \strng{shortauthorfullhash}{9873a6cc65c553faa2b21aaad626fe4b}
       \field{labelalpha}{XAn35}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
@@ -412,6 +426,10 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       }
       \strng{namehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
+      \strng{authornamehash}{a0bccee4041bc840e14c06e5ba7f083c}
+      \strng{authorfullhash}{a0bccee4041bc840e14c06e5ba7f083c}
+      \strng{shortauthornamehash}{f64c29e89ea49402b997956610b58ef6}
+      \strng{shortauthorfullhash}{f64c29e89ea49402b997956610b58ef6}
       \field{labelalpha}{YAn39}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
@@ -440,6 +458,8 @@ my $url1 = q|    \entry{url1}{misc}{}
       }
       \strng{namehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
+      \strng{authornamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
+      \strng{authorfullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \field{labelalpha}{Ali05}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
@@ -602,6 +622,8 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
       }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{authornamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{authorfullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \field{labelalpha}{Flu}
       \field{sortinit}{F}
       \field{sortinithash}{c6a7d9913bbd7b20ea954441c0460b78}
@@ -621,6 +643,8 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
       }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{authornamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{authorfullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \field{labelalpha}{Flu}
       \field{sortinit}{F}
       \field{sortinithash}{c6a7d9913bbd7b20ea954441c0460b78}
@@ -657,6 +681,8 @@ my $clone1 = q|    \entry{snk1}{book}{}
       }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{authornamehash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{authorfullhash}{83330b0520b5d4ea57529a23b404d43d}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
@@ -679,6 +705,8 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
       }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{authornamehash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{authorfullhash}{83330b0520b5d4ea57529a23b404d43d}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
@@ -705,6 +733,8 @@ my $ent1 = q|    \entry{ent1}{book}{}
       }
       \strng{namehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{fullhash}{b2536a425d549b46de5f21c4d468050a}
+      \strng{authornamehash}{b2536a425d549b46de5f21c4d468050a}
+      \strng{authorfullhash}{b2536a425d549b46de5f21c4d468050a}
       \field{labelalpha}{SdB}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
@@ -746,6 +776,8 @@ my $era1 = q|    \entry{era1}{book}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{labelalpha}{Smi80}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
@@ -770,6 +802,8 @@ my $era2 = q|    \entry{era2}{book}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{labelalpha}{Smi98}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
@@ -795,6 +829,8 @@ my $era3 = q|    \entry{era3}{book}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{labelalpha}{Smi97}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
@@ -818,6 +854,8 @@ my $era4 = q|    \entry{era4}{book}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{labelalpha}{Smi34}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
@@ -845,6 +883,8 @@ my $time1 = q|    \entry{time1}{book}{}
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{labelalpha}{Smi01}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
@@ -883,6 +923,8 @@ my $range1 = q|    \entry{range1}{book}{}
       }
       \strng{namehash}{e71420afc24f7262a6c48ac55ac0cfb5}
       \strng{fullhash}{e71420afc24f7262a6c48ac55ac0cfb5}
+      \strng{authornamehash}{e71420afc24f7262a6c48ac55ac0cfb5}
+      \strng{authorfullhash}{e71420afc24f7262a6c48ac55ac0cfb5}
       \field{labelalpha}{Jon34}
       \field{sortinit}{J}
       \field{sortinithash}{ec3950a647c092421b9fcca6d819504a}
@@ -907,6 +949,8 @@ my $season1 = q|    \entry{season1}{book}{}
       }
       \strng{namehash}{12cae7a5437aee8989512ae17a6ea0ca}
       \strng{fullhash}{12cae7a5437aee8989512ae17a6ea0ca}
+      \strng{authornamehash}{12cae7a5437aee8989512ae17a6ea0ca}
+      \strng{authorfullhash}{12cae7a5437aee8989512ae17a6ea0ca}
       \field{labelalpha}{Thi03}
       \field{sortinit}{T}
       \field{sortinithash}{423d138a005a533b47e6475e39378bf2}

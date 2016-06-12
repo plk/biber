@@ -55,6 +55,8 @@ my $set1 = q|    \entry{seta}{set}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -80,6 +82,8 @@ my $set2 = q|    \entry{set:membera}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labeldatesource}{}
@@ -102,6 +106,8 @@ my $set3 = q|    \entry{set:memberb}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labeldatesource}{}
@@ -123,6 +129,8 @@ my $set4 = q|    \entry{set:memberc}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labeldatesource}{}
@@ -143,6 +151,8 @@ my $noset1 = q|    \entry{noseta}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -166,6 +176,8 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -189,6 +201,8 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -218,6 +232,8 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
       \field{labeldatesource}{}

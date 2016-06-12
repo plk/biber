@@ -2042,13 +2042,22 @@ sub process_fullhash {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $dmh = Biber::Config->get_dm_helpers;
 
   # fullhash is generated from the labelname but ignores SHORT* fields and
   # max/mincitenames settings
+  # This can't be resolved nicely by biblatex because it depends on use* options
+  # and also SHORT* fields etc.
   if (my $lnfhi = $be->get_labelnamefh_info) {
     if (my $lnfh = $be->get_field($lnfhi)) {
       $be->set_field('fullhash', $self->_getfullhash($citekey, $lnfh));
     }
+  }
+
+  # Generate fullhash for all other name fields
+  foreach my $n (@{$dmh->{namelistsall}}) {
+    next unless my $nv = $be->get_field($n);
+    $be->set_field("${n}fullhash", $self->_getfullhash($citekey, $nv));
   }
 
   return;
@@ -2067,12 +2076,21 @@ sub process_namehash {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
+  my $dmh = Biber::Config->get_dm_helpers;
 
   # namehash is generated from the labelname
+  # This can't be resolved nicely by biblatex because it depends on use* options
+  # and also SHORT* fields etc.
   if (my $lni = $be->get_labelname_info) {
     if (my $ln = $be->get_field($lni)) {
       $be->set_field('namehash', $self->_getnamehash($citekey, $ln));
     }
+  }
+
+  # Generate namehash for all other name fields
+  foreach my $n (@{$dmh->{namelistsall}}) {
+    next unless my $nv = $be->get_field($n);
+    $be->set_field("${n}namehash", $self->_getnamehash($citekey, $nv));
   }
 
   return;

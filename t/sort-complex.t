@@ -115,6 +115,8 @@ my $l4 = q|    \entry{L4}{book}{}
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authornamehash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authorfullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -142,6 +144,8 @@ my $l1 = q|    \entry{L1}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -169,6 +173,8 @@ my $l2 = q|    \entry{L2}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -196,6 +202,8 @@ my $l3 = q|    \entry{L3}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -225,6 +233,8 @@ my $l5 = q|    \entry{L5}{book}{}
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authornamehash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authorfullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}

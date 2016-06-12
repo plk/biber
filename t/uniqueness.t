@@ -58,8 +58,8 @@ eq_or_diff($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_l
 ok(is_undef($bibentries->entry('un4a')->get_field($bibentries->entry('un4a')->get_labelname_info)->nth_name(1)->get_uniquename), 'per-entry uniquename');
 eq_or_diff($bibentries->entry('un6')->get_field('namehash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 1');
 eq_or_diff($bibentries->entry('un6')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 2');
-eq_or_diff($bibentries->entry('un7')->get_field('namehash'), 'b33fbd3f3349d1536dbcc14664f2cbbd', 'Fullnamshash ignores SHORT* names - 1');
-eq_or_diff($bibentries->entry('un7')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Fullnamshash ignores SHORT* names - 2');
+eq_or_diff($bibentries->entry('un7')->get_field('namehash'), 'b33fbd3f3349d1536dbcc14664f2cbbd', 'Fullnamehash ignores SHORT* names - 1');
+eq_or_diff($bibentries->entry('un7')->get_field('fullhash'), 'f8169a157f8d9209961157b8d23902db', 'Fullnamehash ignores SHORT* names - 2');
 eq_or_diff($bibentries->entry('test1')->get_field('namehash'), '07df5c892ba1452776abee0a867591f2', 'Namehash and fullhash - 3');
 eq_or_diff($bibentries->entry('test1')->get_field('fullhash'), '637292dd2997a74c91847f1ec5081a46', 'Namehash and fullhash - 4');
 eq_or_diff($bibentries->entry('untf1')->get_field($bibentries->entry('untf1')->get_labelname_info)->nth_name(2)->get_uniquename, '2', 'Uniquename with full and repeat - 1');

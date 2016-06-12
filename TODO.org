@@ -72,8 +72,8 @@
 ** DONE Doc (including scope)
 * DONE 'given' in _getnamehash_u in Internals - can be abstracted?
 * DONE nullable_check in Biber.pm - needed? It's a deep loop
-* TODO donames stuff is messy
-* TODO hash/fullhash for all names, bltx resolves namehash/fullhash from labelnamesource?
+* DONE donames stuff is messy
+* DONE hash/fullhash for all names
 * TODO 5.2.2 EDTF? (see github comments).
 * TODO Implement EDTF Date/Times
 ** DONE circa/uncertain/era should apply to individual dates, not the range.

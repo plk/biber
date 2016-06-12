@@ -99,6 +99,12 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       }
       \strng{namehash}{f29948d2b7207cd79c4466d823d8627c}
       \strng{fullhash}{835d3352054f77020fc38705080e4596}
+      \strng{authornamehash}{f29948d2b7207cd79c4466d823d8627c}
+      \strng{authorfullhash}{835d3352054f77020fc38705080e4596}
+      \strng{forewordnamehash}{0ee59e598dae22fac8e6d9d2df7e79ec}
+      \strng{forewordfullhash}{0ee59e598dae22fac8e6d9d2df7e79ec}
+      \strng{translatornamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
+      \strng{translatorfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labeldatesource}{}

@@ -75,6 +75,10 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       }
       \strng{namehash}{121b6dc164b5b619c81c670fbd823f12}
       \strng{fullhash}{121b6dc164b5b619c81c670fbd823f12}
+      \strng{authornamehash}{121b6dc164b5b619c81c670fbd823f12}
+      \strng{authorfullhash}{121b6dc164b5b619c81c670fbd823f12}
+      \strng{editornamehash}{c129df5593fdaa7475548811bfbb227d}
+      \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{G}
       \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
       \field{labelnamesource}{author}
@@ -113,6 +117,10 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       }
       \strng{namehash}{2d51a96bc0a6804995b3a9ff350c3384}
       \strng{fullhash}{2d51a96bc0a6804995b3a9ff350c3384}
+      \strng{authornamehash}{2d51a96bc0a6804995b3a9ff350c3384}
+      \strng{authorfullhash}{2d51a96bc0a6804995b3a9ff350c3384}
+      \strng{editornamehash}{c129df5593fdaa7475548811bfbb227d}
+      \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{F}
       \field{sortinithash}{c6a7d9913bbd7b20ea954441c0460b78}
       \field{labelnamesource}{author}
@@ -125,8 +133,9 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
     \endentry
 |;
 
-# This is included as it is crossrefed >= mincrossrefs times
-# Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
+# This is included as it is crossrefed >= mincrossrefs times Notice lack of
+# labelname and labelname hashes because the only name is EDITOR and
+# useeditor is false
 my $cr_m = q|    \entry{cr_m}{book}{}
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
@@ -138,6 +147,8 @@ my $cr_m = q|    \entry{cr_m}{book}{}
       \list{publisher}{1}{%
         {Grimble}%
       }
+      \strng{editornamehash}{c129df5593fdaa7475548811bfbb227d}
+      \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{G}
       \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
       \true{crossrefsource}
@@ -168,6 +179,10 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       }
       \strng{namehash}{2baf676a220704f6914223aefccaaa88}
       \strng{fullhash}{2baf676a220704f6914223aefccaaa88}
+      \strng{authornamehash}{2baf676a220704f6914223aefccaaa88}
+      \strng{authorfullhash}{2baf676a220704f6914223aefccaaa88}
+      \strng{editornamehash}{a1f5c22413396d599ec766725b226735}
+      \strng{editorfullhash}{a1f5c22413396d599ec766725b226735}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \field{labelnamesource}{author}
@@ -193,6 +208,8 @@ my $crt = q|    \entry{crt}{book}{}
       \list{publisher}{1}{%
         {Rancour}%
       }
+      \strng{editornamehash}{a1f5c22413396d599ec766725b226735}
+      \strng{editorfullhash}{a1f5c22413396d599ec766725b226735}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
       \field{labeltitlesource}{title}
@@ -220,6 +237,10 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{authornamehash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{authorfullhash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{editornamehash}{344a7f427fb765610ef96eb7bce95257}
+      \strng{editorfullhash}{344a7f427fb765610ef96eb7bce95257}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \field{labelnamesource}{author}
@@ -261,6 +282,10 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{authornamehash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{authorfullhash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{bookauthornamehash}{91a1dd4aeed3c4ec29ca74c4e778be5f}
+      \strng{bookauthorfullhash}{91a1dd4aeed3c4ec29ca74c4e778be5f}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \field{labelnamesource}{author}
@@ -289,6 +314,8 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       }
       \strng{namehash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{fullhash}{3d449e56eb3ca1ae80dc99a18d689795}
+      \strng{authornamehash}{3d449e56eb3ca1ae80dc99a18d689795}
+      \strng{authorfullhash}{3d449e56eb3ca1ae80dc99a18d689795}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
       \field{labelnamesource}{author}
@@ -312,6 +339,8 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       }
       \strng{namehash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \strng{fullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
+      \strng{authornamehash}{e0ecc4fc668ee499d1afba44e1ac064d}
+      \strng{authorfullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \field{sortinit}{Z}
       \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
       \field{labelnamesource}{author}
@@ -333,6 +362,8 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       }
       \strng{namehash}{6afa09374ecfd6b394ce714d2d9709c7}
       \strng{fullhash}{6afa09374ecfd6b394ce714d2d9709c7}
+      \strng{authornamehash}{6afa09374ecfd6b394ce714d2d9709c7}
+      \strng{authorfullhash}{6afa09374ecfd6b394ce714d2d9709c7}
       \field{sortinit}{I}
       \field{sortinithash}{25e99d37ba90f7c4fb20baf4e310faf3}
       \field{labelnamesource}{author}
@@ -343,8 +374,9 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
     \endentry
 |;
 
-# This is included as it is xref'd >= minxrefs times
-# Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
+# This is included as it is xref'd >= minxrefs times Notice lack of
+# labelname and labelname hashes because the only name is EDITOR and
+# useeditor is false
 my $xrm = q|    \entry{xrm}{book}{}
       \name{editor}{1}{}{%
         {{hash=809950f9b59ae207092b909a19dcb27b}{%
@@ -356,6 +388,8 @@ my $xrm = q|    \entry{xrm}{book}{}
       \list{publisher}{1}{%
         {Mainstream}%
       }
+      \strng{editornamehash}{809950f9b59ae207092b909a19dcb27b}
+      \strng{editorfullhash}{809950f9b59ae207092b909a19dcb27b}
       \field{sortinit}{C}
       \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
       \true{xrefsource}
@@ -376,6 +410,8 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       }
       \strng{namehash}{9788055665b9bb4b37c776c3f6b74f16}
       \strng{fullhash}{9788055665b9bb4b37c776c3f6b74f16}
+      \strng{authornamehash}{9788055665b9bb4b37c776c3f6b74f16}
+      \strng{authorfullhash}{9788055665b9bb4b37c776c3f6b74f16}
       \field{sortinit}{N}
       \field{sortinithash}{925374ca63e7594de7fafdb83e64d41d}
       \field{labelnamesource}{author}
@@ -398,6 +434,8 @@ my $xrt = q|    \entry{xrt}{book}{}
       \list{publisher}{1}{%
         {Middling}%
       }
+      \strng{editornamehash}{bf7d6b02f3e073913e5bfe5059508dd5}
+      \strng{editorfullhash}{bf7d6b02f3e073913e5bfe5059508dd5}
       \field{sortinit}{K}
       \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
       \field{labeltitlesource}{title}
@@ -427,6 +465,10 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       }
       \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
       \strng{fullhash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{authornamehash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{authorfullhash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{editornamehash}{6ea89bd4958743a20b70fe17647d6af5}
+      \strng{editorfullhash}{6ea89bd4958743a20b70fe17647d6af5}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelnamesource}{author}
@@ -449,6 +491,8 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authornamehash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelnamesource}{author}
@@ -471,6 +515,8 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authornamehash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelnamesource}{author}
@@ -490,6 +536,8 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authornamehash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelnamesource}{author}
@@ -516,6 +564,10 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       }
       \strng{namehash}{6268941b408d3263bddb208a54899ea9}
       \strng{fullhash}{6268941b408d3263bddb208a54899ea9}
+      \strng{authornamehash}{6268941b408d3263bddb208a54899ea9}
+      \strng{authorfullhash}{6268941b408d3263bddb208a54899ea9}
+      \strng{editornamehash}{cfee758a1c82df2e26af1985e061bb0a}
+      \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{sortinit}{V}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
       \field{labelnamesource}{author}
@@ -541,6 +593,10 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
            given={Edward},
            given_i={E\bibinitperiod}}}%
       }
+      \strng{bookauthornamehash}{6268941b408d3263bddb208a54899ea9}
+      \strng{bookauthorfullhash}{6268941b408d3263bddb208a54899ea9}
+      \strng{editornamehash}{cfee758a1c82df2e26af1985e061bb0a}
+      \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{sortinit}{P}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
       \field{labeltitlesource}{title}
@@ -595,6 +651,10 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
       }
       \strng{namehash}{1a0f7d518cccdad859a74412ef956474}
       \strng{fullhash}{1a0f7d518cccdad859a74412ef956474}
+      \strng{authornamehash}{1a0f7d518cccdad859a74412ef956474}
+      \strng{authorfullhash}{1a0f7d518cccdad859a74412ef956474}
+      \strng{bookauthornamehash}{1a0f7d518cccdad859a74412ef956474}
+      \strng{bookauthorfullhash}{1a0f7d518cccdad859a74412ef956474}
       \field{sortinit}{C}
       \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
       \true{xrefsource}

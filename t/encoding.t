@@ -45,6 +45,8 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
@@ -70,6 +72,8 @@ my $encode2 = q|    \entry{test1}{book}{}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
@@ -95,6 +99,8 @@ my $encode3 = q|    \entry{test1}{book}{}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
@@ -120,6 +126,8 @@ my $encode5 = q|    \entry{test}{book}{}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
@@ -145,6 +153,8 @@ my $encode6 = q|    \entry{test}{book}{}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
@@ -170,6 +180,8 @@ my $encode7 = q|    \entry{test}{book}{}
       }
       \strng{namehash}{06a47edae2e847800cfd78323a0e6be8}
       \strng{fullhash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authornamehash}{06a47edae2e847800cfd78323a0e6be8}
+      \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}

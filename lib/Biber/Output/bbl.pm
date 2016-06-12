@@ -285,10 +285,20 @@ sub set_output_entry {
     }
   }
 
+  # Output labelname hashes
   my $namehash = $be->get_field('namehash');
   $acc .= "      \\strng{namehash}{$namehash}\n" if $namehash;
   my $fullhash = $be->get_field('fullhash');
   $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
+
+  # Output namelist hashes
+  foreach my $namefield (@{$dmh->{namelists}}) {
+    if (my $namehash = $be->get_field("${namefield}namehash")) {
+      $acc .= "      \\strng{${namefield}namehash}{$namehash}\n";
+      my $fullhash = $be->get_field("${namefield}fullhash");
+      $acc .= "      \\strng{${namefield}fullhash}{$fullhash}\n";
+    }
+  }
 
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
     # Might not have been set due to skiplab/dataonly
