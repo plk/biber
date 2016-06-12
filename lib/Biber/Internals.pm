@@ -83,20 +83,23 @@ sub _getnamehash_u {
 
   # namehash obeys list truncations
   foreach my $n (@{$names->first_n_names($visible)}) {
-    foreach my $nt (@nps) {# list type so returns list
-      if (my $np = $n->get_namepart($nt)) {
-        if ($nt eq 'given') {
+    # Use nameuniqueness template to construct hash
+    foreach my $nps (@{Biber::Config->getblxoption('uniquenametemplate')}) {
+      my $npn = $nps->{namepart};
+      if (my $np = $n->get_namepart($npn)) {
+        if ($nps->{base}) {
+          $hashkey .= $np;
+        }
+        else {
           if (defined($n->get_uniquename)) {
             if ($n->get_uniquename eq '2') {
               $hashkey .= $np;
             }
+            # Use initials for non-base parts if uniquename indicates this will disambiguate
             elsif ($n->get_uniquename eq '1') {
-              $hashkey .= join('', @{$n->get_namepart_initial('given')});
+              $hashkey .= join('', @{$n->get_namepart_initial($npn)});
             }
           }
-        }
-        else {
-          $hashkey .= $np;
         }
       }
     }

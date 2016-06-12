@@ -63,13 +63,14 @@
 ** DONE compound, strwidth replace pstrwidth, pcompound and compound
 ** DONE xsl update
 ** DONE Doc - move pstrwidth (remove) -> strwidth, pcompound (remove) -> compound, strwidth on lant overrides on lat
-* TODO sortgiveninits
+* DONE sortgiveninits
 ** DONE Should be moved to option of \namepart in SNKS
 ** DONE Remove biber option and make biblatex deprecated
 ** DONE Fix in Internals, Remove from Constants.pm and Config.pm
-** TODO Change schema, .bcfs, xsl, doc
-* TODO giveninits should be autogen and <name>inits
-* TODO 'given' in _getnamehash_u in Internals - can be abstracted?
+** DONE Change schema, .bcfs, xsl, doc
+* DONE giveninits should be autogen and <name>inits
+** DONE Doc (including scope)
+* DONE 'given' in _getnamehash_u in Internals - can be abstracted?
 * DONE nullable_check in Biber.pm - needed? It's a deep loop
 * TODO hash/fullhash for all names, bltx resolves namehash/fullhash from labelnamesource?
 * TODO 5.2.2 EDTF? (see github comments).
