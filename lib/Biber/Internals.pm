@@ -499,7 +499,7 @@ sub _label_name {
 
     # Loop over names in range
     for (my $i = $nr_start-1; $i < $nr_end; $i++) {
-      # Deal with prefix options
+      # Deal with pre options
       foreach my $fieldinfo (@{$parts->{pre}{strings}[$i]}) {
         my $np = $fieldinfo->[0];
         my $npo = $fieldinfo->[1];

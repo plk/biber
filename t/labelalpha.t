@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 121;
+use Test::More tests => 122;
 use Test::Differences;
 unified_diff;
 
@@ -50,8 +50,14 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $bibentries = $section->bibentries;
 
+# Test with useprefix=false
+eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'Vaa99', 'useprefix=0 so not in label');
 
-eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'vVaa99', 'Default prefix settings entry prefix1 labelalpha');
+# useprefix=true
+Biber::Config->setblxoption('useprefix', 1);
+$biber->prepare;
+
+eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'vdVaa99', 'Default prefix settings entry prefix1 labelalpha');
 eq_or_diff($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=1 minalphanames=1 entry L1 labelalpha');
 ok(is_undef($main->get_extraalphadata('l1')), 'maxalphanames=1 minalphanames=1 entry L1 extraalpha');
 eq_or_diff($bibentries->entry('L2')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L2 labelalpha');

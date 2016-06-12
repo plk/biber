@@ -137,7 +137,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useauthor</bcf:key>
@@ -448,7 +448,7 @@
   </bcf:sourcemap>
   <!-- LABELALPHA NAME TEMPLATE -->
   <bcf:labelalphanametemplate type="global">
-    <bcf:namepart order="1" use="1" pre="1" substring_width="1">prefix</bcf:namepart>
+    <bcf:namepart order="1" use="1" pre="1" substring_width="1" substring_compound="1">prefix</bcf:namepart>
     <bcf:namepart order="2" substring_compound="1">family</bcf:namepart>
   </bcf:labelalphanametemplate>
   <bcf:labelalphanametemplate type="customa">

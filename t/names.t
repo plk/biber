@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 59;
+use Test::More tests => 60;
 use Test::Differences;
 unified_diff;
 
@@ -231,6 +231,16 @@ my $name18 =
       basenamestring => 'British National Corpus',
       namestring     => 'British National Corpus',
       nameinitstring => 'British National Corpus' } ;
+
+my $name19 =
+   {  given          => {string => 'Luis', initial => ['L']},
+      family         => {string => 'Vázques{ de }Parga', initial => ['V']},
+      prefix         => {string => undef, initial => undef},
+      suffix         => {string => undef, initial => undef},
+      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring => 'Vázques{ de }Parga',
+      namestring     => 'Vázques{ de }PargaLuis',
+      nameinitstring => 'Vázques{ de }PargaL' } ;
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
@@ -793,6 +803,7 @@ is_deeply(Biber::Input::file::bibtex::parsename('E. S. El-{M}allah', 'author'), 
 is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author'), $name16, 'parsename 16');
 is_deeply(Biber::Input::file::bibtex::parsename('Other, A.~N.', 'author'), $name17, 'parsename 17');
 is_deeply(Biber::Input::file::bibtex::parsename('{{{British National Corpus}}}', 'author'), $name18, 'parsename 18');
+is_deeply(Biber::Input::file::bibtex::parsename('Vázques{ de }Parga, Luis', 'author'), $name19, 'parsename 19');
 
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'First Last') ;
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'First Initial. Last') ;
