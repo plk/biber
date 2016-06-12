@@ -502,7 +502,7 @@
             <h4>Template for type <xsl:value-of select="./@type"/></h4>
             <table>
               <thead>
-                <tr><td>Order</td><td>Pre</td><td>Use option</td><td>Width</td><td>Compound</td><td>Namepart</td></tr>
+                <tr><td>Order</td><td>Pre</td><td>Use option</td><td>Width</td><td>Side</td><td>Compound</td><td>Namepart</td></tr>
               </thead>
               <tbody>
                 <xsl:for-each select="./bcf:namepart">
@@ -512,6 +512,7 @@
                     <td><xsl:value-of select="./@pre"/></td>
                     <td><xsl:value-of select="./@use"/></td>
                     <td><xsl:value-of select="./@substring_width"/></td>
+                    <td><xsl:value-of select="./@substring_side"/></td>
                     <td><xsl:value-of select="./@substring_compound"/></td>
                     <td><xsl:value-of select="./text()"/></td>
                   </tr>

@@ -575,6 +575,7 @@ sub parse_ctrlfile {
                     use                => $np->{use},
                     pre                => $np->{pre},
                     substring_compound => $np->{substring_compound},
+                    substring_side     => $np->{substring_side},
                     substring_width    => $np->{substring_width}};
     }
 

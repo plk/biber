@@ -475,6 +475,7 @@ sub _label_name {
             push @$preacc,
               [normalise_string_label($np),
                {substring_width => $lnp->{substring_width},
+                substring_side => $lnp->{substring_side},
                 substring_compound => $lnp->{substring_compound}}];
           }
           else {
@@ -482,6 +483,7 @@ sub _label_name {
             push @$mainacc,
               [normalise_string_label($np),
                {substring_width => $lnp->{substring_width},
+                substring_side => $lnp->{substring_side},
                 substring_compound => $lnp->{substring_compound}}];
           }
         }
@@ -683,8 +685,13 @@ sub _process_label_attributes {
         my $subs_width = ($labelattrs->{substring_width} or $default_substring_width);
 
         # Override subs width with namepart specific setting, if it exists
-        if ($nameparts and my $w = $namepartopts->{substring_width}) {
-          $subs_width = $w;
+        if ($nameparts) {
+          if (my $w = $namepartopts->{substring_width}) {
+            $subs_width = $w;
+          }
+          if (my $s = $namepartopts->{substring_side}) {
+            $subs_side = $s;
+          }
         }
 
         # Set offset depending on subs side

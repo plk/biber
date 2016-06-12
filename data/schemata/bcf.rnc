@@ -127,6 +127,7 @@ start =
         attribute pre { "0" | "1" }?,
         attribute substring_width { xsd:integer }?,
         attribute substring_compound { "0" | "1" }?,
+        attribute substring_side { "left" | "right" }?,
         text
       }+
     }+,

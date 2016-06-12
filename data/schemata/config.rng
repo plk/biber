@@ -1099,6 +1099,14 @@
               </choice>
             </attribute>
           </optional>
+          <optional>
+            <attribute name="substring_side">
+              <choice>
+                <value>left</value>
+                <value>right</value>
+              </choice>
+            </attribute>
+          </optional>
           <text/>
         </element>
       </oneOrMore>
