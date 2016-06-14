@@ -1031,7 +1031,7 @@ sub parse_date_edtf_unspecified {
   elsif ($d =~ m/^(\d{2})uu$/) {
     return ("${1}00", '/', "${1}99", 'decadeincentury');
   }
-  # 1999-uu     -> 1999-01/1999-12
+  # 1999-uu -> 1999-01/1999-12
   elsif ($d =~ m/^(\d{4})\p{Dash}uu$/) {
     return ("${1}-01", '/', "${1}-12", 'monthinyear');
   }
