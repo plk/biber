@@ -1081,8 +1081,6 @@ sub _name {
 }
 
 # Dates
-# NOTE - the biblatex options controlling era, circa and uncertain meta-information
-# output are in the .bcf but biber does not used them as it always outputs this information
 sub _datetime {
   my ($bibentry, $entry, $field, $key) = @_;
   my $datetype = $field =~ s/date\z//xmsr;
@@ -1091,7 +1089,15 @@ sub _datetime {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
 
-  my ($sdate, $edate, $sep) = parse_date_range($date);
+  my ($sdate, $edate, $sep, $unspec) = parse_date_range($date);
+
+  # Date had EDTF 5.2.2 unspecified format
+  # This does not differ for *enddate components as these are split into ranges
+  # from non-ranges only
+  if ($unspec) {
+    $bibentry->set_field($datetype . 'dateunspecified', $unspec);
+  }
+
   if ($sdate) {# Start date was successfully parsed
     # Did this entry get its year/month fields from splitting an ISO8601 date field?
     # We only need to know this for date, year/month as year/month can also
@@ -1180,12 +1186,12 @@ sub _datetime {
         }
       }
       else {
-        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of end date field '$field' - ignoring", $bibentry);
+        biber_warn("Entry '$key' ($ds): Invalid format '$date' of end date field '$field' - ignoring", $bibentry);
       }
     }
   }
   else {
-    biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '$date' of date field '$field' - ignoring", $bibentry);
+    biber_warn("Entry '$key' ($ds): Invalid format '$date' of date field '$field' - ignoring", $bibentry);
   }
   return;
 }

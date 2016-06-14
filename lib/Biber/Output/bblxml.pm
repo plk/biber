@@ -373,6 +373,11 @@ sub set_output_entry {
       my $str;
       if (my ($d) = $field =~ m/^(.*)(?!end)year$/) {
 
+        # Unspecified granularity
+        if (my $unspec = $be->get_field("${d}dateunspecified")) {
+            push @attrs, ('unspecified', $unspec);
+        }
+
         # Circa dates
         if ($be->get_field("${d}datecirca")) {
           push @attrs, ('startcirca', 'true');

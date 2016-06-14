@@ -48,7 +48,7 @@ t/bibtex-output.t
 t/configfile.t
 t/crossrefs.t
 t/dm-constraints.t
-t/dm-dateformats.t
+t/dateformats.t
 t/encoding.t
 t/extratitle.t
 t/extratitleyear.t
@@ -95,8 +95,8 @@ t/tdata/crossrefs.bcf
 t/tdata/crossrefs.bib
 t/tdata/dm-constraints.bcf
 t/tdata/dm-constraints.bib
-t/tdata/dm-dateformats.bcf
-t/tdata/dm-dateformats.bib
+t/tdata/dateformats.bcf
+t/tdata/dateformats.bib
 t/tdata/encoding1.bcf
 t/tdata/encoding1.bib
 t/tdata/encoding2.bcf

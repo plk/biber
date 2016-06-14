@@ -420,6 +420,11 @@ sub set_output_entry {
   foreach my $datefield (@{$dmh->{datefields}}) {
     my ($d) = $datefield =~ m/^(.*)date$/;
 
+    # Unspecified granularity
+    if (my $unspec = $be->get_field("${d}dateunspecified")) {
+      $acc .= "      \\field{${d}dateunspecified}{$unspec}\n";
+    }
+
     # Circa dates
     if ($be->get_field("${d}datecirca")) {
       $acc .= "      \\true{${d}datecirca}\n";

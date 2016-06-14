@@ -1198,6 +1198,19 @@ sub generate_bltxml_schema {
           $writer->endTag(); # attribute
           $writer->endTag(); # optional
 
+          # optional unspecified attribute
+          $writer->startTag('optional');
+          $writer->startTag('attribute', 'name' => 'unspecified');
+          $writer->startTag('choice');
+          $writer->dataElement('value', 'yearindecade');
+          $writer->dataElement('value', 'decadeincentury');
+          $writer->dataElement('value', 'monthinyear');
+          $writer->dataElement('value', 'dayinmonth');
+          $writer->dataElement('value', 'dayinyear');
+          $writer->endTag(); # choice
+          $writer->endTag(); # attribute
+          $writer->endTag(); # optional
+
           # optional circa attributes
           $writer->startTag('optional');
           $writer->startTag('attribute', 'name' => 'startcirca');

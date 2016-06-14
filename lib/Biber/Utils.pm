@@ -1005,9 +1005,64 @@ sub _expand_option {
 =cut
 
 sub parse_date_range {
-  shift =~ m|^([^/]+)(/)?([^/]+)?$|;
-  return (parse_date_start($1), parse_date_end($3), $2);
+  my ($sd, $sep, $ed) = shift =~ m|^([^/]+)(/)?([^/]+)?$|;
+  my $unspec;
+  if ($sd =~ /u/) {# EDTF 5.2.2 Unspecified format
+    ($sd, $sep, $ed, $unspec) = parse_date_edtf_unspecified($sd);
+  }
+  return (parse_date_start($sd), parse_date_end($ed), $sep, $unspec);
 }
+
+=head2 parse_date_edtf_unspecified
+
+  Parse of EDTF 5.2.2 Unspecified format into date range
+  Returns range plus specification of granularity of unspecified
+
+=cut
+
+sub parse_date_edtf_unspecified {
+  my $d = shift;
+
+  # 199u -> 1990/1999
+  if ($d =~ m/^(\d{3})u$/) {
+    return ("${1}0", '/', "${1}9", 'yearindecade');
+  }
+  # 19uu -> 1900/1999
+  elsif ($d =~ m/^(\d{2})uu$/) {
+    return ("${1}00", '/', "${1}99", 'decadeincentury');
+  }
+  # 1999-uu     -> 1999-01/1999-12
+  elsif ($d =~ m/^(\d{4})\p{Dash}uu$/) {
+    return ("${1}-01", '/', "${1}-12", 'monthinyear');
+  }
+  # 1999-01-uu -> 1999-01-01/1999-01-31
+  # (understands different months and leap years)
+  elsif ($d =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}uu$/) {
+
+    sub leapyear {
+      my $year = shift;
+      if ((($year % 4 == 0) and ($year % 100 != 0))
+          or ($year % 400 == 0)) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }
+
+    my %monthdays;
+    @monthdays{map {sprintf('%.2d', $_)} 1..12} = ('31') x 12;
+    @monthdays{'09', '04', '06', '11'} = ('30') x 4;
+    $monthdays{'02'} = leapyear($1) ? 29 : 28;
+
+    return ("${1}-${2}-01", '/', "${1}-${2}-" . $monthdays{$2}, 'dayinmonth');
+  }
+  # 1999-uu-uu -> 1999-01-01/1999-12-31
+  elsif ($d =~ m/^(\d{4})\p{Dash}uu\p{Dash}uu$/) {
+    return ("${1}-01-01", '/', "${1}-12-31", 'dayinyear');
+  }
+}
+
 
 =head2 parse_date_start
 
