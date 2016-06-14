@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 33;
+use Test::More tests => 34;
 use Test::Differences;
 unified_diff;
 
@@ -49,9 +49,8 @@ Biber::Config->setoption('nodieonerror', 1); # because there is a failing cyclic
 # Now generate the information
 my (undef, $stderr) = capture { $biber->prepare };
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->sortlists->get_list(1, 'nty/global/', 'entry', 'nty', 'global', '');
 my $out = $biber->get_output_obj;
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
@@ -663,28 +662,40 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
     \endentry
 |;
 
-eq_or_diff($out->get_output_entry('cr1', $main0), $cr1, 'crossref test 1');
-eq_or_diff($out->get_output_entry('cr2', $main0), $cr2, 'crossref test 2');
-eq_or_diff($out->get_output_entry('cr_m', $main0), $cr_m, 'crossref test 3');
-eq_or_diff($out->get_output_entry('cr3', $main0), $cr3, 'crossref test 4');
-eq_or_diff($out->get_output_entry('crt', $main0), $crt, 'crossref test 5');
-eq_or_diff($out->get_output_entry('cr4', $main0), $cr4, 'crossref test 6');
+my $b1 = q|    \entry{b1}{inbook}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8343b463aacf48517c044b4d2c9c45ed}
+      \strng{crossref}{b2}
+      \field{day}{3}
+      \field{month}{3}
+      \field{origmonth}{3}
+      \field{origyear}{2004}
+      \field{year}{2004}
+    \endentry
+|;
+
+eq_or_diff($out->get_output_entry('cr1', $main), $cr1, 'crossref test 1');
+eq_or_diff($out->get_output_entry('cr2', $main), $cr2, 'crossref test 2');
+eq_or_diff($out->get_output_entry('cr_m', $main), $cr_m, 'crossref test 3');
+eq_or_diff($out->get_output_entry('cr3', $main), $cr3, 'crossref test 4');
+eq_or_diff($out->get_output_entry('crt', $main), $crt, 'crossref test 5');
+eq_or_diff($out->get_output_entry('cr4', $main), $cr4, 'crossref test 6');
 eq_or_diff($section0->has_citekey('crn'), 0,'crossref test 7');
-eq_or_diff($out->get_output_entry('cr6', $main0), $cr6, 'crossref test (inheritance) 8');
-eq_or_diff($out->get_output_entry('cr7', $main0), $cr7, 'crossref test (inheritance) 9');
-eq_or_diff($out->get_output_entry('cr8', $main0), $cr8, 'crossref test (inheritance) 10');
-eq_or_diff($out->get_output_entry('xr1', $main0), $xr1, 'xref test 1');
-eq_or_diff($out->get_output_entry('xr2', $main0), $xr2, 'xref test 2');
-eq_or_diff($out->get_output_entry('xrm', $main0), $xrm, 'xref test 3');
-eq_or_diff($out->get_output_entry('xr3', $main0), $xr3, 'xref test 4');
-eq_or_diff($out->get_output_entry('xrt', $main0), $xrt, 'xref test 5');
-eq_or_diff($out->get_output_entry('xr4', $main0), $xr4, 'xref test 6');
+eq_or_diff($out->get_output_entry('cr6', $main), $cr6, 'crossref test (inheritance) 8');
+eq_or_diff($out->get_output_entry('cr7', $main), $cr7, 'crossref test (inheritance) 9');
+eq_or_diff($out->get_output_entry('cr8', $main), $cr8, 'crossref test (inheritance) 10');
+eq_or_diff($out->get_output_entry('xr1', $main), $xr1, 'xref test 1');
+eq_or_diff($out->get_output_entry('xr2', $main), $xr2, 'xref test 2');
+eq_or_diff($out->get_output_entry('xrm', $main), $xrm, 'xref test 3');
+eq_or_diff($out->get_output_entry('xr3', $main), $xr3, 'xref test 4');
+eq_or_diff($out->get_output_entry('xrt', $main), $xrt, 'xref test 5');
+eq_or_diff($out->get_output_entry('xr4', $main), $xr4, 'xref test 6');
 eq_or_diff($section0->has_citekey('xrn'), 1,'xref test 7');
-eq_or_diff($out->get_output_entry('mxr', $main0), $mxr, 'missing xref test');
-eq_or_diff($out->get_output_entry('mcr', $main0), $mcr, 'missing crossef test');
+eq_or_diff($out->get_output_entry('mxr', $main), $mxr, 'missing xref test');
+eq_or_diff($out->get_output_entry('mcr', $main), $mcr, 'missing crossef test');
 eq_or_diff($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections');
-eq_or_diff($out->get_output_entry('ccr2', $main0), $ccr1, 'cascading crossref test 1');
-eq_or_diff($out->get_output_entry('ccr3', $main0), $ccr2, 'cascading crossref test 2');
+eq_or_diff($out->get_output_entry('ccr2', $main), $ccr1, 'cascading crossref test 1');
+eq_or_diff($out->get_output_entry('ccr3', $main), $ccr2, 'cascading crossref test 2');
 chomp $stderr;
 eq_or_diff($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'", 'Cyclic crossref error check');
 eq_or_diff($section0->has_citekey('r1'), 1,'Recursive crossref test 1');
@@ -695,6 +706,6 @@ eq_or_diff($section0->has_citekey('r3'), 0,'Recursive crossref test 5');
 ok(defined($section0->bibentry('r3')),'Recursive crossref test 6');
 eq_or_diff($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
 ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
-eq_or_diff($out->get_output_entry('s1', $main0), $s1, 'per-entry noinherit');
-eq_or_diff($out->get_output_entry('xc2', $main0), $xc2, 'Cascading xref+crossref');
-
+eq_or_diff($out->get_output_entry('s1', $main), $s1, 'per-entry noinherit');
+eq_or_diff($out->get_output_entry('xc2', $main), $xc2, 'Cascading xref+crossref');
+eq_or_diff($out->get_output_entry('b1', $main), $b1, 'Blocking bad date inheritance');

@@ -1953,6 +1953,8 @@
     <bcf:citekey order="24">s1</bcf:citekey>
     <bcf:citekey order="25">s2</bcf:citekey>
     <bcf:citekey order="26">xc1</bcf:citekey>
+    <bcf:citekey order="27">b1</bcf:citekey>
+    <bcf:citekey order="28">b2</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">

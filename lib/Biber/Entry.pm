@@ -426,6 +426,23 @@ sub field_exists {
           exists($self->{rawfields}{$key})) ? 1 : 0;
 }
 
+=head2 date_fields_exist
+
+    Check whether any parts of a date field exist when passed a datepart field name
+
+=cut
+
+sub date_fields_exist {
+  my ($self, $field) = @_;
+  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|season|timezone)$//r;
+  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'season', 'timezone') {
+    if (exists($self->{datafields}{"$t$dp"}) or exists($self->{datafields}{"${t}end$dp"})) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 =head2 datafields
 
     Returns a sorted array of the fields which came from the data source
@@ -633,6 +650,7 @@ sub resolve_xdata {
 
 sub inherit_from {
   my ($self, $parent) = @_;
+  my $dmh = Biber::Config->get_dm_helpers;
 
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
@@ -731,14 +749,29 @@ sub inherit_from {
     else {
       @fields = $parent->datafields;
     }
+
+    # Special case - if the child has any Xdate datepart, don't inherit any Xdateparts
+    # from parent otherwise you can end up with rather broken dates in the child.
+    # Remove such fields before we start since it can't be done in the loop because
+    # as soon as one Xdatepart field has been inherited, no more will be.
+    my @filtered_fields;
     foreach my $field (@fields) {
-      # Skip for fields in the per-entry noinerit datafield set
+      if (first {$_ eq $field} @{$dmh->{dateparts}}) {
+        next if $self->date_fields_exist($field);
+      }
+      push @filtered_fields, $field;
+    }
+    @fields = @filtered_fields;
+
+    foreach my $field (@fields) {
+      # Skip for fields in the per-entry noinherit datafield set
       if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key)) {
         if (first {$field eq $_} @{$DATAFIELD_SETS{$niset}}) {
           next;
         }
       }
       next if $processed{$field}; # Skip if we have already dealt with this field above
+
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
         if ($logger->is_debug()) {# performance tune
