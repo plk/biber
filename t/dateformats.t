@@ -541,7 +541,7 @@ my $unspec1 = q|    \entry{unspec1}{book}{}
       \field{urlyear}{1999}
       \field{year}{1990}
       \field{dateunspecified}{yearindecade}
-      \field{eventdateunspecified}{decadeincentury}
+      \field{eventdateunspecified}{yearincentury}
       \field{origdateunspecified}{monthinyear}
       \field{urldateunspecified}{dayinmonth}
     \\endentry

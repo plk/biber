@@ -82,12 +82,12 @@
 ** DONE Document *season and all label* new fields
 ** DONE cite in 96 is circa xxxx-yyyy instead of circa xxxx-circa yyyy
 *** DONE Document mkday,month,yearzeros, changes
-** TODO 5.2.2 - expand to ranges in biber and put in X{end}dateuncertain{day,month,year,decade}
-*** TODO biblatex unspec
-*** TODO Don't forget bibtex legacy fallbacks for any tests
+** TODO 5.2.2 - expand to ranges in biber and put in \Xdateuncertain{}
+*** DONE biblatex unspec
+*** TODO Document, remove 5.2.2 exclusion 96-test
 ** TODO Timeparts are not in blx-dm.def datamodel or in .bcfs
-** TODO Option to decide TZ format (none, "EST", num). Get rid of "floating" in bbl
-** TODO times printing
+** TODO times
+*** TODO Option to decide TZ format (none, "EST", num). Get rid of "floating" in bbl
 *** DONE timezeros option?
 *** TODO option datetime like datelabel
 *** TODO formats - 24hour, am/pm (localised), time sep (localised), leading zeros option for units

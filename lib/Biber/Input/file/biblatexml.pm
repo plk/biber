@@ -927,7 +927,15 @@ sub _datetime {
       my $end = $node->findnodes("./$NS:end");
 
       # Start of range
-      if (my $sdate = parse_date_start($start->get_node(1)->textContent())) {
+      # Using high-level range parsing sub in order to get unspec
+      if (my ($sdate, undef, undef, $unspec) = parse_date_range($start->get_node(1)->textContent())) {
+        # Date had EDTF 5.2.2 unspecified format
+        # This does not differ for *enddate components as these are split into ranges
+        # from non-ranges only
+        if ($unspec) {
+          $bibentry->set_field($datetype . 'dateunspecified', $unspec);
+        }
+
         unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
           $bibentry->set_datafield($datetype . 'year', $sdate->year);
           $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
@@ -989,11 +997,18 @@ sub _datetime {
         }
       }
       else {
-        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end - ignoring", $bibentry);
+        biber_warn("Entry '$key' ($ds): Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end - ignoring", $bibentry);
       }
     }
     else { # Simple date
-      if (my $sdate = parse_date_start($node->textContent())) {
+      # Using high-level range parsing sub in order to get unspec
+      if (my ($sdate, undef, undef, $unspec) = parse_date_range($node->textContent())) {
+        # Date had EDTF 5.2.2 unspecified format
+        # This does not differ for *enddate components as these are split into ranges
+        # from non-ranges only
+        if ($unspec) {
+          $bibentry->set_field($datetype . 'dateunspecified', $unspec);
+        }
 
         unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
           $bibentry->set_datafield($datetype . 'year', $sdate->year);
@@ -1020,7 +1035,7 @@ sub _datetime {
         }
       }
       else {
-        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $node->textContent() . "' of date field '$f' - ignoring", $bibentry);
+        biber_warn("Entry '$key' ($ds): Invalid format '" . $node->textContent() . "' of date field '$f' - ignoring", $bibentry);
       }
     }
   }

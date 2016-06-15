@@ -128,7 +128,8 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{userb}{usera}
       \field{userd}{userc}
       \field{usere}{a}
-      \field{year}{1983}
+      \field{year}{1980}
+      \field{dateunspecified}{yearindecade}
       \field{origdateera}{bce}
       \true{urldatecirca}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
@@ -151,7 +152,7 @@ my $l2 = q|    \entry{loopkey:a}{book}{}
 |;
 
 
-my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРозенфельд!БорисZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович,1983,0,Мухаммад ибн муса алХорезми Около 783 около 850';
+my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРозенфельд!БорисZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович,1980,0,Мухаммад ибн муса алХорезми Около 783 около 850';
 
 # Test::Differences doesn't like utf8 unless it's encoded here
 eq_or_diff(encode_utf8($out->get_output_entry('bltx1', $main)), encode_utf8($l1), 'BibLaTeXML - 1');
