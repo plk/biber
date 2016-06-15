@@ -82,9 +82,16 @@
 ** DONE Document *season and all label* new fields
 ** DONE cite in 96 is circa xxxx-yyyy instead of circa xxxx-circa yyyy
 *** DONE Document mkday,month,yearzeros, changes
-** TODO 5.2.2 - expand to ranges in biber and put in \Xdateuncertain{}
+** DONE 5.2.2 - expand to ranges in biber and put in \Xdateuncertain{}
 *** DONE biblatex unspec
-*** TODO Document, remove 5.2.2 exclusion 96-test
+*** DONE Document, remove 5.2.2 exclusion 96-test
+** TODO Default for era
+*** DONE edtf toggle can be removed (not tests - see below)
+*** DONE Make a 'simple' option for dateera, default
+*** TODO make a value for dateera that can be tested, perhaps usermode too
+*** DONE convert edtf toggle tests to check for 'simple'
+*** DONE This will need to be added to mkranges like labelname but for edtf, no choice as now
+*** Doc, 96
 ** TODO Timeparts are not in blx-dm.def datamodel or in .bcfs
 ** TODO times
 *** TODO Option to decide TZ format (none, "EST", num). Get rid of "floating" in bbl
