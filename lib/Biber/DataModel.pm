@@ -1203,7 +1203,7 @@ sub generate_bltxml_schema {
           $writer->startTag('attribute', 'name' => 'unspecified');
           $writer->startTag('choice');
           $writer->dataElement('value', 'yearindecade');
-          $writer->dataElement('value', 'decadeincentury');
+          $writer->dataElement('value', 'yearincentury');
           $writer->dataElement('value', 'monthinyear');
           $writer->dataElement('value', 'dayinmonth');
           $writer->dataElement('value', 'dayinyear');
