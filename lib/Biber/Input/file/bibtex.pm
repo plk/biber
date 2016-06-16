@@ -123,8 +123,9 @@ sub extract_entries {
       push @$smaps, $m;
     }
     # Style maps
-    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'style' } @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, $m;
+    # Allow multiple style maps from multiple \DeclareStyleSourcemap
+    if (my @m = grep {$_->{datatype} eq 'bibtex' and $_->{level} eq 'style' } @{Biber::Config->getoption('sourcemap')} ) {
+      push @$smaps, @m;
     }
     # Driver default maps
     if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'driver'} @{Biber::Config->getoption('sourcemap')} ) {
