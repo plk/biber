@@ -50,6 +50,7 @@ start =
       uniquename,
       uniqueprimaryauthor,
       uniquetitle,
+      uniquework,
       useprefix,
       usenames
     },
@@ -83,6 +84,7 @@ start =
       uniquelist?,
       uniquename?,
       uniquetitle?,
+      uniquework?,
       useprefix?,
       usenames?
     }*,
@@ -584,6 +586,12 @@ uniquetitle =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "uniquetitle" },
+    element bcf:value { "0" | "1" }
+  }
+uniquework =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "uniquework" },
     element bcf:value { "0" | "1" }
   }
 maxitems =

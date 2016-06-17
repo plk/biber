@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 193;
+use Test::More tests => 208;
 use Test::Differences;
 unified_diff;
 
@@ -323,7 +323,6 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 
-
 # maxcitenames/mincitenames = 3/1 so these will not truncate to the same list (since
 # us15 would not be truncated at all) and they therefore would not need disambiguating with
 # uniquename = 5 or 6
@@ -457,9 +456,9 @@ eq_or_diff($main->get_extrayeardata('ey3'), '1', 'Extrayear - 3');
 eq_or_diff($main->get_extrayeardata('ey4'), '2', 'Extrayear - 4');
 eq_or_diff($main->get_extrayeardata('ey5'), '1', 'Extrayear - 5');
 eq_or_diff($main->get_extrayeardata('ey6'), '2', 'Extrayear - 6');
-ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 1');
-ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 2');
-ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'Singletitle - 3');
+ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'singletitle - 1');
+ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'singletitle - 2');
+ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'singletitle - 3');
 
 #############################################################################
 
@@ -472,6 +471,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 1);
+Biber::Config->setblxoption('uniquetitle', 1);
+Biber::Config->setblxoption('uniquework', 1);
 Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
@@ -485,9 +486,27 @@ eq_or_diff($main->get_extrayeardata('ey3'), '1', 'Extrayear - 9');
 eq_or_diff($main->get_extrayeardata('ey4'), '2', 'Extrayear - 10');
 ok(is_undef($main->get_extrayeardata('ey5')), 'Extrayear - 11');
 ok(is_undef($main->get_extrayeardata('ey6')), 'Extrayear - 12');
-eq_or_diff($bibentries->entry('ey1')->get_field('singletitle'), '1', 'Singletitle - 4');
-eq_or_diff($bibentries->entry('ey2')->get_field('singletitle'), '1', 'Singletitle - 5');
-eq_or_diff($bibentries->entry('ey5')->get_field('singletitle'), '1', 'Singletitle - 6');
+
+ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'singletitle - 4');
+eq_or_diff($bibentries->entry('ey2')->get_field('singletitle'), '1', 'singletitle - 5');
+ok(is_undef($bibentries->entry('ey3')->get_field('singletitle')), 'singletitle - 6');
+ok(is_undef($bibentries->entry('ey4')->get_field('singletitle')), 'singletitle - 7');
+eq_or_diff($bibentries->entry('ey5')->get_field('singletitle'), '1', 'singletitle - 8');
+eq_or_diff($bibentries->entry('ey6')->get_field('singletitle'), '1', 'singletitle - 9');
+
+ok(is_undef($bibentries->entry('ey1')->get_field('uniquetitle')), 'uniquetitle - 1');
+eq_or_diff($bibentries->entry('ey2')->get_field('uniquetitle'), '1', 'uniquetitle - 2');
+ok(is_undef($bibentries->entry('ey3')->get_field('uniquetitle')), 'uniquetitle - 3');
+eq_or_diff($bibentries->entry('ey4')->get_field('uniquetitle'), '1', 'uniquetitle - 4');
+ok(is_undef($bibentries->entry('ey5')->get_field('uniquetitle')), 'uniquetitle - 5');
+eq_or_diff($bibentries->entry('ey6')->get_field('uniquetitle'), '1', 'uniquetitle - 6');
+
+ok(is_undef($bibentries->entry('ey1')->get_field('uniquework')), 'uniquework - 1');
+eq_or_diff($bibentries->entry('ey2')->get_field('uniquework'), '1', 'uniquework - 2');
+eq_or_diff($bibentries->entry('ey3')->get_field('uniquework'), '1', 'uniquework - 3');
+eq_or_diff($bibentries->entry('ey4')->get_field('uniquework'), '1', 'uniquework - 4');
+eq_or_diff($bibentries->entry('ey5')->get_field('uniquework'), '1', 'uniquework - 5');
+eq_or_diff($bibentries->entry('ey6')->get_field('uniquework'), '1', 'uniquework - 6');
 
 #############################################################################
 
@@ -500,6 +519,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setblxoption('uniquename', 0);
 Biber::Config->setblxoption('uniquelist', 0);
 Biber::Config->setblxoption('singletitle', 1);
+Biber::Config->setblxoption('uniquetitle', 0);
+Biber::Config->setblxoption('uniquework', 0);
 Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
@@ -513,8 +534,8 @@ eq_or_diff($main->get_extrayeardata('ey3'), '1', 'Extrayear - 15');
 eq_or_diff($main->get_extrayeardata('ey4'), '2', 'Extrayear - 16');
 eq_or_diff($main->get_extrayeardata('ey5'), '1', 'Extrayear - 17');
 eq_or_diff($main->get_extrayeardata('ey6'), '2', 'Extrayear - 18');
-ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'Singletitle - 7');
-ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'Singletitle - 8');
+ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'singletitle - 10');
+ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'singletitle - 11');
 
 #############################################################################
 

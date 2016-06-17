@@ -136,6 +136,10 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>uniquework</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
@@ -248,6 +252,7 @@
     <bcf:option datatype="boolean">uniquename</bcf:option>
     <bcf:option datatype="boolean">uniqueprimaryauthor</bcf:option>
     <bcf:option datatype="boolean">uniquetitle</bcf:option>
+    <bcf:option datatype="boolean">uniquework</bcf:option>
     <bcf:option datatype="boolean">singletitle</bcf:option>
     <bcf:option datatype="boolean">defernumbers</bcf:option>
     <bcf:option datatype="boolean">bibwarn</bcf:option>

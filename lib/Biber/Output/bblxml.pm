@@ -137,12 +137,16 @@ sub set_output_entry {
     push @entryopts, ('singletitle', 'true');
   }
 
-  if (defined($be->get_field('uniqueprimaryauthor'))) {
-    push @entryopts, ('uniqueprimaryauthor', 'true');
-  }
-
   if (defined($be->get_field('uniquetitle'))) {
     push @entryopts, ('uniquetitle', 'true');
+  }
+
+  if (defined($be->get_field('uniquework'))) {
+    push @entryopts, ('uniquework', 'true');
+  }
+
+  if (defined($be->get_field('uniqueprimaryauthor'))) {
+    push @entryopts, ('uniqueprimaryauthor', 'true');
   }
 
   $xml->startTag([$xml_prefix, 'entry'], key => _bblxml_norm($key), type => _bblxml_norm($bee), @entryopts);

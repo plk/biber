@@ -1569,7 +1569,8 @@ sub process_uniqueprimaryauthor {
 
 =head2 process_xtitle
 
-    Track seen work combination for generation of singletitle and uniquetitle
+    Track seen work combination for generation of singletitle, uniquetitle and
+    uniquework
 
 =cut
 
@@ -1581,38 +1582,50 @@ sub process_xtitle {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  # Use labelname to generate this, if there is one ...
   my $identifier;
-  if (my $lni = $be->get_labelname_info) {
-    $identifier = $self->_getnamehash_u($citekey, $be->get_field($lni));
-  }
-  # ... otherwise use labeltitle
-  elsif (my $lti = $be->get_labeltitle_info) {
-    $identifier = $be->get_field($lti);
-  }
+  my $lni = $be->get_labelname_info;
+  my $lti = $be->get_labeltitle_info;
 
-  # Don't generate singletitle information for entries with no labelname or labeltitle
-  if ($identifier and Biber::Config->getblxoption('singletitle', $bee)) {
+  # singletitle
+  # Don't generate information for entries with no labelname or labeltitle
+  if (($lni or $lti) and Biber::Config->getblxoption('singletitle', $bee)) {
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Creating singletitle information for '$citekey'");
     }
-    Biber::Config->incr_seenwork($identifier);
-    if ($logger->is_trace()) {# performance tune
-      $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
+    if ($lni) {
+      $identifier = $self->_getnamehash_u($citekey, $be->get_field($lni));
     }
-    $be->set_field('seenwork', $identifier);
+    else {
+      $identifier = $be->get_field($lti);
+    }
+
+    Biber::Config->incr_seenname($identifier);
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("Setting seenname for '$citekey' to '$identifier'");
+    }
+    $be->set_field('seenname', $identifier);
   }
 
-  # Don't generate uniquetitle information for entries with no labeltitle
-  if (Biber::Config->getblxoption('uniquetitle', $bee)) {
-    if (my $lti = $be->get_labeltitle_info) {
-      my $identifier = $be->get_field($lti);
-      Biber::Config->incr_seentitle($identifier);
-      if ($logger->is_trace()) {# performance tune
-        $logger->trace("Setting seentitle for '$citekey' to '$identifier'");
-      }
-      $be->set_field('seentitle', $identifier);
+  # uniquetitle
+  # Don't generate information for entries with no labeltitle
+  if ($lti and Biber::Config->getblxoption('uniquetitle', $bee)) {
+    $identifier = $be->get_field($lti);
+    Biber::Config->incr_seentitle($identifier);
+    if ($logger->is_trace()) {  # performance tune
+      $logger->trace("Setting seentitle for '$citekey' to '$identifier'");
     }
+    $be->set_field('seentitle', $identifier);
+  }
+
+  # uniquework
+  # Don't generate information for entries with no labelname and labeltitle
+  if ($lni and $lti and Biber::Config->getblxoption('uniquework', $bee)) {
+    $identifier = $self->_getnamehash_u($citekey, $be->get_field($lni)) . $be->get_field($lti);
+    Biber::Config->incr_seenwork($identifier);
+    if ($logger->is_trace()) {  # performance tune
+      $logger->trace("Setting seenworkfor '$citekey' to '$identifier'");
+    }
+    $be->set_field('seenwork', $identifier);
   }
 
   return;
@@ -3223,8 +3236,8 @@ sub generate_singletitle {
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))) {
-      if ($be->get_field('seenwork') and
-          Biber::Config->get_seenwork($be->get_field('seenwork')) < 2 ) {
+      if ($be->get_field('seenname') and
+          Biber::Config->get_seenname($be->get_field('seenname')) < 2 ) {
         if ($logger->is_trace()) {# performance tune
           $logger->trace("Setting singletitle for '$citekey'");
         }
@@ -3233,39 +3246,6 @@ sub generate_singletitle {
       else {
         if ($logger->is_trace()) {# performance tune
           $logger->trace("Not setting singletitle for '$citekey'");
-        }
-      }
-    }
-  }
-  return;
-}
-
-=head2 generate_uniquepa
-
-    Generate the uniqueprimaryauthor field, if requested. The information for generating
-    this is gathered in create_uniquename_info()
-
-=cut
-
-sub generate_uniquepa {
-  my $self = shift;
-  my $secnum = $self->get_current_section;
-  my $section = $self->sections->get_section($secnum);
-  my $bibentries = $section->bibentries;
-
-  foreach my $citekey ( $section->get_citekeys ) {
-    my $be = $bibentries->entry($citekey);
-    if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
-      if ($be->get_field('seenprimaryauthor') and
-          Biber::Config->get_seenpa($be->get_field('seenprimaryauthor')) < 2 ) {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Setting uniqueprimaryauthor for '$citekey'");
-        }
-        $be->set_field('uniqueprimaryauthor', 1);
-      }
-      else {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Not setting uniqueprimaryauthor for '$citekey'");
         }
       }
     }
@@ -3299,6 +3279,72 @@ sub generate_uniquetitle {
       else {
         if ($logger->is_trace()) {# performance tune
           $logger->trace("Not setting uniquetitle for '$citekey'");
+        }
+      }
+    }
+  }
+  return;
+}
+
+=head2 generate_uniquework
+
+    Generate the uniquework field, if requested. The information for generating
+    this is gathered in process_xtitle()
+
+=cut
+
+sub generate_uniquework {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+
+  foreach my $citekey ( $section->get_citekeys ) {
+    my $be = $bibentries->entry($citekey);
+    if (Biber::Config->getblxoption('uniquework', $be->get_field('entrytype'))) {
+      if ($be->get_field('seenwork') and
+          Biber::Config->get_seenwork($be->get_field('seenwork')) < 2 ) {
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Setting uniquework for '$citekey'");
+        }
+        $be->set_field('uniquework', 1);
+      }
+      else {
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Not setting uniquework for '$citekey'");
+        }
+      }
+    }
+  }
+  return;
+}
+
+=head2 generate_uniquepa
+
+    Generate the uniqueprimaryauthor field, if requested. The information for generating
+    this is gathered in create_uniquename_info()
+
+=cut
+
+sub generate_uniquepa {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+
+  foreach my $citekey ( $section->get_citekeys ) {
+    my $be = $bibentries->entry($citekey);
+    if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
+      if ($be->get_field('seenprimaryauthor') and
+          Biber::Config->get_seenpa($be->get_field('seenprimaryauthor')) < 2 ) {
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Setting uniqueprimaryauthor for '$citekey'");
+        }
+        $be->set_field('uniqueprimaryauthor', 1);
+      }
+      else {
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Not setting uniqueprimaryauthor for '$citekey'");
         }
       }
     }
@@ -3564,6 +3610,7 @@ sub prepare {
     $self->process_lists;                # process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
     $self->generate_uniquetitle;         # Generate uniquetitle field if requested
+    $self->generate_uniquework;          # Generate uniquework field if requested
     $self->generate_uniquepa;            # Generate uniqueprimaryauthor if requested
     $out->create_output_section;         # Generate and push the section output into the
                                          # output object ready for writing

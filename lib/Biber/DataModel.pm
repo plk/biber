@@ -1423,18 +1423,27 @@ sub generate_bblxml_schema {
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
 
-  # uniqueprimaryauthor
+  # uniquetitle
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'uniqueprimaryauthor');
+  $writer->startTag('attribute', 'name' => 'uniquetitle');
   $writer->startTag('choice');
   $writer->dataElement('value', 'true');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
 
-  # uniquetitle
+  # uniquework
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'uniquetitle');
+  $writer->startTag('attribute', 'name' => 'uniquework');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+
+  # uniqueprimaryauthor
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'uniqueprimaryauthor');
   $writer->startTag('choice');
   $writer->dataElement('value', 'true');
   $writer->endTag();    # choice

@@ -54,8 +54,9 @@ our $CONFIG;
 
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{xrefkeys} = {};
-$CONFIG->{state}{seenwork} = {};
+$CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{seentitle} = {};
+$CONFIG->{state}{seenwork} = {};
 
 # Set tracking, parent->child and child->parent
 $CONFIG->{state}{set}{pc} = {};
@@ -126,8 +127,9 @@ sub _init {
   $CONFIG->{options}{biblatex}{ENTRY} = {};
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
-  $CONFIG->{state}{seenwork} = {};
+  $CONFIG->{state}{seenname} = {};
   $CONFIG->{state}{seentitle} = {};
+  $CONFIG->{state}{seenwork} = {};
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{xrefkeys} = {};
   $CONFIG->{state}{ladisambiguation} = {};
@@ -1290,9 +1292,59 @@ sub incr_seenkey {
   return;
 }
 
-=head2 get_seenwork
+=head2 get_seenname
 
     Get the count of occurrences of a labelname or labeltitle
+
+=cut
+
+sub get_seenname {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  return $CONFIG->{state}{seenname}{$identifier};
+}
+
+=head2 incr_seenname
+
+    Increment the count of occurrences of a labelname or labeltitle
+
+=cut
+
+sub incr_seenname {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  $CONFIG->{state}{seenname}{$identifier}++;
+  return;
+}
+
+=head2 get_seentitle
+
+    Get the count of occurrences of a labeltitle
+
+=cut
+
+sub get_seentitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  return $CONFIG->{state}{seentitle}{$identifier};
+}
+
+=head2 incr_seentitle
+
+    Increment the count of occurrences of a labeltitle
+
+=cut
+
+sub incr_seentitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  $CONFIG->{state}{seentitle}{$identifier}++;
+  return;
+}
+
+=head2 get_seenwork
+
+    Get the count of occurrences of a labelname and labeltitle
 
 =cut
 
@@ -1304,7 +1356,7 @@ sub get_seenwork {
 
 =head2 incr_seenwork
 
-    Increment the count of occurrences of a labelname or labeltitle
+    Increment the count of occurrences of a labelname and labeltitle
 
 =cut
 
@@ -1339,32 +1391,6 @@ sub get_seenpa {
   shift; # class method so don't care about class name
   my $identifier = shift;
   return $CONFIG->{state}{seenpa}{$identifier};
-}
-
-
-=head2 get_seentitle
-
-    Get the count of occurrences of a labeltitle
-
-=cut
-
-sub get_seentitle {
-  shift; # class method so don't care about class name
-  my $identifier = shift;
-  return $CONFIG->{state}{seentitle}{$identifier};
-}
-
-=head2 incr_seentitle
-
-    Increment the count of occurrences of a labeltitle
-
-=cut
-
-sub incr_seentitle {
-  shift; # class method so don't care about class name
-  my $identifier = shift;
-  $CONFIG->{state}{seentitle}{$identifier}++;
-  return;
 }
 
 =head2 reset_seen_extra

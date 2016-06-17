@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 70;
+use Test::More tests => 67;
 use Test::Differences;
 unified_diff;
 
@@ -56,7 +56,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 m1 m2 m3 markey ent1};
+my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 markey ent1};
 
 # entry "loh" is missing as the biber.conf map removes it with map_entry_null
 my @allkeys = sort map {lc()} qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
@@ -70,7 +70,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey m1 m2 m3 ent1 avona rvonr};
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey ent1 avona rvonr};
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
@@ -718,7 +718,7 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
 
 my $ent1 = q|    \entry{ent1}{book}{}
       \name{author}{2}{sortnamekeyscheme=snks1}{%
-        {{uniquename=1,hash=6b3653417f9aa97391c37cff5dfda7fa}{%
+        {{uniquename=0,hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
            family_i={S\bibinitperiod},
            given={Simon},
@@ -753,11 +753,6 @@ eq_or_diff($out->get_output_entry('newtestkey', $main), $new1, 'New key mapping 
 # Should be three new ids in here with random keys
 is(3, scalar(grep {$_ =~ m/^loopkey:/} $section->get_citekeys), 'New key loop mapping - 1');
 eq_or_diff($bibentries->entry([grep {$_ =~ m/^loopkey:/} $section->get_citekeys]->[0])->get_field('note'), 'NOTEreplaced', 'New key loop mapping - 2');
-
-# uniquetitle test
-eq_or_diff($bibentries->entry('m1')->get_field('uniquetitle'), '1', 'uniquetitle test - 1');
-ok(is_undef($bibentries->entry('m2')->get_field('uniquetitle')),  'uniquetitle test - 2');
-ok(is_undef($bibentries->entry('m3')->get_field('uniquetitle')),  'uniquetitle test - 3');
 
 # notfield test
 eq_or_diff($bibentries->entry('markey')->get_field('addendum'), 'NF1', 'notfield - 1');
