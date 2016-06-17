@@ -74,7 +74,7 @@
 * DONE nullable_check in Biber.pm - needed? It's a deep loop
 * DONE donames stuff is messy
 * DONE hash/fullhash for all names
-* DONE Implement EDTF Date/Times
+* TODO Implement EDTF Date/Times
 ** DONE circa/uncertain/era should apply to individual dates, not the range.
 ** DONE 5.2.5 - seasons - new field (not in DM, only from date parsing), containing localisation string
 ** DONE iso8601 -> EDTF in biblatex with fallback 
@@ -92,7 +92,6 @@
 *** DONE convert edtf toggle tests to check for 'simple'
 *** DONE This will need to be added to mkranges like labelname but for edtf, no choice as now
 *** Doc, 96
-** TODO Timeparts are not in blx-dm.def datamodel or in .bcfs
 ** TODO times
 *** TODO Option to decide TZ format (none, "EST", num). Get rid of "floating" in bbl
 *** DONE timezeros option?
