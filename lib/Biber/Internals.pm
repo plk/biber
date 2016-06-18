@@ -1447,7 +1447,6 @@ sub _liststring {
   my @items = @$f;
   my $str = '';
   my $truncated = 0;
-
   # These should be symbols which can't appear in lists and which sort before all alphanum
   # so that "Alan Smith" sorts after "Al Smth". This means, symbols which normalise_string_sort()
   # strips out. Unfortuately, this means using punctuation and these are by default variable
@@ -1462,7 +1461,6 @@ sub _liststring {
     $truncated = 1;
     @items = splice(@items, 0, Biber::Config->getblxoption('minitems', $bee, $citekey) );
   }
-
   # separate the items by a string to give some structure
   $str = join($lsi, map { normalise_string_sort($_, $field)} @items);
 

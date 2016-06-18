@@ -5,7 +5,7 @@ use warnings;
 use sigtrap qw(handler TBSIG SEGV);
 
 use Carp;
-use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
+use Text::BibTeX qw(utf8 :nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
 use Biber::Annotation;
@@ -203,7 +203,6 @@ sub extract_entries {
       biber_error("Cannot find '$source'!")
     }
   }
-
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   # We can't redirect STDERR to a variable as libbtparse doesnt' use PerlIO, just stdio
   # so it doesn't understand this. It does understand normal file redirection though as
@@ -244,13 +243,11 @@ sub extract_entries {
 
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($key, $filename);
-
       unless (create_entry($key, $entry, $source, $smaps, \@rkeys)) {
         # if create entry returns false, remove the key from the cache
         @{$cache->{orig_key_order}{$filename}} = grep {$key ne $_} @{$cache->{orig_key_order}{$filename}};
       }
     }
-
     # Loop over all aliases, creating data in section object
     # Since this is allkeys, we are guaranteed that the real entry for the alias
     # will be available
@@ -795,16 +792,13 @@ sub _create_entry {
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Creating biber Entry object with key '$k'");
   }
-
   # Save pre-mapping data. Might be useful somewhere
   $bibentry->set_field('rawdata', biber_decode_utf8($e->print_s));
-
   my $entrytype = biber_decode_utf8($e->type);
 
   # We put all the fields we find modulo field aliases into the object
   # validation happens later and is not datasource dependent
   foreach my $f ($e->fieldlist) {
-
     # In tool mode, keep the raw data fields
     if (Biber::Config->getoption('tool')) {
       $bibentry->set_rawfield($f, biber_decode_utf8($e->get($f)));
@@ -940,7 +934,7 @@ sub _literal {
 # URI fields
 sub _uri {
   my ($bibentry, $entry, $field) = @_;
-  my $value = NFC(decode_utf8($entry->get($field)));# Unicode NFC boundary (before hex encoding)
+  my $value = biber_decode_utf8($entry->get($field));# Unicode NFC boundary (before hex encoding)
   $bibentry->set_datafield($field, URI->new($value)->as_string); # Performs url encoding
   return;
 }
@@ -1212,7 +1206,7 @@ sub _list {
 # Bibtex uri lists
 sub _urilist {
   my ($bibentry, $entry, $field) = @_;
-  my $value = NFC(decode_utf8($entry->get($field)));# Unicode NFC boundary (before hex encoding)
+  my $value = biber_decode_utf8($entry->get($field));# Unicode NFC boundary (before hex encoding)
   my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
   @tmp = map {
     # If there are some escapes in the URI, unescape them

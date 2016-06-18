@@ -1119,7 +1119,8 @@ sub edtf_monthday {
 =cut
 
 sub biber_decode_utf8 {
-  return NFD(decode_utf8(shift));# Unicode NFD boundary
+  return $_[0];
+  #return NFD(decode_utf8(shift));# Unicode NFD boundary
 }
 
 =head2 out
