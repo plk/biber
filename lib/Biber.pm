@@ -1587,12 +1587,13 @@ sub process_xtitle {
 
   # singletitle
   # Don't generate information for entries with no labelname or labeltitle
+  # Should use fullhash this is not a test of uniqueness of only visible information
   if (($lni or $lti) and Biber::Config->getblxoption('singletitle', $bee)) {
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Creating singletitle information for '$citekey'");
     }
     if ($lni) {
-      $identifier = $self->_getnamehash_u($citekey, $be->get_field($lni));
+      $identifier = $self->_getfullhash($citekey, $be->get_field($lni));
     }
     else {
       $identifier = $be->get_field($lti);
@@ -1618,19 +1619,18 @@ sub process_xtitle {
 
   # uniquework
   # Don't generate information for entries with no labelname and labeltitle
+  # Should use fullhash this is not a test of uniqueness of only visible information
   if ($lni and $lti and Biber::Config->getblxoption('uniquework', $bee)) {
-    $identifier = $self->_getnamehash_u($citekey, $be->get_field($lni)) . $be->get_field($lti);
+    $identifier = $self->_getfullhash($citekey, $be->get_field($lni)) . $be->get_field($lti);
     Biber::Config->incr_seenwork($identifier);
     if ($logger->is_trace()) {  # performance tune
-      $logger->trace("Setting seenworkfor '$citekey' to '$identifier'");
+      $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
     }
     $be->set_field('seenwork', $identifier);
   }
 
   return;
 }
-
-
 
 =head2 process_extrayear
 

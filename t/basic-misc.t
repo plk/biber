@@ -47,6 +47,7 @@ Biber::Config->setblxoption('maxbibnames', 10);
 Biber::Config->setblxoption('minbibnames', 7);
 Biber::Config->setoption('isbn_normalise', 1);
 Biber::Config->setoption('isbn13', 1);
+Biber::Config->setblxoption('uniquework', 1);
 
 # THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
@@ -95,6 +96,7 @@ my $u1 = q|    \entry{u1}{misc}{}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{A title}
@@ -209,6 +211,7 @@ my $murray1 = q|    \entry{murray}{article}{}
       \field{sortinit}{H}
       \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
       \true{singletitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{shorttitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
@@ -309,6 +312,7 @@ my $murray2 = q|    \entry{murray}{article}{}
       \field{sortinit}{H}
       \field{sortinithash}{82012198d5dfa657b8c4a168793268a6}
       \true{singletitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{shorttitle}
       \field{annotation}{An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable}
@@ -344,6 +348,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
@@ -369,6 +374,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Signs of W$\frac{o}{a}$nder}
@@ -399,6 +405,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
+      \true{uniquework}
       \field{labelnamesource}{shortauthor}
       \field{labeltitlesource}{shorttitle}
       \field{langid}{english}
@@ -434,6 +441,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
       \true{singletitle}
+      \true{uniquework}
       \field{labelnamesource}{shortauthor}
       \field{labeltitlesource}{shorttitle}
       \field{langid}{english}

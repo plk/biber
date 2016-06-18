@@ -93,11 +93,12 @@
 *** DONE This will need to be added to mkranges like labelname but for edtf, no choice as now
 *** Doc, 96
 ** TODO times
-*** TODO Option to decide TZ format (none, "EST", num). Get rid of "floating" in bbl
+*** DONE Option to decide TZ format (none, "EST", num). Get rid of "floating" in bbl
 *** DONE timezeros option?
 *** TODO option datetime like datelabel
 *** TODO formats - 24hour, am/pm (localised), time sep (localised), leading zeros option for units
 *** TODO \mktimezeros - needs options like mkdatezeros? probably not as each component is 2 digits
+*** TODO Document *time= opts and formats, timelabel
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 ** TODO name to bib and name to xnamebib in Name.pm
 ** TODO date output to all formats needs to use raw because of 5.2.2 resolution. In general, dateparts should not be used to construct output

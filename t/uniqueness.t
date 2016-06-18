@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 208;
+use Test::More tests => 203;
 use Test::Differences;
 unified_diff;
 
@@ -456,9 +456,6 @@ eq_or_diff($main->get_extrayeardata('ey3'), '1', 'Extrayear - 3');
 eq_or_diff($main->get_extrayeardata('ey4'), '2', 'Extrayear - 4');
 eq_or_diff($main->get_extrayeardata('ey5'), '1', 'Extrayear - 5');
 eq_or_diff($main->get_extrayeardata('ey6'), '2', 'Extrayear - 6');
-ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'singletitle - 1');
-ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'singletitle - 2');
-ok(is_undef($bibentries->entry('ey5')->get_field('singletitle')), 'singletitle - 3');
 
 #############################################################################
 
@@ -487,12 +484,12 @@ eq_or_diff($main->get_extrayeardata('ey4'), '2', 'Extrayear - 10');
 ok(is_undef($main->get_extrayeardata('ey5')), 'Extrayear - 11');
 ok(is_undef($main->get_extrayeardata('ey6')), 'Extrayear - 12');
 
-ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'singletitle - 4');
-eq_or_diff($bibentries->entry('ey2')->get_field('singletitle'), '1', 'singletitle - 5');
-ok(is_undef($bibentries->entry('ey3')->get_field('singletitle')), 'singletitle - 6');
-ok(is_undef($bibentries->entry('ey4')->get_field('singletitle')), 'singletitle - 7');
-eq_or_diff($bibentries->entry('ey5')->get_field('singletitle'), '1', 'singletitle - 8');
-eq_or_diff($bibentries->entry('ey6')->get_field('singletitle'), '1', 'singletitle - 9');
+ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'singletitle - 1');
+eq_or_diff($bibentries->entry('ey2')->get_field('singletitle'), '1', 'singletitle - 2');
+ok(is_undef($bibentries->entry('ey3')->get_field('singletitle')), 'singletitle - 3');
+ok(is_undef($bibentries->entry('ey4')->get_field('singletitle')), 'singletitle - 4');
+eq_or_diff($bibentries->entry('ey5')->get_field('singletitle'), '1', 'singletitle - 5');
+eq_or_diff($bibentries->entry('ey6')->get_field('singletitle'), '1', 'singletitle - 6');
 
 ok(is_undef($bibentries->entry('ey1')->get_field('uniquetitle')), 'uniquetitle - 1');
 eq_or_diff($bibentries->entry('ey2')->get_field('uniquetitle'), '1', 'uniquetitle - 2');
@@ -534,8 +531,6 @@ eq_or_diff($main->get_extrayeardata('ey3'), '1', 'Extrayear - 15');
 eq_or_diff($main->get_extrayeardata('ey4'), '2', 'Extrayear - 16');
 eq_or_diff($main->get_extrayeardata('ey5'), '1', 'Extrayear - 17');
 eq_or_diff($main->get_extrayeardata('ey6'), '2', 'Extrayear - 18');
-ok(is_undef($bibentries->entry('ey1')->get_field('singletitle')), 'singletitle - 10');
-ok(is_undef($bibentries->entry('ey2')->get_field('singletitle')), 'singletitle - 11');
 
 #############################################################################
 
