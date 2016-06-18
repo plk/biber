@@ -234,13 +234,13 @@ my $name18 =
 
 my $name19 =
    {  given          => {string => 'Luis', initial => ['L']},
-      family         => {string => 'Vázques{ de }Parga', initial => ['V']},
+      family         => {string => NFC 'Vázques{ de }Parga', initial => ['V']},
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring => 'Vázques{ de }Parga',
-      namestring     => 'Vázques{ de }PargaLuis',
-      nameinitstring => 'Vázques{ de }PargaL' } ;
+      basenamestring => NFC 'Vázques{ de }Parga',
+      namestring     => NFC 'Vázques{ de }PargaLuis',
+      nameinitstring => NFC 'Vázques{ de }PargaL' } ;
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%

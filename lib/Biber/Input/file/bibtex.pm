@@ -1243,13 +1243,13 @@ sub cache_data {
   # Convert/decode file
   my $pfilename = preprocess_file($filename);
 
-  my $bib = Text::BibTeX::File->new( $pfilename, '<' )
+  my $bib = Text::BibTeX::File->new( $pfilename )
     or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
 
   # Log that we found a data file
   $logger->info("Found BibTeX data source '$filename'");
 
-  while ( my $entry = new Text::BibTeX::Entry $bib ) {
+  while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {
       push @{$cache->{preamble}{$filename}}, biber_decode_utf8($entry->value);
       next;
