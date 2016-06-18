@@ -486,7 +486,6 @@ my $time1 = q|    \entry{time1}{book}{}
       \field{minute}{0}
       \field{month}{1}
       \field{second}{0}
-      \field{timezone}{floating}
       \field{urlday}{3}
       \field{urlhour}{17}
       \field{urlminute}{7}

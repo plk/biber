@@ -958,7 +958,9 @@ sub _datetime {
           $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
           $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
           $bibentry->set_datafield($datetype . 'second', $sdate->second);
-          $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name);
+          unless ($sdate->time_zone->is_floating) { # ignore floating timezones
+            $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name);
+          }
         }
       }
       else {
@@ -990,7 +992,9 @@ sub _datetime {
             $bibentry->set_datafield($datetype . 'endhour', $edate->hour);
             $bibentry->set_datafield($datetype . 'endminute', $edate->minute);
             $bibentry->set_datafield($datetype . 'endsecond', $edate->second);
-            $bibentry->set_datafield($datetype . 'endtimezone', $edate->time_zone->name);
+            unless ($edate->time_zone->is_floating) { # ignore floating timezones
+              $bibentry->set_datafield($datetype . 'endtimezone', $edate->time_zone->name);
+            }
           }
         }
         else { # open ended range - edate is defined but empty
@@ -1032,7 +1036,9 @@ sub _datetime {
           $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
           $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
           $bibentry->set_datafield($datetype . 'second', $sdate->second);
-          $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name);
+          unless ($sdate->time_zone->is_floating) { # ignore floating timezones
+            $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name);
+          }
         }
       }
       else {

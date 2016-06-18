@@ -9,14 +9,6 @@ use constant {
   EXIT_ERROR => 2
 };
 
-use Carp;
-use Encode;
-use File::Copy;
-use File::Spec;
-use File::Temp;
-use IO::File;
-use List::AllUtils qw( first uniq max );
-use POSIX qw( locale_h ); # for sorting with built-in "sort"
 use Biber::Config;
 use Biber::DataModel;
 use Biber::Constants;
@@ -32,14 +24,21 @@ use Biber::SortLists;
 use Biber::SortList;
 use Biber::UCollate;
 use Biber::Utils;
-use Log::Log4perl qw( :no_extra_logdie_message );
+use Carp;
 use Data::Dump;
 use Data::Compare;
-use Text::BibTeX qw(:macrosubs);
-use Unicode::Normalize;
+use Encode;
+use File::Copy;
+use File::Spec;
+use File::Temp;
+use IO::File;
+use List::AllUtils qw( first uniq max );
+use Log::Log4perl qw( :no_extra_logdie_message );
 use POSIX qw( locale_h ); # for lc()
 use Scalar::Util qw(looks_like_number);
 use Sort::Key qw ( multikeysorter );
+use Text::BibTeX qw(:macrosubs);
+use Unicode::Normalize;
 
 =encoding utf-8
 

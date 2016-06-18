@@ -4,6 +4,7 @@ use v5.16;
 use strict;
 use Carp;
 use DateTime;
+use DateTime::TimeZone;
 use DateTime::Format::Builder;
 
 =encoding utf-8
@@ -14,7 +15,7 @@ Biber::Date::Format
 
 =head2 Description
 
-  Implements EDTF Levels 0 and 1 (apart from 5.2.2) and also allows detection of
+  Implements EDTF Levels 0 and 1 and also allows detection of
   missing month/year.
 
   https://www.loc.gov/standards/datetime/pre-submission.html
