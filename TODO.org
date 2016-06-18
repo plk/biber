@@ -92,12 +92,13 @@
 *** DONE convert edtf toggle tests to check for 'simple'
 *** DONE This will need to be added to mkranges like labelname but for edtf, no choice as now
 *** Doc, 96
+** DONE Putting all date meta things into labeldate resolution breaks the ability to treat labeldate parts as normal datepart fields. They shouldn't be applied there really - when they hit forcezeros etc. they cause an error. When they are simpler, forcezeros etc. can have \IfInteger to skip "nodate" etc. labeldate part values. However, labelyear printing in authoryear cites is already processed into a range etc. This probably shouldn't be the case any more so that labelyear is more easily processing like other years.
 ** TODO times
 *** DONE Option to decide TZ format (none, "EST", num). Get rid of "floating" in bbl
 *** DONE timezeros option?
-*** TODO option datetime like datelabel
+*** DONE \mktimezeros - needs options like mkdatezeros? probably not as each component is 2 digits
+*** TODO option labeltime like labeldate
 *** TODO formats - 24hour, am/pm (localised), time sep (localised), leading zeros option for units
-*** TODO \mktimezeros - needs options like mkdatezeros? probably not as each component is 2 digits
 *** TODO Document *time= opts and formats, timelabel
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 ** TODO name to bib and name to xnamebib in Name.pm

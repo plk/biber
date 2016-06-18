@@ -1520,7 +1520,7 @@ sub process_entries_post {
     $self->process_extratitleyear($citekey);
 
     # generate information for tracking singletitle and uniquetitle
-    $self->process_xtitle($citekey);
+    $self->process_workuniqueness($citekey);
 
     # generate information for tracking uniqueprimaryauthor
     $self ->process_uniqueprimaryauthor($citekey);
@@ -1566,14 +1566,14 @@ sub process_uniqueprimaryauthor {
   }
 }
 
-=head2 process_xtitle
+=head2 process_workuniqueness
 
     Track seen work combination for generation of singletitle, uniquetitle and
     uniquework
 
 =cut
 
-sub process_xtitle {
+sub process_workuniqueness {
   my $self = shift;
   my $citekey = shift;
   my $secnum = $self->get_current_section;
@@ -3222,7 +3222,7 @@ sub generate_extra {
 =head2 generate_singletitle
 
     Generate the singletitle field, if requested. The information for generating
-    this is gathered in process_xtitle()
+    this is gathered in process_workuniqueness()
 
 =cut
 
@@ -3255,7 +3255,7 @@ sub generate_singletitle {
 =head2 generate_uniquetitle
 
     Generate the uniquetitle field, if requested. The information for generating
-    this is gathered in process_xtitle()
+    this is gathered in process_workuniqueness()
 
 =cut
 
@@ -3288,7 +3288,7 @@ sub generate_uniquetitle {
 =head2 generate_uniquework
 
     Generate the uniquework field, if requested. The information for generating
-    this is gathered in process_xtitle()
+    this is gathered in process_workuniqueness()
 
 =cut
 
