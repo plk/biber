@@ -35,7 +35,7 @@ use Biber::Utils;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use Data::Dump;
 use Data::Compare;
-use Text::BibTeX qw(utf8 :macrosubs);
+use Text::BibTeX qw(:macrosubs);
 use Unicode::Normalize;
 use POSIX qw( locale_h ); # for lc()
 use Scalar::Util qw(looks_like_number);

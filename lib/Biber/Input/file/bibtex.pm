@@ -5,7 +5,7 @@ use warnings;
 use sigtrap qw(handler TBSIG SEGV);
 
 use Carp;
-use Text::BibTeX qw(utf8 :nameparts :joinmethods :metatypes);
+use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
 use Text::BibTeX::NameFormat;
 use Biber::Annotation;
