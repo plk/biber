@@ -97,7 +97,8 @@ my $t3 = q|@BOOK{b1,
 
 my $tc1 = ["\@COMMENT{Comment 1}\n",
            "\@COMMENT{Comment 2}\n",
-           "\@COMMENT{jabref-meta: groupstree:\n0 AllEntriesGroup:;\n1 ExplicitGroup:Doktorandkurser\\;2\\;;\n2 KeywordGroup:Fra\x{30a}n ko\x{308}nsroll till genus\\;0\\;course\\;UCGS Fra\x{30a}n ko\x{308}nsrolltill genus\\;0\\;0\\;;\n2 KeywordGroup:Historiska och filosofiska perspektiv pa\x{30a} psykologi\\;0\\;course\\;Historiska och filosofiska perspektiv pa\x{30a} psykologi\\;0\\;0\\;;\n2 KeywordGroup:Kurs i introduktion\\;0\\;course\\;Kurs i introduktion\\;0\\;0\\;;\n2 KeywordGroup:Fenomenologi, ko\x{308}n och genus\\;0\\;course\\;UCGS Fenomenologi\\;0\\;0\\;;\n2 KeywordGroup:Quantitative Research Methods\\;0\\;course\\;QMR\\;0\\;0\\;;\n2 KeywordGroup:Multivariate Analysis\\;0\\;course\\;MVA\\;1\\;0\\;;\n}\n"];
+           ### NFC YET AGAIN!
+           NFC("\@COMMENT{jabref-meta: groupstree:\n0 AllEntriesGroup:;\n1 ExplicitGroup:Doktorandkurser\\;2\\;;\n2 KeywordGroup:Fra\x{30a}n ko\x{308}nsroll till genus\\;0\\;course\\;UCGS Fra\x{30a}n ko\x{308}nsrolltill genus\\;0\\;0\\;;\n2 KeywordGroup:Historiska och filosofiska perspektiv pa\x{30a} psykologi\\;0\\;course\\;Historiska och filosofiska perspektiv pa\x{30a} psykologi\\;0\\;0\\;;\n2 KeywordGroup:Kurs i introduktion\\;0\\;course\\;Kurs i introduktion\\;0\\;0\\;;\n2 KeywordGroup:Fenomenologi, ko\x{308}n och genus\\;0\\;course\\;UCGS Fenomenologi\\;0\\;0\\;;\n2 KeywordGroup:Quantitative Research Methods\\;0\\;course\\;QMR\\;0\\;0\\;;\n2 KeywordGroup:Multivariate Analysis\\;0\\;course\\;MVA\\;1\\;0\\;;\n}\n")];
 
 # NFD here because we are testing internals here and all internals expect NFD
 #### AMBS
