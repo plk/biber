@@ -74,7 +74,7 @@
 * DONE nullable_check in Biber.pm - needed? It's a deep loop
 * DONE donames stuff is messy
 * DONE hash/fullhash for all names
-* TODO Implement EDTF Date/Times
+* DONE Implement EDTF Date/Times
 ** DONE circa/uncertain/era should apply to individual dates, not the range.
 ** DONE 5.2.5 - seasons - new field (not in DM, only from date parsing), containing localisation string
 ** DONE iso8601 -> EDTF in biblatex with fallback 
@@ -93,13 +93,15 @@
 *** DONE This will need to be added to mkranges like labelname but for edtf, no choice as now
 *** Doc, 96
 ** DONE Putting all date meta things into labeldate resolution breaks the ability to treat labeldate parts as normal datepart fields. They shouldn't be applied there really - when they hit forcezeros etc. they cause an error. When they are simpler, forcezeros etc. can have \IfInteger to skip "nodate" etc. labeldate part values. However, labelyear printing in authoryear cites is already processed into a range etc. This probably shouldn't be the case any more so that labelyear is more easily processing like other years.
-** TODO times
+** DONE times
 *** DONE Option to decide TZ format (none, "EST", num). Get rid of "floating" in bbl
 *** DONE timezeros option?
 *** DONE \mktimezeros - needs options like mkdatezeros? probably not as each component is 2 digits
-*** TODO option labeltime like labeldate
-*** TODO formats - 24hour, am/pm (localised), time sep (localised), leading zeros option for units
-*** TODO Document *time= opts and formats, timelabel
+*** DONE option labeldate makes time fields available
+*** DONE \bibtimesep, \bibtimezonesep AM PM strings
+*** DONE TZ display option
+*** DONE formats - 24hour (normal and compressed), 12 hour am/pm (localised)
+*** DONE Document *time={HH,HHcomp,hh} opts and formats, timelabel, alltimes, Expand bib:use:dat to include times. Format docs in aut:fmt:ich
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 ** TODO name to bib and name to xnamebib in Name.pm
 ** TODO date output to all formats needs to use raw because of 5.2.2 resolution. In general, dateparts should not be used to construct output
