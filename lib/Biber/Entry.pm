@@ -774,22 +774,22 @@ sub inherit_from {
 
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
-        if ($logger->is_debug()) {# performance tune
+        if ($logger->is_debug()) { # performance tune
           $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
         }
-            # For tool mode with bibtex output we need to copy the raw fields
-            if (Biber::Config->getoption('tool') and
-                Biber::Config->getoption('output_format') eq 'bibtex') {
-              $self->set_rawfield($field, $parent->get_rawfield($field));
-            }
-            else {
-              $self->set_datafield($field, $parent->get_field($field));
-            }
+        # For tool mode with bibtex output we need to copy the raw fields
+        if (Biber::Config->getoption('tool') and
+            Biber::Config->getoption('output_format') eq 'bibtex') {
+          $self->set_rawfield($field, $parent->get_rawfield($field));
+        }
+        else {
+          $self->set_datafield($field, $parent->get_field($field));
+        }
 
-            # Record graphing information if required
-            if (Biber::Config->getoption('output_format') eq 'dot') {
-              Biber::Config->set_graph('crossref', $source_key, $target_key, $field, $field);
-            }
+        # Record graphing information if required
+        if (Biber::Config->getoption('output_format') eq 'dot') {
+          Biber::Config->set_graph('crossref', $source_key, $target_key, $field, $field);
+        }
       }
     }
   }
