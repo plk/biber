@@ -448,7 +448,7 @@ sub set_output_entry {
     # Only output era for date if:
     # The field is "year" and it came from splitting a date
     # The field is any other startyear
-    if ($be->get_field("${d}year")) {
+    if ($be->field_exists("${d}year")) { # use exists test as could be year 0000
       next if ($d eq '' and not $be->get_field('datesplit'));
       if (my $era = $be->get_field("${d}era")) {
         $acc .= "      \\field{${d}dateera}{$era}\n";
