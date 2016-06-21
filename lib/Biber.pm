@@ -1926,9 +1926,9 @@ sub process_labeldate {
   my $dm = Biber::Config->get_dm;
 
   if (Biber::Config->getblxoption('labeldate', $bee)) {
-    my $pseudodate;
     my $ldatespec = Biber::Config->getblxoption('labeldatespec', $bee);
     foreach my $h_ly (@$ldatespec) {
+      my $pseudodate;
       my $ly = $h_ly->{content};
       if ($h_ly->{'type'} eq 'field') { # labeldate field
         my $ldy;
@@ -1945,12 +1945,15 @@ sub process_labeldate {
           $ldy = $ly; # labelyear can be a non-date field so make a pseudo-year
           $pseudodate = 1;
         }
-        if ($be->get_field($ldy)) { # did we find a labeldate?
+
+        # Did we find a labeldate?
+        if ($be->get_field($ldy)) {
           # set source to field or date field prefix for a real date field
-          $be->set_labeldate_info({'field' => {year   => $ldy,
-                                               month  => $ldm,
-                                               day    => $ldd,
-                                               source => $pseudodate ? $ldy : $datetype }});
+          $be->set_labeldate_info({'field' => {year       => $ldy,
+                                               month      => $ldm,
+                                               day        => $ldd,
+                                               pseudodate => $pseudodate,
+                                               source     => $pseudodate ? $ldy : $datetype }});
           last;
         }
       }
@@ -1964,7 +1967,7 @@ sub process_labeldate {
     # Might not have been set due to skiplab/dataonly
     if (my $ldi = $be->get_labeldate_info) {
       if (my $df = $ldi->{field}) { # set labelyear to a field value
-
+        my $pseudodate = $df->{pseudodate};
         my $yearstring = $be->get_field($df->{year});
         $be->set_field('labelyear', $yearstring);
 
