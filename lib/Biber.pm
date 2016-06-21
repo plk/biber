@@ -1965,16 +1965,17 @@ sub process_labeldate {
     if (my $ldi = $be->get_labeldate_info) {
       if (my $df = $ldi->{field}) { # set labelyear to a field value
 
-        # In case we parsed a BC data, we should use the abs value
-        my $yearstring = $be->get_field($df->{year} . 'abs') || $be->get_field($df->{year});
+        my $yearstring = $be->get_field($df->{year});
         $be->set_field('labelyear', $yearstring);
 
         $be->set_field('labelmonth', $be->get_field($df->{month})) if $df->{month};
         $be->set_field('labelday', $be->get_field($df->{day})) if $df->{day};
         $be->set_field('labeldatesource', $df->{source});
+
         # ignore endyear if it's the same as year
         my ($ytype) = $df->{year} =~ /\A(\X*)year\z/xms;
         $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
+
         # endyear can be null which makes labelyear different to plain year
         if ($be->field_exists($ytype . 'endyear')
             and ($be->get_field($df->{year}) ne $be->get_field($ytype . 'endyear'))) {
