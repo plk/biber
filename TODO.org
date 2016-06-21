@@ -103,10 +103,10 @@
 *** DONE formats - 24hour (normal and compressed), 12 hour am/pm (localised)
 *** DONE Document *time={HH,HHcomp,hh} opts and formats, timelabel, alltimes, Expand bib:use:dat to include times. Format docs in aut:fmt:ich
 * DONE EDTF should set dateera=simple and use \dateeraprintpre/\enddateeraprintpre
-* TODO dateera=simple should -1 all bce years on output
-** TODO Remove yearabs from biber, biblatex needs to +1 all bce abs values on output when dateera is not "astronomical"
-** TODO fix biber tests
-* TODO Remove uniquework?
+* DONE dateera=simple should -1 all bce years on output
+** DONE Remove yearabs from biber, biblatex needs to +1 all bce abs values on output when dateera is not "astronomical"
+** DONE fix biber tests
+** DONE Fix spaces in cites, run tests, upload, reply
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 ** TODO name to bib and name to xnamebib in Name.pm
 ** TODO date output to all formats needs to use raw because of 5.2.2 resolution. In general, dateparts should not be used to construct output
