@@ -13,6 +13,7 @@ use Encode;
 use List::AllUtils qw( :all );
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
+use Scalar::Util qw(looks_like_number);
 use Text::Wrap;
 use Unicode::Normalize;
 $Text::Wrap::columns = 80;
@@ -114,9 +115,12 @@ sub _printfield {
     $field_type = 'strng';
   }
 
-  # *year should print *yearabs if it exists
+  # Output absolute astronomical year by default (with year 0)
+  # biblatex will adjust the years when printed with BCE/CE eras
   if ($field =~ m/^(.*)(?!end)year$/) {
-    $str = $be->get_field("$1yearabs") || $str;
+    if (my $y = $be->get_field("$1year")) {
+      $str = abs($y) if looks_like_number($y);
+    }
   }
 
   # auto-escape TeX special chars if:

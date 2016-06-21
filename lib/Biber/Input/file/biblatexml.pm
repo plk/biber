@@ -939,7 +939,6 @@ sub _datetime {
 
         unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
           $bibentry->set_datafield($datetype . 'year', $sdate->year);
-          $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
         }
 
         $bibentry->set_datafield($datetype . 'month', $sdate->month)
@@ -973,7 +972,6 @@ sub _datetime {
         if ($edate) { # not an empty range
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
             $bibentry->set_datafield($datetype . 'endyear', $edate->year);
-            $bibentry->set_field($datetype . 'endyearabs', abs($edate->ce_year));
           }
 
           $bibentry->set_datafield($datetype . 'endmonth', $edate->month)
@@ -1017,7 +1015,6 @@ sub _datetime {
 
         unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
           $bibentry->set_datafield($datetype . 'year', $sdate->year);
-          $bibentry->set_field($datetype . 'yearabs', abs($sdate->ce_year));
         }
 
         $bibentry->set_datafield($datetype . 'month', $sdate->month)

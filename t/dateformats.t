@@ -416,9 +416,9 @@ my $era1 = q|    \entry{era1}{book}{}
       \field{sortinithash}{7e21a31d9ef6ddc352701d4fa590bfbc}
       \field{labeldatesource}{}
       \field{month}{2}
-      \field{origendyear}{220}
-      \field{origyear}{222}
-      \field{year}{380}
+      \field{origendyear}{219}
+      \field{origyear}{221}
+      \field{year}{379}
       \field{dateera}{bce}
       \field{origdateera}{bce}
       \field{origenddateera}{bce}
@@ -429,10 +429,10 @@ my $era2 = q|    \entry{era2}{book}{}
       \field{sortinit}{1}
       \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
       \field{labeldatesource}{}
-      \field{eventyear}{250}
-      \field{origendyear}{45}
-      \field{origyear}{50}
-      \field{year}{198}
+      \field{eventyear}{249}
+      \field{origendyear}{44}
+      \field{origyear}{49}
+      \field{year}{197}
       \field{dateera}{bce}
       \field{eventdateera}{bce}
       \field{origdateera}{bce}
@@ -448,7 +448,7 @@ my $era3 = q|    \entry{era3}{book}{}
       \field{eventmonth}{3}
       \field{eventyear}{250}
       \field{month}{2}
-      \field{year}{197}
+      \field{year}{196}
       \field{dateera}{bce}
     \endentry
 |;

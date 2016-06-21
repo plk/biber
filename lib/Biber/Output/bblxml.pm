@@ -13,6 +13,7 @@ use List::AllUtils qw( :all );
 use IO::File;
 use IO::String;
 use Log::Log4perl qw( :no_extra_logdie_message );
+use Scalar::Util qw(looks_like_number);
 use XML::Writer;
 use Unicode::Normalize;
 my $logger = Log::Log4perl::get_logger('main');
@@ -369,13 +370,17 @@ sub set_output_entry {
   # Date parts
   foreach my $field (sort @{$dm->get_fields_of_type('field', 'datepart')}) {
     my $val = $be->get_field($field);
+
     if ( length($val) or # length() catches '0' values, which we want
          ($dm->field_is_nullok($field) and
           $be->field_exists($field))) {
       my @attrs = ('name', $field);
-      # *year should print *yearabs if it exists and was split from date field
       my $str;
       if (my ($d) = $field =~ m/^(.*)(?!end)year$/) {
+
+        # Output absolute astronomical year by default (with year 0)
+        # biblatex will adjust the years when printed with BCE/CE eras
+        $val = abs($val) if looks_like_number($val);
 
         # Unspecified granularity
         if (my $unspec = $be->get_field("${d}dateunspecified")) {
@@ -408,7 +413,7 @@ sub set_output_entry {
           if (my $era = $be->get_field("${d}endera")) {
             push @attrs, ('endera', $era);
           }
-          $str = _bblxml_norm($be->get_field("${d}yearabs"));
+          $str = _bblxml_norm($be->get_field("${d}year"));
         }
         else {
           $str = _bblxml_norm($val);
