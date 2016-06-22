@@ -105,7 +105,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortalphaothers</bcf:key>
@@ -133,11 +133,11 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquetitle</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquework</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
@@ -453,7 +453,7 @@
   </bcf:labelalphatemplate>
   <!-- INHERITANCE -->
   <bcf:inheritance>
-    <bcf:defaults inherit_all="true" override_target="false">
+    <bcf:defaults inherit_all="true" override_target="false" suppress="singletitle">
       <bcf:type_pair source="*" target="incollection" inherit_all="false"/>
     </bcf:defaults>
     <bcf:inherit>
@@ -1961,6 +1961,8 @@
     <bcf:citekey order="26">xc1</bcf:citekey>
     <bcf:citekey order="27">b1</bcf:citekey>
     <bcf:citekey order="28">b2</bcf:citekey>
+    <bcf:citekey order="29">sup2</bcf:citekey>
+    <bcf:citekey order="30">sup3</bcf:citekey>
   </bcf:section>
   <!-- SECTION 1 -->
   <bcf:bibdata section="1">

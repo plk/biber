@@ -304,3 +304,19 @@
   ORIGDATE = {2004-03/2005-08},
 }
 
+% test of singletitle, uniquetitle and uniquework suppression
+@MVBOOK{sup1,
+  AUTHOR = {Alan Smith},
+  TITLE  = {Title1}
+}
+
+@BOOK{sup2,
+  NOTE   = {Book sup2},
+  CROSSREF = {sup1}
+}
+
+@BOOK{sup3,
+  NOTE   = {Book sup3},
+  CROSSREF = {sup1}
+}
+

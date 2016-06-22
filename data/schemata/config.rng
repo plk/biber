@@ -350,14 +350,6 @@
             </choice>
           </element>
         </optional>
-        <optional>
-          <element name="sortfirstinits">
-            <choice>
-              <value>0</value>
-              <value>1</value>
-            </choice>
-          </element>
-        </optional>
         <zeroOrMore>
           <ref name="translit"/>
         </zeroOrMore>
@@ -782,6 +774,10 @@
             <value>false</value>
           </choice>
         </attribute>
+        <optional>
+          <!-- Suppression of uniqueness tracking -->
+          <attribute name="suppress"/>
+        </optional>
         <zeroOrMore>
           <!-- Default inherit_all and override_target settings for entrytype source/target pairs -->
           <element name="type_pair">
@@ -817,6 +813,9 @@
                 </choice>
               </attribute>
             </optional>
+            <optional>
+              <attribute name="suppress"/>
+            </optional>
             <empty/>
           </element>
         </zeroOrMore>
@@ -824,6 +823,10 @@
       <zeroOrMore>
         <!-- An inheritance specification -->
         <element name="inherit">
+          <optional>
+            <!-- Suppression of uniqueness tracking -->
+            <attribute name="suppress"/>
+          </optional>
           <oneOrMore>
             <!-- applies to these pairs of source/target entrytypes -->
             <element name="type_pair">

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 34;
+use Test::More tests => 36;
 use Test::Differences;
 unified_diff;
 
@@ -80,6 +80,9 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{G}
       \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Graphs of the Continent}
@@ -122,6 +125,9 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{F}
       \field{sortinithash}{c6a7d9913bbd7b20ea954441c0460b78}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Graphs of the Continent}
@@ -135,6 +141,7 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
 # This is included as it is crossrefed >= mincrossrefs times Notice lack of
 # labelname and labelname hashes because the only name is EDITOR and
 # useeditor is false
+# This is also why there is no \true{uniquework}
 my $cr_m = q|    \entry{cr_m}{book}{}
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
@@ -151,6 +158,8 @@ my $cr_m = q|    \entry{cr_m}{book}{}
       \field{sortinit}{G}
       \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
       \true{crossrefsource}
+      \true{singletitle}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Graphs of the Continent}
       \field{year}{1974}
@@ -184,6 +193,9 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \strng{editorfullhash}{a1f5c22413396d599ec766725b226735}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Beasts of the Burbling Burns}
@@ -192,6 +204,45 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \field{origyear}{1934}
       \field{title}{Arrangements of All Articles}
       \field{year}{1996}
+    \endentry
+|;
+
+# No crossref field as parent is not cited (mincrossrefs < 2)
+my $cr4 = q|    \entry{cr4}{inbook}{}
+      \name{author}{1}{}{%
+        {{hash=50ef7fd3a1be33bccc5de2768b013836}{%
+           family={Mumble},
+           family_i={M\bibinitperiod},
+           given={Morris},
+           given_i={M\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=6ea89bd4958743a20b70fe17647d6af5}{%
+           family={Jermain},
+           family_i={J\bibinitperiod},
+           given={Jeremy},
+           given_i={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Pillsbury}%
+      }
+      \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{fullhash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{authornamehash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{authorfullhash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{editornamehash}{6ea89bd4958743a20b70fe17647d6af5}
+      \strng{editorfullhash}{6ea89bd4958743a20b70fe17647d6af5}
+      \field{sortinit}{M}
+      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Vanquished, Victor, Vandal}
+      \field{origyear}{1911}
+      \field{title}{Enterprising Entities}
+      \field{year}{1945}
     \endentry
 |;
 
@@ -211,6 +262,8 @@ my $crt = q|    \entry{crt}{book}{}
       \strng{editorfullhash}{a1f5c22413396d599ec766725b226735}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \true{singletitle}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Beasts of the Burbling Burns}
       \field{year}{1996}
@@ -242,6 +295,8 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \strng{editorfullhash}{344a7f427fb765610ef96eb7bce95257}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Manual booktitle}
@@ -287,6 +342,8 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \strng{bookauthorfullhash}{91a1dd4aeed3c4ec29ca74c4e778be5f}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booksubtitle}{Book Subtitle}
@@ -317,6 +374,9 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \strng{authorfullhash}{3d449e56eb3ca1ae80dc99a18d689795}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Book Title}
@@ -342,6 +402,9 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \strng{authorfullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \field{sortinit}{Z}
       \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1921}
@@ -365,6 +428,9 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \strng{authorfullhash}{6afa09374ecfd6b394ce714d2d9709c7}
       \field{sortinit}{I}
       \field{sortinithash}{25e99d37ba90f7c4fb20baf4e310faf3}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1926}
@@ -392,6 +458,8 @@ my $xrm = q|    \entry{xrm}{book}{}
       \field{sortinit}{C}
       \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
       \true{xrefsource}
+      \true{singletitle}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Calligraphy, Calisthenics, Culture}
       \field{year}{1970}
@@ -413,6 +481,9 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \strng{authorfullhash}{9788055665b9bb4b37c776c3f6b74f16}
       \field{sortinit}{N}
       \field{sortinithash}{925374ca63e7594de7fafdb83e64d41d}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1923}
@@ -437,47 +508,14 @@ my $xrt = q|    \entry{xrt}{book}{}
       \strng{editorfullhash}{bf7d6b02f3e073913e5bfe5059508dd5}
       \field{sortinit}{K}
       \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
+      \true{singletitle}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Kings, Cork and Calculation}
       \field{year}{1977}
     \endentry
 |;
 
-# No crossref field as parent is not cited (mincrossrefs < 2)
-my $cr4 = q|    \entry{cr4}{inbook}{}
-      \name{author}{1}{}{%
-        {{hash=50ef7fd3a1be33bccc5de2768b013836}{%
-           family={Mumble},
-           family_i={M\bibinitperiod},
-           given={Morris},
-           given_i={M\bibinitperiod}}}%
-      }
-      \name{editor}{1}{}{%
-        {{hash=6ea89bd4958743a20b70fe17647d6af5}{%
-           family={Jermain},
-           family_i={J\bibinitperiod},
-           given={Jeremy},
-           given_i={J\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {Pillsbury}%
-      }
-      \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
-      \strng{fullhash}{50ef7fd3a1be33bccc5de2768b013836}
-      \strng{authornamehash}{50ef7fd3a1be33bccc5de2768b013836}
-      \strng{authorfullhash}{50ef7fd3a1be33bccc5de2768b013836}
-      \strng{editornamehash}{6ea89bd4958743a20b70fe17647d6af5}
-      \strng{editorfullhash}{6ea89bd4958743a20b70fe17647d6af5}
-      \field{sortinit}{M}
-      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Vanquished, Victor, Vandal}
-      \field{origyear}{1911}
-      \field{title}{Enterprising Entities}
-      \field{year}{1945}
-    \endentry
-|;
 
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $xr4 = q|    \entry{xr4}{inbook}{}
@@ -569,6 +607,9 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{sortinit}{V}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \strng{crossref}{ccr1}
@@ -598,6 +639,8 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
       \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{sortinit}{P}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
+      \true{singletitle}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{booktitle}{Misc etc.}
       \strng{crossref}{ccr2}
@@ -627,6 +670,8 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
 my $s1 = q|    \entry{s1}{inbook}{}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \true{singletitle}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \strng{crossref}{s2}
       \field{title}{Subtitle}
@@ -674,6 +719,57 @@ my $b1 = q|    \entry{b1}{inbook}{}
     \endentry
 |;
 
+# sup1 is here because it is crossref'ed twice by sup2 and sup3 which share
+# the author as a result. However, note that singletitle is true despite
+# the same author for three entries because two instance of the author
+# being present are by inheritance and singletitle tracking is suppressed
+# in this case because of the "suppress=singletitle" in the inheritance
+# definitions in the .bcf
+my $sup1 = q|    \entry{sup1}{mvbook}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           family_i={S\\bibinitperiod},
+           given={Alan},
+           given_i={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \true{crossrefsource}
+      \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Title1}
+    \endentry
+|;
+
+my $sup2 = q|    \entry{sup2}{book}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           family_i={S\\bibinitperiod},
+           given={Alan},
+           given_i={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \strng{crossref}{sup1}
+      \field{note}{Book sup2}
+      \field{title}{Title1}
+    \endentry
+|;
+
 eq_or_diff($out->get_output_entry('cr1', $main), $cr1, 'crossref test 1');
 eq_or_diff($out->get_output_entry('cr2', $main), $cr2, 'crossref test 2');
 eq_or_diff($out->get_output_entry('cr_m', $main), $cr_m, 'crossref test 3');
@@ -709,3 +805,5 @@ ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
 eq_or_diff($out->get_output_entry('s1', $main), $s1, 'per-entry noinherit');
 eq_or_diff($out->get_output_entry('xc2', $main), $xc2, 'Cascading xref+crossref');
 eq_or_diff($out->get_output_entry('b1', $main), $b1, 'Blocking bad date inheritance');
+eq_or_diff($out->get_output_entry('sup1', $main), $sup1, 'Suppressing singletitle tracking - 1');
+eq_or_diff($out->get_output_entry('sup2', $main), $sup2, 'Suppressing singletitle tracking - 2');

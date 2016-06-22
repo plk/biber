@@ -52,6 +52,9 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 
+# Uniqueness supression information from inheritance data
+$CONFIG->{state}{uniqsupp};
+
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{xrefkeys} = {};
 $CONFIG->{state}{seenname} = {};
@@ -124,6 +127,7 @@ $CONFIG->{state}{datafiles} = [];
 =cut
 
 sub _init {
+  $CONFIG->{state}{uniqsupp} = {};
   $CONFIG->{options}{biblatex}{ENTRY} = {};
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
@@ -715,6 +719,34 @@ sub set_unul_changed {
   my $val = shift;
   $CONFIG->{state}{unulchanged} = $val;
   return;
+}
+
+=head2 add_uniq_suppress
+
+    Track uniqueness supression settings found in inheritance data
+
+=cut
+
+sub add_uniq_suppress {
+  shift; # class method so don't care about class name
+  my ($key, $field, $uniqs) = @_;
+  foreach my $u (split(/\s*,\s*/, $uniqs)) {
+    push @{$CONFIG->{state}{uniqsupp}{$key}{$u}}, $field;
+  }
+  return;
+}
+
+=head2 get_uniq_suppress
+
+    Retrieve uniqueness supression settings found in inheritance data
+
+=cut
+
+sub get_uniq_suppress {
+  no autovivification;
+  shift; # class method so don't care about class name
+  my $key = shift;
+  return $CONFIG->{state}{uniqsupp}{$key};
 }
 
 =head2 postprocess_biber_opts
@@ -1594,8 +1626,6 @@ sub incr_seen_titleyear {
   }
   return;
 }
-
-
 
 =head1 uniquelistcount
 

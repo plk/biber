@@ -1585,23 +1585,32 @@ sub process_workuniqueness {
   my $lni = $be->get_labelname_info;
   my $lti = $be->get_labeltitle_info;
 
+  # suppression settings from inheritance data?
+  my $suppress = Biber::Config->get_uniq_suppress($citekey);
+
   # singletitle
   # Don't generate information for entries with no labelname or labeltitle
-  # Should use fullhash this is not a test of uniqueness of only visible information
+  # Use fullhash as this is not a test of uniqueness of only visible information
   if (($lni or $lti) and Biber::Config->getblxoption('singletitle', $bee)) {
+    my $f;
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Creating singletitle information for '$citekey'");
     }
     if ($lni) {
       $identifier = $self->_getfullhash($citekey, $be->get_field($lni));
+      $f = $lni;
     }
     else {
       $identifier = $be->get_field($lti);
+      $f = $lti;
     }
 
-    Biber::Config->incr_seenname($identifier);
-    if ($logger->is_trace()) {# performance tune
-      $logger->trace("Setting seenname for '$citekey' to '$identifier'");
+    # Skip due to suppression settings?
+    unless (first {fc($f) eq fc($_)} @{$suppress->{singletitle}}) {
+      Biber::Config->incr_seenname($identifier);
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("Setting seenname for '$citekey' to '$identifier'");
+      }
     }
     $be->set_field('seenname', $identifier);
   }
@@ -1610,9 +1619,13 @@ sub process_workuniqueness {
   # Don't generate information for entries with no labeltitle
   if ($lti and Biber::Config->getblxoption('uniquetitle', $bee)) {
     $identifier = $be->get_field($lti);
-    Biber::Config->incr_seentitle($identifier);
-    if ($logger->is_trace()) {  # performance tune
-      $logger->trace("Setting seentitle for '$citekey' to '$identifier'");
+
+    # Skip due to suppression settings?
+    unless (first {fc($lti) eq fc($_)} @{$suppress->{uniquetitle}}) {
+      Biber::Config->incr_seentitle($identifier);
+      if ($logger->is_trace()) {  # performance tune
+        $logger->trace("Setting seentitle for '$citekey' to '$identifier'");
+      }
     }
     $be->set_field('seentitle', $identifier);
   }
@@ -1622,9 +1635,15 @@ sub process_workuniqueness {
   # Should use fullhash this is not a test of uniqueness of only visible information
   if ($lni and $lti and Biber::Config->getblxoption('uniquework', $bee)) {
     $identifier = $self->_getfullhash($citekey, $be->get_field($lni)) . $be->get_field($lti);
-    Biber::Config->incr_seenwork($identifier);
-    if ($logger->is_trace()) {  # performance tune
-      $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
+
+    # Skip due to suppression settings?
+    unless (first {fc($lni) eq fc($_)} @{$suppress->{uniquework}} and
+            first {fc($lti) eq fc($_)} @{$suppress->{uniquework}}) {
+
+      Biber::Config->incr_seenwork($identifier);
+      if ($logger->is_trace()) {  # performance tune
+        $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
+      }
     }
     $be->set_field('seenwork', $identifier);
   }

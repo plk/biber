@@ -617,7 +617,11 @@
           <!-- Defaults -->
           <table>
             <thead>
-              <tr><td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td><td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td></tr>
+              <tr>
+                <td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td>
+                <td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td>
+                <td>Suppress</td>
+              </tr>
             </thead>
             <tbody>
               <!-- Defaults for all types -->
@@ -656,6 +660,7 @@
                     </td>
                   </xsl:otherwise>
                 </xsl:choose>
+                <td><xsl:value-of select="/bcf:controlfile/bcf:inheritance/bcf:defaults/@suppress"/></td>
               </tr>
               <!-- Defaults for certain types -->
               <xsl:for-each select="/bcf:controlfile/bcf:inheritance/bcf:defaults/bcf:type_pair">
@@ -704,6 +709,7 @@
                       </td>
                     </xsl:otherwise>
                   </xsl:choose>
+                  <td><xsl:value-of select="./@suppress"/></td>
                 </tr>
               </xsl:for-each>
             </tbody>
@@ -711,7 +717,11 @@
           <h4>Specifications</h4>          
           <table>
             <thead>
-              <tr><td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td><td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td></tr>
+              <tr>
+                <td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td>
+                <td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td>
+                <td>Suppress</td>
+              </tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:inheritance/bcf:inherit">
@@ -763,6 +773,7 @@
                       </xsl:for-each>
                     </ul>
                   </td>
+                  <td><xsl:value-of select="./@suppress"/></td>
                 </tr>
               </xsl:for-each>
             </tbody>

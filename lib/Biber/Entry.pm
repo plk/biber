@@ -681,12 +681,14 @@ sub inherit_from {
   # global defaults ...
   my $inherit_all = $defaults->{inherit_all};
   my $override_target = $defaults->{override_target};
+  my $suppress = $defaults->{suppress};
   # override with type_pair specific defaults if they exist ...
   foreach my $type_pair (@{$defaults->{type_pair}}) {
     if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
         ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
       $inherit_all = $type_pair->{inherit_all} if $type_pair->{inherit_all};
       $override_target = $type_pair->{override_target} if $type_pair->{override_target};
+      $suppress = $type_pair->{suppress} if $type_pair->{suppress};
     }
   }
 
@@ -729,7 +731,13 @@ sub inherit_from {
             }
             else {
               $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+
+              # Suppress uniqueness information tracking for this inheritance?
+              if (my $supp = $inherit->{suppress}) {
+                Biber::Config->add_uniq_suppress($target_key, $field->{target}, $supp);
+              }
             }
+
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
               Biber::Config->set_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
@@ -784,6 +792,11 @@ sub inherit_from {
         }
         else {
           $self->set_datafield($field, $parent->get_field($field));
+
+          # Suppress uniqueness information tracking for this inheritance?
+          if (my $supp = $suppress) {
+            Biber::Config->add_uniq_suppress($target_key, $field, $supp);
+          }
         }
 
         # Record graphing information if required

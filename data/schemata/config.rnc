@@ -237,17 +237,22 @@ element inheritance {
     attribute inherit_all { "true" | "false" },
     # Should we overwrite the target field if it exists?
     attribute override_target { "true" | "false" },
+    # Suppression of uniqueness tracking
+    attribute suppress { text }?,
     # Default inherit_all and override_target settings for entrytype source/target pairs
     element type_pair {
       attribute source { "*" | xsd:string {minLength="1"}},
       attribute target { "*" | xsd:string {minLength="1"}},
       attribute inherit_all { "true" | "false" }?,
       attribute override_target { "true" | "false" }?,
+      attribute suppress { text }?,
       empty
     }*
   },
   # An inheritance specification
   element inherit {
+    # Suppression of uniqueness tracking
+    attribute suppress { text }?,
     # applies to these pairs of source/target entrytypes
     element type_pair {
       attribute source { "*" | xsd:string {minLength="1"}},
