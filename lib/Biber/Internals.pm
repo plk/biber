@@ -12,6 +12,8 @@ use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Digest::MD5 qw( md5_hex );
 use POSIX qw( locale_h ); # for lc()
+use Scalar::Util qw(looks_like_number);
+use Text::Roman qw(isroman roman2int);
 use Unicode::GCString;
 use Unicode::Collate::Locale;
 use Unicode::Normalize;
@@ -1115,7 +1117,7 @@ sub _sort_citeorder {
   }
   # otherwise, we need to take account of citations with simulataneous order like
   # \cite{key1, key2} so this tied sorting order can be further sorted with other fields
-  # Note the fallback of "0" - this is for auto-generated entries which are not cited
+  # Note the fallback of '' - this is for auto-generated entries which are not cited
   # and so never have a keyorder entry
   else {
     return $ko || '';
@@ -1127,7 +1129,19 @@ sub _sort_integer {
   my $dmtype = $args->[0]; # get int field type
   my $bee = $be->get_field('entrytype');
   if (my $field = $be->get_field($dmtype)) {
-    return _translit($dmtype, $bee, _process_sort_attributes($field, $sortelementattributes));
+    # Make and attempt to map
+    if (not looks_like_number($field)) {
+      # Make an attempt to map roman numerals to integers for sorting
+      $field = NFKD($field);
+      if (isroman($field)) {
+        $field = roman2int($field);
+      }
+    }
+    # Make an attempt to map alpha fields to integers for sorting
+    if (not looks_like_number($field)) {
+      $field = sum(map {ord} split('', $field));
+    }
+    return _process_sort_attributes($field, $sortelementattributes);
   }
   else {
     return '';
