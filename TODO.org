@@ -88,7 +88,7 @@
 ** DONE Default for era
 *** DONE edtf toggle can be removed (not tests - see below)
 *** DONE Make a 'simple' option for dateera, default
-*** TODO make a value for dateera that can be tested, perhaps usermode too
+*** DONE make a value for dateera that can be tested, perhaps usermode too
 *** DONE convert edtf toggle tests to check for 'simple'
 *** DONE This will need to be added to mkranges like labelname but for edtf, no choice as now
 *** Doc, 96
@@ -108,5 +108,7 @@
 ** DONE fix biber tests
 ** DONE Fix spaces in cites, run tests, upload, reply
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
-** TODO name to bib and name to xnamebib in Name.pm
+** DONE name to bib and name to xnamebib in Name.pm
+** TODO name list output should use namesep option value
+** TODO name list output needs to care about x vs normal for per-namelist options.
 ** TODO date output to all formats needs to use raw because of 5.2.2 resolution. In general, dateparts should not be used to construct output

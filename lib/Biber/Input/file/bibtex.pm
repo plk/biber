@@ -1592,10 +1592,6 @@ sub parsename {
       basenamestring => 'Doe',
       namestring     => 'Doe, John',
       nameinitstring => 'Doe_J',
-      strip          => {'given'  => 0,
-                         'family' => 0,
-                         'prefix' => 0,
-                         'suffix' => 0},
       sortnamekeyscheme => 'scheme' }
       }
 

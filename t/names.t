@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 60;
+use Test::More tests => 72;
 use Test::Differences;
 unified_diff;
 
@@ -241,6 +241,16 @@ my $name19 =
       basenamestring => 'Vázques{ de }Parga',
       namestring     => 'Vázques{ de }PargaLuis',
       nameinitstring => 'Vázques{ de }PargaL' } ;
+
+my $namex1 =
+   {  given          => {string => 'James', initial => ['J']},
+      family         => {string => 'Smithers~Jones', initial => ['S','J']},
+      prefix         => {string => 'van~der', initial => ['v','d']},
+      suffix         => {string => undef, initial => undef},
+      basenamestring => 'van~derSmithers~Jones',
+      namestring     => 'van~derSmithers~JonesJames',
+      nameinitstring => 'van~derSmithers~JonesJ',
+      useprefix      => 'true'} ;
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
@@ -851,6 +861,7 @@ my $l31 = q|    \entry{L31}{book}{}
     \endentry
 |;
 
+# name parsing tests
 is_deeply(Biber::Input::file::bibtex::parsename('John Doe', 'author'), $name1, 'parsename 1');
 is_deeply(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author'), $name2, 'parsename 2');
 is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 1}), $name3, 'parsename 3') ;
@@ -870,7 +881,25 @@ is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'autho
 is_deeply(Biber::Input::file::bibtex::parsename('Other, A.~N.', 'author'), $name17, 'parsename 17');
 is_deeply(Biber::Input::file::bibtex::parsename('{{{British National Corpus}}}', 'author'), $name18, 'parsename 18');
 is_deeply(Biber::Input::file::bibtex::parsename('Vázques{ de }Parga, Luis', 'author'), $name19, 'parsename 19');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author'), $namex1, 'parsename_x 1');
 
+# name to bib tests
+eq_or_diff(Biber::Input::file::bibtex::parsename('John Doe', 'author')->name_to_bib, 'Doe, John', 'name_to_bib 1');
+eq_or_diff(Biber::Input::file::bibtex::parsename('John van der Doe', 'author')->name_to_bib, 'van der Doe, John', 'name_to_bib 2');
+eq_or_diff(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author')->name_to_bib, 'Doe, Jr, John', 'name_to_bib 3');
+eq_or_diff(Biber::Input::file::bibtex::parsename('von Doe, Jr, John', 'author')->name_to_bib, 'von Doe, Jr, John', 'name_to_bib 4');
+eq_or_diff(Biber::Input::file::bibtex::parsename('John Alan Doe', 'author')->name_to_bib, 'Doe, John Alan', 'name_to_bib 5');
+eq_or_diff(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author')->name_to_bib, '{Robert and Sons, Inc.}', 'name_to_bib 6');
+eq_or_diff(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author', undef, 'fakekey', 1)->name_to_bib, 'de la {Vallée Poussin}, Jean Charles Gabriel', 'name_to_bib 7');
+eq_or_diff(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author')->name_to_bib, '{K}ent-{B}oswell, E. S.', 'name_to_bib 8');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->name_to_bib, 'van der Smithers Jones, James', 'name_to_bib - 9');
+
+# name to xname tests
+is_deeply(Biber::Input::file::bibtex::parsename('van der Smithers Jones, James', 'author')->name_to_xname, 'family=Smithers Jones, given=James, prefix=van der', 'name_to_xname - 1');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->name_to_xname, 'family=Smithers Jones, given=James, prefix=van der, useprefix=true', 'name_to_xname - 2');
+
+
+# Full entry tests
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'First Last') ;
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'First Initial. Last') ;
 eq_or_diff( $out->get_output_entry('L3', $main), $l3, 'Initial. Initial. Last') ;

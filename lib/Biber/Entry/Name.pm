@@ -473,6 +473,66 @@ sub name_to_bblxml {
   return;
 }
 
+=head2 name_to_bib
+
+    Return standard bibtex data format for name
+
+=cut
+
+sub name_to_bib {
+  my $self = shift;
+  my $parts;
+  my $namestring = '';
+
+  foreach my $np ('prefix', 'family', 'suffix', 'given') {
+    if ($parts->{$np} = $self->get_namepart($np)) {
+      $parts->{$np} =~ s/~/ /g;
+      if ($self->was_stripped($np)) {
+        $parts->{$np} = Biber::Utils::add_outer($parts->{$np});
+      }
+    }
+  }
+
+  if (my $p = $parts->{prefix}) {$namestring .= "$p "};
+  if (my $f = $parts->{family}) {$namestring .= $f};
+  if (my $s= $parts->{suffix}) {$namestring .= ", $s"};
+  if (my $g= $parts->{given}) {$namestring .= ", $g"};
+
+  return $namestring;
+}
+
+=head2 name_to_xname
+
+    Return extended bibtex data format for name
+
+=cut
+
+sub name_to_xname {
+  my $self = shift;
+  my $dm = Biber::Config->get_dm;
+  my $parts;
+  my @namestring;
+
+  foreach my $np (sort $dm->get_constant_value('nameparts')) {# list type so returns list
+    if ($parts->{$np} = $self->get_namepart($np)) {
+      $parts->{$np} =~ s/~/ /g;
+      push @namestring, "$np=" . $parts->{$np};
+    }
+  }
+
+  # Name scope useprefix
+  if (defined($self->get_useprefix)) {# could be 0
+    push @namestring, 'useprefix=' . Biber::Utils::map_boolean($self->get_useprefix, 'tostring');
+  }
+
+  # Name scope sortnamekeyscheme
+  if (my $snks = $self->get_sortnamekeyscheme) {
+    push @namestring, "sortnamekeyscheme=$snks";
+  }
+
+  return join(', ', @namestring);
+}
+
 
 =head2 dump
 
