@@ -3,7 +3,7 @@ use v5.16;
 use strict;
 use warnings;
 use parent qw(Biber::Output::base);
-
+use utf8;
 use Biber::Annotation;
 use Biber::Config;
 use Biber::Constants;
@@ -564,6 +564,8 @@ sub output {
   if ($self->{output_target_file}) {
     $target_string = $self->{output_target_file};
   }
+
+  ### FIXME: something weird goes on here. target_string is never used?
 
   # for debugging mainly
   unless ($target) {

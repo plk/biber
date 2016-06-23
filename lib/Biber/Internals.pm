@@ -1461,6 +1461,7 @@ sub _liststring {
     $truncated = 1;
     @items = splice(@items, 0, Biber::Config->getblxoption('minitems', $bee, $citekey) );
   }
+
   # separate the items by a string to give some structure
   $str = join($lsi, map { normalise_string_sort($_, $field)} @items);
 

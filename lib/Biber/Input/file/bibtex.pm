@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use sigtrap qw(handler TBSIG SEGV);
 
+use utf8;
 use Carp;
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
@@ -108,7 +109,7 @@ sub extract_entries {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $filename;
-  my @rkeys = @$keys;
+  my @rkeys =  @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've used it
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Entering extract_entries() in driver 'bibtex'");
@@ -281,6 +282,9 @@ sub extract_entries {
       $logger->debug('Wanted keys: ' . join(', ', @$keys));
     }
     foreach my $wanted_key (@$keys) {
+
+
+
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
       }
@@ -288,13 +292,13 @@ sub extract_entries {
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($wanted_key, $filename);
 
-      if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
+      if (my $entry = $cache->{data}{$filename}{NFC($wanted_key)}) {
         if ($logger->is_debug()) {# performance tune
           $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
         }
 
         # Skip creation if it's already been done, for example, via a citekey alias
-        unless ($section->bibentries->entry_exists($wanted_key)) {
+        unless ($section->bibentries->entry_exists(NFC($wanted_key))) {
           create_entry($wanted_key, $entry, $source, $smaps, \@rkeys);
         }
         # found a key, remove it from the list of keys we want
@@ -465,7 +469,7 @@ sub create_entry {
                 }
                 my $newentry = new Text::BibTeX::Entry;
                 $newentry->set_metatype(BTE_REGULAR);
-                $newentry->set_key(encode('UTF-8', NFC($newkey)));
+                $newentry->set_key($newkey);
                 $newentry->set_type(encode('UTF-8', NFC($newentrytype)));
 
                 # found a new entry key, remove it from the list of keys we want since we
@@ -636,7 +640,7 @@ sub create_entry {
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
                     }
                     $etarget->set($fieldsource,
-                                  encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
+                                  ireplace($last_fieldval, $m, $r));
                   }
                   else {
                     # Now re-instate any unescaped $1 .. $9 to get round these being
@@ -688,7 +692,7 @@ sub create_entry {
                       next;
                     }
                   }
-                  $etarget->set($target, encode('UTF-8', NFC(biber_decode_utf8($entry->get($fieldsource)))));
+                  $etarget->set($target, biber_decode_utf8($entry->get($fieldsource)));
                   $etarget->delete($fieldsource);
                 }
               }
@@ -731,21 +735,21 @@ sub create_entry {
                     if ($logger->is_debug()) {# performance tune
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_type}'");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $last_type)));
+                    $etarget->set($field, $orig . $last_type);
                   }
                   elsif ($step->{map_origfieldval}) {
                     next unless $last_fieldval;
                     if ($logger->is_debug()) {# performance tune
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_fieldval}'");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $last_fieldval)));
+                    $etarget->set($field, $orig . $last_fieldval);
                   }
                   elsif ($step->{map_origfield}) {
                     next unless $last_field;
                     if ($logger->is_debug()) {# performance tune
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_field}'");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $last_field)));
+                    $etarget->set($field, $orig . $last_field);
                   }
                   else {
                     my $fv = maploopreplace($step->{map_field_value}, $maploop);
@@ -756,7 +760,7 @@ sub create_entry {
                     if ($logger->is_debug()) {# performance tune
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${fv}'");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $fv)));
+                    $etarget->set($field, $orig . $fv);
                   }
                 }
               }
@@ -1000,10 +1004,10 @@ sub _name {
   my $xnamesep = Biber::Config->getoption('xnamesep');
 
   # @tmp is bytes again now
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
-
+  my @tmp = $entry->_split_list($field, Biber::Config->getoption('namesep'));
+  
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
-  my $names = new Biber::Entry::Names;
+  my $names = Biber::Entry::Names->new();
 
   foreach my $name (@tmp) {
 
@@ -1194,10 +1198,9 @@ sub _datetime {
 # Bibtex list fields with listsep separator
 sub _list {
   my ($bibentry, $entry, $field) = @_;
-  my $value = biber_decode_utf8($entry->get($field));
+  #my $value = biber_decode_utf8($entry->get($field));
 
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
-  @tmp = map { biber_decode_utf8($_) } @tmp;
+  my @tmp = $entry->_split_list($field, Biber::Config->getoption('listsep'));
   @tmp = map { (remove_outer($_))[1] } @tmp;
   $bibentry->set_datafield($field, [ @tmp ]);
   return;
@@ -1206,8 +1209,8 @@ sub _list {
 # Bibtex uri lists
 sub _urilist {
   my ($bibentry, $entry, $field) = @_;
-  my $value = biber_decode_utf8($entry->get($field));# Unicode NFC boundary (before hex encoding)
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
+#  my $value = biber_decode_utf8($entry->get($field));# Unicode NFC boundary (before hex encoding)
+  my @tmp = $entry->_split_list($field, Biber::Config->getoption('listsep'));
   @tmp = map {
     # If there are some escapes in the URI, unescape them
     if ($_ =~ /\%/) {
@@ -1401,6 +1404,7 @@ sub preprocess_file {
 
   File::Slurp::write_file($ufilename, encode('UTF-8', NFC($lbuf))) or
       biber_error("Can't write $ufilename");# Unicode NFC boundary
+
 
   return $ufilename;
 }

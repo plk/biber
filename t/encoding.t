@@ -202,7 +202,6 @@ my $output;
 $biber->parse_ctrlfile('encoding1.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
-
 Biber::Config->setoption('input_encoding', 'latin9');
 Biber::Config->setoption('output_encoding', 'UTF-8');
 # Now generate the information
