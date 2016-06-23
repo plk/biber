@@ -200,6 +200,7 @@ The function accepts a number of options:
 
 sub latex_decode {
     my $text      = shift;
+
     # Optimisation - if there are no macros, no point doing anything
     return $text unless $text =~ m/\\/;
 
