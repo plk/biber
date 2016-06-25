@@ -258,7 +258,7 @@ sub tool_mode_setup {
   # Add the Biber::Sections object to the Biber object
   $self->add_sections($bib_sections);
 
-  my $sortlists = new Biber::SortLists;
+  my $sortlists = Biber::SortLists->new();
   my $seclist = Biber::SortList->new(section => 99999,
                                      sortschemename => Biber::Config->getblxoption('sortscheme'),
                                      sortnamekeyschemename => 'global',
