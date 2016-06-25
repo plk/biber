@@ -758,9 +758,6 @@ sub create_entry {
       if (_norm($f) eq 'options') {
         if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
           process_entry_options($k, [ split(/\s*,\s*/, $node->textContent()) ]);
-          # Save the raw options in case we are to output another input format like
-          # biblatexml
-          $bibentry->set_field('rawoptions', $node->textContent());
         }
       }
 

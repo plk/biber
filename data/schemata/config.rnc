@@ -26,8 +26,11 @@ start =
         empty
       }+
     }* &
+           
+    # Annotation marker
+    element annotation_marker { text }? &
     # Can't specify the config file location in the config file ...
-    #  element configfile          { text }? & 
+    # element configfile          { text }? & 
     element convert_control     { "0" | "1" }? &
     element dot_include         { text }? &
     # Data model specification (mainly for tool mode)
@@ -74,16 +77,21 @@ start =
     element onlylog              { "0" | "1" }? &
     element others_string        { text }? &
     element output_align         { "0" | "1" }? &
+    element output_annotation_marker { text }? &
     element output_directory     { text }? &
     element output_encoding      { text }? &
     element output_fieldcase     { "upper" | "lower" | "title" }? &
     element output_file          { text }? &
     element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
     element output_indent        { xsd:unsignedByte }? &
+    element output_listsep       { text }? &
     element output_macro_fields  { text }? &
+    element output_namesep       { text }? &
     element output_resolve       { "0" | "1" }? &
     element output_safechars     { "0" | "1" }? &
     element output_safecharsset  { "base" | "full" }? &
+    element output_xname         { "0" | "1" }? &
+    element output_xnamesep      { text }? &
     element quiet                { "0" | "1" }? &
     element recodedata           { text }? &
     element sortcase             { "0" | "1" }? &

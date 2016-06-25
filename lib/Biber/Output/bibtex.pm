@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use parent qw(Biber::Output::base);
 
+use Biber::Annotation;
 use Biber::Config;
 use Biber::Constants;
 use Biber::Utils;
@@ -84,6 +85,7 @@ sub set_output_entry {
   my $bee = $be->get_field('entrytype');
   my $section = shift; # Section object the entry occurs in
   my $dm = shift; # Data Model object
+  my $dmh = $dm->{helpers};
   my $acc = '';
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
@@ -105,36 +107,122 @@ sub set_output_entry {
   $acc .= $casing->($bee);
   $acc .=  "\{$key,\n";
 
-  my $max_field_len;
-  if (Biber::Config->getoption('output_align')) {
-    $max_field_len = max map {Unicode::GCString->new($_)->length} $be->rawfields;
+  # hash accumulator so we can gather all the data before formatting so that things like
+  # $max_field_len can be calculated
+  my %acc;
+
+  # Name fields
+  my $tonamesub = 'name_to_bib';
+  if (Biber::Config->getoption('output_xname')) {
+    $tonamesub = 'name_to_xname';
   }
 
-  foreach my $f ($be->rawfields) {
-    # If CROSSREF and XDATA have been resolved, don't output them
-    # We can't use the usual skipout test for fields not to be output
-    # as this only refers to .bbl output and not to bibtex output since this
-    # latter is not really a "processed" output, it is supposed to be something
-    # which could be again used as input and so we don't want to resolve/skip
-    # fields like DATE etc.
-    if (Biber::Config->getoption('output_resolve')) {
-      next if first {lc($f) eq $_}  ('xdata', 'crossref');
-    }
+  foreach my $namefield (@{$dmh->{namelists}}) {
+    if (my $names = $be->get_field($namefield)) {
+      my $namesep = Biber::Config->getoption('output_namesep');
+      my @namelist;
 
-    my $value = $be->get_rawfield($f);
-    $acc .= ' ' x Biber::Config->getoption('output_indent');
-    $acc .= $casing->($f);
-    $acc .= ' ' x ($max_field_len - Unicode::GCString->new($f)->length) if Biber::Config->getoption('output_align');
-    $acc .= ' = ';
+      # Namelist scope useprefix
+      if (defined($names->get_useprefix)) {# could be 0
+        push @namelist, 'useprefix=' . Biber::Utils::map_boolean($names->get_useprefix, 'tostring');
+      }
 
-    # Don't wrap field which should be macros in braces
-    my $mfs = Biber::Config->getoption('output_macro_fields');
-    if (defined($mfs) and first {lc($f) eq $_} map {lc($_)} split(/\s*,\s*/, $mfs) ) {
-      $acc .= "$value,\n";
+      # Namelist scope sortnamekeyscheme
+      if (my $snks = $names->get_sortnamekeyscheme) {
+        push @namelist, "sortnamekeyscheme=$snks";
+      }
+
+      # Now add all names to accumulator
+      foreach my $name (@{$names->names}) {
+        push @namelist, $name->$tonamesub;
+      }
+      $acc{$casing->($namefield)} = join(" $namesep ", @namelist);
+
+      # Deal with morenames
+      if ($names->get_morenames) {
+        $acc{$casing->($namefield)} .= " $namesep others";
+      }
     }
-    else {
-      $acc .= "\{$value\},\n";
+  }
+
+  # List fields and verbatim list fields
+  foreach my $listfield (@{$dmh->{lists}}, @{$dmh->{vlists}}) {
+    if (my $list = $be->get_field($listfield)) {
+      my $listsep = Biber::Config->getoption('output_listsep');
+      my @plainlist;
+      foreach my $item (@$list) {
+        push @plainlist, $item;
+      }
+      $acc{$casing->($listfield)} = join(" $listsep ", @plainlist);
     }
+  }
+
+  # Standard fields
+  foreach my $field (@{$dmh->{fields}}) {
+    if (my $val = $be->get_field($field)) {
+      $acc{$casing->($field)} = $val;
+    }
+  }
+
+  # Date fields
+  foreach my $datefield (@{$dmh->{datefields}}) {
+    my ($d) = $datefield =~ m/^(.*)date$/;
+    next unless $be->get_field("${d}year");
+    $acc{$casing->($datefield)} = construct_date($be, $d);
+  }
+
+  # XSV fields
+  foreach my $field (@{$dmh->{xsv}}) {
+    if (my $f = $be->get_field($field)) {
+      $acc{$casing->($field)} .= join(',', @$f);
+    }
+  }
+
+  # Ranges
+  foreach my $rfield (@{$dmh->{ranges}}) {
+    if ( my $rf = $be->get_field($rfield) ) {
+      $acc{$casing->($rfield)} .= construct_range($rf);
+    }
+  }
+
+  # Verbatim fields
+  foreach my $vfield (@{$dmh->{vfields}}) {
+    if ( my $vf = $be->get_field($vfield) ) {
+      $acc{$casing->($vfield)} = $vf;
+    }
+  }
+
+  # Keywords
+  if ( my $k = $be->get_field('keywords') ) {
+    $acc{$casing->('keywords')} = join(',', @$k);
+  }
+
+  # If CROSSREF and XDATA have been resolved, don't output them
+  unless (Biber::Config->getoption('output_resolve')) {
+    if ( my $cr = $be->get_field('crossref') ) {
+      $acc{$casing->('crossref')} = $cr;
+    }
+    if ( my $xd = $be->get_field('xdata') ) {
+      $acc{$casing->('xdata')} = $xd;
+    }
+  }
+
+  # Annotations
+  foreach my $f (keys %acc) {
+    if (Biber::Annotation->is_annotated_field($key, lc($f))) {
+      $acc{$casing->($f) . Biber::Config->getoption('output_annotation_marker')} = construct_annotation($key, lc($f));
+    }
+  }
+
+  # Determine maximum length of field names
+  my $max_field_len;
+  if (Biber::Config->getoption('output_align')) {
+    $max_field_len = max map {Unicode::GCString->new($_)->length} keys %acc;
+  }
+
+  # Order of fields is determined here
+  while (my ($key, $value) = each %acc) {
+    $acc .= bibfield($key, $value, $max_field_len);
   }
 
   $acc .= "}\n\n";
@@ -143,7 +231,7 @@ sub set_output_entry {
   if (Biber::Config->getoption('output_safechars')) {
     $acc = latex_recode_output($acc);
   }
-  else {             # ... or, check for encoding problems and force macros
+  else { # ... or, check for encoding problems and force macros
     my $outenc = Biber::Config->getoption('output_encoding');
     if ($outenc ne 'UTF-8') {
       # Can this entry be represented in the output encoding?
@@ -252,6 +340,207 @@ sub create_output_section {
   return;
 }
 
+=head2 bibfield
+
+  Format a single field
+
+=cut
+
+sub bibfield {
+  my ($field, $value, $max_field_len) = @_;
+  my $acc;
+  $acc .= ' ' x Biber::Config->getoption('output_indent');
+  $acc .= $field;
+  $acc .= ' ' x ($max_field_len - Unicode::GCString->new($field)->length) if $max_field_len;
+  $acc .= ' = ';
+
+  # Don't wrap fields which should be macros in braces
+  my $mfs = Biber::Config->getoption('output_macro_fields');
+  if (defined($mfs) and first {lc($field) eq $_} map {lc($_)} split(/\s*,\s*/, $mfs) ) {
+    $acc .= "$value,\n";
+  }
+  else {
+    $acc .= "\{$value\},\n";
+  }
+  return $acc;
+}
+
+
+=head2 construct_annotation
+
+  Construct a field annotation
+
+=cut
+
+sub construct_annotation {
+  my ($key, $field) = @_;
+  my @annotations;
+
+  if (my $fa = Biber::Annotation->get_field_annotation($key, $field)) {
+    push @annotations, "=$fa";
+  }
+
+  foreach my $item (Biber::Annotation->get_annotated_items('item', $key, $field)) {
+    push @annotations, "$item=" . Biber::Annotation->get_annotation('item', $key, $field, $item);
+  }
+
+  foreach my $item (Biber::Annotation->get_annotated_items('part', $key, $field)) {
+    foreach my $part (Biber::Annotation->get_annotated_parts('part', $key, $field, $item)) {
+      push @annotations, "$item:$part=" . Biber::Annotation->get_annotation('part', $key, $field, $item, $part);
+    }
+  }
+
+  return join(';', @annotations);
+}
+
+=head2 construct_range
+
+  Construct a range field from its components
+
+  [m, n]      -> m-n
+  [m, undef]  -> m
+  [m, '']     -> m-
+  ['', n]     -> -n
+  ['', undef] -> ignore
+
+=cut
+
+sub construct_range {
+  my $r = shift;
+  my @ranges;
+  foreach my $e (@$r) {
+    my $rs = $e->[0];
+    if (defined($e->[1])) {
+      $rs = '-' . $e->[1];
+    }
+    push @ranges, $rs;
+  }
+  return join(',', @ranges);
+}
+
+=head2 construct_date
+
+  Construct a date from its components
+
+=cut
+
+sub construct_date {
+  my ($be, $d) = @_;
+  my $datestring = '';
+  my $overridey;
+  my $overridem;
+  my $overrideem;
+  my $overrided;
+
+  my %seasons = ( 'spring' => 21,
+                  'summer' => 22,
+                  'autumn' => 23,
+                  'winter' => 24 );
+
+  # Did the date fields come from interpreting an EDTF 5.2.2 unspecified date?
+  # If so, do the reverse of Biber::Utils::parse_date_edtf_unspecified()
+  if (my $unspec = $be->get_field("${d}dateunspecified")) {
+
+    # 1990/1999 -> 199u
+    if ($unspec eq 'yearindecade') {
+      my ($decade) = $be->get_field("${d}year") =~ m/^(\d+)\d$/;
+      $overridey = "${decade}u";
+      $be->del_field("${d}endyear");
+    }
+    # 1900/1999 -> 19uu
+    elsif ($unspec eq 'yearincentury') {
+      my ($century) = $be->get_field("${d}year") =~ m/^(\d+)\d\d$/;
+      $overridey = "${century}uu";
+      $be->del_field("${d}endyear");
+    }
+    # 1999-01/1999-12 => 1999-uu
+    elsif ($unspec eq 'monthinyear') {
+      $overridem = 'uu';
+      $be->del_field("${d}endyear");
+      $be->del_field("${d}endmonth");
+    }
+    # 1999-01-01/1999-01-31 -> 1999-01-uu
+    elsif ($unspec eq 'dayinmonth') {
+      $overrided = 'uu';
+      $be->del_field("${d}endyear");
+      $be->del_field("${d}endmonth");
+      $be->del_field("${d}endday");
+    }
+    # 1999-01-01/1999-12-31 -> 1999-uu-uu
+    elsif ($unspec eq 'dayinyear') {
+      $overridem = 'uu';
+      $overrided = 'uu';
+      $be->del_field("${d}endyear");
+      $be->del_field("${d}endmonth");
+      $be->del_field("${d}endday");
+    }
+  }
+
+  # Seasons derived from EDTF dates
+  if (my $s = $be->get_field("${d}season")) {
+    $overridem = $seasons{$s};
+  }
+  if (my $s = $be->get_field("${d}endseason")) {
+    $overrideem = $seasons{$s};
+  }
+
+  # date exists if there is a start year
+  if (my $sy = $overridey || $be->get_field("${d}year") ) {
+    $datestring .= $sy;
+
+    # Start month
+    if (my $sm = $overridem || $be->get_field("${d}month")) {
+      $datestring .= "-$sm";
+    }
+
+    # Start day
+    if (my $sd = $overrided || $be->get_field("${d}day")) {
+      $datestring .= "-$sd";
+    }
+
+    # Uncertain start date
+    if ($be->get_field("${d}dateuncertain")) {
+      $datestring .= '?';
+    }
+
+    # Circa start date
+    if ($be->get_field("${d}datecirca")) {
+      $datestring .= '~';
+    }
+
+
+    # End year, can be empty
+    if ($be->field_exists("${d}endyear")) {
+      $datestring .= '/';
+    }
+
+    # End year
+    if (my $ey = $be->get_field("${d}endyear")) {
+      $datestring .= $ey;
+
+      # End month
+      if (my $em = $overrideem || $be->get_field("${d}endmonth")) {
+        $datestring .= "-$em";
+      }
+
+      # End day
+      if (my $ed = $be->get_field("${d}endday")) {
+        $datestring .= "-$ed";
+      }
+
+      # Uncertain start date
+      if ($be->get_field("${d}enddateuncertain")) {
+        $datestring .= '?';
+      }
+
+      # Circa start date
+      if ($be->get_field("${d}enddatecirca")) {
+        $datestring .= '~';
+      }
+    }
+  }
+  return $datestring;
+}
 
 1;
 

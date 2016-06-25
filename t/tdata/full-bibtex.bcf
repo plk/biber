@@ -895,7 +895,6 @@
       <bcf:field fieldtype="list" datatype="name">director</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">abstractloc</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">doubtfulauthor</bcf:field>
-      <bcf:field fieldtype="field" datatype="literal">doubtfuldate</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">titleisdescription</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">newspaper</bcf:field>
       <bcf:field fieldtype="field" datatype="literal">urldescription</bcf:field>

@@ -87,9 +87,15 @@
           </element>
         </zeroOrMore>
         <optional>
+          <!-- Annotation marker -->
+          <element name="annotation_marker">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <!--
             Can't specify the config file location in the config file ...
-             element configfile          { text }? & 
+            element configfile          { text }? & 
           -->
           <element name="convert_control">
             <choice>
@@ -262,6 +268,11 @@
           </element>
         </optional>
         <optional>
+          <element name="output_annotation_marker">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="output_directory">
             <text/>
           </element>
@@ -301,7 +312,17 @@
           </element>
         </optional>
         <optional>
+          <element name="output_listsep">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="output_macro_fields">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_namesep">
             <text/>
           </element>
         </optional>
@@ -327,6 +348,19 @@
               <value>base</value>
               <value>full</value>
             </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_xname">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_xnamesep">
+            <text/>
           </element>
         </optional>
         <optional>

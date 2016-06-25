@@ -512,22 +512,23 @@ sub name_to_xname {
   my $dm = Biber::Config->get_dm;
   my $parts;
   my @namestring;
+  my $xns = Biber::Config->getoption('output_xnamesep');
 
   foreach my $np (sort $dm->get_constant_value('nameparts')) {# list type so returns list
     if ($parts->{$np} = $self->get_namepart($np)) {
       $parts->{$np} =~ s/~/ /g;
-      push @namestring, "$np=" . $parts->{$np};
+      push @namestring, "$np$xns" . $parts->{$np};
     }
   }
 
   # Name scope useprefix
   if (defined($self->get_useprefix)) {# could be 0
-    push @namestring, 'useprefix=' . Biber::Utils::map_boolean($self->get_useprefix, 'tostring');
+    push @namestring, "useprefix$xns" . Biber::Utils::map_boolean($self->get_useprefix, 'tostring');
   }
 
   # Name scope sortnamekeyscheme
   if (my $snks = $self->get_sortnamekeyscheme) {
-    push @namestring, "sortnamekeyscheme=$snks";
+    push @namestring, "sortnamekeyscheme$xns$snks";
   }
 
   return join(', ', @namestring);

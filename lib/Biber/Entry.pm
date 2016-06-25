@@ -25,22 +25,18 @@ Biber::Entry
 
     There are three types of field possible in an entry:
 
-    * raw  - These are direct copies of input fields with no processing performed on them.
-             Such fields are used for tool mode where we don't want to alter the fields as they
-             need to go back into the output as they are
-    * data - These are fields which derive directly from or are themselves fields in the
-             data source. Things like YEAR, MONTH, DAY etc. are such fields which are derived from,
-             for example, the DATE field (which is itself a "raw" field). They are part of the
-             original data implicitly, derived from a "raw" field.
-    * other - These are fields, often meta-information like labelname, labelalpha etc. which are
-              more removed from the data fields.
+    * data    - These are fields which derive directly from or are themselves fields in the
+                data source. Things like YEAR, MONTH, DAY etc. are such fields which are
+                derived from, for example, the DATE field. They are part of the original
+                data implicitly, derived from a field.
+    * derived - These are fields, often meta-information like labelname, labelalpha etc.
+                which are more removed from the data fields.
 
     The reason for this division is largely the entry cloning required for the related entry and
     inheritance features. When we clone an entry or copy some fields from one entry to another
-    we generally don't want the "other" category as such derived meta-fields will often need
-    to be re-created or ignored so we need to know which are the actual "data" fields to copy/clone.
-    "raw" fields are important when we are writing bibtex format output (in tool mode for example)
-    since in such cases, we don't want to derive implicit fields like YEAR/MONTH from DATE.
+    we generally don't want the "derived" category as such derived meta-fields will often need
+    to be re-created or ignored so we need to know which are the actual "data" fields to
+    copy/clone.
 
 =cut
 
@@ -163,9 +159,6 @@ sub clone {
   my $new = new Biber::Entry;
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = $v;
-  }
-  while (my ($k, $v) = each(%{$self->{rawfields}})) {
-    $new->{rawfields}{$k} = $v;
   }
   while (my ($k, $v) = each(%{$self->{origfields}})) {
     $new->{origfields}{$k} = $v;
@@ -331,8 +324,7 @@ sub get_field {
   my ($self, $key) = @_;
   return undef unless $key;
   return $self->{datafields}{$key} //
-         $self->{derivedfields}{$key} //
-         $self->{rawfields}{$key};
+         $self->{derivedfields}{$key};
 }
 
 
@@ -347,32 +339,6 @@ sub set_datafield {
   $self->{datafields}{$key} = $val;
   return;
 }
-
-
-
-=head2 set_rawfield
-
-    Save a copy of the raw field from the datasource
-
-=cut
-
-sub set_rawfield {
-  my ($self, $key, $val) = @_;
-  $self->{rawfields}{$key} = $val;
-  return;
-}
-
-=head2 get_rawfield
-
-    Get a raw field
-
-=cut
-
-sub get_rawfield {
-  my ($self, $key) = @_;
-  return $self->{rawfields}{$key};
-}
-
 
 =head2 get_datafield
 
@@ -396,7 +362,6 @@ sub del_field {
   my ($self, $key) = @_;
   delete $self->{datafields}{$key};
   delete $self->{derivedfields}{$key};
-  delete $self->{rawfields}{$key};
   return;
 }
 
@@ -422,8 +387,7 @@ sub del_datafield {
 sub field_exists {
   my ($self, $key) = @_;
   return (exists($self->{datafields}{$key}) ||
-          exists($self->{derivedfields}{$key}) ||
-          exists($self->{rawfields}{$key})) ? 1 : 0;
+          exists($self->{derivedfields}{$key})) ? 1 : 0;
 }
 
 =head2 date_fields_exist
@@ -455,18 +419,6 @@ sub datafields {
   return sort keys %{$self->{datafields}};
 }
 
-=head2 rawfields
-
-    Returns a sorted array of the raw fields and contents
-
-=cut
-
-sub rawfields {
-  my $self = shift;
-  use locale;
-  return sort keys %{$self->{rawfields}};
-}
-
 =head2 count_datafields
 
     Returns the number of datafields
@@ -478,6 +430,17 @@ sub count_datafields {
   return keys %{$self->{datafields}};
 }
 
+=head2 derivedfields
+
+    Returns a sorted array of the fields which were added during processing
+
+=cut
+
+sub derivedfields {
+  my $self = shift;
+  use locale;
+  return sort keys %{$self->{derivedfields}};
+}
 
 =head2 fields
 
@@ -604,29 +567,16 @@ sub resolve_xdata {
         if (my $recurse_xdata = $xdatum_entry->get_field('xdata')) { # recurse
           $xdatum_entry->resolve_xdata($recurse_xdata);
         }
-        # For tool mode with bibtex output we need to copy the raw fields
-        if (Biber::Config->getoption('tool') and
-            Biber::Config->getoption('output_format') eq 'bibtex') {
-          foreach my $field ($xdatum_entry->rawfields()) { # set raw fields
-            next if $field eq 'ids'; # Never inherit aliases
-            $self->set_rawfield($field, $xdatum_entry->get_rawfield($field));
-            if ($logger->is_debug()) {# performance tune
-              $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
-            }
-          }
-        }
-        else {
-          foreach my $field ($xdatum_entry->datafields()) { # set fields
-            next if $field eq 'ids'; # Never inherit aliases
-            $self->set_datafield($field, $xdatum_entry->get_field($field));
+        foreach my $field ($xdatum_entry->datafields()) { # set fields
+          next if $field eq 'ids'; # Never inherit aliases
+          $self->set_datafield($field, $xdatum_entry->get_field($field));
 
-            # Record graphing information if required
-            if (Biber::Config->getoption('output_format') eq 'dot') {
-              Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
-            }
-            if ($logger->is_debug()) {# performance tune
-              $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
-            }
+          # Record graphing information if required
+          if (Biber::Config->getoption('output_format') eq 'dot') {
+            Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
+          }
+          if ($logger->is_debug()) { # performance tune
+            $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
           }
         }
       }
@@ -724,18 +674,12 @@ sub inherit_from {
                              $field->{target} .
                              "' from entry '$source_key'");
             }
-            # For tool mode with bibtex output we need to copy the raw fields
-            if (Biber::Config->getoption('tool') and
-                Biber::Config->getoption('output_format') eq 'bibtex') {
-              $self->set_rawfield($field->{target}, $parent->get_rawfield($field->{source}));
-            }
-            else {
-              $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
 
-              # Suppress uniqueness information tracking for this inheritance?
-              if (my $supp = $inherit->{suppress}) {
-                Biber::Config->add_uniq_suppress($target_key, $field->{target}, $supp);
-              }
+            $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+
+            # Suppress uniqueness information tracking for this inheritance?
+            if (my $supp = $inherit->{suppress}) {
+              Biber::Config->add_uniq_suppress($target_key, $field->{target}, $supp);
             }
 
             # Record graphing information if required
@@ -750,13 +694,7 @@ sub inherit_from {
 
   # Now process the rest of the (original data only) fields, if necessary
   if ($inherit_all eq 'true') {
-    my @fields;
-    if (Biber::Config->getoption('tool')) {
-      @fields = $parent->rawfields;
-    }
-    else {
-      @fields = $parent->datafields;
-    }
+    my @fields = $parent->datafields;
 
     # Special case - if the child has any Xdate datepart, don't inherit any Xdateparts
     # from parent otherwise you can end up with rather broken dates in the child.
@@ -785,18 +723,12 @@ sub inherit_from {
         if ($logger->is_debug()) { # performance tune
           $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
         }
-        # For tool mode with bibtex output we need to copy the raw fields
-        if (Biber::Config->getoption('tool') and
-            Biber::Config->getoption('output_format') eq 'bibtex') {
-          $self->set_rawfield($field, $parent->get_rawfield($field));
-        }
-        else {
-          $self->set_datafield($field, $parent->get_field($field));
 
-          # Suppress uniqueness information tracking for this inheritance?
-          if (my $supp = $suppress) {
-            Biber::Config->add_uniq_suppress($target_key, $field, $supp);
-          }
+        $self->set_datafield($field, $parent->get_field($field));
+
+        # Suppress uniqueness information tracking for this inheritance?
+        if (my $supp = $suppress) {
+          Biber::Config->add_uniq_suppress($target_key, $field, $supp);
         }
 
         # Record graphing information if required

@@ -109,6 +109,12 @@
 ** DONE Fix spaces in cites, run tests, upload, reply
 * TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 ** DONE name to bib and name to xnamebib in Name.pm
-** TODO name list output should use namesep option value
-** TODO name list output needs to care about x vs normal for per-namelist options.
-** TODO date output to all formats needs to use raw because of 5.2.2 resolution. In general, dateparts should not be used to construct output
+** DONE Name lists "and others"
+** DONE name list output should use namesep option value
+** DONE name list output needs to care about x vs normal for per-namelist options.
+** DONE error could be raw fields which are found by get_field?
+** DONE *seps should have separate output versions, same as input ones
+** TODO Output annotations
+** TODO Order of fields needs to be determined
+** TODO Document all in biber manual, add output_xname, output_*sep to the table there
+** TODO Remove raw and references to raw

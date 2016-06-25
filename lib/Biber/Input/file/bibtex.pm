@@ -805,11 +805,6 @@ sub _create_entry {
   # validation happens later and is not datasource dependent
   foreach my $f ($e->fieldlist) {
 
-    # In tool mode, keep the raw data fields
-    if (Biber::Config->getoption('tool')) {
-      $bibentry->set_rawfield($f, biber_decode_utf8($e->get($f)));
-    }
-
     # We have to process local options as early as possible in order
     # to make them available for things that need them like parsename()
     if ($f eq 'options') {
@@ -817,9 +812,6 @@ sub _create_entry {
       my $Srx = Biber::Config->getoption('xsvsep');
       my $S = qr/$Srx/;
       process_entry_options($k, [ split(/$S/, $value) ]);
-      # Save the raw options in case we are to output another input format like
-      # biblatexml
-      $bibentry->set_field('rawoptions', $value);
     }
 
     # Now run any defined handler
@@ -1231,7 +1223,6 @@ sub _urilist {
   $bibentry->set_datafield($field, [ @tmp ]);
   return;
 }
-
 
 =head2 cache_data
 

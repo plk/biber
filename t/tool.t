@@ -85,11 +85,13 @@ my $t2 = q|@BOOK{xd1,
 |;
 
 my $t3 = q|@BOOK{b1,
+  LOCATION       = {London and Edinburgh},
+  LOCATION+an    = {1=ann1;2=ann2},
   MAINSUBTITLE   = {Mainsubtitle},
   MAINTITLE      = {Maintitle},
   MAINTITLEADDON = {Maintitleaddon},
   TITLE          = {Booktitle},
-  TITLE+AN       = {ann1, ann2},
+  TITLE+an       = {=ann1, ann2},
   YEAR           = {1999},
 }
 

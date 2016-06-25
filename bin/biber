@@ -62,16 +62,21 @@ GetOptions(
            'outfile=s',           # legacy alias for output_file
            'outformat=s',         # legacy alias for output_format
            'output_align|output-align',
+           'output_annotation_marker|output-annotation-marker=s',
            'output_directory|output-directory=s',
            'output_encoding|output-encoding|E=s',
            'output_fieldcase|output-fieldcase=s',
            'output_file|output-file|O=s',
            'output_format|output-format=s',
            'output_indent|output-indent=s',
+           'output_listsep|output-listsep=s',
            'output_macro_fields|output-macro-fields=s',
+           'output_namesep|output-namesep=s',
            'output_resolve|output-resolve',
            'output_safechars|output-safechars',
            'output_safecharsset|output-safecharsset=s',
+           'output_xname|output-xname',
+           'output_xnamesep|output-xnamesep=s',
            'quiet|q+',
            'recodedata=s',
            'noskipduplicates',
@@ -613,6 +618,10 @@ Use F<string> as the final name in a name field which implies "et al". Defaults 
 Align field values in neat columns in output. Effect depends on the output format. Default is false.
 The legacy option B<--tool_align> is supported as an alias.
 
+=item B<--output-annotation-marker=[marker]>
+
+As B<--annotation-marker> but for tool mode bibtex output. The default is C<+an>.
+
 =item B<--output-directory [directory]>
 
 Output files (including log files) are output to F<directory> instead
@@ -659,16 +668,26 @@ with the output file name (unless the B<--no-bblxml-schema> option is specified)
 may validate the F<bblxml> using the schema with the B<--validate-bblxml> option.
 The legacy option B<--outformat> is supported as an alias.
 
+=item B<--output-listsep=[sep]>
+
+As B<--listsep> but for tool mode bibtex output. Defaults to BibTeX's usual
+'and'.
+
 =item B<--output-macro-fields=[field1, ... fieldn]>
 
 A comma-separated list of field names whose values are, on output, treated as BibTeX macros.
 Effectively this means that they are not wrapped in braces. Effect depends on the output format.
 The legacy option B<--tool_macro_fields> is supported as an alias.
 
+=item B<--output-namesep=[sep]>
+
+As B<--namesep> but for tool mode bibtex output. Defaults to BibTeX's usual
+'and'.
+
 =item B<--output-resolve>
 
 Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
-The legacy option B<--tool_resolve> is supported as an alias.
+The legacy option B<--tool-resolve> is supported as an alias.
 
 =item B<--output-safechars>
 
@@ -690,6 +709,14 @@ symbols etc.). The recode sets are defined in the reencoding data file which
 can be customised. See the --recodedata option and the PDF manual.
 The legacy option B<--bblsafecharsset> is supported as an alias. The
 virtual set name "null" may be specified which effectively turns off macro encoding.
+
+=item B<--output-xname>
+
+When output is a .bib BibTeX file in tool mode, whether to output names the eXtended BibTeX name field format.
+
+=item B<--output-xnamesep=[sep]>
+
+As B<--xnamesep> but for tool mode bibtex output. Default is '='.
 
 =item B<--quiet|-q>
 

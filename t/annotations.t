@@ -74,6 +74,7 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{The Title}
+      \annotation{field}{language}{}{}{ann4}
       \annotation{field}{title}{}{}{one, two}
       \annotation{item}{author}{2}{}{corresponding}
       \annotation{item}{language}{1}{}{ann1}
