@@ -1456,7 +1456,6 @@ sub _liststring {
   my @items = @$f;
   my $str = '';
   my $truncated = 0;
-
   # These should be symbols which can't appear in lists and which sort before all alphanum
   # so that "Alan Smith" sorts after "Al Smth". This means, symbols which normalise_string_sort()
   # strips out. Unfortuately, this means using punctuation and these are by default variable

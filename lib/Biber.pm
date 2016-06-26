@@ -257,7 +257,7 @@ sub tool_mode_setup {
   # Add the Biber::Sections object to the Biber object
   $self->add_sections($bib_sections);
 
-  my $sortlists = new Biber::SortLists;
+  my $sortlists = Biber::SortLists->new();
   my $seclist = Biber::SortList->new(section => 99999,
                                      sortschemename => Biber::Config->getblxoption('sortscheme'),
                                      sortnamekeyschemename => 'global',
@@ -3600,7 +3600,6 @@ sub preprocess_options {
 
 sub prepare {
   my $self = shift;
-
   my $out = $self->get_output_obj;          # Biber::Output object
 
   # Place to put global pre-processing things
@@ -3612,7 +3611,6 @@ sub prepare {
     my $secnum = $section->number;
 
     $logger->info("Processing section $secnum");
-
     $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
@@ -3745,7 +3743,6 @@ sub fetch_data {
   if ($logger->is_debug()) {# performance tune
     $logger->debug('Looking for directly cited keys: ' . join(', ', @remaining_keys));
   }
-
   foreach my $datasource (@{$section->get_datasources}) {
     # shortcut if we have found all the keys now
     last unless (@remaining_keys or $section->is_allkeys);
@@ -3774,7 +3771,6 @@ sub fetch_data {
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
     eval "require $package" or
       biber_error("Error loading data source package '$package': $@");
-
     # Slightly different message for tool mode
     if (Biber::Config->getoption('tool')) {
       $logger->info("Looking for $datatype format $type '$name'");
@@ -3782,10 +3778,8 @@ sub fetch_data {
     else {
       $logger->info("Looking for $datatype format $type '$name' for section $secnum");
     }
-
     @remaining_keys = &{"${package}::extract_entries"}($name, \@remaining_keys);
   }
-
   # error reporting
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Directly cited keys not found for section '$secnum': " . join(',', @remaining_keys));

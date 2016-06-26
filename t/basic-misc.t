@@ -113,6 +113,7 @@ is_deeply( [ $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'short
 
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
+
 $section->del_citekeys;
 $section->set_allkeys(1);
 $section->bibentries->del_entries;
@@ -535,7 +536,7 @@ ok(is_undef($bibentries->entry('i1')->get_field('abstract')), 'map 1' );
 eq_or_diff($bibentries->entry('i1')->get_field('userd'), 'test', 'map 2' );
 ok(is_undef($bibentries->entry('i2')->get_field('userb')), 'map 3' );
 eq_or_diff(NFC($bibentries->entry('i2')->get_field('usere')), 'a Štring', 'map 4' );
-# Testing ot UTF8 match/replace
+# Testing of UTF8 match/replace
 eq_or_diff($biber->_liststring('i1', 'listd'), 'abc', 'map 5' );
 # Testing of user field map match/replace
 eq_or_diff($biber->_liststring('i1', 'listb'), 'REPlacedte!early', 'map 6');

@@ -234,13 +234,13 @@ my $name18 =
 
 my $name19 =
    {  given          => {string => 'Luis', initial => ['L']},
-      family         => {string => 'Vázques{ de }Parga', initial => ['V']},
+      family         => {string => NFC 'Vázques{ de }Parga', initial => ['V']},
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring => 'Vázques{ de }Parga',
-      namestring     => 'Vázques{ de }PargaLuis',
-      nameinitstring => 'Vázques{ de }PargaL' } ;
+      basenamestring => NFC 'Vázques{ de }Parga',
+      namestring     => NFC 'Vázques{ de }PargaLuis',
+      nameinitstring => NFC 'Vázques{ de }PargaL' } ;
 
 my $namex1 =
    {  given          => {string => 'James', initial => ['J']},
@@ -922,6 +922,7 @@ eq_or_diff( $out->get_output_entry('L19', $main), $l19, 'Firstname with hyphen')
 eq_or_diff( $out->get_output_entry('L19a', $main), $l19a, 'Short given name with hyphen');
 eq_or_diff( $out->get_output_entry('L20', $main), $l20, 'Protected dual given name');
 eq_or_diff( encode_utf8(NFC($out->get_output_entry('L22', $main))), encode_utf8($l22u), 'LaTeX encoded unicode family - 1');
+
 eq_or_diff( NFC($out->get_output_entry('L23', $main)), $l23, 'Unicode given name');
 eq_or_diff( NFC($out->get_output_entry('L24', $main)), $l24, 'Unicode family name');
 eq_or_diff( $out->get_output_entry('L25', $main), $l25, 'Single string name');

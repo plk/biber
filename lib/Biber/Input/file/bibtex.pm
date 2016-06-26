@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use sigtrap qw(handler TBSIG SEGV);
 
+use utf8;
 use Carp;
 use Text::BibTeX qw(:nameparts :joinmethods :metatypes);
 use Text::BibTeX::Name;
@@ -108,7 +109,7 @@ sub extract_entries {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $filename;
-  my @rkeys = @$keys;
+  my @rkeys =  @$keys;
   my $tf; # Up here so that the temp file has enough scope to survive until we've used it
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Entering extract_entries() in driver 'bibtex'");
@@ -203,7 +204,6 @@ sub extract_entries {
       biber_error("Cannot find '$source'!")
     }
   }
-
   # Text::BibTeX can't be controlled by Log4perl so we have to do something clumsy
   # We can't redirect STDERR to a variable as libbtparse doesnt' use PerlIO, just stdio
   # so it doesn't understand this. It does understand normal file redirection though as
@@ -244,13 +244,11 @@ sub extract_entries {
 
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($key, $filename);
-
       unless (create_entry($key, $entry, $source, $smaps, \@rkeys)) {
         # if create entry returns false, remove the key from the cache
         @{$cache->{orig_key_order}{$filename}} = grep {$key ne $_} @{$cache->{orig_key_order}{$filename}};
       }
     }
-
     # Loop over all aliases, creating data in section object
     # Since this is allkeys, we are guaranteed that the real entry for the alias
     # will be available
@@ -284,6 +282,9 @@ sub extract_entries {
       $logger->debug('Wanted keys: ' . join(', ', @$keys));
     }
     foreach my $wanted_key (@$keys) {
+
+
+
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
       }
@@ -291,13 +292,13 @@ sub extract_entries {
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($wanted_key, $filename);
 
-      if (my $entry = $cache->{data}{$filename}{$wanted_key}) {
+      if (my $entry = $cache->{data}{$filename}{NFC($wanted_key)}) {
         if ($logger->is_debug()) {# performance tune
           $logger->debug("Found key '$wanted_key' in Text::BibTeX cache");
         }
 
         # Skip creation if it's already been done, for example, via a citekey alias
-        unless ($section->bibentries->entry_exists($wanted_key)) {
+        unless ($section->bibentries->entry_exists(NFC($wanted_key))) {
           create_entry($wanted_key, $entry, $source, $smaps, \@rkeys);
         }
         # found a key, remove it from the list of keys we want
@@ -468,7 +469,7 @@ sub create_entry {
                 }
                 my $newentry = new Text::BibTeX::Entry;
                 $newentry->set_metatype(BTE_REGULAR);
-                $newentry->set_key(encode('UTF-8', NFC($newkey)));
+                $newentry->set_key($newkey);
                 $newentry->set_type(encode('UTF-8', NFC($newentrytype)));
 
                 # found a new entry key, remove it from the list of keys we want since we
@@ -639,7 +640,7 @@ sub create_entry {
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
                     }
                     $etarget->set($fieldsource,
-                                  encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
+                                  ireplace($last_fieldval, $m, $r));
                   }
                   else {
                     # Now re-instate any unescaped $1 .. $9 to get round these being
@@ -691,7 +692,7 @@ sub create_entry {
                       next;
                     }
                   }
-                  $etarget->set($target, encode('UTF-8', NFC(biber_decode_utf8($entry->get($fieldsource)))));
+                  $etarget->set($target, biber_decode_utf8($entry->get($fieldsource)));
                   $etarget->delete($fieldsource);
                 }
               }
@@ -734,21 +735,21 @@ sub create_entry {
                     if ($logger->is_debug()) {# performance tune
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_type}'");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $last_type)));
+                    $etarget->set($field, $orig . $last_type);
                   }
                   elsif ($step->{map_origfieldval}) {
                     next unless $last_fieldval;
                     if ($logger->is_debug()) {# performance tune
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_fieldval}'");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $last_fieldval)));
+                    $etarget->set($field, $orig . $last_fieldval);
                   }
                   elsif ($step->{map_origfield}) {
                     next unless $last_field;
                     if ($logger->is_debug()) {# performance tune
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_field}'");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $last_field)));
+                    $etarget->set($field, $orig . $last_field);
                   }
                   else {
                     my $fv = maploopreplace($step->{map_field_value}, $maploop);
@@ -759,7 +760,7 @@ sub create_entry {
                     if ($logger->is_debug()) {# performance tune
                       $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${fv}'");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $fv)));
+                    $etarget->set($field, $orig . $fv);
                   }
                 }
               }
@@ -795,16 +796,13 @@ sub _create_entry {
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Creating biber Entry object with key '$k'");
   }
-
   # Save pre-mapping data. Might be useful somewhere
   $bibentry->set_field('rawdata', biber_decode_utf8($e->print_s));
-
   my $entrytype = biber_decode_utf8($e->type);
 
   # We put all the fields we find modulo field aliases into the object
   # validation happens later and is not datasource dependent
   foreach my $f ($e->fieldlist) {
-
     # In tool mode, keep the raw data fields
     if (Biber::Config->getoption('tool')) {
       $bibentry->set_rawfield($f, biber_decode_utf8($e->get($f)));
@@ -940,7 +938,7 @@ sub _literal {
 # URI fields
 sub _uri {
   my ($bibentry, $entry, $field) = @_;
-  my $value = NFC(decode_utf8($entry->get($field)));# Unicode NFC boundary (before hex encoding)
+  my $value = biber_decode_utf8($entry->get($field));# Unicode NFC boundary (before hex encoding)
   $bibentry->set_datafield($field, URI->new($value)->as_string); # Performs url encoding
   return;
 }
@@ -1006,10 +1004,10 @@ sub _name {
   my $xnamesep = Biber::Config->getoption('xnamesep');
 
   # @tmp is bytes again now
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
-
+  my @tmp = $entry->_split_list($field, Biber::Config->getoption('namesep'));
+  
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
-  my $names = new Biber::Entry::Names;
+  my $names = Biber::Entry::Names->new();
 
   foreach my $name (@tmp) {
 
@@ -1202,10 +1200,9 @@ sub _datetime {
 # Bibtex list fields with listsep separator
 sub _list {
   my ($bibentry, $entry, $field) = @_;
-  my $value = biber_decode_utf8($entry->get($field));
+  #my $value = biber_decode_utf8($entry->get($field));
 
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
-  @tmp = map { biber_decode_utf8($_) } @tmp;
+  my @tmp = $entry->_split_list($field, Biber::Config->getoption('listsep'));
   @tmp = map { (remove_outer($_))[1] } @tmp;
   $bibentry->set_datafield($field, [ @tmp ]);
   return;
@@ -1214,8 +1211,8 @@ sub _list {
 # Bibtex uri lists
 sub _urilist {
   my ($bibentry, $entry, $field) = @_;
-  my $value = NFC(decode_utf8($entry->get($field)));# Unicode NFC boundary (before hex encoding)
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
+#  my $value = biber_decode_utf8($entry->get($field));# Unicode NFC boundary (before hex encoding)
+  my @tmp = $entry->_split_list($field, Biber::Config->getoption('listsep'));
   @tmp = map {
     # If there are some escapes in the URI, unescape them
     if ($_ =~ /\%/) {
@@ -1251,13 +1248,13 @@ sub cache_data {
   # Convert/decode file
   my $pfilename = preprocess_file($filename);
 
-  my $bib = Text::BibTeX::File->new( $pfilename, '<' )
+  my $bib = Text::BibTeX::File->new( $pfilename, {binmode => 'utf-8'} )
     or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
 
   # Log that we found a data file
   $logger->info("Found BibTeX data source '$filename'");
 
-  while ( my $entry = new Text::BibTeX::Entry $bib ) {
+  while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {
       push @{$cache->{preamble}{$filename}}, biber_decode_utf8($entry->value);
       next;
@@ -1410,6 +1407,7 @@ sub preprocess_file {
   File::Slurp::write_file($ufilename, encode('UTF-8', NFC($lbuf))) or
       biber_error("Can't write $ufilename");# Unicode NFC boundary
 
+
   return $ufilename;
 }
 
@@ -1451,13 +1449,13 @@ sub parsename {
   $namestr =~ s/(\w)\.(\w)/$1. $2/g if Biber::Config->getoption('fixinits');
 
   my %namec;
-  my $name = new Text::BibTeX::Name($namestr);
+  my $name = Text::BibTeX::Name->new({binmode => 'utf8'}, $namestr);
 
   # Formats so we can get BibTeX compatible nbsp inserted
-  my $l_f = new Text::BibTeX::NameFormat('l', 0);
-  my $f_f = new Text::BibTeX::NameFormat('f', 0);
-  my $p_f = new Text::BibTeX::NameFormat('v', 0);
-  my $s_f = new Text::BibTeX::NameFormat('j', 0);
+  my $l_f = Text::BibTeX::NameFormat->new('l', 0);
+  my $f_f = Text::BibTeX::NameFormat->new('f', 0);
+  my $p_f = Text::BibTeX::NameFormat->new('v', 0);
+  my $s_f = Text::BibTeX::NameFormat->new('j', 0);
   $l_f->set_options(BTN_LAST,  0, BTJ_MAYTIE, BTJ_NOTHING);
   $f_f->set_options(BTN_FIRST, 0, BTJ_MAYTIE, BTJ_NOTHING);
   $p_f->set_options(BTN_VON,   0, BTJ_MAYTIE, BTJ_NOTHING);
@@ -1478,13 +1476,13 @@ sub parsename {
   # spaces - this is fine as we are just generating initials
   $nd_namestr =~ s/\.~\s*/. /g;
 
-  my $nd_name = new Text::BibTeX::Name($nd_namestr, $fieldname);
+  my $nd_name = Text::BibTeX::Name->new({binmode => 'utf-8'},$nd_namestr, $fieldname);
 
   # Initials formats
-  my $li_f = new Text::BibTeX::NameFormat('l', 1);
-  my $fi_f = new Text::BibTeX::NameFormat('f', 1);
-  my $pi_f = new Text::BibTeX::NameFormat('v', 1);
-  my $si_f = new Text::BibTeX::NameFormat('j', 1);
+  my $li_f = Text::BibTeX::NameFormat->new('l', 1);
+  my $fi_f = Text::BibTeX::NameFormat->new('f', 1);
+  my $pi_f = Text::BibTeX::NameFormat->new('v', 1);
+  my $si_f = Text::BibTeX::NameFormat->new('j', 1);
 
   # Initials generated with forced tie so we can make an array
   $li_f->set_text(BTN_LAST,  undef, undef, undef, '');

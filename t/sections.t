@@ -59,8 +59,10 @@ my $main3 = $biber->sortlists->get_list(3, 'nty/global/', 'entry', 'nty', 'globa
 my $shs3 = $biber->sortlists->get_list(3, 'shorthands/global/', 'list', 'shorthands', 'global', '');
 
 # Internal UTF-8 before output is always NFD so have to NFD bits of this
+##### AMBS
+#####  -- again, now Text::BibTeX uses NFC...
 my $preamble = [
-                NFD('Štring for Preamble 1'),
+                NFC('Štring for Preamble 1'),
                 'String for Preamble 2',
                 'String for Preamble 3',
                 'String for Preamble 4'

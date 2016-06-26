@@ -200,6 +200,7 @@ The function accepts a number of options:
 
 sub latex_decode {
     my $text      = shift;
+
     # Optimisation - if there are no macros, no point doing anything
     return $text unless $text =~ m/\\/;
 
@@ -319,6 +320,8 @@ sub latex_encode {
 
   # Optimisation - if virtual null set was specified, do nothing
   return $text if $set_e eq 'null';
+
+  $text = NFD($text); # This helps, as now some strings come in NFC :-(
 
   foreach my $type ('greek', 'dings', 'negatedsymbols', 'superscripts', 'cmdsuperscripts', 'diacritics', 'letters', 'punctuation', 'symbols') {
     my $map = $remap_e->{$type}{map};

@@ -256,6 +256,7 @@ sub get_output_entry {
   my $out = $self->{output_data}{ENTRIES}{$section}{index}{$key} ||
             $self->{output_data}{MISSING_ENTRIES}{$section}{index}{$key} ||
             $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$key};
+            
   my $out_string = $list ? $list->instantiate_entry($out, $key) : $out;
 
   # If requested to convert UTF-8 to macros ...

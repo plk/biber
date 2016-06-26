@@ -3,6 +3,7 @@ use v5.16;
 use strict;
 use warnings;
 
+use utf8;
 use Biber::Utils;
 use Biber::Constants;
 use Digest::MD5 qw( md5_hex );

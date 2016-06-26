@@ -9,6 +9,7 @@ use constant {
   EXIT_ERROR => 2
 };
 
+use utf8;
 use Carp;
 use Encode;
 use File::Find;
@@ -824,7 +825,7 @@ sub imatch {
 =cut
 
 sub ireplace {
-  my ($value, $val_match, $val_replace) = @_;
+  my ($value, $val_match, $val_replace) = map { NFC($_) } @_;
   return $value unless $val_match;
   $val_match = qr/$val_match/;
   # Tricky quoting because of later evals
@@ -1119,7 +1120,8 @@ sub edtf_monthday {
 =cut
 
 sub biber_decode_utf8 {
-  return NFD(decode_utf8(shift));# Unicode NFD boundary
+  return shift;
+  #return NFD(decode_utf8(shift));# Unicode NFD boundary
 }
 
 =head2 out
