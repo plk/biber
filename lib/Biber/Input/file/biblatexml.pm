@@ -161,8 +161,13 @@ sub extract_entries {
       $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
                             DIR => $Biber::MASTER->biber_tempdir,
                             SUFFIX => '.xml');
-      unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-        biber_error("Could not fetch file '$filename'");
+
+      # Pretend to be a browser otherwise some sites refuse the default LWP UA string
+      $LWP::Simple::ua->agent('Mozilla/5.0');
+
+      my $retcode = LWP::Simple::getstore($source, $tf->filename);
+      unless (LWP::Simple::is_success($retcode)) {
+        biber_error("Could not fetch '$source' (HTTP code: $retcode)");
       }
       $filename = $tf->filename;
       # cache any remote so it persists and so we don't fetch it again
