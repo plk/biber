@@ -77,6 +77,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \field{labelnamesource}{author}
       \field{note}{A Note}
       \field{year}{2007}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -108,6 +109,7 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \field{note}{A Note}
       \field{venue}{venue}
       \field{year}{2003}
+      \field{dateera}{ce}
     \endentry
 |;
 

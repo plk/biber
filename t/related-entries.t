@@ -66,6 +66,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \field{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
+      \field{dateera}{ce}
       \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{pages}{125\bibrangedash 150}
       \range{pages}{26}
@@ -99,6 +100,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \field{shorthand}{RK2}
       \field{title}{Reprint Title}
       \field{year}{2009}
+      \field{dateera}{ce}
       \field{related}{c2add694bf942dc77b376592d9c862cd}
       \field{pages}{34\bibrangedash 60}
       \range{pages}{27}

@@ -92,6 +92,7 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \field{origyear}{1955}
       \field{title}{Great and Good Graphs}
       \field{year}{1974}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -135,6 +136,7 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \field{origyear}{1943}
       \field{title}{Fabulous Fourier Forms}
       \field{year}{1974}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -204,6 +206,7 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \field{origyear}{1934}
       \field{title}{Arrangements of All Articles}
       \field{year}{1996}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -243,6 +246,7 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       \field{origyear}{1911}
       \field{title}{Enterprising Entities}
       \field{year}{1945}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -410,6 +414,7 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \field{origyear}{1921}
       \field{title}{Moods Mildly Modified}
       \strng{xref}{xrm}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -436,6 +441,7 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \field{origyear}{1926}
       \field{title}{Migraines Multiplying Madly}
       \strng{xref}{xrm}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -489,6 +495,7 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \field{origyear}{1923}
       \field{title}{Russian Regalia Revisited}
       \strng{xref}{xrt}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -537,6 +544,7 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \field{origyear}{1933}
       \field{title}{Lumbering Lunatics}
       \strng{xref}{xrn}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -560,6 +568,7 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \field{labeltitlesource}{title}
       \field{origyear}{1933}
       \field{title}{Lumbering Lunatics}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -581,6 +590,7 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \field{labeltitlesource}{title}
       \field{origyear}{1933}
       \field{title}{Lumbering Lunatics}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -646,6 +656,7 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
       \strng{crossref}{ccr2}
       \field{title}{Perhaps, Perchance, Possibilities?}
       \field{year}{1911}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -664,6 +675,7 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
       \field{booktitle}{Misc etc.}
       \field{title}{Stuff Concerning Varia}
       \field{year}{1911}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -716,6 +728,8 @@ my $b1 = q|    \entry{b1}{inbook}{}
       \field{origmonth}{3}
       \field{origyear}{2004}
       \field{year}{2004}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
     \endentry
 |;
 

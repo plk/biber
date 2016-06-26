@@ -920,10 +920,10 @@ sub _datetime {
     # Possible values are specified in the schema and should be compatible
     # with lc(DateTime->secular_era)
     if (my $era = $node->getAttribute('startera')) {
-      $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce';# CE is assumed
+      $bibentry->set_field($datetype . 'era', $era);
     }
     if (my $era = $node->getAttribute('endera')) {
-      $bibentry->set_field($datetype . 'endera', $era) unless $era eq 'ce';# CE is assumed
+      $bibentry->set_field($datetype . 'endera', $era);
     }
 
     if (my $start = $node->findnodes("./$NS:start")) { # Date range

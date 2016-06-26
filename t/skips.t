@@ -91,6 +91,7 @@ my $set2 = q|    \entry{set:membera}{book}{}
       \field{labeltitlesource}{title}
       \field{title}{Set Member A}
       \field{year}{2010}
+      \field{dateera}{ce}
       \keyw{key1,key2}
     \endentry
 |;
@@ -115,6 +116,7 @@ my $set3 = q|    \entry{set:memberb}{book}{}
       \field{labeltitlesource}{title}
       \field{title}{Set Member B}
       \field{year}{2010}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -137,6 +139,7 @@ my $set4 = q|    \entry{set:memberc}{book}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Set Member C}
+      \field{dateera}{ce}
       \field{year}{2010}
     \endentry
 |;
@@ -163,6 +166,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{labeltitlesource}{title}
       \field{title}{Stand-Alone A}
       \field{year}{2010}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -188,6 +192,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{labeltitlesource}{title}
       \field{title}{Stand-Alone B}
       \field{year}{2010}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -213,6 +218,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{labeltitlesource}{title}
       \field{title}{Stand-Alone C}
       \field{year}{2010}
+      \field{dateera}{ce}
     \endentry
 |;
 

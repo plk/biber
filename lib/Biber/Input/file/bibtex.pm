@@ -1130,7 +1130,7 @@ sub _datetime {
       $bibentry->set_datafield($datetype . 'year', $sdate->year);
       my $era = lc($sdate->secular_era);
       # Save era date information - CE is assumed
-      $bibentry->set_field($datetype . 'era', $era) unless $era eq 'ce';
+      $bibentry->set_field($datetype . 'era', $era);
     }
 
     $bibentry->set_datafield($datetype . 'month', $sdate->month)
@@ -1157,7 +1157,7 @@ sub _datetime {
             $bibentry->set_datafield($datetype . 'endyear', $edate->year);
             my $era = lc($edate->secular_era);
             # Save era date information - CE is assumed
-            $bibentry->set_field($datetype . 'endera', $era) unless $era eq 'ce';
+            $bibentry->set_field($datetype . 'endera', $era);
           }
 
           $bibentry->set_datafield($datetype . 'endmonth', $edate->month)

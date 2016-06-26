@@ -91,6 +91,7 @@ my $l13c = q|    \entry{L13}{book}{}
       \field{month}{1}
       \field{title}{Title 2}
       \field{year}{1996}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -127,6 +128,8 @@ my $l14 = q|    \entry{L14}{book}{}
       \field{month}{12}
       \field{title}{Title 2}
       \field{year}{1996}
+      \field{dateera}{ce}
+      \field{enddateera}{ce}
     \endentry
 |;
 
@@ -156,6 +159,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Title 2}
+      \field{eventdateera}{ce}
       \warn{\item Datamodel: Entry 'L15' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;
@@ -240,6 +244,12 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
+      \field{dateera}{ce}
+      \field{enddateera}{ce}
+      \field{eventdateera}{ce}
+      \field{eventenddateera}{ce}
+      \field{origdateera}{ce}
+      \field{origenddateera}{ce}
     \endentry
 |;
 
@@ -288,6 +298,12 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
+      \field{dateera}{ce}
+      \field{enddateera}{ce}
+      \field{eventdateera}{ce}
+      \field{eventenddateera}{ce}
+      \field{origdateera}{ce}
+      \field{origenddateera}{ce}
     \endentry
 |;
 
@@ -336,6 +352,12 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
+      \field{dateera}{ce}
+      \field{enddateera}{ce}
+      \field{eventdateera}{ce}
+      \field{eventenddateera}{ce}
+      \field{origdateera}{ce}
+      \field{origenddateera}{ce}
     \endentry
 |;
 
@@ -450,6 +472,7 @@ my $era3 = q|    \entry{era3}{book}{}
       \field{month}{2}
       \field{year}{196}
       \field{dateera}{bce}
+      \field{eventdateera}{ce}
     \endentry
 |;
 
@@ -464,9 +487,15 @@ my $era4 = q|    \entry{era4}{book}{}
       \field{urlyear}{1487}
       \field{year}{1034}
       \true{datecirca}
+      \field{dateera}{ce}
       \true{eventdateuncertain}
+      \field{eventdateera}{ce}
       \true{origenddatecirca}
+      \field{origdateera}{ce}
+      \field{origenddateera}{ce}
       \true{urldatecirca}
+      \field{urldateera}{ce}
+      \field{urlenddateera}{ce}
     \endentry
 |;
 
@@ -494,6 +523,9 @@ my $time1 = q|    \entry{time1}{book}{}
       \field{urltimezone}{+0500}
       \field{urlyear}{2001}
       \field{year}{2001}
+      \field{dateera}{ce}
+      \field{eventdateera}{ce}
+      \field{urldateera}{ce}
     \endentry
 |;
 
@@ -507,6 +539,9 @@ my $range1 = q|    \entry{range1}{book}{}
       \field{origendyear}{}
       \field{origyear}{2000}
       \field{year}{1034}
+      \field{dateera}{ce}
+      \field{eventdateera}{ce}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -518,6 +553,8 @@ my $season1 = q|    \entry{season1}{book}{}
       \field{eventyear}{2002}
       \field{season}{spring}
       \field{year}{2003}
+      \field{dateera}{ce}
+      \field{eventdateera}{ce}
     \endentry
 |;
 
@@ -540,9 +577,17 @@ my $unspec1 = q|    \entry{unspec1}{book}{}
       \field{urlyear}{1999}
       \field{year}{1990}
       \field{dateunspecified}{yearindecade}
+      \field{dateera}{ce}
+      \field{enddateera}{ce}
       \field{eventdateunspecified}{yearincentury}
+      \field{eventdateera}{ce}
+      \field{eventenddateera}{ce}
       \field{origdateunspecified}{monthinyear}
+      \field{origdateera}{ce}
+      \field{origenddateera}{ce}
       \field{urldateunspecified}{dayinmonth}
+      \field{urldateera}{ce}
+      \field{urlenddateera}{ce}
     \\endentry
 |;
 
@@ -558,6 +603,8 @@ my $unspec2 = q|    \entry{unspec2}{book}{}
       \field{month}{1}
       \field{year}{1999}
       \field{dateunspecified}{dayinyear}
+      \field{dateera}{ce}
+      \field{enddateera}{ce}
     \endentry
 |;
 

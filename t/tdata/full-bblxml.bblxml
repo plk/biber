@@ -54,7 +54,7 @@
         <bbl:field name="title">Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions</bbl:field>
         <bbl:field name="volume">691</bbl:field>
         <bbl:field name="month">02</bbl:field>
-        <bbl:field name="year">2006</bbl:field>
+        <bbl:field name="year" startera="ce">2006</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="10">
             <bbl:start>3027</bbl:start>
@@ -85,7 +85,7 @@
         <bbl:field name="shorttitle">In Honore Salvatoris</bbl:field>
         <bbl:field name="title">In Honore Salvatoris -- Vom Sinn und Unsinn der Patrozinienkunde</bbl:field>
         <bbl:field name="volume">97</bbl:field>
-        <bbl:field name="year">2002</bbl:field>
+        <bbl:field name="year" startera="ce">2002</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="59">
             <bbl:start>431</bbl:start>
@@ -122,7 +122,7 @@
         <bbl:field name="journaltitle">Nucl. Phys.</bbl:field>
         <bbl:field name="title">Partial Symmetries of Weak Interactions</bbl:field>
         <bbl:field name="volume">22</bbl:field>
-        <bbl:field name="year">1961</bbl:field>
+        <bbl:field name="year" startera="ce">1961</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="-1">
             <bbl:start>579</bbl:start>
@@ -151,7 +151,7 @@
         <bbl:field name="journaltitle">Nucl. Phys.</bbl:field>
         <bbl:field name="title">Partial Symmetries of Weak Interactions</bbl:field>
         <bbl:field name="volume">22</bbl:field>
-        <bbl:field name="year">1961</bbl:field>
+        <bbl:field name="year" startera="ce">1961</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="-1">
             <bbl:start>579</bbl:start>
@@ -190,7 +190,7 @@
         <bbl:field name="shorttitle"></bbl:field>
         <bbl:field name="title">: The Program</bbl:field>
         <bbl:field name="volume">B</bbl:field>
-        <bbl:field name="year">1986</bbl:field>
+        <bbl:field name="year" startera="ce">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="knuth:ct:c" type="book">
         <bbl:names type="author" count="1">
@@ -223,7 +223,7 @@
         <bbl:field name="shorttitle">METAFONTbook</bbl:field>
         <bbl:field name="title">The METAFONTbook</bbl:field>
         <bbl:field name="volume">C</bbl:field>
-        <bbl:field name="year">1986</bbl:field>
+        <bbl:field name="year" startera="ce">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="reese" type="article" singletitle="true">
         <bbl:names type="author" count="1">
@@ -248,7 +248,7 @@
         <bbl:field name="series">3</bbl:field>
         <bbl:field name="title">Georgia in Anglo-Spanish Diplomacy, 1736-1739</bbl:field>
         <bbl:field name="volume">15</bbl:field>
-        <bbl:field name="year">1958</bbl:field>
+        <bbl:field name="year" startera="ce">1958</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="23">
             <bbl:start>168</bbl:start>
@@ -293,7 +293,7 @@
         <bbl:field name="booktitleaddon">Proceedings of the Eighth Nobel Symposium, May 19--25, 1968</bbl:field>
         <bbl:field name="title">Weak and Electromagnetic Interactions</bbl:field>
         <bbl:field name="venue">Aspenäsgarden, Lerum</bbl:field>
-        <bbl:field name="year">1968</bbl:field>
+        <bbl:field name="year" startera="ce">1968</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="-1">
             <bbl:start>367</bbl:start>
@@ -325,7 +325,7 @@
         <bbl:field name="title">Twice-Born, Once Conceived</bbl:field>
         <bbl:field name="volume">93</bbl:field>
         <bbl:field name="month">3</bbl:field>
-        <bbl:field name="year">1991</bbl:field>
+        <bbl:field name="year" startera="ce">1991</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="19">
             <bbl:start>9</bbl:start>
@@ -354,7 +354,7 @@
         <bbl:field name="journaltitle">Phys. Rev. Lett.</bbl:field>
         <bbl:field name="title">A Model of Leptons</bbl:field>
         <bbl:field name="volume">19</bbl:field>
-        <bbl:field name="year">1967</bbl:field>
+        <bbl:field name="year" startera="ce">1967</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="-1">
             <bbl:start>1264</bbl:start>
