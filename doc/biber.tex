@@ -2083,6 +2083,7 @@ hard-coded English terms look really rather bad in the context of
 multilingual bibliographies.
 \bigskip
 \subsection{Extended Name Format}
+\label{biber:xname}
 The parsing rules for \bibtex names are rather archaic and not suited to
 many international name formats. \biber supports an extended name format
 which allows explicit specification of the parts of names. This allows the
@@ -2092,7 +2093,7 @@ the usual \bibtex name format. Recognition of extended name format can be
 disabled with the \biber option \opt{--noxname} in case you do not need the
 extended format and the auto-detection causes problems with normal name
 parsing. The separator \verb+=+ which comes between the namepart names and
-values is customisable with the \biber option \verb+--xnamesep+. Here is an
+values is customisable with the \biber option \opt{--xnamesep}. Here is an
 example:
 \begin{verbatim}
 AUTHOR = {Hans Harman and Simon de Beumont}
@@ -2561,6 +2562,29 @@ default. The applicability of the various output options depends on
 the output format as shown in table \ref{tab:outopts} where dash means that
 the options has no relevance for the output format.
 
+The order of the fields when writing \bibtex data is controlled by the
+\opt{--output-field-order} option. This is a comma-separated list of fields
+or field classes and fields will be output to entries in the order
+specified. Any unspecified fields will be output in sorted order after the
+specified fields. The field classes are:
+
+\begin{description}
+\item[names] All name fields
+\item[lists] All non-name list fields
+\item[dates] All date fields
+\end{description}
+%
+For the default value, run \biber with the \opt{--help} option and see the
+documentation for the option. \opt{--output-listsep}, \opt{output-namesep}
+and \opt{output-xnamesep} can be used to customise separators on output and
+their default values are the same as their input option counterparts
+\opt{--listsep}, \opt{--namesep} and \opt{--xnamesep}. The option
+\opt{--output-xname} can be used to specify that the extended name format
+(see section \ref{biber::xname}) is to be used to output names.
+\opt{--output-annotation-marker} can be used to specify the annotation
+marker to write for annotated fields on output. See the Data Annotation feature
+documentation in the \biblatex manual.
+
 \begin{table}
 \begin{center}
 \small
@@ -2570,10 +2594,16 @@ the options has no relevance for the output format.
 \emph{Option} & bibtex & biblatexml & bbl & dot\\
 \midrule
 output-align & \checkmark & - & - & -\\
+output-annotation-marker & \checkmark & - & - & -\\
 output-indent & \checkmark & \checkmark & - & -\\
+output-field-order & \checkmark & - & - & -\\
 output-fieldcase & \checkmark & - & - & -\\
+output-listsep & \checkmark & - & - & -\\
 output-macro-fields & \checkmark & - & - & -\\
+output-namesep & \checkmark & - & - & -\\
 output-resolve & \checkmark & \checkmark & - & -\\
+output-xname & \checkmark & - & - & -\\
+output-xnamesep & \checkmark & - & - & -\\
 \bottomrule
 \end{tabular}
 \end{center}

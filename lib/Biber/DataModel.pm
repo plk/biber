@@ -1248,6 +1248,7 @@ sub generate_bltxml_schema {
           $writer->startTag('attribute', 'name' => 'startera');
           $writer->startTag('choice');
           $writer->dataElement('value', 'bce');
+          $writer->dataElement('value', 'ce');
           $writer->endTag(); # choice
           $writer->endTag(); # attribute
           $writer->endTag(); # optional
@@ -1255,6 +1256,7 @@ sub generate_bltxml_schema {
           $writer->startTag('attribute', 'name' => 'endera');
           $writer->startTag('choice');
           $writer->dataElement('value', 'bce');
+          $writer->dataElement('value', 'ce');
           $writer->endTag(); # choice
           $writer->endTag(); # attribute
           $writer->endTag(); # optional
@@ -1636,6 +1638,7 @@ sub generate_bblxml_schema {
   $writer->startTag('attribute', 'name' => 'startera');
   $writer->startTag('choice');
   $writer->dataElement('value', 'bce');
+  $writer->dataElement('value', 'ce');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
@@ -1643,6 +1646,7 @@ sub generate_bblxml_schema {
   $writer->startTag('attribute', 'name' => 'endera');
   $writer->startTag('choice');
   $writer->dataElement('value', 'bce');
+  $writer->dataElement('value', 'ce');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # optional

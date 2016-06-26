@@ -110,7 +110,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:note>i3Š</bltx:note>
     <bltx:title>Š title</bltx:title>
     <bltx:userb>test</bltx:userb>
-    <bltx:date>2003</bltx:date>
+    <bltx:date era="ce">2003</bltx:date>
   </bltx:entry>
   <bltx:entry id="xd1" entrytype="book">
     <bltx:names type="author">
@@ -174,10 +174,16 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:note>A Note</bltx:note>
   </bltx:entry>
   <bltx:entry id="b1" entrytype="book">
+    <bltx:location>
+      <bltx:list>
+        <bltx:item annotation="ann1">London</bltx:item>
+        <bltx:item annotation="ann2">Edinburgh</bltx:item>
+      </bltx:list>
+    </bltx:location>
     <bltx:mainsubtitle>Mainsubtitle</bltx:mainsubtitle>
     <bltx:maintitle>Maintitle</bltx:maintitle>
     <bltx:maintitleaddon>Maintitleaddon</bltx:maintitleaddon>
-    <bltx:title>Booktitle</bltx:title>
+    <bltx:title annotation="ann1, ann2">Booktitle</bltx:title>
     <bltx:date>1999</bltx:date>
   </bltx:entry>
   <bltx:entry id="mv1" entrytype="mvbook">

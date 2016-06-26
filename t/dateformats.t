@@ -159,7 +159,6 @@ my $l15 = q|    \entry{L15}{book}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Title 2}
-      \field{eventdateera}{ce}
       \warn{\item Datamodel: Entry 'L15' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;
@@ -194,6 +193,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{eventmonth}{1}
       \field{eventyear}{1996}
       \field{title}{Title 2}
+      \field{eventdateera}{ce}
       \warn{\item Datamodel: Entry 'L16' (dateformats.bib): Missing mandatory field - one of 'date, year' must be defined}
     \endentry
 |;

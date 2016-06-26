@@ -131,9 +131,12 @@ sub set_output_entry {
     }
   }
 
-  if (my $opts = $be->get_field('options')) {
-    $xml->dataElement([$xml_prefix, 'options'], NFC(join(',', @{filter_entry_options($be->get_field('options'))})));
+  # Per-entry options
+  my @entryoptions;
+  foreach my $opt (Biber::Config->getblxentryoptions($key)) {
+    push @entryoptions, $opt . '=' . Biber::Config->getblxoption($opt, undef, $key);
   }
+  $xml->dataElement([$xml_prefix, 'options'], NFC(join(',', @entryoptions))) if @entryoptions;
 
   # Output name fields
   foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {

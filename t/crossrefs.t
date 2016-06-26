@@ -625,6 +625,7 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \strng{crossref}{ccr1}
       \field{title}{Misc etc.}
       \field{year}{1923}
+      \field{dateera}{ce}
     \endentry
 |;
 

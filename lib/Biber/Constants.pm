@@ -115,6 +115,7 @@ our $CONFIG_DEFAULT_BIBER = {
   output_align        => { content => 0 },
   output_annotation_marker   => { content => '+an' },
   output_encoding     => { content => 'UTF-8' },
+  output_field_order  => { content => 'options,abstract,names,lists,dates' },
   output_format       => { content => 'bbl' },
   output_indent       => { content => '2' },
   output_fieldcase    => { content => 'upper' },

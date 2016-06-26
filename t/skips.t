@@ -139,8 +139,8 @@ my $set4 = q|    \entry{set:memberc}{book}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Set Member C}
-      \field{dateera}{ce}
       \field{year}{2010}
+      \field{dateera}{ce}
     \endentry
 |;
 

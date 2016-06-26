@@ -40,7 +40,6 @@
       \field{shorthand}{\emph{A}}
       \field{title}{The Fullness of Times}
       \field{year}{1995}
-      \field{dateera}{ce}
     \endentry
   \endsortlist
   \sortlist[entry]{nty/global/}
@@ -65,7 +64,6 @@
       \field{shorthand}{\emph{A}}
       \field{title}{The Fullness of Times}
       \field{year}{1995}
-      \field{dateera}{ce}
     \endentry
   \endsortlist
   \keyalias{F1a}{F1}

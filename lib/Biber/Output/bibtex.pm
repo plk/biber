@@ -12,6 +12,7 @@ use List::AllUtils qw( :all );
 use Encode;
 use IO::File;
 use Log::Log4perl qw( :no_extra_logdie_message );
+use Scalar::Util qw(looks_like_number);
 use Text::Wrap;
 $Text::Wrap::columns = 80;
 use Unicode::Normalize;
@@ -157,18 +158,49 @@ sub set_output_entry {
     }
   }
 
-  # Standard fields
-  foreach my $field (@{$dmh->{fields}}) {
-    if (my $val = $be->get_field($field)) {
-      $acc{$casing->($field)} = $val;
-    }
+  # Per-entry options
+  my @entryoptions;
+  foreach my $opt (Biber::Config->getblxentryoptions($key)) {
+    push @entryoptions, $opt . '=' . Biber::Config->getblxoption($opt, undef, $key);
   }
+  $acc{$casing->('options')} = join(',', @entryoptions) if @entryoptions;
 
   # Date fields
   foreach my $datefield (@{$dmh->{datefields}}) {
     my ($d) = $datefield =~ m/^(.*)date$/;
     next unless $be->get_field("${d}year");
     $acc{$casing->($datefield)} = construct_date($be, $d);
+  }
+
+  # YEAR and MONTH are legacy - convert these to DATE if possible
+  if (my $val = $be->get_field('year')) {
+    if (looks_like_number($val)) {
+      $acc{$casing->('date')} = $val;
+      $be->del_field('year');
+    }
+  }
+  if (my $val = $be->get_field('month')) {
+    if (looks_like_number($val)) {
+      $acc{$casing->('date')} .= "-$val";
+      $be->del_field('month');
+    }
+  }
+
+  # If CROSSREF and XDATA have been resolved, don't output them
+  if (Biber::Config->getoption('output_resolve')) {
+    if ( my $cr = $be->get_field('crossref') ) {
+      $be->del_field('crossref');
+    }
+    if ( my $xd = $be->get_field('xdata') ) {
+      $be->del_field('xdata');
+    }
+  }
+
+  # Standard fields
+  foreach my $field (@{$dmh->{fields}}) {
+    if (my $val = $be->get_field($field)) {
+      $acc{$casing->($field)} = $val;
+    }
   }
 
   # XSV fields
@@ -197,16 +229,6 @@ sub set_output_entry {
     $acc{$casing->('keywords')} = join(',', @$k);
   }
 
-  # If CROSSREF and XDATA have been resolved, don't output them
-  unless (Biber::Config->getoption('output_resolve')) {
-    if ( my $cr = $be->get_field('crossref') ) {
-      $acc{$casing->('crossref')} = $cr;
-    }
-    if ( my $xd = $be->get_field('xdata') ) {
-      $acc{$casing->('xdata')} = $xd;
-    }
-  }
-
   # Annotations
   foreach my $f (keys %acc) {
     if (Biber::Annotation->is_annotated_field($key, lc($f))) {
@@ -220,9 +242,43 @@ sub set_output_entry {
     $max_field_len = max map {Unicode::GCString->new($_)->length} keys %acc;
   }
 
-  # Order of fields is determined here
-  while (my ($key, $value) = each %acc) {
-    $acc .= bibfield($key, $value, $max_field_len);
+  # Determine order of fields
+  my %classmap = ('names'     => 'namelists',
+                  'lists'     => 'lists',
+                  'dates'     => 'datefields');
+
+  foreach my $field (split(/\s*,\s*/, Biber::Config->getoption('output_field_order'))) {
+    if ($field eq 'names' or
+        $field eq 'lists' or
+        $field eq 'dates') {
+      my @donefields;
+      foreach my $key (sort keys %acc) {
+        if (first {fc($_) eq fc($key)} @{$dmh->{$classmap{$field}}}) {
+          $acc .= bibfield($key, $acc{$key}, $max_field_len);
+          push @donefields, $key;
+          # Keep annotations with their fields
+          my $ann = $key . Biber::Config->getoption('output_annotation_marker');
+          if (my $value = $acc{$ann}) {
+            $acc .= bibfield($ann, $value, $max_field_len);
+            push @donefields, $ann;
+          }
+        }
+      }
+      delete @acc{@donefields};
+    }
+    elsif (my $value = delete $acc{$casing->($field)}) {
+      $acc .= bibfield($casing->($field), $value, $max_field_len);
+      # Keep annotations with their fields
+      my $ann = $casing->($field) . Biber::Config->getoption('output_annotation_marker');
+      if (my $value = delete $acc{$ann}) {
+        $acc .= bibfield($ann, $value, $max_field_len);
+      }
+    }
+  }
+
+  # Now rest of fields not explicitly specified
+  foreach my $field (sort keys %acc) {
+    $acc .= bibfield($field, $acc{$field}, $max_field_len);
   }
 
   $acc .= "}\n\n";
@@ -411,7 +467,7 @@ sub construct_range {
   foreach my $e (@$r) {
     my $rs = $e->[0];
     if (defined($e->[1])) {
-      $rs = '-' . $e->[1];
+      $rs .= '--' . $e->[1];
     }
     push @ranges, $rs;
   }

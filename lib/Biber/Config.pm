@@ -1000,6 +1000,18 @@ sub getblxoption {
 }
 
 
+=head2 getblxentryoptions
+
+    Get all per-entry options for an entry
+
+=cut
+
+sub getblxentryoptions {
+  no autovivification;
+  shift; # class method so don't care about class name
+  my $key = shift;
+  return keys %{$CONFIG->{options}{biblatex}{ENTRY}{$key}};
+}
 
 ##############################
 # Inheritance state methods

@@ -58,16 +58,16 @@ my $main = $biber->sortlists->get_list(99999, Biber::Config->getblxoption('sorts
 my $out = $biber->get_output_obj;
 
 my $t1 = q|@UNPUBLISHED{i3Š,
+  OPTIONS     = {useprefix=false},
   ABSTRACT    = {Some abstract %50 of which is useless},
   AUTHOR      = {AAA and BBB and CCC and DDD and EEE},
-  DATE        = {2003},
   INSTITUTION = {REPlaCEDte and early},
-  KEYWORDS    = {keyword},
   LISTA       = {list test},
   LISTB       = {late and early},
   LOCATION    = {one and two},
+  DATE        = {2003},
+  KEYWORDS    = {keyword},
   NOTE        = {i3Š},
-  OPTIONS     = {useprefix=false},
   TITLE       = {Š title},
   USERB       = {test},
 }
@@ -75,11 +75,11 @@ my $t1 = q|@UNPUBLISHED{i3Š,
 |;
 
 my $t2 = q|@BOOK{xd1,
-  AUTHOR    = {Edward Paul Ellington},
+  AUTHOR    = {Ellington, Edward Paul},
   LOCATION  = {New York and London},
-  NOTE      = {A Note},
   PUBLISHER = {Macmillan},
-  YEAR      = {2001},
+  DATE      = {2001},
+  NOTE      = {A Note},
 }
 
 |;
@@ -87,12 +87,12 @@ my $t2 = q|@BOOK{xd1,
 my $t3 = q|@BOOK{b1,
   LOCATION       = {London and Edinburgh},
   LOCATION+an    = {1=ann1;2=ann2},
+  DATE           = {1999},
   MAINSUBTITLE   = {Mainsubtitle},
   MAINTITLE      = {Maintitle},
   MAINTITLEADDON = {Maintitleaddon},
   TITLE          = {Booktitle},
   TITLE+an       = {=ann1, ann2},
-  YEAR           = {1999},
 }
 
 |;

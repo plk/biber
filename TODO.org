@@ -114,7 +114,8 @@
 ** DONE name list output needs to care about x vs normal for per-namelist options.
 ** DONE error could be raw fields which are found by get_field?
 ** DONE *seps should have separate output versions, same as input ones
-** TODO Output annotations
-** TODO Order of fields needs to be determined
-** TODO Document all in biber manual, add output_xname, output_*sep to the table there
-** TODO Remove raw and references to raw
+** DONE Output annotations
+** DONE Order of fields needs to be determined
+** DONE Document all in biber manual, add output_xname, output_*sep to the table there
+** DONE Remove raw and references to raw
+** TODO More tool tests with --output-xname
