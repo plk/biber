@@ -289,33 +289,90 @@ sub set_output_entry {
     my @attrs;
     my @start;
     my @end;
+    my $overridey;
+    my $overridem;
+    my $overrideem;
+    my $overrided;
+
     my ($d) = $datefield =~ m/^(.*)date$/;
     if (my $sf = $be->get_field("${d}year") ) { # date exists if there is a year
 
       push @attrs, ('type', $d) if $d; # ignore for main date
 
-      # Circa dates
-      if ($be->get_field("${d}datecirca")) {
-        push @attrs, ('circa', 'true');
-      }
+      $xml->startTag([$xml_prefix, 'date'], @attrs);
 
       # Uncertain dates
       if ($be->get_field("${d}dateuncertain")) {
-        push @attrs, ('uncertain', 'true');
+        $sf .= '?';
+      }
+      # Circa dates
+      if ($be->get_field("${d}datecirca")) {
+        $sf .= '~';
       }
 
-      $xml->startTag([$xml_prefix, 'date'], @attrs);
+      my %seasons = ( 'spring' => 21,
+                      'summer' => 22,
+                      'autumn' => 23,
+                      'winter' => 24 );
+
+      # Did the date fields come from interpreting an EDTF 5.2.2 unspecified date?
+      # If so, do the reverse of Biber::Utils::parse_date_edtf_unspecified()
+      if (my $unspec = $be->get_field("${d}dateunspecified")) {
+
+        # 1990/1999 -> 199u
+        if ($unspec eq 'yearindecade') {
+          my ($decade) = $be->get_field("${d}year") =~ m/^(\d+)\d$/;
+          $overridey = "${decade}u";
+          $be->del_field("${d}endyear");
+        }
+        # 1900/1999 -> 19uu
+        elsif ($unspec eq 'yearincentury') {
+          my ($century) = $be->get_field("${d}year") =~ m/^(\d+)\d\d$/;
+          $overridey = "${century}uu";
+          $be->del_field("${d}endyear");
+        }
+        # 1999-01/1999-12 => 1999-uu
+        elsif ($unspec eq 'monthinyear') {
+          $overridem = 'uu';
+          $be->del_field("${d}endyear");
+          $be->del_field("${d}endmonth");
+        }
+        # 1999-01-01/1999-01-31 -> 1999-01-uu
+        elsif ($unspec eq 'dayinmonth') {
+          $overrided = 'uu';
+          $be->del_field("${d}endyear");
+          $be->del_field("${d}endmonth");
+          $be->del_field("${d}endday");
+        }
+        # 1999-01-01/1999-12-31 -> 1999-uu-uu
+        elsif ($unspec eq 'dayinyear') {
+          $overridem = 'uu';
+          $overrided = 'uu';
+          $be->del_field("${d}endyear");
+          $be->del_field("${d}endmonth");
+          $be->del_field("${d}endday");
+        }
+      }
+
+      # Seasons derived from EDTF dates
+      if (my $s = $be->get_field("${d}season")) {
+        $overridem = $seasons{$s};
+      }
+      if (my $s = $be->get_field("${d}endseason")) {
+        $overrideem = $seasons{$s};
+      }
+      $sf = $overridey || $sf;
 
       # strip undefs
       push @start,
         grep {$_}
           $sf,
-            edtf_monthday($be->get_field("${d}month")),
-              edtf_monthday($be->get_field("${d}day"));
+            edtf_monthday($overridem || $be->get_field("${d}month")),
+              edtf_monthday($overrided || $be->get_field("${d}day"));
       push @end,
         grep {defined($_)} # because end can be def but empty
           $be->get_field("${d}endyear"),
-            edtf_monthday($be->get_field("${d}endmonth")),
+            edtf_monthday($overrideem || $be->get_field("${d}endmonth")),
               edtf_monthday($be->get_field("${d}endday"));
       # Date range
       if (@end) {
