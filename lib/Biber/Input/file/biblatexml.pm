@@ -907,6 +907,8 @@ sub _datetime {
       # Using high-level range parsing sub in order to get unspec
       if (my ($sdate, undef, undef, $unspec) = parse_date_range($start->get_node(1)->textContent())) {
 
+        # Save julian
+        $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;
         # Save circa information
         $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
 
@@ -956,11 +958,14 @@ sub _datetime {
       if (defined($edate)) { # no parse error
         if ($edate) { # not an empty range
 
-        # Save circa information
-        $bibentry->set_field($datetype . 'enddatecirca', 1) if $CONFIG_DATE_PARSERS{end}->circa;
+          # Save julian
+          $bibentry->set_field($datetype . 'enddatejulian', 1) if $CONFIG_DATE_PARSERS{end}->julian;
 
-        # Save uncertain date information
-        $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
+          # Save circa information
+          $bibentry->set_field($datetype . 'enddatecirca', 1) if $CONFIG_DATE_PARSERS{end}->circa;
+
+          # Save uncertain date information
+          $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
 
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
             $bibentry->set_datafield($datetype . 'endyear', $edate->year);
@@ -1001,6 +1006,8 @@ sub _datetime {
       # Using high-level range parsing sub in order to get unspec
       if (my ($sdate, undef, undef, $unspec) = parse_date_range($node->textContent())) {
 
+        # Save julian
+        $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;
         # Save circa information
         $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
 

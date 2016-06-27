@@ -387,6 +387,14 @@ sub set_output_entry {
             push @attrs, ('unspecified', $unspec);
         }
 
+        # Julian dates
+        if ($be->get_field("${d}datejulian")) {
+          push @attrs, ('startjulian', 'true');
+        }
+        if ($be->get_field("${d}enddatejulian")) {
+          push @attrs, ('endjulian', 'true');
+        }
+
         # Circa dates
         if ($be->get_field("${d}datecirca")) {
           push @attrs, ('startcirca', 'true');

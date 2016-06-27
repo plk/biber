@@ -433,6 +433,14 @@ sub set_output_entry {
       $acc .= "      \\field{${d}dateunspecified}{$unspec}\n";
     }
 
+    # Julian dates
+    if ($be->get_field("${d}datejulian")) {
+      $acc .= "      \\true{${d}datejulian}\n";
+    }
+    if ($be->get_field("${d}enddatejulian")) {
+      $acc .= "      \\true{${d}enddatejulian}\n";
+    }
+
     # Circa dates
     if ($be->get_field("${d}datecirca")) {
       $acc .= "      \\true{${d}datecirca}\n";

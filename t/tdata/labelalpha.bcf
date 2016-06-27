@@ -72,6 +72,14 @@
       <bcf:value order="1" type="field">date</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>julian</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>julianend</bcf:key>
+      <bcf:value>1582-10-15</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>maxalphanames</bcf:key>
       <bcf:value>3</bcf:value>
     </bcf:option>
@@ -217,7 +225,10 @@
     <bcf:option datatype="string">citereset</bcf:option>
     <bcf:option datatype="string">backrefstyle</bcf:option>
     <bcf:option datatype="string">arxiv</bcf:option>
+    <bcf:option datatype="string">julianstart</bcf:option>
+    <bcf:option datatype="string">julianend</bcf:option>
     <bcf:option datatype="boolean">useafterword</bcf:option>
+    <bcf:option datatype="boolean">julian</bcf:option>
     <bcf:option datatype="boolean">useannotator</bcf:option>
     <bcf:option datatype="boolean">useauthor</bcf:option>
     <bcf:option datatype="boolean">usebookauthor</bcf:option>

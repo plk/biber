@@ -47,6 +47,7 @@ my $builder = $class->new(
                  'Data::Compare' => 0,
                  'Data::Uniqid' => 0,
                  'DateTime::Format::Builder' => 0,
+                 'DateTime::Calendar::Julian' => 0,
                  'File::Slurp'  => 0,
                  'IPC::Cmd' => 0,
                  'IPC::Run3' => 0,

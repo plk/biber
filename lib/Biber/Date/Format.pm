@@ -6,6 +6,7 @@ use Carp;
 use DateTime;
 use DateTime::TimeZone;
 use DateTime::Format::Builder;
+use DateTime::Calendar::Julian;
 
 =encoding utf-8
 
@@ -31,7 +32,18 @@ sub init {
   delete $self->{circa};
   delete $self->{uncertain};
   delete $self->{season};
+  delete $self->{julian};
   return $self;
+}
+
+sub set_julian {
+  my $self = shift;
+  $self->{julian} = 1;
+}
+
+sub julian {
+  my $self = shift;
+  return $self->{julian};
 }
 
 sub missing {

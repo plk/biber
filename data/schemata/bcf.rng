@@ -54,6 +54,11 @@
         <ref name="labeltitleyear"/>
         <ref name="labeldate"/>
         <ref name="labeldatespec"/>
+        <ref name="julian"/>
+        <optional>
+          <ref name="julianstart"/>
+        </optional>
+        <ref name="julianend"/>
         <ref name="maxalphanames"/>
         <ref name="maxbibnames"/>
         <ref name="maxcitenames"/>
@@ -1556,6 +1561,48 @@
           <value>0</value>
           <value>1</value>
         </choice>
+      </element>
+    </element>
+  </define>
+  <define name="julian">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>julian</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="julianstart">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>julianstart</value>
+      </element>
+      <element name="bcf:value">
+        <text/>
+      </element>
+    </element>
+  </define>
+  <define name="julianend">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>julianend</value>
+      </element>
+      <element name="bcf:value">
+        <text/>
       </element>
     </element>
   </define>

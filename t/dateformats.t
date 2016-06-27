@@ -40,6 +40,8 @@ Biber::Config->setoption('validate_datamodel', 1);
 
 # Biblatex options
 Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption('julian', 1);
+Biber::Config->setblxoption('julianstart', '0001-01-01');
 
 # Now generate the information
 $biber->prepare;
@@ -472,6 +474,7 @@ my $era3 = q|    \entry{era3}{book}{}
       \field{month}{2}
       \field{year}{196}
       \field{dateera}{bce}
+      \true{eventdatejulian}
       \field{eventdateera}{ce}
     \endentry
 |;
@@ -648,5 +651,3 @@ eq_or_diff($out->get_output_entry('unspec2', $main), $unspec2, 'Unspecified - 2'
 
 # Test EDTF times
 eq_or_diff($out->get_output_entry('time1', $main), $time1, 'Times - 1');
-
-

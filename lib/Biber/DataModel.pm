@@ -1587,6 +1587,21 @@ sub generate_bblxml_schema {
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
+  # dateparts may have a julian attributes
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'startjulian');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'endjulian');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
   # dateparts may have a circa attributes
   $writer->startTag('optional');
   $writer->startTag('attribute', 'name' => 'startcirca');

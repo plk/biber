@@ -1097,7 +1097,52 @@ sub parse_date {
   return 0 unless $string;
   return 0 if $string eq 'unknown'; # EDTF 5.2.3
   return 0 if $string eq 'open';    # EDTF 5.2.3
-  return eval {$obj->parse_datetime($string)};
+
+  my $dt = eval {$obj->parse_datetime($string)};
+
+  return $dt unless $dt; # bad parse, don't do anything else
+
+  # Check if this datetime is between any Julian range. If so, return Julian date
+  # instead of Gregorian/astronomical
+  # This conversion is only done if the date is not missing month or day since the Julian
+  # Gregorian difference is usually a matter of only days and therefore a bare year like
+  # "1565" could be "1564" or "1565" in Julian, depending on the month/day of the Gregorian date
+  # For example, "1565-01-01" (which is what DateTime will default to for bare years), is
+  # "1564-12-22" Julian but 1564-01-11" and later is "1565" Julian year.
+  if (Biber::Config->getblxoption('julian') and
+      not $obj->missing('month') and
+      not $obj->missing('day')) {
+
+    # There is guaranteed to be an end point since biblatex has a default
+    my $je = Biber::Config->getblxoption('julianend');
+    my ($jeyear, $jemonth, $jeday) = $je =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}(\d{2})$/;
+    my $dtje = DateTime->new( year  => $jeyear,
+                              month => $jemonth,
+                              day   => $jeday );
+
+    # Datetime is not before the Julian end point so leave it alone
+    if (DateTime->compare($dt, $dtje) == 1) {
+      return $dt;
+    }
+
+    if (my $js = Biber::Config->getblxoption('julianstart')) {
+      my ($jsyear, $jsmonth, $jsday) = $js =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}(\d{2})$/;
+      my $dtjs = DateTime->new( year  => $jsyear,
+                                month => $jsmonth,
+                                day   => $jsday );
+
+      # Datetime is not after the Julian start point so leave it alone
+      if (DateTime->compare($dt, $dtjs) == -1) {
+        return $dt;
+      }
+
+      # Override with Julian conversion
+      $dt = DateTime::Calendar::Julian->from_object( object => $dt );
+      $obj->set_julian;
+    }
+  }
+
+  return $dt;
 }
 
 =head2 edtf_monthday

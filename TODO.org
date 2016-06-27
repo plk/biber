@@ -107,7 +107,7 @@
 ** DONE Remove yearabs from biber, biblatex needs to +1 all bce abs values on output when dateera is not "astronomical"
 ** DONE fix biber tests
 ** DONE Fix spaces in cites, run tests, upload, reply
-* TODO bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
+* DONE bibtex output only works on bibtex input data as it uses ->rawfields - should be able to base it on biblatexml output
 ** DONE name to bib and name to xnamebib in Name.pm
 ** DONE Name lists "and others"
 ** DONE name list output should use namesep option value
@@ -118,4 +118,10 @@
 ** DONE Order of fields needs to be determined
 ** DONE Document all in biber manual, add output_xname, output_*sep to the table there
 ** DONE Remove raw and references to raw
-** TODO More tool tests with --output-xname
+** DONE Check idiosyncratic fields in input bibtex.pm like keywords etc.
+** DONE Tool tests with --output-xname
+* DONE Julian cutoff
+** DONE cutoff option *must* be YYYY-MM-DD. Can be true or custom date. Document. Examples.
+** DONE Passed in .bcf, probably no need to update schema if simple option. Must be in .bcf data model as global option.
+** DONE Biber needs to put a *(end)datejulian boolean in the .bbl
+** DONE Define \if*(end)datejulian and \if(end)datejulian tests
