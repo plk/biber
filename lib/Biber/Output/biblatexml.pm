@@ -304,11 +304,6 @@ sub set_output_entry {
         push @attrs, ('uncertain', 'true');
       }
 
-      # BCE dates
-      if (my $era = $be->get_field("${d}era")) {
-        push @attrs, ('era', $era);
-      }
-
       $xml->startTag([$xml_prefix, 'date'], @attrs);
 
       # strip undefs

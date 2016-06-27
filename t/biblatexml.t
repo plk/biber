@@ -130,8 +130,12 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{usere}{a}
       \field{year}{1980}
       \field{dateunspecified}{yearindecade}
+      \field{dateera}{ce}
+      \field{eventdateera}{ce}
+      \field{eventenddateera}{ce}
       \field{origdateera}{bce}
       \true{urldatecirca}
+      \field{urldateera}{ce}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}
       \annotation{field}{author}{}{}{names-ann}

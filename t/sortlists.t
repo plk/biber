@@ -90,6 +90,7 @@ my $K11 = q|    \entry{K11}{book}{}
       \field{labeltitlesource}{title}
       \field{title}{One}
       \field{year}{1983}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -118,6 +119,7 @@ my $K12 = q|    \entry{K12}{book}{}
       \field{labeltitlesource}{title}
       \field{title}{Two}
       \field{year}{1983}
+      \field{dateera}{ce}
     \endentry
 |;
 

@@ -1198,69 +1198,6 @@ sub generate_bltxml_schema {
           $writer->endTag(); # attribute
           $writer->endTag(); # optional
 
-          # optional unspecified attribute
-          $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'unspecified');
-          $writer->startTag('choice');
-          $writer->dataElement('value', 'yearindecade');
-          $writer->dataElement('value', 'yearincentury');
-          $writer->dataElement('value', 'monthinyear');
-          $writer->dataElement('value', 'dayinmonth');
-          $writer->dataElement('value', 'dayinyear');
-          $writer->endTag(); # choice
-          $writer->endTag(); # attribute
-          $writer->endTag(); # optional
-
-          # optional circa attributes
-          $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'startcirca');
-          $writer->startTag('choice');
-          $writer->dataElement('value', 'true');
-          $writer->endTag(); # choice
-          $writer->endTag(); # attribute
-          $writer->endTag(); # optional
-          $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'endcirca');
-          $writer->startTag('choice');
-          $writer->dataElement('value', 'true');
-          $writer->endTag(); # choice
-          $writer->endTag(); # attribute
-          $writer->endTag(); # optional
-
-          # optional uncertain attributes
-          $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'startuncertain');
-          $writer->startTag('choice');
-          $writer->dataElement('value', 'true');
-          $writer->endTag(); # choice
-          $writer->endTag(); # attribute
-          $writer->endTag(); # optional
-          $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'enduncertain');
-          $writer->startTag('choice');
-          $writer->dataElement('value', 'true');
-          $writer->endTag(); # choice
-          $writer->endTag(); # attribute
-          $writer->endTag(); # optional
-
-          # optional era attributes
-          $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'startera');
-          $writer->startTag('choice');
-          $writer->dataElement('value', 'bce');
-          $writer->dataElement('value', 'ce');
-          $writer->endTag(); # choice
-          $writer->endTag(); # attribute
-          $writer->endTag(); # optional
-          $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'endera');
-          $writer->startTag('choice');
-          $writer->dataElement('value', 'bce');
-          $writer->dataElement('value', 'ce');
-          $writer->endTag(); # choice
-          $writer->endTag(); # attribute
-          $writer->endTag(); # optional
-
           # generic annotation attribute
           $writer->emptyTag('ref', 'name' => "annotation");
 

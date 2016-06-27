@@ -1128,9 +1128,8 @@ sub _datetime {
 
     unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
       $bibentry->set_datafield($datetype . 'year', $sdate->year);
-      my $era = lc($sdate->secular_era);
-      # Save era date information - CE is assumed
-      $bibentry->set_field($datetype . 'era', $era);
+      # Save era date information
+      $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
     }
 
     $bibentry->set_datafield($datetype . 'month', $sdate->month)
@@ -1155,9 +1154,8 @@ sub _datetime {
         if ($edate) {
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
             $bibentry->set_datafield($datetype . 'endyear', $edate->year);
-            my $era = lc($edate->secular_era);
-            # Save era date information - CE is assumed
-            $bibentry->set_field($datetype . 'endera', $era);
+            # Save era date information
+            $bibentry->set_field($datetype . 'endera', lc($edate->secular_era));
           }
 
           $bibentry->set_datafield($datetype . 'endmonth', $edate->month)

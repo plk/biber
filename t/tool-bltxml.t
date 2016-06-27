@@ -110,7 +110,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:note>i3Š</bltx:note>
     <bltx:title>Š title</bltx:title>
     <bltx:userb>test</bltx:userb>
-    <bltx:date era="ce">2003</bltx:date>
+    <bltx:date>2003</bltx:date>
   </bltx:entry>
   <bltx:entry id="xd1" entrytype="book">
     <bltx:names type="author">

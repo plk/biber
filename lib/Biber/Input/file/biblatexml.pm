@@ -900,38 +900,19 @@ sub _datetime {
 
     my $datetype = $node->getAttribute('type') // '';
 
-    # Save circa information
-    if ($node->getAttribute('startcirca')) {
-      $bibentry->set_field($datetype . 'datecirca', 1);
-    }
-    if ($node->getAttribute('endcirca')) {
-      $bibentry->set_field($datetype . 'enddatecirca', 1);
-    }
-
-    # Save uncertain date information
-    if ($node->getAttribute('startuncertain')) {
-      $bibentry->set_field($datetype . 'dateuncertain', 1);
-    }
-    if ($node->getAttribute('enduncertain')) {
-      $bibentry->set_field($datetype . 'enddateuncertain', 1);
-    }
-
-    # Save era  date information
-    # Possible values are specified in the schema and should be compatible
-    # with lc(DateTime->secular_era)
-    if (my $era = $node->getAttribute('startera')) {
-      $bibentry->set_field($datetype . 'era', $era);
-    }
-    if (my $era = $node->getAttribute('endera')) {
-      $bibentry->set_field($datetype . 'endera', $era);
-    }
-
     if (my $start = $node->findnodes("./$NS:start")) { # Date range
       my $end = $node->findnodes("./$NS:end");
 
       # Start of range
       # Using high-level range parsing sub in order to get unspec
       if (my ($sdate, undef, undef, $unspec) = parse_date_range($start->get_node(1)->textContent())) {
+
+        # Save circa information
+        $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
+
+        # Save uncertain date information
+        $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
+
         # Date had EDTF 5.2.2 unspecified format
         # This does not differ for *enddate components as these are split into ranges
         # from non-ranges only
@@ -941,6 +922,8 @@ sub _datetime {
 
         unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
           $bibentry->set_datafield($datetype . 'year', $sdate->year);
+          # Save era date information
+          $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
         }
 
         $bibentry->set_datafield($datetype . 'month', $sdate->month)
@@ -972,8 +955,17 @@ sub _datetime {
       my $edate = parse_date_end($end->get_node(1)->textContent());
       if (defined($edate)) { # no parse error
         if ($edate) { # not an empty range
+
+        # Save circa information
+        $bibentry->set_field($datetype . 'enddatecirca', 1) if $CONFIG_DATE_PARSERS{end}->circa;
+
+        # Save uncertain date information
+        $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
+
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
             $bibentry->set_datafield($datetype . 'endyear', $edate->year);
+            # Save era date information
+            $bibentry->set_field($datetype . 'endera', lc($edate->secular_era));
           }
 
           $bibentry->set_datafield($datetype . 'endmonth', $edate->month)
@@ -1008,6 +1000,13 @@ sub _datetime {
     else { # Simple date
       # Using high-level range parsing sub in order to get unspec
       if (my ($sdate, undef, undef, $unspec) = parse_date_range($node->textContent())) {
+
+        # Save circa information
+        $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
+
+        # Save uncertain date information
+        $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
+
         # Date had EDTF 5.2.2 unspecified format
         # This does not differ for *enddate components as these are split into ranges
         # from non-ranges only
@@ -1017,6 +1016,8 @@ sub _datetime {
 
         unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
           $bibentry->set_datafield($datetype . 'year', $sdate->year);
+          # Save era date information
+          $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
         }
 
         $bibentry->set_datafield($datetype . 'month', $sdate->month)
