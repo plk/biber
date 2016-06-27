@@ -540,6 +540,7 @@ sub construct_date {
     $overrideem = $seasons{$s};
   }
 
+
   # date exists if there is a start year
   if (my $sy = $overridey || $be->get_field("${d}year") ) {
     $datestring .= $sy;
