@@ -64,7 +64,7 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>labeldate</bcf:key>
+      <bcf:key>labeldateparts</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
@@ -264,7 +264,7 @@
     <bcf:option datatype="boolean">labelalpha</bcf:option>
     <bcf:option datatype="boolean">labeltitle</bcf:option>
     <bcf:option datatype="boolean">labeltitleyear</bcf:option>
-    <bcf:option datatype="boolean">labeldate</bcf:option>
+    <bcf:option datatype="boolean">labeldateparts</bcf:option>
     <bcf:option datatype="boolean">labelyear</bcf:option>
     <bcf:option datatype="boolean">uniquelist</bcf:option>
     <bcf:option datatype="boolean">uniquename</bcf:option>
@@ -323,7 +323,7 @@
     <bcf:option datatype="boolean">labelalpha</bcf:option>
     <bcf:option datatype="boolean">labeltitle</bcf:option>
     <bcf:option datatype="boolean">labeltitleyear</bcf:option>
-    <bcf:option datatype="boolean">labeldate</bcf:option>
+    <bcf:option datatype="boolean">labeldateparts</bcf:option>
     <bcf:option datatype="boolean">labelyear</bcf:option>
     <bcf:option datatype="boolean">uniquelist</bcf:option>
     <bcf:option datatype="boolean">uniquename</bcf:option>

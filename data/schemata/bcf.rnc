@@ -32,7 +32,7 @@ start =
       labeltitle,
       labeltitlespec,
       labeltitleyear,
-      labeldate,
+      labeldateparts,
       labeldatespec,
       julian,
       julianstart?,
@@ -68,7 +68,7 @@ start =
       labeltitle?,
       labeltitlespec?,
       labeltitleyear?,
-      labeldate?,
+      labeldateparts?,
       labeldatespec?,
       maxalphanames?,
       maxbibnames?,
@@ -516,10 +516,10 @@ labeltitleyear =
     element bcf:key { "labeltitleyear" },
     element bcf:value { "0" | "1" }
   }
-labeldate =
+labeldateparts =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "labeldate" },
+    element bcf:key { "labeldateparts" },
     element bcf:value { "0" | "1" }
   }
 labeldatespec =

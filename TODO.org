@@ -125,3 +125,13 @@
 ** DONE Passed in .bcf, probably no need to update schema if simple option. Must be in .bcf data model as global option.
 ** DONE Biber needs to put a *(end)datejulian boolean in the .bbl
 ** DONE Define \if*(end)datejulian and \if(end)datejulian tests
+* TODO Times - more work
+** DONE Add to EDTF
+** DONE Add time output to standard formats (don't forget ranges in .lbx)
+*** DONE bibdatetimesp should be space by default for non EDTF output
+** DONE Document \print*time are stand-alone time prints and \printdate will print times if *dateusetime is set
+** DONE Document *dateusetime, labeldateusetime, alldatesusetime and \bibdatetimesep
+** DONE Add *dateusetime, labeldateusetime, alldatesusetime to scope table in doc
+** DONE Document that the *usetime options do nothing with compact date range formats as this would be confusing.
+** TODO New output format like EDTF but options
+* TODO datelabel has to become labeldate somehow, for consistency

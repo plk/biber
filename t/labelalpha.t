@@ -42,7 +42,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxalphanames', 1);
 Biber::Config->setblxoption('maxcitenames', 1);
-Biber::Config->setblxoption('labeldate', undef);
+Biber::Config->setblxoption('labeldateparts', undef);
 
 # Now generate the information
 $biber->prepare;
@@ -194,7 +194,7 @@ Biber::Config->setblxoption('minalphanames', 4);
 Biber::Config->setblxoption('maxcitenames', 4);
 Biber::Config->setblxoption('mincitenames', 4);
 Biber::Config->setblxoption('labelalpha', 1);
-Biber::Config->setblxoption('labeldate', 1);
+Biber::Config->setblxoption('labeldateparts', 1);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');

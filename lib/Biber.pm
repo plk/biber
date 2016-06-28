@@ -1673,7 +1673,7 @@ sub process_extrayear {
   #   (see code in incr_seen_nameyear method).
   # * Don't increment if skiplab is set
 
-  if (Biber::Config->getblxoption('labeldate', $bee)) {
+  if (Biber::Config->getblxoption('labeldateparts', $bee)) {
     if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
       return;
     }
@@ -1944,7 +1944,7 @@ sub process_labeldate {
   my $bee = $be->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
 
-  if (Biber::Config->getblxoption('labeldate', $bee)) {
+  if (Biber::Config->getblxoption('labeldateparts', $bee)) {
     my $ldatespec = Biber::Config->getblxoption('labeldatespec', $bee);
     foreach my $h_ly (@$ldatespec) {
       my $pseudodate;
@@ -3194,7 +3194,7 @@ sub generate_extra {
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
       # extrayear
-      if (Biber::Config->getblxoption('labeldate', $bee)) {
+      if (Biber::Config->getblxoption('labeldateparts', $bee)) {
         my $nameyear = $be->get_field('nameyear');
         if (Biber::Config->get_seen_nameyear($nameyear) > 1) {
           if ($logger->is_trace()) {# performance tune

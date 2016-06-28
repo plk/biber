@@ -40,7 +40,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 1);
 Biber::Config->setblxoption('maxalphanames', 1);
-Biber::Config->setblxoption('labeldate', undef);
+Biber::Config->setblxoption('labeldateparts', undef);
 
 # Now generate the information
 $biber->prepare;

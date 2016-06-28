@@ -52,7 +52,7 @@
         <ref name="labeltitle"/>
         <ref name="labeltitlespec"/>
         <ref name="labeltitleyear"/>
-        <ref name="labeldate"/>
+        <ref name="labeldateparts"/>
         <ref name="labeldatespec"/>
         <ref name="julian"/>
         <optional>
@@ -107,7 +107,7 @@
             <ref name="labeltitleyear"/>
           </optional>
           <optional>
-            <ref name="labeldate"/>
+            <ref name="labeldateparts"/>
           </optional>
           <optional>
             <ref name="labeldatespec"/>
@@ -1344,13 +1344,13 @@
       </element>
     </element>
   </define>
-  <define name="labeldate">
+  <define name="labeldateparts">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>labeldate</value>
+        <value>labeldateparts</value>
       </element>
       <element name="bcf:value">
         <choice>

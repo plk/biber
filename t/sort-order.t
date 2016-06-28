@@ -32,7 +32,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setblxoption('labeldate', undef);
+Biber::Config->setblxoption('labeldateparts', undef);
 Biber::Config->setblxoption('labelalpha', 0);
 
 # (re)generate informtion based on option settings
