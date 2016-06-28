@@ -1135,11 +1135,11 @@ sub parse_date {
       if (DateTime->compare($dt, $dtjs) == -1) {
         return $dt;
       }
-
-      # Override with Julian conversion
-      $dt = DateTime::Calendar::Julian->from_object( object => $dt );
-      $obj->set_julian;
     }
+
+    # Override with Julian conversion
+    $dt = DateTime::Calendar::Julian->from_object( object => $dt );
+    $obj->set_julian;
   }
 
   return $dt;
