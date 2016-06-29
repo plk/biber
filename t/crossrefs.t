@@ -617,7 +617,6 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{sortinit}{V}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
-      \true{singletitle}
       \true{uniquetitle}
       \true{uniquework}
       \field{labelnamesource}{author}

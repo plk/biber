@@ -77,7 +77,7 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>julianend</bcf:key>
+      <bcf:key>gregorianstart</bcf:key>
       <bcf:value>1582-10-15</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
@@ -218,8 +218,7 @@
     <bcf:option datatype="string">citereset</bcf:option>
     <bcf:option datatype="string">backrefstyle</bcf:option>
     <bcf:option datatype="string">arxiv</bcf:option>
-    <bcf:option datatype="string">julianstart</bcf:option>
-    <bcf:option datatype="string">julianend</bcf:option>
+    <bcf:option datatype="string">gregorianstart</bcf:option>
     <bcf:option datatype="boolean">useafterword</bcf:option>
     <bcf:option datatype="boolean">julian</bcf:option>
     <bcf:option datatype="boolean">useannotator</bcf:option>

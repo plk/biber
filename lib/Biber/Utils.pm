@@ -1102,7 +1102,7 @@ sub parse_date {
 
   return $dt unless $dt; # bad parse, don't do anything else
 
-  # Check if this datetime is between any Julian range. If so, return Julian date
+  # Check if this datetime is before the Gregorian start date. If so, return Julian date
   # instead of Gregorian/astronomical
   # This conversion is only done if the date is not missing month or day since the Julian
   # Gregorian difference is usually a matter of only days and therefore a bare year like
@@ -1114,32 +1114,18 @@ sub parse_date {
       not $obj->missing('day')) {
 
     # There is guaranteed to be an end point since biblatex has a default
-    my $je = Biber::Config->getblxoption('julianend');
-    my ($jeyear, $jemonth, $jeday) = $je =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}(\d{2})$/;
-    my $dtje = DateTime->new( year  => $jeyear,
-                              month => $jemonth,
-                              day   => $jeday );
+    my $gs = Biber::Config->getblxoption('gregorianstart');
+    my ($gsyear, $gsmonth, $gsday) = $gs =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}(\d{2})$/;
+    my $dtgs = DateTime->new( year  => $gsyear,
+                              month => $gsmonth,
+                              day   => $gsday );
 
-    # Datetime is not before the Julian end point so leave it alone
-    if (DateTime->compare($dt, $dtje) == 1) {
-      return $dt;
+    # Datetime is not before the Gregorian start point
+    if (DateTime->compare($dt, $dtgs) == -1) {
+      # Override with Julian conversion
+      $dt = DateTime::Calendar::Julian->from_object( object => $dt );
+      $obj->set_julian;
     }
-
-    if (my $js = Biber::Config->getblxoption('julianstart')) {
-      my ($jsyear, $jsmonth, $jsday) = $js =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}(\d{2})$/;
-      my $dtjs = DateTime->new( year  => $jsyear,
-                                month => $jsmonth,
-                                day   => $jsday );
-
-      # Datetime is not after the Julian start point so leave it alone
-      if (DateTime->compare($dt, $dtjs) == -1) {
-        return $dt;
-      }
-    }
-
-    # Override with Julian conversion
-    $dt = DateTime::Calendar::Julian->from_object( object => $dt );
-    $obj->set_julian;
   }
 
   return $dt;

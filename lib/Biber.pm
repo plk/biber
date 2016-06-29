@@ -1606,7 +1606,12 @@ sub process_workuniqueness {
     }
 
     # Skip due to suppression settings?
-    unless (first {fc($f) eq fc($_)} @{$suppress->{singletitle}}) {
+    # Don't count towards singletitle being false if both labelname and labeltitle
+    # were inherited
+    # Put another way, if both labelname and labeltitle were inherited, singletitle
+    # can still be true (in a mvbook for example, which is just a single "work")
+    unless (($lni && first {fc($lni) eq fc($_)} @{$suppress->{singletitle}}) and
+            first {fc($lti) eq fc($_)} @{$suppress->{singletitle}}) {
       Biber::Config->incr_seenname($identifier);
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Setting seenname for '$citekey' to '$identifier'");

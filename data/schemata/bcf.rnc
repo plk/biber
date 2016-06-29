@@ -35,8 +35,7 @@ start =
       labeldateparts,
       labeldatespec,
       julian,
-      julianstart?,
-      julianend,
+      gregorianstart,
       maxalphanames,
       maxbibnames,
       maxcitenames,
@@ -608,16 +607,10 @@ julian =
     element bcf:key { "julian" },
     element bcf:value { "0" | "1" }
   }
-julianstart =
+gregorianstart =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "julianstart" },
-    element bcf:value { text }
-  }
-julianend =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "julianend" },
+    element bcf:key { "gregorianstart" },
     element bcf:value { text }
   }
 maxitems =
