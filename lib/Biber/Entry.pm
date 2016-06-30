@@ -631,14 +631,15 @@ sub inherit_from {
   # global defaults ...
   my $inherit_all = $defaults->{inherit_all};
   my $override_target = $defaults->{override_target};
-  my $suppress = $defaults->{suppress};
+  my $dignore = $defaults->{ignore};
+
   # override with type_pair specific defaults if they exist ...
   foreach my $type_pair (@{$defaults->{type_pair}}) {
     if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
         ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
       $inherit_all = $type_pair->{inherit_all} if $type_pair->{inherit_all};
       $override_target = $type_pair->{override_target} if $type_pair->{override_target};
-      $suppress = $type_pair->{suppress} if $type_pair->{suppress};
+      $dignore = $type_pair->{ignore} if defined($type_pair->{ignore});
     }
   }
 
@@ -677,10 +678,9 @@ sub inherit_from {
 
             $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
 
-            # Suppress uniqueness information tracking for this inheritance?
-            if (my $supp = $inherit->{suppress}) {
-              Biber::Config->add_uniq_suppress($target_key, $field->{target}, $supp);
-            }
+            # Ignore uniqueness information tracking for this inheritance?
+            my $ignore = $inherit->{ignore} || $dignore;
+            Biber::Config->add_uniq_ignore($target_key, $field->{target}, $ignore);
 
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
@@ -726,10 +726,8 @@ sub inherit_from {
 
         $self->set_datafield($field, $parent->get_field($field));
 
-        # Suppress uniqueness information tracking for this inheritance?
-        if (my $supp = $suppress) {
-          Biber::Config->add_uniq_suppress($target_key, $field, $supp);
-        }
+        # Ignore uniqueness information tracking for this inheritance?
+        Biber::Config->add_uniq_ignore($target_key, $field, $dignore);
 
         # Record graphing information if required
         if (Biber::Config->getoption('output_format') eq 'dot') {

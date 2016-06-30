@@ -52,8 +52,8 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 
-# Uniqueness supression information from inheritance data
-$CONFIG->{state}{uniqsupp};
+# Uniqueness ignore information from inheritance data
+$CONFIG->{state}{uniqignore};
 
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{xrefkeys} = {};
@@ -127,7 +127,7 @@ $CONFIG->{state}{datafiles} = [];
 =cut
 
 sub _init {
-  $CONFIG->{state}{uniqsupp} = {};
+  $CONFIG->{state}{uniqignore} = {};
   $CONFIG->{options}{biblatex}{ENTRY} = {};
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
@@ -721,32 +721,33 @@ sub set_unul_changed {
   return;
 }
 
-=head2 add_uniq_suppress
+=head2 add_uniq_ignore
 
-    Track uniqueness supression settings found in inheritance data
+    Track uniqueness ignore settings found in inheritance data
 
 =cut
 
-sub add_uniq_suppress {
+sub add_uniq_ignore {
   shift; # class method so don't care about class name
   my ($key, $field, $uniqs) = @_;
+  return unless $uniqs;
   foreach my $u (split(/\s*,\s*/, $uniqs)) {
-    push @{$CONFIG->{state}{uniqsupp}{$key}{$u}}, $field;
+    push @{$CONFIG->{state}{uniqignore}{$key}{$u}}, $field;
   }
   return;
 }
 
-=head2 get_uniq_suppress
+=head2 get_uniq_ignore
 
-    Retrieve uniqueness supression settings found in inheritance data
+    Retrieve uniqueness ignore settings found in inheritance data
 
 =cut
 
-sub get_uniq_suppress {
+sub get_uniq_ignore {
   no autovivification;
   shift; # class method so don't care about class name
   my $key = shift;
-  return $CONFIG->{state}{uniqsupp}{$key};
+  return $CONFIG->{state}{uniqignore}{$key};
 }
 
 =head2 postprocess_biber_opts

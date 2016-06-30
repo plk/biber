@@ -135,4 +135,4 @@
 ** DONE Add *dateusetime, labeldateusetime, alldatesusetime to scope table in doc
 ** DONE Document that the *usetime options do nothing with compact date range formats as this would be confusing.
 ** DONE New output format like EDTF but options
-
+* TODO singletitle -> uniquelabelname and uniquetitle -> uniquelabeltitle

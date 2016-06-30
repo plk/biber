@@ -165,8 +165,8 @@ start =
         attribute inherit_all { "true" | "false" },
         # Should we overwrite the target field if it exists?
         attribute override_target { "true" | "false" },
-        # Suppression of uniqueness tracking
-        attribute suppress { text }?,
+        # ignore of uniqueness tracking
+        attribute ignore { text }?,
         # Default inherit_all and override_target settings for entrytype source/target pairs
         element bcf:type_pair {
           attribute source { "*" | xsd:string {minLength="1"}},
@@ -179,8 +179,8 @@ start =
       },
       # An inheritance specification
       element bcf:inherit {
-        # Suppression of uniqueness tracking
-        attribute suppress { text }?,
+        # ignore of uniqueness tracking
+        attribute ignore { text }?,
         # applies to these pairs of source/target entrytypes
         element bcf:type_pair {
           attribute source { "*" | xsd:string {minLength="1"}},

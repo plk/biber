@@ -463,7 +463,7 @@
   </bcf:labelalphatemplate>
   <!-- INHERITANCE -->
   <bcf:inheritance>
-    <bcf:defaults inherit_all="true" override_target="false" suppress="singletitle">
+    <bcf:defaults inherit_all="true" override_target="false" ignore="singletitle">
       <bcf:type_pair source="*" target="incollection" inherit_all="false"/>
     </bcf:defaults>
     <bcf:inherit>

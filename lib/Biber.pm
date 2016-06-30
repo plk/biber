@@ -1585,8 +1585,8 @@ sub process_workuniqueness {
   my $lni = $be->get_labelname_info;
   my $lti = $be->get_labeltitle_info;
 
-  # suppression settings from inheritance data?
-  my $suppress = Biber::Config->get_uniq_suppress($citekey);
+  # ignore settings from inheritance data?
+  my $ignore = Biber::Config->get_uniq_ignore($citekey);
 
   # singletitle
   # Don't generate information for entries with no labelname or labeltitle
@@ -1605,13 +1605,13 @@ sub process_workuniqueness {
       $f = $lti;
     }
 
-    # Skip due to suppression settings?
+    # Skip due to ignore settings?
     # Don't count towards singletitle being false if both labelname and labeltitle
     # were inherited
     # Put another way, if both labelname and labeltitle were inherited, singletitle
     # can still be true (in a mvbook for example, which is just a single "work")
-    unless (($lni && first {fc($lni) eq fc($_)} @{$suppress->{singletitle}}) and
-            first {fc($lti) eq fc($_)} @{$suppress->{singletitle}}) {
+    unless (($lni && first {fc($lni) eq fc($_)} @{$ignore->{singletitle}}) and
+            first {fc($lti) eq fc($_)} @{$ignore->{singletitle}}) {
       Biber::Config->incr_seenname($identifier);
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Setting seenname for '$citekey' to '$identifier'");
@@ -1625,8 +1625,8 @@ sub process_workuniqueness {
   if ($lti and Biber::Config->getblxoption('uniquetitle', $bee)) {
     $identifier = $be->get_field($lti);
 
-    # Skip due to suppression settings?
-    unless (first {fc($lti) eq fc($_)} @{$suppress->{uniquetitle}}) {
+    # Skip due to ignore settings?
+    unless (first {fc($lti) eq fc($_)} @{$ignore->{uniquetitle}}) {
       Biber::Config->incr_seentitle($identifier);
       if ($logger->is_trace()) {  # performance tune
         $logger->trace("Setting seentitle for '$citekey' to '$identifier'");
@@ -1641,9 +1641,9 @@ sub process_workuniqueness {
   if ($lni and $lti and Biber::Config->getblxoption('uniquework', $bee)) {
     $identifier = $self->_getfullhash($citekey, $be->get_field($lni)) . $be->get_field($lti);
 
-    # Skip due to suppression settings?
-    unless (first {fc($lni) eq fc($_)} @{$suppress->{uniquework}} and
-            first {fc($lti) eq fc($_)} @{$suppress->{uniquework}}) {
+    # Skip due to ignore settings?
+    unless (first {fc($lni) eq fc($_)} @{$ignore->{uniquework}} and
+            first {fc($lti) eq fc($_)} @{$ignore->{uniquework}}) {
 
       Biber::Config->incr_seenwork($identifier);
       if ($logger->is_trace()) {  # performance tune

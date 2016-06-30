@@ -429,8 +429,8 @@
             </choice>
           </attribute>
           <optional>
-            <!-- Suppression of uniqueness tracking -->
-            <attribute name="suppress"/>
+            <!-- ignore of uniqueness tracking -->
+            <attribute name="ignore"/>
           </optional>
           <zeroOrMore>
             <!-- Default inherit_all and override_target settings for entrytype source/target pairs -->
@@ -468,7 +468,7 @@
                 </attribute>
               </optional>
               <optional>
-                <attribute name="suppress"/>
+                <attribute name="ignore"/>
               </optional>
               <empty/>
             </element>
@@ -478,8 +478,8 @@
           <!-- An inheritance specification -->
           <element name="bcf:inherit">
             <optional>
-              <!-- Suppression of uniqueness tracking -->
-              <attribute name="suppress"/>
+              <!-- ignore of uniqueness tracking -->
+              <attribute name="ignore"/>
             </optional>
             <oneOrMore>
               <!-- applies to these pairs of source/target entrytypes -->
