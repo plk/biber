@@ -141,9 +141,9 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
 |;
 
 # This is included as it is crossrefed >= mincrossrefs times Notice lack of
-# labelname and labelname hashes because the only name is EDITOR and
-# useeditor is false
-# This is also why there is no \true{uniquework}
+# singletitle, labelname and labelname hashes because the only name is
+# EDITOR and useeditor is false This is also why there is no
+# \true{uniquework}
 my $cr_m = q|    \entry{cr_m}{book}{}
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
@@ -160,7 +160,6 @@ my $cr_m = q|    \entry{cr_m}{book}{}
       \field{sortinit}{G}
       \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
       \true{crossrefsource}
-      \true{singletitle}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Graphs of the Continent}
@@ -251,6 +250,7 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
 |;
 
 # cited as normal
+# No singletitle as useeditor is false
 my $crt = q|    \entry{crt}{book}{}
       \name{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{%
@@ -266,7 +266,6 @@ my $crt = q|    \entry{crt}{book}{}
       \strng{editorfullhash}{a1f5c22413396d599ec766725b226735}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
-      \true{singletitle}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Beasts of the Burbling Burns}
@@ -445,7 +444,7 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
     \endentry
 |;
 
-# This is included as it is xref'd >= minxrefs times Notice lack of
+# This is included as it is xref'd >= minxrefs times Notice lack of singletitle,
 # labelname and labelname hashes because the only name is EDITOR and
 # useeditor is false
 my $xrm = q|    \entry{xrm}{book}{}
@@ -464,7 +463,6 @@ my $xrm = q|    \entry{xrm}{book}{}
       \field{sortinit}{C}
       \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
       \true{xrefsource}
-      \true{singletitle}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Calligraphy, Calisthenics, Culture}
@@ -500,6 +498,7 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
 |;
 
 # cited as normal
+# Note no singletitle as useeditor is false
 my $xrt = q|    \entry{xrt}{book}{}
       \name{editor}{1}{}{%
         {{hash=bf7d6b02f3e073913e5bfe5059508dd5}{%
@@ -515,7 +514,6 @@ my $xrt = q|    \entry{xrt}{book}{}
       \strng{editorfullhash}{bf7d6b02f3e073913e5bfe5059508dd5}
       \field{sortinit}{K}
       \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
-      \true{singletitle}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Kings, Cork and Calculation}
@@ -649,7 +647,6 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
       \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{sortinit}{P}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
-      \true{singletitle}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{booktitle}{Misc etc.}
@@ -682,7 +679,6 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
 my $s1 = q|    \entry{s1}{inbook}{}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
-      \true{singletitle}
       \true{uniquetitle}
       \field{labeltitlesource}{title}
       \strng{crossref}{s2}

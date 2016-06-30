@@ -1591,27 +1591,16 @@ sub process_workuniqueness {
   # singletitle
   # Don't generate information for entries with no labelname or labeltitle
   # Use fullhash as this is not a test of uniqueness of only visible information
-  if (($lni or $lti) and Biber::Config->getblxoption('singletitle', $bee)) {
-    my $f;
-    if ($logger->is_trace()) {# performance tune
-      $logger->trace("Creating singletitle information for '$citekey'");
-    }
-    if ($lni) {
-      $identifier = $self->_getfullhash($citekey, $be->get_field($lni));
-      $f = $lni;
-    }
-    else {
-      $identifier = $be->get_field($lti);
-      $f = $lti;
-    }
+  if ($lni and Biber::Config->getblxoption('singletitle', $bee)) {
+    $identifier = $self->_getfullhash($citekey, $be->get_field($lni));
 
     # Skip due to ignore settings?
     # Don't count towards singletitle being false if both labelname and labeltitle
     # were inherited
     # Put another way, if both labelname and labeltitle were inherited, singletitle
     # can still be true (in a mvbook for example, which is just a single "work")
-    unless (($lni && first {fc($lni) eq fc($_)} @{$ignore->{singletitle}}) and
-            first {fc($lti) eq fc($_)} @{$ignore->{singletitle}}) {
+    unless (($lni and first {fc($lni) eq fc($_)} @{$ignore->{singletitle}}) and
+            ($lti and first {fc($lti) eq fc($_)} @{$ignore->{singletitle}})) {
       Biber::Config->incr_seenname($identifier);
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Setting seenname for '$citekey' to '$identifier'");
