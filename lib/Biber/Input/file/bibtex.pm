@@ -937,8 +937,9 @@ sub _literal {
 # URI fields
 sub _uri {
   my ($bibentry, $entry, $field) = @_;
-  my $value = NFC($entry->get($field));# Unicode NFC boundary (before hex encoding)
-  $bibentry->set_datafield($field, URI->new($value)->as_string); # Performs url encoding
+  my $value = $entry->get($field);
+  # Unicode NFC boundary (before hex encoding)
+  $bibentry->set_datafield($field, URI->new(NFC($value))->as_string); # Performs url encoding
   return;
 }
 
@@ -1002,7 +1003,7 @@ sub _name {
   my $value = $entry->get($field);
   my $xnamesep = Biber::Config->getoption('xnamesep');
 
-  my @tmp = Text::BibTeX::split_list($value,
+  my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('namesep'),
                                      undef,
                                      undef,
@@ -1203,8 +1204,8 @@ sub _datetime {
 # Bibtex list fields with listsep separator
 sub _list {
   my ($bibentry, $entry, $field) = @_;
-  my $value = NFC($entry->get($field)); # because we are going back out to Text::BibTeX
-  my @tmp = Text::BibTeX::split_list($value,
+  my $value = $entry->get($field);
+  my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('listsep'),
                                      undef,
                                      undef,
@@ -1218,8 +1219,9 @@ sub _list {
 # Bibtex uri lists
 sub _urilist {
   my ($bibentry, $entry, $field) = @_;
-  my $value = NFC($entry->get($field)); # because we are going back out to Text::BibTeX
-  my @tmp = Text::BibTeX::split_list($value,
+  my $value = $entry->get($field);
+  # Unicode NFC boundary (before hex encoding)
+  my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('listsep'));
   @tmp = map {
     # If there are some escapes in the URI, unescape them
