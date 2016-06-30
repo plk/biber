@@ -1002,10 +1002,12 @@ sub _name {
   my $value = $entry->get($field);
   my $xnamesep = Biber::Config->getoption('xnamesep');
 
-
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
-  # @tmp is bytes again now
-  @tmp = map { biber_decode_utf8($_) } @tmp;
+  my @tmp = Text::BibTeX::split_list($value,
+                                     Biber::Config->getoption('namesep'),
+                                     undef,
+                                     undef,
+                                     undef,
+                                     {binmode => 'utf-8', normalization => 'NFD'});
 
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
@@ -1202,9 +1204,12 @@ sub _datetime {
 sub _list {
   my ($bibentry, $entry, $field) = @_;
   my $value = NFC($entry->get($field)); # because we are going back out to Text::BibTeX
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
-  # split_list always returns bytes
-  @tmp = map { biber_decode_utf8($_) } @tmp;
+  my @tmp = Text::BibTeX::split_list($value,
+                                     Biber::Config->getoption('listsep'),
+                                     undef,
+                                     undef,
+                                     undef,
+                                     {binmode => 'utf-8', normalization => 'NFD'});
   @tmp = map { (remove_outer($_))[1] } @tmp;
   $bibentry->set_datafield($field, [ @tmp ]);
   return;
@@ -1214,7 +1219,8 @@ sub _list {
 sub _urilist {
   my ($bibentry, $entry, $field) = @_;
   my $value = NFC($entry->get($field)); # because we are going back out to Text::BibTeX
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
+  my @tmp = Text::BibTeX::split_list($value,
+                                     Biber::Config->getoption('listsep'));
   @tmp = map {
     # If there are some escapes in the URI, unescape them
     if ($_ =~ /\%/) {
