@@ -107,6 +107,7 @@ start =
       element maps {
         attribute datatype { "bibtex" | "biblatexml" },
         attribute map_overwrite { "0" | "1" }?,
+        attribute refsection { xsd:integer }?,
         map+
       }+
     }? &

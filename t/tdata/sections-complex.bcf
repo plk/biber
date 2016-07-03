@@ -423,7 +423,7 @@
   </bcf:datafieldset>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
-    <bcf:maps datatype="bibtex" level="user">
+    <bcf:maps datatype="bibtex" level="user" refsection="1">
       <bcf:map map_overwrite="1">
         <bcf:per_type>MOVIE</bcf:per_type>
         <bcf:map_step map_field_set="keywords" map_field_value="thing" map_append="1"/>

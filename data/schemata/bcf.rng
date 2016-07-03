@@ -254,6 +254,11 @@
                   </choice>
                 </attribute>
               </optional>
+              <optional>
+                <attribute name="refsection">
+                  <data type="integer"/>
+                </attribute>
+              </optional>
               <oneOrMore>
                 <ref name="map"/>
               </oneOrMore>
@@ -468,7 +473,7 @@
                 </attribute>
               </optional>
               <optional>
-                <attribute name="ignore"/>
+                <attribute name="suppress"/>
               </optional>
               <empty/>
             </element>

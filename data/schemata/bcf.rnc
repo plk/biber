@@ -117,6 +117,7 @@ start =
         attribute datatype { "bibtex" | "biblatexml" },
         attribute map_overwrite { "0" | "1" }?,
         attribute level { "user" | "style" | "driver" }?,
+        attribute refsection { xsd:integer }?,
         map+
       }+
     }?,

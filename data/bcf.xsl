@@ -398,6 +398,12 @@
             <xsl:choose>
               <xsl:when test="./@map_overwrite">1</xsl:when>
               <xsl:otherwise>0</xsl:otherwise>
+              </xsl:choose>, section = 
+              <xsl:choose>
+                <xsl:when test="./@refsection">
+                  <xsl:value-of select="./@refsection"/>
+                </xsl:when>
+              <xsl:otherwise>all</xsl:otherwise>
             </xsl:choose>)</h4>
             <xsl:for-each select="./bcf:map">
               <table>

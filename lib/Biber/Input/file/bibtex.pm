@@ -400,6 +400,11 @@ sub create_entry {
       $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
       my $level = $smap->{level};
 
+      # Skip if this maps element specifies a particular refsection and it is not this one
+      if (my $mapsecnum = $smap->{refsection}) {
+        next unless $secnum == $mapsecnum;
+      }
+
     MAP: foreach my $map (@{$smap->{map}}) {
 
         # Check pertype restrictions
