@@ -390,394 +390,396 @@ sub create_entry {
   if ( $entry->metatype == BTE_REGULAR ) {
     my %newentries; # In case we create a new entry in a map
 
-    # Only process maps once for each entry in the cache. The cache is persistent across
-    # refsections and so the first refsection will process sourcemaps and alter the cache.
-    unless ($cache->{data}{$key}{mapdone}) {
-      # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
-      foreach my $smap (@$smaps) {
-        $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
-        my $level = $smap->{level};
+    # Save entry and work on a clone so that modifications do not propagate to
+    # other refsections
+    my $saved_entry = $entry;
+    $entry = $entry->clone;
 
-      MAP: foreach my $map (@{$smap->{map}}) {
+    # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
+    foreach my $smap (@$smaps) {
+      $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
+      my $level = $smap->{level};
 
-          # Check pertype restrictions
-          # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
-          # messier to write than Q
-          unless (not exists($map->{per_type}) or
-                  first {lc($_->{content}) eq $entry->type} @{$map->{per_type}}) {
-            next;
+    MAP: foreach my $map (@{$smap->{map}}) {
+
+        # Check pertype restrictions
+        # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
+        # messier to write than Q
+        unless (not exists($map->{per_type}) or
+                first {lc($_->{content}) eq $entry->type} @{$map->{per_type}}) {
+          next;
+        }
+
+        # Check negated pertype restrictions
+        if (exists($map->{per_nottype}) and
+            first {lc($_->{content}) eq $entry->type} @{$map->{per_nottype}}) {
+          next;
+        }
+
+        # Check per_datasource restrictions
+        # Don't compare case insensitively - this might not be correct
+        # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
+        # messier to write than Q
+        unless (not exists($map->{per_datasource}) or
+                first {$_->{content} eq $datasource} @{$map->{per_datasource}}) {
+          next;
+        }
+
+        my $last_type = $entry->type; # defaults to the entrytype unless changed below
+        my $last_field = undef;
+        my $last_fieldval = undef;
+
+        my @imatches; # For persisting parenthetical matches over several steps
+
+        # Set up any mapping foreach loop
+        my @maploop = ('');
+        if (my $foreach = $map->{map_foreach}) {
+          if (my $dslist = $DATAFIELD_SETS{lc($foreach)}) { # datafield set list
+            @maploop = @$dslist;
           }
-
-          # Check negated pertype restrictions
-          if (exists($map->{per_nottype}) and
-              first {lc($_->{content}) eq $entry->type} @{$map->{per_nottype}}) {
-            next;
+          elsif (my $felist = $entry->get(lc($foreach))) { # datafield
+            @maploop = split(/\s*,\s*/, $felist);
           }
-
-          # Check per_datasource restrictions
-          # Don't compare case insensitively - this might not be correct
-          # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
-          # messier to write than Q
-          unless (not exists($map->{per_datasource}) or
-                  first {$_->{content} eq $datasource} @{$map->{per_datasource}}) {
-            next;
+          else {                # explicit CSV
+            @maploop = split(/\s*,\s*/, $foreach);
           }
+        }
 
-          my $last_type = $entry->type; # defaults to the entrytype unless changed below
-          my $last_field = undef;
-          my $last_fieldval = undef;
+        foreach my $maploop (@maploop) {
+          my $MAPUNIQVAL;
+          # loop over mapping steps
+          foreach my $step (@{$map->{map_step}}) {
 
-          my @imatches; # For persisting parenthetical matches over several steps
-
-          # Set up any mapping foreach loop
-          my @maploop = ('');
-          if (my $foreach = $map->{map_foreach}) {
-            if (my $dslist = $DATAFIELD_SETS{lc($foreach)}) { # datafield set list
-              @maploop = @$dslist;
+            # entry deletion. Really only useful with allkeys or tool mode
+            if ($step->{map_entry_null}) {
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
+              }
+              return 0;         # don't create an entry at all
             }
-            elsif (my $felist = $entry->get(lc($foreach))) { # datafield
-              @maploop = split(/\s*,\s*/, $felist);
+
+            # new entry
+            if (my $newkey = maploopreplace($step->{map_entry_new}, $maploop)) {
+              # Now re-instate any unescaped $1 .. $9 to get round these being
+              # dynamically scoped and being null when we get here from any
+              # previous map_match
+              $newkey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+
+              my $newentrytype;
+              unless ($newentrytype = maploopreplace($step->{map_entry_newtype}, $maploop)) {
+                biber_warn("Source mapping (type=$level, key=$key): Missing type for new entry '$newkey', skipping step ...");
+                next;
+              }
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Source mapping (type=$level, key=$key): Creating new entry with key '$newkey'");
+              }
+              my $newentry = new Text::BibTeX::Entry;
+              $newentry->set_metatype(BTE_REGULAR);
+              $newentry->set_key(encode('UTF-8', NFC($newkey)));
+              $newentry->set_type(encode('UTF-8', NFC($newentrytype)));
+
+              # found a new entry key, remove it from the list of keys we want since we
+              # have "found" it by creating it
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Source mapping (type=$level, key=$key): created '$newkey', removing from dependent list");
+              }
+              @$rkeys = grep {$newkey ne $_} @$rkeys;
+
+              # Need to add the clone key to the section if allkeys is set since all keys
+              # are cleared for allkeys sections initially
+              if ($section->is_allkeys) {
+                $section->add_citekeys($newkey);
+              }
+              $newentries{$newkey} = $newentry;
             }
-            else {              # explicit CSV
-              @maploop = split(/\s*,\s*/, $foreach);
+
+            # entry clone
+            if (my $clonekey = maploopreplace($step->{map_entry_clone}, $maploop)) {
+              # Now re-instate any unescaped $1 .. $9 to get round these being
+              # dynamically scoped and being null when we get here from any
+              # previous map_match
+              $clonekey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Source mapping (type=$level, key=$key): cloning entry with new key '$clonekey'");
+              }
+              # found a clone key, remove it from the list of keys we want since we
+              # have "found" it by creating it along with its clone parent
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Source mapping (type=$level, key=$key): created '$clonekey', removing from dependent list");
+              }
+              @$rkeys = grep {$clonekey ne $_} @$rkeys;
+
+              # Need to add the clone key to the section if allkeys is set since all keys
+              # are cleared for allkeys sections initially
+              if ($section->is_allkeys) {
+                $section->add_citekeys($clonekey);
+              }
+              $newentries{$clonekey} = $entry->clone;
             }
-          }
 
-          foreach my $maploop (@maploop) {
-            my $MAPUNIQVAL;
-            # loop over mapping steps
-            foreach my $step (@{$map->{map_step}}) {
+            # An entry created by map_entry_new or map_entry_clone previously can be
+            # the target for field setting options
+            # A newly created entry as target of operations doesn't make sense in all situations
+            # so it's limited to being the target for field sets
+            my $etarget;
+            my $etargetkey;
+            if ($etargetkey = maploopreplace($step->{map_entrytarget}, $maploop)) {
+              # Now re-instate any unescaped $1 .. $9 to get round these being
+              # dynamically scoped and being null when we get here from any
+              # previous map_match
+              $etargetkey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
 
-              # entry deletion. Really only useful with allkeys or tool mode
-              if ($step->{map_entry_null}) {
-                if ($logger->is_debug()) {# performance tune
-                  $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
-                }
-                  return 0;       # don't create an entry at all
+              unless ($etarget = $newentries{$etargetkey}) {
+                biber_warn("Source mapping (type=$level, key=$key): Dynamically created entry target '$etargetkey' does not exist skipping step ...");
+                next;
               }
+            }
+            else {           # default is that we operate on the same entry
+              $etarget = $entry;
+              $etargetkey = $key;
+            }
 
-              # new entry
-              if (my $newkey = maploopreplace($step->{map_entry_new}, $maploop)) {
-                # Now re-instate any unescaped $1 .. $9 to get round these being
-                # dynamically scoped and being null when we get here from any
-                # previous map_match
-                $newkey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-
-                my $newentrytype;
-                unless ($newentrytype = maploopreplace($step->{map_entry_newtype}, $maploop)) {
-                  biber_warn("Source mapping (type=$level, key=$key): Missing type for new entry '$newkey', skipping step ...");
-                  next;
-                }
-                if ($logger->is_debug()) {# performance tune
-                  $logger->debug("Source mapping (type=$level, key=$key): Creating new entry with key '$newkey'");
-                }
-                my $newentry = new Text::BibTeX::Entry;
-                $newentry->set_metatype(BTE_REGULAR);
-                $newentry->set_key(encode('UTF-8', NFC($newkey)));
-                $newentry->set_type(encode('UTF-8', NFC($newentrytype)));
-
-                # found a new entry key, remove it from the list of keys we want since we
-                # have "found" it by creating it
-                if ($logger->is_debug()) {# performance tune
-                  $logger->debug("Source mapping (type=$level, key=$key): created '$newkey', removing from dependent list");
-                }
-                @$rkeys = grep {$newkey ne $_} @$rkeys;
-
-                # Need to add the clone key to the section if allkeys is set since all keys
-                # are cleared for allkeys sections initially
-                if ($section->is_allkeys) {
-                  $section->add_citekeys($newkey);
-                }
-                $newentries{$newkey} = $newentry;
-              }
-
-              # entry clone
-              if (my $clonekey = maploopreplace($step->{map_entry_clone}, $maploop)) {
-                # Now re-instate any unescaped $1 .. $9 to get round these being
-                # dynamically scoped and being null when we get here from any
-                # previous map_match
-                $clonekey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-
-                if ($logger->is_debug()) {# performance tune
-                  $logger->debug("Source mapping (type=$level, key=$key): cloning entry with new key '$clonekey'");
-                }
-                # found a clone key, remove it from the list of keys we want since we
-                # have "found" it by creating it along with its clone parent
-                if ($logger->is_debug()) {# performance tune
-                  $logger->debug("Source mapping (type=$level, key=$key): created '$clonekey', removing from dependent list");
-                }
-                @$rkeys = grep {$clonekey ne $_} @$rkeys;
-
-                # Need to add the clone key to the section if allkeys is set since all keys
-                # are cleared for allkeys sections initially
-                if ($section->is_allkeys) {
-                  $section->add_citekeys($clonekey);
-                }
-                $newentries{$clonekey} = $entry->clone;
-              }
-
-              # An entry created by map_entry_new or map_entry_clone previously can be
-              # the target for field setting options
-              # A newly created entry as target of operations doesn't make sense in all situations
-              # so it's limited to being the target for field sets
-              my $etarget;
-              my $etargetkey;
-              if ($etargetkey = maploopreplace($step->{map_entrytarget}, $maploop)) {
-                # Now re-instate any unescaped $1 .. $9 to get round these being
-                # dynamically scoped and being null when we get here from any
-                # previous map_match
-                $etargetkey =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-
-                unless ($etarget = $newentries{$etargetkey}) {
-                  biber_warn("Source mapping (type=$level, key=$key): Dynamically created entry target '$etargetkey' does not exist skipping step ...");
-                  next;
-                }
-              }
-              else {         # default is that we operate on the same entry
-                $etarget = $entry;
-                $etargetkey = $key;
-              }
-
-              # Entrytype map
-              if (my $typesource = maploopreplace($step->{map_type_source}, $maploop)) {
-                $typesource = lc($typesource);
-                unless ($etarget->type eq $typesource) {
-                  # Skip the rest of the map if this step doesn't match and match is final
-                  if ($step->{map_final}) {
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
-                    }
-                    next MAP;
+            # Entrytype map
+            if (my $typesource = maploopreplace($step->{map_type_source}, $maploop)) {
+              $typesource = lc($typesource);
+              unless ($etarget->type eq $typesource) {
+                # Skip the rest of the map if this step doesn't match and match is final
+                if ($step->{map_final}) {
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
                   }
-                  else {
-                    # just ignore this step
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource', skipping step ...");
-                    }
-                    next;
-                  }
-                }
-                # Change entrytype if requested
-                $last_type = $etarget->type;
-                my $t = lc(maploopreplace($step->{map_type_target}, $maploop));
-                if ($logger->is_debug()) {# performance tune
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
-                }
-                $etarget->set_type(encode('UTF-8', NFC($t)));
-              }
-
-              my $fieldcontinue = 0;
-              my $fieldsource;
-              my $nfieldsource;
-              # Negated source field map
-              if ($nfieldsource = maploopreplace($step->{map_notfield}, $maploop)) {
-                $nfieldsource = lc($nfieldsource);
-                if ($etarget->exists($nfieldsource)) {
-                  if ($step->{map_final}) {
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists and step has 'final' set, skipping rest of map ...");
-                    }
-                    next MAP;
-                  }
-                  else {
-                    # just ignore this step
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists, skipping step ...");
-                    }
-                    next;
-                  }
-                }
-                $fieldcontinue = 1;
-              }
-
-              # Field map
-              if ($fieldsource = maploopreplace($step->{map_field_source}, $maploop)) {
-                $fieldsource = lc($fieldsource);
-
-                # key is a pseudo-field. It's guaranteed to exist so
-                # just check if that's what's being asked for
-                unless ($fieldsource eq 'entrykey' or
-                        $etarget->exists($fieldsource)) {
-                  # Skip the rest of the map if this step doesn't match and match is final
-                  if ($step->{map_final}) {
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource' and step has 'final' set, skipping rest of map ...");
-                    }
-                    next MAP;
-                  }
-                  else {
-                    # just ignore this step
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource', skipping step ...");
-                    }
-                    next;
-                  }
-                }
-                $fieldcontinue = 1;
-              }
-
-              if ($fieldcontinue) {
-                $last_field = $fieldsource;
-                $last_fieldval = $fieldsource eq 'entrykey' ? biber_decode_utf8($etarget->key) : biber_decode_utf8($etarget->get($fieldsource));
-
-                my $negmatch = 0;
-                # Negated matches are a normal match with a special flag
-                if (my $nm = $step->{map_notmatch}) {
-                  $step->{map_match} = $nm;
-                  $negmatch = 1;
-                }
-
-                # map fields to targets
-                if (my $m = maploopreplace($step->{map_match}, $maploop)) {
-                  if (defined($step->{map_replace})) { # replace can be null
-
-                    # Can't modify entrykey
-                    if ($fieldsource eq 'entrykey') {
-                      if ($logger->is_debug()) {# performance tune
-                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot remap the value of this field, skipping ...");
-                      }
-                      next;
-                    }
-
-                    my $r = maploopreplace($step->{map_replace}, $maploop);
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
-                    }
-                    $etarget->set($fieldsource,
-                                  encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
-                  }
-                  else {
-                    # Now re-instate any unescaped $1 .. $9 to get round these being
-                    # dynamically scoped and being null when we get here from any
-                    # previous map_match
-                    # Be aware that imatch() uses m//g so @imatches can have multiple paren group
-                    # captures which might be useful
-                    $m =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-                    unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
-                      # Skip the rest of the map if this step doesn't match and match is final
-                      if ($step->{map_final}) {
-                        if ($logger->is_debug()) {# performance tune
-                          $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m' and step has 'final' set, skipping rest of map ...");
-                        }
-                        next MAP;
-                      }
-                      else {
-                        # just ignore this step
-                        if ($logger->is_debug()) {# performance tune
-                          $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m', skipping step ...");
-                        }
-                        next;
-                      }
-                    }
-                  }
-                }
-
-                # Set to a different target if there is one
-                if (my $target = maploopreplace($step->{map_field_target}, $maploop)) {
-                  $target = lc($target);
-                  # Can't remap entry key pseudo-field
-                  if ($fieldsource eq 'entrykey') {
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot map this to a new field as you must have an entrykey, skipping ...");
-                    }
-                    next;
-                  }
-
-                  if ($etarget->exists($target)) {
-                    if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                      if ($logger->is_debug()) {# performance tune
-                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field '$target'");
-                      }
-                    }
-                    else {
-                      if ($logger->is_debug()) {# performance tune
-                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is mapped to field '$target' but both are defined, skipping ...");
-                      }
-                      next;
-                    }
-                  }
-                  $etarget->set($target, encode('UTF-8', NFC(biber_decode_utf8($entry->get($fieldsource)))));
-                  $etarget->delete($fieldsource);
-                }
-              }
-
-              # field changes
-              if (my $field = maploopreplace($step->{map_field_set}, $maploop)) {
-                $field = lc($field);
-                # Deal with special tokens
-                if ($step->{map_null}) {
-                  if ($logger->is_debug()) {# performance tune
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Deleting field '$field'");
-                  }
-                  $etarget->delete($field);
+                  next MAP;
                 }
                 else {
-                  if ($etarget->exists($field)) {
-                    unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                      if ($step->{map_final}) {
-                        # map_final is set, ignore and skip rest of step
-                        if ($logger->is_debug()) {# performance tune
-                          $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
-                        }
-                        next MAP;
-                      }
-                      else {
-                        # just ignore this step
-                        if ($logger->is_debug()) {# performance tune
-                          $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists and overwrite is not set, skipping step ...");
-                        }
-                        next;
-                      }
+                  # just ignore this step
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->type . "' but map wants '$typesource', skipping step ...");
+                  }
+                  next;
+                }
+              }
+              # Change entrytype if requested
+              $last_type = $etarget->type;
+              my $t = lc(maploopreplace($step->{map_type_target}, $maploop));
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
+              }
+              $etarget->set_type(encode('UTF-8', NFC($t)));
+            }
+
+            my $fieldcontinue = 0;
+            my $fieldsource;
+            my $nfieldsource;
+            # Negated source field map
+            if ($nfieldsource = maploopreplace($step->{map_notfield}, $maploop)) {
+              $nfieldsource = lc($nfieldsource);
+              if ($etarget->exists($nfieldsource)) {
+                if ($step->{map_final}) {
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists and step has 'final' set, skipping rest of map ...");
+                  }
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$nfieldsource' exists, skipping step ...");
+                  }
+                  next;
+                }
+              }
+              $fieldcontinue = 1;
+            }
+
+            # Field map
+            if ($fieldsource = maploopreplace($step->{map_field_source}, $maploop)) {
+              $fieldsource = lc($fieldsource);
+
+              # key is a pseudo-field. It's guaranteed to exist so
+              # just check if that's what's being asked for
+              unless ($fieldsource eq 'entrykey' or
+                      $etarget->exists($fieldsource)) {
+                # Skip the rest of the map if this step doesn't match and match is final
+                if ($step->{map_final}) {
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource' and step has 'final' set, skipping rest of map ...");
+                  }
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): No field '$fieldsource', skipping step ...");
+                  }
+                  next;
+                }
+              }
+              $fieldcontinue = 1;
+            }
+
+            if ($fieldcontinue) {
+              $last_field = $fieldsource;
+              $last_fieldval = $fieldsource eq 'entrykey' ? biber_decode_utf8($etarget->key) : biber_decode_utf8($etarget->get($fieldsource));
+
+              my $negmatch = 0;
+              # Negated matches are a normal match with a special flag
+              if (my $nm = $step->{map_notmatch}) {
+                $step->{map_match} = $nm;
+                $negmatch = 1;
+              }
+
+              # map fields to targets
+              if (my $m = maploopreplace($step->{map_match}, $maploop)) {
+                if (defined($step->{map_replace})) { # replace can be null
+
+                  # Can't modify entrykey
+                  if ($fieldsource eq 'entrykey') {
+                    if ($logger->is_debug()) { # performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot remap the value of this field, skipping ...");
                     }
+                    next;
                   }
 
-                  # If append is set, keep the original value and append the new
-                  my $orig = $step->{map_append} ? biber_decode_utf8($etarget->get($field)) : '';
+                  my $r = maploopreplace($step->{map_replace}, $maploop);
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
+                  }
+                  $etarget->set($fieldsource,
+                                encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
+                }
+                else {
+                  # Now re-instate any unescaped $1 .. $9 to get round these being
+                  # dynamically scoped and being null when we get here from any
+                  # previous map_match
+                  # Be aware that imatch() uses m//g so @imatches can have multiple paren group
+                  # captures which might be useful
+                  $m =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+                  unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
+                    # Skip the rest of the map if this step doesn't match and match is final
+                    if ($step->{map_final}) {
+                      if ($logger->is_debug()) { # performance tune
+                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                      }
+                      next MAP;
+                    }
+                    else {
+                      # just ignore this step
+                      if ($logger->is_debug()) { # performance tune
+                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' does not match '$m', skipping step ...");
+                      }
+                      next;
+                    }
+                  }
+                }
+              }
 
-                  if ($step->{map_origentrytype}) {
-                    next unless $last_type;
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_type}'");
-                    }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $last_type)));
+              # Set to a different target if there is one
+              if (my $target = maploopreplace($step->{map_field_target}, $maploop)) {
+                $target = lc($target);
+                # Can't remap entry key pseudo-field
+                if ($fieldsource eq 'entrykey') {
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot map this to a new field as you must have an entrykey, skipping ...");
                   }
-                  elsif ($step->{map_origfieldval}) {
-                    next unless $last_fieldval;
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_fieldval}'");
+                  next;
+                }
+
+                if ($etarget->exists($target)) {
+                  if ($map->{map_overwrite} // $smap->{map_overwrite}) {
+                    if ($logger->is_debug()) { # performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field '$target'");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $last_fieldval)));
-                  }
-                  elsif ($step->{map_origfield}) {
-                    next unless $last_field;
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_field}'");
-                    }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $last_field)));
                   }
                   else {
-                    my $fv = maploopreplace($step->{map_field_value}, $maploop);
-                    # Now re-instate any unescaped $1 .. $9 to get round these being
-                    # dynamically scoped and being null when we get here from any
-                    # previous map_match
-                    $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-                    if ($logger->is_debug()) {# performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${fv}'");
+                    if ($logger->is_debug()) { # performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is mapped to field '$target' but both are defined, skipping ...");
                     }
-                    $etarget->set($field, encode('UTF-8', NFC($orig . $fv)));
+                    next;
                   }
+                }
+                $etarget->set($target, encode('UTF-8', NFC(biber_decode_utf8($entry->get($fieldsource)))));
+                $etarget->delete($fieldsource);
+              }
+            }
+
+            # field changes
+            if (my $field = maploopreplace($step->{map_field_set}, $maploop)) {
+              $field = lc($field);
+              # Deal with special tokens
+              if ($step->{map_null}) {
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Deleting field '$field'");
+                }
+                $etarget->delete($field);
+              }
+              else {
+                if ($etarget->exists($field)) {
+                  unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
+                    if ($step->{map_final}) {
+                      # map_final is set, ignore and skip rest of step
+                      if ($logger->is_debug()) { # performance tune
+                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
+                      }
+                      next MAP;
+                    }
+                    else {
+                      # just ignore this step
+                      if ($logger->is_debug()) { # performance tune
+                        $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$field' exists and overwrite is not set, skipping step ...");
+                      }
+                      next;
+                    }
+                  }
+                }
+
+                # If append is set, keep the original value and append the new
+                my $orig = $step->{map_append} ? biber_decode_utf8($etarget->get($field)) : '';
+
+                if ($step->{map_origentrytype}) {
+                  next unless $last_type;
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_type}'");
+                  }
+                  $etarget->set($field, encode('UTF-8', NFC($orig . $last_type)));
+                }
+                elsif ($step->{map_origfieldval}) {
+                  next unless $last_fieldval;
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_fieldval}'");
+                  }
+                  $etarget->set($field, encode('UTF-8', NFC($orig . $last_fieldval)));
+                }
+                elsif ($step->{map_origfield}) {
+                  next unless $last_field;
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_field}'");
+                  }
+                  $etarget->set($field, encode('UTF-8', NFC($orig . $last_field)));
+                }
+                else {
+                  my $fv = maploopreplace($step->{map_field_value}, $maploop);
+                  # Now re-instate any unescaped $1 .. $9 to get round these being
+                  # dynamically scoped and being null when we get here from any
+                  # previous map_match
+                  $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${fv}'");
+                  }
+                  $etarget->set($field, encode('UTF-8', NFC($orig . $fv)));
                 }
               }
             }
           }
         }
       }
-
-      # Register that we've processed maps for this entry
-      $cache->{data}{$key}{mapdone} = 1;
     }
 
     _create_entry($key, $entry);
+
+    # reinstate original entry before modifications so that further refsections
+    # have a clean slate
+    $entry = $saved_entry;
 
     # Need to also instantiate fields in any new entries created by map
     while (my ($k, $e) = each %newentries) {
