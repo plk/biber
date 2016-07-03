@@ -400,12 +400,12 @@ sub create_entry {
       $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
       my $level = $smap->{level};
 
-      # Skip if this maps element specifies a particular refsection and it is not this one
-      if (my $mapsecnum = $smap->{refsection}) {
-        next unless $secnum == $mapsecnum;
-      }
-
     MAP: foreach my $map (@{$smap->{map}}) {
+
+        # Skip if this map element specifies a particular refsection and it is not this one
+        if (exists($map->{refsection})) {
+          next unless $secnum == $map->{refsection};
+        }
 
         # Check pertype restrictions
         # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so

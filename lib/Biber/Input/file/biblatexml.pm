@@ -373,6 +373,11 @@ sub create_entry {
 
   MAP:    foreach my $map (@{$smap->{map}}) {
 
+      # Skip if this map element specifies a particular refsection and it is not this one
+      if (exists($map->{refsection})) {
+        next unless $secnum == $map->{refsection};
+      }
+
       # defaults to the entrytype unless changed below
       my $last_type = $entry->getAttribute('entrytype');
       my $last_field = undef;
