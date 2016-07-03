@@ -117,7 +117,6 @@ start =
         attribute datatype { "bibtex" | "biblatexml" },
         attribute map_overwrite { "0" | "1" }?,
         attribute level { "user" | "style" | "driver" }?,
-        attribute refsection { xsd:integer }?,
         map+
       }+
     }?,
@@ -753,6 +752,7 @@ map =
   element bcf:map {
     attribute map_overwrite { "0" | "1" }?,
     attribute map_foreach { xsd:string {minLength="1"} }?,
+    attribute refsection { xsd:integer }?,
     element bcf:per_datasource { xsd:string {minLength="1"} }*,
     element bcf:per_type { xsd:string {minLength="1"} }*,
     element bcf:map_step {

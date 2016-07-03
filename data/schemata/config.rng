@@ -433,11 +433,6 @@
                     </choice>
                   </attribute>
                 </optional>
-                <optional>
-                  <attribute name="refsection">
-                    <data type="integer"/>
-                  </attribute>
-                </optional>
                 <oneOrMore>
                   <ref name="map"/>
                 </oneOrMore>
@@ -951,6 +946,11 @@
           <data type="string">
             <param name="minLength">1</param>
           </data>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="refsection">
+          <data type="integer"/>
         </attribute>
       </optional>
       <zeroOrMore>
