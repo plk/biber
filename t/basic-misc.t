@@ -489,7 +489,7 @@ my $url1 = q|    \entry{url1}{misc}{}
 my $list1 = q|    \entry{list1}{book}{}
       \true{morelocation}
       \list{location}{2}{%
-        {AAA}%
+        {ÁAA}%
         {BBB}%
       }
       \field{sortinit}{}

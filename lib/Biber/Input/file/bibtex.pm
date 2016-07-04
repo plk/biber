@@ -623,9 +623,9 @@ sub create_entry {
               $fieldcontinue = 1;
             }
 
-            if ($fieldcontinue) {
-              $last_field = $fieldsource;
-              $last_fieldval = $fieldsource eq 'entrykey' ? biber_decode_utf8($etarget->key) : biber_decode_utf8($etarget->get($fieldsource));
+              if ($fieldcontinue) {
+                $last_field = $fieldsource;
+                $last_fieldval = $fieldsource eq 'entrykey' ? $etarget->key : $etarget->get($fieldsource);
 
               my $negmatch = 0;
               # Negated matches are a normal match with a special flag
@@ -702,8 +702,10 @@ sub create_entry {
                     }
                     next;
                   }
+                  $etarget->set($target, encode('UTF-8', NFC($entry->get($fieldsource))));
+                  $etarget->delete($fieldsource);
                 }
-                $etarget->set($target, encode('UTF-8', NFC(biber_decode_utf8($entry->get($fieldsource)))));
+                $etarget->set($target, encode('UTF-8', NFC($entry->get($fieldsource))));
                 $etarget->delete($fieldsource);
               }
             }
@@ -738,8 +740,8 @@ sub create_entry {
                   }
                 }
 
-                # If append is set, keep the original value and append the new
-                my $orig = $step->{map_append} ? biber_decode_utf8($etarget->get($field)) : '';
+                  # If append is set, keep the original value and append the new
+                  my $orig = $step->{map_append} ? $etarget->get($field) : '';
 
                 if ($step->{map_origentrytype}) {
                   next unless $last_type;
@@ -809,9 +811,9 @@ sub _create_entry {
   }
 
   # Save pre-mapping data. Might be useful somewhere
-  $bibentry->set_field('rawdata', biber_decode_utf8($e->print_s));
+  $bibentry->set_field('rawdata', $e->print_s);
 
-  my $entrytype = biber_decode_utf8($e->type);
+  my $entrytype = $e->type;
 
   # We put all the fields we find modulo field aliases into the object
   # validation happens later and is not datasource dependent
@@ -820,7 +822,7 @@ sub _create_entry {
     # We have to process local options as early as possible in order
     # to make them available for things that need them like parsename()
     if ($f eq 'options') {
-      my $value = biber_decode_utf8($e->get($f));
+      my $value = $e->get($f);
       my $Srx = Biber::Config->getoption('xsvsep');
       my $S = qr/$Srx/;
       process_entry_options($k, [ split(/$S/, $value) ]);
@@ -851,7 +853,7 @@ sub _create_entry {
 # Data annotation fields
 sub _annotation {
   my ($bibentry, $entry, $field, $key) = @_;
-  my $value = biber_decode_utf8($entry->get($field));
+  my $value = $entry->get($field);
   my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
   $field =~ s/$ann$//;
   foreach my $a (split(/\s*;\s*/, $value)) {
@@ -872,7 +874,7 @@ sub _annotation {
 # Literal fields
 sub _literal {
   my ($bibentry, $entry, $field, $key) = @_;
-  my $value = biber_decode_utf8($entry->get($field));
+  my $value = $entry->get($field);
 
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
@@ -944,8 +946,9 @@ sub _literal {
 # URI fields
 sub _uri {
   my ($bibentry, $entry, $field) = @_;
-  my $value = NFC(decode_utf8($entry->get($field)));# Unicode NFC boundary (before hex encoding)
-  $bibentry->set_datafield($field, URI->new($value)->as_string); # Performs url encoding
+  my $value = $entry->get($field);
+  # Unicode NFC boundary (before hex encoding)
+  $bibentry->set_datafield($field, URI->new(NFC($value))->as_string); # Performs url encoding
   return;
 }
 
@@ -954,14 +957,14 @@ sub _xsv {
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
   my ($bibentry, $entry, $field) = @_;
-  $bibentry->set_datafield($field, [ split(/$S/, biber_decode_utf8($entry->get($field))) ]);
+  $bibentry->set_datafield($field, [ split(/$S/, $entry->get($field)) ]);
   return;
 }
 
 # Verbatim fields
 sub _verbatim {
   my ($bibentry, $entry, $field) = @_;
-  my $value = biber_decode_utf8($entry->get($field));
+  my $value = $entry->get($field);
   $bibentry->set_datafield($field, $value);
   return;
 }
@@ -975,7 +978,7 @@ sub _verbatim {
 sub _range {
   my ($bibentry, $entry, $field, $key) = @_;
   my $values_ref;
-  my $value = biber_decode_utf8($entry->get($field));
+  my $value = $entry->get($field);
 
   my @values = split(/\s*[;,]\s*/, $value);
   # If there is a range sep, then we set the end of the range even if it's null
@@ -1006,11 +1009,15 @@ sub _name {
   my ($bibentry, $entry, $field, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $value = biber_decode_utf8($entry->get($field));
+  my $value = $entry->get($field);
   my $xnamesep = Biber::Config->getoption('xnamesep');
 
-  # @tmp is bytes again now
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('namesep'));
+  my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
+                                     Biber::Config->getoption('namesep'),
+                                     undef,
+                                     undef,
+                                     undef,
+                                     {binmode => 'utf-8', normalization => 'NFD'});
 
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
   my $names = new Biber::Entry::Names;
@@ -1036,8 +1043,6 @@ sub _name {
       $section->del_citekey($key);
       next;
     }
-
-    $name = biber_decode_utf8($name);
 
     my $nps = join('|', $dm->get_constant_value('nameparts'));
     my $no;
@@ -1089,7 +1094,7 @@ sub _name {
 sub _datetime {
   my ($bibentry, $entry, $field, $key) = @_;
   my $datetype = $field =~ s/date\z//xmsr;
-  my $date = biber_decode_utf8($entry->get($field));
+  my $date = $entry->get($field);
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
@@ -1208,10 +1213,13 @@ sub _datetime {
 # Bibtex list fields with listsep separator
 sub _list {
   my ($bibentry, $entry, $field) = @_;
-  my $value = biber_decode_utf8($entry->get($field));
-
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
-  @tmp = map { biber_decode_utf8($_) } @tmp;
+  my $value = $entry->get($field);
+  my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
+                                     Biber::Config->getoption('listsep'),
+                                     undef,
+                                     undef,
+                                     undef,
+                                     {binmode => 'utf-8', normalization => 'NFD'});
   @tmp = map { (remove_outer($_))[1] } @tmp;
   $bibentry->set_datafield($field, [ @tmp ]);
   return;
@@ -1220,8 +1228,10 @@ sub _list {
 # Bibtex uri lists
 sub _urilist {
   my ($bibentry, $entry, $field) = @_;
-  my $value = NFC(decode_utf8($entry->get($field)));# Unicode NFC boundary (before hex encoding)
-  my @tmp = Text::BibTeX::split_list($value, Biber::Config->getoption('listsep'));
+  my $value = $entry->get($field);
+  # Unicode NFC boundary (before hex encoding)
+  my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
+                                     Biber::Config->getoption('listsep'));
   @tmp = map {
     # If there are some escapes in the URI, unescape them
     if ($_ =~ /\%/) {
@@ -1256,15 +1266,15 @@ sub cache_data {
   # Convert/decode file
   my $pfilename = preprocess_file($filename);
 
-  my $bib = Text::BibTeX::File->new( $pfilename, '<' )
-    or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
+  my $bib = new Text::BibTeX::File;
+  $bib->open($pfilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
 
   # Log that we found a data file
   $logger->info("Found BibTeX data source '$filename'");
 
   while ( my $entry = new Text::BibTeX::Entry $bib ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {
-      push @{$cache->{preamble}{$filename}}, biber_decode_utf8($entry->value);
+      push @{$cache->{preamble}{$filename}}, $entry->value;
       next;
     }
 
@@ -1272,7 +1282,7 @@ sub cache_data {
     if ( $entry->metatype == BTE_COMMENT ) {
       if (Biber::Config->getoption('tool') and not
           Biber::Config->getoption('strip_comments') ) {
-        push @{$cache->{comments}{$filename}}, process_comment(biber_decode_utf8($entry->value));
+        push @{$cache->{comments}{$filename}}, process_comment($entry->value);
       }
       next;
     }
@@ -1288,7 +1298,7 @@ sub cache_data {
     }
 
     # Text::BibTeX >= 0.46 passes through all citekey bits, thus allowing UTF-8 keys
-    my $key = biber_decode_utf8($entry->key);
+    my $key = $entry->key;
 
     # Check if this key has already been registered as a citekey alias, if
     # so, the key takes priority and we delete the alias
@@ -1301,7 +1311,7 @@ sub cache_data {
     # We can't do this with a driver dispatch for the IDS field as this needs
     # an entry object creating first and the whole point of aliases is that
     # there is no entry object
-    if (my $ids = biber_decode_utf8($entry->get('ids'))) {
+    if (my $ids = $entry->get('ids')) {
       my $Srx = Biber::Config->getoption('xsvsep');
       my $S = qr/$Srx/;
       foreach my $id (split(/$S/, $ids)) {
@@ -1456,7 +1466,7 @@ sub parsename {
   $namestr =~ s/(\w)\.(\w)/$1. $2/g if Biber::Config->getoption('fixinits');
 
   my %namec;
-  my $name = new Text::BibTeX::Name($namestr);
+  my $name = new Text::BibTeX::Name({binmode => 'utf-8', normalization => 'NFD'}, $namestr);
 
   # Formats so we can get BibTeX compatible nbsp inserted
   my $l_f = new Text::BibTeX::NameFormat('l', 0);
@@ -1469,10 +1479,10 @@ sub parsename {
   $s_f->set_options(BTN_JR,    0, BTJ_MAYTIE, BTJ_NOTHING);
 
   # Generate name parts
-  $namec{family} = biber_decode_utf8($name->format($l_f));
-  $namec{given}  = biber_decode_utf8($name->format($f_f));
-  $namec{prefix} = biber_decode_utf8($name->format($p_f));
-  $namec{suffix} = biber_decode_utf8($name->format($s_f));
+  $namec{family} = $name->format($l_f);
+  $namec{given}  = $name->format($f_f);
+  $namec{prefix} = $name->format($p_f);
+  $namec{suffix} = $name->format($s_f);
 
   # Use a copy of $name so that when we generate the
   # initials, we do so without certain things. This is easier than trying
@@ -1483,7 +1493,7 @@ sub parsename {
   # spaces - this is fine as we are just generating initials
   $nd_namestr =~ s/\.~\s*/. /g;
 
-  my $nd_name = new Text::BibTeX::Name($nd_namestr, $fieldname);
+  my $nd_name = new Text::BibTeX::Name({binmode => 'utf-8', normalization => 'NFD'}, $nd_namestr, $fieldname);
 
   # Initials formats
   my $li_f = new Text::BibTeX::NameFormat('l', 1);
@@ -1501,10 +1511,10 @@ sub parsename {
   $pi_f->set_options(BTN_VON,   1, BTJ_FORCETIE, BTJ_NOTHING);
   $si_f->set_options(BTN_JR,    1, BTJ_FORCETIE, BTJ_NOTHING);
 
-  $namec{'family-i'} = inits(biber_decode_utf8($nd_name->format($li_f)));
-  $namec{'given-i'}  = inits(biber_decode_utf8($nd_name->format($fi_f)));
-  $namec{'prefix-i'} = inits(biber_decode_utf8($nd_name->format($pi_f)));
-  $namec{'suffix-i'} = inits(biber_decode_utf8($nd_name->format($si_f)));
+  $namec{'family-i'} = inits($nd_name->format($li_f));
+  $namec{'given-i'}  = inits($nd_name->format($fi_f));
+  $namec{'prefix-i'} = inits($nd_name->format($pi_f));
+  $namec{'suffix-i'} = inits($nd_name->format($si_f));
 
   my $basenamestring = '';
   my $namestring = '';
