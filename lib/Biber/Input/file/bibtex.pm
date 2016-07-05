@@ -478,7 +478,7 @@ sub create_entry {
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Source mapping (type=$level, key=$key): Creating new entry with key '$newkey'");
               }
-              my $newentry = new Text::BibTeX::Entry;
+              my $newentry = Text::BibTeX::Entry->new();
               $newentry->set_metatype(BTE_REGULAR);
               $newentry->set_key(encode('UTF-8', NFC($newkey)));
               $newentry->set_type(encode('UTF-8', NFC($newentrytype)));
@@ -803,7 +803,7 @@ sub _create_entry {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($k);
 
-  my $bibentry = new Biber::Entry;
+  my $bibentry = Biber::Entry->new();
 
   $bibentry->set_field('citekey', $k);
   if ($logger->is_debug()) {# performance tune
@@ -1020,7 +1020,7 @@ sub _name {
                                      {binmode => 'utf-8', normalization => 'NFD'});
 
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
-  my $names = new Biber::Entry::Names;
+  my $names = Biber::Entry::Names->new();
 
   foreach my $name (@tmp) {
 
@@ -1266,13 +1266,13 @@ sub cache_data {
   # Convert/decode file
   my $pfilename = preprocess_file($filename);
 
-  my $bib = new Text::BibTeX::File;
+  my $bib = Text::BibTeX::File->new();
   $bib->open($pfilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
 
   # Log that we found a data file
   $logger->info("Found BibTeX data source '$filename'");
 
-  while ( my $entry = new Text::BibTeX::Entry $bib ) {
+  while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {
       push @{$cache->{preamble}{$filename}}, $entry->value;
       next;
@@ -1466,13 +1466,13 @@ sub parsename {
   $namestr =~ s/(\w)\.(\w)/$1. $2/g if Biber::Config->getoption('fixinits');
 
   my %namec;
-  my $name = new Text::BibTeX::Name({binmode => 'utf-8', normalization => 'NFD'}, $namestr);
+  my $name = Text::BibTeX::Name->new({binmode => 'utf-8', normalization => 'NFD'}, $namestr);
 
   # Formats so we can get BibTeX compatible nbsp inserted
-  my $l_f = new Text::BibTeX::NameFormat('l', 0);
-  my $f_f = new Text::BibTeX::NameFormat('f', 0);
-  my $p_f = new Text::BibTeX::NameFormat('v', 0);
-  my $s_f = new Text::BibTeX::NameFormat('j', 0);
+  my $l_f = Text::BibTeX::NameFormat->new('l', 0);
+  my $f_f = Text::BibTeX::NameFormat->new('f', 0);
+  my $p_f = Text::BibTeX::NameFormat->new('v', 0);
+  my $s_f = Text::BibTeX::NameFormat->new('j', 0);
   $l_f->set_options(BTN_LAST,  0, BTJ_MAYTIE, BTJ_NOTHING);
   $f_f->set_options(BTN_FIRST, 0, BTJ_MAYTIE, BTJ_NOTHING);
   $p_f->set_options(BTN_VON,   0, BTJ_MAYTIE, BTJ_NOTHING);
@@ -1493,13 +1493,13 @@ sub parsename {
   # spaces - this is fine as we are just generating initials
   $nd_namestr =~ s/\.~\s*/. /g;
 
-  my $nd_name = new Text::BibTeX::Name({binmode => 'utf-8', normalization => 'NFD'}, $nd_namestr, $fieldname);
+  my $nd_name = Text::BibTeX::Name->new({binmode => 'utf-8', normalization => 'NFD'}, $nd_namestr, $fieldname);
 
   # Initials formats
-  my $li_f = new Text::BibTeX::NameFormat('l', 1);
-  my $fi_f = new Text::BibTeX::NameFormat('f', 1);
-  my $pi_f = new Text::BibTeX::NameFormat('v', 1);
-  my $si_f = new Text::BibTeX::NameFormat('j', 1);
+  my $li_f = Text::BibTeX::NameFormat->new('l', 1);
+  my $fi_f = Text::BibTeX::NameFormat->new('f', 1);
+  my $pi_f = Text::BibTeX::NameFormat->new('v', 1);
+  my $si_f = Text::BibTeX::NameFormat->new('j', 1);
 
   # Initials generated with forced tie so we can make an array
   $li_f->set_text(BTN_LAST,  undef, undef, undef, '');
