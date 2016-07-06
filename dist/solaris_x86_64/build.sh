@@ -4,7 +4,7 @@
 # constructed in the code so Par::Packer can't auto-detect them.
 # Same with some of the output modules.
 
-PAR_VERBATIM=1 /usr/perl5/5.22.0/bin/pp \
+PAR_VERBATIM=1 /usr/perl5/5.24/bin/pp \
   --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
@@ -25,7 +25,7 @@ PAR_VERBATIM=1 /usr/perl5/5.22.0/bin/pp \
   --module=IO::Socket::SSL \
   --module=Text::CSV_XS \
   --module=DateTime \
-  --link=/usr/perl5/5.22.0/lib/libbtparse.so \
+  --link=/usr/perl5/5.24/lib/libbtparse.so \
   --link=/usr/lib/amd64/libxml2.so.2 \
   --link=/usr/lib/amd64/libz.so.1 \
   --link=/usr/lib/amd64/libxslt.so.1 \
@@ -35,4 +35,4 @@ PAR_VERBATIM=1 /usr/perl5/5.22.0/bin/pp \
   --addlist=biber.files \
   --cachedeps=scancache \
   --output=biber-solaris_x86_64 \
-  /usr/perl5/5.22.0/bin/biber
+  /usr/perl5/5.24/bin/biber
