@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -268,7 +268,7 @@ if (exists($opts->{dot_include}) and (not exists($opts->{output_format})
 if (exists($opts->{dot_include})) {
   $opts->{dot_include} = {map {lc($_) => 1} split(/,/,join(',',@{$opts->{dot_include}}))};
   my @suboptions = ( 'section', 'field', 'crossref', 'xref', 'xdata', 'related' );
-  foreach my $g (keys %{$opts->{dot_include}}) {
+  foreach my $g (keys $opts->{dot_include}->%*) {
     unless (first {$_ eq lc($g)} @suboptions) {
       say STDERR "Biber: '$g' is an invalid output type for DOT output";
       exit EXIT_ERROR;
@@ -289,7 +289,7 @@ if (exists($opts->{input_format}) and
 }
 
 # Create Biber object, passing command-line options
-my $biber = Biber->new(%$opts);
+my $biber = Biber->new($opts->%*);
 
 # get the logger object
 my $logger  = Log::Log4perl::get_logger('main');
