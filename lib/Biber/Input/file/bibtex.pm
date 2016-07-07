@@ -215,11 +215,18 @@ sub extract_entries {
   # that's standard stdio.
   # The Log4Perl setup outputs only to STDOUT so redirecting all STDERR like this is
   # ok since only libbtparse will be writing there
-  my $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
-                              DIR      => $Biber::MASTER->biber_tempdir);
-  my $tberr_name = $tberr->filename;
-  open OLDERR, '>&', \*STDERR;
-  open STDERR, '>', $tberr_name;
+  # Don't do this if we are debugging or tracing because some errors in libbtparse cause
+  # sudden death and can't be output as the read/output of the saved STDERR is never reached.
+  # so, if debugging/tracing, output STDERR errors immediately.
+  my $tberr;
+  my $tberr_name;
+  unless ($logger->is_debug() or $logger->is_trace()) {
+    $tberr = File::Temp->new(TEMPLATE => 'biber_Text_BibTeX_STDERR_XXXXX',
+                             DIR      => $Biber::MASTER->biber_tempdir);
+    $tberr_name = $tberr->filename;
+    open OLDERR, '>&', \*STDERR;
+    open STDERR, '>', $tberr_name;
+  }
 
   # Increment the number of times each datafile has been referenced
   # For example, a datafile might be referenced in more than one section.
@@ -335,24 +342,26 @@ sub extract_entries {
     }
   }
 
-  open STDERR, '>&', \*OLDERR;
-  close OLDERR;
+  unless ($logger->is_debug() or $logger->is_trace()) {
+    open STDERR, '>&', \*OLDERR;
+    close OLDERR;
 
-  # Put any Text::BibTeX errors into the biber warnings/errors collections
-  # We are parsing the libbtparse library error/warning strings a little here
-  # This is not so bad as they have a clean structure (see error.c in libbtparse)
-  open my $tbe, '<', $tberr_name;
-  while (<$tbe>) {
-    if (/error:/) {
-      chomp;
-      biber_error("BibTeX subsystem: $_");
+    # Put any Text::BibTeX errors into the biber warnings/errors collections
+    # We are parsing the libbtparse library error/warning strings a little here
+    # This is not so bad as they have a clean structure (see error.c in libbtparse)
+    open my $tbe, '<', $tberr_name;
+    while (<$tbe>) {
+      if (/error:/) {
+        chomp;
+        biber_error("BibTeX subsystem: $_");
+      }
+      elsif (/warning:/) {
+        chomp;
+        biber_warn("BibTeX subsystem: $_");
+      }
     }
-    elsif (/warning:/) {
-      chomp;
-      biber_warn("BibTeX subsystem: $_");
-    }
+    close($tbe);
   }
-  close($tbe);
 
   # Only push the preambles from the file if we haven't seen this data file before
   # and there are some preambles to push
