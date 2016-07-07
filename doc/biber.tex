@@ -1398,12 +1398,12 @@ scheme. When this is done, it sorts the entries according to the sorting
 objects it has generated for each entry.
 
 A sorting specification is comprised of a number of \texttt{sort} elements.
-Sorting is essentially a process of comparing whatever information the \textcolor{red}{n}th
-\texttt{sort} element collected for every entry (otherwise known as
-«multi-field» sorting). Within a \texttt{sort} element, there can be any
-number of \texttt{sortitem} elements which describe what information to
-look for in the entry in order to construct this part of the sorting
-object; either a field, a literal string or the special «citeorder»
+Sorting is essentially a process of comparing whatever information is in
+the \textcolor{red}{n}th \texttt{sort} element collected for every entry
+(otherwise known as «multi-field» sorting). Within a \texttt{sort} element,
+there can be any number of \texttt{sortitem} elements which describe what
+information to look for in the entry in order to construct this part of the
+sorting object; either a field, a literal string or the special «citeorder»
 pseudo-field.
 
 When generating the sorting information for an entry, within each
@@ -1605,8 +1605,8 @@ anyway. \opt{nosort} allows you to ignore parts of a field for sorting.
 This is done using Perl regular expressions which specify what to
 ignore in a field. You can specify as many patterns as you like for a
 specific field. Datasource field sets defined using
-\cmd{DeclareDatafieldSet} in \biblatex are also recognised as valid options
-values and so you can specify \opt{nosort} regular expressions for
+\cmd{DeclareDatafieldSet} in \biblatex are also recognised as valid
+values and so it is possible to specify \opt{nosort} regular expressions for
 arbitrary sets of fields. \biblatex defines as standard two sets as shown
 in Table \ref{tab:nst}.
 
@@ -2001,7 +2001,7 @@ does the replacement. Just copy a similar type of macro from the default
 recoding data file if you are adding new entries, which is unlikely as the
 file is quite comprehensive. There is only one other thing to note. The
 «preferred» attribute tells \biber\ to use a specific \latex\ macro when
-mapping from UTF-8, just in case there are more than one mappings from
+mapping from UTF-8, just in case there is more than one mapping from
 UTF-8 for a particular character. It's unlikely you will need to use this.
 
 \bigskip
