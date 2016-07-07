@@ -80,7 +80,7 @@ my $builder = $class->new(
                  'Business::ISSN' => 0,
                  'Business::ISMN' => 0,
                  'Lingua::Translit' => '0.25',
-                 'perl' => '5.16.0'
+                 'perl' => '5.24.0'
                 },
     script_files => [ glob( "bin/*" ) ],
     data_files => {'data/schemata/config.rnc' => 'lib/Biber/config.rnc',
