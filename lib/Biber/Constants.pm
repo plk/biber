@@ -1,5 +1,5 @@
 package Biber::Constants;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 

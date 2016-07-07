@@ -1,5 +1,5 @@
 package Biber::Section;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -295,7 +295,7 @@ sub del_bibentries {
 sub set_citekeys {
   my $self = shift;
   my $keys = shift;
-  map { $self->{citekeys_h}{$_} = 1} @$keys;
+  map { $self->{citekeys_h}{$_} = 1} $keys->@*;
   $self->{citekeys} = $keys;
   return;
 }
@@ -323,7 +323,7 @@ sub set_orig_order_citekeys {
 
 sub get_citekeys {
   my $self = shift;
-  return @{$self->{citekeys}};
+  return $self->{citekeys}->@*;
 }
 
 =head2 get_static_citekeys
@@ -351,7 +351,7 @@ sub get_static_citekeys {
 sub add_undef_citekey {
   my $self = shift;
   my $key = shift;
-  push @{$self->{undef_citekeys}}, $key;
+  push $self->{undef_citekeys}->@*, $key;
   return;
 }
 
@@ -364,7 +364,7 @@ sub add_undef_citekey {
 
 sub get_undef_citekeys {
   my $self = shift;
-  return @{$self->{undef_citekeys}};
+  return $self->{undef_citekeys}->@*;
 }
 
 =head2 get_orig_order_citekeys
@@ -378,7 +378,7 @@ sub get_undef_citekeys {
 
 sub get_orig_order_citekeys {
   my $self = shift;
-  return @{$self->{orig_order_citekeys}};
+  return $self->{orig_order_citekeys}->@*;
 }
 
 =head2 has_citekey
@@ -405,8 +405,8 @@ sub del_citekey {
   my $self = shift;
   my $key = shift;
   return unless $self->has_citekey($key);
-  $self->{citekeys}            = [ grep {$_ ne $key} @{$self->{citekeys}} ];
-  $self->{orig_order_citekeys} = [ grep {$_ ne $key} @{$self->{orig_order_citekeys}} ];
+  $self->{citekeys}            = [ grep {$_ ne $key} $self->{citekeys}->@* ];
+  $self->{orig_order_citekeys} = [ grep {$_ ne $key} $self->{orig_order_citekeys}->@* ];
   delete $self->{citekeys_h}{$key};
   return;
 }
@@ -437,8 +437,8 @@ sub add_citekeys {
   foreach my $key (@keys) {
     next if $self->has_citekey($key);
     $self->{citekeys_h}{$key} = 1;
-    push @{$self->{citekeys}}, $key;
-    push @{$self->{orig_order_citekeys}}, $key;
+    push $self->{citekeys}->@*, $key;
+    push $self->{orig_order_citekeys}->@*, $key;
   }
   return;
 }
@@ -491,7 +491,7 @@ sub del_citekey_alias {
 
 sub get_citekey_aliases {
   my $self = shift;
-  return ( keys %{$self->{citekey_alias}} );
+  return ( keys $self->{citekey_alias}->%* );
 }
 
 
@@ -581,7 +581,7 @@ sub get_dynamic_set {
   my $self = shift;
   my $dkey = shift;
   if (my $set_members = $self->{dkeys}{$dkey}) {
-    return @$set_members;
+    return $set_members->@*;
   }
   else {
     return ();
@@ -596,7 +596,7 @@ sub get_dynamic_set {
 
 sub dynamic_set_keys {
   my $self = shift;
-  return [keys %{$self->{dkeys}}];
+  return [keys $self->{dkeys}->%*];
 }
 
 =head2 has_dynamic_sets
@@ -620,7 +620,7 @@ sub has_dynamic_sets {
 sub add_datasource {
   my $self = shift;
   my $source = shift;
-  push @{$self->{datasources}}, $source;
+  push $self->{datasources}->@*, $source;
   return;
 }
 
@@ -665,7 +665,7 @@ sub get_datasources {
 sub add_sort_cache {
   my $self = shift;
   my $cacheitem = shift;
-  push @{$self->{sortcache}}, $cacheitem;
+  push $self->{sortcache}->@*, $cacheitem;
   return;
 }
 

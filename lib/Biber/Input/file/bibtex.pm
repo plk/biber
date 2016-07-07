@@ -1,5 +1,5 @@
 package Biber::Input::file::bibtex;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use sigtrap qw(handler TBSIG SEGV);
@@ -108,7 +108,7 @@ sub extract_entries {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $filename;
-  my @rkeys = @$keys;
+  my @rkeys = $keys->@*;
   my $tf; # Up here so that the temp file has enough scope to survive until we've used it
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Entering extract_entries() in driver 'bibtex'");
@@ -119,17 +119,17 @@ sub extract_entries {
   # Maps are applied in order USER->STYLE->DRIVER
   if (defined(Biber::Config->getoption('sourcemap'))) {
     # User maps
-    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'user' } @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, $m;
+    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'user' } Biber::Config->getoption('sourcemap')->@* ) {
+      push $smaps->@*, $m;
     }
     # Style maps
     # Allow multiple style maps from multiple \DeclareStyleSourcemap
-    if (my @m = grep {$_->{datatype} eq 'bibtex' and $_->{level} eq 'style' } @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, @m;
+    if (my @m = grep {$_->{datatype} eq 'bibtex' and $_->{level} eq 'style' } Biber::Config->getoption('sourcemap')->@* ) {
+      push $smaps->@*, @m;
     }
     # Driver default maps
-    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'driver'} @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, $m;
+    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'driver'} Biber::Config->getoption('sourcemap')->@* ) {
+      push $smaps->@*, $m;
     }
   }
 
@@ -245,21 +245,21 @@ sub extract_entries {
       $logger->debug("All citekeys will be used for section '$secnum'");
     }
     # Loop over all entries, creating objects
-    while (my ($key, $entry) = each %{$cache->{data}{$filename}}) {
+    while (my ($key, $entry) = each $cache->{data}{$filename}->%*) {
 
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($key, $filename);
 
       unless (create_entry($key, $entry, $source, $smaps, \@rkeys)) {
         # if create entry returns false, remove the key from the cache
-        @{$cache->{orig_key_order}{$filename}} = grep {$key ne $_} @{$cache->{orig_key_order}{$filename}};
+        $cache->{orig_key_order}{$filename}->@* = grep {$key ne $_} $cache->{orig_key_order}{$filename}->@*;
       }
     }
 
     # Loop over all aliases, creating data in section object
     # Since this is allkeys, we are guaranteed that the real entry for the alias
     # will be available
-    while (my ($alias, $key) = each %{$cache->{data}{citekey_aliases}}) {
+    while (my ($alias, $key) = each $cache->{data}{citekey_aliases}->%*) {
       $section->set_citekey_alias($alias, $key);
     }
 
@@ -269,26 +269,26 @@ sub extract_entries {
     # keys from the bibentries hash because we need to preserve the original order of
     # the .bib as in this case the sorting sub "citeorder" means "bib order" as there are
     # no explicitly cited keys
-    $section->add_citekeys(@{$cache->{orig_key_order}{$filename}});
+    $section->add_citekeys($cache->{orig_key_order}{$filename}->@*);
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
     }
     # Special case when allkeys but also some dynamic set entries. These keys must also be
     # in the section or they will be missed on output.
     if ($section->has_dynamic_sets) {
-      $section->add_citekeys(@{$section->dynamic_set_keys});
+      $section->add_citekeys($section->dynamic_set_keys->@*);
       if ($logger->is_debug()) {# performance tune
-        $logger->debug("Added dynamic sets to section '$secnum': " . join(', ', @{$section->dynamic_set_keys}));
+        $logger->debug("Added dynamic sets to section '$secnum': " . join(', ', $section->dynamic_set_keys->@*));
       }
     }
   }
   else {
     # loop over all keys we're looking for and create objects
     if ($logger->is_debug()) {# performance tune
-      $logger->debug('Text::BibTeX cache keys: ' . join(', ', keys %{$cache->{data}{$filename}}));
-      $logger->debug('Wanted keys: ' . join(', ', @$keys));
+      $logger->debug('Text::BibTeX cache keys: ' . join(', ', keys $cache->{data}{$filename}->%*));
+      $logger->debug('Wanted keys: ' . join(', ', $keys->@*));
     }
-    foreach my $wanted_key (@$keys) {
+    foreach my $wanted_key ($keys->@*) {
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Looking for key '$wanted_key' in Text::BibTeX cache");
       }
@@ -356,8 +356,8 @@ sub extract_entries {
 
   # Only push the preambles from the file if we haven't seen this data file before
   # and there are some preambles to push
-  if ($cache->{counts}{$filename} < 2 and @{$cache->{preamble}{$filename}}) {
-    push @{$Biber::MASTER->{preamble}}, @{$cache->{preamble}{$filename}};
+  if ($cache->{counts}{$filename} < 2 and $cache->{preamble}{$filename}->@*) {
+    push $Biber::MASTER->{preamble}->@*, $cache->{preamble}{$filename}->@*;
   }
 
   # Save comments if in tool mode
@@ -396,11 +396,11 @@ sub create_entry {
     $entry = $entry->clone;
 
     # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
-    foreach my $smap (@$smaps) {
+    foreach my $smap ($smaps->@*) {
       $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
       my $level = $smap->{level};
 
-    MAP: foreach my $map (@{$smap->{map}}) {
+    MAP: foreach my $map ($smap->{map}->@*) {
 
         # Skip if this map element specifies a particular refsection and it is not this one
         if (exists($map->{refsection})) {
@@ -411,13 +411,13 @@ sub create_entry {
         # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
         # messier to write than Q
         unless (not exists($map->{per_type}) or
-                first {lc($_->{content}) eq $entry->type} @{$map->{per_type}}) {
+                first {lc($_->{content}) eq $entry->type} $map->{per_type}->@*) {
           next;
         }
 
         # Check negated pertype restrictions
         if (exists($map->{per_nottype}) and
-            first {lc($_->{content}) eq $entry->type} @{$map->{per_nottype}}) {
+            first {lc($_->{content}) eq $entry->type} $map->{per_nottype}->@*) {
           next;
         }
 
@@ -426,7 +426,7 @@ sub create_entry {
         # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
         # messier to write than Q
         unless (not exists($map->{per_datasource}) or
-                first {$_->{content} eq $datasource} @{$map->{per_datasource}}) {
+                first {$_->{content} eq $datasource} $map->{per_datasource}->@*) {
           next;
         }
 
@@ -440,7 +440,7 @@ sub create_entry {
         my @maploop = ('');
         if (my $foreach = $map->{map_foreach}) {
           if (my $dslist = $DATAFIELD_SETS{lc($foreach)}) { # datafield set list
-            @maploop = @$dslist;
+            @maploop = $dslist->@*;
           }
           elsif (my $felist = $entry->get(lc($foreach))) { # datafield
             @maploop = split(/\s*,\s*/, $felist);
@@ -453,7 +453,7 @@ sub create_entry {
         foreach my $maploop (@maploop) {
           my $MAPUNIQVAL;
           # loop over mapping steps
-          foreach my $step (@{$map->{map_step}}) {
+          foreach my $step ($map->{map_step}->@*) {
 
             # entry deletion. Really only useful with allkeys or tool mode
             if ($step->{map_entry_null}) {
@@ -488,7 +488,7 @@ sub create_entry {
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Source mapping (type=$level, key=$key): created '$newkey', removing from dependent list");
               }
-              @$rkeys = grep {$newkey ne $_} @$rkeys;
+              $rkeys->@* = grep {$newkey ne $_} $rkeys->@*;
 
               # Need to add the clone key to the section if allkeys is set since all keys
               # are cleared for allkeys sections initially
@@ -513,7 +513,7 @@ sub create_entry {
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Source mapping (type=$level, key=$key): created '$clonekey', removing from dependent list");
               }
-              @$rkeys = grep {$clonekey ne $_} @$rkeys;
+              $rkeys->@* = grep {$clonekey ne $_} $rkeys->@*;
 
               # Need to add the clone key to the section if allkeys is set since all keys
               # are cleared for allkeys sections initially
@@ -831,7 +831,7 @@ sub _create_entry {
     # Now run any defined handler
     if ($dm->is_field($f)) {
       my $handler = _get_handler($f);
-      &$handler($bibentry, $e, $f, $k);
+      $handler->($bibentry, $e, $f, $k);
     }
     elsif (Biber::Config->getoption('validate_datamodel')) {
       biber_warn("Datamodel: Entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
@@ -998,7 +998,7 @@ sub _range {
     $start =~ s/\A\{([^\}]+)\}\z/$1/;
     $end =~ s/\A\{([^\}]+)\}\z/$1/;
     biber_warn("Range field '$field' in entry '$key' is malformed, skipping", $bibentry) unless $start;
-    push @$values_ref, [$start || '', $end];
+    push $values_ref->@*, [$start || '', $end];
   }
   $bibentry->set_datafield($field, $values_ref);
   return;
@@ -1274,7 +1274,7 @@ sub cache_data {
 
   while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
     if ( $entry->metatype == BTE_PREAMBLE ) {
-      push @{$cache->{preamble}{$filename}}, $entry->value;
+      push $cache->{preamble}{$filename}->@*, $entry->value;
       next;
     }
 
@@ -1282,7 +1282,7 @@ sub cache_data {
     if ( $entry->metatype == BTE_COMMENT ) {
       if (Biber::Config->getoption('tool') and not
           Biber::Config->getoption('strip_comments') ) {
-        push @{$cache->{comments}{$filename}}, process_comment($entry->value);
+        push $cache->{comments}{$filename}->@*, process_comment($entry->value);
       }
       next;
     }
@@ -1370,7 +1370,7 @@ sub cache_data {
     # We do this as otherwise we have no way of determining the original .bib entry order
     # We need this in order to do sorting=none + allkeys because in this case, there is no
     # "citeorder" because nothing is explicitly cited and so "citeorder" means .bib order
-    push @{$cache->{orig_key_order}{$filename}}, $key;
+    push $cache->{orig_key_order}{$filename}->@*, $key;
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Cached Text::BibTeX entry for key '$key' from BibTeX file '$filename'");
     }
@@ -1528,7 +1528,7 @@ sub parsename {
   }
 
   # Use nameuniqueness template to construct uniqueness strings
-  foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
     my $npn = $np->{namepart};
     if ($namec{$npn}) {
       if ($np->{use}) {         # only ever defined as 1
@@ -1541,7 +1541,7 @@ sub parsename {
         $basenamestring .= $namec{"${npn}-stripped"};
       }
       else {
-        $nameinitstring .= join('', @{$namec{"${npn}-i"}});
+        $nameinitstring .= join('', $namec{"${npn}-i"}->@*);
       }
     }
   }
@@ -1552,7 +1552,7 @@ sub parsename {
     foreach my $np ('prefix', 'family', 'given', 'suffix') {
       if ($namec{$np}) {
         $namec{"${np}-stripped"} = NFC($namec{"${np}-stripped"});
-        $namec{"${np}-i"}        = [ map {NFC($_)} @{$namec{"${np}-i"}} ];
+        $namec{"${np}-i"}        = [ map {NFC($_)} $namec{"${np}-i"}->@* ];
       }
     }
     if ($basenamestring) {
@@ -1690,7 +1690,7 @@ sub parsename_x {
   #   irrelevant
   # * As a local setting (entry, namelist, name), it would lead to different uniqueness
   #   information which would be confusing
-  foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
     my $namepart = $np->{namepart};
     my $useopt;
     my $useoptval;
@@ -1709,7 +1709,7 @@ sub parsename_x {
         $basenamestring .= $namec{$namepart};
       }
       else {
-        $nameinitstring .= join('', @{$namec{"${namepart}-i"}});
+        $nameinitstring .= join('', $namec{"${namepart}-i"}->@*);
       }
     }
   }

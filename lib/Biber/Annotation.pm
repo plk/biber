@@ -1,5 +1,5 @@
 package Biber::Annotation;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -98,7 +98,7 @@ sub get_field_annotation {
 sub get_annotated_fields {
   shift; # class method so don't care about class name
   my ($scope, $key) = @_;
-  return sort keys %{$ANN->{$scope}{$key}};
+  return sort keys $ANN->{$scope}{$key}->%*;
 }
 
 =head2 get_annotated_items
@@ -110,7 +110,7 @@ sub get_annotated_fields {
 sub get_annotated_items {
   shift; # class method so don't care about class name
   my ($scope, $key, $field) = @_;
-  return sort keys %{$ANN->{$scope}{$key}{$field}};
+  return sort keys $ANN->{$scope}{$key}{$field}->%*;
 }
 
 =head2 get_annotated_parts
@@ -122,7 +122,7 @@ sub get_annotated_items {
 sub get_annotated_parts {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $count) = @_;
-  return sort keys %{$ANN->{$scope}{$key}{$field}{$count}};
+  return sort keys $ANN->{$scope}{$key}{$field}{$count}->%*;
 }
 
 =head2 dump

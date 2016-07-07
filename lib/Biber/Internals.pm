@@ -1,5 +1,5 @@
 package Biber::Internals;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -45,7 +45,7 @@ sub _getnamehash {
   my @nps = $dm->get_constant_value('nameparts');
 
   # namehash obeys list truncations but not uniquename
-  foreach my $n (@{$names->first_n_names($visible)}) {
+  foreach my $n ($names->first_n_names($visible)->@*) {
     foreach my $nt (@nps) {# list type so returns list
       if (my $np = $n->get_namepart($nt)) {
         $hashkey .= $np;
@@ -71,7 +71,7 @@ sub _getfullhash {
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 
-  foreach my $n (@{$names->names}) {
+  foreach my $n ($names->names->@*) {
     foreach my $nt (@nps) {# list type so returns list
       if (my $np = $n->get_namepart($nt)) {
         $hashkey .= $np;
@@ -102,9 +102,9 @@ sub _getnamehash_u {
   my @nps = $dm->get_constant_value('nameparts');
 
   # namehash obeys list truncations
-  foreach my $n (@{$names->first_n_names($visible)}) {
+  foreach my $n ($names->first_n_names($visible)->@*) {
     # Use nameuniqueness template to construct hash
-    foreach my $nps (@{Biber::Config->getblxoption('uniquenametemplate')}) {
+    foreach my $nps (Biber::Config->getblxoption('uniquenametemplate')->@*) {
       my $npn = $nps->{namepart};
       if (my $np = $n->get_namepart($npn)) {
         if ($nps->{base}) {
@@ -117,7 +117,7 @@ sub _getnamehash_u {
             }
             # Use initials for non-base parts if uniquename indicates this will disambiguate
             elsif ($n->get_uniquename eq '1') {
-              $hashkey .= join('', @{$n->get_namepart_initial($npn)});
+              $hashkey .= join('', $n->get_namepart_initial($npn)->@*);
             }
           }
         }
@@ -207,7 +207,7 @@ sub _genlabel {
   my $slabel;
   $LABEL_FINAL = 0; # reset final shortcut
 
-  foreach my $labelpart (sort {$a->{order} <=> $b->{order}} @{$labelalphatemplate->{labelelement}}) {
+  foreach my $labelpart (sort {$a->{order} <=> $b->{order}} $labelalphatemplate->{labelelement}->@*) {
     my $ret = _labelpart($self, $labelpart->{labelpart}, $citekey, $secnum, $section, $be);
     $label .= $ret->[0] || '';
     $slabel .= $ret->[1] || '';
@@ -227,7 +227,7 @@ sub _labelpart {
   my $lp;
   my $slp;
 
-  foreach my $part (@$labelpart) {
+  foreach my $part ($labelpart->@*) {
     # Implement defaults not set by biblatex itself
     unless (exists($part->{substring_fixed_threshold})) {
       $part->{substring_fixed_threshold} = 1;
@@ -242,7 +242,7 @@ sub _labelpart {
       if ($f eq 'labelname') {
         $f = ($be->get_labelname_info || '');
       }
-      if ( first {$f eq $_} @{$dm->get_fields_of_type('list', 'name')}) {
+      if ( first {$f eq $_} $dm->get_fields_of_type('list', 'name')->@*) {
         my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
         my $total_names = $name->count_names;
         my $visible_names;
@@ -429,7 +429,7 @@ sub _label_name {
     my $parts;
     my $opts;
 
-    foreach my $name (@{$names->names}) {
+    foreach my $name ($names->names->@*) {
 
       # name scope useprefix
       if (defined($name->get_useprefix)) {
@@ -445,7 +445,7 @@ sub _label_name {
       my $mpns; # arrayref accumulator for main non "pre" namepart names
       my $preopts; # arrayref accumulator for "pre" namepart options
       my $mainopts; # arrayref accumulator for main non "pre" namepart options
-      foreach my $lnp (@$lnat) {
+      foreach my $lnp ($lnat->@*) {
         my $npn = $lnp->{namepart};
         my $np;
 
@@ -455,15 +455,15 @@ sub _label_name {
           }
 
           if ($lnp->{pre}) {
-            push @$preacc,
+            push $preacc->@*,
               [normalise_string_label($np),
                {substring_width => $lnp->{substring_width},
                 substring_side => $lnp->{substring_side},
                 substring_compound => $lnp->{substring_compound}}];
           }
           else {
-            push @$mpns, $npn;
-            push @$mainacc,
+            push $mpns->@*, $npn;
+            push $mainacc->@*,
               [normalise_string_label($np),
                {substring_width => $lnp->{substring_width},
                 substring_side => $lnp->{substring_side},
@@ -472,15 +472,15 @@ sub _label_name {
         }
       }
 
-      push @{$parts->{pre}{strings}}, $preacc;
-      push @{$parts->{main}{strings}}, $mainacc;
-      push @{$parts->{main}{partnames}}, $mpns;
+      push $parts->{pre}{strings}->@*, $preacc;
+      push $parts->{main}{strings}->@*, $mainacc;
+      push $parts->{main}{partnames}->@*, $mpns;
     }
 
     # Loop over names in range
     for (my $i = $nr_start-1; $i < $nr_end; $i++) {
       # Deal with pre options
-      foreach my $fieldinfo (@{$parts->{pre}{strings}[$i]}) {
+      foreach my $fieldinfo ($parts->{pre}{strings}[$i]->@*) {
         my $np = $fieldinfo->[0];
         my $npo = $fieldinfo->[1];
         my $w = $npo->{substring_width} // 1;
@@ -538,14 +538,14 @@ sub _label_name {
 sub _process_label_attributes {
   my ($self, $citekey, $fieldstrings, $labelattrs, $field, $nameparts, $index) = @_;
 
-  return join('', map {$_->[0]} @$fieldstrings) unless $labelattrs;
+  return join('', map {$_->[0]} $fieldstrings->@*) unless $labelattrs;
   my $rfield_string;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my @citekeys = $section->get_citekeys;
   my $nindex = first_index {$_ eq $citekey} @citekeys;
 
-  foreach my $fieldinfo (@$fieldstrings) {
+  foreach my $fieldinfo ($fieldstrings->@*) {
     my $field_string = $fieldinfo->[0];
     my $namepartopts = $fieldinfo->[1];
 
@@ -570,10 +570,10 @@ sub _process_label_attributes {
           foreach my $key (@citekeys) {
             if (my $f = $section->bibentry($key)->get_field($field)) {
               if ($nameparts) {
-                foreach my $n (@{$f->first_n_names($f->get_visible_alpha)}) {
+                foreach my $n ($f->first_n_names($f->get_visible_alpha)->@*) {
                   # Do strip/nosort here as that's what we also do to the field contents
                   # we will use to look up in this hash later
-                  $indices{normalise_string_sort(join('',map {$n->get_namepart($_)} @$nameparts), $field)} = $n->get_index;
+                  $indices{normalise_string_sort(join('',map {$n->get_namepart($_)} $nameparts->@*), $field)} = $n->get_index;
                 }
               }
               else {
@@ -591,7 +591,7 @@ sub _process_label_attributes {
               # We construct a list of all substrings, up to the length of the longest string
               # or substring_width_max. Then we save the index of the list element which is
               # the minimal disambiguation if it's not yet defined
-              push @{$lcache->{$map->[0]}{data}}, $map->[1];
+              push $lcache->{$map->[0]}{data}->@*, $map->[1];
               $lcache->{$map->[0]}{nameindex} = $indices{$map->[0]};
               if (not exists($lcache->{$map->[0]}{index}) and
                   ($substr_cache{$map->[1]} == 1 or $i == $maxlen)) {
@@ -617,7 +617,7 @@ sub _process_label_attributes {
             foreach my $s (keys %$lcache) {
               foreach my $ind (keys %$is) {
                 next unless $indices{$s} == $ind;
-                $lcache->{globalindices}{$s} = max grep {$is->{$ind}{$_} >= $labelattrs->{substring_fixed_threshold} } keys %{$is->{$ind}};
+                $lcache->{globalindices}{$s} = max grep {$is->{$ind}{$_} >= $labelattrs->{substring_fixed_threshold} } keys $is->{$ind}->%*;
               }
             }
           }
@@ -626,7 +626,7 @@ sub _process_label_attributes {
           $field_string = ${$lcache->{$field_string}{data}}[$lcache->{globalindices}{$field_string} || $lcache->{$field_string}{index}];
           if ($logger->is_trace()) { # performance tune
             $logger->trace("Label disambiguation cache for '$field' " .
-                           ($nameparts ? '(' . join(',', @$nameparts) . ') ' : '') .
+                           ($nameparts ? '(' . join(',', $nameparts->@*) . ') ' : '') .
                            "in section $secnum:\n " . Data::Dump::pp($lcache));
           }
           $section->set_labelcache_v($field, $lcache);
@@ -645,14 +645,14 @@ sub _process_label_attributes {
           # This retains the structure of the entries for the "l" list disambiguation
           # Have to be careful if field "$f" is not set for all entries
           my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
-                              $f ? ($nameparts ? [map {my $n = $_;join('', map {$n->get_namepart($_)} @$nameparts)} @{$f->first_n_names($f->get_visible_alpha)}] : [$f]) : [''] }
+                              $f ? ($nameparts ? [map {my $n = $_;join('', map {$n->get_namepart($_)} $nameparts->@*)} $f->first_n_names($f->get_visible_alpha)->@*] : [$f]) : [''] }
                          @citekeys];
           my $lcache = _label_listdisambiguation($strings);
 
           $field_string = $lcache->{data}[$nindex][$index];
           if ($logger->is_trace()) { # performance tune
             $logger->trace("Label disambiguation (list) cache for '$field' " .
-                           ($nameparts ? '(' . join(',', @$nameparts) . ') ' : '') .
+                           ($nameparts ? '(' . join(',', $nameparts->@*) . ') ' : '') .
                            "in section $secnum:\n " . Data::Dump::pp($lcache));
           }
           $section->set_labelcache_l($field, $lcache);
@@ -687,10 +687,10 @@ sub _process_label_attributes {
         my $nolabelwcs = Biber::Config->getoption('nolabelwidthcount');
         my $nolabelwcis;
         if ($nolabelwcs) {
-          $nolabelwcis = match_indices([map {$_->{value}} @$nolabelwcs], $field_string);
+          $nolabelwcis = match_indices([map {$_->{value}} $nolabelwcs->@*], $field_string);
           $logger->trace('Saved indices for nolabelwidthcount: ' . Data::Dump::pp($nolabelwcis));
           # Then remove the nolabelwidthcount chars for now
-          foreach my $nolabelwc (@$nolabelwcs) {
+          foreach my $nolabelwc ($nolabelwcs->@*) {
             my $nlwcopt = $nolabelwc->{value};
             my $re = qr/$nlwcopt/;
             $field_string =~ s/$re//gxms; # remove nolabelwidthcount items
@@ -728,7 +728,7 @@ sub _process_label_attributes {
         # Now reinstate any nolabelwidthcount regexps
         if ($nolabelwcis) {
           my $gc_string = Unicode::GCString->new($field_string);
-          foreach my $nolabelwci (@$nolabelwcis) {
+          foreach my $nolabelwci ($nolabelwcis->@*) {
             # Don't put back anything at positions which are no longer in the string
             if ($nolabelwci->[1] +1 <= $gc_string->length) {
               $gc_string->substr($nolabelwci->[1], 0, $nolabelwci->[0]);
@@ -803,22 +803,22 @@ sub _label_listdisambiguation {
 
   # Cache map says which index are we substr'ing to for each name.
   # Starting default is first char from each
-  my $cache->{substr_map} = [map {[map {1} @$_]} @$strings];
-  my $lcache->{data} = [map {undef} @$strings];
+  my $cache->{substr_map} = [map {[map {1} $_->@*]} $strings->@*];
+  my $lcache->{data} = [map {undef} $strings->@*];
 
   # First flag any duplicates so we can shortcut setting these later
   my @dups;
-  for (my $i = 0; $i <= $#$strings; $i++) {
-    $dups[$i] = join('', @{$strings->[$i]});
+  for (my $i = 0; $i <= $strings->$#*; $i++) {
+    $dups[$i] = join('', $strings->[$i]->@*);
   }
 
   _do_substr($lcache, $cache, $strings);
 
   # loop until the entire disambiguation cache is filled.
-  while (grep { !defined } @{$lcache->{data}}) {
+  while (grep { !defined } $lcache->{data}->@*) {
     _check_counts($lcache, $cache);
-    foreach my $ambiguous_indices (@{$cache->{ambiguity}}) {
-      my $ambiguous_strings = [@$strings[@$ambiguous_indices]]; # slice
+    foreach my $ambiguous_indices ($cache->{ambiguity}->@*) {
+      my $ambiguous_strings = [$strings->@[$ambiguous_indices->@*]]; # slice
       # We work on the first in an ambiguous set
       # We have to find the first name which is not the same as another name in the
       # same position as we can't disambiguate on the basis of an identical name. For example:
@@ -838,8 +838,8 @@ sub _label_listdisambiguation {
       #
       # Then we can shortcut and take a 1-char substring only
       # if all name lists in the ambiguous list are in fact the same
-      if (all {Compare($ambiguous_strings->[0], $_)} @$ambiguous_strings) {
-        $lcache->{data}[$ambiguous_indices->[0]] =  [map {Unicode::GCString->new($_)->substr(0,1)->as_string} @{$ambiguous_strings->[0]}];
+      if (all {Compare($ambiguous_strings->[0], $_)} $ambiguous_strings->@*) {
+        $lcache->{data}[$ambiguous_indices->[0]] =  [map {Unicode::GCString->new($_)->substr(0,1)->as_string} $ambiguous_strings->[0]->@*];
       }
       else {
         # Get disambiguating list position information
@@ -861,16 +861,16 @@ sub _label_listdisambiguation {
 sub _do_substr {
   my ($lcache, $cache, $strings) = @_;
   delete($cache->{keys});
-  for (my $i = 0; $i <= $#$strings; $i++) {
+  for (my $i = 0; $i <= $strings->$#*; $i++) {
     next if defined($lcache->{data}[$i]); # ignore names already disambiguated
     my $row = $strings->[$i];
     my @s;
-    for (my $j = 0; $j <= $#$row; $j++) {
+    for (my $j = 0; $j <= $row->$#*; $j++) {
       push @s, Unicode::GCString->new($row->[$j])->substr(0 ,$cache->{substr_map}[$i][$j])->as_string;
     }
     my $js = join('', @s);
     $cache->{keys}{$js}{index} = $i; # index of the last seen $js key - useless for count >1
-    push @{$cache->{keys}{$js}{indices}}, $i;
+    push $cache->{keys}{$js}{indices}->@*, $i;
     $cache->{keys}{$js}{count}++;
     $cache->{keys}{$js}{strings} = \@s;
   }
@@ -880,9 +880,9 @@ sub _do_substr {
 sub _check_counts {
   my ($lcache, $cache) = @_;
   delete($cache->{ambiguity});
-  foreach my $key (keys %{$cache->{keys}}) {
+  foreach my $key (keys $cache->{keys}->%*) {
     if ($cache->{keys}{$key}{count} > 1) {
-      push @{$cache->{ambiguity}}, $cache->{keys}{$key}{indices};
+      push $cache->{ambiguity}->@*, $cache->{keys}{$key}{indices};
     }
     else {
       $lcache->{data}[$cache->{keys}{$key}{index}] = $cache->{keys}{$key}{strings};
@@ -907,8 +907,8 @@ sub _check_counts {
 # $cache->{name_map} = [ 1, 1, 1, 1, 2 ]
 sub _gen_first_disambiguating_name_map {
   my ($cache, $array, $indices) = @_;
-  for (my $i = 0; $i <= $#$array; $i++) {
-    my @check_array = @$array;
+  for (my $i = 0; $i <= $array->$#*; $i++) {
+    my @check_array = $array->@*;
     splice(@check_array, $i, 1);
     # Remove duplicates from the check array otherwise the duplicate makes generating the
     # name disambiguation index fail because there is a same name in every position
@@ -1029,7 +1029,7 @@ sub _generatesortinfo {
   my $szero = 0;
   $BIBER_SORT_NULL = 0;
   $BIBER_SORT_FINAL = '';
-  foreach my $sortset (@{$sortscheme->{spec}}) {
+  foreach my $sortset ($sortscheme->{spec}->@*) {
     my $s = $self->_sortset($sortset, $citekey, $secnum, $section, $be, $sortlist);
 
     # Did we get a real zero? This messes up tests below unless we are careful
@@ -1042,17 +1042,17 @@ sub _generatesortinfo {
     # We have already found a "final" item so if this item returns null,
     # copy in the "final" item string as it's the master key for this entry now
     if ($BIBER_SORT_FINAL and not $BIBER_SORT_NULL) {
-      push @$sortobj, $BIBER_SORT_FINAL;
+      push $sortobj->@*, $BIBER_SORT_FINAL;
     }
     else {
-      push @$sortobj, $s;
+      push $sortobj->@*, $s;
     }
   }
 
   # Record the information needed for sorting later
   # sortstring isn't actually used to sort, it's used to generate sortinit and
   # for debugging purposes
-  my $ss = join($sorting_sep, @$sortobj);
+  my $ss = join($sorting_sep, $sortobj->@*);
   $sortlist->set_sortdata($citekey, [$ss, $sortobj]);
   if ($logger->is_debug()) { # performance shortcut
     $logger->debug("Sorting object for key '$citekey' -> " . Data::Dump::pp($sortobj));
@@ -1075,7 +1075,7 @@ sub _generatesortinfo {
 sub _sortset {
   my ($self, $sortset, $citekey, $secnum, $section, $be, $sortlist) = @_;
   my $dm = Biber::Config->get_dm;
-  foreach my $sortelement (@$sortset[1..$#$sortset]) {
+  foreach my $sortelement ($sortset->@[1..$sortset->$#*]) {
     my ($sortelementname, $sortelementattributes) = %$sortelement;
     $BIBER_SORT_NULL = 0; # reset this per sortset
     my $out = $self->_dispatch_sorting($sortelementname, $citekey, $secnum, $section, $be, $sortlist, $sortelementattributes);
@@ -1281,7 +1281,7 @@ sub _sort_sortname {
 
   # sortname is ignored if no use<name> option is defined - see biblatex manual
   if ($be->get_field('sortname') and
-      grep {Biber::Config->getblxoption("use$_", $be->get_field('entrytype'), $citekey)} @{$dm->get_fields_of_type('list', 'name')}) {
+      grep {Biber::Config->getblxoption("use$_", $be->get_field('entrytype'), $citekey)} $dm->get_fields_of_type('list', 'name')->@*) {
     my $string = $self->_namestring($citekey, 'sortname', $sortlist);
     return _translit('sortname', $bee, _process_sort_attributes($string, $sortelementattributes));
   }
@@ -1384,7 +1384,7 @@ sub _namestring {
   # as name separators things which would otherwise be stripped. This way we
   # guarantee that the separators are never in names
 
-  foreach my $n (@{$names->first_n_names($visible)}) {
+  foreach my $n ($names->first_n_names($visible)->@*) {
 
     # Name scope useprefix option
     if (defined($n->get_useprefix)) {
@@ -1398,9 +1398,9 @@ sub _namestring {
     my $snk = Biber::Config->getblxoption('sortingnamekey')->{$snkname};
 
     # Get the sorting name key specification and use it to construct a sorting key for each name
-    foreach my $kp (@$snk) {
+    foreach my $kp ($snk->@*) {
       my $kps;
-      foreach my $np (@$kp) {
+      foreach my $np ($kp->@*) {
         if ($np->{type} eq 'namepart') {
           my $namepart = $np->{value};
           my $useopt = exists($np->{use}) ? "use$namepart" : undef;
@@ -1418,7 +1418,7 @@ sub _namestring {
               # Do we only want initials for sorting?
               if ($np->{inits}) {
                 my $npistring = $n->get_namepart_initial($namepart);
-                $kps .= normalise_string_sort(join('', @{$npistring}), $field);
+                $kps .= normalise_string_sort(join('', $npistring->@*), $field);
               }
               else {
                 $kps .= normalise_string_sort($npstring, $field);
@@ -1453,7 +1453,7 @@ sub _liststring {
   my $bee = $be->get_field('entrytype');
   my $f = $be->get_field($field); # _liststring is used in tests so there has to be
   return '' unless defined($f);   # more error checking which will never be needed in normal use
-  my @items = @$f;
+  my @items = $f->@*;
   my $str = '';
   my $truncated = 0;
 
@@ -1484,10 +1484,10 @@ sub _liststring {
 sub _translit {
   my ($target, $entrytype, $string) = @_;
   if (my $translits = Biber::Config->getblxoption('translit', $entrytype)) {
-    foreach my $tr (@$translits) {
+    foreach my $tr ($translits->@*) {
       if (lc($tr->{target}) eq '*' or
           $tr->{target} eq $target or
-          first {$target eq $_} @{$DATAFIELD_SETS{$tr->{target}}}) {
+          first {$target eq $_} $DATAFIELD_SETS{$tr->{target}}->@*) {
         return call_transliterator($target, $tr->{from}, $tr->{to}, $string);
       }
     }

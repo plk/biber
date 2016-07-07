@@ -1,5 +1,5 @@
 package Biber::LaTeX::Recode;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Exporter);
@@ -172,7 +172,7 @@ sub init_sets {
   # of longer ones damaging the longer ones
   foreach my $type (@types) {
     next unless exists $remap_d->{$type};
-    $remap_d->{$type}{re} = join('|', map { /[\.\^\|\+\-\)\(]/ ? '\\' . $_ : $_ } sort {length($b) <=> length($a)} keys %{$remap_d->{$type}{map}});
+    $remap_d->{$type}{re} = join('|', map { /[\.\^\|\+\-\)\(]/ ? '\\' . $_ : $_ } sort {length($b) <=> length($a)} keys $remap_d->{$type}{map}->%*);
     $remap_d->{$type}{re} = qr|$remap_d->{$type}{re}|;
   }
 

@@ -1,5 +1,5 @@
 package Biber::Sections;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -29,8 +29,8 @@ sub new {
 
 sub get_num_sections {
   my $self = shift;
-  my @keys = keys %$self;
- return $#keys + 1;
+  my @keys = keys $self->%*;
+  return $#keys + 1;
 }
 
 
@@ -54,7 +54,7 @@ sub get_section {
 
 sub get_sections {
   my $self = shift;
-  return [ sort {$a->number <=> $b->number} values %$self ];
+  return [ sort {$a->number <=> $b->number} values $self->%* ];
 }
 
 

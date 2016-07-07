@@ -1,5 +1,5 @@
 package Biber::Output::bibtex;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Biber::Output::base);
@@ -70,7 +70,7 @@ sub set_output_comment {
   $acc .= $casing->('comment');
   $acc .= "{$comment}\n";
 
-  push @{$self->{output_data}{COMMENTS}}, $acc;
+  push $self->{output_data}{COMMENTS}->@*, $acc;
   return;
 }
 
@@ -118,7 +118,7 @@ sub set_output_entry {
     $tonamesub = 'name_to_xname';
   }
 
-  foreach my $namefield (@{$dmh->{namelists}}) {
+  foreach my $namefield ($dmh->{namelists}->@*) {
     if (my $names = $be->get_field($namefield)) {
       my $namesep = Biber::Config->getoption('output_namesep');
       my @namelist;
@@ -134,7 +134,7 @@ sub set_output_entry {
       }
 
       # Now add all names to accumulator
-      foreach my $name (@{$names->names}) {
+      foreach my $name ($names->names->@*) {
         push @namelist, $name->$tonamesub;
       }
       $acc{$casing->($namefield)} = join(" $namesep ", @namelist);
@@ -147,11 +147,11 @@ sub set_output_entry {
   }
 
   # List fields and verbatim list fields
-  foreach my $listfield (@{$dmh->{lists}}, @{$dmh->{vlists}}) {
+  foreach my $listfield ($dmh->{lists}->@*, $dmh->{vlists}->@*) {
     if (my $list = $be->get_field($listfield)) {
       my $listsep = Biber::Config->getoption('output_listsep');
       my @plainlist;
-      foreach my $item (@$list) {
+      foreach my $item ($list->@*) {
         push @plainlist, $item;
       }
       $acc{$casing->($listfield)} = join(" $listsep ", @plainlist);
@@ -166,7 +166,7 @@ sub set_output_entry {
   $acc{$casing->('options')} = join(',', @entryoptions) if @entryoptions;
 
   # Date fields
-  foreach my $datefield (@{$dmh->{datefields}}) {
+  foreach my $datefield ($dmh->{datefields}->@*) {
     my ($d) = $datefield =~ m/^(.*)date$/;
     next unless $be->get_field("${d}year");
     $acc{$casing->($datefield)} = construct_date($be, $d);
@@ -197,28 +197,28 @@ sub set_output_entry {
   }
 
   # Standard fields
-  foreach my $field (@{$dmh->{fields}}) {
+  foreach my $field ($dmh->{fields}->@*) {
     if (my $val = $be->get_field($field)) {
       $acc{$casing->($field)} = $val;
     }
   }
 
   # XSV fields
-  foreach my $field (@{$dmh->{xsv}}) {
+  foreach my $field ($dmh->{xsv}->@*) {
     if (my $f = $be->get_field($field)) {
-      $acc{$casing->($field)} .= join(',', @$f);
+      $acc{$casing->($field)} .= join(',', $f->@*);
     }
   }
 
   # Ranges
-  foreach my $rfield (@{$dmh->{ranges}}) {
+  foreach my $rfield ($dmh->{ranges}->@*) {
     if ( my $rf = $be->get_field($rfield) ) {
       $acc{$casing->($rfield)} .= construct_range($rf);
     }
   }
 
   # Verbatim fields
-  foreach my $vfield (@{$dmh->{vfields}}) {
+  foreach my $vfield ($dmh->{vfields}->@*) {
     if ( my $vf = $be->get_field($vfield) ) {
       $acc{$casing->($vfield)} = $vf;
     }
@@ -226,7 +226,7 @@ sub set_output_entry {
 
   # Keywords
   if ( my $k = $be->get_field('keywords') ) {
-    $acc{$casing->('keywords')} = join(',', @$k);
+    $acc{$casing->('keywords')} = join(',', $k->@*);
   }
 
   # Annotations
@@ -253,7 +253,7 @@ sub set_output_entry {
         $field eq 'dates') {
       my @donefields;
       foreach my $key (sort keys %acc) {
-        if (first {fc($_) eq fc($key)} @{$dmh->{$classmap{$field}}}) {
+        if (first {fc($_) eq fc($key)} $dmh->{$classmap{$field}}->@*) {
           $acc .= bibfield($key, $acc{$key}, $max_field_len);
           push @donefields, $key;
           # Keep annotations with their fields
@@ -354,7 +354,7 @@ sub output {
 
   # Output any comments when in tool mode
   if (Biber::Config->getoption('tool')) {
-    foreach my $comment (@{$data->{COMMENTS}}) {
+    foreach my $comment ($data->{COMMENTS}->@*) {
       out($target, $comment);
     }
   }
@@ -386,7 +386,7 @@ sub create_output_section {
   }
 
   # Output all comments at the end
-  foreach my $comment (@{$Biber::MASTER->{comments}}) {
+  foreach my $comment ($Biber::MASTER->{comments}->@*) {
     $self->set_output_comment($comment);
   }
 
@@ -464,7 +464,7 @@ sub construct_annotation {
 sub construct_range {
   my $r = shift;
   my @ranges;
-  foreach my $e (@$r) {
+  foreach my $e ($r->@*) {
     my $rs = $e->[0];
     if (defined($e->[1])) {
       $rs .= '--' . $e->[1];

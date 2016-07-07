@@ -1,5 +1,5 @@
 package Biber::Output::biblatexml;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Biber::Output::base);
@@ -121,7 +121,7 @@ sub set_output_entry {
   unless (Biber::Config->getoption('output_resolve')) {
     if (my $xdata = $be->get_field('xdata')) {
       $xml->startTag([$xml_prefix, 'xdata']);
-      foreach my $xd (@$xdata) {
+      foreach my $xd ($xdata->@*) {
         $xml->dataElement([$xml_prefix, 'key'], NFC($xd));
       }
       $xml->endTag();
@@ -139,7 +139,7 @@ sub set_output_entry {
   $xml->dataElement([$xml_prefix, 'options'], NFC(join(',', @entryoptions))) if @entryoptions;
 
   # Output name fields
-  foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
+  foreach my $namefield ($dm->get_fields_of_type('list', 'name')->@*) {
 
     # Name loop
     if (my $nf = $be->get_field($namefield)) {
@@ -152,7 +152,7 @@ sub set_output_entry {
       }
 
       # Add per-namelist options
-      foreach my $ploname (sort keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}}) {
+      foreach my $ploname (sort keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
         if (defined($nf->${\"get_$ploname"})) {
           my $plo = $nf->${\"get_$ploname"};
           if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
@@ -172,7 +172,7 @@ sub set_output_entry {
 
       $xml->startTag([$xml_prefix, 'names'], @attrs);
 
-      foreach my $n (@{$nf->names}) {
+      foreach my $n ($nf->names->@*) {
         $n->name_to_biblatexml($self, $xml, $key, $namefield, $n->get_index);
       }
       $xml->endTag();           # Names
@@ -180,7 +180,7 @@ sub set_output_entry {
   }
 
   # Output list fields
-  foreach my $listfield (sort @{$dm->get_fields_of_fieldtype('list')}) {
+  foreach my $listfield (sort $dm->get_fields_of_fieldtype('list')->@*) {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
 
     # List loop
@@ -190,7 +190,7 @@ sub set_output_entry {
       # Did we have a "more" list?
       if (lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
         push @attrs, (morelist => 1);
-        pop @$lf;               # remove the last element in the array
+        pop $lf->@*;               # remove the last element in the array
       }
 
       # list scope annotation
@@ -203,7 +203,7 @@ sub set_output_entry {
 
       # List loop
       my $itemcount = 1;
-      foreach my $f (@$lf) {
+      foreach my $f ($lf->@*) {
         my @lattrs;
         # item scope annotation
         if (my $ann = Biber::Annotation->get_annotation('item', $key, $listfield, $itemcount++)) {
@@ -218,14 +218,14 @@ sub set_output_entry {
   }
 
   # Standard fields
-  foreach my $field (sort @{$dm->get_fields_of_type('field',
-                                                    ['entrykey',
-                                                     'key',
-                                                     'literal',
-                                                     'code',
-                                                     'integer',
-                                                     'verbatim',
-                                                     'uri'])}) {
+  foreach my $field (sort $dm->get_fields_of_type('field',
+                                                  ['entrykey',
+                                                   'key',
+                                                   'literal',
+                                                   'code',
+                                                   'integer',
+                                                   'verbatim',
+                                                   'uri'])->@*) {
     my $val = $be->get_field($field);
     if (length($val) or # length() catches '0' values, which we want
       ($dm->field_is_nullok($field) and
@@ -244,7 +244,7 @@ sub set_output_entry {
   }
 
   # xsv fields
-  foreach my $xsvf (@{$dm->get_fields_of_type('field', 'xsv')}) {
+  foreach my $xsvf ($dm->get_fields_of_type('field', 'xsv')->@*) {
     if (my $f = $be->get_field($xsvf)) {
       next if $xsvf eq 'ids'; # IDS is special
       next if $xsvf eq 'xdata'; # XDATA is special
@@ -255,19 +255,19 @@ sub set_output_entry {
         push @attrs, ('annotation' => $ann);
       }
 
-      $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',@$f)));
+      $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',$f->@*)));
     }
   }
 
   # Range fields
-  foreach my $rfield (sort @{$dm->get_fields_of_datatype('range')}) {
+  foreach my $rfield (sort $dm->get_fields_of_datatype('range')->@*) {
     if ( my $rf = $be->get_field($rfield) ) {
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
       $xml->startTag([$xml_prefix, $rfield]);
       $xml->startTag([$xml_prefix, 'list']);
 
-      foreach my $f (@$rf) {
+      foreach my $f ($rf->@*) {
         $xml->startTag([$xml_prefix, 'item']);
         if (defined($f->[1])) {
           $xml->dataElement([$xml_prefix, 'start'], NFC($f->[0]));
@@ -285,7 +285,7 @@ sub set_output_entry {
 
   # Date fields
   my %dinfo;
-  foreach my $datefield (sort @{$dm->get_fields_of_datatype('date')}) {
+  foreach my $datefield (sort $dm->get_fields_of_datatype('date')->@*) {
     my @attrs;
     my @start;
     my @end;

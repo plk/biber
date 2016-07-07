@@ -1,5 +1,5 @@
 package Biber::Output::bblxml;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Biber::Output::base);
@@ -153,7 +153,7 @@ sub set_output_entry {
   $xml->startTag([$xml_prefix, 'entry'], key => _bblxml_norm($key), type => _bblxml_norm($bee), @entryopts);
   if (my $opts = $be->get_field('options')) {
     $xml->startTag([$xml_prefix, 'options']);
-    foreach my $opt (@{filter_entry_options($opts)}) {
+    foreach my $opt (filter_entry_options($opts)->@*) {
       $xml->dataElement([$xml_prefix, 'option'], _bblxml_norm($opt));
     }
     $xml->endTag();# options
@@ -161,7 +161,7 @@ sub set_output_entry {
   # Generate set information
   if ($bee eq 'set') {# Set parents get <set> entry ...
     $xml->startTag([$xml_prefix, 'set']);
-    foreach my $m (@{$be->get_field('entryset')}) {
+    foreach my $m ($be->get_field('entryset')->@*) {
       $xml->dataElement([$xml_prefix, 'member'], _bblxml_norm($m));
     }
     $xml->endTag();# set
@@ -169,7 +169,7 @@ sub set_output_entry {
   else { # Everything else that isn't a set parent ...
     if (my $es = $be->get_field('entryset')) { # ... gets a <inset> if it's a set member
       $xml->startTag([$xml_prefix, 'inset']);
-      foreach my $m (@$es) {
+      foreach my $m ($es->@*) {
         $xml->dataElement([$xml_prefix, 'member'], _bblxml_norm($m));
       }
       $xml->endTag();# inset
@@ -177,7 +177,7 @@ sub set_output_entry {
   }
 
   # Output name fields
-  foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
+  foreach my $namefield ($dm->get_fields_of_type('list', 'name')->@*) {
     if ( my $nf = $be->get_field($namefield) ) {
       next if $dm->field_is_skipout($namefield);
       my %plo;
@@ -200,7 +200,7 @@ sub set_output_entry {
         }
 
         # Add per-namelist options
-        foreach my $ploname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}}) {
+        foreach my $ploname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
           if (defined($nf->${\"get_$ploname"})) {
             my $plo = $nf->${\"get_$ploname"};
             if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
@@ -217,7 +217,7 @@ sub set_output_entry {
       $xml->startTag([$xml_prefix, 'names'], type => $namefield, count => $total, sort keys %plo);
 
       # Now the names
-      foreach my $n (@{$nf->names}) {
+      foreach my $n ($nf->names->@*) {
         $n->name_to_bblxml($xml, $xml_prefix);
       }
       $xml->endTag();# names
@@ -225,7 +225,7 @@ sub set_output_entry {
   }
 
   # Output list fields
-  foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
+  foreach my $listfield ($dm->get_fields_of_fieldtype('list')->@*) {
     if (my $lf = $be->get_field($listfield)) {
       next if $dm->field_is_datatype('name', $listfield); # name is a special list
       next if $dm->field_is_datatype('uri', $listfield); # special lists
@@ -236,12 +236,12 @@ sub set_output_entry {
       if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
         # Did we have "and others" in the data?
         $plo{more} = 'true';
-        pop @$lf; # remove the last element in the array
+        pop $lf->@*; # remove the last element in the array
       }
 
-      my $total = $#$lf + 1;
+      my $total = $lf->$#* + 1;
       $xml->startTag([$xml_prefix, 'list'], name => $listfield, count => $total, sort keys %plo);
-      foreach my $f (@$lf) {
+      foreach my $f ($lf->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
       $xml->endTag();# list
@@ -255,7 +255,7 @@ sub set_output_entry {
   $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($fullhash), name => 'fullhash') if $fullhash;
 
   # Output namelist hashes
-  foreach my $namefield (@{$dmh->{namelists}}) {
+  foreach my $namefield ($dmh->{namelists}->@*) {
     if (my $namehash = $be->get_field("${namefield}namehash")) {
       $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($namehash), name => "${namefield}namehash");
       my $fullhash = $be->get_field("${namefield}fullhash");
@@ -338,13 +338,13 @@ sub set_output_entry {
     $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($ck), name => 'clonesourcekey');
   }
 
-  foreach my $field (sort @{$dm->get_fields_of_type('field',
-                                                    ['entrykey',
-                                                     'key',
-                                                     'integer',
-                                                     'literal',
-                                                     'code',
-                                                     'verbatim'])}) {
+  foreach my $field (sort $dm->get_fields_of_type('field',
+                                                  ['entrykey',
+                                                   'key',
+                                                   'integer',
+                                                   'literal',
+                                                   'code',
+                                                   'verbatim'])->@*) {
     my $val = $be->get_field($field);
     if ( length($val) or # length() catches '0' values, which we want
          ($dm->field_is_nullok($field) and
@@ -368,7 +368,7 @@ sub set_output_entry {
   }
 
   # Date parts
-  foreach my $field (sort @{$dm->get_fields_of_type('field', 'datepart')}) {
+  foreach my $field (sort $dm->get_fields_of_type('field', 'datepart')->@*) {
     my $val = $be->get_field($field);
 
     if ( length($val) or # length() catches '0' values, which we want
@@ -434,26 +434,26 @@ sub set_output_entry {
     }
   }
 
-  foreach my $field (@{$dmh->{xsv}}) {
+  foreach my $field ($dmh->{xsv}->@*) {
     if (my $f = $be->get_field($field)) {
       next if $dm->field_is_skipout($field);
       next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
       $xml->startTag([$xml_prefix, 'field'], name => $field, format => 'xsv');
-      foreach my $f (@$f) {
+      foreach my $f ($f->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
       $xml->endTag();# field
     }
   }
 
-  foreach my $rfield (@{$dmh->{ranges}}) {
+  foreach my $rfield ($dmh->{ranges}->@*) {
     if ( my $rf = $be->get_field($rfield) ) {
       next if $dm->field_is_skipout($rfield);
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
       my @pr;
       $xml->startTag([$xml_prefix, 'range'], name => $rfield);
-      foreach my $f (@$rf) {
+      foreach my $f ($rf->@*) {
         $xml->startTag([$xml_prefix, 'item'], length => rangelen($rf));
         $xml->dataElement([$xml_prefix, 'start'], _bblxml_norm($f->[0]));
         if (defined($f->[1])) {
@@ -466,7 +466,7 @@ sub set_output_entry {
   }
 
   # uri fields
-  foreach my $uri (@{$dmh->{uris}}) {
+  foreach my $uri ($dmh->{uris}->@*) {
     if ( my $f = $be->get_field($uri) ) {
       next if $dm->field_is_skipout($uri);
       $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($f), name => $uri);
@@ -474,18 +474,18 @@ sub set_output_entry {
   }
 
   # uri lists
-  foreach my $uril (@{$dmh->{urils}}) {
+  foreach my $uril ($dmh->{urils}->@*) {
     if ( my $urilf = $be->get_field($uril) ) {
       next if $dm->field_is_skipout($uril);
       my %plo;
       if ( lc($urilf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $plo{$uril} = 'true';
-        pop @$urilf; # remove the last element in the array
+        pop $urilf->@*; # remove the last element in the array
       }
-      my $total = $#$urilf + 1;
+      my $total = $urilf->$#* + 1;
       $xml->startTag([$xml_prefix, 'list'], name => $uril, count => $total, sort keys %plo);
 
-      foreach my $f (@$urilf) {
+      foreach my $f ($urilf->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
       $xml->endTag();# list
@@ -494,7 +494,7 @@ sub set_output_entry {
 
   if ( my $kws = $be->get_field('keywords') ) {
     $xml->startTag([$xml_prefix, 'keywords']);
-    foreach my $k (@$kws) {
+    foreach my $k ($kws->@*) {
       $xml->dataElement([$xml_prefix, 'keyword'], _bblxml_norm($k));
     }
     $xml->endTag();# keywords
@@ -540,7 +540,7 @@ sub set_output_entry {
 
   # Append any warnings to the entry, if any
   if (my $w = $be->get_field('warnings')) {
-    foreach my $warning (@$w) {
+    foreach my $warning ($w->@*) {
       $xml->dataElement([$xml_prefix, 'warning'], _bblxml_norm($warning));
     }
   }
@@ -584,7 +584,7 @@ sub output {
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
   $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('output_safechars');
 
-  foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
+  foreach my $secnum (sort keys $data->{ENTRIES}->%*) {
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Writing entries for section $secnum");
     }
@@ -597,7 +597,7 @@ sub output {
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     # but omit the global context list so that we can add this last
-    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
+    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->sortlists->get_lists_for_section($secnum)->@*) {
       if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
           $list->get_sortnamekeyschemename eq 'global' and
           $list->get_labelprefix eq '' and

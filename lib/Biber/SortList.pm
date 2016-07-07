@@ -1,5 +1,5 @@
 package Biber::SortList;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -216,7 +216,7 @@ sub set_keys {
 
 sub get_keys {
   my $self = shift;
-  return @{$self->{keys}};
+  return $self->{keys}->@*;
 }
 
 =head2 count_keys
@@ -524,7 +524,7 @@ sub get_sortscheme {
 sub add_filter {
   my $self = shift;
   my ($filter) = @_;
-  push @{$self->{filters}}, $filter;
+  push $self->{filters}->@*, $filter;
   return;
 }
 

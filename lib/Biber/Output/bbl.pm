@@ -1,5 +1,5 @@
 package Biber::Output::bbl;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Biber::Output::base);
@@ -74,7 +74,7 @@ sub create_output_misc {
   my $self = shift;
 
   if (my $pa = $Biber::MASTER->get_preamble) {
-    $pa = join("%\n", @$pa);
+    $pa = join("%\n", $pa->@*);
 
     # If requested to convert UTF-8 to macros ...
     if (Biber::Config->getoption('output_safechars')) {
@@ -207,20 +207,20 @@ sub set_output_entry {
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
-  $acc .= "    \\entry{$key}{$bee}{" . join(',', @{filter_entry_options($be->get_field('options'))}) . "}\n";
+  $acc .= "    \\entry{$key}{$bee}{" . join(',', filter_entry_options($be->get_field('options'))->@*) . "}\n";
 
   # Generate set information
   if ( $bee eq 'set' ) {   # Set parents get \set entry ...
-    $acc .= "      \\set{" . join(',', @{$be->get_field('entryset')}) . "}\n";
+    $acc .= "      \\set{" . join(',', $be->get_field('entryset')->@*) . "}\n";
   }
   else { # Everything else that isn't a set parent ...
     if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
-      $acc .= "      \\inset{" . join(',', @$es) . "}\n";
+      $acc .= "      \\inset{" . join(',', $es->@*) . "}\n";
     }
   }
 
   # Output name fields
-  foreach my $namefield (@{$dmh->{namelists}}) {
+  foreach my $namefield ($dmh->{namelists}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $nf = $be->get_field($namefield) ) {
       my $plo = '';
@@ -249,7 +249,7 @@ sub set_output_entry {
         }
 
         # Add per-namelist options
-        foreach my $ploname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}}) {
+        foreach my $ploname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
           if (defined($nf->${\"get_$ploname"})) {
             my $plo = $nf->${\"get_$ploname"};
             if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
@@ -265,7 +265,7 @@ sub set_output_entry {
         $plo = join(',', @plo);
       }
       $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
-      foreach my $n (@{$nf->names}) {
+      foreach my $n ($nf->names->@*) {
         $acc .= $n->name_to_bbl;
       }
       $acc .= "      }\n";
@@ -273,16 +273,16 @@ sub set_output_entry {
   }
 
   # Output list fields
-  foreach my $listfield (@{$dmh->{lists}}) {
+  foreach my $listfield ($dmh->{lists}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if (my $lf = $be->get_field($listfield)) {
       if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$listfield}\n";
-        pop @$lf; # remove the last element in the array
+        pop $lf->@*; # remove the last element in the array
       }
-      my $total = $#$lf + 1;
+      my $total = $lf->$#* + 1;
       $acc .= "      \\list{$listfield}{$total}{%\n";
-      foreach my $f (@$lf) {
+      foreach my $f ($lf->@*) {
         $acc .= "        {$f}%\n";
       }
       $acc .= "      }\n";
@@ -296,7 +296,7 @@ sub set_output_entry {
   $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
 
   # Output namelist hashes
-  foreach my $namefield (@{$dmh->{namelists}}) {
+  foreach my $namefield ($dmh->{namelists}->@*) {
     if (my $namehash = $be->get_field("${namefield}namehash")) {
       $acc .= "      \\strng{${namefield}namehash}{$namehash}\n";
       my $fullhash = $be->get_field("${namefield}fullhash");
@@ -403,7 +403,7 @@ sub set_output_entry {
     $acc .= "      \\field{clonesourcekey}{$ck}\n";
   }
 
-  foreach my $field (@{$dmh->{fields}}) {
+  foreach my $field ($dmh->{fields}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     my $val = $be->get_field($field);
     if ( length($val) or # length() catches '0' values, which we want
@@ -425,7 +425,7 @@ sub set_output_entry {
   }
 
   # Date meta-information
-  foreach my $datefield (@{$dmh->{datefields}}) {
+  foreach my $datefield ($dmh->{datefields}->@*) {
     my ($d) = $datefield =~ m/^(.*)date$/;
 
     # Unspecified granularity
@@ -472,19 +472,19 @@ sub set_output_entry {
   }
 
   # XSV fields
-  foreach my $field (@{$dmh->{xsv}}) {
+  foreach my $field ($dmh->{xsv}->@*) {
     if (my $f = $be->get_field($field)) {
-      $acc .= _printfield($be, $field, join(',', @$f) );
+      $acc .= _printfield($be, $field, join(',', $f->@*) );
     }
   }
 
-  foreach my $rfield (@{$dmh->{ranges}}) {
+  foreach my $rfield ($dmh->{ranges}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $rf = $be->get_field($rfield) ) {
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
       my @pr;
-      foreach my $f (@$rf) {
+      foreach my $f ($rf->@*) {
         if (defined($f->[1])) {
           push @pr, $f->[0] . '\bibrangedash' . ($f->[1] ? ' ' . $f->[1] : '');
         }
@@ -499,7 +499,7 @@ sub set_output_entry {
   }
 
   # verbatim fields
-  foreach my $vfield (@{$dmh->{vfields}}) {
+  foreach my $vfield ($dmh->{vfields}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $vf = $be->get_field($vfield) ) {
       $acc .= "      \\verb{$vfield}\n";
@@ -507,15 +507,15 @@ sub set_output_entry {
     }
   }
   # verbatim lists
-  foreach my $vlist (@{$dmh->{vlists}}) {
+  foreach my $vlist ($dmh->{vlists}->@*) {
     if ( my $vlf = $be->get_field($vlist) ) {
       if ( lc($vlf->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$vlist}\n";
-        pop @$vlf; # remove the last element in the array
+        pop $vlf->@*; # remove the last element in the array
       }
-      my $total = $#$vlf + 1;
+      my $total = $vlf->$#* + 1;
       $acc .= "      \\lverb{$vlist}{$total}\n";
-      foreach my $f (@$vlf) {
+      foreach my $f ($vlf->@*) {
         $acc .= "      \\lverb $f\n";
       }
       $acc .= "      \\endlverb\n";
@@ -523,7 +523,7 @@ sub set_output_entry {
   }
 
   if ( my $k = $be->get_field('keywords') ) {
-    $k = join(',', @$k);
+    $k = join(',', $k->@*);
     $acc .= "      \\keyw{$k}\n";
   }
 
@@ -551,7 +551,7 @@ sub set_output_entry {
 
   # Append any warnings to the entry, if any
   if (my $w = $be->get_field('warnings')) {
-    foreach my $warning (@$w) {
+    foreach my $warning ($w->@*) {
       $acc .= "      \\warn{\\item $warning}\n";
     }
   }
@@ -595,7 +595,7 @@ sub output {
 
   out($target, $data->{HEAD});
 
-  foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
+  foreach my $secnum (sort keys $data->{ENTRIES}->%*) {
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Writing entries for section $secnum");
     }
@@ -607,7 +607,7 @@ sub output {
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     # but omit the global context list so that we can add this last
-    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
+    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->sortlists->get_lists_for_section($secnum)->@*) {
       if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
           $list->get_sortnamekeyschemename eq 'global' and
           $list->get_labelprefix eq '' and
@@ -680,12 +680,12 @@ sub output {
     }
 
     # Aliases
-    foreach my $ks (values %{$data->{ALIAS_ENTRIES}{$secnum}{index}}) {
+    foreach my $ks (values $data->{ALIAS_ENTRIES}{$secnum}{index}->%*) {
       out($target, $$ks);
     }
 
     # Missing keys
-    foreach my $ks (values %{$data->{MISSING_ENTRIES}{$secnum}{index}}) {
+    foreach my $ks (values $data->{MISSING_ENTRIES}{$secnum}{index}->%*) {
       out($target, $$ks);
     }
 

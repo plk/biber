@@ -1,5 +1,5 @@
 package Biber::Entry::Name;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Class::Accessor);
@@ -46,7 +46,7 @@ sub new {
   my $dm = Biber::Config->get_dm;
   if (%params) {
     my $name = {};
-    foreach my $attr (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}},
+    foreach my $attr (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*,
                       'gender',
                       'namestring',
                       'nameinitstring',
@@ -73,7 +73,7 @@ sub new {
 sub TO_JSON {
   my $self = shift;
   my $json;
-  while (my ($k, $v) = each(%{$self})) {
+  while (my ($k, $v) = each($self->%*)) {
     $json->{$k} = $v;
   }
   return $json;
@@ -264,7 +264,7 @@ sub name_to_biblatexml {
   my @attrs;
 
   # Add per-name options
-  foreach my $pnoname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+  foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$pnoname"})) {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
@@ -316,9 +316,9 @@ sub name_part_to_bltxml {
     }
 
     # Compound name part
-    if ($#$parts > 0) {
+    if ($parts->$#* > 0) {
       $xml->startTag([$xml_prefix, 'namepart'], type => $npn, @attrs);
-      for (my $i=0;$i <= $#$parts;$i++) {
+      for (my $i=0;$i <= $parts->$#*;$i++) {
         if (my $init = $nip->[$i]) {
           $xml->startTag([$xml_prefix, 'namepart'], initial => $init);
         }
@@ -388,7 +388,7 @@ sub name_to_bbl {
   }
 
   # Add per-name options
-  foreach my $pnoname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+  foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$pnoname"})) {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
@@ -445,7 +445,7 @@ sub name_to_bblxml {
   }
 
   # Add per-name options
-  foreach my $pnoname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+  foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$pnoname"})) {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and

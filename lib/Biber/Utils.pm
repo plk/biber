@@ -1,5 +1,5 @@
 package Biber::Utils;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Exporter);
@@ -196,7 +196,7 @@ concatenation of all of the full name strings.
 sub makenamesid {
   my $names = shift;
   my @namestrings;
-  foreach my $name (@{$names->names}) {
+  foreach my $name ($names->names->@*) {
     push @namestrings, $name->get_namestring;
   }
   my $tmp = join ' ', @namestrings;
@@ -239,7 +239,7 @@ sub strip_noinit {
   my $string = shift;
   return '' unless $string; # Sanitise missing data
   return $string unless my $noinit = Biber::Config->getoption('noinit');
-  foreach my $opt (@$noinit) {
+  foreach my $opt ($noinit->@*) {
     my $re = $opt->{value};
     $string =~ s/$re//gxms;
   }
@@ -261,14 +261,14 @@ sub strip_nosort {
 
   my $restrings;
 
-  foreach my $nsopt (@$nosort) {
+  foreach my $nsopt ($nosort->@*) {
     # Specific fieldnames override sets
     if (fc($nsopt->{name}) eq fc($fieldname)) {
-      push @$restrings, $nsopt->{value};
+      push $restrings->@*, $nsopt->{value};
     }
     elsif (my $set = $DATAFIELD_SETS{lc($nsopt->{name})} ) {
-      if (first {fc($_) eq fc($fieldname)} @$set) {
-        push @$restrings, $nsopt->{value};
+      if (first {fc($_) eq fc($fieldname)} $set->@*) {
+        push $restrings->@*, $nsopt->{value};
       }
     }
   }
@@ -276,7 +276,7 @@ sub strip_nosort {
   # If no nosort to do, just return string
   return $string unless $restrings;
 
-  foreach my $re (@$restrings) {
+  foreach my $re ($restrings->@*) {
     $string =~ s/$re//gxms;
   }
   return $string;
@@ -295,7 +295,7 @@ sub normalise_string_label {
   $str =~ s/\\[A-Za-z]+//g;    # remove latex macros (assuming they have only ASCII letters)
   # Replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-  foreach my $nolabel (@$nolabels) {
+  foreach my $nolabel ($nolabels->@*) {
     my $re = $nolabel->{value};
     $str =~ s/$re//gxms;           # remove nolabel items
   }
@@ -451,11 +451,11 @@ reduce_array(\@a, \@b) returns all elements in @a that are not in @b
 sub reduce_array {
   my ($a, $b) = @_;
   my %countb = ();
-  foreach my $elem (@$b) {
+  foreach my $elem ($b->@*) {
     $countb{$elem}++;
   }
   my @result;
-  foreach my $elem (@$a) {
+  foreach my $elem ($a->@*) {
     push @result, $elem unless $countb{$elem};
   }
   return @result;
@@ -653,7 +653,7 @@ sub is_notnull_array {
   unless (ref $arg eq 'ARRAY') {
     return undef;
   }
-  my @arr = @$arg;
+  my @arr = $arg->@*;
   return $#arr > -1 ? 1 : 0;
 }
 
@@ -668,7 +668,7 @@ sub is_notnull_hash {
   unless (ref $arg eq 'HASH') {
     return undef;
   }
-  my @arr = keys %$arg;
+  my @arr = keys $arg->%*;
   return $#arr > -1 ? 1 : 0;
 }
 
@@ -696,7 +696,7 @@ sub is_notnull_object {
 sub stringify_hash {
   my $hashref = shift;
   my $string;
-  while (my ($k,$v) = each %$hashref) {
+  while (my ($k,$v) = each $hashref->%*) {
     $string .= "$k => $v, ";
   }
   # Take off the trailing comma and space
@@ -765,7 +765,7 @@ sub filter_entry_options {
   my $options = shift;
   return [] unless $options;
   my $roptions = [];
-  foreach (@$options) {
+  foreach ($options->@*) {
     m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
     my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}{OUTPUT};
     # convert booleans
@@ -777,18 +777,18 @@ sub filter_entry_options {
     }
     # Standard option
     if (not defined($cfopt) or $cfopt == 1) {
-      push @$roptions, $1 . ($val ? "=$val" : '') ;
+      push $roptions->@*, $1 . ($val ? "=$val" : '') ;
     }
     # Set all split options to same value as parent
     elsif (ref($cfopt) eq 'ARRAY') {
-      foreach my $map (@$cfopt) {
-        push @$roptions, "$map=$val";
+      foreach my $map ($cfopt->@*) {
+        push $roptions->@*, "$map=$val";
       }
     }
     # Set all splits to specific values
     elsif (ref($cfopt) eq 'HASH') {
-      foreach my $map (keys %$cfopt) {
-        push @$roptions, "$map=" . $_->{$map};
+      foreach my $map (keys $cfopt->%*) {
+        push $roptions->@*, "$map=" . $_->{$map};
       }
     }
   }
@@ -936,11 +936,11 @@ sub remove_entry_options {
   my $options = shift;
   my $mods = shift;
   my $changed_opts;
-  foreach (@$options) {
+  foreach ($options->@*) {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)(=?)(.+)?$/;
     unless ($mods->{$1}) {
-      push @$changed_opts, ($1 . ($2 // '') . ($3 // ''));
+      push $changed_opts->@*, ($1 . ($2 // '') . ($3 // ''));
     }
   }
   return $changed_opts;
@@ -956,7 +956,7 @@ sub process_entry_options {
   my $citekey = shift;
   my $options = shift;
   return unless $options;       # Just in case it's null
-  foreach (@$options) {
+  foreach ($options->@*) {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)(=?)(.+)?$/;
     if ($2) {
@@ -984,13 +984,13 @@ sub _expand_option {
   }
   # Set all split options to same value as parent
   elsif (ref($cfopt) eq 'ARRAY') {
-    foreach my $k (@$cfopt) {
+    foreach my $k ($cfopt->@*) {
       Biber::Config->setblxoption($k, $val, 'ENTRY', $citekey);
     }
   }
   # Specify values per all splits
   elsif (ref($cfopt) eq 'HASH') {
-    foreach my $k (keys %$cfopt) {
+    foreach my $k (keys $cfopt->%*) {
       Biber::Config->setblxoption($k, $cfopt->{$k}, 'ENTRY', $citekey);
     }
   }
@@ -1225,7 +1225,7 @@ sub bcp472locale {
 sub rangelen {
   my $rf = shift;
   my $rl = 0;
-  foreach my $f (@$rf) {
+  foreach my $f ($rf->@*) {
     my $m = $f->[0];
     my $n = $f->[1];
     # m is something that's just numerals (decimal Unicode roman or ASCII roman)
@@ -1286,7 +1286,7 @@ sub match_indices {
   my ($regexes, $string) = @_;
   my @ret;
   my $relen = 0;
-  foreach my $regex (@$regexes) {
+  foreach my $regex ($regexes->@*) {
     my $len = 0;
     while ($string =~ /$regex/g) {
       my $gcs = Unicode::GCString->new($string)->substr($-[0], $+[0]-$-[0]);
@@ -1445,7 +1445,7 @@ sub join_name_parts {
   }
   my $namestring = $parts->[0];
   $namestring .= Unicode::GCString->new($parts->[0])->length < 3 ? '~' : ' ';
-  $namestring .= join(' ', @$parts[1 .. ($#{$parts} - 1)]);
+  $namestring .= join(' ', $parts->@[1 .. ($#{$parts} - 1)]);
   $namestring .= '~' . $parts->[$#{$parts}];
   return $namestring;
 }

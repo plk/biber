@@ -1,5 +1,5 @@
 package Biber::Output::base;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -389,10 +389,10 @@ sub output {
 
   out($target, $data->{HEAD});
 
-  foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
+  foreach my $secnum (sort keys $data->{ENTRIES}->%*) {
     out($target, "SECTION: $secnum\n\n");
     my $section = $self->get_output_section($secnum);
-    foreach my $list (@{$section->get_lists}) {
+    foreach my $list ($section->get_lists->@*) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
       out($target, "  LIST: $listlabel\n\n");

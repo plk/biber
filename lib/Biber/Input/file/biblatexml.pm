@@ -1,5 +1,5 @@
 package Biber::Input::file::biblatexml;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -83,7 +83,7 @@ sub extract_entries {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $filename;
-  my @rkeys = @$keys;
+  my @rkeys = $keys->@*;
   my $tf; # Up here so that the temp file has enough scope to survive until we've
           # used it
   $logger->trace("Entering extract_entries() in driver 'biblatexml'");
@@ -94,16 +94,16 @@ sub extract_entries {
   if (defined(Biber::Config->getoption('sourcemap'))) {
     # User maps
     if (my $m = first {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'user' } @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, $m;
+      push $smaps->@*, $m;
     }
     # Style maps
     # Allow multiple style maps from multiple \DeclareStyleSourcemap
     if (my @m = grep {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'style' } @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, @m;
+      push $smaps->@*, @m;
     }
     # Driver default maps
     if (my $m = first {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'driver'} @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, $m;
+      push $smaps->@*, $m;
     }
   }
 
@@ -287,9 +287,9 @@ sub extract_entries {
   else {
     # loop over all keys we're looking for and create objects
     if ($logger->is_debug()) {# performance tune
-      $logger->debug('Wanted keys: ' . join(', ', @$keys));
+      $logger->debug('Wanted keys: ' . join(', ', $keys->@*));
     }
-    foreach my $wanted_key (@$keys) {
+    foreach my $wanted_key ($keys->@*) {
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
       }
@@ -367,7 +367,7 @@ sub create_entry {
   my %newentries; # In case we create a new entry in a map
 
   # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
-  foreach my $smap (@$smaps) {
+  foreach my $smap ($smaps->@*) {
     $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
     my $level = $smap->{level};
 
@@ -451,7 +451,7 @@ sub create_entry {
 
             # found a new entry key, remove it from the list of keys we want since we
             # have "found" it by creating it
-            @$rkeys = grep {$newkey ne $_} @$rkeys;
+            $rkeys->@* = grep {$newkey ne $_} $rkeys->@*;
 
             # for allkeys sections initially
             if ($section->is_allkeys) {
@@ -470,7 +470,7 @@ sub create_entry {
 
             # found a prefix clone key, remove it from the list of keys we want since we
             # have "found" it by creating it along with its clone parent
-            @$rkeys = grep {"$prefix$key" ne $_} @$rkeys;
+            $rkeys->@* = grep {"$prefix$key" ne $_} $rkeys->@*;
             # Need to add the clone key to the section if allkeys is set since all keys are cleared
             # for allkeys sections initially
             if ($section->is_allkeys) {
@@ -774,7 +774,7 @@ sub create_entry {
       # Now run any defined handler
       if ($dm->is_field(_norm($f))) {
         my $handler = _get_handler($f);
-        &$handler($bibentry, $e, $f, $k);
+        $handler->($bibentry, $e, $f, $k);
       }
     }
 
@@ -884,7 +884,7 @@ sub _range {
     if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
       my $rl;
       foreach my $range (@rangelist) {
-        push @$rl, _parse_range_list($range);
+        push $rl->@*, _parse_range_list($range);
       }
       $bibentry->set_datafield(_norm($f), $rl);
     }
