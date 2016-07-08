@@ -17,6 +17,7 @@ PAR_VERBATIM=1 /opt/gnu/perl5/5.24/bin/pp \
   --module=Pod::Simple::TranscodeSmart \
   --module=Pod::Simple::TranscodeDumb \
   --module=List::MoreUtils::XS \
+  --module=List::SomeUtils::XS \
   --module=List::MoreUtils::PP \
   --module=HTTP::Status \
   --module=HTTP::Date \

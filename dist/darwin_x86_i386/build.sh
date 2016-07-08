@@ -26,6 +26,7 @@ PAR_VERBATIM=1 pp \
   --module=Pod::Simple::TranscodeSmart \
   --module=Pod::Simple::TranscodeDumb \
   --module=List::MoreUtils::XS \
+  --module=List::SomeUtils::XS \
   --module=List::MoreUtils::PP \
   --module=HTTP::Status \
   --module=HTTP::Date \

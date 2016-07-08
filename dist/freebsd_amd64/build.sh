@@ -31,6 +31,7 @@ export PAR_VERBATIM
   --module=Pod::Simple::TranscodeDumb \
   --module=Pod::Perldoc \
   --module=List::MoreUtils::XS \
+  --module=List::SomeUtils::XS \
   --module=List::MoreUtils::PP \
   --module=Readonly::XS \
   --module=IO::Socket::SSL \
