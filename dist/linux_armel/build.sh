@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Note that our perl location is in non-standard place
 
 PAR_VERBATIM=1 /usr/local/perl-5.24.0/bin/pp \
