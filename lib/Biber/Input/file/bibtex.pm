@@ -1651,7 +1651,8 @@ sub parsename_x {
     }
 
     if ($npn =~ m/-i$/) {
-      $namec{$npn} = [split(//,$npv)];
+      # Strip any periods/spaces in explicit initials so they can be replaced by macros
+      $namec{$npn} = [split(//,$npv =~ s/(?:\.|\s)//gr)];
     }
     else {
       # Don't tie according to bibtex rules if the namepart is protected with braces
