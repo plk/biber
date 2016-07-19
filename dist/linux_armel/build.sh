@@ -1,31 +1,8 @@
 #!/bin/bash
 
-# For some reason, PAR::Packer on linux is clever and when processing link lines
-# resolves any symlinks but names the packed lib the same as the link name. This is
-# a good thing. This is a feature of PAR::Packer on ELF systems.
+# Note that our perl location is in non-standard place
 
-# Have to be very careful about Perl modules with .so binary libraries as sometimes
-# (LibXML.so for example), they include RPATH which means that the PAR cache
-# is not searched first, even though it's at the top of LD_LIBRARY_PATH. So, the wrong
-# libraries will be found and things may well break. Strip any RPATH out of such libs
-# with "chrpath -d <lib>". Check for presence with "readelf -d <lib>".
-# 
-# Check all perl binaries with:
-# for file in `find /usr/local/perl/lib* -name \*.so`; do echo $file >> /tmp/out ;readelf -d $file >> /tmp/out; done
-# and then grep the file for "RPATH"
-
-# Had to add /etc/ld.so.conf.d/biber.conf and put "/usr/local/perl/lib" in there
-# and then run "sudo ldconfig" so that libbtparse.so is found. Doesn't really make
-# a difference to the build, just the running of Text::BibTeX itself.
-
-# Using a newer locally built libz and libxml2 (and rebuilt XML::LibXML) in /usr/local because
-# beginning with 32-bit Debian Wheezy, the older ones would segfault
-
-# Have to explicitly include the Input* modules as the names of these are dynamically
-# constructed in the code so Par::Packer can't auto-detect them.
-# Same with some of the output modules.
-
-PAR_VERBATIM=1 /usr/local/perl/bin/pp \
+PAR_VERBATIM=1 /usr/local/perl-5.24.0/bin/pp \
   --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
@@ -47,14 +24,14 @@ PAR_VERBATIM=1 /usr/local/perl/bin/pp \
   --module=IO::Socket::SSL \
   --module=Text::CSV_XS \
   --module=DateTime \
-  --link=/usr/local/perl/lib/libbtparse.so \
-  --link=/usr/local/lib/libxml2.so.2 \
-  --link=/usr/local/lib/libz.so.1 \
-  --link=/usr/local/lib/libxslt.so.1 \
-  --link=/usr/local/lib/libexslt.so.0 \
-  --link=/usr/lib/libssl.so.0.9.8 \
-  --link=/usr/lib/libcrypto.so.0.9.8 \
+  --link=/usr/local/perl-5.24.0/lib/libbtparse.so \
+  --link=/usr/lib/arm-linux-gnueabi/libxml2.so.2 \
+  --link=/lib/arm-linux-gnueabi/libz.so.1 \
+  --link=/usr/lib/arm-linux-gnueabi/libxslt.so.1 \
+  --link=/usr/lib/arm-linux-gnueabi/libexslt.so.0 \
+  --link=/usr/lib/arm-linux-gnueabi/libssl.so.1.0.0 \
+  --link=/usr/lib/arm-linux-gnueabi/libcrypto.so.1.0.0 \
   --addlist=biber.files \
   --cachedeps=scancache \
-  --output=biber-linux_x86_32 \
-  /usr/local/perl/bin/biber
+  --output=biber-linux_armel \
+  /usr/local/perl-5.24.0/bin/biber
