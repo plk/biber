@@ -950,7 +950,7 @@ sub _datetime {
           $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
           $bibentry->set_datafield($datetype . 'second', $sdate->second);
           unless ($sdate->time_zone->is_floating) { # ignore floating timezones
-            $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name);
+            $bibentry->set_datafield($datetype . 'timezone', tzformat($sdate->time_zone->name));
           }
         }
       }
@@ -995,7 +995,7 @@ sub _datetime {
             $bibentry->set_datafield($datetype . 'endminute', $edate->minute);
             $bibentry->set_datafield($datetype . 'endsecond', $edate->second);
             unless ($edate->time_zone->is_floating) { # ignore floating timezones
-              $bibentry->set_datafield($datetype . 'endtimezone', $edate->time_zone->name);
+              $bibentry->set_datafield($datetype . 'endtimezone', tzformat($edate->time_zone->name));
             }
           }
         }
@@ -1049,7 +1049,7 @@ sub _datetime {
           $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
           $bibentry->set_datafield($datetype . 'second', $sdate->second);
           unless ($sdate->time_zone->is_floating) { # ignore floating timezones
-            $bibentry->set_datafield($datetype . 'timezone', $sdate->time_zone->name);
+            $bibentry->set_datafield($datetype . 'timezone', tzformat($sdate->time_zone->name));
           }
         }
       }

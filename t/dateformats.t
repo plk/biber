@@ -523,7 +523,7 @@ my $time1 = q|    \entry{time1}{book}{}
       \field{urlminute}{7}
       \field{urlmonth}{1}
       \field{urlsecond}{34}
-      \field{urltimezone}{+0500}
+      \field{urltimezone}{+05\bibtzminsep 00}
       \field{urlyear}{2001}
       \field{year}{2001}
       \field{dateera}{ce}

@@ -169,7 +169,7 @@ sub set_output_entry {
   foreach my $datefield ($dmh->{datefields}->@*) {
     my ($d) = $datefield =~ m/^(.*)date$/;
     next unless $be->get_field("${d}year");
-    $acc{$casing->($datefield)} = construct_date($be, $d);
+    $acc{$casing->($datefield)} = construct_datetime($be, $d);
   }
 
   # YEAR and MONTH are legacy - convert these to DATE if possible
@@ -474,13 +474,13 @@ sub construct_range {
   return join(',', @ranges);
 }
 
-=head2 construct_date
+=head2 construct_datetime
 
-  Construct a date from its components
+  Construct a datetime from its components
 
 =cut
 
-sub construct_date {
+sub construct_datetime {
   my ($be, $d) = @_;
   my $datestring = '';
   my $overridey;

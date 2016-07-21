@@ -55,7 +55,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
-  split_xsv edtf_monthday};
+  split_xsv edtf_monthday tzformat};
 
 =head1 FUNCTIONS
 
@@ -1458,6 +1458,13 @@ sub split_xsv {
   }
   $CONFIG_CSV_PARSER->parse($string);
   return $CONFIG_CSV_PARSER->fields();
+}
+
+# Add a macro sep for minutes in timezones
+sub tzformat {
+  my $tz = shift;
+  return $tz unless $tz =~ m/^([+-])(\d{2})(\d{2})?/;
+  return "$1$2" . ($3 ? "\\bibtzminsep $3" : '');
 }
 
 1;
