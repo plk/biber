@@ -1463,8 +1463,15 @@ sub split_xsv {
 # Add a macro sep for minutes in timezones
 sub tzformat {
   my $tz = shift;
-  return $tz unless $tz =~ m/^([+-])(\d{2})(\d{2})?/;
-  return "$1$2" . ($3 ? "\\bibtzminsep $3" : '');
+  if ($tz =~ m/^([+-])(\d{2}):?(\d{2})?/) {
+    return "$1$2" . ($3 ? "\\bibtzminsep $3" : '');
+  }
+  elsif ($tz eq 'UTC') {
+    return 'Z';
+  }
+  else {
+    return $tz;
+  }
 }
 
 1;

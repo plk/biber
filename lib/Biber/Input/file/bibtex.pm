@@ -1163,7 +1163,7 @@ sub _datetime {
     $bibentry->set_datafield($datetype . 'day', $sdate->day)
       unless $CONFIG_DATE_PARSERS{start}->missing('day');
 
-    # must be an hour if there is a time but could be 00 so use defined()
+    # time
     unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
       $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
       $bibentry->set_datafield($datetype . 'minute', $sdate->minute);

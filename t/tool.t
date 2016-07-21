@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Test::Differences;
 unified_diff;
 
@@ -114,6 +114,16 @@ my $t3 = q|@BOOK{b1,
 
 |;
 
+my $t4 = q|@BOOK{dt1,
+  DATE      = {2004-04-25T14:34:00/2004-04-05T14:37:06},
+  EVENTDATE = {2004-04-25T14:34:00+05:00/2004-04-05T15:34:00+05:00},
+  ORIGDATE  = {2004-04-25T14:34:00Z/2004-04-05T14:34:05Z},
+  URLDATE   = {2004-04-25T14:34:00/2004-04-05T15:00:00},
+}
+
+|;
+
+
 my $tc1 = ["\@COMMENT{Comment 1}\n",
            "\@COMMENT{Comment 2}\n",
            "\@COMMENT{jabref-meta: groupstree:\n0 AllEntriesGroup:;\n1 ExplicitGroup:Doktorandkurser\\;2\\;;\n2 KeywordGroup:Fra\x{30a}n ko\x{308}nsroll till genus\\;0\\;course\\;UCGS Fra\x{30a}n ko\x{308}nsrolltill genus\\;0\\;0\\;;\n2 KeywordGroup:Historiska och filosofiska perspektiv pa\x{30a} psykologi\\;0\\;course\\;Historiska och filosofiska perspektiv pa\x{30a} psykologi\\;0\\;0\\;;\n2 KeywordGroup:Kurs i introduktion\\;0\\;course\\;Kurs i introduktion\\;0\\;0\\;;\n2 KeywordGroup:Fenomenologi, ko\x{308}n och genus\\;0\\;course\\;UCGS Fenomenologi\\;0\\;0\\;;\n2 KeywordGroup:Quantitative Research Methods\\;0\\;course\\;QMR\\;0\\;0\\;;\n2 KeywordGroup:Multivariate Analysis\\;0\\;course\\;MVA\\;1\\;0\\;;\n}\n"];
@@ -123,8 +133,9 @@ eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($t1), '
 ok(is_undef($out->get_output_entry('loh')), 'tool mode - 2');
 eq_or_diff($out->get_output_entry('xd1',), $t2, 'tool mode - 3');
 eq_or_diff($out->get_output_entry('b1',), $t3, 'tool mode - 4');
-is_deeply([$main->get_keys], ['b1', 'macmillan', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'xd1'], 'tool mode sorting');
-eq_or_diff($out->get_output_comments, $tc1, 'tool mode - 5');
+eq_or_diff($out->get_output_entry('dt1',), $t4, 'tool mode - 5');
+is_deeply([$main->get_keys], ['b1', 'macmillan', 'dt1', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'xd1'], 'tool mode sorting');
+eq_or_diff($out->get_output_comments, $tc1, 'tool mode - 6');
 
 Biber::Config->setoption('output_xname', 1);
 Biber::Config->setoption('output_xnamesep', ':');
@@ -133,7 +144,7 @@ $biber->prepare_tool;
 $main = $biber->sortlists->get_list(99999, Biber::Config->getblxoption('sortscheme'). '/global/', 'entry', Biber::Config->getblxoption('sortscheme'), 'global', '');
 $out = $biber->get_output_obj;
 
-eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($tx1), 'tool mode - 6');
+eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($tx1), 'tool mode - 7');
 
 my $CFxmlparser = XML::LibXML->new();
  # basic parse and XInclude processing

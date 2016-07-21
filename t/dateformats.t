@@ -512,7 +512,7 @@ my $time1 = q|    \entry{time1}{book}{}
       \field{eventminute}{7}
       \field{eventmonth}{1}
       \field{eventsecond}{34}
-      \field{eventtimezone}{UTC}
+      \field{eventtimezone}{Z}
       \field{eventyear}{2001}
       \field{hour}{15}
       \field{minute}{0}

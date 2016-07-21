@@ -194,8 +194,26 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:title>Maintitle</bltx:title>
     <bltx:titleaddon>Maintitleaddon</bltx:titleaddon>
   </bltx:entry>
+  <bltx:entry id="dt1" entrytype="book">
+    <bltx:date>
+      <bltx:start>2004-04-25</bltx:start>
+      <bltx:end>2004-04-05</bltx:end>
+    </bltx:date>
+    <bltx:date type="event">
+      <bltx:start>2004-04-25</bltx:start>
+      <bltx:end>2004-04-05</bltx:end>
+    </bltx:date>
+    <bltx:date type="orig">
+      <bltx:start>2004-04-25</bltx:start>
+      <bltx:end>2004-04-05</bltx:end>
+    </bltx:date>
+    <bltx:date type="url">
+      <bltx:start>2004-04-25</bltx:start>
+      <bltx:end>2004-04-05</bltx:end>
+    </bltx:date>
+  </bltx:entry>
 </bltx:entries>
 |;
 
 eq_or_diff($outvar, encode_utf8($bltxml1), 'bltxml tool mode - 1');
-is_deeply([$main->get_keys], ['b1', 'macmillan', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'xd1'], 'tool mode sorting');
+is_deeply([$main->get_keys], ['b1', 'macmillan', 'dt1', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'xd1'], 'tool mode sorting');

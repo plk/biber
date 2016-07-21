@@ -540,19 +540,21 @@ sub construct_datetime {
     $overrideem = $seasons{$s};
   }
 
-
   # date exists if there is a start year
   if (my $sy = $overridey || $be->get_field("${d}year") ) {
     $datestring .= $sy;
+    $be->del_field("${d}year");
 
     # Start month
     if (my $sm = $overridem || $be->get_field("${d}month")) {
-      $datestring .= "-$sm";
+      $datestring .= '-' . sprintf('%.2d', $sm);
+      $be->del_field("${d}month");
     }
 
     # Start day
     if (my $sd = $overrided || $be->get_field("${d}day")) {
-      $datestring .= "-$sd";
+      $datestring .= '-' . sprintf('%.2d', $sd);
+      $be->del_field("${d}day");
     }
 
     # Uncertain start date
@@ -565,6 +567,22 @@ sub construct_datetime {
       $datestring .= '~';
     }
 
+    # If start hour, there must be minute and second
+    if (my $sh = $be->get_field("${d}hour")) {
+      $datestring .= 'T' . sprintf('%.2d', $sh) . ':' .
+        sprintf('%.2d', $be->get_field("${d}minute")) . ':' .
+          sprintf('%.2d', $be->get_field("${d}second"));
+      $be->del_field("${d}hour");
+      $be->del_field("${d}minute");
+      $be->del_field("${d}second");
+    }
+
+    # start timezone
+    if (my $stz = $be->get_field("${d}timezone")) {
+      $stz =~ s/\\bibtzminsep\s+/:/;
+      $datestring .= $stz;
+      $be->del_field("${d}timezone");
+    }
 
     # End year, can be empty
     if ($be->field_exists("${d}endyear")) {
@@ -574,15 +592,18 @@ sub construct_datetime {
     # End year
     if (my $ey = $be->get_field("${d}endyear")) {
       $datestring .= $ey;
+      $be->del_field("${d}endyear");
 
       # End month
       if (my $em = $overrideem || $be->get_field("${d}endmonth")) {
-        $datestring .= "-$em";
+        $datestring .= '-' . sprintf('%.2d', $em);
+        $be->del_field("${d}endmonth");
       }
 
       # End day
       if (my $ed = $be->get_field("${d}endday")) {
-        $datestring .= "-$ed";
+        $datestring .= '-' . sprintf('%.2d', $ed);
+        $be->del_field("${d}endday");
       }
 
       # Uncertain start date
@@ -593,6 +614,23 @@ sub construct_datetime {
       # Circa start date
       if ($be->get_field("${d}enddatecirca")) {
         $datestring .= '~';
+      }
+
+      # If end hour, there must be minute and second
+      if (my $eh = $be->get_field("${d}endhour")) {
+        $datestring .= 'T' . sprintf('%.2d', $eh) . ':' .
+          sprintf('%.2d', $be->get_field("${d}endminute")) . ':' .
+            sprintf('%.2d', $be->get_field("${d}endsecond"));
+        $be->del_field("${d}endhour");
+        $be->del_field("${d}endminute");
+        $be->del_field("${d}endsecond");
+      }
+
+      # end timezone
+      if (my $etz = $be->get_field("${d}endtimezone")) {
+        $etz =~ s/\\bibtzminsep\s+/:/;
+        $datestring .= $etz;
+        $be->del_field("${d}endtimezone");
       }
     }
   }
