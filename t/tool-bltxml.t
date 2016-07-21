@@ -196,20 +196,20 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
   </bltx:entry>
   <bltx:entry id="dt1" entrytype="book">
     <bltx:date>
-      <bltx:start>2004-04-25</bltx:start>
-      <bltx:end>2004-04-05</bltx:end>
+      <bltx:start>2004-04-25T14:34:00</bltx:start>
+      <bltx:end>2004-04-05T14:37:06</bltx:end>
     </bltx:date>
     <bltx:date type="event">
-      <bltx:start>2004-04-25</bltx:start>
-      <bltx:end>2004-04-05</bltx:end>
+      <bltx:start>2004-04-25T14:34:00+05:00</bltx:start>
+      <bltx:end>2004-04-05T15:34:00+05:00</bltx:end>
     </bltx:date>
     <bltx:date type="orig">
-      <bltx:start>2004-04-25</bltx:start>
-      <bltx:end>2004-04-05</bltx:end>
+      <bltx:start>2004-04-25T14:34:00Z</bltx:start>
+      <bltx:end>2004-04-05T14:34:05Z</bltx:end>
     </bltx:date>
     <bltx:date type="url">
-      <bltx:start>2004-04-25</bltx:start>
-      <bltx:end>2004-04-05</bltx:end>
+      <bltx:start>2004-04-25T14:34:00</bltx:start>
+      <bltx:end>2004-04-05T15:00:00</bltx:end>
     </bltx:date>
   </bltx:entry>
 </bltx:entries>

@@ -376,13 +376,55 @@ sub set_output_entry {
               edtf_monthday($be->get_field("${d}endday"));
       # Date range
       if (@end) {
-        $xml->dataElement([$xml_prefix, 'start'], NFC(join('-', @start)));
-        $xml->dataElement([$xml_prefix, 'end'], NFC(join('-', @end)));
+        my $start = NFC(join('-', @start));
+        my $end = NFC(join('-', @end));
+
+        # If start hour, there must be minute and second
+        if (my $sh = $be->get_field("${d}hour")) {
+          $start .= NFC('T' . sprintf('%.2d', $sh) . ':' .
+            sprintf('%.2d', $be->get_field("${d}minute")) . ':' .
+              sprintf('%.2d', $be->get_field("${d}second")));
+        }
+
+        # start timezone
+        if (my $stz = $be->get_field("${d}timezone")) {
+          $stz =~ s/\\bibtzminsep\s+/:/;
+          $start .= NFC($stz);
+        }
+
+        # If end hour, there must be minute and second
+        if (my $eh = $be->get_field("${d}endhour")) {
+          $end .= NFC('T' . sprintf('%.2d', $eh) . ':' .
+            sprintf('%.2d', $be->get_field("${d}endminute")) . ':' .
+              sprintf('%.2d', $be->get_field("${d}endsecond")));
+        }
+
+        # end timezone
+        if (my $etz = $be->get_field("${d}endtimezone")) {
+          $etz =~ s/\\bibtzminsep\s+/:/;
+          $end .= NFC($etz);
+        }
+
+        $xml->dataElement([$xml_prefix, 'start'], $start);
+        $xml->dataElement([$xml_prefix, 'end'], $end);
       }
       else { # simple date
-        $xml->characters(NFC(join('-', @start)))
+        $xml->characters(NFC(join('-', @start)));
+
+        # If start hour, there must be minute and second
+        if (my $sh = $be->get_field("${d}hour")) {
+          $xml->characters(NFC('T' . sprintf('%.2d', $sh) . ':' .
+                               sprintf('%.2d', $be->get_field("${d}minute")) . ':' .
+                               sprintf('%.2d', $be->get_field("${d}second"))));
+        }
+
+        # start timezone
+        if (my $stz = $be->get_field("${d}timezone")) {
+          $stz =~ s/\\bibtzminsep\s+/:/;
+          $xml->characters(NFC($stz));
+        }
       }
-      $xml->endTag();# date
+      $xml->endTag();           # date
     }
   }
 
