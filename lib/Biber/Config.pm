@@ -53,7 +53,7 @@ Biber::Config - Configuration items which need to be saved across the
 our $CONFIG;
 
 # Uniqueness ignore information from inheritance data
-$CONFIG->{state}{uniqignore};
+$CONFIG->{state}{uniqignore} = {};
 
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{xrefkeys} = {};

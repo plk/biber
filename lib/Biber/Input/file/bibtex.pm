@@ -840,7 +840,8 @@ sub _create_entry {
     # Now run any defined handler
     if ($dm->is_field($f)) {
       my $handler = _get_handler($f);
-      $handler->($bibentry, $e, $f, $k);
+      my $v = $handler->($bibentry, $e, $f, $k);
+      $bibentry->set_datafield($f, $v) if $v;
     }
     elsif (Biber::Config->getoption('validate_datamodel')) {
       biber_warn("Datamodel: Entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
@@ -916,8 +917,7 @@ sub _literal {
     # Ignore invalid ISBNs
     if (not $isbn or not $isbn->is_valid) {
       biber_warn("ISBN '$value' in entry '$key' is invalid - run biber with '--validate_datamodel' for details.");
-      $bibentry->set_datafield($field, $value);
-      return;
+      return $value;
     }
 
     # Force to a specified format
@@ -938,18 +938,17 @@ sub _literal {
 
   # Try to sanitise months to biblatex requirements
   if ($field eq 'month') {
-    $bibentry->set_datafield($field, _hack_month($value));
+    return _hack_month($value);
   }
   # Rationalise any bcp47 style langids into babel/polyglossia names
   # biblatex will convert these back again when loading .lbx files
   # We need this until babel/polyglossia support proper bcp47 language/locales
   elsif ($field eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
-    $bibentry->set_datafield($field, $map);
+    return $map;
   }
   else {
-    $bibentry->set_datafield($field, $value);
+    return $value;
   }
-  return;
 }
 
 # URI fields
@@ -957,8 +956,7 @@ sub _uri {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get($field);
   # Unicode NFC boundary (before hex encoding)
-  $bibentry->set_datafield($field, URI->new(NFC($value))->as_string); # Performs url encoding
-  return;
+  return URI->new(NFC($value))->as_string;
 }
 
 # xSV field form
@@ -966,16 +964,14 @@ sub _xsv {
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
   my ($bibentry, $entry, $field) = @_;
-  $bibentry->set_datafield($field, [ split(/$S/, $entry->get($field)) ]);
-  return;
+  return [ split(/$S/, $entry->get($field)) ];
 }
 
 # Verbatim fields
 sub _verbatim {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get($field);
-  $bibentry->set_datafield($field, $value);
-  return;
+  return $value;
 }
 
 # Range fields
@@ -1009,8 +1005,7 @@ sub _range {
     biber_warn("Range field '$field' in entry '$key' is malformed, skipping", $bibentry) unless $start;
     push $values_ref->@*, [$start || '', $end];
   }
-  $bibentry->set_datafield($field, $values_ref);
-  return;
+  return $values_ref;
 }
 
 # Names
@@ -1095,8 +1090,7 @@ sub _name {
   }
 
   # Don't set if there were no valid names due to special errors above
-  $bibentry->set_datafield($field, $names) if $names->count_names;
-  return;
+  return $names->count_names ? $names : '';
 }
 
 # Dates
@@ -1230,8 +1224,7 @@ sub _list {
                                      undef,
                                      {binmode => 'utf-8', normalization => 'NFD'});
   @tmp = map { (remove_outer($_))[1] } @tmp;
-  $bibentry->set_datafield($field, [ @tmp ]);
-  return;
+  return [ @tmp ];
 }
 
 # Bibtex uri lists
@@ -1253,8 +1246,7 @@ sub _urilist {
 
   @tmp = map { URI->new($_)->as_string } @tmp;
 
-  $bibentry->set_datafield($field, [ @tmp ]);
-  return;
+  return [ @tmp ];
 }
 
 =head2 cache_data
