@@ -1940,22 +1940,24 @@ sub process_labeldate {
 
   if (Biber::Config->getblxoption('labeldateparts', $bee)) {
     my $ldatespec = Biber::Config->getblxoption('labeldatespec', $bee);
-    foreach my $h_ly ($ldatespec->@*) {
+    foreach my $lds ($ldatespec->@*) {
       my $pseudodate;
-      my $ly = $h_ly->{content};
-      if ($h_ly->{'type'} eq 'field') { # labeldate field
+      my $ld = $lds->{content};
+      if ($lds->{'type'} eq 'field') { # labeldate field
         my $ldy;
         my $ldm;
         my $ldd;
         my $datetype;
-        if ($dm->field_is_datatype('date', $ly)) { # resolve dates
-          $datetype = $ly =~ s/date\z//xmsr;
+
+        # resolve dates
+        if ($dm->field_is_datatype('date', $ld)) {
+          $datetype = $ld =~ s/date\z//xmsr;
           $ldy = $datetype . 'year';
           $ldm = $datetype . 'month';
           $ldd = $datetype . 'day';
         }
         else {
-          $ldy = $ly; # labelyear can be a non-date field so make a pseudo-year
+          $ldy = $ld; # labelyear can be a non-date field so make a pseudo-year
           $pseudodate = 1;
         }
 
@@ -1970,8 +1972,8 @@ sub process_labeldate {
           last;
         }
       }
-      elsif ($h_ly->{'type'} eq 'string') { # labelyear fallback string
-        $be->set_labeldate_info({'string' => $ly});
+      elsif ($lds->{'type'} eq 'string') { # labelyear fallback string
+        $be->set_labeldate_info({'string' => $ld});
         last;
       }
     }

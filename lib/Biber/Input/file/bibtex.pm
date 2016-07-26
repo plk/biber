@@ -890,15 +890,15 @@ sub _literal {
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
   if ($field eq 'year') {
-    return if my $y = $bibentry->get_datafield('year');
-    if ($y and not looks_like_number($y)) {
-      biber_warn("year field '$y' in entry '$key' is not an integer - this will probably not sort properly.");
+    return if $bibentry->get_datafield('year');
+    if ($value and not looks_like_number($value)) {
+      biber_warn("year field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
   }
   if ($field eq 'month') {
-    return if my $m = $bibentry->get_datafield('month');
-    if ($m and not looks_like_number($m)) {
-      biber_warn("month field '$m' in entry '$key' is not an integer - this will probably not sort properly.");
+    return if $bibentry->get_datafield('month');
+    if ($value and not looks_like_number($value)) {
+      biber_warn("month field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
   }
 
@@ -1112,8 +1112,8 @@ sub _datetime {
   }
 
   if ($sdate) {# Start date was successfully parsed
-    # Did this entry get its year/month fields from splitting an ISO8601 date field?
-    # We only need to know this for date, year/month as year/month can also
+    # Did this entry get its year/month fields from splitting an EDTF date field?
+    # We only need to know this for date, year/month can also
     # be explicitly set. This is useful to know in various places.
     $bibentry->set_field('datesplit', 1) if $datetype eq '';
     # Some warnings for overwriting YEAR and MONTH from DATE
