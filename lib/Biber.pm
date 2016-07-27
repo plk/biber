@@ -1950,14 +1950,15 @@ sub process_labeldate {
         my $datetype;
 
         # resolve dates
-        if ($dm->field_is_datatype('date', $ld)) {
-          $datetype = $ld =~ s/date\z//xmsr;
+        $datetype = $ld =~ s/date\z//xmsr;
+        if ($dm->field_is_datatype('date', $ld) and
+            $be->get_field("${datetype}datesplit")) { # real EDTF dates
           $ldy = $datetype . 'year';
           $ldm = $datetype . 'month';
           $ldd = $datetype . 'day';
         }
-        else {
-          $ldy = $ld; # labelyear can be a non-date field so make a pseudo-year
+        else { # non-EDTF split date field so make a pseudo-year
+          $ldy = $ld;
           $pseudodate = 1;
         }
 

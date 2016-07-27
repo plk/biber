@@ -50,7 +50,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labeldatesource}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -77,7 +77,7 @@ my $encode2 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labeldatesource}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -104,7 +104,7 @@ my $encode3 = q|    \entry{test1}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labeldatesource}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -131,7 +131,7 @@ my $encode5 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labeldatesource}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -158,7 +158,7 @@ my $encode6 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labeldatesource}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -185,7 +185,7 @@ my $encode7 = q|    \entry{test}{book}{}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labeldatesource}{}
+      \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

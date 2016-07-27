@@ -247,7 +247,7 @@ Biber::Config->setblxoption('mincitenames', 3);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -316,7 +316,7 @@ Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -354,7 +354,7 @@ Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 6);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -389,7 +389,7 @@ Biber::Config->setblxoption('mincitenames', 1);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 2);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -417,7 +417,7 @@ Biber::Config->setblxoption('mincitenames', 2);
 Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 2);
 Biber::Config->setblxoption('singletitle', 0);
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -443,7 +443,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setblxoption('uniquename', 1);
 Biber::Config->setblxoption('uniquelist', 0);
 Biber::Config->setblxoption('singletitle', 1);
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -470,7 +470,7 @@ Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('uniquetitle', 1);
 Biber::Config->setblxoption('uniquework', 1);
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -518,7 +518,7 @@ Biber::Config->setblxoption('uniquelist', 0);
 Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('uniquetitle', 0);
 Biber::Config->setblxoption('uniquework', 0);
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);

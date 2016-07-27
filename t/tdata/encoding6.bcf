@@ -70,6 +70,7 @@
     <bcf:option type="multivalued">
       <bcf:key>labeldatespec</bcf:key>
       <bcf:value order="1" type="field">date</bcf:value>
+      <bcf:value order="2" type="field">year</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>julian</bcf:key>
