@@ -1119,12 +1119,14 @@ sub _datetime {
     # Some warnings for overwriting YEAR and MONTH from DATE
     if ($sdate->year and
         ($datetype . 'year' eq 'year') and
-        $entry->get('year')) {
+        $entry->get('year') and
+       $sdate->year != $entry->get('year')) {
       biber_warn("Overwriting field 'year' with year value from field 'date' for entry '$key'", $bibentry);
     }
     if ($sdate->month and
         ($datetype . 'month' eq 'month') and
-        $entry->get('month')) {
+        $entry->get('month') and
+       $sdate->month != $entry->get('month')) {
       biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
     }
 
