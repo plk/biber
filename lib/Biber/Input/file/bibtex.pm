@@ -141,7 +141,7 @@ sub extract_entries {
       $filename = $cf;
     }
     else {
-      if ($1) {                 # HTTPS
+      if ($1) { # HTTPS/FTPS
         # use IO::Socket::SSL qw(debug99); # useful for debugging SSL issues
         # We have to explicitly set the cert path because otherwise the https module
         # can't find the .pem when PAR::Packer'ed
@@ -1112,10 +1112,9 @@ sub _datetime {
   }
 
   if ($sdate) {# Start date was successfully parsed
-    # Did this entry get its year/month fields from splitting an EDTF date field?
-    # We only need to know this for date, year/month can also
-    # be explicitly set. This is useful to know in various places.
-    $bibentry->set_field('datesplit', 1) if $datetype eq '';
+    # Did this entry get its datepart fields from splitting an EDTF date field?
+    $bibentry->set_field("${datetype}datesplit", 1);
+
     # Some warnings for overwriting YEAR and MONTH from DATE
     if ($sdate->year and
         ($datetype . 'year' eq 'year') and

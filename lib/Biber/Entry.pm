@@ -64,6 +64,7 @@ sub relclone {
   my $citekey = $self->get_field('citekey');
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $dmh = Biber::Config->get_dm_helpers;
   if (my $relkeys = $self->get_field('related')) {
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Found RELATED field in '$citekey' with contents " . join(',', @$relkeys));
@@ -100,10 +101,13 @@ sub relclone {
           $logger->debug("Created new related clone for '$relkey' with clone key '$clonekey'");
         }
 
-        # Datesplit is a special non datafield and needs to be copied for things like era
+        # *datesplit is a special non datafield and needs to be copied for things like era
         # output
-        if (my $ds = $self->get_field('datesplit')) {
-          $relclone->set_field('datesplit', $ds);
+        foreach my $df ($dmh->{datefields}->@*) {
+          $df =~ s/date$//;
+          if (my $ds = $self->get_field("${df}datesplit")) {
+            $relclone->set_field("${df}datesplit", $ds);
+          }
         }
 
         # Set related clone options
@@ -500,7 +504,7 @@ sub has_keyword {
 
 sub add_warning {
   my ($self, $warning) = @_;
-  push @{$self->{derivedfields}{warnings}}, $warning;
+  push $self->{derivedfields}{warnings}->@*, $warning;
   return;
 }
 
@@ -519,6 +523,7 @@ sub add_warning {
 
 sub set_inherit_from {
   my ($self, $parent) = @_;
+  my $dmh = Biber::Config->get_dm_helpers;
 
   # Data source fields
   foreach my $field ($parent->datafields) {
@@ -527,8 +532,11 @@ sub set_inherit_from {
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  if (my $ds = $parent->get_field('datesplit')) {
-    $self->set_field('datesplit', $ds);
+  foreach my $df ($dmh->{datefields}->@*) {
+    $df =~ s/date$//;
+    if (my $ds = $parent->get_field("${df}datesplit")) {
+      $self->set_field("${df}datesplit", $ds);
+    }
   }
   return;
 }
@@ -634,7 +642,7 @@ sub inherit_from {
   my $dignore = $defaults->{ignore};
 
   # override with type_pair specific defaults if they exist ...
-  foreach my $type_pair (@{$defaults->{type_pair}}) {
+  foreach my $type_pair ($defaults->{type_pair}->@*) {
     if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
         ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
       $inherit_all = $type_pair->{inherit_all} if $type_pair->{inherit_all};
@@ -644,16 +652,16 @@ sub inherit_from {
   }
 
   # First process any fields that have special treatment
-  foreach my $inherit (@{$inheritance->{inherit}}) {
+  foreach my $inherit ($inheritance->{inherit}->@*) {
     # Match for this combination of entry and crossref parent?
-    foreach my $type_pair (@{$inherit->{type_pair}}) {
+    foreach my $type_pair ($inherit->{type_pair}->@*) {
       if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
           ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
-        foreach my $field (@{$inherit->{field}}) {
+        foreach my $field ($inherit->{field}->@*) {
           # Skip for fields in the per-entry noinerit datafield set
           if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key) and
              exists($field->{target})) {
-            if (first {$field->{target} eq $_} @{$DATAFIELD_SETS{$niset}}) {
+            if (first {$field->{target} eq $_} $DATAFIELD_SETS{$niset}->@*) {
               next;
             }
           }
@@ -702,7 +710,7 @@ sub inherit_from {
     # as soon as one Xdatepart field has been inherited, no more will be.
     my @filtered_fields;
     foreach my $field (@fields) {
-      if (first {$_ eq $field} @{$dmh->{dateparts}}) {
+      if (first {$_ eq $field} $dmh->{dateparts}->@*) {
         next if $self->date_fields_exist($field);
       }
       push @filtered_fields, $field;
@@ -712,7 +720,7 @@ sub inherit_from {
     foreach my $field (@fields) {
       # Skip for fields in the per-entry noinherit datafield set
       if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key)) {
-        if (first {$field eq $_} @{$DATAFIELD_SETS{$niset}}) {
+        if (first {$field eq $_} $DATAFIELD_SETS{$niset}->@*) {
           next;
         }
       }
@@ -738,8 +746,11 @@ sub inherit_from {
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  if (my $ds = $parent->get_field('datesplit')) {
-    $self->set_field('datesplit', $ds);
+  foreach my $df ($dmh->{datefields}->@*) {
+    $df =~ s/date$//;
+    if (my $ds = $parent->get_field("${df}datesplit")) {
+      $self->set_field("${df}datesplit", $ds);
+    }
   }
 
   return;

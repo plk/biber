@@ -166,10 +166,10 @@ sub set_output_entry {
   $acc{$casing->('options')} = join(',', @entryoptions) if @entryoptions;
 
   # Date fields
-  foreach my $datefield ($dmh->{datefields}->@*) {
-    my ($d) = $datefield =~ m/^(.*)date$/;
+  foreach my $d ($dmh->{datefields}->@*) {
+    $d =~ s/date$//;
     next unless $be->get_field("${d}year");
-    $acc{$casing->($datefield)} = construct_datetime($be, $d);
+    $acc{$casing->("${d}date")} = construct_datetime($be, $d);
   }
 
   # YEAR and MONTH are legacy - convert these to DATE if possible

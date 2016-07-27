@@ -900,10 +900,12 @@ sub _datetime {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
-  $bibentry->set_field('datesplit', 1); # biblatexml date fields are always "split"
+
   foreach my $node ($entry->findnodes("./$f")) {
 
     my $datetype = $node->getAttribute('type') // '';
+
+    $bibentry->set_field("${datetype}datesplit", 1);
 
     if (my $start = $node->findnodes("./$NS:start")) { # Date range
       my $end = $node->findnodes("./$NS:end");

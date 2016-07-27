@@ -425,8 +425,8 @@ sub set_output_entry {
   }
 
   # Date meta-information
-  foreach my $datefield ($dmh->{datefields}->@*) {
-    my ($d) = $datefield =~ m/^(.*)date$/;
+  foreach my $d ($dmh->{datefields}->@*) {
+    $d =~ s/date$//;
 
     # Unspecified granularity
     if (my $unspec = $be->get_field("${d}dateunspecified")) {
@@ -461,7 +461,7 @@ sub set_output_entry {
     # The field is "year" and it came from splitting a date
     # The field is any other startyear
     if ($be->field_exists("${d}year")) { # use exists test as could be year 0000
-      next if ($d eq '' and not $be->get_field('datesplit'));
+      next unless $be->get_field("${d}datesplit");
       if (my $era = $be->get_field("${d}era")) {
         $acc .= "      \\field{${d}dateera}{$era}\n";
       }

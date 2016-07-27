@@ -48,8 +48,8 @@ my $out = $biber->get_output_obj;
 
 my $b1 = q|@ARTICLE{murray,
   AUTHOR       = {Hostetler, Michael J. and Wingate, Julia E. and Zhong, Chuan-Jian and Harris, Jay E. and Vachet, Richard W. and Clark, Michael R. and Londono, J. David and Green, Stephen J. and Stokes, Jennifer J. and Wignall, George D. and Glish, Gary L. and Porter, Marc D. and Evans, Neal D. and Murray, Royce W.},
-  DATE         = {1998},
   ANNOTATION   = {An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable},
+  DATE         = {1998},
   INDEXTITLE   = {Alkanethiolate gold cluster molecules},
   JOURNALTITLE = {Langmuir},
   LANGID       = {english},
