@@ -989,6 +989,8 @@ sub _range {
   # If there is a range sep, then we set the end of the range even if it's null
   # If no range sep, then the end of the range is undef
   foreach my $value (@values) {
+    my $ovalue = $value;
+    $value =~ s/~/ /g; # Some normalisation for malformed fields
     $value =~ m/\A\s*(\P{Pd}+)\s*\z/xms ||# Simple value without range
       $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*)\s*\z/xms ||
         $value =~ m/\A\s*(.+)(\p{Pd}{2,})(.+)\s*\z/xms;# M-1--M-4
@@ -1002,8 +1004,13 @@ sub _range {
     }
     $start =~ s/\A\{([^\}]+)\}\z/$1/;
     $end =~ s/\A\{([^\}]+)\}\z/$1/;
-    biber_warn("Range field '$field' in entry '$key' is malformed, skipping", $bibentry) unless $start;
-    push $values_ref->@*, [$start || '', $end];
+    if ($start) {
+      push $values_ref->@*, [$start || '', $end];
+    }
+    else {
+      biber_warn("Range field '$field' in entry '$key' is malformed, falling back to literal", $bibentry);
+      push $values_ref->@*, [$ovalue, undef];
+    }
   }
   return $values_ref;
 }
