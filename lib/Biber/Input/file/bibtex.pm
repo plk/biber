@@ -1129,7 +1129,7 @@ sub _datetime {
        $sdate->year != $entry->get('year')) {
       biber_warn("Overwriting field 'year' with year value from field 'date' for entry '$key'", $bibentry);
     }
-    if ($sdate->month and
+    if (not $CONFIG_DATE_PARSERS{start}->missing('month') and
         ($datetype . 'month' eq 'month') and
         $entry->get('month') and
        $sdate->month != $entry->get('month')) {
