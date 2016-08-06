@@ -342,8 +342,15 @@ sub latex_encode {
       $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '{}')/ge;
     }
     elsif (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
-      # Math mode macros (excluding special encoding excludes)
-      $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "{\$\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '$}')/ge;
+      if (my ($e) = $text =~ m/($re)/) {
+        if ($map->{$e} =~ m/^text/) {
+          $text =~ s/$re/"\\" . $map->{$e}/ge;
+        }
+        else {
+          # Math mode macros (excluding special encoding excludes)
+          $text =~ s/$re/($remap_e_raw->{$e} ? '' : "{\$\\") . $map->{$e} . ($remap_e_raw->{$e} ? '' : '$}')/ge;
+        }
+      }
     }
     elsif ($type eq 'diacritics') {
       # special case such as "i\x{304}" -> '\={\i}' -> "i" needs the dot removing for accents

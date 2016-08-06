@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 72;
+use Test::More tests => 74;
 use Test::Differences;
 unified_diff;
 
@@ -102,7 +102,7 @@ eq_or_diff(latex_decode('\textdiv'), '÷', 'latex decode 11'); # checking multip
 eq_or_diff(latex_decode('--'), '--', 'latex decode 13'); # Testing raw
 
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
-eq_or_diff(latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols
+eq_or_diff(latex_encode(NFD('µ')), '\textmu', 'latex encode 4'); # Testing symbols
 eq_or_diff(latex_encode(NFD('≄')), '{$\not\simeq$}', 'latex encode 5'); # Testing negated symbols
 eq_or_diff(latex_encode(NFD('Þ')), '\TH{}', 'latex encode 6'); # Testing preferred
 eq_or_diff(latex_encode('$'), '$', 'latex encode 7'); # Testing exclude
@@ -111,6 +111,8 @@ eq_or_diff(latex_decode('a\-a'), 'a\-a', 'discretionary hyphens');
 eq_or_diff(latex_encode(NFD('Åå')), '\r{A}\r{a}', 'latex encode 9');
 eq_or_diff(latex_encode(NFD('a̍')), '\|{a}', 'latex encode 10');
 eq_or_diff(latex_encode(NFD('ı̆')), '\u{\i{}}', 'latex encode 11');
+eq_or_diff(latex_encode(NFD('®')), '\textregistered', 'latex encode 12');
+eq_or_diff(latex_encode(NFD('©')), '\textcopyright', 'latex encode 13');
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
@@ -126,7 +128,7 @@ eq_or_diff(normalise_string_hash('Ä.~{\c{C}}.~{\c S}.'), 'Äc:Cc:S', 'normalise
 
 Biber::LaTeX::Recode->init_sets('base', 'full'); # Need to do this to reset
 eq_or_diff(latex_decode('\textdiv'), '\textdiv', 'latex different encode/decode sets 1');
-eq_or_diff(latex_encode(NFD('÷')), '{$\div$}', 'latex different encode/decode sets 2');
+eq_or_diff(latex_encode(NFD('÷')), '\textdiv', 'latex different encode/decode sets 2');
 
 Biber::LaTeX::Recode->init_sets('null', 'full'); # Need to do this to reset
 eq_or_diff(latex_decode('\i'), '\i', 'latex null decode 1');
