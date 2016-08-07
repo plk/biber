@@ -342,15 +342,7 @@ sub latex_encode {
       $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '{}')/ge;
     }
     elsif (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
-      if (my ($e) = $text =~ m/($re)/) {
-        if ($map->{$e} =~ m/^text/) {
-          $text =~ s/$re/"\\" . $map->{$e}/ge;
-        }
-        else {
-          # Math mode macros (excluding special encoding excludes)
-          $text =~ s/$re/($remap_e_raw->{$e} ? '' : "{\$\\") . $map->{$e} . ($remap_e_raw->{$e} ? '' : '$}')/ge;
-        }
-      }
+      $text =~ s/($re)/_wrap($1,$map,$remap_e_raw)/ge;
     }
     elsif ($type eq 'diacritics') {
       # special case such as "i\x{304}" -> '\={\i}' -> "i" needs the dot removing for accents
@@ -376,6 +368,20 @@ sub latex_encode {
               }gex;
     }
   }
+
+  sub _wrap {
+    my ($s, $map, $remap_e_raw) = @_;
+    if ($map->{$s} =~ m/^text/) {
+      "\\"  . $map->{$s};
+    }
+    elsif ($remap_e_raw->{$s}) {
+      $map->{$s};
+    }
+    else {
+      "{\$\\" .  $map->{$s} . '$}';
+    }
+  }
+
   return $text;
 }
 
