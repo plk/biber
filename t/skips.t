@@ -49,9 +49,9 @@ my $set1 = q|    \entry{seta}{set}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -76,9 +76,9 @@ my $set2 = q|    \entry{set:membera}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -101,9 +101,9 @@ my $set3 = q|    \entry{set:memberb}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -125,9 +125,9 @@ my $set4 = q|    \entry{set:memberc}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -148,9 +148,9 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -174,9 +174,9 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -200,9 +200,9 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -226,9 +226,9 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Cambridge}%

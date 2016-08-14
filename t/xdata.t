@@ -56,9 +56,9 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \name{author}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{%
            family={Ellington},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{location}{2}{%
         {New York}%
@@ -85,9 +85,9 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \name{author}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{%
            family={Pillington},
-           family_i={P\bibinitperiod},
+           familyi={P\bibinitperiod},
            given={Peter},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \list{location}{2}{%
         {New York}%

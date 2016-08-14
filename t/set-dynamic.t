@@ -51,9 +51,9 @@ my $string1 = q|    \entry{DynSet}{set}{}
       \name{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{%
            family={Dynamism},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={Derek},
-           given_i={D\bibinitperiod}}}%
+           giveni={D\bibinitperiod}}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
@@ -76,9 +76,9 @@ my $string2 = q|    \entry{Dynamic1}{book}{}
       \name{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{%
            family={Dynamism},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={Derek},
-           given_i={D\bibinitperiod}}}%
+           giveni={D\bibinitperiod}}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
@@ -101,9 +101,9 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
       \name{author}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{%
            family={Bunting},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
@@ -125,9 +125,9 @@ my $string4 = q|    \entry{Dynamic3}{book}{}
       \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
            family={Regardless},
-           family_i={R\bibinitperiod},
+           familyi={R\bibinitperiod},
            given={Roger},
-           given_i={R\bibinitperiod}}}%
+           giveni={R\bibinitperiod}}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
@@ -150,9 +150,9 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
            family={Regardless},
-           family_i={R\bibinitperiod},
+           familyi={R\bibinitperiod},
            given={Roger},
-           given_i={R\bibinitperiod}}}%
+           giveni={R\bibinitperiod}}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}

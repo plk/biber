@@ -23,9 +23,9 @@
       \name{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -47,9 +47,9 @@
       \name{author}{1}{}{%
         {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}

@@ -378,7 +378,7 @@ sub name_to_bbl {
     $npc //= '';
     $npci //= '';
     if ($npc) {
-      push @namestrings, "           $np={$npc}", "           ${np}_i={$npci}";
+      push @namestrings, "           $np={$npc}", "           ${np}i={$npci}";
     }
   }
 

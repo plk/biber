@@ -36,9 +36,9 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -63,9 +63,9 @@ my $encode2 = q|    \entry{test1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -90,9 +90,9 @@ my $encode3 = q|    \entry{test1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -117,9 +117,9 @@ my $encode5 = q|    \entry{test}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -144,9 +144,9 @@ my $encode6 = q|    \entry{test}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%
@@ -171,9 +171,9 @@ my $encode7 = q|    \entry{test}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {A press}%

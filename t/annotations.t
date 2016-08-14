@@ -47,19 +47,19 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \name{author}{3}{}{%
         {{hash=89a9e5097e11e595700540379c9b3a6b}{%
            family={Last1},
-           family_i={L\\bibinitperiod},
+           familyi={L\\bibinitperiod},
            given={First1},
-           given_i={F\\bibinitperiod}}}%
+           giveni={F\\bibinitperiod}}}%
         {{hash=7475b6b7b3c24a2ac6bd4d146cdc74dc}{%
            family={Last2},
-           family_i={L\\bibinitperiod},
+           familyi={L\\bibinitperiod},
            given={First2},
-           given_i={F\\bibinitperiod}}}%
+           giveni={F\\bibinitperiod}}}%
         {{hash=fd3dffa06a5d1f89c512841df1ccf4d0}{%
            family={Last3},
-           family_i={L\\bibinitperiod},
+           familyi={L\\bibinitperiod},
            given={First3},
-           given_i={F\\bibinitperiod}}}%
+           giveni={F\\bibinitperiod}}}%
       }
       \list{language}{2}{%
         {english}%

@@ -256,9 +256,9 @@ my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
         {{hash=72287a68c1714cb1b9f4ab9e03a88b96}{%
            family={Adler},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Alfred},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \strng{namehash}{72287a68c1714cb1b9f4ab9e03a88b96}
       \strng{fullhash}{72287a68c1714cb1b9f4ab9e03a88b96}
@@ -274,9 +274,9 @@ my $l2 = q|    \entry{L2}{book}{}
       \name{author}{1}{}{%
         {{hash=1c867a2b5ceb243bab70afb18702dc04}{%
            family={Bull},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Bertie\bibnamedelima B.},
-           given_i={B\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+           giveni={B\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
       }
       \strng{namehash}{1c867a2b5ceb243bab70afb18702dc04}
       \strng{fullhash}{1c867a2b5ceb243bab70afb18702dc04}
@@ -292,9 +292,9 @@ my $l3 = q|    \entry{L3}{book}{}
       \name{author}{1}{}{%
         {{hash=cecd18116c43ee86e5a136b6e0362948}{%
            family={Crop},
-           family_i={C\bibinitperiod},
+           familyi={C\bibinitperiod},
            given={C.\bibnamedelimi Z.},
-           given_i={C\bibinitperiod\bibinitdelim Z\bibinitperiod}}}%
+           giveni={C\bibinitperiod\bibinitdelim Z\bibinitperiod}}}%
       }
       \strng{namehash}{cecd18116c43ee86e5a136b6e0362948}
       \strng{fullhash}{cecd18116c43ee86e5a136b6e0362948}
@@ -310,9 +310,9 @@ my $l4 = q|    \entry{L4}{book}{}
       \name{author}{1}{}{%
         {{hash=675883f3aca7c6069c0b154d47af4c86}{%
            family={Decket},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={Derek\bibnamedelima D},
-           given_i={D\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+           giveni={D\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
       }
       \strng{namehash}{675883f3aca7c6069c0b154d47af4c86}
       \strng{fullhash}{675883f3aca7c6069c0b154d47af4c86}
@@ -328,11 +328,11 @@ my $l5 = q|    \entry{L5}{book}{}
       \name{author}{1}{}{%
         {{hash=c6b9d281cc1ff3f35570f76f463d4244}{%
            family={Eel},
-           family_i={E\\bibinitperiod},
+           familyi={E\\bibinitperiod},
            given={Egbert},
-           given_i={E\\bibinitperiod},
+           giveni={E\\bibinitperiod},
            prefix={von},
-           prefix_i={v\\bibinitperiod}}}%
+           prefixi={v\\bibinitperiod}}}%
       }
       \strng{namehash}{c6b9d281cc1ff3f35570f76f463d4244}
       \strng{fullhash}{c6b9d281cc1ff3f35570f76f463d4244}
@@ -348,11 +348,11 @@ my $l6 = q|    \entry{L6}{book}{}
       \name{author}{1}{}{%
         {{hash=dd96e3fc645eb4685988366f233403df}{%
            family={Frome},
-           family_i={F\\bibinitperiod},
+           familyi={F\\bibinitperiod},
            given={Francis},
-           given_i={F\\bibinitperiod},
+           giveni={F\\bibinitperiod},
            prefix={van\\bibnamedelimb der\\bibnamedelima valt},
-           prefix_i={v\\bibinitperiod\\bibinitdelim d\\bibinitperiod\\bibinitdelim v\\bibinitperiod}}}%
+           prefixi={v\\bibinitperiod\\bibinitdelim d\\bibinitperiod\\bibinitdelim v\\bibinitperiod}}}%
       }
       \strng{namehash}{dd96e3fc645eb4685988366f233403df}
       \strng{fullhash}{dd96e3fc645eb4685988366f233403df}
@@ -368,11 +368,11 @@ my $l7 = q|    \entry{L7}{book}{}
       \name{author}{1}{}{%
         {{hash=1e802cc32f10930a9567712b8febdf19}{%
            family={Gloom},
-           family_i={G\\bibinitperiod},
+           familyi={G\\bibinitperiod},
            given={Gregory\\bibnamedelima R.},
-           given_i={G\\bibinitperiod\\bibinitdelim R\\bibinitperiod},
+           giveni={G\\bibinitperiod\\bibinitdelim R\\bibinitperiod},
            prefix={van},
-           prefix_i={v\\bibinitperiod}}}%
+           prefixi={v\\bibinitperiod}}}%
       }
       \strng{namehash}{1e802cc32f10930a9567712b8febdf19}
       \strng{fullhash}{1e802cc32f10930a9567712b8febdf19}
@@ -388,11 +388,11 @@ my $l8 = q|    \entry{L8}{book}{}
       \name{author}{1}{}{%
         {{hash=076a9b62b331eb2cdfba234d9ad7bca9}{%
            family={Henkel},
-           family_i={H\\bibinitperiod},
+           familyi={H\\bibinitperiod},
            given={Henry\\bibnamedelima F.},
-           given_i={H\\bibinitperiod\\bibinitdelim F\\bibinitperiod},
+           giveni={H\\bibinitperiod\\bibinitdelim F\\bibinitperiod},
            prefix={van},
-           prefix_i={v\\bibinitperiod}}}%
+           prefixi={v\\bibinitperiod}}}%
       }
       \strng{namehash}{076a9b62b331eb2cdfba234d9ad7bca9}
       \strng{fullhash}{076a9b62b331eb2cdfba234d9ad7bca9}
@@ -408,9 +408,9 @@ my $l9 = q|    \entry{L9}{book}{}
       \name{author}{1}{}{%
         {{hash=1734924c4c55de5bb18d020c34a5249e}{%
            family={{Iliad Ipswich}},
-           family_i={I\bibinitperiod},
+           familyi={I\bibinitperiod},
            given={Ian},
-           given_i={I\bibinitperiod}}}%
+           giveni={I\bibinitperiod}}}%
       }
       \strng{namehash}{1734924c4c55de5bb18d020c34a5249e}
       \strng{fullhash}{1734924c4c55de5bb18d020c34a5249e}
@@ -427,11 +427,11 @@ my $l10 = q|    \entry{L10}{book}{}
       \name{author}{1}{}{%
         {{hash=37b4325752e394ddfb2fc810f6c88e27}{%
            family={Jolly},
-           family_i={J\\bibinitperiod},
+           familyi={J\\bibinitperiod},
            given={James},
-           given_i={J\\bibinitperiod},
+           giveni={J\\bibinitperiod},
            suffix={III},
-           suffix_i={I\\bibinitperiod}}}%
+           suffixi={I\\bibinitperiod}}}%
       }
       \strng{namehash}{37b4325752e394ddfb2fc810f6c88e27}
       \strng{fullhash}{37b4325752e394ddfb2fc810f6c88e27}
@@ -448,11 +448,11 @@ my $l10a = q|    \entry{L10a}{book}{}
       \name{author}{1}{}{%
         {{hash=264cb53d2295644c1c99523e254d9b0e}{%
            family={Pimentel},
-           family_i={P\\bibinitperiod},
+           familyi={P\\bibinitperiod},
            given={Joseph\\bibnamedelima J.},
-           given_i={J\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
+           giveni={J\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
            suffix={Jr.},
-           suffix_i={J\\bibinitperiod}}}%
+           suffixi={J\\bibinitperiod}}}%
       }
       \strng{namehash}{264cb53d2295644c1c99523e254d9b0e}
       \strng{fullhash}{264cb53d2295644c1c99523e254d9b0e}
@@ -469,13 +469,13 @@ my $l11 = q|    \entry{L11}{book}{}
       \name{author}{1}{}{%
         {{hash=c536dd808dc9193fda59ba1ff2afb38f}{%
            family={Kluster},
-           family_i={K\\bibinitperiod},
+           familyi={K\\bibinitperiod},
            given={Kevin},
-           given_i={K\\bibinitperiod},
+           giveni={K\\bibinitperiod},
            prefix={van},
-           prefix_i={v\\bibinitperiod},
+           prefixi={v\\bibinitperiod},
            suffix={Jr.},
-           suffix_i={J\\bibinitperiod}}}%
+           suffixi={J\\bibinitperiod}}}%
       }
       \strng{namehash}{c536dd808dc9193fda59ba1ff2afb38f}
       \strng{fullhash}{c536dd808dc9193fda59ba1ff2afb38f}
@@ -491,11 +491,11 @@ my $l12 = q|    \entry{L12}{book}{}
       \name{author}{1}{}{%
         {{hash=7e7640f3cb87a1cf11a86307a186ec0f}{%
            family={Vallée\\bibnamedelima Poussin},
-           family_i={V\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
+           familyi={V\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
            given={Charles\\bibnamedelimb Louis\\bibnamedelimb Xavier\\bibnamedelima Joseph},
-           given_i={C\\bibinitperiod\\bibinitdelim L\\bibinitperiod\\bibinitdelim X\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
+           giveni={C\\bibinitperiod\\bibinitdelim L\\bibinitperiod\\bibinitdelim X\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
            prefix={de\\bibnamedelima la},
-           prefix_i={d\\bibinitperiod\\bibinitdelim l\\bibinitperiod}}}%
+           prefixi={d\\bibinitperiod\\bibinitdelim l\\bibinitperiod}}}%
       }
       \strng{namehash}{7e7640f3cb87a1cf11a86307a186ec0f}
       \strng{fullhash}{7e7640f3cb87a1cf11a86307a186ec0f}
@@ -512,9 +512,9 @@ my $l13 = q|    \entry{L13}{book}{}
       \name{author}{1}{}{%
         {{hash=5e79da6869afaf0d38e01285b494d555}{%
            family={Van\bibnamedelimb de\bibnamedelima Graaff},
-           family_i={V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod},
+           familyi={V\bibinitperiod\bibinitdelim d\bibinitperiod\bibinitdelim G\bibinitperiod},
            given={R.\bibnamedelimi J.},
-           given_i={R\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+           giveni={R\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
       }
       \strng{namehash}{5e79da6869afaf0d38e01285b494d555}
       \strng{fullhash}{5e79da6869afaf0d38e01285b494d555}
@@ -530,9 +530,9 @@ my $l14 = q|    \entry{L14}{book}{}
       \name{author}{1}{}{%
         {{hash=2319907d9a5d5dd46da77879bdb7e609}{%
            family={St\bibnamedelima John-Mollusc},
-           family_i={S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod},
+           familyi={S\bibinitperiod\bibinitdelim J\bibinithyphendelim M\bibinitperiod},
            given={Oliver},
-           given_i={O\bibinitperiod}}}%
+           giveni={O\bibinitperiod}}}%
       }
       \strng{namehash}{2319907d9a5d5dd46da77879bdb7e609}
       \strng{fullhash}{2319907d9a5d5dd46da77879bdb7e609}
@@ -548,11 +548,11 @@ my $l15 = q|    \entry{L15}{book}{}
       \name{author}{1}{}{%
         {{hash=b30b0fc69681fd11ad5d75a880124091}{%
            family={Gompel},
-           family_i={G\\bibinitperiod},
+           familyi={G\\bibinitperiod},
            given={Roger\\bibnamedelima P.{\\,}G.},
-           given_i={R\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
+           giveni={R\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
            prefix={van},
-           prefix_i={v\\bibinitperiod}}}%
+           prefixi={v\\bibinitperiod}}}%
       }
       \strng{namehash}{b30b0fc69681fd11ad5d75a880124091}
       \strng{fullhash}{b30b0fc69681fd11ad5d75a880124091}
@@ -568,11 +568,11 @@ my $l16 = q|    \entry{L16}{book}{}
       \name{author}{1}{}{%
         {{hash=2b17c50dc666b9cc73d132da9ef08c7b}{%
            family={Gompel},
-           family_i={G\\bibinitperiod},
+           familyi={G\\bibinitperiod},
            given={Roger\\bibnamedelima {P.\\,G.}},
-           given_i={R\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
+           giveni={R\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
            prefix={van},
-           prefix_i={v\\bibinitperiod}}}%
+           prefixi={v\\bibinitperiod}}}%
       }
       \strng{namehash}{2b17c50dc666b9cc73d132da9ef08c7b}
       \strng{fullhash}{2b17c50dc666b9cc73d132da9ef08c7b}
@@ -588,9 +588,9 @@ my $l17 = q|    \entry{L17}{book}{}
       \name{author}{1}{}{%
         {{hash=766d5329cf995fcc7c1cef19de2a2ae8}{%
            family={Lovecraft},
-           family_i={L\bibinitperiod},
+           familyi={L\bibinitperiod},
            given={Bill\bibnamedelima H.{\,}P.},
-           given_i={B\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+           giveni={B\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
       }
       \strng{namehash}{766d5329cf995fcc7c1cef19de2a2ae8}
       \strng{fullhash}{766d5329cf995fcc7c1cef19de2a2ae8}
@@ -606,9 +606,9 @@ my $l18 = q|    \entry{L18}{book}{}
       \name{author}{1}{}{%
         {{hash=58620d2c7d6839bac23306c732c563fb}{%
            family={Lovecraft},
-           family_i={L\bibinitperiod},
+           familyi={L\bibinitperiod},
            given={Bill\bibnamedelima {H.\,P.}},
-           given_i={B\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+           giveni={B\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
       }
       \strng{namehash}{58620d2c7d6839bac23306c732c563fb}
       \strng{fullhash}{58620d2c7d6839bac23306c732c563fb}
@@ -624,9 +624,9 @@ my $l19 = q|    \entry{L19}{book}{}
       \name{author}{1}{}{%
         {{hash=83caa52f21f97e572dd3267bdf62978a}{%
            family={Mustermann},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Klaus-Peter},
-           given_i={K\bibinithyphendelim P\bibinitperiod}}}%
+           giveni={K\bibinithyphendelim P\bibinitperiod}}}%
       }
       \strng{namehash}{83caa52f21f97e572dd3267bdf62978a}
       \strng{fullhash}{83caa52f21f97e572dd3267bdf62978a}
@@ -642,9 +642,9 @@ my $l19a = q|    \entry{L19a}{book}{}
       \name{author}{1}{}{%
         {{hash=0963f6904ccfeaac2770c5882a587001}{%
            family={Lam},
-           family_i={L\bibinitperiod},
+           familyi={L\bibinitperiod},
            given={Ho-Pun},
-           given_i={H\bibinithyphendelim P\bibinitperiod}}}%
+           giveni={H\bibinithyphendelim P\bibinitperiod}}}%
       }
       \strng{namehash}{0963f6904ccfeaac2770c5882a587001}
       \strng{fullhash}{0963f6904ccfeaac2770c5882a587001}
@@ -661,9 +661,9 @@ my $l20 = q|    \entry{L20}{book}{}
       \name{author}{1}{}{%
         {{hash=fdaa0936724be89ef8bd16cf02e08c74}{%
            family={Ford},
-           family_i={F\bibinitperiod},
+           familyi={F\bibinitperiod},
            given={{John Henry}},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \strng{namehash}{fdaa0936724be89ef8bd16cf02e08c74}
       \strng{fullhash}{fdaa0936724be89ef8bd16cf02e08c74}
@@ -679,9 +679,9 @@ my $l21 = q|    \entry{L21}{book}{}
       \name{author}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{%
            family={Smith},
-           family_i={S\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={\v{S}omeone},
-           given_i={\v{S}\bibinitperiod}}}%
+           giveni={\v{S}\bibinitperiod}}}%
       }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
@@ -697,9 +697,9 @@ my $l22u = q|    \entry{L22}{book}{}
       \name{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
            family={Šmith},
-           family_i={Š\bibinitperiod},
+           familyi={Š\bibinitperiod},
            given={Someone},
-           given_i={S\bibinitperiod}}}%
+           giveni={S\bibinitperiod}}}%
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
@@ -716,9 +716,9 @@ my $l22 = q|    \entry{L22}{book}{}
       \name{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
            family={\v{S}mith},
-           family_i={\v{S}\bibinitperiod},
+           familyi={\v{S}\bibinitperiod},
            given={Someone},
-           given_i={S\bibinitperiod}}}%
+           giveni={S\bibinitperiod}}}%
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
@@ -735,9 +735,9 @@ my $l23 = q|    \entry{L23}{book}{}
       \name{author}{1}{}{%
         {{hash=4389a3c0dc7da74487b50808ba9436ad}{%
            family={Smith},
-           family_i={S\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Šomeone},
-           given_i={Š\bibinitperiod}}}%
+           giveni={Š\bibinitperiod}}}%
       }
       \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
@@ -753,9 +753,9 @@ my $l24 = q|    \entry{L24}{book}{}
       \name{author}{1}{}{%
         {{hash=e58b861545799d0eaf883402a882126e}{%
            family={Šmith},
-           family_i={Š\bibinitperiod},
+           familyi={Š\bibinitperiod},
            given={Someone},
-           given_i={S\bibinitperiod}}}%
+           giveni={S\bibinitperiod}}}%
       }
       \strng{namehash}{e58b861545799d0eaf883402a882126e}
       \strng{fullhash}{e58b861545799d0eaf883402a882126e}
@@ -771,7 +771,7 @@ my $l25 = q|    \entry{L25}{book}{}
       \name{author}{1}{}{%
         {{hash=7069367d4a4f37ffb0377e3830e98ed0}{%
            family={{American Psychological Association, Task Force on the Sexualization of Girls}},
-           family_i={A\bibinitperiod}}}%
+           familyi={A\bibinitperiod}}}%
       }
       \strng{namehash}{7069367d4a4f37ffb0377e3830e98ed0}
       \strng{fullhash}{7069367d4a4f37ffb0377e3830e98ed0}
@@ -787,7 +787,7 @@ my $l26 = q|    \entry{L26}{book}{}
       \name{author}{1}{}{%
         {{hash=d176a8af5ce1c45cb06875c4433f2fe2}{%
            family={{Sci-Art Publishers}},
-           family_i={S\bibinitperiod}}}%
+           familyi={S\bibinitperiod}}}%
       }
       \strng{namehash}{d176a8af5ce1c45cb06875c4433f2fe2}
       \strng{fullhash}{d176a8af5ce1c45cb06875c4433f2fe2}
@@ -812,7 +812,7 @@ my $l29 = q|    \entry{L29}{book}{}
       \name{author}{1}{}{%
         {{hash=59a5e43a502767d00e589eb29f863728}{%
            family={{U.S. Department of Health and Human Services, National Institute of Mental Health, National Heart, Lung and Blood Institute}},
-           family_i={U\bibinitperiod}}}%
+           familyi={U\bibinitperiod}}}%
       }
       \strng{namehash}{59a5e43a502767d00e589eb29f863728}
       \strng{fullhash}{59a5e43a502767d00e589eb29f863728}
@@ -828,23 +828,23 @@ my $l31 = q|    \entry{L31}{book}{}
       \name{author}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={\~{Z}elly},
-           family_i={\~{Z}\\bibinitperiod},
+           familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={\~{Z}elly},
-           family_i={\~{Z}\\bibinitperiod},
+           familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \name{translator}{1}{}{%
         {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
            family={\~{Z}elly},
-           family_i={\~{Z}\\bibinitperiod},
+           familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \strng{namehash}{29c3ff92fff79d09a8b44d2f775de0b1}
       \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}

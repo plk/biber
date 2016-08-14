@@ -58,16 +58,16 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \name{author}{1}{}{%
         {{hash=121b6dc164b5b619c81c670fbd823f12}{%
            family={Gullam},
-           family_i={G\bibinitperiod},
+           familyi={G\bibinitperiod},
            given={Graham},
-           given_i={G\bibinitperiod}}}%
+           giveni={G\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edgar},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Grimble}%
@@ -101,16 +101,16 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \name{author}{1}{}{%
         {{hash=2d51a96bc0a6804995b3a9ff350c3384}{%
            family={Fumble},
-           family_i={F\bibinitperiod},
+           familyi={F\bibinitperiod},
            given={Frederick},
-           given_i={F\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edgar},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{institution}{1}{%
         {Institution}%
@@ -148,9 +148,9 @@ my $cr_m = q|    \entry{cr_m}{book}{}
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edgar},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Grimble}%
@@ -172,16 +172,16 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \name{author}{1}{}{%
         {{hash=2baf676a220704f6914223aefccaaa88}{%
            family={Aptitude},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Arthur},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{%
            family={Monkley},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Mark},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Rancour}%
@@ -214,16 +214,16 @@ my $cr4 = q|    \entry{cr4}{inbook}{}
       \name{author}{1}{}{%
         {{hash=50ef7fd3a1be33bccc5de2768b013836}{%
            family={Mumble},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Morris},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=6ea89bd4958743a20b70fe17647d6af5}{%
            family={Jermain},
-           family_i={J\bibinitperiod},
+           familyi={J\bibinitperiod},
            given={Jeremy},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Pillsbury}%
@@ -255,9 +255,9 @@ my $crt = q|    \entry{crt}{book}{}
       \name{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{%
            family={Monkley},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Mark},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Rancour}%
@@ -278,14 +278,14 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \name{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{%
            family={Author},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Firstname},
-           given_i={F\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=344a7f427fb765610ef96eb7bce95257}{%
            family={Editor},
-           family_i={E\bibinitperiod}}}%
+           familyi={E\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Address}%
@@ -323,16 +323,16 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \name{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{%
            family={Author},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Firstname},
-           given_i={F\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
       }
       \name{bookauthor}{1}{}{%
         {{hash=91a1dd4aeed3c4ec29ca74c4e778be5f}{%
            family={Bookauthor},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Publisher of proceeding}%
@@ -367,9 +367,9 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \name{author}{1}{}{%
         {{hash=3d449e56eb3ca1ae80dc99a18d689795}{%
            family={Smith},
-           family_i={S\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Firstname},
-           given_i={F\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
       }
       \strng{namehash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{fullhash}{3d449e56eb3ca1ae80dc99a18d689795}
@@ -395,9 +395,9 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \name{author}{1}{}{%
         {{hash=e0ecc4fc668ee499d1afba44e1ac064d}{%
            family={Zentrum},
-           family_i={Z\bibinitperiod},
+           familyi={Z\bibinitperiod},
            given={Zoe},
-           given_i={Z\bibinitperiod}}}%
+           giveni={Z\bibinitperiod}}}%
       }
       \strng{namehash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \strng{fullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
@@ -422,9 +422,9 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \name{author}{1}{}{%
         {{hash=6afa09374ecfd6b394ce714d2d9709c7}{%
            family={Instant},
-           family_i={I\bibinitperiod},
+           familyi={I\bibinitperiod},
            given={Ian},
-           given_i={I\bibinitperiod}}}%
+           giveni={I\bibinitperiod}}}%
       }
       \strng{namehash}{6afa09374ecfd6b394ce714d2d9709c7}
       \strng{fullhash}{6afa09374ecfd6b394ce714d2d9709c7}
@@ -451,9 +451,9 @@ my $xrm = q|    \entry{xrm}{book}{}
       \name{editor}{1}{}{%
         {{hash=809950f9b59ae207092b909a19dcb27b}{%
            family={Prendergast},
-           family_i={P\bibinitperiod},
+           familyi={P\bibinitperiod},
            given={Peter},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Mainstream}%
@@ -475,9 +475,9 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \name{author}{1}{}{%
         {{hash=9788055665b9bb4b37c776c3f6b74f16}{%
            family={Normal},
-           family_i={N\bibinitperiod},
+           familyi={N\bibinitperiod},
            given={Norman},
-           given_i={N\bibinitperiod}}}%
+           giveni={N\bibinitperiod}}}%
       }
       \strng{namehash}{9788055665b9bb4b37c776c3f6b74f16}
       \strng{fullhash}{9788055665b9bb4b37c776c3f6b74f16}
@@ -503,9 +503,9 @@ my $xrt = q|    \entry{xrt}{book}{}
       \name{editor}{1}{}{%
         {{hash=bf7d6b02f3e073913e5bfe5059508dd5}{%
            family={Lunders},
-           family_i={L\bibinitperiod},
+           familyi={L\bibinitperiod},
            given={Lucy},
-           given_i={L\bibinitperiod}}}%
+           giveni={L\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Middling}%
@@ -527,9 +527,9 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Megan},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
@@ -552,9 +552,9 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Megan},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
@@ -574,9 +574,9 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Megan},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
@@ -596,16 +596,16 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \name{author}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{%
            family={Various},
-           family_i={V\bibinitperiod},
+           familyi={V\bibinitperiod},
            given={Vince},
-           given_i={V\bibinitperiod}}}%
+           giveni={V\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{%
            family={Editor},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \strng{namehash}{6268941b408d3263bddb208a54899ea9}
       \strng{fullhash}{6268941b408d3263bddb208a54899ea9}
@@ -630,16 +630,16 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
       \name{bookauthor}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{%
            family={Various},
-           family_i={V\bibinitperiod},
+           familyi={V\bibinitperiod},
            given={Vince},
-           given_i={V\bibinitperiod}}}%
+           giveni={V\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{%
            family={Editor},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \strng{bookauthornamehash}{6268941b408d3263bddb208a54899ea9}
       \strng{bookauthorfullhash}{6268941b408d3263bddb208a54899ea9}
@@ -690,16 +690,16 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
       \name{author}{1}{}{%
         {{hash=1a0f7d518cccdad859a74412ef956474}{%
            family={Crust},
-           family_i={C\\bibinitperiod},
+           familyi={C\\bibinitperiod},
            given={Xavier},
-           given_i={X\\bibinitperiod}}}%
+           giveni={X\\bibinitperiod}}}%
       }
       \name{bookauthor}{1}{}{%
         {{hash=1a0f7d518cccdad859a74412ef956474}{%
            family={Crust},
-           family_i={C\\bibinitperiod},
+           familyi={C\\bibinitperiod},
            given={Xavier},
-           given_i={X\\bibinitperiod}}}%
+           giveni={X\\bibinitperiod}}}%
       }
       \strng{namehash}{1a0f7d518cccdad859a74412ef956474}
       \strng{fullhash}{1a0f7d518cccdad859a74412ef956474}
@@ -739,9 +739,9 @@ my $sup1 = q|    \entry{sup1}{mvbook}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           family_i={S\\bibinitperiod},
+           familyi={S\\bibinitperiod},
            given={Alan},
-           given_i={A\\bibinitperiod}}}%
+           giveni={A\\bibinitperiod}}}%
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
@@ -761,9 +761,9 @@ my $sup2 = q|    \entry{sup2}{book}{}
       \name{author}{1}{}{%
         {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
            family={Smith},
-           family_i={S\\bibinitperiod},
+           familyi={S\\bibinitperiod},
            given={Alan},
-           given_i={A\\bibinitperiod}}}%
+           giveni={A\\bibinitperiod}}}%
       }
       \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}

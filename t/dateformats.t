@@ -67,14 +67,14 @@ my $l13c = q|    \entry{L13}{book}{}
       \name{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{%
            family={Abrahams},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Albert},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%
@@ -101,14 +101,14 @@ my $l14 = q|    \entry{L14}{book}{}
       \name{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{%
            family={Abrahams},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Albert},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%
@@ -139,14 +139,14 @@ my $l15 = q|    \entry{L15}{book}{}
       \name{author}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{%
            family={Abrahams},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Albert},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%
@@ -169,14 +169,14 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \name{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{%
            family={Abrahams},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Albert},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%
@@ -204,14 +204,14 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \name{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{%
            family={Abrahams},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Albert},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%
@@ -259,14 +259,14 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \name{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{%
            family={Abrahams},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Albert},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%
@@ -313,14 +313,14 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \name{editor}{2}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
         {{hash=df9bf04cd41245e6d23ad7543e7fd90d}{%
            family={Abrahams},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Albert},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Oxford}%

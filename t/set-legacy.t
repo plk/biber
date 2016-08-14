@@ -47,9 +47,9 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{%
            family={Elias},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={P.},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
@@ -81,9 +81,9 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
       \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{%
            family={Elias},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={P.},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
@@ -113,9 +113,9 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
       \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{%
            family={Elias},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={P.},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}

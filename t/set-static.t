@@ -47,9 +47,9 @@ my $string1 = q|    \entry{Static1}{set}{}
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
@@ -71,9 +71,9 @@ my $string2 = q|    \entry{Static2}{book}{}
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
@@ -95,9 +95,9 @@ my $string3 = q|    \entry{Static3}{book}{}
       \name{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{%
            family={Crenellation},
-           family_i={C\bibinitperiod},
+           familyi={C\bibinitperiod},
            given={Clive},
-           given_i={C\bibinitperiod}}}%
+           giveni={C\bibinitperiod}}}%
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
@@ -116,9 +116,9 @@ my $string4 = q|    \entry{Static4}{book}{}
       \name{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{%
            family={Dingle},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={Derek},
-           given_i={D\bibinitperiod}}}%
+           giveni={D\bibinitperiod}}}%
       }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
@@ -138,9 +138,9 @@ my $string5 = q|    \entry{Static2}{book}{}
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}

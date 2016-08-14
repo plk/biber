@@ -56,37 +56,37 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \name{author}{3}{useprefix=true}{%
         {{hash=633a0b6ab963c5f044b56f06c6091c27}{%
            family={Булгаков},
-           family_i={Б\\bibinitperiod},
+           familyi={Б\\bibinitperiod},
            given={Павел\\bibnamedelima Георгиевич},
-           given_i={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod},
+           giveni={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod},
            prefix={von},
-           prefix_i={v\\bibinitperiod}}}%
+           prefixi={v\\bibinitperiod}}}%
         {{useprefix=false,hash=0ffcce4df8f0d0eedf2c614091ba2355}{%
            family={РРозенфельд},
-           family_i={Р\\bibinitperiod},
+           familyi={Р\\bibinitperiod},
            given={Борис-ZZ\\bibnamedelima Aбрамович},
-           given_i={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod},
+           giveni={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod},
            prefix={von},
-           prefix_i={v\\bibinitperiod}}}%
+           prefixi={v\\bibinitperiod}}}%
         {{hash=e708d5a31534e937578abf161c867a25}{%
            family={Aхмедов},
-           family_i={A\\bibinitperiod},
+           familyi={A\\bibinitperiod},
            given={Ашраф\\bibnamedelima Ахмедович},
-           given_i={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
+           giveni={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
       }
       \name{foreword}{1}{}{%
         {{hash=0ee59e598dae22fac8e6d9d2df7e79ec}{%
            family={Brown},
-           family_i={B\\bibinitperiod},
+           familyi={B\\bibinitperiod},
            given={John\\bibnamedelimb },
-           given_i={J\\bibinitperiod}}}%
+           giveni={J\\bibinitperiod}}}%
       }
       \name{translator}{1}{}{%
         {{hash=b44eba830fe9817fbe8e53c82f1cbe04}{%
            family={Smith},
-           family_i={S\\bibinitperiod},
+           familyi={S\\bibinitperiod},
            given={Paul},
-           given_i={P\\bibinitperiod}}}%
+           giveni={P\\bibinitperiod}}}%
       }
       \list{language}{1}{%
         {russian}%
