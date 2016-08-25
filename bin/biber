@@ -352,7 +352,7 @@ my $biberoutput = $biber->get_output_obj;
 # Set the output filename and get ref to output object This has to come
 # before .bcf parsing so that we can detect .bcf parsing errors
 # early and clean up
-my $outfileobj = $biberoutput->set_output_target_file($outfile);
+$biberoutput->set_output_target_file($outfile);
 
 # Fake some necessary .bcf parts if in tool mode
 if (Biber::Config->getoption('tool')) {
@@ -364,8 +364,8 @@ else {
 }
 
 # Reset output filename now we have the output coding from the .bcf
-# because set_output_target_file() set output encoding from information in .bcf
-$outfileobj = $biberoutput->set_output_target_file($outfile);
+# because set_output_target_file() sets output encoding from information in .bcf
+my $outfileobj = $biberoutput->set_output_target_file($outfile, 1);
 
 # Postprocess biber options now that they are all read from the various places
 Biber::Config->postprocess_biber_opts;
@@ -662,11 +662,11 @@ By default, its value is 'options,abstract,names,lists,dates'.
 
 =item B<--output-file|-O [file]>
 
-Output to F<file> instead of F<basename.bbl>
-F<file> is relative to B<--output_directory>, if set (absolute
-paths in this case are stripped to filename only). F<file> can
-be absolute if B<--output_directory> is not set.
-The legacy option B<--outfile> is supported as an alias.
+Output to F<file> instead of F<basename.bbl> F<file> is relative to
+B<--output_directory>, if set (absolute paths in this case are stripped to
+filename only). F<file> can be absolute if B<--output_directory> is not
+set. F<file> can be '-' to output directly to STDOUT. The legacy option
+B<--outfile> is supported as an alias.
 
 =item B<--output-format=dot|bibtex|biblatexml|bbl|bblxml>
 

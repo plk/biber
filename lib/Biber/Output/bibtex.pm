@@ -330,7 +330,7 @@ sub output {
   my $target = IO::File->new($target_string, ">$enc_out");
 
   # for debugging mainly
-  unless ($target) {
+  if (not $target or $target_string eq '-') {
     $target = new IO::File '>-';
   }
 

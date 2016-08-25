@@ -53,8 +53,8 @@ sub new {
 =cut
 
 sub set_output_target_file {
-  my $self = shift;
-  my $file = shift;
+  my ($self, $file, $init) = @_;
+
   $self->{output_target_file} = $file;
   my $enc_out;
   if (my $enc = Biber::Config->getoption('output_encoding')) {

@@ -306,7 +306,7 @@ sub parse_ctrlfile {
   $checkbuf = NFD(decode('UTF-8', $checkbuf));# Unicode NFD boundary
   unless (eval "XML::LibXML->load_xml(string => \$checkbuf)") {
     my $output = $self->get_output_obj->get_output_target_file;
-    unlink($output);
+    unlink($output) unless $output eq '-';# ignore deletion of STDOUT marker
     biber_error("$ctrl_file_path is malformed, last biblatex run probably failed. Deleted $output");
   }
 

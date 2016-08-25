@@ -48,7 +48,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('dsn', 'tool.bib');
 
 # Set the output target
-$out->set_output_target($out->set_output_target_file(\$outvar));
+$out->set_output_target($out->set_output_target_file(\$outvar, 1));
 
 # THERE IS A CONFIG FILE BEING READ!
 
