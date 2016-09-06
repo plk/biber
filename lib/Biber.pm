@@ -1519,7 +1519,7 @@ sub process_entries_post {
     # generate information for tracking extratitleyear
     $self->process_extratitleyear($citekey);
 
-    # generate information for tracking singletitle and uniquetitle
+    # generate information for tracking singletitle, uniquetitle, uniquebaretitle and uniquework
     $self->process_workuniqueness($citekey);
 
     # generate information for tracking uniqueprimaryauthor
@@ -1568,7 +1568,7 @@ sub process_uniqueprimaryauthor {
 
 =head2 process_workuniqueness
 
-    Track seen work combination for generation of singletitle, uniquetitle and
+    Track seen work combination for generation of singletitle, uniquetitle, uniquebaretitle and
     uniquework
 
 =cut
@@ -1624,6 +1624,21 @@ sub process_workuniqueness {
     $be->set_field('seentitle', $identifier);
   }
 
+  # uniquebaretitle
+  # Don't generate information for entries with no labeltitle and with labelname
+  if ($lti and not $lni and Biber::Config->getblxoption('uniquebaretitle', $bee)) {
+    $identifier = $be->get_field($lti);
+
+    # Skip due to ignore settings?
+    unless (first {fc($lti) eq fc($_)} $ignore->{uniquebaretitle}->@*) {
+      Biber::Config->incr_seenbaretitle($identifier);
+      if ($logger->is_trace()) {  # performance tune
+        $logger->trace("Setting seenbaretitle for '$citekey' to '$identifier'");
+      }
+    }
+    $be->set_field('seenbaretitle', $identifier);
+  }
+
   # uniquework
   # Don't generate information for entries with no labelname and labeltitle
   # Should use fullhash this is not a test of uniqueness of only visible information
@@ -1633,7 +1648,6 @@ sub process_workuniqueness {
     # Skip due to ignore settings?
     unless (first {fc($lni) eq fc($_)} $ignore->{uniquework}->@* and
             first {fc($lti) eq fc($_)} $ignore->{uniquework}->@*) {
-
       Biber::Config->incr_seenwork($identifier);
       if ($logger->is_trace()) {  # performance tune
         $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
@@ -3305,6 +3319,39 @@ sub generate_uniquetitle {
   return;
 }
 
+=head2 generate_uniquebaretitle
+
+    Generate the uniquebaretitle field, if requested. The information for generating
+    this is gathered in process_workuniqueness()
+
+=cut
+
+sub generate_uniquebaretitle {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+
+  foreach my $citekey ( $section->get_citekeys ) {
+    my $be = $bibentries->entry($citekey);
+    if (Biber::Config->getblxoption('uniquebaretitle', $be->get_field('entrytype'))) {
+      if ($be->get_field('seenbaretitle') and
+          Biber::Config->get_seenbaretitle($be->get_field('seenbaretitle')) < 2 ) {
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Setting uniquebaretitle for '$citekey'");
+        }
+        $be->set_field('uniquebaretitle', 1);
+      }
+      else {
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("Not setting uniquebaretitle for '$citekey'");
+        }
+      }
+    }
+  }
+  return;
+}
+
 =head2 generate_uniquework
 
     Generate the uniquework field, if requested. The information for generating
@@ -3629,6 +3676,7 @@ sub prepare {
     $self->process_lists;                # process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
     $self->generate_uniquetitle;         # Generate uniquetitle field if requested
+    $self->generate_uniquebaretitle;     # Generate uniquebaretitle field if requested
     $self->generate_uniquework;          # Generate uniquework field if requested
     $self->generate_uniquepa;            # Generate uniqueprimaryauthor if requested
     $out->create_output_section;         # Generate and push the section output into the

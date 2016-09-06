@@ -151,6 +151,10 @@ sub set_output_entry {
     push @entryopts, ('uniquetitle', 'true');
   }
 
+  if (defined($be->get_field('uniquebaretitle'))) {
+    push @entryopts, ('uniquebaretitle', 'true');
+  }
+
   if (defined($be->get_field('uniquework'))) {
     push @entryopts, ('uniquework', 'true');
   }

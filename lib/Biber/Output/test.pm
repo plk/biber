@@ -237,6 +237,10 @@ sub set_output_entry {
     $acc .= "      \\true{uniquetitle}\n";
   }
 
+  if (defined($be->get_field('uniquebaretitle'))) {
+    $acc .= "      \\true{uniquebaretitle}\n";
+  }
+
   if (defined($be->get_field('uniquework'))) {
     $acc .= "      \\true{uniquework}\n";
   }

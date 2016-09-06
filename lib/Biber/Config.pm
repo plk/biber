@@ -59,6 +59,7 @@ $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{xrefkeys} = {};
 $CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{seentitle} = {};
+$CONFIG->{state}{seenbaretitle} = {};
 $CONFIG->{state}{seenwork} = {};
 
 # Set tracking, parent->child and child->parent
@@ -133,6 +134,7 @@ sub _init {
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seenname} = {};
   $CONFIG->{state}{seentitle} = {};
+  $CONFIG->{state}{seenbaretitle} = {};
   $CONFIG->{state}{seenwork} = {};
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{xrefkeys} = {};
@@ -1384,6 +1386,33 @@ sub incr_seentitle {
   shift; # class method so don't care about class name
   my $identifier = shift;
   $CONFIG->{state}{seentitle}{$identifier}++;
+  return;
+}
+
+=head2 get_seenbaretitle
+
+    Get the count of occurrences of a labeltitle when there is
+    no labelname
+
+=cut
+
+sub get_seenbaretitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  return $CONFIG->{state}{seenbaretitle}{$identifier};
+}
+
+=head2 incr_seenbaretitle
+
+    Increment the count of occurrences of a labeltitle
+    when there is no labelname
+
+=cut
+
+sub incr_seenbaretitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  $CONFIG->{state}{seenbaretitle}{$identifier}++;
   return;
 }
 
