@@ -145,6 +145,10 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>uniquebaretitle</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>uniquework</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>
@@ -264,6 +268,7 @@
     <bcf:option datatype="boolean">singletitle</bcf:option>
     <bcf:option datatype="boolean">uniqueprimaryauthor</bcf:option>
     <bcf:option datatype="boolean">uniquetitle</bcf:option>
+    <bcf:option datatype="boolean">uniquebaretitle</bcf:option>
     <bcf:option datatype="boolean">uniquework</bcf:option>
     <bcf:option datatype="boolean">defernumbers</bcf:option>
     <bcf:option datatype="boolean">bibwarn</bcf:option>
@@ -322,6 +327,7 @@
     <bcf:option datatype="boolean">uniquename</bcf:option>
     <bcf:option datatype="boolean">singletitle</bcf:option>
     <bcf:option datatype="boolean">uniquetitle</bcf:option>
+    <bcf:option datatype="boolean">uniquebaretitle</bcf:option>
     <bcf:option datatype="boolean">uniquework</bcf:option>
     <bcf:option datatype="boolean">useprefix</bcf:option>
     <bcf:option datatype="boolean">skipbib</bcf:option>
@@ -2044,6 +2050,9 @@
     <bcf:citekey order="5">ey4</bcf:citekey>
     <bcf:citekey order="6">ey5</bcf:citekey>
     <bcf:citekey order="7">ey6</bcf:citekey>
+    <bcf:citekey order="8">ey7</bcf:citekey>
+    <bcf:citekey order="9">ey8</bcf:citekey>
+    <bcf:citekey order="10">ey9</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>

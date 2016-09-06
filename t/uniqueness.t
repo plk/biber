@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 203;
+use Test::More tests => 206;
 use Test::Differences;
 unified_diff;
 
@@ -469,6 +469,7 @@ Biber::Config->setblxoption('uniquename', 2);
 Biber::Config->setblxoption('uniquelist', 1);
 Biber::Config->setblxoption('singletitle', 1);
 Biber::Config->setblxoption('uniquetitle', 1);
+Biber::Config->setblxoption('uniquebaretitle', 1);
 Biber::Config->setblxoption('uniquework', 1);
 Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
@@ -497,6 +498,10 @@ ok(is_undef($bibentries->entry('ey3')->get_field('uniquetitle')), 'uniquetitle -
 eq_or_diff($bibentries->entry('ey4')->get_field('uniquetitle'), '1', 'uniquetitle - 4');
 ok(is_undef($bibentries->entry('ey5')->get_field('uniquetitle')), 'uniquetitle - 5');
 eq_or_diff($bibentries->entry('ey6')->get_field('uniquetitle'), '1', 'uniquetitle - 6');
+
+ok(is_undef($bibentries->entry('ey7')->get_field('uniquebaretitle')), 'uniquebaretitle - 1');
+ok(is_undef($bibentries->entry('ey8')->get_field('uniquebaretitle')), 'uniquebaretitle - 2');
+eq_or_diff($bibentries->entry('ey9')->get_field('uniquebaretitle'), '1', 'uniquebaretitle - 3');
 
 ok(is_undef($bibentries->entry('ey1')->get_field('uniquework')), 'uniquework - 1');
 eq_or_diff($bibentries->entry('ey2')->get_field('uniquework'), '1', 'uniquework - 2');
