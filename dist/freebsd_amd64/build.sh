@@ -51,5 +51,5 @@ export PAR_VERBATIM
   --link=`ls /usr/lib/libssl.so.*` \
   --addlist=biber.files \
   --cachedeps=scancache \
-  --output=biber-2.5.`uname -m`-freebsd`uname -r | sed 's/\..*//' | sed 's/7/7,8,9,10,11/'` \
+  --output=biber-2.6.`uname -m`-freebsd`uname -r | sed 's/\..*//' | sed 's/7/7,8,9,10,11/'` \
   /usr/local/bin/biber
