@@ -74,6 +74,7 @@
         <ref name="uniquename"/>
         <ref name="uniqueprimaryauthor"/>
         <ref name="uniquetitle"/>
+        <ref name="uniquebaretitle"/>
         <ref name="uniquework"/>
         <ref name="useprefix"/>
         <ref name="usenames"/>
@@ -159,6 +160,9 @@
           </optional>
           <optional>
             <ref name="uniquetitle"/>
+          </optional>
+          <optional>
+            <ref name="uniquebaretitle"/>
           </optional>
           <optional>
             <ref name="uniquework"/>
@@ -1536,6 +1540,22 @@
       </attribute>
       <element name="bcf:key">
         <value>uniquetitle</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="uniquebaretitle">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>uniquebaretitle</value>
       </element>
       <element name="bcf:value">
         <choice>

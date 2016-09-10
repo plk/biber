@@ -52,6 +52,7 @@ start =
       uniquename,
       uniqueprimaryauthor,
       uniquetitle,
+      uniquebaretitle,
       uniquework,
       useprefix,
       usenames
@@ -86,6 +87,7 @@ start =
       uniquelist?,
       uniquename?,
       uniquetitle?,
+      uniquebaretitle?,
       uniquework?,
       useprefix?,
       usenames?
@@ -593,6 +595,12 @@ uniquetitle =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "uniquetitle" },
+    element bcf:value { "0" | "1" }
+  }
+uniquebaretitle =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "uniquebaretitle" },
     element bcf:value { "0" | "1" }
   }
 uniquework =
