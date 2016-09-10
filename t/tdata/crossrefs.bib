@@ -281,8 +281,7 @@
   DATE      = {1911},
 }
 
-% Test if per-entry inheritance suppression
-
+% Test of per-entry inheritance suppression
 @INBOOK{s1,
   OPTIONS  = {noinherit=nobtitle},
   TITLE    = {Subtitle},
@@ -291,5 +290,33 @@
 
 @BOOK{s2,
   TITLE = {Title}
+}
+
+% Test of blocking all datepart inhertance when child has any datepart
+@INBOOK{b1,
+  DATE     = {2004-03-03},
+  ORIGDATE = {2004-03},
+  CROSSREF = {b2}
+}
+
+@BOOK{b2,
+  DATE     = {2004-03-03/2005-08-09},
+  ORIGDATE = {2004-03/2005-08},
+}
+
+% test of singletitle, uniquetitle and uniquework suppression
+@MVBOOK{sup1,
+  AUTHOR = {Alan Smith},
+  TITLE  = {Title1}
+}
+
+@BOOK{sup2,
+  NOTE   = {Book sup2},
+  CROSSREF = {sup1}
+}
+
+@BOOK{sup3,
+  NOTE   = {Book sup3},
+  CROSSREF = {sup1}
 }
 

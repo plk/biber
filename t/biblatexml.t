@@ -41,7 +41,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('bcf', 'biblatexml.bcf');
 
 # Now generate the information
@@ -55,39 +54,39 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{3}{useprefix=true}{%
-        {{hash=d16c52bc219d448d5f07dc865d5c4f54}{%
-           prefix={von},
-           prefix_i={v\\bibinitperiod},
+        {{hash=633a0b6ab963c5f044b56f06c6091c27}{%
            family={Булгаков},
-           family_i={Б\\bibinitperiod},
+           familyi={Б\\bibinitperiod},
            given={Павел\\bibnamedelima Георгиевич},
-           given_i={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod}}}%
-        {{useprefix=false,hash=a3dd54ba13bec8a96a9d9b9804fc7927}{%
+           giveni={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod},
            prefix={von},
-           prefix_i={v\\bibinitperiod},
+           prefixi={v\\bibinitperiod}}}%
+        {{useprefix=false,hash=0ffcce4df8f0d0eedf2c614091ba2355}{%
            family={РРозенфельд},
-           family_i={Р\\bibinitperiod},
+           familyi={Р\\bibinitperiod},
            given={Борис-ZZ\\bibnamedelima Aбрамович},
-           given_i={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod}}}%
+           giveni={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod},
+           prefix={von},
+           prefixi={v\\bibinitperiod}}}%
         {{hash=e708d5a31534e937578abf161c867a25}{%
            family={Aхмедов},
-           family_i={A\\bibinitperiod},
+           familyi={A\\bibinitperiod},
            given={Ашраф\\bibnamedelima Ахмедович},
-           given_i={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
+           giveni={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
       }
       \name{foreword}{1}{}{%
         {{hash=0ee59e598dae22fac8e6d9d2df7e79ec}{%
            family={Brown},
-           family_i={B\\bibinitperiod},
+           familyi={B\\bibinitperiod},
            given={John\\bibnamedelimb },
-           given_i={J\\bibinitperiod}}}%
+           giveni={J\\bibinitperiod}}}%
       }
       \name{translator}{1}{}{%
         {{hash=b44eba830fe9817fbe8e53c82f1cbe04}{%
            family={Smith},
-           family_i={S\\bibinitperiod},
+           familyi={S\\bibinitperiod},
            given={Paul},
-           given_i={P\\bibinitperiod}}}%
+           giveni={P\\bibinitperiod}}}%
       }
       \list{language}{1}{%
         {russian}%
@@ -98,37 +97,45 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \list{publisher}{1}{%
         {Наука}%
       }
-      \strng{namehash}{b5cf3ab49063f1ac8cf913eb3527f38e}
-      \strng{fullhash}{676e5835f2422c4d02b9107e530be190}
+      \strng{namehash}{f29948d2b7207cd79c4466d823d8627c}
+      \strng{fullhash}{835d3352054f77020fc38705080e4596}
+      \strng{authornamehash}{f29948d2b7207cd79c4466d823d8627c}
+      \strng{authorfullhash}{835d3352054f77020fc38705080e4596}
+      \strng{forewordnamehash}{0ee59e598dae22fac8e6d9d2df7e79ec}
+      \strng{forewordfullhash}{0ee59e598dae22fac8e6d9d2df7e79ec}
+      \strng{translatornamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
+      \strng{translatorfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \field{sortinit}{v}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
-      \field{labelyear}{1983}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{addendum}{userc}
       \field{eventday}{16}
       \field{eventendday}{17}
-      \field{eventendmonth}{05}
+      \field{eventendmonth}{5}
       \field{eventendyear}{1990}
-      \field{eventmonth}{05}
+      \field{eventmonth}{5}
       \field{eventyear}{1990}
-      \field{origday}{02}
-      \field{origmonth}{04}
-      \field{origyear}{1985}
+      \field{origyear}{356}
       \field{pagetotal}{240}
       \field{relatedstring}{Somestring}
       \field{relatedtype}{reprint}
       \field{series}{Научно-биографическая литература}
       \field{title}{Мухаммад ибн муса ал-Хорезми. Около 783 – около 850}
-      \field{urlday}{01}
       \field{urlendyear}{}
-      \field{urlmonth}{07}
       \field{urlyear}{1991}
       \field{userb}{usera}
       \field{userd}{userc}
       \field{usere}{a}
-      \field{year}{1983}
+      \field{year}{1980}
+      \field{dateunspecified}{yearindecade}
+      \field{dateera}{ce}
+      \field{eventdateera}{ce}
+      \field{eventenddateera}{ce}
+      \field{origdateera}{bce}
+      \true{urldatecirca}
+      \field{urldateera}{ce}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}
       \annotation{field}{author}{}{}{names-ann}
@@ -149,7 +156,7 @@ my $l2 = q|    \entry{loopkey:a}{book}{}
 |;
 
 
-my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРозенфельд!БорисZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович,1983,0000,Мухаммад ибн муса алХорезми Около 783 около 850';
+my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРозенфельд!БорисZZ Aбрамович!von#Aхмедов!Ашраф Ахмедович,1980,0,Мухаммад ибн муса алХорезми Около 783 около 850';
 
 # Test::Differences doesn't like utf8 unless it's encoded here
 eq_or_diff(encode_utf8($out->get_output_entry('bltx1', $main)), encode_utf8($l1), 'BibLaTeXML - 1');

@@ -1,5 +1,5 @@
 package Biber::Input::file::biblatexml;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -42,7 +42,7 @@ my $handlers = {
                 'field' => {
                             'default' => {
                                           'code'     => \&_literal,
-                                          'date'     => \&_date,
+                                          'date'     => \&_datetime,
                                           'entrykey' => \&_literal,
                                           'integer'  => \&_literal,
                                           'key'      => \&_literal,
@@ -83,7 +83,7 @@ sub extract_entries {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
   my $filename;
-  my @rkeys = @$keys;
+  my @rkeys = $keys->@*;
   my $tf; # Up here so that the temp file has enough scope to survive until we've
           # used it
   $logger->trace("Entering extract_entries() in driver 'biblatexml'");
@@ -94,15 +94,16 @@ sub extract_entries {
   if (defined(Biber::Config->getoption('sourcemap'))) {
     # User maps
     if (my $m = first {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'user' } @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, $m;
+      push $smaps->@*, $m;
     }
     # Style maps
-    if (my $m = first {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'style' } @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, $m;
+    # Allow multiple style maps from multiple \DeclareStyleSourcemap
+    if (my @m = grep {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'style' } @{Biber::Config->getoption('sourcemap')} ) {
+      push $smaps->@*, @m;
     }
     # Driver default maps
     if (my $m = first {$_->{datatype} eq 'biblatexml' and $_->{level} eq 'driver'} @{Biber::Config->getoption('sourcemap')} ) {
-      push @$smaps, $m;
+      push $smaps->@*, $m;
     }
   }
 
@@ -160,8 +161,13 @@ sub extract_entries {
       $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
                             DIR => $Biber::MASTER->biber_tempdir,
                             SUFFIX => '.xml');
-      unless (LWP::Simple::is_success(LWP::Simple::getstore($filename, $tf->filename))) {
-        biber_error("Could not fetch file '$filename'");
+
+      # Pretend to be a browser otherwise some sites refuse the default LWP UA string
+      $LWP::Simple::ua->agent('Mozilla/5.0');
+
+      my $retcode = LWP::Simple::getstore($source, $tf->filename);
+      unless (LWP::Simple::is_success($retcode)) {
+        biber_error("Could not fetch '$source' (HTTP code: $retcode)");
       }
       $filename = $tf->filename;
       # cache any remote so it persists and so we don't fetch it again
@@ -188,10 +194,14 @@ sub extract_entries {
   $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
 
   if ($section->is_allkeys) {
-    $logger->debug("All citekeys will be used for section '$secnum'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("All citekeys will be used for section '$secnum'");
+    }
     # Loop over all entries, creating objects
     foreach my $entry ($xpc->findnodes("/$NS:entries/$NS:entry")) {
-      $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
+      }
 
       # If an entry has no key, ignore it and warn
       unless ($entry->hasAttribute('id')) {
@@ -231,7 +241,9 @@ sub extract_entries {
           # Since this is allkeys, we are guaranteed that the real entry for the alias
           # will be available
           $section->set_citekey_alias($idstr, $key);
-          $logger->debug("Citekey '$idstr' is an alias for citekey '$key'");
+          if ($logger->is_debug()) {# performance tune
+            $logger->debug("Citekey '$idstr' is an alias for citekey '$key'");
+          }
         }
       }
 
@@ -268,13 +280,19 @@ sub extract_entries {
     # the .bib as in this case the sorting sub "citeorder" means "bib order" as there are
     # no explicitly cited keys
     $section->add_citekeys(@{$orig_key_order->{$filename}});
-    $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
+    }
   }
   else {
     # loop over all keys we're looking for and create objects
-    $logger->debug('Wanted keys: ' . join(', ', @$keys));
-    foreach my $wanted_key (@$keys) {
-      $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug('Wanted keys: ' . join(', ', $keys->@*));
+    }
+    foreach my $wanted_key ($keys->@*) {
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
+      }
       if (my @entries = $xpc->findnodes("/$NS:entries/$NS:entry[\@id='$wanted_key']")) {
         # Check to see if there is more than one entry with this key and warn if so
         if ($#entries > 0) {
@@ -283,8 +301,10 @@ sub extract_entries {
         }
         my $entry = $entries[0];
 
-        $logger->debug("Found key '$wanted_key' in BibLaTeXML file '$filename'");
-        $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Found key '$wanted_key' in BibLaTeXML file '$filename'");
+          $logger->debug('Parsing BibLaTeXML entry object ' . $entry->nodePath);
+        }
         # See comment above about the importance of the case of the key
         # passed to create_entry()
         # Skip creation if it's already been done, for example, via a citekey alias
@@ -300,7 +320,9 @@ sub extract_entries {
       }
       elsif ($xpc->findnodes("/$NS:entries/$NS:entry/$NS:id[text()='$wanted_key']")) {
         my $key = $xpc->findnodes("/$NS:entries/$NS:entry/\@id");
-        $logger->debug("Citekey '$wanted_key' is an alias for citekey '$key'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Citekey '$wanted_key' is an alias for citekey '$key'");
+        }
         $section->set_citekey_alias($wanted_key, $key);
 
         # Make sure there is a real, cited entry for the citekey alias
@@ -318,7 +340,9 @@ sub extract_entries {
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
       }
-      $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug('Wanted keys now: ' . join(', ', @rkeys));
+      }
     }
   }
 
@@ -343,11 +367,16 @@ sub create_entry {
   my %newentries; # In case we create a new entry in a map
 
   # Datasource mapping applied in $smap order (USER->STYLE->DRIVER)
-  foreach my $smap (@$smaps) {
+  foreach my $smap ($smaps->@*) {
     $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
     my $level = $smap->{level};
 
   MAP:    foreach my $map (@{$smap->{map}}) {
+
+      # Skip if this map element specifies a particular refsection and it is not this one
+      if (exists($map->{refsection})) {
+        next unless $secnum == $map->{refsection};
+      }
 
       # defaults to the entrytype unless changed below
       my $last_type = $entry->getAttribute('entrytype');
@@ -400,7 +429,9 @@ sub create_entry {
 
           # entry deletion. Really only useful with allkeys or tool mode
           if ($step->{map_entry_null}) {
-            $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
+            if ($logger->is_debug()) {# performance tune
+              $logger->debug("Source mapping (type=$level, key=$key): Ignoring entry completely");
+            }
             return 0;           # don't create an entry at all
           }
 
@@ -411,14 +442,16 @@ sub create_entry {
               biber_warn("Source mapping (type=$level, key=$key): Missing type for new entry '$newkey', skipping step ...");
               next;
             }
-            $logger->debug("Source mapping (type=$level, key=$key): Creating new entry with key '$newkey'");
+            if ($logger->is_debug()) {# performance tune
+              $logger->debug("Source mapping (type=$level, key=$key): Creating new entry with key '$newkey'");
+            }
             my $newentry = XML::LibXML::Element->new("$NS:entry");
             $newentry->setAttribute('id', NFC($newkey));
             $newentry->setAttribute('entrytype', NFC($newentrytype));
 
             # found a new entry key, remove it from the list of keys we want since we
             # have "found" it by creating it
-            @$rkeys = grep {$newkey ne $_} @$rkeys;
+            $rkeys->@* = grep {$newkey ne $_} $rkeys->@*;
 
             # for allkeys sections initially
             if ($section->is_allkeys) {
@@ -429,13 +462,15 @@ sub create_entry {
 
           # entry clone
           if (my $prefix = maploopreplace($step->{map_entry_clone}, $maploop)) {
-            $logger->debug("Source mapping (type=$level, key=$key): cloning entry with prefix '$prefix'");
+            if ($logger->is_debug()) {# performance tune
+              $logger->debug("Source mapping (type=$level, key=$key): cloning entry with prefix '$prefix'");
+            }
             # Create entry with no sourcemapping to avoid recursion
             create_entry("$prefix$key", $entry);
 
             # found a prefix clone key, remove it from the list of keys we want since we
             # have "found" it by creating it along with its clone parent
-            @$rkeys = grep {"$prefix$key" ne $_} @$rkeys;
+            $rkeys->@* = grep {"$prefix$key" ne $_} $rkeys->@*;
             # Need to add the clone key to the section if allkeys is set since all keys are cleared
             # for allkeys sections initially
             if ($section->is_allkeys) {
@@ -466,41 +501,81 @@ sub create_entry {
             unless ($etarget->getAttribute('entrytype') eq $typesource) {
               # Skip the rest of the map if this step doesn't match and match is final
               if ($step->{map_final}) {
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->getAttribute('entrytype') . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->getAttribute('entrytype') . "' but map wants '$typesource' and step has 'final' set, skipping rest of map ...");
+                }
                 next MAP;
               }
               else {
                 # just ignore this step
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->getAttribute('entrytype') . "' but map wants '$typesource', skipping step ...");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Entry type is '" . $etarget->getAttribute('entrytype') . "' but map wants '$typesource', skipping step ...");
+                }
                 next;
               }
             }
             # Change entrytype if requested
             $last_type = $etarget->getAttribute('entrytype');
             my $t = lc(maploopreplace($step->{map_type_target}, $maploop));
-            $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
+            if ($logger->is_debug()) {# performance tune
+              $logger->debug("Source mapping (type=$level, key=$etargetkey): Changing entry type from '$last_type' to $t");
+            }
             $etarget->setAttribute('entrytype', NFC($t));
           }
 
+          my $fieldcontinue = 0;
+          my $xp_nfieldsource_s;
+          my $xp_nfieldsource;
+          my $xp_fieldsource_s;
+          my $xp_fieldsource;
+          # Negated source field map
+          if ($xp_nfieldsource_s = _getpath(maploopreplace($step->{map_notfield}, $maploop))) {
+            $xp_nfieldsource = XML::LibXML::XPathExpression->new($xp_nfieldsource_s);
+
+            if ($etarget->exists($xp_nfieldsource)) {
+              if ($step->{map_final}) {
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_nfieldsource_s' exists and step has 'final' set, skipping rest of map ...");
+                }
+                next MAP;
+              }
+              else {
+                # just ignore this step
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_nfieldsource_s' exists, skipping step ...");
+                }
+                next;
+              }
+            }
+            $fieldcontinue = 1;
+          }
+
           # Field map
-          if (my $xp_fieldsource_s = _getpath(maploopreplace($step->{map_field_source}, $maploop))) {
-            my $xp_fieldsource = XML::LibXML::XPathExpression->new($xp_fieldsource_s);
+          if ($xp_fieldsource_s = _getpath(maploopreplace($step->{map_field_source}, $maploop))) {
+            $xp_fieldsource = XML::LibXML::XPathExpression->new($xp_fieldsource_s);
 
             # key is a pseudo-field. It's guaranteed to exist so
             # just check if that's what's being asked for
             unless ($etarget->exists($xp_fieldsource)) {
               # Skip the rest of the map if this step doesn't match and match is final
               if ($step->{map_final}) {
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): No field xpath '$xp_fieldsource_s' and step has 'final' set, skipping rest of map ...");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): No field xpath '$xp_fieldsource_s' and step has 'final' set, skipping rest of map ...");
+                }
                 next MAP;
               }
               else {
                 # just ignore this step
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): No field xpath '$xp_fieldsource_s', skipping step ...");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): No field xpath '$xp_fieldsource_s', skipping step ...");
+                }
                 next;
               }
             }
+            $fieldcontinue = 1;
+          }
 
+          if ($fieldcontinue) {
             $last_field = $etarget->findnodes($xp_fieldsource)->get_node(1)->nodeName;
             $last_fieldval = $etarget->findvalue($xp_fieldsource);
 
@@ -517,12 +592,16 @@ sub create_entry {
 
                 # Can't modify entrykey
                 if (lc($xp_fieldsource_s) eq './@id') {
+                if ($logger->is_debug()) {# performance tune
                   $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' is entrykey- cannot remap the value of this field, skipping ...");
-                  next;
+                }
+                next;
                 }
 
                 my $r = maploopreplace($step->{map_replace}, $maploop);
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field xpath '$xp_fieldsource_s'");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field xpath '$xp_fieldsource_s'");
+                }
 
                 unless (_changenode($etarget, $xp_fieldsource_s, ireplace($last_fieldval, $m, $r)), \$cnerror) {
                   biber_warn("Source mapping (type=$level, key=$etargetkey): $cnerror");
@@ -538,12 +617,16 @@ sub create_entry {
                 unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
                   # Skip the rest of the map if this step doesn't match and match is final
                   if ($step->{map_final}) {
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' does not match '$m' and step has 'final' set, skipping rest of map ...");
+                    }
                     next MAP;
                   }
                   else {
                     # just ignore this step
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' does not match '$m', skipping step ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' does not match '$m', skipping step ...");
+                    }
                     next;
                   }
                 }
@@ -556,16 +639,22 @@ sub create_entry {
 
               # Can't remap entry key pseudo-field
               if (lc($xp_target_s) eq './@id') {
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' is entrykey - cannot map this to a new field as you must have an entrykey, skipping ...");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' is entrykey - cannot map this to a new field as you must have an entrykey, skipping ...");
+                }
                 next;
               }
 
             if ($etarget->exists($xp_target)) {
                 if ($map->{map_overwrite} // $smap->{map_overwrite}) {
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field xpath '$xp_target_s'");
+                  if ($logger->is_debug()) {# performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Overwriting existing field xpath '$xp_target_s'");
+                  }
                 }
                 else {
-                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' is mapped to field xpath '$xp_target_s' but both are defined, skipping ...");
+                  if ($logger->is_debug()) {# performance tune
+                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_fieldsource_s' is mapped to field xpath '$xp_target_s' but both are defined, skipping ...");
+                  }
                   next;
                 }
               }
@@ -582,7 +671,9 @@ sub create_entry {
 
             # Deal with special tokens
             if ($step->{map_null}) {
-              $logger->debug("Source mapping (type=$level, key=$etargetkey): Deleting field xpath '$xp_node_s'");
+              if ($logger->is_debug()) {# performance tune
+                $logger->debug("Source mapping (type=$level, key=$etargetkey): Deleting field xpath '$xp_node_s'");
+              }
               $etarget->findnodes($xp_node)->get_node(1)->unbindNode();
             }
             else {
@@ -590,12 +681,16 @@ sub create_entry {
                 unless ($map->{map_overwrite} // $smap->{map_overwrite}) {
                   if ($step->{map_final}) {
                     # map_final is set, ignore and skip rest of step
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_node_s' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_node_s' exists, overwrite is not set and step has 'final' set, skipping rest of map ...");
+                    }
                     next MAP;
                   }
                   else {
                     # just ignore this step
-                    $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_node_s' exists and overwrite is not set, skipping step ...");
+                    if ($logger->is_debug()) {# performance tune
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field xpath '$xp_node_s' exists and overwrite is not set, skipping step ...");
+                    }
                     next;
                   }
                 }
@@ -606,7 +701,9 @@ sub create_entry {
 
               if ($step->{map_origentrytype}) {
                 next unless $last_type;
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting xpath '$xp_node_s' to '${orig}${last_type}'");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting xpath '$xp_node_s' to '${orig}${last_type}'");
+                }
 
                 unless (_changenode($etarget, $xp_node_s, $orig . $last_type, \$cnerror)) {
                   biber_warn("Source mapping (type=$level, key=$key): $cnerror");
@@ -614,14 +711,18 @@ sub create_entry {
               }
               elsif ($step->{map_origfieldval}) {
                 next unless $last_fieldval;
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_fieldval}'");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_fieldval}'");
+                }
                 unless (_changenode($etarget, $xp_node_s, $orig . $last_fieldval, \$cnerror)) {
                   biber_warn("Source mapping (type=$level, key=$etargetkey): $cnerror");
                 }
               }
               elsif ($step->{map_origfield}) {
                 next unless $last_field;
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_field}'");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_field}'");
+                }
                 unless (_changenode($etarget, $xp_node_s, $orig . $last_field, \$cnerror)) {
                   biber_warn("Source mapping (type=$level, key=$etargetkey): $cnerror");
                 }
@@ -632,7 +733,9 @@ sub create_entry {
                 # dynamically scoped and being null when we get here from any
                 # previous map_match
                 $fv =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-                $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${fv}'");
+                if ($logger->is_debug()) {# performance tune
+                  $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${fv}'");
+                }
                 unless (_changenode($etarget, $xp_node_s, $orig . $fv, \$cnerror)) {
                   biber_warn("Source mapping (type=$level, key=$key): $cnerror");
                 }
@@ -651,7 +754,9 @@ sub create_entry {
     my $bibentry = new Biber::Entry;
     my $k = $e->getAttribute('id');
     $bibentry->set_field('citekey', $k);
-    $logger->debug("Creating entry with key '$k'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Creating entry with key '$k'");
+    }
 
     # We put all the fields we find modulo field aliases into the object.
     # Validation happens later and is not datasource dependent
@@ -663,16 +768,13 @@ sub create_entry {
       if (_norm($f) eq 'options') {
         if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
           process_entry_options($k, [ split(/\s*,\s*/, $node->textContent()) ]);
-          # Save the raw options in case we are to output another input format like
-          # biblatexml
-          $bibentry->set_field('rawoptions', $node->textContent());
         }
       }
 
       # Now run any defined handler
       if ($dm->is_field(_norm($f))) {
         my $handler = _get_handler($f);
-        &$handler($bibentry, $e, $f, $k);
+        $handler->($bibentry, $e, $f, $k);
       }
     }
 
@@ -782,7 +884,7 @@ sub _range {
     if (my @rangelist = $node->findnodes("./$NS:list/$NS:item")) {
       my $rl;
       foreach my $range (@rangelist) {
-        push @$rl, _parse_range_list($range);
+        push $rl->@*, _parse_range_list($range);
       }
       $bibentry->set_datafield(_norm($f), $rl);
     }
@@ -791,61 +893,170 @@ sub _range {
 }
 
 # Date fields
-sub _date {
+# NOTE - the biblatex options controlling era, circa and uncertain meta-information
+# output are in the .bcf but biber does not used them as it always outputs this information
+sub _datetime {
   my ($bibentry, $entry, $f, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
+
   foreach my $node ($entry->findnodes("./$f")) {
+
     my $datetype = $node->getAttribute('type') // '';
-    # We are not validating dates here, just syntax parsing
-    my $date_re = qr/(\d{4}) # year
-                     (?:-(\d{2}))? # month
-                     (?:-(\d{2}))? # day
-                    /xms;
+
+    $bibentry->set_field("${datetype}datesplit", 1);
+
     if (my $start = $node->findnodes("./$NS:start")) { # Date range
       my $end = $node->findnodes("./$NS:end");
+
       # Start of range
-      if (my ($byear, $bmonth, $bday) =
-          $start->get_node(1)->textContent() =~ m|\A$date_re\z|xms) {
-        $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
-        $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
-        $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
+      # Using high-level range parsing sub in order to get unspec
+      if (my ($sdate, undef, undef, $unspec) = parse_date_range($start->get_node(1)->textContent())) {
+
+        # Save julian
+        $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;
+        # Save circa information
+        $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
+
+        # Save uncertain date information
+        $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
+
+        # Date had EDTF 5.2.2 unspecified format
+        # This does not differ for *enddate components as these are split into ranges
+        # from non-ranges only
+        if ($unspec) {
+          $bibentry->set_field($datetype . 'dateunspecified', $unspec);
+        }
+
+        unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
+          $bibentry->set_datafield($datetype . 'year', $sdate->year);
+          # Save era date information
+          $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
+        }
+
+        $bibentry->set_datafield($datetype . 'month', $sdate->month)
+          unless $CONFIG_DATE_PARSERS{start}->missing('month');
+
+        $bibentry->set_datafield($datetype . 'day', $sdate->day)
+          unless $CONFIG_DATE_PARSERS{start}->missing('day');
+
+        # Save start season date information
+        if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
+          $bibentry->set_field($datetype . 'season', $season);
+        }
+
+        # must be an hour if there is a time but could be 00 so use defined()
+        unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
+          $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
+          $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
+          $bibentry->set_datafield($datetype . 'second', $sdate->second);
+          unless ($sdate->time_zone->is_floating) { # ignore floating timezones
+            $bibentry->set_datafield($datetype . 'timezone', tzformat($sdate->time_zone->name));
+          }
+        }
       }
       else {
         biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $start->get_node(1)->textContent() . "' of date field '$f' range start - ignoring", $bibentry);
       }
 
       # End of range
-      if (my ($eyear, $emonth, $eday) =
-          $end->get_node(1)->textContent() =~ m|\A(?:$date_re)?\z|xms) {
-        $bibentry->set_datafield($datetype . 'endmonth', $emonth)    if $emonth;
-        $bibentry->set_datafield($datetype . 'endday', $eday)        if $eday;
-        if ($eyear) {           # normal range
-          $bibentry->set_datafield($datetype . 'endyear', $eyear);
+      my $edate = parse_date_end($end->get_node(1)->textContent());
+      if (defined($edate)) { # no parse error
+        if ($edate) { # not an empty range
+
+          # Save julian
+          $bibentry->set_field($datetype . 'enddatejulian', 1) if $CONFIG_DATE_PARSERS{end}->julian;
+
+          # Save circa information
+          $bibentry->set_field($datetype . 'enddatecirca', 1) if $CONFIG_DATE_PARSERS{end}->circa;
+
+          # Save uncertain date information
+          $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
+
+          unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
+            $bibentry->set_datafield($datetype . 'endyear', $edate->year);
+            # Save era date information
+            $bibentry->set_field($datetype . 'endera', lc($edate->secular_era));
+          }
+
+          $bibentry->set_datafield($datetype . 'endmonth', $edate->month)
+            unless $CONFIG_DATE_PARSERS{end}->missing('month');
+
+          $bibentry->set_datafield($datetype . 'endday', $edate->day)
+            unless $CONFIG_DATE_PARSERS{end}->missing('day');
+
+          # Save end season date information
+          if (my $season = $CONFIG_DATE_PARSERS{end}->season) {
+            $bibentry->set_field($datetype . 'endseason', $season);
+          }
+
+          # must be an hour if there is a time but could be 00 so use defined()
+          unless ($CONFIG_DATE_PARSERS{end}->missing('time')) {
+            $bibentry->set_datafield($datetype . 'endhour', $edate->hour);
+            $bibentry->set_datafield($datetype . 'endminute', $edate->minute);
+            $bibentry->set_datafield($datetype . 'endsecond', $edate->second);
+            unless ($edate->time_zone->is_floating) { # ignore floating timezones
+              $bibentry->set_datafield($datetype . 'endtimezone', tzformat($edate->time_zone->name));
+            }
+          }
         }
-        else {            # open ended range - endyear is defined but empty
+        else { # open ended range - edate is defined but empty
           $bibentry->set_datafield($datetype . 'endyear', '');
         }
       }
       else {
-        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end - ignoring", $bibentry);
+        biber_warn("Entry '$key' ($ds): Invalid format '" . $end->get_node(1)->textContent() . "' of date field '$f' range end - ignoring", $bibentry);
       }
     }
     else { # Simple date
-      if (my ($byear, $bmonth, $bday) =
-          $node->textContent() =~ m|\A$date_re\z|xms) {
-        # did this entry get its year/month fields from splitting an ISO8601 date field?
-        # We only need to know this for date, year/month as year/month can also
-        # be explicitly set. It makes a difference on how we do any potential future
-        # date validation
-        $bibentry->set_field('datesplit', 1) if $datetype eq '';
-        $bibentry->set_datafield($datetype . 'year', $byear)      if $byear;
-        $bibentry->set_datafield($datetype . 'month', $bmonth)    if $bmonth;
-        $bibentry->set_datafield($datetype . 'day', $bday)        if $bday;
+      # Using high-level range parsing sub in order to get unspec
+      if (my ($sdate, undef, undef, $unspec) = parse_date_range($node->textContent())) {
+
+        # Save julian
+        $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;
+        # Save circa information
+        $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
+
+        # Save uncertain date information
+        $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
+
+        # Date had EDTF 5.2.2 unspecified format
+        # This does not differ for *enddate components as these are split into ranges
+        # from non-ranges only
+        if ($unspec) {
+          $bibentry->set_field($datetype . 'dateunspecified', $unspec);
+        }
+
+        unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
+          $bibentry->set_datafield($datetype . 'year', $sdate->year);
+          # Save era date information
+          $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
+        }
+
+        $bibentry->set_datafield($datetype . 'month', $sdate->month)
+          unless $CONFIG_DATE_PARSERS{start}->missing('month');
+
+        $bibentry->set_datafield($datetype . 'day', $sdate->day)
+          unless $CONFIG_DATE_PARSERS{start}->missing('day');
+
+        # Save start season date information
+        if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
+          $bibentry->set_field($datetype . 'season', $season);
+        }
+
+        # must be an hour if there is a time but could be 00 so use defined()
+        unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
+          $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
+          $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
+          $bibentry->set_datafield($datetype . 'second', $sdate->second);
+          unless ($sdate->time_zone->is_floating) { # ignore floating timezones
+            $bibentry->set_datafield($datetype . 'timezone', tzformat($sdate->time_zone->name));
+          }
+        }
       }
       else {
-        biber_warn("Datamodel: Entry '$key' ($ds): Invalid format '" . $node->textContent() . "' of date field '$f' - ignoring", $bibentry);
+        biber_warn("Entry '$key' ($ds): Invalid format '" . $node->textContent() . "' of date field '$f' - ignoring", $bibentry);
       }
     }
   }
@@ -911,6 +1122,7 @@ sub _name {
       middle            => {string => 'Fred', initial => ['F']},
       prefix            => {string => undef, initial => undef},
       suffix            => {string => undef, initial => undef},
+      basenamestring    => 'Doe',
       namestring        => 'Doe, John Fred',
       nameinitstring    => 'Doe_JF',
       gender            => sm,
@@ -922,7 +1134,9 @@ sub _name {
 
 sub parsename {
   my ($node, $fieldname, $key, $count, $opts) = @_;
-  $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
+  }
   # We have to pass this in from higher scopes as we need to actually use the scoped
   # value in this sub as well as set the name local value in the object
   my $useprefix = $opts->{useprefix};
@@ -952,74 +1166,81 @@ sub parsename {
       # name component with parts
       if (my @npnodes =  $npnode->findnodes("./$NS:namepart")) {
         my @parts = map {$_->textContent()} @npnodes;
-        $namec{$n} = _join_name_parts(\@parts);
-        $logger->debug("Found namepart '$n': " . $namec{$n});
+        $namec{$n} = join_name_parts(\@parts);
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Found namepart '$n': " . $namec{$n});
+        }
         my @partinits;
         foreach my $part (@npnodes) {
           if (my $pi = $part->getAttribute('initial')) {
             push @partinits, $pi;
           }
           else {
-            push @partinits, _gen_initials($part->textContent());
+            push @partinits, gen_initials($part->textContent());
           }
         }
-        $namec{"${n}_i"} = \@partinits;
+        $namec{"${n}-i"} = \@partinits;
       }
       # with no parts
       elsif (my $t = $npnode->textContent()) {
         $namec{$n} = $t;
-        $logger->debug("Found namepart '$n': $t");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Found namepart '$n': $t");
+        }
         if (my $ni = $node->getAttribute('initial')) {
-          $namec{"${n}_i"} = [$ni];
+          $namec{"${n}-i"} = [$ni];
         }
         else {
-          $namec{"${n}_i"} = [_gen_initials($t)];
+          $namec{"${n}-i"} = [gen_initials($t)];
         }
       }
     }
   }
 
+  my $basenamestring = '';
   my $namestring = '';
+  my $nameinitstring = '';
 
-  # Don't add suffix to namestring or nameinitstring as these are used for uniquename disambiguation
-  # which should only care about family name + any prefix (if useprefix=1). See biblatex github
-  # tracker #306.
+  # Loop over name parts required for constructing uniquename information
+  # and create the strings needed for this
+  #
+  # Note that with the default uniquenametemplate, we don't conditionalise the *position*
+  # of a prefix on the useprefix option but rather its inclusion at all. This is because, if
+  # useprefix determined the position of the prefix in the uniquename strings:
+  # * As a global setting, it would generate the same uniqueness information and is therefore
+  #   irrelevant
+  # * As a local setting (entry, namelist, name), it would lead to different uniqueness
+  #   information which would be confusing
 
-  # prefix
-  if (my $p = $namec{prefix}) {
-    $namestring .= "$p ";
+  # Use nameuniqueness template to construct uniqueness strings
+  foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
+    my $npn = $np->{namepart};
+    if ($namec{$npn}) {
+      if ($np->{use}) {         # only ever defined as 1
+        next unless $opts->{"use$npn"};
+      }
+      $namestring .= $namec{$npn};
+      if ($np->{base}) {
+        $nameinitstring .= $namec{$npn};
+        $basenamestring .= $namec{$npn};
+      }
+      else {
+        $nameinitstring .= join('', @{$namec{"${npn}-i"}});
+      }
+    }
   }
-
-  # family name
-  if (my $l = $namec{family}) {
-    $namestring .= "$l, ";
-  }
-
-  # given name
-  if (my $f = $namec{given}) {
-    $namestring .= "$f";
-  }
-
-  # Remove any trailing comma and space if, e.g. missing given name
-  $namestring =~ s/,\s+\z//xms;
-
-  # Construct $nameinitstring
-  my $nameinitstr = '';
-  $nameinitstr .= join('', @{$namec{prefix_i}}) . '_' if ( $useprefix and exists($namec{prefix}) );
-  $nameinitstr .= $namec{family} if exists($namec{family});
-  $nameinitstr .= '_' . join('', @{$namec{given_i}}) if exists($namec{given});
-  $nameinitstr =~ s/\s+/_/g;
 
   my %nps;
   foreach my $n ($dm->get_constant_value('nameparts')) { # list type so returns list
     $nps{$n} = {string  => $namec{$n} // undef,
-                initial => exists($namec{$n}) ? $namec{"${n}_i"} : undef};
+                initial => exists($namec{$n}) ? $namec{"${n}-i"} : undef};
   }
 
   my $newname = Biber::Entry::Name->new(
                                         %nps,
                                         namestring      => $namestring,
-                                        nameinitstring  => $nameinitstr,
+                                        nameinitstring  => $nameinitstring,
+                                        basenamestring  => $basenamestring,
                                         gender          => $node->getAttribute('gender')
                                        );
 
@@ -1034,51 +1255,6 @@ sub parsename {
   }
 
   return $newname;
-}
-
-# Joins name parts using BibTeX tie algorithm. Ties are added:
-#
-# 1. After the first part if it is less than three characters long
-# 2. Before the family part
-sub _join_name_parts {
-  my $parts = shift;
-  # special case - 1 part
-  if ($#{$parts} == 0) {
-    return $parts->[0];
-  }
-  # special case - 2 parts
-  if ($#{$parts} == 1) {
-    return $parts->[0] . '~' . $parts->[1];
-  }
-  my $namestring = $parts->[0];
-  $namestring .= Unicode::GCString->new($parts->[0])->length < 3 ? '~' : ' ';
-  $namestring .= join(' ', @$parts[1 .. ($#{$parts} - 1)]);
-  $namestring .= '~' . $parts->[$#{$parts}];
-  return $namestring;
-}
-
-# Passed an array of strings, returns an array of initials
-sub _gen_initials {
-  my @strings = @_;
-  my @strings_out;
-  foreach my $str (@strings) {
-    # Deal with hyphenated name parts and normalise to a '-' character for easy
-    # replacement with macro later
-    if ($str =~ m/\p{Dash}/) {
-      push @strings_out, join('-', _gen_initials(split(/\p{Dash}/, $str)));
-    }
-    else {
-      my $chr = Unicode::GCString->new($str)->substr(0, 1)->as_string;
-      # Keep diacritics with their following characters
-      if ($chr =~ m/\p{Dia}/) {
-        push @strings_out, Unicode::GCString->new($str)->substr(0, 2)->as_string;
-      }
-      else {
-        push @strings_out, $chr;
-      }
-    }
-  }
-  return @strings_out;
 }
 
 # parses a range and returns a ref to an array of start and end values

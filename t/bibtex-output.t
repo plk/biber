@@ -47,8 +47,9 @@ my $main = $biber->sortlists->get_list(99999, Biber::Config->getblxoption('sorts
 my $out = $biber->get_output_obj;
 
 my $b1 = q|@ARTICLE{murray,
-  ANNOTATION   = {An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable},
   AUTHOR       = {Hostetler, Michael J. and Wingate, Julia E. and Zhong, Chuan-Jian and Harris, Jay E. and Vachet, Richard W. and Clark, Michael R. and Londono, J. David and Green, Stephen J. and Stokes, Jennifer J. and Wignall, George D. and Glish, Gary L. and Porter, Marc D. and Evans, Neal D. and Murray, Royce W.},
+  ANNOTATION   = {An \texttt{article} entry with \arabic{author} authors. By default, long author and editor lists are automatically truncated. This is configurable},
+  DATE         = {1998},
   INDEXTITLE   = {Alkanethiolate gold cluster molecules},
   JOURNALTITLE = {Langmuir},
   LANGID       = {english},
@@ -59,28 +60,29 @@ my $b1 = q|@ARTICLE{murray,
   SUBTITLE     = {Core and monolayer properties as a function of core size},
   TITLE        = {Alkanethiolate gold cluster molecules with core diameters from 1.5 to 5.2~nm},
   VOLUME       = {14},
-  YEAR         = {1998},
 }
 
 |;
 
 my $b2 = q|@BOOK{b1,
+  LOCATION       = {London and Edinburgh},
+  LOCATION+an    = {1=ann1;2=ann2},
+  DATE           = {1999},
   MAINSUBTITLE   = {Mainsubtitle},
   MAINTITLE      = {Maintitle},
   MAINTITLEADDON = {Maintitleaddon},
   TITLE          = {Booktitle},
-  TITLE+AN       = {ann1, ann2},
-  YEAR           = {1999},
+  TITLE+an       = {=ann1, ann2},
 }
 
 |;
 
 my $b3 = q|@BOOK{xd1,
-  AUTHOR    = {Edward Paul Ellington},
+  AUTHOR    = {Ellington, Edward Paul},
   LOCATION  = {New York and London},
-  NOTE      = {A Note},
   PUBLISHER = {Macmillan},
-  YEAR      = {2001},
+  DATE      = {2001},
+  NOTE      = {A Note},
 }
 
 |;

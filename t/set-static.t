@@ -35,7 +35,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -48,16 +47,17 @@ my $string1 = q|    \entry{Static1}{set}{}
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2001}
-      \field{datelabelsource}{}
+      \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8343b463aacf48517c044b4d2c9c45ed}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{Some notes}
@@ -71,14 +71,17 @@ my $string2 = q|    \entry{Static2}{book}{}
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
+      \field{sortinit}{1}
+      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{Some Blessed Note}
@@ -92,14 +95,15 @@ my $string3 = q|    \entry{Static3}{book}{}
       \name{author}{1}{}{%
         {{hash=da80091c8cd89e5269bd55af1bd5d2fa}{%
            family={Crenellation},
-           family_i={C\bibinitperiod},
+           familyi={C\bibinitperiod},
            given={Clive},
-           given_i={C\bibinitperiod}}}%
+           giveni={C\bibinitperiod}}}%
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \strng{authorfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Castles and Crime}
@@ -112,14 +116,15 @@ my $string4 = q|    \entry{Static4}{book}{}
       \name{author}{1}{}{%
         {{hash=22dafa5cd57bb5dd7f3e3bab98fd539c}{%
            family={Dingle},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={Derek},
-           given_i={D\bibinitperiod}}}%
+           giveni={D\bibinitperiod}}}%
       }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \strng{authorfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Dungeons, Dark and Dangerous}
@@ -133,16 +138,17 @@ my $string5 = q|    \entry{Static2}{book}{}
       \name{author}{1}{}{%
         {{hash=43874d80d7ce68027102819f16c47df1}{%
            family={Bumble},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2001}
-      \field{datelabelsource}{}
+      \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
+      \field{sortinit}{1}
+      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{Some Blessed Note}

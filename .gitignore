@@ -14,3 +14,4 @@ META.json
 dist/*/biber-*
 dist/*/scancache
 t/tdata/*.rng
+dist/build-env-cmds

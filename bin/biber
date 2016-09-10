@@ -1,6 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -31,7 +31,6 @@ GetOptions(
            'bblsafecharsset=s', # legacy alias for output_safecharsset
            'cache',
            'clrmacros',
-           'collate|C',
            'collate_options|collate-options|c=s',
            'configfile|g=s',
            'convert_control|convert-control',
@@ -39,7 +38,7 @@ GetOptions(
            'decodecharsset=s',
            'dieondatamodel',
            'dot_include|dot-include:s@',
-           'fastsort|f',
+           'fastsort|f', # does nothing now
            'fixinits',
            'help|h|?',
            'input_directory|input-directory=s',
@@ -63,21 +62,28 @@ GetOptions(
            'outfile=s',           # legacy alias for output_file
            'outformat=s',         # legacy alias for output_format
            'output_align|output-align',
+           'output_annotation_marker|output-annotation-marker=s',
            'output_directory|output-directory=s',
            'output_encoding|output-encoding|E=s',
            'output_fieldcase|output-fieldcase=s',
+           'output_field_order|output-field-order=s',
            'output_file|output-file|O=s',
            'output_format|output-format=s',
            'output_indent|output-indent=s',
+           'output_listsep|output-listsep=s',
            'output_macro_fields|output-macro-fields=s',
+           'output_namesep|output-namesep=s',
            'output_resolve|output-resolve',
            'output_safechars|output-safechars',
            'output_safecharsset|output-safecharsset=s',
+           'output_xname|output-xname',
+           'output_xnamesep|output-xnamesep=s',
            'quiet|q+',
            'recodedata=s',
            'noskipduplicates',
+           'noxname',
+           'sortdebug',
            'sortcase=s',
-           'sortgiveninits|sortfirstinits=s',
            'sortlocale|l=s',
            'sortupper=s',
            'ssl-nointernalca',
@@ -100,6 +106,7 @@ GetOptions(
            'validate_datamodel|validate-datamodel|V',
            'version|v',
            'wraplines|w',
+           'xnamesep=s',
            'xsvsep=s',
           ) or pod2usage(-verbose => 0,
                          -exitval => EXIT_ERROR);
@@ -141,11 +148,6 @@ if (exists $opts->{'tool_config'}) {
 unless (@ARGV) {
   pod2usage(-verbose => 0,
             -exitval => EXIT_ERROR);
-}
-
-# Sanitise collate option if fastsort is specified
-if ($opts->{fastsort}) {
-  delete $opts->{collate};
 }
 
 # Resolve some option shortcuts and legacy aliases
@@ -209,7 +211,18 @@ if (my $of = $opts->{output_format}) {
     exit EXIT_ERROR;
   }
 }
+# Auto-detect input-format from extension if not given
+if (exists($opts->{tool}) and
+    not exists($opts->{input_format})) {
+  if ($ARGV[0] =~ m/\.bib$/) {
+    $opts->{input_format} = 'bibtex';
+  }
+  elsif ($ARGV[0] =~ m/\.bltxml$/) {
+    $opts->{input_format} = 'biblatexml';
+  }
+}
 
+# Check output-format value
 if (exists($opts->{tool}) and
     exists($opts->{output_format}) and
     $opts->{output_format} !~ /\A(?:bibtex|biblatexml)\z/xms) {
@@ -255,7 +268,7 @@ if (exists($opts->{dot_include}) and (not exists($opts->{output_format})
 if (exists($opts->{dot_include})) {
   $opts->{dot_include} = {map {lc($_) => 1} split(/,/,join(',',@{$opts->{dot_include}}))};
   my @suboptions = ( 'section', 'field', 'crossref', 'xref', 'xdata', 'related' );
-  foreach my $g (keys %{$opts->{dot_include}}) {
+  foreach my $g (keys $opts->{dot_include}->%*) {
     unless (first {$_ eq lc($g)} @suboptions) {
       say STDERR "Biber: '$g' is an invalid output type for DOT output";
       exit EXIT_ERROR;
@@ -275,9 +288,8 @@ if (exists($opts->{input_format}) and
   exit EXIT_ERROR;
 }
 
-
 # Create Biber object, passing command-line options
-my $biber = Biber->new(%$opts);
+my $biber = Biber->new($opts->%*);
 
 # get the logger object
 my $logger  = Log::Log4perl::get_logger('main');
@@ -340,7 +352,7 @@ my $biberoutput = $biber->get_output_obj;
 # Set the output filename and get ref to output object This has to come
 # before .bcf parsing so that we can detect .bcf parsing errors
 # early and clean up
-my $outfileobj = $biberoutput->set_output_target_file($outfile);
+$biberoutput->set_output_target_file($outfile);
 
 # Fake some necessary .bcf parts if in tool mode
 if (Biber::Config->getoption('tool')) {
@@ -352,8 +364,8 @@ else {
 }
 
 # Reset output filename now we have the output coding from the .bcf
-# because set_output_target_file() set output encoding from information in .bcf
-$outfileobj = $biberoutput->set_output_target_file($outfile);
+# because set_output_target_file() sets output encoding from information in .bcf
+my $outfileobj = $biberoutput->set_output_target_file($outfile, 1);
 
 # Postprocess biber options now that they are all read from the various places
 Biber::Config->postprocess_biber_opts;
@@ -444,11 +456,6 @@ Clears any BibTeX macros (@STRING) between BibLaTeX refsections. This prevents
 BibTeX warnings about macro redefinitions if you are using the same datasource
 several times for different refsections.
 
-=item B<--collate|-C>
-
-Sort with C<Unicode::Collate> instead of the built-in sort function.
-This is the default.
-
 =item B<--collate-options|-c [options]>
 
 Options to pass to the C<Unicode::Collate> object used for sorting
@@ -497,11 +504,6 @@ error is found. Default is to warn and continue.
 Specifies the element to include in GraphViz DOT output format if the output format is 'dot'.
 You can also choose to display crossref, xref, xdata and/or related entry connections.
 The default if not specified is C<--dot_include=section,xdata,crossref,xref>.
-
-=item B<--fastsort|-f>
-
-Use Perl's sort instead of C<Unicode::Collate> for sorting. Also uses
-OS locale definitions (which may be broken for some languages ...).
 
 =item B<--fixinits>
 
@@ -565,9 +567,8 @@ Set threshold for crossrefs.
 
 =item B<--namesep=[sep]>
 
-Use F<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
+Use C<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
 'and'.
-
 
 =item B<--no-bblxml-schema>
 
@@ -598,6 +599,12 @@ Don't automatically define any standard macros like month abbreviations.
 If you also define these yourself, this option can be used to suppress
 macro redefinition warnings.
 
+=item B<--noxname>
+
+Disable exended name processing in bibtex data sources. Can be useful if
+you don't use this and it causes problems due to auto-detection of extended
+name format.
+
 =item B<--onlylog>
 
 Do not write any message to screen.
@@ -611,6 +618,10 @@ Use F<string> as the final name in a name field which implies "et al". Defaults 
 
 Align field values in neat columns in output. Effect depends on the output format. Default is false.
 The legacy option B<--tool_align> is supported as an alias.
+
+=item B<--output-annotation-marker=[marker]>
+
+As B<--annotation-marker> but for tool mode bibtex output. The default is C<+an>.
 
 =item B<--output-directory [directory]>
 
@@ -636,13 +647,26 @@ The legacy option B<--tool_indent> is supported as an alias.
 Case for field names output. Effect depends on the output format. Defaults to 'upper'.
 The legacy option B<--tool_fieldcase> is supported as an alias.
 
+=item B<--output-field-order=[field1, ... fieldn]>
+
+When outputting bibtex format data in tool mode, this option allows the customisation
+of the order of fields within entries. The value is a comma-separated string of field names
+or classes of fields. Fields not mentioned in the list are output in sorted name order after
+the explicitly specified fields. The classes of fields are:
+
+'names' - All name list fields
+'lists' - All non-name list fields
+'dates' - All date fields
+
+By default, its value is 'options,abstract,names,lists,dates'.
+
 =item B<--output-file|-O [file]>
 
-Output to F<file> instead of F<basename.bbl>
-F<file> is relative to B<--output_directory>, if set (absolute
-paths in this case are stripped to filename only). F<file> can
-be absolute if B<--output_directory> is not set.
-The legacy option B<--outfile> is supported as an alias.
+Output to F<file> instead of F<basename.bbl> F<file> is relative to
+B<--output_directory>, if set (absolute paths in this case are stripped to
+filename only). F<file> can be absolute if B<--output_directory> is not
+set. F<file> can be '-' to output directly to STDOUT. The legacy option
+B<--outfile> is supported as an alias.
 
 =item B<--output-format=dot|bibtex|biblatexml|bbl|bblxml>
 
@@ -658,16 +682,26 @@ with the output file name (unless the B<--no-bblxml-schema> option is specified)
 may validate the F<bblxml> using the schema with the B<--validate-bblxml> option.
 The legacy option B<--outformat> is supported as an alias.
 
+=item B<--output-listsep=[sep]>
+
+As B<--listsep> but for tool mode bibtex output. Defaults to BibTeX's usual
+'and'.
+
 =item B<--output-macro-fields=[field1, ... fieldn]>
 
 A comma-separated list of field names whose values are, on output, treated as BibTeX macros.
 Effectively this means that they are not wrapped in braces. Effect depends on the output format.
 The legacy option B<--tool_macro_fields> is supported as an alias.
 
+=item B<--output-namesep=[sep]>
+
+As B<--namesep> but for tool mode bibtex output. Defaults to BibTeX's usual
+'and'.
+
 =item B<--output-resolve>
 
 Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
-The legacy option B<--tool_resolve> is supported as an alias.
+The legacy option B<--tool-resolve> is supported as an alias.
 
 =item B<--output-safechars>
 
@@ -690,6 +724,14 @@ can be customised. See the --recodedata option and the PDF manual.
 The legacy option B<--bblsafecharsset> is supported as an alias. The
 virtual set name "null" may be specified which effectively turns off macro encoding.
 
+=item B<--output-xname>
+
+When output is a .bib BibTeX file in tool mode, whether to output names the eXtended BibTeX name field format.
+
+=item B<--output-xnamesep=[sep]>
+
+As B<--xnamesep> but for tool mode bibtex output. Default is '='.
+
 =item B<--quiet|-q>
 
 Log only errors. If this option is used more than once, don't even log errors.
@@ -708,29 +750,22 @@ Don't skip duplicate bibliography keys if found. The detection of duplicate keys
 all data sources. Sometimes you might need duplicates when using several data sources
 across several refsections in which case you might need to use this option.
 
+=item B<--sortdebug>
+
+Add comments to output with sorting keys. Useful for debugging.
+
 =item B<--sortcase=true|false>
 
 Case-sensitive sorting (default is true).
 
-=item B<--sortgiveninits=true|false>
-
-When sorting names, use only the given name initials, not full given name. Some people expect
-the biblatex B<giveninits> option to do this but it needs to be a separate option in case
-users, for example, need to show only initials but sort with full given names (default is false).
-
 =item B<--sortlocale|-l [locale]>
 
-Set the locale to be used for sorting.  With default sorting
-(B<--collate|-C>), the locale is used to add CLDR
-tailoring to the sort (if available for the locale). With
-B<--fastsort|-f> this sets the OS locale for sorting.
+Set the locale to be used for sorting. The locale is used to add CLDR
+tailoring to the sort (if available for the locale).
 
 =item B<--sortupper=true|false>
 
-Whether to sort uppercase before lowercase when using
-default sorting (B<--collate|-C>). When
-using B<--fastsort|-f>, your OS collation locale determines
-this and this option is ignored (default is true).
+Whether to sort uppercase before lowercase when sorting (default is true).
 
 =item B<--ssl-nointernalca>
 
@@ -808,6 +843,11 @@ Display version number.
 =item B<--wraplines|-w>
 
 Wrap lines in the F<.bbl> file.
+
+=item B<--xnamesep=[sep]>
+
+Use F<sep> as the separator between namepart names and the namepart values
+in the eXtended name format. See biber docs. Default is '='.
 
 =item B<--xsvsep=[sep]>
 

@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 70;
+use Test::More tests => 74;
 use Test::Differences;
 unified_diff;
 
@@ -72,6 +72,7 @@ eq_or_diff(NFC(normalise_string_underscore(latex_decode('\c Se\x{c}\"ok-\foo{a},
 eq_or_diff(normalise_string_underscore('{Foo de Bar, Graf Ludwig}', 1), 'Foo_de_Bar_Graf_Ludwig', 'normalise_string_underscore 3');
 
 # LaTeX decoding/encoding
+# There is a "\x{131}\x{304}" but might look like nothing in current font
 eq_or_diff(NFC(latex_decode('Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i} \r{a}')), 'Muḥammad ibn Mūsā al-Khwārizmı̄ å', 'latex decode 1');
 eq_or_diff(latex_decode('\alpha'), '\alpha', 'latex decode 2'); # no greek decoding by default
 eq_or_diff(latex_decode('\textless\textampersand'), '<&', 'latex decode 3'); # checking XML encoding bits
@@ -98,7 +99,6 @@ eq_or_diff(NFC(latex_decode("\\u\\i")), 'ı̆', 'latex decode 8'); # checking i/
 eq_or_diff(latex_decode('\i'), 'ı', 'latex decode 9'); # checking dotless i
 eq_or_diff(latex_decode('\j'), 'ȷ', 'latex decode 10'); # checking dotless j
 eq_or_diff(latex_decode('\textdiv'), '÷', 'latex decode 11'); # checking multiple set for types
-eq_or_diff(latex_decode('\textbackslash'), "\\", 'latex decode 12'); # checking multiple set for types
 eq_or_diff(latex_decode('--'), '--', 'latex decode 13'); # Testing raw
 
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
@@ -111,6 +111,8 @@ eq_or_diff(latex_decode('a\-a'), 'a\-a', 'discretionary hyphens');
 eq_or_diff(latex_encode(NFD('Åå')), '\r{A}\r{a}', 'latex encode 9');
 eq_or_diff(latex_encode(NFD('a̍')), '\|{a}', 'latex encode 10');
 eq_or_diff(latex_encode(NFD('ı̆')), '\u{\i{}}', 'latex encode 11');
+eq_or_diff(latex_encode(NFD('®')), '\textregistered', 'latex encode 12');
+eq_or_diff(latex_encode(NFD('©')), '{$\copyright$}', 'latex encode 13');
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
@@ -119,13 +121,14 @@ my @AminusBexpected = qw/ a b d f /;
 
 is_deeply(\@AminusB, \@AminusBexpected, 'reduce_array') ;
 
-eq_or_diff(remove_outer('{Some string}'), 'Some string', 'remove_outer') ;
+eq_or_diff((remove_outer('{Some string}'))[0], 1, 'remove_outer - 1') ;
+eq_or_diff((remove_outer('{Some string}'))[1], 'Some string', 'remove_outer - 2') ;
 
 eq_or_diff(normalise_string_hash('Ä.~{\c{C}}.~{\c S}.'), 'Äc:Cc:S', 'normalise_string_lite' ) ;
 
 Biber::LaTeX::Recode->init_sets('base', 'full'); # Need to do this to reset
 eq_or_diff(latex_decode('\textdiv'), '\textdiv', 'latex different encode/decode sets 1');
-eq_or_diff(latex_encode(NFD('÷')), '{$\div$}', 'latex different encode/decode sets 2');
+eq_or_diff(latex_encode(NFD('÷')), '{$\\div$}', 'latex different encode/decode sets 2');
 
 Biber::LaTeX::Recode->init_sets('null', 'full'); # Need to do this to reset
 eq_or_diff(latex_decode('\i'), '\i', 'latex null decode 1');
@@ -156,3 +159,7 @@ eq_or_diff(parse_range('-2'), [1,2], 'Range parsing - 2');
 eq_or_diff(parse_range('3-'), [3,undef], 'Range parsing - 3');
 eq_or_diff(parse_range('5'), [1,5], 'Range parsing - 4');
 eq_or_diff(parse_range('3--+'), [3,'+'], 'Range parsing - 5');
+
+# split_xsv
+eq_or_diff([split_xsv('family=a, given=a b, given-i=a b c')], ['family=a', 'given=a b', 'given-i=a b c'], 'split_xsv - 1');
+eq_or_diff([split_xsv('"family={Something, here}", given=b')], ['family={Something, here}', 'given=b'], 'split_xsv - 2');

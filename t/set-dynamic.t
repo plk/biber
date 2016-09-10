@@ -35,7 +35,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -52,16 +51,17 @@ my $string1 = q|    \entry{DynSet}{set}{}
       \name{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{%
            family={Dynamism},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={Derek},
-           given_i={D\bibinitperiod}}}%
+           giveni={D\bibinitperiod}}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2002}
-      \field{datelabelsource}{}
+      \strng{authornamehash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{authorfullhash}{252caa7921a061ca92087a1a52f15b78}
+      \field{sortinit}{1}
+      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{Some Dynamic Note}
@@ -76,14 +76,17 @@ my $string2 = q|    \entry{Dynamic1}{book}{}
       \name{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{%
            family={Dynamism},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={Derek},
-           given_i={D\bibinitperiod}}}%
+           giveni={D\bibinitperiod}}}%
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{authorfullhash}{252caa7921a061ca92087a1a52f15b78}
+      \field{sortinit}{8}
+      \field{sortinithash}{ff392057b609ad7b4de0b8e2cc30b687}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{Some Dynamic Note}
@@ -98,14 +101,17 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
       \name{author}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{%
            family={Bunting},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{894a5fe6de820f5dcce84a65581667f4}
+      \strng{authorfullhash}{894a5fe6de820f5dcce84a65581667f4}
+      \field{sortinit}{9}
+      \field{sortinithash}{5a7694b2c36c7534b22948c31e4b7920}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{shorthand}{d2}
@@ -119,14 +125,17 @@ my $string4 = q|    \entry{Dynamic3}{book}{}
       \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
            family={Regardless},
-           family_i={R\bibinitperiod},
+           familyi={R\bibinitperiod},
            given={Roger},
-           given_i={R\bibinitperiod}}}%
+           giveni={R\bibinitperiod}}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \field{sortinit}{1}
+      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{shorthand}{d3}
@@ -141,16 +150,17 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
            family={Regardless},
-           family_i={R\bibinitperiod},
+           familyi={R\bibinitperiod},
            given={Roger},
-           given_i={R\bibinitperiod}}}%
+           giveni={R\bibinitperiod}}}%
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2000}
-      \field{datelabelsource}{}
+      \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \field{sortinit}{1}
+      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{shorthand}{d3}

@@ -12,6 +12,7 @@ mkdir -p /tmp/sftree/binaries/Solaris_Intel
 mkdir -p /tmp/sftree/binaries/FreeBSD
 mkdir -p /tmp/sftree/binaries/OSX_Intel
 mkdir -p /tmp/sftree/binaries/Windows
+mkdir -p /tmp/sftree/binaries/ARM
 
 chmod -R 777 /tmp/sftree
 

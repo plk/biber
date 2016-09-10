@@ -26,8 +26,11 @@ start =
         empty
       }+
     }* &
+           
+    # Annotation marker
+    element annotation_marker { text }? &
     # Can't specify the config file location in the config file ...
-    #  element configfile          { text }? & 
+    # element configfile          { text }? & 
     element convert_control     { "0" | "1" }? &
     element dot_include         { text }? &
     # Data model specification (mainly for tool mode)
@@ -74,28 +77,35 @@ start =
     element onlylog              { "0" | "1" }? &
     element others_string        { text }? &
     element output_align         { "0" | "1" }? &
+    element output_annotation_marker { text }? &
     element output_directory     { text }? &
     element output_encoding      { text }? &
     element output_fieldcase     { "upper" | "lower" | "title" }? &
     element output_file          { text }? &
     element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
     element output_indent        { xsd:unsignedByte }? &
+    element output_listsep       { text }? &
     element output_macro_fields  { text }? &
+    element output_namesep       { text }? &
     element output_resolve       { "0" | "1" }? &
     element output_safechars     { "0" | "1" }? &
     element output_safecharsset  { "base" | "full" }? &
+    element output_xname         { "0" | "1" }? &
+    element output_xnamesep      { text }? &
     element quiet                { "0" | "1" }? &
     element recodedata           { text }? &
     element sortcase             { "0" | "1" }? &
-    element sortfirstinits       { "0" | "1" }? &
     translit* &
+    labelalphanametemplate? &
+    labelalphatemplate? &
+    uniquenametemplate? &
     sortingnamekey? &
     sorting? &
     element sortlocale           { text }? &
     element sortupper            { "0" | "1" }? &
     element sourcemap            {
       element maps {
-        attribute datatype { "bibtex" | "biblatexml" | "ris" },
+        attribute datatype { "bibtex" | "biblatexml" },
         attribute map_overwrite { "0" | "1" }?,
         map+
       }+
@@ -235,17 +245,22 @@ element inheritance {
     attribute inherit_all { "true" | "false" },
     # Should we overwrite the target field if it exists?
     attribute override_target { "true" | "false" },
+    # ignore of uniqueness tracking
+    attribute ignore { text }?,
     # Default inherit_all and override_target settings for entrytype source/target pairs
     element type_pair {
       attribute source { "*" | xsd:string {minLength="1"}},
       attribute target { "*" | xsd:string {minLength="1"}},
       attribute inherit_all { "true" | "false" }?,
       attribute override_target { "true" | "false" }?,
+      attribute ignore { text }?,
       empty
     }*
   },
   # An inheritance specification
   element inherit {
+    # ignore of uniqueness tracking
+    attribute ignore { text }?,
     # applies to these pairs of source/target entrytypes
     element type_pair {
       attribute source { "*" | xsd:string {minLength="1"}},
@@ -273,6 +288,7 @@ map =
   element map {
     attribute map_overwrite { "0" | "1" }?,
     attribute map_foreach { xsd:string {minLength="1"} }?,
+    attribute refsection { xsd:integer }?,
     element per_datasource { xsd:string {minLength="1"} }*,
     element per_type { xsd:string {minLength="1"} }*,
     element map_step {
@@ -285,6 +301,7 @@ map =
         ( attribute map_type_source { xsd:string {minLength="1"} }?,
           attribute map_type_target { xsd:string {minLength="1"} }?,
           attribute map_field_source { xsd:string {minLength="1"} }?,
+          attribute map_notfield { xsd:string {minLength="1"} }?,
           attribute map_field_target { xsd:string {minLength="1"} }?,
           attribute map_entrytarget { xsd:string {minLength="1"} }?,
           attribute map_field_set { xsd:string {minLength="1"} }?,
@@ -305,6 +322,54 @@ map =
     }+
   }
 
+
+labelalphanametemplate =     
+    element labelalphanametemplate {
+      attribute type { xsd:string }?, # per-type?
+      element namepart {
+        attribute order { xsd:integer },
+        attribute use { "0" | "1" }?,
+        attribute pre { "0" | "1" }?,
+        attribute substring_width { xsd:integer }?,
+        attribute substring_compound { "0" | "1" }?,
+        attribute substring_side { "left" | "right" }?,
+        text
+      }+
+    }
+    
+labelalphatemplate =         
+    element labelalphatemplate {
+      attribute type { xsd:string }?, # per-type?
+      element labelelement {
+        attribute order { xsd:integer },
+        element labelpart {          
+          attribute final { "0" | "1" }?,
+          attribute pad_char { xsd:string {minLength="1"}}?,
+          attribute pad_side { "left" | "right" }?,
+          attribute substring_width { xsd:integer | "v" | "vf" | "l" }?,
+          attribute substring_fixed_threshold { xsd:integer }?,
+          attribute substring_width_max { xsd:integer }?,
+          attribute substring_side { "left" | "right" }?,
+          attribute ifnames { text }?,
+          attribute names { text }?,
+          attribute namessep { string }?,
+          attribute noalphaothers { "0" | "1" }?,
+          xsd:string
+        }+
+      }+
+    }
+
+
+uniquenametemplate = 
+  element uniquenametemplate {
+    element namepart {
+     attribute order { xsd:integer },
+      attribute use { "0" | "1" }?,
+      attribute base { "0" | "1" }?,
+      text
+    }+
+  }
+
 sortingnamekey = 
   element sortingnamekey {
     attribute keyscheme { text },
@@ -314,6 +379,7 @@ sortingnamekey =
         attribute type { "namepart" | "literal" },
         attribute order { xsd:integer },
         attribute use { "0" | "1" }?,
+        attribute inits { "0" | "1" }?,
         text
       }+
     }+

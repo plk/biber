@@ -1,6 +1,6 @@
 % WRONG - ORIGDATE is mistyped, URLDATE is just wrong
 % YEAR is messy and should be done by DATE but isn't wrong as such
-% MONTH is out of range
+% Explicit MONTH is not checked
 @ARTICLE{L1,
   AUTHOR	    = {John Doe},
   JOURNALTITLE      = {Journal},
@@ -150,3 +150,56 @@
   EVENTDATE   = {1998-12-10/2004-12-12},
 }
 
+% Testing extended dates
+@BOOK{era1,
+  DATE	      = {-0379-02},
+  ORIGDATE    = {-0221/-0219},
+}
+
+@BOOK{era2,
+  DATE	      = {-0197},
+  EVENTDATE   = {-0249},
+  ORIGDATE    = {-0049/-0044},
+}
+
+@BOOK{era3,
+  DATE	      = {-0196-02},
+  EVENTDATE   = {0250-03-02},
+}
+
+@BOOK{era4,
+  DATE	      = {1034~},
+  EVENTDATE   = {1565?},
+  URLDATE     = {1487~/1490},
+  ORIGDATE    = {1487/1488~},
+}
+
+@BOOK{range1,
+  DATE	      = {1034/unknown},
+  EVENTDATE   = {1565/open},
+  ORIGDATE    = {2000/},
+}
+
+@BOOK{season1,
+  DATE	      = {2003-21},
+  EVENTDATE   = {2002-23},
+}
+
+@BOOK{time1,
+  DATE	      = {2001-01-03T15:00:00},
+  EVENTDATE   = {2001-01-03T17:07:34Z},
+  URLDATE     = {2001-01-03T17:07:34+05:00},
+}
+
+% EDTF 5.2.2 tests
+
+@BOOK{unspec1,
+  DATE      = {199u},
+  EVENTDATE = {19uu},
+  ORIGDATE  = {1999-uu},
+  URLDATE   = {1999-01-uu}
+}
+
+@BOOK{unspec2,
+  DATE      = {1999-uu-uu},
+}

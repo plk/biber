@@ -19,7 +19,6 @@ export PAR_VERBATIM
   --module=App::Packer::PAR \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
-  --module=Biber::Input::file::ris \
   --module=Biber::Output::dot \
   --module=Biber::Output::bbl \
   --module=Biber::Output::bblxml \
@@ -32,10 +31,13 @@ export PAR_VERBATIM
   --module=Pod::Simple::TranscodeDumb \
   --module=Pod::Perldoc \
   --module=List::MoreUtils::XS \
+  --module=List::SomeUtils::XS \
   --module=List::MoreUtils::PP \
   --module=Readonly::XS \
   --module=IO::Socket::SSL \
   --module=File::Find::Rule \
+  --module=Text::CSV_XS \
+  --module=DateTime \
   --link=/usr/local/lib/libbtparse.so \
   --link=/usr/local/lib/libiconv.so.3 \
   --link=/usr/local/lib/libxml2.so.5 \

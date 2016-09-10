@@ -49,7 +49,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('dsn', 'biblatexml.bltxml');
 
 # Set the output target
-$out->set_output_target($out->set_output_target_file(\$outvar));
+$out->set_output_target($out->set_output_target_file(\$outvar, 1));
 
 # THERE IS A CONFIG FILE BEING READ!
 
@@ -151,13 +151,16 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
         </bltx:item>
       </bltx:list>
     </bltx:pages>
-    <bltx:date>1983</bltx:date>
+    <bltx:date>198u</bltx:date>
     <bltx:date type="event">
       <bltx:start>1990-05-16</bltx:start>
       <bltx:end>1990-05-17</bltx:end>
     </bltx:date>
-    <bltx:date type="orig">1985-04-02</bltx:date>
-    <bltx:date type="url">1991-07-01</bltx:date>
+    <bltx:date type="orig">-356</bltx:date>
+    <bltx:date type="url">
+      <bltx:start>1991~</bltx:start>
+      <bltx:end></bltx:end>
+    </bltx:date>
   </bltx:entry>
 </bltx:entries>
 |;

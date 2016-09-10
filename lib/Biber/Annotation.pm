@@ -1,5 +1,5 @@
 package Biber::Annotation;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -31,14 +31,16 @@ sub set_annotation {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $value, $count, $part) = @_;
   if ($scope eq 'field') {
-    $ANN->{$scope}{$key}{$field} = $value;
+    $ANN->{field}{$key}{$field} = $value;
   }
   elsif ($scope eq 'item') {
-    $ANN->{$scope}{$key}{$field}{$count} = $value;
+    $ANN->{item}{$key}{$field}{$count} = $value;
   }
   elsif ($scope eq 'part') {
-    $ANN->{$scope}{$key}{$field}{$count}{$part} = $value;
+    $ANN->{part}{$key}{$field}{$count}{$part} = $value;
   }
+  # For easy checking later whether or not a field is annotated
+  $ANN->{fields}{$key}{$field} = 1;
   return;
 }
 
@@ -52,15 +54,39 @@ sub get_annotation {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $count, $part) = @_;
   if ($scope eq 'field') {
-    return $ANN->{$scope}{$key}{$field};
+    return $ANN->{field}{$key}{$field};
   }
   elsif ($scope eq 'item') {
-    return $ANN->{$scope}{$key}{$field}{$count};
+    return $ANN->{item}{$key}{$field}{$count};
   }
   elsif ($scope eq 'part') {
-    return $ANN->{$scope}{$key}{$field}{$count}{$part};
+    return $ANN->{part}{$key}{$field}{$count}{$part};
   }
   return undef;
+}
+
+=head2 is_annotated_field
+
+  Returns boolean to say if a field is annotated
+
+=cut
+
+sub is_annotated_field {
+  shift; # class method so don't care about class name
+  my ($key, $field) = @_;
+  return $ANN->{fields}{$key}{$field};
+}
+
+=head2 get_field_annotation
+
+  Retrieve 'field' scope annotation for a field. There will only be one.
+
+=cut
+
+sub get_field_annotation {
+  shift; # class method so don't care about class name
+  my ($key, $field) = @_;
+  return $ANN->{field}{$key}{$field};
 }
 
 =head2 get_annotated_fields
@@ -72,7 +98,7 @@ sub get_annotation {
 sub get_annotated_fields {
   shift; # class method so don't care about class name
   my ($scope, $key) = @_;
-  return sort keys %{$ANN->{$scope}{$key}};
+  return sort keys $ANN->{$scope}{$key}->%*;
 }
 
 =head2 get_annotated_items
@@ -84,7 +110,7 @@ sub get_annotated_fields {
 sub get_annotated_items {
   shift; # class method so don't care about class name
   my ($scope, $key, $field) = @_;
-  return sort keys %{$ANN->{$scope}{$key}{$field}};
+  return sort keys $ANN->{$scope}{$key}{$field}->%*;
 }
 
 =head2 get_annotated_parts
@@ -96,7 +122,7 @@ sub get_annotated_items {
 sub get_annotated_parts {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $count) = @_;
-  return sort keys %{$ANN->{$scope}{$key}{$field}{$count}};
+  return sort keys $ANN->{$scope}{$key}{$field}{$count}->%*;
 }
 
 =head2 dump

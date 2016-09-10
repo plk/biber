@@ -1,5 +1,5 @@
 package Biber::Entry::Name;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Class::Accessor);
@@ -22,8 +22,11 @@ __PACKAGE__->mk_accessors(qw (
                                gender
                                hash
                                index
+                               basenamestring
                                namestring
                                nameinitstring
+                               useprefix
+                               sortnamekeyscheme
                             ));
 
 =encoding utf-8
@@ -43,10 +46,12 @@ sub new {
   my $dm = Biber::Config->get_dm;
   if (%params) {
     my $name = {};
-    foreach my $attr (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}},
+    foreach my $attr (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*,
                       'gender',
                       'namestring',
                       'nameinitstring',
+                      'basenamestring',
+                      'useprefix',
                       'strip',
                       $dm->get_constant_value('nameparts')) {
       if (exists $params{$attr}) {
@@ -68,7 +73,7 @@ sub new {
 sub TO_JSON {
   my $self = shift;
   my $json;
-  while (my ($k, $v) = each(%{$self})) {
+  while (my ($k, $v) = each($self->%*)) {
     $json->{$k} = $v;
   }
   return $json;
@@ -114,7 +119,9 @@ sub set_uniquename {
   if (not defined($currval) or $currval != $uniquename) {
     Biber::Config->set_unul_changed(1);
   }
-  $logger->trace('Setting uniquename for "' . $self->get_namestring . '" to ' . $uniquename);
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace('Setting uniquename for "' . $self->get_namestring . '" to ' . $uniquename);
+  }
   $self->{uniquename} = $uniquename;
   return;
 }
@@ -128,7 +135,9 @@ sub set_uniquename {
 sub set_uniquename_all {
   my ($self, $uniquename) = @_;
 
-  $logger->trace('Setting uniquename_all for "' . $self->get_namestring . '" to ' . $uniquename);
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace('Setting uniquename_all for "' . $self->get_namestring . '" to ' . $uniquename);
+  }
   $self->{uniquename_all} = $uniquename;
   return;
 }
@@ -195,7 +204,6 @@ sub get_minimal_info {
   return $self->{familynames_string};
 }
 
-
 =head2 get_namepart
 
     Get a namepart by passed name
@@ -204,7 +212,8 @@ sub get_minimal_info {
 
 sub get_namepart {
   my ($self, $namepart) = @_;
-  return $self->{$namepart}{string};
+  # prevent warnings when concating arbitrary nameparts
+  return $self->{$namepart}{string} || '';
 }
 
 =head2 set_namepart
@@ -255,7 +264,7 @@ sub name_to_biblatexml {
   my @attrs;
 
   # Add per-name options
-  foreach my $pnoname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+  foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$pnoname"})) {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
@@ -307,9 +316,9 @@ sub name_part_to_bltxml {
     }
 
     # Compound name part
-    if ($#$parts > 0) {
+    if ($parts->$#* > 0) {
       $xml->startTag([$xml_prefix, 'namepart'], type => $npn, @attrs);
-      for (my $i=0;$i <= $#$parts;$i++) {
+      for (my $i=0;$i <= $parts->$#*;$i++) {
         if (my $init = $nip->[$i]) {
           $xml->startTag([$xml_prefix, 'namepart'], initial => $init);
         }
@@ -369,7 +378,7 @@ sub name_to_bbl {
     $npc //= '';
     $npci //= '';
     if ($npc) {
-      push @namestrings, "           $np={$npc}", "           ${np}_i={$npci}";
+      push @namestrings, "           $np={$npc}", "           ${np}i={$npci}";
     }
   }
 
@@ -379,7 +388,7 @@ sub name_to_bbl {
   }
 
   # Add per-name options
-  foreach my $pnoname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+  foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$pnoname"})) {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
@@ -436,7 +445,7 @@ sub name_to_bblxml {
   }
 
   # Add per-name options
-  foreach my $pnoname (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+  foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if (defined($self->${\"get_$pnoname"})) {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
@@ -462,6 +471,67 @@ sub name_to_bblxml {
   $xml->endTag();# names
 
   return;
+}
+
+=head2 name_to_bib
+
+    Return standard bibtex data format for name
+
+=cut
+
+sub name_to_bib {
+  my $self = shift;
+  my $parts;
+  my $namestring = '';
+
+  foreach my $np ('prefix', 'family', 'suffix', 'given') {
+    if ($parts->{$np} = $self->get_namepart($np)) {
+      $parts->{$np} =~ s/~/ /g;
+      if ($self->was_stripped($np)) {
+        $parts->{$np} = Biber::Utils::add_outer($parts->{$np});
+      }
+    }
+  }
+
+  if (my $p = $parts->{prefix}) {$namestring .= "$p "};
+  if (my $f = $parts->{family}) {$namestring .= $f};
+  if (my $s= $parts->{suffix}) {$namestring .= ", $s"};
+  if (my $g= $parts->{given}) {$namestring .= ", $g"};
+
+  return $namestring;
+}
+
+=head2 name_to_xname
+
+    Return extended bibtex data format for name
+
+=cut
+
+sub name_to_xname {
+  my $self = shift;
+  my $dm = Biber::Config->get_dm;
+  my $parts;
+  my @namestring;
+  my $xns = Biber::Config->getoption('output_xnamesep');
+
+  foreach my $np (sort $dm->get_constant_value('nameparts')) {# list type so returns list
+    if ($parts->{$np} = $self->get_namepart($np)) {
+      $parts->{$np} =~ s/~/ /g;
+      push @namestring, "$np$xns" . $parts->{$np};
+    }
+  }
+
+  # Name scope useprefix
+  if (defined($self->get_useprefix)) {# could be 0
+    push @namestring, "useprefix$xns" . Biber::Utils::map_boolean($self->get_useprefix, 'tostring');
+  }
+
+  # Name scope sortnamekeyscheme
+  if (my $snks = $self->get_sortnamekeyscheme) {
+    push @namestring, "sortnamekeyscheme$xns$snks";
+  }
+
+  return join(', ', @namestring);
 }
 
 

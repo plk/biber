@@ -1,5 +1,5 @@
 package Biber::UCollate;
-use v5.16;
+use v5.24;
 
 use strict;
 use Carp;
@@ -53,7 +53,9 @@ sub new {
   }
 
   # Show the collation options when debugging
-  $logger->debug('Collation options: ' . Data::Dump::pp(%collopts));
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Collation options: ' . Data::Dump::pp(%collopts));
+  }
 
   # Tailor the collation object and report differences from defaults for locale
   # Have to do this in ->change method as ->new can croak with conflicting tailoring

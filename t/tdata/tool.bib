@@ -9,7 +9,7 @@
   LISTA  = {list test},
   LISTB  = {late and early},
   LISTC  = {late and early},
-  KEYWORDS = {keyword},
+  KEYWORDS = {keyword, keyword2,keyword3},
 }
 
 @COMMENT{Comment 1}
@@ -49,17 +49,25 @@
 }
 
 @BOOK{b1,
-  TITLE = {Booktitle},
-  TITLE+an  = {ann1, ann2},
-  YEAR  = {1999},
-  CROSSREF = {mvalias}
+  TITLE        = {Booktitle},
+  TITLE+an     = {=ann1, ann2},
+  LOCATION     = {London and Edinburgh},
+  LOCATION+an  = {1=ann1; 2=ann2},
+  YEAR         = {1999},
+  CROSSREF     = {mvalias}
 }
 
 @MVBOOK{mv1,
-  IDS = {mvalias},
-  TITLE = {Maintitle},
-  SUBTITLE = {Mainsubtitle},
+  IDS        = {mvalias},
+  TITLE      = {Maintitle},
+  SUBTITLE   = {Mainsubtitle},
   TITLEADDON = {Maintitleaddon}
 }
 
-
+% Test reconstructing datetimes
+@BOOK{dt1,
+ DATE      = {2004-04-25T14:34:00/2004-04-05T14:37:06},
+ ORIGDATE  = {2004-04-25T14:34:00Z/2004-04-05T14:34:05Z},
+ EVENTDATE = {2004-04-25T14:34:00+05:00/2004-04-05T15:34:00+05:00},
+ URLDATE   = {2004-04-25T14:34:00/2004-04-05T15:00:00}
+}

@@ -28,7 +28,6 @@ CALL pp ^
   --module=deprecate ^
   --module=Biber::Input::file::bibtex ^
   --module=Biber::Input::file::biblatexml ^
-  --module=Biber::Input::file::ris ^
   --module=Biber::Output::dot ^
   --module=Biber::Output::bbl ^
   --module=Biber::Output::bblxml ^
@@ -37,12 +36,15 @@ CALL pp ^
   --module=Pod::Simple::TranscodeSmart ^
   --module=Pod::Simple::TranscodeDumb ^
   --module=List::MoreUtils::XS ^
+  --module=List::SomeUtils::XS ^
   --module=List::MoreUtils::PP ^
   --module=HTTP::Status ^
   --module=HTTP::Date ^
   --module=Encode:: ^
   --module=IO::Socket::SSL ^
   --module=File::Find::Rule ^
+  --module=Text::CSV_XS ^
+  --module=DateTime ^
   --link=C:\WINDOWS\system32\libbtparse.dll ^
   --link=C:\strawberry\c\bin\libxslt-1_.dll ^
   --link=C:\strawberry\c\bin\libexslt-0_.dll ^

@@ -87,9 +87,15 @@
           </element>
         </zeroOrMore>
         <optional>
+          <!-- Annotation marker -->
+          <element name="annotation_marker">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <!--
             Can't specify the config file location in the config file ...
-             element configfile          { text }? & 
+            element configfile          { text }? & 
           -->
           <element name="convert_control">
             <choice>
@@ -262,6 +268,11 @@
           </element>
         </optional>
         <optional>
+          <element name="output_annotation_marker">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="output_directory">
             <text/>
           </element>
@@ -301,7 +312,17 @@
           </element>
         </optional>
         <optional>
+          <element name="output_listsep">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="output_macro_fields">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_namesep">
             <text/>
           </element>
         </optional>
@@ -330,6 +351,19 @@
           </element>
         </optional>
         <optional>
+          <element name="output_xname">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_xnamesep">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="quiet">
             <choice>
               <value>0</value>
@@ -350,17 +384,18 @@
             </choice>
           </element>
         </optional>
-        <optional>
-          <element name="sortfirstinits">
-            <choice>
-              <value>0</value>
-              <value>1</value>
-            </choice>
-          </element>
-        </optional>
         <zeroOrMore>
           <ref name="translit"/>
         </zeroOrMore>
+        <optional>
+          <ref name="labelalphanametemplate"/>
+        </optional>
+        <optional>
+          <ref name="labelalphatemplate"/>
+        </optional>
+        <optional>
+          <ref name="uniquenametemplate"/>
+        </optional>
         <optional>
           <ref name="sortingnamekey"/>
         </optional>
@@ -388,7 +423,6 @@
                   <choice>
                     <value>bibtex</value>
                     <value>biblatexml</value>
-                    <value>ris</value>
                   </choice>
                 </attribute>
                 <optional>
@@ -774,6 +808,10 @@
             <value>false</value>
           </choice>
         </attribute>
+        <optional>
+          <!-- ignore of uniqueness tracking -->
+          <attribute name="ignore"/>
+        </optional>
         <zeroOrMore>
           <!-- Default inherit_all and override_target settings for entrytype source/target pairs -->
           <element name="type_pair">
@@ -809,6 +847,9 @@
                 </choice>
               </attribute>
             </optional>
+            <optional>
+              <attribute name="ignore"/>
+            </optional>
             <empty/>
           </element>
         </zeroOrMore>
@@ -816,6 +857,10 @@
       <zeroOrMore>
         <!-- An inheritance specification -->
         <element name="inherit">
+          <optional>
+            <!-- ignore of uniqueness tracking -->
+            <attribute name="ignore"/>
+          </optional>
           <oneOrMore>
             <!-- applies to these pairs of source/target entrytypes -->
             <element name="type_pair">
@@ -903,6 +948,11 @@
           </data>
         </attribute>
       </optional>
+      <optional>
+        <attribute name="refsection">
+          <data type="integer"/>
+        </attribute>
+      </optional>
       <zeroOrMore>
         <element name="per_datasource">
           <data type="string">
@@ -954,6 +1004,13 @@
               </optional>
               <optional>
                 <attribute name="map_field_source">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_notfield">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>
@@ -1042,6 +1099,181 @@
       </oneOrMore>
     </element>
   </define>
+  <define name="labelalphanametemplate">
+    <element name="labelalphanametemplate">
+      <optional>
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <oneOrMore>
+        <!-- per-type? -->
+        <element name="namepart">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <optional>
+            <attribute name="use">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="pre">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="substring_width">
+              <data type="integer"/>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="substring_compound">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="substring_side">
+              <choice>
+                <value>left</value>
+                <value>right</value>
+              </choice>
+            </attribute>
+          </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="labelalphatemplate">
+    <element name="labelalphatemplate">
+      <optional>
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <oneOrMore>
+        <!-- per-type? -->
+        <element name="labelelement">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <oneOrMore>
+            <element name="labelpart">
+              <optional>
+                <attribute name="final">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="pad_char">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="pad_side">
+                  <choice>
+                    <value>left</value>
+                    <value>right</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_width">
+                  <choice>
+                    <data type="integer"/>
+                    <value>v</value>
+                    <value>vf</value>
+                    <value>l</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_fixed_threshold">
+                  <data type="integer"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_width_max">
+                  <data type="integer"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_side">
+                  <choice>
+                    <value>left</value>
+                    <value>right</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="ifnames"/>
+              </optional>
+              <optional>
+                <attribute name="names"/>
+              </optional>
+              <optional>
+                <attribute name="namessep">
+                  <data type="string" datatypeLibrary=""/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="noalphaothers">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <data type="string"/>
+            </element>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="uniquenametemplate">
+    <element name="uniquenametemplate">
+      <oneOrMore>
+        <element name="namepart">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <optional>
+            <attribute name="use">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="base">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
   <define name="sortingnamekey">
     <element name="sortingnamekey">
       <attribute name="keyscheme"/>
@@ -1063,6 +1295,14 @@
               </attribute>
               <optional>
                 <attribute name="use">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="inits">
                   <choice>
                     <value>0</value>
                     <value>1</value>

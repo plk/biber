@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 120;
+use Test::More tests => 122;
 use Test::Differences;
 unified_diff;
 
@@ -38,12 +38,11 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 
 # Biblatex options
 Biber::Config->setblxoption('maxalphanames', 1);
 Biber::Config->setblxoption('maxcitenames', 1);
-Biber::Config->setblxoption('labeldate', undef);
+Biber::Config->setblxoption('labeldateparts', undef);
 
 # Now generate the information
 $biber->prepare;
@@ -51,8 +50,14 @@ my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $bibentries = $section->bibentries;
 
+# Test with useprefix=false
+eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'Vaa99', 'useprefix=0 so not in label');
 
-eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'vVaa99', 'Default prefix settings entry prefix1 labelalpha');
+# useprefix=true
+Biber::Config->setblxoption('useprefix', 1);
+$biber->prepare;
+
+eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'vdVaa99', 'Default prefix settings entry prefix1 labelalpha');
 eq_or_diff($bibentries->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=1 minalphanames=1 entry L1 labelalpha');
 ok(is_undef($main->get_extraalphadata('l1')), 'maxalphanames=1 minalphanames=1 entry L1 extraalpha');
 eq_or_diff($bibentries->entry('L2')->get_field('sortlabelalpha'), 'Doe+95', 'maxalphanames=1 minalphanames=1 entry L2 labelalpha');
@@ -181,6 +186,7 @@ eq_or_diff($bibentries->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxa
 ok(is_undef($main->get_extraalphadata('L8')), 'maxalphanames=3 minalphanames=1 entry L8 extraalpha');
 eq_or_diff($bibentries->entry('LDN1')->get_field('sortlabelalpha'), 'VUR89', 'Testing compound lastnames 1');
 eq_or_diff($bibentries->entry('LDN2')->get_field('sortlabelalpha'), 'VU45', 'Testing compound lastnames 2');
+eq_or_diff($bibentries->entry('LDN3')->get_field('sortlabelalpha'), 'VisvSJRu45', 'Testing with multiple pre and main and width/side override');
 
 # reset options and regenerate information
 Biber::Config->setblxoption('maxalphanames', 4);
@@ -188,7 +194,7 @@ Biber::Config->setblxoption('minalphanames', 4);
 Biber::Config->setblxoption('maxcitenames', 4);
 Biber::Config->setblxoption('mincitenames', 4);
 Biber::Config->setblxoption('labelalpha', 1);
-Biber::Config->setblxoption('labeldate', 1);
+Biber::Config->setblxoption('labeldateparts', 1);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -419,34 +425,50 @@ $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 $bibentries = $section->bibentries;
 
-eq_or_diff($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '20050302', 'labeldate test - 1');
+eq_or_diff($bibentries->entry('labelstest')->get_field('sortlabelalpha'), '200532', 'labeldate test - 1');
 eq_or_diff($bibentries->entry('padtest')->get_field('labelalpha'), '\&Al\_\_{\textasciitilde}{\textasciitilde}T07', 'pad test - 1');
 eq_or_diff($bibentries->entry('padtest')->get_field('sortlabelalpha'), '&Al__~~T07', 'pad test - 2');
+
+Biber::Config->setblxoption('labelalphanametemplate',
+[
+ {
+    namepart => "prefix",
+    pre => 1,
+    substring_compound => 1,
+    substring_width => 2,
+    use => 1,
+  },
+  {
+    namepart => "family",
+    pre => undef,
+    substring_compound => 1,
+    substring_width => undef,
+    use => undef,
+  }
+]);
 
 Biber::Config->setblxoption('labelalphatemplate', {
   labelelement => [
                    {
                     labelpart => [
                                   {
-                   content         => "author",
-                   ifnames     => 1,
-                   substring_side  => "left",
-                   substring_width => 3,
-                   substring_pwidth => 2,
-                   substring_pcompound=> 1,
+                                   content         => "author",
+                                   ifnames         => 1,
+                                   substring_side  => "left",
+                                   substring_width => 3,
                                   },
-               ],
-                   order => 1,
+                                 ],
+                    order => 1,
                    },
                    {
-               labelpart => [
-                 {
-                   content         => "title",
-                   substring_side  => "left",
-                   substring_width => 4,
-                 },
-               ],
-              order => 2,
+                    labelpart => [
+                                  {
+                                   content         => "title",
+                                   substring_side  => "left",
+                                   substring_width => 4,
+                                  },
+                                 ],
+                    order => 2,
              },
            ],
   type  => "global",
@@ -466,7 +488,6 @@ $bibentries = $section->bibentries;
 
 eq_or_diff($bibentries->entry('skipwidthtest1')->get_field('sortlabelalpha'), 'OToolOToole', 'Skip width test - 1');
 eq_or_diff($bibentries->entry('prefix1')->get_field('sortlabelalpha'), 'vadeVaaThin', 'compound and string length entry prefix1 labelalpha');
-
 
 Biber::Config->setblxoption('labelalphatemplate', {
   labelelement => [

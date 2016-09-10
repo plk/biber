@@ -1,5 +1,5 @@
 package Biber::Output::base;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -53,8 +53,8 @@ sub new {
 =cut
 
 sub set_output_target_file {
-  my $self = shift;
-  my $file = shift;
+  my ($self, $file, $init) = @_;
+
   $self->{output_target_file} = $file;
   my $enc_out;
   if (my $enc = Biber::Config->getoption('output_encoding')) {
@@ -381,16 +381,18 @@ sub output {
     $target_string = $self->{output_target_file};
   }
 
-  $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  }
 
   $logger->info("Writing '$target_string' with encoding '" . Biber::Config->getoption('output_encoding') . "'");
 
   out($target, $data->{HEAD});
 
-  foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
+  foreach my $secnum (sort keys $data->{ENTRIES}->%*) {
     out($target, "SECTION: $secnum\n\n");
     my $section = $self->get_output_section($secnum);
-    foreach my $list (@{$section->get_lists}) {
+    foreach my $list ($section->get_lists->@*) {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
       out($target, "  LIST: $listlabel\n\n");

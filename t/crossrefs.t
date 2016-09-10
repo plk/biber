@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 33;
+use Test::More tests => 36;
 use Test::Differences;
 unified_diff;
 
@@ -44,15 +44,13 @@ $DATAFIELD_SETS{'nobtitle'} = ['booktitle'];
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('nodieonerror', 1); # because there is a failing cyclic crossref check
 
 # Now generate the information
 my (undef, $stderr) = capture { $biber->prepare };
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->sortlists->get_list(1, 'nty/global/', 'entry', 'nty', 'global', '');
 my $out = $biber->get_output_obj;
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
@@ -60,24 +58,31 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \name{author}{1}{}{%
         {{hash=121b6dc164b5b619c81c670fbd823f12}{%
            family={Gullam},
-           family_i={G\bibinitperiod},
+           familyi={G\bibinitperiod},
            given={Graham},
-           given_i={G\bibinitperiod}}}%
+           giveni={G\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edgar},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Grimble}%
       }
       \strng{namehash}{121b6dc164b5b619c81c670fbd823f12}
       \strng{fullhash}{121b6dc164b5b619c81c670fbd823f12}
+      \strng{authornamehash}{121b6dc164b5b619c81c670fbd823f12}
+      \strng{authorfullhash}{121b6dc164b5b619c81c670fbd823f12}
+      \strng{editornamehash}{c129df5593fdaa7475548811bfbb227d}
+      \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{G}
       \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Graphs of the Continent}
@@ -87,6 +92,7 @@ my $cr1 = q|    \entry{cr1}{inbook}{}
       \field{origyear}{1955}
       \field{title}{Great and Good Graphs}
       \field{year}{1974}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -95,16 +101,16 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \name{author}{1}{}{%
         {{hash=2d51a96bc0a6804995b3a9ff350c3384}{%
            family={Fumble},
-           family_i={F\bibinitperiod},
+           familyi={F\bibinitperiod},
            given={Frederick},
-           given_i={F\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edgar},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{institution}{1}{%
         {Institution}%
@@ -114,8 +120,15 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       }
       \strng{namehash}{2d51a96bc0a6804995b3a9ff350c3384}
       \strng{fullhash}{2d51a96bc0a6804995b3a9ff350c3384}
+      \strng{authornamehash}{2d51a96bc0a6804995b3a9ff350c3384}
+      \strng{authorfullhash}{2d51a96bc0a6804995b3a9ff350c3384}
+      \strng{editornamehash}{c129df5593fdaa7475548811bfbb227d}
+      \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{F}
       \field{sortinithash}{c6a7d9913bbd7b20ea954441c0460b78}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Graphs of the Continent}
@@ -123,25 +136,31 @@ my $cr2 = q|    \entry{cr2}{inbook}{}
       \field{origyear}{1943}
       \field{title}{Fabulous Fourier Forms}
       \field{year}{1974}
+      \field{origdateera}{ce}
     \endentry
 |;
 
-# This is included as it is crossrefed >= mincrossrefs times
-# Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
+# This is included as it is crossrefed >= mincrossrefs times Notice lack of
+# singletitle, labelname and labelname hashes because the only name is
+# EDITOR and useeditor is false This is also why there is no
+# \true{uniquework}
 my $cr_m = q|    \entry{cr_m}{book}{}
       \name{editor}{1}{}{%
         {{hash=c129df5593fdaa7475548811bfbb227d}{%
            family={Erbriss},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edgar},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Grimble}%
       }
+      \strng{editornamehash}{c129df5593fdaa7475548811bfbb227d}
+      \strng{editorfullhash}{c129df5593fdaa7475548811bfbb227d}
       \field{sortinit}{G}
       \field{sortinithash}{1c854ef9177a91bf894e66485bdbd3ed}
       \true{crossrefsource}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Graphs of the Continent}
       \field{year}{1974}
@@ -153,24 +172,31 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \name{author}{1}{}{%
         {{hash=2baf676a220704f6914223aefccaaa88}{%
            family={Aptitude},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Arthur},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{%
            family={Monkley},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Mark},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Rancour}%
       }
       \strng{namehash}{2baf676a220704f6914223aefccaaa88}
       \strng{fullhash}{2baf676a220704f6914223aefccaaa88}
+      \strng{authornamehash}{2baf676a220704f6914223aefccaaa88}
+      \strng{authorfullhash}{2baf676a220704f6914223aefccaaa88}
+      \strng{editornamehash}{a1f5c22413396d599ec766725b226735}
+      \strng{editorfullhash}{a1f5c22413396d599ec766725b226735}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Beasts of the Burbling Burns}
@@ -179,23 +205,68 @@ my $cr3 = q|    \entry{cr3}{inbook}{}
       \field{origyear}{1934}
       \field{title}{Arrangements of All Articles}
       \field{year}{1996}
+      \field{origdateera}{ce}
+    \endentry
+|;
+
+# No crossref field as parent is not cited (mincrossrefs < 2)
+my $cr4 = q|    \entry{cr4}{inbook}{}
+      \name{author}{1}{}{%
+        {{hash=50ef7fd3a1be33bccc5de2768b013836}{%
+           family={Mumble},
+           familyi={M\bibinitperiod},
+           given={Morris},
+           giveni={M\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=6ea89bd4958743a20b70fe17647d6af5}{%
+           family={Jermain},
+           familyi={J\bibinitperiod},
+           given={Jeremy},
+           giveni={J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Pillsbury}%
+      }
+      \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{fullhash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{authornamehash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{authorfullhash}{50ef7fd3a1be33bccc5de2768b013836}
+      \strng{editornamehash}{6ea89bd4958743a20b70fe17647d6af5}
+      \strng{editorfullhash}{6ea89bd4958743a20b70fe17647d6af5}
+      \field{sortinit}{M}
+      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Vanquished, Victor, Vandal}
+      \field{origyear}{1911}
+      \field{title}{Enterprising Entities}
+      \field{year}{1945}
+      \field{origdateera}{ce}
     \endentry
 |;
 
 # cited as normal
+# No singletitle as useeditor is false
 my $crt = q|    \entry{crt}{book}{}
       \name{editor}{1}{}{%
         {{hash=a1f5c22413396d599ec766725b226735}{%
            family={Monkley},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Mark},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Rancour}%
       }
+      \strng{editornamehash}{a1f5c22413396d599ec766725b226735}
+      \strng{editorfullhash}{a1f5c22413396d599ec766725b226735}
       \field{sortinit}{B}
       \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Beasts of the Burbling Burns}
       \field{year}{1996}
@@ -207,30 +278,36 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \name{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{%
            family={Author},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Firstname},
-           given_i={F\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=344a7f427fb765610ef96eb7bce95257}{%
            family={Editor},
-           family_i={E\bibinitperiod}}}%
+           familyi={E\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Address}%
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{authornamehash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{authorfullhash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{editornamehash}{344a7f427fb765610ef96eb7bce95257}
+      \strng{editorfullhash}{344a7f427fb765610ef96eb7bce95257}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Manual booktitle}
       \field{eventday}{21}
       \field{eventendday}{24}
-      \field{eventendmonth}{08}
+      \field{eventendmonth}{8}
       \field{eventendyear}{2009}
-      \field{eventmonth}{08}
+      \field{eventmonth}{8}
       \field{eventtitle}{Title of the event}
       \field{eventyear}{2009}
       \field{title}{Title of inproceeding}
@@ -246,24 +323,30 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \name{author}{1}{}{%
         {{hash=8ab39ee68c55046dc1f05d657fcefed9}{%
            family={Author},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Firstname},
-           given_i={F\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
       }
       \name{bookauthor}{1}{}{%
         {{hash=91a1dd4aeed3c4ec29ca74c4e778be5f}{%
            family={Bookauthor},
-           family_i={B\bibinitperiod},
+           familyi={B\bibinitperiod},
            given={Brian},
-           given_i={B\bibinitperiod}}}%
+           giveni={B\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Publisher of proceeding}%
       }
       \strng{namehash}{8ab39ee68c55046dc1f05d657fcefed9}
       \strng{fullhash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{authornamehash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{authorfullhash}{8ab39ee68c55046dc1f05d657fcefed9}
+      \strng{bookauthornamehash}{91a1dd4aeed3c4ec29ca74c4e778be5f}
+      \strng{bookauthorfullhash}{91a1dd4aeed3c4ec29ca74c4e778be5f}
       \field{sortinit}{A}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booksubtitle}{Book Subtitle}
@@ -284,14 +367,19 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \name{author}{1}{}{%
         {{hash=3d449e56eb3ca1ae80dc99a18d689795}{%
            family={Smith},
-           family_i={S\bibinitperiod},
+           familyi={S\bibinitperiod},
            given={Firstname},
-           given_i={F\bibinitperiod}}}%
+           giveni={F\bibinitperiod}}}%
       }
       \strng{namehash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{fullhash}{3d449e56eb3ca1ae80dc99a18d689795}
+      \strng{authornamehash}{3d449e56eb3ca1ae80dc99a18d689795}
+      \strng{authorfullhash}{3d449e56eb3ca1ae80dc99a18d689795}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Book Title}
@@ -307,19 +395,25 @@ my $xr1 = q|    \entry{xr1}{inbook}{}
       \name{author}{1}{}{%
         {{hash=e0ecc4fc668ee499d1afba44e1ac064d}{%
            family={Zentrum},
-           family_i={Z\bibinitperiod},
+           familyi={Z\bibinitperiod},
            given={Zoe},
-           given_i={Z\bibinitperiod}}}%
+           giveni={Z\bibinitperiod}}}%
       }
       \strng{namehash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \strng{fullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
+      \strng{authornamehash}{e0ecc4fc668ee499d1afba44e1ac064d}
+      \strng{authorfullhash}{e0ecc4fc668ee499d1afba44e1ac064d}
       \field{sortinit}{Z}
       \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1921}
       \field{title}{Moods Mildly Modified}
       \strng{xref}{xrm}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -328,38 +422,48 @@ my $xr2 = q|    \entry{xr2}{inbook}{}
       \name{author}{1}{}{%
         {{hash=6afa09374ecfd6b394ce714d2d9709c7}{%
            family={Instant},
-           family_i={I\bibinitperiod},
+           familyi={I\bibinitperiod},
            given={Ian},
-           given_i={I\bibinitperiod}}}%
+           giveni={I\bibinitperiod}}}%
       }
       \strng{namehash}{6afa09374ecfd6b394ce714d2d9709c7}
       \strng{fullhash}{6afa09374ecfd6b394ce714d2d9709c7}
+      \strng{authornamehash}{6afa09374ecfd6b394ce714d2d9709c7}
+      \strng{authorfullhash}{6afa09374ecfd6b394ce714d2d9709c7}
       \field{sortinit}{I}
       \field{sortinithash}{25e99d37ba90f7c4fb20baf4e310faf3}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1926}
       \field{title}{Migraines Multiplying Madly}
       \strng{xref}{xrm}
+      \field{origdateera}{ce}
     \endentry
 |;
 
-# This is included as it is xref'd >= minxrefs times
-# Notice lack of labelname and hashes because the only name is EDITOR and useeditor is false
+# This is included as it is xref'd >= minxrefs times Notice lack of singletitle,
+# labelname and labelname hashes because the only name is EDITOR and
+# useeditor is false
 my $xrm = q|    \entry{xrm}{book}{}
       \name{editor}{1}{}{%
         {{hash=809950f9b59ae207092b909a19dcb27b}{%
            family={Prendergast},
-           family_i={P\bibinitperiod},
+           familyi={P\bibinitperiod},
            given={Peter},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Mainstream}%
       }
+      \strng{editornamehash}{809950f9b59ae207092b909a19dcb27b}
+      \strng{editorfullhash}{809950f9b59ae207092b909a19dcb27b}
       \field{sortinit}{C}
       \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
       \true{xrefsource}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Calligraphy, Calisthenics, Culture}
       \field{year}{1970}
@@ -371,85 +475,66 @@ my $xr3 = q|    \entry{xr3}{inbook}{}
       \name{author}{1}{}{%
         {{hash=9788055665b9bb4b37c776c3f6b74f16}{%
            family={Normal},
-           family_i={N\bibinitperiod},
+           familyi={N\bibinitperiod},
            given={Norman},
-           given_i={N\bibinitperiod}}}%
+           giveni={N\bibinitperiod}}}%
       }
       \strng{namehash}{9788055665b9bb4b37c776c3f6b74f16}
       \strng{fullhash}{9788055665b9bb4b37c776c3f6b74f16}
+      \strng{authornamehash}{9788055665b9bb4b37c776c3f6b74f16}
+      \strng{authorfullhash}{9788055665b9bb4b37c776c3f6b74f16}
       \field{sortinit}{N}
       \field{sortinithash}{925374ca63e7594de7fafdb83e64d41d}
+      \true{singletitle}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1923}
       \field{title}{Russian Regalia Revisited}
       \strng{xref}{xrt}
+      \field{origdateera}{ce}
     \endentry
 |;
 
 # cited as normal
+# Note no singletitle as useeditor is false
 my $xrt = q|    \entry{xrt}{book}{}
       \name{editor}{1}{}{%
         {{hash=bf7d6b02f3e073913e5bfe5059508dd5}{%
            family={Lunders},
-           family_i={L\bibinitperiod},
+           familyi={L\bibinitperiod},
            given={Lucy},
-           given_i={L\bibinitperiod}}}%
+           giveni={L\bibinitperiod}}}%
       }
       \list{publisher}{1}{%
         {Middling}%
       }
+      \strng{editornamehash}{bf7d6b02f3e073913e5bfe5059508dd5}
+      \strng{editorfullhash}{bf7d6b02f3e073913e5bfe5059508dd5}
       \field{sortinit}{K}
       \field{sortinithash}{a7d5b3aec5a0890aae7baf85a209abfc}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{title}{Kings, Cork and Calculation}
       \field{year}{1977}
     \endentry
 |;
 
-# No crossref field as parent is not cited (mincrossrefs < 2)
-my $cr4 = q|    \entry{cr4}{inbook}{}
-      \name{author}{1}{}{%
-        {{hash=50ef7fd3a1be33bccc5de2768b013836}{%
-           family={Mumble},
-           family_i={M\bibinitperiod},
-           given={Morris},
-           given_i={M\bibinitperiod}}}%
-      }
-      \name{editor}{1}{}{%
-        {{hash=6ea89bd4958743a20b70fe17647d6af5}{%
-           family={Jermain},
-           family_i={J\bibinitperiod},
-           given={Jeremy},
-           given_i={J\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {Pillsbury}%
-      }
-      \strng{namehash}{50ef7fd3a1be33bccc5de2768b013836}
-      \strng{fullhash}{50ef7fd3a1be33bccc5de2768b013836}
-      \field{sortinit}{M}
-      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{booktitle}{Vanquished, Victor, Vandal}
-      \field{origyear}{1911}
-      \field{title}{Enterprising Entities}
-      \field{year}{1945}
-    \endentry
-|;
 
 # No crossref field as parent is not cited (mincrossrefs < 2)
 my $xr4 = q|    \entry{xr4}{inbook}{}
       \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Megan},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authornamehash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelnamesource}{author}
@@ -457,6 +542,7 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \field{origyear}{1933}
       \field{title}{Lumbering Lunatics}
       \strng{xref}{xrn}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -466,18 +552,21 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Megan},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authornamehash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1933}
       \field{title}{Lumbering Lunatics}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -485,18 +574,21 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \name{author}{1}{}{%
         {{hash=7804ffef086c0c4686c235807f5cb502}{%
            family={Mistrel},
-           family_i={M\bibinitperiod},
+           familyi={M\bibinitperiod},
            given={Megan},
-           given_i={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod}}}%
       }
       \strng{namehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{fullhash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authornamehash}{7804ffef086c0c4686c235807f5cb502}
+      \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
       \field{sortinit}{M}
       \field{sortinithash}{2684bec41e9697b92699b46491061da2}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{origyear}{1933}
       \field{title}{Lumbering Lunatics}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -504,26 +596,33 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \name{author}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{%
            family={Various},
-           family_i={V\bibinitperiod},
+           familyi={V\bibinitperiod},
            given={Vince},
-           given_i={V\bibinitperiod}}}%
+           giveni={V\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{%
            family={Editor},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \strng{namehash}{6268941b408d3263bddb208a54899ea9}
       \strng{fullhash}{6268941b408d3263bddb208a54899ea9}
+      \strng{authornamehash}{6268941b408d3263bddb208a54899ea9}
+      \strng{authorfullhash}{6268941b408d3263bddb208a54899ea9}
+      \strng{editornamehash}{cfee758a1c82df2e26af1985e061bb0a}
+      \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{sortinit}{V}
       \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
+      \true{uniquetitle}
+      \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \strng{crossref}{ccr1}
       \field{title}{Misc etc.}
       \field{year}{1923}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -531,24 +630,30 @@ my $ccr2 = q|    \entry{ccr3}{inbook}{}
       \name{bookauthor}{1}{}{%
         {{hash=6268941b408d3263bddb208a54899ea9}{%
            family={Various},
-           family_i={V\bibinitperiod},
+           familyi={V\bibinitperiod},
            given={Vince},
-           given_i={V\bibinitperiod}}}%
+           giveni={V\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
         {{hash=cfee758a1c82df2e26af1985e061bb0a}{%
            family={Editor},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
+      \strng{bookauthornamehash}{6268941b408d3263bddb208a54899ea9}
+      \strng{bookauthorfullhash}{6268941b408d3263bddb208a54899ea9}
+      \strng{editornamehash}{cfee758a1c82df2e26af1985e061bb0a}
+      \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
       \field{sortinit}{P}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \field{booktitle}{Misc etc.}
       \strng{crossref}{ccr2}
       \field{title}{Perhaps, Perchance, Possibilities?}
       \field{year}{1911}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -567,12 +672,14 @@ my $ccr3 = q|    \entry{ccr4}{inbook}{}
       \field{booktitle}{Misc etc.}
       \field{title}{Stuff Concerning Varia}
       \field{year}{1911}
+      \field{dateera}{ce}
     \endentry
 |;
 
 my $s1 = q|    \entry{s1}{inbook}{}
       \field{sortinit}{S}
       \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \true{uniquetitle}
       \field{labeltitlesource}{title}
       \strng{crossref}{s2}
       \field{title}{Subtitle}
@@ -583,19 +690,23 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
       \name{author}{1}{}{%
         {{hash=1a0f7d518cccdad859a74412ef956474}{%
            family={Crust},
-           family_i={C\\bibinitperiod},
+           familyi={C\\bibinitperiod},
            given={Xavier},
-           given_i={X\\bibinitperiod}}}%
+           giveni={X\\bibinitperiod}}}%
       }
       \name{bookauthor}{1}{}{%
         {{hash=1a0f7d518cccdad859a74412ef956474}{%
            family={Crust},
-           family_i={C\\bibinitperiod},
+           familyi={C\\bibinitperiod},
            given={Xavier},
-           given_i={X\\bibinitperiod}}}%
+           giveni={X\\bibinitperiod}}}%
       }
       \strng{namehash}{1a0f7d518cccdad859a74412ef956474}
       \strng{fullhash}{1a0f7d518cccdad859a74412ef956474}
+      \strng{authornamehash}{1a0f7d518cccdad859a74412ef956474}
+      \strng{authorfullhash}{1a0f7d518cccdad859a74412ef956474}
+      \strng{bookauthornamehash}{1a0f7d518cccdad859a74412ef956474}
+      \strng{bookauthorfullhash}{1a0f7d518cccdad859a74412ef956474}
       \field{sortinit}{C}
       \field{sortinithash}{59f25d509f3381b07695554a9f35ecb2}
       \true{xrefsource}
@@ -604,28 +715,93 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
     \endentry
 |;
 
-eq_or_diff($out->get_output_entry('cr1', $main0), $cr1, 'crossref test 1');
-eq_or_diff($out->get_output_entry('cr2', $main0), $cr2, 'crossref test 2');
-eq_or_diff($out->get_output_entry('cr_m', $main0), $cr_m, 'crossref test 3');
-eq_or_diff($out->get_output_entry('cr3', $main0), $cr3, 'crossref test 4');
-eq_or_diff($out->get_output_entry('crt', $main0), $crt, 'crossref test 5');
-eq_or_diff($out->get_output_entry('cr4', $main0), $cr4, 'crossref test 6');
+my $b1 = q|    \entry{b1}{inbook}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8343b463aacf48517c044b4d2c9c45ed}
+      \strng{crossref}{b2}
+      \field{day}{3}
+      \field{month}{3}
+      \field{origmonth}{3}
+      \field{origyear}{2004}
+      \field{year}{2004}
+      \field{dateera}{ce}
+      \field{origdateera}{ce}
+    \endentry
+|;
+
+# sup1 is here because it is crossref'ed twice by sup2 and sup3 which share
+# the author as a result. However, note that singletitle is true despite
+# the same author for three entries because two instance of the author
+# being present are by inheritance and singletitle tracking is suppressed
+# in this case because of the "suppress=singletitle" in the inheritance
+# definitions in the .bcf
+my $sup1 = q|    \entry{sup1}{mvbook}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \true{crossrefsource}
+      \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Title1}
+    \endentry
+|;
+
+my $sup2 = q|    \entry{sup2}{book}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{fd1e7c5ab79596b13dbbb67f8d70fb5a}
+      \true{singletitle}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \strng{crossref}{sup1}
+      \field{note}{Book sup2}
+      \field{title}{Title1}
+    \endentry
+|;
+
+eq_or_diff($out->get_output_entry('cr1', $main), $cr1, 'crossref test 1');
+eq_or_diff($out->get_output_entry('cr2', $main), $cr2, 'crossref test 2');
+eq_or_diff($out->get_output_entry('cr_m', $main), $cr_m, 'crossref test 3');
+eq_or_diff($out->get_output_entry('cr3', $main), $cr3, 'crossref test 4');
+eq_or_diff($out->get_output_entry('crt', $main), $crt, 'crossref test 5');
+eq_or_diff($out->get_output_entry('cr4', $main), $cr4, 'crossref test 6');
 eq_or_diff($section0->has_citekey('crn'), 0,'crossref test 7');
-eq_or_diff($out->get_output_entry('cr6', $main0), $cr6, 'crossref test (inheritance) 8');
-eq_or_diff($out->get_output_entry('cr7', $main0), $cr7, 'crossref test (inheritance) 9');
-eq_or_diff($out->get_output_entry('cr8', $main0), $cr8, 'crossref test (inheritance) 10');
-eq_or_diff($out->get_output_entry('xr1', $main0), $xr1, 'xref test 1');
-eq_or_diff($out->get_output_entry('xr2', $main0), $xr2, 'xref test 2');
-eq_or_diff($out->get_output_entry('xrm', $main0), $xrm, 'xref test 3');
-eq_or_diff($out->get_output_entry('xr3', $main0), $xr3, 'xref test 4');
-eq_or_diff($out->get_output_entry('xrt', $main0), $xrt, 'xref test 5');
-eq_or_diff($out->get_output_entry('xr4', $main0), $xr4, 'xref test 6');
+eq_or_diff($out->get_output_entry('cr6', $main), $cr6, 'crossref test (inheritance) 8');
+eq_or_diff($out->get_output_entry('cr7', $main), $cr7, 'crossref test (inheritance) 9');
+eq_or_diff($out->get_output_entry('cr8', $main), $cr8, 'crossref test (inheritance) 10');
+eq_or_diff($out->get_output_entry('xr1', $main), $xr1, 'xref test 1');
+eq_or_diff($out->get_output_entry('xr2', $main), $xr2, 'xref test 2');
+eq_or_diff($out->get_output_entry('xrm', $main), $xrm, 'xref test 3');
+eq_or_diff($out->get_output_entry('xr3', $main), $xr3, 'xref test 4');
+eq_or_diff($out->get_output_entry('xrt', $main), $xrt, 'xref test 5');
+eq_or_diff($out->get_output_entry('xr4', $main), $xr4, 'xref test 6');
 eq_or_diff($section0->has_citekey('xrn'), 1,'xref test 7');
-eq_or_diff($out->get_output_entry('mxr', $main0), $mxr, 'missing xref test');
-eq_or_diff($out->get_output_entry('mcr', $main0), $mcr, 'missing crossef test');
+eq_or_diff($out->get_output_entry('mxr', $main), $mxr, 'missing xref test');
+eq_or_diff($out->get_output_entry('mcr', $main), $mcr, 'missing crossef test');
 eq_or_diff($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections');
-eq_or_diff($out->get_output_entry('ccr2', $main0), $ccr1, 'cascading crossref test 1');
-eq_or_diff($out->get_output_entry('ccr3', $main0), $ccr2, 'cascading crossref test 2');
+eq_or_diff($out->get_output_entry('ccr2', $main), $ccr1, 'cascading crossref test 1');
+eq_or_diff($out->get_output_entry('ccr3', $main), $ccr2, 'cascading crossref test 2');
 chomp $stderr;
 eq_or_diff($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'", 'Cyclic crossref error check');
 eq_or_diff($section0->has_citekey('r1'), 1,'Recursive crossref test 1');
@@ -636,6 +812,8 @@ eq_or_diff($section0->has_citekey('r3'), 0,'Recursive crossref test 5');
 ok(defined($section0->bibentry('r3')),'Recursive crossref test 6');
 eq_or_diff($section0->has_citekey('r4'), 0,'Recursive crossref test 7');
 ok(defined($section0->bibentry('r4')),'Recursive crossref test 8');
-eq_or_diff($out->get_output_entry('s1', $main0), $s1, 'per-entry noinherit');
-eq_or_diff($out->get_output_entry('xc2', $main0), $xc2, 'Cascading xref+crossref');
-
+eq_or_diff($out->get_output_entry('s1', $main), $s1, 'per-entry noinherit');
+eq_or_diff($out->get_output_entry('xc2', $main), $xc2, 'Cascading xref+crossref');
+eq_or_diff($out->get_output_entry('b1', $main), $b1, 'Blocking bad date inheritance');
+eq_or_diff($out->get_output_entry('sup1', $main), $sup1, 'Suppressing singletitle tracking - 1');
+eq_or_diff($out->get_output_entry('sup2', $main), $sup2, 'Suppressing singletitle tracking - 2');

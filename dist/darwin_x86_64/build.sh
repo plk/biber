@@ -8,14 +8,13 @@
 # constructed in the code so Par::Packer can't auto-detect them.
 # Same with some of the output modules.
 
-cp /opt/local/libexec/perl5.22/sitebin/biber /tmp/biber-darwin
+cp /opt/local/libexec/perl5.24/sitebin/biber /tmp/biber-darwin
 
 PAR_VERBATIM=1 pp \
   --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
-  --module=Biber::Input::file::ris \
   --module=Biber::Output::dot \
   --module=Biber::Output::bbl \
   --module=Biber::Output::bblxml \
@@ -24,15 +23,18 @@ PAR_VERBATIM=1 pp \
   --module=Pod::Simple::TranscodeSmart \
   --module=Pod::Simple::TranscodeDumb \
   --module=List::MoreUtils::XS \
+  --module=List::SomeUtils::XS \
   --module=List::MoreUtils::PP \
   --module=HTTP::Status \
   --module=HTTP::Date \
   --module=Encode:: \
   --module=File::Find::Rule \
   --module=IO::Socket::SSL \
+  --module=Text::CSV_XS \
+  --module=DateTime \
   --link=/opt/local/lib/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
-  --link=/opt/local/libexec/perl5.22/sitebin/libbtparse.dylib \
+  --link=/opt/local/libexec/perl5.24/sitebin/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
   --link=/opt/local/lib/libxslt.1.dylib \
   --link=/opt/local/lib/libgdbm.4.dylib \

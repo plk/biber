@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 15;
+use Test::More tests => 14;
 
 use Biber;
 use Biber::Output::bbl;
@@ -32,8 +32,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
-Biber::Config->setblxoption('labelyear', undef);
+Biber::Config->setblxoption('labeldateparts', undef);
 Biber::Config->setblxoption('labelalpha', 0);
 
 # (re)generate informtion based on option settings
@@ -263,6 +262,8 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
+# Note that L5 is last because it has a final sortkey which maps to a  large
+# int in sort fields
 is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
 
 # ynt with year substring
@@ -304,6 +305,8 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
+# Note that L5 is last because it has a final sortkey which maps to a  large
+# int in sort fields
 is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5'], 'ynt with year substring');
 
 # ydnt
@@ -344,7 +347,8 @@ $main->set_sortscheme($S);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-# This is correct as "aaaaaa" sorts before all years when descending
+# Note that L5 is first because it has a final sortkey which maps to a
+# large int in sort fields
 is_deeply([$main->get_keys], ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
 
 # anyt
@@ -480,28 +484,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1'], 'nty with descending n');
-
-
-# testing case sensitive with fastsort
-# In alphabetic, all uppercase comes before lower so the
-# "sortcase => 1" on location means that "edinburgh" sorts at the end after "London"
-# Take this out of the location sorting spec and it fails as it should
-$S = { spec => [
-                                                    [
-                                                     {sortcase => 1},
-                                                     {'location'     => {}}
-                                                    ]
-                                                   ]};
-
-$main->set_sortscheme($S);
-
-$biber->set_output_obj(Biber::Output::bbl->new());
-# Have to set locale to something which understands lexical/case differences for this test
-# otherwise testing on Windows doesn't work ...
-Biber::Config->setoption('sortlocale', 'C.UTF-8');
-$biber->prepare;
-$section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['L1B','L1','L1A','L2','L3','L4','L5','L7','L8','L9','L6'], 'location - sortcase=1');
 
 # Test nosort option
 $S = { spec => [

@@ -35,7 +35,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -48,22 +47,22 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{%
            family={Elias},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={P.},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{1955}
-      \field{labelmonth}{03}
-      \field{datelabelsource}{}
+      \strng{authornamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{authorfullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \field{sortinit}{1}
+      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{0096-1000}
       \field{journaltitle}{IRE Transactions on Information Theory}
-      \field{month}{03}
+      \field{month}{3}
       \field{number}{1}
       \field{title}{Predictive coding--I}
       \field{volume}{1}
@@ -82,19 +81,20 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
       \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{%
            family={Elias},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={P.},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{authorfullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{0096-1000}
       \field{journaltitle}{IRE Transactions on Information Theory}
-      \field{month}{03}
+      \field{month}{3}
       \field{number}{1}
       \field{title}{Predictive coding--I}
       \field{volume}{1}
@@ -113,19 +113,20 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
       \name{author}{1}{}{%
         {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{%
            family={Elias},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={P.},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{authorfullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{issn}{0096-1000}
       \field{journaltitle}{IRE Transactions on Information Theory}
-      \field{month}{03}
+      \field{month}{3}
       \field{number}{1}
       \field{title}{Predictive coding--II}
       \field{volume}{1}

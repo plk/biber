@@ -1,5 +1,5 @@
 package Biber::SortList;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -216,7 +216,7 @@ sub set_keys {
 
 sub get_keys {
   my $self = shift;
-  return @{$self->{keys}};
+  return $self->{keys}->@*;
 }
 
 =head2 count_keys
@@ -247,7 +247,8 @@ sub get_listdata {
            $self->{extrayeardata},
            $self->{extraalphadata},
            $self->{extratitledata},
-           $self->{extratitleyeardata} ];
+           $self->{extratitleyeardata},
+           $self->{sortdataschema} ];
 }
 
 =head2 set_extrayeardata_for_key
@@ -403,6 +404,29 @@ sub get_extraalphadata {
   return $self->{extraalphadata}{$key};
 }
 
+=head2 get_sortdataschema
+
+    Gets the sortdata schema for a sortlist
+
+=cut
+
+sub get_sortdataschema {
+  my ($self) = @_;
+  return $self->{sortdataschema};
+}
+
+=head2 set_sortdataschema
+
+    Saves the sortdata schema for a sortlist
+
+=cut
+
+sub set_sortdataschema {
+  my ($self, $ss) = @_;
+  $self->{sortdataschema} = $ss;
+  return;
+}
+
 =head2 set_sortdata
 
     Saves sorting data in a list for a key
@@ -500,7 +524,7 @@ sub get_sortscheme {
 sub add_filter {
   my $self = shift;
   my ($filter) = @_;
-  push @{$self->{filters}}, $filter;
+  push $self->{filters}->@*, $filter;
   return;
 }
 

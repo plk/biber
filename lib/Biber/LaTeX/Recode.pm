@@ -1,5 +1,5 @@
 package Biber::LaTeX::Recode;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Exporter);
@@ -172,7 +172,7 @@ sub init_sets {
   # of longer ones damaging the longer ones
   foreach my $type (@types) {
     next unless exists $remap_d->{$type};
-    $remap_d->{$type}{re} = join('|', map { /[\.\^\|\+\-\)\(]/ ? '\\' . $_ : $_ } sort {length($b) <=> length($a)} keys %{$remap_d->{$type}{map}});
+    $remap_d->{$type}{re} = join('|', map { /[\.\^\|\+\-\)\(]/ ? '\\' . $_ : $_ } sort {length($b) <=> length($a)} keys $remap_d->{$type}{map}->%*);
     $remap_d->{$type}{re} = qr|$remap_d->{$type}{re}|;
   }
 
@@ -206,7 +206,9 @@ sub latex_decode {
     # Optimisation - if virtual null set was specified, do nothing
     return $text if $set_d eq 'null';
 
-    $logger->trace("String before latex_decode() -> '$text'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("String before latex_decode() -> '$text'");
+    }
 
     my %opts      = @_;
     my $norm      = exists $opts{normalize} ? $opts{normalize} : 1;
@@ -294,7 +296,9 @@ sub latex_decode {
     $text = reverse $text;
     $text =~ s/}(\pM+\pL){(?!\pL+\\)/$1/g;
     $text = reverse $text;
-    $logger->trace("String in latex_decode() now -> '$text'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->trace("String in latex_decode() now -> '$text'");
+    }
 
     if ($norm) {
       return Unicode::Normalize::normalize( $norm_form, $text );
@@ -338,8 +342,7 @@ sub latex_encode {
       $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '{}')/ge;
     }
     elsif (first {$type eq $_}  ('punctuation', 'symbols', 'greek')) {
-      # Math mode macros (excluding special encoding excludes)
-      $text =~ s/($re)/($remap_e_raw->{$1} ? '' : "{\$\\") . $map->{$1} . ($remap_e_raw->{$1} ? '' : '$}')/ge;
+      $text =~ s/($re)/_wrap($1,$map,$remap_e_raw)/ge;
     }
     elsif ($type eq 'diacritics') {
       # special case such as "i\x{304}" -> '\={\i}' -> "i" needs the dot removing for accents
@@ -365,6 +368,20 @@ sub latex_encode {
               }gex;
     }
   }
+
+  sub _wrap {
+    my ($s, $map, $remap_e_raw) = @_;
+    if ($map->{$s} =~ m/^text/) {
+      "\\"  . $map->{$s};
+    }
+    elsif ($remap_e_raw->{$s}) {
+      $map->{$s};
+    }
+    else {
+      "{\$\\" .  $map->{$s} . '$}';
+    }
+  }
+
   return $text;
 }
 

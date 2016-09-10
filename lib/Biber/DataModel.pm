@@ -1,5 +1,5 @@
 package Biber::DataModel;
-use v5.16;
+use v5.24;
 use strict;
 
 use warnings;
@@ -10,7 +10,6 @@ use Biber::Config;
 use Biber::Utils;
 use Biber::Constants;
 use Data::Dump qw( pp );
-use Date::Simple;
 use Log::Log4perl qw( :no_extra_logdie_message );
 
 =encoding utf-8
@@ -36,21 +35,32 @@ sub new {
   my $dm = shift;
   my $self;
   $self = bless {}, $class;
+#  use Data::Dump;dd($dm);exit 0;
+
+  # Early check for fatal datamodel errors
+
+  # Make sure dates are named *date. A lot of code relies on this.
+  foreach my $date (grep {$_->{datatype} eq 'date'} $dm->{fields}{field}->@*) {
+    unless ($date->{content} =~ m/date$/) {
+      biber_error("Fatal datamodel error: date field '" . $date->{content} . "' must end with string 'date'");
+    }
+  }
+
   # Pull out legal entrytypes, fields and constraints and make lookup hash
   # for quick tests later
-  foreach my $f (@{$dm->{fields}{field}}) {
+  foreach my $f ($dm->{fields}{field}->@*) {
 
     # In case of conflicts, we need to remove the previous definitions since
     # later overrides earlier
     if (my $previous = $self->{fieldsbyname}{$f->{content}}) {
 
       if ($f->{format}) {
-        @{$self->{fieldsbytype}{$previous->{fieldtype}}{$previous->{datatype}}{$previous->{format}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbytype}{$previous->{fieldtype}}{$previous->{datatype}}{$previous->{format}}};
+        $self->{fieldsbytype}{$previous->{fieldtype}}{$previous->{datatype}}{$previous->{format}}->@* = grep {$_ ne $f->{content}} $self->{fieldsbytype}{$previous->{fieldtype}}{$previous->{datatype}}{$previous->{format}}->@*;
       }
-      @{$self->{fieldsbytype}{$previous->{fieldtype}}{$previous->{datatype}}{'*'}} = grep {$_ ne $f->{content}} @{$self->{fieldsbytype}{$previous->{fieldtype}}{$previous->{datatype}}{'*'}};
-      @{$self->{fieldsbyfieldtype}{$previous->{fieldtype}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbyfieldtype}{$previous->{fieldtype}}};
-      @{$self->{fieldsbydatatype}{$previous->{datatype}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbydatatype}{$previous->{datatype}}};
-      @{$self->{fieldsbyformat}{$previous->{'format'}}} = grep {$_ ne $f->{content}} @{$self->{fieldsbyformat}{$previous->{format}}};
+      $self->{fieldsbytype}{$previous->{fieldtype}}{$previous->{datatype}}{'*'}->@* = grep {$_ ne $f->{content}} $self->{fieldsbytype}{$previous->{fieldtype}}{$previous->{datatype}}{'*'}->@*;
+      $self->{fieldsbyfieldtype}{$previous->{fieldtype}}->@* = grep {$_ ne $f->{content}} $self->{fieldsbyfieldtype}{$previous->{fieldtype}}->@*;
+      $self->{fieldsbydatatype}{$previous->{datatype}}->@* = grep {$_ ne $f->{content}} $self->{fieldsbydatatype}{$previous->{datatype}}->@*;
+      $self->{fieldsbyformat}{$previous->{'format'}}->@* = grep {$_ ne $f->{content}} $self->{fieldsbyformat}{$previous->{format}}->@*;
       delete $self->{fieldsbyname}{$f->{content}};
     }
 
@@ -58,31 +68,31 @@ sub new {
                                             'datatype'    => $f->{datatype},
                                             'format'      => $f->{format} || 'default'};
     if ($f->{format}) {
-      push @{$self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}{$f->{format}}}, $f->{content};
+      push $self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}{$f->{format}}->@*, $f->{content};
     }
-    push @{$self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}{'*'}}, $f->{content};
-    push @{$self->{fieldsbyfieldtype}{$f->{fieldtype}}}, $f->{content};
-    push @{$self->{fieldsbydatatype}{$f->{datatype}}}, $f->{content};
-    push @{$self->{fieldsbyformat}{$f->{format} || 'default'}}, $f->{content};
+    push $self->{fieldsbytype}{$f->{fieldtype}}{$f->{datatype}}{'*'}->@*, $f->{content};
+    push $self->{fieldsbyfieldtype}{$f->{fieldtype}}->@*, $f->{content};
+    push $self->{fieldsbydatatype}{$f->{datatype}}->@*, $f->{content};
+    push $self->{fieldsbyformat}{$f->{format} || 'default'}->@*, $f->{content};
 
     # check null_ok
     if ($f->{nullok}) {
       $self->{fieldsbyname}{$f->{content}}{nullok} = 1;
     }
-    # check skips - fields we don't want to output to BBL
+    # check skips - fields we don't want to output to .bbl
     if ($f->{skip_output}) {
       $self->{fieldsbyname}{$f->{content}}{skipout} = 1;
     }
   }
 
   my $constants;
-  foreach my $constant (@{$dm->{constants}{constant}}) {
+  foreach my $constant ($dm->{constants}{constant}->@*) {
     $self->{constants}{$constant->{name}}{type} = $constant->{type};
     $self->{constants}{$constant->{name}}{value} = $constant->{content};
   }
 
   my $leg_ents;
-  foreach my $et (@{$dm->{entrytypes}{entrytype}}) {
+  foreach my $et ($dm->{entrytypes}{entrytype}->@*) {
     my $es = $et->{content};
 
     # Skip output flag for certain entrytypes
@@ -91,11 +101,11 @@ sub new {
     }
     # fields for entrytypes
     my $lfs;
-    foreach my $ef (@{$dm->{entryfields}}) {
+    foreach my $ef ($dm->{entryfields}->@*) {
       # Found a section describing legal fields for entrytype
       if (not exists($ef->{entrytype}) or
-          grep {$_->{content} eq $es} @{$ef->{entrytype}}) {
-        foreach my $f (@{$ef->{field}}) {
+          grep {$_->{content} eq $es} $ef->{entrytype}->@*) {
+        foreach my $f ($ef->{field}->@*) {
           $lfs->{$f->{content}} = 1;
         }
       }
@@ -103,35 +113,35 @@ sub new {
 
     # constraints
     my $constraints;
-    foreach my $cd (@{$dm->{constraints}}) {
+    foreach my $cd ($dm->{constraints}->@*) {
       # Found a section describing constraints for entrytype
       if (not exists($cd->{entrytype}) or
-          grep {$_->{content} eq $es} @{$cd->{entrytype}}) {
-        foreach my $c (@{$cd->{constraint}}) {
+          grep {$_->{content} eq $es} $cd->{entrytype}->@*) {
+        foreach my $c ($cd->{constraint}->@*) {
           if ($c->{type} eq 'mandatory') {
             # field
-            foreach my $f (@{$c->{field}}) {
-              push @{$constraints->{mandatory}}, $f->{content};
+            foreach my $f ($c->{field}->@*) {
+              push $constraints->{mandatory}->@*, $f->{content};
             }
             # xor set of fields
             # [ XOR, field1, field2, ... , fieldn ]
-            foreach my $fxor (@{$c->{fieldxor}}) {
+            foreach my $fxor ($c->{fieldxor}->@*) {
               my $xorset;
-              foreach my $f (@{$fxor->{field}}) {
-                push @$xorset, $f->{content};
+              foreach my $f ($fxor->{field}->@*) {
+                push $xorset->@*, $f->{content};
               }
-              unshift @$xorset, 'XOR';
-              push @{$constraints->{mandatory}}, $xorset;
+              unshift $xorset->@*, 'XOR';
+              push $constraints->{mandatory}->@*, $xorset;
             }
             # or set of fields
             # [ OR, field1, field2, ... , fieldn ]
-            foreach my $for (@{$c->{fieldor}}) {
+            foreach my $for ($c->{fieldor}->@*) {
               my $orset;
-              foreach my $f (@{$for->{field}}) {
-                push @$orset, $f->{content};
+              foreach my $f ($for->{field}->@*) {
+                push $orset->@*, $f->{content};
               }
-              unshift @$orset, 'OR';
-              push @{$constraints->{mandatory}}, $orset;
+              unshift $orset->@*, 'OR';
+              push $constraints->{mandatory}->@*, $orset;
             }
           }
           # Conditional constraints
@@ -143,20 +153,20 @@ sub new {
           elsif ($c->{type} eq 'conditional') {
             my $cond;
             $cond->[0] = $c->{antecedent}{quant};
-            $cond->[1] = [ map { $_->{content} } @{$c->{antecedent}{field}} ];
+            $cond->[1] = [ map { $_->{content} } $c->{antecedent}{field}->@* ];
             $cond->[2] = $c->{consequent}{quant};
-            $cond->[3] = [ map { $_->{content} } @{$c->{consequent}{field}} ];
-            push @{$constraints->{conditional}}, $cond;
+            $cond->[3] = [ map { $_->{content} } $c->{consequent}{field}->@* ];
+            push $constraints->{conditional}->@*, $cond;
           }
           # data constraints
           elsif ($c->{type} eq 'data') {
             my $data;
-            $data->{fields} = [ map { $_->{content} } @{$c->{field}} ];
+            $data->{fields} = [ map { $_->{content} } $c->{field}->@* ];
             $data->{datatype} = $c->{datatype};
             $data->{rangemin} = $c->{rangemin};
             $data->{rangemax} = $c->{rangemax};
             $data->{pattern} = $c->{pattern};
-            push @{$constraints->{data}}, $data;
+            push $constraints->{data}->@*, $data;
           }
         }
       }
@@ -165,6 +175,81 @@ sub new {
     $leg_ents->{$es}{constraints} = $constraints;
   }
   $self->{entrytypesbyname} = $leg_ents;
+
+  # Calculate and store some convenient lists of DM fields. This is to save the expense
+  # of constructing these in dense loops like entry processing/output.
+  # Mostly only used for .bbl output since that's the most commonly used one and so
+  # we care about performance there. Other output formats are not often used and so a few
+  # seconds difference is irrelevant.
+  $self->{helpers} = {namelistsall => [sort $self->get_fields_of_type('list', 'name')->@*],
+                      namelists => [sort grep
+                                    {not $self->field_is_skipout($_)}
+                                    $self->get_fields_of_type('list', 'name')->@*],
+                      lists     => [sort grep
+                                    {
+                                      not $self->field_is_datatype('name', $_) and
+                                        not $self->field_is_skipout($_) and
+                                          not $self->field_is_datatype('verbatim', $_) and
+                                            not $self->field_is_datatype('uri', $_)
+                                    }
+                                    $self->get_fields_of_fieldtype('list')->@*],
+                      fields    => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_) and
+                                        not $self->get_fieldformat($_) eq 'xsv'
+                                    }
+                                    $self->get_fields_of_type('field',
+                                                              ['entrykey',
+                                                               'key',
+                                                               'integer',
+                                                               'datepart',
+                                                               'literal',
+                                                               'code'])->@*],
+                      datefields   => [sort $self->get_fields_of_type('field', 'date')->@*],
+                      dateparts    => [sort $self->get_fields_of_type('field', 'datepart')->@*],
+                      xsv       => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_) and
+                                        not $self->get_datatype($_) eq 'keyword'
+                                    }
+                                    $self->get_fields_of_fieldformat('xsv')->@*],
+                      ranges    => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_)
+                                    }
+                                    $self->get_fields_of_datatype('range')->@*],
+                      uris      => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_);
+                                    }
+                                    $self->get_fields_of_type('field', 'uri')->@*],
+                      urils     => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_);
+                                    }
+                                    $self->get_fields_of_type('list', 'uri')->@*],
+                      vfields   => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_);
+                                    }
+                                    $self->get_fields_of_type('field', ['verbatim', 'uri'])->@*],
+                      vlists    => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_);
+                                    }
+                                    $self->get_fields_of_type('list', ['verbatim', 'uri'])->@*],
+                      integers  => [sort $self->get_fields_of_datatype(['datepart', 'integer'])->@*]
+                     };
+  # Mapping of sorting fields to Sort::Key sort data types which are not 'str'
+  $self->{sortdataschema} = sub {
+    my $f = shift;
+    if (first {$f eq $_} ('citeorder', $self->{helpers}{integers}->@*)) {
+      return 'int';
+    }
+    else {
+      return 'str';
+    }
+  };
 
 #  use Data::Dump;dd($self);exit 0;
   return $self;
@@ -178,7 +263,7 @@ sub new {
 
 sub constants {
   my $self = shift;
-  return [ keys %{$self->{constants}} ];
+  return [ keys $self->{constants}->%* ];
 }
 
 =head2 get_constant_type
@@ -217,7 +302,7 @@ sub get_constant_value {
 
 sub fieldtypes {
   my $self = shift;
-  return [ keys %{$self->{fieldsbyfieldtype}} ];
+  return [ keys $self->{fieldsbyfieldtype}->%* ];
 }
 
 =head2 datatypes
@@ -228,24 +313,25 @@ sub fieldtypes {
 
 sub datatypes {
   my $self = shift;
-  return [ keys %{$self->{fieldsbydatatype}} ];
+  return [ keys $self->{fieldsbydatatype}->%* ];
 }
 
 
 =head2 is_field
 
-    Returns boolean to say if a field is a legal field. We always
-    allow annotation fields as these are not part of the datamodel.
+    Returns boolean to say if a field is a legal field.
+    Allows for fields with meta markers whose marked field should be in
+    the datamodel.
 
 =cut
 
 sub is_field {
   my $self = shift;
   my $field = shift;
-  my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
+  my $ann = $CONFIG_META_MARKERS{annotation};
 
-  if ($field =~ m/$ann$/) {
-    return 1;
+  if ($field =~ m/^(.+)(?:$ann)$/) {
+    return $self->{fieldsbyname}{$1} ? 1 : 0;
   }
   else {
     return $self->{fieldsbyname}{$field} ? 1 : 0;
@@ -260,7 +346,7 @@ sub is_field {
 
 sub entrytypes {
   my $self = shift;
-  return [ keys %{$self->{entrytypesbyname}} ];
+  return [ keys $self->{entrytypesbyname}->%* ];
 }
 
 
@@ -316,7 +402,7 @@ sub entrytype_is_skipout {
 sub get_fields_of_fieldtype {
   my ($self, $fieldtype) = @_;
   my $f = $self->{fieldsbyfieldtype}{$fieldtype};
-  return $f ? [ sort @$f ] : [];
+  return $f ? [ sort $f->@* ] : [];
 }
 
 =head2 get_fields_of_fieldformat
@@ -330,7 +416,7 @@ sub get_fields_of_fieldtype {
 sub get_fields_of_fieldformat {
   my ($self, $format) = @_;
   my $f = $self->{fieldsbyformat}{$format};
-  return $f ? [ sort @$f ] : [];
+  return $f ? [ sort $f->@* ] : [];
 }
 
 
@@ -344,8 +430,21 @@ sub get_fields_of_fieldformat {
 
 sub get_fields_of_datatype {
   my ($self, $datatype) = @_;
-  my $f = $self->{fieldsbydatatype}{$datatype};
-  return $f ? [ sort @$f ] : [];
+  my @f;
+  # datatype can be array ref of datatypes - makes some calls cleaner
+  if (ref($datatype) eq 'ARRAY') {
+    foreach my $dt ($datatype->@*) {
+      if (my $fs = $self->{fieldsbydatatype}{$dt}) {
+        push @f, $fs->@*;
+      }
+    }
+  }
+  else {
+    if (my $fs = $self->{fieldsbydatatype}{$datatype}) {
+      push @f, $fs->@*;
+    }
+  }
+  return [ sort @f ];
 }
 
 
@@ -359,24 +458,24 @@ sub get_fields_of_datatype {
 
 sub get_fields_of_type {
   my ($self, $fieldtype, $datatype, $format) = @_;
-  my $f;
+  my @f;
   $format //= '*';
 
   # datatype can be array ref of datatypes - makes some calls cleaner
   if (ref($datatype) eq 'ARRAY') {
-    foreach my $dt (@$datatype) {
+    foreach my $dt ($datatype->@*) {
       if (my $fs = $self->{fieldsbytype}{$fieldtype}{$dt}{$format}) {
-        push @$f, @$fs;
+        push @f, $fs->@*;
       }
     }
   }
   else {
     if (my $fs = $self->{fieldsbytype}{$fieldtype}{$datatype}{$format}) {
-      push @$f, @$fs;
+      push @f, $fs->@*;
     }
   }
 
-  return $f ? [ sort @$f ] : [];
+  return [ sort @f ];
 }
 
 =head2 is_fields_of_type
@@ -466,6 +565,25 @@ sub field_is_datatype {
 }
 
 
+=head2 field_is_type
+
+    Returns boolean depending on whether a field is a certain biblatex fieldtype
+    and datatype
+
+=cut
+
+sub field_is_type {
+  my ($self, $fieldtype, $datatype, $field) = @_;
+  if ($self->{fieldsbyname}{$field} and
+      $self->{fieldsbyname}{$field}{fieldtype} eq $fieldtype and
+      $self->{fieldsbyname}{$field}{datatype} eq $datatype) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 =head2 field_is_nullok
 
     Returns boolean depending on whether a field is ok to be null
@@ -505,11 +623,11 @@ sub check_mandatory_constraints {
   my $key = $be->get_field('citekey');
   my $ds = $section->get_keytods($key);
 
-  foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{mandatory}}) {
+  foreach my $c ($self->{entrytypesbyname}{$et}{constraints}{mandatory}->@*) {
     if (ref($c) eq 'ARRAY') {
       # Exactly one of a set is mandatory
       if ($c->[0] eq 'XOR') {
-        my @fs = @$c[1,-1]; # Lose the first element which is the 'XOR'
+        my @fs = $c->@[1,-1]; # Lose the first element which is the 'XOR'
         my $flag = 0;
         my $xorflag = 0;
         foreach my $of (@fs) {
@@ -530,7 +648,7 @@ sub check_mandatory_constraints {
       }
       # One or more of a set is mandatory
       elsif ($c->[0] eq 'OR') {
-        my @fs = @$c[1,-1]; # Lose the first element which is the 'OR'
+        my @fs = $c->@[1,-1]; # Lose the first element which is the 'OR'
         my $flag = 0;
         foreach my $of (@fs) {
           if ($be->field_exists($of)) {
@@ -570,15 +688,15 @@ sub check_conditional_constraints {
   my $key = $be->get_field('citekey');
   my $ds = $section->get_keytods($key);
 
-  foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{conditional}}) {
+  foreach my $c ($self->{entrytypesbyname}{$et}{constraints}{conditional}->@*) {
     my $aq  = $c->[0];          # Antecedent quantifier
     my $afs = $c->[1];          # Antecedent fields
     my $cq  = $c->[2];          # Consequent quantifier
     my $cfs = $c->[3];          # Consequent fields
-    my @actual_afs = (grep {$be->field_exists($_)} @$afs); # antecedent fields in entry
+    my @actual_afs = (grep {$be->field_exists($_)} $afs->@*); # antecedent fields in entry
     # check antecedent
     if ($aq eq 'all') {
-      next unless $#$afs == $#actual_afs; # ALL -> ? not satisfied
+      next unless $afs->$#* == $#actual_afs; # ALL -> ? not satisfied
     }
     elsif ($aq eq 'none') {
       next if @actual_afs;      # NONE -> ? not satisfied
@@ -588,19 +706,19 @@ sub check_conditional_constraints {
     }
 
     # check consequent
-    my @actual_cfs = (grep {$be->field_exists($_)} @$cfs);
+    my @actual_cfs = (grep {$be->field_exists($_)} $cfs->@*);
     if ($cq eq 'all') {
-      unless ($#$cfs == $#actual_cfs) { # ? -> ALL not satisfied
+      unless ($cfs->$#* == $#actual_cfs) { # ? -> ALL not satisfied
         push @warnings, "Datamodel: Entry '$key' ($ds): Constraint violation - $cq of fields (" .
-          join(', ', @$cfs) .
-            ") must exist when $aq of fields (" . join(', ', @$afs). ") exist";
+          join(', ', $cfs->@*) .
+            ") must exist when $aq of fields (" . join(', ', $afs->@*). ") exist";
       }
     }
     elsif ($cq eq 'none') {
       if (@actual_cfs) {        # ? -> NONE not satisfied
         push @warnings, "Datamodel: Entry '$key' ($ds): Constraint violation - $cq of fields (" .
           join(', ', @actual_cfs) .
-            ") must exist when $aq of fields (" . join(', ', @$afs). ") exist. Ignoring them.";
+            ") must exist when $aq of fields (" . join(', ', $afs->@*). ") exist. Ignoring them.";
         # delete the offending fields
         foreach my $f (@actual_cfs) {
           $be->del_field($f);
@@ -610,8 +728,8 @@ sub check_conditional_constraints {
     elsif ($cq eq 'one') {
       unless (@actual_cfs) {    # ? -> ONE not satisfied
         push @warnings, "Datamodel: Entry '$key' ($ds): Constraint violation - $cq of fields (" .
-          join(', ', @$cfs) .
-            ") must exist when $aq of fields (" . join(', ', @$afs). ") exist";
+          join(', ', $cfs->@*) .
+            ") must exist when $aq of fields (" . join(', ', $afs->@*). ") exist";
       }
     }
   }
@@ -635,10 +753,10 @@ sub check_data_constraints {
   my $key = $be->get_field('citekey');
   my $ds = $section->get_keytods($key);
 
-  foreach my $c (@{$self->{entrytypesbyname}{$et}{constraints}{data}}) {
+  foreach my $c ($self->{entrytypesbyname}{$et}{constraints}{data}->@*) {
     # This is the datatype of the constraint, not the field!
     if ($c->{datatype} eq 'isbn') {
-      foreach my $f (@{$c->{fields}}) {
+      foreach my $f ($c->{fields}->@*) {
         if (my $fv = $be->get_field($f)) {
           require Business::ISBN;
           my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
@@ -652,7 +770,7 @@ sub check_data_constraints {
           unless ($self->get_fieldtype($f) eq 'list') {
             $fv = [$fv];
           }
-          foreach (@$fv) {
+          foreach ($fv->@*) {
             my $isbn = Business::ISBN->new($_);
             if (not $isbn) {
               push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISBN in value of field '$f'";
@@ -666,14 +784,14 @@ sub check_data_constraints {
       }
     }
     elsif ($c->{datatype} eq 'issn') {
-      foreach my $f (@{$c->{fields}}) {
+      foreach my $f ($c->{fields}->@*) {
         if (my $fv = $be->get_field($f)) {
           require Business::ISSN;
           # Treat as a list field just in case someone has made it so in a custom datamodel
           unless ($self->get_fieldtype($f) eq 'list') {
             $fv = [$fv];
           }
-          foreach (@$fv) {
+          foreach ($fv->@*) {
             my $issn = Business::ISSN->new($_);
             unless ($issn and $issn->is_valid) {
               push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISSN in value of field '$f'";
@@ -683,14 +801,14 @@ sub check_data_constraints {
       }
     }
     elsif ($c->{datatype} eq 'ismn') {
-      foreach my $f (@{$c->{fields}}) {
+      foreach my $f ($c->{fields}->@*) {
         if (my $fv = $be->get_field($f)) {
           require Business::ISMN;
           # Treat as a list field just in case someone has made it so in a custom datamodel
           unless ($self->get_fieldtype($f) eq 'list') {
             $fv = [$fv];
           }
-          foreach (@$fv) {
+          foreach ($fv->@*) {
             my $ismn = Business::ISMN->new($_);
             unless ($ismn and $ismn->is_valid) {
               push @warnings, "Datamodel: Entry '$key' ($ds): Invalid ISMN in value of field '$f'";
@@ -702,7 +820,7 @@ sub check_data_constraints {
     elsif ($c->{datatype} eq 'integer' or
            $c->{datatype} eq 'datepart') {
       my $dt = $DM_DATATYPES{$c->{datatype}};
-      foreach my $f (@{$c->{fields}}) {
+      foreach my $f ($c->{fields}->@*) {
         if (my $fv = $be->get_field($f)) {
           unless ( $fv =~ /$dt/ ) {
             push @warnings, "Datamodel: Entry '$key' ($ds): Invalid format (" . $c->{datatype}. ") of field '$f' - ignoring field";
@@ -726,69 +844,12 @@ sub check_data_constraints {
         }
       }
     }
-    elsif ($c->{datatype} eq 'date') {
-      # Perform content validation checks on date components by trying to
-      # instantiate a Date::Simple object.
-      foreach my $f (@{$self->get_fields_of_type('field', 'date')}) {
-        my $d = $f =~ s/date\z//xmsr;
-        # Don't bother unless this type of date is defined (has a year)
-        next unless $be->get_datafield($d . 'year');
-
-        # When checking date components not split from date fields, have ignore the value
-        # of an explicit YEAR field as it is allowed to be an arbitrary string
-        # so we just set it to any valid value for the test
-        my $byc;
-        my $byc_d; # Display value for errors so as not to confuse people
-        if ($d eq '' and not $be->get_field('datesplit')) {
-          $byc = '1900';        # Any valid value is fine
-          $byc_d = 'YYYY';
-        }
-        else {
-          $byc = $be->get_datafield($d . 'year')
-        }
-
-        # Begin date
-        if ($byc) {
-          my $bm = $be->get_datafield($d . 'month') || 'MM';
-          my $bmc = $bm  eq 'MM' ? '01' : $bm;
-          my $bd = $be->get_datafield($d . 'day') || 'DD';
-          my $bdc = $bd  eq 'DD' ? '01' : $bd;
-          $logger->debug("Checking '${d}date' date value '$byc/$bmc/$bdc' for key '$key'");
-          unless (Date::Simple->new("$byc$bmc$bdc")) {
-            push @warnings, "Datamodel: Entry '$key' ($ds): Invalid date value '" .
-              ($byc_d || $byc) .
-                "/$bm/$bd' - ignoring its components";
-            $be->del_datafield($d . 'year');
-            $be->del_datafield($d . 'month');
-            $be->del_datafield($d . 'day');
-            next;
-          }
-        }
-        # End date
-        # defined and some value - end*year can be empty but defined in which case,
-        # we don't need to validate
-        if (my $eyc = $be->get_datafield($d . 'endyear')) {
-          my $em = $be->get_datafield($d . 'endmonth') || 'MM';
-          my $emc = $em  eq 'MM' ? '01' : $em;
-          my $ed = $be->get_datafield($d . 'endday') || 'DD';
-          my $edc = $ed  eq 'DD' ? '01' : $ed;
-          $logger->debug("Checking '${d}date' date value '$eyc/$emc/$edc' for key '$key'");
-          unless (Date::Simple->new("$eyc$emc$edc")) {
-            push @warnings, "Datamodel: Entry '$key' ($ds): Invalid date value '$eyc/$em/$ed' - ignoring its components";
-            $be->del_datafield($d . 'endyear');
-            $be->del_datafield($d . 'endmonth');
-            $be->del_datafield($d . 'endday');
-            next;
-          }
-        }
-      }
-    }
     elsif ($c->{datatype} eq 'pattern') {
       my $patt;
       unless ($patt = $c->{pattern}) {
         push @warnings, "Datamodel: Pattern constraint has no pattern!";
       }
-      foreach my $f (@{$c->{fields}}) {
+      foreach my $f ($c->{fields}->@*) {
         if (my $fv = $be->get_field($f)) {
           unless (imatch($fv, $patt)) {
             push @warnings, "Datamodel: Entry '$key' ($ds): Invalid value (pattern match fails) for field '$f'";
@@ -855,15 +916,15 @@ sub generate_bltxml_schema {
   $writer->emptyTag('attribute', 'name' => 'id');
   $writer->startTag('attribute', 'name' => 'entrytype');
   $writer->startTag('choice');
-  foreach my $entrytype (@{$dm->entrytypes}) {
+  foreach my $entrytype ($dm->entrytypes->@*) {
     $writer->dataElement('value', $entrytype);
   }
   $writer->endTag();# choice
   $writer->endTag();# attribute
   $writer->startTag('interleave');
 
-  foreach my $ft (@{$dm->fieldtypes()}) {
-    foreach my $dt (@{$dm->datatypes()}) {
+  foreach my $ft ($dm->fieldtypes->@*) {
+    foreach my $dt ($dm->datatypes->@*) {
       if ($dm->is_fields_of_type($ft, $dt)) {
         next if $dt eq 'datepart'; # not legal in input, only output
         $writer->comment("$dt ${ft}s");
@@ -878,8 +939,8 @@ sub generate_bltxml_schema {
   $writer->endTag();# entries element
   $writer->endTag();# start
 
-  foreach my $ft (@{$dm->fieldtypes()}) {
-    foreach my $dt (@{$dm->datatypes()}) {
+  foreach my $ft ($dm->fieldtypes->@*) {
+    foreach my $dt ($dm->datatypes->@*) {
       if ($dm->is_fields_of_type($ft, $dt)) {
         next if $dt eq 'datepart'; # not legal in input, only output
         $writer->comment("$dt ${ft}s definition");
@@ -911,7 +972,7 @@ sub generate_bltxml_schema {
           $writer->comment('types of names elements');
           $writer->startTag('attribute', 'name' => 'type');
           $writer->startTag('choice');
-          foreach my $name (@{$dm->get_fields_of_type($ft, $dt)}) {
+          foreach my $name ($dm->get_fields_of_type($ft, $dt)->@*) {
             $writer->dataElement('value', $name);
           }
           $writer->endTag();    # choice
@@ -994,7 +1055,7 @@ sub generate_bltxml_schema {
           # lists element definition
           # ========================
           $writer->startTag('interleave');
-          foreach my $list (@{$dm->get_fields_of_type($ft, $dt)}) {
+          foreach my $list ($dm->get_fields_of_type($ft, $dt)->@*) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$list");
 
@@ -1025,7 +1086,7 @@ sub generate_bltxml_schema {
           # uri field element definition
           # ============================
           $writer->startTag('interleave');
-          foreach my $field (@{$dm->get_fields_of_type($ft, $dt)}) {
+          foreach my $field ($dm->get_fields_of_type($ft, $dt)->@*) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
 
@@ -1043,7 +1104,7 @@ sub generate_bltxml_schema {
           # range field element definition
           # ==============================
           $writer->startTag('interleave');
-          foreach my $field (@{$dm->get_fields_of_type($ft, $dt)}) {
+          foreach my $field ($dm->get_fields_of_type($ft, $dt)->@*) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
 
@@ -1075,7 +1136,7 @@ sub generate_bltxml_schema {
           # entrykey field element definition
           # =================================
           $writer->startTag('interleave');
-          foreach my $field (@{$dm->get_fields_of_type($ft, $dt)}) {
+          foreach my $field ($dm->get_fields_of_type($ft, $dt)->@*) {
             $writer->startTag('optional');
             # related field is special
             if ($field eq 'related') {
@@ -1123,7 +1184,7 @@ sub generate_bltxml_schema {
         elsif ($ft eq 'field' and $dt eq 'date') {
           # date field element definition
           # =============================
-          my @types = map { s/date$//r } @{$dm->get_fields_of_type($ft, $dt)};
+          my @types = map { s/date$//r } $dm->get_fields_of_type($ft, $dt)->@*;
           $writer->startTag('zeroOrMore');
           $writer->startTag('element', 'name' => "$bltx:date");
           $writer->startTag('optional');
@@ -1135,11 +1196,11 @@ sub generate_bltxml_schema {
           }
           $writer->endTag(); # choice
           $writer->endTag(); # attribute
+          $writer->endTag(); # optional
 
           # generic annotation attribute
           $writer->emptyTag('ref', 'name' => "annotation");
 
-          $writer->endTag(); # optional
           $writer->startTag('choice');
           $writer->emptyTag('data', 'type' => 'date');
           $writer->emptyTag('data', 'type' => 'gYear');
@@ -1167,7 +1228,7 @@ sub generate_bltxml_schema {
           # field element definition
           # ========================
           $writer->startTag('interleave');
-          foreach my $field (@{$dm->get_fields_of_type($ft, $dt)}) {
+          foreach my $field ($dm->get_fields_of_type($ft, $dt)->@*) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
 
@@ -1228,6 +1289,7 @@ sub generate_bltxml_schema {
 
 sub generate_bblxml_schema {
   my ($dm, $outfile) = @_;
+  my $dmh = $dm->{helpers};
 
   # Set the .rng path to the output dir, if specified
   if (my $outdir = Biber::Config->getoption('output_directory')) {
@@ -1275,7 +1337,7 @@ sub generate_bblxml_schema {
   $writer->emptyTag('attribute', 'name' => 'key');
   $writer->startTag('attribute', 'name' => 'type');
   $writer->startTag('choice');
-  foreach my $et (@{$dm->entrytypes}) {
+  foreach my $et ($dm->entrytypes->@*) {
     $writer->dataElement('value', $et);
   }
   $writer->endTag();    # choice
@@ -1300,18 +1362,27 @@ sub generate_bblxml_schema {
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
 
-  # uniqueprimaryauthor
+  # uniquetitle
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'uniqueprimaryauthor');
+  $writer->startTag('attribute', 'name' => 'uniquetitle');
   $writer->startTag('choice');
   $writer->dataElement('value', 'true');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
 
-  # uniquetitle
+  # uniquework
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'uniquetitle');
+  $writer->startTag('attribute', 'name' => 'uniquework');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+
+  # uniqueprimaryauthor
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'uniqueprimaryauthor');
   $writer->startTag('choice');
   $writer->dataElement('value', 'true');
   $writer->endTag();    # choice
@@ -1342,7 +1413,7 @@ sub generate_bblxml_schema {
   $writer->endTag();    # zeroOrMore
 
   # names
-  my @names = grep {not $dm->field_is_skipout($_)} @{$dm->get_fields_of_type('list', 'name')};
+  my @names = grep {not $dm->field_is_skipout($_)} $dm->get_fields_of_type('list', 'name')->@*;
 
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:names");
@@ -1410,7 +1481,7 @@ sub generate_bblxml_schema {
     not $dm->field_is_datatype('name', $_)
         and not $dm->field_is_datatype('uri', $_)
           and not $dm->field_is_skipout($_)
-        } @{$dm->get_fields_of_fieldtype('list')};
+        } $dm->get_fields_of_fieldtype('list')->@*;
 
   $writer->startTag('zeroOrMore');
   $writer->startTag('element', 'name' => "$bbl:list");
@@ -1448,7 +1519,7 @@ sub generate_bblxml_schema {
               labelyear
               labelmonth
               labelday
-              datelabelsource
+              labeldatesource
               labelprefix
               extratitle
               extratitleyear
@@ -1461,34 +1532,114 @@ sub generate_bblxml_schema {
   my @fs2 = grep {
       not ($dm->get_fieldformat($_) eq 'xsv')
         and not $dm->field_is_skipout($_)
-      } @{$dm->get_fields_of_type('field',
+      } $dm->get_fields_of_type('field',
                                   ['entrykey',
                                    'key',
                                    'integer',
                                    'datepart',
                                    'literal',
                                    'code',
-                                   'verbatim'])};
+                                   'verbatim'])->@*;
 
   # uri fields
-  my @fs3 = @{$dm->get_fields_of_type('field', 'uri')};
+  my @fs3 = $dm->get_fields_of_type('field', 'uri')->@*;
+
+  # <namelist>namehash and <namelist>fullhash
+  my @fs4;
+  map {push @fs4, "${_}namehash";push @fs4, "${_}fullhash"} $dmh->{namelists}->@*;
 
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:field");
+  $writer->startTag('choice'); # start choice of normal vs datepart fields
+  $writer->startTag('group'); #
   $writer->startTag('attribute', 'name' => 'name');
 
   $writer->startTag('choice');
-  foreach my $f (@fs1, @fs2, @fs3) {
-      $writer->dataElement('value', $f);
-    }
+  foreach my $f (@fs1, @fs2, @fs3, @fs4) {
+    $writer->dataElement('value', $f);
+  }
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
+  $writer->endTag();    # group
+  $writer->startTag('group'); #
+  $writer->startTag('attribute', 'name' => 'name');
+
+  $writer->startTag('choice');
+  foreach my $dp ($dm->get_fields_of_type('field', 'datepart')->@*) {
+    $writer->dataElement('value', $dp);
+  }
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  # dateparts may have an era attributes
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'startera');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'bce');
+  $writer->dataElement('value', 'ce');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'endera');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'bce');
+  $writer->dataElement('value', 'ce');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  # dateparts may have a julian attributes
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'startjulian');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'endjulian');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  # dateparts may have a circa attributes
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'startcirca');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'endcirca');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  # dateparts may have an uncertain attributes
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'startuncertain');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'enduncertain');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->endTag();    # group
+  $writer->endTag();    # choice (normal vs datepart)
   $writer->emptyTag('text');# text
   $writer->endTag();    # field
-  $writer->endTag();    #
+  $writer->endTag();    # oneOrMore
 
   # ranges
-  my @ranges = grep {not $dm->field_is_skipout($_)} @{$dm->get_fields_of_datatype('range')};
+  my @ranges = grep {not $dm->field_is_skipout($_)} $dm->get_fields_of_datatype('range')->@*;
 
   $writer->startTag('zeroOrMore');
   $writer->startTag('element', 'name' => "$bbl:range");
@@ -1518,7 +1669,7 @@ sub generate_bblxml_schema {
   $writer->endTag();    # zeroOrMore
 
   # uri lists - not in default data model
-  if (my @uril = @{$dm->get_fields_of_type('list', 'uri')}) {
+  if (my @uril = $dm->get_fields_of_type('list', 'uri')->@*) {
     $writer->startTag('optional');
     $writer->startTag('element', 'name' => "$bbl:list");
     $writer->startTag('attribute', 'name' => 'name');

@@ -13,6 +13,7 @@ doc/biber.tex
 lib/Biber/Annotation.pm
 lib/Biber/Config.pm
 lib/Biber/Constants.pm
+lib/Biber/Date/Format.pm
 lib/Biber/DataModel.pm
 lib/Biber/Entries.pm
 lib/Biber/Entry/Name.pm
@@ -20,7 +21,6 @@ lib/Biber/Entry/Names.pm
 lib/Biber/Entry.pm
 lib/Biber/Input/file/biblatexml.pm
 lib/Biber/Input/file/bibtex.pm
-lib/Biber/Input/file/ris.pm
 lib/Biber/Internals.pm
 lib/Biber/LaTeX/recode_data.xml
 lib/Biber/LaTeX/Recode.pm
@@ -48,7 +48,7 @@ t/bibtex-output.t
 t/configfile.t
 t/crossrefs.t
 t/dm-constraints.t
-t/dm-dateformats.t
+t/dateformats.t
 t/encoding.t
 t/extratitle.t
 t/extratitleyear.t
@@ -61,11 +61,11 @@ THANKS
 t/labelalpha.t
 t/labelname.t
 t/names.t
+t/names_x.t
 TODO.org
 t/options.t
 t/related-entries.t
 t/remote-files.t
-t/ris.t
 t/sections-complex.t
 t/sections.t
 t/set-dynamic.t
@@ -95,8 +95,8 @@ t/tdata/crossrefs.bcf
 t/tdata/crossrefs.bib
 t/tdata/dm-constraints.bcf
 t/tdata/dm-constraints.bib
-t/tdata/dm-dateformats.bcf
-t/tdata/dm-dateformats.bib
+t/tdata/dateformats.bcf
+t/tdata/dateformats.bib
 t/tdata/encoding1.bcf
 t/tdata/encoding1.bib
 t/tdata/encoding2.bcf
@@ -132,16 +132,15 @@ t/tdata/labelalpha.bcf
 t/tdata/labelalpha.bib
 t/tdata/labelalpha.bib
 t/tdata/names.bcf
+t/tdata/names_x.bcf
 t/tdata/names.bib
-t/tdata/names.bib
+t/tdata/names_x.bib
 t/tdata/options.bcf
 t/tdata/options.bib
 t/tdata/options.bib
 t/tdata/related.bcf
 t/tdata/related.bib
 t/tdata/remote-files.bcf
-t/tdata/ris1.ris
-t/tdata/ris.bcf
 t/tdata/sections1.bib
 t/tdata/sections2.bib
 t/tdata/sections3.bib

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 66;
+use Test::More tests => 68;
 use Test::Differences;
 unified_diff;
 
@@ -36,12 +36,11 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 1);
 Biber::Config->setblxoption('maxalphanames', 1);
-Biber::Config->setblxoption('labeldate', undef);
+Biber::Config->setblxoption('labeldateparts', undef);
 
 # Now generate the information
 $biber->prepare;
@@ -192,5 +191,7 @@ eq_or_diff($bibentries1->entry('L7')->get_field('sortlabelalpha'), 'DSJ95', 'max
 ok(is_undef($main1->get_extraalphadata('L7')), 'maxalphanames=3 minalphanames=1 entry L7 extraalpha');
 eq_or_diff($bibentries1->entry('L8')->get_field('sortlabelalpha'), 'Sha85', 'maxalphanames=3 minalphanames=1 entry L8 labelalpha');
 ok(is_undef($main1->get_extraalphadata('L8')), 'maxalphanames=3 minalphanames=1 entry L8 extraalpha');
-eq_or_diff($bibentries1->entry('m1')->get_field('keywords'), ['thing'], 'map idempotency - 1');
-eq_or_diff($bibentries1->entry('m1')->get_field('title'), 'Film title 11', 'map idempotency - 2');
+ok(is_undef($bibentries0->entry('m1')->get_field('keywords')), 'map refsection - 1');
+eq_or_diff($bibentries0->entry('m1')->get_field('title'), 'Film title 1', 'map refsection - 2');
+eq_or_diff($bibentries1->entry('m1')->get_field('keywords'), ['thing'], 'map refsection- 3');
+eq_or_diff($bibentries1->entry('m1')->get_field('title'), 'Film title 11', 'map refsection - 4');

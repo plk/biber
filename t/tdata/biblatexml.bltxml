@@ -64,14 +64,14 @@
     <bltx:userc>userc</bltx:userc>
     <bltx:userd>userd</bltx:userd>
     <bltx:usere>a</bltx:usere>
-    <bltx:date>1983</bltx:date>
-    <bltx:date type="orig">1985-04-02</bltx:date>
+    <bltx:date>198u</bltx:date>
+    <bltx:date type="orig">-0356</bltx:date>
     <bltx:date type ="event">
       <bltx:start>1990-05-16</bltx:start>
       <bltx:end>1990-05-17</bltx:end>
     </bltx:date>
     <bltx:date type="url">
-      <bltx:start>1991-07-01</bltx:start>
+      <bltx:start>1991~</bltx:start>
       <bltx:end></bltx:end>
     </bltx:date>
     <bltx:pagetotal>240</bltx:pagetotal>

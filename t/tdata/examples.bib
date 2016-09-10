@@ -258,8 +258,7 @@
   volume	  = {93},
   series	  = {newseries},
   number	  = {1},
-  month		  = mar,
-  year		  = {1991},
+  date		  = {1991-03},
   pages		  = {9--27},
   annotation	  = {An \texttt{article} entry with \texttt{series}, \texttt{volume}, and
 		    \texttt{number} fields. Note the format of the \texttt{series} which is a
@@ -1440,10 +1439,23 @@
   PAGES = {100--108}
 }
 
+% useprefix tests
 @MISC{tvonb,
   AUTHOR = {Terrence von Bobble},
   TITLE = {Things},
   YEAR = {1997}
+}
+
+@BOOK{avona,
+  AUTHOR = {useprefix=false and Alan von Animal},
+  TITLE = {Things},
+  YEAR = {1998}
+}
+
+@BOOK{rvonr,
+  AUTHOR = {useprefix=false and useprefix=true, given=Richard, prefix=von, family=Rabble},
+  TITLE = {Things},
+  YEAR = {1998}
 }
 
 % fullhash and namehash should be different for these two
@@ -1631,8 +1643,9 @@
   DATE   = {2005-03-02}
 }
 
+% Note the UTF8 char so we test Text::BibTeX::split_list utf-8 returns
 @BOOK{list1,
-  LOCATION = {AAA and BBB and others}
+  LOCATION = {ÁAA and BBB and others}
 }
 
 @BOOK{sn1,
@@ -1642,7 +1655,7 @@
 
 % ISBN tests
 @MISC{isbn1,
-  AUTHOR = {Fred Flummox},
+  AUTHOR = {given=Fred, family=Flummox},
   ISBN   = {0816520666}
 }
 
@@ -1656,21 +1669,8 @@
   AUTHOR = {von Doe, Jr, John}
 }
 
-% uniquetitle test
-@MOVIE{m1,
-  AUTHOR = {Alan Smith},
-  TITLE = {Film title}
-}
-
-% uniquetitle test
-@MOVIE{m2,
-  AUTHOR = {Bill Smyth},
-  TITLE = {Film title 1}
-}
-
-% uniquetitle test
-@MOVIE{m3,
-  AUTHOR = {Frank Fake},
-  TITLE = {Film title 1}
+% Extended name format test
+@BOOK{ent1,
+  AUTHOR = {sortnamekeyscheme=snks1 and Simon Smith and family=Brown, prefix=de, given=Brian, sortnamekeyscheme=snks2},
 }
 

@@ -1,5 +1,5 @@
 package Biber::SortLists;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -30,7 +30,7 @@ sub new {
 sub add_list {
   my $self = shift;
   my $list = shift;
-  push @{$self->{lists}}, $list;
+  push $self->{lists}->@*, $list;
   return;
 }
 
@@ -57,9 +57,9 @@ sub get_lists_for_section {
   my $section = shift;
   my $lists = [];
   my $glist;
-  foreach my $list (@{$self->{lists}}) {
+  foreach my $list ($self->{lists}->@*) {
     if ($list->get_section == $section) {
-      push @$lists, $list;
+      push $lists->@*, $list;
     }
   }
   return $lists;
@@ -73,7 +73,7 @@ sub get_lists_for_section {
 
 sub get_list {
   my ($self, $section, $name, $type, $ssn, $snksn, $pn) = @_;
-  foreach my $list (@{$self->{lists}}) {
+  foreach my $list ($self->{lists}->@*) {
     return $list if ($list->get_name eq $name and
                      $list->get_sortschemename eq $ssn and
                      $list->get_sortnamekeyschemename eq $snksn and
@@ -93,7 +93,7 @@ sub get_list {
 
 sub has_lists_of_type_for_section {
   my ($self, $section, $type) = @_;
-  foreach my $list (@{$self->{lists}}) {
+  foreach my $list ($self->{lists}->@*) {
     if ($list->get_type eq $type and
         $list->get_section == $section) {
       return 1;

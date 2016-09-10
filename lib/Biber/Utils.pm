@@ -1,5 +1,5 @@
 package Biber::Utils;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Exporter);
@@ -23,6 +23,7 @@ use Regexp::Common qw( balanced );
 use List::AllUtils qw( first );
 use Log::Log4perl qw(:no_extra_logdie_message);
 use Scalar::Util qw(looks_like_number);
+use Text::CSV;
 use Text::Roman qw(isroman roman2int);
 use Unicode::Normalize;
 use Unicode::GCString;
@@ -43,14 +44,18 @@ All functions are exported by default.
 =cut
 
 our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
-  normalise_string normalise_string_hash normalise_string_underscore normalise_string_sort
-  normalise_string_label reduce_array remove_outer add_outer ucinit strip_nosort strip_noinit
-  is_def is_undef is_def_and_notnull is_def_and_null
-  is_undef_or_null is_notnull is_null normalise_utf8 inits join_name latex_recode_output
-  filter_entry_options biber_error biber_warn ireplace imatch validate_biber_xml
-  process_entry_options escape_label unescape_label biber_decode_utf8 out parse_date
-  locale2bcp47 bcp472locale rangelen match_indices process_comment map_boolean parse_range
-  parse_range_alt maploopreplace get_transliterator call_transliterator normalise_string_bblxml};
+  normalise_string normalise_string_hash normalise_string_underscore
+  normalise_string_sort normalise_string_label reduce_array remove_outer
+  has_outer add_outer ucinit strip_nosort strip_noinit is_def is_undef
+  is_def_and_notnull is_def_and_null is_undef_or_null is_notnull is_null
+  normalise_utf8 inits join_name latex_recode_output filter_entry_options
+  biber_error biber_warn ireplace imatch validate_biber_xml
+  process_entry_options remove_entry_options escape_label unescape_label
+  biber_decode_utf8 out parse_date_start parse_date_end parse_date_range locale2bcp47
+  bcp472locale rangelen match_indices process_comment map_boolean
+  parse_range parse_range_alt maploopreplace get_transliterator
+  call_transliterator normalise_string_bblxml gen_initials join_name_parts
+  split_xsv edtf_monthday tzformat};
 
 =head1 FUNCTIONS
 
@@ -114,23 +119,33 @@ sub locate_biber_file {
 
   # File is in kpse path
   if (can_run('kpsewhich')) {
-    $logger->debug("Looking for file '$filename' via kpsewhich");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Looking for file '$filename' via kpsewhich");
+    }
     my $found;
     my $err;
     run3  [ 'kpsewhich', $filename ], \undef, \$found, \$err, { return_if_system_error => 1};
     if ($?) {
-      $logger->debug("kpsewhich returned error: $err ($!)");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("kpsewhich returned error: $err ($!)");
+      }
     }
-    $logger->trace("kpsewhich returned '$found'");
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("kpsewhich returned '$found'");
+    }
     if ($found) {
-      $logger->debug("Found '$filename' via kpsewhich");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Found '$filename' via kpsewhich");
+      }
       chomp $found;
       $found =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
       # filename can be UTF-8 and run3() isn't clever with UTF-8
       return decode_utf8($found);
     }
     else {
-      $logger->debug("Could not find '$filename' via kpsewhich");
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Could not find '$filename' via kpsewhich");
+      }
     }
   }
   return undef;
@@ -181,7 +196,7 @@ concatenation of all of the full name strings.
 sub makenamesid {
   my $names = shift;
   my @namestrings;
-  foreach my $name (@{$names->names}) {
+  foreach my $name ($names->names->@*) {
     push @namestrings, $name->get_namestring;
   }
   my $tmp = join ' ', @namestrings;
@@ -224,7 +239,7 @@ sub strip_noinit {
   my $string = shift;
   return '' unless $string; # Sanitise missing data
   return $string unless my $noinit = Biber::Config->getoption('noinit');
-  foreach my $opt (@$noinit) {
+  foreach my $opt ($noinit->@*) {
     my $re = $opt->{value};
     $string =~ s/$re//gxms;
   }
@@ -246,14 +261,14 @@ sub strip_nosort {
 
   my $restrings;
 
-  foreach my $nsopt (@$nosort) {
+  foreach my $nsopt ($nosort->@*) {
     # Specific fieldnames override sets
     if (fc($nsopt->{name}) eq fc($fieldname)) {
-      push @$restrings, $nsopt->{value};
+      push $restrings->@*, $nsopt->{value};
     }
     elsif (my $set = $DATAFIELD_SETS{lc($nsopt->{name})} ) {
-      if (first {fc($_) eq fc($fieldname)} @$set) {
-        push @$restrings, $nsopt->{value};
+      if (first {fc($_) eq fc($fieldname)} $set->@*) {
+        push $restrings->@*, $nsopt->{value};
       }
     }
   }
@@ -261,7 +276,7 @@ sub strip_nosort {
   # If no nosort to do, just return string
   return $string unless $restrings;
 
-  foreach my $re (@$restrings) {
+  foreach my $re ($restrings->@*) {
     $string =~ s/$re//gxms;
   }
   return $string;
@@ -280,7 +295,7 @@ sub normalise_string_label {
   $str =~ s/\\[A-Za-z]+//g;    # remove latex macros (assuming they have only ASCII letters)
   # Replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-  foreach my $nolabel (@$nolabels) {
+  foreach my $nolabel ($nolabels->@*) {
     my $re = $nolabel->{value};
     $str =~ s/$re//gxms;           # remove nolabel items
   }
@@ -436,11 +451,11 @@ reduce_array(\@a, \@b) returns all elements in @a that are not in @b
 sub reduce_array {
   my ($a, $b) = @_;
   my %countb = ();
-  foreach my $elem (@$b) {
+  foreach my $elem ($b->@*) {
     $countb{$elem}++;
   }
   my @result;
-  foreach my $elem (@$a) {
+  foreach my $elem ($a->@*) {
     push @result, $elem unless $countb{$elem};
   }
   return @result;
@@ -453,13 +468,27 @@ sub reduce_array {
     but not
         '{string} {string}' -> 'string} {string'
 
+    Return (boolean if stripped, string)
+
 =cut
 
 sub remove_outer {
   my $str = shift;
-  return $str if $str =~ m/}\s*{/;
-  $str =~ s/^{(\X+)}$/$1/;
-  return $str;
+  return (0, $str) if $str =~ m/}\s*{/;
+  my $r = $str =~ s/^{(\X+)}$/$1/;
+  return (($r ? 1 : 0), $str);
+}
+
+=head2 has_outer
+
+    Return (boolean if surrounded in braces
+
+=cut
+
+sub has_outer {
+  my $str = shift;
+  return 0 if $str =~ m/}\s*{/;
+  return $str =~ m/^{\X+}$/;
 }
 
 =head2 add_outer
@@ -624,7 +653,7 @@ sub is_notnull_array {
   unless (ref $arg eq 'ARRAY') {
     return undef;
   }
-  my @arr = @$arg;
+  my @arr = $arg->@*;
   return $#arr > -1 ? 1 : 0;
 }
 
@@ -639,7 +668,7 @@ sub is_notnull_hash {
   unless (ref $arg eq 'HASH') {
     return undef;
   }
-  my @arr = keys %$arg;
+  my @arr = keys $arg->%*;
   return $#arr > -1 ? 1 : 0;
 }
 
@@ -667,7 +696,7 @@ sub is_notnull_object {
 sub stringify_hash {
   my $hashref = shift;
   my $string;
-  while (my ($k,$v) = each %$hashref) {
+  while (my ($k,$v) = each $hashref->%*) {
     $string .= "$k => $v, ";
   }
   # Take off the trailing comma and space
@@ -736,7 +765,7 @@ sub filter_entry_options {
   my $options = shift;
   return [] unless $options;
   my $roptions = [];
-  foreach (@$options) {
+  foreach ($options->@*) {
     m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
     my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}{OUTPUT};
     # convert booleans
@@ -748,18 +777,18 @@ sub filter_entry_options {
     }
     # Standard option
     if (not defined($cfopt) or $cfopt == 1) {
-      push @$roptions, $1 . ($val ? "=$val" : '') ;
+      push $roptions->@*, $1 . ($val ? "=$val" : '') ;
     }
     # Set all split options to same value as parent
     elsif (ref($cfopt) eq 'ARRAY') {
-      foreach my $map (@$cfopt) {
-        push @$roptions, "$map=$val";
+      foreach my $map ($cfopt->@*) {
+        push $roptions->@*, "$map=$val";
       }
     }
     # Set all splits to specific values
     elsif (ref($cfopt) eq 'HASH') {
-      foreach my $map (keys %$cfopt) {
-        push @$roptions, "$map=" . $_->{$map};
+      foreach my $map (keys $cfopt->%*) {
+        push $roptions->@*, "$map=" . $_->{$map};
       }
     }
   }
@@ -859,7 +888,9 @@ sub validate_biber_xml {
   # Validate against schema. Dies if it fails.
   eval { $xmlschema->validate($doc) };
   if (ref($@)) {
-    $logger->debug( $@->dump() );
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug( $@->dump() );
+    }
     biber_error("'$file' failed to validate against schema '$schema'");
   }
   elsif ($@) {
@@ -895,6 +926,26 @@ sub map_boolean {
   }
 }
 
+=head2 remove_entry_options
+
+    Remove per-entry options
+
+=cut
+
+sub remove_entry_options {
+  my $options = shift;
+  my $mods = shift;
+  my $changed_opts;
+  foreach ($options->@*) {
+    s/\s+=\s+/=/g; # get rid of spaces around any "="
+    m/^([^=]+)(=?)(.+)?$/;
+    unless ($mods->{$1}) {
+      push $changed_opts->@*, ($1 . ($2 // '') . ($3 // ''));
+    }
+  }
+  return $changed_opts;
+}
+
 =head2 process_entry_options
 
     Set per-entry options
@@ -905,7 +956,7 @@ sub process_entry_options {
   my $citekey = shift;
   my $options = shift;
   return unless $options;       # Just in case it's null
-  foreach (@$options) {
+  foreach ($options->@*) {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)(=?)(.+)?$/;
     if ($2) {
@@ -933,34 +984,162 @@ sub _expand_option {
   }
   # Set all split options to same value as parent
   elsif (ref($cfopt) eq 'ARRAY') {
-    foreach my $k (@$cfopt) {
+    foreach my $k ($cfopt->@*) {
       Biber::Config->setblxoption($k, $val, 'ENTRY', $citekey);
     }
   }
   # Specify values per all splits
   elsif (ref($cfopt) eq 'HASH') {
-    foreach my $k (keys %$cfopt) {
+    foreach my $k (keys $cfopt->%*) {
       Biber::Config->setblxoption($k, $cfopt->{$k}, 'ENTRY', $citekey);
     }
   }
   return;
 }
 
+=head2 parse_date_range
+
+  Parse of EDTF date range
+  Returns two-element array ref: [start DT object, end DT object]
+
+=cut
+
+sub parse_date_range {
+  my ($sd, $sep, $ed) = shift =~ m|^([^/]+)(/)?([^/]+)?$|;
+  my $unspec;
+  if ($sd =~ /u/) {# EDTF 5.2.2 Unspecified format
+    ($sd, $sep, $ed, $unspec) = parse_date_edtf_unspecified($sd);
+  }
+  return (parse_date_start($sd), parse_date_end($ed), $sep, $unspec);
+}
+
+=head2 parse_date_edtf_unspecified
+
+  Parse of EDTF 5.2.2 Unspecified format into date range
+  Returns range plus specification of granularity of unspecified
+
+=cut
+
+sub parse_date_edtf_unspecified {
+  my $d = shift;
+
+  # 199u -> 1990/1999
+  if ($d =~ m/^(\d{3})u$/) {
+    return ("${1}0", '/', "${1}9", 'yearindecade');
+  }
+  # 19uu -> 1900/1999
+  elsif ($d =~ m/^(\d{2})uu$/) {
+    return ("${1}00", '/', "${1}99", 'yearincentury');
+  }
+  # 1999-uu -> 1999-01/1999-12
+  elsif ($d =~ m/^(\d{4})\p{Dash}uu$/) {
+    return ("${1}-01", '/', "${1}-12", 'monthinyear');
+  }
+  # 1999-01-uu -> 1999-01-01/1999-01-31
+  # (understands different months and leap years)
+  elsif ($d =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}uu$/) {
+
+    sub leapyear {
+      my $year = shift;
+      if ((($year % 4 == 0) and ($year % 100 != 0))
+          or ($year % 400 == 0)) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }
+
+    my %monthdays;
+    @monthdays{map {sprintf('%.2d', $_)} 1..12} = ('31') x 12;
+    @monthdays{'09', '04', '06', '11'} = ('30') x 4;
+    $monthdays{'02'} = leapyear($1) ? 29 : 28;
+
+    return ("${1}-${2}-01", '/', "${1}-${2}-" . $monthdays{$2}, 'dayinmonth');
+  }
+  # 1999-uu-uu -> 1999-01-01/1999-12-31
+  elsif ($d =~ m/^(\d{4})\p{Dash}uu\p{Dash}uu$/) {
+    return ("${1}-01-01", '/', "${1}-12-31", 'dayinyear');
+  }
+}
+
+
+=head2 parse_date_start
+
+  Convenience wrapper
+
+=cut
+
+sub parse_date_start {
+  return parse_date($CONFIG_DATE_PARSERS{start}, shift);
+}
+
+=head2 parse_date_end
+
+  Convenience wrapper
+
+=cut
+
+sub parse_date_end {
+  return parse_date($CONFIG_DATE_PARSERS{end}, shift);
+}
+
 =head2 parse_date
 
-  Simple parse of ISO8601 dates because not decent module exists for this that
-  doesn't default the missing components
+  Parse of EDTF dates
 
 =cut
 
 sub parse_date {
-  my $date = shift;
-  # We are not validating dates here, just syntax parsing
-  my $date_re = qr/(\d{4}) # year
-                   (?:-(\d{2}))? # month
-                   (?:-(\d{2}))? # day
-                  /xms;
-  return $date =~ m|\A$date_re(/)?(?:$date_re)?\z|xms;
+  my ($obj, $string) = @_;
+  # Must do this to make sure meta-information from sub-class Biber::Date::Format is reset
+  $obj->init();
+  return 0 unless $string;
+  return 0 if $string eq 'unknown'; # EDTF 5.2.3
+  return 0 if $string eq 'open';    # EDTF 5.2.3
+
+  my $dt = eval {$obj->parse_datetime($string)};
+
+  return $dt unless $dt; # bad parse, don't do anything else
+
+  # Check if this datetime is before the Gregorian start date. If so, return Julian date
+  # instead of Gregorian/astronomical
+  # This conversion is only done if the date is not missing month or day since the Julian
+  # Gregorian difference is usually a matter of only days and therefore a bare year like
+  # "1565" could be "1564" or "1565" in Julian, depending on the month/day of the Gregorian date
+  # For example, "1565-01-01" (which is what DateTime will default to for bare years), is
+  # "1564-12-22" Julian but 1564-01-11" and later is "1565" Julian year.
+  if (Biber::Config->getblxoption('julian') and
+      not $obj->missing('month') and
+      not $obj->missing('day')) {
+
+    # There is guaranteed to be an end point since biblatex has a default
+    my $gs = Biber::Config->getblxoption('gregorianstart');
+    my ($gsyear, $gsmonth, $gsday) = $gs =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}(\d{2})$/;
+    my $dtgs = DateTime->new( year  => $gsyear,
+                              month => $gsmonth,
+                              day   => $gsday );
+
+    # Datetime is not before the Gregorian start point
+    if (DateTime->compare($dt, $dtgs) == -1) {
+      # Override with Julian conversion
+      $dt = DateTime::Calendar::Julian->from_object( object => $dt );
+      $obj->set_julian;
+    }
+  }
+
+  return $dt;
+}
+
+=head2 edtf_monthday
+
+  Force month/day to EDTF format with leading zero
+
+=cut
+
+sub edtf_monthday {
+  my $md = shift;
+  return $md ? sprintf('%.2d', $md) : undef;
 }
 
 =head2 biber_decode_utf8
@@ -1046,7 +1225,7 @@ sub bcp472locale {
 sub rangelen {
   my $rf = shift;
   my $rl = 0;
-  foreach my $f (@$rf) {
+  foreach my $f ($rf->@*) {
     my $m = $f->[0];
     my $n = $f->[1];
     # m is something that's just numerals (decimal Unicode roman or ASCII roman)
@@ -1105,18 +1284,20 @@ sub rangelen {
 
 sub match_indices {
   my ($regexes, $string) = @_;
-  my $ret;
+  my @ret;
   my $relen = 0;
-  foreach my $regex (@$regexes) {
+  foreach my $regex ($regexes->@*) {
     my $len = 0;
     while ($string =~ /$regex/g) {
       my $gcs = Unicode::GCString->new($string)->substr($-[0], $+[0]-$-[0]);
-      push @$ret, [ $gcs->as_string, $-[0] - $relen ];
+      push @ret, [ $gcs->as_string, $-[0] - $relen ];
       $len = $gcs->length;
     }
     $relen += $len;
   }
-  return $ret
+  # Return last index first so replacements can be done without recalculating
+  # indices changed by earlier index replacements
+  return scalar(@ret) ? [reverse @ret] : undef;
 }
 
 =head2 parse_range
@@ -1156,7 +1337,6 @@ sub parse_range_alt {
     return undef;
   }
 }
-
 
 =head2 maploopreplace
 
@@ -1199,7 +1379,9 @@ sub get_transliterator {
   require Lingua::Translit;
   # List pairs explicitly as we don't expect there to be to many of these ever
   if ($from eq 'iast' and $to eq 'devanagari') {
-    $logger->debug("Using 'iast -> devanagari' transliteration for sorting '$target'");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Using 'iast -> devanagari' transliteration for sorting '$target'");
+    }
     return new Lingua::Translit('IAST Devanagari');
   }
   return undef;
@@ -1223,6 +1405,74 @@ sub call_transliterator {
   }
 }
 
+# Passed an array of strings, returns an array of initials
+sub gen_initials {
+  my @strings = @_;
+  my @strings_out;
+  foreach my $str (@strings) {
+    # Deal with hyphenated name parts and normalise to a '-' character for easy
+    # replacement with macro later
+    if ($str =~ m/\p{Dash}/) {
+      push @strings_out, join('-', gen_initials(split(/\p{Dash}/, $str)));
+    }
+    else {
+      my $chr = Unicode::GCString->new($str)->substr(0, 1)->as_string;
+      # Keep diacritics with their following characters
+      if ($chr =~ m/\p{Dia}/) {
+        push @strings_out, Unicode::GCString->new($str)->substr(0, 2)->as_string;
+      }
+      else {
+        push @strings_out, $chr;
+      }
+    }
+  }
+  return @strings_out;
+}
+
+# Joins name parts using BibTeX tie algorithm. Ties are added:
+#
+# 1. After the first part if it is less than three characters long
+# 2. Before the family part
+sub join_name_parts {
+  my $parts = shift;
+  # special case - 1 part
+  if ($#{$parts} == 0) {
+    return $parts->[0];
+  }
+  # special case - 2 parts
+  if ($#{$parts} == 1) {
+    return $parts->[0] . '~' . $parts->[1];
+  }
+  my $namestring = $parts->[0];
+  $namestring .= Unicode::GCString->new($parts->[0])->length < 3 ? '~' : ' ';
+  $namestring .= join(' ', $parts->@[1 .. ($#{$parts} - 1)]);
+  $namestring .= '~' . $parts->[$#{$parts}];
+  return $namestring;
+}
+
+# Split an xsv using Text::CSV because it is fast and can handle quoting
+sub split_xsv {
+  my ($string, $sep) = @_;
+  if ($sep) {
+    $CONFIG_CSV_PARSER->sep_char($sep);
+  }
+  $CONFIG_CSV_PARSER->parse($string);
+  return $CONFIG_CSV_PARSER->fields();
+}
+
+# Add a macro sep for minutes in timezones
+sub tzformat {
+  my $tz = shift;
+  if ($tz =~ m/^([+-])(\d{2}):?(\d{2})?/) {
+    return "$1$2" . ($3 ? "\\bibtzminsep $3" : '');
+  }
+  elsif ($tz eq 'UTC') {
+    return 'Z';
+  }
+  else {
+    return $tz;
+  }
+}
 
 1;
 

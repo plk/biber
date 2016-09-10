@@ -35,7 +35,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 # Want to ignore SHORTHAND* fields for the first few tests
 Biber::Config->setoption('sourcemap', [
   {
@@ -48,7 +47,7 @@ Biber::Config->setoption('sourcemap', [
       }]}]);
 
 # Biblatex options
-Biber::Config->setblxoption('labeldate', undef);
+Biber::Config->setblxoption('labeldateparts', undef);
 
 # Now generate the information
 $biber->prepare;
@@ -93,10 +92,8 @@ my $ss = { locale => 'en-US',
            ],
            [
             {},
-            {'volume'     => {pad_char => '0',
-                              pad_side => 'left',
-                              pad_width => '4'}},
-            {'0000'       => {}}
+            {'volume'     => {}},
+            {'0'          => {}},
            ],
           ]};
 
@@ -106,9 +103,9 @@ my $l4 = q|    \entry{L4}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Cambridge}%
@@ -118,6 +115,8 @@ my $l4 = q|    \entry{L4}{book}{}
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authornamehash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authorfullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -133,9 +132,9 @@ my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Cambridge}%
@@ -145,6 +144,8 @@ my $l1 = q|    \entry{L1}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -160,9 +161,9 @@ my $l2 = q|    \entry{L2}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Cambridge}%
@@ -172,6 +173,8 @@ my $l2 = q|    \entry{L2}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -187,9 +190,9 @@ my $l3 = q|    \entry{L3}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Cambridge}%
@@ -199,6 +202,8 @@ my $l3 = q|    \entry{L3}{book}{}
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -216,9 +221,9 @@ my $l5 = q|    \entry{L5}{book}{}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
-           family_i={D\bibinitperiod},
+           familyi={D\bibinitperiod},
            given={John},
-           given_i={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Cambridge}%
@@ -228,6 +233,8 @@ my $l5 = q|    \entry{L5}{book}{}
       }
       \strng{namehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{fullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authornamehash}{6eb389989020e8246fee90ac93fcecbe}
+      \strng{authorfullhash}{6eb389989020e8246fee90ac93fcecbe}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
       \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
@@ -262,7 +269,6 @@ Biber::Config->setoption('sourcemap', undef); # no longer ignore shorthand*
 $bibentries->del_entries;
 $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
-Biber::Config->setoption('fastsort', 0);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $shs = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');

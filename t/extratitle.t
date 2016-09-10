@@ -36,7 +36,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 1);
@@ -59,7 +58,7 @@ eq_or_diff($main->get_extratitledata('L7'), '2', 'No name, same shorttitle/title
 ok(is_undef($bibentries->entry('L8')->get_field('singletitle')), 'Singletitle test - 1');
 ok(is_undef($bibentries->entry('L9')->get_field('singletitle')), 'Singletitle test - 2');
 eq_or_diff($bibentries->entry('L10')->get_field('singletitle'), '1', 'Singletitle test - 3');
-eq_or_diff($bibentries->entry('L11')->get_field('singletitle'), '1', 'Singletitle test - 4');
+ok(is_undef($bibentries->entry('L11')->get_field('singletitle')), 'Singletitle test - 4');
 ok(is_undef($bibentries->entry('L12')->get_field('singletitle')), 'Singletitle test - 5');
 ok(is_undef($bibentries->entry('L1')->get_field('singletitle')), 'Singletitle test - 6');
-eq_or_diff($bibentries->entry('L5')->get_field('singletitle'), '1', 'Singletitle test - 7');
+ok(is_undef($bibentries->entry('L5')->get_field('singletitle')), 'Singletitle test - 7');

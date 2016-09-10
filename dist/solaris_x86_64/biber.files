@@ -1,0 +1,16 @@
+../biber/data/biber-tool.conf;lib/Biber/biber-tool.conf
+../biber/data/schemata/config.rnc;lib/Biber/config.rnc
+../biber/data/schemata/config.rng;lib/Biber/config.rng
+../biber/data/schemata/bcf.rnc;lib/Biber/bcf.rnc
+../biber/data/schemata/bcf.rng;lib/Biber/bcf.rng
+../biber/lib/Biber/LaTeX/recode_data.xml;lib/Biber/LaTeX/recode_data.xml
+../biber/data/bcf.xsl;lib/Biber/bcf.xsl
+../biber/data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
+/usr/perl5/5.24/lib/site_perl/5.24/i86pc-solaris-thread-multi-64/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
+/usr/perl5/5.24/lib/site_perl/5.24/i86pc-solaris-thread-multi-64/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
+/usr/perl5/5.24/lib/site_perl/5.24/i86pc-solaris-thread-multi-64/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
+/usr/perl5/5.24/lib/site_perl/5.24/i86pc-solaris-thread-multi-64/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
+/usr/perl5/5.24/lib/site_perl/5.24/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem
+/usr/perl5/5.24/lib/5.24/i86pc-solaris-thread-multi-64/PerlIO;lib/PerlIO
+/usr/perl5/5.24/lib/5.24/i86pc-solaris-thread-multi-64/auto/PerlIO;lib/auto/PerlIO
+/usr/perl5/5.24/lib/site_perl/5.24/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml

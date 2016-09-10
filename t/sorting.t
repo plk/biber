@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 44;
+use Test::More tests => 49;
 use Test::Differences;
 unified_diff;
 
@@ -35,26 +35,25 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # relying on here for tests
 
 # Biber options
-Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
-my $yearoff1    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff2    = 'mm,,Knuth!Donald E,Computers Typesetting,198,0000';
-my $yearoff3    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff4    = 'mm,,Knuth!Donald E,Computers Typesetting,984,0000';
-my $yearoff5    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff6    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff7    = 'mm,,Knuth!Donald E,Computers Typesetting,198,0000';
-my $yearoff8    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,0000';
-my $yearoff9    = 'mm,,Knuth!Donald E,Computers Typesetting,984,0000';
+my $yearoff1    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff2    = 'mm,,Knuth!Donald E,Computers Typesetting,198,';
+my $yearoff3    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff4    = 'mm,,Knuth!Donald E,Computers Typesetting,984,';
+my $yearoff5    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff6    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff7    = 'mm,,Knuth!Donald E,Computers Typesetting,198,';
+my $yearoff8    = 'mm,,Knuth!Donald E,Computers Typesetting,1984,';
+my $yearoff9    = 'mm,,Knuth!Donald E,Computers Typesetting,984,';
 my $vol1        = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,2200';
 my $vol2        = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,2200000';
 my $vol3        = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,ĐĐĐ22';
 my $nty         = 'mm,,Glashow!Sheldon,Partial Symmetries of Weak Interactions,1961,22';
 my $nyt         = 'mm,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,22';
 my $nyvt        = 'mm,,Glashow!Sheldon,1961,22,Partial Symmetries of Weak Interactions';
-my $anyt_la     = 'mm,Gla61,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,0000';
-my $anyt        = 'mm,,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,0000';
+my $anyt_la     = 'mm,Gla61,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,';
+my $anyt        = 'mm,,,Glashow!Sheldon,1961,Partial Symmetries of Weak Interactions,';
 my $anyvt_la    = 'mm,Gla61,,Glashow!Sheldon,1961,0022,Partial Symmetries of Weak Interactions';
 my $anyvt_la2   = "mm,Hos+98,,Hostetler!Michael J\x{10FFFD},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm";
 my $anyvt_la3   = "mm,HW98,,Hostetler!Michael J#Wingate!Julia E\x{10FFFD},1998,0014,Alkanethiolate gold cluster molecules with core diameters from 15 to 52 nm";
@@ -67,23 +66,64 @@ my $debug       = 'stdmodel';
 my $sk1         = 'mm,,AATESTKEY,AATESTKEY,AATESTKEY,AATESTKEY';
 my $ps_sc       = 'zs,,Partial Symmetries of Weak Interactions,,Partial Symmetries of Weak Interactions,Partial Symmetries of Weak Interactions';
 my $noname      = 'mm,,Partial Symmetries of Weak Interactions,Partial Symmetries of Weak Interactions,1961,22';
-my $citeorder   = '0000001';
+my $citeorder   = '1';
 my $lists1      = 'Marcel Dekker';
 my $lists2      = 'Chichester';
 my $lists3      = "IBM\x{10FFFD}";
 my $lists4      = "IBM!HP\x{10FFFD}";
 my $lists5      = 'IBM!HP!Sun!Sony';
-my $dates1      = '1979,01,0200000,1980,04,08,1924,06,07,1924,07,09,1924,0002,05,192,02,03,1979,03,04,79,03,03';
+my $dates1      = '1979,1,2000000,1980,4,8,1924,6,7,1924,7,9,1924,0002,5,192,2,3,1979,3,4,79,3,3';
 my $edtypeclass1 = 'redactor,Jaffé!Philipp,Loewenfeld!Samuel#Kaltenbrunner!Ferdinand#Ewald!Paul';
-my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah ḥiburim,2000,0000';
-my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,0000';
-my $labels      = '2005,03,02';
+my $prefix1     = 'mm,,Luzzatto!Moshe Ḥayyim,,,Lashon laRamḥal uvo sheloshah ḥiburim,2000,';
+my $diacritic1  = 'mm,,Hasan!Alī,alHasan!ʿAlī,Hasan!Alī,Some title,2000,';
+my $labels      = '2005,3,2';
 my $sn1         = '';
-my $snk1        = 'mm,,John John!von!Doe!Jr,,,0000';
+my $snk1        = 'mm,,John John!von!Doe!Jr,,,0';
+my $ent1        = 'mm,,Smith#Brian,,,0';
 
 # These have custom presort and also an exclusion on year and title set
-my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0000';
-my $useprefix2  = 'ww,,Bobble!Terrence!von,,,0000';
+my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0';
+my $useprefix4  = 'ww,,Bobble!Terrence!von,,,0';
+
+# These have namelist and name scope useprefix respectively
+my $useprefix2  = 'mm,,Animal!Alan!von,1998,Things,0';
+my $useprefix3  = 'mm,,von!Rabble!Richard,1998,Things,0';
+
+# Sorting data schemata
+my $ssd1 = [
+  { spec => "str", str => 1 },
+  { spec => "str", str => 1 },
+  { spec => "str", str => 1 },
+  { int => 1, spec => "int" },
+  { spec => "str", str => 1 },
+  { int => 1, spec => "int" },
+];
+my $ssd2 = [
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "-int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "-int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+  { int => 1, spec => "int" },
+];
 
 Biber::Config->setblxoption('useprefix', 1);
 
@@ -94,11 +134,15 @@ my $bibentries = $section->bibentries;
 my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 
 eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
+eq_or_diff($main->get_sortdata('avona')->[0], $useprefix2, 'von with name list scope useprefix' );
+eq_or_diff($main->get_sortdata('rvonr')->[0], $useprefix3, 'von with name scope useprefix' );
 
+# Testing sorting data schema generation
+is_deeply($main->get_sortdataschema, $ssd1, 'Sorting data schemata - 1' );
 
 # Testing custom name sorting key
-my $SNK;
-$SNK = {global => [
+my $SNK = Biber::Config->getblxoption('sortingnamekey');
+$SNK->{global} = [
         [{ type => 'namepart', value => 'given' },
          { type => 'literal', value => ' ' },
          { type => 'namepart', value => 'given' }],
@@ -106,26 +150,26 @@ $SNK = {global => [
         [{ type => 'namepart', value => 'family'}],
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
-       ]};
+       ];
 Biber::Config->setblxoption('sortingnamekey', $SNK);
 $biber->prepare;
 eq_or_diff($main->get_sortdata('snk1')->[0], $snk1, 'Sorting name key - 1' );
-
+eq_or_diff($main->get_sortdata('ent1')->[0], $ent1, 'Sorting name key - 2' );
 
 # regenerate information
 Biber::Config->setblxoption('useprefix', 0);
 # Default name sorting key back again
-$SNK = {global => [
+$SNK->{global} = [
         [{ type => 'namepart', value => 'prefix', use => 1}],
         [{ type => 'namepart', value => 'family'}],
         [{ type => 'namepart', value => 'given' }],
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
-       ]};
+       ];
 Biber::Config->setblxoption('sortingnamekey', $SNK);
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix2, 'von with type-specific presort, exclusions and useprefix=false' );
+eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix4, 'von with type-specific presort, exclusions and useprefix=false' );
 
 my $S;
 
@@ -169,7 +213,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -243,8 +286,8 @@ $S = {spec => [
        {'endday'       => {}},
       ],
       [
-       {},
-       {'origyear'   => {'sort_direction'  => 'descending'}}
+       {'sort_direction'  => 'descending'},
+       {'origyear'   => {}}
       ],
       [
        {},
@@ -322,6 +365,9 @@ $main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
+
+# Testing sorting data schema generation
+is_deeply($main->get_sortdataschema, $ssd2, 'Sorting data schemata - 2' );
 
 eq_or_diff($main->get_sortdata('moraux')->[0], $dates1, 'Very contrived but thorough test of date sorting' );
 
@@ -434,7 +480,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -477,7 +522,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -521,7 +565,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -564,7 +607,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -607,7 +649,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -643,15 +684,13 @@ $S = {spec => [
        {'title'      => {}}
       ],
       [
-       {},
+       {'sort_direction'  => 'descending'},
        {'year'       => {'substring_side'  => 'left',
-                         'substring_width' => 4,
-                         'sort_direction'  => 'descending'}}
+                         'substring_width' => 4}}
       ],
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -687,15 +726,13 @@ $S = {spec => [
        {'title'      => {}}
       ],
       [
-       {},
+       {'sort_direction'  => 'descending'},
        {'year'       => {'substring_side'  => 'left',
-                         'substring_width' => 3,
-                         'sort_direction'  => 'descending'}}
+                         'substring_width' => 3}}
       ],
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -731,15 +768,13 @@ $S = {spec => [
        {'title'      => {}}
       ],
       [
-       {},
+       {'sort_direction'  => 'descending'},
        {'year'       => {'substring_side'  => 'right',
-                         'substring_width' => 4,
-                         'sort_direction'  => 'descending'}}
+                         'substring_width' => 4}}
       ],
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -775,15 +810,13 @@ $S = {spec => [
        {'title'      => {}}
       ],
       [
-       {},
+       {'sort_direction'  => 'descending'},
        {'year'       => {'substring_side' => 'right',
-                         'substring_width' => 3,
-                         'sort_direction'  => 'descending'}}
+                         'substring_width' => 3}}
       ],
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -826,7 +859,7 @@ $S = {spec => [
       [
        {},
        {'volume'     => {pad_side => 'right'}},
-       {'0000'       => {}}
+       {'0'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -869,8 +902,7 @@ $S = {spec => [
       [
        {},
        {'volume'     => {pad_side => 'right',
-                         pad_width => 7}},
-       {'0000'       => {}}
+                         pad_width => 7}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -916,7 +948,6 @@ $S = {spec => [
        {'volume'     => {pad_side => 'left',
                          pad_width => 5,
                          pad_char => 'Đ'}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -960,7 +991,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -1005,7 +1035,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -1043,7 +1072,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ],
       [
        {},
@@ -1096,7 +1124,6 @@ $S = {spec => [
       [
        {},
        {'sorttitle'  => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -1150,7 +1177,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {pad_width => 4}},
-       {'0000'       => {}}
       ],
       [
        {},
@@ -1274,13 +1300,33 @@ $main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
-
 eq_or_diff($main->get_sortdata('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
-Biber::Config->setoption('sortgiveninits', 1);
+
+
+$SNK = Biber::Config->getblxoption('sortingnamekey');
+$SNK->{global} = [
+        [{ type => 'namepart', value => 'prefix', use => 1}],
+        [{ type => 'namepart', value => 'family'}],
+        [{ type => 'namepart', value => 'given', inits => 1}],
+        [{ type => 'namepart', value => 'suffix'}],
+        [{ type => 'namepart', value => 'prefix', use => 0}]
+       ];
+Biber::Config->setblxoption('sortingnamekey', $SNK);
+
 $biber->prepare;
 eq_or_diff($main->get_sortdata('stdmodel')->[0], $sortinits, 'sort first name inits only' );
 
-Biber::Config->setoption('sortgiveninits', 0);
+$SNK = Biber::Config->getblxoption('sortingnamekey');
+# Default back again
+$SNK->{global} = [
+        [{ type => 'namepart', value => 'prefix', use => 1}],
+        [{ type => 'namepart', value => 'family'}],
+        [{ type => 'namepart', value => 'given'}],
+        [{ type => 'namepart', value => 'suffix'}],
+        [{ type => 'namepart', value => 'prefix', use => 0}]
+       ];
+Biber::Config->setblxoption('sortingnamekey', $SNK);
+
 Biber::Config->setblxoption('labelalpha', 0);
 
 # debug
@@ -1333,7 +1379,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 $main->set_sortscheme($S);
@@ -1378,7 +1423,6 @@ $S = {spec => [
       [
        {},
        {'volume'     => {}},
-       {'0000'       => {}}
       ]
      ]};
 

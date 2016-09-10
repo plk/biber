@@ -1,6 +1,3 @@
-% To make this maximally compatible with older PDF readers, it uses
-% PDF 1.4
-\pdfminorversion=4
 \documentclass{ltxdockit}
 \usepackage{btxdockit}
 \usepackage[british]{babel}
@@ -29,8 +26,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{2.5}    % BIBER VERSION
-\gdef\biblatexversion{3.4}   % BIBLATEX VERSION
+\gdef\biberversion{2.6}    % BIBER VERSION
+\gdef\biblatexversion{3.5}   % BIBLATEX VERSION
 
 % colour for tables
 \definecolor{Gray}{gray}{0.85}
@@ -237,6 +234,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
+2.6 & 3.5\\
 2.5 & 3.4\\
 2.4 & 3.3\\
 2.3 & 3.2\\
@@ -590,7 +588,6 @@ an example config file which displays the \biber\ defaults:
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
   <clrmacros>0</clrmacros>
-  <collate>1</collate>
   <collate_options>
     <option name="level" value="4"/>
     <option name="variable" value="non-ignorable"/>
@@ -599,7 +596,6 @@ an example config file which displays the \biber\ defaults:
   <debug>0</debug>
   <decodecharsset>base</decodecharsset>
   <dieondatamodel>0</dieondatamodel>
-  <fastsort>0</fastsort>
   <graph>0</graph>
   <input_encoding>UTF-8</input_encoding>
   <listsep>and</listsep>
@@ -793,6 +789,7 @@ examples. A \opt{map} element looks like this:
   +\textcolor{blue}{<per\_nottype>\textcolor{red}{entrytype}</per\_nottype>}+
   <map_step  +\textcolor{blue}{map\_type\_source="\textcolor{red}{source-entrytype}"}+
              +\textcolor{blue}{map\_field\_source="\textcolor{red}{source-field}"}+
+             +\textcolor{blue}{map\_notfield="\textcolor{red}{source-field}"}+
              +\textcolor{blue}{map\_type\_target="\textcolor{red}{target-entrytype}"}+
              +\textcolor{blue}{map\_field\_target="\textcolor{red}{target-field}"}+
              +\textcolor{blue}{map\_match="\textcolor{red}{match-regexp}"}+
@@ -891,6 +888,8 @@ datasource entry being processed. A \opt{map\_step} works like this:
   \textcolor{blue}{\texttt{map\_final}} is set, then if there is no
   \textcolor{red}{\texttt{source-field}} field in the entry, processing of
   this \opt{map} immediately terminates.
+\item If \textcolor{blue}{\texttt{map\_notfield}} is used then only apply
+  the step if the \textcolor{red}{\texttt{source-field}} does not exist.
 \item If \textcolor{blue}{\texttt{map\_match}} is defined but
   \textcolor{blue}{\texttt{map\_replace}} is not, only apply the
   step if the \textcolor{red}{\texttt{source-field}} matches
@@ -934,7 +933,7 @@ datasource entry being processed. A \opt{map\_step} works like this:
   \end{itemize}
 \end{itemize}
 
-\noindent With \bibtex\ and RIS datasources, you can specify the
+\noindent With \bibtex\ datasources, you can specify the
 pseudo-field «entrykey» for \textcolor{red}{\texttt{source-field}}
 which is the citation key of the entry. Naturally, this «field» cannot
 be changed (used as \textcolor{red}{\texttt{set-field}},
@@ -943,7 +942,7 @@ be changed (used as \textcolor{red}{\texttt{set-field}},
 
 Note that for XML datasources like BibLaTeXML, the names of
 fields and entrytypes are matched in a case sensitive manner. For all other
-datasource types (\BibTeX, RIS etc.) entrytype and field name matching is
+datasource types, entrytype and field name matching is
 case insensitive.
 
 \noindent Here are some examples:
@@ -1121,23 +1120,10 @@ particular name, which presumably has some variants in the datasource.
 </map>
 \end{lstlisting}
 
-\noindent Any entry with a \bibfield{TITLE} field matching «A Title»
-will be completely ignored.
-\bigskip
-\minisec{Other datasource types}
-For datasources other than \BibTeX, (e.g. \verb+ris+ and
-\verb+biblatexml+), the source entrytypes and fields are usually very
-differently modelled and named. For example, here, dropping the
-\bibfield{N2} field from \verb+RIS+ datasources, which are commonly used
-for abstracts:
-
-\begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<maps datatype="ris" map_overwrite="1">
-  <map>
-    <map_step map_field_set="N2" map_null="1"/>
-  </map>
-</maps>
-\end{lstlisting}
+\noindent Any entry with a \bibfield{TITLE} field matching «A Title» will
+be completely ignored. \bigskip \minisec{Other datasource types} For
+datasources other than \BibTeX, (e.g. \verb+biblatexml+), the source
+entrytypes and fields are usually very differently modelled and named.
 
 \noindent Here we use a loop to apply a regular expression replacement to
 several fields:
@@ -1412,12 +1398,12 @@ scheme. When this is done, it sorts the entries according to the sorting
 objects it has generated for each entry.
 
 A sorting specification is comprised of a number of \texttt{sort} elements.
-Sorting is essentially a process of comparing whatever information the \textcolor{red}{n}th
-\texttt{sort} element collected for every entry (otherwise known as
-«multi-field» sorting). Within a \texttt{sort} element, there can be any
-number of \texttt{sortitem} elements which describe what information to
-look for in the entry in order to construct this part of the sorting
-object; either a field, a literal string or the special «citeorder»
+Sorting is essentially a process of comparing whatever information is in
+the \textcolor{red}{n}th \texttt{sort} element collected for every entry
+(otherwise known as «multi-field» sorting). Within a \texttt{sort} element,
+there can be any number of \texttt{sortitem} elements which describe what
+information to look for in the entry in order to construct this part of the
+sorting object; either a field, a literal string or the special «citeorder»
 pseudo-field.
 
 When generating the sorting information for an entry, within each
@@ -1619,8 +1605,8 @@ anyway. \opt{nosort} allows you to ignore parts of a field for sorting.
 This is done using Perl regular expressions which specify what to
 ignore in a field. You can specify as many patterns as you like for a
 specific field. Datasource field sets defined using
-\cmd{DeclareDatafieldSet} in \biblatex are also recognised as valid options
-values and so you can specify \opt{nosort} regular expressions for
+\cmd{DeclareDatafieldSet} in \biblatex are also recognised as valid
+values and so it is possible to specify \opt{nosort} regular expressions for
 arbitrary sets of fields. \biblatex defines as standard two sets as shown
 in Table \ref{tab:nst}.
 
@@ -1794,27 +1780,14 @@ option to specify the location to write the \verb+.bbl+ to in such cases.
 \biber\ takes care of collating the bibliography for
 \biblatex. It writes entries to the \verb+.bbl+ file sorted by a
 completely customisable set of rules which are passed in the
-\verb+.bcf+ file by \biblatex. \biber\ has two ways of performing
-collation:\\[2ex]
+\verb+.bcf+ file by \biblatex. \biber\ uses the Perl
+\verb+Unicode::Collate+ module for collation which implements the full UCA
+(Unicode Collation Algorithm). It also has CLDR (Common Locale Data
+Repository) tailoring to deal with cases which are not covered by the
+UCA.
 
-\biberex{--collate|-C}
-  \noindent The default. This option makes \biber\ use the Perl
-  \verb+Unicode::Collate+ module for collation which implements the full UCA (Unicode
-  Collation Algorithm). It also has CLDR (Common Locale Data
-  Repository) tailoring to deal with cases which are not covered by the
-  UCA. It is a little slower than \opt{--fastsort|-f} but the
-  advantages are such that it's rarely worth using \opt{--fastsort|-f}\\[1ex]
-
-\biberex{--fastsort|-f}
-  \noindent \biber\ will sort using
-  the OS locale collation tables. The drawback for this method is that special
-  collation tailoring for various languages are not implemented in the
-  collation tables for many OSes. For example, few OSes correctly sort 'å'
-  before 'ä' in the Swedish (\verb+sv_SE+) locale. If you are using a
-  common latin alphabet, then this is probably not a problem for you.\\[2ex]
-
-\noindent The locale used for collating a particular field in the
-bibliography is determined by the following resource chain which is given
+The locale used for collating a particular field in the bibliography is
+determined by the following resource chain which is given
 in decreasing precedence order:\\[2ex]
 
 \noindent\opt{--collate-options|-c} (e.g. \opt{-c 'locale => "de\_DE"'}) $\rightarrow$\\
@@ -1823,11 +1796,11 @@ in decreasing precedence order:\\[2ex]
 \hspace*{3em}\biblatex per-sortscheme \opt{locale} option$\rightarrow$\\
 \hspace*{4em}\biblatex global sortlocale option\\
 
-\noindent With the default \opt{--collate|-C} option, the locale will be
-used to look for a collation tailoring for that locale. It will generate an
-informational warning if it finds none. This is not a problem as most
-standard collation cases are covered by the standard UCA and many locales
-neither have nor need any special collation tailoring.
+\noindent The locale will be used to look for a collation tailoring for
+that locale. It will generate an informational warning if it finds none.
+This is not a problem as most standard collation cases are covered by the
+standard UCA and many locales neither have nor need any special collation
+tailoring.
 
 \biblatex passes sortscheme-specific sorting locales and its global sorting
 locale in the \file{.bcf}. \biber uses these locales automatically to
@@ -1846,26 +1819,20 @@ instead of using the «spanish» string because the Babel/Polyglossia
 «spanish» language identifier by default maps to the modern \verb+es_ES+
 locale (which doesn't include sort tailoring for «ch» in Spanish).
 
-With the \opt{--fastsort|-f} option, the locale will be
-used to locate an OS locale definition to use for the collation. This
-may or may not be correctly tailored, depending on the locale and the OS.
-
 Collation is by default case sensitive. You can turn this
 off globally using the \biber\ option \opt{--sortcase=false} or from
 \biblatex\ using its option\linebreak[4]\opt{sortcase=false}. The option can also
 be defined per-field so you can sort some fields case sensitively and
 others case insensitively. See the \biblatex\ manual.
 
-\opt{--collate|-C} by default collates uppercase before lower.
+By default, \biber\ collates uppercase before lower.
 You can reverse this globally for all sorting using the \biber\ option
 \opt{--sortupper=false} or from\linebreak[4]\biblatex\ by using its option
 \opt{sortupper=false}. The option can also be defined per-field so you can
 sort some fields uppercase before lower and others lower before upper. See the
 \biblatex\ manual. Be aware though that some locales rightly enforce a
 particular setting for this (for example, Danish). You will be able to
-override it but \biber\ will warn you if you do. \opt{sortupper} has
-no effect when using \opt{--fastsort|-f}--you are at the mercy of what
-your OS locale does.
+override it but \biber\ will warn you if you do.
 
 There are in fact many options to \verb+Unicode::Collate+
 which can tailor the collation in various ways in
@@ -1900,11 +1867,6 @@ not used to override the \verb+.bcf+
 \biberex{biber --sortlocale=de_DE_phonebook}
 
 \noindent Override any locale setting in the \verb+.bcf+
-
-\biberex{biber --fastsort}
-
-\noindent Use slightly quicker internal sorting routine. This uses the OS locale
-files which may or may not be accurate.
 
 \biberex{biber --sortcase=false}
 
@@ -2039,7 +2001,7 @@ does the replacement. Just copy a similar type of macro from the default
 recoding data file if you are adding new entries, which is unlikely as the
 file is quite comprehensive. There is only one other thing to note. The
 «preferred» attribute tells \biber\ to use a specific \latex\ macro when
-mapping from UTF-8, just in case there are more than one mappings from
+mapping from UTF-8, just in case there is more than one mapping from
 UTF-8 for a particular character. It's unlikely you will need to use this.
 
 \bigskip
@@ -2120,6 +2082,64 @@ hard-coded «and» and «others». Hopefully this will change as these two
 hard-coded English terms look really rather bad in the context of
 multilingual bibliographies.
 \bigskip
+\subsection{Extended Name Format}
+\label{biber:xname}
+The parsing rules for \bibtex names are rather archaic and not suited to
+many international name formats. \biber supports an extended name format
+which allows explicit specification of the parts of names. This allows the
+use of custom name parts apart from the four standard \bibtex parts. Extended
+name formats are supported in all name fields and can be used along with
+the usual \bibtex name format. Recognition of extended name format can be
+disabled with the \biber option \opt{--noxname} in case you do not need the
+extended format and the auto-detection causes problems with normal name
+parsing. The separator \verb+=+ which comes between the namepart names and
+values is customisable with the \biber option \opt{--xnamesep}. Here is an
+example:
+\begin{verbatim}
+AUTHOR = {Hans Harman and Simon de Beumont}
+AUTHOR = {given=Hans, family=Harman and given=Simon, prefix=de, family=Beumont}
+\end{verbatim}
+%
+These two name specifications are equivalent but the extended format
+explicitly names the parts. The supported parts are those specified by the
+\biblatex data mode constant \opt{nameparts}, the default value of which
+is:
+\begin{verbatim}
+\DeclareDatamodelConstant[type=list]{nameparts}{prefix,family,suffix,given}
+\end{verbatim}
+%
+As with traditional \bibtex name parsing, initials are automatically
+generated but it is also possible to specify these explicitly:
+\begin{verbatim}
+AUTHOR = {given=Jean, prefix=de la, prefix-i=d, family=Rousse}
+AUTHOR = {given={Jean Pierre Simon}, given-i=JPS}
+\end{verbatim}
+%
+Initials are specified by adding the suffix \verb+-i+ to the namepart name.
+Compound parts may be protected with braces:
+\begin{verbatim}
+AUTHOR = {given={Jean Pierre}}
+\end{verbatim}
+%
+If a namepart contains a comma, the whole namepart should be protected with
+quotes:
+\begin{verbatim}
+AUTHOR = {"family={Robert and Sons, Inc.}"}
+\end{verbatim}
+%
+Traditional \bibtex name formats and the extended form may be used together:
+\begin{verbatim}
+AUTHOR = {Hans Harman and given=Simon, prefix=de, family=Beumont}
+\end{verbatim}
+%
+Per-namelist and per-name options may be specified in the extended name
+format:
+\begin{verbatim}
+AUTHOR = {namelistopt=true and Hans Harman and
+          given=Simon, family=Beumont, nameopt=true}
+\end{verbatim}
+
+\bigskip
 \subsection{Editor Integration}
 
 Visit \url{http://tex.stackexchange.com/questions/154751/} for a
@@ -2166,7 +2186,6 @@ drivers are:
 \begin{itemize}
 \item \BibTeX\ --- \BibTeX\ data files
 \item \verb+biblatexml+ --- Experimental \biblatex\ XML format
-\item \verb+ris+ --- Research Information Systems format
 \end{itemize}
 
 \subsection{Visualising the Output}\label{ref:vis}
@@ -2544,6 +2563,29 @@ default. The applicability of the various output options depends on
 the output format as shown in table \ref{tab:outopts} where dash means that
 the options has no relevance for the output format.
 
+The order of the fields when writing \bibtex data is controlled by the
+\opt{--output-field-order} option. This is a comma-separated list of fields
+or field classes and fields will be output to entries in the order
+specified. Any unspecified fields will be output in sorted order after the
+specified fields. The field classes are:
+
+\begin{description}
+\item[names] All name fields
+\item[lists] All non-name list fields
+\item[dates] All date fields
+\end{description}
+%
+For the default value, run \biber with the \opt{--help} option and see the
+documentation for the option. \opt{--output-listsep}, \opt{output-namesep}
+and \opt{output-xnamesep} can be used to customise separators on output and
+their default values are the same as their input option counterparts
+\opt{--listsep}, \opt{--namesep} and \opt{--xnamesep}. The option
+\opt{--output-xname} can be used to specify that the extended name format
+(see section \ref{biber::xname}) is to be used to output names.
+\opt{--output-annotation-marker} can be used to specify the annotation
+marker to write for annotated fields on output. See the Data Annotation feature
+documentation in the \biblatex manual.
+
 \begin{table}
 \begin{center}
 \small
@@ -2553,10 +2595,16 @@ the options has no relevance for the output format.
 \emph{Option} & bibtex & biblatexml & bbl & dot\\
 \midrule
 output-align & \checkmark & - & - & -\\
+output-annotation-marker & \checkmark & - & - & -\\
 output-indent & \checkmark & \checkmark & - & -\\
+output-field-order & \checkmark & - & - & -\\
 output-fieldcase & \checkmark & - & - & -\\
+output-listsep & \checkmark & - & - & -\\
 output-macro-fields & \checkmark & - & - & -\\
+output-namesep & \checkmark & - & - & -\\
 output-resolve & \checkmark & \checkmark & - & -\\
+output-xname & \checkmark & - & - & -\\
+output-xnamesep & \checkmark & - & - & -\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -2596,7 +2644,7 @@ modules. It is packaged as a stand-alone binary using the excellent
 dependencies into one file which acts as a stand-alone binary and is
 indistinguishable from such to the end user. You can also simply download
 the Perl source and run it as a normal Perl program which
-requires you to have a working Perl 5.16+ installation and the
+requires you to have a working Perl 5.24+ installation and the
 ability to install the pre-requisite modules. You would typically only do
 this if you wanted to keep up with all the bleeding-edge git commits before
 they had been packaged as a binary. Almost all users will not want to do
@@ -2731,11 +2779,10 @@ sudo chmod +x /usr/local/bin/biber
 linux» if unsure about this. There are many pages about this, for example:
 \url{http://www.cyberciti.biz/faq/unix-linux-adding-path/}
 
-
 \subsection{Building}
 
 Instructions for those who want/need to build an executable from the
-Perl version. For this, you will need to have Perl 5.16+ with
+Perl version. For this, you will need to have Perl 5.24+ with
 the following modules (best installed in this order):
 
 \begin{itemize}
@@ -2811,7 +2858,7 @@ define these two things as part of constructing new build scripts:
 
 \noindent The \opt{--link} options can be a little tricky sometimes. It is
 usually best to build without them once and then run
-\verb+ldd+\footnote{\verb+otool+ on OSX and \verb+depends.exe+ on Windows}
+\verb+ldd+\footnote{\texttt{otool} on OSX and \texttt{depends.exe} on Windows}
 on the binary to see which version/location of a library you should link
 to. You can also try just running the binary and it should complain about
 missing libraries and where it expected to find them. Put missing library
@@ -2852,7 +2899,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.5
+INFO - This is Biber 2.6
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

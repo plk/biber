@@ -48,7 +48,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('dsn', 'tool.bib');
 
 # Set the output target
-$out->set_output_target($out->set_output_target_file(\$outvar));
+$out->set_output_target($out->set_output_target_file(\$outvar, 1));
 
 # THERE IS A CONFIG FILE BEING READ!
 
@@ -174,10 +174,16 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:note>A Note</bltx:note>
   </bltx:entry>
   <bltx:entry id="b1" entrytype="book">
+    <bltx:location>
+      <bltx:list>
+        <bltx:item annotation="ann1">London</bltx:item>
+        <bltx:item annotation="ann2">Edinburgh</bltx:item>
+      </bltx:list>
+    </bltx:location>
     <bltx:mainsubtitle>Mainsubtitle</bltx:mainsubtitle>
     <bltx:maintitle>Maintitle</bltx:maintitle>
     <bltx:maintitleaddon>Maintitleaddon</bltx:maintitleaddon>
-    <bltx:title>Booktitle</bltx:title>
+    <bltx:title annotation="ann1, ann2">Booktitle</bltx:title>
     <bltx:date>1999</bltx:date>
   </bltx:entry>
   <bltx:entry id="mv1" entrytype="mvbook">
@@ -188,8 +194,26 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:title>Maintitle</bltx:title>
     <bltx:titleaddon>Maintitleaddon</bltx:titleaddon>
   </bltx:entry>
+  <bltx:entry id="dt1" entrytype="book">
+    <bltx:date>
+      <bltx:start>2004-04-25T14:34:00</bltx:start>
+      <bltx:end>2004-04-05T14:37:06</bltx:end>
+    </bltx:date>
+    <bltx:date type="event">
+      <bltx:start>2004-04-25T14:34:00+05:00</bltx:start>
+      <bltx:end>2004-04-05T15:34:00+05:00</bltx:end>
+    </bltx:date>
+    <bltx:date type="orig">
+      <bltx:start>2004-04-25T14:34:00Z</bltx:start>
+      <bltx:end>2004-04-05T14:34:05Z</bltx:end>
+    </bltx:date>
+    <bltx:date type="url">
+      <bltx:start>2004-04-25T14:34:00</bltx:start>
+      <bltx:end>2004-04-05T15:00:00</bltx:end>
+    </bltx:date>
+  </bltx:entry>
 </bltx:entries>
 |;
 
 eq_or_diff($outvar, encode_utf8($bltxml1), 'bltxml tool mode - 1');
-is_deeply([$main->get_keys], ['macmillan:pub', 'macmillan:loc', 'mv1', 'b1', 'macmillan', NFD('i3Š'), 'xd1'], 'tool mode sorting');
+is_deeply([$main->get_keys], ['b1', 'macmillan', 'dt1', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'xd1'], 'tool mode sorting');

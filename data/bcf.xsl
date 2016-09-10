@@ -398,6 +398,12 @@
             <xsl:choose>
               <xsl:when test="./@map_overwrite">1</xsl:when>
               <xsl:otherwise>0</xsl:otherwise>
+              </xsl:choose>, section = 
+              <xsl:choose>
+                <xsl:when test="./@refsection">
+                  <xsl:value-of select="./@refsection"/>
+                </xsl:when>
+              <xsl:otherwise>all</xsl:otherwise>
             </xsl:choose>)</h4>
             <xsl:for-each select="./bcf:map">
               <table>
@@ -494,6 +500,34 @@
           </ul>
           </div>
         </xsl:if>
+        <!-- LABELALPHA NAME TEMPLATES -->
+        <xsl:if test="/bcf:controlfile/bcf:labelalphanametemplate">
+          <hr/>
+          <h4>Labelalpha Name Templates</h4>
+          <xsl:for-each select="/bcf:controlfile/bcf:labelalphanametemplate">
+            <h4>Template for type <xsl:value-of select="./@type"/></h4>
+            <table>
+              <thead>
+                <tr><td>Order</td><td>Pre</td><td>Use option</td><td>Width</td><td>Side</td><td>Compound</td><td>Namepart</td></tr>
+              </thead>
+              <tbody>
+                <xsl:for-each select="./bcf:namepart">
+                  <xsl:sort select="./@order"/>
+                  <tr>
+                    <td><xsl:value-of select="./@order"/></td>
+                    <td><xsl:value-of select="./@pre"/></td>
+                    <td><xsl:value-of select="./@use"/></td>
+                    <td><xsl:value-of select="./@substring_width"/></td>
+                    <td><xsl:value-of select="./@substring_side"/></td>
+                    <td><xsl:value-of select="./@substring_compound"/></td>
+                    <td><xsl:value-of select="./text()"/></td>
+                  </tr>
+                </xsl:for-each>
+              </tbody>
+            </table>
+            <br/>
+          </xsl:for-each>
+        </xsl:if>
         <!-- LABELALPHA TEMPLATES -->
         <xsl:if test="/bcf:controlfile/bcf:labelalphatemplate">
           <hr/>
@@ -577,7 +611,7 @@
           <div class="key"><u>Key</u>
           <ul>
             <li><b>Heading key</b>: Label parts are concatenated together in part order shown</li>
-            <li><b>Labelpart key</b>: <span class="la_final">Final label, no more parts are considered</span>. &quot;namecount=n<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><span class="la_fieldkey">field</span>&quot; - conditional name <span class="la_fieldkey">field</span>part, only used if there as many names as specified by the range n. Substring specification: &quot;<span class="la_substring">&gt;&gt;&gt;</span><span class="la_fieldkey">field</span>&quot; = use three chars from left side of field. &quot;<span class="la_fieldkey">field</span><span class="la_substring">&lt;&lt;</span>&quot; = use two chars from right side of field. &quot;<span class="la_fieldkey">field</span><span class="la_substring">v/n</span>&quot; = variable-width substring, max n chars. &quot;<span class="la_fieldkey">field</span><span class="la_substring">vf/n</span>&quot; = variable-width substring fixed to same length as longest string occuring at least n times. &quot;<span class="la_fieldkey">field</span><span class="la_substring">l</span>&quot; = list scope disambiguation where the label as a whole is unique, not necessarily the individual parts. &quot;<span class="la_compound"><span class="la_fieldkey">field</span>&quot; with compound substring extraction enabled</span>. &quot;<span class="la_fieldkey">field</span><span class="la_names">&quot;=range</span>=only use the names in the specified range to form the labelpart. &quot;<span class="la_fieldkey">field</span><span class="la_namessep">(string)</span>&quot;=use string as separator between all names. <span class="la_final"><xsl:text disable-output-escaping="yes">&amp;otimes;</xsl:text></span> = supress alphaothers</li>
+            <li><b>Labelpart key</b>: <span class="la_final">Final label, no more parts are considered</span>. &quot;namecount=n<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><span class="la_fieldkey">field</span>&quot; - conditional name <span class="la_fieldkey">field</span>part, only used if there as many names as specified by the range n. Substring specification: &quot;<span class="la_substring">&gt;&gt;&gt;</span><span class="la_fieldkey">field</span>&quot; = use three chars from left side of field. &quot;<span class="la_fieldkey">field</span><span class="la_substring">&lt;&lt;</span>&quot; = use two chars from right side of field. &quot;<span class="la_fieldkey">field</span><span class="la_substring">v/n</span>&quot; = variable-width substring, max n chars. &quot;<span class="la_fieldkey">field</span><span class="la_substring">vf/n</span>&quot; = variable-width substring fixed to same length as longest string occuring at least n times. &quot;<span class="la_fieldkey">field</span><span class="la_substring">l</span>&quot; = list scope disambiguation where the label as a whole is unique, not necessarily the individual parts. &quot;<span class="la_fieldkey">field</span><span class="la_names">&quot;=range</span>=only use the names in the specified range to form the labelpart. &quot;<span class="la_fieldkey">field</span><span class="la_namessep">(string)</span>&quot;=use string as separator between all names. <span class="la_final"><xsl:text disable-output-escaping="yes">&amp;otimes;</xsl:text></span> = supress alphaothers</li>
           </ul>
           </div>
         </xsl:if>
@@ -589,7 +623,11 @@
           <!-- Defaults -->
           <table>
             <thead>
-              <tr><td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td><td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td></tr>
+              <tr>
+                <td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td>
+                <td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td>
+                <td>Suppress</td>
+              </tr>
             </thead>
             <tbody>
               <!-- Defaults for all types -->
@@ -628,6 +666,7 @@
                     </td>
                   </xsl:otherwise>
                 </xsl:choose>
+                <td><xsl:value-of select="/bcf:controlfile/bcf:inheritance/bcf:defaults/@suppress"/></td>
               </tr>
               <!-- Defaults for certain types -->
               <xsl:for-each select="/bcf:controlfile/bcf:inheritance/bcf:defaults/bcf:type_pair">
@@ -676,6 +715,7 @@
                       </td>
                     </xsl:otherwise>
                   </xsl:choose>
+                  <td><xsl:value-of select="./@suppress"/></td>
                 </tr>
               </xsl:for-each>
             </tbody>
@@ -683,7 +723,11 @@
           <h4>Specifications</h4>          
           <table>
             <thead>
-              <tr><td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td><td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td></tr>
+              <tr>
+                <td>Child type <xsl:text disable-output-escaping="yes">&amp;asymp;</xsl:text> Parent type</td>
+                <td>Source field <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> Target field</td>
+                <td>Suppress</td>
+              </tr>
             </thead>
             <tbody>
               <xsl:for-each select="/bcf:controlfile/bcf:inheritance/bcf:inherit">
@@ -735,6 +779,7 @@
                       </xsl:for-each>
                     </ul>
                   </td>
+                  <td><xsl:value-of select="./@suppress"/></td>
                 </tr>
               </xsl:for-each>
             </tbody>
@@ -797,6 +842,24 @@
             </xsl:for-each>
           </tbody>
         </table>
+        <h4>Uniquename Template</h4>
+        <table>
+          <thead>
+            <tr><td>Order</td><td>Base</td><td>Use option</td><td>Namepart</td></tr>
+          </thead>
+          <tbody>
+            <xsl:for-each select="/bcf:controlfile/bcf:uniquenametemplate/bcf:namepart">
+              <xsl:sort select="./@order"/>
+              <tr>
+                <td><xsl:value-of select="./@order"/></td>
+                <td><xsl:value-of select="./@base"/></td>
+                <td><xsl:value-of select="./@use"/></td>
+                <td><xsl:value-of select="./text()"/></td>
+              </tr>
+            </xsl:for-each>
+          </tbody>
+        </table>
+        <br/>
         <h4>Sorting Name Key Specification</h4>
         <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekey">
           <table>
@@ -813,7 +876,7 @@
                     <xsl:for-each select="./bcf:part">
                       <xsl:sort select="./@order"/>
                       <xsl:value-of select="./text()"/><xsl:if
-                      test="./@use"><span class="small"> (if use<xsl:value-of select="./text()"/>=<xsl:value-of select="./@use"/>)</span></xsl:if>
+                      test="./@use"><span class="small"> (if use<xsl:value-of select="./text()"/>=<xsl:value-of select="./@use"/>)</span></xsl:if><xsl:if test="./@inits"> (Initials only)</xsl:if>
                       <xsl:if test="not(position()=last())"> + </xsl:if>
                     </xsl:for-each>
                   </td>

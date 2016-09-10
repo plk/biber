@@ -1,5 +1,5 @@
 package Biber::Entry;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -25,22 +25,18 @@ Biber::Entry
 
     There are three types of field possible in an entry:
 
-    * raw  - These are direct copies of input fields with no processing performed on them.
-             Such fields are used for tool mode where we don't want to alter the fields as they
-             need to go back into the output as they are
-    * data - These are fields which derive directly from or are themselves fields in the
-             data source. Things like YEAR, MONTH, DAY etc. are such fields which are derived from,
-             for example, the DATE field (which is itself a "raw" field). They are part of the
-             original data implicitly, derived from a "raw" field.
-    * other - These are fields, often meta-information like labelname, labelalpha etc. which are
-              more removed from the data fields.
+    * data    - These are fields which derive directly from or are themselves fields in the
+                data source. Things like YEAR, MONTH, DAY etc. are such fields which are
+                derived from, for example, the DATE field. They are part of the original
+                data implicitly, derived from a field.
+    * derived - These are fields, often meta-information like labelname, labelalpha etc.
+                which are more removed from the data fields.
 
     The reason for this division is largely the entry cloning required for the related entry and
     inheritance features. When we clone an entry or copy some fields from one entry to another
-    we generally don't want the "other" category as such derived meta-fields will often need
-    to be re-created or ignored so we need to know which are the actual "data" fields to copy/clone.
-    "raw" fields are important when we are writing bibtex format output (in tool mode for example)
-    since in such cases, we don't want to derive implicit fields like YEAR/MONTH from DATE.
+    we generally don't want the "derived" category as such derived meta-fields will often need
+    to be re-created or ignored so we need to know which are the actual "data" fields to
+    copy/clone.
 
 =cut
 
@@ -68,20 +64,27 @@ sub relclone {
   my $citekey = $self->get_field('citekey');
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $dmh = Biber::Config->get_dm_helpers;
   if (my $relkeys = $self->get_field('related')) {
-    $logger->debug("Found RELATED field in '$citekey' with contents " . join(',', @$relkeys));
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Found RELATED field in '$citekey' with contents " . join(',', @$relkeys));
+    }
     my @clonekeys;
     foreach my $relkey (@$relkeys) {
       # Resolve any alias
       my $nrelkey = $section->get_citekey_alias($relkey) // $relkey;
-      $logger->debug("Resolved RELATED key alias '$relkey' to '$nrelkey'") if $relkey ne $nrelkey;
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Resolved RELATED key alias '$relkey' to '$nrelkey'") if $relkey ne $nrelkey;
+        $logger->debug("Looking at RELATED key '$relkey'");
+      }
       $relkey = $nrelkey;
-      $logger->debug("Looking at RELATED key '$relkey'");
 
       # Loop avoidance, in case we are back in an entry again in the guise of a clone
       # We can record the related clone but don't create it again
       if (my $ck = $section->get_keytorelclone($relkey)) {
-        $logger->debug("Found RELATED key '$relkey' already has clone '$ck'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Found RELATED key '$relkey' already has clone '$ck'");
+        }
         push @clonekeys, $ck;
 
         # Save graph information if requested
@@ -94,16 +97,35 @@ sub relclone {
         my $clonekey = md5_hex($relkey);
         push @clonekeys, $clonekey;
         my $relclone = $relentry->clone($clonekey);
-        $logger->debug("Created new related clone for '$relkey' with clone key '$clonekey'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Created new related clone for '$relkey' with clone key '$clonekey'");
+        }
+
+        # *datesplit is a special non datafield and needs to be copied for things like era
+        # output
+        foreach my $df ($dmh->{datefields}->@*) {
+          $df =~ s/date$//;
+          if (my $ds = $self->get_field("${df}datesplit")) {
+            $relclone->set_field("${df}datesplit", $ds);
+          }
+        }
 
         # Set related clone options
         if (my $relopts = $self->get_field('relatedoptions')) {
+          # Check if this clone was also directly cited. If so, set skipbib/skipbiblist
+          # if they are unset as otherwise this entry would appear twice in bibliographies
+          # but with different keys.
+          if ($section->has_citekey($relkey)) {
+            $relopts = remove_entry_options($relopts, {skipbib => 1, skipbiblist => 1});
+            push @$relopts, ('skipbib=true', 'skipbiblist=true');
+          }
           process_entry_options($clonekey, $relopts);
           $relclone->set_datafield('options', $relopts);
         }
         else {
-          process_entry_options($clonekey, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
-          $relclone->set_datafield('options', [ 'dataonly' ]);
+          process_entry_options($clonekey, ['skiplab','skipbiblist','uniquename=0','uniquelist=0']);
+          # Preserve options already in the clone but add 'dataonly'
+          $relclone->set_datafield('options', [ 'dataonly', @{$relclone->get_datafield('options') || []} ]);
         }
 
         $section->bibentries->add_entry($clonekey, $relclone);
@@ -115,7 +137,9 @@ sub relclone {
         }
 
         # recurse so we can do cascading related entries
-        $logger->debug("Recursing into RELATED entry '$clonekey'");
+        if ($logger->is_debug()) {# performance tune
+          $logger->debug("Recursing into RELATED entry '$clonekey'");
+        }
         $relclone->relclone;
       }
     }
@@ -139,9 +163,6 @@ sub clone {
   my $new = new Biber::Entry;
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = $v;
-  }
-  while (my ($k, $v) = each(%{$self->{rawfields}})) {
-    $new->{rawfields}{$k} = $v;
   }
   while (my ($k, $v) = each(%{$self->{origfields}})) {
     $new->{origfields}{$k} = $v;
@@ -307,8 +328,7 @@ sub get_field {
   my ($self, $key) = @_;
   return undef unless $key;
   return $self->{datafields}{$key} //
-         $self->{derivedfields}{$key} //
-         $self->{rawfields}{$key};
+         $self->{derivedfields}{$key};
 }
 
 
@@ -323,32 +343,6 @@ sub set_datafield {
   $self->{datafields}{$key} = $val;
   return;
 }
-
-
-
-=head2 set_rawfield
-
-    Save a copy of the raw field from the datasource
-
-=cut
-
-sub set_rawfield {
-  my ($self, $key, $val) = @_;
-  $self->{rawfields}{$key} = $val;
-  return;
-}
-
-=head2 get_rawfield
-
-    Get a raw field
-
-=cut
-
-sub get_rawfield {
-  my ($self, $key) = @_;
-  return $self->{rawfields}{$key};
-}
-
 
 =head2 get_datafield
 
@@ -372,7 +366,6 @@ sub del_field {
   my ($self, $key) = @_;
   delete $self->{datafields}{$key};
   delete $self->{derivedfields}{$key};
-  delete $self->{rawfields}{$key};
   return;
 }
 
@@ -398,8 +391,24 @@ sub del_datafield {
 sub field_exists {
   my ($self, $key) = @_;
   return (exists($self->{datafields}{$key}) ||
-          exists($self->{derivedfields}{$key}) ||
-          exists($self->{rawfields}{$key})) ? 1 : 0;
+          exists($self->{derivedfields}{$key})) ? 1 : 0;
+}
+
+=head2 date_fields_exist
+
+    Check whether any parts of a date field exist when passed a datepart field name
+
+=cut
+
+sub date_fields_exist {
+  my ($self, $field) = @_;
+  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|season|timezone)$//r;
+  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'season', 'timezone') {
+    if (exists($self->{datafields}{"$t$dp"}) or exists($self->{datafields}{"${t}end$dp"})) {
+      return 1;
+    }
+  }
+  return 0;
 }
 
 =head2 datafields
@@ -414,18 +423,6 @@ sub datafields {
   return sort keys %{$self->{datafields}};
 }
 
-=head2 rawfields
-
-    Returns a sorted array of the raw fields and contents
-
-=cut
-
-sub rawfields {
-  my $self = shift;
-  use locale;
-  return sort keys %{$self->{rawfields}};
-}
-
 =head2 count_datafields
 
     Returns the number of datafields
@@ -437,6 +434,17 @@ sub count_datafields {
   return keys %{$self->{datafields}};
 }
 
+=head2 derivedfields
+
+    Returns a sorted array of the fields which were added during processing
+
+=cut
+
+sub derivedfields {
+  my $self = shift;
+  use locale;
+  return sort keys %{$self->{derivedfields}};
+}
 
 =head2 fields
 
@@ -496,7 +504,7 @@ sub has_keyword {
 
 sub add_warning {
   my ($self, $warning) = @_;
-  push @{$self->{derivedfields}{warnings}}, $warning;
+  push $self->{derivedfields}{warnings}->@*, $warning;
   return;
 }
 
@@ -515,6 +523,7 @@ sub add_warning {
 
 sub set_inherit_from {
   my ($self, $parent) = @_;
+  my $dmh = Biber::Config->get_dm_helpers;
 
   # Data source fields
   foreach my $field ($parent->datafields) {
@@ -523,8 +532,11 @@ sub set_inherit_from {
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  if (my $ds = $parent->get_field('datesplit')) {
-    $self->set_field('datesplit', $ds);
+  foreach my $df ($dmh->{datefields}->@*) {
+    $df =~ s/date$//;
+    if (my $ds = $parent->get_field("${df}datesplit")) {
+      $self->set_field("${df}datesplit", $ds);
+    }
   }
   return;
 }
@@ -563,24 +575,15 @@ sub resolve_xdata {
         if (my $recurse_xdata = $xdatum_entry->get_field('xdata')) { # recurse
           $xdatum_entry->resolve_xdata($recurse_xdata);
         }
-        # For tool mode with bibtex output we need to copy the raw fields
-        if (Biber::Config->getoption('tool') and
-            Biber::Config->getoption('output_format') eq 'bibtex') {
-          foreach my $field ($xdatum_entry->rawfields()) { # set raw fields
-            next if $field eq 'ids'; # Never inherit aliases
-            $self->set_rawfield($field, $xdatum_entry->get_rawfield($field));
-            $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
-          }
-        }
-        else {
-          foreach my $field ($xdatum_entry->datafields()) { # set fields
-            next if $field eq 'ids'; # Never inherit aliases
-            $self->set_datafield($field, $xdatum_entry->get_field($field));
+        foreach my $field ($xdatum_entry->datafields()) { # set fields
+          next if $field eq 'ids'; # Never inherit aliases
+          $self->set_datafield($field, $xdatum_entry->get_field($field));
 
-            # Record graphing information if required
-            if (Biber::Config->getoption('output_format') eq 'dot') {
-              Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
-            }
+          # Record graphing information if required
+          if (Biber::Config->getoption('output_format') eq 'dot') {
+            Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
+          }
+          if ($logger->is_debug()) { # performance tune
             $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
           }
         }
@@ -605,6 +608,7 @@ sub resolve_xdata {
 
 sub inherit_from {
   my ($self, $parent) = @_;
+  my $dmh = Biber::Config->get_dm_helpers;
 
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
@@ -635,26 +639,29 @@ sub inherit_from {
   # global defaults ...
   my $inherit_all = $defaults->{inherit_all};
   my $override_target = $defaults->{override_target};
+  my $dignore = $defaults->{ignore};
+
   # override with type_pair specific defaults if they exist ...
-  foreach my $type_pair (@{$defaults->{type_pair}}) {
+  foreach my $type_pair ($defaults->{type_pair}->@*) {
     if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
         ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
       $inherit_all = $type_pair->{inherit_all} if $type_pair->{inherit_all};
       $override_target = $type_pair->{override_target} if $type_pair->{override_target};
+      $dignore = $type_pair->{ignore} if defined($type_pair->{ignore});
     }
   }
 
   # First process any fields that have special treatment
-  foreach my $inherit (@{$inheritance->{inherit}}) {
+  foreach my $inherit ($inheritance->{inherit}->@*) {
     # Match for this combination of entry and crossref parent?
-    foreach my $type_pair (@{$inherit->{type_pair}}) {
+    foreach my $type_pair ($inherit->{type_pair}->@*) {
       if (($type_pair->{source} eq '*' or $type_pair->{source} eq $parenttype) and
           ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
-        foreach my $field (@{$inherit->{field}}) {
+        foreach my $field ($inherit->{field}->@*) {
           # Skip for fields in the per-entry noinerit datafield set
           if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key) and
              exists($field->{target})) {
-            if (first {$field->{target} eq $_} @{$DATAFIELD_SETS{$niset}}) {
+            if (first {$field->{target} eq $_} $DATAFIELD_SETS{$niset}->@*) {
               next;
             }
           }
@@ -669,19 +676,20 @@ sub inherit_from {
           # Set the field if it doesn't exist or override is requested
           elsif (not $self->field_exists($field->{target}) or
                  $field_override_target eq 'true') {
-            $logger->debug("Entry '$target_key' is inheriting field '" .
-                           $field->{source}.
-                           "' as '" .
-                           $field->{target} .
-                           "' from entry '$source_key'");
-            # For tool mode with bibtex output we need to copy the raw fields
-            if (Biber::Config->getoption('tool') and
-                Biber::Config->getoption('output_format') eq 'bibtex') {
-              $self->set_rawfield($field->{target}, $parent->get_rawfield($field->{source}));
+            if ($logger->is_debug()) {# performance tune
+              $logger->debug("Entry '$target_key' is inheriting field '" .
+                             $field->{source}.
+                             "' as '" .
+                             $field->{target} .
+                             "' from entry '$source_key'");
             }
-            else {
-              $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
-            }
+
+            $self->set_datafield($field->{target}, $parent->get_field($field->{source}));
+
+            # Ignore uniqueness information tracking for this inheritance?
+            my $ignore = $inherit->{ignore} || $dignore;
+            Biber::Config->add_uniq_ignore($target_key, $field->{target}, $ignore);
+
             # Record graphing information if required
             if (Biber::Config->getoption('output_format') eq 'dot') {
               Biber::Config->set_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
@@ -694,44 +702,55 @@ sub inherit_from {
 
   # Now process the rest of the (original data only) fields, if necessary
   if ($inherit_all eq 'true') {
-    my @fields;
-    if (Biber::Config->getoption('tool')) {
-      @fields = $parent->rawfields;
-    }
-    else {
-      @fields = $parent->datafields;
-    }
+    my @fields = $parent->datafields;
+
+    # Special case - if the child has any Xdate datepart, don't inherit any Xdateparts
+    # from parent otherwise you can end up with rather broken dates in the child.
+    # Remove such fields before we start since it can't be done in the loop because
+    # as soon as one Xdatepart field has been inherited, no more will be.
+    my @filtered_fields;
     foreach my $field (@fields) {
-      # Skip for fields in the per-entry noinerit datafield set
+      if (first {$_ eq $field} $dmh->{dateparts}->@*) {
+        next if $self->date_fields_exist($field);
+      }
+      push @filtered_fields, $field;
+    }
+    @fields = @filtered_fields;
+
+    foreach my $field (@fields) {
+      # Skip for fields in the per-entry noinherit datafield set
       if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key)) {
-        if (first {$field eq $_} @{$DATAFIELD_SETS{$niset}}) {
+        if (first {$field eq $_} $DATAFIELD_SETS{$niset}->@*) {
           next;
         }
       }
       next if $processed{$field}; # Skip if we have already dealt with this field above
+
       # Set the field if it doesn't exist or override is requested
       if (not $self->field_exists($field) or $override_target eq 'true') {
-            $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
-            # For tool mode with bibtex output we need to copy the raw fields
-            if (Biber::Config->getoption('tool') and
-                Biber::Config->getoption('output_format') eq 'bibtex') {
-              $self->set_rawfield($field, $parent->get_rawfield($field));
-            }
-            else {
-              $self->set_datafield($field, $parent->get_field($field));
-            }
+        if ($logger->is_debug()) { # performance tune
+          $logger->debug("Entry '$target_key' is inheriting field '$field' from entry '$source_key'");
+        }
 
-            # Record graphing information if required
-            if (Biber::Config->getoption('output_format') eq 'dot') {
-              Biber::Config->set_graph('crossref', $source_key, $target_key, $field, $field);
-            }
+        $self->set_datafield($field, $parent->get_field($field));
+
+        # Ignore uniqueness information tracking for this inheritance?
+        Biber::Config->add_uniq_ignore($target_key, $field, $dignore);
+
+        # Record graphing information if required
+        if (Biber::Config->getoption('output_format') eq 'dot') {
+          Biber::Config->set_graph('crossref', $source_key, $target_key, $field, $field);
+        }
       }
     }
   }
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
-  if (my $ds = $parent->get_field('datesplit')) {
-    $self->set_field('datesplit', $ds);
+  foreach my $df ($dmh->{datefields}->@*) {
+    $df =~ s/date$//;
+    if (my $ds = $parent->get_field("${df}datesplit")) {
+      $self->set_field("${df}datesplit", $ds);
+    }
   }
 
   return;

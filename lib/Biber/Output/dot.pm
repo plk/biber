@@ -1,5 +1,5 @@
 package Biber::Output::dot;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Biber::Output::base);
@@ -113,7 +113,9 @@ sub output {
     $target = new IO::File '>-';
   }
 
-  $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug('Preparing final output using class ' . __PACKAGE__ . '...');
+  }
 
   $logger->info("Writing '$target_string' with encoding 'UTF-8'");
 
@@ -123,7 +125,7 @@ sub output {
   $i = ' '; # starting indentation
 
   # Loop over sections, sort so we can run tests
-  foreach my $section (sort {$a->number <=> $b->number} @{$biber->sections->get_sections}) {
+  foreach my $section (sort {$a->number <=> $b->number} $biber->sections->get_sections->@*) {
     my $secnum = $section->number;
     if ($gopts->{section}) {
       $graph .= $i x $in . "subgraph \"cluster_section${secnum}\" {\n";
@@ -249,9 +251,9 @@ sub _graph_related {
   if (my $gr = Biber::Config->get_graph('related')) {
 
     # related links
-    foreach my $f_entry (sort keys %{$gr->{clonetotarget}}) {
+    foreach my $f_entry (sort keys $gr->{clonetotarget}->%*) {
       my $m = $gr->{clonetotarget}{$f_entry};
-      foreach my $t_entry (sort keys %$m) {
+      foreach my $t_entry (sort keys $m->%*) {
         next unless $state->{$secnum}{"${secnum}/${f_entry}"};
         next unless $state->{$secnum}{"${secnum}/${t_entry}"};
 
@@ -267,9 +269,9 @@ sub _graph_related {
     }
 
     # clone links
-    foreach my $f_entry (sort keys %{$gr->{reltoclone}}) {
+    foreach my $f_entry (sort keys $gr->{reltoclone}->%*) {
       my $m = $gr->{reltoclone}{$f_entry};
-      foreach my $t_entry (sort keys %$m) {
+      foreach my $t_entry (sort keys $m->%*) {
         next unless $state->{$secnum}{"${secnum}/${f_entry}"};
         next unless $state->{$secnum}{"${secnum}/${t_entry}"};
 
@@ -290,7 +292,7 @@ sub _graph_related {
 sub _graph_xref {
   my $secnum = shift;
   if (my $gr = Biber::Config->get_graph('xref')) {
-    foreach my $f_entry (sort keys %$gr) {
+    foreach my $f_entry (sort keys $gr->%*) {
       my $t_entry = $gr->{$f_entry};
       next unless $state->{$secnum}{"${secnum}/${f_entry}"};
       next unless $state->{$secnum}{"${secnum}/${t_entry}"};
@@ -322,12 +324,12 @@ sub _graph_inheritance {
   if (my $gr = Biber::Config->get_graph($type)) {
     # Show fields
     if ($gopts->{field}) {
-      foreach my $f_entry (sort keys %$gr) {
+      foreach my $f_entry (sort keys $gr->%*) {
         my $v = $gr->{$f_entry};
-        foreach my $f_field (sort keys %$v) {
+        foreach my $f_field (sort keys $v->%*) {
           my $w = $v->{$f_field};
-          foreach my $t_entry (sort keys %$w) {
-            foreach my $t_field (@{$w->{$t_entry}}) {
+          foreach my $t_entry (sort keys $w->%*) {
+            foreach my $t_field ($w->{$t_entry}->@*) {
               next unless $state->{$secnum}{"${secnum}/${f_entry}"};
               next unless $state->{$secnum}{"${secnum}/${t_entry}"};
               $graph_edges .= $i x $in . "\"section${secnum}/${f_entry}/${f_field}\" -> \"section${secnum}/${t_entry}/${t_field}\" [ penwidth=\"2.0\", color=\"${edgecolor}\", tooltip=\"${t_entry}/" . uc($t_field) . " inherited via " . uc($type) . " from ${f_entry}/" . uc($f_field) . "\" ]\n";
@@ -338,10 +340,10 @@ sub _graph_inheritance {
     }
     # Just show the entries, no fields
     else {
-      foreach my $f_entry (sort keys %$gr) {
+      foreach my $f_entry (sort keys $gr->%*) {
         my $v = $gr->{$f_entry};
-        foreach my $w (sort values %$v) {
-          foreach my $t_entry (sort keys %$w) {
+        foreach my $w (sort values $v->%*) {
+          foreach my $t_entry (sort keys $w->%*) {
             next unless $state->{$secnum}{"${secnum}/${f_entry}"};
             next unless $state->{$secnum}{"${secnum}/${t_entry}"};
             next if $state->{edges}{"section${secnum}/${f_entry}"}{"section${secnum}/${t_entry}"};

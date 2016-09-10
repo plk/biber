@@ -33,7 +33,6 @@
         <ref name="mincrossrefs"/>
         <ref name="minxrefs"/>
         <ref name="sortcase"/>
-        <ref name="sortgiveninits"/>
         <ref name="sortupper"/>
       </element>
       <!--
@@ -53,8 +52,10 @@
         <ref name="labeltitle"/>
         <ref name="labeltitlespec"/>
         <ref name="labeltitleyear"/>
-        <ref name="labeldate"/>
+        <ref name="labeldateparts"/>
         <ref name="labeldatespec"/>
+        <ref name="julian"/>
+        <ref name="gregorianstart"/>
         <ref name="maxalphanames"/>
         <ref name="maxbibnames"/>
         <ref name="maxcitenames"/>
@@ -73,6 +74,7 @@
         <ref name="uniquename"/>
         <ref name="uniqueprimaryauthor"/>
         <ref name="uniquetitle"/>
+        <ref name="uniquework"/>
         <ref name="useprefix"/>
         <ref name="usenames"/>
       </element>
@@ -102,7 +104,7 @@
             <ref name="labeltitleyear"/>
           </optional>
           <optional>
-            <ref name="labeldate"/>
+            <ref name="labeldateparts"/>
           </optional>
           <optional>
             <ref name="labeldatespec"/>
@@ -157,6 +159,9 @@
           </optional>
           <optional>
             <ref name="uniquetitle"/>
+          </optional>
+          <optional>
+            <ref name="uniquework"/>
           </optional>
           <optional>
             <ref name="useprefix"/>
@@ -230,7 +235,6 @@
                 <choice>
                   <value>bibtex</value>
                   <value>biblatexml</value>
-                  <value>ris</value>
                 </choice>
               </attribute>
               <optional>
@@ -257,6 +261,62 @@
           </oneOrMore>
         </element>
       </optional>
+      <oneOrMore>
+        <!-- labelalphanametemplate specification -->
+        <element name="bcf:labelalphanametemplate">
+          <optional>
+            <attribute name="type">
+              <data type="string"/>
+            </attribute>
+          </optional>
+          <oneOrMore>
+            <!-- per-type? -->
+            <element name="bcf:namepart">
+              <attribute name="order">
+                <data type="integer"/>
+              </attribute>
+              <optional>
+                <attribute name="use">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="pre">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_width">
+                  <data type="integer"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_compound">
+                  <choice>
+                    <value>0</value>
+                    <value>1</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="substring_side">
+                  <choice>
+                    <value>left</value>
+                    <value>right</value>
+                  </choice>
+                </attribute>
+              </optional>
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </oneOrMore>
       <oneOrMore>
         <!-- labelalpha template specification -->
         <element name="bcf:labelalphatemplate">
@@ -307,11 +367,6 @@
                     </attribute>
                   </optional>
                   <optional>
-                    <attribute name="substring_pwidth">
-                      <data type="integer"/>
-                    </attribute>
-                  </optional>
-                  <optional>
                     <attribute name="substring_fixed_threshold">
                       <data type="integer"/>
                     </attribute>
@@ -326,22 +381,6 @@
                       <choice>
                         <value>left</value>
                         <value>right</value>
-                      </choice>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="substring_compound">
-                      <choice>
-                        <value>0</value>
-                        <value>1</value>
-                      </choice>
-                    </attribute>
-                  </optional>
-                  <optional>
-                    <attribute name="substring_pcompound">
-                      <choice>
-                        <value>0</value>
-                        <value>1</value>
                       </choice>
                     </attribute>
                   </optional>
@@ -389,6 +428,10 @@
               <value>false</value>
             </choice>
           </attribute>
+          <optional>
+            <!-- ignore of uniqueness tracking -->
+            <attribute name="ignore"/>
+          </optional>
           <zeroOrMore>
             <!-- Default inherit_all and override_target settings for entrytype source/target pairs -->
             <element name="bcf:type_pair">
@@ -424,6 +467,9 @@
                   </choice>
                 </attribute>
               </optional>
+              <optional>
+                <attribute name="suppress"/>
+              </optional>
               <empty/>
             </element>
           </zeroOrMore>
@@ -431,6 +477,10 @@
         <zeroOrMore>
           <!-- An inheritance specification -->
           <element name="bcf:inherit">
+            <optional>
+              <!-- ignore of uniqueness tracking -->
+              <attribute name="ignore"/>
+            </optional>
             <oneOrMore>
               <!-- applies to these pairs of source/target entrytypes -->
               <element name="bcf:type_pair">
@@ -546,6 +596,8 @@
         <!-- Transliteration specification(s) -->
         <ref name="translit"/>
       </zeroOrMore>
+      <!-- Uniquename template -->
+      <ref name="uniquenametemplate"/>
       <!-- Sorting name key specification -->
       <ref name="sortingnamekey"/>
       <!-- Global sorting specification -->
@@ -888,6 +940,34 @@
       </oneOrMore>
     </element>
   </define>
+  <define name="uniquenametemplate">
+    <element name="bcf:uniquenametemplate">
+      <oneOrMore>
+        <element name="bcf:namepart">
+          <attribute name="order">
+            <data type="integer"/>
+          </attribute>
+          <optional>
+            <attribute name="use">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="base">
+              <choice>
+                <value>0</value>
+                <value>1</value>
+              </choice>
+            </attribute>
+          </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+    </element>
+  </define>
   <define name="sortingnamekey">
     <oneOrMore>
       <element name="bcf:sortingnamekey">
@@ -910,6 +990,14 @@
                 </attribute>
                 <optional>
                   <attribute name="use">
+                    <choice>
+                      <value>0</value>
+                      <value>1</value>
+                    </choice>
+                  </attribute>
+                </optional>
+                <optional>
+                  <attribute name="inits">
                     <choice>
                       <value>0</value>
                       <value>1</value>
@@ -1076,7 +1164,6 @@
                 <choice>
                   <value>bibtex</value>
                   <value>biblatexml</value>
-                  <value>ris</value>
                 </choice>
               </attribute>
             </optional>
@@ -1254,13 +1341,13 @@
       </element>
     </element>
   </define>
-  <define name="labeldate">
+  <define name="labeldateparts">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>labeldate</value>
+        <value>labeldateparts</value>
       </element>
       <element name="bcf:value">
         <choice>
@@ -1455,6 +1542,51 @@
           <value>0</value>
           <value>1</value>
         </choice>
+      </element>
+    </element>
+  </define>
+  <define name="uniquework">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>uniquework</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="julian">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>julian</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="gregorianstart">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>gregorianstart</value>
+      </element>
+      <element name="bcf:value">
+        <text/>
       </element>
     </element>
   </define>
@@ -1706,22 +1838,6 @@
       </element>
     </element>
   </define>
-  <define name="sortgiveninits">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>sortgiveninits</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
-      </element>
-    </element>
-  </define>
   <define name="alphaothers">
     <element name="bcf:option">
       <attribute name="type">
@@ -1785,6 +1901,11 @@
           </data>
         </attribute>
       </optional>
+      <optional>
+        <attribute name="refsection">
+          <data type="integer"/>
+        </attribute>
+      </optional>
       <zeroOrMore>
         <element name="bcf:per_datasource">
           <data type="string">
@@ -1836,6 +1957,13 @@
               </optional>
               <optional>
                 <attribute name="map_field_source">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_notfield">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>

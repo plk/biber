@@ -1,5 +1,5 @@
 package Biber::Entry::Names;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Class::Accessor);
@@ -16,6 +16,8 @@ __PACKAGE__->mk_accessors(qw (
                               visible_alpha
                               visible_cite
                               visible_bib
+                              useprefix
+                              sortnamekeyscheme
                             ));
 
 =encoding utf-8
@@ -44,10 +46,10 @@ sub new {
 
 # sub TO_JSON {
 #   my $self = shift;
-#   foreach my $n (@$self){
+#   foreach my $n ($self->@*){
 #     $json->{$k} = $v;
 #   }
-#   return [ map {$_} @$self ];
+#   return [ map {$_} $self->@* ];
 # }
 
 =head2 notnull
@@ -58,7 +60,7 @@ sub new {
 
 sub notnull {
   my $self = shift;
-  my @arr = @{$self->{namelist}};
+  my @arr = $self->{namelist}->@*;
   return $#arr > -1 ? 1 : 0;
 }
 
@@ -189,7 +191,7 @@ sub get_uniquelist {
 sub count_uniquelist {
   my $self = shift;
   my $namelist = shift;
-  return $#$namelist + 1;
+  return $namelist->$#* + 1;
 }
 
 =head2 add_name
@@ -202,7 +204,7 @@ sub count_uniquelist {
 sub add_name {
   my $self = shift;
   my $name_obj = shift;
-  push @{$self->{namelist}}, $name_obj;
+  push $self->{namelist}->@*, $name_obj;
   $name_obj->set_index($#{$self->{namelist}} + 1);
   return;
 }
@@ -238,7 +240,7 @@ sub get_morenames {
 
 sub count_names {
   my $self = shift;
-  return scalar @{$self->{namelist}};
+  return scalar $self->{namelist}->@*;
 }
 
 =head2 nth_name
@@ -251,7 +253,7 @@ sub count_names {
 sub nth_name {
   my $self = shift;
   my $n = shift;
-  my $size = @{$self->{namelist}};
+  my $size = $self->{namelist}->@*;
   return $self->{namelist}[$n > $size ? $size-1 : $n-1];
 }
 
@@ -265,8 +267,8 @@ sub nth_name {
 sub first_n_names {
   my $self = shift;
   my $n = shift;
-  my $size = @{$self->{namelist}};
-  return [ @{$self->{namelist}}[0 .. ($n > $size ? $size-1 : $n-1)] ];
+  my $size = $self->{namelist}->@*;
+  return [ $self->{namelist}->@[0 .. ($n > $size ? $size-1 : $n-1)] ];
 }
 
 =head2 del_last_name
@@ -277,7 +279,7 @@ sub first_n_names {
 
 sub del_last_name {
   my $self = shift;
-  pop(@{$self->{namelist}}); # Don't want the return value of this!
+  pop($self->{namelist}->@*); # Don't want the return value of this!
   return;
 }
 

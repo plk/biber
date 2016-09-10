@@ -1,5 +1,5 @@
 package Biber::Entries;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
@@ -29,7 +29,7 @@ sub new {
 
 sub notnull {
   my $self = shift;
-  my @arr = keys %$self;
+  my @arr = keys $self->%*;
   return $#arr > -1 ? 1 : 0;
 }
 
@@ -65,7 +65,7 @@ sub entry {
 
 sub entries {
   my $self = shift;
-  return values %$self;
+  return values $self->%*;
 }
 
 
@@ -77,7 +77,7 @@ sub entries {
 
 sub del_entries {
   my $self = shift;
-  foreach my $e (keys %$self) {
+  foreach my $e (keys $self->%*) {
     delete($self->{$e});
   }
   return;

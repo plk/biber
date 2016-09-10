@@ -11,9 +11,11 @@ Things to remember when releasing new version:
 * "perl Build.PL" and "Build dist" to update YAML/JSON
 * Run test suite and make sure it passes cleanly
 * Commit and tag with version number
+* Move "current" to version number on SF
 * Create a new empty version tree for new version, use the dist/empty_tree.sh script:
-  empty_tree.sh <version>
-* Build binaries from release and upload to SF to new version folder
+  empty_tree.sh current
+* Build binaries from release and upload to SF to new version folder using
+  "current" as release 
 * Inform builders of binaries to update
 * Associate new defaults with new binaries and change labels
 * scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/

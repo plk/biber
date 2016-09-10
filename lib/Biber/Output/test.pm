@@ -1,5 +1,5 @@
 package Biber::Output::test;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 use parent qw(Biber::Output::base);
@@ -80,27 +80,28 @@ sub set_output_entry {
   my $dm = shift; # Structure object
   my $acc = '';
   my $secnum = $section->number;
+  my $dmh = $dm->{helpers};
 
   my $key = $be->get_field('citekey');
 
   $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
 
-  $acc .= "    \\entry{$key}{$bee}{" . join(',', @{filter_entry_options($be->get_field('options'))}) . "}\n";
+  $acc .= "    \\entry{$key}{$bee}{" . join(',', filter_entry_options($be->get_field('options'))->@*) . "}\n";
 
   # Generate set information
   if ( $be->get_field('entrytype') eq 'set' ) {   # Set parents get \set entry ...
-    $acc .= "      \\set{" . join(',', @{$be->get_field('entryset')}) . "}\n";
+    $acc .= "      \\set{" . join(',', $be->get_field('entryset')->@*) . "}\n";
   }
   else { # Everything else that isn't a set parent ...
     if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
-      $acc .= "      \\inset{" . join(',', @$es) . "}\n";
+      $acc .= "      \\inset{" . join(',', $es->@*) . "}\n";
     }
   }
 
 
   # Output name fields
-  foreach my $namefield (@{$dm->get_fields_of_type('list', 'name')}) {
+  foreach my $namefield ($dm->get_fields_of_type('list', 'name')->@*) {
     next if $dm->field_is_skipout($namefield);
     if ( my $nf = $be->get_field($namefield) ) {
       my $plo = '';
@@ -130,33 +131,43 @@ sub set_output_entry {
         $plo = join(',', @plo);
       }
       $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
-      foreach my $n (@{$nf->names}) {
+      foreach my $n ($nf->names->@*) {
         $acc .= $n->name_to_bbl;
       }
       $acc .= "      }\n";
     }
   }
 
-  foreach my $listfield (@{$dm->get_fields_of_fieldtype('list')}) {
+  foreach my $listfield ($dm->get_fields_of_fieldtype('list')->@*) {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
     if ( my $lf = $be->get_field($listfield) ) {
       if ( lc($be->get_field($listfield)->[-1]) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$listfield}\n";
-        pop @$lf; # remove the last element in the array
+        pop $lf->@*; # remove the last element in the array
       };
-      my $total = $#$lf + 1;
+      my $total = $lf->$#* + 1;
       $acc .= "      \\list{$listfield}{$total}{%\n";
-      foreach my $f (@$lf) {
+      foreach my $f ($lf->@*) {
         $acc .= "        {$f}%\n";
       }
       $acc .= "      }\n";
     }
   }
 
+  # Output labelname hashes
   my $namehash = $be->get_field('namehash');
   $acc .= "      \\strng{namehash}{$namehash}\n" if $namehash;
   my $fullhash = $be->get_field('fullhash');
   $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
+
+  # Output namelist hashes
+  foreach my $namefield ($dmh->{namelists}->@*) {
+    if (my $namehash = $be->get_field("${namefield}namehash")) {
+      $acc .= "      \\strng{${namefield}namehash}{$namehash}\n";
+      my $fullhash = $be->get_field("${namefield}fullhash");
+      $acc .= "      \\strng{${namefield}fullhash}{$fullhash}\n";
+    }
+  }
 
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     # Might not have been set due to skiplab/dataonly
@@ -170,9 +181,9 @@ sub set_output_entry {
   $acc .= "      <BDS>SORTINIT</BDS>\n";
   $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
-  # The labeldate option determines whether "extrayear" is output
+  # The labeldateparts option determines whether "extrayear" is output
   # Skip generating extrayear for entries with "skiplab" set
-  if ( Biber::Config->getblxoption('labeldate', $be->get_field('entrytype'))) {
+  if ( Biber::Config->getblxoption('labeldateparts', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
     if (my $ey = $be->get_field('extrayear')) {
       my $nameyear_extra = $be->get_field('nameyear_extra');
@@ -180,17 +191,8 @@ sub set_output_entry {
         $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
       }
     }
-    if (my $ly = $be->get_field('labelyear')) {
-      $acc .= "      \\field{labelyear}{$ly}\n";
-    }
-    if (my $lm = $be->get_field('labelmonth')) {
-      $acc .= "      \\field{labelmonth}{$lm}\n";
-    }
-    if (my $ld = $be->get_field('labelday')) {
-      $acc .= "      \\field{labelday}{$ld}\n";
-    }
-    if ($be->field_exists('datelabelsource')) {
-      $acc .= "      \\field{datelabelsource}{" . $be->get_field('datelabelsource') .  "}\n";
+    if ($be->field_exists('labeldatesource')) {
+      $acc .= "      \\field{labeldatesource}{" . $be->get_field('labeldatesource') .  "}\n";
     }
   }
 
@@ -231,12 +233,20 @@ sub set_output_entry {
     $acc .= "      \\true{singletitle}\n";
   }
 
-  if (defined($be->get_field('uniqueprimaryauthor'))) {
-    $acc .= "      \\true{uniqueprimaryauthor}\n";
-  }
-
   if (defined($be->get_field('uniquetitle'))) {
     $acc .= "      \\true{uniquetitle}\n";
+  }
+
+  if (defined($be->get_field('uniquebaretitle'))) {
+    $acc .= "      \\true{uniquebaretitle}\n";
+  }
+
+  if (defined($be->get_field('uniquework'))) {
+    $acc .= "      \\true{uniquework}\n";
+  }
+
+  if (defined($be->get_field('uniqueprimaryauthor'))) {
+    $acc .= "      \\true{uniqueprimaryauthor}\n";
   }
 
   # The source field for labelname
@@ -249,12 +259,12 @@ sub set_output_entry {
     $acc .= "      \\field{labeltitlesource}{$lti}\n";
   }
 
-  foreach my $field (sort @{$dm->get_fields_of_type('field', 'entrykey')},
-                          @{$dm->get_fields_of_type('field', 'key')},
-                          @{$dm->get_fields_of_type('field', 'integer')},
-                          @{$dm->get_fields_of_type('field', 'datepart')},
-                          @{$dm->get_fields_of_type('field', 'literal')},
-                          @{$dm->get_fields_of_type('field', 'code')}) {
+  foreach my $field (sort $dm->get_fields_of_type('field', 'entrykey')->@*,
+                          $dm->get_fields_of_type('field', 'key')->@*,
+                          $dm->get_fields_of_type('field', 'integer')->@*,
+                          $dm->get_fields_of_type('field', 'datepart')->@*,
+                          $dm->get_fields_of_type('field', 'literal')->@*,
+                          $dm->get_fields_of_type('field', 'code')->@*) {
     next if $dm->field_is_skipout($field);
     next if $dm->get_fieldformat($field) eq 'xsv';
     if ( ($dm->field_is_nullok($field) and
@@ -275,15 +285,15 @@ sub set_output_entry {
     }
   }
 
-  foreach my $field (sort @{$dm->get_fields_of_fieldformat('xsv')}) {
+  foreach my $field (sort $dm->get_fields_of_fieldformat('xsv')->@*) {
     next if $dm->field_is_skipout($field);
     next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
     if (my $f = $be->get_field($field)) {
-      $acc .= _printfield($be, $field, join(',', @$f) );
+      $acc .= _printfield($be, $field, join(',', $f->@*) );
     }
   }
 
-  foreach my $rfield (@{$dm->get_fields_of_datatype('range')}) {
+  foreach my $rfield ($dm->get_fields_of_datatype('range')->@*) {
     if ( my $rf = $be->get_field($rfield)) {
       $rf =~ s/[-–]+/\\bibrangedash /g;
       $acc .= "      \\field{$rfield}{$rf}\n";
@@ -291,8 +301,8 @@ sub set_output_entry {
     }
   }
 
-  foreach my $vfield ((@{$dm->get_fields_of_datatype('verbatim')},
-                       @{$dm->get_fields_of_datatype('uri')})) {
+  foreach my $vfield (($dm->get_fields_of_datatype('verbatim')->@*,
+                       $dm->get_fields_of_datatype('uri')->@*)) {
     if ( my $rf = $be->get_field($vfield) ) {
       $acc .= "      \\verb{$vfield}\n";
       $acc .= "      \\verb $rf\n    \\endverb\n";
@@ -304,7 +314,7 @@ sub set_output_entry {
 
   # Append any warnings to the entry, if any
   if (my $w = $be->get_field('warnings')) {
-    foreach my $warning (@$w) {
+    foreach my $warning ($w->@*) {
       $acc .= "      \\warn{\\item $warning}\n";
     }
   }
@@ -328,7 +338,7 @@ sub create_output_misc {
   my $self = shift;
 
   if (my $pa = $Biber::MASTER->get_preamble) {
-    $pa = join("%\n", @$pa);
+    $pa = join("%\n", $pa->@*);
     # Decode UTF-8 -> LaTeX macros if asked to
     if (Biber::Config->getoption('output_safechars')) {
       $pa = Biber::LaTeX::Recode::latex_encode($pa);
@@ -354,9 +364,9 @@ sub output {
   $logger->info("Writing output with encoding '" . Biber::Config->getoption('output_encoding') . "'");
   $logger->info('Converting UTF-8 to TeX macros on output to .bbl') if Biber::Config->getoption('output_safechars');
 
-  foreach my $secnum (sort keys %{$data->{ENTRIES}}) {
+  foreach my $secnum (sort keys $data->{ENTRIES}->%*) {
     my $section = $self->get_output_section($secnum);
-    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} @{$Biber::MASTER->sortlists->get_lists_for_section($secnum)}) {
+    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->sortlists->get_lists_for_section($secnum)->@*) {
       next unless $list->count_keys; # skip empty lists
       my $listtype = $list->get_type;
       foreach my $k ($list->get_keys) {

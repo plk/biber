@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Test::Differences;
 unified_diff;
 
@@ -42,7 +42,7 @@ my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
 is_deeply([$biber->sortlists->get_list(0, 'lname', 'entry', 'lname', 'global', '')->get_keys], ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K12', 'K5', 'K6'], 'List - name order');
-is_deeply([$biber->sortlists->get_list(0, 'lyear', 'entry', 'lyear', 'global', '')->get_keys], ['K4', 'K1', 'K11', 'K12', 'K2', 'K3', 'K6', 'K5', 'K7', 'K8', 'K9', 'K10'], 'List - year order');
+is_deeply([$biber->sortlists->get_list(0, 'lyear', 'entry', 'lyear', 'global', '')->get_keys], ['K8', 'K9', 'K10', 'K4', 'K1', 'K11', 'K12', 'K2', 'K3', 'K6', 'K5', 'K7'], 'List - year order');
 is_deeply([$biber->sortlists->get_list(0, 'ltitle', 'entry', 'ltitle', 'global', '')->get_keys], ['K1', 'K7', 'K8', 'K9', 'K4', 'K10', 'K2', 'K11', 'K6', 'K5', 'K12', 'K3'], 'List - title order');
 is_deeply([$biber->sortlists->get_list(0, 'lnamef1', 'entry', 'lnamef1', 'global', '')->get_keys], ['K11', 'K2', 'K4', 'K12', 'K5', 'K6'], 'List - name order (filtered) - 1');
 is_deeply([$biber->sortlists->get_list(0, 'lnamef2', 'entry', 'lnamef2', 'global', '')->get_keys], ['K4'], 'List - name order (filtered) - 2');
@@ -69,9 +69,9 @@ my $K11 = q|    \entry{K11}{book}{}
       \name{author}{1}{sortnamekeyscheme=snk1}{%
         {{hash=4edc280a0ef229f9c061e3b121b17482}{%
            family={Xanax},
-           family_i={X\bibinitperiod},
+           familyi={X\bibinitperiod},
            given={Xavier},
-           given_i={X\bibinitperiod}}}%
+           giveni={X\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Moscow}%
@@ -81,14 +81,16 @@ my $K11 = q|    \entry{K11}{book}{}
       }
       \strng{namehash}{4edc280a0ef229f9c061e3b121b17482}
       \strng{fullhash}{4edc280a0ef229f9c061e3b121b17482}
+      \strng{authornamehash}{4edc280a0ef229f9c061e3b121b17482}
+      \strng{authorfullhash}{4edc280a0ef229f9c061e3b121b17482}
       \field{sortinit}{a}
       \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
-      \field{labelyear}{1983}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{One}
       \field{year}{1983}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -96,9 +98,9 @@ my $K12 = q|    \entry{K12}{book}{}
       \name{author}{1}{}{%
         {{sortnamekeyscheme=snk2,hash=a846a485fc9cbb59b0ebeedd6ac637e4}{%
            family={Allen},
-           family_i={A\bibinitperiod},
+           familyi={A\bibinitperiod},
            given={Arthur},
-           given_i={A\bibinitperiod}}}%
+           giveni={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Moscow}%
@@ -108,16 +110,21 @@ my $K12 = q|    \entry{K12}{book}{}
       }
       \strng{namehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \strng{fullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}
+      \strng{authornamehash}{a846a485fc9cbb59b0ebeedd6ac637e4}
+      \strng{authorfullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \field{sortinit}{Z}
       \field{sortinithash}{fdda4caaa6b5fa63e0c081dcb159543a}
-      \field{labelyear}{1983}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Two}
       \field{year}{1983}
+      \field{dateera}{ce}
     \endentry
 |;
 
 eq_or_diff($out->get_output_entry('K11', $main), $K11, 'sortlist output - 1');
 eq_or_diff($out->get_output_entry('K12', $main), $K12, 'sortlist output - 2');
+
+# Testing dates
+is_deeply([$biber->sortlists->get_list(1, 'ldates', 'entry', 'ldates', 'global', '')->get_keys], ['D3', 'D2', 'D1', 'D5', 'D4'], 'List - dates');

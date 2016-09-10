@@ -1,42 +1,47 @@
 package Biber::Constants;
-use v5.16;
+use v5.24;
 use strict;
 use warnings;
 
 use Encode::Alias;
 
 use parent qw(Exporter);
+use Biber::Date::Format;
+use Text::CSV;
 
 our @EXPORT = qw{
                   $CONFIG_DEFAULT_BIBER
-                  %CONFIG_DEFAULT_BIBLATEX
-                  %CONFIG_OPTSCOPE_BIBLATEX
-                  %CONFIG_SCOPEOPT_BIBLATEX
-                  %CONFIG_OPTTYPE_BIBLATEX
-                  %CONFIG_BIBLATEX_ENTRY_OPTIONS
-                  %DATAFIELD_SETS
-                  %DM_DATATYPES
-                  %LOCALE_MAP
-                  %LOCALE_MAP_R
-                  %REMOTE_MAP
-                  %DS_EXTENSIONS
+                  $CONFIG_CSV_PARSER
                   $BIBER_CONF_NAME
                   $BCF_VERSION
                   $BBL_VERSION
                   $BIBER_SORT_FINAL
                   $BIBER_SORT_NULL
                   $LABEL_FINAL
+                  %CONFIG_DEFAULT_BIBLATEX
+                  %CONFIG_OPTSCOPE_BIBLATEX
+                  %CONFIG_SCOPEOPT_BIBLATEX
+                  %CONFIG_OPTTYPE_BIBLATEX
+                  %CONFIG_BIBLATEX_ENTRY_OPTIONS
+                  %CONFIG_META_MARKERS
+                  %CONFIG_DATE_PARSERS
+                  %DATAFIELD_SETS
+                  %DM_DATATYPES
+                  %LOCALE_MAP
+                  %LOCALE_MAP_R
+                  %REMOTE_MAP
+                  %DS_EXTENSIONS
               };
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '3.1';
+our $BCF_VERSION = '3.2';
 # Format version of the .bbl. Used when writing the .bbl
-our $BBL_VERSION = '2.7';
+our $BBL_VERSION = '2.8';
 
 # Global flags needed for sorting
-our $BIBER_SORT_FINAL = 0;
-our $BIBER_SORT_NULL  = 0;
+our $BIBER_SORT_FINAL;
+our $BIBER_SORT_NULL;
 
 # the name of the Biber configuration file, which should be
 # either returned by kpsewhich or located at "$HOME/.$BIBER_CONF_NAME"
@@ -75,18 +80,15 @@ our %DS_EXTENSIONS = (
                       );
 
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
-
 our $CONFIG_DEFAULT_BIBER = {
-  annotation_marker   => { content => '+an' },
+  annotation_marker   => { content => q/+an/ },
   clrmacros           => { content => 0 },
-  collate             => { content => 1 },
   collate_options     => { option => {level => 4, variable => 'non-ignorable', normalization => 'prenormalized' }},
   graph               => { content => 0 },
   debug               => { content => 0 },
   dieondatamodel      => { content => 0 },
   decodecharsset      => { content => 'base' },
   dot_include         => { option => {section => 1, xdata => 1, crossref => 1, xref => 1 }},
-  fastsort            => { content => 0 },
   fixinits            => { content => 0 },
   input_encoding      => { content => 'UTF-8' },
   input_format        => { content => 'bibtex' },
@@ -103,7 +105,7 @@ our $CONFIG_DEFAULT_BIBER = {
   noinit              => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}/},
                                        {value => q/[\x{2bf}\x{2018}]/} ] },
   nolabel             => { option => [ {value => q/[\p{P}\p{S}\p{C}]+/} ] },
-  nolabelwidthcount   => { option => [ {value => q//} ] },
+#  nolabelwidthcount   => { option =>  }, # default is nothing
   nolog               => { content => 0 },
   nostdmacros         => { content => 0 },
   nosort              => { option => [ { name => 'setnames', value => q/\A\p{L}{2}\p{Pd}/ },
@@ -111,17 +113,22 @@ our $CONFIG_DEFAULT_BIBER = {
   onlylog             => { content => 0 },
   others_string       => { content => 'others' },
   output_align        => { content => 0 },
+  output_annotation_marker   => { content => '+an' },
   output_encoding     => { content => 'UTF-8' },
+  output_field_order  => { content => 'options,abstract,names,lists,dates' },
   output_format       => { content => 'bbl' },
   output_indent       => { content => '2' },
   output_fieldcase    => { content => 'upper' },
+  output_listsep      => { content => 'and' },
+  output_namesep      => { content => 'and' },
   output_resolve      => { content => 0 },
   output_safechars    => { content => 0 },
   output_safecharsset => { content => 'base' },
+  output_xnamesep     => { content => '=' },
   quiet               => { content => 0 },
   noskipduplicates    => { content => 0 },
+  sortdebug           => { content => 0 },
   sortcase            => { content => 1 },
-  sortgiveninits      => { content => 0 },
   sortupper           => { content => 1 },
   strip_comments      => { content => 0 },
   tool                => { content => 0 },
@@ -132,8 +139,23 @@ our $CONFIG_DEFAULT_BIBER = {
   validate_control    => { content => 0 },
   validate_datamodel  => { content => 0 },
   wraplines           => { content => 0 },
+  xnamesep            => { content => '=' },
   xsvsep              => { content => q/\s*,\s*/ },
 };
+
+# Set up some re-usable CSV parsers here for efficiency reasons
+our $CONFIG_CSV_PARSER = Text::CSV->new ( { binary           => 1,
+                                            allow_whitespace => 1,
+                                            always_quote     => 1  } );
+
+# Set up some re-usable Date parsers here for efficiency reasons
+# We need two as the missing component data is in these objects, not
+# in the DT objects returned by ->parse_datetime() and this data will
+# likely be different for start/end
+our %CONFIG_DATE_PARSERS = ('start' => Biber::Date::Format->new(),
+                            'end'   => Biber::Date::Format->new());
+
+our %CONFIG_META_MARKERS = ();
 
 # default global options for biblatex
 # Used to set:

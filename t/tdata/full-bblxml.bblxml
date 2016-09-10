@@ -41,6 +41,8 @@
         </bbl:names>
         <bbl:field name="namehash">350c1258034a7da03092d563be673f84</bbl:field>
         <bbl:field name="fullhash">562d8cda005e7c37bc696e0d0edc306e</bbl:field>
+        <bbl:field name="authornamehash">350c1258034a7da03092d563be673f84</bbl:field>
+        <bbl:field name="authorfullhash">562d8cda005e7c37bc696e0d0edc306e</bbl:field>
         <bbl:field name="labelalpha">Aks+06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">b685c7856330eaee22789815b49de9bb</bbl:field>
@@ -48,10 +50,10 @@
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
         <bbl:field name="journaltitle">J. Organomet. Chem.</bbl:field>
-        <bbl:field name="month">02</bbl:field>
         <bbl:field name="number">13</bbl:field>
         <bbl:field name="title">Effect of immobilization on catalytic characteristics of saturated Pd-N-heterocyclic carbenes in Mizoroki-Heck reactions</bbl:field>
         <bbl:field name="volume">691</bbl:field>
+        <bbl:field name="month">02</bbl:field>
         <bbl:field name="year">2006</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="10">
@@ -69,6 +71,8 @@
         </bbl:names>
         <bbl:field name="namehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="fullhash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
+        <bbl:field name="authornamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
+        <bbl:field name="authorfullhash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="labelalpha">Ang02</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">b685c7856330eaee22789815b49de9bb</bbl:field>
@@ -107,6 +111,8 @@
         </bbl:names>
         <bbl:field name="namehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="fullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authornamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authorfullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="labelalpha">Gla61</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
         <bbl:field name="sortinithash">1c854ef9177a91bf894e66485bdbd3ed</bbl:field>
@@ -136,6 +142,8 @@
         </bbl:names>
         <bbl:field name="namehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="fullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authornamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
+        <bbl:field name="authorfullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
         <bbl:field name="sortinithash">1c854ef9177a91bf894e66485bdbd3ed</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
@@ -166,6 +174,8 @@
         </bbl:list>
         <bbl:field name="namehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="fullhash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
+        <bbl:field name="authornamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
+        <bbl:field name="authorfullhash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">a7d5b3aec5a0890aae7baf85a209abfc</bbl:field>
@@ -197,6 +207,8 @@
         </bbl:list>
         <bbl:field name="namehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="fullhash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
+        <bbl:field name="authornamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
+        <bbl:field name="authorfullhash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">a7d5b3aec5a0890aae7baf85a209abfc</bbl:field>
@@ -222,6 +234,8 @@
         </bbl:names>
         <bbl:field name="namehash">7c73b571a33320e72d2d87ff821579fd</bbl:field>
         <bbl:field name="fullhash">7c73b571a33320e72d2d87ff821579fd</bbl:field>
+        <bbl:field name="authornamehash">7c73b571a33320e72d2d87ff821579fd</bbl:field>
+        <bbl:field name="authorfullhash">7c73b571a33320e72d2d87ff821579fd</bbl:field>
         <bbl:field name="labelalpha">Ree58</bbl:field>
         <bbl:field name="sortinit">R</bbl:field>
         <bbl:field name="sortinithash">c7387613477035a752d935acfc3e3ea2</bbl:field>
@@ -266,6 +280,10 @@
         </bbl:list>
         <bbl:field name="namehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
         <bbl:field name="fullhash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
+        <bbl:field name="authornamehash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
+        <bbl:field name="authorfullhash">5196fd7e08485dbc6a7dd05adc133fdf</bbl:field>
+        <bbl:field name="editornamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
+        <bbl:field name="editorfullhash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">fd1e7c5ab79596b13dbbb67f8d70fb5a</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
@@ -292,6 +310,8 @@
         </bbl:names>
         <bbl:field name="namehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="fullhash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
+        <bbl:field name="authornamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
+        <bbl:field name="authorfullhash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="labelalpha">Sho91</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
         <bbl:field name="sortinithash">fd1e7c5ab79596b13dbbb67f8d70fb5a</bbl:field>
@@ -299,13 +319,13 @@
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
         <bbl:field name="journaltitle">American Anthropologist</bbl:field>
-        <bbl:field name="month">03</bbl:field>
         <bbl:field name="number">1</bbl:field>
         <bbl:field name="series">newseries</bbl:field>
         <bbl:field name="subtitle">Meaning Construction and Cultural Cognition</bbl:field>
         <bbl:field name="title">Twice-Born, Once Conceived</bbl:field>
         <bbl:field name="volume">93</bbl:field>
-        <bbl:field name="year">1991</bbl:field>
+        <bbl:field name="month">3</bbl:field>
+        <bbl:field name="year" startera="ce">1991</bbl:field>
         <bbl:range name="pages">
           <bbl:item length="19">
             <bbl:start>9</bbl:start>
@@ -325,6 +345,8 @@
         </bbl:names>
         <bbl:field name="namehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="fullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
+        <bbl:field name="authornamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
+        <bbl:field name="authorfullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="sortinit">W</bbl:field>
         <bbl:field name="sortinithash">99e3ba1b3f78bb6f073e7fa7ac11636b</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>

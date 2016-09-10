@@ -1,7 +1,6 @@
 package Biber::Config;
-use v5.16;
+use v5.24;
 
-use Biber;
 use Biber::Constants;
 use Biber::Utils;
 use IPC::Cmd qw( can_run );
@@ -53,10 +52,15 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 
+# Uniqueness ignore information from inheritance data
+$CONFIG->{state}{uniqignore} = {};
+
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{xrefkeys} = {};
-$CONFIG->{state}{seenwork} = {};
+$CONFIG->{state}{seenname} = {};
 $CONFIG->{state}{seentitle} = {};
+$CONFIG->{state}{seenbaretitle} = {};
+$CONFIG->{state}{seenwork} = {};
 
 # Set tracking, parent->child and child->parent
 $CONFIG->{state}{set}{pc} = {};
@@ -124,11 +128,14 @@ $CONFIG->{state}{datafiles} = [];
 =cut
 
 sub _init {
+  $CONFIG->{state}{uniqignore} = {};
   $CONFIG->{options}{biblatex}{ENTRY} = {};
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
-  $CONFIG->{state}{seenwork} = {};
+  $CONFIG->{state}{seenname} = {};
   $CONFIG->{state}{seentitle} = {};
+  $CONFIG->{state}{seenbaretitle} = {};
+  $CONFIG->{state}{seenwork} = {};
   $CONFIG->{state}{crossrefkeys} = {};
   $CONFIG->{state}{xrefkeys} = {};
   $CONFIG->{state}{ladisambiguation} = {};
@@ -174,7 +181,7 @@ sub _initopts {
   }
 
   # Set hard-coded biber option defaults
-  while (my ($k, $v) = each %$CONFIG_DEFAULT_BIBER) {
+  while (my ($k, $v) = each $CONFIG_DEFAULT_BIBER->%*) {
     if (exists($v->{content})) { # simple option
       Biber::Config->setoption($k, $v->{content});
     }
@@ -208,14 +215,14 @@ sub _initopts {
   }
 
   # Command-line overrides everything else
-  foreach my $copt (keys %$opts) {
+  foreach my $copt (keys $opts->%*) {
     # This is a tricky option as we need to keep non-overriden defaults
     # If we don't we can get errors when contructing the sorting call to eval() later
     if (lc($copt) eq 'collate_options') {
       my $collopts = Biber::Config->getoption('collate_options');
       my $copt_h = eval "{ $opts->{$copt} }" or croak('Bad command-line collation options');
       # Override defaults with any cmdline settings
-      foreach my $co (keys %$copt_h) {
+      foreach my $co (keys $copt_h->%*) {
         $collopts->{$co} = $copt_h->{$co};
       }
       Biber::Config->setconfigfileoption('collate_options', $collopts);
@@ -261,6 +268,10 @@ sub _initopts {
   if (my $outdir = Biber::Config->getoption('output_directory')) {
     $biberlog = File::Spec->catfile($outdir, $biberlog);
   }
+
+  # cache meta markers since they are referenced in the oft-called _get_handler
+  $CONFIG_META_MARKERS{annotation} = quotemeta(Biber::Config->getoption('annotation_marker'));
+  $CONFIG_META_MARKERS{xname} = quotemeta(Biber::Config->getoption('xname_marker'));
 
   # Setting up Log::Log4perl
   my $LOGLEVEL;
@@ -394,6 +405,7 @@ sub _config_file_set {
                                                             qr/\Asortexclusion\z/,
                                                             qr/\Aexclusion\z/,
                                                             qr/\Asort\z/,
+                                                            qr/\Alabelalpha(?:name)?template\z/,
                                                             qr/\Asortitem\z/,
                                                             qr/\Apresort\z/,
                                                             qr/\Aoptionscope\z/,
@@ -404,9 +416,9 @@ sub _config_file_set {
                                              croak("Failed to read biber config file '$conf'\n $@");
   }
   # Option scope has to be set first
-  foreach my $bcfscopeopts (@{$userconf->{optionscope}}) {
+  foreach my $bcfscopeopts ($userconf->{optionscope}->@*) {
     my $scope = $bcfscopeopts->{type};
-    foreach my $bcfscopeopt (@{$bcfscopeopts->{option}}) {
+    foreach my $bcfscopeopt ($bcfscopeopts->{option}->@*) {
       my $opt = $bcfscopeopt->{content};
       $CONFIG_OPTSCOPE_BIBLATEX{$opt}{$scope} = 1;
       $CONFIG_SCOPEOPT_BIBLATEX{$scope}{$opt} = 1;
@@ -414,12 +426,12 @@ sub _config_file_set {
   }
 
   # Now we have the per-namelist options, make the accessors for them in the Names package
-  foreach my $nso (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}}) {
+  foreach my $nso (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
     Biber::Entry::Names->follow_best_practice;
     Biber::Entry::Names->mk_accessors($nso);
   }
   # Now we have the per-name options, make the accessors for them in the Name package
-  foreach my $no (keys %{$CONFIG_SCOPEOPT_BIBLATEX{NAME}}) {
+  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     Biber::Entry::Name->follow_best_practice;
     Biber::Entry::Name->mk_accessors($no);
   }
@@ -429,51 +441,110 @@ sub _config_file_set {
   # DATAFIELD SETS
   # Since we have to use the datamodel to resolve some members, just record the settings
   # here for processing after the datamodel is parsed
-  foreach my $s (@{$userconf->{datafieldset}}) {
+  foreach my $s ($userconf->{datafieldset}->@*) {
     my $name = $s->{name};
-    foreach my $m (@{$s->{member}}) {
+    foreach my $m ($s->{member}->@*) {
       if (my $field = $m->{field}[0]) {# 'field' has forcearray for other things
-        push @{$DATAFIELD_SETS{$name}}, $field;
+        push $DATAFIELD_SETS{$name}->@*, $field;
       }
       else {
-          push @{$DATAFIELD_SETS{$name}}, {fieldtype => $m->{fieldtype},
-                                           datatype  => $m->{datatype}};
+          push $DATAFIELD_SETS{$name}->@*, {fieldtype => $m->{fieldtype},
+                                            datatype  => $m->{datatype}};
       }
     }
   }
   delete $userconf->{datafieldset};
 
   # Set options from config file
-  while (my ($k, $v) = each %$userconf) {
-    # sortingnamekey is special and has to be an array ref and so must come before
+  while (my ($k, $v) = each $userconf->%*) {
+    # Has to be an array ref and so must come before
     # the later options tests which assume hash refs
-    if (lc($k) eq 'sortingnamekey') {
+    if (lc($k) eq 'uniquenametemplate') {
+      my $unkt;
+      my $bun;
+      foreach my $np (sort {$a->{order} <=> $b->{order}} $v->{namepart}->@*) {
+
+        # useful later in uniqueness tests
+        if ($np->{base}) {
+          push $bun->@*, $np->{content};
+        }
+
+        push $unkt->@*, {namepart => $np->{content},
+                         use => $np->{use},
+                         base => $np->{base}}
+      }
+      Biber::Config->setblxoption('uniquenametemplate', $unkt);
+    }
+    # Has to be an array ref and so must come before
+    # the later options tests which assume hash refs
+    elsif (lc($k) eq 'labelalphatemplate') {
+      foreach my $t ($v->@*) {
+        my $latype = $t->{type};
+        if ($latype eq 'global') {
+          Biber::Config->setblxoption('labelalphatemplate', $t);
+        }
+        else {
+          Biber::Config->setblxoption('labelalphatemplate',
+                                      $t,
+                                      'ENTRYTYPE',
+                                      $latype);
+        }
+      }
+    }
+    elsif (lc($k) eq 'labelalphanametemplate') {
+      foreach my $t ($v->@*) {
+        my $lant;
+        my $lantype = $t->{type};
+        foreach my $np (sort {$a->{order} <=> $b->{order}} $t->{namepart}->@*) {
+          push $lant->@*, {namepart           => $np->{content},
+                           use                => $np->{use},
+                           pre                => $np->{pre},
+                           substring_compound => $np->{substring_compound},
+                           substring_side     => $np->{substring_side},
+                           substring_width    => $np->{substring_width} };
+
+        }
+
+        if ($lantype eq 'global') {
+          Biber::Config->setblxoption('labelalphanametemplate', $lant);
+        }
+        else {
+          Biber::Config->setblxoption('labelalphanametemplate', $lant, 'ENTRYTYPE', $lantype);
+        }
+      }
+    }
+    # Has to be an array ref and so must come before
+    # the later options tests which assume hash refs
+    elsif (lc($k) eq 'sortingnamekey') {
       my $snss;
-      foreach my $sns (@$v) {
+      foreach my $sns ($v->@*) {
         my $snkps;
-        foreach my $snkp (sort {$a->{order} <=> $b->{order}} @{$sns->{keypart}}) {
+        foreach my $snkp (sort {$a->{order} <=> $b->{order}} $sns->{keypart}->@*) {
           my $snps;
-          foreach my $snp (sort {$a->{order} <=> $b->{order}} @{$snkp->{part}}) {
+          foreach my $snp (sort {$a->{order} <=> $b->{order}} $snkp->{part}->@*) {
             my $np;
             if ($snp->{type} eq 'namepart') {
               $np = { type => 'namepart', value => $snp->{content} };
               if (exists($snp->{use})) {
                 $np->{use} = $snp->{use};
               }
+              if (exists($snp->{inits})) {
+                $np->{inits} = $snp->{inits};
+              }
             }
             elsif ($snp->{type} eq 'literal') {
               $np = { type => 'literal', value => $snp->{content} };
             }
-            push @$snps, $np;
+            push $snps->@*, $np;
           }
-          push @$snkps, $snps;
+          push $snkps->@*, $snps;
         }
         $snss->{$sns->{keyscheme}} = $snkps;
       }
       Biber::Config->setblxoption('sortingnamekey', $snss);
     }
     elsif (lc($k) eq 'transliteration') {
-      foreach my $tr (@$v) {
+      foreach my $tr ($v->@*) {
         if ($tr->{entrytype}[0] eq '*') { # already array forced for another option
           Biber::Config->setblxoption('translit', $tr->{translit});
         }
@@ -497,14 +568,14 @@ sub _config_file_set {
     elsif (lc($k) eq 'collate_options') {
       my $collopts = Biber::Config->getoption('collate_options');
       # Override defaults with any user settings
-      foreach my $co (@{$v->{option}}) {
+      foreach my $co ($v->{option}->@*) {
         $collopts->{$co->{name}} = $co->{value};
       }
       Biber::Config->setconfigfileoption($k, $collopts);
     }
     elsif (lc($k) eq 'sourcemap') {
       my $sms;
-      foreach my $sm (@{$v->{maps}}) {
+      foreach my $sm ($v->{maps}->@*) {
         if (defined($sm->{level}) and $sm->{level} eq 'driver') {
           carp("You can't set driver level sourcemaps via biber - use \\DeclareDriverSourcemap in biblatex. Ignoring map.");
         }
@@ -512,7 +583,7 @@ sub _config_file_set {
           carp("You can't set style level sourcemaps via biber - use \\DeclareStyleSourcemap in biblatex. Ignoring map.");
         }
         else {
-          push @$sms, $sm;
+          push $sms->@*, $sm;
         }
       }
       Biber::Config->setconfigfileoption($k, $sms);
@@ -522,9 +593,9 @@ sub _config_file_set {
     }
     elsif (lc($k) eq 'sorting') {# This is a biblatex option
       # sorting excludes
-      foreach my $sex (@{$v->{sortexclusion}}) {
+      foreach my $sex ($v->{sortexclusion}->@*) {
         my $excludes;
-        foreach my $ex (@{$sex->{exclusion}}) {
+        foreach my $ex ($sex->{exclusion}->@*) {
           $excludes->{$ex->{content}} = 1;
         }
         Biber::Config->setblxoption('sortexclusion',
@@ -534,7 +605,7 @@ sub _config_file_set {
       }
 
       # presort defaults
-      foreach my $presort (@{$v->{presort}}) {
+      foreach my $presort ($v->{presort}->@*) {
         # Global presort default
         unless (exists($presort->{type})) {
           Biber::Config->setblxoption('presort', $presort->{content});
@@ -652,6 +723,35 @@ sub set_unul_changed {
   return;
 }
 
+=head2 add_uniq_ignore
+
+    Track uniqueness ignore settings found in inheritance data
+
+=cut
+
+sub add_uniq_ignore {
+  shift; # class method so don't care about class name
+  my ($key, $field, $uniqs) = @_;
+  return unless $uniqs;
+  foreach my $u (split(/\s*,\s*/, $uniqs)) {
+    push $CONFIG->{state}{uniqignore}{$key}{$u}->@*, $field;
+  }
+  return;
+}
+
+=head2 get_uniq_ignore
+
+    Retrieve uniqueness ignore settings found in inheritance data
+
+=cut
+
+sub get_uniq_ignore {
+  no autovivification;
+  shift; # class method so don't care about class name
+  my $key = shift;
+  return $CONFIG->{state}{uniqignore}{$key};
+}
+
 =head2 postprocess_biber_opts
 
     Place to postprocess biber options when they have been
@@ -661,11 +761,11 @@ sub set_unul_changed {
 
 sub postprocess_biber_opts {
   shift; # class method so don't care about class name
-  # Turn sortcase, sortupper, sortgiveninits into booleans if they are not already
+  # Turn sortcase and sortupper into booleans if they are not already
   # They are not booleans on the command-line/config file so that they
   # mirror biblatex option syntax for users, for example
 
-  foreach my $opt ('sortgiveninits', 'sortcase', 'sortupper') {
+  foreach my $opt ('sortcase', 'sortupper') {
     if (exists($CONFIG->{options}{biber}{$opt})) {
       if ($CONFIG->{options}{biber}{$opt} eq 'true') {
         $CONFIG->{options}{biber}{$opt} = 1;
@@ -706,19 +806,6 @@ sub get_dm {
   return $CONFIG->{dm};
 }
 
-=head2 set_dm_helpers
-
-    Sets some datamodel helper lists
-
-=cut
-
-sub set_dm_helpers {
-  shift;
-  my $obj = shift;
-  $CONFIG->{dmhelpers} = $obj;
-  return;
-}
-
 =head2 get_dm_helpers
 
     Sets the datamodel helper lists
@@ -727,9 +814,8 @@ sub set_dm_helpers {
 
 sub get_dm_helpers {
   shift;
-  return $CONFIG->{dmhelpers};
+  return $CONFIG->{dm}{helpers};
 }
-
 
 =head2 set_ctrlfile_path
 
@@ -917,6 +1003,18 @@ sub getblxoption {
 }
 
 
+=head2 getblxentryoptions
+
+    Get all per-entry options for an entry
+
+=cut
+
+sub getblxentryoptions {
+  no autovivification;
+  shift; # class method so don't care about class name
+  my $key = shift;
+  return keys $CONFIG->{options}{biblatex}{ENTRY}{$key}->%*;
+}
 
 ##############################
 # Inheritance state methods
@@ -933,26 +1031,34 @@ sub set_graph {
   my $type = shift;
   if ($type eq 'set') {
     my ($source_key, $target_key) = @_;
-    $logger->debug("Saving DOT graph information type 'set' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Saving DOT graph information type 'set' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
+    }
     $CONFIG->{state}{graph}{$type}{settomem}{$source_key}{$target_key} = 1;
     $CONFIG->{state}{graph}{$type}{memtoset}{$target_key} = $source_key;
   }
   elsif ($type eq 'xref') {
     my ($source_key, $target_key) = @_;
-    $logger->debug("Saving DOT graph information type 'xref' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Saving DOT graph information type 'xref' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
+    }
     $CONFIG->{state}{graph}{$type}{$source_key} = $target_key;
   }
   elsif ($type eq 'related') {
     my ($clone_key, $related_key, $target_key) = @_;
-    $logger->debug("Saving DOT graph information type 'related' with CLONEKEY=$clone_key, RELATEDKEY=$related_key, TARGETKEY=$target_key");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Saving DOT graph information type 'related' with CLONEKEY=$clone_key, RELATEDKEY=$related_key, TARGETKEY=$target_key");
+    }
     $CONFIG->{state}{graph}{$type}{reltoclone}{$related_key}{$clone_key} = 1;
     $CONFIG->{state}{graph}{$type}{clonetotarget}{$clone_key}{$target_key} = 1;
   }
   else {
     my ($source_key, $target_key, $source_field, $target_field) = @_;
-    $logger->debug("Saving DOT graph information type '$type' with SOURCEKEY=$source_key, TARGETKEY=$target_key, SOURCEFIELD=$source_field, TARGETFIELD=$target_field");
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Saving DOT graph information type '$type' with SOURCEKEY=$source_key, TARGETKEY=$target_key, SOURCEFIELD=$source_field, TARGETFIELD=$target_field");
+    }
     # source can go to more than one target (and does in default rules) so need array here
-    push @{$CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key}}, $target_field;
+    push $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key}->@*, $target_field;
   }
   return;
 }
@@ -1029,7 +1135,7 @@ sub get_set_children {
   shift; # class method so don't care about class name
   my $parent = shift;
   if (exists($CONFIG->{state}{set}{pc}{$parent})) {
-    return (keys %{$CONFIG->{state}{set}{pc}{$parent}});
+    return (keys $CONFIG->{state}{set}{pc}{$parent}->%*);
   }
   else {
     return ();
@@ -1046,7 +1152,7 @@ sub get_set_parents {
   shift; # class method so don't care about class name
   my $child = shift;
   if (exists($CONFIG->{state}{set}{cp}{$child})) {
-    return (keys %{$CONFIG->{state}{set}{cp}{$child}});
+    return (keys $CONFIG->{state}{set}{cp}{$child}->%*);
   }
   else {
     return ();
@@ -1065,7 +1171,7 @@ sub get_set_parents {
 sub set_inheritance {
   shift; # class method so don't care about class name
   my ($type, $source, $target) = @_;
-  push @{$CONFIG->{state}{$type}}, {s => $source, t => $target};
+  push $CONFIG->{state}{$type}->@*, {s => $source, t => $target};
   return;
 }
 
@@ -1080,7 +1186,7 @@ sub set_inheritance {
 sub get_inheritance {
   shift; # class method so don't care about class name
   my ($type, $source, $target) = @_;
-  return first {$_->{s} eq $source and $_->{t} eq $target} @{$CONFIG->{state}{$type}};
+  return first {$_->{s} eq $source and $_->{t} eq $target} $CONFIG->{state}{$type}->@*;
 }
 
 =head2 is_inheritance_path
@@ -1103,7 +1209,7 @@ sub get_inheritance {
 
 sub is_inheritance_path {
   my ($self, $type, $e1, $e2) = @_;
-  foreach my $dps (grep {$_->{s} eq $e1} @{$CONFIG->{state}{$type}}) {
+  foreach my $dps (grep {$_->{s} eq $e1} $CONFIG->{state}{$type}->@*) {
     return 1 if $dps->{t} eq $e2;
     return 1 if is_inheritance_path($self, $type, $dps->{t}, $e2);
   }
@@ -1177,7 +1283,7 @@ sub get_keyorder {
 sub get_keyorder_max {
   shift; # class method so don't care about class name
   my $section = shift;
-  return (max values %{$CONFIG->{state}{keyorder}{$section}}) || 0;
+  return (max values $CONFIG->{state}{keyorder}{$section}->%*) || 0;
 }
 
 =head2 reset_keyorder
@@ -1211,7 +1317,7 @@ sub get_seenkey {
   }
   else {
     my $count;
-    foreach my $section (keys %{$CONFIG->{state}{seenkeys}}) {
+    foreach my $section (keys $CONFIG->{state}{seenkeys}->%*) {
       $count += $CONFIG->{state}{seenkeys}{$section}{$key};
     }
     return $count;
@@ -1233,9 +1339,86 @@ sub incr_seenkey {
   return;
 }
 
-=head2 get_seenwork
+=head2 get_seenname
 
     Get the count of occurrences of a labelname or labeltitle
+
+=cut
+
+sub get_seenname {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  return $CONFIG->{state}{seenname}{$identifier};
+}
+
+=head2 incr_seenname
+
+    Increment the count of occurrences of a labelname or labeltitle
+
+=cut
+
+sub incr_seenname {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  $CONFIG->{state}{seenname}{$identifier}++;
+  return;
+}
+
+=head2 get_seentitle
+
+    Get the count of occurrences of a labeltitle
+
+=cut
+
+sub get_seentitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  return $CONFIG->{state}{seentitle}{$identifier};
+}
+
+=head2 incr_seentitle
+
+    Increment the count of occurrences of a labeltitle
+
+=cut
+
+sub incr_seentitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  $CONFIG->{state}{seentitle}{$identifier}++;
+  return;
+}
+
+=head2 get_seenbaretitle
+
+    Get the count of occurrences of a labeltitle when there is
+    no labelname
+
+=cut
+
+sub get_seenbaretitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  return $CONFIG->{state}{seenbaretitle}{$identifier};
+}
+
+=head2 incr_seenbaretitle
+
+    Increment the count of occurrences of a labeltitle
+    when there is no labelname
+
+=cut
+
+sub incr_seenbaretitle {
+  shift; # class method so don't care about class name
+  my $identifier = shift;
+  $CONFIG->{state}{seenbaretitle}{$identifier}++;
+  return;
+}
+
+=head2 get_seenwork
+
+    Get the count of occurrences of a labelname and labeltitle
 
 =cut
 
@@ -1247,7 +1430,7 @@ sub get_seenwork {
 
 =head2 incr_seenwork
 
-    Increment the count of occurrences of a labelname or labeltitle
+    Increment the count of occurrences of a labelname and labeltitle
 
 =cut
 
@@ -1282,32 +1465,6 @@ sub get_seenpa {
   shift; # class method so don't care about class name
   my $identifier = shift;
   return $CONFIG->{state}{seenpa}{$identifier};
-}
-
-
-=head2 get_seentitle
-
-    Get the count of occurrences of a labeltitle
-
-=cut
-
-sub get_seentitle {
-  shift; # class method so don't care about class name
-  my $identifier = shift;
-  return $CONFIG->{state}{seentitle}{$identifier};
-}
-
-=head2 incr_seentitle
-
-    Increment the count of occurrences of a labeltitle
-
-=cut
-
-sub incr_seentitle {
-  shift; # class method so don't care about class name
-  my $identifier = shift;
-  $CONFIG->{state}{seentitle}{$identifier}++;
-  return;
 }
 
 =head2 reset_seen_extra
@@ -1512,8 +1669,6 @@ sub incr_seen_titleyear {
   return;
 }
 
-
-
 =head1 uniquelistcount
 
 =head2 get_uniquelistcount
@@ -1525,7 +1680,7 @@ sub incr_seen_titleyear {
 sub get_uniquelistcount {
   shift; # class method so don't care about class name
   my $namelist = shift;
-  return $CONFIG->{state}{uniquelistcount}{global}{join("\x{10FFFD}", @$namelist)};
+  return $CONFIG->{state}{uniquelistcount}{global}{join("\x{10FFFD}", $namelist->@*)};
 }
 
 =head2 add_uniquelistcount
@@ -1537,7 +1692,7 @@ sub get_uniquelistcount {
 sub add_uniquelistcount {
   shift; # class method so don't care about class name
   my $namelist = shift;
-  $CONFIG->{state}{uniquelistcount}{global}{join("\x{10FFFD}", @$namelist)}++;
+  $CONFIG->{state}{uniquelistcount}{global}{join("\x{10FFFD}", $namelist->@*)}++;
   return;
 }
 
@@ -1550,7 +1705,7 @@ sub add_uniquelistcount {
 sub add_uniquelistcount_final {
   shift; # class method so don't care about class name
   my $namelist = shift;
-  $CONFIG->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", @$namelist)}++;
+  $CONFIG->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", $namelist->@*)}++;
   return;
 }
 
@@ -1566,7 +1721,7 @@ sub add_uniquelistcount_minyear {
   shift; # class method so don't care about class name
   my ($minyearnamelist, $year, $namelist) = @_;
   # Allow year a default in case labelname is undef
-  $CONFIG->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", @$minyearnamelist)}{$year // '0'}{join("\x{10FFFD}", @$namelist)}++;
+  $CONFIG->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", $minyearnamelist->@*)}{$year // '0'}{join("\x{10FFFD}", $namelist->@*)}++;
   return;
 }
 
@@ -1580,7 +1735,7 @@ sub add_uniquelistcount_minyear {
 sub get_uniquelistcount_minyear {
   shift; # class method so don't care about class name
   my ($minyearnamelist, $year) = @_;
-  return scalar keys %{$CONFIG->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", @$minyearnamelist)}{$year}};
+  return scalar keys $CONFIG->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", $minyearnamelist->@*)}{$year}->%*;
 }
 
 
@@ -1594,7 +1749,7 @@ sub get_uniquelistcount_minyear {
 sub get_uniquelistcount_final {
   shift; # class method so don't care about class name
   my $namelist = shift;
-  my $c = $CONFIG->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", @$namelist)};
+  my $c = $CONFIG->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", $namelist->@*)};
   return $c // 0;
 }
 
@@ -1628,20 +1783,22 @@ sub reset_uniquelistcount {
 sub list_differs_nth {
   shift; # class method so don't care about class name
   my ($list, $n) = @_;
-  my @list_one = @$list;
+  my @list_one = $list->@*;
   # Loop over all final lists, looking for ones which match:
   # * up to n - 1
   # * differ at $n
   # * are at least as long
-  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{global}{final}}) {
+  foreach my $l_s (keys $CONFIG->{state}{uniquelistcount}{global}{final}->%*) {
     my @l = split("\x{10FFFD}", $l_s);
     # If list is shorter than the list we are checking, it's irrelevant
-    next unless $#l >= $#$list;
+    next unless $#l >= $list->$#*;
     # If list matches at $n, it's irrelevant;
     next if ($list_one[$n-1] eq $l[$n-1]);
     # If list doesn't match up to $n - 1, it's irrelevant
     next unless Compare([@list_one[0 .. $n-2]], [@l[0 .. $n-2]]);
-    $logger->trace("list_differs_nth() returning true: " . join(',', @list_one) . " vs " . join(',', @l));
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("list_differs_nth() returning true: " . join(',', @list_one) . " vs " . join(',', @l));
+    }
     return 1;
   }
   return 0;
@@ -1665,22 +1822,24 @@ sub list_differs_nth {
 sub list_differs_last {
   shift; # class method so don't care about class name
   my $list = shift;
-  my @list_one = @$list;
+  my @list_one = $list->@*;
   my $list_last = pop @list_one;
 
   # Loop over all final lists, looking for ones which match up to
   # length of list to check minus 1 but which differ in the last place of the
   # list to check.
-  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{global}{final}}) {
+  foreach my $l_s (keys $CONFIG->{state}{uniquelistcount}{global}{final}->%*) {
     my @l = split("\x{10FFFD}", $l_s);
     # If list is shorter than the list we are checking, it's irrelevant
-    next unless $#l >= $#$list;
+    next unless $#l >= $list->$#*;
     # get the list elements up to length of the list we are checking
-    my @ln = @l[0 .. $#$list];
+    my @ln = @l[0 .. $list->$#*];
     # pop off the last element which is the potential point of difference
     my $ln_last = pop @ln;
     if (Compare(\@list_one, \@ln) and ($list_last ne $ln_last)) {
-      $logger->trace("list_differs_last() returning true: (" . join(',', @list_one) . " vs " . join(',', @ln) . " -> $list_last vs $ln_last)");
+      if ($logger->is_trace()) {# performance tune
+        $logger->trace("list_differs_last() returning true: (" . join(',', @list_one) . " vs " . join(',', @ln) . " -> $list_last vs $ln_last)");
+      }
       return 1;
     }
   }
@@ -1707,14 +1866,16 @@ sub list_differs_superset {
   my $list = shift;
   # Loop over all final lists, looking for ones which match up to
   # length of list to check but which differ after this length
-  foreach my $l_s (keys %{$CONFIG->{state}{uniquelistcount}{global}{final}}) {
+  foreach my $l_s (keys $CONFIG->{state}{uniquelistcount}{global}{final}->%*) {
     my @l = split("\x{10FFFD}", $l_s);
     # If list is not longer than the list we are checking, it's irrelevant
-    next unless $#l > $#$list;
+    next unless $#l > $list->$#*;
     # get the list elements up to length of the list we are checking
-    my @ln = @l[0 .. $#$list];
+    my @ln = @l[0 .. $list->$#*];
     if (Compare($list, \@ln)) {
-      $logger->trace("list_differs_superset() returning true: (" . join(',', @$list) . " vs " . join(',', @l) . ")");
+        if ($logger->is_trace()) {# performance tune
+          $logger->trace("list_differs_superset() returning true: (" . join(',', $list->@*) . " vs " . join(',', @l) . ")");
+        }
       return 1;
     }
   }
@@ -1733,8 +1894,10 @@ sub list_differs_superset {
 sub get_numofuniquenames {
   shift; # class method so don't care about class name
   my ($name, $namecontext) = @_;
-  my $return = scalar keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
-  $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  my $return = scalar keys $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}->%*;
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("get_numofuniquenames() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  }
   return $return;
 }
 
@@ -1747,8 +1910,10 @@ sub get_numofuniquenames {
 sub get_numofuniquenames_all {
   shift; # class method so don't care about class name
   my ($name, $namecontext) = @_;
-  my $return = scalar keys %{$CONFIG->{state}{uniquenamecount_all}{$name}{$namecontext}};
-  $logger->trace("get_numofuniquenames_all() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  my $return = scalar keys $CONFIG->{state}{uniquenamecount_all}{$name}{$namecontext}->%*;
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("get_numofuniquenames_all() returning $return for NAME='$name' and NAMECONTEXT='$namecontext'");
+  }
   return $return;
 }
 
@@ -1804,7 +1969,7 @@ sub reset_uniquenamecount {
 sub _get_uniquename {
   shift; # class method so don't care about class name
   my ($name, $namecontext) = @_;
-  my @list = sort keys %{$CONFIG->{state}{uniquenamecount}{$name}{$namecontext}};
+  my @list = sort keys $CONFIG->{state}{uniquenamecount}{$name}{$namecontext}->%*;
   return \@list;
 }
 
@@ -1818,7 +1983,7 @@ sub _get_uniquename {
 
 sub get_crossrefkeys {
   shift; # class method so don't care about class name
-  return [ keys %{$CONFIG->{state}{crossrefkeys}} ];
+  return [ keys $CONFIG->{state}{crossrefkeys}->%* ];
 }
 
 =head1 xrefkeys
@@ -1831,7 +1996,7 @@ sub get_crossrefkeys {
 
 sub get_xrefkeys {
   shift; # class method so don't care about class name
-  return [ keys %{$CONFIG->{state}{xrefkeys}} ];
+  return [ keys $CONFIG->{state}{xrefkeys}->%* ];
 }
 
 =head2 get_crossrefkey

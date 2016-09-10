@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::Differences;
 unified_diff;
 
@@ -35,7 +35,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setoption('fastsort', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -49,14 +48,15 @@ my $k1 = q|    \entry{key1}{article}{}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
-           family_i={A\bibinitperiod}}}%
+           familyi={A\bibinitperiod}}}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{1998}
-      \field{datelabelsource}{}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{sortinit}{1}
+      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Journal Title}
@@ -66,6 +66,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \field{title}{Original Title}
       \field{volume}{12}
       \field{year}{1998}
+      \field{dateera}{ce}
       \field{related}{78f825aaa0103319aaa1a30bf4fe3ada,3631578538a2d6ba5879b31a9a42f290}
       \field{pages}{125\bibrangedash 150}
       \range{pages}{26}
@@ -76,7 +77,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
-           family_i={A\bibinitperiod}}}%
+           familyi={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Location}%
@@ -86,10 +87,11 @@ my $k2 = q|    \entry{key2}{inbook}{}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
-      \field{labelyear}{2009}
-      \field{datelabelsource}{}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{sortinit}{2}
+      \field{sortinithash}{8343b463aacf48517c044b4d2c9c45ed}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Booktitle}
@@ -98,6 +100,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \field{shorthand}{RK2}
       \field{title}{Reprint Title}
       \field{year}{2009}
+      \field{dateera}{ce}
       \field{related}{c2add694bf942dc77b376592d9c862cd}
       \field{pages}{34\bibrangedash 60}
       \range{pages}{27}
@@ -109,12 +112,13 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
-           family_i={A\bibinitperiod}}}%
+           familyi={A\bibinitperiod}}}%
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{key1}
@@ -135,7 +139,7 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
-           family_i={A\bibinitperiod}}}%
+           familyi={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Location}%
@@ -145,8 +149,9 @@ my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{key2}
@@ -166,7 +171,7 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
-           family_i={A\bibinitperiod}}}%
+           familyi={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Location}%
@@ -176,8 +181,9 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{key3}
@@ -192,11 +198,11 @@ my $kck3 = q|    \entry{3631578538a2d6ba5879b31a9a42f290}{inbook}{dataonly}
     \endentry
 |;
 
-my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
+my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly,useeditor=false,uniquename=false}
       \name{author}{1}{}{%
         {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
-           family_i={A\bibinitperiod}}}%
+           familyi={A\bibinitperiod}}}%
       }
       \list{location}{1}{%
         {Location}%
@@ -206,8 +212,9 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
       }
       \strng{namehash}{a517747c3d12f99244ae598910d979c5}
       \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{clonesourcekey}{key4}
@@ -221,29 +228,40 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly}
 |;
 
 my $c1 = q|    \entry{c1}{book}{}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{sortinit}{3}
+      \field{sortinithash}{7e21a31d9ef6ddc352701d4fa590bfbc}
       \field{related}{9ab62b5ef34a985438bfdf7ee0102229}
     \endentry
 |;
 
 my $c2k = q|    \entry{9ab62b5ef34a985438bfdf7ee0102229}{book}{dataonly}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{clonesourcekey}{c2}
       \field{related}{0a3d72134fb3d6c024db4c510bc1605b}
     \endentry
 |;
 
 my $c3k = q|    \entry{0a3d72134fb3d6c024db4c510bc1605b}{book}{dataonly}
-      \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
       \field{clonesourcekey}{c3}
       \field{related}{9ab62b5ef34a985438bfdf7ee0102229}
     \endentry
 |;
 
-my $m1 = q||;
+my $s1 = q|    \entry{8ddf878039b70767c4a5bcf4f0c4f65e}{book}{dataonly,skipbib=false,usecustom=false}
+      \name{author}{1}{}{%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
+           family={Author},
+           familyi={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{fullhash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
+      \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{clonesourcekey}{s1}
+      \field{title}{Title 1}
+    \endentry
+|;
 
 eq_or_diff( $out->get_output_entry('key1', $main), $k1, 'Related entry test 1' ) ;
 eq_or_diff( $out->get_output_entry('key2', $main), $k2, 'Related entry test 2' ) ;
@@ -258,14 +276,17 @@ eq_or_diff( $out->get_output_entry('caf8e34be07426ae7127c1b4829983c1', $main), $
 # it shouldn't be in the .bbl
 eq_or_diff( $out->get_output_entry('key4', $main), undef, 'Related entry test 8' ) ;
 is_deeply([$shs->get_keys], [
-    "caf8e34be07426ae7127c1b4829983c1",
-    "78f825aaa0103319aaa1a30bf4fe3ada",
-    "3631578538a2d6ba5879b31a9a42f290",
-    "c2add694bf942dc77b376592d9c862cd",
-    "key1",
-    "key2",
+                             "key1",
+                             "key2",
+                             "caf8e34be07426ae7127c1b4829983c1",
+                             "78f825aaa0103319aaa1a30bf4fe3ada",
+                             "3631578538a2d6ba5879b31a9a42f290",
+                             "c2add694bf942dc77b376592d9c862cd",
   ], 'Related entry test 9');
 # Testing circular dependencies
 eq_or_diff( $out->get_output_entry('c1', $main), $c1, 'Related entry test 10' ) ;
 eq_or_diff( $out->get_output_entry('9ab62b5ef34a985438bfdf7ee0102229', $main), $c2k, 'Related entry test 11' ) ;
 eq_or_diff( $out->get_output_entry('0a3d72134fb3d6c024db4c510bc1605b', $main), $c3k, 'Related entry test 12' ) ;
+
+# Testing custom relatedoptions
+eq_or_diff( $out->get_output_entry('8ddf878039b70767c4a5bcf4f0c4f65e', $main), $s1, 'Custom options - 1' ) ;

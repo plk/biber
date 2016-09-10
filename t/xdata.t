@@ -43,7 +43,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # relying on here for tests
 
 # Biber options
-Biber::Config->setoption('fastsort', 1);
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('nodieonerror', 1); # because there is a cyclic xdata check
 
@@ -57,9 +56,9 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \name{author}{1}{}{%
         {{hash=51db4bfd331cba22959ce2d224c517cd}{%
            family={Ellington},
-           family_i={E\bibinitperiod},
+           familyi={E\bibinitperiod},
            given={Edward},
-           given_i={E\bibinitperiod}}}%
+           giveni={E\bibinitperiod}}}%
       }
       \list{location}{2}{%
         {New York}%
@@ -70,13 +69,15 @@ my $xd1 = q|    \entry{xd1}{book}{}
       }
       \strng{namehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{fullhash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{authornamehash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{authorfullhash}{51db4bfd331cba22959ce2d224c517cd}
       \field{sortinit}{E}
       \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
-      \field{labelyear}{2007}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{note}{A Note}
       \field{year}{2007}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -84,9 +85,9 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \name{author}{1}{}{%
         {{hash=68539e0ce4922cc4957c6cabf35e6fc8}{%
            family={Pillington},
-           family_i={P\bibinitperiod},
+           familyi={P\bibinitperiod},
            given={Peter},
-           given_i={P\bibinitperiod}}}%
+           giveni={P\bibinitperiod}}}%
       }
       \list{location}{2}{%
         {New York}%
@@ -97,16 +98,18 @@ my $xd2 = q|    \entry{xd2}{book}{}
       }
       \strng{namehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{fullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{authornamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{authorfullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \field{sortinit}{P}
       \field{sortinithash}{c0a4896d0e424f9ca4d7f14f2b3428e7}
-      \field{labelyear}{2003}
-      \field{datelabelsource}{}
+      \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{abstract}{An abstract}
       \field{addendum}{Москва}
       \field{note}{A Note}
       \field{venue}{venue}
       \field{year}{2003}
+      \field{dateera}{ce}
     \endentry
 |;
 
