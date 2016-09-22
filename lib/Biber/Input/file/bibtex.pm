@@ -891,7 +891,7 @@ sub _literal {
   # year/month
   if ($field eq 'year') {
     return if $bibentry->get_datafield('year');
-    if ($value and not looks_like_number($value)) {
+    if ($value and not looks_like_number($value)and not $bibentry->get_datafield('sortyear')) {
       biber_warn("year field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
   }
