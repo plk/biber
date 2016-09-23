@@ -1005,6 +1005,20 @@ sub _dispatch_sorting {
       return '';
     }
   }
+  # If this field is excluded from sorting for all entrytypes, then include it if it's
+  # explicitly included
+  if (my $se = Biber::Config->getblxoption('sortexclusion', '*')) {
+    if ($se->{$sortfield}) {
+      if (my $si = Biber::Config->getblxoption('sortinclusion', $be->get_field('entrytype'))) {
+        unless ($si->{$sortfield}) {
+          return '';
+        }
+      }
+      else {
+        return '';
+      }
+    }
+  }
 
   # real sorting field
   if (my $d = _dispatch_table_sorting($sortfield, $dm)) {

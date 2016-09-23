@@ -1046,6 +1046,17 @@
           </oneOrMore>
         </element>
       </zeroOrMore>
+      <zeroOrMore>
+        <!-- forcibly includes certain fields excluded by sortexclusion for sorting for specified types -->
+        <element name="bcf:sortinclusion">
+          <attribute name="type"/>
+          <oneOrMore>
+            <element name="bcf:inclusion">
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
       <oneOrMore>
         <ref name="sort"/>
       </oneOrMore>

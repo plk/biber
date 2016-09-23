@@ -375,8 +375,8 @@ sub parse_ctrlfile {
                                                            qr/\Adatasource\z/,
                                                            qr/\Aconstant\z/,
                                                            qr/\Asection\z/,
-                                                           qr/\Asortexclusion\z/,
-                                                           qr/\Aexclusion\z/,
+                                                           qr/\Asort(?:ex|in)clusion\z/,
+                                                           qr/\A(?:ex|in)clusion\z/,
                                                            qr/\Asort\z/,
                                                            qr/\Amode\z/,
                                                            qr/\Amaps\z/,
@@ -717,6 +717,18 @@ sub parse_ctrlfile {
                                 $excludes,
                                 'ENTRYTYPE',
                                 $sex->{type});
+  }
+
+  # sorting includes
+  foreach my $sin ($bcfxml->{sorting}{sortinclusion}->@*) {
+    my $includes;
+    foreach my $in ($sin->{inclusion}->@*) {
+      $includes->{$in->{content}} = 1;
+    }
+    Biber::Config->setblxoption('sortinclusion',
+                                $includes,
+                                'ENTRYTYPE',
+                                $sin->{type});
   }
 
   # presort defaults
