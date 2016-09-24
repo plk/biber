@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 206;
+use Test::More tests => 210;
 use Test::Differences;
 unified_diff;
 
@@ -589,3 +589,22 @@ eq_or_diff($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_l
 eq_or_diff($bibentries->entry('un9')->get_field($bibentries->entry('un9')->get_labelname_info)->nth_name(4)->get_uniquename, '1', 'Forced name expansion - 7');
 eq_or_diff($bibentries->entry('un10')->get_field($bibentries->entry('un10')->get_labelname_info)->nth_name(1)->get_uniquename, '1', 'Forced name expansion - 8');
 
+#############################################################################
+
+$biber = Biber->new(noconf => 1);
+$biber->parse_ctrlfile('uniqueness6.bcf');
+$biber->set_output_obj(Biber::Output::bbl->new());
+# Biber options
+Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
+# Biblatex options
+Biber::Config->setblxoption('uniquelist', 1);
+# Now generate the information
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+
+eq_or_diff($bibentries->entry('entry1a')->get_field($bibentries->entry('entry1a')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 1');
+eq_or_diff($bibentries->entry('entry1b')->get_field($bibentries->entry('entry1b')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 2');
+eq_or_diff($bibentries->entry('entry2a')->get_field($bibentries->entry('entry2a')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 3');
+eq_or_diff($bibentries->entry('entry2b')->get_field($bibentries->entry('entry2b')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 4');
