@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use parent qw(Exporter);
 use Biber::Config;
+use Digest::MD5 qw( md5_hex );
 use Encode;
 use File::Slurp;
 use File::Spec;
@@ -184,6 +185,15 @@ sub init_sets {
   }
 }
 
+# Supporting code to keep track of verbatim fields during decoding
+my $saveverb;
+sub verbmark {
+  my ($field,$open,$re,$close) = @_;
+  my $mre = md5_hex(encode_utf8(NFC($re)));
+  $saveverb->{$mre} = $re;
+  return "$field$open$mre$close";
+}
+
 =head2 latex_decode($text, @options)
 
 Converts LaTeX macros in the $text to Unicode characters.
@@ -197,14 +207,23 @@ The function accepts a number of options:
         and if yes, the normalization form to use (see the Unicode::Normalize documentation)
 
 =cut
-
 sub latex_decode {
-    my $text      = shift;
-    # Optimisation - if there are no macros, no point doing anything
-    return $text unless $text =~ m/\\/;
+    my $text = shift;
 
-    # Optimisation - if virtual null set was specified, do nothing
-    return $text if $set_d eq 'null';
+    # In tests like utils.t, there is no data model
+    if (my $dmh = Biber::Config->get_dm_helpers) {
+      my $vs = join('|', ($dmh->{vfields}->@*, $dmh->{vlists}->@*));
+
+      # Optimisation - if there are no macros, no point doing anything
+      return $text unless $text =~ m/(?:$vs|\\)/i;
+
+      # Optimisation - if virtual null set was specified, do nothing
+      return $text if $set_d eq 'null';
+
+      # first replace all verbatim fields with markers as we mustn't touch these
+      $text =~ s/((?:$vs)\s*=\s*)(")\s*([^"]+)\s*(")/verbmark($1,$2,$3,$4)/gie;
+      $text =~ s/((?:$vs)\s*=\s*)({)\s*([^}]+)\s*(})/verbmark($1,$2,$3,$4)/gie;
+    }
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("String before latex_decode() -> '$text'");
@@ -296,6 +315,10 @@ sub latex_decode {
     $text = reverse $text;
     $text =~ s/}(\pM+\pL){(?!\pL+\\)/$1/g;
     $text = reverse $text;
+
+    # Replace verbatim field markers
+    $text =~ s/([a-f0-9]{32})/$saveverb->{$1}/gie;
+
     if ($logger->is_debug()) {# performance tune
       $logger->trace("String in latex_decode() now -> '$text'");
     }

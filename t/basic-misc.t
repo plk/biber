@@ -477,10 +477,10 @@ my $url1 = q|    \entry{url1}{misc}{}
       \field{year}{2005}
       \field{dateera}{ce}
       \verb{url}
-      \verb http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0
+      \verb http://www.something.com/q=%C3%A1%C5%A0
       \endverb
       \lverb{urls}{2}
-      \lverb http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0
+      \lverb http://www.something.com/q=%C3%A1%C5%A0
       \lverb http://www.sun.com
       \endlverb
     \endentry
@@ -598,7 +598,7 @@ eq_or_diff($section->get_citekey_alias('alias6'), 'alias5', 'Citekey aliases - 4
 ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 
 # URL encoding testing
-eq_or_diff($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C3%A9%C3%A1%C5%A0', 'URL encoding - 1');
+eq_or_diff($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C5%A0', 'URL encoding - 1');
 eq_or_diff($out->get_output_entry('url1', $main), $url1, 'URL encoding - 2' ) ;
 
 # map_final testing with map_field_set
@@ -773,7 +773,8 @@ my $verb1 = q|    \\entry{verb1}{book}{}
       \\verb{verba}
       \\verb \=y.\"a
       \\endverb
-    \\endentry|;
+    \\endentry
+|;
 
 # clone test
 eq_or_diff($out->get_output_entry('snk1', $main), $clone1, 'Clone - 1');

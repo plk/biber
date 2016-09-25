@@ -1426,7 +1426,9 @@ sub preprocess_file {
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Buffer before decoding -> '$lbuf'");
   }
+
   $lbuf = Biber::LaTeX::Recode::latex_decode($lbuf);
+
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Buffer after decoding -> '$lbuf'");
   }
