@@ -142,27 +142,28 @@ sub set_uniquelist {
     # Now we know that some disambiguation is needed from other similar list(s)
     $uniquelist = $index+1;# convert zero-based index into 1-based uniquelist value
   }
+  # this is an elsif because for final count > 1, we are setting uniquelist and don't
+  # want to mess about with it any more
+  elsif ($num_names > $uniquelist and
+         not Biber::Config->list_differs_nth($namelist, $uniquelist)) {
+    # If there are more names than uniquelist, reduce it by one unless
+    # there is another list which differs at uniquelist and is at least as long
+    # so we get:
+    #
+    # AAA and BBB and CCC
+    # AAA and BBB and CCC et al
+    #
+    # instead of
+    #
+    # AAA and BBB and CCC
+    # AAA and BBB and CCC and DDD et al
+    #
+    # BUT, we also want
+    #
+    # AAA and BBB and CCC
+    # AAA and BBB and CCC and DDD et al
+    # AAA and BBB and CCC and EEE et al
 
-  # If there are more names than uniquelist, reduce it by one unless
-  # there is another list which differs at uniquelist and is at least as long
-  # so we get:
-  #
-  # AAA and BBB and CCC
-  # AAA and BBB and CCC et al
-  #
-  # instead of
-  #
-  # AAA and BBB and CCC
-  # AAA and BBB and CCC and DDD et al
-  #
-  # BUT, we also want
-  #
-  # AAA and BBB and CCC
-  # AAA and BBB and CCC and DDD et al
-  # AAA and BBB and CCC and EEE et al
-
-  if ($num_names > $uniquelist and
-      not Biber::Config->list_differs_nth($namelist, $uniquelist)) {
     $uniquelist--;
   }
 

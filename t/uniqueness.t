@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 210;
+use Test::More tests => 213;
 use Test::Differences;
 unified_diff;
 
@@ -608,3 +608,6 @@ eq_or_diff($bibentries->entry('entry1a')->get_field($bibentries->entry('entry1a'
 eq_or_diff($bibentries->entry('entry1b')->get_field($bibentries->entry('entry1b')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 2');
 eq_or_diff($bibentries->entry('entry2a')->get_field($bibentries->entry('entry2a')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 3');
 eq_or_diff($bibentries->entry('entry2b')->get_field($bibentries->entry('entry2b')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 4');
+eq_or_diff($bibentries->entry('A')->get_field($bibentries->entry('A')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 5');
+eq_or_diff($bibentries->entry('B')->get_field($bibentries->entry('B')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 6');
+eq_or_diff($bibentries->entry('C')->get_field($bibentries->entry('C')->get_labelname_info)->get_uniquelist, '2', 'Uniquelist duplicates - 7');

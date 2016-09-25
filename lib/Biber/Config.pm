@@ -1791,8 +1791,8 @@ sub list_differs_nth {
   foreach my $l_s (keys $CONFIG->{state}{uniquelistcount}{global}{final}->%*) {
     my @l = split("\x{10FFFD}", $l_s);
     # If list is shorter than the list we are checking, it's irrelevant
-    next unless $#l >= $list->$#*;
-    # If list matches at $n, it's irrelevant;
+    next if $#l < $list->$#*;
+    # If list matches at $n, it's irrelevant
     next if ($list_one[$n-1] eq $l[$n-1]);
     # If list doesn't match up to $n - 1, it's irrelevant
     next unless Compare([@list_one[0 .. $n-2]], [@l[0 .. $n-2]]);
