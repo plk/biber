@@ -133,6 +133,7 @@ our $CONFIG_DEFAULT_BIBER = {
   strip_comments      => { content => 0 },
   tool                => { content => 0 },
   trace               => { content => 0 },
+  uri_encode          => { content => 1 },
   validate_bblxml     => { content => 0 },
   validate_bltxml     => { content => 0 },
   validate_config     => { content => 0 },

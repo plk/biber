@@ -956,7 +956,12 @@ sub _uri {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get($field);
   # Unicode NFC boundary (before hex encoding)
-  return URI->new(NFC($value))->as_string;
+  if (Biber::Config->getoption('uri_encode')) {
+    return URI->new(NFC($value))->as_string;
+  }
+  else {
+    return $value;
+  }
 }
 
 # xSV field form
