@@ -956,11 +956,11 @@ sub _uri {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get($field);
   # Unicode NFC boundary (before hex encoding)
-  if (Biber::Config->getoption('uri_encode')) {
-    return URI->new(NFC($value))->as_string;
+  if (Biber::Config->getoption('nouri_encode')) {
+    return $value;
   }
   else {
-    return $value;
+    return URI->new(NFC($value))->as_string;
   }
 }
 
