@@ -1658,8 +1658,7 @@ sub parsename_x {
     }
 
     if ($npn =~ m/-i$/) {
-      # Strip any periods/spaces in explicit initials so they can be replaced by macros
-      $namec{$npn} = [split(//,$npv =~ s/(?:\.|\s)//gr)];
+      $namec{$npn} = _split_initials($npv);
     }
     else {
       # Don't tie according to bibtex rules if the namepart is protected with braces
@@ -1789,6 +1788,36 @@ sub _get_handler {
   else {
     return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field) || 'default'}{$dm->get_datatype($field)};
   }
+}
+
+# "ab{cd}e" -> [a,b,cd,e]
+sub _split_initials {
+  my $npv = shift;
+  my @npv;
+  my $ci = 0;
+  my $acc;
+
+  foreach my $c (split(/\b{gcb}/, $npv)) {
+    # entering compound initial
+    if ($c eq '{') {
+      $ci = 1;
+    }
+    # exiting compound initial, push accumulator and reset
+    elsif ($c eq '}') {
+      $ci = 0;
+      push @npv, $acc;
+      $acc = '';
+    }
+    else {
+      if ($ci) {
+        $acc .= $c;
+      }
+      else {
+        push @npv, $c;
+      }
+    }
+  }
+  return \@npv;
 }
 
 
