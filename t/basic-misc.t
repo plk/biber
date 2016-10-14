@@ -99,6 +99,7 @@ my $u1 = q|    \entry{u1}{misc}{}
       \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
+      \field{note}{0}
       \field{title}{A title}
       \field{year}{2000}
       \field{dateera}{ce}
