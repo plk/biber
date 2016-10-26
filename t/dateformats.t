@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 41;
+use Test::More tests => 44;
 use Test::Differences;
 unified_diff;
 
@@ -651,3 +651,8 @@ eq_or_diff($out->get_output_entry('unspec2', $main), $unspec2, 'Unspecified - 2'
 
 # Test EDTF times
 eq_or_diff($out->get_output_entry('time1', $main), $time1, 'Times - 1');
+
+# Test long year formats
+eq_or_diff($bibentries->entry('y1')->get_field('year'), '17000002', 'Extended years - 1');
+eq_or_diff($bibentries->entry('y2')->get_field('year'), '-17000002', 'Extended years - 2');
+eq_or_diff($bibentries->entry('y3')->get_field('year'), undef, 'Extended years - 3');

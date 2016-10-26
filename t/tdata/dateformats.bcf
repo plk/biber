@@ -1924,6 +1924,9 @@
     <bcf:citekey order="24">time1</bcf:citekey>
     <bcf:citekey order="25">unspec1</bcf:citekey>
     <bcf:citekey order="26">unspec2</bcf:citekey>
+    <bcf:citekey order="27">y1</bcf:citekey>
+    <bcf:citekey order="28">y2</bcf:citekey>
+    <bcf:citekey order="29">y3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>

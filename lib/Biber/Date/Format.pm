@@ -104,7 +104,7 @@ DateTime::Format::Builder->create_class(
             },
             {# EDTF 5.2.4
                 #y[-]YYYYY... y17000000002
-                regex  => qr/^ y(-?\d+) $/x,
+                regex  => qr/^ y(-?\d{5,}) $/x,
                 params => [ qw( year ) ],
                 postprocess => [ \&_missing_month,
                                  \&_missing_day,
