@@ -461,6 +461,12 @@ sub set_output_entry {
       $acc .= "      \\true{${d}enddateuncertain}\n";
     }
 
+    # Output enddateera
+    if ($be->field_exists("${d}endyear")) { # use exists test as could be year 0000
+      if (my $era = $be->get_field("${d}endera")) {
+        $acc .= "      \\field{${d}enddateera}{$era}\n";
+      }
+    }
     # Only output era for date if:
     # The field is "year" and it came from splitting a date
     # The field is any other startyear
@@ -468,9 +474,6 @@ sub set_output_entry {
       next unless $be->get_field("${d}datesplit");
       if (my $era = $be->get_field("${d}era")) {
         $acc .= "      \\field{${d}dateera}{$era}\n";
-      }
-      if (my $era = $be->get_field("${d}endera")) {
-        $acc .= "      \\field{${d}enddateera}{$era}\n";
       }
     }
   }

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 44;
+use Test::More tests => 45;
 use Test::Differences;
 unified_diff;
 
@@ -130,8 +130,8 @@ my $l14 = q|    \entry{L14}{book}{}
       \field{month}{12}
       \field{title}{Title 2}
       \field{year}{1996}
-      \field{dateera}{ce}
       \field{enddateera}{ce}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -246,12 +246,12 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
-      \field{dateera}{ce}
       \field{enddateera}{ce}
-      \field{eventdateera}{ce}
+      \field{dateera}{ce}
       \field{eventenddateera}{ce}
-      \field{origdateera}{ce}
+      \field{eventdateera}{ce}
       \field{origenddateera}{ce}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -300,12 +300,12 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
-      \field{dateera}{ce}
       \field{enddateera}{ce}
-      \field{eventdateera}{ce}
+      \field{dateera}{ce}
       \field{eventenddateera}{ce}
-      \field{origdateera}{ce}
+      \field{eventdateera}{ce}
       \field{origenddateera}{ce}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -354,12 +354,12 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \field{pubstate}{inpress}
       \field{title}{Title 2}
       \field{year}{1996}
-      \field{dateera}{ce}
       \field{enddateera}{ce}
-      \field{eventdateera}{ce}
+      \field{dateera}{ce}
       \field{eventenddateera}{ce}
-      \field{origdateera}{ce}
+      \field{eventdateera}{ce}
       \field{origenddateera}{ce}
+      \field{origdateera}{ce}
     \endentry
 |;
 
@@ -444,8 +444,8 @@ my $era1 = q|    \entry{era1}{book}{}
       \field{origyear}{221}
       \field{year}{379}
       \field{dateera}{bce}
-      \field{origdateera}{bce}
       \field{origenddateera}{bce}
+      \field{origdateera}{bce}
     \endentry
 |;
 
@@ -459,8 +459,8 @@ my $era2 = q|    \entry{era2}{book}{}
       \field{year}{197}
       \field{dateera}{bce}
       \field{eventdateera}{bce}
-      \field{origdateera}{bce}
       \field{origenddateera}{bce}
+      \field{origdateera}{bce}
     \endentry
 |;
 
@@ -494,11 +494,11 @@ my $era4 = q|    \entry{era4}{book}{}
       \true{eventdateuncertain}
       \field{eventdateera}{ce}
       \true{origenddatecirca}
-      \field{origdateera}{ce}
       \field{origenddateera}{ce}
+      \field{origdateera}{ce}
       \true{urldatecirca}
-      \field{urldateera}{ce}
       \field{urlenddateera}{ce}
+      \field{urldateera}{ce}
     \endentry
 |;
 
@@ -541,10 +541,32 @@ my $range1 = q|    \entry{range1}{book}{}
       \field{eventyear}{1565}
       \field{origendyear}{}
       \field{origyear}{2000}
+      \field{urlendyear}{1034}
+      \field{urlyear}{}
       \field{year}{1034}
       \field{dateera}{ce}
       \field{eventdateera}{ce}
       \field{origdateera}{ce}
+      \field{urlenddateera}{ce}
+    \endentry
+|;
+
+my $range2 = q|    \entry{range2}{book}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{labeldatesource}{}
+      \field{endyear}{}
+      \field{eventendyear}{1565}
+      \field{eventyear}{}
+      \field{origendyear}{2000}
+      \field{origyear}{}
+      \field{urlendyear}{1034}
+      \field{urlyear}{}
+      \field{year}{1034}
+      \field{dateera}{ce}
+      \field{eventenddateera}{ce}
+      \field{origenddateera}{ce}
+      \field{urlenddateera}{ce}
     \endentry
 |;
 
@@ -580,17 +602,17 @@ my $unspec1 = q|    \entry{unspec1}{book}{}
       \field{urlyear}{1999}
       \field{year}{1990}
       \field{dateunspecified}{yearindecade}
-      \field{dateera}{ce}
       \field{enddateera}{ce}
+      \field{dateera}{ce}
       \field{eventdateunspecified}{yearincentury}
-      \field{eventdateera}{ce}
       \field{eventenddateera}{ce}
+      \field{eventdateera}{ce}
       \field{origdateunspecified}{monthinyear}
-      \field{origdateera}{ce}
       \field{origenddateera}{ce}
+      \field{origdateera}{ce}
       \field{urldateunspecified}{dayinmonth}
-      \field{urldateera}{ce}
       \field{urlenddateera}{ce}
+      \field{urldateera}{ce}
     \\endentry
 |;
 
@@ -606,8 +628,8 @@ my $unspec2 = q|    \entry{unspec2}{book}{}
       \field{month}{1}
       \field{year}{1999}
       \field{dateunspecified}{dayinyear}
-      \field{dateera}{ce}
       \field{enddateera}{ce}
+      \field{dateera}{ce}
     \endentry
 |;
 
@@ -625,6 +647,7 @@ $bibentries->del_entry('era2');
 $bibentries->del_entry('era3');
 $bibentries->del_entry('era4');
 $bibentries->del_entry('range1');
+$bibentries->del_entry('range2');
 $bibentries->del_entry('season1');
 $bibentries->del_entry('time1');
 $bibentries->del_entry('unspec1');
@@ -641,6 +664,7 @@ eq_or_diff($out->get_output_entry('era4', $main), $era4, 'Date meta information 
 
 # Test EDTF range markers
 eq_or_diff($out->get_output_entry('range1', $main), $range1, 'Range - 1');
+eq_or_diff($out->get_output_entry('range2', $main), $range2, 'Range - 2');
 
 # Test EDTF seasons
 eq_or_diff($out->get_output_entry('season1', $main), $season1, 'Seasons - 1');

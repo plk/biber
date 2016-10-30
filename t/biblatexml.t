@@ -131,8 +131,8 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{year}{1980}
       \field{dateunspecified}{yearindecade}
       \field{dateera}{ce}
-      \field{eventdateera}{ce}
       \field{eventenddateera}{ce}
+      \field{eventdateera}{ce}
       \field{origdateera}{bce}
       \true{urldatecirca}
       \field{urldateera}{ce}

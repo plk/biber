@@ -1005,9 +1005,9 @@ sub _expand_option {
 =cut
 
 sub parse_date_range {
-  my ($sd, $sep, $ed) = shift =~ m|^([^/]+)(/)?([^/]+)?$|;
+  my ($sd, $sep, $ed) = shift =~ m|^([^/]+)?(/)?([^/]+)?$|;
   my $unspec;
-  if ($sd =~ /u/) {# EDTF 5.2.2 Unspecified format
+  if ($sd =~ /u/ and $sd !~ /unknown/) {# EDTF 5.2.2 Unspecified format but not 5.2.3
     ($sd, $sep, $ed, $unspec) = parse_date_edtf_unspecified($sd);
   }
   return (parse_date_start($sd), parse_date_end($ed), $sep, $unspec);
@@ -1096,6 +1096,7 @@ sub parse_date {
   $obj->init();
   return 0 unless $string;
   return 0 if $string eq 'unknown'; # EDTF 5.2.3
+  return 0 if $string eq '*';       # ISO8601-2 equivalent for "unknown"
   return 0 if $string eq 'open';    # EDTF 5.2.3
 
   my $dt = eval {$obj->parse_datetime($string)};

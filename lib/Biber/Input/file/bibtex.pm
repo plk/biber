@@ -1123,67 +1123,72 @@ sub _datetime {
     $bibentry->set_field($datetype . 'dateunspecified', $unspec);
   }
 
-  if ($sdate) {# Start date was successfully parsed
-    # Did this entry get its datepart fields from splitting an EDTF date field?
-    $bibentry->set_field("${datetype}datesplit", 1);
+  if (defined($sdate)) { # Start date was successfully parsed
+    if ($sdate) { # Start date is an object not "0"
+      # Did this entry get its datepart fields from splitting an EDTF date field?
+      $bibentry->set_field("${datetype}datesplit", 1);
 
-    # Some warnings for overwriting YEAR and MONTH from DATE
-    if ($sdate->year and
-        ($datetype . 'year' eq 'year') and
-        $entry->get('year') and
-       $sdate->year != $entry->get('year')) {
-      biber_warn("Overwriting field 'year' with year value from field 'date' for entry '$key'", $bibentry);
-    }
-    if (not $CONFIG_DATE_PARSERS{start}->missing('month') and
-        ($datetype . 'month' eq 'month') and
-        $entry->get('month') and
-       $sdate->month != $entry->get('month')) {
-      biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
-    }
-
-    # Save julian
-    $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;
-    $bibentry->set_field($datetype . 'enddatejulian', 1) if $CONFIG_DATE_PARSERS{end}->julian;
-
-    # Save circa information
-    $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
-    $bibentry->set_field($datetype . 'enddatecirca', 1) if $CONFIG_DATE_PARSERS{end}->circa;
-
-    # Save uncertain date information
-    $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
-    $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
-
-    # Save start season date information
-    if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
-      $bibentry->set_field($datetype . 'season', $season);
-    }
-
-    unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
-      $bibentry->set_datafield($datetype . 'year', $sdate->year);
-      # Save era date information
-      $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
-    }
-
-    $bibentry->set_datafield($datetype . 'month', $sdate->month)
-      unless $CONFIG_DATE_PARSERS{start}->missing('month');
-
-    $bibentry->set_datafield($datetype . 'day', $sdate->day)
-      unless $CONFIG_DATE_PARSERS{start}->missing('day');
-
-    # time
-    unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
-      $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
-      $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
-      $bibentry->set_datafield($datetype . 'second', $sdate->second);
-      unless ($sdate->time_zone->is_floating) { # ignore floating timezones
-        $bibentry->set_datafield($datetype . 'timezone', tzformat($sdate->time_zone->name));
+      # Some warnings for overwriting YEAR and MONTH from DATE
+      if ($sdate->year and
+          ($datetype . 'year' eq 'year') and
+          $entry->get('year') and
+          $sdate->year != $entry->get('year')) {
+        biber_warn("Overwriting field 'year' with year value from field 'date' for entry '$key'", $bibentry);
       }
+      if (not $CONFIG_DATE_PARSERS{start}->missing('month') and
+          ($datetype . 'month' eq 'month') and
+          $entry->get('month') and
+          $sdate->month != $entry->get('month')) {
+        biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
+      }
+
+      # Save julian
+      $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;
+      $bibentry->set_field($datetype . 'enddatejulian', 1) if $CONFIG_DATE_PARSERS{end}->julian;
+
+      # Save circa information
+      $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
+      $bibentry->set_field($datetype . 'enddatecirca', 1) if $CONFIG_DATE_PARSERS{end}->circa;
+
+      # Save uncertain date information
+      $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
+      $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
+
+      # Save start season date information
+      if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
+        $bibentry->set_field($datetype . 'season', $season);
+      }
+
+      unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
+        $bibentry->set_datafield($datetype . 'year', $sdate->year);
+        # Save era date information
+        $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
+      }
+
+      $bibentry->set_datafield($datetype . 'month', $sdate->month)
+        unless $CONFIG_DATE_PARSERS{start}->missing('month');
+
+      $bibentry->set_datafield($datetype . 'day', $sdate->day)
+        unless $CONFIG_DATE_PARSERS{start}->missing('day');
+
+      # time
+      unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
+        $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
+        $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
+        $bibentry->set_datafield($datetype . 'second', $sdate->second);
+        unless ($sdate->time_zone->is_floating) { # ignore floating timezones
+          $bibentry->set_datafield($datetype . 'timezone', tzformat($sdate->time_zone->name));
+        }
+      }
+    }
+    else { # open ended range - startdate is defined but empty
+      $bibentry->set_datafield($datetype . 'year', '');
     }
 
     # End date can be missing
     if ($sep) {
-      if (defined($edate)) {
-        if ($edate) {
+      if (defined($edate)) { # End date was successfully parsed
+        if ($edate) { # End date is an object not "0"
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
             $bibentry->set_datafield($datetype . 'endyear', $edate->year);
             # Save era date information
