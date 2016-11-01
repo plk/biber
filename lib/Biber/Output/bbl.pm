@@ -461,6 +461,14 @@ sub set_output_entry {
       $acc .= "      \\true{${d}enddateuncertain}\n";
     }
 
+    # Unknown dates
+    if ($be->get_field("${d}dateunknown")) {
+      $acc .= "      \\true{${d}dateunknown}\n";
+    }
+    if ($be->get_field("${d}enddateunknown")) {
+      $acc .= "      \\true{${d}enddateunknown}\n";
+    }
+
     # Output enddateera
     if ($be->field_exists("${d}endyear")) { # use exists test as could be year 0000
       if (my $era = $be->get_field("${d}endera")) {

@@ -544,9 +544,11 @@ my $range1 = q|    \entry{range1}{book}{}
       \field{urlendyear}{1034}
       \field{urlyear}{}
       \field{year}{1034}
+      \true{enddateunknown}
       \field{dateera}{ce}
       \field{eventdateera}{ce}
       \field{origdateera}{ce}
+      \true{urldateunknown}
       \field{urlenddateera}{ce}
     \endentry
 |;
@@ -563,9 +565,11 @@ my $range2 = q|    \entry{range2}{book}{}
       \field{urlendyear}{1034}
       \field{urlyear}{}
       \field{year}{1034}
+      \true{enddateunknown}
       \field{dateera}{ce}
       \field{eventenddateera}{ce}
       \field{origenddateera}{ce}
+      \true{urldateunknown}
       \field{urlenddateera}{ce}
     \endentry
 |;

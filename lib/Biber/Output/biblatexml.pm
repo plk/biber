@@ -315,6 +315,10 @@ sub set_output_entry {
       if ($be->get_field("${d}dateuncertain")) {
         $sf .= '?';
       }
+      # Unknown dates
+      if ($be->get_field("${d}dateunknown")) {
+        $sf = 'unknown';
+      }
       # Circa dates
       if ($be->get_field("${d}datecirca")) {
         $sf .= '~';

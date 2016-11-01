@@ -1632,6 +1632,21 @@ sub generate_bblxml_schema {
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
+  # dateparts may have an unknown attributes
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'startunknown');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'endunknown');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'true');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->endTag();    # optional
   $writer->endTag();    # group
   $writer->endTag();    # choice (normal vs datepart)
   $writer->emptyTag('text');# text

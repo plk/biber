@@ -1114,7 +1114,7 @@ sub _datetime {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
 
-  my ($sdate, $edate, $sep, $unspec) = parse_date_range($date);
+  my ($sdate, $edate, $sep, $unspec) = parse_date_range($bibentry, $datetype, $date);
 
   # Date had EDTF 5.2.2 unspecified format
   # This does not differ for *enddate components as these are split into ranges
