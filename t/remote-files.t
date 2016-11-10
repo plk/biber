@@ -80,7 +80,7 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \strng{authornamehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
       \strng{authorfullhash}{ee363ce5e21ebe022f83aae896dd47f9}
       \field{sortinit}{M}
-      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
+      \field{sortinithash}{c26a05ef03e4429073ed5c825140fac3}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -119,7 +119,7 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \strng{authornamehash}{01599a4cb58316d64208b12a07741765}
       \strng{authorfullhash}{01599a4cb58316d64208b12a07741765}
       \field{sortinit}{A}
-      \field{sortinithash}{b685c7856330eaee22789815b49de9bb}
+      \field{sortinithash}{3248043b5fe8d0a34dab5ab6b8d4309b}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -163,7 +163,7 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       \strng{editornamehash}{ff5f90046157eecef0c22da4dac6486e}
       \strng{editorfullhash}{ff5f90046157eecef0c22da4dac6486e}
       \field{sortinit}{M}
-      \field{sortinithash}{2684bec41e9697b92699b46491061da2}
+      \field{sortinithash}{c26a05ef03e4429073ed5c825140fac3}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

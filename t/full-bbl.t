@@ -29,8 +29,8 @@ my $stdout;
 my $stderr;
 
 run3  [ $perl, 'bin/biber', '--noconf', '--nolog', "--output-file=$bbl", 't/tdata/full-bbl.bcf' ], \undef, \$stdout, \$stderr;
-#say $stdout;
-#say $stderr;
+# say $stdout;
+# say $stderr;
 
 is($? >> 8, 0, 'Full test has zero exit status');
 ok(compare($bbl, 't/tdata/full-bbl.bbl') == 0, 'Testing lossort case and sortinit for macros');

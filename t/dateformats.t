@@ -84,7 +84,7 @@ my $l13c = q|    \entry{L13}{book}{}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -118,7 +118,7 @@ my $l14 = q|    \entry{L14}{book}{}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extrayear}{3}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -156,7 +156,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extrayear}{4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -186,7 +186,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extrayear}{1}
       \field{labeldatesource}{event}
       \field{labelnamesource}{editor}
@@ -221,7 +221,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extrayear}{5}
       \field{labeldatesource}{}
       \field{labelnamesource}{editor}
@@ -276,7 +276,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{labeldatesource}{orig}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
@@ -330,7 +330,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{labeldatesource}{event}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
@@ -437,7 +437,7 @@ eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubs
 
 my $era1 = q|    \entry{era1}{book}{}
       \field{sortinit}{3}
-      \field{sortinithash}{7e21a31d9ef6ddc352701d4fa590bfbc}
+      \field{sortinithash}{197da6d6c34c6b20ce45c4d4baace5a4}
       \field{labeldatesource}{}
       \field{month}{2}
       \field{origendyear}{219}
@@ -451,7 +451,7 @@ my $era1 = q|    \entry{era1}{book}{}
 
 my $era2 = q|    \entry{era2}{book}{}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{}
       \field{eventyear}{249}
       \field{origendyear}{44}
@@ -466,7 +466,7 @@ my $era2 = q|    \entry{era2}{book}{}
 
 my $era3 = q|    \entry{era3}{book}{}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{}
       \field{eventday}{2}
       \field{eventmonth}{3}
@@ -481,7 +481,7 @@ my $era3 = q|    \entry{era3}{book}{}
 
 my $era4 = q|    \entry{era4}{book}{}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{}
       \field{eventyear}{1565}
       \field{origendyear}{1488}
@@ -504,7 +504,7 @@ my $era4 = q|    \entry{era4}{book}{}
 
 my $time1 = q|    \entry{time1}{book}{}
       \field{sortinit}{2}
-      \field{sortinithash}{8343b463aacf48517c044b4d2c9c45ed}
+      \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
       \field{labeldatesource}{}
       \field{day}{3}
       \field{eventday}{3}
@@ -534,7 +534,7 @@ my $time1 = q|    \entry{time1}{book}{}
 
 my $range1 = q|    \entry{range1}{book}{}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{}
       \field{endyear}{}
       \field{eventendyear}{}
@@ -555,7 +555,7 @@ my $range1 = q|    \entry{range1}{book}{}
 
 my $range2 = q|    \entry{range2}{book}{}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{}
       \field{endyear}{}
       \field{eventendyear}{1565}
@@ -576,7 +576,7 @@ my $range2 = q|    \entry{range2}{book}{}
 
 my $season1 = q|    \entry{season1}{book}{}
       \field{sortinit}{2}
-      \field{sortinithash}{8343b463aacf48517c044b4d2c9c45ed}
+      \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
       \field{labeldatesource}{}
       \field{eventseason}{autumn}
       \field{eventyear}{2002}
@@ -589,7 +589,7 @@ my $season1 = q|    \entry{season1}{book}{}
 
 my $unspec1 = q|    \entry{unspec1}{book}{}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{}
       \field{endyear}{1999}
       \field{eventendyear}{1999}
@@ -623,7 +623,7 @@ my $unspec1 = q|    \entry{unspec1}{book}{}
 
 my $unspec2 = q|    \entry{unspec2}{book}{}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{}
       \field{day}{1}
       \field{endday}{31}
