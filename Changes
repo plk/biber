@@ -1,6 +1,8 @@
 Revision history for Biber
 
-2.7    unreleased
+2.7    (2016-12-08)
+       * New option (--nouri-encode) to prevent URL encoding of URLs. Avoids breaking
+         display of URLS which contain non-ASCII.
        * Misc bug fixes
 2.6    (2016-09-10)
        * Improved tool mode bibtex output. This has some normalisation

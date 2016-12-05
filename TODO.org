@@ -135,4 +135,3 @@
 ** DONE Add *dateusetime, labeldateusetime, alldatesusetime to scope table in doc
 ** DONE Document that the *usetime options do nothing with compact date range formats as this would be confusing.
 ** DONE New output format like EDTF but options
-* TODO Make handlers return the value and set outside of handler to variant can be set without changing all handlers. Do this in dev branch as it's neater anyway.
