@@ -22,8 +22,8 @@ use Unicode::Normalize;
 use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
-our $VERSION = '2.6';
-our $BETA_VERSION = 0; # Is this a beta version?
+our $VERSION = '2.7';
+our $BETA_VERSION = 1; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
 our $screen  = Log::Log4perl::get_logger('screen');
@@ -1791,8 +1791,8 @@ sub list_differs_nth {
   foreach my $l_s (keys $CONFIG->{state}{uniquelistcount}{global}{final}->%*) {
     my @l = split("\x{10FFFD}", $l_s);
     # If list is shorter than the list we are checking, it's irrelevant
-    next unless $#l >= $list->$#*;
-    # If list matches at $n, it's irrelevant;
+    next if $#l < $list->$#*;
+    # If list matches at $n, it's irrelevant
     next if ($list_one[$n-1] eq $l[$n-1]);
     # If list doesn't match up to $n - 1, it's irrelevant
     next unless Compare([@list_one[0 .. $n-2]], [@l[0 .. $n-2]]);
@@ -1804,84 +1804,56 @@ sub list_differs_nth {
   return 0;
 }
 
+=head2 list_differs_index
 
+    Returns the greatest index at where the list begins to differ from any other list
 
-=head2 list_differs_last
+    Assuming these lists
 
-    Returns true if some list differs from passed list in its last place
+    [a, b]
+    [a, b, d, e, f, g, h, i, j]
+    [a, b, d, e, f]
+    [a, b, e, z, z, y]
 
-    list_differs_last([a, b, c]) = 1
-
-    if there is another list like any of these:
-
-    [a, b, d]
-    [a, b, d, e]
-
-=cut
-
-sub list_differs_last {
-  shift; # class method so don't care about class name
-  my $list = shift;
-  my @list_one = $list->@*;
-  my $list_last = pop @list_one;
-
-  # Loop over all final lists, looking for ones which match up to
-  # length of list to check minus 1 but which differ in the last place of the
-  # list to check.
-  foreach my $l_s (keys $CONFIG->{state}{uniquelistcount}{global}{final}->%*) {
-    my @l = split("\x{10FFFD}", $l_s);
-    # If list is shorter than the list we are checking, it's irrelevant
-    next unless $#l >= $list->$#*;
-    # get the list elements up to length of the list we are checking
-    my @ln = @l[0 .. $list->$#*];
-    # pop off the last element which is the potential point of difference
-    my $ln_last = pop @ln;
-    if (Compare(\@list_one, \@ln) and ($list_last ne $ln_last)) {
-      if ($logger->is_trace()) {# performance tune
-        $logger->trace("list_differs_last() returning true: (" . join(',', @list_one) . " vs " . join(',', @ln) . " -> $list_last vs $ln_last)");
-      }
-      return 1;
-    }
-  }
-  return 0;
-}
-
-=head2 list_differs_superset
-
-    Returns true if some list differs from passed list by being
-    identical to the list up to the end of the list but also
-    by having extra elements after this
-
-    list_differs_superset([a, b, c]) = 1
-
-    if there is another list like any of these:
-
-    [a, b, c, d]
-    [a, b, c, d, e]
+    list_differs_index([a, b, c, d, e]) -> 2
+    list_differs_index([a]) -> 1
 
 =cut
 
-sub list_differs_superset {
+sub list_differs_index {
   shift; # class method so don't care about class name
-  my $list = shift;
-  # Loop over all final lists, looking for ones which match up to
-  # length of list to check but which differ after this length
+  my @list = shift->@*;
+  my $index;
   foreach my $l_s (keys $CONFIG->{state}{uniquelistcount}{global}{final}->%*) {
     my @l = split("\x{10FFFD}", $l_s);
-    # If list is not longer than the list we are checking, it's irrelevant
-    next unless $#l > $list->$#*;
-    # get the list elements up to length of the list we are checking
-    my @ln = @l[0 .. $list->$#*];
-    if (Compare($list, \@ln)) {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("list_differs_superset() returning true: (" . join(',', $list->@*) . " vs " . join(',', @l) . ")");
+    next if Compare(\@list, \@l);# Ignore identical lists
+    for (my $i=0;$i<=$#list;$i++) {
+      if ($list[$i] eq $l[$i]) {
+        if (not defined($index) or $i > $index) {
+          $index = $i;
         }
-      return 1;
+      }
+      else {
+        last;
+      }
     }
   }
-  return 0;
-}
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("list_differs_index() returning: " . $index+1);
+  }
 
+  if (defined($index)) { # one or more similar lists
+    if ($index == $#list) { # There is another list which is a superset, return last index
+      return $index;
+    }
+    else { # Differs with some list, return index of where difference begins
+      return $index+1;
+    }
+  }
+  else { # no similar lists
+    return undef;
+  }
+}
 
 =head1 uniquenamecount
 

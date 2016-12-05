@@ -106,7 +106,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \strng{translatornamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \strng{translatorfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \field{sortinit}{v}
-      \field{sortinithash}{d18f5ce25ce0b5ca7f924e3f6c04870e}
+      \field{sortinithash}{555737dafdcf1396ebfeae5822e5bde2}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -131,8 +131,8 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{year}{1980}
       \field{dateunspecified}{yearindecade}
       \field{dateera}{ce}
-      \field{eventdateera}{ce}
       \field{eventenddateera}{ce}
+      \field{eventdateera}{ce}
       \field{origdateera}{bce}
       \true{urldatecirca}
       \field{urldateera}{ce}
@@ -151,7 +151,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
 
 my $l2 = q|    \entry{loopkey:a}{book}{}
       \field{sortinit}{0}
-      \field{sortinithash}{990108227b3316c02842d895999a0165}
+      \field{sortinithash}{e07d8eeb31ded4126e0aa0cfcdcb5a8f}
     \endentry
 |;
 

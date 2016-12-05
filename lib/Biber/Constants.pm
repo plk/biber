@@ -35,7 +35,7 @@ our @EXPORT = qw{
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '3.2';
+our $BCF_VERSION = '3.3';
 # Format version of the .bbl. Used when writing the .bbl
 our $BBL_VERSION = '2.8';
 
@@ -133,6 +133,7 @@ our $CONFIG_DEFAULT_BIBER = {
   strip_comments      => { content => 0 },
   tool                => { content => 0 },
   trace               => { content => 0 },
+  nouri_encode        => { content => 0 },
   validate_bblxml     => { content => 0 },
   validate_bltxml     => { content => 0 },
   validate_config     => { content => 0 },

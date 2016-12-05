@@ -842,6 +842,29 @@
             </xsl:for-each>
           </tbody>
         </table>
+        <h4>Sorting inclusions</h4>
+        <table>
+          <thead>
+            <tr><td>Entrytype</td><td>Fields forcibly included in sorting</td></tr>
+          </thead>
+          <tbody>
+            <xsl:for-each select="/bcf:controlfile/bcf:sorting/bcf:sortinclusion">
+              <tr>
+                <td>
+                  <xsl:value-of select="./@type"/>
+                </td>
+                <td>
+                  <xsl:for-each select="./bcf:inclusion">
+                    <xsl:value-of select="./text()"/>
+                    <xsl:if test="not(position()=last())">
+                      <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
+                    </xsl:if>
+                  </xsl:for-each>
+                </td>
+              </tr>
+            </xsl:for-each>
+          </tbody>
+        </table>
         <h4>Uniquename Template</h4>
         <table>
           <thead>

@@ -59,7 +59,7 @@ my $set1 = q|    \entry{seta}{set}{}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extrayear}{1}
       \field{labeldatesource}{}
       \field{extraalpha}{1}
@@ -85,7 +85,7 @@ my $set2 = q|    \entry{set:membera}{book}{}
       \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -110,7 +110,7 @@ my $set3 = q|    \entry{set:memberb}{book}{}
       \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -134,7 +134,7 @@ my $set4 = q|    \entry{set:memberc}{book}{}
       \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -158,7 +158,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extrayear}{2}
       \field{labeldatesource}{}
       \field{extraalpha}{2}
@@ -184,7 +184,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extrayear}{3}
       \field{labeldatesource}{}
       \field{extraalpha}{3}
@@ -210,7 +210,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extrayear}{4}
       \field{labeldatesource}{}
       \field{extraalpha}{4}
@@ -241,7 +241,7 @@ my $sk4 = q|    \entry{skip4}{article}{dataonly}
       \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

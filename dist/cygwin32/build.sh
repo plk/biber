@@ -8,6 +8,12 @@
 # through the link name break. So, we copy them to the link names first and
 # and package those.
 
+# There’s no need to link cygssp-0.dll, because it’s present in a
+# minimal Cygwin installation.  And we shouldn’t link cygcrypt-0.dll,
+# because it is a dependency of the cygperl DLL and needs to be
+# treated as an embedded file by PAR::Packer.  See
+# https://rt.cpan.org/Public/Bug/Display.html?id=118053.
+
 # Have to explicitly include the Input* modules as the names of these are dynamically
 # constructed in the code so Par::Packer can't auto-detect them.
 # Same with some of the output modules.
@@ -44,10 +50,8 @@ PAR_VERBATIM=1 pp \
    --link=/usr/bin/cygxml2-2.dll \
    --link=/usr/bin/cygxslt-1.dll \
    --link=/usr/bin/cygexslt-0.dll \
-   --link=/usr/bin/cygssp-0.dll \
    --link=/usr/bin/cygcrypto-1.0.0.dll \
    --link=/usr/bin/cygssl-1.0.0.dll \
-   --link=/usr/bin/cygcrypt-0.dll \
    --link=/usr/bin/cygdatrie-1.dll \
    --link=/usr/bin/cygthai-0.dll \
    --addlist=biber.files \

@@ -99,6 +99,7 @@ GetOptions(
            'trace|T',
            'u',                   # alias for input_encoding=UTF-8
            'U',                   # alias for output_encoding=UTF-8
+           'nouri_encode|nouri-encode',
            'validate_bblxml|validate-bblxml',
            'validate_bltxml|validate-bltxml',
            'validate_config|validate-config',
@@ -807,6 +808,10 @@ Alias for B<--input-encoding=UTF-8>
 =item B<-U>
 
 Alias for B<--output-encoding=UTF-8>
+
+=item B<--nouri-encode>
+
+Don't URI encode URLs. By default, biber URI encodes all URLS.
 
 =item B<--validate-bblxml>
 

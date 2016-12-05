@@ -912,7 +912,9 @@ sub _datetime {
 
       # Start of range
       # Using high-level range parsing sub in order to get unspec
-      if (my ($sdate, undef, undef, $unspec) = parse_date_range($start->get_node(1)->textContent())) {
+      if (my ($sdate, undef, undef, $unspec) = parse_date_range($bibentry,
+                                                                $datetype,
+                                                                $start->get_node(1)->textContent())) {
 
         # Save julian
         $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;
@@ -1011,7 +1013,9 @@ sub _datetime {
     }
     else { # Simple date
       # Using high-level range parsing sub in order to get unspec
-      if (my ($sdate, undef, undef, $unspec) = parse_date_range($node->textContent())) {
+      if (my ($sdate, undef, undef, $unspec) = parse_date_range($bibentry,
+                                                                $datetype,
+                                                                $node->textContent())) {
 
         # Save julian
         $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;

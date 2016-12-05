@@ -841,7 +841,7 @@ sub _create_entry {
     if ($dm->is_field($f)) {
       my $handler = _get_handler($f);
       my $v = $handler->($bibentry, $e, $f, $k);
-      $bibentry->set_datafield($f, $v) if $v;
+      $bibentry->set_datafield($f, $v) if defined($v);
     }
     elsif (Biber::Config->getoption('validate_datamodel')) {
       biber_warn("Datamodel: Entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
@@ -956,7 +956,12 @@ sub _uri {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get($field);
   # Unicode NFC boundary (before hex encoding)
-  return URI->new(NFC($value))->as_string;
+  if (Biber::Config->getoption('nouri_encode')) {
+    return $value;
+  }
+  else {
+    return URI->new(NFC($value))->as_string;
+  }
 }
 
 # xSV field form
@@ -1109,7 +1114,7 @@ sub _datetime {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
 
-  my ($sdate, $edate, $sep, $unspec) = parse_date_range($date);
+  my ($sdate, $edate, $sep, $unspec) = parse_date_range($bibentry, $datetype, $date);
 
   # Date had EDTF 5.2.2 unspecified format
   # This does not differ for *enddate components as these are split into ranges
@@ -1118,67 +1123,72 @@ sub _datetime {
     $bibentry->set_field($datetype . 'dateunspecified', $unspec);
   }
 
-  if ($sdate) {# Start date was successfully parsed
-    # Did this entry get its datepart fields from splitting an EDTF date field?
-    $bibentry->set_field("${datetype}datesplit", 1);
+  if (defined($sdate)) { # Start date was successfully parsed
+    if ($sdate) { # Start date is an object not "0"
+      # Did this entry get its datepart fields from splitting an EDTF date field?
+      $bibentry->set_field("${datetype}datesplit", 1);
 
-    # Some warnings for overwriting YEAR and MONTH from DATE
-    if ($sdate->year and
-        ($datetype . 'year' eq 'year') and
-        $entry->get('year') and
-       $sdate->year != $entry->get('year')) {
-      biber_warn("Overwriting field 'year' with year value from field 'date' for entry '$key'", $bibentry);
-    }
-    if (not $CONFIG_DATE_PARSERS{start}->missing('month') and
-        ($datetype . 'month' eq 'month') and
-        $entry->get('month') and
-       $sdate->month != $entry->get('month')) {
-      biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
-    }
-
-    # Save julian
-    $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;
-    $bibentry->set_field($datetype . 'enddatejulian', 1) if $CONFIG_DATE_PARSERS{end}->julian;
-
-    # Save circa information
-    $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
-    $bibentry->set_field($datetype . 'enddatecirca', 1) if $CONFIG_DATE_PARSERS{end}->circa;
-
-    # Save uncertain date information
-    $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
-    $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
-
-    # Save start season date information
-    if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
-      $bibentry->set_field($datetype . 'season', $season);
-    }
-
-    unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
-      $bibentry->set_datafield($datetype . 'year', $sdate->year);
-      # Save era date information
-      $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
-    }
-
-    $bibentry->set_datafield($datetype . 'month', $sdate->month)
-      unless $CONFIG_DATE_PARSERS{start}->missing('month');
-
-    $bibentry->set_datafield($datetype . 'day', $sdate->day)
-      unless $CONFIG_DATE_PARSERS{start}->missing('day');
-
-    # time
-    unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
-      $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
-      $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
-      $bibentry->set_datafield($datetype . 'second', $sdate->second);
-      unless ($sdate->time_zone->is_floating) { # ignore floating timezones
-        $bibentry->set_datafield($datetype . 'timezone', tzformat($sdate->time_zone->name));
+      # Some warnings for overwriting YEAR and MONTH from DATE
+      if ($sdate->year and
+          ($datetype . 'year' eq 'year') and
+          $entry->get('year') and
+          $sdate->year != $entry->get('year')) {
+        biber_warn("Overwriting field 'year' with year value from field 'date' for entry '$key'", $bibentry);
       }
+      if (not $CONFIG_DATE_PARSERS{start}->missing('month') and
+          ($datetype . 'month' eq 'month') and
+          $entry->get('month') and
+          $sdate->month != $entry->get('month')) {
+        biber_warn("Overwriting field 'month' with month value from field 'date' for entry '$key'", $bibentry);
+      }
+
+      # Save julian
+      $bibentry->set_field($datetype . 'datejulian', 1) if $CONFIG_DATE_PARSERS{start}->julian;
+      $bibentry->set_field($datetype . 'enddatejulian', 1) if $CONFIG_DATE_PARSERS{end}->julian;
+
+      # Save circa information
+      $bibentry->set_field($datetype . 'datecirca', 1) if $CONFIG_DATE_PARSERS{start}->circa;
+      $bibentry->set_field($datetype . 'enddatecirca', 1) if $CONFIG_DATE_PARSERS{end}->circa;
+
+      # Save uncertain date information
+      $bibentry->set_field($datetype . 'dateuncertain', 1) if $CONFIG_DATE_PARSERS{start}->uncertain;
+      $bibentry->set_field($datetype . 'enddateuncertain', 1) if $CONFIG_DATE_PARSERS{end}->uncertain;
+
+      # Save start season date information
+      if (my $season = $CONFIG_DATE_PARSERS{start}->season) {
+        $bibentry->set_field($datetype . 'season', $season);
+      }
+
+      unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
+        $bibentry->set_datafield($datetype . 'year', $sdate->year);
+        # Save era date information
+        $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
+      }
+
+      $bibentry->set_datafield($datetype . 'month', $sdate->month)
+        unless $CONFIG_DATE_PARSERS{start}->missing('month');
+
+      $bibentry->set_datafield($datetype . 'day', $sdate->day)
+        unless $CONFIG_DATE_PARSERS{start}->missing('day');
+
+      # time
+      unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
+        $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
+        $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
+        $bibentry->set_datafield($datetype . 'second', $sdate->second);
+        unless ($sdate->time_zone->is_floating) { # ignore floating timezones
+          $bibentry->set_datafield($datetype . 'timezone', tzformat($sdate->time_zone->name));
+        }
+      }
+    }
+    else { # open ended range - startdate is defined but empty
+      $bibentry->set_datafield($datetype . 'year', '');
     }
 
     # End date can be missing
     if ($sep) {
-      if (defined($edate)) {
-        if ($edate) {
+      if (defined($edate)) { # End date was successfully parsed
+        if ($edate) { # End date is an object not "0"
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
             $bibentry->set_datafield($datetype . 'endyear', $edate->year);
             # Save era date information
@@ -1426,7 +1436,9 @@ sub preprocess_file {
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Buffer before decoding -> '$lbuf'");
   }
+
   $lbuf = Biber::LaTeX::Recode::latex_decode($lbuf);
+
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Buffer after decoding -> '$lbuf'");
   }
@@ -1651,8 +1663,7 @@ sub parsename_x {
     }
 
     if ($npn =~ m/-i$/) {
-      # Strip any periods/spaces in explicit initials so they can be replaced by macros
-      $namec{$npn} = [split(//,$npv =~ s/(?:\.|\s)//gr)];
+      $namec{$npn} = _split_initials($npv);
     }
     else {
       # Don't tie according to bibtex rules if the namepart is protected with braces
@@ -1782,6 +1793,36 @@ sub _get_handler {
   else {
     return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field) || 'default'}{$dm->get_datatype($field)};
   }
+}
+
+# "ab{cd}e" -> [a,b,cd,e]
+sub _split_initials {
+  my $npv = shift;
+  my @npv;
+  my $ci = 0;
+  my $acc;
+
+  foreach my $c (split(/\b{gcb}/, $npv)) {
+    # entering compound initial
+    if ($c eq '{') {
+      $ci = 1;
+    }
+    # exiting compound initial, push accumulator and reset
+    elsif ($c eq '}') {
+      $ci = 0;
+      push @npv, $acc;
+      $acc = '';
+    }
+    else {
+      if ($ci) {
+        $acc .= $c;
+      }
+      else {
+        push @npv, $c;
+      }
+    }
+  }
+  return \@npv;
 }
 
 

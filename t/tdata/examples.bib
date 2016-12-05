@@ -1484,10 +1484,11 @@
 }
 
 % Testing uniquelist
-
+% Testing field with zero value
 @MISC{u1,
   AUTHOR = {AAA and BBB and CCC and DDD},
   TITLE  = {A title},
+  NOTE   = {0},
   DATE   = {2000}
 }
 
@@ -1498,7 +1499,6 @@
 }
 
 % Testing ignore
-
 @UNPUBLISHED{i1,
   ABSTRACT = {Some abstract %50 of which is useless},
   AUTHOR = {AAA and BBB and CCC and DDD and EEE},
@@ -1520,7 +1520,6 @@
 }
 
 % Testing per_type and per_entry max/min*names
-
 @MISC{tmn1,
   AUTHOR = {AAA and BBB and CCC},
   TITLE  = {A title},
@@ -1586,8 +1585,8 @@
 @MISC{url1,
   AUTHOR = {Alan Alias},
   DATE   = {2005},
-  URL = {http://www.something.com/q=á\'{e}\'aŠ},
-  URLS = {http://www.something.com/q=á\'{e}\'aŠ and http://www.sun.com}
+  URL = {http://www.something.com/q=áŠ},
+  URLS = {http://www.something.com/q=áŠ and http://www.sun.com}
 }
 
 @ONLINE{ol1,
@@ -1672,5 +1671,11 @@
 % Extended name format test
 @BOOK{ent1,
   AUTHOR = {sortnamekeyscheme=snks1 and Simon Smith and family=Brown, prefix=de, given=Brian, sortnamekeyscheme=snks2},
+}
+
+% Decode verbatim test
+@BOOK{verb1,
+  AUTHOR = {Arthur Allright},
+  VERBA = {\=y.\"a}
 }
 

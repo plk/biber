@@ -1,6 +1,10 @@
 Revision history for Biber
 
+2.7    unreleased
+       * Misc bug fixes
 2.6    (2016-09-10)
+       * Improved tool mode bibtex output. This has some normalisation
+         consequences for YEAR and custom fields. See PDF doc.
        * Support for new \ifuniquebaretitle test
        * Sourcemaps can now be restricted to particular refsections
        * Perl 5.24 is now required due to use of postfix deref notation

@@ -178,6 +178,14 @@
   DATE	      = {1034/unknown},
   EVENTDATE   = {1565/open},
   ORIGDATE    = {2000/},
+  URLDATE     = {unknown/1034},
+}
+
+@BOOK{range2,
+  DATE	      = {1034/*},
+  EVENTDATE   = {open/1565},
+  ORIGDATE    = {/2000},
+  URLDATE     = {*/1034},
 }
 
 @BOOK{season1,
@@ -192,7 +200,6 @@
 }
 
 % EDTF 5.2.2 tests
-
 @BOOK{unspec1,
   DATE      = {199u},
   EVENTDATE = {19uu},
@@ -202,4 +209,17 @@
 
 @BOOK{unspec2,
   DATE      = {1999-uu-uu},
+}
+
+% EDTF 5.2.4
+@BOOK{y1,
+  DATE = {y17000002},
+}
+
+@BOOK{y2,
+  DATE = {y-17000002},
+}
+
+@BOOK{y3,
+  DATE = {y1700},
 }

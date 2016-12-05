@@ -60,7 +60,7 @@ my $string1 = q|    \entry{DynSet}{set}{}
       \strng{authornamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authorfullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -85,7 +85,7 @@ my $string2 = q|    \entry{Dynamic1}{book}{}
       \strng{authornamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authorfullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{8}
-      \field{sortinithash}{ff392057b609ad7b4de0b8e2cc30b687}
+      \field{sortinithash}{2f1b0e69e7617f99664f1cd00bb9603c}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -110,7 +110,7 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
       \strng{authornamehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{authorfullhash}{894a5fe6de820f5dcce84a65581667f4}
       \field{sortinit}{9}
-      \field{sortinithash}{5a7694b2c36c7534b22948c31e4b7920}
+      \field{sortinithash}{2999ebab86052e6d71b434385f8b4ed2}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -134,7 +134,7 @@ my $string4 = q|    \entry{Dynamic3}{book}{}
       \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -159,7 +159,7 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

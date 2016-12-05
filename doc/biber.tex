@@ -26,8 +26,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{2.6}    % BIBER VERSION
-\gdef\biblatexversion{3.5}   % BIBLATEX VERSION
+\gdef\biberversion{2.7}    % BIBER VERSION
+\gdef\biblatexversion{3.7}   % BIBLATEX VERSION
 
 % colour for tables
 \definecolor{Gray}{gray}{0.85}
@@ -96,6 +96,23 @@
 Please see the \verb+Changes+ file which accompanies \biber\ for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
+
+\minisec{2.6}
+When outputting \bibtex\ data in tool mode (\opt{--tool}), \biber now
+follows a full internal processing chain involving the data model. In
+previous versions, \bibtex output would just output the raw
+\bibtex input data, only allowing for some re-formatting options and
+therefore no tool mode conversions from other formats into \bibtex format
+were possible. This change has some normalisation consequences:
+
+\begin{itemize}
+\item Dates are normalised into \bibfield{DATE} fields. Legacy
+  \bibfield{YEAR} fields are never output in \bibtex format data output.
+\item Fields which are not defined in the data model described in the
+  default \file{biber-tool.conf} are ignored and are neither read nor
+  output. If custom fields are required, they should be defined in the data
+  model by using a custom tool mode config file (see below).
+\end{itemize}
 
 \minisec{1.9}
 \biber no longer checks the environment for locales to use for sorting. This
@@ -2899,7 +2916,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.6
+INFO - This is Biber 2.7
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

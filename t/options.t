@@ -97,7 +97,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{sortinit}{D}
-      \field{sortinithash}{78f7c4753a2004675f316a80bdb31742}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -130,7 +130,7 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
       \strng{authornamehash}{19eec87c959944d6d9c72434a42856ba}
       \strng{authorfullhash}{19eec87c959944d6d9c72434a42856ba}
       \field{sortinit}{E}
-      \field{sortinithash}{fefc5210ef4721525b2a478df41efcd4}
+      \field{sortinithash}{07bbd5a529b5beaa311df5be05b874bc}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -158,7 +158,7 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
       \strng{authornamehash}{490250da1f3b92580d97563dc96c6c84}
       \strng{authorfullhash}{490250da1f3b92580d97563dc96c6c84}
       \field{sortinit}{B}
-      \field{sortinithash}{4ecbea03efd0532989d3836d1a048c32}
+      \field{sortinithash}{5f6fa000f686ee5b41be67ba6ff7962d}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

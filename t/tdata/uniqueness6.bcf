@@ -90,7 +90,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxcitenames</bcf:key>
-      <bcf:value>3</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxitems</bcf:key>
@@ -114,7 +114,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>singletitle</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortalphaothers</bcf:key>
@@ -130,11 +130,11 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>2</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniqueprimaryauthor</bcf:key>
@@ -172,8 +172,8 @@
   <!-- BIBLATEX OPTION SCOPE -->
   <bcf:optionscope type="GLOBAL">
     <bcf:option datatype="xml">translit</bcf:option>
-    <bcf:option datatype="xml">uniquenametemplate</bcf:option>
     <bcf:option datatype="xml">datamodel</bcf:option>
+    <bcf:option datatype="xml">uniquenametemplate</bcf:option>
     <bcf:option datatype="xml">labelalphanametemplate</bcf:option>
     <bcf:option datatype="xml">labelalphatemplate</bcf:option>
     <bcf:option datatype="xml">inheritance</bcf:option>
@@ -255,7 +255,6 @@
     <bcf:option datatype="boolean">opcittracker</bcf:option>
     <bcf:option datatype="boolean">loccittracker</bcf:option>
     <bcf:option datatype="boolean">parentracker</bcf:option>
-    <bcf:option datatype="boolean">datezeros</bcf:option>
     <bcf:option datatype="boolean">autopunct</bcf:option>
     <bcf:option datatype="boolean">punctfont</bcf:option>
     <bcf:option datatype="boolean">labelnumber</bcf:option>
@@ -622,7 +621,7 @@
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
-    <bcf:sort order="2"  final="1">
+    <bcf:sort order="2" final="1">
       <bcf:sortitem order="1">sortkey</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="3">
@@ -2041,10 +2040,10 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">encoding1.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">uniqueness6.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="0">testŠ</bcf:citekey>
+    <bcf:citekey order="0">*</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>

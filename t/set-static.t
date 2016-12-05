@@ -56,7 +56,7 @@ my $string1 = q|    \entry{Static1}{set}{}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{2}
-      \field{sortinithash}{8343b463aacf48517c044b4d2c9c45ed}
+      \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -80,7 +80,7 @@ my $string2 = q|    \entry{Static2}{book}{}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -147,7 +147,7 @@ my $string5 = q|    \entry{Static2}{book}{}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

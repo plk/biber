@@ -1005,10 +1005,23 @@ sub _expand_option {
 =cut
 
 sub parse_date_range {
-  my ($sd, $sep, $ed) = shift =~ m|^([^/]+)(/)?([^/]+)?$|;
+  my ($bibentry, $datetype, $datestring) = @_;
+  my ($sd, $sep, $ed) = $datestring =~ m|^([^/]+)?(/)?([^/]+)?$|;
   my $unspec;
-  if ($sd =~ /u/) {# EDTF 5.2.2 Unspecified format
+  if ($sd =~ /u/ and $sd !~ /unknown/) {# EDTF 5.2.2 Unspecified format but not 5.2.3
     ($sd, $sep, $ed, $unspec) = parse_date_edtf_unspecified($sd);
+  }
+  # Set start date unknown flag
+  if ($sd) {
+    if (fc($sd) eq fc('unknown') or fc($sd) eq fc('*')) {
+      $bibentry->set_field($datetype . 'dateunknown',1);
+    }
+  }
+  # Set end date unknown flag
+  if ($ed) {
+    if (fc($ed) eq fc('unknown') or fc($ed) eq fc('*')) {
+      $bibentry->set_field($datetype . 'enddateunknown',1);
+    }
   }
   return (parse_date_start($sd), parse_date_end($ed), $sep, $unspec);
 }
@@ -1096,6 +1109,7 @@ sub parse_date {
   $obj->init();
   return 0 unless $string;
   return 0 if $string eq 'unknown'; # EDTF 5.2.3
+  return 0 if $string eq '*';       # ISO8601-2 equivalent for "unknown"
   return 0 if $string eq 'open';    # EDTF 5.2.3
 
   my $dt = eval {$obj->parse_datetime($string)};

@@ -424,6 +424,14 @@ sub set_output_entry {
           push @attrs, ('enduncertain', 'true');
         }
 
+        # Unknown dates
+        if ($be->get_field("${d}dateunknown")) {
+          push @attrs, ('startunknown', 'true');
+        }
+        if ($be->get_field("${d}enddateunknown")) {
+          push @attrs, ('endunknown', 'true');
+        }
+
         # Only output era for date if:
         # The field is "year" and it came from splitting a date
         # The field is any other startyear

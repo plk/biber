@@ -125,44 +125,45 @@ sub set_uniquelist {
   # be <1
   return if $uniquelist <= $mincn and not $mincn == $self->count_names;
 
-  # Special case.
+  # Special case
   # No point disambiguating with uniquelist lists which have the same count
   # for the complete list as this means they are the same list. So, if this
-  # is the case, don't set uniquelist at all. BUT, only do this if there is nothing
-  # else which these identical lists need disambiguating from:
-  #
-  # * Assume last index of list is x
-  # * Must not be any other list identical apart from position x
-  # * Must not be any other list identical up to position x but also longer
-  return if (
-             # if final count > 1 (identical lists)
-             Biber::Config->get_uniquelistcount_final($namelist) > 1 and
-             # nothing differs from $namelist in last place
-             not Biber::Config->list_differs_last($namelist) and
-             # nothing else is the same to last position but is longer
-             not Biber::Config->list_differs_superset($namelist)
-            );
+  # is the case, don't set uniquelist at all.
+  # BUT, this only applies if there is nothing else which these identical lists
+  # need disambiguating from so check if there are any other lists which differ
+  # up to any index. If there is such a list, set uniquelist using that index.
 
-  # If there are more names than uniquelist, reduce it by one unless
-  # there is another list which differs at uniquelist and is at least as long
-  # so we get:
-  #
-  # AAA and BBB and CCC
-  # AAA and BBB and CCC et al
-  #
-  # instead of
-  #
-  # AAA and BBB and CCC
-  # AAA and BBB and CCC and DDD et al
-  #
-  # BUT, we also want
-  #
-  # AAA and BBB and CCC
-  # AAA and BBB and CCC and DDD et al
-  # AAA and BBB and CCC and EEE et al
+  # if final count > 1 (identical lists)
+  if (Biber::Config->get_uniquelistcount_final($namelist) > 1) {
+    # index where this namelist begins to differ from any other
+    # Can't be 0 as that means it begins differently in which case $index is undef
+    my $index = Biber::Config->list_differs_index($namelist);
+    return unless $index;
+    # Now we know that some disambiguation is needed from other similar list(s)
+    $uniquelist = $index+1;# convert zero-based index into 1-based uniquelist value
+  }
+  # this is an elsif because for final count > 1, we are setting uniquelist and don't
+  # want to mess about with it any more
+  elsif ($num_names > $uniquelist and
+         not Biber::Config->list_differs_nth($namelist, $uniquelist)) {
+    # If there are more names than uniquelist, reduce it by one unless
+    # there is another list which differs at uniquelist and is at least as long
+    # so we get:
+    #
+    # AAA and BBB and CCC
+    # AAA and BBB and CCC et al
+    #
+    # instead of
+    #
+    # AAA and BBB and CCC
+    # AAA and BBB and CCC and DDD et al
+    #
+    # BUT, we also want
+    #
+    # AAA and BBB and CCC
+    # AAA and BBB and CCC and DDD et al
+    # AAA and BBB and CCC and EEE et al
 
-  if ($num_names > $uniquelist and
-      not Biber::Config->list_differs_nth($namelist, $uniquelist)) {
     $uniquelist--;
   }
 

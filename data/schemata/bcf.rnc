@@ -408,6 +408,11 @@ sorting =
       attribute type { text },
       element bcf:exclusion { text }+
     }*,
+    # forcibly includes certain fields excluded by sortexclusion for sorting for specified types
+    element bcf:sortinclusion {
+      attribute type { text },
+      element bcf:inclusion { text }+
+    }*,
     sort+
   }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="../../data/bcf.xsl"?>
 <?xml-model href="../../data/schemata/bcf.rnc" type="application/relax-ng-compact-syntax"?>
-<bcf:controlfile version="3.2" bltxversion="3.5" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="3.3" bltxversion="3.5" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -723,7 +723,7 @@
       <bcf:field fieldtype="field" datatype="datepart">urlseason</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">urlendseason</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart" nullok="true">endyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">year</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart" nullok="true">year</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">month</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">day</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">hour</bcf:field>
@@ -737,7 +737,7 @@
       <bcf:field fieldtype="field" datatype="datepart">endsecond</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">endtimezone</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart" nullok="true">eventendyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">eventyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart" nullok="true">eventyear</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">eventmonth</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">eventday</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">eventhour</bcf:field>
@@ -751,7 +751,7 @@
       <bcf:field fieldtype="field" datatype="datepart">eventendsecond</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">eventendtimezone</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart" nullok="true">origendyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">origyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart" nullok="true">origyear</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">origmonth</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">origday</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">orighour</bcf:field>
@@ -765,7 +765,7 @@
       <bcf:field fieldtype="field" datatype="datepart">origendsecond</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">origendtimezone</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart" nullok="true">urlendyear</bcf:field>
-      <bcf:field fieldtype="field" datatype="datepart">urlyear</bcf:field>
+      <bcf:field fieldtype="field" datatype="datepart" nullok="true">urlyear</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">urlmonth</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">urlday</bcf:field>
       <bcf:field fieldtype="field" datatype="datepart">urlhour</bcf:field>
@@ -1920,10 +1920,14 @@
     <bcf:citekey order="20">era3</bcf:citekey>
     <bcf:citekey order="21">era4</bcf:citekey>
     <bcf:citekey order="22">range1</bcf:citekey>
-    <bcf:citekey order="23">season1</bcf:citekey>
-    <bcf:citekey order="24">time1</bcf:citekey>
-    <bcf:citekey order="25">unspec1</bcf:citekey>
-    <bcf:citekey order="26">unspec2</bcf:citekey>
+    <bcf:citekey order="23">range2</bcf:citekey>
+    <bcf:citekey order="24">season1</bcf:citekey>
+    <bcf:citekey order="25">time1</bcf:citekey>
+    <bcf:citekey order="26">unspec1</bcf:citekey>
+    <bcf:citekey order="27">unspec2</bcf:citekey>
+    <bcf:citekey order="28">y1</bcf:citekey>
+    <bcf:citekey order="29">y2</bcf:citekey>
+    <bcf:citekey order="30">y3</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>

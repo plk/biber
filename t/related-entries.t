@@ -55,7 +55,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{1}
-      \field{sortinithash}{53e85f4cf497d2a4e1d51786552bcbf1}
+      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -90,7 +90,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{2}
-      \field{sortinithash}{8343b463aacf48517c044b4d2c9c45ed}
+      \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -229,7 +229,7 @@ my $kck4 = q|    \entry{caf8e34be07426ae7127c1b4829983c1}{inbook}{dataonly,useed
 
 my $c1 = q|    \entry{c1}{book}{}
       \field{sortinit}{3}
-      \field{sortinithash}{7e21a31d9ef6ddc352701d4fa590bfbc}
+      \field{sortinithash}{197da6d6c34c6b20ce45c4d4baace5a4}
       \field{related}{9ab62b5ef34a985438bfdf7ee0102229}
     \endentry
 |;
