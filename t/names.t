@@ -489,18 +489,18 @@ my $l11 = q|    \entry{L11}{book}{}
 
 my $l12 = q|    \entry{L12}{book}{}
       \name{author}{1}{}{%
-        {{hash=7e7640f3cb87a1cf11a86307a186ec0f}{%
-           family={Vallée\\bibnamedelima Poussin},
+        {{hash=6c883a8c1975ffff06f875bf366b3e47}{%
+           family={Vall{é}e\\bibnamedelima Poussin},
            familyi={V\\bibinitperiod\\bibinitdelim P\\bibinitperiod},
            given={Charles\\bibnamedelimb Louis\\bibnamedelimb Xavier\\bibnamedelima Joseph},
            giveni={C\\bibinitperiod\\bibinitdelim L\\bibinitperiod\\bibinitdelim X\\bibinitperiod\\bibinitdelim J\\bibinitperiod},
            prefix={de\\bibnamedelima la},
            prefixi={d\\bibinitperiod\\bibinitdelim l\\bibinitperiod}}}%
       }
-      \strng{namehash}{7e7640f3cb87a1cf11a86307a186ec0f}
-      \strng{fullhash}{7e7640f3cb87a1cf11a86307a186ec0f}
-      \strng{authornamehash}{7e7640f3cb87a1cf11a86307a186ec0f}
-      \strng{authorfullhash}{7e7640f3cb87a1cf11a86307a186ec0f}
+      \strng{namehash}{6c883a8c1975ffff06f875bf366b3e47}
+      \strng{fullhash}{6c883a8c1975ffff06f875bf366b3e47}
+      \strng{authornamehash}{6c883a8c1975ffff06f875bf366b3e47}
+      \strng{authorfullhash}{6c883a8c1975ffff06f875bf366b3e47}
       \field{sortinit}{d}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \true{uniqueprimaryauthor}
@@ -677,16 +677,16 @@ my $l20 = q|    \entry{L20}{book}{}
 
 my $l21 = q|    \entry{L21}{book}{}
       \name{author}{1}{}{%
-        {{hash=4389a3c0dc7da74487b50808ba9436ad}{%
+        {{hash=b3df6330af0651b93bce079a36dea339}{%
            family={Smith},
            familyi={S\bibinitperiod},
-           given={\v{S}omeone},
+           given={{\v{S}}omeone},
            giveni={\v{S}\bibinitperiod}}}%
       }
-      \strng{namehash}{4389a3c0dc7da74487b50808ba9436ad}
-      \strng{fullhash}{4389a3c0dc7da74487b50808ba9436ad}
-      \strng{authornamehash}{4389a3c0dc7da74487b50808ba9436ad}
-      \strng{authorfullhash}{4389a3c0dc7da74487b50808ba9436ad}
+      \strng{namehash}{b3df6330af0651b93bce079a36dea339}
+      \strng{fullhash}{b3df6330af0651b93bce079a36dea339}
+      \strng{authornamehash}{b3df6330af0651b93bce079a36dea339}
+      \strng{authorfullhash}{b3df6330af0651b93bce079a36dea339}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labelnamesource}{author}
@@ -695,16 +695,16 @@ my $l21 = q|    \entry{L21}{book}{}
 
 my $l22u = q|    \entry{L22}{book}{}
       \name{author}{1}{}{%
-        {{hash=e58b861545799d0eaf883402a882126e}{%
-           family={Šmith},
+        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{%
+           family={{Š}mith},
            familyi={Š\bibinitperiod},
            given={Someone},
            giveni={S\bibinitperiod}}}%
       }
-      \strng{namehash}{e58b861545799d0eaf883402a882126e}
-      \strng{fullhash}{e58b861545799d0eaf883402a882126e}
-      \strng{authornamehash}{e58b861545799d0eaf883402a882126e}
-      \strng{authorfullhash}{e58b861545799d0eaf883402a882126e}
+      \strng{namehash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{fullhash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{authornamehash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{authorfullhash}{2273e0084ca97649d7edced9ce8d0ea3}
       \field{sortinit}{Š}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labelnamesource}{author}
@@ -714,18 +714,19 @@ my $l22u = q|    \entry{L22}{book}{}
 
 my $l22 = q|    \entry{L22}{book}{}
       \name{author}{1}{}{%
-        {{hash=e58b861545799d0eaf883402a882126e}{%
-           family={\v{S}mith},
+        {{hash=2273e0084ca97649d7edced9ce8d0ea3}{%
+           family={{\v{S}}mith},
            familyi={\v{S}\bibinitperiod},
            given={Someone},
            giveni={S\bibinitperiod}}}%
       }
-      \strng{namehash}{e58b861545799d0eaf883402a882126e}
-      \strng{fullhash}{e58b861545799d0eaf883402a882126e}
-      \strng{authornamehash}{e58b861545799d0eaf883402a882126e}
-      \strng{authorfullhash}{e58b861545799d0eaf883402a882126e}
+      \strng{namehash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{fullhash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{authornamehash}{2273e0084ca97649d7edced9ce8d0ea3}
+      \strng{authorfullhash}{2273e0084ca97649d7edced9ce8d0ea3}
       \field{sortinit}{\v{S}}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \true{uniqueprimaryauthor}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -826,34 +827,34 @@ my $l29 = q|    \entry{L29}{book}{}
 
 my $l31 = q|    \entry{L31}{book}{}
       \name{author}{1}{}{%
-        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
-           family={\~{Z}elly},
+        {{hash=b43419361d83c9ab010e98aed1a83e35}{%
+           family={{\~{Z}}elly},
            familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
       \name{editor}{1}{}{%
-        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
-           family={\~{Z}elly},
+        {{hash=b43419361d83c9ab010e98aed1a83e35}{%
+           family={{\~{Z}}elly},
            familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
       \name{translator}{1}{}{%
-        {{hash=29c3ff92fff79d09a8b44d2f775de0b1}{%
-           family={\~{Z}elly},
+        {{hash=b43419361d83c9ab010e98aed1a83e35}{%
+           family={{\~{Z}}elly},
            familyi={\~{Z}\\bibinitperiod},
            given={Arthur},
            giveni={A\bibinitperiod}}}%
       }
-      \strng{namehash}{29c3ff92fff79d09a8b44d2f775de0b1}
-      \strng{fullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
-      \strng{authornamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
-      \strng{authorfullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
-      \strng{editornamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
-      \strng{editorfullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
-      \strng{translatornamehash}{29c3ff92fff79d09a8b44d2f775de0b1}
-      \strng{translatorfullhash}{29c3ff92fff79d09a8b44d2f775de0b1}
+      \strng{namehash}{b43419361d83c9ab010e98aed1a83e35}
+      \strng{fullhash}{b43419361d83c9ab010e98aed1a83e35}
+      \strng{authornamehash}{b43419361d83c9ab010e98aed1a83e35}
+      \strng{authorfullhash}{b43419361d83c9ab010e98aed1a83e35}
+      \strng{editornamehash}{b43419361d83c9ab010e98aed1a83e35}
+      \strng{editorfullhash}{b43419361d83c9ab010e98aed1a83e35}
+      \strng{translatornamehash}{b43419361d83c9ab010e98aed1a83e35}
+      \strng{translatorfullhash}{b43419361d83c9ab010e98aed1a83e35}
       \field{sortinit}{\~{Z}}
       \field{sortinithash}{35589aa085e881766b72503e53fd4c97}
       \true{uniqueprimaryauthor}

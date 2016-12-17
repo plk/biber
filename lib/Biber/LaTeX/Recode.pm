@@ -265,7 +265,13 @@ sub latex_decode {
         $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/ge;
       }
       elsif ($type eq 'diacritics') {
-        $text =~ s/\\($re)\s*\{(\pL\pM*)\}/$2 . $map->{$1}/ge;
+        my $bracemap = {'' => '',
+                        '{' => "OB",
+                        '}' => "CB"};
+
+        # Rename protecting braces so that they are not broken by RE manipulations
+        $text =~ s/(\{?)\\($re)\s*\{(\pL\pM*)\}(\}?)/$bracemap->{$1} . $3 . $map->{$2} . $bracemap->{$4}/ge;
+
         # Conditional regexp with code-block condition
         # non letter macros for diacritics (e.g. \=) can be followed by any letter
         # but letter diacritic macros (e.g \c) can't (\cS) horribly Broken
@@ -277,14 +283,14 @@ sub latex_decode {
         #     Any letter is allowed after the space (\c S)
         #   Else
         #     Only a non basic LaTeX letter is allowed (\c-)
-        $text =~ s/\\# slash
+        $text =~ s/(\{?)\\# slash
                    ($re)# the diacritic
                    (\s*)# optional space
                    (# capture paren
-                     (?(?{$1 !~ m:[A-Za-z]$:})# code block condition (is not a letter?)
+                     (?(?{$2 !~ m:[A-Za-z]$:})# code block condition (is not a letter?)
                        \pL # yes pattern
                      | # no pattern
-                       (?(?{$2}) # code block condition (space matched earlier after diacritic?)
+                       (?(?{$3}) # code block condition (space matched earlier after diacritic?)
                          \pL # yes pattern
                        | # no pattern
                          [^A-Za-z]
@@ -292,7 +298,7 @@ sub latex_decode {
                      ) # close conditional
                      \pM* # optional marks
                    ) # capture paren
-                   /$3 . $map->{$1}/gxe;
+                   (\}?)/$bracemap->{$1} . $4 . $map->{$2} . $bracemap->{$5}/gxe;
       }
     }
 
@@ -315,6 +321,10 @@ sub latex_decode {
     $text = reverse $text;
     $text =~ s/}(\pM+\pL){(?!\pL+\\)/$1/g;
     $text = reverse $text;
+
+    # Put brace markers back
+    $text =~ s/OB/{/g;
+    $text =~ s/CB/}/g;
 
     # Replace verbatim field markers
     $text =~ s/([a-f0-9]{32})/$saveverb->{$1}/gie;

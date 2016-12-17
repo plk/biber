@@ -39,10 +39,10 @@
             <bbl:namepart type="given" initials="E">Erhan</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:field name="namehash">350c1258034a7da03092d563be673f84</bbl:field>
-        <bbl:field name="fullhash">562d8cda005e7c37bc696e0d0edc306e</bbl:field>
-        <bbl:field name="authornamehash">350c1258034a7da03092d563be673f84</bbl:field>
-        <bbl:field name="authorfullhash">562d8cda005e7c37bc696e0d0edc306e</bbl:field>
+        <bbl:field name="namehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
+        <bbl:field name="fullhash">0a33d8193e8c0f08f4b806878362f41f</bbl:field>
+        <bbl:field name="authornamehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
+        <bbl:field name="authorfullhash">0a33d8193e8c0f08f4b806878362f41f</bbl:field>
         <bbl:field name="labelalpha">Aks+06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">3248043b5fe8d0a34dab5ab6b8d4309b</bbl:field>

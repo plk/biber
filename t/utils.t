@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 74;
+use Test::More tests => 75;
 use Test::Differences;
 unified_diff;
 
@@ -78,7 +78,7 @@ eq_or_diff(latex_decode('\alpha'), '\alpha', 'latex decode 2'); # no greek decod
 eq_or_diff(latex_decode('\textless\textampersand'), '<&', 'latex decode 3'); # checking XML encoding bits
 eq_or_diff(latex_encode(NFD('Muḥammad ibn Mūsā al-Khwārizmī')), 'Mu\d{h}ammad ibn M\={u}s\={a} al-Khw\={a}rizm\={\i}', 'latex encode 1');
 eq_or_diff(latex_encode(NFD('α')), 'α', 'latex encode 2'); # no greek encoding by default
-eq_or_diff(NFC(latex_decode("{M{\\'a}t{\\'e}}")), '{Máté}', 'latex decode accent 1');
+eq_or_diff(NFC(latex_decode("{M{\\'a}t{\\'e}}")), '{M{á}t{é}}', 'latex decode accent 1');
 eq_or_diff(NFC(latex_decode("{M\\'{a}t\\'{e}}")), '{Máté}', 'latex decode accent 2');
 eq_or_diff(NFC(latex_decode("{M\\'at\\'e}")), '{Máté}', 'latex decode accent 3');
 eq_or_diff(NFC(latex_decode("R{\\'egis}")), 'R{égis}', 'latex decode accent 4');
@@ -89,10 +89,10 @@ eq_or_diff(latex_encode(NFD('Ðandđandć, H.')), '\\DH{}and\\dj{}and\\\'{c}, H.
 eq_or_diff(latex_encode(NFD('{Ðandđandć, H.}')), '{\\DH{}and\\dj{}and\\\'{c}, H.}', 'latex reversing recoding test 4');
 
 Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
-eq_or_diff(latex_decode('\alpha'), 'α', 'latex decode 4'); # greek decoding with "full"
+eq_or_diff(NFC(latex_decode('{\"{U}}ber {\"{U}}berlegungen zur {\"{U}}berwindung des {\"{U}}bels')), '{Ü}ber {Ü}berlegungen zur {Ü}berwindung des {Ü}bels', 'latex_decode 4'); # Brace protection
+eq_or_diff(latex_decode('\alpha'), 'α', 'latex decode 4a'); # greek decoding with "full"
 eq_or_diff(NFC(latex_decode("\\'\\i")), 'ı́', 'latex decode 5'); # checking i/j with accents
-
-eq_or_diff(NFC(latex_decode("{\\'\\i}")), 'ı́', 'latex decode 5a'); # checking i/j with accents
+eq_or_diff(NFC(latex_decode("{\\'\\i}")), '{ı́}', 'latex decode 5a'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("\\^{\\j}")), 'ȷ̂', 'latex decode 6'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("\\u{\\i}")), 'ı̆', 'latex decode 7'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("\\u\\i")), 'ı̆', 'latex decode 8'); # checking i/j with accents
