@@ -94,9 +94,9 @@ my $ssd1 = [
   { spec => "str", str => 1 },
   { spec => "str", str => 1 },
   { spec => "str", str => 1 },
-  { int => 1, spec => "int" },
   { spec => "str", str => 1 },
-  { int => 1, spec => "int" },
+  { spec => "str", str => 1 },
+  { spec => "int", int => 1 },
 ];
 my $ssd2 = [
   { int => 1, spec => "int" },
