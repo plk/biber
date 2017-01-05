@@ -1,5 +1,7 @@
 Revision history for Biber
 
+2.8    ()
+       * Updated copyright dates
 2.7    (2016-12-08)
        * New option (--nouri-encode) to prevent URL encoding of URLs. Avoids breaking
          display of URLS which contain non-ASCII.

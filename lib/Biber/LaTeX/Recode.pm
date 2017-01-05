@@ -31,7 +31,7 @@ Biber::LaTeX::Recode - Encode/Decode chars to/from UTF-8/lacros in LaTeX
 
     use Biber::LaTeX:Recode
 
-    my $string       = 'Muḥammad ibn Mūsā al-Khwārizmī';
+    my $string = 'Muḥammad ibn Mūsā al-Khwārizmī';
     my $latex_string = latex_encode($string);
         # => 'Mu\d{h}ammad ibn M\=us\=a al-Khw\=arizm\={\i}'
 
@@ -434,7 +434,7 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2016 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2017 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

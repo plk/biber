@@ -174,3 +174,28 @@ sub _missing_time {
 }
 
 1;
+
+__END__
+
+=head1 AUTHORS
+
+François Charette, C<< <firmicus at ankabut.net> >>
+Philip Kime C<< <philip at kime.org.uk> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests on our Github tracker at
+L<https://github.com/plk/biber/issues>.
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2009-2017 François Charette and Philip Kime, all rights reserved.
+
+This module is free software.  You can redistribute it and/or
+modify it under the terms of the Artistic License 2.0.
+
+This program is distributed in the hope that it will be useful,
+but without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
+
+=cut
