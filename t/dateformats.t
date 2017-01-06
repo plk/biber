@@ -435,13 +435,28 @@ eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'pubs
 
 
 
-my $era1 = q|    \entry{era1}{book}{}
-      \field{sortinit}{3}
-      \field{sortinithash}{197da6d6c34c6b20ce45c4d4baace5a4}
+my $era1 = q|    \entry{era1}{article}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal Title}
       \field{month}{2}
       \field{origendyear}{219}
       \field{origyear}{221}
+      \field{title}{Title}
       \field{year}{379}
       \field{dateera}{bce}
       \field{origenddateera}{bce}
@@ -449,13 +464,28 @@ my $era1 = q|    \entry{era1}{book}{}
     \endentry
 |;
 
-my $era2 = q|    \entry{era2}{book}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+my $era2 = q|    \entry{era2}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Book Title}
       \field{eventyear}{249}
       \field{origendyear}{44}
       \field{origyear}{49}
+      \field{title}{Title}
       \field{year}{197}
       \field{dateera}{bce}
       \field{eventdateera}{bce}
@@ -464,14 +494,29 @@ my $era2 = q|    \entry{era2}{book}{}
     \endentry
 |;
 
-my $era3 = q|    \entry{era3}{book}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+my $era3 = q|    \entry{era3}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Book Title}
       \field{eventday}{2}
       \field{eventmonth}{3}
       \field{eventyear}{250}
       \field{month}{2}
+      \field{title}{Title}
       \field{year}{196}
       \field{dateera}{bce}
       \true{eventdatejulian}
@@ -479,13 +524,28 @@ my $era3 = q|    \entry{era3}{book}{}
     \endentry
 |;
 
-my $era4 = q|    \entry{era4}{book}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+my $era4 = q|    \entry{era4}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Book Title}
       \field{eventyear}{1565}
       \field{origendyear}{1488}
       \field{origyear}{1487}
+      \field{title}{Title}
       \field{urlendyear}{1490}
       \field{urlyear}{1487}
       \field{year}{1034}
@@ -502,22 +562,37 @@ my $era4 = q|    \entry{era4}{book}{}
     \endentry
 |;
 
-my $time1 = q|    \entry{time1}{book}{}
-      \field{sortinit}{2}
-      \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
+my $time1 = q|    \entry{time1}{article}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{day}{3}
-      \field{eventday}{3}
-      \field{eventhour}{17}
-      \field{eventminute}{7}
-      \field{eventmonth}{1}
-      \field{eventsecond}{34}
-      \field{eventtimezone}{Z}
-      \field{eventyear}{2001}
       \field{hour}{15}
+      \field{journaltitle}{Journal Title}
       \field{minute}{0}
       \field{month}{1}
+      \field{origday}{3}
+      \field{orighour}{17}
+      \field{origminute}{7}
+      \field{origmonth}{1}
+      \field{origsecond}{34}
+      \field{origtimezone}{Z}
+      \field{origyear}{2001}
       \field{second}{0}
+      \field{title}{Title}
       \field{urlday}{3}
       \field{urlhour}{17}
       \field{urlminute}{7}
@@ -527,20 +602,36 @@ my $time1 = q|    \entry{time1}{book}{}
       \field{urlyear}{2001}
       \field{year}{2001}
       \field{dateera}{ce}
-      \field{eventdateera}{ce}
+      \field{origdateera}{ce}
       \field{urldateera}{ce}
     \endentry
 |;
 
-my $range1 = q|    \entry{range1}{book}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+my $range1 = q|    \entry{range1}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extrayear}{1}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Book Title}
       \field{endyear}{}
       \field{eventendyear}{}
       \field{eventyear}{1565}
       \field{origendyear}{}
       \field{origyear}{2000}
+      \field{title}{Title}
       \field{urlendyear}{1034}
       \field{urlyear}{}
       \field{year}{1034}
@@ -553,15 +644,31 @@ my $range1 = q|    \entry{range1}{book}{}
     \endentry
 |;
 
-my $range2 = q|    \entry{range2}{book}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+my $range2 = q|    \entry{range2}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extrayear}{2}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Book Title}
       \field{endyear}{}
       \field{eventendyear}{1565}
       \field{eventyear}{}
       \field{origendyear}{2000}
       \field{origyear}{}
+      \field{title}{Title}
       \field{urlendyear}{1034}
       \field{urlyear}{}
       \field{year}{1034}
@@ -574,23 +681,52 @@ my $range2 = q|    \entry{range2}{book}{}
     \endentry
 |;
 
-my $season1 = q|    \entry{season1}{book}{}
-      \field{sortinit}{2}
-      \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
+my $season1 = q|    \entry{season1}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Book Title}
       \field{eventseason}{autumn}
       \field{eventyear}{2002}
       \field{season}{spring}
+      \field{title}{Title}
       \field{year}{2003}
       \field{dateera}{ce}
       \field{eventdateera}{ce}
     \endentry
 |;
 
-my $unspec1 = q|    \entry{unspec1}{book}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Book Title}
       \field{endyear}{1999}
       \field{eventendyear}{1999}
       \field{eventyear}{1900}
@@ -598,6 +734,7 @@ my $unspec1 = q|    \entry{unspec1}{book}{}
       \field{origendyear}{1999}
       \field{origmonth}{1}
       \field{origyear}{1999}
+      \field{title}{Title}
       \field{urlday}{1}
       \field{urlendday}{31}
       \field{urlendmonth}{1}
@@ -621,15 +758,30 @@ my $unspec1 = q|    \entry{unspec1}{book}{}
 |;
 
 
-my $unspec2 = q|    \entry{unspec2}{book}{}
-      \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+my $unspec2 = q|    \entry{unspec2}{article}{}
+      \name{author}{1}{}{%
+        {{hash=556c8dba145b472e6a8598d506f7cbe2}{%
+           family={Smith},
+           familyi={S\\bibinitperiod},
+           given={Alan},
+           giveni={A\\bibinitperiod}}}%
+      }
+      \strng{namehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{fullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
+      \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
       \field{day}{1}
       \field{endday}{31}
       \field{endmonth}{12}
       \field{endyear}{1999}
+      \field{journaltitle}{Journal Title}
       \field{month}{1}
+      \field{title}{Title}
       \field{year}{1999}
       \field{dateunspecified}{dayinyear}
       \field{enddateera}{ce}
@@ -656,7 +808,6 @@ $bibentries->del_entry('season1');
 $bibentries->del_entry('time1');
 $bibentries->del_entry('unspec1');
 $bibentries->del_entry('unspec2');
-Biber::Config->setoption('validate_datamodel', 0);
 $biber->prepare;
 $out = $biber->get_output_obj;
 
