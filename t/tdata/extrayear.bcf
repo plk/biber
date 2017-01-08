@@ -1002,6 +1002,7 @@
       <bcf:field>sorttitle</bcf:field>
       <bcf:field>sortyear</bcf:field>
       <bcf:field>timezone</bcf:field>
+      <bcf:field>url</bcf:field>
       <bcf:field>urlday</bcf:field>
       <bcf:field>urlendday</bcf:field>
       <bcf:field>urlendhour</bcf:field>
@@ -1070,7 +1071,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>version</bcf:field>
       <bcf:field>volume</bcf:field>
     </bcf:entryfields>
@@ -1120,7 +1120,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -1160,7 +1159,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -1211,7 +1209,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -1237,7 +1234,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
-      <bcf:field>url</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>collection</bcf:entrytype>
@@ -1281,7 +1277,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -1320,7 +1315,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -1370,7 +1364,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>translator</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -1401,7 +1394,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>version</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
@@ -1424,7 +1416,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>version</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
@@ -1440,7 +1431,6 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>version</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
@@ -1460,7 +1450,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>version</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
@@ -1490,7 +1479,6 @@
       <bcf:field>series</bcf:field>
       <bcf:field>subtitle</bcf:field>
       <bcf:field>title</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>volume</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
@@ -1523,7 +1511,6 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>venue</bcf:field>
       <bcf:field>volumes</bcf:field>
     </bcf:entryfields>
@@ -1563,7 +1550,6 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>venue</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
@@ -1607,7 +1593,6 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>venue</bcf:field>
       <bcf:field>volume</bcf:field>
       <bcf:field>volumes</bcf:field>
@@ -1634,7 +1619,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
-      <bcf:field>url</bcf:field>
       <bcf:field>version</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
@@ -1657,7 +1641,6 @@
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
       <bcf:field>type</bcf:field>
-      <bcf:field>url</bcf:field>
     </bcf:entryfields>
     <bcf:entryfields>
       <bcf:entrytype>unpublished</bcf:entrytype>
@@ -1671,7 +1654,6 @@
       <bcf:field>subtitle</bcf:field>
       <bcf:field>title</bcf:field>
       <bcf:field>titleaddon</bcf:field>
-      <bcf:field>url</bcf:field>
     </bcf:entryfields>
     <bcf:constraints>
       <bcf:entrytype>article</bcf:entrytype>
