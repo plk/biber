@@ -841,7 +841,8 @@ sub _create_entry {
     if ($dm->is_field($f)) {
       my $handler = _get_handler($f);
       my $v = $handler->($bibentry, $e, $f, $k);
-      $bibentry->set_datafield($f, $v) if defined($v);
+      # Don't set datafields with empty contents like 'language = {}'
+      $bibentry->set_datafield($f, $v) if defined($v) and $e->get($f) ne '';
     }
     elsif (Biber::Config->getoption('validate_datamodel')) {
       biber_warn("Datamodel: Entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
