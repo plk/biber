@@ -97,9 +97,14 @@ sub locate_biber_file {
     return $foundfile;
   }
 
-  # File is relative to cwd
-  if (-e $filename) {
-    return $filename;
+  # NFD filesystem: File is relative to cwd
+  if (-e NFD($filename)) {
+    return NFD($filename);
+  }
+
+  # NFC filesystem: File is relative to cwd
+  if (-e NFC($filename)) {
+    return NFC($filename);
   }
 
   # File is where control file lives
