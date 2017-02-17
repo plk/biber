@@ -711,8 +711,6 @@ sub create_entry {
                     }
                     next;
                   }
-                  $etarget->set($target, encode('UTF-8', NFC($entry->get($fieldsource))));
-                  $etarget->delete($fieldsource);
                 }
                 $etarget->set($target, encode('UTF-8', NFC($entry->get($fieldsource))));
                 $etarget->delete($fieldsource);
