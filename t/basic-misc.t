@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 68;
+use Test::More tests => 69;
 use Test::Differences;
 unified_diff;
 
@@ -57,7 +57,7 @@ my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 my @keys = sort $section->get_citekeys;
-my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 markey ent1 verb1};
+my @citedkeys = sort qw{ alias1 alias2 alias5 anon1 anon2 murray t1 kant:ku kant:kpv t2 shore u1 u2 us1 list1 isbn1 isbn2 markey ent1 verb1 over1};
 
 # entry "loh" is missing as the biber.conf map removes it with map_entry_null
 my @allkeys = sort map {lc()} qw{ anon1 anon2 stdmodel aristotle:poetics vazques-de-parga t1
@@ -71,7 +71,7 @@ piccato hasan hyman stdmodel:glashow stdmodel:ps_sc kant:kpv companion almendro
 sigfridsson ctan baez/online aristotle:rhetoric pimentel00 pines knuth:ct:c moraux cms
 angenendt angenendtsk markey cotton vangennepx kant:ku nussbaum nietzsche:ksa1
 vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsche:ksa
-set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey ent1 avona rvonr verb1};
+set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey ent1 avona rvonr verb1 over1};
 
 my $u1 = q|    \entry{u1}{misc}{}
       \name{author}{4}{uniquelist=4}{%
@@ -498,6 +498,13 @@ my $list1 = q|    \entry{list1}{book}{}
     \endentry
 |;
 
+my $over1 = q|    \entry{over1}{book}{}
+      \field{sortinit}{}
+      \field{sortinithash}{495dc9894017a8b12cafa9c619d10c0c}
+      \field{userd}{thing}
+    \endentry
+|;
+
 my $Worman_N = [ 'WormanN' ] ;
 my $Gennep = [ 'vanGennepA', 'vanGennepJ' ] ;
 
@@ -522,7 +529,7 @@ $section->del_citekeys;
 $section->bibentries->del_entries;
 $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
-$biber->prepare ;
+$biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
 $out = $biber->get_output_obj;
@@ -607,8 +614,8 @@ eq_or_diff($bibentries->entry('ol1')->get_field('note'), 'A note', 'map_final - 
 eq_or_diff($bibentries->entry('ol1')->get_field('title'), 'Online1', 'map_final - 2');
 
 # Test for tricky pages field
-is_deeply($bibentries->entry('pages1')->get_field('pages'),[[23, 24]], 'pages - 1');
-is_deeply($bibentries->entry('pages2')->get_field('pages'),[[23, undef]], 'pages - 2');
+is_deeply($bibentries->entry('pages1')->get_field('pages'), [[23, 24]], 'pages - 1');
+is_deeply($bibentries->entry('pages2')->get_field('pages'), [[23, undef]], 'pages - 2');
 is_deeply($bibentries->entry('pages3')->get_field('pages'), [['I-II', 'III-IV']], 'pages - 3');
 is_deeply($bibentries->entry('pages4')->get_field('pages'), [[3,5]], 'pages - 4');
 is_deeply($bibentries->entry('pages5')->get_field('pages'), [[42, '']], 'pages - 5');
@@ -622,6 +629,9 @@ eq_or_diff($bibentries->entry('us1')->get_field('entrytype'), 'customa', 'Map le
 
 # Test for "others" in lists
 eq_or_diff( $out->get_output_entry('list1', $main), $list1, 'Entry with others list' ) ;
+
+# source->target mapping with overwrite test
+eq_or_diff($out->get_output_entry('over1', $main), $over1, 'Overwrite test - 1');
 
 my $isbn1 = q|    \entry{isbn1}{misc}{}
       \name{author}{1}{}{%
@@ -754,7 +764,7 @@ my $ent1 = q|    \entry{ent1}{book}{}
     \endentry
 |;
 
-my $verb1 = q|    \\entry{verb1}{book}{}
+my $verb1 = q|    \entry{verb1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,hash=cac5a25f503e71f5ef28f474e14007b6}{%
            family={Allright},
@@ -774,7 +784,7 @@ my $verb1 = q|    \\entry{verb1}{book}{}
       \verb{verba}
       \verb \=y.\"a
       \endverb
-    \\endentry
+    \endentry
 |;
 
 # clone test

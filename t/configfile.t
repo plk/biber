@@ -52,6 +52,11 @@ my $sourcemap = [
     map => [
       {
         map_step => [
+          { map_field_source => "usera", map_field_target => "userd" },
+        ],
+      },
+      {
+        map_step => [
           { map_field_source => "TITLE", map_match => "High-Resolution Micromachined Interferometric Accelerometer", map_final => 1, },
           { map_entry_null => 1 },
         ],
