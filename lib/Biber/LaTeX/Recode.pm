@@ -265,9 +265,10 @@ sub latex_decode {
         $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/ge;
       }
       elsif ($type eq 'diacritics') {
+        # Using Unicode INFORMATION SEPARATOR ONE/TWO
         my $bracemap = {'' => '',
-                        '{' => "OB",
-                        '}' => "CB"};
+                        '{' => "\x{1f}",
+                        '}' => "\x{1e}"};
 
         # Rename protecting braces so that they are not broken by RE manipulations
         $text =~ s/(\{?)\\($re)\s*\{(\pL\pM*)\}(\}?)/$bracemap->{$1} . $3 . $map->{$2} . $bracemap->{$4}/ge;
@@ -323,8 +324,11 @@ sub latex_decode {
     $text = reverse $text;
 
     # Put brace markers back
-    $text =~ s/OB/{/g;
-    $text =~ s/CB/}/g;
+    $text =~ s/\x{1f}/{/g;
+    $text =~ s/\x{1e}/}/g;
+
+    # {<char>} -> <char>
+    # $text =~ s/\{(\X)\}/$1/g;
 
     # Replace verbatim field markers
     $text =~ s/([a-f0-9]{32})/$saveverb->{$1}/gie;
