@@ -303,6 +303,13 @@ sub latex_decode {
       }
     }
 
+    # Replace verbatim field markers
+    $text =~ s/([a-f0-9]{32})/$saveverb->{$1}/gie;
+
+    if ($logger->is_trace()) {# performance tune
+      $logger->trace("String in latex_decode() before brace elimination now -> '$text'");
+    }
+
     # Now remove braces around single letters with diacritics (which the replace above
     # can result in). Things like '{á}'. Such things can break kerning. We can't do this in
     # the RE above as we can't determine if the braces are wrapping a phrase because this
@@ -319,21 +326,17 @@ sub latex_decode {
     #
     # Workaround perl's lack of variable-width negative look-behind -
     # Reverse string (and therefore some of the Re) and use variable width negative look-ahead
+    # Careful here - reversing puts any combining chars before the char so \X can't be used
     $text = reverse $text;
     $text =~ s/}(\pM+\pL){(?!\pL+\\)/$1/g;
     $text = reverse $text;
 
-    # Put brace markers back
+    # Put brace markers back after doing the brace elimination as we only want to eliminate
+    # braces introduced as part of decoding, not explicit braces in the data
     $text =~ s/\x{1f}/{/g;
     $text =~ s/\x{1e}/}/g;
 
-    # {<char>} -> <char>
-    # $text =~ s/\{(\X)\}/$1/g;
-
-    # Replace verbatim field markers
-    $text =~ s/([a-f0-9]{32})/$saveverb->{$1}/gie;
-
-    if ($logger->is_debug()) {# performance tune
+    if ($logger->is_trace()) {# performance tune
       $logger->trace("String in latex_decode() now -> '$text'");
     }
 
