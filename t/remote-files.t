@@ -94,6 +94,9 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \field{year}{1999}
       \field{pages}{741\bibrangedash 745}
       \range{pages}{5}
+      \verb{urlraw}
+      \verb http://www.biomedexperts.com/Abstract.bme/10405096
+      \endverb
       \verb{url}
       \verb http://www.biomedexperts.com/Abstract.bme/10405096
       \endverb

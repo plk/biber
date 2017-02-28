@@ -477,6 +477,9 @@ my $url1 = q|    \entry{url1}{misc}{}
       \field{labelnamesource}{author}
       \field{year}{2005}
       \field{dateera}{ce}
+      \verb{urlraw}
+      \verb http://www.something.com/q=áŠ
+      \endverb
       \verb{url}
       \verb http://www.something.com/q=%C3%A1%C5%A0
       \endverb
@@ -606,7 +609,8 @@ eq_or_diff($section->get_citekey_alias('alias6'), 'alias5', 'Citekey aliases - 4
 ok($bibentries->entry('alias5'), 'Citekey aliases - 5');
 
 # URL encoding testing
-eq_or_diff($bibentries->entry('url1')->get_field('url'), 'http://www.something.com/q=%C3%A1%C5%A0', 'URL encoding - 1');
+# Should be raw as encoding is done on output
+eq_or_diff(NFC($bibentries->entry('url1')->get_field('url')), 'http://www.something.com/q=áŠ', 'URL encoding - 1');
 eq_or_diff($out->get_output_entry('url1', $main), $url1, 'URL encoding - 2' ) ;
 
 # map_final testing with map_field_set

@@ -16,6 +16,7 @@ use Log::Log4perl qw( :no_extra_logdie_message );
 use Scalar::Util qw(looks_like_number);
 use Text::Wrap;
 use Unicode::Normalize;
+use URI;
 $Text::Wrap::columns = 80;
 my $logger = Log::Log4perl::get_logger('main');
 
@@ -517,10 +518,17 @@ sub set_output_entry {
   foreach my $vfield ($dmh->{vfields}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $vf = $be->get_field($vfield) ) {
+      if ($vfield eq 'url') {
+        $acc .= "      \\verb{urlraw}\n";
+        $acc .= "      \\verb $vf\n      \\endverb\n";
+        # Unicode NFC boundary (before hex encoding)
+        $vf = URI->new(NFC($vf))->as_string;
+      }
       $acc .= "      \\verb{$vfield}\n";
       $acc .= "      \\verb $vf\n      \\endverb\n";
     }
   }
+
   # verbatim lists
   foreach my $vlist ($dmh->{vlists}->@*) {
     if ( my $vlf = $be->get_field($vlist) ) {
@@ -531,6 +539,10 @@ sub set_output_entry {
       my $total = $vlf->$#* + 1;
       $acc .= "      \\lverb{$vlist}{$total}\n";
       foreach my $f ($vlf->@*) {
+        if ($vlist eq 'urls') {
+          # Unicode NFC boundary (before hex encoding)
+          $f = URI->new(NFC($f))->as_string;
+        }
         $acc .= "      \\lverb $f\n";
       }
       $acc .= "      \\endlverb\n";

@@ -2,6 +2,8 @@ Revision history for Biber
 
 2.8    ()
        * Updated copyright dates
+       * The --nouri-encode option is removed. All urls are URL encoded and
+         a new field urlraw is always output with an unencoded version.
 2.7    (2016-12-08)
        * New option (--nouri-encode) to prevent URL encoding of URLs. Avoids breaking
          display of URLS which contain non-ASCII.

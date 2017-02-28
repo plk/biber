@@ -954,13 +954,7 @@ sub _literal {
 sub _uri {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get($field);
-  # Unicode NFC boundary (before hex encoding)
-  if (Biber::Config->getoption('nouri_encode')) {
-    return $value;
-  }
-  else {
-    return URI->new(NFC($value))->as_string;
-  }
+  return $value;
 }
 
 # xSV field form
@@ -1248,21 +1242,13 @@ sub _list {
 sub _urilist {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get($field);
-  # Unicode NFC boundary (before hex encoding)
-  my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
-                                     Biber::Config->getoption('listsep'));
-  @tmp = map {
-    # If there are some escapes in the URI, unescape them
-    if ($_ =~ /\%/) {
-      $_ =~ s/\\%/%/g; # just in case someone BibTeX escaped the "%"
-      # This is what uri_unescape() does but it's faster
-      $_ =~ s/%([0-9A-Fa-f]{2})/chr(hex($1))/eg;
-    }
-    $_;
-  } @tmp;
-
-  @tmp = map { URI->new($_)->as_string } @tmp;
-
+  # Unicode NFC boundary (passing to external library)
+  my @tmp = Text::BibTeX::split_list(NFC($value),
+                                     Biber::Config->getoption('listsep'),
+                                     undef,
+                                     undef,
+                                     undef,
+                                     {binmode => 'utf-8', normalization => 'NFD'});
   return [ @tmp ];
 }
 
