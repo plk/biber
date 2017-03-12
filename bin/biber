@@ -464,14 +464,15 @@ See C<perldoc Unicode::Collate> for details.
 
 =item B<--configfile|-g [file]>
 
-Use F<file> as configuration file for C<biber>.
-The default is the first file found among
-F<biber.conf> in the current directory, C<$HOME/.biber.conf>,
-or else the output of C<kpsewhich biber.conf>.
-In tool mode, (B<--tool>) the F<biber-tool.conf> installed with Biber is
-always used to set defaults before potentially overriding the defaults with a user-defined
-config specified with this option. Use the B<--tool-config> option to view the location of
-the default tool mode config file.
+Use F<file> as configuration file for C<biber>. The default is the first
+file found among F<biber.conf> in the current directory,
+C<$HOME/.biber.conf>, or else the output of C<kpsewhich biber.conf>. In
+tool mode, (B<--tool>) the F<biber-tool.conf> installed with Biber is
+always used to set default options if a user-defined config file is not
+specified. Use the B<--tool-config> option to view the location of the
+default tool mode config file, copy this file and edit it to your
+requirements for use with this option. The options in the default config
+file reflect the options set by biblatex by default.
 
 =item B<--convert-control>
 
@@ -700,8 +701,9 @@ As B<--namesep> but for tool mode bibtex output. Defaults to BibTeX's usual
 
 =item B<--output-resolve>
 
-Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool mode. Defaults to 'false'.
-The legacy option B<--tool-resolve> is supported as an alias.
+Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool
+mode. Defaults to 'false'. The legacy option B<--tool-resolve> is supported
+as an alias.
 
 =item B<--output-safechars>
 

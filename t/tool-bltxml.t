@@ -212,8 +212,11 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:end>2004-04-05T15:00:00</bltx:end>
     </bltx:date>
   </bltx:entry>
+  <bltx:entry id="m1" entrytype="article">
+    <bltx:date>2017</bltx:date>
+  </bltx:entry>
 </bltx:entries>
 |;
 
 eq_or_diff($outvar, encode_utf8($bltxml1), 'bltxml tool mode - 1');
-is_deeply([$main->get_keys], ['b1', 'macmillan', 'dt1', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'xd1'], 'tool mode sorting');
+is_deeply([$main->get_keys], ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'xd1'], 'tool mode sorting');
