@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 36;
+use Test::More tests => 37;
 use Test::Differences;
 unified_diff;
 
@@ -803,7 +803,7 @@ eq_or_diff($section1->has_citekey('crn'), 0,'mincrossrefs reset between sections
 eq_or_diff($out->get_output_entry('ccr2', $main), $ccr1, 'cascading crossref test 1');
 eq_or_diff($out->get_output_entry('ccr3', $main), $ccr2, 'cascading crossref test 2');
 chomp $stderr;
-eq_or_diff($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'", 'Cyclic crossref error check');
+eq_or_diff($stderr, "ERROR - Circular inheritance between 'circ1'<->'circ2'\nERROR - Circular inheritance between 'circ3'<->'circ1'", 'Cyclic crossref error check');
 eq_or_diff($section0->has_citekey('r1'), 1,'Recursive crossref test 1');
 ok(defined($section0->bibentry('r1')),'Recursive crossref test 2');
 eq_or_diff($section0->has_citekey('r2'), 0,'Recursive crossref test 3');
@@ -817,3 +817,4 @@ eq_or_diff($out->get_output_entry('xc2', $main), $xc2, 'Cascading xref+crossref'
 eq_or_diff($out->get_output_entry('b1', $main), $b1, 'Blocking bad date inheritance');
 eq_or_diff($out->get_output_entry('sup1', $main), $sup1, 'Suppressing singletitle tracking - 1');
 eq_or_diff($out->get_output_entry('sup2', $main), $sup2, 'Suppressing singletitle tracking - 2');
+eq_or_diff($section0->has_citekey('al2'), 0, 'mincrossref via alias');

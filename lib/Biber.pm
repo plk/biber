@@ -2365,7 +2365,6 @@ sub process_lists {
     # Last-ditch fallback in case we still don't have a sorting spec
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
     $list->set_sortnamekeyschemename('global') unless $list->get_sortnamekeyschemename;
-
     $list->set_keys([ $section->get_citekeys ]);
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Populated sortlist '$lname' of type '$ltype' with sortscheme '$lssn' and sorting name key scheme '$lsnksn' in section $secnum with keys: " . join(', ', $list->get_keys));
@@ -3847,6 +3846,7 @@ sub fetch_data {
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Directly cited keys not found for section '$secnum': " . join(',', @remaining_keys));
   }
+
   foreach my $citekey (@remaining_keys) {
     biber_warn("I didn't find a database entry for '$citekey' (section $secnum)");
     $section->del_citekey($citekey);
@@ -4028,6 +4028,7 @@ sub get_dependents {
   if ($logger->is_trace()) {# performance tune
     $logger->trace('Recursing in get_dependents with: ' . join(', ', $new_deps->@*));
   }
+
   get_dependents($self, $new_deps, $keyswithdeps) if $new_deps->@*;
 
   # Now remove any missing entries from various places in all entries we have flagged

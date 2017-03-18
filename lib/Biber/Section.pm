@@ -40,6 +40,7 @@ sub new {
   $self->{orig_order_citekeys} = [];
   $self->{undef_citekeys} = [];
   $self->{citekey_alias} = {};
+  $self->{static_keys} = {};
   return $self;
 }
 
@@ -313,7 +314,6 @@ sub set_orig_order_citekeys {
   return;
 }
 
-
 =head2 get_citekeys
 
     Gets the citekeys of a Biber::Section object
@@ -339,6 +339,17 @@ sub get_static_citekeys {
   return reduce_array($self->{citekeys}, $self->dynamic_set_keys);
 }
 
+=head2 has_cited_citekey
+
+    Returns true when $key was one of the actually cited keys in the section
+
+=cut
+
+sub has_cited_citekey {
+  my $self = shift;
+  my $key = shift;
+  return $self->{citekeys_h}{$key} ? 1 : 0;
+}
 
 =head2 add_undef_citekey
 
@@ -443,7 +454,6 @@ sub add_citekeys {
   return;
 }
 
-
 =head2 set_citekey_alias
 
     Set citekey alias information
@@ -482,7 +492,6 @@ sub del_citekey_alias {
   return;
 }
 
-
 =head2 get_citekey_aliases
 
     Get a list of all citekey aliases for the section
@@ -493,7 +502,6 @@ sub get_citekey_aliases {
   my $self = shift;
   return ( keys $self->{citekey_alias}->%* );
 }
-
 
 =head2 set_labelcache_v
 

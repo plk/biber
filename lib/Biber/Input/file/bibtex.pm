@@ -320,11 +320,16 @@ sub extract_entries {
         $section->set_citekey_alias($wanted_key, $rk);
 
         # Make sure there is a real, cited entry for the citekey alias
-        # just in case only the alias is cited
+        # just in case only the alias is cited. However, make sure that the real entry
+        # is actually cited before adding to the section citekeys list in case this real
+        # entry is only needed as an aliased Xref and shouldn't necessarily be in
+        # the bibliography (minXrefs will take care of adding it there if necessary).
         unless ($section->bibentries->entry_exists($rk)) {
           if (my $entry = $cache->{data}{GLOBALDS}{$rk}) {# Look in cache of all datasource keys
             create_entry($rk, $entry, $source, $smaps, \@rkeys);
-            $section->add_citekeys($rk);
+            if ($section->has_cited_citekey($wanted_key)) {
+              $section->add_citekeys($rk);
+            }
           }
         }
 

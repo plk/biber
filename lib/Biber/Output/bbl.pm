@@ -644,7 +644,7 @@ sub output {
       push @lists, $list;
     }
 
-    # biblatex requires the last list in the .bbl to be the global sort  list
+    # biblatex requires the last list in the .bbl to be the global sort list
     # due to its sequential reading of the .bbl as the final list overrides the
     # previously read ones and the global list determines the order of labelnumber
     # and sortcites etc. when not using defernumbers

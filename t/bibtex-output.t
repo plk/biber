@@ -91,4 +91,4 @@ eq_or_diff($out->get_output_entry('murray',), $b1, 'bibtex output 1');
 eq_or_diff($out->get_output_entry('b1',), $b2, 'bibtex output 2');
 eq_or_diff($out->get_output_entry('xd1',), $b3, 'bibtex output 3');
 ok(is_undef($out->get_output_entry('reese')), 'bibtex output 4');
-is_deeply([$main->get_keys], ['murray', 'kant:ku', 'b1', 'xd1', 'mv1', 'macmillan', 'macmillan:pub'], 'bibtex output sorting');
+is_deeply([$main->get_keys], ['murray', 'kant:ku', 'b1', 'xd1'], 'bibtex output sorting');

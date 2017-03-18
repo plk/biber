@@ -244,7 +244,6 @@
 }
 
 % Testing circular refs detection
-
 @BOOK{circ1,
   DATE      = {1911},
   CROSSREF  = {circ3}
@@ -261,7 +260,6 @@
 }
 
 % Test of dependency calculations for non-cited entries
-
 @BOOK{r1,
   DATE      = {1911},
   CROSSREF  = {r2}
@@ -320,3 +318,14 @@
   CROSSREF = {sup1}
 }
 
+% Testing mincrossrefs via aliases
+@BOOK{al1,
+  DATE      = {1911},
+  CROSSREF  = {alias2}
+}
+
+@BOOK{al2,
+  IDS = {alias2},
+  DATE      = {1911},
+  CROSSREF  = {circ1}
+}
