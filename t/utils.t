@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 76;
+use Test::More tests => 78;
 use Test::Differences;
 unified_diff;
 
@@ -90,7 +90,7 @@ eq_or_diff(latex_encode(NFD('Ðandđandć, H.')), '\\DH{}and\\dj{}and\\\'{c}, H.
 eq_or_diff(latex_encode(NFD('{Ðandđandć, H.}')), '{\\DH{}and\\dj{}and\\\'{c}, H.}', 'latex reversing recoding test 4');
 
 Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
-eq_or_diff(NFC(latex_decode('{\"{U}}ber {\"{U}}berlegungen zur {\"{U}}berwindung des {\"{U}}bels')), '{Ü}ber {Ü}berlegungen zur {Ü}berwindung des {Ü}bels', 'latex_decode 4 (with explicit brace protection)');
+eq_or_diff(NFC(latex_decode('{\"{U}}ber {\"{U}}berlegungen zur {\"{U}}berwindung des {\"{U}}bels')), '{Ü}ber {Ü}berlegungen zur {Ü}berwindung des {Ü}bels', 'latex decode 4 (with explicit brace protection)');
 eq_or_diff(latex_decode('\alpha'), 'α', 'latex decode 4a'); # greek decoding with "full"
 eq_or_diff(NFC(latex_decode("\\'\\i")), 'ı́', 'latex decode 5'); # checking i/j with accents
 eq_or_diff(NFC(latex_decode("{\\'\\i}")), '{ı́}', 'latex decode 5a (with explicit brace protection)'); # checking i/j with accents
@@ -101,6 +101,7 @@ eq_or_diff(latex_decode('\i'), 'ı', 'latex decode 9'); # checking dotless i
 eq_or_diff(latex_decode('\j'), 'ȷ', 'latex decode 10'); # checking dotless j
 eq_or_diff(latex_decode('\textdiv'), '÷', 'latex decode 11'); # checking multiple set for types
 eq_or_diff(latex_decode('--'), '--', 'latex decode 13'); # Testing raw
+eq_or_diff(latex_decode('\textdegree C'), '°C', 'latex decode 14');
 
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 eq_or_diff(latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols
@@ -112,8 +113,9 @@ eq_or_diff(latex_decode('a\-a'), 'a\-a', 'discretionary hyphens');
 eq_or_diff(latex_encode(NFD('Åå')), '\r{A}\r{a}', 'latex encode 9');
 eq_or_diff(latex_encode(NFD('a̍')), '\|{a}', 'latex encode 10');
 eq_or_diff(latex_encode(NFD('ı̆')), '\u{\i{}}', 'latex encode 11');
-eq_or_diff(latex_encode(NFD('®')), '\textregistered', 'latex encode 12');
+eq_or_diff(latex_encode(NFD('®')), '\textregistered{}', 'latex encode 12');
 eq_or_diff(latex_encode(NFD('©')), '{$\copyright$}', 'latex encode 13');
+eq_or_diff(latex_encode(NFD('°C')), '\textdegree{}C', 'latex encode 13');
 
 my @arrayA = qw/ a b c d e f c /;
 my @arrayB = qw/ c e /;
