@@ -1389,20 +1389,25 @@ sub maploopreplace {
 
 sub get_transliterator {
   my ($target, $from, $to) = map {lc} @_;
-  my @valid_from = ('iast');
-  my @valid_to   = ('devanagari');
+  my @valid_from = ('iast', 'russian');
+  my @valid_to   = ('devanagari', 'ala-lc');
   unless (first {$from eq $_} @valid_from and
           first {$to eq $_} @valid_to) {
     biber_warn("Invalid transliteration from/to pair ($from/$to)");
   }
   require Lingua::Translit;
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Using '$from -> $to' transliteration for sorting '$target'");
+  }
+
   # List pairs explicitly as we don't expect there to be to many of these ever
   if ($from eq 'iast' and $to eq 'devanagari') {
-    if ($logger->is_debug()) {# performance tune
-      $logger->debug("Using 'iast -> devanagari' transliteration for sorting '$target'");
-    }
     return new Lingua::Translit('IAST Devanagari');
   }
+  elsif ($from eq 'russian' and $to eq 'ala-lc') {
+    return new Lingua::Translit('ALA-LC RUS');
+  }
+
   return undef;
 }
 
