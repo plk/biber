@@ -6,7 +6,7 @@ use parent qw(Exporter);
 use Biber::Config;
 use Digest::MD5 qw( md5_hex );
 use Encode;
-use File::Slurp;
+use File::Slurper;
 use File::Spec;
 use IPC::Cmd qw( can_run );
 use IPC::Run3; # This works with PAR::Packer and Windows. IPC::Run doesn't
@@ -112,8 +112,8 @@ sub init_sets {
   }
 
   # Read driver config file
-  my $xml = File::Slurp::read_file($mapdata) or biber_error("Can't read file $mapdata");
-  my $doc = XML::LibXML->load_xml(string => decode('UTF-8', $xml));
+  my $xml = File::Slurper::read_text($mapdata);
+  my $doc = XML::LibXML->load_xml(string => $xml);
   my $xpc = XML::LibXML::XPathContext->new($doc);
 
   my @types = qw(letters diacritics punctuation symbols negatedsymbols superscripts cmdsuperscripts dings greek);

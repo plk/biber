@@ -32,6 +32,7 @@ PAR_VERBATIM=1 pp \
   --module=HTTP::Date \
   --module=Encode:: \
   --module=IO::Socket::SSL \
+  --module=PerlIO::utf8_strict \
   --module=File::Find::Rule \
   --module=Text::CSV_XS \
   --module=DateTime \

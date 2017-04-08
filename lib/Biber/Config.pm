@@ -9,7 +9,7 @@ use Cwd qw( abs_path );
 use Data::Compare;
 use Data::Dump;
 use Encode;
-use File::Slurp;
+use File::Slurper;
 use File::Spec;
 use Carp;
 use List::AllUtils qw(first max);
@@ -372,8 +372,7 @@ sub _config_file_set {
   if (defined($conf)) {
     require XML::LibXML::Simple;
 
-    my $buf = File::Slurp::read_file($conf);
-    $buf = NFD(decode('UTF-8', $buf));# Unicode NFD boundary
+    my $buf = NFD(File::Slurper::read_text($conf));# Unicode NFD boundary
 
     $userconf = XML::LibXML::Simple::XMLin($buf,
                                            'ForceContent' => 1,

@@ -29,6 +29,7 @@ use Data::Dump;
 use Data::Compare;
 use Encode;
 use File::Copy;
+use File::Slurper;
 use File::Spec;
 use File::Temp;
 use IO::File;
@@ -302,8 +303,8 @@ sub parse_ctrlfile {
   # exited prematurely while writing the .bcf. This results is problems for latexmk. So, if the
   # .bcf is broken, just stop here, remove the .bcf and exit with error so that we don't write
   # a bad .bbl
-  my $checkbuf = File::Slurp::read_file($ctrl_file_path) or biber_error("Cannot open $ctrl_file_path: $!");
-  $checkbuf = NFD(decode('UTF-8', $checkbuf));# Unicode NFD boundary
+  my $checkbuf = File::Slurper::read_text($ctrl_file_path);
+  $checkbuf = NFD($checkbuf);# Unicode NFD boundary
   unless (eval "XML::LibXML->load_xml(string => \$checkbuf)") {
     my $output = $self->get_output_obj->get_output_target_file;
     unlink($output) unless $output eq '-';# ignore deletion of STDOUT marker
@@ -357,8 +358,8 @@ sub parse_ctrlfile {
   # Open control file
  LOADCF:
   $logger->info("Reading '$ctrl_file_path'");
-  my $buf = File::Slurp::read_file($ctrl_file_path) or biber_error("Cannot open $ctrl_file_path: $!");
-  $buf = NFD(decode('UTF-8', $buf));# Unicode NFD boundary
+  my $buf = File::Slurper::read_text($ctrl_file_path);
+  $buf = NFD($buf);# Unicode NFD boundary
 
   # Read control file
   require XML::LibXML::Simple;

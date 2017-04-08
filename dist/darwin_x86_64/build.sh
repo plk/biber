@@ -30,6 +30,7 @@ PAR_VERBATIM=1 pp \
   --module=Encode:: \
   --module=File::Find::Rule \
   --module=IO::Socket::SSL \
+  --module=PerlIO::utf8_strict \
   --module=Text::CSV_XS \
   --module=DateTime \
   --link=/opt/local/lib/libz.1.dylib \

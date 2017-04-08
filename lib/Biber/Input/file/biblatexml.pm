@@ -18,7 +18,7 @@ use Biber::Config;
 use Data::Uniqid qw ( suniqid );
 use Encode;
 use File::Spec;
-use File::Slurp;
+use File::Slurper;
 use File::Temp;
 use Log::Log4perl qw(:no_extra_logdie_message);
 use List::AllUtils qw( uniq first );
@@ -187,8 +187,8 @@ sub extract_entries {
   $logger->info("Found BibLaTeXML data file '$filename'");
 
   # Set up XML parser and namespace
-  my $xml = File::Slurp::read_file($filename) or biber_error("Can't read file $filename");
-  $xml = NFD(decode('UTF-8', $xml));# Unicode NFD boundary
+  my $xml = File::Slurper::read_text($filename);
+  $xml = NFD($xml);# Unicode NFD boundary
   my $bltxml = XML::LibXML->load_xml(string => $xml);
   my $xpc = XML::LibXML::XPathContext->new($bltxml);
   $xpc->registerNs($NS, $BIBLATEXML_NAMESPACE_URI);
