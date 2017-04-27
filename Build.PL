@@ -80,7 +80,7 @@ my $builder = $class->new(
                  'Business::ISBN' => 0,
                  'Business::ISSN' => 0,
                  'Business::ISMN' => 0,
-                 'Lingua::Translit' => '0.26',
+                 'Lingua::Translit' => '0.27',
                  'perl' => '5.24.0'
                 },
     script_files => [ glob( "bin/*" ) ],

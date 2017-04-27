@@ -1405,7 +1405,13 @@ sub get_transliterator {
     return new Lingua::Translit('IAST Devanagari');
   }
   elsif ($from eq 'russian' and $to eq 'ala-lc') {
-    return new Lingua::Translit('ALA-LC RUS');
+    Return new Lingua::Translit('ALA-LC RUS');
+  }
+  elsif ($from eq 'russian' and $to eq 'bgn/pcgn-strict') {
+    Return new Lingua::Translit('BGN/PCGN RUS Strict');
+  }
+  elsif ($from eq 'russian' and $to eq 'bgn/pcgn-standard') {
+    Return new Lingua::Translit('BGN/PCGN RUS Standard');
   }
 
   return undef;
