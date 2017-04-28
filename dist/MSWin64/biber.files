@@ -1,0 +1,16 @@
+../../data/biber-tool.conf;lib/Biber/biber-tool.conf
+../../data/schemata/config.rnc;lib/Biber/config.rnc
+../../data/schemata/config.rng;lib/Biber/config.rng
+../../data/schemata/bcf.rnc;lib/Biber/bcf.rnc
+../../data/schemata/bcf.rng;lib/Biber/bcf.rng
+../../data/schemata/biblatexml.rnc;lib/Biber/biblatexml.rnc
+../../data/schemata/biblatexml.rng;lib/Biber/biblatexml.rng
+../../lib/Biber/LaTeX/recode_data.xml;lib/Biber/LaTeX/recode_data.xml
+../../data/bcf.xsl;lib/Biber/bcf.xsl
+../../data/latinkeys.txt;lib/Unicode/Collate/latinkeys.txt
+C:/strawberry/perl/lib/Unicode/Collate/Locale;lib/Unicode/Collate/Locale
+C:/strawberry/perl/lib/Unicode/Collate/CJK;lib/Unicode/Collate/CJK
+C:/strawberry/perl/lib/Unicode/Collate/allkeys.txt;lib/Unicode/Collate/allkeys.txt
+C:/strawberry/perl/lib/Unicode/Collate/keys.txt;lib/Unicode/Collate/keys.txt
+C:/strawberry/perl/vendor/lib/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem
+C:/strawberry/perl/site/lib/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml
