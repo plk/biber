@@ -36,10 +36,7 @@ my $builder = $class->new(
                         },
     add_to_cleanup      => [ 'biber-*' ],
     configure_requires => { 'Module::Build' => 0.38 },
-    build_requires => {
-        'Config::AutoConf' => '0.15',
-        'ExtUtils::LibBuilder' => '0.02'
-    },
+    build_requires => { },
     requires => {
                  'autovivification' => 0,
                  'Class::Accessor' => 0,
