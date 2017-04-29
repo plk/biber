@@ -1390,7 +1390,7 @@ sub maploopreplace {
 sub get_transliterator {
   my ($target, $from, $to) = map {lc} @_;
   my @valid_from = ('iast', 'russian');
-  my @valid_to   = ('devanagari', 'ala-lc', 'bgn/pcgn-strict', 'bgn/pcgn-standard');
+  my @valid_to   = ('devanagari', 'ala-lc', 'bgn/pcgn-standard');
   unless (first {$from eq $_} @valid_from and
           first {$to eq $_} @valid_to) {
     biber_warn("Invalid transliteration from/to pair ($from/$to)");
@@ -1406,9 +1406,6 @@ sub get_transliterator {
   }
   elsif ($from eq 'russian' and $to eq 'ala-lc') {
     return new Lingua::Translit('ALA-LC RUS');
-  }
-  elsif ($from eq 'russian' and $to eq 'bgn/pcgn-strict') {
-    return new Lingua::Translit('BGN/PCGN RUS Strict');
   }
   elsif ($from eq 'russian' and $to eq 'bgn/pcgn-standard') {
     return new Lingua::Translit('BGN/PCGN RUS Standard');
