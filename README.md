@@ -1,4 +1,4 @@
-#OVERVIEW
+# OVERVIEW
 
 Biber is a BibTeX replacement for users of biblatex, with full Unicode
 support.
@@ -7,7 +7,7 @@ support.
 look in the files section for the correct 32-bit platform instead of
 using the default download button if you want 32-bit.
 
-##REQUIREMENTS
+## REQUIREMENTS
 
 Biber is written in Perl with the aim of providing a customised and
 sophisticated data preparation backend for biblatex.
@@ -31,7 +31,7 @@ The git repository for Biber is kept on github:
 
 [https://github.com/plk/biber](https://github.com/plk/biber)
 
-##SUPPORT AND DOCUMENTATION
+## SUPPORT AND DOCUMENTATION
 
 After installing, `biber --help` will give you the basic documentation.
 
@@ -43,9 +43,8 @@ More information, bugfix releases, forums and bug tracker are available at:
 
 [https://github.com/plk/biber](https://github.com/plk/biber)
 
-##BUILDING
+## BUILDING
 
 If you wish to build you own binary, see the main biber PDF documentation.
 There is a section there on how to do this. The PDF documentation is in the
 `documentation` folder for the release on Sourceforge.
-
