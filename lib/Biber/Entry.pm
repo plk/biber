@@ -8,6 +8,7 @@ use Biber::Internals;
 use Biber::Constants;
 use Data::Dump qw( pp );
 use Digest::MD5 qw( md5_hex );
+use Encode;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
 
@@ -94,7 +95,8 @@ sub relclone {
       }
       else {
         my $relentry = $section->bibentry($relkey);
-        my $clonekey = md5_hex($relkey);
+        # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
+        my $clonekey = md5_hex(encode_utf8($relkey));
         push @clonekeys, $clonekey;
         my $relclone = $relentry->clone($clonekey);
         if ($logger->is_debug()) {# performance tune
