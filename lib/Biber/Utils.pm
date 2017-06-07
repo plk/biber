@@ -339,7 +339,7 @@ sub normalise_string_bblxml {
   my $str = shift;
   return '' unless $str; # Sanitise missing data
   $str =~ s/\\[A-Za-z]+//g; # remove latex macros (assuming they have only ASCII letters)
-  $str =~ s/\{([^{}]+)\}/$1/g; # remove pointless braces
+  $str =~ s/\{([^\{\}]+)\}/$1/g; # remove pointless braces
   $str =~ s/~/ /g; # replace ties with spaces
   return $str;
 }
@@ -395,7 +395,7 @@ sub normalise_string_hash {
   return '' unless $str; # Sanitise missing data
   $str =~ s/\\(\p{L}+)\s*/$1:/g; # remove tex macros
   $str =~ s/\\([^\p{L}])\s*/ord($1).':'/ge; # remove accent macros like \"a
-  $str =~ s/[{}~\.\s]+//g; # Remove brackes, ties, dots, spaces
+  $str =~ s/[\{\}~\.\s]+//g; # Remove brackes, ties, dots, spaces
   return $str;
 }
 

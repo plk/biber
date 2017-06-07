@@ -222,7 +222,7 @@ sub latex_decode {
 
       # first replace all verbatim fields with markers as we mustn't touch these
       $text =~ s/((?:$vs)\s*=\s*)(")\s*([^"]+)\s*(")/verbmark($1,$2,$3,$4)/gie;
-      $text =~ s/((?:$vs)\s*=\s*)({)\s*([^}]+)\s*(})/verbmark($1,$2,$3,$4)/gie;
+      $text =~ s/((?:$vs)\s*=\s*)(\{)\s*([^\}]+)\s*(\})/verbmark($1,$2,$3,$4)/gie;
     }
 
     if ($logger->is_trace()) {# performance tune
@@ -239,7 +239,7 @@ sub latex_decode {
     $text =~ s/\\char(\d+)/"chr($1)"/gee;    # decimal chars
 
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
-    $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
+    $text =~ s/([^\{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
 
     foreach my $type ('greek', 'dings', 'punctuation', 'symbols', 'negatedsymbols', 'superscripts', 'cmdsuperscripts', 'letters', 'diacritics') {
       my $map = $remap_d->{$type}{map};
@@ -328,7 +328,7 @@ sub latex_decode {
     # Reverse string (and therefore some of the Re) and use variable width negative look-ahead
     # Careful here - reversing puts any combining chars before the char so \X can't be used
     $text = reverse $text;
-    $text =~ s/}(\pM+\pL){(?!\pL+\\)/$1/g;
+    $text =~ s/\}(\pM+\pL)\{(?!\pL+\\)/$1/g;
     $text = reverse $text;
 
     # Put brace markers back after doing the brace elimination as we only want to eliminate

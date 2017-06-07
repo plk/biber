@@ -1465,7 +1465,7 @@ sub parsename {
   $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
   # Collapse internal whitespace and escaped spaces like in "Christina A. L.\ Thiele"
   $namestr =~ s/\s+|\\\s/ /g;
-  $namestr =~ s/\A\{\{+([^{}]+)\}+\}\z/{$1}/xms; # Allow only one enveloping set of braces
+  $namestr =~ s/\A\{\{+([^\{\}]+)\}+\}\z/{$1}/xms; # Allow only one enveloping set of braces
 
   # If requested, try to correct broken initials with no space between them.
   # This can slightly mess up some other names like {{U.K. Government}} etc.
