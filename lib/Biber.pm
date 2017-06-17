@@ -1280,25 +1280,21 @@ sub cite_setmembers {
   }
 }
 
-=head2 process_interentry
+=head2 preprocess_sets
 
-    $biber->process_interentry
+    $biber->preprocess_sets
 
-    This does several things:
-    1. Records the set information for use later
-    2. Ensures proper inheritance of data from cross-references.
-    3. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
-       at least mincrossrefs/minxrefs times are included in the bibliography.
+    This records the set information for use later
 
 =cut
 
-sub process_interentry {
+sub preprocess_sets {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
   if ($logger->is_debug()) {# performance tune
-    $logger->debug("Processing explicit and implicit xref/crossrefs for section $secnum");
+    $logger->debug("Recording set information");
   }
 
   foreach my $citekey ($section->get_citekeys) {
@@ -1314,6 +1310,31 @@ sub process_interentry {
         Biber::Config->set_set_cp($member, $citekey);
       }
     }
+  }
+}
+
+=head2 process_interentry
+
+    $biber->process_interentry
+
+    This does several things:
+    1. Ensures proper inheritance of data from cross-references.
+    2. Ensures that crossrefs/xrefs that are directly cited or cross-referenced
+       at least mincrossrefs/minxrefs times are included in the bibliography.
+
+=cut
+
+sub process_interentry {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Processing explicit and implicit xref/crossrefs for section $secnum");
+  }
+
+  foreach my $citekey ($section->get_citekeys) {
+    my $be = $section->bibentry($citekey);
 
     # Loop over cited keys and count the cross/xrefs
     # Can't do this when parsing entries as this would count them
@@ -3679,7 +3700,8 @@ sub prepare {
     $self->resolve_alias_refs;           # Resolve xref/crossref/xdata aliases to real keys
     $self->resolve_xdata;                # Resolve xdata entries
     $self->cite_setmembers;              # Cite set members
-    $self->process_interentry;           # Process crossrefs/sets etc.
+    $self->preprocess_sets;              # Record set information
+    $self->process_interentry;           # Process crossrefs/xrefs etc.
     $self->validate_datamodel;           # Check against data model
     $self->process_entries_pre;          # Main entry processing loop, part 1
     $self->uniqueness;                   # Here we generate uniqueness information
@@ -3724,10 +3746,21 @@ sub prepare_tool {
 
   $self->process_visible_names;# Generate visible names information for all entries
 
-  if (Biber::Config->getoption('output_resolve')) {
+  if (Biber::Config->getoption('output_resolve_xdata') or
+      Biber::Config->getoption('output_resolve_crossrefs')) {
     $self->resolve_alias_refs; # Resolve xref/crossref/xdata aliases to real keys
+  }
+
+  if (Biber::Config->getoption('output_resolve_sets')) {
+    $self->preprocess_sets;    # Record set information
+  }
+
+  if (Biber::Config->getoption('output_resolve_crossrefs')) {
+    $self->process_interentry; # Process crossrefs/xrefs etc.
+  }
+
+  if (Biber::Config->getoption('output_resolve_xdata')) {
     $self->resolve_xdata;      # Resolve xdata entries
-    $self->process_interentry; # Process crossrefs/sets etc.
   }
 
   $self->validate_datamodel;   # Check against data model

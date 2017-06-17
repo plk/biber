@@ -327,7 +327,23 @@
           </element>
         </optional>
         <optional>
-          <element name="output_resolve">
+          <element name="output_resolve_xdata">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_resolve_crossrefs">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_resolve_sets">
             <choice>
               <value>0</value>
               <value>1</value>

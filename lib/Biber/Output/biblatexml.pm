@@ -128,7 +128,7 @@ sub set_output_entry {
   # latter is not really a "processed" output, it is supposed to be something
   # which could be again used as input and so we don't want to resolve/skip
   # fields like DATE etc.
-  unless (Biber::Config->getoption('output_resolve')) {
+  unless (Biber::Config->getoption('output_resolve_xdata')) {
     if (my $xdata = $be->get_field('xdata')) {
       $xml->startTag([$xml_prefix, 'xdata']);
       foreach my $xd ($xdata->@*) {
@@ -136,6 +136,8 @@ sub set_output_entry {
       }
       $xml->endTag();
     }
+  }
+  unless (Biber::Config->getoption('output_resolve_crossrefs')) {
     if (my $crossref = $be->get_field('crossref')) {
       $xml->dataElement([$xml_prefix, 'crossref'], NFC($crossref));
     }

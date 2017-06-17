@@ -2,6 +2,8 @@ Revision history for Biber
 
 2.8    ()
        * Updated copyright dates
+       * --output-resolve option is now a meta-alias for the more granular
+         --output-resolve-* options - see the biber -? output
        * The --nouri-encode option is removed. All urls are URL encoded and
          a new field urlraw is always output with an unencoded version.
 2.7    (2016-12-08)

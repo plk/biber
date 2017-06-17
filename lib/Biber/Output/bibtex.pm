@@ -187,11 +187,13 @@ sub set_output_entry {
   }
 
   # If CROSSREF and XDATA have been resolved, don't output them
-  if (Biber::Config->getoption('output_resolve')) {
-    if ( my $cr = $be->get_field('crossref') ) {
+  if (Biber::Config->getoption('output_resolve_crossrefs')) {
+    if ($be->get_field('crossref')) {
       $be->del_field('crossref');
     }
-    if ( my $xd = $be->get_field('xdata') ) {
+  }
+  if (Biber::Config->getoption('output_resolve_xdata')) {
+    if ($be->get_field('xdata')) {
       $be->del_field('xdata');
     }
   }

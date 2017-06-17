@@ -42,7 +42,8 @@ my $out = $biber->get_output_obj;
 
 # Biber options
 Biber::Config->setoption('tool', 1);
-Biber::Config->setoption('output_resolve', 1);
+Biber::Config->setoption('output_resolve_xdata', 1);
+Biber::Config->setoption('output_resolve_crossrefs', 1);
 Biber::Config->setoption('output_format', 'biblatexml');
 Biber::Config->setoption('input_format', 'biblatexml');
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');

@@ -74,6 +74,9 @@ GetOptions(
            'output_macro_fields|output-macro-fields=s',
            'output_namesep|output-namesep=s',
            'output_resolve|output-resolve',
+           'output_resolve_xdata|output-resolve-xdata',
+           'output_resolve_crossrefs|output-resolve-crossrefs',
+           'output_resolve_sets|output-resolve-sets',
            'output_safechars|output-safechars',
            'output_safecharsset|output-safecharsset=s',
            'output_xname|output-xname',
@@ -202,6 +205,14 @@ if ($opts->{u}) {
 if ($opts->{U}) {
   $opts->{output_encoding} = 'UTF-8';
   delete $opts->{U};
+}
+
+# Break up resolve meta-option
+if (exists($opts->{output_resolve})) {
+  $opts->{output_resolve_xdata} = 1;
+  $opts->{output_resolve_crossrefs} = 1;
+  $opts->{output_resolve_sets} = 1;
+  delete $opts->{output_resolve};
 }
 
 # Check the output_format option
@@ -701,9 +712,20 @@ As B<--namesep> but for tool mode bibtex output. Defaults to BibTeX's usual
 
 =item B<--output-resolve>
 
-Whether to resolve aliases and inheritance (XDATA, CROSSREF etc.) in tool
-mode. Defaults to 'false'. The legacy option B<--tool-resolve> is supported
-as an alias.
+Convenience option to set all of the B<--output-resolve-*> options to
+'true'. The legacy option B<--tool-resolve> is supported as an alias.
+
+=item B<--output-resolve-xdata>
+
+Whether to resolve XDATA inheritance in tool mode. Defaults to 'false'.
+
+=item B<--output-resolve-crossrefs>
+
+Whether to resolve CROSSREF/XREF inheritance in tool mode. Defaults to 'false'.
+
+=item B<--output-resolve-sets>
+
+Whether to resolve data sets in tool mode. Defaults to 'false'.
 
 =item B<--output-safechars>
 

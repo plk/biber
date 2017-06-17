@@ -645,7 +645,9 @@ an example config file which displays the \biber\ defaults:
   <output_fieldcase>upper</output_fieldcase>
   <output_format>bbl</output_format>
   <output_indent>2</output_indent>
-  <output_resolve>0</output_resolve>
+  <output_resolve_xdata>0</output_resolve_xdata>
+  <output_resolve_crossrefs>0</output_resolve_crossrefs>
+  <output_resolve_sets>0</output_resolve_sets>
   <output_safechars>0</output_safechars>
   <output_safecharsset>base</output_safecharsset>
   <quiet>0</quiet>
@@ -2329,7 +2331,7 @@ the input encoding is not (it is by default UTF-8), then the
 config file, you can set up a complex set of mappings to transform
 your datasource however you wish in a semantic manner much more robust
 than just textual search/replace. You can also use the
-\opt{--output-resolve} option which will process any \bibfield{XDATA}
+\opt{--output-resolve} meta-option which will process any \bibfield{XDATA}
 fields/entries, entry aliases and inheritance rules mentioned in the config
 file (see below).
 
@@ -2472,7 +2474,7 @@ it will use the default \file{biber-tool.conf} which is located in the
 default config file contains the default \biblatex source mappings for
 \bibtex datasources and also the default inheritance rules for
 \bibfield{CROSSREF} processing. This means that when you use the
-\opt{--tool-resolve} option, inheritance processing is performed on the
+\opt{--output-resolve} meta-option, inheritance processing is performed on the
 entries and the results of this are «materialised» in the output. For
 example, consider a \file{test.bib} file:
 
@@ -2620,7 +2622,9 @@ output-fieldcase & \checkmark & - & - & -\\
 output-listsep & \checkmark & - & - & -\\
 output-macro-fields & \checkmark & - & - & -\\
 output-namesep & \checkmark & - & - & -\\
-output-resolve & \checkmark & \checkmark & - & -\\
+output-resolve-xdata & \checkmark & \checkmark & - & -\\
+output-resolve-crossrefs & \checkmark & \checkmark & - & -\\
+output-resolve-sets & \checkmark & \checkmark & - & -\\
 output-xname & \checkmark & - & - & -\\
 output-xnamesep & \checkmark & - & - & -\\
 \bottomrule
