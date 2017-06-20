@@ -3,6 +3,7 @@ use v5.24;
 use strict;
 use warnings;
 
+use Encode;
 use Encode::Alias;
 
 use parent qw(Exporter);
