@@ -52,8 +52,7 @@ CALL pp ^
   --link=C:\strawberry\c\bin\zlib1__.dll ^
   --link=C:\strawberry\c\bin\libxml2-2__.dll ^
   --link=C:\strawberry\c\bin\libiconv-2__.dll ^
-  --link=C:\strawberry\c\bin\ssleay32__.dll ^
-  --link=C:\strawberry\c\bin\libeay32__.dll ^
+  --link=C:\strawberry\c\bin\libssl-1_1-x64__.dll ^
   --link=C:\strawberry\c\bin\liblzma-5__.dll ^
   --addlist=biber.files ^
   --cachedeps=scancache ^
