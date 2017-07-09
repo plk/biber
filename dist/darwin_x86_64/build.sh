@@ -8,7 +8,7 @@
 # constructed in the code so Par::Packer can't auto-detect them.
 # Same with some of the output modules.
 
-cp /opt/local/libexec/perl5.24/sitebin/biber /tmp/biber-darwin
+cp /opt/local/libexec/perl5.26/sitebin/biber /tmp/biber-darwin
 
 PAR_VERBATIM=1 pp \
   --unicode \
@@ -35,7 +35,7 @@ PAR_VERBATIM=1 pp \
   --module=DateTime \
   --link=/opt/local/lib/libz.1.dylib \
   --link=/opt/local/lib/libiconv.2.dylib \
-  --link=/opt/local/libexec/perl5.24/sitebin/libbtparse.dylib \
+  --link=/opt/local/libexec/perl5.26/sitebin/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
   --link=/opt/local/lib/libxslt.1.dylib \
   --link=/opt/local/lib/libgdbm.4.dylib \
