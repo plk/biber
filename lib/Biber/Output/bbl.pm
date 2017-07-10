@@ -39,27 +39,26 @@ sub new {
   my $obj = shift;
   my $self = $class->SUPER::new($obj);
 
-  $self->{output_data}{HEAD} = <<EOF;
-% \$ biblatex auxiliary file \$
-% \$ biblatex bbl format version $Biber::Config::BBL_VERSION \$
-% Do not modify the above lines!
-%
-% This is an auxiliary file used by the 'biblatex' package.
-% This file may safely be deleted. It will be recreated by
-% biber as required.
-%
-\\begingroup
-\\makeatletter
-\\\@ifundefined{ver\@biblatex.sty}
-  {\\\@latex\@error
-     {Missing 'biblatex' package}
-     {The bibliography requires the 'biblatex' package.}
-      \\aftergroup\\endinput}
-  {}
-\\endgroup
+  $self->{output_data}{HEAD} = <<~EOF;
+    % \$ biblatex auxiliary file \$
+    % \$ biblatex bbl format version $Biber::Config::BBL_VERSION \$
+    % Do not modify the above lines!
+    %
+    % This is an auxiliary file used by the 'biblatex' package.
+    % This file may safely be deleted. It will be recreated by
+    % biber as required.
+    %
+    \\begingroup
+    \\makeatletter
+    \\\@ifundefined{ver\@biblatex.sty}
+      {\\\@latex\@error
+         {Missing 'biblatex' package}
+         {The bibliography requires the 'biblatex' package.}
+          \\aftergroup\\endinput}
+      {}
+    \\endgroup
 
-EOF
-
+    EOF
   return $self;
 }
 

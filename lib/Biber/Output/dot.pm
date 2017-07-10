@@ -41,18 +41,18 @@ sub new {
   my $obj = shift;
   my $self = $class->SUPER::new($obj);
 
-  $self->{output_data}{HEAD} = <<EOF;
-digraph Biberdata {
-  compound = true;
-  edge [ arrowhead=open ];
-  graph [ style=filled, rankdir=LR ];
-  node [
-    fontsize=10,
-    fillcolor=white,
-    style=filled,
-    shape=box ];
+  $self->{output_data}{HEAD} = <<~EOF;
+    digraph Biberdata {
+      compound = true;
+      edge [ arrowhead=open ];
+      graph [ style=filled, rankdir=LR ];
+      node [
+        fontsize=10,
+        fillcolor=white,
+        style=filled,
+        shape=box ];
 
-EOF
+    EOF
 
   return $self;
 }
