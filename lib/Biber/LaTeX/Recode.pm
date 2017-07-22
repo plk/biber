@@ -411,7 +411,7 @@ sub latex_encode {
 
   sub _wrap {
     my ($s, $map, $remap_e_raw) = @_;
-    if ($map->{$s} =~ m/^text/) {
+    if ($map->{$s} =~ m/^(?:text|guillemot)/) {
       "\\"  . $map->{$s} . '{}';
     }
     elsif ($remap_e_raw->{$s}) {
