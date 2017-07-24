@@ -326,7 +326,7 @@ sub normalise_string_sort {
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
   # Don't use normalise_string_common() as this strips out things needed for sorting
   $str =~ s/\\[A-Za-z]+//g;        # remove latex macros (assuming they have only ASCII letters)
-  $str =~ s/[\p{Ps}\p{Pe}\p{C}]+//g; # remove start/end punctuation, control
+  $str =~ s/[\{\}\p{C}]+//g;       # remove embedded braces and control
   $str =~ s/^\s+|\s+$//g;          # Remove leading and trailing spaces
   $str =~ s/\s+/ /g;               # collapse spaces
   return $str;
