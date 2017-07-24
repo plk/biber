@@ -573,7 +573,7 @@ sub _process_label_attributes {
                 foreach my $n ($f->first_n_names($f->get_visible_alpha)->@*) {
                   # Do strip/nosort here as that's what we also do to the field contents
                   # we will use to look up in this hash later
-                  $indices{normalise_string_sort(join('',map {$n->get_namepart($_)} $nameparts->@*), $field)} = $n->get_index;
+                  $indices{normalise_string_label(join('',map {$n->get_namepart($_)} $nameparts->@*), $field)} = $n->get_index;
                 }
               }
               else {

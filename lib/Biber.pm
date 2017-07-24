@@ -3606,7 +3606,8 @@ sub sort_list {
         push @d, looks_like_number($sortfield) ? $sortfield : 2000000000;
       }
       else {
-        my $a = $collateobjs[$i] . "->getSortKey('$sortfield')";
+        # Don't do '$sortfield' or "$sortfield" because it might contain quotes
+        my $a = $collateobjs[$i] . "->getSortKey(q{$sortfield})";
         # Cache index is just the collation object opts and key gen call in string form
         # since this should be unique for a key/collopts combination
         push @d, $cache->{$a} ||= eval $a;

@@ -313,8 +313,6 @@ sub normalise_string_label {
 
 Removes LaTeX macros, and all punctuation, symbols, separators and control characters,
 as well as leading and trailing whitespace for sorting strings.
-It also decodes LaTeX character macros into Unicode as this is always safe when
-normalising strings for sorting since they don't appear in the output.
 
 =cut
 
@@ -326,7 +324,12 @@ sub normalise_string_sort {
   $str = strip_nosort($str, $fieldname);
   # Then replace ties with spaces or they will be lost
   $str =~ s/([^\\])~/$1 /g; # Foo~Bar -> Foo Bar
-  return normalise_string_common($str);
+  # Don't use normalise_string_common() as this strips out things needed for sorting
+  $str =~ s/\\[A-Za-z]+//g;        # remove latex macros (assuming they have only ASCII letters)
+  $str =~ s/[\p{Ps}\p{Pe}\p{C}]+//g; # remove start/end punctuation, control
+  $str =~ s/^\s+|\s+$//g;          # Remove leading and trailing spaces
+  $str =~ s/\s+/ /g;               # collapse spaces
+  return $str;
 }
 
 =head2 normalise_string_bblxml
@@ -369,7 +372,7 @@ sub normalise_string {
 sub normalise_string_common {
   my $str = shift;
   $str =~ s/\\[A-Za-z]+//g;        # remove latex macros (assuming they have only ASCII letters)
-  $str =~ s/[\p{P}\p{S}\p{C}]+//g; # remove punctuation, symbols, separator and control
+  $str =~ s/[\p{P}\p{S}\p{C}]+//g; # remove punctuation, symbols and control
   $str =~ s/^\s+|\s+$//g;          # Remove leading and trailing spaces
   $str =~ s/\s+/ /g;               # collapse spaces
   return $str;
