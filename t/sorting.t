@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 49;
+use Test::More tests => 51;
 use Test::Differences;
 unified_diff;
 
@@ -80,6 +80,8 @@ my $labels      = '2005,3,2';
 my $sn1         = '';
 my $snk1        = 'mm,,John John!von!Doe!Jr,,,0';
 my $ent1        = 'mm,,Smith#Brian,,,0';
+my $others1     = 'mm,,Gauck!Joachim,,Title A,0';
+my $others2     = 'mm,,Gauck!Joachim#+,,Title B,0';
 
 # These have custom presort and also an exclusion on year and title set
 my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0';
@@ -139,6 +141,10 @@ eq_or_diff($main->get_sortdata('rvonr')->[0], $useprefix3, 'von with name scope 
 
 # Testing sorting data schema generation
 is_deeply($main->get_sortdataschema, $ssd1, 'Sorting data schemata - 1' );
+
+# Explicit "and others"
+eq_or_diff($main->get_sortdata('others1')->[0], $others1, 'Explicit "and others" - 1' );
+eq_or_diff($main->get_sortdata('others2')->[0], $others2, 'Explicit "and others" - 2' );
 
 # Testing custom name sorting key
 my $SNK = Biber::Config->getblxoption('sortingnamekey');

@@ -1884,6 +1884,8 @@
     <bcf:citekey order="23">ent1</bcf:citekey>
     <bcf:citekey order="24">avona</bcf:citekey>
     <bcf:citekey order="25">rvonr</bcf:citekey>
+    <bcf:citekey order="26">others1</bcf:citekey>
+    <bcf:citekey order="26">others2</bcf:citekey>
   </bcf:section>
   <!-- SORT LISTS -->
   <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>
