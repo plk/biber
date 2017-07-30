@@ -2248,11 +2248,12 @@ sub process_visible_names {
       my $l_minbn = $count < $minbn ? $count : $minbn;
       my $l_minan = $count < $minan ? $count : $minan;
 
-      # If name list was truncated in bib with "and others", this overrides maxcitenames
-      my $morenames = $names->get_morenames ? 1 : 0;
+      # If name list was truncated in bib with "and others", this means that the
+      # name list has already been manually truncated to the correct visibility
+      # and so the visibility is just the count of the explicit names
 
       # max/minalphanames doesn't care about uniquelist - labels are just labels
-      if ( $morenames or $count > $maxan ) {
+      if ($count > $maxan) {
         $visible_names_alpha = $l_minan;
       }
       else {
@@ -2260,11 +2261,12 @@ sub process_visible_names {
       }
 
       # max/mincitenames
-      if ( $morenames or $count > $maxcn ) {
-        # Visibiliy to the uniquelist point if uniquelist is requested
+      if ($count > $maxcn) {
+        # Visibility to the uniquelist point if uniquelist is requested
         # We know at this stage that if uniquelist is set, there are more than maxcitenames
-        # names. We also know that uniquelist > mincitenames because it is a further disambiguation
-        # on top of mincitenames so can't be less as you can't disambiguate by losing information
+        # names. We also know that uniquelist > mincitenames because it is a further
+        # disambiguation on top of mincitenames so can't be less as you can't disambiguate
+        # by losing information
         $visible_names_cite = $names->get_uniquelist // $l_mincn;
       }
       else { # visibility is simply the full list
@@ -2272,11 +2274,12 @@ sub process_visible_names {
       }
 
       # max/minbibnames
-      if ( $morenames or $count > $maxbn ) {
-        # Visibiliy to the uniquelist point if uniquelist is requested
+      if ($count > $maxbn) {
+        # Visibility to the uniquelist point if uniquelist is requested
         # We know at this stage that if uniquelist is set, there are more than maxbibnames
-        # names. We also know that uniquelist > mincitenames because it is a further disambiguation
-        # on top of mincitenames so can't be less as you can't disambiguate by losing information
+        # names. We also know that uniquelist > mincitenames because it is a further
+        # disambiguation on top of mincitenames so can't be less as you can't disambiguate
+        # by losing information
         $visible_names_bib = $names->get_uniquelist // $l_minbn;
       }
       else { # visibility is simply the full list
@@ -2784,6 +2787,7 @@ sub create_uniquename_info {
       my $nl = $be->get_field($lni);
       my $num_names = $nl->count_names;
       my $names = $nl->names;
+
       # If name list was truncated in bib with "and others", this overrides maxcitenames
       my $morenames = $nl->get_morenames ? 1 : 0;
 

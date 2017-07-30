@@ -54,12 +54,7 @@ sub _getnamehash {
   }
 
   # name list was truncated
-  if ($visible < $count) {
-    $hashkey .= '+';
-  }
-
-  # name list has explicit "and others"
-  if ($names->get_morenames) {
+  if ($visible < $count or $names->get_morenames) {
     $hashkey .= '+';
   }
 
@@ -131,12 +126,7 @@ sub _getnamehash_u {
   }
 
   # name list was truncated
-  if ($visible < $count) {
-    $hashkey .= '+';
-  }
-
-  # name list has explicit "and others"
-  if ($names->get_morenames) {
+  if ($visible < $count or $names->get_morenames) {
     $hashkey .= '+';
   }
 
