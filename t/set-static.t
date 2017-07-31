@@ -53,6 +53,8 @@ my $string1 = q|    \entry{Static1}{set}{}
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{bibnamehash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authorbibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{2}
@@ -77,6 +79,8 @@ my $string2 = q|    \entry{Static2}{book}{}
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{bibnamehash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authorbibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}
@@ -101,6 +105,8 @@ my $string3 = q|    \entry{Static3}{book}{}
       }
       \strng{namehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{fullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \strng{bibnamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
+      \strng{authorbibnamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authornamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authorfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{labeldatesource}{year}
@@ -122,6 +128,8 @@ my $string4 = q|    \entry{Static4}{book}{}
       }
       \strng{namehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{fullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \strng{bibnamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
+      \strng{authorbibnamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authornamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authorfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{labeldatesource}{year}
@@ -144,6 +152,8 @@ my $string5 = q|    \entry{Static2}{book}{}
       }
       \strng{namehash}{43874d80d7ce68027102819f16c47df1}
       \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
+      \strng{bibnamehash}{43874d80d7ce68027102819f16c47df1}
+      \strng{authorbibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}

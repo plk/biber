@@ -77,6 +77,8 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       }
       \strng{namehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
       \strng{fullhash}{ee363ce5e21ebe022f83aae896dd47f9}
+      \strng{bibnamehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
+      \strng{authorbibnamehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
       \strng{authornamehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
       \strng{authorfullhash}{ee363ce5e21ebe022f83aae896dd47f9}
       \field{sortinit}{M}
@@ -119,6 +121,8 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       }
       \strng{namehash}{01599a4cb58316d64208b12a07741765}
       \strng{fullhash}{01599a4cb58316d64208b12a07741765}
+      \strng{bibnamehash}{01599a4cb58316d64208b12a07741765}
+      \strng{authorbibnamehash}{01599a4cb58316d64208b12a07741765}
       \strng{authornamehash}{01599a4cb58316d64208b12a07741765}
       \strng{authorfullhash}{01599a4cb58316d64208b12a07741765}
       \field{sortinit}{A}
@@ -161,8 +165,11 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       }
       \strng{namehash}{83d062f99d033839537243075d75bad2}
       \strng{fullhash}{83d062f99d033839537243075d75bad2}
+      \strng{bibnamehash}{83d062f99d033839537243075d75bad2}
+      \strng{authorbibnamehash}{83d062f99d033839537243075d75bad2}
       \strng{authornamehash}{83d062f99d033839537243075d75bad2}
       \strng{authorfullhash}{83d062f99d033839537243075d75bad2}
+      \strng{editorbibnamehash}{ff5f90046157eecef0c22da4dac6486e}
       \strng{editornamehash}{ff5f90046157eecef0c22da4dac6486e}
       \strng{editorfullhash}{ff5f90046157eecef0c22da4dac6486e}
       \field{sortinit}{M}

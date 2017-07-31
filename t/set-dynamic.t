@@ -57,6 +57,8 @@ my $string1 = q|    \entry{DynSet}{set}{}
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{bibnamehash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{authorbibnamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authornamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authorfullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{1}
@@ -82,6 +84,8 @@ my $string2 = q|    \entry{Dynamic1}{book}{}
       }
       \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{bibnamehash}{252caa7921a061ca92087a1a52f15b78}
+      \strng{authorbibnamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authornamehash}{252caa7921a061ca92087a1a52f15b78}
       \strng{authorfullhash}{252caa7921a061ca92087a1a52f15b78}
       \field{sortinit}{8}
@@ -107,6 +111,8 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
       }
       \strng{namehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{fullhash}{894a5fe6de820f5dcce84a65581667f4}
+      \strng{bibnamehash}{894a5fe6de820f5dcce84a65581667f4}
+      \strng{authorbibnamehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{authornamehash}{894a5fe6de820f5dcce84a65581667f4}
       \strng{authorfullhash}{894a5fe6de820f5dcce84a65581667f4}
       \field{sortinit}{9}
@@ -131,6 +137,8 @@ my $string4 = q|    \entry{Dynamic3}{book}{}
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{bibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authorbibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
@@ -156,6 +164,8 @@ my $string5 = q|    \entry{Dynamic3}{book}{}
       }
       \strng{namehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{fullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{bibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
+      \strng{authorbibnamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authornamehash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}

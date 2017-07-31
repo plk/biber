@@ -2149,7 +2149,6 @@ sub process_fullhash {
 
 =cut
 
-
 sub process_namehash {
   my $self = shift;
   my $citekey = shift;
@@ -2164,6 +2163,7 @@ sub process_namehash {
   if (my $lni = $be->get_labelname_info) {
     if (my $ln = $be->get_field($lni)) {
       $be->set_field('namehash', $self->_getnamehash($citekey, $ln));
+      $be->set_field('bibnamehash', $self->_getnamehash($citekey, $ln, 1));
     }
   }
 
@@ -2171,11 +2171,11 @@ sub process_namehash {
   foreach my $n ($dmh->{namelistsall}->@*) {
     next unless my $nv = $be->get_field($n);
     $be->set_field("${n}namehash", $self->_getnamehash($citekey, $nv));
+    $be->set_field("${n}bibnamehash", $self->_getnamehash($citekey, $nv, 1));
   }
 
   return;
 }
-
 
 =head2 process_pername_hashes
 

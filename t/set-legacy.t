@@ -53,6 +53,8 @@ my $string1 = q|    \entry{Elias1955}{set}{}
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{bibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{authorbibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{authornamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{authorfullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{sortinit}{1}
@@ -87,6 +89,8 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{bibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{authorbibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{authornamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{authorfullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{labeldatesource}{year}
@@ -119,6 +123,8 @@ my $string3 = q|    \entry{Elias1955b}{article}{}
       }
       \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{bibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{authorbibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{authornamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \strng{authorfullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
       \field{labeldatesource}{year}

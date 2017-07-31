@@ -1510,6 +1510,7 @@ sub generate_bblxml_schema {
 
   # fields
   my @fs1 = qw/namehash
+              bibnamehash
               fullhash
               labelalpha
               sortinit
@@ -1546,7 +1547,7 @@ sub generate_bblxml_schema {
 
   # <namelist>namehash and <namelist>fullhash
   my @fs4;
-  map {push @fs4, "${_}namehash";push @fs4, "${_}fullhash"} $dmh->{namelists}->@*;
+  map {push @fs4, "${_}namehash";push @fs4, "${_}bibnamehash";push @fs4, "${_}fullhash"} $dmh->{namelists}->@*;
 
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:field");

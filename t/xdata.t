@@ -69,6 +69,8 @@ my $xd1 = q|    \entry{xd1}{book}{}
       }
       \strng{namehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{fullhash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{bibnamehash}{51db4bfd331cba22959ce2d224c517cd}
+      \strng{authorbibnamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authornamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authorfullhash}{51db4bfd331cba22959ce2d224c517cd}
       \field{sortinit}{E}
@@ -98,6 +100,8 @@ my $xd2 = q|    \entry{xd2}{book}{}
       }
       \strng{namehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{fullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{bibnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
+      \strng{authorbibnamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authornamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authorfullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \field{sortinit}{P}

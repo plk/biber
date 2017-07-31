@@ -294,9 +294,14 @@ sub set_output_entry {
   $acc .= "      \\strng{namehash}{$namehash}\n" if $namehash;
   my $fullhash = $be->get_field('fullhash');
   $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
+  my $bibnamehash = $be->get_field('bibnamehash');
+  $acc .= "      \\strng{bibnamehash}{$bibnamehash}\n" if $bibnamehash;
 
   # Output namelist hashes
   foreach my $namefield ($dmh->{namelists}->@*) {
+    if (my $bibnamehash = $be->get_field("${namefield}bibnamehash")) {
+      $acc .= "      \\strng{${namefield}bibnamehash}{$bibnamehash}\n";
+    }
     if (my $namehash = $be->get_field("${namefield}namehash")) {
       $acc .= "      \\strng{${namefield}namehash}{$namehash}\n";
       my $fullhash = $be->get_field("${namefield}fullhash");

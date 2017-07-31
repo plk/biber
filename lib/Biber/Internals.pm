@@ -37,10 +37,10 @@ my $logger = Log::Log4perl::get_logger('main');
 # unique to a name, not a particular representation of a name. So, always statically concatenate
 # nameparts from the data model list of valid nameparts
 sub _getnamehash {
-  my ($self, $citekey, $names) = @_;
+  my ($self, $citekey, $names, $bib) = @_;
   my $hashkey = '';
   my $count = $names->count_names;
-  my $visible = $names->get_visible_cite;
+  my $visible = $bib ? $names->get_visible_bib : $names->get_visible_cite;
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 

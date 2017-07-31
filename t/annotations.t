@@ -67,6 +67,8 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       }
       \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{bibnamehash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authorbibnamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authornamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authorfullhash}{90ae96c82de92e36949bc64254bbde0c}
       \field{sortinit}{L}

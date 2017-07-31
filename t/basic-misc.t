@@ -90,6 +90,8 @@ my $u1 = q|    \entry{u1}{misc}{}
       }
       \strng{namehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{fullhash}{b78abdc838d79b6576f2ed0021642766}
+      \strng{bibnamehash}{b78abdc838d79b6576f2ed0021642766}
+      \strng{authorbibnamehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{authornamehash}{b78abdc838d79b6576f2ed0021642766}
       \strng{authorfullhash}{b78abdc838d79b6576f2ed0021642766}
       \field{labelalpha}{AAA\textbf{+}00}
@@ -207,6 +209,8 @@ my $murray1 = q|    \entry{murray}{article}{}
       }
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
+      \strng{bibnamehash}{bc09e680e2274ab94c57b58c4500dc45}
+      \strng{authorbibnamehash}{bc09e680e2274ab94c57b58c4500dc45}
       \strng{authornamehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{authorfullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos\textbf{+}98}
@@ -308,6 +312,8 @@ my $murray2 = q|    \entry{murray}{article}{}
       }
       \strng{namehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{fullhash}{61836f4684b2615842b68c26479f6ec2}
+      \strng{bibnamehash}{bc09e680e2274ab94c57b58c4500dc45}
+      \strng{authorbibnamehash}{bc09e680e2274ab94c57b58c4500dc45}
       \strng{authornamehash}{7ba00ed438c44a2270c14ba95a7fc011}
       \strng{authorfullhash}{61836f4684b2615842b68c26479f6ec2}
       \field{labelalpha}{Hos98}
@@ -345,6 +351,8 @@ my $t1 = q+    \entry{t1}{misc}{}
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{bibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{authorbibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authornamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authorfullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro92}
@@ -371,6 +379,8 @@ my $t2 = q|    \entry{t2}{misc}{}
       }
       \strng{namehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{fullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{bibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \strng{authorbibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authornamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authorfullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \field{labelalpha}{Bro94}
@@ -399,8 +409,11 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
       }
       \strng{namehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{fullhash}{a66f357fe2fd356fe49959173522a651}
+      \strng{bibnamehash}{9873a6cc65c553faa2b21aaad626fe4b}
+      \strng{authorbibnamehash}{a66f357fe2fd356fe49959173522a651}
       \strng{authornamehash}{a66f357fe2fd356fe49959173522a651}
       \strng{authorfullhash}{a66f357fe2fd356fe49959173522a651}
+      \strng{shortauthorbibnamehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{shortauthornamehash}{9873a6cc65c553faa2b21aaad626fe4b}
       \strng{shortauthorfullhash}{9873a6cc65c553faa2b21aaad626fe4b}
       \field{labelalpha}{XAn35}
@@ -435,8 +448,11 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
       }
       \strng{namehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{fullhash}{a0bccee4041bc840e14c06e5ba7f083c}
+      \strng{bibnamehash}{f64c29e89ea49402b997956610b58ef6}
+      \strng{authorbibnamehash}{a0bccee4041bc840e14c06e5ba7f083c}
       \strng{authornamehash}{a0bccee4041bc840e14c06e5ba7f083c}
       \strng{authorfullhash}{a0bccee4041bc840e14c06e5ba7f083c}
+      \strng{shortauthorbibnamehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{shortauthornamehash}{f64c29e89ea49402b997956610b58ef6}
       \strng{shortauthorfullhash}{f64c29e89ea49402b997956610b58ef6}
       \field{labelalpha}{YAn39}
@@ -468,6 +484,8 @@ my $url1 = q|    \entry{url1}{misc}{}
       }
       \strng{namehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{fullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
+      \strng{bibnamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
+      \strng{authorbibnamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{authornamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{authorfullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \field{labelalpha}{Ali05}
@@ -647,6 +665,8 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
       }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{bibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{authorbibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authornamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authorfullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \field{labelalpha}{Flu}
@@ -668,6 +688,8 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
       }
       \strng{namehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{fullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{bibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \strng{authorbibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authornamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authorfullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \field{labelalpha}{Flu}
@@ -706,6 +728,8 @@ my $clone1 = q|    \entry{snk1}{book}{}
       }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{bibnamehash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{authorbibnamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authornamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authorfullhash}{83330b0520b5d4ea57529a23b404d43d}
       \field{labelalpha}{vDoe}
@@ -730,6 +754,8 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
       }
       \strng{namehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{fullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{bibnamehash}{83330b0520b5d4ea57529a23b404d43d}
+      \strng{authorbibnamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authornamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authorfullhash}{83330b0520b5d4ea57529a23b404d43d}
       \field{labelalpha}{vDoe}
@@ -758,6 +784,8 @@ my $ent1 = q|    \entry{ent1}{book}{}
       }
       \strng{namehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{fullhash}{b2536a425d549b46de5f21c4d468050a}
+      \strng{bibnamehash}{b2536a425d549b46de5f21c4d468050a}
+      \strng{authorbibnamehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{authornamehash}{b2536a425d549b46de5f21c4d468050a}
       \strng{authorfullhash}{b2536a425d549b46de5f21c4d468050a}
       \field{labelalpha}{SdB}
@@ -778,6 +806,8 @@ my $verb1 = q|    \entry{verb1}{book}{}
       }
       \strng{namehash}{cac5a25f503e71f5ef28f474e14007b6}
       \strng{fullhash}{cac5a25f503e71f5ef28f474e14007b6}
+      \strng{bibnamehash}{cac5a25f503e71f5ef28f474e14007b6}
+      \strng{authorbibnamehash}{cac5a25f503e71f5ef28f474e14007b6}
       \strng{authornamehash}{cac5a25f503e71f5ef28f474e14007b6}
       \strng{authorfullhash}{cac5a25f503e71f5ef28f474e14007b6}
       \field{labelalpha}{All}
