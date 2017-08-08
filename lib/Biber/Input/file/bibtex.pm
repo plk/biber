@@ -1408,22 +1408,25 @@ sub preprocess_file {
 
   # We read the file in the bib encoding and then output to UTF-8, even if it was already UTF-8,
   # just in case there was a BOM so we can delete it as it makes T::B complain
-  my $buf = NFD(File::Slurper::read_text($filename,
-                                         Biber::Config->getoption('input_encoding')));# Unicode NFD boundary
+  # Might fail due to encountering characters invalid in the encoding so trap and die gracefully
+  my $benc = Biber::Config->getoption('input_encoding');
+  my $buf;
+  unless (eval{$buf = NFD(File::Slurper::read_text($filename, $benc))}) {# Unicode NFD boundary
+    biber_error("Data file '$filename' cannot be read in encoding '$benc': $@");
+  }
 
   # strip UTF-8 BOM if it exists - this just makes T::B complain about junk characters
   $buf =~ s/\A\x{feff}//;
 
   File::Slurper::write_text($ufilename, NFC($buf));# Unicode NFC boundary
 
-  # Always decode LaTeX to UTF8
   my $lbuf = NFD(File::Slurper::read_text($ufilename));# Unicode NFD boundary
 
+  # Always decode LaTeX to UTF8
   $logger->info('Decoding LaTeX character macros into UTF-8');
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Buffer before decoding -> '$lbuf'");
   }
-
   $lbuf = Biber::LaTeX::Recode::latex_decode($lbuf);
 
   if ($logger->is_trace()) {# performance tune
