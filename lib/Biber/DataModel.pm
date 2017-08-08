@@ -1349,15 +1349,19 @@ sub generate_bblxml_schema {
   $writer->endTag();    # member
   $writer->endTag();    # oneOrMore
   $writer->endTag();    # set
+  $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:field");
   $writer->startTag('attribute', 'name' => 'name');
   $writer->startTag('choice');
+  $writer->dataElement('value', 'labelprefix');
   $writer->dataElement('value', 'labelalpha');
   $writer->dataElement('value', 'extraalpha');
+  $writer->dataElement('value', 'annotation');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->emptyTag('text');# text
   $writer->endTag();    # field
+  $writer->endTag();    # oneOrMore
   $writer->endTag(); # entry
   # Normal entries
   $writer->startTag('element', 'name' => "$bbl:entry");

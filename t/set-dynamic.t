@@ -48,6 +48,7 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{DynSet}{set}{}
       \set{Dynamic1,Dynamic2,Dynamic3}
+      \field{annotation}{Some Dynamic Note}
     \endentry
 |;
 

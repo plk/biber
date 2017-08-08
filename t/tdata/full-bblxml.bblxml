@@ -108,6 +108,7 @@
           <bbl:member>stdmodel:salam</bbl:member>
         </bbl:set>
         <bbl:field name="labelalpha">Gla61</bbl:field>
+        <bbl:field name="annotation">A set entry with three members discussing the standard model of particle physics.</bbl:field>
       </bbl:entry>
       <bbl:entry key="stdmodel:glashow" type="article">
         <bbl:inset>

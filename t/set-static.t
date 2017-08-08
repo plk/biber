@@ -44,6 +44,7 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Static1}{set}{}
       \set{Static2,Static3,Static4}
+      \field{annotation}{Some notes}
     \endentry
 |;
 
