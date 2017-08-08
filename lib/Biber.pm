@@ -1184,20 +1184,22 @@ sub instantiate_dynamic {
       $logger->debug("Created dynamic set entry '$dset' in section $secnum");
     }
 
+    foreach my $m (@members) {
     # Save graph information if requested
-    if (Biber::Config->getoption('output_format') eq 'dot') {
-      foreach my $m (@members) {
+      if (Biber::Config->getoption('output_format') eq 'dot') {
         Biber::Config->set_graph('set', $dset, $m);
       }
+      # Instantiate any related entry clones we need from dynamic set members
+      $section->bibentry($m)->relclone;
     }
     # Setting dataonly for members is handled by process_sets()
   }
 
-  # Instantiate any related entry clones we need
+  # Instantiate any related entry clones we need from regular entries
   foreach my $citekey ($section->get_citekeys) {
-    my $be = $section->bibentry($citekey);
-    $be->relclone;
+    $section->bibentry($citekey)->relclone;
   }
+
   return;
 }
 
@@ -1308,6 +1310,9 @@ sub preprocess_sets {
       foreach my $member ($entrysetkeys->@*) {
         Biber::Config->set_set_pc($citekey, $member);
         Biber::Config->set_set_cp($member, $citekey);
+
+        # Instantiate any related entry clones we need from static set members
+        $section->bibentry($member)->relclone;
       }
     }
   }
