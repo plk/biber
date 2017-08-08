@@ -48,28 +48,6 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{DynSet}{set}{}
       \set{Dynamic1,Dynamic2,Dynamic3}
-      \name{author}{1}{}{%
-        {{hash=252caa7921a061ca92087a1a52f15b78}{%
-           family={Dynamism},
-           familyi={D\bibinitperiod},
-           given={Derek},
-           giveni={D\bibinitperiod}}}%
-      }
-      \strng{namehash}{252caa7921a061ca92087a1a52f15b78}
-      \strng{fullhash}{252caa7921a061ca92087a1a52f15b78}
-      \strng{bibnamehash}{252caa7921a061ca92087a1a52f15b78}
-      \strng{authorbibnamehash}{252caa7921a061ca92087a1a52f15b78}
-      \strng{authornamehash}{252caa7921a061ca92087a1a52f15b78}
-      \strng{authorfullhash}{252caa7921a061ca92087a1a52f15b78}
-      \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
-      \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{annotation}{Some Dynamic Note}
-      \field{shorthand}{d1}
-      \field{title}{Doing Daring Deeds}
-      \field{year}{2002}
     \endentry
 |;
 

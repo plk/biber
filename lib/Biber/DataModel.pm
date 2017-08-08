@@ -1309,7 +1309,7 @@ sub generate_bblxml_schema {
                                DATA_MODE    => 1,
                                DATA_INDENT  => 2,
                                OUTPUT       => $rng,
-                               PREFIX_MAP   => {$bbl_ns    => $bbl,
+                               PREFIX_MAP   => {$bbl_ns     => $bbl,
                                                 $default_ns => ''});
 
   $writer->xmlDecl();
@@ -1333,6 +1333,33 @@ sub generate_bblxml_schema {
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->startTag('oneOrMore');
+  $writer->startTag('choice');
+  # Set parent entries are special
+  $writer->startTag('element', 'name' => "$bbl:entry");
+  $writer->emptyTag('attribute', 'name' => 'key');
+  $writer->startTag('attribute', 'name' => 'type');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'set');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->startTag('element', 'name' => "$bbl:set");
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:member");
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # member
+  $writer->endTag();    # oneOrMore
+  $writer->endTag();    # set
+  $writer->startTag('element', 'name' => "$bbl:field");
+  $writer->startTag('attribute', 'name' => 'name');
+  $writer->startTag('choice');
+  $writer->dataElement('value', 'labelalpha');
+  $writer->dataElement('value', 'extraalpha');
+  $writer->endTag();    # choice
+  $writer->endTag();    # attribute
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # field
+  $writer->endTag(); # entry
+  # Normal entries
   $writer->startTag('element', 'name' => "$bbl:entry");
   $writer->emptyTag('attribute', 'name' => 'key');
   $writer->startTag('attribute', 'name' => 'type');
@@ -1390,17 +1417,6 @@ sub generate_bblxml_schema {
   $writer->endTag();    # optional
 
   $writer->startTag('interleave');
-
-  # sets
-  $writer->startTag('zeroOrMore');
-  $writer->startTag('element', 'name' => "$bbl:set");
-  $writer->startTag('oneOrMore');
-  $writer->startTag('element', 'name' => "$bbl:member");
-  $writer->emptyTag('text');# text
-  $writer->endTag();    # member
-  $writer->endTag();    # oneOrMore
-  $writer->endTag();    # set
-  $writer->endTag();    # zeroOrMore
 
   $writer->startTag('zeroOrMore');
   $writer->startTag('element', 'name' => "$bbl:inset");
@@ -1748,6 +1764,7 @@ sub generate_bblxml_schema {
 
   $writer->endTag();# interleave element
   $writer->endTag();# entry element
+  $writer->endTag();# choice
   $writer->endTag();# oneOrMore
   $writer->endTag();# sortlist element
   $writer->endTag();# oneOrMore

@@ -46,30 +46,8 @@ my $bibentries = $section->bibentries;
 
 my $set1 = q|    \entry{seta}{set}{}
       \set{set:membera,set:memberb,set:memberc}
-      \name{author}{1}{}{%
-        {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
-           family={Doe},
-           familyi={D\bibinitperiod},
-           given={John},
-           giveni={J\bibinitperiod}}}%
-      }
-      \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{bibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
-      \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \field{labelalpha}{Doe10}
-      \field{sortinit}{D}
-      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
-      \field{extrayear}{1}
-      \field{labeldatesource}{}
       \field{extraalpha}{1}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{title}{Set Member A}
-      \field{year}{2010}
-      \keyw{key1,key2}
     \endentry
 |;
 

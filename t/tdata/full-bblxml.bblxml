@@ -107,34 +107,7 @@
           <bbl:member>stdmodel:weinberg</bbl:member>
           <bbl:member>stdmodel:salam</bbl:member>
         </bbl:set>
-        <bbl:names type="author" count="1">
-          <bbl:name hash="uniquename">
-            <bbl:namepart type="family" initials="G">Glashow</bbl:namepart>
-            <bbl:namepart type="given" initials="S">Sheldon</bbl:namepart>
-          </bbl:name>
-        </bbl:names>
-        <bbl:field name="namehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="fullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="bibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="authornamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="authorfullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
-        <bbl:field name="authorbibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="labelalpha">Gla61</bbl:field>
-        <bbl:field name="sortinit">G</bbl:field>
-        <bbl:field name="sortinithash">618d986594b7198ba52cf8b00d348f3f</bbl:field>
-        <bbl:field name="labelnamesource">author</bbl:field>
-        <bbl:field name="labeltitlesource">title</bbl:field>
-        <bbl:field name="annotation">A set entry with three members discussing the standard model of particle physics.</bbl:field>
-        <bbl:field name="journaltitle">Nucl. Phys.</bbl:field>
-        <bbl:field name="title">Partial Symmetries of Weak Interactions</bbl:field>
-        <bbl:field name="volume">22</bbl:field>
-        <bbl:field name="year">1961</bbl:field>
-        <bbl:range name="pages">
-          <bbl:item length="-1">
-            <bbl:start>579</bbl:start>
-          </bbl:item>
-        </bbl:range>
-        <bbl:warning>Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry 'stdmodel'</bbl:warning>
       </bbl:entry>
       <bbl:entry key="stdmodel:glashow" type="article">
         <bbl:inset>

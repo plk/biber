@@ -44,27 +44,6 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Static1}{set}{}
       \set{Static2,Static3,Static4}
-      \name{author}{1}{}{%
-        {{hash=43874d80d7ce68027102819f16c47df1}{%
-           family={Bumble},
-           familyi={B\bibinitperiod},
-           given={Brian},
-           giveni={B\bibinitperiod}}}%
-      }
-      \strng{namehash}{43874d80d7ce68027102819f16c47df1}
-      \strng{fullhash}{43874d80d7ce68027102819f16c47df1}
-      \strng{bibnamehash}{43874d80d7ce68027102819f16c47df1}
-      \strng{authorbibnamehash}{43874d80d7ce68027102819f16c47df1}
-      \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
-      \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{sortinit}{2}
-      \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
-      \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{annotation}{Some notes}
-      \field{title}{Blessed Brains}
-      \field{year}{2001}
     \endentry
 |;
 

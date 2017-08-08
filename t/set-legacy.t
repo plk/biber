@@ -44,37 +44,6 @@ my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Elias1955}{set}{}
       \set{Elias1955a,Elias1955b}
-      \name{author}{1}{}{%
-        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{%
-           family={Elias},
-           familyi={E\bibinitperiod},
-           given={P.},
-           giveni={P\bibinitperiod}}}%
-      }
-      \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{bibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{authorbibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{authornamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{authorfullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
-      \field{labeldatesource}{year}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{issn}{0096-1000}
-      \field{journaltitle}{IRE Transactions on Information Theory}
-      \field{month}{3}
-      \field{number}{1}
-      \field{title}{Predictive coding--I}
-      \field{volume}{1}
-      \field{year}{1955}
-      \field{pages}{16\bibrangedash 24}
-      \range{pages}{9}
-      \verb{doi}
-      \verb 10.1109/TIT.1955.1055126
-      \endverb
-      \warn{\item Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry 'Elias1955'}
     \endentry
 |;
 
