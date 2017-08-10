@@ -48,6 +48,8 @@ my $set1 = q|    \entry{seta}{set}{}
       \set{set:membera,set:memberb,set:memberc}
       \field{labelalpha}{Doe10}
       \field{extraalpha}{1}
+      \field{sortinit}{D}
+      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
     \endentry
 |;
 

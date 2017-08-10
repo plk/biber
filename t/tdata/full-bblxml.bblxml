@@ -108,6 +108,8 @@
           <bbl:member>stdmodel:salam</bbl:member>
         </bbl:set>
         <bbl:field name="labelalpha">Gla61</bbl:field>
+        <bbl:field name="sortinit">G</bbl:field>
+        <bbl:field name="sortinithash">618d986594b7198ba52cf8b00d348f3f</bbl:field>
         <bbl:field name="annotation">A set entry with three members discussing the standard model of particle physics.</bbl:field>
       </bbl:entry>
       <bbl:entry key="stdmodel:glashow" type="article">

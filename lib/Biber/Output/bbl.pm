@@ -225,9 +225,19 @@ sub set_output_entry {
       }
     }
 
+    # This is special, we have to put a marker for sortinit{hash} and then replace this string
+    # on output as it can vary between lists
+    $acc .= "      <BDS>SORTINIT</BDS>\n";
+    $acc .= "      <BDS>SORTINITHASH</BDS>\n";
+
     # labelprefix is list-specific. It is only defined is there is no shorthand
     # (see biblatex documentation)
     $acc .= "      <BDS>LABELPREFIX</BDS>\n";
+
+    # Label can be in set parents
+    if (my $lab = $be->get_field('label')) {
+      $acc .= "      \\field{label}{$lab}\n";
+    }
 
     # Annotation can be in set parents
     if (my $ann = $be->get_field('annotation')) {

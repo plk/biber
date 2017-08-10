@@ -1357,6 +1357,9 @@ sub generate_bblxml_schema {
   $writer->dataElement('value', 'labelalpha');
   $writer->dataElement('value', 'extraalpha');
   $writer->dataElement('value', 'annotation');
+  $writer->dataElement('value', 'sortinit');
+  $writer->dataElement('value', 'sortinithash');
+  $writer->dataElement('value', 'label');
   $writer->endTag();    # choice
   $writer->endTag();    # attribute
   $writer->emptyTag('text');# text

@@ -191,9 +191,20 @@ sub set_output_entry {
       }
     }
 
+    # This is special, we have to put a marker for sortinit{hash} and then replace this string
+    # on output as it can vary between lists
+    $xml->dataElement('BDS', 'SORTINIT');
+    $xml->dataElement('BDS', 'SORTINITHASH');
+
+
     # labelprefix is list-specific. It is only defined is there is no shorthand
     # (see biblatex documentation)
     $xml->dataElement('BDS', 'LABELPREFIX');
+
+    # Label can be in set parents
+    if (my $lab = $be->get_field('label')) {
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lab), name => 'label');
+    }
 
     # Annotation can be in set parents
     if (my $ann = $be->get_field('annotation')) {
