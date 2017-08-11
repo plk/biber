@@ -1271,8 +1271,12 @@ sub cite_setmembers {
           Biber::Config->set_graph('set', $citekey, $inset_key);
         }
       }
-      # automatically crossref for the first set member using plain set inheritance
+
+      # Set parents inherit first child member data so that they get sensible
+      # sorting/labelling defaults. Most of these inherited fields will not be output
+      # in the .bbl
       $be->set_inherit_from($section->bibentry($inset_keys->[0]), $section);
+
       # warning for the old pre-Biber way of doing things
       if ($be->get_field('crossref')) {
         biber_warn("Field 'crossref' is no longer needed in set entries in Biber - ignoring in entry '$citekey'", $be);

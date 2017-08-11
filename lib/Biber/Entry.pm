@@ -513,13 +513,17 @@ sub add_warning {
 
 =head2 set_inherit_from
 
-    Inherit fields from parent entry
+    Inherit fields from first child entry
 
-    $entry->set_inherit_from($parententry);
+    $entry->set_inherit_from($firstchild);
 
     Takes a second Biber::Entry object as argument
-    Tailored for set inheritance which is a straight 1:1 inheritance,
-    excluding certain fields for backwards compatibility
+
+    The purpose here is to inherit fields so that sorting/labelling defaults
+    can be generated for set parents from the first child set member data, unless
+    the set parent itself already has some fields set that will do this. Set
+    parents only have certain fields output in the .bbl and those that output but
+    are not used in sorting/labelling data generation should not be inherited.
 
 =cut
 
@@ -530,8 +534,16 @@ sub set_inherit_from {
   # Data source fields
   foreach my $field ($parent->datafields) {
     next if $self->field_exists($field); # Don't overwrite existing fields
+
+    # Annotations are allowed for set parents themselves so never inherit these.
+    # This can't be suppressed at .bbl writing as it is impossible to know there
+    # whether the field came from the parent or first child because inheritance
+    # is a low-level operation on datafields
+    next if fc($field) eq fc('annotation');
+
     $self->set_datafield($field, $parent->get_field($field));
   }
+
   # Datesplit is a special non datafield and needs to be inherited for any
   # validation checks which may occur later
   foreach my $df ($dmh->{datefields}->@*) {

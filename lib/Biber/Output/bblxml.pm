@@ -197,7 +197,7 @@ sub set_output_entry {
     $xml->dataElement('BDS', 'SORTINITHASH');
 
 
-    # labelprefix is list-specific. It is only defined is there is no shorthand
+    # labelprefix is list-specific. It is only defined if there is no shorthand
     # (see biblatex documentation)
     $xml->dataElement('BDS', 'LABELPREFIX');
 
@@ -343,7 +343,7 @@ sub set_output_entry {
     }
   }
 
-  # labelprefix is list-specific. It is only defined is there is no shorthand
+  # labelprefix is list-specific. It is only defined if there is no shorthand
   # (see biblatex documentation)
   unless ($be->get_field('shorthand')) {
     $xml->dataElement('BDS', 'LABELPREFIX');

@@ -230,7 +230,7 @@ sub set_output_entry {
     $acc .= "      <BDS>SORTINIT</BDS>\n";
     $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
-    # labelprefix is list-specific. It is only defined is there is no shorthand
+    # labelprefix is list-specific. It is only defined if there is no shorthand
     # (see biblatex documentation)
     $acc .= "      <BDS>LABELPREFIX</BDS>\n";
 
@@ -369,7 +369,7 @@ sub set_output_entry {
     }
   }
 
-  # labelprefix is list-specific. It is only defined is there is no shorthand
+  # labelprefix is list-specific. It is only defined if there is no shorthand
   # (see biblatex documentation)
   unless ($be->get_field('shorthand')) {
     $acc .= "      <BDS>LABELPREFIX</BDS>\n";
