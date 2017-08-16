@@ -318,7 +318,6 @@
     <map><from>textequals</from>                       <to hex="3D">=</to></map>
     <map><from>textgreater</from>                      <to hex="3E">&gt;</to></map>
     <map><from>textasciicircum</from>                  <to hex="5E">^</to></map>
-    <map><from>textunderscore</from>                   <to hex="5F">_</to></map>
     <map><from>textasciigrave</from>                   <to hex="60">`</to></map>
     <map><from>textbraceleft</from>                    <to hex="7B">{</to></map>
     <map><from>textbar</from>                          <to hex="7C">|</to></map>
@@ -861,6 +860,7 @@
     <char>|</char>
     <char>textbraceleft</char>
     <char>textbraceright</char>
+    <char>textunderscore</char>
   </decode_exclude>
   <encode_exclude>
     <char>"</char>
