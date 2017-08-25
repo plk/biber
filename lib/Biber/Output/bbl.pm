@@ -747,13 +747,15 @@ sub output {
     }
 
     # Aliases
-    foreach my $ks (values $data->{ALIAS_ENTRIES}{$secnum}{index}->%*) {
-      out($target, $$ks);
+    # Use sort to guaranteed deterministic order for things like latexmk
+    foreach my $ks (sort keys $data->{ALIAS_ENTRIES}{$secnum}{index}->%*) {
+      out($target, $data->{ALIAS_ENTRIES}{$secnum}{index}{$ks}->$*);
     }
 
     # Missing keys
-    foreach my $ks (values $data->{MISSING_ENTRIES}{$secnum}{index}->%*) {
-      out($target, $$ks);
+    # Use sort to guaranteed deterministic order for things like latexmk
+    foreach my $ks (sort keys $data->{MISSING_ENTRIES}{$secnum}{index}->%*) {
+      out($target, $data->{MISSING_ENTRIES}{$secnum}{index}{$ks}->$*);
     }
 
     out($target, "\\endrefsection\n");

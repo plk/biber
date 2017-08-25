@@ -203,6 +203,9 @@ sub get_output_section {
 =head2 get_output_entries
 
     Get the sorted order output data for all entries in a list as array ref
+    Used really only in tests as it instantiates list dynamic information so
+    we can see it in tests. As a result, we have to NFC() the result to mimic
+    real output since UTF-8 output is assumed in most tests.
 
 =cut
 
