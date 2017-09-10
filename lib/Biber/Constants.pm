@@ -32,6 +32,7 @@ our @EXPORT = qw{
                   %LOCALE_MAP_R
                   %REMOTE_MAP
                   %DS_EXTENSIONS
+                  %UNIQUENAME_CONTEXTS
               };
 
 # Version of biblatex control file which this release expects. Matched against version
@@ -76,9 +77,17 @@ our %DS_EXTENSIONS = (
                       bbl        => 'bbl',
                       bblxml     => 'bblxml',
                       bibtex     => 'bib',
-                      biblatexml => 'bltxml',
-                      ris        => 'ris'
+                      biblatexml => 'bltxml'
                       );
+
+# Mapping of biblatex uniquename option to disamniguation context
+my %UNIQUENAME_CONTEXTS = (0 => 'none', # false
+                           1 => 'init', # init
+                           2 => 'full', # full/true
+                           3 => 'init', # allinit
+                           4 => 'full', # allfull
+                           5 => 'init', # mininit
+                           6 => 'full'); # minfull
 
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 our $CONFIG_DEFAULT_BIBER = {

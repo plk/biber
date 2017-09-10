@@ -650,15 +650,10 @@ sub parse_ctrlfile {
 
   # UNIQUENAME TEMPLATE
   my $unkt;
-  my $bun;
   foreach my $np (sort {$a->{order} <=> $b->{order}} $bcfxml->{uniquenametemplate}{namepart}->@*) {
-    # useful later in uniqueness tests
-    if ($np->{base}) {
-      push $bun->@*, $np->{content};
-    }
-
     push $unkt->@*, {namepart => $np->{content},
                      use      => $np->{use},
+                     scope    => $np->{scope},
                      base     => $np->{base}};
   }
   Biber::Config->setblxoption('uniquenametemplate', $unkt);
@@ -2745,6 +2740,17 @@ sub uniqueness {
     So both "John Smith" and "Bert Smith" in this entry get uniquename=0 (of course, as long as
     there are no other "X Smith and Y Smith" entries where X != "John" or Y != "Bert").
 
+    The values from biblatex.sty:
+
+    false   = 0
+    init    = 1
+    true    = 2
+    full    = 2
+    allinit = 3
+    allfull = 4
+    mininit = 5
+    minfull = 6
+
 =cut
 
 sub create_uniquename_info {
@@ -2802,8 +2808,7 @@ sub create_uniquename_info {
 
       my @truncnames;
       my @basenames;
-      my @fullnames;
-      my @initnames;
+      my @nonbasenames;
 
       foreach my $name ($names->@*) {
         # We need to track two types of uniquename disambiguation here:
@@ -2832,80 +2837,54 @@ sub create_uniquename_info {
           push @truncnames, $name;
           if ($un == 5 or $un == 6) {
             push @basenames, $name->get_basenamestring;
-            push @fullnames, $name->get_namestring;
-            push @initnames, $name->get_nameinitstring;
+            push @nonbasenames, $name->get_namestring;
           }
         }
       }
       # Information for mininit ($un=5) or minfull ($un=6)
-      my $basenames_string;
-      my $fullnames_string;
-      my $initnames_string;
-      if ($un == 5) {
-        $basenames_string = join("\x{10FFFD}", @basenames);
-        $initnames_string = join("\x{10FFFD}", @initnames);
+      my $min_basename;
+      my $min_namestring;
+      if ($un == 5 or $un == 6) {
+        $min_basename = join("\x{10FFFD}", @basenames);
+        $min_namestring = join("\x{10FFFD}", @nonbasenames);
         if ($#basenames + 1 < $num_names or
             $morenames) {
-          $basenames_string .= "\x{10FFFD}et al"; # if truncated, record this
-          $initnames_string .= "\x{10FFFD}et al"; # if truncated, record this
-        }
-      }
-      elsif ($un == 6) {
-        $basenames_string = join("\x{10FFFD}", @basenames);
-        $fullnames_string = join("\x{10FFFD}", @fullnames);
-        if ($#basenames + 1 < $num_names or
-            $morenames) {
-          $basenames_string .= "\x{10FFFD}et al"; # if truncated, record this
-          $fullnames_string .= "\x{10FFFD}et al"; # if truncated, record this
+          $min_basename .= "\x{10FFFD}et al"; # if truncated, record this
+          $min_namestring .= "\x{10FFFD}et al"; # if truncated, record this
         }
       }
 
       foreach my $name ($names->@*) {
-        my $basename = $name->get_basenamestring;
-        my $nameinitstring = $name->get_nameinitstring;
-        my $namestring     = $name->get_namestring;
-        my $namecontext;
+        my $basename   = $name->get_basenamestring;
+        my $namestring = $name->get_namestring;
+        my $namedisamiguationscope;
         my $key;
 
-        # Context and key depend on the uniquename setting
-        if ($un == 1 or $un == 3) {
-          $namecontext = 'global';
-          $key = $nameinitstring;
-        }
-        elsif ($un == 2 or $un == 4) {
-          $namecontext = 'global';
+        # Disambiguation scope and key depend on the uniquename setting
+        if ($un == 1 or $un == 2 or $un == 3 or $un ==4) {
+          $namedisamiguationscope = 'global';
           $key = $namestring;
         }
-        elsif ($un == 5) {
-          $namecontext = $basenames_string;
-          $key = $initnames_string;
-          $name->set_minimal_info($basenames_string);
-        }
-        elsif ($un == 6) {
-          $namecontext = $basenames_string;
-          $key = $fullnames_string;
-          $name->set_minimal_info($basenames_string);
+        elsif ($un == 5 or $un == 6) {
+          $namedisamiguationscope = $min_basename;
+          $key = $min_namestring;
+          $name->set_minimal_info($min_basename);
         }
         if (first {Compare($_, $name)} @truncnames) {
           # Record a uniqueness information entry for the base name showing that
           # this base name has been seen in this name context
-          Biber::Config->add_uniquenamecount($basename, $namecontext, $key);
+          Biber::Config->add_uniquenamecount($basename, $namedisamiguationscope, $key);
 
-          # Record a uniqueness information entry for the basename+initials showing that
-          # this basename_initials has been seen in this name context
-          Biber::Config->add_uniquenamecount($nameinitstring, $namecontext, $key);
-
-          # Record a uniqueness information entry for the fullname
+          # Record a uniqueness information entry for the name d
           # showing that this fullname has been seen in this name context
-          Biber::Config->add_uniquenamecount($namestring, $namecontext, $key);
+          Biber::Config->add_uniquenamecount($namestring, $namedisamiguationscope, $key);
         }
 
         # As above but here we are collecting (separate) information for all
         # names, regardless of visibility (needed to track uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-          Biber::Config->add_uniquenamecount_all($basename, $namecontext, $key);
-          Biber::Config->add_uniquenamecount_all($nameinitstring, $namecontext, $key);
-          Biber::Config->add_uniquenamecount_all($namestring, $namecontext, $key);
+          Biber::Config->add_uniquenamecount_all($basename, $namsescope, $key);
+          Biber::Config->add_uniquenamecount_all($namestring, $namedisamiguationscope, $key);
         }
       }
     }
@@ -2971,7 +2950,6 @@ sub generate_uniquename {
 
       foreach my $name ($names->@*) {
         my $basename = $name->get_basenamestring;
-        my $nameinitstring = $name->get_nameinitstring;
         my $namestring = $name->get_namestring;
         my $namecontext = 'global'; # default
         if ($un == 5 or $un == 6) {

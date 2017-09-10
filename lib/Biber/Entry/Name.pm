@@ -24,7 +24,6 @@ __PACKAGE__->mk_accessors(qw (
                                index
                                basenamestring
                                namestring
-                               nameinitstring
                                useprefix
                                sortnamekeyscheme
                             ));
@@ -49,7 +48,6 @@ sub new {
     foreach my $attr (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*,
                       'gender',
                       'namestring',
-                      'nameinitstring',
                       'basenamestring',
                       'useprefix',
                       'strip',

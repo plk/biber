@@ -375,6 +375,7 @@ uniquenametemplate =
      attribute order { xsd:integer },
       attribute use { "0" | "1" }?,
       attribute base { "0" | "1" }?,
+      attribute context { "none" | "init" | "full" }?,
       text
     }+
   }

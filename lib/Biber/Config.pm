@@ -460,16 +460,11 @@ sub _config_file_set {
     # the later options tests which assume hash refs
     if (lc($k) eq 'uniquenametemplate') {
       my $unkt;
-      my $bun;
       foreach my $np (sort {$a->{order} <=> $b->{order}} $v->{namepart}->@*) {
-
-        # useful later in uniqueness tests
-        if ($np->{base}) {
-          push $bun->@*, $np->{content};
-        }
 
         push $unkt->@*, {namepart => $np->{content},
                          use => $np->{use},
+                         scope => $np->{scope},
                          base => $np->{base}}
       }
       Biber::Config->setblxoption('uniquenametemplate', $unkt);

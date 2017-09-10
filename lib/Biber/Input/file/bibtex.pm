@@ -1034,6 +1034,8 @@ sub _name {
                                      {binmode => 'utf-8', normalization => 'NFD'});
 
   my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
+  my $un = Biber::Config->getblxoption('uniquename', $bibentry->get_field('entrytype'), $key);
+
   my $names = Biber::Entry::Names->new();
 
   foreach my $name (@tmp) {
@@ -1065,7 +1067,7 @@ sub _name {
     my $xnamesep = Biber::Config->getoption('xnamesep');
     if ($name =~ m/(?:$nps)\s*$xnamesep/ and not Biber::Config->getoption('noxname')) {
       # Skip names that don't parse for some reason
-      next unless $no = parsename_x($name, $field, {useprefix => $useprefix}, $key);
+      next unless $no = parsename_x($name, $field, {useprefix => $useprefix}, $key, $un);
     }
     else { # Normal bibtex name format
       # Check for malformed names in names which aren't completely escaped
@@ -1087,7 +1089,7 @@ sub _name {
       }
 
       # Skip names that don't parse for some reason
-      next unless $no = parsename($name, $field, {useprefix => $useprefix}, $key);
+      next unless $no = parsename($name, $field, {useprefix => $useprefix}, $key, $un);
     }
 
     # Deal with implied "et al" in data source
@@ -1452,7 +1454,6 @@ sub preprocess_file {
       suffix         => {string => undef, initial => undef},
       basenamestring => 'Doe',
       namestring     => 'Doe, John',
-      nameinitstring => 'Doe_J',
       strip          => {'given'  => 0,
                          'family' => 0,
                          'prefix' => 0,
@@ -1462,7 +1463,7 @@ sub preprocess_file {
 =cut
 
 sub parsename {
-  my ($namestr, $fieldname, $opts, $key, $testing) = @_;
+  my ($namestr, $fieldname, $opts, $key, $un, $testing) = @_;
 
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
   $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
@@ -1528,7 +1529,6 @@ sub parsename {
 
   my $basenamestring = '';
   my $namestring = '';
-  my $nameinitstring = '';
 
   # basic bibtex names have a fixed data model
   foreach my $np ('prefix', 'family', 'given', 'suffix') {
@@ -1540,18 +1540,26 @@ sub parsename {
   # Use nameuniqueness template to construct uniqueness strings
   foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
     my $npn = $np->{namepart};
+    my $context = $np->{context} || $UNIQUENAME_CONTEXTS{$un};
+
     if ($namec{$npn}) {
-      if ($np->{use}) {         # only ever defined as 1
+      if ($np->{use}) { # only ever defined as 1
         next unless $opts->{"use$npn"};
       }
-      $namestring .= $namec{"${npn}-stripped"};
 
-      if ($np->{base}) {
-        $nameinitstring .= $namec{"${npn}-stripped"};
+      if ($np->{base}) {# all of base part is included in disambiguation
         $basenamestring .= $namec{"${npn}-stripped"};
+        $namestring     .= $namec{"${npn}-stripped"};
       }
       else {
-        $nameinitstring .= join('', $namec{"${npn}-i"}->@*);
+        # per-namepart disambiguation context
+        if (fc($context) eq fc('full')) { # full disambiguation
+          $namestring     .= $namec{"${npn}-stripped"};
+        }
+        elsif (fc($context) eq fc('init')) { # inits only
+          $namestring     .= join('', $namec{"${npn}-i"}->@*);
+        }
+
       }
     }
   }
@@ -1571,9 +1579,6 @@ sub parsename {
     if ($namestring) {
       $namestring = NFC($namestring);
     }
-    if ($nameinitstring) {
-      $nameinitstring = NFC($nameinitstring);
-    }
   }
 
   my %nameparts;
@@ -1586,7 +1591,6 @@ sub parsename {
 
   if ($logger->is_trace()) {# performance tune
     $logger->trace("namestring for '$key' (parsename): $namestring");
-    $logger->trace("nameinitstring for '$key' (parsename): $nameinitstring");
   }
 
 
@@ -1595,9 +1599,8 @@ sub parsename {
   # .bbl so as to maintain maximum BibTeX compatibility
   return  Biber::Entry::Name->new(
                                   %nameparts,
-                                  namestring     => $namestring,
-                                  nameinitstring => $nameinitstring,
                                   basenamestring => $basenamestring,
+                                  namestring     => $namestring,
                                   strip          => $strip
                                  );
 }
@@ -1616,7 +1619,6 @@ sub parsename {
       suffix         => {string => undef, initial => undef},
       basenamestring => 'Doe',
       namestring     => 'Doe, John',
-      nameinitstring => 'Doe_J',
       sortnamekeyscheme => 'scheme' }
       }
 
@@ -1688,7 +1690,6 @@ sub parsename_x {
 
   my $basenamestring = '';
   my $namestring = '';
-  my $nameinitstring = '';
 
   # Loop over name parts required for constructing uniquename information
   # and create the strings needed for this
@@ -1704,6 +1705,7 @@ sub parsename_x {
     my $namepart = $np->{namepart};
     my $useopt;
     my $useoptval;
+    my $context = $np->{context} || $UNIQUENAME_CONTEXTS{$un};
 
     if ($np->{use}) {# only ever defined as 1
       $useopt = "use$namepart";
@@ -1713,13 +1715,19 @@ sub parsename_x {
     # No use attribute conditionals or the attribute is specified and matches the option
     if (exists($namec{$namepart}) and
         (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
-      $namestring .= $namec{$namepart};
+
       if ($np->{base}) {# all of base part is included in initstr
-        $nameinitstring .= $namec{$namepart};
         $basenamestring .= $namec{$namepart};
+        $namestring     .= $namec{$namepart};
       }
       else {
-        $nameinitstring .= join('', $namec{"${namepart}-i"}->@*);
+        if (fc($context) eq fc('full')) {
+          $namestring     .= $namec{$namepart};
+        }
+        if (fc($context) eq fc('init')) {
+          $namestring     .= join('', $namec{"${namepart}-i"}->@*);
+        }
+
       }
     }
   }
@@ -1732,7 +1740,6 @@ sub parsename_x {
 
   if ($logger->is_trace()) {# performance tune
     $logger->trace("namestring for '$key' (parsename_x): $namestring");
-    $logger->trace("nameinitstring for '$key' (parsename_x): $nameinitstring");
   }
 
   # The "strip" entry tells us which of the name parts had outer braces
@@ -1740,9 +1747,8 @@ sub parsename_x {
   # .bbl so as to maintain maximum BibTeX compatibility
   return  Biber::Entry::Name->new(
                                   %nameparts,
-                                  namestring     => $namestring,
-                                  nameinitstring => $nameinitstring,
                                   basenamestring => $basenamestring,
+                                  namestring     => $namestring,
                                   %pernameopts
                                  );
 }

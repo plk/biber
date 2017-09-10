@@ -1285,6 +1285,15 @@
               </choice>
             </attribute>
           </optional>
+          <optional>
+            <attribute name="context">
+              <choice>
+                <value>none</value>
+                <value>init</value>
+                <value>full</value>
+              </choice>
+            </attribute>
+          </optional>
           <text/>
         </element>
       </oneOrMore>
