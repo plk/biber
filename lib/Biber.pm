@@ -2837,7 +2837,7 @@ sub create_uniquename_info {
           push @truncnames, $name;
           if ($un == 5 or $un == 6) {
             push @basenames, $name->get_basenamestring;
-            push @nonbasenames, $name->get_namestring;
+            push @nonbasenames, $name->get_namestrings;
           }
         }
       }
@@ -2856,7 +2856,7 @@ sub create_uniquename_info {
 
       foreach my $name ($names->@*) {
         my $basename   = $name->get_basenamestring;
-        my $namestring = $name->get_namestring;
+        my $namestring = $name->get_namestrings;
         my $namedisamiguationscope;
         my $key;
 
@@ -2871,20 +2871,24 @@ sub create_uniquename_info {
           $name->set_minimal_info($min_basename);
         }
         if (first {Compare($_, $name)} @truncnames) {
-          # Record a uniqueness information entry for the base name showing that
-          # this base name has been seen in this name context
+          # Record uniqueness information entry for the base name showing that
+          # this base name has been seen in this name scope
           Biber::Config->add_uniquenamecount($basename, $namedisamiguationscope, $key);
 
-          # Record a uniqueness information entry for the name d
-          # showing that this fullname has been seen in this name context
-          Biber::Config->add_uniquenamecount($namestring, $namedisamiguationscope, $key);
+          # Record uniqueness information entry for all name contexts
+          # showing that they have been seen in this name scope
+          foreach my $ns ($namestring->@*) {
+            Biber::Config->add_uniquenamecount($ns, $namedisamiguationscope, $key);
+          }
         }
 
         # As above but here we are collecting (separate) information for all
         # names, regardless of visibility (needed to track uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-          Biber::Config->add_uniquenamecount_all($basename, $namsescope, $key);
-          Biber::Config->add_uniquenamecount_all($namestring, $namedisamiguationscope, $key);
+          Biber::Config->add_uniquenamecount_all($basename, $namedisamiguationscope, $key);
+          foreach my $ns ($namestring->@*) {
+            Biber::Config->add_uniquenamecount_all($ns, $namedisamiguationscope, $key);
+          }
         }
       }
     }
@@ -2950,7 +2954,7 @@ sub generate_uniquename {
 
       foreach my $name ($names->@*) {
         my $basename = $name->get_basenamestring;
-        my $namestring = $name->get_namestring;
+        my $namestring = $name->get_namestrings;
         my $namecontext = 'global'; # default
         if ($un == 5 or $un == 6) {
           $namecontext = $name->get_minimal_info; # $un=5 and 6
@@ -3063,7 +3067,7 @@ sub create_uniquelist_info {
 
         my $basename = $name->get_basenamestring;
         my $nameinitstring = $name->get_nameinitstring;
-        my $namestring = $name->get_namestring;
+        my $namestring = $name->get_namestrings;
         my $ulminyearflag = 0;
 
         # uniquelist = minyear
@@ -3150,7 +3154,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 
         my $basename = $name->get_basenamestring;
         my $nameinitstring = $name->get_nameinitstring;
-        my $namestring = $name->get_namestring;
+        my $namestring = $name->get_namestrings;
 
         # uniquename is not set so generate uniquelist based on just base name
         if (not defined($name->get_uniquename_all)) {

@@ -23,7 +23,8 @@ __PACKAGE__->mk_accessors(qw (
                                hash
                                index
                                basenamestring
-                               namestring
+                               namestrings
+                               namedisschema
                                useprefix
                                sortnamekeyscheme
                             ));
@@ -47,7 +48,8 @@ sub new {
     my $name = {};
     foreach my $attr (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*,
                       'gender',
-                      'namestring',
+                      'namestrings',
+                      'namedisschema',
                       'basenamestring',
                       'useprefix',
                       'strip',
@@ -113,12 +115,12 @@ sub set_uniquename {
   my ($self, $uniquename) = @_;
   my $currval = $self->{uniquename};
 
-  # Set modified flag to positive if we change something
+  # Set modified flag to positive if we changed something
   if (not defined($currval) or $currval != $uniquename) {
     Biber::Config->set_unul_changed(1);
   }
   if ($logger->is_trace()) {# performance tune
-    $logger->trace('Setting uniquename for "' . $self->get_namestring . '" to ' . $uniquename);
+    $logger->trace('Setting uniquename for "' . join(',', $self->get_namestring->@*) . '" to ' . $uniquename);
   }
   $self->{uniquename} = $uniquename;
   return;
@@ -134,7 +136,7 @@ sub set_uniquename_all {
   my ($self, $uniquename) = @_;
 
   if ($logger->is_trace()) {# performance tune
-    $logger->trace('Setting uniquename_all for "' . $self->get_namestring . '" to ' . $uniquename);
+    $logger->trace('Setting uniquename_all for "' . join(',', $self->get_namestring->@*) . '" to ' . $uniquename);
   }
   $self->{uniquename_all} = $uniquename;
   return;
