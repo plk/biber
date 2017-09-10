@@ -1530,8 +1530,6 @@ sub parsename {
   my $basenamestring = '';
   my $namestrings = [];
   my $namedisschema = [];
-  my $newnamestrings = [];
-  my $newnamedisschema = [];
 
   # basic bibtex names have a fixed data model
   foreach my $np ('prefix', 'family', 'given', 'suffix') {
@@ -1559,7 +1557,7 @@ sub parsename {
   }
 
   push $namestrings->@*, $basenamestring;
-  push $namedisschema->@*, 'base';
+  push $namedisschema->@*, {'base' => 'base'};
 
   # ... then add non-base parts
   foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
@@ -1571,28 +1569,24 @@ sub parsename {
         next unless $opts->{"use$npn"};
       }
 
-      $newnamestrings = [];
-      $newnamedisschema = [];
       foreach my $ns ($namestrings->@*) {
         # per-namepart disambiguation context
         if (fc($context) eq fc('full')) { # full disambiguation
-          push $newnamestrings->@*, $ns . $namec{"${npn}-stripped"};
-          push $newnamedisschema->@*, 'full';
-          push $newnamestrings->@*, $ns . join('', $namec{"${npn}-i"}->@*);
-          push $newnamedisschema->@*, 'init';
+          push $namestrings->@*, $ns . $namec{"${npn}-stripped"};
+          push $namedisschema->@*, {$npn = > 'full'};
+          push $namestrings->@*, $ns . join('', $namec{"${npn}-i"}->@*);
+          push $namedisschema->@*, {$npn = > 'init'};
         }
         elsif (fc($context) eq fc('init')) { # inits only
-          push $newnamestrings->@*, $ns . join('', $namec{"${npn}-i"}->@*);
-          push $newnamedisschema->@*, 'init';
+          push $namestrings->@*, $ns . join('', $namec{"${npn}-i"}->@*);
+          push $namedisschema->@*, {$npn = > 'init'};
         }
-        elsif (fc($context) eq fc('none')) { # no disambiguation
-          push $newnamedisschema->@*, 'none';
+        elsif (fc($context) eq fc('none')) { # no disambiguation via this namepart
+          push $namedisschema->@*, {$npn = > 'none'};
         }
       }
     }
   }
-  $namestrings   = $newnamestrings;
-  $namedisschema = $newnamedisschema;
 
   # output is always NFC and so when testing the output of this routine, need NFC
   if ($testing) {
@@ -1722,8 +1716,6 @@ sub parsename_x {
   my $basenamestring = '';
   my $namestrings = [];
   my $namedisschema = [];
-  my $newnamestrings = [];
-  my $newnamedisschema = [];
 
   # Loop over name parts required for constructing uniquename information
   # and create the strings needed for this
@@ -1759,7 +1751,7 @@ sub parsename_x {
   }
 
   push $namestrings->@*, $basenamestring;
-  push $namedisschema->@*, 'base';
+  push $namedisschema->@*, {'base' => 'base'};
 
   # ... then add non-base parts
   foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
@@ -1777,21 +1769,19 @@ sub parsename_x {
     if (exists($namec{$namepart}) and
         (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
 
-      $newnamestrings = [];
-      $newnamedisschema = [];
       foreach my $ns ($namestrings->@*) {
         if (fc($context) eq fc('full')) {
-          push $newnamestrings->@*, $ns . $namec{$namepart};;
-          push $newnamedisschema->@*, 'full';
-          push $newnamestrings->@*, $ns . join('', $namec{"${namepart}-i"}->@*);
-          push $newnamedisschema->@*, 'init';
+          push $namestrings->@*, $ns . $namec{$namepart};;
+          push $namedisschema->@*, {$namepart => 'full'};
+          push $namestrings->@*, $ns . join('', $namec{"${namepart}-i"}->@*);
+          push $namedisschema->@*, {$namepart => 'init'};
         }
         if (fc($context) eq fc('init')) {
-          push $newnamestrings->@*, $ns . join('', $namec{"${namepart}-i"}->@*);
-          push $newnamedisschema->@*, 'init';
+          push $namestrings->@*, $ns . join('', $namec{"${namepart}-i"}->@*);
+          push $namedisschema->@*, {$namepart => 'init'};
         }
-        elsif (fc($context) eq fc('none')) { # no disambiguation
-          push $newnamedisschema->@*, 'none';
+        elsif (fc($context) eq fc('none')) { # no disambiguation for this namepart
+          push $namedisschema->@*, {$namepart => 'none'};
         }
       }
     }

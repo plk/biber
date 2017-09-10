@@ -2856,7 +2856,7 @@ sub create_uniquename_info {
 
       foreach my $name ($names->@*) {
         my $basename   = $name->get_basenamestring;
-        my $namestring = $name->get_namestrings;
+        my $namestrings = $name->get_namestrings;
         my $namedisamiguationscope;
         my $key;
 
@@ -2870,10 +2870,11 @@ sub create_uniquename_info {
           $key = $min_namestring;
           $name->set_minimal_info($min_basename);
         }
+
         if (first {Compare($_, $name)} @truncnames) {
           # Record uniqueness information entry for the base name showing that
           # this base name has been seen in this name scope
-          Biber::Config->add_uniquenamecount($basename, $namedisamiguationscope, $key);
+#          Biber::Config->add_uniquenamecount($basename, $namedisamiguationscope, $key);
 
           # Record uniqueness information entry for all name contexts
           # showing that they have been seen in this name scope
@@ -2885,7 +2886,7 @@ sub create_uniquename_info {
         # As above but here we are collecting (separate) information for all
         # names, regardless of visibility (needed to track uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-          Biber::Config->add_uniquenamecount_all($basename, $namedisamiguationscope, $key);
+#          Biber::Config->add_uniquenamecount_all($basename, $namedisamiguationscope, $key);
           foreach my $ns ($namestring->@*) {
             Biber::Config->add_uniquenamecount_all($ns, $namedisamiguationscope, $key);
           }
@@ -2954,74 +2955,93 @@ sub generate_uniquename {
 
       foreach my $name ($names->@*) {
         my $basename = $name->get_basenamestring;
-        my $namestring = $name->get_namestrings;
-        my $namecontext = 'global'; # default
+        my $namestrings = $name->get_namestrings;
+        my $namedisschema = $name->get_namedisschema;
+        my $namescope = 'global'; # default
         if ($un == 5 or $un == 6) {
-          $namecontext = $name->get_minimal_info; # $un=5 and 6
+          $namescope = $name->get_minimal_info; # $un=5 and 6
         }
 
         if (first {Compare($_, $name)} @truncnames) {
+
+          for (my $i=0; $i<=$namestrings->$#*; $i++) {
+            my $ns = $namestrings->[$i];
+            my $nss = $namedisschema->[$i];
+            if (Biber::Config->get_numofuniquenames($ns, $namescope) == 1) {
+              $name->set_uniquename($nss);
+            }
+          }
 
           # If there is one key for the base name, then it's unique using just base name
           # because either:
           # * There are no other identical base names
           # * All identical base names have a basename+init ($un=5) or fullname ($un=6)
           #   which is identical and therefore can't be disambiguated any further anyway
-          if (Biber::Config->get_numofuniquenames($basename, $namecontext) == 1) {
-            $name->set_uniquename(0);
-          }
+          # if (Biber::Config->get_numofuniquenames($basename, $namescope) == 1) {
+          #   $name->set_uniquename(0);
+          # }
+
           # Otherwise, if there is one key for the base name+inits, then it's unique
           # using initials because either:
           # * There are no other identical  basename+inits
           # * All identical basename+inits have a fullname ($un=6) which is identical
           #   and therefore can't be disambiguated any further anyway
-          elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namecontext) == 1) {
-            $name->set_uniquename(1);
-          }
+          # elsif (Biber::Config->get_numofuniquenames($nameinitstring, $namescope) == 1) {
+          #   $name->set_uniquename(1);
+          # }
           # Otherwise if there is one key for the fullname, then it's unique using
           # the fullname because:
           # * There are no other identical full names
           #
           # But restrict to uniquename biblatex option maximum
-          elsif (Biber::Config->get_numofuniquenames($namestring, $namecontext) == 1) {
-            my $run;
-            if ($un == 1)    {$run = 1}   # init
-            elsif ($un == 2) {$run = 2}   # full
-            elsif ($un == 3) {$run = 1}   # allinit
-            elsif ($un == 4) {$run = 2}   # allfull
-            elsif ($un == 5) {$run = 1}   # mininit
-            elsif ($un == 6) {$run = 2}   # minfull
-            $name->set_uniquename($run)
-          }
+          # elsif (Biber::Config->get_numofuniquenames($namestring, $namescope) == 1) {
+          #   my $run;
+          #   if ($un == 1)    {$run = 1}   # init
+          #   elsif ($un == 2) {$run = 2}   # full
+          #   elsif ($un == 3) {$run = 1}   # allinit
+          #   elsif ($un == 4) {$run = 2}   # allfull
+          #   elsif ($un == 5) {$run = 1}   # mininit
+          #   elsif ($un == 6) {$run = 2}   # minfull
+          #   $name->set_uniquename($run)
+          # }
           # Otherwise, there must be more than one key for the full name,
           # so set to 0 since nothing will uniqueify this name and it's just
           # misleading to expand it
-          else {
-            $name->set_uniquename(0);
-          }
+          # else {
+          #   $name->set_uniquename(0);
+          # }
         }
 
         # As above but not just for visible names (needed for uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
-          if (Biber::Config->get_numofuniquenames_all($basename, $namecontext) == 1) {
-            $name->set_uniquename_all(0);
+
+          for (my $i=0; $i<=$namestrings->$#*; $i++) {
+            my $ns = $namestrings->[$i];
+            my $nss = $namedisschema->[$i];
+            if (Biber::Config->get_numofuniquenames_all($ns, $namescope) == 1) {
+              $name->set_uniquename_all($nss);
+            }
           }
-          elsif (Biber::Config->get_numofuniquenames_all($nameinitstring, $namecontext) == 1) {
-            $name->set_uniquename_all(1);
-          }
-          elsif (Biber::Config->get_numofuniquenames_all($namestring, $namecontext) == 1) {
-            my $run;
-            if ($un == 1) {$run = 1}   # init
-            elsif ($un == 2) {$run = 2}   # full
-            elsif ($un == 3) {$run = 1}   # allinit
-            elsif ($un == 4) {$run = 2}   # allfull
-            elsif ($un == 5) {$run = 1}   # mininit
-            elsif ($un == 6) {$run = 2}   # minfull
-            $name->set_uniquename_all($run)
-          }
-          else {
-            $name->set_uniquename_all(0);
-          }
+
+          # if (Biber::Config->get_numofuniquenames_all($basename, $namescope) == 1) {
+          #   $name->set_uniquename_all(0);
+          # }
+          # elsif (Biber::Config->get_numofuniquenames_all($nameinitstring, $namescope) == 1) {
+          #   $name->set_uniquename_all(1);
+          # }
+          # elsif (Biber::Config->get_numofuniquenames_all($namestring, $namescope) == 1) {
+          #   my $run;
+          #   if ($un == 1) {$run = 1}   # init
+          #   elsif ($un == 2) {$run = 2}   # full
+          #   elsif ($un == 3) {$run = 1}   # allinit
+          #   elsif ($un == 4) {$run = 2}   # allfull
+          #   elsif ($un == 5) {$run = 1}   # mininit
+          #   elsif ($un == 6) {$run = 2}   # minfull
+          #   $name->set_uniquename_all($run)
+          # }
+          # else {
+          #   $name->set_uniquename_all(0);
+          # }
         }
       }
     }
