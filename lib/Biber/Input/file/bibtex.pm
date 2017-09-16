@@ -1067,7 +1067,10 @@ sub _name {
     my $xnamesep = Biber::Config->getoption('xnamesep');
     if ($name =~ m/(?:$nps)\s*$xnamesep/ and not Biber::Config->getoption('noxname')) {
       # Skip names that don't parse for some reason
-      next unless $no = parsename_x($name, $field, {useprefix => $useprefix}, $key, $un);
+      next unless $no = parsename_x($name,
+                                    $field,
+                                    {useprefix => $useprefix, uniquename => $un},
+                                    $key);
     }
     else { # Normal bibtex name format
       # Check for malformed names in names which aren't completely escaped
@@ -1089,7 +1092,10 @@ sub _name {
       }
 
       # Skip names that don't parse for some reason
-      next unless $no = parsename($name, $field, {useprefix => $useprefix}, $key, $un);
+      next unless $no = parsename($name,
+                                  $field,
+                                  {useprefix => $useprefix, uniquename => $un},
+                                  $key);
     }
 
     # Deal with implied "et al" in data source
@@ -1452,8 +1458,10 @@ sub preprocess_file {
       family         => {string => 'Doe', initial => ['D']},
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
-      basenamestring => 'Doe',
-      namestring     => 'Doe, John',
+      basenamestring => "Doe",
+      basenamestringparts => ["family"],
+      namedisschema => [{ given => "init" }, { given => "full" }],
+      namestrings => ["DoeJ", "DoeJohn"],
       strip          => {'given'  => 0,
                          'family' => 0,
                          'prefix' => 0,
@@ -1463,7 +1471,7 @@ sub preprocess_file {
 =cut
 
 sub parsename {
-  my ($namestr, $fieldname, $opts, $key, $un, $testing) = @_;
+  my ($namestr, $fieldname, $opts, $key, $testing) = @_;
 
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
   $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
@@ -1527,7 +1535,6 @@ sub parsename {
   $namec{'prefix-i'} = inits($nd_name->format($pi_f));
   $namec{'suffix-i'} = inits($nd_name->format($si_f));
 
-  my $basenamestring = '';
   my $namestrings = [];
   my $namedisschema = [];
 
@@ -1541,50 +1548,50 @@ sub parsename {
   # Use nameuniqueness template to construct uniqueness strings
 
   # First construct base part ...
+  my $base;
+  my $baseparts;
   foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+    next unless $np->{base};
     my $npn = $np->{namepart};
-    my $context = $np->{context} || $UNIQUENAME_CONTEXTS{$un};
 
     if ($namec{$npn}) {
       if ($np->{use}) { # only ever defined as 1
         next unless $opts->{"use$npn"};
       }
-
-      if ($np->{base}) {
-        $basenamestring .= $namec{"${npn}-stripped"};
-      }
+      $base .= $namec{"${npn}-stripped"};
+      push $baseparts->@*, $npn;
     }
   }
 
-  push $namestrings->@*, $basenamestring;
-  push $namedisschema->@*, {'base' => 'base'};
+  push $namestrings->@*, $base;
+  push $namedisschema->@*, ['base' => $baseparts];
 
   # ... then add non-base parts
   foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+    next if $np->{base};
     my $npn = $np->{namepart};
-    my $context = $np->{context} || $UNIQUENAME_CONTEXTS{$un};
+    my $context = $np->{context} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
+    my $lastns = $namestrings->[$namestrings->$#*];
 
     if ($namec{$npn}) {
       if ($np->{use}) { # only ever defined as 1
         next unless $opts->{"use$npn"};
       }
 
-      foreach my $ns ($namestrings->@*) {
-        # per-namepart disambiguation context
-        if (fc($context) eq fc('full')) { # full disambiguation
-          push $namestrings->@*, $ns . $namec{"${npn}-stripped"};
-          push $namedisschema->@*, {$npn = > 'full'};
-          push $namestrings->@*, $ns . join('', $namec{"${npn}-i"}->@*);
-          push $namedisschema->@*, {$npn = > 'init'};
-        }
-        elsif (fc($context) eq fc('init')) { # inits only
-          push $namestrings->@*, $ns . join('', $namec{"${npn}-i"}->@*);
-          push $namedisschema->@*, {$npn = > 'init'};
-        }
-        elsif (fc($context) eq fc('none')) { # no disambiguation via this namepart
-          push $namedisschema->@*, {$npn = > 'none'};
-        }
+      # per-namepart disambiguation context
+      # Here we incrementally add disambiguation possibilities to an array and simultaneously
+      # record a schema of what each incremental disambiguation is
+      if (fc($context) eq fc('full')) { # full disambiguation
+        push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
+        push $namedisschema->@*, [$npn => 'init'];
+        push $namestrings->@*, $lastns . $namec{"${npn}-stripped"};
+        push $namedisschema->@*, [$npn => 'full'];
       }
+      elsif (fc($context) eq fc('init')) { # inits only
+        push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
+        push $namedisschema->@*, [$npn => 'init'];
+      }
+      # context = 'none' gets here and nothing is added to the strings or schema
     }
   }
 
@@ -1597,8 +1604,8 @@ sub parsename {
         $namec{"${np}-i"}        = [ map {NFC($_)} $namec{"${np}-i"}->@* ];
       }
     }
-    if ($basenamestring) {
-      $basenamestring = NFC($basenamestring);
+    if ($base) {
+      $base = NFC($base);
     }
     if ($namestrings->@*) {
       $namestrings->@* = map {NFC($_)} $namestrings->@*;
@@ -1623,7 +1630,6 @@ sub parsename {
   # .bbl so as to maintain maximum BibTeX compatibility
   return  Biber::Entry::Name->new(
                                   %nameparts,
-                                  basenamestring => $basenamestring,
                                   namestrings    => $namestrings,
                                   namedisschema  => $namedisschema,
                                   strip          => $strip
@@ -1642,8 +1648,10 @@ sub parsename {
       family         => {string => 'Doe', initial => ['D']},
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
-      basenamestring => 'Doe',
-      namestring     => 'Doe, John',
+      basenamestring => "Doe",
+      basenamestringparts => ["family"],
+      namedisschema => [{ given => "init" }, { given => "full" }],
+      namestrings => ["DoeJ", "DoeJohn"],
       sortnamekeyscheme => 'scheme' }
       }
 
@@ -1713,7 +1721,6 @@ sub parsename_x {
     }
   }
 
-  my $basenamestring = '';
   my $namestrings = [];
   my $namedisschema = [];
 
@@ -1729,11 +1736,13 @@ sub parsename_x {
   #   information which would be confusing
 
   # First construct base part ...
+  my $base;
+  my $baseparts;
   foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+    next unless $np->{base};
     my $namepart = $np->{namepart};
     my $useopt;
     my $useoptval;
-    my $context = $np->{context} || $UNIQUENAME_CONTEXTS{$un};
 
     if ($np->{use}) {# only ever defined as 1
       $useopt = "use$namepart";
@@ -1743,22 +1752,22 @@ sub parsename_x {
     # No use attribute conditionals or the attribute is specified and matches the option
     if (exists($namec{$namepart}) and
         (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
-
-      if ($np->{base}) {# all of base part is included in initstr
-        $basenamestring .= $namec{$namepart};
-      }
+      $base .= $namec{$namepart};
+      push $baseparts->@*, $namepart;
     }
   }
 
-  push $namestrings->@*, $basenamestring;
-  push $namedisschema->@*, {'base' => 'base'};
+  push $namestrings->@*, $base;
+  push $namedisschema->@*, ['base' => $baseparts];
 
   # ... then add non-base parts
   foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+    next if $np->{base};
     my $namepart = $np->{namepart};
     my $useopt;
     my $useoptval;
-    my $context = $np->{context} || $UNIQUENAME_CONTEXTS{$un};
+    my $context = $np->{context} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
+    my $lastns = $namestrings->[$namestrings->$#*];
 
     if ($np->{use}) {# only ever defined as 1
       $useopt = "use$namepart";
@@ -1769,21 +1778,19 @@ sub parsename_x {
     if (exists($namec{$namepart}) and
         (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
 
-      foreach my $ns ($namestrings->@*) {
-        if (fc($context) eq fc('full')) {
-          push $namestrings->@*, $ns . $namec{$namepart};;
-          push $namedisschema->@*, {$namepart => 'full'};
-          push $namestrings->@*, $ns . join('', $namec{"${namepart}-i"}->@*);
-          push $namedisschema->@*, {$namepart => 'init'};
-        }
-        if (fc($context) eq fc('init')) {
-          push $namestrings->@*, $ns . join('', $namec{"${namepart}-i"}->@*);
-          push $namedisschema->@*, {$namepart => 'init'};
-        }
-        elsif (fc($context) eq fc('none')) { # no disambiguation for this namepart
-          push $namedisschema->@*, {$namepart => 'none'};
-        }
+      # Here we incrementally add disambiguation possibilities to an array and simultaneously
+      # record a schema of what each incremental disambiguation is
+      if (fc($context) eq fc('full')) {
+        push $namestrings->@*, $lastns . join('', $namec{"${namepart}-i"}->@*);
+        push $namedisschema->@*, [$namepart => 'init'];
+        push $namestrings->@*, $lastns . $namec{$namepart};
+        push $namedisschema->@*, [$namepart => 'full'];
       }
+      if (fc($context) eq fc('init')) {
+        push $namestrings->@*, $lastns . join('', $namec{"${namepart}-i"}->@*);
+        push $namedisschema->@*, [$namepart => 'init'];
+      }
+      # context = 'none' gets here and nothing is added to the strings or schema
     }
   }
 
@@ -1802,7 +1809,6 @@ sub parsename_x {
   # .bbl so as to maintain maximum BibTeX compatibility
   return  Biber::Entry::Name->new(
                                   %nameparts,
-                                  basenamestring => $basenamestring,
                                   namestrings    => $namestrings,
                                   namedisschema  => $namedisschema,
                                   %pernameopts

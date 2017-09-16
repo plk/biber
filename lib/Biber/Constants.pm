@@ -81,7 +81,7 @@ our %DS_EXTENSIONS = (
                       );
 
 # Mapping of biblatex uniquename option to disamniguation context
-my %UNIQUENAME_CONTEXTS = (0 => 'none', # false
+our %UNIQUENAME_CONTEXTS = (0 => 'none', # false
                            1 => 'init', # init
                            2 => 'full', # full/true
                            3 => 'init', # allinit

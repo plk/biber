@@ -23,6 +23,7 @@ __PACKAGE__->mk_accessors(qw (
                                hash
                                index
                                basenamestring
+                               basenamestringparts
                                namestrings
                                namedisschema
                                useprefix
@@ -50,7 +51,6 @@ sub new {
                       'gender',
                       'namestrings',
                       'namedisschema',
-                      'basenamestring',
                       'useprefix',
                       'strip',
                       $dm->get_constant_value('nameparts')) {
@@ -58,8 +58,18 @@ sub new {
         $name->{$attr} = $params{$attr};
       }
     }
+    my $schema = $name->{namedisschema};
+    for (my $i=0;$i<=$schema->$#*;$i++) {
+      my $se = $schema->[$i];
+      # make these explicit for faster lookup since they are static
+      if ($se->[0] eq 'base') {
+        $name->{basenamestring} = $name->{namestrings}->[$i];
+        $name->{basenamestringparts} = $se->[1];
+      }
+    }
     return bless $name, $class;
-  } else {
+  }
+  else {
     return bless {}, $class;
   }
 }
@@ -103,7 +113,6 @@ sub was_stripped {
   return exists($self->{strip}) ? $self->{strip}{$part} : undef;
 }
 
-
 =head2 set_uniquename
 
     Set uniquename for a visible Biber::Entry::Name object
@@ -114,13 +123,13 @@ sub was_stripped {
 sub set_uniquename {
   my ($self, $uniquename) = @_;
   my $currval = $self->{uniquename};
-
   # Set modified flag to positive if we changed something
-  if (not defined($currval) or $currval != $uniquename) {
+  if (not defined($currval) or
+      ($currval->[0] != $uniquename->[0] and $currval->[1] != $uniquename->[1])) {
     Biber::Config->set_unul_changed(1);
   }
   if ($logger->is_trace()) {# performance tune
-    $logger->trace('Setting uniquename for "' . join(',', $self->get_namestring->@*) . '" to ' . $uniquename);
+    $logger->trace('Setting uniquename for "' . join(',', $self->get_namestring->@*) . '" to ' . $uniquename->[0] . '=' . $uniquename->[1]);
   }
   $self->{uniquename} = $uniquename;
   return;
@@ -151,7 +160,16 @@ sub set_uniquename_all {
 
 sub get_uniquename {
   my $self = shift;
-  return $self->{uniquename};
+  my $un = $self->{uniquename};
+  if ($un->[1] eq 'none') {
+    return 0;
+  }
+  elsif ($un->[1] eq 'init') {
+    return 1;
+  }
+  elsif ($un->[1] eq 'full') {
+    return 2;
+  }
 }
 
 =head2 get_uniquename_all
@@ -162,9 +180,17 @@ sub get_uniquename {
 
 sub get_uniquename_all {
   my $self = shift;
-  return $self->{uniquename_all};
+  my $un = $self->{uniquename_all};
+  if ($un->[1] eq 'none') {
+    return 0;
+  }
+  elsif ($un->[1] eq 'init') {
+    return 1;
+  }
+  elsif ($un->[1] eq 'full') {
+    return 2;
+  }
 }
-
 
 =head2 reset_uniquename
 

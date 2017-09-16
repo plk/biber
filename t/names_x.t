@@ -233,24 +233,24 @@ my $name20 =
       namestring     => 'Doe',
       nameinitstring => 'Doe' } ;
 
-is_deeply(Biber::Input::file::bibtex::parsename_x('given=John,family=Doe', 'author'), $name1, 'parsename_x 1');
-is_deeply(Biber::Input::file::bibtex::parsename_x('family=Doe, suffix=Jr, given=John, given-i=J', 'author'), $name2, 'parsename_x 2');
-is_deeply(Biber::Input::file::bibtex::parsename_x('prefix=von, family=Berlichingen zu Hornberg, given=Johann Gottfried', 'author', {useprefix => 1}), $name3, 'parsename_x 3') ;
-is_deeply(Biber::Input::file::bibtex::parsename_x('prefix=von, family=Berlichingen zu Hornberg, given=Johann Gottfried', 'author', {useprefix => 0}), $name4, 'parsename_x 4') ;
-is_deeply(Biber::Input::file::bibtex::parsename_x('"family={Robert and Sons, Inc.}"', 'author'), $name5, 'parsename_x 5') ;
-is_deeply(Biber::Input::file::bibtex::parsename_x('family=al-Ṣāliḥ, given=ʿAbdallāh', 'author', undef, 1), $name6, 'parsename_x 6') ;
-is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles Gabriel, prefix=de la, family=Vallée Poussin', 'author', {useprefix => 1}), $name7, 'parsename_x 7');
-is_deeply(Biber::Input::file::bibtex::parsename_x('given={Jean Charles Gabriel}, prefix=de la, family=Vallée Poussin', 'author', undef,), $name8, 'parsename_x 8');
-is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles Gabriel de la Vallée, given-i=JCGdV, family=Poussin', 'author', undef,), $name9, 'parsename_x 9');
-is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles Gabriel, prefix=de la, family={Vallée Poussin}', 'author', undef, 1), $name10, 'parsename_x 10');
-is_deeply(Biber::Input::file::bibtex::parsename_x('given={Jean Charles Gabriel}, prefix=de la, family={Vallée Poussin}', 'author', undef), $name11, 'parsename_x 11');
-is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles Gabriel, family=Poussin', 'author'), $name12, 'parsename_x 12');
-is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles, family={Poussin Lecoq}', 'author'), $name13, 'parsename_x 13');
-is_deeply(Biber::Input::file::bibtex::parsename_x('given=J. C. G., prefix=de la, family=Vallée Poussin', 'author', {useprefix => 1}, 1), $name14, 'parsename_x 14');
-is_deeply(Biber::Input::file::bibtex::parsename_x('given=E. S., family=El-Mallah', 'author'), $name15, 'parsename_x 15');
-is_deeply(Biber::Input::file::bibtex::parsename_x('given=E. S., family=Kent-Boswell', 'author'), $name16, 'parsename_x 16');
-is_deeply(Biber::Input::file::bibtex::parsename_x('family=Other, given=A.~N.', 'author'), $name17, 'parsename_x 17');
-is_deeply(Biber::Input::file::bibtex::parsename_x('family={British National Corpus}', 'author'), $name18, 'parsename_x 18');
-is_deeply(Biber::Input::file::bibtex::parsename_x('sortnamekeyscheme=test, family=Smith, given=Bill', 'author'), $name19, 'parsename_x 19');
-is_deeply(Biber::Input::file::bibtex::parsename_x('family=Doe, family-i={Do}', 'author'), $name20, 'parsename_x 20');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given=John,family=Doe', 'author', {uniquename => 0}), $name1, 'parsename_x 1');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=Doe, suffix=Jr, given=John, given-i=J', 'author', {uniquename => 0}), $name2, 'parsename_x 2');
+is_deeply(Biber::Input::file::bibtex::parsename_x('prefix=von, family=Berlichingen zu Hornberg, given=Johann Gottfried', 'author', {useprefix => 1, uniquename => 0}), $name3, 'parsename_x 3') ;
+is_deeply(Biber::Input::file::bibtex::parsename_x('prefix=von, family=Berlichingen zu Hornberg, given=Johann Gottfried', 'author', {useprefix => 0, uniquename => 0}), $name4, 'parsename_x 4') ;
+is_deeply(Biber::Input::file::bibtex::parsename_x('"family={Robert and Sons, Inc.}"', 'author', {uniquename => 0}), $name5, 'parsename_x 5') ;
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=al-Ṣāliḥ, given=ʿAbdallāh', 'author', {uniquename => 0}, 1), $name6, 'parsename_x 6') ;
+is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles Gabriel, prefix=de la, family=Vallée Poussin', 'author', {useprefix => 1, uniquename => 0}), $name7, 'parsename_x 7');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given={Jean Charles Gabriel}, prefix=de la, family=Vallée Poussin', 'author', {uniquename => 0}), $name8, 'parsename_x 8');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles Gabriel de la Vallée, given-i=JCGdV, family=Poussin', 'author', {uniquename => 0}), $name9, 'parsename_x 9');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles Gabriel, prefix=de la, family={Vallée Poussin}', 'author', {uniquename => 0}, 1), $name10, 'parsename_x 10');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given={Jean Charles Gabriel}, prefix=de la, family={Vallée Poussin}', 'author', {uniquename => 0}), $name11, 'parsename_x 11');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles Gabriel, family=Poussin', 'author', {uniquename => 0}), $name12, 'parsename_x 12');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given=Jean Charles, family={Poussin Lecoq}', 'author', {uniquename => 0}), $name13, 'parsename_x 13');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given=J. C. G., prefix=de la, family=Vallée Poussin', 'author', {useprefix => 1, uniquename => 0}, 1), $name14, 'parsename_x 14');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given=E. S., family=El-Mallah', 'author', {uniquename => 0}), $name15, 'parsename_x 15');
+is_deeply(Biber::Input::file::bibtex::parsename_x('given=E. S., family=Kent-Boswell', 'author', {uniquename => 0}), $name16, 'parsename_x 16');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=Other, given=A.~N.', 'author', {uniquename => 0}), $name17, 'parsename_x 17');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family={British National Corpus}', 'author', {uniquename => 0}), $name18, 'parsename_x 18');
+is_deeply(Biber::Input::file::bibtex::parsename_x('sortnamekeyscheme=test, family=Smith, given=Bill', 'author', {uniquename => 0}), $name19, 'parsename_x 19');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=Doe, family-i={Do}', 'author', {uniquename => 0}), $name20, 'parsename_x 20');
 

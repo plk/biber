@@ -2847,8 +2847,7 @@ sub create_uniquename_info {
       if ($un == 5 or $un == 6) {
         $min_basename = join("\x{10FFFD}", @basenames);
         $min_namestring = join("\x{10FFFD}", @nonbasenames);
-        if ($#basenames + 1 < $num_names or
-            $morenames) {
+        if ($#basenames + 1 < $num_names or $morenames) {
           $min_basename .= "\x{10FFFD}et al"; # if truncated, record this
           $min_namestring .= "\x{10FFFD}et al"; # if truncated, record this
         }
@@ -2863,7 +2862,7 @@ sub create_uniquename_info {
         # Disambiguation scope and key depend on the uniquename setting
         if ($un == 1 or $un == 2 or $un == 3 or $un ==4) {
           $namedisamiguationscope = 'global';
-          $key = $namestring;
+          $key = join('\x{10FFFD}', $namestrings->@*);
         }
         elsif ($un == 5 or $un == 6) {
           $namedisamiguationscope = $min_basename;
@@ -2873,12 +2872,12 @@ sub create_uniquename_info {
 
         if (first {Compare($_, $name)} @truncnames) {
           # Record uniqueness information entry for the base name showing that
-          # this base name has been seen in this name scope
+          # this base name has been seen in this key for this name scope
 #          Biber::Config->add_uniquenamecount($basename, $namedisamiguationscope, $key);
 
           # Record uniqueness information entry for all name contexts
-          # showing that they have been seen in this name scope
-          foreach my $ns ($namestring->@*) {
+          # showing that they have been seen for this name key in this name scope
+          foreach my $ns ($namestrings->@*) {
             Biber::Config->add_uniquenamecount($ns, $namedisamiguationscope, $key);
           }
         }
@@ -2887,7 +2886,7 @@ sub create_uniquename_info {
         # names, regardless of visibility (needed to track uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
 #          Biber::Config->add_uniquenamecount_all($basename, $namedisamiguationscope, $key);
-          foreach my $ns ($namestring->@*) {
+          foreach my $ns ($namestrings->@*) {
             Biber::Config->add_uniquenamecount_all($ns, $namedisamiguationscope, $key);
           }
         }
