@@ -526,8 +526,8 @@ my $over1 = q|    \entry{over1}{book}{}
     \endentry
 |;
 
-my $Worman_N = [ 'WormanN' ] ;
-my $Gennep = [ 'vanGennepA', 'vanGennepJ' ] ;
+my $Worman_N = [ "Worman\x{10FFFD}WormanN" ] ;
+my $Gennep = [ "vanGennep\x{10FFFD}vanGennepA", "vanGennep\x{10FFFD}vanGennepJ" ] ;
 
 eq_or_diff( $out->get_output_entry('t1', $main), $t1, 'bbl entry with maths in title 1');
 eq_or_diff( $bibentries->entry('shore')->get_field('month'), '3', 'default bib month macros');

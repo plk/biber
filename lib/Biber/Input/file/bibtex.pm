@@ -1535,6 +1535,7 @@ sub parsename {
   $namec{'prefix-i'} = inits($nd_name->format($pi_f));
   $namec{'suffix-i'} = inits($nd_name->format($si_f));
 
+  my $namestring = '';
   my $namestrings = [];
   my $namedisschema = [];
 
@@ -1563,6 +1564,7 @@ sub parsename {
     }
   }
 
+  $namestring .= $base;
   push $namestrings->@*, $base;
   push $namedisschema->@*, ['base' => $baseparts];
 
@@ -1577,6 +1579,8 @@ sub parsename {
       if ($np->{use}) { # only ever defined as 1
         next unless $opts->{"use$npn"};
       }
+
+      $namestring .= $namec{"${npn}-stripped"};
 
       # per-namepart disambiguation context
       # Here we incrementally add disambiguation possibilities to an array and simultaneously
@@ -1630,6 +1634,7 @@ sub parsename {
   # .bbl so as to maintain maximum BibTeX compatibility
   return  Biber::Entry::Name->new(
                                   %nameparts,
+                                  namestring     => $namestring,
                                   namestrings    => $namestrings,
                                   namedisschema  => $namedisschema,
                                   strip          => $strip
@@ -1721,6 +1726,7 @@ sub parsename_x {
     }
   }
 
+  my $namestring = '';
   my $namestrings = [];
   my $namedisschema = [];
 
@@ -1757,6 +1763,7 @@ sub parsename_x {
     }
   }
 
+  $namestring .= $base;
   push $namestrings->@*, $base;
   push $namedisschema->@*, ['base' => $baseparts];
 
@@ -1777,6 +1784,8 @@ sub parsename_x {
     # No use attribute conditionals or the attribute is specified and matches the option
     if (exists($namec{$namepart}) and
         (not $useopt or ($useopt and defined($useoptval) and $useoptval == $np->{use}))) {
+
+      $namestring .= $namec{$namepart};
 
       # Here we incrementally add disambiguation possibilities to an array and simultaneously
       # record a schema of what each incremental disambiguation is
@@ -1809,6 +1818,7 @@ sub parsename_x {
   # .bbl so as to maintain maximum BibTeX compatibility
   return  Biber::Entry::Name->new(
                                   %nameparts,
+                                  namestring     => $namestring,
                                   namestrings    => $namestrings,
                                   namedisschema  => $namedisschema,
                                   %pernameopts

@@ -25,6 +25,7 @@ __PACKAGE__->mk_accessors(qw (
                                index
                                basenamestring
                                basenamestringparts
+                               namestring
                                namestrings
                                namedisschema
                                unmininfo
@@ -51,6 +52,7 @@ sub new {
     my $name = {};
     foreach my $attr (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*,
                       'gender',
+                      'namestring',
                       'namestrings',
                       'namedisschema',
                       'useprefix',
@@ -130,7 +132,7 @@ sub set_uniquename {
     Biber::Config->set_unul_changed(1);
   }
   if ($logger->is_trace()) {# performance tune
-    $logger->trace('Setting uniquename for "' . join(',', $self->get_namestrings->@*) . '" to ' . pp($uniquename));
+    $logger->trace('Setting uniquename for "' . $self->get_namestring . '" to ' . pp($uniquename));
   }
   $self->{uniquename} = $uniquename;
   return;
@@ -146,7 +148,7 @@ sub set_uniquename_all {
   my ($self, $uniquename) = @_;
 
   if ($logger->is_trace()) {# performance tune
-    $logger->trace('Setting uniquename_all for "' . join(',', $self->get_namestrings->@*) . '" to ' . pp($uniquename));
+    $logger->trace('Setting uniquename_all for "' . $self->get_namestring . '" to ' . pp($uniquename));
   }
   $self->{uniquename_all} = $uniquename;
   return;

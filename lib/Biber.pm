@@ -2808,7 +2808,7 @@ sub create_uniquename_info {
 
       my @truncnames;
       my @basenames;
-      my @nonbasenames;
+      my @allnames;
 
       foreach my $name ($names->@*) {
         # We need to track two types of uniquename disambiguation here:
@@ -2837,7 +2837,7 @@ sub create_uniquename_info {
           push @truncnames, $name;
           if ($un == 5 or $un == 6) {
             push @basenames, $name->get_basenamestring;
-            push @nonbasenames, $name->get_namestrings;
+            push @allnames, $name->get_namestring;
           }
         }
       }
@@ -2847,7 +2847,7 @@ sub create_uniquename_info {
       my $min_namestring;
       if ($un == 5 or $un == 6) {
         $min_basename = join("\x{10FFFD}", @basenames);
-        $min_namestring = join("\x{10FFFD}", @nonbasenames);
+        $min_namestring = join("\x{10FFFD}", @allnames);
         if ($#basenames + 1 < $num_names or $morenames) {
           $min_basename .= "\x{10FFFD}et al"; # if truncated, record this
           $min_namestring .= "\x{10FFFD}et al"; # if truncated, record this
@@ -2863,7 +2863,7 @@ sub create_uniquename_info {
         # Disambiguation scope and key depend on the uniquename setting
         if ($un == 1 or $un == 2 or $un == 3 or $un ==4) {
           $namedisamiguationscope = 'global';
-          $key = join('\x{10FFFD}', $namestrings->@*);
+          $key = join("\x{10FFFD}", $name->get_namestrings->@*);
         }
         elsif ($un == 5 or $un == 6) {
           $namedisamiguationscope = $min_basename;
@@ -2969,6 +2969,10 @@ sub generate_uniquename {
             my $nss = $namedisschema->[$i];
             if (Biber::Config->get_numofuniquenames($ns, $namescope) == 1) {
               $name->set_uniquename($nss);
+              # We have found the most general disambiguation schema which disambiguates,
+              # skip the rest. This is because the schema goes from most general to least
+              # general in the array
+              last;
             }
           }
 
@@ -3020,6 +3024,10 @@ sub generate_uniquename {
             my $nss = $namedisschema->[$i];
             if (Biber::Config->get_numofuniquenames_all($ns, $namescope) == 1) {
               $name->set_uniquename_all($nss);
+              # We have found the most general disambiguation schema which disambiguates,
+              # skip the rest. This is because the schema goes from most general to least
+              # general in the array
+              last;
             }
           }
 
