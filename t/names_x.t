@@ -55,6 +55,7 @@ my $name1 =
       basenamestring      => 'Doe',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'DoeJohn',
       namestrings         => ['Doe'],
       prefix              => {string => undef, initial => undef},
       suffix              => {string => undef, initial => undef}};
@@ -65,6 +66,7 @@ my $name2 =
       basenamestring      => 'Doe',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']], ['given', 'init']],
+      namestring          => 'DoeJohn',
       namestrings         => ['Doe', 'DoeJ'],
       prefix              => {string => undef, initial => undef},
       suffix              => {string => 'Jr', initial => ['J']}};
@@ -75,6 +77,7 @@ my $name3 =
       basenamestring      => 'vonBerlichingen zu~Hornberg',
       basenamestringparts => ['prefix', 'family'],
       namedisschema       => [['base', ['prefix', 'family']]],
+      namestring          => 'vonBerlichingen zu~HornbergJohann~Gottfried',
       namestrings         => ['vonBerlichingen zu~Hornberg'],
       prefix              => {string => 'von', initial => ['v']},
       suffix              => {string => undef, initial => undef}};
@@ -85,6 +88,7 @@ my $name4 =
       basenamestring      => 'Berlichingen zu~Hornberg',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'Berlichingen zu~HornbergJohann~Gottfried',
       namestrings         => ['Berlichingen zu~Hornberg'],
       prefix              => {string => 'von', initial => ['v']},
       suffix              => {string => undef, initial => undef}};
@@ -95,6 +99,7 @@ my $name5 =
       basenamestring      => 'Robert and Sons, Inc.',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'Robert and Sons, Inc.',
       namestrings         => ['Robert and Sons, Inc.'],
       prefix              => {string => undef, initial => undef},
       suffix              => {string => undef, initial => undef}};
@@ -107,6 +112,7 @@ my $name6 =
       basenamestring      => 'al-Ṣāliḥ',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'al-ṢāliḥʿAbdallāh',
       namestrings         => ['al-Ṣāliḥ']};
 
 my $name7 =
@@ -117,6 +123,7 @@ my $name7 =
       basenamestring      => 'de~laVallée~Poussin',
       basenamestringparts => ['prefix', 'family'],
       namedisschema       => [['base', ['prefix', 'family']], ['given', 'init'], ['given', 'full']],
+      namestring          => 'de~laVallée~PoussinJean Charles~Gabriel',
       namestrings         => ['de~laVallée~Poussin', 'de~laVallée~PoussinJCG', 'de~laVallée~PoussinJean Charles~Gabriel']} ;
 
 my $name8 =
@@ -127,6 +134,7 @@ my $name8 =
       basenamestring      => 'Vallée~Poussin',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'Vallée~PoussinJean Charles Gabriel',
       namestrings         => ['Vallée~Poussin']};
 
 my $name9 =
@@ -137,6 +145,7 @@ my $name9 =
       basenamestring      => 'Poussin',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'PoussinJean Charles Gabriel de la~Vallée',
       namestrings         => ['Poussin']};
 
 my $name10 =
@@ -147,6 +156,7 @@ my $name10 =
       basenamestring      => 'Vallée Poussin',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'Vallée PoussinJean Charles~Gabriel',
       namestrings         => ['Vallée Poussin']};
 
 my $name11 =
@@ -157,6 +167,7 @@ my $name11 =
       basenamestring      => 'Vallée Poussin',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'Vallée PoussinJean Charles Gabriel',
       namestrings         => ['Vallée Poussin']};
 
 my $name12 =
@@ -167,6 +178,7 @@ my $name12 =
       basenamestring      => 'Poussin',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'PoussinJean Charles~Gabriel',
       namestrings         => ['Poussin']};
 
 my $name13 =
@@ -177,6 +189,7 @@ my $name13 =
       basenamestring      => 'Poussin Lecoq',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'Poussin LecoqJean~Charles',
       namestrings         => ['Poussin Lecoq']};
 
 my $name14 =
@@ -187,6 +200,7 @@ my $name14 =
       basenamestring      => 'de~laVallée~Poussin',
       basenamestringparts => ['prefix', 'family'],
       namedisschema       => [['base', ['prefix', 'family']]],
+      namestring          => 'de~laVallée~PoussinJ.~C.~G.',
       namestrings         => ['de~laVallée~Poussin']};
 
 # Note that the family initials are wrong because the prefix "El-" was not stripped
@@ -200,6 +214,7 @@ my $name15 =
       basenamestring      => 'El-Mallah',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'El-MallahE.~S.',
       namestrings         => ['El-Mallah']};
 
 my $name16 =
@@ -210,6 +225,7 @@ my $name16 =
       basenamestring      => 'Kent-Boswell',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'Kent-BoswellE.~S.',
       namestrings         => ['Kent-Boswell']};
 
 my $name17 =
@@ -220,6 +236,7 @@ my $name17 =
       basenamestring      => 'Other',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'OtherA.~N.',
       namestrings         => ['Other']};
 
 my $name18 =
@@ -230,6 +247,7 @@ my $name18 =
       basenamestring      => 'British National Corpus',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'British National Corpus',
       namestrings         => ['British National Corpus']};
 
 my $name19 =
@@ -240,6 +258,7 @@ my $name19 =
       basenamestring => 'Smith',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'SmithBill',
       namestrings         => ['Smith'],
       sortnamekeyscheme => 'test' } ;
 
@@ -251,6 +270,7 @@ my $name20 =
       basenamestring => 'Doe',
       basenamestringparts => ['family'],
       namedisschema       => [['base', ['family']]],
+      namestring          => 'Doe',
       namestrings         => ['Doe']};
 
 is_deeply(Biber::Input::file::bibtex::parsename_x('given=John,family=Doe', 'author', {uniquename => 0}), $name1, 'parsename_x 1');

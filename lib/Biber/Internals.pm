@@ -106,17 +106,19 @@ sub _getnamehash_u {
     # Use nameuniqueness template to construct hash
     foreach my $nps (Biber::Config->getblxoption('uniquenametemplate')->@*) {
       my $npn = $nps->{namepart};
+
       if (my $np = $n->get_namepart($npn)) {
         if ($nps->{base}) {
           $hashkey .= $np;
         }
         else {
-          if (defined($n->get_uniquename)) {
-            if ($n->get_uniquename eq '2') {
+          my $un = $n->get_uniquename;
+          if (defined($un) and not $un->[0] eq 'base') {
+            if ($un->[1] eq 'full') {
               $hashkey .= $np;
             }
             # Use initials for non-base parts if uniquename indicates this will disambiguate
-            elsif ($n->get_uniquename eq '1') {
+            elsif ($un->[1] eq 'init') {
               $hashkey .= join('', $n->get_namepart_initial($npn)->@*);
             }
           }

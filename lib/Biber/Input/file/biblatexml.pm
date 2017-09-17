@@ -1071,6 +1071,8 @@ sub _datetime {
 sub _name {
   my ($bibentry, $entry, $f, $key) = @_;
 
+  my $un = Biber::Config->getblxoption('uniquename', $bibentry->get_field('entrytype'), $key);
+
   foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
     my $names = new Biber::Entry::Names;
 
@@ -1097,7 +1099,7 @@ sub _name {
         $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
       }
 
-      $names->add_name(parsename($namenode, $f, $key, $numname++, {useprefix => $useprefix}));
+      $names->add_name(parsename($namenode, $f, $key, $numname++, {useprefix => $useprefix, uniquename => ($un // 0)}));
     }
 
     # Deal with explicit "moreenames" in data source
@@ -1201,9 +1203,9 @@ sub parsename {
     }
   }
 
-  my $basenamestring = '';
   my $namestring = '';
-  my $nameinitstring = '';
+  my $namestrings = [];
+  my $namedisschema = [];
 
   # Loop over name parts required for constructing uniquename information
   # and create the strings needed for this
@@ -1217,20 +1219,55 @@ sub parsename {
   #   information which would be confusing
 
   # Use nameuniqueness template to construct uniqueness strings
-  foreach my $np (@{Biber::Config->getblxoption('uniquenametemplate')}) {
+
+  # First construct base part ...
+  my $base;
+  my $baseparts;
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+    next unless $np->{base};
     my $npn = $np->{namepart};
+
     if ($namec{$npn}) {
-      if ($np->{use}) {         # only ever defined as 1
+      if ($np->{use}) { # only ever defined as 1
         next unless $opts->{"use$npn"};
       }
+      $base .= $namec{$npn};
+      push $baseparts->@*, $npn;
+    }
+  }
+
+  $namestring .= $base;
+  push $namestrings->@*, $base;
+  push $namedisschema->@*, ['base' => $baseparts];
+
+  # ... then add non-base parts by incrementally adding to the last disambiguation context
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+    next if $np->{base};
+    my $npn = $np->{namepart};
+    my $context = $np->{context} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
+    my $lastns = $namestrings->[$namestrings->$#*];
+
+    if ($namec{$npn}) {
+      if ($np->{use}) { # only ever defined as 1
+        next unless $opts->{"use$npn"};
+      }
+
       $namestring .= $namec{$npn};
-      if ($np->{base}) {
-        $nameinitstring .= $namec{$npn};
-        $basenamestring .= $namec{$npn};
+
+      # per-namepart disambiguation context
+      # Here we incrementally add disambiguation possibilities to an array and simultaneously
+      # record a schema of what each incremental disambiguation is
+      if (fc($context) eq fc('full')) { # full disambiguation
+        push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
+        push $namedisschema->@*, [$npn => 'init'];
+        push $namestrings->@*, $lastns . $namec{"${npn}-stripped"};
+        push $namedisschema->@*, [$npn => 'full'];
       }
-      else {
-        $nameinitstring .= join('', @{$namec{"${npn}-i"}});
+      elsif (fc($context) eq fc('init')) { # inits only
+        push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
+        push $namedisschema->@*, [$npn => 'init'];
       }
+      # context = 'none' gets here and nothing is added to the strings or schema
     }
   }
 
@@ -1242,10 +1279,10 @@ sub parsename {
 
   my $newname = Biber::Entry::Name->new(
                                         %nps,
-                                        namestring      => $namestring,
-                                        nameinitstring  => $nameinitstring,
-                                        basenamestring  => $basenamestring,
-                                        gender          => $node->getAttribute('gender')
+                                        namestring     => $namestring,
+                                        namestrings    => $namestrings,
+                                        namedisschema  => $namedisschema,
+                                        gender         => $node->getAttribute('gender')
                                        );
 
   # Set name-scope sortnamekeyscheme attribute if it exists

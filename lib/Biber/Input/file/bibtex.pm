@@ -1067,9 +1067,11 @@ sub _name {
     my $xnamesep = Biber::Config->getoption('xnamesep');
     if ($name =~ m/(?:$nps)\s*$xnamesep/ and not Biber::Config->getoption('noxname')) {
       # Skip names that don't parse for some reason
+      # unique name defaults to 0 just in case we are in tool mode otherwise there are spurious
+      # uninitialised warnings
       next unless $no = parsename_x($name,
                                     $field,
-                                    {useprefix => $useprefix, uniquename => $un},
+                                    {useprefix => $useprefix, uniquename => ($un // 0)},
                                     $key);
     }
     else { # Normal bibtex name format
@@ -1092,9 +1094,11 @@ sub _name {
       }
 
       # Skip names that don't parse for some reason
+      # unique name defaults to 0 just in case we are in tool mode otherwise there are spurious
+      # uninitialised warnings
       next unless $no = parsename($name,
                                   $field,
-                                  {useprefix => $useprefix, uniquename => $un},
+                                  {useprefix => $useprefix, uniquename => ($un // 0)},
                                   $key);
     }
 
@@ -1568,7 +1572,7 @@ sub parsename {
   push $namestrings->@*, $base;
   push $namedisschema->@*, ['base' => $baseparts];
 
-  # ... then add non-base parts
+  # ... then add non-base parts by incrementally adding to the last disambiguation context
   foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
     next if $np->{base};
     my $npn = $np->{namepart};

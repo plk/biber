@@ -185,7 +185,7 @@ sub get_uniquename_all {
 sub get_uniquename_summary {
   my $self = shift;
   my $un = $self->{uniquename};
-  return undef if not ref($un) eq 'ARRAY';
+  return undef unless defined($un);
   if ($un->[1] eq 'none' or $un->[0] eq 'base') {
     return 0;
   }
@@ -195,27 +195,7 @@ sub get_uniquename_summary {
   elsif ($un->[1] eq 'full') {
     return 2;
   }
-}
-
-=head2 get_uniquename_all_summary
-
-    Get uniquename for a Biber::Entry::Name object
-
-=cut
-
-sub get_uniquename_all_summary {
-  my $self = shift;
-  my $un = $self->{uniquename_all};
-  return undef if not ref($un) eq 'ARRAY';
-  if ($un->[1] eq 'none' or $un->[0] eq 'base') {
-    return 0;
-  }
-  elsif ($un->[1] eq 'init') {
-    return 1;
-  }
-  elsif ($un->[1] eq 'full') {
-    return 2;
-  }
+  return 0;
 }
 
 =head2 reset_uniquename
@@ -409,7 +389,7 @@ sub name_to_bbl {
   }
 
   # Generate uniquename if uniquename is requested
-  if (defined($self->get_uniquename_summary)) {
+  if (defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename_summary;
   }
 
@@ -466,7 +446,7 @@ sub name_to_bblxml {
   }
 
   # Generate uniquename if uniquename is requested
-  if (defined($self->get_uniquename_summary)) {
+  if (defined($self->get_uniquename)) {
     $pno{uniquename} = $self->get_uniquename_summary;
   }
 
