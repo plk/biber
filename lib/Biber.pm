@@ -2841,7 +2841,8 @@ sub create_uniquename_info {
           }
         }
       }
-      # Information for mininit ($un=5) or minfull ($un=6)
+      # Information for mininit ($un=5) or minfull ($un=6), here the basename
+      # and non-basename is all names in the namelist, not just the current name
       my $min_basename;
       my $min_namestring;
       if ($un == 5 or $un == 6) {
@@ -3085,8 +3086,8 @@ sub create_uniquelist_info {
       foreach my $name ($nl->names->@*) {
 
         my $basename = $name->get_basenamestring;
-        my $nameinitstring = $name->get_nameinitstring;
-        my $namestring = $name->get_namestrings;
+        my $namestrings = $name->get_namestrings;
+        my $namedisschema = $name->get_namedisschema;
         my $ulminyearflag = 0;
 
         # uniquelist = minyear
@@ -3098,25 +3099,20 @@ sub create_uniquelist_info {
           }
         }
 
+        my $unall = $name->get_uniquename_all;
         # uniquename is not set so generate uniquelist based on just base name
-        if (not defined($name->get_uniquename_all)) {
+        if (not defined($unall) or $unall->[0] eq 'base') {
           push $namelist->@*, $basename;
           push $ulminyear_namelist->@*, $basename if $ulminyearflag;
         }
-        # uniquename indicates unique with just base name
-        elsif ($name->get_uniquename_all == 0) {
-          push $namelist->@*, $basename;
-          push $ulminyear_namelist->@*, $basename if $ulminyearflag;
-        }
-        # uniquename indicates unique with base name with initials
-        elsif ($name->get_uniquename_all == 1) {
-          push $namelist->@*, $nameinitstring;
-          push $ulminyear_namelist->@*, $nameinitstring if $ulminyearflag;
-        }
-        # uniquename indicates unique with full name
-        elsif ($name->get_uniquename_all == 2) {
-          push $namelist->@*, $namestring;
-          push $ulminyear_namelist->@*, $namestring if $ulminyearflag;
+        else {
+          for (my $i=0; $i<=$namedisschema->$#*; $i++) {
+            my $nss = $namedisschema->[$i];
+            if (Compare($nss, $unall)) {
+              push $namelist->@*, $namestrings->[$i];
+              push $ulminyear_namelist->@*, $namestrings->[$i] if $ulminyearflag;
+            }
+          }
         }
 
         Biber::Config->add_uniquelistcount($namelist);
@@ -3172,24 +3168,21 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
       foreach my $name ($nl->names->@*) {
 
         my $basename = $name->get_basenamestring;
-        my $nameinitstring = $name->get_nameinitstring;
-        my $namestring = $name->get_namestrings;
+        my $namestrings = $name->get_namestrings;
+        my $namedisschema = $name->get_namedisschema;
 
+        my $unall = $name->get_uniquename_all;
         # uniquename is not set so generate uniquelist based on just base name
-        if (not defined($name->get_uniquename_all)) {
+        if (not defined($unall) or $unall->[0] eq 'base') {
           push $namelist->@*, $basename;
         }
-        # uniquename indicates unique with just base name
-        elsif ($name->get_uniquename_all == 0) {
-          push $namelist->@*, $basename;
-        }
-        # uniquename indicates unique with base name with initials
-        elsif ($name->get_uniquename_all == 1) {
-          push $namelist->@*, $nameinitstring;
-        }
-        # uniquename indicates unique with full name
-        elsif ($name->get_uniquename_all == 2) {
-          push $namelist->@*, $namestring;
+        else {
+          for (my $i=0; $i<=$namedisschema->$#*; $i++) {
+            my $nss = $namedisschema->[$i];
+            if (Compare($nss, $unall)) {
+              push $namelist->@*, $namestrings->[$i];
+            }
+          }
         }
 
         # With uniquelist=minyear, uniquelist should not be set at all if there are

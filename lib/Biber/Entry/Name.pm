@@ -10,6 +10,7 @@ use Biber::Annotation;
 use Biber::Config;
 use Biber::Constants;
 use Biber::Utils;
+use Data::Compare;
 use Data::Dump qw( pp );
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
@@ -125,12 +126,11 @@ sub set_uniquename {
   my ($self, $uniquename) = @_;
   my $currval = $self->{uniquename};
   # Set modified flag to positive if we changed something
-  if (not defined($currval) or
-      ($currval->[0] != $uniquename->[0] and $currval->[1] != $uniquename->[1])) {
+  if (not defined($currval) or not Compare($currval, $uniquename)) {
     Biber::Config->set_unul_changed(1);
   }
   if ($logger->is_trace()) {# performance tune
-    $logger->trace('Setting uniquename for "' . join(',', $self->get_namestring->@*) . '" to ' . $uniquename->[0] . '=' . $uniquename->[1]);
+    $logger->trace('Setting uniquename for "' . join(',', $self->get_namestrings->@*) . '" to ' . pp($uniquename));
   }
   $self->{uniquename} = $uniquename;
   return;
@@ -146,12 +146,11 @@ sub set_uniquename_all {
   my ($self, $uniquename) = @_;
 
   if ($logger->is_trace()) {# performance tune
-    $logger->trace('Setting uniquename_all for "' . join(',', $self->get_namestring->@*) . '" to ' . $uniquename);
+    $logger->trace('Setting uniquename_all for "' . join(',', $self->get_namestrings->@*) . '" to ' . pp($uniquename));
   }
   $self->{uniquename_all} = $uniquename;
   return;
 }
-
 
 =head2 get_uniquename
 
@@ -161,17 +160,7 @@ sub set_uniquename_all {
 
 sub get_uniquename {
   my $self = shift;
-  my $un = $self->{uniquename};
-  return undef if not ref($un) eq 'ARRAY';
-  if ($un->[1] eq 'none') {
-    return 0;
-  }
-  elsif ($un->[1] eq 'init') {
-    return 1;
-  }
-  elsif ($un->[1] eq 'full') {
-    return 2;
-  }
+  return $self->{uniquename};
 }
 
 =head2 get_uniquename_all
@@ -182,9 +171,41 @@ sub get_uniquename {
 
 sub get_uniquename_all {
   my $self = shift;
+  return $self->{uniquename_all};
+}
+
+=head2 get_uniquename_summary
+
+    Get uniquename for a visible Biber::Entry::Name object
+
+=cut
+
+sub get_uniquename_summary {
+  my $self = shift;
+  my $un = $self->{uniquename};
+  return undef if not ref($un) eq 'ARRAY';
+  if ($un->[1] eq 'none' or $un->[0] eq 'base') {
+    return 0;
+  }
+  elsif ($un->[1] eq 'init') {
+    return 1;
+  }
+  elsif ($un->[1] eq 'full') {
+    return 2;
+  }
+}
+
+=head2 get_uniquename_all_summary
+
+    Get uniquename for a Biber::Entry::Name object
+
+=cut
+
+sub get_uniquename_all_summary {
+  my $self = shift;
   my $un = $self->{uniquename_all};
   return undef if not ref($un) eq 'ARRAY';
-  if ($un->[1] eq 'none') {
+  if ($un->[1] eq 'none' or $un->[0] eq 'base') {
     return 0;
   }
   elsif ($un->[1] eq 'init') {
@@ -203,7 +224,7 @@ sub get_uniquename_all {
 
 sub reset_uniquename {
   my $self = shift;
-  $self->{uniquename} = 0;
+  $self->{uniquename} = ['base', $self->{basenamestringparts}];
   return;
 }
 
@@ -386,8 +407,8 @@ sub name_to_bbl {
   }
 
   # Generate uniquename if uniquename is requested
-  if (defined($self->get_uniquename)) {
-    push @pno, 'uniquename=' . $self->get_uniquename;
+  if (defined($self->get_uniquename_summary)) {
+    push @pno, 'uniquename=' . $self->get_uniquename_summary;
   }
 
   # Add per-name options
@@ -443,8 +464,8 @@ sub name_to_bblxml {
   }
 
   # Generate uniquename if uniquename is requested
-  if (defined($self->get_uniquename)) {
-    $pno{uniquename} = $self->get_uniquename;
+  if (defined($self->get_uniquename_summary)) {
+    $pno{uniquename} = $self->get_uniquename_summary;
   }
 
   # Add per-name options
