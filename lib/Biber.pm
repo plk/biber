@@ -2867,7 +2867,7 @@ sub create_uniquename_info {
         elsif ($un == 5 or $un == 6) {
           $namedisamiguationscope = $min_basename;
           $key = $min_namestring;
-          $name->set_minimal_info($min_basename);
+          $name->set_unmininfo($min_basename);
         }
 
         if (first {Compare($_, $name)} @truncnames) {
@@ -2958,7 +2958,7 @@ sub generate_uniquename {
         my $namedisschema = $name->get_namedisschema;
         my $namescope = 'global'; # default
         if ($un == 5 or $un == 6) {
-          $namescope = $name->get_minimal_info; # $un=5 and 6
+          $namescope = $name->get_unmininfo; # $un=5 and 6
         }
 
         if (first {Compare($_, $name)} @truncnames) {

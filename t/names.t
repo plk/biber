@@ -72,187 +72,205 @@ my $name2 =
       strip               => { given => 0, family => 0, prefix => undef, suffix => 0 }};
 
 my $name3 =
-    { given          => {string => 'Johann~Gottfried', initial => ['J', 'G']},
-      family         => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
-      basenamestring => 'vonBerlichingen zu~Hornberg',
-      nameinitstring => 'vonBerlichingen zu~HornbergJG',
-      namestring     => 'vonBerlichingen zu~HornbergJohann~Gottfried',
-      prefix         => {string => 'von', initial => ['v']},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => 0, suffix => undef }};
+    { given               => {string => 'Johann~Gottfried', initial => ['J', 'G']},
+      family              => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
+      basenamestring      => 'vonBerlichingen zu~Hornberg',
+      basenamestringparts => ['prefix', 'family'],
+      namedisschema       => [['base', ['prefix', 'family']]],
+      namestrings         => ['vonBerlichingen zu~Hornberg'],
+      prefix              => {string => 'von', initial => ['v']},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => 0, suffix => undef }};
 
 my $name4 =
-    { given          => {string => 'Johann~Gottfried', initial => ['J', 'G']},
-      family         => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
-      basenamestring => 'Berlichingen zu~Hornberg',
-      nameinitstring => 'Berlichingen zu~HornbergJG',
-      namestring     => 'Berlichingen zu~HornbergJohann~Gottfried',
-      prefix         => {string => 'von', initial => ['v']},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => 0, suffix => undef }};
+    { given               => {string => 'Johann~Gottfried', initial => ['J', 'G']},
+      family              => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
+      basenamestring      => 'Berlichingen zu~Hornberg',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Berlichingen zu~Hornberg'],
+      prefix              => {string => 'von', initial => ['v']},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => 0, suffix => undef }};
 
 my $name5 =
-   {  given          => {string => undef, initial => undef},
-      family         => {string => 'Robert and Sons, Inc.', initial => ['R']},
-      basenamestring => 'Robert and Sons, Inc.',
-      nameinitstring => 'Robert and Sons, Inc.',
-      namestring     => 'Robert and Sons, Inc.',
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => undef, family => 1, prefix => undef, suffix => undef }};
+   {  given               => {string => undef, initial => undef},
+      family              => {string => 'Robert and Sons, Inc.', initial => ['R']},
+      basenamestring      => 'Robert and Sons, Inc.',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Robert and Sons, Inc.'],
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => undef, family => 1, prefix => undef, suffix => undef }};
 
 my $name6 =
-   {  given          => {string => 'ʿAbdallāh', initial => ['A']},
-      family         => {string => 'al-Ṣāliḥ', initial => ['Ṣ']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring => 'al-Ṣāliḥ',
-      namestring     => 'al-ṢāliḥʿAbdallāh',
-      nameinitstring => 'al-ṢāliḥA'} ;
+   {  given               => {string => 'ʿAbdallāh', initial => ['A']},
+      family              => {string => 'al-Ṣāliḥ', initial => ['Ṣ']},
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring      => 'al-Ṣāliḥ',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['al-Ṣāliḥ']};
 
 my $name7 =
-   {  given          => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
-      family         => {string => 'Vallée~Poussin', initial => ['V', 'P']},
-      prefix         => {string => 'de~la', initial => ['d', 'l']},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
-      basenamestring => 'de~laVallée~Poussin',
-      namestring     => 'de~laVallée~PoussinJean Charles~Gabriel',
-      nameinitstring => 'de~laVallée~PoussinJCG' } ;
+   {  given               => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
+      family              => {string => 'Vallée~Poussin', initial => ['V', 'P']},
+      prefix              => {string => 'de~la', initial => ['d', 'l']},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => 0, suffix => undef },
+      basenamestring      => 'de~laVallée~Poussin',
+      basenamestringparts => ['prefix', 'family'],
+      namedisschema       => [['base', ['prefix', 'family']], ['given', 'init'], ['given', 'full']],
+      namestrings         => ['de~laVallée~Poussin', 'de~laVallée~PoussinJCG', 'de~laVallée~PoussinJean Charles~Gabriel']} ;
 
 my $name8 =
-   {  given          => {string => 'Jean Charles Gabriel', initial => ['J']},
-      family         => {string => 'Vallée~Poussin', initial => ['V', 'P']},
-      prefix         => {string => 'de~la', initial => ['d', 'l']},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 1, family => 0, prefix => 0, suffix => undef },
-      basenamestring => 'Vallée~Poussin',
-      namestring     => 'Vallée~PoussinJean Charles Gabriel',
-      nameinitstring => 'Vallée~PoussinJ' } ;
+   {  given               => {string => 'Jean Charles Gabriel', initial => ['J']},
+      family              => {string => 'Vallée~Poussin', initial => ['V', 'P']},
+      prefix              => {string => 'de~la', initial => ['d', 'l']},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 1, family => 0, prefix => 0, suffix => undef },
+      basenamestring      => 'Vallée~Poussin',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Vallée~Poussin']};
 
 my $name9 =
-   {  given          => {string => 'Jean Charles Gabriel {de la}~Vallée', initial => ['J', 'C', 'G', 'd', 'V']},
-      family         => {string => 'Poussin', initial => ['P']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring => 'Poussin',
-      namestring     => 'PoussinJean Charles Gabriel {de la}~Vallée',
-      nameinitstring => 'PoussinJCGdV'} ;
+   {  given               => {string => 'Jean Charles Gabriel {de la}~Vallée', initial => ['J', 'C', 'G', 'd', 'V']},
+      family              => {string => 'Poussin', initial => ['P']},
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring      => 'Poussin',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Poussin']};
 
 my $name10 =
-   {  given          => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
-      family         => {string => 'Vallée Poussin', initial => ['V']},
-      prefix         => {string => 'de~la', initial => ['d', 'l']},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 1, prefix => 0, suffix => undef },
-      basenamestring => 'Vallée Poussin',
-      namestring     => 'Vallée PoussinJean Charles~Gabriel',
-      nameinitstring => 'Vallée PoussinJCG' } ;
+   {  given               => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
+      family              => {string => 'Vallée Poussin', initial => ['V']},
+      prefix              => {string => 'de~la', initial => ['d', 'l']},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 1, prefix => 0, suffix => undef },
+      basenamestring      => 'Vallée Poussin',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Vallée Poussin']};
 
 my $name11 =
-   {  given          => {string => 'Jean Charles Gabriel', initial => ['J']},
-      family         => {string => 'Vallée Poussin', initial => ['V']},
-      prefix         => {string => 'de~la', initial => ['d', 'l']},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 1, family => 1, prefix => 0, suffix => undef },
-      basenamestring => 'Vallée Poussin',
-      namestring     => 'Vallée PoussinJean Charles Gabriel',
-      nameinitstring => 'Vallée PoussinJ' } ;
+   {  given               => {string => 'Jean Charles Gabriel', initial => ['J']},
+      family              => {string => 'Vallée Poussin', initial => ['V']},
+      prefix              => {string => 'de~la', initial => ['d', 'l']},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 1, family => 1, prefix => 0, suffix => undef },
+      basenamestring      => 'Vallée Poussin',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Vallée Poussin']};
 
 my $name12 =
-   {  given          => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
-      family         => {string => 'Poussin', initial => ['P']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring => 'Poussin',
-      namestring     => 'PoussinJean Charles~Gabriel',
-      nameinitstring => 'PoussinJCG' } ;
+   {  given               => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
+      family              => {string => 'Poussin', initial => ['P']},
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring      => 'Poussin',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Poussin']};
 
 my $name13 =
-   {  given          => {string => 'Jean~Charles', initial => ['J', 'C']},
-      family         => {string => 'Poussin Lecoq', initial => ['P']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 1, prefix => undef, suffix => undef },
-      basenamestring => 'Poussin Lecoq',
-      namestring     => 'Poussin LecoqJean~Charles',
-      nameinitstring => 'Poussin LecoqJC' } ;
+   {  given               => {string => 'Jean~Charles', initial => ['J', 'C']},
+      family              => {string => 'Poussin Lecoq', initial => ['P']},
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 1, prefix => undef, suffix => undef },
+      basenamestring      => 'Poussin Lecoq',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Poussin Lecoq']};
 
 my $name14 =
-   {  given          => {string => 'J.~C.~G.', initial => ['J', 'C', 'G']},
-      family         => {string => 'Vallée~Poussin', initial => ['V', 'P']},
-      prefix         => {string => 'de~la', initial => ['d', 'l']},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => 0, suffix => undef },
-      basenamestring => 'de~laVallée~Poussin',
-      namestring     => 'de~laVallée~PoussinJ.~C.~G.',
-      nameinitstring => 'de~laVallée~PoussinJCG' } ;
+   {  given               => {string => 'J.~C.~G.', initial => ['J', 'C', 'G']},
+      family              => {string => 'Vallée~Poussin', initial => ['V', 'P']},
+      prefix              => {string => 'de~la', initial => ['d', 'l']},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => 0, suffix => undef },
+      basenamestring      => 'de~laVallée~Poussin',
+      basenamestringparts => ['prefix', 'family'],
+      namedisschema       => [['base', ['prefix', 'family']]],
+      namestrings         => ['de~laVallée~Poussin']};
 
 # Note that the family initials are wrong because the prefix "El-" was not stripped
 # This is because the default noinit regexp only strips lower-case prefices to protect
 # hyphenated names
 my $name15 =
-   {  given          => {string => 'E.~S.', initial => ['E', 'S']},
-      family         => {string => 'El-{M}allah', initial => ['E-M']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring => 'El-{M}allah',
-      namestring     => 'El-{M}allahE.~S.',
-      nameinitstring => 'El-{M}allahES' } ;
+   {  given               => {string => 'E.~S.', initial => ['E', 'S']},
+      family              => {string => 'El-{M}allah', initial => ['E-M']},
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring      => 'El-{M}allah',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['El-{M}allah']};
 
 my $name16 =
-   {  given          => {string => 'E.~S.', initial => ['E', 'S']},
-      family         => {string => '{K}ent-{B}oswell', initial => ['K-B']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring => '{K}ent-{B}oswell',
-      namestring     => '{K}ent-{B}oswellE.~S.',
-      nameinitstring => '{K}ent-{B}oswellES' } ;
+   {  given               => {string => 'E.~S.', initial => ['E', 'S']},
+      family              => {string => '{K}ent-{B}oswell', initial => ['K-B']},
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring      => '{K}ent-{B}oswell',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['{K}ent-{B}oswell']};
 
 my $name17 =
-   {  given          => {string => 'A.~N.', initial => ['A', 'N']},
-      family         => {string => 'Other', initial => ['O']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring => 'Other',
-      namestring     => 'OtherA.~N.',
-      nameinitstring => 'OtherAN' } ;
+   {  given               => {string => 'A.~N.', initial => ['A', 'N']},
+      family              => {string => 'Other', initial => ['O']},
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring      => 'Other',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Other']};
 
 my $name18 =
-   {  given          => {string => undef, initial => undef},
-      family         => {string => 'British National Corpus', initial => ['B']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => undef, family => 1, prefix => undef, suffix => undef },
-      basenamestring => 'British National Corpus',
-      namestring     => 'British National Corpus',
-      nameinitstring => 'British National Corpus' } ;
+   {  given               => {string => undef, initial => undef},
+      family              => {string => 'British National Corpus', initial => ['B']},
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => undef, family => 1, prefix => undef, suffix => undef },
+      basenamestring      => 'British National Corpus',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['British National Corpus']};
 
 my $name19 =
-   {  given          => {string => 'Luis', initial => ['L']},
-      family         => {string => 'Vázques{ de }Parga', initial => ['V']},
-      prefix         => {string => undef, initial => undef},
-      suffix         => {string => undef, initial => undef},
-      strip          => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring => 'Vázques{ de }Parga',
-      namestring     => 'Vázques{ de }PargaLuis',
-      nameinitstring => 'Vázques{ de }PargaL' } ;
+   {  given               => {string => 'Luis', initial => ['L']},
+      family              => {string => 'Vázques{ de }Parga', initial => ['V']},
+      prefix              => {string => undef, initial => undef},
+      suffix              => {string => undef, initial => undef},
+      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
+      basenamestring      => 'Vázques{ de }Parga',
+      basenamestringparts => ['family'],
+      namedisschema       => [['base', ['family']]],
+      namestrings         => ['Vázques{ de }Parga']};
 
 my $namex1 =
-   {  given          => {string => 'James', initial => ['J']},
-      family         => {string => 'Smithers~Jones', initial => ['S','J']},
-      prefix         => {string => 'van~der', initial => ['v','d']},
-      suffix         => {string => undef, initial => undef},
-      basenamestring => 'van~derSmithers~Jones',
-      namestring     => 'van~derSmithers~JonesJames',
-      nameinitstring => 'van~derSmithers~JonesJ',
-      useprefix      => 'true'} ;
+   {  given               => {string => 'James', initial => ['J']},
+      family              => {string => 'Smithers~Jones', initial => ['S','J']},
+      prefix              => {string => 'van~der', initial => ['v','d']},
+      suffix              => {string => undef, initial => undef},
+      useprefix           => 'true',
+      basenamestring      => 'van~derSmithers~Jones',
+      basenamestringparts => ['prefix', 'family'],
+      namedisschema       => [['base', ['prefix', 'family']]],
+      namestrings         => ['van~derSmithers~Jones']};
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
@@ -929,14 +947,13 @@ my $l31 = q|    \entry{L31}{book}{}
 |;
 
 # name parsing tests
-use Data::Dump;dd(Biber::Input::file::bibtex::parsename('John Doe', 'author', {uniquename => 0}));
 is_deeply(Biber::Input::file::bibtex::parsename('John Doe', 'author', {uniquename => 0}), $name1, 'parsename 1');
 is_deeply(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author', {uniquename => 2}), $name2, 'parsename 2');
 is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 1, uniquename => 0}), $name3, 'parsename 3') ;
 is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 0, uniquename => 0}), $name4, 'parsename 4') ;
 is_deeply(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author', {uniquename => 0}), $name5, 'parsename 5') ;
 is_deeply(Biber::Input::file::bibtex::parsename('al-Ṣāliḥ, ʿAbdallāh', 'author', {uniquename => 0}, 'fakekey', 1), $name6, 'parsename 6') ;
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1, uniquename => 0}, 'fakekey', 1), $name7, 'parsename 7');
+is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1, uniquename => 2}, 'fakekey', 1), $name7, 'parsename 7');
 is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author', {uniquename => 0}, 'fakekey', 1), $name8, 'parsename 8');
 is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author', {uniquename => 0}, 'fakekey', 1), $name9, 'parsename 9');
 is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author', {uniquename => 0}, 'fakekey', 1), $name10, 'parsename 10');

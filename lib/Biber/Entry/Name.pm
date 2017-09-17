@@ -26,6 +26,7 @@ __PACKAGE__->mk_accessors(qw (
                                basenamestringparts
                                namestrings
                                namedisschema
+                               unmininfo
                                useprefix
                                sortnamekeyscheme
                             ));
@@ -161,6 +162,7 @@ sub set_uniquename_all {
 sub get_uniquename {
   my $self = shift;
   my $un = $self->{uniquename};
+  return undef if not ref($un) eq 'ARRAY';
   if ($un->[1] eq 'none') {
     return 0;
   }
@@ -181,6 +183,7 @@ sub get_uniquename {
 sub get_uniquename_all {
   my $self = shift;
   my $un = $self->{uniquename_all};
+  return undef if not ref($un) eq 'ARRAY';
   if ($un->[1] eq 'none') {
     return 0;
   }
@@ -202,32 +205,6 @@ sub reset_uniquename {
   my $self = shift;
   $self->{uniquename} = 0;
   return;
-}
-
-
-=head2 set_minimal_info
-
-    Set the string of family names and string of fullnames
-    Used to track uniquename=5 or 6
-
-=cut
-
-sub set_minimal_info {
-  my ($self, $lns) = @_;
-  $self->{familynames_string} = $lns;
-  return;
-}
-
-
-=head2 get_minimal_info
-
-    Get the name context used to track uniquename=5 or 6
-
-=cut
-
-sub get_minimal_info {
-  my $self = shift;
-  return $self->{familynames_string};
 }
 
 =head2 get_namepart
