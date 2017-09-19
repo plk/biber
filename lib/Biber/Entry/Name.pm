@@ -362,10 +362,24 @@ sub name_to_bbl {
   my $pno; # per-name options final string
   my $namestring;
   my @namestrings;
+  my $uniquename = $self->get_uniquename;
+  my $namedisschema = $self->get_namedisschema;
+
+  # Construct per-namepart uniquename hash
+  my %pnun;
+  for (my $i=0; $i<=$namedisschema->$#*; $i++) {
+    my $nss = $namedisschema->[$i];
+    if (Compare($uniquename, $nss)) {
+      # Find where uniqueness is established, determine un settings up to this point
+      %pnun = map {$_->[0] => $_->[1]} grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i];
+      last;
+    }
+  }
 
   foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
     my $npc;
     my $npci;
+    my $npun;
     if ($npc = $self->get_namepart($np)) {
 
       if ($self->was_stripped($np)) {
@@ -378,13 +392,18 @@ sub name_to_bbl {
 
       $npci = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial($np)}) . '\bibinitperiod';
       $npci =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
+
+      $npun = $UNIQUENAME_VALUES{$pnun{$np} // 'none'};
     }
     # Some of the subs above can result in these being undef so make sure there is an empty
     # string instead of undef so that interpolation below doesn't produce warnings
     $npc //= '';
     $npci //= '';
+    $npun //= 0;
     if ($npc) {
-      push @namestrings, "           $np={$npc}", "           ${np}i={$npci}";
+      push @namestrings, "           $np={$npc}",
+                         "           ${np}i={$npci}",
+                         "           ${np}un={$npun}";
     }
   }
 

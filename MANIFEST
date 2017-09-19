@@ -179,10 +179,13 @@ t/tdata/uniqueness5.bcf
 t/tdata/uniqueness5.bib
 t/tdata/uniqueness6.bcf
 t/tdata/uniqueness6.bib
+t/tdata/uniqueness-nameparts.bcf
+t/tdata/uniqueness-nameparts.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
 t/uniqueness.t
+t/uniqueness-nameparts.t
 t/utils.t
 t/xdata.t
 visual.pl

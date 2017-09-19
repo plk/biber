@@ -33,6 +33,7 @@ our @EXPORT = qw{
                   %REMOTE_MAP
                   %DS_EXTENSIONS
                   %UNIQUENAME_CONTEXTS
+                  %UNIQUENAME_VALUES
               };
 
 # Version of biblatex control file which this release expects. Matched against version
@@ -88,6 +89,9 @@ our %UNIQUENAME_CONTEXTS = (0 => 'none', # false
                            4 => 'full', # allfull
                            5 => 'init', # mininit
                            6 => 'full'); # minfull
+
+our %UNIQUENAME_VALUES = ('none' => 0, 'init' => 1, full => '2');
+
 
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 our $CONFIG_DEFAULT_BIBER = {

@@ -653,7 +653,7 @@ sub parse_ctrlfile {
   foreach my $np (sort {$a->{order} <=> $b->{order}} $bcfxml->{uniquenametemplate}{namepart}->@*) {
     push $unkt->@*, {namepart => $np->{content},
                      use      => $np->{use},
-                     scope    => $np->{scope},
+                     context  => $np->{context},
                      base     => $np->{base}};
   }
   Biber::Config->setblxoption('uniquenametemplate', $unkt);

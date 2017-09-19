@@ -1661,8 +1661,8 @@ sub parsename {
       basenamestringparts => ["family"],
       namedisschema => [{ given => "init" }, { given => "full" }],
       namestrings => ["DoeJ", "DoeJohn"],
-      sortnamekeyscheme => 'scheme' }
-      }
+      sortnamekeyscheme => 'scheme'
+    }
 
 =cut
 
