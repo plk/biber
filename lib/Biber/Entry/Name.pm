@@ -371,7 +371,9 @@ sub name_to_bbl {
     my $nss = $namedisschema->[$i];
     if (Compare($uniquename, $nss)) {
       # Find where uniqueness is established, determine un settings up to this point
-      %pnun = map {$_->[0] => $_->[1]} grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i];
+      my @dis = grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i-1];
+      push @dis, $namedisschema->@[$i];
+      %pnun = map {$_->[0] => $_->[1]} @dis;
       last;
     }
   }
@@ -403,7 +405,7 @@ sub name_to_bbl {
     if ($npc) {
       push @namestrings, "           $np={$npc}",
                          "           ${np}i={$npci}",
-                         "           ${np}un={$npun}";
+                         "           ${np}un=$npun";
     }
   }
 
@@ -448,10 +450,25 @@ sub name_to_bblxml {
   my $dm = Biber::Config->get_dm;
   my %pno; # per-name options
   my %names;
+  my $uniquename = $self->get_uniquename;
+  my $namedisschema = $self->get_namedisschema;
+
+  # Construct per-namepart uniquename hash
+  my %pnun;
+  for (my $i=0; $i<=$namedisschema->$#*; $i++) {
+    my $nss = $namedisschema->[$i];
+    if (Compare($uniquename, $nss)) {
+      # Find where uniqueness is established, determine un settings up to this point
+      %pnun = map {$_->[0] => $_->[1]} grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i];
+      last;
+    }
+  }
 
   foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
     my $npc;
     my $npci;
+    my $npun;
+
     if ($npc = $self->get_namepart($np)) {
       $npci = join('. ', @{$self->get_namepart_initial($np)});
     }
@@ -459,9 +476,11 @@ sub name_to_bblxml {
     # string instead of undef so that interpolation below doesn't produce warnings
     $npc //= '';
     $npci //= '';
+    $npun = $UNIQUENAME_VALUES{$pnun{$np} // 'none'};
     if ($npc) {
-      $names{$np} = [$npc, $npci];
+      $names{$np} = [$npc, $npci, $npun];
     }
+
   }
 
   # Generate uniquename if uniquename is requested
@@ -489,7 +508,10 @@ sub name_to_bblxml {
   $xml->startTag([$xml_prefix, 'name'], sort keys %pno);
   foreach my $key (sort keys %names) {
     my $value = $names{$key};
-    $xml->startTag([$xml_prefix, 'namepart'], type => $key, initials => NFC(Biber::Utils::normalise_string_bblxml($value->[1])));
+    $xml->startTag([$xml_prefix, 'namepart'],
+                   type => $key,
+                   uniquename => $value->[2],
+                   initials => NFC(Biber::Utils::normalise_string_bblxml($value->[1])));
     $xml->characters(NFC(Biber::Utils::normalise_string_bblxml($value->[0])));
     $xml->endTag();# namepart
   }

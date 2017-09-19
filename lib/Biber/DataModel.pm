@@ -1490,6 +1490,7 @@ sub generate_bblxml_schema {
   $writer->startTag('element', 'name' => "$bbl:namepart");
   $writer->emptyTag('attribute', 'name' => 'type');
   $writer->emptyTag('attribute', 'name' => 'initials');
+  $writer->emptyTag('attribute', 'name' => 'uniquename');
   $writer->emptyTag('text');# text
   $writer->endTag();# namepart
   $writer->endTag();# oneOrMore
