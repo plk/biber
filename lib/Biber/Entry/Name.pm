@@ -404,14 +404,17 @@ sub name_to_bbl {
     $npun //= 0;
     if ($npc) {
       push @namestrings, "           $np={$npc}",
-                         "           ${np}i={$npci}",
-                         "           ${np}un=$npun";
+                         "           ${np}i={$npci}";
+      unless ($UNIQUENAME_BASEPARTS{$np}) {
+        push @namestrings, "           ${np}un=$npun";
+      }
     }
   }
 
   # Generate uniquename if uniquename is requested
   if (defined($self->get_uniquename)) {
     push @pno, 'uniquename=' . $self->get_uniquename_summary;
+    push @pno, 'uniquepart=' . $self->get_uniquename->[0];
   }
 
   # Add per-name options
@@ -478,7 +481,10 @@ sub name_to_bblxml {
     $npci //= '';
     $npun = $UNIQUENAME_VALUES{$pnun{$np} // 'none'};
     if ($npc) {
-      $names{$np} = [$npc, $npci, $npun];
+      $names{$np} = [$npc, $npci];
+      unless ($UNIQUENAME_BASEPARTS{$np}) {
+        push $names{$np}->@*, $npun;
+      }
     }
 
   }
@@ -486,6 +492,7 @@ sub name_to_bblxml {
   # Generate uniquename if uniquename is requested
   if (defined($self->get_uniquename)) {
     $pno{uniquename} = $self->get_uniquename_summary;
+    $pno{uniquepart} = $self->get_uniquename->[0];
   }
 
   # Add per-name options

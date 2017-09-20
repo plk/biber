@@ -643,7 +643,7 @@ sub parse_ctrlfile {
   # the first element here as they will always be only length=1
   my $nosort;
   foreach my $ns ($bcfxml->{nosorts}{nosort}->@*) {
-    push $nosort->@*, { name => $ns->{field}[0], value => $ns->{value}[0]};
+    push $nosort->@*, {name => $ns->{field}[0], value => $ns->{value}[0]};
   }
   # There is a default so don't set this option if nothing is in the .bcf
   Biber::Config->setoption('nosort', $nosort) if $nosort;
@@ -651,6 +651,9 @@ sub parse_ctrlfile {
   # UNIQUENAME TEMPLATE
   my $unkt;
   foreach my $np (sort {$a->{order} <=> $b->{order}} $bcfxml->{uniquenametemplate}{namepart}->@*) {
+    if (exists($np->{base})) {
+      $UNIQUENAME_BASEPARTS{$np->{content}} = 1;
+    }
     push $unkt->@*, {namepart => $np->{content},
                      use      => $np->{use},
                      context  => $np->{context},

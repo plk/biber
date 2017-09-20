@@ -34,6 +34,7 @@ our @EXPORT = qw{
                   %DS_EXTENSIONS
                   %UNIQUENAME_CONTEXTS
                   %UNIQUENAME_VALUES
+                  %UNIQUENAME_BASEPARTS
               };
 
 # Version of biblatex control file which this release expects. Matched against version
@@ -90,8 +91,11 @@ our %UNIQUENAME_CONTEXTS = (0 => 'none', # false
                            5 => 'init', # mininit
                            6 => 'full'); # minfull
 
+# Mapping of strings to numeric uniquename values for easier biblatex processing
 our %UNIQUENAME_VALUES = ('none' => 0, 'init' => 1, full => '2');
 
+# Convenience for quick lookup of uniquename template base parts
+our %UNIQUENAME_BASEPARTS = ();
 
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 our $CONFIG_DEFAULT_BIBER = {
