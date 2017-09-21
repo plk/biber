@@ -21,11 +21,12 @@
   \sortlist[list]{shorthands/global/}
     \entry{F1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
+        {{uniquename=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
-           giveni={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod},
+           givenun=0}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
@@ -47,11 +48,12 @@
   \sortlist[entry]{nty/global/}
     \entry{F1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
+        {{uniquename=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
-           giveni={J\bibinitperiod}}}%
+           giveni={J\bibinitperiod},
+           givenun=0}}%
       }
       \strng{namehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{fullhash}{bd051a2f7a5f377e3a62581b0e0f8577}

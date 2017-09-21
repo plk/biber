@@ -48,10 +48,9 @@ my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global
 my $out = $biber->get_output_obj;
 my $un1 = q|    \entry{un1}{article}{}
       \name{author}{1}{}{%
-        {{uniquename=1,hash=329d8f9192ea3349d700160c9ddb505d}{%
+        {{uniquename=1,uniquepart=middle,hash=329d8f9192ea3349d700160c9ddb505d}{%
            family={Smith},
            familyi={S\bibinitperiod},
-           familyun=0,
            given={John},
            giveni={J\bibinitperiod},
            givenun=1,
@@ -75,10 +74,9 @@ my $un1 = q|    \entry{un1}{article}{}
 
 my $un2 = q|    \entry{un2}{article}{}
       \name{author}{1}{}{%
-        {{uniquename=2,hash=7551114aede4ef69e4b3683039801706}{%
+        {{uniquename=2,uniquepart=middle,hash=7551114aede4ef69e4b3683039801706}{%
            family={Smith},
            familyi={S\bibinitperiod},
-           familyun=0,
            given={John},
            giveni={J\bibinitperiod},
            givenun=1,
@@ -102,10 +100,9 @@ my $un2 = q|    \entry{un2}{article}{}
 
 my $un3 = q|    \entry{un3}{article}{}
       \name{author}{1}{}{%
-        {{uniquename=2,hash=401aebda288799a7c757526242d8c9fc}{%
+        {{uniquename=2,uniquepart=middle,hash=401aebda288799a7c757526242d8c9fc}{%
            family={Smith},
            familyi={S\bibinitperiod},
-           familyun=0,
            given={John},
            giveni={J\bibinitperiod},
            givenun=1,
@@ -129,10 +126,9 @@ my $un3 = q|    \entry{un3}{article}{}
 
 my $un4 = q|    \entry{un4}{article}{}
       \name{author}{1}{}{%
-        {{uniquename=1,hash=f6038a264619efefd49c7daac56424ca}{%
+        {{uniquename=1,uniquepart=given,hash=f6038a264619efefd49c7daac56424ca}{%
            family={Smith},
            familyi={S\bibinitperiod},
-           familyun=0,
            given={Alan},
            giveni={A\bibinitperiod},
            givenun=1,

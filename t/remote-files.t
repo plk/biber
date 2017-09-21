@@ -54,26 +54,30 @@ my $bibentries = $section->bibentries;
 
 my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \name{author}{4}{}{%
-        {{uniquename=0,hash=aba7750b7045425a3cf8573f7710ec18}{%
+        {{uniquename=0,uniquepart=base,hash=aba7750b7045425a3cf8573f7710ec18}{%
            family={Marazziti},
            familyi={M\bibinitperiod},
            given={D.},
-           giveni={D\bibinitperiod}}}%
-        {{uniquename=0,hash=1f2c257ff6c86cffeb33019b6d8598c5}{%
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=1f2c257ff6c86cffeb33019b6d8598c5}{%
            family={Akiskal},
            familyi={A\\bibinitperiod},
            given={H.\bibnamedelimi S.},
-           giveni={H\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
-        {{uniquename=0,hash=e1b1769dbb6e7d04008811b49cd745a9}{%
+           giveni={H\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=e1b1769dbb6e7d04008811b49cd745a9}{%
            family={Rossi},
            familyi={R\bibinitperiod},
            given={A.},
-           giveni={A\bibinitperiod}}}%
-        {{uniquename=0,hash=b1d8ec8b73d39a27898e50cfa3e3c676}{%
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=b1d8ec8b73d39a27898e50cfa3e3c676}{%
            family={Cassano},
            familyi={C\bibinitperiod},
            given={G.\bibnamedelimi B.},
-           giveni={G\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+           giveni={G\bibinitperiod\bibinitdelim B\bibinitperiod},
+           givenun=0}}%
       }
       \strng{namehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
       \strng{fullhash}{ee363ce5e21ebe022f83aae896dd47f9}
@@ -108,16 +112,18 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
 
 my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \name{author}{2}{}{%
-        {{uniquename=0,hash=14c582ce40292affd427311ca8e3bc9c}{%
+        {{uniquename=0,uniquepart=base,hash=14c582ce40292affd427311ca8e3bc9c}{%
            family={Abdelbar},
            familyi={A\bibinitperiod},
            given={A.M.},
-           giveni={A\bibinitperiod}}}%
-        {{uniquename=0,hash=558ac9729b484b6f378e45a86582ea1d}{%
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=558ac9729b484b6f378e45a86582ea1d}{%
            family={Hedetniemi},
            familyi={H\bibinitperiod},
            given={S.M.},
-           giveni={S\bibinitperiod}}}%
+           giveni={S\bibinitperiod},
+           givenun=0}}%
       }
       \strng{namehash}{01599a4cb58316d64208b12a07741765}
       \strng{fullhash}{01599a4cb58316d64208b12a07741765}
@@ -141,11 +147,12 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
 
 my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       \name{author}{1}{}{%
-        {{uniquename=0,hash=83d062f99d033839537243075d75bad2}{%
+        {{uniquename=0,uniquepart=base,hash=83d062f99d033839537243075d75bad2}{%
            family={Merleau-Ponty},
            familyi={M\bibinithyphendelim P\bibinitperiod},
            given={Maurice},
-           giveni={M\bibinitperiod}}}%
+           giveni={M\bibinitperiod},
+           givenun=0}}%
       }
       \name{editor}{1}{}{%
         {{hash=ff5f90046157eecef0c22da4dac6486e}{%

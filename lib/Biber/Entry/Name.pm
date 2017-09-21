@@ -405,7 +405,7 @@ sub name_to_bbl {
     if ($npc) {
       push @namestrings, "           $np={$npc}",
                          "           ${np}i={$npci}";
-      unless ($UNIQUENAME_BASEPARTS{$np}) {
+      if (not $UNIQUENAME_BASEPARTS{$np} and defined($self->get_uniquename)) {
         push @namestrings, "           ${np}un=$npun";
       }
     }
@@ -456,7 +456,7 @@ sub name_to_bblxml {
   my $uniquename = $self->get_uniquename;
   my $namedisschema = $self->get_namedisschema;
 
-  # Construct per-namepart uniquename hash
+  # Construct per-namepart uniquename
   my %pnun;
   for (my $i=0; $i<=$namedisschema->$#*; $i++) {
     my $nss = $namedisschema->[$i];
@@ -482,7 +482,7 @@ sub name_to_bblxml {
     $npun = $UNIQUENAME_VALUES{$pnun{$np} // 'none'};
     if ($npc) {
       $names{$np} = [$npc, $npci];
-      unless ($UNIQUENAME_BASEPARTS{$np}) {
+      if (not $UNIQUENAME_BASEPARTS{$np} and defined($self->get_uniquename)) {
         push $names{$np}->@*, $npun;
       }
     }
@@ -512,12 +512,16 @@ sub name_to_bblxml {
   # Add the name hash to the options
   $pno{hash} = $self->get_hash;
 
-  $xml->startTag([$xml_prefix, 'name'], sort keys %pno);
+  $xml->startTag([$xml_prefix, 'name'], map {$_ => $pno{$_}} sort keys %pno);
   foreach my $key (sort keys %names) {
     my $value = $names{$key};
+    my %un;
+    if (not $UNIQUENAME_BASEPARTS{$key} and defined($self->get_uniquename)) {
+      %un = (uniquename => $value->[2]);
+    }
     $xml->startTag([$xml_prefix, 'namepart'],
                    type => $key,
-                   uniquename => $value->[2],
+                   %un,
                    initials => NFC(Biber::Utils::normalise_string_bblxml($value->[1])));
     $xml->characters(NFC(Biber::Utils::normalise_string_bblxml($value->[0])));
     $xml->endTag();# namepart

@@ -1485,12 +1485,17 @@ sub generate_bblxml_schema {
   $writer->startTag('attribute', 'name' => 'uniquename');
   $writer->emptyTag('data', 'type' => 'integer');
   $writer->endTag();    # attribute
+  $writer->startTag('attribute', 'name' => 'uniquepart');
+  $writer->emptyTag('data', 'type' => 'string');
+  $writer->endTag();    # attribute
   $writer->endTag();    # optional
   $writer->startTag('oneOrMore');
   $writer->startTag('element', 'name' => "$bbl:namepart");
   $writer->emptyTag('attribute', 'name' => 'type');
   $writer->emptyTag('attribute', 'name' => 'initials');
+  $writer->startTag('optional');
   $writer->emptyTag('attribute', 'name' => 'uniquename');
+  $writer->endTag();    # optional
   $writer->emptyTag('text');# text
   $writer->endTag();# namepart
   $writer->endTag();# oneOrMore
