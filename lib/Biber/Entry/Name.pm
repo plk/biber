@@ -365,7 +365,7 @@ sub name_to_bbl {
   my $uniquename = $self->get_uniquename;
   my $namedisschema = $self->get_namedisschema;
 
-  # Construct per-namepart uniquename hash
+  # Construct per-namepart uniquename value
   my %pnun;
   for (my $i=0; $i<=$namedisschema->$#*; $i++) {
     my $nss = $namedisschema->[$i];
@@ -373,7 +373,8 @@ sub name_to_bbl {
       # Find where uniqueness is established, determine un settings up to this point
       my @dis = grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i-1];
       push @dis, $namedisschema->@[$i];
-      %pnun = map {$_->[0] => $_->[1]} @dis;
+      # normalise 'fullonly' to 'full' now that we have stripped all non-disambiguating elements
+      %pnun = map {$_->[0] => ($_->[1] eq 'fullonly' ? 'full' : $_->[1])} @dis;
       last;
     }
   }
@@ -462,7 +463,10 @@ sub name_to_bblxml {
     my $nss = $namedisschema->[$i];
     if (Compare($uniquename, $nss)) {
       # Find where uniqueness is established, determine un settings up to this point
-      %pnun = map {$_->[0] => $_->[1]} grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i];
+      my @dis = grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i-1];
+      push @dis, $namedisschema->@[$i];
+      # normalise 'fullonly' to 'full' now that we have stripped all non-disambiguating elements
+      %pnun = map {$_->[0] => ($_->[1] eq 'fullonly' ? 'full' : $_->[1])} @dis;
       last;
     }
   }
@@ -486,7 +490,6 @@ sub name_to_bblxml {
         push $names{$np}->@*, $npun;
       }
     }
-
   }
 
   # Generate uniquename if uniquename is requested

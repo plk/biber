@@ -659,6 +659,7 @@ sub parse_ctrlfile {
                      context  => $np->{context},
                      base     => $np->{base}};
   }
+
   Biber::Config->setblxoption('uniquenametemplate', $unkt);
 
   # SORTING NAME KEY
@@ -2789,17 +2790,14 @@ sub create_uniquename_info {
 
       # Note that we don't determine if a name is unique here -
       # we can't, were still processing entries at this point.
-      # Here we are just recording seen combinations of:
+      # Here we are just recording seen combinations of the basename plus
+      # non-basename parts in both initial and full formats.
       #
-      # base name and how many name context keys contain this (uniquename = 0)
-      # basenames+initials and how many name context keys contain this (uniquename = 1)
-      # Full name and how many name context keys contain this (uniquename = 2)
-      #
-      # A name context can be either a complete single name or a list of names
+      # A name scope can be either a complete single name or a list of names
       # depending on whether uniquename=min* or not
       #
-      # Anything which has more than one combination for both of these would
-      # be uniquename = 2 unless even the full name doesn't disambiguate
+      # Anything which has more than one combination for a given basename+non-basenameparts
+      # would be uniquename = 2 unless even the full name doesn't disambiguate
       # and then it is left at uniquename = 0
 
       my $nl = $be->get_field($lni);

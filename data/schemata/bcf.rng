@@ -973,6 +973,7 @@
                 <value>none</value>
                 <value>init</value>
                 <value>full</value>
+                <value>fullonly</value>
               </choice>
             </attribute>
           </optional>

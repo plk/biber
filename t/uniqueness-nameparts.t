@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 8;
+use Test::More tests => 10;
 use Test::Differences;
 unified_diff;
 
@@ -150,6 +150,32 @@ my $un4 = q|    \entry{un4}{article}{}
     \endentry
 |;
 
+my $un4a = q|    \entry{un4}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=2,uniquepart=given,hash=f6038a264619efefd49c7daac56424ca}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Alan},
+           giveni={A\bibinitperiod},
+           givenun=2,
+           middle={Simon},
+           middlei={S\bibinitperiod},
+           middleun=0}}%
+      }
+      \strng{namehash}{f6038a264619efefd49c7daac56424ca}
+      \strng{fullhash}{f6038a264619efefd49c7daac56424ca}
+      \strng{bibnamehash}{f6038a264619efefd49c7daac56424ca}
+      \strng{authorbibnamehash}{f6038a264619efefd49c7daac56424ca}
+      \strng{authornamehash}{f6038a264619efefd49c7daac56424ca}
+      \strng{authorfullhash}{f6038a264619efefd49c7daac56424ca}
+      \field{labelalpha}{Smi}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extraalpha}{1}
+      \field{labelnamesource}{author}
+    \endentry
+|;
+
 eq_or_diff($bibentries->entry('un1')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'init'], 'Uniquename namepart - 1');
 eq_or_diff($bibentries->entry('un2')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 2');
 eq_or_diff($bibentries->entry('un3')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 3');
@@ -158,3 +184,26 @@ eq_or_diff($out->get_output_entry('un1', $main), $un1, 'Uniquename namepart - 5'
 eq_or_diff($out->get_output_entry('un2', $main), $un2, 'Uniquename namepart - 6');
 eq_or_diff($out->get_output_entry('un3', $main), $un3, 'Uniquename namepart - 7');
 eq_or_diff($out->get_output_entry('un4', $main), $un4, 'Uniquename namepart - 8');
+
+
+
+$biber->parse_ctrlfile('uniqueness-nameparts.bcf');
+
+my $unt = [
+   { base => 1, namepart => "prefix", use => 1 },
+   { base => 1, namepart => "family" },
+   { context => "fullonly", namepart => "given" },
+   { namepart => "middle" },
+];
+
+Biber::Config->setblxoption('uniquenametemplate', $unt);
+
+$biber->set_output_obj(Biber::Output::bbl->new());
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global' ,'');
+$out = $biber->get_output_obj;
+
+eq_or_diff($bibentries->entry('un4')->get_field('author')->nth_name(1)->get_uniquename, ['given', 'full'], 'Uniquename namepart - 9');
+eq_or_diff($out->get_output_entry('un4', $main), $un4a, 'Uniquename namepart - 10');
