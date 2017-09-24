@@ -595,7 +595,7 @@
   <bcf:uniquenametemplate>
     <bcf:namepart order="1" use="1" base="1">prefix</bcf:namepart>
     <bcf:namepart order="2" base="1">family</bcf:namepart>
-    <bcf:namepart order="3" context="init">given</bcf:namepart>
+    <bcf:namepart order="3" disambiguation="init">given</bcf:namepart>
     <bcf:namepart order="4">middle</bcf:namepart>
   </bcf:uniquenametemplate>
   <!-- SORTING NAME KEY -->

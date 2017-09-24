@@ -192,7 +192,7 @@ $biber->parse_ctrlfile('uniqueness-nameparts.bcf');
 my $unt = [
    { base => 1, namepart => "prefix", use => 1 },
    { base => 1, namepart => "family" },
-   { context => "fullonly", namepart => "given" },
+   { disambiguation => "fullonly", namepart => "given" },
    { namepart => "middle" },
 ];
 

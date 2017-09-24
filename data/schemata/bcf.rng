@@ -968,7 +968,7 @@
             </attribute>
           </optional>
           <optional>
-            <attribute name="context">
+            <attribute name="disambiguation">
               <choice>
                 <value>none</value>
                 <value>init</value>

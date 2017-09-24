@@ -654,10 +654,10 @@ sub parse_ctrlfile {
     if (exists($np->{base})) {
       $UNIQUENAME_BASEPARTS{$np->{content}} = 1;
     }
-    push $unkt->@*, {namepart => $np->{content},
-                     use      => $np->{use},
-                     context  => $np->{context},
-                     base     => $np->{base}};
+    push $unkt->@*, {namepart        => $np->{content},
+                     use             => $np->{use},
+                     disambiguation  => $np->{disambiguation},
+                     base            => $np->{base}};
   }
 
   Biber::Config->setblxoption('uniquenametemplate', $unkt);

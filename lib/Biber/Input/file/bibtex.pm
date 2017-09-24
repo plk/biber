@@ -1572,11 +1572,11 @@ sub parsename {
   push $namestrings->@*, $base;
   push $namedisschema->@*, ['base' => $baseparts];
 
-  # ... then add non-base parts by incrementally adding to the last disambiguation context
+  # ... then add non-base parts by incrementally adding to the last disambiguation level
   foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
     next if $np->{base};
     my $npn = $np->{namepart};
-    my $context = $np->{context} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
+    my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
     my $lastns = $namestrings->[$namestrings->$#*];
 
     if ($namec{$npn}) {
@@ -1586,24 +1586,24 @@ sub parsename {
 
       $namestring .= $namec{"${npn}-stripped"};
 
-      # per-namepart disambiguation context
+      # per-namepart disambiguation level
       # Here we incrementally add disambiguation possibilities to an array and simultaneously
       # record a schema of what each incremental disambiguation is
-      if (fc($context) eq fc('fullonly')) { # fullonly disambiguation
+      if (fc($level) eq fc('fullonly')) { # fullonly disambiguation
         push $namestrings->@*, $lastns . $namec{"${npn}-stripped"};
         push $namedisschema->@*, [$npn => 'full'];
       }
-      if (fc($context) eq fc('full')) { # full disambiguation
+      if (fc($level) eq fc('full')) { # full disambiguation
         push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
         push $namedisschema->@*, [$npn => 'init'];
         push $namestrings->@*, $lastns . $namec{"${npn}-stripped"};
         push $namedisschema->@*, [$npn => 'full'];
       }
-      elsif (fc($context) eq fc('init')) { # inits only
+      elsif (fc($level) eq fc('init')) { # inits only
         push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
         push $namedisschema->@*, [$npn => 'init'];
       }
-      # context = 'none' gets here and nothing is added to the strings or schema
+      # disambiguation='none' gets here and nothing is added to the strings or schema
     }
   }
 
@@ -1781,7 +1781,7 @@ sub parsename_x {
     my $namepart = $np->{namepart};
     my $useopt;
     my $useoptval;
-    my $context = $np->{context} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
+    my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
     my $lastns = $namestrings->[$namestrings->$#*];
 
     if ($np->{use}) {# only ever defined as 1
@@ -1797,21 +1797,21 @@ sub parsename_x {
 
       # Here we incrementally add disambiguation possibilities to an array and simultaneously
       # record a schema of what each incremental disambiguation is
-      if (fc($context) eq fc('fullonly')) {
+      if (fc($level) eq fc('fullonly')) {
         push $namestrings->@*, $lastns . $namec{$namepart};
         push $namedisschema->@*, [$namepart => 'full'];
       }
-      if (fc($context) eq fc('full')) {
+      if (fc($level) eq fc('full')) {
         push $namestrings->@*, $lastns . join('', $namec{"${namepart}-i"}->@*);
         push $namedisschema->@*, [$namepart => 'init'];
         push $namestrings->@*, $lastns . $namec{$namepart};
         push $namedisschema->@*, [$namepart => 'full'];
       }
-      if (fc($context) eq fc('init')) {
+      if (fc($level) eq fc('init')) {
         push $namestrings->@*, $lastns . join('', $namec{"${namepart}-i"}->@*);
         push $namedisschema->@*, [$namepart => 'init'];
       }
-      # context = 'none' gets here and nothing is added to the strings or schema
+      # disambiguation='none' gets here and nothing is added to the strings or schema
     }
   }
 
