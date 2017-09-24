@@ -1591,7 +1591,7 @@ sub parsename {
       # record a schema of what each incremental disambiguation is
       if (fc($level) eq fc('fullonly')) { # fullonly disambiguation
         push $namestrings->@*, $lastns . $namec{"${npn}-stripped"};
-        push $namedisschema->@*, [$npn => 'full'];
+        push $namedisschema->@*, [$npn => 'fullonly'];
       }
       if (fc($level) eq fc('full')) { # full disambiguation
         push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
@@ -1799,7 +1799,7 @@ sub parsename_x {
       # record a schema of what each incremental disambiguation is
       if (fc($level) eq fc('fullonly')) {
         push $namestrings->@*, $lastns . $namec{$namepart};
-        push $namedisschema->@*, [$namepart => 'full'];
+        push $namedisschema->@*, [$namepart => 'fullonly'];
       }
       if (fc($level) eq fc('full')) {
         push $namestrings->@*, $lastns . join('', $namec{"${namepart}-i"}->@*);

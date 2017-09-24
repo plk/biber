@@ -192,7 +192,7 @@ sub get_uniquename_summary {
   elsif ($un->[1] eq 'init') {
     return 1;
   }
-  elsif ($un->[1] eq 'full') {
+  elsif ($un->[1] eq 'full' or $un->[1] eq 'fullonly') {
     return 2;
   }
   return 0;
