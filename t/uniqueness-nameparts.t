@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 16;
+use Test::More tests => 24;
 use Test::Differences;
 unified_diff;
 
@@ -255,6 +255,111 @@ my $un4a = q|    \entry{un4}{article}{}
     \endentry
 |;
 
+my $un1b = q|    \entry{un1}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=1,uniquepart=middle,hash=329d8f9192ea3349d700160c9ddb505d}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod},
+           givenun=0,
+           middle={Simon},
+           middlei={S\bibinitperiod},
+           middleun=1}}%
+      }
+      \strng{namehash}{329d8f9192ea3349d700160c9ddb505d}
+      \strng{fullhash}{329d8f9192ea3349d700160c9ddb505d}
+      \strng{bibnamehash}{329d8f9192ea3349d700160c9ddb505d}
+      \strng{authorbibnamehash}{329d8f9192ea3349d700160c9ddb505d}
+      \strng{authornamehash}{329d8f9192ea3349d700160c9ddb505d}
+      \strng{authorfullhash}{329d8f9192ea3349d700160c9ddb505d}
+      \field{labelalpha}{Smi}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extraalpha}{2}
+      \field{labelnamesource}{author}
+    \endentry
+|;
+
+my $un2b = q|    \entry{un2}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=2,uniquepart=middle,hash=7551114aede4ef69e4b3683039801706}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod},
+           givenun=0,
+           middle={Alan},
+           middlei={A\bibinitperiod},
+           middleun=2}}%
+      }
+      \strng{namehash}{7551114aede4ef69e4b3683039801706}
+      \strng{fullhash}{7551114aede4ef69e4b3683039801706}
+      \strng{bibnamehash}{7551114aede4ef69e4b3683039801706}
+      \strng{authorbibnamehash}{7551114aede4ef69e4b3683039801706}
+      \strng{authornamehash}{7551114aede4ef69e4b3683039801706}
+      \strng{authorfullhash}{7551114aede4ef69e4b3683039801706}
+      \field{labelalpha}{Smi}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extraalpha}{3}
+      \field{labelnamesource}{author}
+    \endentry
+|;
+
+my $un3b = q|    \entry{un3}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=2,uniquepart=middle,hash=401aebda288799a7c757526242d8c9fc}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={John},
+           giveni={J\bibinitperiod},
+           givenun=0,
+           middle={Arthur},
+           middlei={A\bibinitperiod},
+           middleun=2}}%
+      }
+      \strng{namehash}{401aebda288799a7c757526242d8c9fc}
+      \strng{fullhash}{401aebda288799a7c757526242d8c9fc}
+      \strng{bibnamehash}{401aebda288799a7c757526242d8c9fc}
+      \strng{authorbibnamehash}{401aebda288799a7c757526242d8c9fc}
+      \strng{authornamehash}{401aebda288799a7c757526242d8c9fc}
+      \strng{authorfullhash}{401aebda288799a7c757526242d8c9fc}
+      \field{labelalpha}{Smi}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extraalpha}{4}
+      \field{labelnamesource}{author}
+    \endentry
+|;
+
+
+my $un4b = q|    \entry{un4}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=1,uniquepart=middle,hash=f6038a264619efefd49c7daac56424ca}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Alan},
+           giveni={A\bibinitperiod},
+           givenun=0,
+           middle={Simon},
+           middlei={S\bibinitperiod},
+           middleun=1}}%
+      }
+      \strng{namehash}{f6038a264619efefd49c7daac56424ca}
+      \strng{fullhash}{f6038a264619efefd49c7daac56424ca}
+      \strng{bibnamehash}{f6038a264619efefd49c7daac56424ca}
+      \strng{authorbibnamehash}{f6038a264619efefd49c7daac56424ca}
+      \strng{authornamehash}{f6038a264619efefd49c7daac56424ca}
+      \strng{authorfullhash}{f6038a264619efefd49c7daac56424ca}
+      \field{labelalpha}{Smi}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extraalpha}{1}
+      \field{labelnamesource}{author}
+    \endentry
+|;
+
 eq_or_diff($bibentries->entry('un1')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'init'], 'Uniquename namepart - 1');
 eq_or_diff($bibentries->entry('un2')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 2');
 eq_or_diff($bibentries->entry('un3')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 3');
@@ -293,3 +398,33 @@ eq_or_diff($out->get_output_entry('un1', $main), $un1a, 'Uniquename namepart - 1
 eq_or_diff($out->get_output_entry('un2', $main), $un2a, 'Uniquename namepart - 14');
 eq_or_diff($out->get_output_entry('un3', $main), $un3a, 'Uniquename namepart - 15');
 eq_or_diff($out->get_output_entry('un4', $main), $un4a, 'Uniquename namepart - 16');
+
+# redo with different uniquename template
+
+$biber->parse_ctrlfile('uniqueness-nameparts.bcf');
+
+$unt = [
+   { base => 1, namepart => "prefix", use => 1 },
+   { base => 1, namepart => "family" },
+   { disambiguation => "none", namepart => "given" },
+   { namepart => "middle" },
+];
+
+Biber::Config->setblxoption('uniquenametemplate', $unt);
+
+$biber->set_output_obj(Biber::Output::bbl->new());
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+$bibentries = $section->bibentries;
+$main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global' ,'');
+$out = $biber->get_output_obj;
+
+
+eq_or_diff($bibentries->entry('un1')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'init'], 'Uniquename namepart - 17');
+eq_or_diff($bibentries->entry('un2')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 18');
+eq_or_diff($bibentries->entry('un3')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 19');
+eq_or_diff($bibentries->entry('un4')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'init'], 'Uniquename namepart - 20');
+eq_or_diff($out->get_output_entry('un1', $main), $un1b, 'Uniquename namepart - 21');
+eq_or_diff($out->get_output_entry('un2', $main), $un2b, 'Uniquename namepart - 22');
+eq_or_diff($out->get_output_entry('un3', $main), $un3b, 'Uniquename namepart - 23');
+eq_or_diff($out->get_output_entry('un4', $main), $un4b, 'Uniquename namepart - 24');
