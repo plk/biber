@@ -230,7 +230,7 @@ start =
     # Transliteration specification(s)
     translit*,
     # Uniquename template
-    uniquenametemplate,
+    uniquenametemplate+,
     # Sorting name key specification
     sortingnamekey,
     # Global sorting specification
@@ -346,15 +346,15 @@ listspec =
     element bcf:sortlist {
       attribute section { xsd:integer },
       attribute type { "entry" | "list" },
-      attribute sortscheme { xsd:string {minLength="1"}},
-      attribute sortnamekeyscheme { xsd:string {minLength="1"}},
+      attribute sortscheme { xsd:string {minLength="1"} },
+      attribute sortnamekeyscheme { xsd:string {minLength="1"} },
       attribute labelprefix { xsd:string },
       # name is only needed for list types
-      attribute name { xsd:string {minLength="1"}},
+      attribute name { xsd:string {minLength="1"} },
       (filter | filteror )*,
       element bcf:sorting {
         # locale for entire sorting specification
-        attribute locale { xsd:string {minLength="1"}}?,
+        attribute locale { xsd:string {minLength="1" } }?,
         sort+
       }?
     }*
@@ -371,6 +371,7 @@ translit =
 
 uniquenametemplate = 
   element bcf:uniquenametemplate {
+    attribute name { xsd:string {minLength="1"} },
     element bcf:namepart {
      attribute order { xsd:integer },
       attribute use { "0" | "1" }?,

@@ -380,7 +380,7 @@ my $unt = [
    { namepart => "middle" },
 ];
 
-Biber::Config->setblxoption('uniquenametemplate', $unt);
+Biber::Config->setblxoption('uniquenametemplate', {global => $unt});
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
@@ -410,7 +410,7 @@ $unt = [
    { namepart => "middle" },
 ];
 
-Biber::Config->setblxoption('uniquenametemplate', $unt);
+Biber::Config->setblxoption('uniquenametemplate', {global => $unt});
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;

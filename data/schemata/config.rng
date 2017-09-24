@@ -409,9 +409,9 @@
         <optional>
           <ref name="labelalphatemplate"/>
         </optional>
-        <optional>
+        <zeroOrMore>
           <ref name="uniquenametemplate"/>
-        </optional>
+        </zeroOrMore>
         <optional>
           <ref name="sortingnamekey"/>
         </optional>
@@ -1264,6 +1264,11 @@
   </define>
   <define name="uniquenametemplate">
     <element name="uniquenametemplate">
+      <attribute name="name">
+        <data type="string">
+          <param name="minLength">1</param>
+        </data>
+      </attribute>
       <oneOrMore>
         <element name="namepart">
           <attribute name="order">
@@ -1290,6 +1295,7 @@
               <choice>
                 <value>none</value>
                 <value>init</value>
+                <value>initorfull</value>
                 <value>full</value>
               </choice>
             </attribute>

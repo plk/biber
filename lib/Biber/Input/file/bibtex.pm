@@ -1464,7 +1464,7 @@ sub preprocess_file {
       suffix         => {string => undef, initial => undef},
       basenamestring => "Doe",
       basenamestringparts => ["family"],
-      namedisschema => [{ given => "init" }, { given => "full" }],
+      namedisschema => [[ given, "init" ], [ given, "initorfull" ]],
       namestrings => ["DoeJ", "DoeJohn"],
       strip          => {'given'  => 0,
                          'family' => 0,
@@ -1555,7 +1555,7 @@ sub parsename {
   # First construct base part ...
   my $base;
   my $baseparts;
-  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
     next unless $np->{base};
     my $npn = $np->{namepart};
 
@@ -1573,7 +1573,7 @@ sub parsename {
   push $namedisschema->@*, ['base' => $baseparts];
 
   # ... then add non-base parts by incrementally adding to the last disambiguation level
-  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
     next if $np->{base};
     my $npn = $np->{namepart};
     my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
@@ -1663,7 +1663,7 @@ sub parsename {
       suffix         => {string => undef, initial => undef},
       basenamestring => "Doe",
       basenamestringparts => ["family"],
-      namedisschema => [{ given => "init" }, { given => "full" }],
+      namedisschema => [[ given, "init" ], [ given, "initorfull" ]],
       namestrings => ["DoeJ", "DoeJohn"],
       sortnamekeyscheme => 'scheme'
     }
@@ -1752,7 +1752,7 @@ sub parsename_x {
   # First construct base part ...
   my $base;
   my $baseparts;
-  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
     next unless $np->{base};
     my $namepart = $np->{namepart};
     my $useopt;
@@ -1776,7 +1776,7 @@ sub parsename_x {
   push $namedisschema->@*, ['base' => $baseparts];
 
   # ... then add non-base parts
-  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
     next if $np->{base};
     my $namepart = $np->{namepart};
     my $useopt;

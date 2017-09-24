@@ -600,8 +600,10 @@
         <!-- Transliteration specification(s) -->
         <ref name="translit"/>
       </zeroOrMore>
-      <!-- Uniquename template -->
-      <ref name="uniquenametemplate"/>
+      <oneOrMore>
+        <!-- Uniquename template -->
+        <ref name="uniquenametemplate"/>
+      </oneOrMore>
       <!-- Sorting name key specification -->
       <ref name="sortingnamekey"/>
       <!-- Global sorting specification -->
@@ -946,6 +948,11 @@
   </define>
   <define name="uniquenametemplate">
     <element name="bcf:uniquenametemplate">
+      <attribute name="name">
+        <data type="string">
+          <param name="minLength">1</param>
+        </data>
+      </attribute>
       <oneOrMore>
         <element name="bcf:namepart">
           <attribute name="order">

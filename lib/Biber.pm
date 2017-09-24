@@ -388,6 +388,7 @@ sub parse_ctrlfile {
                                                            qr/\Akeypart\z/,
                                                            qr/\Apart\z/,
                                                            qr/\Asortingnamekey\z/,
+                                                           qr/\Auniquenametemplate\z/,
                                                            qr/\Aper_datasource\z/,
                                                            qr/\Anosort\z/,
                                                            qr/\Amember\z/,
@@ -649,18 +650,21 @@ sub parse_ctrlfile {
   Biber::Config->setoption('nosort', $nosort) if $nosort;
 
   # UNIQUENAME TEMPLATE
-  my $unkt;
-  foreach my $np (sort {$a->{order} <=> $b->{order}} $bcfxml->{uniquenametemplate}{namepart}->@*) {
-    if (exists($np->{base})) {
-      $UNIQUENAME_BASEPARTS{$np->{content}} = 1;
+  my $unts;
+  foreach my $unt ($bcfxml->{uniquenametemplate}->@*) {
+    my $untval = [];
+    foreach my $np (sort {$a->{order} <=> $b->{order}} $unt->{namepart}->@*) {
+      if (exists($np->{base})) {
+        $UNIQUENAME_BASEPARTS{$np->{content}} = 1;
+      }
+      push $untval->@*, {namepart        => $np->{content},
+                         use             => $np->{use},
+                         disambiguation  => $np->{disambiguation},
+                         base            => $np->{base}};
     }
-    push $unkt->@*, {namepart        => $np->{content},
-                     use             => $np->{use},
-                     disambiguation  => $np->{disambiguation},
-                     base            => $np->{base}};
+    $unts->{$unt->{name}} = $untval;
   }
-
-  Biber::Config->setblxoption('uniquenametemplate', $unkt);
+  Biber::Config->setblxoption('uniquenametemplate', $unts);
 
   # SORTING NAME KEY
   # Use the order attributes to make sure things are in right order and create a data structure
@@ -3659,10 +3663,10 @@ sub prepare {
     $self->process_interentry;           # Process crossrefs/xrefs etc.
     $self->validate_datamodel;           # Check against data model
     $self->process_entries_pre;          # Main entry processing loop, part 1
-    $self->uniqueness;                   # Here we generate uniqueness information
+    $self->uniqueness;                   # Generate uniqueness information
     $self->process_visible_names;        # Generate visible names information for all entries
     $self->process_entries_post;         # Main entry processing loop, part 2
-    $self->process_lists;                # process the output lists (sort and filtering)
+    $self->process_lists;                # Process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
     $self->generate_uniquetitle;         # Generate uniquetitle field if requested
     $self->generate_uniquebaretitle;     # Generate uniquebaretitle field if requested

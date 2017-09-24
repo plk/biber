@@ -104,7 +104,7 @@ sub _getnamehash_u {
   # namehash obeys list truncations
   foreach my $n ($names->first_n_names($visible)->@*) {
     # Use nameuniqueness template to construct hash
-    foreach my $nps (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+    foreach my $nps (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
       my $npn = $nps->{namepart};
 
       if (my $np = $n->get_namepart($npn)) {

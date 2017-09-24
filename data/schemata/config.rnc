@@ -100,7 +100,7 @@ start =
     translit* &
     labelalphanametemplate? &
     labelalphatemplate? &
-    uniquenametemplate? &
+    uniquenametemplate* &
     sortingnamekey? &
     sorting? &
     element sortlocale           { text }? &
@@ -364,11 +364,12 @@ labelalphatemplate =
 
 uniquenametemplate = 
   element uniquenametemplate {
+    attribute name { xsd:string {minLength="1"} },
     element namepart {
      attribute order { xsd:integer },
       attribute use { "0" | "1" }?,
       attribute base { "0" | "1" }?,
-      attribute context { "none" | "init" | "full" }?,
+      attribute context { "none" | "init" | "initorfull" | "full" }?,
       text
     }+
   }

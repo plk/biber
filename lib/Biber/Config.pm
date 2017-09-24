@@ -406,6 +406,7 @@ sub _config_file_set {
                                                             qr/\Asort\z/,
                                                             qr/\Alabelalpha(?:name)?template\z/,
                                                             qr/\Asortitem\z/,
+                                                            qr/\Auniquenametemplate\z/,
                                                             qr/\Apresort\z/,
                                                             qr/\Aoptionscope\z/,
                                                             qr/\Asortingnamekey\z/,
@@ -458,20 +459,7 @@ sub _config_file_set {
   while (my ($k, $v) = each $userconf->%*) {
     # Has to be an array ref and so must come before
     # the later options tests which assume hash refs
-    if (lc($k) eq 'uniquenametemplate') {
-      my $unkt;
-      foreach my $np (sort {$a->{order} <=> $b->{order}} $v->{namepart}->@*) {
-
-        push $unkt->@*, {namepart => $np->{content},
-                         use => $np->{use},
-                         scope => $np->{scope},
-                         base => $np->{base}}
-      }
-      Biber::Config->setblxoption('uniquenametemplate', $unkt);
-    }
-    # Has to be an array ref and so must come before
-    # the later options tests which assume hash refs
-    elsif (lc($k) eq 'labelalphatemplate') {
+    if (lc($k) eq 'labelalphatemplate') {
       foreach my $t ($v->@*) {
         my $latype = $t->{type};
         if ($latype eq 'global') {
@@ -507,8 +495,23 @@ sub _config_file_set {
         }
       }
     }
-    # Has to be an array ref and so must come before
-    # the later options tests which assume hash refs
+    elsif (lc($k) eq 'uniquenametemplate') {
+      my $unts;
+      foreach my $unt ($v->@*) {
+        my $untval = [];
+        foreach my $np (sort {$a->{order} <=> $b->{order}} $unt->{namepart}->@*) {
+          if (exists($np->{base})) {
+            $UNIQUENAME_BASEPARTS{$np->{content}} = 1;
+          }
+          push $untval->@*, {namepart        => $np->{content},
+                             use             => $np->{use},
+                             disambiguation  => $np->{disambiguation},
+                             base            => $np->{base}};
+        }
+        $unts->{$unt->{name}} = $untval;
+      }
+      Biber::Config->setblxoption('uniquenametemplate', $unts);
+    }
     elsif (lc($k) eq 'sortingnamekey') {
       my $snss;
       foreach my $sns ($v->@*) {

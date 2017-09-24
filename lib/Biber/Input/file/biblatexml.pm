@@ -1223,7 +1223,7 @@ sub parsename {
   # First construct base part ...
   my $base;
   my $baseparts;
-  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
     next unless $np->{base};
     my $npn = $np->{namepart};
 
@@ -1241,7 +1241,7 @@ sub parsename {
   push $namedisschema->@*, ['base' => $baseparts];
 
   # ... then add non-base parts by incrementally adding to the last disambiguation context
-  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->@*) {
+  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
     next if $np->{base};
     my $npn = $np->{namepart};
     my $context = $np->{context} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
