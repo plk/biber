@@ -1589,11 +1589,11 @@ sub parsename {
       # per-namepart disambiguation level
       # Here we incrementally add disambiguation possibilities to an array and simultaneously
       # record a schema of what each incremental disambiguation is
-      if (fc($level) eq fc('fullonly')) { # fullonly disambiguation
+      if (fc($level) eq fc('full')) { # only full disambiguation
         push $namestrings->@*, $lastns . $namec{"${npn}-stripped"};
         push $namedisschema->@*, [$npn => 'fullonly'];
       }
-      if (fc($level) eq fc('full')) { # full disambiguation
+      if (fc($level) eq fc('initorfull')) { # initials or full disambiguation
         push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
         push $namedisschema->@*, [$npn => 'init'];
         push $namestrings->@*, $lastns . $namec{"${npn}-stripped"};
@@ -1797,11 +1797,11 @@ sub parsename_x {
 
       # Here we incrementally add disambiguation possibilities to an array and simultaneously
       # record a schema of what each incremental disambiguation is
-      if (fc($level) eq fc('fullonly')) {
+      if (fc($level) eq fc('full')) {
         push $namestrings->@*, $lastns . $namec{$namepart};
         push $namedisschema->@*, [$namepart => 'fullonly'];
       }
-      if (fc($level) eq fc('full')) {
+      if (fc($level) eq fc('initorfull')) {
         push $namestrings->@*, $lastns . join('', $namec{"${namepart}-i"}->@*);
         push $namedisschema->@*, [$namepart => 'init'];
         push $namestrings->@*, $lastns . $namec{$namepart};

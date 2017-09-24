@@ -82,14 +82,14 @@ our %DS_EXTENSIONS = (
                       biblatexml => 'bltxml'
                       );
 
-# Mapping of biblatex uniquename option to disambiguation context
-our %UNIQUENAME_CONTEXTS = (0 => 'none',  # false
-                            1 => 'init',  # init
-                            2 => 'full',  # full/true
-                            3 => 'init',  # allinit
-                            4 => 'full',  # allfull
-                            5 => 'init',  # mininit
-                            6 => 'full'); # minfull
+# Mapping of biblatex uniquename option to disambiguation level
+our %UNIQUENAME_CONTEXTS = (0 => 'none',        # false
+                            1 => 'init',        # init
+                            2 => 'initorfull',  # full/true
+                            3 => 'init',        # allinit
+                            4 => 'initorfull',  # allfull
+                            5 => 'init',        # mininit
+                            6 => 'initorfull'); # minfull
 
 # Mapping of strings to numeric uniquename values for easier biblatex processing
 our %UNIQUENAME_VALUES = ('none' => 0, 'init' => 1, full => '2');

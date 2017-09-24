@@ -972,8 +972,8 @@
               <choice>
                 <value>none</value>
                 <value>init</value>
+                <value>initorfull</value>
                 <value>full</value>
-                <value>fullonly</value>
               </choice>
             </attribute>
           </optional>
