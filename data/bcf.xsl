@@ -868,7 +868,7 @@
         <h4>Uniquename Template</h4>
         <table>
           <thead>
-            <tr><td>Order</td><td>Base</td><td>Use option</td><td>Namepart</td></tr>
+            <tr><td>Order</td><td>Base</td><td>Use option</td><td>Disambiguation level</td><td>Namepart</td></tr>
           </thead>
           <tbody>
             <xsl:for-each select="/bcf:controlfile/bcf:uniquenametemplate/bcf:namepart">
@@ -877,6 +877,7 @@
                 <td><xsl:value-of select="./@order"/></td>
                 <td><xsl:value-of select="./@base"/></td>
                 <td><xsl:value-of select="./@use"/></td>
+                <td><xsl:value-of select="./@disambiguation"/></td>
                 <td><xsl:value-of select="./text()"/></td>
               </tr>
             </xsl:for-each>
