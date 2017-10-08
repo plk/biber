@@ -100,6 +100,54 @@ sub get_sortnamekeyschemename {
   return $self->{sortnamekeyschemename};
 }
 
+=head2 set_uniquenametemplatename
+
+    Sets the uniquenametemplate name of a sort list
+
+=cut
+
+sub set_uniquenametemplatename {
+  my $self = shift;
+  my $untn = shift;
+  $self->{uniquenametemplatename} = lc($untn);
+  return;
+}
+
+=head2 get_uniquenametemplatename
+
+    Gets the uniquenametemplate name of a sort list
+
+=cut
+
+sub get_uniquenametemplatename {
+  my $self = shift;
+  return $self->{uniquenametemplatename};
+}
+
+=head2 set_labelalphanametemplatename
+
+    Sets the labelalphanametemplate name of a sort list
+
+=cut
+
+sub set_labelalphanametemplatename {
+  my $self = shift;
+  my $latn = shift;
+  $self->{labelalphanametemplatename} = lc($latn);
+  return;
+}
+
+=head2 get_uniquenametemplatename
+
+    Gets the uniquenametemplate name of a sort list
+
+=cut
+
+sub get_labelalphanametemplatename {
+  my $self = shift;
+  return $self->{labelalphanametemplatename};
+}
+
 =head2 set_sortinit_collator
 
     Sets the sortinit collator for this list
@@ -248,7 +296,9 @@ sub get_listdata {
            $self->{extraalphadata},
            $self->{extratitledata},
            $self->{extratitleyeardata},
-           $self->{sortdataschema} ];
+           $self->{sortdataschema},
+           $self->{uniquenametemplatename},
+           $self->{labelalphanametemplatename}];
 }
 
 =head2 set_extrayeardata_for_key

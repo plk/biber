@@ -18,6 +18,8 @@ __PACKAGE__->mk_accessors(qw (
                               visible_bib
                               useprefix
                               sortnamekeyscheme
+                              uniquenametemplate
+                              labelalphanametemplate
                             ));
 
 =encoding utf-8

@@ -31,6 +31,8 @@ __PACKAGE__->mk_accessors(qw (
                                unmininfo
                                useprefix
                                sortnamekeyscheme
+                               uniquenametemplate
+                               labelalphanametemplate
                             ));
 
 =encoding utf-8

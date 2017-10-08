@@ -161,7 +161,7 @@ sub _genpnhash {
 
 
 ##################
-# label generation
+# LABEL GENERATION
 ##################
 
 # special label routines - either not part of the dm but special fields for biblatex
@@ -200,7 +200,7 @@ sub _dispatch_table_label {
 
 # Main label loop
 sub _genlabel {
-  my ($self, $citekey) = @_;
+  my ($self, $citekey, $slist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -210,7 +210,7 @@ sub _genlabel {
   $LABEL_FINAL = 0; # reset final shortcut
 
   foreach my $labelpart (sort {$a->{order} <=> $b->{order}} $labelalphatemplate->{labelelement}->@*) {
-    my $ret = _labelpart($self, $labelpart->{labelpart}, $citekey, $secnum, $section, $be);
+    my $ret = _labelpart($self, $labelpart->{labelpart}, $citekey, $secnum, $section, $be, $slist);
     $label .= $ret->[0] || '';
     $slabel .= $ret->[1] || '';
     last if $LABEL_FINAL;
@@ -221,7 +221,7 @@ sub _genlabel {
 
 # Disjunctive set of label parts
 sub _labelpart {
-  my ($self, $labelpart, $citekey, $secnum, $section, $be) = @_;
+  my ($self, $labelpart, $citekey, $secnum, $section, $be, $slist) = @_;
   my $bee = $be->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
   my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
@@ -274,7 +274,7 @@ sub _labelpart {
         }
       }
     }
-    my $ret = _dispatch_label($self, $part, $citekey, $secnum, $section, $be);
+    my $ret = _dispatch_label($self, $part, $citekey, $secnum, $section, $be, $slist);
     $lp .= $ret->[0];
     $slp .= $ret->[1];
 
@@ -291,7 +291,7 @@ sub _labelpart {
 
 # Main label dispatch method
 sub _dispatch_label {
-  my ($self, $part, $citekey, $secnum, $section, $be) = @_;
+  my ($self, $part, $citekey, $secnum, $section, $be, $slist) = @_;
   my $code_ref;
   my $code_args_ref;
   my $lp;
@@ -308,7 +308,7 @@ sub _dispatch_label {
     $code_ref = \&_label_literal;
     $code_args_ref = [$part->{content}];
   }
-  return &{$code_ref}($self, $citekey, $secnum, $section, $be, $code_args_ref, $part);
+  return &{$code_ref}($self, $citekey, $secnum, $section, $be, $code_args_ref, $part, $slist);
 }
 
 
@@ -352,11 +352,17 @@ sub _label_literal {
 
 # names
 sub _label_name {
-  my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs) = @_;
+  my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs, $sortlist) = @_;
   my $bee = $be->get_field('entrytype');
   my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
   my $alphaothers = Biber::Config->getblxoption('alphaothers', $bee);
   my $sortalphaothers = Biber::Config->getblxoption('sortalphaothers', $bee);
+
+  # Get the labelalphanametemplate name or this list context
+  my $lantname = $sortlist->get_labelalphanametemplatename;
+
+  # Override with any entry-specific information
+  $lantname = Biber::Config->getblxoption('labelalphanametemplatename', undef, $citekey) // $lantname;
 
   # Shortcut - if there is no labelname, don't do anything
   return ['',''] unless defined($be->get_labelname_info);
@@ -392,6 +398,11 @@ sub _label_name {
   if (Biber::Config->getblxoption("use$lnameopt", $bee, $citekey) and
     $names) {
 
+    # namelist scope labelalphanametemplate
+    if (defined($names->get_labelalphanametemplate)) {
+      $lantname = $names->get_labelalphanametemplate;
+    }
+
     # namelist scope useprefix
     if (defined($names->get_useprefix)) {
       $useprefix = $names->get_useprefix;
@@ -426,12 +437,15 @@ sub _label_name {
       $logger->trace("$realname/numnames=$numnames/visibility=$visibility/nr_start=$nr_start/nr_end=$nr_end");
     }
 
-    # Now extract nameparts to use in label construction
-    my $lnat = Biber::Config->getblxoption('labelalphanametemplate', $bee);
     my $parts;
     my $opts;
 
     foreach my $name ($names->names->@*) {
+
+      # namelist scope labelalphanametemplate
+      if (defined($name->get_labelalphanametemplate)) {
+        $lantname = $name->get_labelalphanametemplate;
+      }
 
       # name scope useprefix
       if (defined($name->get_useprefix)) {
@@ -441,6 +455,9 @@ sub _label_name {
       # In future, perhaps there will be a need for more namepart use* options and
       # therefore $opts will come from somewhere else
       $opts->{useprefix} = $useprefix;
+
+      # Now extract the template to use from the global hash of templates
+      my $lnat = Biber::Config->getblxoption('labelalphanametemplate')->{$lantname};
 
       my $preacc; # arrayref accumulator for "pre" nameparts
       my $mainacc; # arrayref accumulator for main non "pre" nameparts

@@ -475,8 +475,8 @@ sub _config_file_set {
     }
     elsif (lc($k) eq 'labelalphanametemplate') {
       foreach my $t ($v->@*) {
+        my $lants;
         my $lant;
-        my $lantype = $t->{type};
         foreach my $np (sort {$a->{order} <=> $b->{order}} $t->{namepart}->@*) {
           push $lant->@*, {namepart           => $np->{content},
                            use                => $np->{use},
@@ -486,13 +486,8 @@ sub _config_file_set {
                            substring_width    => $np->{substring_width} };
 
         }
-
-        if ($lantype eq 'global') {
-          Biber::Config->setblxoption('labelalphanametemplate', $lant);
-        }
-        else {
-          Biber::Config->setblxoption('labelalphanametemplate', $lant, 'ENTRYTYPE', $lantype);
-        }
+        $lants->{$t->{name}} = $lant;
+        Biber::Config->setblxoption('labelalphanametemplate', $lants);
       }
     }
     elsif (lc($k) eq 'uniquenametemplate') {
@@ -1215,6 +1210,18 @@ sub is_inheritance_path {
 
 
 =head1 labelalpha disambiguation
+
+=head2 reset_la_disambiguation
+
+    Reset the counter which says we have seen this labelalpha
+
+=cut
+
+sub reset_la_disambiguation {
+  shift; # class method so don't care about class name
+  $CONFIG->{state}{ladisambiguation} = {};
+  return;
+}
 
 =head2 incr_la_disambiguation
 
