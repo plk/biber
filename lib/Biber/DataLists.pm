@@ -1,4 +1,4 @@
-package Biber::SortLists;
+package Biber::DataLists;
 use v5.24;
 use strict;
 use warnings;
@@ -7,11 +7,11 @@ use warnings;
 
 =head1 NAME
 
-Biber::SortLists
+Biber::DataLists
 
 =head2 new
 
-    Initialize a Biber::SortLists object
+    Initialize a Biber::DataLists object
 
 =cut
 
@@ -65,23 +65,38 @@ sub get_lists_for_section {
   return $lists;
 }
 
+=head2 get_lists_by_attrs
+
+    Returns an array ref of sort lists with certain
+    attributes
+
+=cut
+
+sub get_lists_by_attrs {
+  my ($self, %attrs) = @_;
+  my $lists;
+  LIST: foreach my $list ($self->{lists}->@*) {
+      foreach my $attr (keys %attrs) {
+        my $method = "get_$attr";
+        unless ($attrs{$attr} eq $list->$method) {
+          next LIST;
+        }
+      }
+      push $lists->@*, $list;
+    }
+  return $lists;
+}
+
 =head2 get_list
 
-    Returns a specific list by section, name, type, sortscheme, sortnamekeyscheme
+    Returns a specific list by list metadata
 
 =cut
 
 sub get_list {
-  my ($self, $section, $name, $type, $ssn, $snksn, $pn) = @_;
-  foreach my $list ($self->{lists}->@*) {
-    return $list if ($list->get_name eq $name and
-                     $list->get_sortschemename eq $ssn and
-                     $list->get_sortnamekeyschemename eq $snksn and
-                     $list->get_labelprefix eq $pn and
-                     $list->get_type eq $type and
-                     $list->get_section == $section);
-  }
-  return undef;
+  my ($self, %attrs) = @_;
+  my $lists = $self->get_lists_by_attrs(%attrs);
+  return defined($lists) ? $lists->[0] : undef;
 }
 
 =head2 has_lists_of_type_for_section

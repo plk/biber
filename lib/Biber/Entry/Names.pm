@@ -7,6 +7,7 @@ __PACKAGE__->follow_best_practice;
 no autovivification;
 
 use Data::Dump;
+use Data::Uniqid qw (suniqid);
 use Biber::Config;
 use Log::Log4perl qw( :no_extra_logdie_message );
 my $logger = Log::Log4perl::get_logger('main');
@@ -17,9 +18,10 @@ __PACKAGE__->mk_accessors(qw (
                               visible_cite
                               visible_bib
                               useprefix
+                              id
                               sortnamekeyscheme
-                              uniquenametemplate
-                              labelalphanametemplate
+                              uniquenametemplatename
+                              labelalphanametemplatename
                             ));
 
 =encoding utf-8
@@ -36,7 +38,8 @@ Biber::Entry::Names
 
 sub new {
   my $class = shift;
-  return bless {namelist => []}, $class;
+  return bless {namelist => [],
+                id       => suniqid}, $class;
 }
 
 

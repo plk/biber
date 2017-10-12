@@ -410,14 +410,14 @@ sub output {
 
   foreach my $secnum (sort keys $data->{ENTRIES}->%*) {
     my $section = $self->get_output_section($secnum);
-    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->sortlists->get_lists_for_section($secnum)->@*) {
+    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
       next unless $list->count_keys; # skip empty lists
       my $listtype = $list->get_type;
       foreach my $k ($list->get_keys) {
         my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
 
         # Instantiate any dynamic, list specific entry information
-        my $entry_string = $list->instantiate_entry($entry, $k);
+        my $entry_string = $list->instantiate_entry($section, $entry, $k);
 
         # If requested to convert UTF-8 to macros ...
         if (Biber::Config->getoption('output_safechars')) {

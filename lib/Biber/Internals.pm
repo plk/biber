@@ -94,17 +94,31 @@ sub _getfullhash {
 # Same as _getnamehash but takes account of uniquename setting for firstname
 # It's used for extra* tracking only
 sub _getnamehash_u {
-  my ($self, $citekey, $names) = @_;
+  my ($self, $citekey, $names, $dlist) = @_;
   my $hashkey = '';
   my $count = $names->count_names;
   my $visible = $names->get_visible_cite;
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 
+  # refcontext or per-entry uniquenametemplate
+  my $untname = Biber::Config->getblxoption('uniquenametemplatename', undef, $citekey) // $dlist->get_uniquenametemplatename;
+
+  # Per-namelist uniquenametemplate
+  if (defined($names->get_uniquenametemplatename)) {
+    $untname = $names->get_uniquenametemplatename;
+  }
+
   # namehash obeys list truncations
   foreach my $n ($names->first_n_names($visible)->@*) {
+
+    # Per-name uniquenametemplate
+    if (defined($n->get_uniquenametemplatename)) {
+      $untname = $n->get_uniquenametemplatename;
+    }
+
     # Use nameuniqueness template to construct hash
-    foreach my $nps (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
+    foreach my $nps (Biber::Config->getblxoption('uniquenametemplate')->{$untname}->@*) {
       my $npn = $nps->{namepart};
 
       if (my $np = $n->get_namepart($npn)) {
@@ -399,8 +413,8 @@ sub _label_name {
     $names) {
 
     # namelist scope labelalphanametemplate
-    if (defined($names->get_labelalphanametemplate)) {
-      $lantname = $names->get_labelalphanametemplate;
+    if (defined($names->get_labelalphanametemplatename)) {
+      $lantname = $names->get_labelalphanametemplatename;
     }
 
     # namelist scope useprefix
@@ -442,9 +456,9 @@ sub _label_name {
 
     foreach my $name ($names->names->@*) {
 
-      # namelist scope labelalphanametemplate
-      if (defined($name->get_labelalphanametemplate)) {
-        $lantname = $name->get_labelalphanametemplate;
+      # name scope labelalphanametemplate
+      if (defined($name->get_labelalphanametemplatename)) {
+        $lantname = $name->get_labelalphanametemplatename;
       }
 
       # name scope useprefix

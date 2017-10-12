@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 72;
+use Test::More tests => 74;
 use Test::Differences;
 unified_diff;
 
@@ -46,176 +46,100 @@ Biber::Config->setblxoption('mincitenames', 3);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
 my $bibentries = $section->bibentries;
 
 my $name1 =
     { given               => {string => 'John', initial => ['J']},
       family              => {string => 'Doe', initial => ['D']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      basenamestring      => 'Doe',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'DoeJohn',
-      namestrings         => ['Doe'],
-      strip               => { given => 0, family => 0, prefix => undef, suffix => undef }};
+      suffix              => {string => undef, initial => undef}};
 
 my $name2 =
     { given               => {string => 'John', initial => ['J']},
       family              => {string => 'Doe', initial  => ['D']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => 'Jr', initial => ['J']},
-      basenamestring      => 'Doe',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']], ['given', 'init'], ['given', 'full']],
-      namestring          => 'DoeJohn',
-      namestrings         => ['Doe', 'DoeJ', 'DoeJohn'],
-      strip               => { given => 0, family => 0, prefix => undef, suffix => 0 }};
+      suffix              => {string => 'Jr', initial => ['J']}};
 
 my $name3 =
     { given               => {string => 'Johann~Gottfried', initial => ['J', 'G']},
       family              => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
-      basenamestring      => 'vonBerlichingen zu~Hornberg',
-      basenamestringparts => ['prefix', 'family'],
-      namedisschema       => [['base', ['prefix', 'family']]],
-      namestring          => 'vonBerlichingen zu~HornbergJohann~Gottfried',
-      namestrings         => ['vonBerlichingen zu~Hornberg'],
       prefix              => {string => 'von', initial => ['v']},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => 0, suffix => undef }};
+      suffix              => {string => undef, initial => undef}};
 
 my $name4 =
     { given               => {string => 'Johann~Gottfried', initial => ['J', 'G']},
       family              => {string => 'Berlichingen zu~Hornberg', initial => ['B', 'z', 'H']},
-      basenamestring      => 'Berlichingen zu~Hornberg',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'Berlichingen zu~HornbergJohann~Gottfried',
-      namestrings         => ['Berlichingen zu~Hornberg'],
       prefix              => {string => 'von', initial => ['v']},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => 0, suffix => undef }};
+      suffix              => {string => undef, initial => undef}};
 
 my $name5 =
    {  given               => {string => undef, initial => undef},
       family              => {string => 'Robert and Sons, Inc.', initial => ['R']},
-      basenamestring      => 'Robert and Sons, Inc.',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'Robert and Sons, Inc.',
-      namestrings         => ['Robert and Sons, Inc.'],
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => undef, family => 1, prefix => undef, suffix => undef }};
+      suffix              => {string => undef, initial => undef}};
 
 my $name6 =
    {  given               => {string => 'ʿAbdallāh', initial => ['A']},
       family              => {string => 'al-Ṣāliḥ', initial => ['Ṣ']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring      => 'al-Ṣāliḥ',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'al-ṢāliḥʿAbdallāh',
-      namestrings         => ['al-Ṣāliḥ']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name7 =
    {  given               => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
       family              => {string => 'Vallée~Poussin', initial => ['V', 'P']},
       prefix              => {string => 'de~la', initial => ['d', 'l']},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => 0, suffix => undef },
-      basenamestring      => 'de~laVallée~Poussin',
-      basenamestringparts => ['prefix', 'family'],
-      namedisschema       => [['base', ['prefix', 'family']], ['given', 'init'], ['given', 'full']],
-      namestring          => 'de~laVallée~PoussinJean Charles~Gabriel',
-      namestrings         => ['de~laVallée~Poussin', 'de~laVallée~PoussinJCG', 'de~laVallée~PoussinJean Charles~Gabriel']} ;
+      suffix              => {string => undef, initial => undef}};
 
 my $name8 =
    {  given               => {string => 'Jean Charles Gabriel', initial => ['J']},
       family              => {string => 'Vallée~Poussin', initial => ['V', 'P']},
       prefix              => {string => 'de~la', initial => ['d', 'l']},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 1, family => 0, prefix => 0, suffix => undef },
-      basenamestring      => 'Vallée~Poussin',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'Vallée~PoussinJean Charles Gabriel',
-      namestrings         => ['Vallée~Poussin']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name9 =
    {  given               => {string => 'Jean Charles Gabriel {de la}~Vallée', initial => ['J', 'C', 'G', 'd', 'V']},
       family              => {string => 'Poussin', initial => ['P']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring      => 'Poussin',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'PoussinJean Charles Gabriel {de la}~Vallée',
-      namestrings         => ['Poussin']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name10 =
    {  given               => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
       family              => {string => 'Vallée Poussin', initial => ['V']},
       prefix              => {string => 'de~la', initial => ['d', 'l']},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 1, prefix => 0, suffix => undef },
-      basenamestring      => 'Vallée Poussin',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'Vallée PoussinJean Charles~Gabriel',
-      namestrings         => ['Vallée Poussin']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name11 =
    {  given               => {string => 'Jean Charles Gabriel', initial => ['J']},
       family              => {string => 'Vallée Poussin', initial => ['V']},
       prefix              => {string => 'de~la', initial => ['d', 'l']},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 1, family => 1, prefix => 0, suffix => undef },
-      basenamestring      => 'Vallée Poussin',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'Vallée PoussinJean Charles Gabriel',
-      namestrings         => ['Vallée Poussin']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name12 =
    {  given               => {string => 'Jean Charles~Gabriel', initial => ['J', 'C', 'G']},
       family              => {string => 'Poussin', initial => ['P']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring      => 'Poussin',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'PoussinJean Charles~Gabriel',
-      namestrings         => ['Poussin']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name13 =
    {  given               => {string => 'Jean~Charles', initial => ['J', 'C']},
       family              => {string => 'Poussin Lecoq', initial => ['P']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 1, prefix => undef, suffix => undef },
-      basenamestring      => 'Poussin Lecoq',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'Poussin LecoqJean~Charles',
-      namestrings         => ['Poussin Lecoq']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name14 =
    {  given               => {string => 'J.~C.~G.', initial => ['J', 'C', 'G']},
       family              => {string => 'Vallée~Poussin', initial => ['V', 'P']},
       prefix              => {string => 'de~la', initial => ['d', 'l']},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => 0, suffix => undef },
-      basenamestring      => 'de~laVallée~Poussin',
-      basenamestringparts => ['prefix', 'family'],
-      namedisschema       => [['base', ['prefix', 'family']]],
-      namestring          => 'de~laVallée~PoussinJ.~C.~G.',
-      namestrings         => ['de~laVallée~Poussin']};
+      suffix              => {string => undef, initial => undef}};
 
 # Note that the family initials are wrong because the prefix "El-" was not stripped
 # This is because the default noinit regexp only strips lower-case prefices to protect
@@ -224,73 +148,38 @@ my $name15 =
    {  given               => {string => 'E.~S.', initial => ['E', 'S']},
       family              => {string => 'El-{M}allah', initial => ['E-M']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring      => 'El-{M}allah',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'El-{M}allahE.~S.',
-      namestrings         => ['El-{M}allah']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name16 =
    {  given               => {string => 'E.~S.', initial => ['E', 'S']},
       family              => {string => '{K}ent-{B}oswell', initial => ['K-B']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring      => '{K}ent-{B}oswell',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => '{K}ent-{B}oswellE.~S.',
-      namestrings         => ['{K}ent-{B}oswell']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name17 =
    {  given               => {string => 'A.~N.', initial => ['A', 'N']},
       family              => {string => 'Other', initial => ['O']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring      => 'Other',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'OtherA.~N.',
-      namestrings         => ['Other']};
+      suffix              => {string => undef, initial => undef}};
 
 my $name18 =
    {  given               => {string => undef, initial => undef},
       family              => {string => 'British National Corpus', initial => ['B']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => undef, family => 1, prefix => undef, suffix => undef },
-      basenamestring      => 'British National Corpus',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'British National Corpus',
-      namestrings         => ['British National Corpus']};
+      suffix              => {string => undef, initial => undef}};
+my $name18strip = { given => undef, family => 1, prefix => undef, suffix => undef };
 
 my $name19 =
    {  given               => {string => 'Luis', initial => ['L']},
-      family              => {string => 'Vázques{ de }Parga', initial => ['V']},
+      family              => {string => 'Vázques{ de }Parga', initial => ['V']},
       prefix              => {string => undef, initial => undef},
-      suffix              => {string => undef, initial => undef},
-      strip               => { given => 0, family => 0, prefix => undef, suffix => undef },
-      basenamestring      => 'Vázques{ de }Parga',
-      basenamestringparts => ['family'],
-      namedisschema       => [['base', ['family']]],
-      namestring          => 'Vázques{ de }PargaLuis',
-      namestrings         => ['Vázques{ de }Parga']};
+      suffix              => {string => undef, initial => undef}};
 
 my $namex1 =
    {  given               => {string => 'James', initial => ['J']},
       family              => {string => 'Smithers~Jones', initial => ['S','J']},
       prefix              => {string => 'van~der', initial => ['v','d']},
-      suffix              => {string => undef, initial => undef},
-      useprefix           => 'true',
-      basenamestring      => 'van~derSmithers~Jones',
-      basenamestringparts => ['prefix', 'family'],
-      namedisschema       => [['base', ['prefix', 'family']]],
-      namestring          => 'van~derSmithers~JonesJames',
-      namestrings         => ['van~derSmithers~Jones']};
+      suffix              => {string => undef, initial => undef}};
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
@@ -966,43 +855,73 @@ my $l31 = q|    \entry{L31}{book}{}
     \endentry
 |;
 
+# Convert to NFC for testing
+sub tparsename {
+  my $nps = Biber::Input::file::bibtex::parsename(@_)->{nameparts};
+  foreach my $np (keys $nps->%*) {
+    next unless defined($nps->{$np}{string});
+    $nps->{$np}{string} = NFC($nps->{$np}{string});
+    my $npis;
+    foreach my $npi ($nps->{$np}{initial}->@*) {
+      push $npis->@*, NFC($npi);
+    }
+    $nps->{$np}{initial} = $npis;
+  }
+  return $nps;
+}
+
+sub tparsename_x {
+  my $nps = Biber::Input::file::bibtex::parsename_x(@_)->{nameparts};
+  foreach my $np (keys $nps->%*) {
+    next unless defined($nps->{$np}{string});
+    $nps->{$np}{string} = NFC($nps->{$np}{string}) || undef;
+    my $npis;
+    foreach my $npi ($nps->{$np}{initial}->@*) {
+      push $npis->@*, NFC($npi);
+    }
+    $nps->{$np}{initial} = $npis;
+  }
+  return $nps;
+}
+
 # name parsing tests
-is_deeply(Biber::Input::file::bibtex::parsename('John Doe', 'author', {uniquename => 0}), $name1, 'parsename 1');
-is_deeply(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author', {uniquename => 2}), $name2, 'parsename 2');
-is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 1, uniquename => 0}), $name3, 'parsename 3') ;
-is_deeply(Biber::Input::file::bibtex::parsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author', {useprefix => 0, uniquename => 0}), $name4, 'parsename 4') ;
-is_deeply(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author', {uniquename => 0}), $name5, 'parsename 5') ;
-is_deeply(Biber::Input::file::bibtex::parsename('al-Ṣāliḥ, ʿAbdallāh', 'author', {uniquename => 0}, 'fakekey', 1), $name6, 'parsename 6') ;
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la Vallée Poussin', 'author', {useprefix => 1, uniquename => 2}, 'fakekey', 1), $name7, 'parsename 7');
-is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author', {uniquename => 0}, 'fakekey', 1), $name8, 'parsename 8');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author', {uniquename => 0}, 'fakekey', 1), $name9, 'parsename 9');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author', {uniquename => 0}, 'fakekey', 1), $name10, 'parsename 10');
-is_deeply(Biber::Input::file::bibtex::parsename('{Jean Charles Gabriel} de la {Vallée Poussin}', 'author', {uniquename => 0}, 'fakekey', 1), $name11, 'parsename 11');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel Poussin', 'author', {uniquename => 0}), $name12, 'parsename 12');
-is_deeply(Biber::Input::file::bibtex::parsename('Jean Charles {Poussin Lecoq}', 'author', {uniquename => 0}), $name13, 'parsename 13');
-is_deeply(Biber::Input::file::bibtex::parsename('J. C. G. de la Vallée Poussin', 'author', {useprefix => 1, uniquename => 0}, 'fakekey', 1), $name14, 'parsename 14');
-is_deeply(Biber::Input::file::bibtex::parsename('E. S. El-{M}allah', 'author', {uniquename => 0}), $name15, 'parsename 15');
-is_deeply(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author', {uniquename => 0}), $name16, 'parsename 16');
-is_deeply(Biber::Input::file::bibtex::parsename('Other, A.~N.', 'author', {uniquename => 0}), $name17, 'parsename 17');
-is_deeply(Biber::Input::file::bibtex::parsename('{{{British National Corpus}}}', 'author', {uniquename => 0}), $name18, 'parsename 18');
-is_deeply(Biber::Input::file::bibtex::parsename('Vázques{ de }Parga, Luis', 'author', {uniquename => 0}), $name19, 'parsename 19');
-is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author', {uniquename => 0}), $namex1, 'parsename_x 1');
+is_deeply(tparsename('John Doe', 'author'), $name1, 'parsename 1');
+is_deeply(tparsename('Doe, Jr, John', 'author'), $name2, 'parsename 2');
+is_deeply(tparsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author'), $name3, 'parsename 3') ;
+is_deeply(tparsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author'), $name4, 'parsename 4') ;
+is_deeply(tparsename('{Robert and Sons, Inc.}', 'author'), $name5, 'parsename 5') ;
+is_deeply(tparsename('al-Ṣāliḥ, ʿAbdallāh', 'author'), $name6, 'parsename 6') ;
+is_deeply(tparsename('Jean Charles Gabriel de la Vallée Poussin', 'author'), $name7, 'parsename 7');
+is_deeply(tparsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author'), $name8, 'parsename 8');
+is_deeply(tparsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author'), $name9, 'parsename 9');
+is_deeply(tparsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author'), $name10, 'parsename 10');
+is_deeply(tparsename('{Jean Charles Gabriel} de la {Vallée Poussin}', 'author'), $name11, 'parsename 11');
+is_deeply(tparsename('Jean Charles Gabriel Poussin', 'author'), $name12, 'parsename 12');
+is_deeply(tparsename('Jean Charles {Poussin Lecoq}', 'author'), $name13, 'parsename 13');
+is_deeply(tparsename('J. C. G. de la Vallée Poussin', 'author'), $name14, 'parsename 14');
+is_deeply(tparsename('E. S. El-{M}allah', 'author'), $name15, 'parsename 15');
+is_deeply(tparsename('E. S. {K}ent-{B}oswell', 'author'), $name16, 'parsename 16');
+is_deeply(tparsename('Other, A.~N.', 'author'), $name17, 'parsename 17');
+is_deeply(tparsename('{{{British National Corpus}}}', 'author'), $name18, 'parsename 18');
+is_deeply(Biber::Input::file::bibtex::parsename('{{{British National Corpus}}}', 'author')->{strip}, $name18strip, 'parsename 18a');
+is_deeply(tparsename('Vázques{ de }Parga, Luis', 'author'), $name19, 'parsename 19');
+is_deeply(tparsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author'), $namex1, 'parsename_x 1');
+eq_or_diff(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->{useprefix}, 'true', 'parsename_x 2');
 
 # name to bib tests
-eq_or_diff(Biber::Input::file::bibtex::parsename('John Doe', 'author', {uniquename => 0})->name_to_bib, 'Doe, John', 'name_to_bib 1');
-eq_or_diff(Biber::Input::file::bibtex::parsename('John van der Doe', 'author', {uniquename => 0})->name_to_bib, 'van der Doe, John', 'name_to_bib 2');
-eq_or_diff(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author', {uniquename => 0})->name_to_bib, 'Doe, Jr, John', 'name_to_bib 3');
-eq_or_diff(Biber::Input::file::bibtex::parsename('von Doe, Jr, John', 'author', {uniquename => 0})->name_to_bib, 'von Doe, Jr, John', 'name_to_bib 4');
-eq_or_diff(Biber::Input::file::bibtex::parsename('John Alan Doe', 'author', {uniquename => 0})->name_to_bib, 'Doe, John Alan', 'name_to_bib 5');
-eq_or_diff(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author', {uniquename => 0})->name_to_bib, '{Robert and Sons, Inc.}', 'name_to_bib 6');
-eq_or_diff(NFC(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author', {uniquename => 0})->name_to_bib), 'de la {Vallée Poussin}, Jean Charles Gabriel', 'name_to_bib 7');
-eq_or_diff(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author', {uniquename => 0})->name_to_bib, '{K}ent-{B}oswell, E. S.', 'name_to_bib 8');
-is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author', {uniquename => 0})->name_to_bib, 'van der Smithers Jones, James', 'name_to_bib - 9');
+eq_or_diff(Biber::Input::file::bibtex::parsename('John Doe', 'author')->name_to_bib, 'Doe, John', 'name_to_bib 1');
+eq_or_diff(Biber::Input::file::bibtex::parsename('John van der Doe', 'author')->name_to_bib, 'van der Doe, John', 'name_to_bib 2');
+eq_or_diff(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author')->name_to_bib, 'Doe, Jr, John', 'name_to_bib 3');
+eq_or_diff(Biber::Input::file::bibtex::parsename('von Doe, Jr, John', 'author')->name_to_bib, 'von Doe, Jr, John', 'name_to_bib 4');
+eq_or_diff(Biber::Input::file::bibtex::parsename('John Alan Doe', 'author')->name_to_bib, 'Doe, John Alan', 'name_to_bib 5');
+eq_or_diff(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author')->name_to_bib, '{Robert and Sons, Inc.}', 'name_to_bib 6');
+eq_or_diff(NFC(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author')->name_to_bib), 'de la {Vallée Poussin}, Jean Charles Gabriel', 'name_to_bib 7');
+eq_or_diff(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author')->name_to_bib, '{K}ent-{B}oswell, E. S.', 'name_to_bib 8');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->name_to_bib, 'van der Smithers Jones, James', 'name_to_bib - 9');
 
 # name to xname tests
-is_deeply(Biber::Input::file::bibtex::parsename('van der Smithers Jones, James', 'author', {uniquename => 0})->name_to_xname, 'family=Smithers Jones, given=James, prefix=van der', 'name_to_xname - 1');
-is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author', {uniquename => 0})->name_to_xname, 'family=Smithers Jones, given=James, prefix=van der, useprefix=true', 'name_to_xname - 2');
-
+is_deeply(Biber::Input::file::bibtex::parsename('van der Smithers Jones, James', 'author')->name_to_xname, 'family=Smithers Jones, given=James, prefix=van der', 'name_to_xname - 1');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->name_to_xname, 'family=Smithers Jones, given=James, prefix=van der, useprefix=true', 'name_to_xname - 2');
 
 # Full entry tests
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'First Last') ;
@@ -1059,7 +978,15 @@ Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-$main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+$main = $biber->datalists->get_list(section                    => 0,
+                                    name                       => 'nty/global//global/global',
+                                    type                       => 'entry',
+                                    sortschemename             => 'nty',
+                                    sortnamekeyschemename      => 'global',
+                                    labelprefix                => '',
+                                    uniquenametemplatename     => 'global',
+                                    labelalphanametemplatename => 'global');
+
 $bibentries = $section->bibentries;
 
 eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info)->nth_name(1)->get_namepart_initial('given')->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8

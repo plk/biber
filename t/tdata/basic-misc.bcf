@@ -1893,13 +1893,23 @@
     <bcf:citekey order="23">verb1</bcf:citekey>
     <bcf:citekey order="24">over1</bcf:citekey>
   </bcf:section>
-  <!-- SORT LISTS -->
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global//global/global"
-                sortscheme="nty" type="entry" labelprefix=""
-                uniquenametemplatename="global" labelalphanametemplatename="global"/>
-  <bcf:sortlist sortnamekeyscheme="global" section="0"
-                name="shorthands/global//global/global" sortscheme="shorthands"
-                type="list" labelprefix="" uniquenametemplatename="global" labelalphanametemplatename="global">
+  <!-- DATA LISTS -->
+  <bcf:datalist sortnamekeyscheme="global"
+                section="0"
+                name="nty/global//global/global"
+                sortscheme="nty"
+                type="entry"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global"/>
+  <bcf:datalist sortnamekeyscheme="global"
+                section="0"
+                name="shorthands/global//global/global"
+                sortscheme="shorthands"
+                type="list"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global">
     <bcf:filter type="field">shorthand</bcf:filter>
-  </bcf:sortlist>
+  </bcf:datalist>
 </bcf:controlfile>

@@ -18,7 +18,7 @@
 
 
 \refsection{0}
-  \sortlist[list]{shorthands/global/}
+  \datalist[list]{shorthands/global//global/global}
     \entry{F1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
@@ -44,8 +44,8 @@
       \field{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
-  \endsortlist
-  \sortlist[entry]{nty/global/}
+  \enddatalist
+  \datalist[entry]{nty/global//global/global}
     \entry{F1}{book}{}
       \name{author}{1}{}{%
         {{uniquename=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
@@ -71,7 +71,7 @@
       \field{title}{The Fullness of Times}
       \field{year}{1995}
     \endentry
-  \endsortlist
+  \enddatalist
   \keyalias{F1a}{F1}
   \missing{C1}
 \endrefsection

@@ -47,7 +47,15 @@ Biber::Config->setoption('bcf', 'biblatexml.bcf');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
 my $bibentries = $section->bibentries;
 
 my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
@@ -166,5 +174,5 @@ my $bltx1 = 'mm,,,von!Булгаков!Павел Георгиевич#РРоз�
 eq_or_diff(encode_utf8($out->get_output_entry('bltx1', $main)), encode_utf8($l1), 'BibLaTeXML - 1');
 eq_or_diff($section->get_citekey_alias('bltx1a1'), 'bltx1', 'Citekey aliases - 1');
 eq_or_diff($section->get_citekey_alias('bltx1a2'), 'bltx1', 'Citekey aliases - 2');
-eq_or_diff(encode_utf8($main->get_sortdata('bltx1')->[0]), encode_utf8($bltx1), 'useprefix at name list and name scope - 1' );
+eq_or_diff(encode_utf8($main->get_sortdata_for_key('bltx1')->[0]), encode_utf8($bltx1), 'useprefix at name list and name scope - 1' );
 eq_or_diff(encode_utf8($out->get_output_entry('loopkey:a', $main)), encode_utf8($l2), 'BibLaTeXML automapcreate - 1');

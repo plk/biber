@@ -403,9 +403,9 @@
         <zeroOrMore>
           <ref name="translit"/>
         </zeroOrMore>
-        <optional>
+        <zeroOrMore>
           <ref name="labelalphanametemplate"/>
-        </optional>
+        </zeroOrMore>
         <optional>
           <ref name="labelalphatemplate"/>
         </optional>
@@ -1118,12 +1118,11 @@
   <define name="labelalphanametemplate">
     <element name="labelalphanametemplate">
       <optional>
-        <attribute name="type">
+        <attribute name="name">
           <data type="string"/>
         </attribute>
       </optional>
       <oneOrMore>
-        <!-- per-type? -->
         <element name="namepart">
           <attribute name="order">
             <data type="integer"/>

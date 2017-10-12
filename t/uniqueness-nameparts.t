@@ -44,7 +44,15 @@ Biber::Config->setblxoption('uniquename', 2);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global' ,'');
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
 my $out = $biber->get_output_obj;
 my $un1 = q|    \entry{un1}{article}{}
       \name{author}{1}{}{%
@@ -386,7 +394,15 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global' ,'');
+$main = $biber->datalists->get_list(section                    => 0,
+                                    name                       => 'nty/global//global/global',
+                                    type                       => 'entry',
+                                    sortschemename             => 'nty',
+                                    sortnamekeyschemename      => 'global',
+                                    labelprefix                => '',
+                                    uniquenametemplatename     => 'global',
+                                    labelalphanametemplatename => 'global');
+
 $out = $biber->get_output_obj;
 
 
@@ -416,7 +432,15 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
-$main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global' ,'');
+$main = $biber->datalists->get_list(section                    => 0,
+                                    name                       => 'nty/global//global/global',
+                                    type                       => 'entry',
+                                    sortschemename             => 'nty',
+                                    sortnamekeyschemename      => 'global',
+                                    labelprefix                => '',
+                                    uniquenametemplatename     => 'global',
+                                    labelalphanametemplatename => 'global');
+
 $out = $biber->get_output_obj;
 
 

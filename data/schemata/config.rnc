@@ -98,7 +98,7 @@ start =
     element recodedata           { text }? &
     element sortcase             { "0" | "1" }? &
     translit* &
-    labelalphanametemplate? &
+    labelalphanametemplate* &
     labelalphatemplate? &
     uniquenametemplate* &
     sortingnamekey? &
@@ -327,7 +327,7 @@ map =
 
 labelalphanametemplate =     
     element labelalphanametemplate {
-      attribute type { xsd:string }?, # per-type?
+      attribute name { xsd:string }?,
       element namepart {
         attribute order { xsd:integer },
         attribute use { "0" | "1" }?,

@@ -335,7 +335,6 @@
     <bcf:option datatype="boolean">skiplab</bcf:option>
     <bcf:option datatype="boolean">dataonly</bcf:option>
     <bcf:option datatype="xml">translit</bcf:option>
-    <bcf:option datatype="xml">labelalphanametemplate</bcf:option>
     <bcf:option datatype="xml">labelalphatemplate</bcf:option>
     <bcf:option datatype="xml">sortexclusion</bcf:option>
     <bcf:option datatype="xml">labelnamespec</bcf:option>
@@ -393,14 +392,20 @@
     <bcf:option datatype="integer">minitems</bcf:option>
     <bcf:option datatype="integer">maxalphanames</bcf:option>
     <bcf:option datatype="integer">minalphanames</bcf:option>
+    <bcf:option datatype="string">labelalphanametemplatename</bcf:option>
+    <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="NAMELIST">
     <bcf:option datatype="boolean">useprefix</bcf:option>
     <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
+    <bcf:option datatype="string">labelalphanametemplatename</bcf:option>
+    <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="NAME">
     <bcf:option datatype="boolean">useprefix</bcf:option>
     <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
+    <bcf:option datatype="string">labelalphanametemplatename</bcf:option>
+    <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
   <!-- DATAFIELDSETS -->
   <bcf:datafieldset name="setnames">
@@ -449,7 +454,7 @@
     </bcf:maps>
   </bcf:sourcemap>
   <!-- LABELALPHA NAME TEMPLATE -->
-  <bcf:labelalphanametemplate type="global">
+  <bcf:labelalphanametemplate name="global">
     <bcf:namepart order="1" use="1" pre="1" substring_width="1"
                   substring_compound="1">prefix</bcf:namepart>
     <bcf:namepart order="2">family</bcf:namepart>
@@ -1842,6 +1847,13 @@
     <bcf:citekey order="2">xd2</bcf:citekey>
     <bcf:citekey order="3">xd3</bcf:citekey>
   </bcf:section>
-  <!-- SORT LISTS -->
-  <bcf:sortlist sortnamekeyscheme="global" section="0" name="nty/global/" sortscheme="nty" type="entry" labelprefix=""/>
+  <!-- DATA LISTS -->
+  <bcf:datalist sortnamekeyscheme="global"
+                section="0"
+                name="nty/global//global/global"
+                sortscheme="nty"
+                type="entry"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global"/>
 </bcf:controlfile>

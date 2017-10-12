@@ -133,18 +133,25 @@ Biber::Config->setblxoption('useprefix', 1);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
 
-eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
-eq_or_diff($main->get_sortdata('avona')->[0], $useprefix2, 'von with name list scope useprefix' );
-eq_or_diff($main->get_sortdata('rvonr')->[0], $useprefix3, 'von with name scope useprefix' );
+eq_or_diff($main->get_sortdata_for_key('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
+eq_or_diff($main->get_sortdata_for_key('avona')->[0], $useprefix2, 'von with name list scope useprefix' );
+eq_or_diff($main->get_sortdata_for_key('rvonr')->[0], $useprefix3, 'von with name scope useprefix' );
 
 # Testing sorting data schema generation
 is_deeply($main->get_sortdataschema, $ssd1, 'Sorting data schemata - 1' );
 
 # Explicit "and others"
-eq_or_diff($main->get_sortdata('others1')->[0], $others1, 'Explicit "and others" - 1' );
-eq_or_diff($main->get_sortdata('others2')->[0], $others2, 'Explicit "and others" - 2' );
+eq_or_diff($main->get_sortdata_for_key('others1')->[0], $others1, 'Explicit "and others" - 1' );
+eq_or_diff($main->get_sortdata_for_key('others2')->[0], $others2, 'Explicit "and others" - 2' );
 
 # Testing custom name sorting key
 my $SNK = Biber::Config->getblxoption('sortingnamekey');
@@ -159,8 +166,8 @@ $SNK->{global} = [
        ];
 Biber::Config->setblxoption('sortingnamekey', $SNK);
 $biber->prepare;
-eq_or_diff($main->get_sortdata('snk1')->[0], $snk1, 'Sorting name key - 1' );
-eq_or_diff($main->get_sortdata('ent1')->[0], $ent1, 'Sorting name key - 2' );
+eq_or_diff($main->get_sortdata_for_key('snk1')->[0], $snk1, 'Sorting name key - 1' );
+eq_or_diff($main->get_sortdata_for_key('ent1')->[0], $ent1, 'Sorting name key - 2' );
 
 # regenerate information
 Biber::Config->setblxoption('useprefix', 0);
@@ -175,7 +182,7 @@ $SNK->{global} = [
 Biber::Config->setblxoption('sortingnamekey', $SNK);
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('tvonb')->[0], $useprefix4, 'von with type-specific presort, exclusions and useprefix=false' );
+eq_or_diff($main->get_sortdata_for_key('tvonb')->[0], $useprefix4, 'von with type-specific presort, exclusions and useprefix=false' );
 
 my $S;
 
@@ -237,8 +244,8 @@ Biber::Config->setoption('sortcase', '1');
 # regenerate information
 $biber->prepare;
 
-eq_or_diff(NFC($main->get_sortdata('luzzatto')->[0]), $prefix1, 'Title with nosort' );
-eq_or_diff(NFC($main->get_sortdata('hasan')->[0]), $diacritic1, 'Name with nosort' );
+eq_or_diff(NFC($main->get_sortdata_for_key('luzzatto')->[0]), $prefix1, 'Title with nosort' );
+eq_or_diff(NFC($main->get_sortdata_for_key('hasan')->[0]), $diacritic1, 'Name with nosort' );
 
 # Testing editor roles
 $S = {spec => [
@@ -261,7 +268,7 @@ Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff(NFC($main->get_sortdata('jaffe')->[0]), $edtypeclass1, 'Editor type/class' );
+eq_or_diff(NFC($main->get_sortdata_for_key('jaffe')->[0]), $edtypeclass1, 'Editor type/class' );
 
 
 # Testing sorting using various date fields
@@ -375,7 +382,7 @@ $biber->prepare;
 # Testing sorting data schema generation
 is_deeply($main->get_sortdataschema, $ssd2, 'Sorting data schemata - 2' );
 
-eq_or_diff($main->get_sortdata('moraux')->[0], $dates1, 'Very contrived but thorough test of date sorting' );
+eq_or_diff($main->get_sortdata_for_key('moraux')->[0], $dates1, 'Very contrived but thorough test of date sorting' );
 
 # Testing max/minITEMS with sorting using list fields
 # publisher
@@ -390,7 +397,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('augustine')->[0], $lists1, 'max/minitems test 1 (publisher)' );
+eq_or_diff($main->get_sortdata_for_key('augustine')->[0], $lists1, 'max/minitems test 1 (publisher)' );
 
 # location
 $S = {spec => [
@@ -404,7 +411,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('cotton')->[0], $lists2, 'max/minitems test 2 (location)' );
+eq_or_diff($main->get_sortdata_for_key('cotton')->[0], $lists2, 'max/minitems test 2 (location)' );
 
 
 # institution
@@ -419,7 +426,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('chiu')->[0], $lists3, 'max/minitems test 3 (institution)' );
+eq_or_diff($main->get_sortdata_for_key('chiu')->[0], $lists3, 'max/minitems test 3 (institution)' );
 
 # institution with minitems=2
 Biber::Config->setblxoption('minitems', 2);
@@ -434,7 +441,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('chiu')->[0], $lists4, 'max/minitems test 4 (institution - minitems=2)' );
+eq_or_diff($main->get_sortdata_for_key('chiu')->[0], $lists4, 'max/minitems test 4 (institution - minitems=2)' );
 
 # institution with maxitems=4, minitems=3
 Biber::Config->setblxoption('maxitems', 4);
@@ -450,7 +457,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('chiu')->[0], $lists5, 'max/minitems test 5 (institution - maxitems=4/minitems=3)' );
+eq_or_diff($main->get_sortdata_for_key('chiu')->[0], $lists5, 'max/minitems test 5 (institution - maxitems=4/minitems=3)' );
 
 
 
@@ -493,7 +500,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('knuth:ct')->[0], $yearoff1, 'nty with default left offset, 4 digit year' );
+eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff1, 'nty with default left offset, 4 digit year' );
 
 # nty with left, 3-digit year sort, case sensitive
 $S = {spec => [
@@ -535,7 +542,7 @@ Biber::Config->setoption('sortcase', 1);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('knuth:ct')->[0], $yearoff2, 'nty with left offset, 3 digit year, case sensitive' );
+eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff2, 'nty with left offset, 3 digit year, case sensitive' );
 
 
 # nty with left, 4-digit year sort, case sensitive
@@ -578,7 +585,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('knuth:ct')->[0], $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
+eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
 
 # nty with right, 3-digit year sort
 $S = {spec => [
@@ -620,7 +627,7 @@ Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('knuth:ct')->[0], $yearoff4, 'nty with right offset, 3 digit year' );
+eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff4, 'nty with right offset, 3 digit year' );
 
 # nty with right, 4-digit year sort
 $S = {spec => [
@@ -662,7 +669,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('knuth:ct')->[0], $yearoff5, 'nty with right offset, 4 digit year' );
+eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff5, 'nty with right offset, 4 digit year' );
 
 # ntyd with left, 4-digit year sort
 $S = {spec => [
@@ -704,7 +711,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('knuth:ct')->[0], $yearoff6, 'ntyd with left offset, 4 digit year' );
+eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff6, 'ntyd with left offset, 4 digit year' );
 
 # ntyd with left, 3-digit year sort
 $S = {spec => [
@@ -746,7 +753,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('knuth:ct')->[0], $yearoff7, 'ntyd with left offset, 3 digit year' );
+eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff7, 'ntyd with left offset, 3 digit year' );
 
 # ntyd with right, 4-digit year sort
 $S = {spec => [
@@ -788,7 +795,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('knuth:ct')->[0], $yearoff8, 'ntyd with right offset, 4 digit year' );
+eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff8, 'ntyd with right offset, 4 digit year' );
 
 # ntyd with right, 3-digit year sort
 $S = {spec => [
@@ -830,7 +837,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('knuth:ct')->[0], $yearoff9, 'ntyd with right offset, 3 digit year' );
+eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff9, 'ntyd with right offset, 3 digit year' );
 
 # nty with right-padded vol
 $S = {spec => [
@@ -873,7 +880,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $vol1, 'nty with right-padded vol' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $vol1, 'nty with right-padded vol' );
 
 # nty with right-padded 7-char vol
 $S = {spec => [
@@ -916,7 +923,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $vol2, 'nty with right-padded 7-char vol' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $vol2, 'nty with right-padded 7-char vol' );
 
 # nty with left-padded 5-char using Unicode "Đ" as pad_char vol
 # Unicode char will be lowercase "đ" in sortstring
@@ -961,7 +968,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $vol3, 'nty with left-padded 5-char "a" pad char vol' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $vol3, 'nty with left-padded 5-char "a" pad char vol' );
 
 
 # nty
@@ -1004,8 +1011,8 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $nty, 'basic nty sort' );
-eq_or_diff($main->get_sortdata('angenendtsk')->[0], $sk1, 'basic sortkey sort' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $nty, 'basic nty sort' );
+eq_or_diff($main->get_sortdata_for_key('angenendtsk')->[0], $sk1, 'basic sortkey sort' );
 
 # nyt
 $S = {spec => [
@@ -1048,7 +1055,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $nyt, 'basic nyt sort' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $nyt, 'basic nyt sort' );
 
 # nyvt
 $S = {spec => [
@@ -1090,7 +1097,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $nyvt, 'basic nyvt sort' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $nyvt, 'basic nyvt sort' );
 
 # anyt with labelalpha
 Biber::Config->setblxoption('labelalpha', 1);
@@ -1137,7 +1144,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $anyt_la, 'anyt sort (with labelalpha)' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $anyt_la, 'anyt sort (with labelalpha)' );
 Biber::Config->setblxoption('labelalpha', 0);
 $bibentries->entry('stdmodel')->del_field('labelalpha');
 $bibentries->entry('stdmodel')->del_field('sortlabelalpha');
@@ -1148,7 +1155,7 @@ $bibentries->entry('stdmodel:glashow')->del_field('sortlabelalpha');
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $anyt, 'anyt sort (without labelalpha)' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $anyt, 'anyt sort (without labelalpha)' );
 
 # anyvt with labelalpha
 Biber::Config->setblxoption('labelalpha',1);
@@ -1195,8 +1202,8 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $anyvt_la, 'anyvt sort (with labelalpha)' );
-eq_or_diff($main->get_sortdata('murray')->[0], $anyvt_la2, 'anyvt sort (> maxbibnames=3 minbibnames=1, with labelalpha and alphaothers)' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $anyvt_la, 'anyvt sort (with labelalpha)' );
+eq_or_diff($main->get_sortdata_for_key('murray')->[0], $anyvt_la2, 'anyvt sort (> maxbibnames=3 minbibnames=1, with labelalpha and alphaothers)' );
 
 Biber::Config->setblxoption('maxalphanames', 2);
 Biber::Config->setblxoption('minalphanames', 2);
@@ -1206,7 +1213,7 @@ Biber::Config->setblxoption('minbibnames', 2);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('murray')->[0], $anyvt_la4, 'anyvt sort (> maxbibnames=2 minbibnames=2, with labelalpha and alphaothers)' );
+eq_or_diff($main->get_sortdata_for_key('murray')->[0], $anyvt_la4, 'anyvt sort (> maxbibnames=2 minbibnames=2, with labelalpha and alphaothers)' );
 
 Biber::Config->setblxoption('alphaothers', '');
 Biber::Config->setblxoption('sortalphaothers', '');
@@ -1214,7 +1221,7 @@ Biber::Config->setblxoption('sortalphaothers', '');
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('murray')->[0], $anyvt_la3, 'anyvt sort (> maxbibnames=2 minbibnames=2,with labelalpha and without alphaothers)' );
+eq_or_diff($main->get_sortdata_for_key('murray')->[0], $anyvt_la3, 'anyvt sort (> maxbibnames=2 minbibnames=2,with labelalpha and without alphaothers)' );
 
 Biber::Config->setblxoption('labelalpha', 0);
 $bibentries->entry('stdmodel')->del_field('labelalpha');
@@ -1229,7 +1236,7 @@ $bibentries->entry('murray')->del_field('sortlabelalpha');
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $anyvt, 'anyvt sort (without labelalpha)' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $anyvt, 'anyvt sort (without labelalpha)' );
 
 # ynt
 $S = {spec => [
@@ -1268,7 +1275,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $ynt, 'basic ynt sort' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $ynt, 'basic ynt sort' );
 
 # ydnt
 $S = {spec => [
@@ -1306,7 +1313,7 @@ $main->set_sortscheme($S);
 
 # regenerate information
 $biber->prepare;
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
 
 
 $SNK = Biber::Config->getblxoption('sortingnamekey');
@@ -1320,7 +1327,7 @@ $SNK->{global} = [
 Biber::Config->setblxoption('sortingnamekey', $SNK);
 
 $biber->prepare;
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $sortinits, 'sort first name inits only' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $sortinits, 'sort first name inits only' );
 
 $SNK = Biber::Config->getblxoption('sortingnamekey');
 # Default back again
@@ -1347,7 +1354,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $debug, 'basic debug sort' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $debug, 'basic debug sort' );
 
 # nty with use* all off
 Biber::Config->setblxoption('useauthor', 0);
@@ -1392,7 +1399,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $noname, 'nty with use* all off' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $noname, 'nty with use* all off' );
 
 
 # nty with modified presort and short_circuit at title
@@ -1437,7 +1444,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel:ps_sc')->[0], $ps_sc, 'nty with modified presort and short-circuit title' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel:ps_sc')->[0], $ps_sc, 'nty with modified presort and short-circuit title' );
 
 
 # citeorder sort
@@ -1452,7 +1459,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('stdmodel')->[0], $citeorder, 'citeorder' );
+eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $citeorder, 'citeorder' );
 
 # citeorder sort
 $S = {spec => [
@@ -1474,7 +1481,7 @@ $main->set_sortscheme($S);
 # regenerate information
 $biber->prepare;
 
-eq_or_diff($main->get_sortdata('labelstest')->[0], $labels, 'date labels' );
+eq_or_diff($main->get_sortdata_for_key('labelstest')->[0], $labels, 'date labels' );
 
 # sortname sort
 $S = {spec => [
@@ -1494,5 +1501,5 @@ Biber::Config->setblxoption('usenamea', 0);
 Biber::Config->setblxoption('useeditora', 0);
 $biber->prepare;
 # Testing that when no use<name> settings are true, sortname is ignored
-eq_or_diff($main->get_sortdata('sn1')->[0], $sn1, 'Sortname - 1' );
+eq_or_diff($main->get_sortdata_for_key('sn1')->[0], $sn1, 'Sortname - 1' );
 

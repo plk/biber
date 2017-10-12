@@ -40,8 +40,24 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $shs = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $shs = $biber->datalists->get_list(section                    => 0,
+                                      name                       => 'shorthands/global//global/global',
+                                      type                       => 'list',
+                                      sortschemename             => 'shorthands',
+                                      sortnamekeyschemename      => 'global',
+                                      labelprefix                => '',
+                                      uniquenametemplatename     => 'global',
+                                      labelalphanametemplatename => 'global');
+
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
 my $bibentries = $section->bibentries;
 
 my $k1 = q|    \entry{key1}{article}{}

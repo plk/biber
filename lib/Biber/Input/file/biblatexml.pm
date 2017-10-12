@@ -1086,6 +1086,16 @@ sub _name {
       $names->set_sortnamekeyscheme($node->getAttribute('sortnamekeyscheme'));
     }
 
+    # Save uniquenametemplatename attribute
+    if ($node->hasAttribute('uniquenametemplatename')) {
+      $names->set_uniquenametemplatename($node->getAttribute('uniquenametemplatename'));
+    }
+
+    # Save labelalphanametemplatename attribute
+    if ($node->hasAttribute('labelalphanametemplatename')) {
+      $names->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplatename'));
+    }
+
     my $numname = 1;
     foreach my $namenode ($node->findnodes("./$NS:name")) {
 
@@ -1099,7 +1109,8 @@ sub _name {
         $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
       }
 
-      $names->add_name(parsename($namenode, $f, $key, $numname++, {useprefix => $useprefix, uniquename => ($un // 0)}));
+      $names->add_name(parsename($namenode, $f, $key, $numname++, {useprefix => $useprefix,
+                                                                   uniquename => ($un // 0)}));
     }
 
     # Deal with explicit "moreenames" in data source
@@ -1133,8 +1144,8 @@ sub _name {
       nameinitstring    => 'Doe_JF',
       gender            => sm,
       useprefix         => 1,
-      sortnamekeyscheme => 'scheme' }
-      }
+      sortnamekeyscheme => 'scheme' 
+    }
 
 =cut
 
@@ -1142,15 +1153,6 @@ sub parsename {
   my ($node, $fieldname, $key, $count, $opts) = @_;
   if ($logger->is_debug()) {# performance tune
     $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
-  }
-  # We have to pass this in from higher scopes as we need to actually use the scoped
-  # value in this sub as well as set the name local value in the object
-  my $useprefix = $opts->{useprefix};
-  my $namescope_useprefix;
-
-  # Set name-scope useprefix attribute if it exists
-  if ($node->hasAttribute('useprefix')) {
-    $useprefix = $namescope_useprefix = map_boolean($node->getAttribute('useprefix'), 'tonum');
   }
 
   # generic annotation attribute - individual name scope
@@ -1203,74 +1205,6 @@ sub parsename {
     }
   }
 
-  my $namestring = '';
-  my $namestrings = [];
-  my $namedisschema = [];
-
-  # Loop over name parts required for constructing uniquename information
-  # and create the strings needed for this
-  #
-  # Note that with the default uniquenametemplate, we don't conditionalise the *position*
-  # of a prefix on the useprefix option but rather its inclusion at all. This is because, if
-  # useprefix determined the position of the prefix in the uniquename strings:
-  # * As a global setting, it would generate the same uniqueness information and is therefore
-  #   irrelevant
-  # * As a local setting (entry, namelist, name), it would lead to different uniqueness
-  #   information which would be confusing
-
-  # Use nameuniqueness template to construct uniqueness strings
-
-  # First construct base part ...
-  my $base;
-  my $baseparts;
-  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
-    next unless $np->{base};
-    my $npn = $np->{namepart};
-
-    if ($namec{$npn}) {
-      if ($np->{use}) { # only ever defined as 1
-        next unless $opts->{"use$npn"};
-      }
-      $base .= $namec{$npn};
-      push $baseparts->@*, $npn;
-    }
-  }
-
-  $namestring .= $base;
-  push $namestrings->@*, $base;
-  push $namedisschema->@*, ['base' => $baseparts];
-
-  # ... then add non-base parts by incrementally adding to the last disambiguation context
-  foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{global}->@*) {
-    next if $np->{base};
-    my $npn = $np->{namepart};
-    my $context = $np->{context} // $UNIQUENAME_CONTEXTS{$opts->{uniquename}};
-    my $lastns = $namestrings->[$namestrings->$#*];
-
-    if ($namec{$npn}) {
-      if ($np->{use}) { # only ever defined as 1
-        next unless $opts->{"use$npn"};
-      }
-
-      $namestring .= $namec{$npn};
-
-      # per-namepart disambiguation context
-      # Here we incrementally add disambiguation possibilities to an array and simultaneously
-      # record a schema of what each incremental disambiguation is
-      if (fc($context) eq fc('full')) { # full disambiguation
-        push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
-        push $namedisschema->@*, [$npn => 'init'];
-        push $namestrings->@*, $lastns . $namec{"${npn}-stripped"};
-        push $namedisschema->@*, [$npn => 'full'];
-      }
-      elsif (fc($context) eq fc('init')) { # inits only
-        push $namestrings->@*, $lastns . join('', $namec{"${npn}-i"}->@*);
-        push $namedisschema->@*, [$npn => 'init'];
-      }
-      # context = 'none' gets here and nothing is added to the strings or schema
-    }
-  }
-
   my %nps;
   foreach my $n ($dm->get_constant_value('nameparts')) { # list type so returns list
     $nps{$n} = {string  => $namec{$n} // undef,
@@ -1279,10 +1213,7 @@ sub parsename {
 
   my $newname = Biber::Entry::Name->new(
                                         %nps,
-                                        namestring     => $namestring,
-                                        namestrings    => $namestrings,
-                                        namedisschema  => $namedisschema,
-                                        gender         => $node->getAttribute('gender')
+                                        gender => $node->getAttribute('gender')
                                        );
 
   # Set name-scope sortnamekeyscheme attribute if it exists
@@ -1290,9 +1221,19 @@ sub parsename {
     $newname->set_sortnamekeyscheme($node->getAttribute('sortnamekeyscheme'));
   }
 
-  # Set name-scope useprefix if it is defined
-  if (defined($namescope_useprefix)) {
-    $newname->set_useprefix($namescope_useprefix);
+  # Set name-scope useprefix attribute if it exists
+  if ($node->hasAttribute('useprefix')) {
+    $newname->set_useprefix(map_boolean($node->getAttribute('useprefix'), 'tonum'));
+  }
+
+  # Set name-scope uniquenametemplatename attribute if it exists
+  if ($node->hasAttribute('uniquenametemplatename')) {
+    $newname->set_uniquenametemplatename($node->getAttribute('uniquenametemplatename'));
+  }
+
+  # Set name-scope labelalphanametemplatename attribute if it exists
+  if ($node->hasAttribute('labelalphanametemplatename')) {
+    $newname->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplatename'));
   }
 
   return $newname;

@@ -34,7 +34,7 @@ sub new {
   $self->{everykey_lc} = {};
   $self->{bcfkeycache} = {};
   $self->{labelcache_v} = {};
-  $self->{sortcache} = [];
+  $self->{rccache} = [];
   $self->{dkeys} = {};
   $self->{keytods} = {};
   $self->{orig_order_citekeys} = [];
@@ -52,7 +52,7 @@ sub new {
 
 sub reset_caches {
   my $self = shift;
-  $self->{sortcache} = [];
+  $self->{rccache} = [];
   $self->{labelcache_l} = {};
   $self->{labelcache_v} = {};
   $self->{bcfkeycache} = {};
@@ -663,30 +663,29 @@ sub get_datasources {
 }
 
 
-=head2 add_sort_cache
+=head2 add_refcontext_cache
 
-    Adds a scheme/keys pair to the sort cache:
-    [$scheme, $keys, $sortinitdata, $extraalphadata, $extrayeardata ]
+    Adds refcontext data to the refcontext cache
 
 =cut
 
-sub add_sort_cache {
+sub add_refcontext_cache {
   my $self = shift;
   my $cacheitem = shift;
-  push $self->{sortcache}->@*, $cacheitem;
+  push $self->{rccache}->@*, $cacheitem;
   return;
 }
 
 
-=head2 get_sort_cache
+=head2 get_refcontext_cache
 
-    Retrieves the sort cache
+    Retrieves the refcontext cache
 
 =cut
 
-sub get_sort_cache {
+sub get_refcontext_cache {
   my $self = shift;
-  return $self->{sortcache};
+  return $self->{rccache};
 }
 
 

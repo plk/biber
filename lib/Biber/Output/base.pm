@@ -243,23 +243,27 @@ sub get_output_entry {
   my $self = shift;
   my $key = shift;
   my $list = shift; # might not be set for, for example, tool mode tests
-  my $section = shift;
+  my $secnum = shift;
+
   # defaults - mainly for tests
-  if (not defined($section)) {
+  if (not defined($secnum)) {
     if (Biber::Config->getoption('tool') or
         Biber::Config->getoption('output_format') eq 'bibtex') {
-      $section = 99999;
+      $secnum = 99999;
     }
     else {
-      $section = 0;
+      $secnum = 0;
     }
   }
+
+  my $section = $self->get_output_section($secnum);
+
   # Force a return of undef if there is no output for this key to avoid
   # dereferencing errors in tests
-  my $out = $self->{output_data}{ENTRIES}{$section}{index}{$key} ||
-            $self->{output_data}{MISSING_ENTRIES}{$section}{index}{$key} ||
-            $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$key};
-  my $out_string = $list ? $list->instantiate_entry($out, $key) : $out;
+  my $out = $self->{output_data}{ENTRIES}{$secnum}{index}{$key} ||
+            $self->{output_data}{MISSING_ENTRIES}{$secnum}{index}{$key} ||
+            $self->{output_data}{ALIAS_ENTRIES}{$secnum}{index}{$key};
+  my $out_string = $list ? $list->instantiate_entry($section, $out, $key) : $out;
 
   # If requested to convert UTF-8 to macros ...
   if (Biber::Config->getoption('output_safechars')) {
@@ -292,9 +296,9 @@ sub get_output_entry {
 sub set_output_entry {
   my $self = shift;
   my $entry = shift;
-  my $section = shift;
+  my $secnum = shift;
   my $struc = shift;
-  $self->{output_data}{ENTRIES}{$section}{index}{$entry->get_field('citekey')} = $entry->dump;
+  $self->{output_data}{ENTRIES}{$secnum}{index}{$entry->get_field('citekey')} = $entry->dump;
   return;
 }
 

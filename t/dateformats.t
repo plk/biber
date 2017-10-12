@@ -47,7 +47,15 @@ Biber::Config->setblxoption('julianstart', '0001-01-01');
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
 my $bibentries = $section->bibentries;
 my $l1 = [ "Entry 'L1' (dateformats.bib): Invalid format '1985-1030' of date field 'origdate' - ignoring",
            "Entry 'L1' (dateformats.bib): Invalid format '1.5.1998' of date field 'urldate' - ignoring" ];

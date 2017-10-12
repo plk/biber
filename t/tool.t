@@ -55,7 +55,15 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber program
 $biber->tool_mode_setup;
 $biber->prepare_tool;
-my $main = $biber->sortlists->get_list(99999, Biber::Config->getblxoption('sortscheme'). '/global/', 'entry', Biber::Config->getblxoption('sortscheme'), 'global', '');
+my $main = $biber->datalists->get_list(section                    => 99999,
+                                       name                       => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => Biber::Config->getblxoption('sortscheme'),
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
 my $out = $biber->get_output_obj;
 
 my $t1 = q|@UNPUBLISHED{i3Š,
@@ -152,7 +160,15 @@ Biber::Config->setoption('output_xname', 1);
 Biber::Config->setoption('output_xnamesep', ':');
 $biber->tool_mode_setup;
 $biber->prepare_tool;
-$main = $biber->sortlists->get_list(99999, Biber::Config->getblxoption('sortscheme'). '/global/', 'entry', Biber::Config->getblxoption('sortscheme'), 'global', '');
+$main = $biber->datalists->get_list(section                    => 99999,
+                                    name                       => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
+                                    type                       => 'entry',
+                                    sortschemename             => Biber::Config->getblxoption('sortscheme'),
+                                    sortnamekeyschemename      => 'global',
+                                    labelprefix                => '',
+                                    uniquenametemplatename     => 'global',
+                                    labelalphanametemplatename => 'global');
+
 $out = $biber->get_output_obj;
 eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($tx1), 'tool mode - 7');
 eq_or_diff($out->get_output_entry('m1',), $m1, 'tool mode - 8');

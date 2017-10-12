@@ -39,11 +39,43 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Now generate the information
 $biber->prepare;
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
-my $sh0 = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');
+my $main0 = $biber->datalists->get_list(section                    => 0,
+                                        name                       => 'nty/global//global/global',
+                                        type                       => 'entry',
+                                        sortschemename             => 'nty',
+                                        sortnamekeyschemename      => 'global',
+                                        labelprefix                => '',
+                                        uniquenametemplatename     => 'global',
+                                        labelalphanametemplatename => 'global');
+
+my $sh0 = $biber->datalists->get_list(section                    => 0,
+                                      name                       => 'shorthands/global//global/global',
+                                      type                       => 'list',
+                                      sortschemename             => 'shorthands',
+                                      sortnamekeyschemename      => 'global',
+                                      labelprefix                => '',
+                                      uniquenametemplatename     => 'global',
+                                      labelalphanametemplatename => 'global');
+
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->sortlists->get_list(1, 'nty/global/', 'entry', 'nty', 'global', '');
-my $sh1 = $biber->sortlists->get_list(1, 'shorthands/global/', 'list', 'shorthands', 'global', '');
+my $main1 = $biber->datalists->get_list(section                    => 1,
+                                        name                       => 'nty/global//global/global',
+                                        type                       => 'entry',
+                                        sortschemename             => 'nty',
+                                        sortnamekeyschemename      => 'global',
+                                        labelprefix                => '',
+                                        uniquenametemplatename     => 'global',
+                                        labelalphanametemplatename => 'global');
+
+my $sh1 = $biber->datalists->get_list(section                    => 1,
+                                      name                       => 'shorthands/global//global/global',
+                                      type                       => 'list',
+                                      sortschemename             => 'shorthands',
+                                      sortnamekeyschemename      => 'global',
+                                      labelprefix                => '',
+                                      uniquenametemplatename     => 'global',
+                                      labelalphanametemplatename => 'global');
+
 my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{DynSet}{set}{}

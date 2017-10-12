@@ -129,7 +129,6 @@ $CONFIG->{state}{datafiles} = [];
 
 sub _init {
   $CONFIG->{state}{uniqignore} = {};
-  $CONFIG->{options}{biblatex}{ENTRY} = {};
   $CONFIG->{state}{unulchanged} = 1;
   $CONFIG->{state}{control_file_location} = '';
   $CONFIG->{state}{seenname} = {};
@@ -700,6 +699,19 @@ sub config_file {
 sub get_unul_done {
   shift; # class method so don't care about class name
   return $CONFIG->{state}{unulchanged} ? 0 : 1;
+}
+
+=head2 set_unul_done
+
+    Set whether uniquenename+uniquelist processing is finished
+
+=cut
+
+sub set_unul_done {
+  shift; # class method so don't care about class name
+  my $done = shift;
+  $CONFIG->{state}{unulchanged} = $done;
+  return;
 }
 
 =head2 set_unul_changed
@@ -1303,6 +1315,21 @@ sub reset_keyorder {
   return;
 }
 
+=head2 reset_workuniqueness
+
+  Reset various work uniqueness counters
+
+=cut
+
+sub reset_workuniqueness {
+  shift; # class method so don't care about class name
+  my $section = shift;
+  $CONFIG->{state}{seenname} = {};
+  $CONFIG->{state}{seentitle} = {};
+  $CONFIG->{state}{seenbaretitle} = {};
+  $CONFIG->{state}{seenwork} = {};
+  return;
+}
 
 =head1 seenkey
 
@@ -1478,15 +1505,26 @@ sub get_seenpa {
 =cut
 
 sub reset_seen_extra {
-  shift; # class method so don't care about class name
-  my $ay = shift;
   $CONFIG->{state}{seen_extrayear} = {};
   $CONFIG->{state}{seen_extratitle} = {};
   $CONFIG->{state}{seen_extratitleyear} = {};
   $CONFIG->{state}{seen_extraalpha} = {};
+  $CONFIG->{state}{seen_extrayearalpha} = {};
   return;
 }
 
+=head2 reset_seen_extratrackers
+
+    Reset the trackers for extra*
+
+=cut
+
+sub reset_seen_extratrackers {
+  $CONFIG->{state}{seen_nameyear} = {};
+  $CONFIG->{state}{seen_nametitle} = {};
+  $CONFIG->{state}{seen_titleyear} = {};
+  return;
+}
 
 =head2 incr_seen_extrayear
 
@@ -1550,7 +1588,7 @@ sub incr_seen_extraalpha {
 sub get_seen_nameyear {
   shift; # class method so don't care about class name
   my $ny = shift;
-  return $CONFIG->{state}{seen_nameyear}{$ny};
+  return $CONFIG->{state}{seen_nameyear}{$ny} // 0;
 }
 
 =head2 incr_seen_nameyear
@@ -1596,7 +1634,7 @@ sub incr_seen_nameyear {
 sub get_seen_nametitle {
   shift; # class method so don't care about class name
   my $nt = shift;
-  return $CONFIG->{state}{seen_nametitle}{$nt};
+  return $CONFIG->{state}{seen_nametitle}{$nt} // 0;
 }
 
 =head2 incr_seen_nametitle
@@ -1640,7 +1678,7 @@ sub incr_seen_nametitle {
 sub get_seen_titleyear {
   shift; # class method so don't care about class name
   my $ty = shift;
-  return $CONFIG->{state}{seen_titleyear}{$ty};
+  return $CONFIG->{state}{seen_titleyear}{$ty} // 0;
 }
 
 =head2 incr_seen_titleyear
@@ -1810,7 +1848,7 @@ sub list_differs_nth {
 
 =head2 list_differs_index
 
-    Returns the greatest index at where the list begins to differ from any other list
+    Returns the index where the list begins to differ from any other list
 
     Assuming these lists
 
@@ -1892,7 +1930,6 @@ sub get_numofuniquenames_all {
   }
   return $return;
 }
-
 
 =head2 add_uniquenamecount
 

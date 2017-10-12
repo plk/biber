@@ -1,4 +1,4 @@
-package Biber::SortList;
+package Biber::DataList;
 use v5.24;
 use strict;
 use warnings;
@@ -12,11 +12,11 @@ use List::Util qw( first );
 
 =head1 NAME
 
-Biber::SortList
+Biber::DataList
 
 =head2 new
 
-    Initialize a Biber::SortList object
+    Initialize a Biber::DataList object
 
 =cut
 
@@ -29,7 +29,7 @@ sub new {
 
 =head2 set_section
 
-    Sets the section of a sort list
+    Sets the section of a data list
 
 =cut
 
@@ -42,7 +42,7 @@ sub set_section {
 
 =head2 get_section
 
-    Gets the section of a sort list
+    Gets the section of a data list
 
 =cut
 
@@ -54,7 +54,7 @@ sub get_section {
 
 =head2 set_sortschemename
 
-    Sets the sortscheme name of a sort list
+    Sets the sortscheme name of a data list
 
 =cut
 
@@ -65,9 +65,24 @@ sub set_sortschemename {
   return;
 }
 
+=head2 get_refcontext
+
+    Gets the refcontext information for a data list
+
+=cut
+
+sub get_refcontext {
+  my $self = shift;
+  return join('/', ($self->{sortschemename},
+                    $self->{sortnamekeyschemename},
+                    $self->{labelprefix},
+                    $self->{uniquenametemplatename},
+                    $self->{labelalphanametemplatename}));
+}
+
 =head2 get_sortschemename
 
-    Gets the sortschemename of a sort list
+    Gets the sortschemename of a data list
 
 =cut
 
@@ -78,7 +93,7 @@ sub get_sortschemename {
 
 =head2 set_sortnamekeyschemename
 
-    Sets the sortnamekeyscheme name of a sort list
+    Sets the sortnamekeyscheme name of a data list
 
 =cut
 
@@ -91,7 +106,7 @@ sub set_sortnamekeyschemename {
 
 =head2 get_sortnamekeyschemename
 
-    Gets the sortnamekeyschemename of a sort list
+    Gets the sortnamekeyschemename of a data list
 
 =cut
 
@@ -102,7 +117,7 @@ sub get_sortnamekeyschemename {
 
 =head2 set_uniquenametemplatename
 
-    Sets the uniquenametemplate name of a sort list
+    Sets the uniquenametemplate name of a data list
 
 =cut
 
@@ -115,7 +130,7 @@ sub set_uniquenametemplatename {
 
 =head2 get_uniquenametemplatename
 
-    Gets the uniquenametemplate name of a sort list
+    Gets the uniquenametemplate name of a data list
 
 =cut
 
@@ -126,7 +141,7 @@ sub get_uniquenametemplatename {
 
 =head2 set_labelalphanametemplatename
 
-    Sets the labelalphanametemplate name of a sort list
+    Sets the labelalphanametemplate name of a data list
 
 =cut
 
@@ -137,9 +152,9 @@ sub set_labelalphanametemplatename {
   return;
 }
 
-=head2 get_uniquenametemplatename
+=head2 get_labelalphanametemplatename
 
-    Gets the uniquenametemplate name of a sort list
+    Gets the labelalphanametemplate name of a data list
 
 =cut
 
@@ -173,7 +188,7 @@ sub get_sortinit_collator {
 
 =head2 get_labelprefix
 
-    Gets the labelprefix setting of a sort list
+    Gets the labelprefix setting of a data list
 
 =cut
 
@@ -184,7 +199,7 @@ sub get_labelprefix {
 
 =head2 set_labelprefix
 
-    Sets the labelprefix setting of a sort list
+    Sets the labelprefix setting of a data list
 
 =cut
 
@@ -197,7 +212,7 @@ sub set_labelprefix {
 
 =head2 set_name
 
-    Sets the name of a sort list
+    Sets the name of a data list
 
 =cut
 
@@ -210,7 +225,7 @@ sub set_name {
 
 =head2 get_name
 
-    Gets the name of a sort list
+    Gets the name of a data list
 
 =cut
 
@@ -222,7 +237,7 @@ sub get_name {
 
 =head2 set_type
 
-    Sets the type of a sort list
+    Sets the type of a data list
 
 =cut
 
@@ -296,9 +311,103 @@ sub get_listdata {
            $self->{extraalphadata},
            $self->{extratitledata},
            $self->{extratitleyeardata},
+           $self->{labelalphadata},
+           $self->{namelistdata},
            $self->{sortdataschema},
-           $self->{uniquenametemplatename},
-           $self->{labelalphanametemplatename}];
+           $self->{namelistdata},
+           $self->{labelalphadata}];
+}
+
+=head2 get_namelistdata
+
+  Gets  name list data
+
+=cut
+
+sub get_namelistdata {
+  return shift->{namelistdata};
+}
+
+=head2 set_namelistdata
+
+  Saves name list data
+
+=cut
+
+sub set_namelistdata {
+  my ($self, $nld) = @_;
+  $self->{labelalphadata} = $nld;
+  return;
+}
+
+=head2 get_namelistdata_for_key
+
+  Gets  name list data for a key
+
+=cut
+
+sub get_namelistdata_for_key {
+  my ($self, $key) = @_;
+  return $self->{namelistdata}{$key};
+}
+
+=head2 set_namelistdata_for_key
+
+  Saves name list data for a key
+
+=cut
+
+sub set_namelistdata_for_key {
+  my ($self, $key, $nld) = @_;
+  return unless defined($key);
+  $self->{namelistdata}{$key} = $nld;
+  return;
+}
+
+=head2 get_labelalphadata
+
+  Gets  labelalpha field data
+
+=cut
+
+sub get_labelalphadata {
+  return shift->{labelalphadata};
+}
+
+=head2 set_labelalphadata
+
+  Saves labelalpha data
+
+=cut
+
+sub set_labelalphadata {
+  my ($self, $lad) = @_;
+  $self->{labelalphadata} = $lad;
+  return;
+}
+
+=head2 get_labelalphadata_for_key
+
+  Gets  labelalpha field data for a key
+
+=cut
+
+sub get_labelalphadata_for_key {
+  my ($self, $key) = @_;
+  return $self->{labelalphadata}{$key};
+}
+
+=head2 set_labelalphadata_for_key
+
+  Saves labelalpha field data for a key
+
+=cut
+
+sub set_labelalphadata_for_key {
+  my ($self, $key, $la) = @_;
+  return unless defined($key);
+  $self->{labelalphadata}{$key} = $la;
+  return;
 }
 
 =head2 set_extrayeardata_for_key
@@ -333,7 +442,7 @@ sub set_extrayeardata {
 
 =cut
 
-sub get_extrayeardata {
+sub get_extrayeardata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
   return $self->{extrayeardata}{$key};
@@ -371,7 +480,7 @@ sub set_extratitledata {
 
 =cut
 
-sub get_extratitledata {
+sub get_extratitledata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
   return $self->{extratitledata}{$key};
@@ -410,7 +519,7 @@ sub set_extratitleyeardata {
 
 =cut
 
-sub get_extratitleyeardata {
+sub get_extratitleyeardata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
   return $self->{extratitleyeardata}{$key};
@@ -448,7 +557,7 @@ sub set_extraalphadata {
 
 =cut
 
-sub get_extraalphadata {
+sub get_extraalphadata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
   return $self->{extraalphadata}{$key};
@@ -490,13 +599,13 @@ sub set_sortdata {
   return;
 }
 
-=head2 get_sortdata
+=head2 get_sortdata_for_key
 
     Gets the sorting data in a list for a key
 
 =cut
 
-sub get_sortdata {
+sub get_sortdata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
   return $self->{sortdata}{$key};
@@ -594,7 +703,7 @@ sub get_filters {
   Do any dynamic information replacement for information
   which varies in an entry between lists. This is information which
   needs to be output to the .bbl for an entry but which is a property
-  of the sorting list and not the entry per se so it cannot be stored
+  of the reference context and not the entry per se so it cannot be stored
   statically in the entry and must be pulled from the specific list
   when outputting the entry.
 
@@ -602,18 +711,25 @@ sub get_filters {
 
   * sortinit
   * sortinithash
+  * labelalpha
   * extrayear
   * extraalpha
   * extratitle
   * extratitleyear
   * labelprefix
+  * uniquelist
+  * uniquename
 
 =cut
 
 sub instantiate_entry {
   my $self = shift;
-  my ($entry, $key, $format) = @_;
+  my ($section, $entry, $key, $format) = @_;
+
   return '' unless $entry;
+  my $be = $section->bibentry($key);
+  my $dmh = Biber::Config->get_dm_helpers;
+
   $format //= 'bbl'; # default
 
   my $entry_string = $$entry;
@@ -654,7 +770,7 @@ sub instantiate_entry {
   }
 
   # extrayear
-  if (my $e = $self->get_extrayeardata($key)) {
+  if (my $e = $self->get_extrayeardata_for_key($key)) {
     my $str;
     if ($format eq 'bbl') {
       $str = "\\field{extrayear}{$e}";
@@ -666,7 +782,7 @@ sub instantiate_entry {
   }
 
   # extratitle
-  if (my $e = $self->get_extratitledata($key)) {
+  if (my $e = $self->get_extratitledata_for_key($key)) {
     my $str;
     if ($format eq 'bbl') {
       $str = "\\field{extratitle}{$e}";
@@ -678,7 +794,7 @@ sub instantiate_entry {
   }
 
   # extratitle
-  if (my $e = $self->get_extratitleyeardata($key)) {
+  if (my $e = $self->get_extratitleyeardata_for_key($key)) {
     my $str;
     if ($format eq 'bbl') {
       $str = "\\field{extratitleyear}{$e}";
@@ -689,8 +805,57 @@ sub instantiate_entry {
     $entry_string =~ s|<BDS>EXTRATITLEYEAR</BDS>|$str|gxms;
   }
 
+  # uniquename
+  # replace pattern is different because this can occur in bblxml attributes
+  # and so can't be angles
+  if (my $nld = $self->get_namelistdata_for_key($key)) {
+    foreach my $namefield ($dmh->{namelists}->@*) {
+      if (my $nl = $be->get_field($namefield)) {
+        my $nlid = $nl->get_id;
+        foreach my $n ($nl->names->@*) {
+          my $str = '';
+          my $nid = $n->get_id;
+          $str = $nld->{$nlid}{un}{$nid}{summary};
+          $entry_string =~ s|[<[]BDS[>\]]UNS-$nid[<[]/BDS[>\]]|$str|gxms;
+          $str = $nld->{$nlid}{un}{$nid}{part};
+          $entry_string =~ s|[<[]BDS[>\]]UNP-$nid[<[]/BDS[>\]]|$str|gxms;
+          foreach my $np ($n->get_nameparts) {
+            $str = $nld->{$nlid}{un}{$nid}{parts}{$np};
+            $entry_string =~ s|[<[]BDS[>\]]UNP-$np-$nid[<[]/BDS[>\]]|$str|gxms;
+          }
+        }
+      }
+    }
+  }
+
+  # uniquelist
+  # replace pattern is different because this can occur in bblxml attributes
+  # and so can't be angles
+  if (my $nld = $self->get_namelistdata_for_key($key)) {
+    foreach my $namefield ($dmh->{namelists}->@*) {
+      if (my $nl = $be->get_field($namefield)) {
+        my $str = '';
+        my $nlid = $nl->get_id;
+        $str = $nld->{$nlid}{ul};
+        $entry_string =~ s|[<[]BDS[>\]]UL-$nlid[<[]/BDS[>\]]|$str|gxms;
+      }
+    }
+  }
+
+  # labelalpha
+  if (my $e = $self->get_labelalphadata_for_key($key)) {
+    my $str;
+    if ($format eq 'bbl') {
+      $str = "\\field{labelalpha}{$e}";
+    }
+    elsif ($format eq 'bblxml') {
+      $str = "<bbl:field name=\"labelalpha\">$e</bbl:field>";
+    }
+    $entry_string =~ s|<BDS>LABELALPHA</BDS>|$str|gxms;
+  }
+
   # extraalpha
-  if (my $e = $self->get_extraalphadata($key)) {
+  if (my $e = $self->get_extraalphadata_for_key($key)) {
     my $str;
     if ($format eq 'bbl') {
       $str = "\\field{extraalpha}{$e}";

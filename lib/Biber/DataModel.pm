@@ -1324,7 +1324,7 @@ sub generate_bblxml_schema {
   $writer->startTag('element', 'name' => "$bbl:refsection");
   $writer->emptyTag('attribute', 'name' => 'id');
   $writer->startTag('oneOrMore');
-  $writer->startTag('element', 'name' => "$bbl:sortlist");
+  $writer->startTag('element', 'name' => "$bbl:datalist");
   $writer->emptyTag('attribute', 'name' => 'id');
   $writer->startTag('attribute', 'name' => 'type');
   $writer->startTag('choice');
@@ -1779,7 +1779,7 @@ sub generate_bblxml_schema {
   $writer->endTag();# entry element
   $writer->endTag();# choice
   $writer->endTag();# oneOrMore
-  $writer->endTag();# sortlist element
+  $writer->endTag();# datalist element
   $writer->endTag();# oneOrMore
 
   # aliases

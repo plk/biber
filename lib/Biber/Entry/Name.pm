@@ -12,6 +12,7 @@ use Biber::Constants;
 use Biber::Utils;
 use Data::Compare;
 use Data::Dump qw( pp );
+use Data::Uniqid qw (suniqid);
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
 use Unicode::Normalize;
@@ -27,12 +28,13 @@ __PACKAGE__->mk_accessors(qw (
                                basenamestringparts
                                namestring
                                namestrings
-                               namedisschema
                                unmininfo
+                               id
                                useprefix
+                               rawstring
                                sortnamekeyscheme
-                               uniquenametemplate
-                               labelalphanametemplate
+                               uniquenametemplatename
+                               labelalphanametemplatename
                             ));
 
 =encoding utf-8
@@ -54,29 +56,24 @@ sub new {
     my $name = {};
     foreach my $attr (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*,
                       'gender',
-                      'namestring',
-                      'namestrings',
-                      'namedisschema',
                       'useprefix',
-                      'strip',
-                      $dm->get_constant_value('nameparts')) {
+                      'strip') {
       if (exists $params{$attr}) {
         $name->{$attr} = $params{$attr};
       }
     }
-    my $schema = $name->{namedisschema};
-    for (my $i=0;$i<=$schema->$#*;$i++) {
-      my $se = $schema->[$i];
-      # make these explicit for faster lookup since they are static
-      if ($se->[0] eq 'base') {
-        $name->{basenamestring} = $name->{namestrings}->[$i];
-        $name->{basenamestringparts} = $se->[1];
+    foreach my $np ($dm->get_constant_value('nameparts')) {
+      if (exists $params{$np}) {
+        $name->{nameparts}{$np} = $params{$np};
       }
     }
+    $name->{rawstring} = join('',
+                              map {$name->{nameparts}{$_}{string} // ''} keys $name->{nameparts}->%*);
+    $name->{id} = suniqid;
     return bless $name, $class;
   }
   else {
-    return bless {}, $class;
+    return bless {id => suniqid}, $class;
   }
 }
 
@@ -117,6 +114,38 @@ sub notnull {
 sub was_stripped {
   my ($self, $part) = @_;
   return exists($self->{strip}) ? $self->{strip}{$part} : undef;
+}
+
+=head2 get_nameddisschema
+
+    Return uniquename disambiguation schema
+
+=cut
+
+sub get_namedisschema {
+  my $self = shift;
+  return $self->{namedisschema};
+}
+
+=head2 set_nameddisschema
+
+    Set uniquename disambiguation schema
+    Can't be auto-created as we need to set some quick lookup data
+
+=cut
+
+sub set_namedisschema {
+  my ($self, $schema) = @_;
+  $self->{namedisschema} = $schema;
+  for (my $i=0;$i<=$schema->$#*;$i++) {
+    my $se = $schema->[$i];
+    # make these explicit for faster lookup since they are static
+    if ($se->[0] eq 'base') {
+      $self->{basenamestring} = $self->{namestrings}->[$i];
+      $self->{basenamestringparts} = $se->[1];
+    }
+  }
+  return;
 }
 
 =head2 set_uniquename
@@ -180,7 +209,7 @@ sub get_uniquename_all {
 
 =head2 get_uniquename_summary
 
-    Get uniquename for a visible Biber::Entry::Name object
+    Get legacy uniquename data for a visible Biber::Entry::Name object
 
 =cut
 
@@ -212,6 +241,17 @@ sub reset_uniquename {
   return;
 }
 
+=head2 get_nameparts
+
+    Get nameparts for a name
+
+=cut
+
+sub get_nameparts {
+  my $self = shift;
+  return keys $self->{nameparts}->%*;
+}
+
 =head2 get_namepart
 
     Get a namepart by passed name
@@ -221,7 +261,7 @@ sub reset_uniquename {
 sub get_namepart {
   my ($self, $namepart) = @_;
   # prevent warnings when concating arbitrary nameparts
-  return $self->{$namepart}{string} || '';
+  return $self->{nameparts}{$namepart}{string} || '';
 }
 
 =head2 set_namepart
@@ -232,7 +272,7 @@ sub get_namepart {
 
 sub set_namepart {
   my ($self, $namepart, $val) = @_;
-  $self->{$namepart}{string} = $val;
+  $self->{nameparts}{$namepart}{string} = $val;
   return;
 }
 
@@ -244,7 +284,7 @@ sub set_namepart {
 
 sub get_namepart_initial {
   my ($self, $namepart) = @_;
-  return $self->{$namepart}{initial};
+  return $self->{nameparts}{$namepart}{initial};
 }
 
 =head2 set_namepart_initial
@@ -255,7 +295,7 @@ sub get_namepart_initial {
 
 sub set_namepart_initial {
   my ($self, $namepart, $val) = @_;
-  $self->{$namepart}{initial} = $val;
+  $self->{nameparts}{$namepart}{initial} = $val;
   return;
 }
 
@@ -364,27 +404,10 @@ sub name_to_bbl {
   my $pno; # per-name options final string
   my $namestring;
   my @namestrings;
-  my $uniquename = $self->get_uniquename;
-  my $namedisschema = $self->get_namedisschema;
-
-  # Construct per-namepart uniquename value
-  my %pnun;
-  for (my $i=0; $i<=$namedisschema->$#*; $i++) {
-    my $nss = $namedisschema->[$i];
-    if (Compare($uniquename, $nss)) {
-      # Find where uniqueness is established, determine un settings up to this point
-      my @dis = grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i-1];
-      push @dis, $namedisschema->@[$i];
-      # normalise 'fullonly' to 'full' now that we have stripped all non-disambiguating elements
-      %pnun = map {$_->[0] => ($_->[1] eq 'fullonly' ? 'full' : $_->[1])} @dis;
-      last;
-    }
-  }
 
   foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
     my $npc;
     my $npci;
-    my $npun;
     if ($npc = $self->get_namepart($np)) {
 
       if ($self->was_stripped($np)) {
@@ -397,27 +420,24 @@ sub name_to_bbl {
 
       $npci = join('\bibinitperiod\bibinitdelim ', @{$self->get_namepart_initial($np)}) . '\bibinitperiod';
       $npci =~ s/\p{Pd}/\\bibinithyphendelim /gxms;
-
-      $npun = $UNIQUENAME_VALUES{$pnun{$np} // 'none'};
     }
     # Some of the subs above can result in these being undef so make sure there is an empty
     # string instead of undef so that interpolation below doesn't produce warnings
     $npc //= '';
     $npci //= '';
-    $npun //= 0;
     if ($npc) {
       push @namestrings, "           $np={$npc}",
                          "           ${np}i={$npci}";
       if (not $UNIQUENAME_BASEPARTS{$np} and defined($self->get_uniquename)) {
-        push @namestrings, "           ${np}un=$npun";
+        push @namestrings, "           ${np}un=<BDS>UNP-$np-" . $self->get_id . '</BDS>';
       }
     }
   }
 
   # Generate uniquename if uniquename is requested
   if (defined($self->get_uniquename)) {
-    push @pno, 'uniquename=' . $self->get_uniquename_summary;
-    push @pno, 'uniquepart=' . $self->get_uniquename->[0];
+    push @pno, 'uniquename=' . '<BDS>UNS-' . $self->get_id . '</BDS>';
+    push @pno, 'uniquepart=' . '<BDS>UNP-' . $self->get_id . '</BDS>';
   }
 
   # Add per-name options
@@ -456,27 +476,10 @@ sub name_to_bblxml {
   my $dm = Biber::Config->get_dm;
   my %pno; # per-name options
   my %names;
-  my $uniquename = $self->get_uniquename;
-  my $namedisschema = $self->get_namedisschema;
-
-  # Construct per-namepart uniquename
-  my %pnun;
-  for (my $i=0; $i<=$namedisschema->$#*; $i++) {
-    my $nss = $namedisschema->[$i];
-    if (Compare($uniquename, $nss)) {
-      # Find where uniqueness is established, determine un settings up to this point
-      my @dis = grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i-1];
-      push @dis, $namedisschema->@[$i];
-      # normalise 'fullonly' to 'full' now that we have stripped all non-disambiguating elements
-      %pnun = map {$_->[0] => ($_->[1] eq 'fullonly' ? 'full' : $_->[1])} @dis;
-      last;
-    }
-  }
 
   foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
     my $npc;
     my $npci;
-    my $npun;
 
     if ($npc = $self->get_namepart($np)) {
       $npci = join('. ', @{$self->get_namepart_initial($np)});
@@ -485,19 +488,18 @@ sub name_to_bblxml {
     # string instead of undef so that interpolation below doesn't produce warnings
     $npc //= '';
     $npci //= '';
-    $npun = $UNIQUENAME_VALUES{$pnun{$np} // 'none'};
     if ($npc) {
       $names{$np} = [$npc, $npci];
       if (not $UNIQUENAME_BASEPARTS{$np} and defined($self->get_uniquename)) {
-        push $names{$np}->@*, $npun;
+        push $names{$np}->@*, "[BDS]UNP-$np-" . $self->get_id . '[/BDS]';
       }
     }
   }
 
   # Generate uniquename if uniquename is requested
   if (defined($self->get_uniquename)) {
-    $pno{uniquename} = $self->get_uniquename_summary;
-    $pno{uniquepart} = $self->get_uniquename->[0];
+    $pno{uniquename} = '[BDS]UNS-' . $self->get_id . '[/BDS]';
+    $pno{uniquepart} = '[BDS]UNP-' . $self->get_id . '[/BDS]';
   }
 
   # Add per-name options

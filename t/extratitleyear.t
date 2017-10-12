@@ -40,17 +40,25 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
 my $bibentries = $section->bibentries;
 
 # Don't forget that the extratitleyear data is inserted after sorting
-eq_or_diff($main->get_extratitleyeardata('L1'), '1', 'Same title, same year');
-eq_or_diff($main->get_extratitleyeardata('L2'), '2', 'Same title, same year');
-ok(is_undef($main->get_extratitledata('L3')), 'No title,  same year');
-ok(is_undef($main->get_extratitleyeardata('L4')), 'Same title,  different year');
-ok(is_undef($main->get_extratitleyeardata('L5')), 'Different labeltitle,  same year');
-ok(is_undef($main->get_extratitleyeardata('LY1')), 'Different years due to range ends - 1');
-ok(is_undef($main->get_extratitleyeardata('LY2')), 'Different years due to range ends - 1');
-ok(is_undef($main->get_extratitleyeardata('LY3')), 'Different years due to range ends - 1');
+eq_or_diff($main->get_extratitleyeardata_for_key('L1'), '1', 'Same title, same year');
+eq_or_diff($main->get_extratitleyeardata_for_key('L2'), '2', 'Same title, same year');
+ok(is_undef($main->get_extratitledata_for_key('L3')), 'No title,  same year');
+ok(is_undef($main->get_extratitleyeardata_for_key('L4')), 'Same title,  different year');
+ok(is_undef($main->get_extratitleyeardata_for_key('L5')), 'Different labeltitle,  same year');
+ok(is_undef($main->get_extratitleyeardata_for_key('LY1')), 'Different years due to range ends - 1');
+ok(is_undef($main->get_extratitleyeardata_for_key('LY2')), 'Different years due to range ends - 1');
+ok(is_undef($main->get_extratitleyeardata_for_key('LY3')), 'Different years due to range ends - 1');
 
 

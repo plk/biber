@@ -44,17 +44,25 @@ Biber::Config->setblxoption('maxbibnames', 1);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
 my $bibentries = $section->bibentries;
 
 # Don't forget that the extratitle data is inserted after sorting
-eq_or_diff($main->get_extratitledata('L1'), '1', 'Same name, same title - 1');
-eq_or_diff($main->get_extratitledata('L2'), '2', 'Same name, same title - 2');
-eq_or_diff($main->get_extratitledata('L3'), '1', 'No name, same title - 1');
-eq_or_diff($main->get_extratitledata('L4'), '2', 'No name, same title - 2');
-ok(is_undef($main->get_extratitledata('L5')), 'No name, same title as with name - 1');
-eq_or_diff($main->get_extratitledata('L6'), '1', 'No name, same shorttitle/title - 1');
-eq_or_diff($main->get_extratitledata('L7'), '2', 'No name, same shorttitle/title - 2');
+eq_or_diff($main->get_extratitledata_for_key('L1'), '1', 'Same name, same title - 1');
+eq_or_diff($main->get_extratitledata_for_key('L2'), '2', 'Same name, same title - 2');
+eq_or_diff($main->get_extratitledata_for_key('L3'), '1', 'No name, same title - 1');
+eq_or_diff($main->get_extratitledata_for_key('L4'), '2', 'No name, same title - 2');
+ok(is_undef($main->get_extratitledata_for_key('L5')), 'No name, same title as with name - 1');
+eq_or_diff($main->get_extratitledata_for_key('L6'), '1', 'No name, same shorttitle/title - 1');
+eq_or_diff($main->get_extratitledata_for_key('L7'), '2', 'No name, same shorttitle/title - 2');
 ok(is_undef($bibentries->entry('L8')->get_field('singletitle')), 'Singletitle test - 1');
 ok(is_undef($bibentries->entry('L9')->get_field('singletitle')), 'Singletitle test - 2');
 eq_or_diff($bibentries->entry('L10')->get_field('singletitle'), '1', 'Singletitle test - 3');

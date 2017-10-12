@@ -36,8 +36,23 @@ Biber::Config->setoption('sortlocale', 'sv_SE.UTF-8');
 # U::C Swedish tailoring
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
-my $shs = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
+my $shs = $biber->datalists->get_list(section                    => 0,
+                                      name                       => 'shorthands/global//global/global',
+                                      type                       => 'list',
+                                      sortschemename             => 'shorthands',
+                                      sortnamekeyschemename      => 'global',
+                                      labelprefix                => '',
+                                      uniquenametemplatename     => 'global',
+                                      labelalphanametemplatename => 'global');
 
 # Shorthands are sorted by shorthand (as per bcf)
 is_deeply([$main->get_keys], ['LS6','LS5','LS2','LS1','LS3','LS4'], 'U::C tailoring - 1');
@@ -45,6 +60,7 @@ is_deeply([$shs->get_keys], ['LS3', 'LS4','LS2','LS1'], 'U::C tailoring - 2');
 
 # Set sorting of shorthands to global sorting default
 $shs->set_sortscheme(Biber::Config->getblxoption('sorting'));
+$shs->set_sortschemename('global');
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -99,7 +115,15 @@ is_deeply([$main->get_keys], ['LS5', 'LS6', 'LS4', 'LS3','LS2','LS1'], 'upper_be
 # test is kept for things that are not sort distinguishable
 $biber->parse_ctrlfile('sort-uc.bcf');
 $section = $biber->sections->get_section(0);
-$main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
+$main = $biber->datalists->get_list(section                    => 0,
+                                    name                       => 'nty/global//global/global',
+                                    type                       => 'entry',
+                                    sortschemename             => 'nty',
+                                    sortnamekeyschemename      => 'global',
+                                    labelprefix                => '',
+                                    uniquenametemplatename     => 'global',
+                                    labelalphanametemplatename => 'global');
+
 $biber->set_output_obj(Biber::Output::bbl->new());
 $S = { spec => [
                                                     [

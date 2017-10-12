@@ -33,8 +33,8 @@ lib/Biber/Output/test.pm
 lib/Biber.pm
 lib/Biber/Section.pm
 lib/Biber/Sections.pm
-lib/Biber/SortList.pm
-lib/Biber/SortLists.pm
+lib/Biber/DataList.pm
+lib/Biber/DataLists.pm
 lib/Biber/UCollate.pm
 lib/Biber/Utils.pm
 MANIFEST
@@ -75,7 +75,7 @@ t/skips.t
 t/sort-case.t
 t/sort-complex.t
 t/sorting.t
-t/sortlists.t
+t/datalists.t
 t/sort-order.t
 t/sort-uc.t
 t/tool.t
@@ -158,9 +158,9 @@ t/tdata/sort.bib
 t/tdata/sort-case.bcf
 t/tdata/sort-case.bib
 t/tdata/sort-complex.bcf
-t/tdata/sortlists.bcf
-t/tdata/sortlists.bib
-t/tdata/sortlists.bltxml
+t/tdata/datalists.bcf
+t/tdata/datalists.bib
+t/tdata/datalists.bltxml
 t/tdata/sort-order.bcf
 t/tdata/sort-order.bib
 t/tdata/sort-order.bib

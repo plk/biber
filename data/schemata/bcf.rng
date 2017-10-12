@@ -269,12 +269,11 @@
         <!-- labelalphanametemplate specification -->
         <element name="bcf:labelalphanametemplate">
           <optional>
-            <attribute name="type">
+            <attribute name="name">
               <data type="string"/>
             </attribute>
           </optional>
           <oneOrMore>
-            <!-- per-type? -->
             <element name="bcf:namepart">
               <attribute name="order">
                 <data type="integer"/>
@@ -859,7 +858,7 @@
   </start>
   <define name="listspec">
     <zeroOrMore>
-      <element name="bcf:sortlist">
+      <element name="bcf:datalist">
         <attribute name="section">
           <data type="integer"/>
         </attribute>
@@ -880,6 +879,12 @@
           </data>
         </attribute>
         <attribute name="labelprefix">
+          <data type="string"/>
+        </attribute>
+        <attribute name="uniquenametemplatename">
+          <data type="string"/>
+        </attribute>
+        <attribute name="labelalphanametemplatename">
           <data type="string"/>
         </attribute>
         <!-- name is only needed for list types -->

@@ -10,6 +10,8 @@ use constant {
 };
 
 use Biber::Config;
+use Biber::DataLists;
+use Biber::DataList;
 use Biber::DataModel;
 use Biber::Constants;
 use Biber::Internals;
@@ -20,8 +22,6 @@ use Biber::Entry::Name;
 use Biber::Sections;
 use Biber::Section;
 use Biber::LaTeX::Recode;
-use Biber::SortLists;
-use Biber::SortList;
 use Biber::UCollate;
 use Biber::Utils;
 use Carp;
@@ -155,17 +155,17 @@ sub add_sections {
   return;
 }
 
-=head2 sortlists
+=head2 datalists
 
-    my $sortlists= $biber->sortlists
+    my $datalists= $biber->datalists
 
-    Returns a Biber::SortLists object describing the bibliography sorting lists
+    Returns a Biber::DataLists object describing the bibliography sorting lists
 
 =cut
 
-sub sortlists {
+sub datalists {
   my $self = shift;
-  return $self->{sortlists};
+  return $self->{datalists};
 }
 
 
@@ -258,12 +258,14 @@ sub tool_mode_setup {
   # Add the Biber::Sections object to the Biber object
   $self->add_sections($bib_sections);
 
-  my $sortlists = new Biber::SortLists;
-  my $seclist = Biber::SortList->new(section => 99999,
+  my $datalists = new Biber::DataLists;
+  my $seclist = Biber::DataList->new(section => 99999,
                                      sortschemename => Biber::Config->getblxoption('sortscheme'),
                                      sortnamekeyschemename => 'global',
+                                     uniquenametemplatename => 'global',
+                                     labelalphanametemplatename => 'global',
                                      labelprefix => '',
-                                     name => Biber::Config->getblxoption('sortscheme') . '/global/');
+                                     name => Biber::Config->getblxoption('sortscheme') . '/global//global/global');
   $seclist->set_type('entry');
   $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
   # Locale just needs a default here - there is no biblatex option to take it from
@@ -271,8 +273,8 @@ sub tool_mode_setup {
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Adding 'entry' list 'tool' for pseudo-section 99999");
   }
-  $sortlists->add_list($seclist);
-  $self->{sortlists} = $sortlists;
+  $datalists->add_list($seclist);
+  $self->{datalists} = $datalists;
 
   # User maps are set in config file and need some massaging which normally
   # happens in parse_ctrlfile
@@ -409,7 +411,7 @@ sub parse_ctrlfile {
                                                            qr/\Aconstraint\z/,
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
-                                                           qr/\Asortlist\z/,
+                                                           qr/\Adatalist\z/,
                                                            qr/\Alabel(?:part|element|alpha(?:name)?template)\z/,
                                                            qr/\Auniquenametemplate\z/,
                                                            qr/\Acondition\z/,
@@ -568,8 +570,8 @@ sub parse_ctrlfile {
   }
 
   # LABELALPHA NAME TEMPLATE
+  my $lants;
   foreach my $t ($bcfxml->{labelalphanametemplate}->@*) {
-    my $lants;
     my $lant;
     foreach my $np (sort {$a->{order} <=> $b->{order}} $t->{namepart}->@*) {
       push $lant->@*, {namepart           => $np->{content},
@@ -580,8 +582,8 @@ sub parse_ctrlfile {
                        substring_width    => $np->{substring_width}};
     }
     $lants->{$t->{name}} = $lant;
-    Biber::Config->setblxoption('labelalphanametemplate', $lants);
   }
+  Biber::Config->setblxoption('labelalphanametemplate', $lants);
 
   # LABELALPHA TEMPLATE
   foreach my $t ($bcfxml->{labelalphatemplate}->@*) {
@@ -847,10 +849,10 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
   # Add the Biber::Sections object to the Biber object
   $self->{sections} = $bib_sections;
 
-  # Read sortlists
-  my $sortlists = new Biber::SortLists;
+  # Read datalists
+  my $datalists = new Biber::DataLists;
 
-  foreach my $list ($bcfxml->{sortlist}->@*) {
+  foreach my $list ($bcfxml->{datalist}->@*) {
     my $ltype  = $list->{type};
     my $lssn = $list->{sortscheme};
     my $lsnksn = $list->{sortnamekeyscheme};
@@ -860,24 +862,31 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     my $lname = $list->{name};
 
     my $lsection = $list->{section}[0]; # because "section" needs to be a list elsewhere in XML
-    if ($sortlists->get_list($lsection, $lname, $ltype, $lssn, $lsnksn, $lpn)) {
+    if ($datalists->get_list(section                    => $lsection,
+                             name                       => $lname,
+                             type                       => $ltype,
+                             sortschemename             => $lssn,
+                             sortnamekeyschemename      => $lsnksn,
+                             labelprefix                => $lpn,
+                             uniquenametemplatename     => $luntn,
+                             labelalphanametemplatename => $llantn)) {
       if ($logger->is_debug()) {# performance tune
-        $logger->debug("Section sortlist '$lname' of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn' and labelalphanametemplate '$llantn' is repeated for section $lsection - ignoring");
+        $logger->debug("Section datalist '$lname' of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn' and labelalphanametemplate '$llantn' is repeated for section $lsection - ignoring");
       }
       next;
     }
 
-    my $sortlist = Biber::SortList->new(section => $lsection,
-                                        sortschemename => $lssn,
-                                        sortnamekeyschemename => $lsnksn,
-                                        uniquenametemplatename => $luntn,
+    my $datalist = Biber::DataList->new(section                    => $lsection,
+                                        sortschemename             => $lssn,
+                                        sortnamekeyschemename      => $lsnksn,
+                                        uniquenametemplatename     => $luntn,
                                         labelalphanametemplatename => $llantn,
-                                        labelprefix => $lpn,
-                                        name => $lname);
-    $sortlist->set_type($ltype || 'entry'); # lists are entry lists by default
-    $sortlist->set_name($lname || "$lssn/$lsnksn/$lpn/$luntn/$llantn"); # default to ss+snkss+pn+untn+lantn
+                                        labelprefix                => $lpn,
+                                        name                       => $lname);
+    $datalist->set_type($ltype || 'entry'); # lists are entry lists by default
+    $datalist->set_name($lname || "$lssn/$lsnksn/$lpn/$luntn/$llantn"); # default to ss+snkss+pn+untn+lantn
     foreach my $filter ($list->{filter}->@*) {
-      $sortlist->add_filter({'type'  => $filter->{type},
+      $datalist->add_filter({'type'  => $filter->{type},
                             'value' => $filter->{content}});
     }
     # disjunctive filters are an array ref of filter hashes
@@ -887,52 +896,54 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
         push $orfilts->@*, {type  => $filter->{type},
                             value => $filter->{content}};
       }
-      $sortlist->add_filter($orfilts) if $orfilts;
+      $datalist->add_filter($orfilts) if $orfilts;
     }
 
     if (my $sorting = $list->{sorting}) { # can be undef for fallback to global sorting
-      $sortlist->set_sortscheme(_parse_sort($sorting));
+      $datalist->set_sortscheme(_parse_sort($sorting));
     }
     else {
-      $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $datalist->set_sortscheme(Biber::Config->getblxoption('sorting'));
     }
 
     # Collator for determining primary weight hash for sortinit
     # Here as it varies only with the locale and that doesn't vary between entries in a list
     # Potentially, the locale could be different for the first field in the sort spec in which
     # case that might give wrong results but this is highly unlikely as it is only used to
-    # determine sortinithash in SortList.pm and that only changes \bibinitsep in biblatex.
-    $sortlist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $sortlist->get_sortscheme->{locale}, level => 1));
+    # determine sortinithash in DataList.pm and that only changes \bibinitsep in biblatex.
+    $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $datalist->get_sortscheme->{locale}, level => 1));
 
     if ($logger->is_debug()) {# performance tune
-      $logger->debug("Adding sortlist of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn', labelalphanametemplate '$llantn' and name '$lname' for section $lsection");
+      $logger->debug("Adding datalist of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn', labelalphanametemplate '$llantn' and name '$lname' for section $lsection");
     }
-    $sortlists->add_list($sortlist);
+    $datalists->add_list($datalist);
   }
 
-  # Check to make sure that each section has an entry sortlist for global sorting
+  # Check to make sure that each section has an entry datalist for global sorting
   # We have to make sure in case sortcites is used which uses the global order.
   foreach my $section ($bcfxml->{section}->@*) {
     my $globalss = Biber::Config->getblxoption('sortscheme');
     my $secnum = $section->{number};
-    unless ($sortlists->get_list($secnum, "$globalss/global//global/global", 'entry', $globalss, 'global', '', 'global', 'global')) {
-      my $sortlist = Biber::SortList->new(section => $secnum,
-                                          type => 'entry',
-                                          sortschemename => $globalss,
-                                          sortnamekeyschemename => 'global',
-                                          uniquenametemplatename => 'global',
+    unless ($datalists->get_list(section        => $secnum,
+                                 type           => 'entry',
+                                 sortschemename => $globalss)) {
+      my $datalist = Biber::DataList->new(section                    => $secnum,
+                                          type                       => 'entry',
+                                          sortschemename             => $globalss,
+                                          sortnamekeyschemename      => 'global',
+                                          uniquenametemplatename     => 'global',
                                           labelalphanametemplatename => 'global',
-                                          labelprefix => '',
-                                          name => "$globalss/global/");
-      $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-      $sortlists->add_list($sortlist);
+                                          labelprefix                => '',
+                                          name                       => "$globalss/global//global/global");
+      $datalist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $datalists->add_list($datalist);
       # See comment above
-      $sortlist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $sortlist->get_sortscheme->{locale}, level => 1));
+      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $datalist->get_sortscheme->{locale}, level => 1));
     }
   }
 
-  # Add the Biber::SortLists object to the Biber object
-  $self->{sortlists} = $sortlists;
+  # Add the Biber::DataLists object to the Biber object
+  $self->{datalists} = $datalists;
 
   # Warn if there are no citations in any section
   unless ($key_flag) {
@@ -971,14 +982,16 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     # Global locale in non tool mode bibtex output is default
     Biber::Config->setblxoption('sortlocale', 'english');
 
-    my $sortlist = Biber::SortList->new(section => 99999,
+    my $datalist = Biber::DataList->new(section => 99999,
                                         sortschemename => Biber::Config->getblxoption('sortscheme'),
                                         sortnamekeyschemename => 'global',
+                                        uniquenametemplatename => 'global',
+                                        labelalphanametemplatename => 'global',
                                         labelprefix => '',
-                                        name => Biber::Config->getblxoption('sortscheme') . '/global/');
-    $sortlist->set_type('entry');
+                                        name => Biber::Config->getblxoption('sortscheme') . '/global//global/global');
+    $datalist->set_type('entry');
     # bibtex output in non-tool mode is just citeorder
-    $sortlist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
+    $datalist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
                               spec   =>
                              [
                               [
@@ -989,7 +1002,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
     }
-    $self->{sortlists}->add_list($sortlist);
+    $self->{datalists}->add_list($datalist);
   }
 
   return;
@@ -1010,17 +1023,19 @@ sub process_setup {
   # bibliography as this results in no entry list in the .bcf
   foreach my $section ($self->sections->get_sections->@*) {
     my $secnum = $section->number;
-    unless ($self->sortlists->has_lists_of_type_for_section($secnum, 'entry')) {
-      my $sortlist = Biber::SortList->new(sortschemename => Biber::Config->getblxoption('sortscheme'),
-                                       sortnamekeyschemename => 'global',
-                                       labelprefix => '',
-                                       name => Biber::Config->getblxoption('sortscheme') . '/global/');
-      $sortlist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-      $sortlist->set_type('entry');
-      $sortlist->set_section($secnum);
-      $self->sortlists->add_list($sortlist);
-      # See comment for same call in .bcf instantiation of sortlists
-      $sortlist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $sortlist->get_sortscheme->{locale}, level => 1));
+    unless ($self->datalists->has_lists_of_type_for_section($secnum, 'entry')) {
+      my $datalist = Biber::DataList->new(sortschemename => Biber::Config->getblxoption('sortscheme'),
+                                          sortnamekeyschemename => 'global',
+                                          uniquenametemplatename => 'global',
+                                          labelalphanametemplatename => 'global',
+                                          labelprefix => '',
+                                          name => Biber::Config->getblxoption('sortscheme') . '/global//global/global');
+      $datalist->set_sortscheme(Biber::Config->getblxoption('sorting'));
+      $datalist->set_type('entry');
+      $datalist->set_section($secnum);
+      $self->datalists->add_list($datalist);
+      # See comment for same call in .bcf instantiation of datalists
+      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $datalist->get_sortscheme->{locale}, level => 1));
     }
   }
 
@@ -1488,6 +1503,164 @@ sub validate_datamodel {
   }
 }
 
+=head2 process_namedis
+
+    Generate name strings and disambiguation schema. Has to be in the context
+    of a data list (reference context) because uniquenametemplate can be specified
+    per-list/context
+
+=cut
+
+sub process_namedis {
+  my ($self, $citekey, $dlist) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $dmh = Biber::Config->get_dm_helpers;
+  if ($logger->is_debug()) {    # performance tune
+    $logger->debug("Processing names in entries in section $secnum to generate disambiguation data");
+  }
+  # Use nameuniqueness template to construct uniqueness strings
+  my $untname = $dlist->get_uniquenametemplatename;
+
+  my $be = $section->bibentry($citekey);
+
+  my $un = Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey);
+
+  # Can be per-entry
+  $untname = Biber::Config->getblxoption('uniquenametemplatename', undef, $citekey) // $untname;
+
+  foreach my $pn ($dmh->{namelistsall}->@*) {
+    next unless my $names = $be->get_field($pn);
+
+    # per-namelist uniquenametemplatename
+    if (defined($names->get_uniquenametemplatename)) {
+      $untname = $names->get_uniquenametemplatename;
+    }
+
+    foreach my $n ($names->names->@*) {
+
+      my $namestring = '';
+      my $namestrings = [];
+      my $namedisschema = [];
+
+      # per-name uniquenametemplatename
+      if (defined($n->get_uniquenametemplatename)) {
+        $untname = $n->get_uniquenametemplatename;
+      }
+
+      # First construct base part ...
+      my $base;
+      my $baseparts;
+
+      foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{$untname}->@*) {
+        next unless $np->{base};
+        my $npn = $np->{namepart};
+
+        if (my $p = $n->get_namepart($npn)) {
+          if ($np->{use}) {     # only ever defined as 1
+            my $method = "get_use$npn";
+            my $useok = Biber::Config->getblxoption("use$npn",
+                                                    $be->get_field('entrytype'),
+                                                    $citekey);
+            # Override with per-namelist setting - only for extended name format
+            if (defined($names->$method)) {
+              $useok = $names->$method;
+            }
+            # Override with per-name setting - only for extended name format
+            if (defined($names->$method)) {
+              $useok = $names->$method;
+            }
+            next unless $useok;
+          }
+          $base .= $p;
+          push $baseparts->@*, $npn;
+        }
+      }
+
+      $namestring .= $base;
+      push $namestrings->@*, $base;
+      push $namedisschema->@*, ['base' => $baseparts];
+
+      # ... then add non-base parts by incrementally adding to the last disambiguation level
+      foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{$untname}->@*) {
+        next if $np->{base};
+        my $npn = $np->{namepart};
+        my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$un // 0};
+        my $lastns = $namestrings->[$namestrings->$#*];
+
+        if (my $p = $n->get_namepart($npn)) {
+          my $pi = $n->get_namepart_initial($npn);
+          if ($np->{use}) {     # only ever defined as 1
+            my $method = "get_use$npn";
+            my $useok = Biber::Config->getblxoption("use$npn",
+                                                    $be->get_field('entrytype'),
+                                                    $citekey);
+            # Override with per-namelist setting - only for extended name format
+            if (defined($names->$method)) {
+              $useok = $names->$method;
+            }
+            # Override with per-name setting - only for extended name format
+            if (defined($names->$method)) {
+              $useok = $names->$method;
+            }
+            next unless $useok;
+          }
+
+          $namestring .= $p;
+
+          # per-namepart disambiguation level
+          # Here we incrementally add disambiguation possibilities to an array and simultaneously
+          # record a schema of what each incremental disambiguation is
+          if (fc($level) eq fc('full')) { # only full disambiguation
+            push $namestrings->@*, $lastns . $p;
+            push $namedisschema->@*, [$npn => 'fullonly'];
+          }
+          if (fc($level) eq fc('initorfull')) { # initials or full disambiguation
+            push $namestrings->@*, $lastns . join('', $pi->@*);
+            push $namedisschema->@*, [$npn => 'init'];
+            push $namestrings->@*, $lastns . $p;
+            push $namedisschema->@*, [$npn => 'full'];
+          }
+          elsif (fc($level) eq fc('init')) { # inits only
+            push $namestrings->@*, $lastns . join('', $pi->@*);
+            push $namedisschema->@*, [$npn => 'init'];
+          }
+          # disambiguation='none' gets here and nothing is added to the strings or schema
+        }
+      }
+
+      if ($logger->is_trace()) { # performance tune
+        $logger->trace("namestrings in '$citekey': " . join (',', $namestrings->@*));
+      }
+
+      $n->set_namestring($namestring);
+      $n->set_namestrings($namestrings);
+      $n->set_namedisschema($namedisschema); # Must come after set_namestrings
+    }
+  }
+  return;
+}
+
+=head2 postprocess_sets
+
+  Adds required per-entry options etc. to sets
+
+=cut
+
+sub postprocess_sets {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  foreach my $citekey ( $section->get_citekeys ) {
+
+    # process set entries
+    $self->process_sets($citekey);
+  }
+
+  return;
+}
+
+
 =head2 process_entries_pre
 
     Main processing operations, to generate metadata and entry information
@@ -1499,16 +1672,16 @@ sub validate_datamodel {
 =cut
 
 sub process_entries_pre {
-  my $self = shift;
+  my ($self, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   if ($logger->is_debug()) {# performance tune
-    $logger->debug("Postprocessing entries in section $secnum (before uniqueness)");
+    $logger->debug("Processing entries in section $secnum (before uniqueness)");
   }
   foreach my $citekey ( $section->get_citekeys ) {
 
-    # process set entries
-    $self->process_sets($citekey);
+    # process name disambiguation schemata
+    $self->process_namedis($citekey, $dlist);
 
     # generate labelname name
     $self->process_labelname($citekey);
@@ -1543,7 +1716,7 @@ sub process_entries_pre {
 =cut
 
 sub process_entries_post {
-  my $self = shift;
+  my ($self, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   if ($logger->is_debug()) {# performance tune
@@ -1551,11 +1724,17 @@ sub process_entries_post {
   }
   foreach my $citekey ( $section->get_citekeys ) {
 
+    # generate labelalpha information
+    $self->process_labelalpha($citekey, $dlist);
+
+    # generate information for tracking extraalpha
+    $self->process_extraalpha($citekey);
+
     # generate information for tracking extrayear
-    $self->process_extrayear($citekey);
+    $self->process_extrayear($citekey, $dlist);
 
     # generate information for tracking extratitle
-    $self->process_extratitle($citekey);
+    $self->process_extratitle($citekey, $dlist);
 
     # generate information for tracking extratitleyear
     $self->process_extratitleyear($citekey);
@@ -1708,7 +1887,7 @@ sub process_workuniqueness {
 
 sub process_extrayear {
   my $self = shift;
-  my $citekey = shift;
+  my ($citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1733,7 +1912,7 @@ sub process_extrayear {
 
     my $name_string = '';
     if (my $lni = $be->get_labelname_info) {
-      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni));
+      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
     }
 
     # extrayear takes into account the labelyear which can be a range
@@ -1761,7 +1940,7 @@ sub process_extrayear {
 
 sub process_extratitle {
   my $self = shift;
-  my $citekey = shift;
+  my ($citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1786,7 +1965,7 @@ sub process_extratitle {
 
     my $name_string = '';
     if (my $lni = $be->get_labelname_info) {
-      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni));
+      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
     }
 
     my $lti = $be->get_labeltitle_info;
@@ -2319,7 +2498,7 @@ sub process_visible_names {
 
 sub process_labelalpha {
   my $self = shift;
-  my ($citekey, $slist) = @_;
+  my ($citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -2331,7 +2510,7 @@ sub process_labelalpha {
   if ( my $la = Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
     my $label;
     my $sortlabel;
-    ($label, $sortlabel) = $self->_genlabel($citekey, $slist)->@*;
+    ($label, $sortlabel) = $self->_genlabel($citekey, $dlist)->@*;
     $be->set_field('labelalpha', $label);
     $be->set_field('sortlabelalpha', $sortlabel);
   }
@@ -2381,7 +2560,7 @@ sub process_presort {
 
 =head2 process_lists
 
-    Sort and filter lists for a section
+    Process a bibliography list
 
 =cut
 
@@ -2389,35 +2568,27 @@ sub process_lists {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
-  foreach my $list ($self->sortlists->get_lists_for_section($secnum)->@*) {
-    my $lssn = $list->get_sortschemename;
-    my $lsnksn = $list->get_sortnamekeyschemename;
+
+  foreach my $list ($self->datalists->get_lists_for_section($secnum)->@*) {
+    my $lrc = $list->get_refcontext;
     my $ltype = $list->get_type;
     my $lname = $list->get_name;
+
     # Last-ditch fallback in case we still don't have a sorting spec
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
     $list->set_sortnamekeyschemename('global') unless $list->get_sortnamekeyschemename;
+    $list->set_uniquenametemplatename('global') unless $list->get_uniquenametemplatename;
+    $list->set_labelalphanametemplatename('global') unless $list->get_labelalphanametemplatename;
     $list->set_keys([ $section->get_citekeys ]);
     if ($logger->is_debug()) {# performance tune
-      $logger->debug("Populated sortlist '$lname' of type '$ltype' with sortscheme '$lssn' and sorting name key scheme '$lsnksn' in section $secnum with keys: " . join(', ', $list->get_keys));
-    }
-
-    # generate labelalpha information as this varies depending on labelalphanametemplate
-    # which can be set per-list
-    # Reset this otherwise we increment the same label count for each list
-    Biber::Config->reset_la_disambiguation;
-    foreach my $citekey ( $section->get_citekeys ) {
-      $self->process_labelalpha($citekey, $list);
-
-      # generate information for tracking extraalpha
-      $self->process_extraalpha($citekey);
+      $logger->debug("Populated datalist '$lname' of type '$ltype' with refcontext '$lrc' in section $secnum with keys: " . join(', ', $list->get_keys));
     }
 
     # Now we check the sorting cache to see if we already have results
-    # for this scheme since sorting is computationally expensive.
+    # for this refcontext since sorting/labelling is computationally expensive.
     # We know the keys are the same as we just set them
-    # to a copy of the section citekeys above. If the scheme is the same
-    # as a previous sort then the results have to also be the same so inherit
+    # to a copy of the section citekeys above. If the refcontext is the same
+    # as a previous context then the results have to also be the same so inherit
     # the results which are normally set by sorting:
     #
     # * sorted keys
@@ -2426,21 +2597,18 @@ sub process_lists {
 
     my $cache_flag = 0;
     if ($logger->is_debug()) {# performance tune
-      $logger->debug("Checking sorting cache for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+      $logger->debug("Checking refcontext cache for refcontext '$lrc'");
     }
-    foreach my $cacheitem ($section->get_sort_cache->@*) {
+    foreach my $cacheitem ($section->get_refcontext_cache->@*) {
       # This conditional checks for identity of the data elements which constitute
-      # a biblatex refcontext since a sortlist is conceptually part of a refcontext
+      # a biblatex refcontext since a datalist is conceptually part of a refcontext
       if (Compare($list->get_sortscheme, $cacheitem->[0]) and
           $list->get_sortnamekeyschemename eq $cacheitem->[1] and
           $list->get_labelprefix eq $cacheitem->[2] and
-          $list->get_uniquenametemplatename eq $cacheitem->[10] and
-          $list->get_labelalphanametemplatename eq $cacheitem->[11]) {
+          Compare($list->get_namelistdata, $cacheitem->[10]) and
+          Compare($list->get_labelalphadata, $cacheitem->[11])) {
         if ($logger->is_debug()) {# performance tune
-          $logger->debug("Found sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
-        }
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Sorting list cache for scheme '$lssn' with sorting name key scheme '$lsnksn':\n-------------------\n" . Data::Dump::pp($list->get_sortscheme) . "\n-------------------\n");
+          $logger->debug("Found refcontext cache entry for '$lrc'");
         }
         $list->set_sortnamekeyschemename($cacheitem->[1]);
         $list->set_labelprefix($cacheitem->[2]);
@@ -2451,8 +2619,8 @@ sub process_lists {
         $list->set_extratitledata($cacheitem->[7]);
         $list->set_extratitleyeardata($cacheitem->[8]);
         $list->set_sortdataschema($cacheitem->[9]);
-        $list->set_uniquenametemplatename($cacheitem->[10]);
-        $list->set_labelalphanametemplatename($cacheitem->[11]);
+        $list->set_namelistdata($cacheitem->[10]);
+        $list->set_labelalphadata($cacheitem->[11]);
         $cache_flag = 1;
         last;
       }
@@ -2460,19 +2628,44 @@ sub process_lists {
 
     unless ($cache_flag) {
       if ($logger->is_debug()) {# performance tune
-        $logger->debug("No sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+        $logger->debug("No refcontext cache entry for '$lrc'");
       }
+
+      # A datalist represents a biblatex refcontext
+      # and many things are refcontext specific and so we need to use the right data. For
+      # example labelalphanametemplate and uniquenametemplate can be set per-list and much
+      # processing uses these
+
+      unless (Biber::Config->getoption('tool')) {
+        # Reset these per-list otherwise we increment counters more than once
+        Biber::Config->reset_la_disambiguation;
+        Biber::Config->reset_workuniqueness;
+        Biber::Config->reset_seen_extratrackers;
+
+        # Main entry processing loop, part 1
+        $self->process_entries_pre($list);
+
+        # Generate uniqueness information
+        $self->uniqueness;
+
+        # Generate visible names information for all entries
+        $self->process_visible_names;
+
+        # Main entry processing loop, part 2
+        $self->process_entries_post($list);
+      }
+
       # Sorting
       $self->generate_sortdataschema($list); # generate the sort schema information
       $self->generate_sortinfo($list);       # generate the sort information
       $self->sort_list($list);               # sort the list
-      $self->generate_extra($list) unless Biber::Config->getoption('tool'); # generate the extra* fields
+      $self->generate_contextdata($list) unless Biber::Config->getoption('tool'); # generate the extra* fields
 
       # Cache the results
       if ($logger->is_debug()) {# performance tune
-        $logger->debug("Adding sorting cache entry for scheme '$lssn' with sorting name key scheme '$lsnksn'");
+        $logger->debug("Adding refcontext cache entry for '$lrc'");
       }
-      $section->add_sort_cache($list->get_listdata);
+      $section->add_refcontext_cache($list->get_listdata);
     }
 
     # Filtering
@@ -2695,6 +2888,9 @@ sub uniqueness {
   # Generate uniquename information, if requested
   while ('true') {
     unless (Biber::Config->get_unul_done) {
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Entering uniquename processing");
+      }
       Biber::Config->set_unul_changed(0); # reset state for global unul changed flag
       $self->create_uniquename_info;
       $self->generate_uniquename;
@@ -2705,6 +2901,9 @@ sub uniqueness {
     # Generate uniquelist information, if requested
     # Always run uniquelist at least once, if requested
     if ($first_ul_pass or not Biber::Config->get_unul_done) {
+      if ($logger->is_debug()) {# performance tune
+        $logger->debug("Entering uniquelist processing");
+      }
       Biber::Config->set_unul_changed(0); # reset state for global unul changed flag
       $first_ul_pass = 0; # Ignore special case when uniquelist has run once
       $self->create_uniquelist_info;
@@ -2979,8 +3178,7 @@ sub generate_uniquename {
             if (Biber::Config->get_numofuniquenames($ns, $namescope) == 1) {
               $name->set_uniquename($nss);
               # We have found the most general disambiguation schema which disambiguates,
-              # skip the rest. This is because the schema goes from most general to least
-              # general in the array
+              # skip the rest since the schema array goes from most general to least general
               last;
             }
           }
@@ -2996,8 +3194,7 @@ sub generate_uniquename {
             if (Biber::Config->get_numofuniquenames_all($ns, $namescope) == 1) {
               $name->set_uniquename_all($nss);
               # We have found the most general disambiguation schema which disambiguates,
-              # skip the rest. This is because the schema goes from most general to least
-              # general in the array
+              # skip the rest since the schema array goes from most general to least general
               last;
             }
           }
@@ -3178,25 +3375,22 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 }
 
 
-=head2 generate_extra
+=head2 generate_contextdata
 
-    Generate information for:
-
-      * extraalpha
-      * extrayear
-      * extratitle
-      * extratitleyear
+    Generate information for data which may changes per datalist
 
 =cut
 
-sub generate_extra {
+sub generate_contextdata {
   my $self = shift;
   my $list = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $dmh = Biber::Config->get_dm_helpers;
 
-  Biber::Config->reset_seen_extra(); # Since this sub is per-list, have to reset the
-                                     # extra* counters per list
+  # Since this sub is per-list, have to reset the extra* counters per list
+  Biber::Config->reset_seen_extra;
+
   # This loop critically depends on the order of the citekeys which
   # is why we have to do sorting before this
   foreach my $key ($list->get_keys) {
@@ -3238,6 +3432,12 @@ sub generate_extra {
           $list->set_extratitleyeardata_for_key($key, $v);
         }
       }
+
+      # labelalpha
+      # This works because labelalpha field is regenerated per-list
+      if (Biber::Config->getblxoption('labelalpha', $bee)) {
+        $list->set_labelalphadata_for_key($key, $be->get_field('labelalpha'));
+      }
       # extraalpha
       if (Biber::Config->getblxoption('labelalpha', $bee)) {
         my $la = $be->get_field('labelalpha');
@@ -3249,6 +3449,54 @@ sub generate_extra {
           $list->set_extraalphadata_for_key($key, $v);
         }
       }
+    }
+    # uniquelist
+    # Using defined as 0 is a valid per-entry override of a global/per-entry setting
+    if (defined(Biber::Config->getblxoption('uniquelist', $bee, $key))) {
+      my $nldata;
+      foreach my $namefield ($dmh->{namelists}->@*) {
+        if (my $nl = $be->get_field($namefield)) {
+          $nldata->{$nl->get_id}{ul} = $nl->get_uniquelist;
+        }
+        $list->set_namelistdata_for_key($key, $nldata);
+      }
+    }
+    # uniquename
+    # Using defined as 0 is a valid per-entry override of a global/per-entry setting
+    if (defined(Biber::Config->getblxoption('uniquename', $bee, $key))) {
+      my $nldata = $list->get_namelistdata_for_key($key);
+      foreach my $namefield ($dmh->{namelists}->@*) {
+        if (my $nl = $be->get_field($namefield)) {
+          foreach my $n ($nl->names->@*) {
+            my $uniquename = $n->get_uniquename;
+            my $namedisschema = $n->get_namedisschema;
+            delete($nldata->{$nl->get_id}{un}{$n->get_id}{parts});
+            if (defined($n->get_uniquename)) {
+              $nldata->{$nl->get_id}{un}{$n->get_id}{summary} = $n->get_uniquename_summary;
+              $nldata->{$nl->get_id}{un}{$n->get_id}{part} = $n->get_uniquename->[0];
+            }
+            # Construct per-namepart uniquename value
+            my %pnun;
+            for (my $i=0; $i<=$namedisschema->$#*; $i++) {
+              my $nss = $namedisschema->[$i];
+              if (Compare($uniquename, $nss)) {
+                # Find where uniqueness is established, determine un settings up to this point
+                my @dis = grep {$_->[0] ne 'base' and $_->[1] ne 'full'} $namedisschema->@[1..$i-1];
+                push @dis, $namedisschema->@[$i];
+                # normalise 'fullonly' to 'full' now that we have stripped all non-disambiguating elements
+                %pnun = map {$_->[0] => ($_->[1] eq 'fullonly' ? 'full' : $_->[1])} @dis;
+                last;
+              }
+            }
+            foreach my $np ($n->get_nameparts) {
+              my $npun = $UNIQUENAME_VALUES{$pnun{$np} // 'none'};
+              $npun //= 0;
+              $nldata->{$nl->get_id}{un}{$n->get_id}{parts}{$np} = $npun;
+            }
+          }
+        }
+      }
+      $list->set_namelistdata_for_key($key, $nldata);
     }
   }
   return;
@@ -3448,12 +3696,12 @@ sub sort_list {
     }
     $logger->debug("Keys before sort:\n");
     foreach my $k (@keys) {
-      $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
+      $logger->debug("$k => " . $list->get_sortdata_for_key($k)->[0]);
     }
   }
 
   if ($logger->is_trace()) { # performance shortcut
-    $logger->trace("Sorting sortlist '$lname' of type '$ltype' with sortscheme '$lssn'. Scheme is\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
+    $logger->trace("Sorting datalist '$lname' of type '$ltype' with sortscheme '$lssn'. Scheme is\n-------------------\n" . Data::Dump::pp($sortscheme) . "\n-------------------\n");
   }
   # Set up locale. Order of priority is:
   # 1. locale value passed to Unicode::Collate::Locale->new() (Unicode::Collate sorts only)
@@ -3558,8 +3806,8 @@ sub sort_list {
     my @d;
     my $key = $keys[$_];
     # Loop over all sorting fields
-    for (my $i=0; $i<=$#{$list->get_sortdata($key)->[1]}; $i++) {
-      my $sortfield = $list->get_sortdata($key)->[1][$i];
+    for (my $i=0; $i<=$#{$list->get_sortdata_for_key($key)->[1]}; $i++) {
+      my $sortfield = $list->get_sortdata_for_key($key)->[1][$i];
       # Resolve real zeros back again
       if ($lsds->[$i]{int}) {
         # There is special cases to be careful of here in that "final" elements
@@ -3592,7 +3840,7 @@ sub sort_list {
   if ($logger->is_debug()) {# performance tune for large @keys
     $logger->debug("Keys after sort:\n");
     foreach my $k (@keys) {
-      $logger->debug("$k => " . $list->get_sortdata($k)->[0]);
+      $logger->debug("$k => " . $list->get_sortdata_for_key($k)->[0]);
     }
   }
 
@@ -3672,10 +3920,7 @@ sub prepare {
     $self->preprocess_sets;              # Record set information
     $self->process_interentry;           # Process crossrefs/xrefs etc.
     $self->validate_datamodel;           # Check against data model
-    $self->process_entries_pre;          # Main entry processing loop, part 1
-    $self->uniqueness;                   # Generate uniqueness information
-    $self->process_visible_names;        # Generate visible names information for all entries
-    $self->process_entries_post;         # Main entry processing loop, part 2
+    $self->postprocess_sets;             # Add options to set members etc.
     $self->process_lists;                # Process the output lists (sort and filtering)
     $self->generate_singletitle;         # Generate singletitle field if requested
     $self->generate_uniquetitle;         # Generate uniquetitle field if requested

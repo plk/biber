@@ -53,8 +53,24 @@ Biber::Config->setblxoption('labeldateparts', undef);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->sortlists->get_list(0, 'nty/global/', 'entry', 'nty', 'global', '');
-my $shs = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');
+my $main = $biber->datalists->get_list(section                    => 0,
+                                       name                       => 'nty/global//global/global',
+                                       type                       => 'entry',
+                                       sortschemename             => 'nty',
+                                       sortnamekeyschemename      => 'global',
+                                       labelprefix                => '',
+                                       uniquenametemplatename     => 'global',
+                                       labelalphanametemplatename => 'global');
+
+my $shs = $biber->datalists->get_list(section                    => 0,
+                                      name                       => 'shorthands/global//global/global',
+                                      type                       => 'list',
+                                      sortschemename             => 'shorthands',
+                                      sortnamekeyschemename      => 'global',
+                                      labelprefix                => '',
+                                      uniquenametemplatename     => 'global',
+                                      labelalphanametemplatename => 'global');
+
 my $out = $biber->get_output_obj;
 
 my $ss = { locale => 'en-US',
@@ -281,7 +297,15 @@ $section->del_everykeys;
 Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-$shs = $biber->sortlists->get_list(0, 'shorthands/global/', 'list', 'shorthands', 'global', '');
+$shs = $biber->datalists->get_list(section                    => 0,
+                                   name                       => 'shorthands/global//global/global',
+                                   type                       => 'list',
+                                   sortschemename             => 'shorthands',
+                                   sortnamekeyschemename      => 'global',
+                                   labelprefix                => '',
+                                   uniquenametemplatename     => 'global',
+                                   labelalphanametemplatename => 'global');
+
 
 # Sort by shorthand
 is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');

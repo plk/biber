@@ -1211,9 +1211,9 @@
             </tbody>
           </table>
         </xsl:for-each>
-        <h3>Sorting Lists</h3>
-        <xsl:for-each select="/bcf:controlfile/bcf:sortlist">
-          <h4><u>Sorting list &quot;<xsl:value-of select="./@name"/>&quot;</u></h4>
+        <h3>Data Lists</h3>
+        <xsl:for-each select="/bcf:controlfile/bcf:datalist">
+          <h4><u>Data list &quot;<xsl:value-of select="./@name"/>&quot;</u></h4>
           <div>
             <h6>Filters</h6>
             <table>

@@ -246,7 +246,8 @@ sub set_output_entry {
 
         # Add uniquelist, if defined
         if (my $ul = $nf->get_uniquelist){
-          $plo{uniquelist} = $ul;
+          # Don't use angles in attributes ...
+          $plo{uniquelist} = "[BDS]UL-" . $$nf->get_id . "[/BDS]"
         }
 
         # Add per-namelist options
@@ -662,7 +663,7 @@ sub output {
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     # but omit the global context list so that we can add this last
-    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->sortlists->get_lists_for_section($secnum)->@*) {
+    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
       if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
           $list->get_sortnamekeyschemename eq 'global' and
           $list->get_labelprefix eq '' and
@@ -676,7 +677,9 @@ sub output {
     # due to its sequential reading of the .bbl as the final list overrides the
     # previously read ones and the global list determines the order of labelnumber
     # and sortcites etc. when not using defernumbers
-    push @lists, $Biber::MASTER->sortlists->get_list($secnum, Biber::Config->getblxoption('sortscheme') . '/global/', 'entry', Biber::Config->getblxoption('sortscheme'), 'global', '');
+    push @lists, $Biber::MASTER->datalists->get_lists_by_attrs(section => $secnum,
+                                                               type    => 'entry',
+                                                               sortschemename => Biber::Config->getblxoption('sortscheme'))->@*;
 
     foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists
@@ -690,7 +693,7 @@ sub output {
         $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn', sort name key scheme '$listsnksn' and labelprefix '$listpn'");
       }
 
-      $xml->startTag([$xml_prefix, 'sortlist'], type => $listtype, id => $listname);
+      $xml->startTag([$xml_prefix, 'datalist'], type => $listtype, id => $listname);
       $xml->raw("\n");
 
       # The order of this array is the sorted order
@@ -702,11 +705,11 @@ sub output {
         my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
 
         # Instantiate any dynamic, list specific entry information
-        my $entry_string = $list->instantiate_entry($entry, $k, 'bblxml');
+        my $entry_string = $list->instantiate_entry($section, $entry, $k, 'bblxml');
 
         # If requested, add a printable sorting key to the output - useful for debugging
         if (Biber::Config->getoption('sortdebug')) {
-          $entry_string = "      <!-- sorting key for '$k':\n           " . $list->get_sortdata($k)->[0] . " -->\n" . $entry_string;
+          $entry_string = "      <!-- sorting key for '$k':\n           " . $list->get_sortdata_for_key($k)->[0] . " -->\n" . $entry_string;
         }
 
         # Now output
@@ -717,7 +720,7 @@ sub output {
         $xml->raw($entry_string);
       }
       $xml->raw('    ');
-      $xml->endTag();    # sortlist
+      $xml->endTag();    # datalist
     }
 
     # alias citekeys are global to a section

@@ -135,8 +135,11 @@
 ** DONE Add *dateusetime, labeldateusetime, alldatesusetime to scope table in doc
 ** DONE Document that the *usetime options do nothing with compact date range formats as this would be confusing.
 ** DONE New output format like EDTF but options
-* TODO uniquenametemplate currently only looks at global only, make refsection/entry/name option
-* TODO make labelalphanametemplatename into refsection/entry/name option
-* TODO requires changes in all .bcfs and to \blx@refcontext@context (line 8219) in biblatex.sty, probably in bltx sortlist test doc 
-* TODO document these changes
+* DONE extrayear, (namestring, namestrings, namedisschema)->uniquelist, uniquename
+* DONE bibaltexml.pm needs uiquenametemplate processing removing
+* TODO stdmodel:glashow is returning 0 for uniquename option - how? - line 3447 in Biber.pm
+* TODO Remove list meta <BDS> stuff - just pre-processing that doesn't depend on lists and afterwards, things that do, including .bbl string generation.
+* TODO bcf schema and xsl
 
+removed from _init in Config.pm
+#  $CONFIG->{options}{biblatex}{ENTRY} = {};
