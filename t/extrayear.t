@@ -44,15 +44,7 @@ Biber::Config->setblxoption('maxbibnames', 1);
 # Now generate the information
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list(section                    => 0,
-                                       name                       => 'nty/global//global/global',
-                                       type                       => 'entry',
-                                       sortschemename             => 'nty',
-                                       sortnamekeyschemename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
-
+my $main = $biber->datalists->get_list('nty/global//global/global');
 my $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_extrayeardata_for_key('L1'), '1', 'Entry L1 - one name, first in 1995');

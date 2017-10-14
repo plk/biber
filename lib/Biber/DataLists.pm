@@ -94,9 +94,13 @@ sub get_lists_by_attrs {
 =cut
 
 sub get_list {
-  my ($self, %attrs) = @_;
-  my $lists = $self->get_lists_by_attrs(%attrs);
-  return defined($lists) ? $lists->[0] : undef;
+  my ($self, $name, $section, $type) = @_;
+  foreach my $list ($self->{lists}->@*) {
+    next if ($section and ($list->get_section ne $section));
+    next if ($type and ($list->get_type ne $type));
+    return $list if $list->get_name eq $name;
+  }
+  return undef;
 }
 
 =head2 has_lists_of_type_for_section

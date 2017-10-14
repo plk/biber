@@ -328,6 +328,18 @@ sub get_namelistdata {
   return shift->{namelistdata};
 }
 
+=head2 reset_namelistdata
+
+  Reset name list data
+
+=cut
+
+sub reset_namelistdata {
+  my $self = shift;
+  $self->{namelistdata} = {};
+  return;
+}
+
 =head2 set_namelistdata
 
   Saves name list data
@@ -336,7 +348,7 @@ sub get_namelistdata {
 
 sub set_namelistdata {
   my ($self, $nld) = @_;
-  $self->{labelalphadata} = $nld;
+  $self->{namelistdata} = $nld;
   return;
 }
 

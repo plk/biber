@@ -333,7 +333,6 @@ sub get_field {
          $self->{derivedfields}{$key};
 }
 
-
 =head2 set_datafield
 
     Set a field which is in the .bib data file

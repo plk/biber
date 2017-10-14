@@ -55,14 +55,14 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber program
 $biber->tool_mode_setup;
 $biber->prepare_tool;
-my $main = $biber->datalists->get_list(section                    => 99999,
+my $main = $biber->datalists->get_lists_by_attrs(section                    => 99999,
                                        name                       => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
                                        type                       => 'entry',
                                        sortschemename             => Biber::Config->getblxoption('sortscheme'),
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
+                                       labelalphanametemplatename => 'global')->[0];
 
 my $out = $biber->get_output_obj;
 

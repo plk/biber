@@ -42,15 +42,7 @@ $S = { spec => [
                 ],
                ]};
 
-my $main = $biber->datalists->get_list(section                    => 0,
-                                       name                       => 'nty/global//global/global',
-                                       type                       => 'entry',
-                                       sortschemename             => 'nty',
-                                       sortnamekeyschemename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
-
+my $main = $biber->datalists->get_list('nty/global//global/global');
 $main->set_sortscheme($S);
 
 $biber->prepare;
@@ -65,14 +57,6 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # title is sortcase=1, sortupper=0
 # So, all names are the same and it depends on title
 $biber->prepare;
-$main = $biber->datalists->get_list(section                    => 0,
-                                    name                       => 'nty/global//global/global',
-                                    type                       => 'entry',
-                                    sortschemename             => 'nty',
-                                    sortnamekeyschemename      => 'global',
-                                    labelprefix                => '',
-                                    uniquenametemplatename     => 'global',
-                                    labelalphanametemplatename => 'global');
-
+$main = $biber->datalists->get_list('nty/global//global/global');
 is_deeply([$main->get_keys], ['CS3','CS2','CS1'], 'U::C case - 2');
 

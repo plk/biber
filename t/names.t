@@ -46,15 +46,7 @@ Biber::Config->setblxoption('mincitenames', 3);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list(section                    => 0,
-                                       name                       => 'nty/global//global/global',
-                                       type                       => 'entry',
-                                       sortschemename             => 'nty',
-                                       sortnamekeyschemename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
-
+my $main = $biber->datalists->get_list('nty/global//global/global');
 my $bibentries = $section->bibentries;
 
 my $name1 =
@@ -978,15 +970,7 @@ Biber::Input::file::bibtex->init_cache;
 $biber->prepare;
 $out = $biber->get_output_obj;
 $section = $biber->sections->get_section(0);
-$main = $biber->datalists->get_list(section                    => 0,
-                                    name                       => 'nty/global//global/global',
-                                    type                       => 'entry',
-                                    sortschemename             => 'nty',
-                                    sortnamekeyschemename      => 'global',
-                                    labelprefix                => '',
-                                    uniquenametemplatename     => 'global',
-                                    labelalphanametemplatename => 'global');
-
+$main = $biber->datalists->get_list('nty/global//global/global');
 $bibentries = $section->bibentries;
 
 eq_or_diff(NFC($bibentries->entry('L21')->get_field($bibentries->entry('L21')->get_labelname_info)->nth_name(1)->get_namepart_initial('given')->[0]), 'Š', 'Terseinitials 1'); # Should be in NFD UTF-8

@@ -13,3 +13,19 @@
 @ARTICLE {un4,
   AUTHOR = {given={Alan}, family={Smith}, middle={Simon}}
 }
+
+% Per-entry
+@ARTICLE {un5,
+  OPTIONS = {uniquenametemplatename=test3},
+  AUTHOR = {given={Arthur}, family={Smith}, middle={Simon}}
+}
+
+% Per-namelist
+@ARTICLE {un6,
+  AUTHOR = {uniquenametemplatename=test4 and given={Arthur}, family={Smith}, middle={Smythe}}
+}
+
+% Per-name
+@ARTICLE {un7,
+  AUTHOR = {uniquenametemplatename=test5, given={Arthur}, family={Smith}, middle={Smedley}}
+}

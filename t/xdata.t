@@ -49,14 +49,7 @@ Biber::Config->setoption('nodieonerror', 1); # because there is a cyclic xdata c
 # Now generate the information
 my ($stdout, $stderr) = capture { $biber->prepare };
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list(section                    => 0,
-                                       name                       => 'nty/global//global/global',
-                                       type                       => 'entry',
-                                       sortschemename             => 'nty',
-                                       sortnamekeyschemename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
+my $main = $biber->datalists->get_list('nty/global//global/global');
 my $out = $biber->get_output_obj;
 
 my $xd1 = q|    \entry{xd1}{book}{}

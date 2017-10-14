@@ -43,76 +43,20 @@ Biber::Config->setoption('output_safechars', 1);
 $biber->prepare;
 my $out = $biber->get_output_obj;
 my $section0 = $biber->sections->get_section(0);
-my $main0 = $biber->datalists->get_list(section                    => 0,
-                                        name                       => 'nty/global//global/global',
-                                        type                       => 'entry',
-                                        sortschemename             => 'nty',
-                                        sortnamekeyschemename      => 'global',
-                                        labelprefix                => '',
-                                        uniquenametemplatename     => 'global',
-                                        labelalphanametemplatename => 'global');
-my $shs0 = $biber->datalists->get_list(section                    => 0,
-                                    name                       => 'shorthands/global//global/global',
-                                    type                       => 'list',
-                                    sortschemename             => 'shorthands',
-                                    sortnamekeyschemename      => 'global',
-                                    labelprefix                => '',
-                                    uniquenametemplatename     => 'global',
-                                    labelalphanametemplatename => 'global');
+my $main0 = $biber->datalists->get_list('nty/global//global/global');
+my $shs0 = $biber->datalists->get_list('shorthands/global//global/global', 0, 'list');
 
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->datalists->get_list(section                    => 1,
-                                        name                       => 'nty/global//global/global',
-                                        type                       => 'entry',
-                                        sortschemename             => 'nty',
-                                        sortnamekeyschemename      => 'global',
-                                        labelprefix                => '',
-                                        uniquenametemplatename     => 'global',
-                                        labelalphanametemplatename => 'global');
-my $shs1 = $biber->datalists->get_list(section                    => 1,
-                                    name                       => 'shorthands/global//global/global',
-                                    type                       => 'list',
-                                    sortschemename             => 'shorthands',
-                                    sortnamekeyschemename      => 'global',
-                                    labelprefix                => '',
-                                    uniquenametemplatename     => 'global',
-                                    labelalphanametemplatename => 'global');
+my $main1 = $biber->datalists->get_list('nty/global//global/global', 1);
+my $shs1 = $biber->datalists->get_list('shorthands/global//global/global', 1, 'list');
 
 my $section2 = $biber->sections->get_section(2);
-my $main2 = $biber->datalists->get_list(section                    => 2,
-                                        name                       => 'nty/global//global/global',
-                                        type                       => 'entry',
-                                        sortschemename             => 'nty',
-                                        sortnamekeyschemename      => 'global',
-                                        labelprefix                => '',
-                                        uniquenametemplatename     => 'global',
-                                        labelalphanametemplatename => 'global');
-my $shs2 = $biber->datalists->get_list(section                    => 2,
-                                       name                       => 'shorthands/global//global/global',
-                                       type                       => 'list',
-                                       sortschemename             => 'shorthands',
-                                       sortnamekeyschemename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
+my $main2 = $biber->datalists->get_list('nty/global//global/global', 2);
+my $shs2 = $biber->datalists->get_list('shorthands/global//global/global', 2, 'list');
 
 my $section3 = $biber->sections->get_section(3);
-my $main3 = $biber->datalists->get_list(section                    => 3,
-                                        name                       => 'nty/global//global/global',
-                                        type                       => 'entry',
-                                        sortschemename             => 'nty',
-                                        sortnamekeyschemename      => 'global',
-                                        labelprefix                => '',
-                                        uniquenametemplatename     => 'global',
-                                        labelalphanametemplatename => 'global');
-my $shs3 = $biber->datalists->get_list(section                    => 3,
-                                       name                       => 'shorthands/global//global/global',
-                                       type                       => 'list',
-                                       sortschemename             => 'shorthands',
-                                       sortnamekeyschemename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
+my $main3 = $biber->datalists->get_list('nty/global//global/global', 3);
+my $shs3 = $biber->datalists->get_list('shorthands/global//global/global', 3, 'list');
 
 # Internal UTF-8 before output is always NFD so have to NFD bits of this
 my $preamble = [

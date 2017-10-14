@@ -59,14 +59,14 @@ $ARGV[0] = 'biblatexml.bltxml'; # fake this as we are not running through top-le
 $biber->tool_mode_setup;
 $biber->prepare_tool;
 $out->output;
-my $main = $biber->datalists->get_list(section                    => 99999,
+my $main = $biber->datalists->get_lists_by_attrs(section                    => 99999,
                                        name                       => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
                                        type                       => 'entry',
                                        sortschemename             => Biber::Config->getblxoption('sortscheme'),
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
+                                       labelalphanametemplatename => 'global')->[0];
 
 my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="biblatexml.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>

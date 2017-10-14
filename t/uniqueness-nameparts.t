@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 24;
+use Test::More tests => 15;
 use Test::Differences;
 unified_diff;
 
@@ -44,14 +44,9 @@ Biber::Config->setblxoption('uniquename', 2);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->datalists->get_list(section                    => 0,
-                                       name                       => 'nty/global//global/global',
-                                       type                       => 'entry',
-                                       sortschemename             => 'nty',
-                                       sortnamekeyschemename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
+my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main1 = $biber->datalists->get_list('nty/global//test1/global');
+my $main2 = $biber->datalists->get_list('nty/global//test2/global');
 
 my $out = $biber->get_output_obj;
 my $un1 = q|    \entry{un1}{article}{}
@@ -72,10 +67,9 @@ my $un1 = q|    \entry{un1}{article}{}
       \strng{authorbibnamehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{authornamehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{authorfullhash}{329d8f9192ea3349d700160c9ddb505d}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiJohSim}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{2}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -98,10 +92,9 @@ my $un2 = q|    \entry{un2}{article}{}
       \strng{authorbibnamehash}{7551114aede4ef69e4b3683039801706}
       \strng{authornamehash}{7551114aede4ef69e4b3683039801706}
       \strng{authorfullhash}{7551114aede4ef69e4b3683039801706}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiJohAla}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{3}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -124,10 +117,9 @@ my $un3 = q|    \entry{un3}{article}{}
       \strng{authorbibnamehash}{401aebda288799a7c757526242d8c9fc}
       \strng{authornamehash}{401aebda288799a7c757526242d8c9fc}
       \strng{authorfullhash}{401aebda288799a7c757526242d8c9fc}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiJohArt}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{4}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -150,10 +142,9 @@ my $un4 = q|    \entry{un4}{article}{}
       \strng{authorbibnamehash}{f6038a264619efefd49c7daac56424ca}
       \strng{authornamehash}{f6038a264619efefd49c7daac56424ca}
       \strng{authorfullhash}{f6038a264619efefd49c7daac56424ca}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiAlaSim}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{1}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -176,10 +167,9 @@ my $un1a = q|    \entry{un1}{article}{}
       \strng{authorbibnamehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{authornamehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{authorfullhash}{329d8f9192ea3349d700160c9ddb505d}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiJohSim}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{2}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -202,10 +192,9 @@ my $un2a = q|    \entry{un2}{article}{}
       \strng{authorbibnamehash}{7551114aede4ef69e4b3683039801706}
       \strng{authornamehash}{7551114aede4ef69e4b3683039801706}
       \strng{authorfullhash}{7551114aede4ef69e4b3683039801706}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiJohAla}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{3}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -228,10 +217,9 @@ my $un3a = q|    \entry{un3}{article}{}
       \strng{authorbibnamehash}{401aebda288799a7c757526242d8c9fc}
       \strng{authornamehash}{401aebda288799a7c757526242d8c9fc}
       \strng{authorfullhash}{401aebda288799a7c757526242d8c9fc}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiJohArt}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{4}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -255,10 +243,9 @@ my $un4a = q|    \entry{un4}{article}{}
       \strng{authorbibnamehash}{f6038a264619efefd49c7daac56424ca}
       \strng{authornamehash}{f6038a264619efefd49c7daac56424ca}
       \strng{authorfullhash}{f6038a264619efefd49c7daac56424ca}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiAlaSim}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{1}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -281,10 +268,9 @@ my $un1b = q|    \entry{un1}{article}{}
       \strng{authorbibnamehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{authornamehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{authorfullhash}{329d8f9192ea3349d700160c9ddb505d}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiJohSim}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{2}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -307,10 +293,9 @@ my $un2b = q|    \entry{un2}{article}{}
       \strng{authorbibnamehash}{7551114aede4ef69e4b3683039801706}
       \strng{authornamehash}{7551114aede4ef69e4b3683039801706}
       \strng{authorfullhash}{7551114aede4ef69e4b3683039801706}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiJohAla}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{3}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -333,10 +318,9 @@ my $un3b = q|    \entry{un3}{article}{}
       \strng{authorbibnamehash}{401aebda288799a7c757526242d8c9fc}
       \strng{authornamehash}{401aebda288799a7c757526242d8c9fc}
       \strng{authorfullhash}{401aebda288799a7c757526242d8c9fc}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiJohArt}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{4}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -360,95 +344,80 @@ my $un4b = q|    \entry{un4}{article}{}
       \strng{authorbibnamehash}{f6038a264619efefd49c7daac56424ca}
       \strng{authornamehash}{f6038a264619efefd49c7daac56424ca}
       \strng{authorfullhash}{f6038a264619efefd49c7daac56424ca}
-      \field{labelalpha}{Smi}
+      \field{labelalpha}{SmiAlaSim}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extraalpha}{1}
       \field{labelnamesource}{author}
     \endentry
 |;
 
-eq_or_diff($bibentries->entry('un1')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'init'], 'Uniquename namepart - 1');
-eq_or_diff($bibentries->entry('un2')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 2');
-eq_or_diff($bibentries->entry('un3')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 3');
-eq_or_diff($bibentries->entry('un4')->get_field('author')->nth_name(1)->get_uniquename, ['given', 'init'], 'Uniquename namepart - 4');
-eq_or_diff($out->get_output_entry('un1', $main), $un1, 'Uniquename namepart - 5');
-eq_or_diff($out->get_output_entry('un2', $main), $un2, 'Uniquename namepart - 6');
-eq_or_diff($out->get_output_entry('un3', $main), $un3, 'Uniquename namepart - 7');
-eq_or_diff($out->get_output_entry('un4', $main), $un4, 'Uniquename namepart - 8');
+my $un5 = q|    \entry{un5}{article}{uniquenametemplatename=test3}
+      \name{author}{1}{}{%
+        {{uniquename=2,uniquepart=middle,hash=74fba0d07ca65976bbff1034f9bb22e6}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Arthur},
+           giveni={A\bibinitperiod},
+           givenun=0,
+           middle={Simon},
+           middlei={S\bibinitperiod},
+           middleun=2}}%
+      }
+      \strng{namehash}{74fba0d07ca65976bbff1034f9bb22e6}
+      \strng{fullhash}{74fba0d07ca65976bbff1034f9bb22e6}
+      \strng{bibnamehash}{74fba0d07ca65976bbff1034f9bb22e6}
+      \strng{authorbibnamehash}{74fba0d07ca65976bbff1034f9bb22e6}
+      \strng{authornamehash}{74fba0d07ca65976bbff1034f9bb22e6}
+      \strng{authorfullhash}{74fba0d07ca65976bbff1034f9bb22e6}
+      \field{labelalpha}{SmiArtSim}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{labelnamesource}{author}
+    \endentry
+|;
 
-# redo with different uniquename template
+my $un6 = q|    \entry{un6}{article}{}
+      \name{author}{1}{uniquenametemplatename=test4}{%
+        {{uniquename=1,uniquepart=middle,hash=8100e7d06d05938e91bf8863f5c20e33}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Arthur},
+           giveni={A\bibinitperiod},
+           givenun=0,
+           middle={Smythe},
+           middlei={S\bibinitperiod},
+           middleun=1}}%
+      }
+      \strng{namehash}{8100e7d06d05938e91bf8863f5c20e33}
+      \strng{fullhash}{8100e7d06d05938e91bf8863f5c20e33}
+      \strng{bibnamehash}{8100e7d06d05938e91bf8863f5c20e33}
+      \strng{authorbibnamehash}{8100e7d06d05938e91bf8863f5c20e33}
+      \strng{authornamehash}{8100e7d06d05938e91bf8863f5c20e33}
+      \strng{authorfullhash}{8100e7d06d05938e91bf8863f5c20e33}
+      \field{labelalpha}{SmiArtSmy}
+      \field{sortinit}{S}
+      \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{labelnamesource}{author}
+    \\endentry
+|;
 
-$biber->parse_ctrlfile('uniqueness-nameparts.bcf');
+my $un7 = q||;
 
-my $unt = [
-   { base => 1, namepart => "prefix", use => 1 },
-   { base => 1, namepart => "family" },
-   { disambiguation => "full", namepart => "given" },
-   { namepart => "middle" },
-];
+eq_or_diff($out->get_output_entry('un1', $main), $un1, 'Uniquename namepart - 1');
+eq_or_diff($out->get_output_entry('un2', $main), $un2, 'Uniquename namepart - 2');
+eq_or_diff($out->get_output_entry('un3', $main), $un3, 'Uniquename namepart - 3');
+eq_or_diff($out->get_output_entry('un4', $main), $un4, 'Uniquename namepart - 4');
 
-Biber::Config->setblxoption('uniquenametemplate', {global => $unt});
+eq_or_diff($out->get_output_entry('un1', $main1), $un1a, 'Uniquename namepart - 5');
+eq_or_diff($out->get_output_entry('un2', $main1), $un2a, 'Uniquename namepart - 6');
+eq_or_diff($out->get_output_entry('un3', $main1), $un3a, 'Uniquename namepart - 7');
+eq_or_diff($out->get_output_entry('un4', $main1), $un4a, 'Uniquename namepart - 8');
 
-$biber->set_output_obj(Biber::Output::bbl->new());
-$biber->prepare;
-$section = $biber->sections->get_section(0);
-$bibentries = $section->bibentries;
-$main = $biber->datalists->get_list(section                    => 0,
-                                    name                       => 'nty/global//global/global',
-                                    type                       => 'entry',
-                                    sortschemename             => 'nty',
-                                    sortnamekeyschemename      => 'global',
-                                    labelprefix                => '',
-                                    uniquenametemplatename     => 'global',
-                                    labelalphanametemplatename => 'global');
+eq_or_diff($out->get_output_entry('un1', $main2), $un1b, 'Uniquename namepart - 9');
+eq_or_diff($out->get_output_entry('un2', $main2), $un2b, 'Uniquename namepart - 10');
+eq_or_diff($out->get_output_entry('un3', $main2), $un3b, 'Uniquename namepart - 11');
+eq_or_diff($out->get_output_entry('un4', $main2), $un4b, 'Uniquename namepart - 12');
 
-$out = $biber->get_output_obj;
-
-
-eq_or_diff($bibentries->entry('un1')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'init'], 'Uniquename namepart - 9');
-eq_or_diff($bibentries->entry('un2')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 10');
-eq_or_diff($bibentries->entry('un3')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 11');
-eq_or_diff($bibentries->entry('un4')->get_field('author')->nth_name(1)->get_uniquename, ['given', 'fullonly'], 'Uniquename namepart - 12');
-eq_or_diff($out->get_output_entry('un1', $main), $un1a, 'Uniquename namepart - 13');
-eq_or_diff($out->get_output_entry('un2', $main), $un2a, 'Uniquename namepart - 14');
-eq_or_diff($out->get_output_entry('un3', $main), $un3a, 'Uniquename namepart - 15');
-eq_or_diff($out->get_output_entry('un4', $main), $un4a, 'Uniquename namepart - 16');
-
-# redo with different uniquename template
-
-$biber->parse_ctrlfile('uniqueness-nameparts.bcf');
-
-$unt = [
-   { base => 1, namepart => "prefix", use => 1 },
-   { base => 1, namepart => "family" },
-   { disambiguation => "none", namepart => "given" },
-   { namepart => "middle" },
-];
-
-Biber::Config->setblxoption('uniquenametemplate', {global => $unt});
-
-$biber->set_output_obj(Biber::Output::bbl->new());
-$biber->prepare;
-$section = $biber->sections->get_section(0);
-$bibentries = $section->bibentries;
-$main = $biber->datalists->get_list(section                    => 0,
-                                    name                       => 'nty/global//global/global',
-                                    type                       => 'entry',
-                                    sortschemename             => 'nty',
-                                    sortnamekeyschemename      => 'global',
-                                    labelprefix                => '',
-                                    uniquenametemplatename     => 'global',
-                                    labelalphanametemplatename => 'global');
-
-$out = $biber->get_output_obj;
-
-
-eq_or_diff($bibentries->entry('un1')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'init'], 'Uniquename namepart - 17');
-eq_or_diff($bibentries->entry('un2')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 18');
-eq_or_diff($bibentries->entry('un3')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'full'], 'Uniquename namepart - 19');
-eq_or_diff($bibentries->entry('un4')->get_field('author')->nth_name(1)->get_uniquename, ['middle', 'init'], 'Uniquename namepart - 20');
-eq_or_diff($out->get_output_entry('un1', $main), $un1b, 'Uniquename namepart - 21');
-eq_or_diff($out->get_output_entry('un2', $main), $un2b, 'Uniquename namepart - 22');
-eq_or_diff($out->get_output_entry('un3', $main), $un3b, 'Uniquename namepart - 23');
-eq_or_diff($out->get_output_entry('un4', $main), $un4b, 'Uniquename namepart - 24');
+eq_or_diff($out->get_output_entry('un5', $main), $un5, 'Uniquename namepart - 13');
+eq_or_diff($out->get_output_entry('un6', $main), $un6, 'Uniquename namepart - 14');
+# eq_or_diff($out->get_output_entry('un7', $main), $un7, 'Uniquename namepart - 15');

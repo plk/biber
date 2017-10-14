@@ -49,15 +49,7 @@ Biber::Config->setoption('nodieonerror', 1); # because there is a failing cyclic
 # Now generate the information
 my (undef, $stderr) = capture { $biber->prepare };
 my $section0 = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list(section                    => 0,
-                                       name                       => 'nty/global//global/global',
-                                       type                       => 'entry',
-                                       sortschemename             => 'nty',
-                                       sortnamekeyschemename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
-
+my $main = $biber->datalists->get_list('nty/global//global/global');
 my $section1 = $biber->sections->get_section(1);
 my $out = $biber->get_output_obj;
 

@@ -46,24 +46,9 @@ Biber::Config->setblxoption('labeldateparts', undef);
 $biber->prepare;
 my $section0 = $biber->sections->get_section(0);
 my $bibentries0 = $section0->bibentries;
-my $main0 = $biber->datalists->get_list(section                    => 0,
-                                        name                       => 'nty/global//global/global',
-                                        type                       => 'entry',
-                                        sortschemename             => 'nty',
-                                        sortnamekeyschemename      => 'global',
-                                        labelprefix                => '',
-                                        uniquenametemplatename     => 'global',
-                                        labelalphanametemplatename => 'global');
-
+my $main0 = $biber->datalists->get_list('nty/global//global/global');
 my $section1 = $biber->sections->get_section(1);
-my $main1 = $biber->datalists->get_list(section                    => 1,
-                                        name                       => 'nty/global//global/global',
-                                        type                       => 'entry',
-                                        sortschemename             => 'nty',
-                                        sortnamekeyschemename      => 'global',
-                                        labelprefix                => '',
-                                        uniquenametemplatename     => 'global',
-                                        labelalphanametemplatename => 'global');
+my $main1 = $biber->datalists->get_list('nty/global//global/global', 1);
 
 my $bibentries1 = $section1->bibentries;
 
@@ -103,24 +88,9 @@ for (my $i=5; $i<9; $i++) {
 $biber->prepare;
 $section0 = $biber->sections->get_section(0);
 $bibentries0 = $section0->bibentries;
-$main0 = $biber->datalists->get_list(section                    => 0,
-                                     name                       => 'nty/global//global/global',
-                                     type                       => 'entry',
-                                     sortschemename             => 'nty',
-                                     sortnamekeyschemename      => 'global',
-                                     labelprefix                => '',
-                                     uniquenametemplatename     => 'global',
-                                     labelalphanametemplatename => 'global');
-
+$main0 = $biber->datalists->get_list('nty/global//global/global');
 $section1 = $biber->sections->get_section(1);
-$main1 = $biber->datalists->get_list(section                    => 1,
-                                     name                       => 'nty/global//global/global',
-                                     type                       => 'entry',
-                                     sortschemename             => 'nty',
-                                     sortnamekeyschemename      => 'global',
-                                     labelprefix                => '',
-                                     uniquenametemplatename     => 'global',
-                                     labelalphanametemplatename => 'global');
+$main1 = $biber->datalists->get_list('nty/global//global/global', 1);
 
 $bibentries1 = $section1->bibentries;
 
@@ -160,25 +130,9 @@ for (my $i=5; $i<9; $i++) {
 $biber->prepare;
 $section0 = $biber->sections->get_section(0);
 $bibentries0 = $section0->bibentries;
-$main0 = $biber->datalists->get_list(section                    => 0,
-                                     name                       => 'nty/global//global/global',
-                                     type                       => 'entry',
-                                     sortschemename             => 'nty',
-                                     sortnamekeyschemename      => 'global',
-                                     labelprefix                => '',
-                                     uniquenametemplatename     => 'global',
-                                     labelalphanametemplatename => 'global');
-
+$main0 = $biber->datalists->get_list('nty/global//global/global');
 $section1 = $biber->sections->get_section(1);
-$main1 = $biber->datalists->get_list(section                    => 1,
-                                     name                       => 'nty/global//global/global',
-                                     type                       => 'entry',
-                                     sortschemename             => 'nty',
-                                     sortnamekeyschemename      => 'global',
-                                     labelprefix                => '',
-                                     uniquenametemplatename     => 'global',
-                                     labelalphanametemplatename => 'global');
-
+$main1 = $biber->datalists->get_list('nty/global//global/global', 1);
 $bibentries1 = $section1->bibentries;
 
 eq_or_diff($bibentries0->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=2 minalphanames=2 entry L1 labelalpha');
@@ -218,25 +172,9 @@ for (my $i=5; $i<9; $i++) {
 $biber->prepare;
 $section0 = $biber->sections->get_section(0);
 $bibentries0 = $section0->bibentries;
-$main0 = $biber->datalists->get_list(section                    => 0,
-                                     name                       => 'nty/global//global/global',
-                                     type                       => 'entry',
-                                     sortschemename             => 'nty',
-                                     sortnamekeyschemename      => 'global',
-                                     labelprefix                => '',
-                                     uniquenametemplatename     => 'global',
-                                     labelalphanametemplatename => 'global');
-
+$main0 = $biber->datalists->get_list('nty/global//global/global');
 $section1 = $biber->sections->get_section(1);
-$main1 = $biber->datalists->get_list(section                    => 1,
-                                     name                       => 'nty/global//global/global',
-                                     type                       => 'entry',
-                                     sortschemename             => 'nty',
-                                     sortnamekeyschemename      => 'global',
-                                     labelprefix                => '',
-                                     uniquenametemplatename     => 'global',
-                                     labelalphanametemplatename => 'global');
-
+$main1 = $biber->datalists->get_list('nty/global//global/global', 1);
 $bibentries1 = $section1->bibentries;
 
 eq_or_diff($bibentries0->entry('L1')->get_field('sortlabelalpha'), 'Doe95', 'maxalphanames=3 minalphanames=1 entry L1 labelalpha');

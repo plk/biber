@@ -924,9 +924,9 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
   foreach my $section ($bcfxml->{section}->@*) {
     my $globalss = Biber::Config->getblxoption('sortscheme');
     my $secnum = $section->{number};
-    unless ($datalists->get_list(section        => $secnum,
-                                 type           => 'entry',
-                                 sortschemename => $globalss)) {
+    unless ($datalists->get_lists_by_attrs(section        => $secnum,
+                                           type           => 'entry',
+                                           sortschemename => $globalss)) {
       my $datalist = Biber::DataList->new(section                    => $secnum,
                                           type                       => 'entry',
                                           sortschemename             => $globalss,
@@ -2094,6 +2094,7 @@ sub process_labelname {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   my $lnamespec = Biber::Config->getblxoption('labelnamespec', $bee);
+  my $dm = Biber::Config->get_dm;
   my $dmh = Biber::Config->get_dm_helpers;
 
   # First we set the normal labelname name
@@ -2134,9 +2135,7 @@ sub process_labelname {
     }
 
     # We have already warned about this above
-    unless (first {$ln eq $_} $dmh->{namelistsall}->@*) {
-      next;
-    }
+    next unless (first {$ln eq $_} $dmh->{namelistsall}->@*);
 
     # If there is a biblatex option which controls the use of this labelname info, check it
     if ($CONFIG_OPTSCOPE_BIBLATEX{"use$ln"} and
@@ -2375,7 +2374,6 @@ sub process_pername_hashes {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
   my $dmh = Biber::Config->get_dm_helpers;
 
   foreach my $pn ($dmh->{namelistsall}->@*) {
@@ -2528,7 +2526,6 @@ sub process_extraalpha {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  my $bee = $be->get_field('entrytype');
   if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
     if (my $la = $be->get_field('labelalpha')) {
       Biber::Config->incr_la_disambiguation($la);
@@ -2641,6 +2638,11 @@ sub process_lists {
         Biber::Config->reset_la_disambiguation;
         Biber::Config->reset_workuniqueness;
         Biber::Config->reset_seen_extratrackers;
+        Biber::Config->reset_seen_extra;
+        $list->reset_namelistdata;
+
+        # reset this otherwise uniqueness won't be processed for subsequent datalists
+        Biber::Config->set_unul_changed(1);
 
         # Main entry processing loop, part 1
         $self->process_entries_pre($list);
@@ -2659,7 +2661,7 @@ sub process_lists {
       $self->generate_sortdataschema($list); # generate the sort schema information
       $self->generate_sortinfo($list);       # generate the sort information
       $self->sort_list($list);               # sort the list
-      $self->generate_contextdata($list) unless Biber::Config->getoption('tool'); # generate the extra* fields
+      $self->generate_contextdata($list) unless Biber::Config->getoption('tool');
 
       # Cache the results
       if ($logger->is_debug()) {# performance tune
@@ -3388,9 +3390,6 @@ sub generate_contextdata {
   my $section = $self->sections->get_section($secnum);
   my $dmh = Biber::Config->get_dm_helpers;
 
-  # Since this sub is per-list, have to reset the extra* counters per list
-  Biber::Config->reset_seen_extra;
-
   # This loop critically depends on the order of the citekeys which
   # is why we have to do sorting before this
   foreach my $key ($list->get_keys) {
@@ -3450,6 +3449,7 @@ sub generate_contextdata {
         }
       }
     }
+
     # uniquelist
     # Using defined as 0 is a valid per-entry override of a global/per-entry setting
     if (defined(Biber::Config->getblxoption('uniquelist', $bee, $key))) {
@@ -3458,22 +3458,24 @@ sub generate_contextdata {
         if (my $nl = $be->get_field($namefield)) {
           $nldata->{$nl->get_id}{ul} = $nl->get_uniquelist;
         }
-        $list->set_namelistdata_for_key($key, $nldata);
       }
+      $list->set_namelistdata_for_key($key, $nldata);
     }
+
     # uniquename
     # Using defined as 0 is a valid per-entry override of a global/per-entry setting
+    # Must come after uniquelist above as this sets the namelistdata with uniqueist information
     if (defined(Biber::Config->getblxoption('uniquename', $bee, $key))) {
       my $nldata = $list->get_namelistdata_for_key($key);
+
       foreach my $namefield ($dmh->{namelists}->@*) {
         if (my $nl = $be->get_field($namefield)) {
           foreach my $n ($nl->names->@*) {
             my $uniquename = $n->get_uniquename;
             my $namedisschema = $n->get_namedisschema;
-            delete($nldata->{$nl->get_id}{un}{$n->get_id}{parts});
-            if (defined($n->get_uniquename)) {
+            if (defined($uniquename)) {
               $nldata->{$nl->get_id}{un}{$n->get_id}{summary} = $n->get_uniquename_summary;
-              $nldata->{$nl->get_id}{un}{$n->get_id}{part} = $n->get_uniquename->[0];
+              $nldata->{$nl->get_id}{un}{$n->get_id}{part} = $uniquename->[0];
             }
             # Construct per-namepart uniquename value
             my %pnun;

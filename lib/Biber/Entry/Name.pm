@@ -231,7 +231,7 @@ sub get_uniquename_summary {
 
 =head2 reset_uniquename
 
-    Reset uniquename for a Biber::Entry::Name object
+    Reset uniquename for a Biber::Entry::Name object to a default value
 
 =cut
 

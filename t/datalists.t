@@ -30,14 +30,14 @@ Log::Log4perl->init(\$l4pconf);
 
 $biber->parse_ctrlfile('datalists.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
-my $main = $biber->datalists->get_list(section                    => 0,
+my $main = $biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lname',
                                        type                       => 'entry',
                                        sortschemename             => 'lname',
                                        sortnamekeyschemename      => 'given',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
+                                       labelalphanametemplatename => 'global')->[0];
 
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
@@ -48,108 +48,108 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $out = $biber->get_output_obj;
 
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lname',
                                        type                       => 'entry',
                                        sortschemename             => 'lname',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K12', 'K5', 'K6'], 'List - name order');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K12', 'K5', 'K6'], 'List - name order');
 
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lyear',
                                        type                       => 'entry',
                                        sortschemename             => 'lyear',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K8', 'K9', 'K10', 'K4', 'K1', 'K11', 'K12', 'K2', 'K3', 'K6', 'K5', 'K7'], 'List - year order');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K8', 'K9', 'K10', 'K4', 'K1', 'K11', 'K12', 'K2', 'K3', 'K6', 'K5', 'K7'], 'List - year order');
 
 
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'ltitle',
                                        type                       => 'entry',
                                        sortschemename             => 'ltitle',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K1', 'K7', 'K8', 'K9', 'K4', 'K10', 'K2', 'K11', 'K6', 'K5', 'K12', 'K3'], 'List - title order');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K1', 'K7', 'K8', 'K9', 'K4', 'K10', 'K2', 'K11', 'K6', 'K5', 'K12', 'K3'], 'List - title order');
 
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lnamef1',
                                        type                       => 'entry',
                                        sortschemename             => 'lnamef1',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K11', 'K2', 'K4', 'K12', 'K5', 'K6'], 'List - name order (filtered) - 1');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K11', 'K2', 'K4', 'K12', 'K5', 'K6'], 'List - name order (filtered) - 1');
 
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lnamef2',
                                        type                       => 'entry',
                                        sortschemename             => 'lnamef2',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K4'], 'List - name order (filtered) - 2');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K4'], 'List - name order (filtered) - 2');
 
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lnamef3',
                                        type                       => 'entry',
                                        sortschemename             => 'lnamef3',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K11', 'K1', 'K2', 'K7', 'K12', 'K5', 'K6'], 'List - name order (filtered) - 3');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K11', 'K1', 'K2', 'K7', 'K12', 'K5', 'K6'], 'List - name order (filtered) - 3');
 
 
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lnamef4',
                                        type                       => 'entry',
                                        sortschemename             => 'lnamef4',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K3'], 'List - name order (filtered) - 4');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K3'], 'List - name order (filtered) - 4');
 
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lnamef5',
                                        type                       => 'entry',
                                        sortschemename             => 'lnamef5',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K1', 'K3'], 'List - name order (filtered) - 5');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K1', 'K3'], 'List - name order (filtered) - 5');
 
 # Test list-local locale sorting
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lnameswe',
                                        type                       => 'entry',
                                        sortschemename             => 'lnameswe',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K12', 'K6', 'K5'], 'List - name order (swedish)');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K8', 'K9', 'K10', 'K12', 'K6', 'K5'], 'List - name order (swedish)');
 
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'ltitlespan',
                                        type                       => 'entry',
                                        sortschemename             => 'ltitlespan',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K1', 'K4', 'K10', 'K7', 'K8', 'K9', 'K2', 'K11', 'K6', 'K5', 'K12', 'K3'], 'List - title order (spanish)');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K1', 'K4', 'K10', 'K7', 'K8', 'K9', 'K2', 'K11', 'K6', 'K5', 'K12', 'K3'], 'List - title order (spanish)');
 
 # Test sortset-local locale sorting
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'ltitleset',
                                        type                       => 'entry',
                                        sortschemename             => 'ltitleset',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K1', 'K7', 'K9', 'K8', 'K4', 'K10', 'K2', 'K11', 'K6', 'K5', 'K12', 'K3'], 'List - granular locale (spanish)');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K1', 'K7', 'K9', 'K8', 'K4', 'K10', 'K2', 'K11', 'K6', 'K5', 'K12', 'K3'], 'List - granular locale (spanish)');
 
 # Testing sorting name key schemes
 # Note that:
@@ -157,14 +157,14 @@ is_deeply([$biber->datalists->get_list(section                    => 0,
 #   'given' name key scheme using the given name first.
 # * K11 has a name list scope override which forces "a" literal first
 # * K12 has a name scope override which forces "Z" literal first
-is_deeply([$biber->datalists->get_list(section                    => 0,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 0,
                                        name                       => 'lname',
                                        type                       => 'entry',
                                        sortschemename             => 'lname',
                                        sortnamekeyschemename      => 'given',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K5', 'K8', 'K9', 'K10', 'K12', 'K6'], 'List - sorting name key schemes - 1');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['K11', 'K1', 'K2', 'K4', 'K3', 'K7', 'K5', 'K8', 'K9', 'K10', 'K12', 'K6'], 'List - sorting name key schemes - 1');
 
 my $K11 = q|    \entry{K11}{book}{}
       \name{author}{1}{sortnamekeyscheme=snk1}{%
@@ -232,11 +232,11 @@ eq_or_diff($out->get_output_entry('K11', $main), $K11, 'datalist output - 1');
 eq_or_diff($out->get_output_entry('K12', $main), $K12, 'datalist output - 2');
 
 # Testing dates
-is_deeply([$biber->datalists->get_list(section                    => 1,
+is_deeply([$biber->datalists->get_lists_by_attrs(section                    => 1,
                                        name                       => 'ldates',
                                        type                       => 'entry',
                                        sortschemename             => 'ldates',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->get_keys], ['D3', 'D2', 'D1', 'D5', 'D4'], 'List - dates');
+                                       labelalphanametemplatename => 'global')->[0]->get_keys], ['D3', 'D2', 'D1', 'D5', 'D4'], 'List - dates');

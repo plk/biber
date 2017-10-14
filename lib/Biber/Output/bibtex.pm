@@ -355,14 +355,14 @@ sub output {
   }
 
   # Bibtex output uses just one special section, always sorted by global sorting spec
-  foreach my $key ($Biber::MASTER->datalists->get_list(section => 99999,
-                                                       name => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
-                                                       type => 'entry',
-                                                       sortschemename => Biber::Config->getblxoption('sortscheme'),
-                                                       sortnamekeyschemename => 'global',
-                                                       labelprefix => '',
-                                                       uniquenametemplatename => 'global',
-                                                       labelalphanametemplatename => 'global')->get_keys) {
+  foreach my $key ($Biber::MASTER->datalists->get_lists_by_attrs(section => 99999,
+                                                                 name => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
+                                                                 type => 'entry',
+                                                                 sortschemename => Biber::Config->getblxoption('sortscheme'),
+                                                                 sortnamekeyschemename => 'global',
+                                                                 labelprefix => '',
+                                                                 uniquenametemplatename => 'global',
+                                                                 labelalphanametemplatename => 'global')->[0]->get_keys) {
     out($target, ${$data->{ENTRIES}{99999}{index}{$key}});
   }
 

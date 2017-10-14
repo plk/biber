@@ -701,19 +701,6 @@ sub get_unul_done {
   return $CONFIG->{state}{unulchanged} ? 0 : 1;
 }
 
-=head2 set_unul_done
-
-    Set whether uniquenename+uniquelist processing is finished
-
-=cut
-
-sub set_unul_done {
-  shift; # class method so don't care about class name
-  my $done = shift;
-  $CONFIG->{state}{unulchanged} = $done;
-  return;
-}
-
 =head2 set_unul_changed
 
     Set a boolean saying whether uniquename+uniquelist has changed

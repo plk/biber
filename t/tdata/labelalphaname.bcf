@@ -26,7 +26,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortcase</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>sortupper</bcf:key>
@@ -70,7 +70,6 @@
     <bcf:option type="multivalued">
       <bcf:key>labeldatespec</bcf:key>
       <bcf:value order="1" type="field">date</bcf:value>
-      <bcf:value order="2" type="field">year</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>julian</bcf:key>
@@ -90,7 +89,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxcitenames</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>3</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxitems</bcf:key>
@@ -130,11 +129,11 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>2</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniqueprimaryauthor</bcf:key>
@@ -154,7 +153,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useauthor</bcf:key>
@@ -167,6 +166,26 @@
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
       <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useforeword</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useholder</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options component="biblatex" type="collection">
+    <bcf:option type="multivalued">
+      <bcf:key>labelnamespec</bcf:key>
+      <bcf:value order="1">shorteditor</bcf:value>
+      <bcf:value order="2">editor</bcf:value>
+      <bcf:value order="3">translator</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>0</bcf:value>
     </bcf:option>
   </bcf:options>
   <!-- BIBLATEX OPTION SCOPE -->
@@ -456,11 +475,24 @@
   </bcf:sourcemap>
   <!-- LABELALPHA NAME TEMPLATE -->
   <bcf:labelalphanametemplate name="global">
-    <bcf:namepart order="1" use="1" pre="1" substring_width="1"
-                  substring_compound="1">prefix</bcf:namepart>
-    <bcf:namepart order="2">family</bcf:namepart>
-    <bcf:namepart order="3">given</bcf:namepart>
-    <bcf:namepart order="4">middle</bcf:namepart>    
+    <bcf:namepart order="1" use="1" pre="1" substring_width="1" substring_compound="1">prefix</bcf:namepart>
+    <bcf:namepart order="2" substring_compound="1">family</bcf:namepart>
+  </bcf:labelalphanametemplate>
+  <bcf:labelalphanametemplate name="test1">
+    <bcf:namepart order="1" substring_width="1">given</bcf:namepart>
+    <bcf:namepart order="2" substring_width="1">family</bcf:namepart>
+  </bcf:labelalphanametemplate>
+  <bcf:labelalphanametemplate name="test2">
+    <bcf:namepart order="1" substring_width="2">given</bcf:namepart>
+    <bcf:namepart order="2" substring_width="2">family</bcf:namepart>
+  </bcf:labelalphanametemplate>
+  <bcf:labelalphanametemplate name="test3">
+    <bcf:namepart order="1" substring_width="3">given</bcf:namepart>
+    <bcf:namepart order="2" substring_width="3">family</bcf:namepart>
+  </bcf:labelalphanametemplate>
+  <bcf:labelalphanametemplate name="test4">
+    <bcf:namepart order="1" substring_width="4">given</bcf:namepart>
+    <bcf:namepart order="2" substring_width="4">family</bcf:namepart>
   </bcf:labelalphanametemplate>
   <!-- LABELALPHA TEMPLATE -->
   <bcf:labelalphatemplate type="global">
@@ -472,6 +504,72 @@
     </bcf:labelelement>
     <bcf:labelelement order="2">
       <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="1">origday</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="customa">
+    <bcf:labelelement order="1">
+      <bcf:labelpart final="1">shorthand</bcf:labelpart>
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="3" substring_side="left" ifnames="1">labelname</bcf:labelpart>
+      <bcf:labelpart substring_width="1" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="1">origday</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="customc">
+    <bcf:labelelement order="1">
+      <bcf:labelpart>&amp;</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart substring_width="4" pad_char="_" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="3" pad_char="~" pad_side="left" substring_side="left">title</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="4">
+      <bcf:labelpart substring_width="2" substring_side="right">year</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="misc">
+    <bcf:labelelement order="1">
+      <bcf:labelpart>label</bcf:labelpart>
+      <bcf:labelpart substring_width="2" names="1" namessep="/" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="2">
+      <bcf:labelpart>-</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="3">
+      <bcf:labelpart substring_width="2" substring_side="right">title</bcf:labelpart>
+    </bcf:labelelement>
+    <bcf:labelelement order="4">
+      <bcf:labelpart substring_width="v">title</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="unpublished">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="report">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="booklet">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="v" substring_width_max="4" substring_side="left">labelname</bcf:labelpart>
+    </bcf:labelelement>
+  </bcf:labelalphatemplate>
+  <bcf:labelalphatemplate type="customb">
+    <bcf:labelelement order="1">
+      <bcf:labelpart substring_width="3" substring_side="left">title</bcf:labelpart>
     </bcf:labelelement>
   </bcf:labelalphatemplate>
   <!-- INHERITANCE -->
@@ -599,35 +697,10 @@
     </bcf:inherit>
   </bcf:inheritance>
   <!-- UNIQUENAME TEMPLATE -->
-  <bcf:uniquenametemplate name='global'>
+  <bcf:uniquenametemplate name="global">
     <bcf:namepart order="1" use="1" base="1">prefix</bcf:namepart>
     <bcf:namepart order="2" base="1">family</bcf:namepart>
-    <bcf:namepart order="3" disambiguation="init">given</bcf:namepart>
-    <bcf:namepart order="4">middle</bcf:namepart>
-  </bcf:uniquenametemplate>
-  <bcf:uniquenametemplate name='test1'>
-    <bcf:namepart order="1" use="1" base="1">prefix</bcf:namepart>
-    <bcf:namepart order="2" base="1">family</bcf:namepart>
-    <bcf:namepart order="3" disambiguation="full">given</bcf:namepart>
-    <bcf:namepart order="4">middle</bcf:namepart>
-  </bcf:uniquenametemplate>
-  <bcf:uniquenametemplate name='test2'>
-    <bcf:namepart order="1" use="1" base="1">prefix</bcf:namepart>
-    <bcf:namepart order="2" base="1">family</bcf:namepart>
-    <bcf:namepart order="3" disambiguation="none">given</bcf:namepart>
-    <bcf:namepart order="4">middle</bcf:namepart>
-  </bcf:uniquenametemplate>
-  <bcf:uniquenametemplate name='test3'>
-    <bcf:namepart order="1" base="1">family</bcf:namepart>
-    <bcf:namepart order="2" disambiguation="full">middle</bcf:namepart>
-  </bcf:uniquenametemplate>
-  <bcf:uniquenametemplate name='test4'>
-    <bcf:namepart order="1" base="1">family</bcf:namepart>
-    <bcf:namepart order="2" disambiguation="init">middle</bcf:namepart>
-  </bcf:uniquenametemplate>
-  <bcf:uniquenametemplate name='test5'>
-    <bcf:namepart order="1" base="1">family</bcf:namepart>
-    <bcf:namepart order="2" disambiguation="none">middle</bcf:namepart>
+    <bcf:namepart order="3">given</bcf:namepart>
   </bcf:uniquenametemplate>
   <!-- SORTING NAME KEY -->
   <bcf:sortingnamekey keyscheme="global">
@@ -651,12 +724,15 @@
   <bcf:sorting>
     <bcf:presort>mm</bcf:presort>
     <bcf:sort order="1">
-      <bcf:sortitem order="1">presort</bcf:sortitem>
+      <bcf:sortitem order="1" substring_side="left" substring_width="2">presort</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="2" final="1">
       <bcf:sortitem order="1">sortkey</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="3">
+      <bcf:sortitem order="1">labelalpha</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
       <bcf:sortitem order="1">sortname</bcf:sortitem>
       <bcf:sortitem order="2">author</bcf:sortitem>
       <bcf:sortitem order="3">editor</bcf:sortitem>
@@ -664,15 +740,15 @@
       <bcf:sortitem order="5">sorttitle</bcf:sortitem>
       <bcf:sortitem order="6">title</bcf:sortitem>
     </bcf:sort>
-    <bcf:sort order="4">
-      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
-      <bcf:sortitem order="2">title</bcf:sortitem>
-    </bcf:sort>
     <bcf:sort order="5">
       <bcf:sortitem order="1">sortyear</bcf:sortitem>
       <bcf:sortitem order="2">year</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="6">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="7">
       <bcf:sortitem order="1">volume</bcf:sortitem>
       <bcf:sortitem order="2">0</bcf:sortitem>
     </bcf:sort>
@@ -681,7 +757,7 @@
   <bcf:datamodel>
     <bcf:constants>
       <bcf:constant type="list" name="gender">sf,sm,sn,pf,pm,pn,pp</bcf:constant>
-      <bcf:constant type="list" name="nameparts">family,given,middle,prefix,suffix</bcf:constant>
+      <bcf:constant type="list" name="nameparts">family,given,prefix,suffix</bcf:constant>
       <bcf:constant type="list" name="optiondatatypes">boolean,integer,string,xml</bcf:constant>
     </bcf:constants>
     <bcf:entrytypes>
@@ -1867,15 +1943,13 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">uniqueness-nameparts.bib</bcf:datasource>
+   <bcf:datasource type="file" datatype="bibtex">labelalphaname.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">un1</bcf:citekey>
-    <bcf:citekey order="2">un2</bcf:citekey>
-    <bcf:citekey order="3">un3</bcf:citekey>
-    <bcf:citekey order="4">un4</bcf:citekey>
-    <bcf:citekey order="5">un5</bcf:citekey>
-    <bcf:citekey order="6">un6</bcf:citekey>
+    <bcf:citekey order="1">lant1</bcf:citekey>
+    <bcf:citekey order="2">lant2</bcf:citekey>
+    <bcf:citekey order="3">lant3</bcf:citekey>
+    <bcf:citekey order="4">lant4</bcf:citekey>
   </bcf:section>
   <!-- DATA LISTS -->
   <bcf:datalist sortnamekeyscheme="global"
@@ -1888,18 +1962,11 @@
                 labelalphanametemplatename="global"/>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
-                name="nty/global//test1/global"
+                name="nty/global//global/test1"
                 sortscheme="nty"
                 type="entry"
                 labelprefix=""
-                uniquenametemplatename="test1"
-                labelalphanametemplatename="global"/>
-  <bcf:datalist sortnamekeyscheme="global"
-                section="0"
-                name="nty/global//test2/global"
-                sortscheme="nty"
-                type="entry"
-                labelprefix=""
-                uniquenametemplatename="test2"
-                labelalphanametemplatename="global"/>
+                uniquenametemplatename="global"
+                labelalphanametemplatename="test1"/>
 </bcf:controlfile>
+

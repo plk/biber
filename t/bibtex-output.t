@@ -44,14 +44,7 @@ $biber->set_output_obj(Biber::Output::bibtex->new());
 
 # Now generate the information
 $biber->prepare_tool;
-my $main = $biber->datalists->get_list(section                    => 99999,
-                                       name                       => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
-                                       type                       => 'entry',
-                                       sortschemename             => Biber::Config->getblxoption('sortscheme'),
-                                       sortnamekeyschemename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global');
+my $main = $biber->datalists->get_list(Biber::Config->getblxoption('sortscheme') . '/global//global/global', 99999, 'entry');
 
 my $out = $biber->get_output_obj;
 
