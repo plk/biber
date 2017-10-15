@@ -1497,16 +1497,6 @@ sub reset_seen_extra {
   $CONFIG->{state}{seen_extratitleyear} = {};
   $CONFIG->{state}{seen_extraalpha} = {};
   $CONFIG->{state}{seen_extrayearalpha} = {};
-  return;
-}
-
-=head2 reset_seen_extratrackers
-
-    Reset the trackers for extra*
-
-=cut
-
-sub reset_seen_extratrackers {
   $CONFIG->{state}{seen_nameyear} = {};
   $CONFIG->{state}{seen_nametitle} = {};
   $CONFIG->{state}{seen_titleyear} = {};

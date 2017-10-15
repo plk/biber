@@ -311,8 +311,6 @@ sub get_listdata {
            $self->{extraalphadata},
            $self->{extratitledata},
            $self->{extratitleyeardata},
-           $self->{labelalphadata},
-           $self->{namelistdata},
            $self->{sortdataschema},
            $self->{namelistdata},
            $self->{labelalphadata}];
@@ -328,16 +326,21 @@ sub get_namelistdata {
   return shift->{namelistdata};
 }
 
-=head2 reset_namelistdata
+=head2 reset_listdata
 
-  Reset name list data
+  Reset list data
 
 =cut
 
-sub reset_namelistdata {
+sub reset_listdata {
   my $self = shift;
+  $self->{extrayeardata} = {};
+  $self->{extraalphadata} = {};
+  $self->{extratitledata} = {};
+  $self->{extratitleyeardata} = {};
+  $self->{labelalphadata} = {};
   $self->{namelistdata} = {};
-  return;
+return;
 }
 
 =head2 set_namelistdata
@@ -718,19 +721,6 @@ sub get_filters {
   of the reference context and not the entry per se so it cannot be stored
   statically in the entry and must be pulled from the specific list
   when outputting the entry.
-
-  Currently this means:
-
-  * sortinit
-  * sortinithash
-  * labelalpha
-  * extrayear
-  * extraalpha
-  * extratitle
-  * extratitleyear
-  * labelprefix
-  * uniquelist
-  * uniquename
 
 =cut
 

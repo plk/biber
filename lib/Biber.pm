@@ -1584,6 +1584,8 @@ sub process_namedis {
       # ... then add non-base parts by incrementally adding to the last disambiguation level
       foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{$untname}->@*) {
         next if $np->{base};
+        next if defined($np->{disambiguation}) and ($np->{disambiguation} eq 'none');
+
         my $npn = $np->{namepart};
         my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$un // 0};
         my $lastns = $namestrings->[$namestrings->$#*];
@@ -1625,7 +1627,6 @@ sub process_namedis {
             push $namestrings->@*, $lastns . join('', $pi->@*);
             push $namedisschema->@*, [$npn => 'init'];
           }
-          # disambiguation='none' gets here and nothing is added to the strings or schema
         }
       }
 
@@ -1910,23 +1911,19 @@ sub process_extrayear {
       $logger->trace("Creating extrayear information for '$citekey'");
     }
 
-    my $name_string = '';
+    my $namehash = '';
     if (my $lni = $be->get_labelname_info) {
-      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
+      $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
     }
 
     # extrayear takes into account the labelyear which can be a range
     my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
 
-    my $nameyear_string = "$name_string,$year_string";
-    if ($logger->is_trace()) {# performance tune
-      $logger->trace("Setting nameyear to '$nameyear_string' for entry '$citekey'");
-    }
+    my $nameyear_string = "$namehash,$year_string";
+
     $be->set_field('nameyear', $nameyear_string);
-    if ($logger->is_trace()) {# performance tune
-      $logger->trace("Incrementing nameyear for '$name_string'");
-    }
-    Biber::Config->incr_seen_nameyear($name_string, $year_string);
+
+    Biber::Config->incr_seen_nameyear($namehash, $year_string);
   }
 
   return;
@@ -1963,23 +1960,23 @@ sub process_extratitle {
       $logger->trace("Creating extratitle information for '$citekey'");
     }
 
-    my $name_string = '';
+    my $namehash = '';
     if (my $lni = $be->get_labelname_info) {
-      $name_string = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
+      $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
     }
 
     my $lti = $be->get_labeltitle_info;
     my $title_string = $be->get_field($lti) // '';
 
-    my $nametitle_string = "$name_string,$title_string";
+    my $nametitle_string = "$namehash,$title_string";
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Setting nametitle to '$nametitle_string' for entry '$citekey'");
     }
     $be->set_field('nametitle', $nametitle_string);
     if ($logger->is_trace()) {# performance tune
-      $logger->trace("Incrementing nametitle for '$name_string'");
+      $logger->trace("Incrementing nametitle for '$namehash'");
     }
-    Biber::Config->incr_seen_nametitle($name_string, $title_string);
+    Biber::Config->incr_seen_nametitle($namehash, $title_string);
   }
 
   return;
@@ -2637,10 +2634,8 @@ sub process_lists {
         # Reset these per-list otherwise we increment counters more than once
         Biber::Config->reset_la_disambiguation;
         Biber::Config->reset_workuniqueness;
-        Biber::Config->reset_seen_extratrackers;
         Biber::Config->reset_seen_extra;
-        $list->reset_namelistdata;
-
+        $list->reset_listdata;
         # reset this otherwise uniqueness won't be processed for subsequent datalists
         Biber::Config->set_unul_changed(1);
 

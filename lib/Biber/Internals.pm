@@ -119,6 +119,8 @@ sub _getnamehash_u {
 
     # Use nameuniqueness template to construct hash
     foreach my $nps (Biber::Config->getblxoption('uniquenametemplate')->{$untname}->@*) {
+      # Same as omitting this
+      next if defined($nps->{disambiguation}) and ($nps->{disambiguation} eq 'none');
       my $npn = $nps->{namepart};
 
       if (my $np = $n->get_namepart($npn)) {
@@ -128,7 +130,7 @@ sub _getnamehash_u {
         else {
           my $un = $n->get_uniquename;
           if (defined($un) and not $un->[0] eq 'base') {
-            if ($un->[1] eq 'full') {
+            if ($un->[1] eq 'full' or $un->[1] eq 'fullonly') {
               $hashkey .= $np;
             }
             # Use initials for non-base parts if uniquename indicates this will disambiguate
@@ -149,6 +151,7 @@ sub _getnamehash_u {
   if ($logger->is_trace()) { # performance shortcut
     $logger->trace("Creating MD5 namehash_u using '$hashkey'");
   }
+
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
