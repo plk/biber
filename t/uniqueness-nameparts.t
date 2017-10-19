@@ -263,6 +263,7 @@ my $un4a = q|    \entry{un4}{article}{}
 |;
 
 # because given is ignored and middle does not disambiguate even on full
+# extrayear is calculated on "Smith" only
 my $un1b = q|    \entry{un1}{article}{}
       \name{author}{1}{}{%
         {{uniquename=0,uniquepart=base,hash=329d8f9192ea3349d700160c9ddb505d}{%
@@ -284,6 +285,7 @@ my $un1b = q|    \entry{un1}{article}{}
       \field{labelalpha}{SmiJohSim}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extrayear}{5}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -339,6 +341,7 @@ my $un3b = q|    \entry{un3}{article}{}
 |;
 
 # because given is ignored and middle does not disambiguate even on full
+# extrayear is calculated on "Smith" only
 my $un4b = q|    \entry{un4}{article}{}
       \name{author}{1}{}{%
         {{uniquename=0,uniquepart=base,hash=f6038a264619efefd49c7daac56424ca}{%
@@ -360,11 +363,13 @@ my $un4b = q|    \entry{un4}{article}{}
       \field{labelalpha}{SmiAlaSim}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extrayear}{1}
       \field{labelnamesource}{author}
     \endentry
 |;
 
 # because given is ignored and middle does not disambiguate on full
+# extrayear is calculated on "Smith" only
 my $un5 = q|    \entry{un5}{article}{uniquenametemplatename=test3}
       \name{author}{1}{}{%
         {{uniquename=0,uniquepart=base,hash=74fba0d07ca65976bbff1034f9bb22e6}{%
@@ -386,11 +391,13 @@ my $un5 = q|    \entry{un5}{article}{uniquenametemplatename=test3}
       \field{labelalpha}{SmiArtSim}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extrayear}{2}
       \field{labelnamesource}{author}
     \endentry
 |;
 
 # because given is ignored and middle does not disambiguate on init
+# extrayear is calculated on "Smith" only
 my $un6 = q|    \entry{un6}{article}{}
       \name{author}{1}{uniquenametemplatename=test4}{%
         {{uniquename=0,uniquepart=base,hash=8100e7d06d05938e91bf8863f5c20e33}{%
@@ -412,10 +419,13 @@ my $un6 = q|    \entry{un6}{article}{}
       \field{labelalpha}{SmiArtSmy}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extrayear}{3}
       \field{labelnamesource}{author}
     \\endentry
 |;
+
 # because there is nothing to disambiguate the base at all
+# extrayear is calculated on "Smith" only
 my $un7 = q|    \entry{un7}{article}{}
       \name{author}{1}{}{%
         {{uniquename=0,uniquepart=base,uniquenametemplatename=test5,hash=c21736158273b6f2f368818459734e04}{%
@@ -437,6 +447,7 @@ my $un7 = q|    \entry{un7}{article}{}
       \field{labelalpha}{SmiArtSme}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extrayear}{4}
       \field{labelnamesource}{author}
     \endentry
 |;
@@ -496,6 +507,7 @@ eq_or_diff($out->get_output_entry('un2', $main2), $un2b, 'Uniquename namepart - 
 eq_or_diff($out->get_output_entry('un3', $main2), $un3b, 'Uniquename namepart - 11');
 eq_or_diff($out->get_output_entry('un4', $main2), $un4b, 'Uniquename namepart - 12');
 
-eq_or_diff($out->get_output_entry('un5', $main), $un5, 'Uniquename namepart - 13');
-eq_or_diff($out->get_output_entry('un6', $main), $un6, 'Uniquename namepart - 14');
-eq_or_diff($out->get_output_entry('un7', $main), $un7, 'Uniquename namepart - 15');
+# Note that these are all being tested against $main2, not the default list
+eq_or_diff($out->get_output_entry('un5', $main2), $un5, 'Uniquename namepart - 13');
+eq_or_diff($out->get_output_entry('un6', $main2), $un6, 'Uniquename namepart - 14');
+eq_or_diff($out->get_output_entry('un7', $main2), $un7, 'Uniquename namepart - 15');
