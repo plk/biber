@@ -96,7 +96,7 @@ sub get_lists_by_attrs {
 sub get_list {
   my ($self, $name, $section, $type) = @_;
   foreach my $list ($self->{lists}->@*) {
-    next if ($section and ($list->get_section ne $section));
+    next if (defined($section) and ($list->get_section ne $section));
     next if ($type and ($list->get_type ne $type));
     return $list if $list->get_name eq $name;
   }

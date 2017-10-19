@@ -73,11 +73,8 @@ sub _printfield {
 =cut
 
 sub set_output_entry {
-  my $self = shift;
-  my $be = shift; # Biber::Entry object
+  my ($self, $be, $section, $dm) = @_;
   my $bee = $be->get_field('entrytype');
-  my $section = shift; # Section the entry occurs in
-  my $dm = shift; # Structure object
   my $acc = '';
   my $secnum = $section->number;
   my $dmh = $dm->{helpers};
@@ -95,10 +92,8 @@ sub set_output_entry {
 
     # Set parents need this - it is the labelalpha from the first entry
     if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
-      # Might not have been set due to skiplab/dataonly
-      if (my $label = $be->get_field('labelalpha')) {
-        $acc .= "      \\field{labelalpha}{$label}\n";
-      }
+      $acc .= "      <BDS>LABELALPHA</BDS>\n";
+      $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
     }
 
     # This is special, we have to put a marker for sortinit{hash} and then replace this string
@@ -136,6 +131,7 @@ sub set_output_entry {
   foreach my $namefield ($dm->get_fields_of_type('list', 'name')->@*) {
     next if $dm->field_is_skipout($namefield);
     if ( my $nf = $be->get_field($namefield) ) {
+      my $nlid = $nf->get_id;
       my $plo = '';
 
       # Did we have "and others" in the data?
@@ -157,9 +153,24 @@ sub set_output_entry {
           $lni eq $namefield) {
         # Add uniquelist, if defined
         my @plo;
-        if (my $ul = $nf->get_uniquelist){
-          push @plo, "uniquelist=$ul";
+
+        # Add uniquelist
+        push @plo, "<BDS>UL-${nlid}</BDS>";
+
+        # Add per-namelist options
+        foreach my $ploname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
+          if (defined($nf->${\"get_$ploname"})) {
+            my $plo = $nf->${\"get_$ploname"};
+            if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
+                $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
+                  push @plo, "$ploname=" . map_boolean($plo, 'tostring');
+                }
+            else {
+              push @plo, "$ploname=$plo";
+            }
+          }
         }
+
         $plo = join(',', @plo);
       }
       $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
@@ -187,30 +198,23 @@ sub set_output_entry {
   }
 
   # Output labelname hashes
-  my $namehash = $be->get_field('namehash');
-  $acc .= "      \\strng{namehash}{$namehash}\n" if $namehash;
+  $acc .= "      <BDS>NAMEHASH</BDS>\n";
   my $fullhash = $be->get_field('fullhash');
   $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
-  my $bibnamehash = $be->get_field('bibnamehash');
-  $acc .= "      \\strng{bibnamehash}{$bibnamehash}\n" if $bibnamehash;
+  $acc .= "      <BDS>BIBNAMEHASH</BDS>\n";
 
   # Output namelist hashes
   foreach my $namefield ($dmh->{namelists}->@*) {
-    if (my $bibnamehash = $be->get_field("${namefield}bibnamehash")) {
-      $acc .= "      \\strng{${namefield}bibnamehash}{$bibnamehash}\n";
-    }
-    if (my $namehash = $be->get_field("${namefield}namehash")) {
-      $acc .= "      \\strng{${namefield}namehash}{$namehash}\n";
-      my $fullhash = $be->get_field("${namefield}fullhash");
+    next unless $be->get_field($namefield);
+    $acc .= "      <BDS>${namefield}BIBNAMEHASH</BDS>\n";
+    $acc .= "      <BDS>${namefield}NAMEHASH</BDS>\n";
+    if (my $fullhash = $be->get_field("${namefield}fullhash")) {
       $acc .= "      \\strng{${namefield}fullhash}{$fullhash}\n";
     }
   }
 
   if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $label = $be->get_field('labelalpha')) {
-      $acc .= "      \\field{labelalpha}{$label}\n";
-    }
+    $acc .= "      <BDS>LABELALPHA</BDS>\n";
   }
 
   # This is special, we have to put a marker for sortinit{hash} and then replace this string
@@ -224,9 +228,7 @@ sub set_output_entry {
     # Might not have been set due to skiplab/dataonly
     if (my $ey = $be->get_field('extrayear')) {
       my $nameyear_extra = $be->get_field('nameyear_extra');
-      if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
-        $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
-      }
+      $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
     }
     if ($be->field_exists('labeldatesource')) {
       $acc .= "      \\field{labeldatesource}{" . $be->get_field('labeldatesource') .  "}\n";
@@ -241,22 +243,12 @@ sub set_output_entry {
 
   # The labeltitle option determines whether "extratitle" is output
   if ( Biber::Config->getblxoption('labeltitle', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $nametitle = $be->get_field('nametitle')) {
-      if ( Biber::Config->get_seen_nametitle($nametitle) > 1) {
-        $acc .= "      <BDS>EXTRATITLE</BDS>\n";
-      }
-    }
+    $acc .= "      <BDS>EXTRATITLE</BDS>\n";
   }
 
   # The labeltitleyear option determines whether "extratitleyear" is output
   if ( Biber::Config->getblxoption('labeltitleyear', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $titleyear = $be->get_field('titleyear')) {
-      if ( Biber::Config->get_seen_titleyear($titleyear) > 1) {
-        $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
-      }
-    }
+    $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
   }
 
 
@@ -272,25 +264,11 @@ sub set_output_entry {
     }
   }
 
-  if (defined($be->get_field('singletitle'))) {
-    $acc .= "      \\true{singletitle}\n";
-  }
-
-  if (defined($be->get_field('uniquetitle'))) {
-    $acc .= "      \\true{uniquetitle}\n";
-  }
-
-  if (defined($be->get_field('uniquebaretitle'))) {
-    $acc .= "      \\true{uniquebaretitle}\n";
-  }
-
-  if (defined($be->get_field('uniquework'))) {
-    $acc .= "      \\true{uniquework}\n";
-  }
-
-  if (defined($be->get_field('uniqueprimaryauthor'))) {
-    $acc .= "      \\true{uniqueprimaryauthor}\n";
-  }
+  $acc .= "      <BDS>SINGLETITLE</BDS>\n";
+  $acc .= "      <BDS>UNIQUETITLE</BDS>\n";
+  $acc .= "      <BDS>UNIQUEBARETITLE</BDS>\n";
+  $acc .= "      <BDS>UNIQUEWORK</BDS>\n";
+  $acc .= "      <BDS>UNIQUEPRIMARYAUTHOR</BDS>\n";
 
   # The source field for labelname
   if (my $lni = $be->get_labelname_info) {

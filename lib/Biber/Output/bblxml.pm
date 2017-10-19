@@ -143,25 +143,11 @@ sub set_output_entry {
     push @entryopts, ('source', 'xref');
   }
 
-  if (defined($be->get_field('singletitle'))) {
-    push @entryopts, ('singletitle', 'true');
-  }
-
-  if (defined($be->get_field('uniquetitle'))) {
-    push @entryopts, ('uniquetitle', 'true');
-  }
-
-  if (defined($be->get_field('uniquebaretitle'))) {
-    push @entryopts, ('uniquebaretitle', 'true');
-  }
-
-  if (defined($be->get_field('uniquework'))) {
-    push @entryopts, ('uniquework', 'true');
-  }
-
-  if (defined($be->get_field('uniqueprimaryauthor'))) {
-    push @entryopts, ('uniqueprimaryauthor', 'true');
-  }
+  push @entryopts, ('singletitle'         => '[BDS]SINGLETITLE[/BDS]');
+  push @entryopts, ('uniquetitle'         => '[BDS]UNIQUETITLE[/BDS]');
+  push @entryopts, ('uniquebaretitle'     => '[BDS]UNIQUEBARETITLE[/BDS]');
+  push @entryopts, ('uniquework'          => '[BDS]UNIQUEWORK[/BDS]');
+  push @entryopts, ('uniqueprimaryauthor' => '[BDS]UNIQUEPRIMARYAUTHOR[/BDS]');
 
   $xml->startTag([$xml_prefix, 'entry'], key => _bblxml_norm($key), type => _bblxml_norm($bee), @entryopts);
   if (my $opts = $be->get_field('options')) {
@@ -182,20 +168,12 @@ sub set_output_entry {
 
     # Set parents need this - it is the labelalpha from the first entry
     if (Biber::Config->getblxoption('labelalpha', $bee)) {
-      # Might not have been set due to skiplab/dataonly
-      if (my $label = $be->get_field('labelalpha')) {
-        $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($label), name => 'labelalpha');
-        if (Biber::Config->get_la_disambiguation($label) > 1) {
-          $xml->dataElement('BDS', 'EXTRAALPHA');
-        }
-      }
+      $xml->dataElement('BDS', 'LABELALPHA');
+      $xml->dataElement('BDS', 'EXTRAALPHA');
     }
 
-    # This is special, we have to put a marker for sortinit{hash} and then replace this string
-    # on output as it can vary between lists
     $xml->dataElement('BDS', 'SORTINIT');
     $xml->dataElement('BDS', 'SORTINITHASH');
-
 
     # labelprefix is list-specific. It is only defined if there is no shorthand
     # (see biblatex documentation)
@@ -230,6 +208,7 @@ sub set_output_entry {
   foreach my $namefield ($dm->get_fields_of_type('list', 'name')->@*) {
     if ( my $nf = $be->get_field($namefield) ) {
       next if $dm->field_is_skipout($namefield);
+      my $nlid = $nf->get_id;
       my %plo;
 
       # Did we have "and others" in the data?
@@ -243,12 +222,9 @@ sub set_output_entry {
       if (defined($lni) and
           $lni eq $namefield) {
 
-
-        # Add uniquelist, if defined
-        if (my $ul = $nf->get_uniquelist){
-          # Don't use angles in attributes ...
-          $plo{uniquelist} = "[BDS]UL-" . $$nf->get_id . "[/BDS]"
-        }
+        # Add uniquelist
+        # Don't use angles in attributes ...
+        $plo{uniquelist} = "[BDS]UL-${nlid}[/BDS]";
 
         # Add per-namelist options
         foreach my $ploname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
@@ -265,7 +241,7 @@ sub set_output_entry {
         }
       }
 
-      $xml->startTag([$xml_prefix, 'names'], type => $namefield, count => $total, sort keys %plo);
+      $xml->startTag([$xml_prefix, 'names'], type => $namefield, count => $total, map {$_ => $plo{$_}} sort keys %plo);
 
       # Now the names
       foreach my $n ($nf->names->@*) {
@@ -291,7 +267,7 @@ sub set_output_entry {
       }
 
       my $total = $lf->$#* + 1;
-      $xml->startTag([$xml_prefix, 'list'], name => $listfield, count => $total, sort keys %plo);
+      $xml->startTag([$xml_prefix, 'list'], name => $listfield, count => $total, map {$_ => $plo{$_}} sort keys %plo);
       foreach my $f ($lf->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
@@ -300,45 +276,31 @@ sub set_output_entry {
   }
 
   # Output labelname hashes
-  my $namehash = $be->get_field('namehash');
-  $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($namehash), name => 'namehash') if $namehash;
+  $xml->dataElement('BDS', 'NAMEHASH');
   my $fullhash = $be->get_field('fullhash');
   $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($fullhash), name => 'fullhash') if $fullhash;
-  my $bibnamehash = $be->get_field('bibnamehash');
-  $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($bibnamehash), name => 'bibnamehash') if $bibnamehash;
+  $xml->dataElement('BDS', 'BIBNAMEHASH');
 
   # Output namelist hashes
   foreach my $namefield ($dmh->{namelists}->@*) {
-    if (my $namehash = $be->get_field("${namefield}namehash")) {
-      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($namehash), name => "${namefield}namehash");
-      my $fullhash = $be->get_field("${namefield}fullhash");
+    next unless $be->get_field($namefield);
+    $xml->dataElement('BDS', "${namefield}NAMEHASH");
+    if (my $fullhash = $be->get_field("${namefield}fullhash")) {
       $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($fullhash), name => "${namefield}fullhash");
     }
-    if (my $bibnamehash = $be->get_field("${namefield}bibnamehash")) {
-      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($bibnamehash), name => "${namefield}bibnamehash");
-    }
+    $xml->dataElement('BDS', "${namefield}BIBNAMEHASH");
   }
 
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $label = $be->get_field('labelalpha')) {
-      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($label), name => 'labelalpha');
-    }
+      $xml->dataElement('BDS', 'LABELALPHA');
   }
 
-  # This is special, we have to put a marker for sortinit{hash} and then replace this string
-  # on output as it can vary between lists
   $xml->dataElement('BDS', 'SORTINIT');
   $xml->dataElement('BDS', 'SORTINITHASH');
 
   # The labeldateparts option determines whether "extrayear" is output
   if (Biber::Config->getblxoption('labeldateparts', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $nameyear = $be->get_field('nameyear')) {
-      if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
-        $xml->dataElement('BDS', 'EXTRAYEAR');
-      }
-    }
+    $xml->dataElement('BDS', 'EXTRAYEAR');
     if ($be->field_exists('labeldatesource')) {
       $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($be->get_field('labeldatesource')), name => 'labeldatesource');
     }
@@ -352,32 +314,17 @@ sub set_output_entry {
 
   # The labeltitle option determines whether "extratitle" is output
   if (Biber::Config->getblxoption('labeltitle', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $nametitle = $be->get_field('nametitle')) {
-      if ( Biber::Config->get_seen_nametitle($nametitle) > 1) {
-        $xml->dataElement('BDS', 'EXTRATITLE');
-      }
-    }
+    $xml->dataElement('BDS', 'EXTRATITLE');
   }
 
   # The labeltitleyear option determines whether "extratitleyear" is output
   if (Biber::Config->getblxoption('labeltitleyear', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $titleyear = $be->get_field('titleyear')) {
-      if ( Biber::Config->get_seen_titleyear($titleyear) > 1) {
-        $xml->dataElement('BDS', 'EXTRATITLEYEAR');
-      }
-    }
+    $xml->dataElement('BDS', 'EXTRATITLEYEAR');
   }
 
   # The labelalpha option determines whether "extraalpha" is output
   if (Biber::Config->getblxoption('labelalpha', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $la = $be->get_field('labelalpha')) {
-      if (Biber::Config->get_la_disambiguation($la) > 1) {
-        $xml->dataElement('BDS', 'EXTRAALPHA');
-      }
-    }
+    $xml->dataElement('BDS', 'EXTRAALPHA');
   }
 
   # The source field for labelname
@@ -547,7 +494,7 @@ sub set_output_entry {
         pop $urilf->@*; # remove the last element in the array
       }
       my $total = $urilf->$#* + 1;
-      $xml->startTag([$xml_prefix, 'list'], name => $uril, count => $total, sort keys %plo);
+      $xml->startTag([$xml_prefix, 'list'], name => $uril, count => $total, map {$_ => $plo{$_}} sort keys %plo);
 
       foreach my $f ($urilf->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));

@@ -24,11 +24,6 @@ __PACKAGE__->mk_accessors(qw (
                                gender
                                hash
                                index
-                               basenamestring
-                               basenamestringparts
-                               namestring
-                               namestrings
-                               unmininfo
                                id
                                useprefix
                                rawstring
@@ -116,130 +111,6 @@ sub was_stripped {
   return exists($self->{strip}) ? $self->{strip}{$part} : undef;
 }
 
-=head2 get_nameddisschema
-
-    Return uniquename disambiguation schema
-
-=cut
-
-sub get_namedisschema {
-  my $self = shift;
-  return $self->{namedisschema};
-}
-
-=head2 set_nameddisschema
-
-    Set uniquename disambiguation schema
-    Can't be auto-created as we need to set some quick lookup data
-
-=cut
-
-sub set_namedisschema {
-  my ($self, $schema) = @_;
-  $self->{namedisschema} = $schema;
-  for (my $i=0;$i<=$schema->$#*;$i++) {
-    my $se = $schema->[$i];
-    # make these explicit for faster lookup since they are static
-    if ($se->[0] eq 'base') {
-      $self->{basenamestring} = $self->{namestrings}->[$i];
-      $self->{basenamestringparts} = $se->[1];
-    }
-  }
-  return;
-}
-
-=head2 set_uniquename
-
-    Set uniquename for a visible Biber::Entry::Name object
-    Sets global flag to say that some uniquename value has changed
-
-=cut
-
-sub set_uniquename {
-  my ($self, $uniquename) = @_;
-  my $currval = $self->{uniquename};
-  # Set modified flag to positive if we changed something
-  if (not defined($currval) or not Compare($currval, $uniquename)) {
-    Biber::Config->set_unul_changed(1);
-  }
-  if ($logger->is_trace()) {# performance tune
-    $logger->trace('Setting uniquename for "' . $self->get_namestring . '" to ' . pp($uniquename));
-  }
-  $self->{uniquename} = $uniquename;
-  return;
-}
-
-=head2 set_uniquename_all
-
-    Set uniquename for a Biber::Entry::Name object
-
-=cut
-
-sub set_uniquename_all {
-  my ($self, $uniquename) = @_;
-
-  if ($logger->is_trace()) {# performance tune
-    $logger->trace('Setting uniquename_all for "' . $self->get_namestring . '" to ' . pp($uniquename));
-  }
-  $self->{uniquename_all} = $uniquename;
-  return;
-}
-
-=head2 get_uniquename
-
-    Get uniquename for a visible Biber::Entry::Name object
-
-=cut
-
-sub get_uniquename {
-  my $self = shift;
-  return $self->{uniquename};
-}
-
-=head2 get_uniquename_all
-
-    Get uniquename for a Biber::Entry::Name object
-
-=cut
-
-sub get_uniquename_all {
-  my $self = shift;
-  return $self->{uniquename_all};
-}
-
-=head2 get_uniquename_summary
-
-    Get legacy uniquename data for a visible Biber::Entry::Name object
-
-=cut
-
-sub get_uniquename_summary {
-  my $self = shift;
-  my $un = $self->{uniquename};
-  return undef unless defined($un);
-  if ($un->[1] eq 'none' or $un->[0] eq 'base') {
-    return 0;
-  }
-  elsif ($un->[1] eq 'init') {
-    return 1;
-  }
-  elsif ($un->[1] eq 'full' or $un->[1] eq 'fullonly') {
-    return 2;
-  }
-  return 0;
-}
-
-=head2 reset_uniquename
-
-    Reset uniquename for a Biber::Entry::Name object to a default value
-
-=cut
-
-sub reset_uniquename {
-  my $self = shift;
-  $self->{uniquename} = ['base', $self->{basenamestringparts}];
-  return;
-}
 
 =head2 get_nameparts
 
@@ -404,6 +275,7 @@ sub name_to_bbl {
   my $pno; # per-name options final string
   my $namestring;
   my @namestrings;
+  my $nid = $self->{id};
 
   foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
     my $npc;
@@ -428,17 +300,15 @@ sub name_to_bbl {
     if ($npc) {
       push @namestrings, "           $np={$npc}",
                          "           ${np}i={$npci}";
-      if (not $UNIQUENAME_BASEPARTS{$np} and defined($self->get_uniquename)) {
-        push @namestrings, "           ${np}un=<BDS>UNP-$np-" . $self->get_id . '</BDS>';
+      if (not $UNIQUENAME_BASEPARTS{$np}) {
+        push @namestrings, "           <BDS>UNP-${np}-${nid}</BDS>";
       }
     }
   }
 
   # Generate uniquename if uniquename is requested
-  if (defined($self->get_uniquename)) {
-    push @pno, 'uniquename=' . '<BDS>UNS-' . $self->get_id . '</BDS>';
-    push @pno, 'uniquepart=' . '<BDS>UNP-' . $self->get_id . '</BDS>';
-  }
+  push @pno, "<BDS>UNS-${nid}</BDS>";
+  push @pno, "<BDS>UNP-${nid}</BDS>";
 
   # Add per-name options
   foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
@@ -455,7 +325,7 @@ sub name_to_bbl {
   }
 
   # Add the name hash to the options
-  push @pno, 'hash=' . $self->get_hash;
+  push @pno, "<BDS>${nid}-PERNAMEHASH</BDS>";
   $pno = join(',', @pno);
 
   $namestring = "        {{$pno}{\%\n";
@@ -476,6 +346,7 @@ sub name_to_bblxml {
   my $dm = Biber::Config->get_dm;
   my %pno; # per-name options
   my %names;
+  my $nid = $self->{id};
 
   foreach my $np ($dm->get_constant_value('nameparts')) {# list type so returns list
     my $npc;
@@ -490,17 +361,15 @@ sub name_to_bblxml {
     $npci //= '';
     if ($npc) {
       $names{$np} = [$npc, $npci];
-      if (not $UNIQUENAME_BASEPARTS{$np} and defined($self->get_uniquename)) {
-        push $names{$np}->@*, "[BDS]UNP-$np-" . $self->get_id . '[/BDS]';
+      if (not $UNIQUENAME_BASEPARTS{$np}) {
+        push $names{$np}->@*, "[BDS]UNP-${np}-${nid}[/BDS]";
       }
     }
   }
 
   # Generate uniquename if uniquename is requested
-  if (defined($self->get_uniquename)) {
-    $pno{uniquename} = '[BDS]UNS-' . $self->get_id . '[/BDS]';
-    $pno{uniquepart} = '[BDS]UNP-' . $self->get_id . '[/BDS]';
-  }
+  $pno{uniquename} = "[BDS]UNS-${nid}[/BDS]";
+  $pno{uniquepart} = "[BDS]UNP-${nid}[/BDS]";
 
   # Add per-name options
   foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
@@ -517,13 +386,13 @@ sub name_to_bblxml {
   }
 
   # Add the name hash to the options
-  $pno{hash} = $self->get_hash;
+  $pno{hash} = "[BDS]${nid}-PERNAMEHASH[/BDS]";
 
   $xml->startTag([$xml_prefix, 'name'], map {$_ => $pno{$_}} sort keys %pno);
   foreach my $key (sort keys %names) {
     my $value = $names{$key};
     my %un;
-    if (not $UNIQUENAME_BASEPARTS{$key} and defined($self->get_uniquename)) {
+    if (not $UNIQUENAME_BASEPARTS{$key}) {
       %un = (uniquename => $value->[2]);
     }
     $xml->startTag([$xml_prefix, 'namepart'],

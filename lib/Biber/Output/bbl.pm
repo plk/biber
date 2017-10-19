@@ -155,10 +155,7 @@ sub _printfield {
 =cut
 
 sub set_output_keyalias {
-  my $self = shift;
-  my $alias = shift;
-  my $key = shift;
-  my $section = shift;
+  my ($self, $alias, $key, $section) = @_;
   my $secnum = $section->number;
 
   my $acc = "  \\keyalias{$alias}{$key}\n";
@@ -176,9 +173,7 @@ sub set_output_keyalias {
 =cut
 
 sub set_output_undefkey {
-  my $self = shift;
-  my $key = shift; # undefined key
-  my $section = shift; # Section object the entry occurs in
+  my ($self, $key, $section) = @_;
   my $secnum = $section->number;
 
   my $acc = "  \\missing{$key}\n";
@@ -188,7 +183,6 @@ sub set_output_undefkey {
 
   return;
 }
-
 
 =head2 set_output_entry
 
@@ -216,17 +210,10 @@ sub set_output_entry {
 
     # Set parents need this - it is the labelalpha from the first entry
     if (Biber::Config->getblxoption('labelalpha', $bee)) {
-      # Might not have been set due to skiplab/dataonly
-      if (my $label = $be->get_field('labelalpha')) {
-          $acc .= "      <BDS>LABELALPHA</BDS>\n";
-        if (Biber::Config->get_la_disambiguation($label) > 1) {
-          $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
-        }
-      }
+      $acc .= "      <BDS>LABELALPHA</BDS>\n";
+      $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
     }
 
-    # This is special, we have to put a marker for sortinit{hash} and then replace this string
-    # on output as it can vary between lists
     $acc .= "      <BDS>SORTINIT</BDS>\n";
     $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
@@ -258,6 +245,7 @@ sub set_output_entry {
   foreach my $namefield ($dmh->{namelists}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $nf = $be->get_field($namefield) ) {
+      my $nlid = $nf->get_id;
       my $plo = '';
 
       # Did we have "and others" in the data?
@@ -278,10 +266,8 @@ sub set_output_entry {
           $lni eq $namefield) {
         my @plo;
 
-        # Add uniquelist, if defined
-        if (my $ul = $nf->get_uniquelist){
-          push @plo, "uniquelist=<BDS>UL-" . $nf->get_id . "</BDS>";
-        }
+        # Add uniquelist
+        push @plo, "<BDS>UL-${nlid}</BDS>";
 
         # Add per-namelist options
         foreach my $ploname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
@@ -325,45 +311,32 @@ sub set_output_entry {
   }
 
   # Output labelname hashes
-  my $namehash = $be->get_field('namehash');
-  $acc .= "      \\strng{namehash}{$namehash}\n" if $namehash;
+  $acc .= "      <BDS>NAMEHASH</BDS>\n";
   my $fullhash = $be->get_field('fullhash');
   $acc .= "      \\strng{fullhash}{$fullhash}\n" if $fullhash;
-  my $bibnamehash = $be->get_field('bibnamehash');
-  $acc .= "      \\strng{bibnamehash}{$bibnamehash}\n" if $bibnamehash;
+  $acc .= "      <BDS>BIBNAMEHASH</BDS>\n";
+
 
   # Output namelist hashes
   foreach my $namefield ($dmh->{namelists}->@*) {
-    if (my $bibnamehash = $be->get_field("${namefield}bibnamehash")) {
-      $acc .= "      \\strng{${namefield}bibnamehash}{$bibnamehash}\n";
-    }
-    if (my $namehash = $be->get_field("${namefield}namehash")) {
-      $acc .= "      \\strng{${namefield}namehash}{$namehash}\n";
-      my $fullhash = $be->get_field("${namefield}fullhash");
+    next unless $be->get_field($namefield);
+    $acc .= "      <BDS>${namefield}BIBNAMEHASH</BDS>\n";
+    $acc .= "      <BDS>${namefield}NAMEHASH</BDS>\n";
+    if (my $fullhash = $be->get_field("${namefield}fullhash")) {
       $acc .= "      \\strng{${namefield}fullhash}{$fullhash}\n";
     }
   }
 
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $label = $be->get_field('labelalpha')) {
-      $acc .= "      <BDS>LABELALPHA</BDS>\n";
-    }
+    $acc .= "      <BDS>LABELALPHA</BDS>\n";
   }
 
-  # This is special, we have to put a marker for sortinit{hash} and then replace this string
-  # on output as it can vary between lists
   $acc .= "      <BDS>SORTINIT</BDS>\n";
   $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
   # The labeldateparts option determines whether "extrayear" is output
   if (Biber::Config->getblxoption('labeldateparts', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $nameyear = $be->get_field('nameyear')) {
-      if ( Biber::Config->get_seen_nameyear($nameyear) > 1) {
-        $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
-      }
-    }
+    $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
     if ($be->field_exists('labeldatesource')) {
       $acc .= "      \\field{labeldatesource}{" . $be->get_field('labeldatesource') .  "}\n";
     }
@@ -377,32 +350,17 @@ sub set_output_entry {
 
   # The labeltitle option determines whether "extratitle" is output
   if ( Biber::Config->getblxoption('labeltitle', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $nametitle = $be->get_field('nametitle')) {
-      if ( Biber::Config->get_seen_nametitle($nametitle) > 1) {
-        $acc .= "      <BDS>EXTRATITLE</BDS>\n";
-      }
-    }
+    $acc .= "      <BDS>EXTRATITLE</BDS>\n";
   }
 
   # The labeltitleyear option determines whether "extratitleyear" is output
   if ( Biber::Config->getblxoption('labeltitleyear', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $titleyear = $be->get_field('titleyear')) {
-      if ( Biber::Config->get_seen_titleyear($titleyear) > 1) {
-        $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
-      }
-    }
+    $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
   }
 
   # The labelalpha option determines whether "extraalpha" is output
   if ( Biber::Config->getblxoption('labelalpha', $bee)) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $la = $be->get_field('labelalpha')) {
-      if (Biber::Config->get_la_disambiguation($la) > 1) {
-        $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
-      }
-    }
+    $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
   }
 
   if (defined($be->get_field('crossrefsource'))) {
@@ -413,25 +371,11 @@ sub set_output_entry {
     $acc .= "      \\true{xrefsource}\n";
   }
 
-  if (defined($be->get_field('singletitle'))) {
-    $acc .= "      \\true{singletitle}\n";
-  }
-
-  if (defined($be->get_field('uniquetitle'))) {
-    $acc .= "      \\true{uniquetitle}\n";
-  }
-
-  if (defined($be->get_field('uniquebaretitle'))) {
-    $acc .= "      \\true{uniquebaretitle}\n";
-  }
-
-  if (defined($be->get_field('uniquework'))) {
-    $acc .= "      \\true{uniquework}\n";
-  }
-
-  if (defined($be->get_field('uniqueprimaryauthor'))) {
-    $acc .= "      \\true{uniqueprimaryauthor}\n";
-  }
+  $acc .= "      <BDS>SINGLETITLE</BDS>\n";
+  $acc .= "      <BDS>UNIQUETITLE</BDS>\n";
+  $acc .= "      <BDS>UNIQUEBARETITLE</BDS>\n";
+  $acc .= "      <BDS>UNIQUEWORK</BDS>\n";
+  $acc .= "      <BDS>UNIQUEPRIMARYAUTHOR</BDS>\n";
 
   # The source field for labelname
   if (my $lni = $be->get_labelname_info) {
@@ -692,14 +636,11 @@ sub output {
 
     foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists
-      my $listssn = $list->get_sortschemename;
-      my $listsnksn = $list->get_sortnamekeyschemename;
-      my $listpn = $list->get_labelprefix;
       my $listtype = $list->get_type;
       my $listname = $list->get_name;
 
       if ($logger->is_debug()) {# performance tune
-        $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn', sort name key scheme '$listsnksn' and labelprefix '$listpn'");
+        $logger->debug("Writing entries in '$listname' list of type '$listtype'");
       }
 
       out($target, "  \\datalist[$listtype]{$listname}\n");
@@ -747,13 +688,13 @@ sub output {
     }
 
     # Aliases
-    # Use sort to guaranteed deterministic order for things like latexmk
+    # Use sort to guarantee deterministic order for things like latexmk
     foreach my $ks (sort keys $data->{ALIAS_ENTRIES}{$secnum}{index}->%*) {
       out($target, $data->{ALIAS_ENTRIES}{$secnum}{index}{$ks}->$*);
     }
 
     # Missing keys
-    # Use sort to guaranteed deterministic order for things like latexmk
+    # Use sort to guarantee deterministic order for things like latexmk
     foreach my $ks (sort keys $data->{MISSING_ENTRIES}{$secnum}{index}->%*) {
       out($target, $data->{MISSING_ENTRIES}{$secnum}{index}{$ks}->$*);
     }

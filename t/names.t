@@ -949,9 +949,8 @@ eq_or_diff( $out->get_output_entry('L29', $main), $l29, 'Escaped name with 3 com
 # Checking visibility
 # Count does not include the "and others" as this "name" is deleted in the output driver
 eq_or_diff($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->count_names, '2', 'Name count for "and others" - 1');
-eq_or_diff($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->get_visible_cite, '2', 'Visibility for "and others" - 1');
-eq_or_diff($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_labelname_info)->get_visible_cite, '1', 'Visibility for "and others" - 2');
-
+eq_or_diff($main->get_visible_cite($bibentries->entry('V1')->get_field($bibentries->entry('V1')->get_labelname_info)->get_id), '2', 'Visibility for "and others" - 1');
+eq_or_diff($main->get_visible_cite($bibentries->entry('V2')->get_field($bibentries->entry('V2')->get_labelname_info)->get_id), '1', 'Visibility for "and others" - 2');
 # A few tests depend on non UTF-8 output
 # Have to use a new biber object when trying to change encoding as this isn't
 # dealt with in ->prepare
@@ -980,8 +979,8 @@ eq_or_diff( $out->get_output_entry('L22', $main), $l22, 'LaTeX encoded unicode f
 eq_or_diff( $out->get_output_entry('L31', $main), $l31, 'LaTeX encoded unicode family name with tie char');
 
 # uniqueprimaryauthor tests
-eq_or_diff($section->bibentry('upa1')->get_field('uniqueprimaryauthor'), 1, 'Unique primary author - 1');
-ok(is_undef($bibentries->entry('upa2')->get_field('uniqueprimaryauthor')), 'Unique primary author - 2');
-ok(is_undef($bibentries->entry('upa3')->get_field('uniqueprimaryauthor')), 'Unique primary author - 3');
-eq_or_diff($section->bibentry('upa4')->get_field('uniqueprimaryauthor'), 1, 'Unique primary author - 4');
+eq_or_diff($main->get_entryfield('upa1', 'uniqueprimaryauthor'), 1, 'Unique primary author - 1');
+ok(is_undef($main->get_entryfield('upa2', 'uniqueprimaryauthor')), 'Unique primary author - 2');
+ok(is_undef($main->get_entryfield('upa3', 'uniqueprimaryauthor')), 'Unique primary author - 3');
+eq_or_diff($main->get_entryfield('upa4', 'uniqueprimaryauthor'), 1, 'Unique primary author - 4');
 

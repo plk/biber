@@ -1530,14 +1530,14 @@ sub process_namedis {
   $untname = Biber::Config->getblxoption('uniquenametemplatename', undef, $citekey) // $untname;
 
   foreach my $pn ($dmh->{namelistsall}->@*) {
-    next unless my $names = $be->get_field($pn);
+    next unless my $nl = $be->get_field($pn);
 
     # per-namelist uniquenametemplatename
-    if (defined($names->get_uniquenametemplatename)) {
-      $untname = $names->get_uniquenametemplatename;
+    if (defined($nl->get_uniquenametemplatename)) {
+      $untname = $nl->get_uniquenametemplatename;
     }
 
-    foreach my $n ($names->names->@*) {
+    foreach my $n ($nl->names->@*) {
 
       my $namestring = '';
       my $namestrings = [];
@@ -1563,12 +1563,12 @@ sub process_namedis {
                                                     $be->get_field('entrytype'),
                                                     $citekey);
             # Override with per-namelist setting - only for extended name format
-            if (defined($names->$method)) {
-              $useok = $names->$method;
+            if (defined($nl->$method)) {
+              $useok = $nl->$method;
             }
             # Override with per-name setting - only for extended name format
-            if (defined($names->$method)) {
-              $useok = $names->$method;
+            if (defined($nl->$method)) {
+              $useok = $nl->$method;
             }
             next unless $useok;
           }
@@ -1598,12 +1598,12 @@ sub process_namedis {
                                                     $be->get_field('entrytype'),
                                                     $citekey);
             # Override with per-namelist setting - only for extended name format
-            if (defined($names->$method)) {
-              $useok = $names->$method;
+            if (defined($nl->$method)) {
+              $useok = $nl->$method;
             }
             # Override with per-name setting - only for extended name format
-            if (defined($names->$method)) {
-              $useok = $names->$method;
+            if (defined($nl->$method)) {
+              $useok = $nl->$method;
             }
             next unless $useok;
           }
@@ -1634,9 +1634,10 @@ sub process_namedis {
         $logger->trace("namestrings in '$citekey': " . join (',', $namestrings->@*));
       }
 
-      $n->set_namestring($namestring);
-      $n->set_namestrings($namestrings);
-      $n->set_namedisschema($namedisschema); # Must come after set_namestrings
+      $dlist->set_namestring($nl->get_id, $n->get_id, $namestring);
+      $dlist->set_namestrings($nl->get_id, $n->get_id, $namestrings);
+      # must come after settings namestrings
+      $dlist->set_namedisschema($nl->get_id, $n->get_id, $namedisschema);
     }
   }
   return;
@@ -1661,6 +1662,38 @@ sub postprocess_sets {
   return;
 }
 
+=head2 process_entries_static
+
+  Processing of entries which is not list-specific and which can therefore
+  insert data directly into entries
+
+=cut
+
+sub process_entries_static {
+  my ($self) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Processing static entry information in section $secnum");
+  }
+  foreach my $citekey ( $section->get_citekeys ) {
+
+    # generate labelname name
+    $self->process_labelname($citekey);
+
+    # generate labeldate name
+    $self->process_labeldate($citekey);
+
+    # generate labeltitle name
+    $self->process_labeltitle($citekey);
+
+    # generate fullhash
+    $self->process_fullhash($citekey);
+
+    # push entry-specific presort fields into the presort state
+    $self->process_presort($citekey);
+  }
+}
 
 =head2 process_entries_pre
 
@@ -1683,21 +1716,6 @@ sub process_entries_pre {
 
     # process name disambiguation schemata
     $self->process_namedis($citekey, $dlist);
-
-    # generate labelname name
-    $self->process_labelname($citekey);
-
-    # generate labeldate name
-    $self->process_labeldate($citekey);
-
-    # generate labeltitle name
-    $self->process_labeltitle($citekey);
-
-    # generate fullhash
-    $self->process_fullhash($citekey);
-
-    # push entry-specific presort fields into the presort state
-    $self->process_presort($citekey);
 
   }
 
@@ -1729,7 +1747,7 @@ sub process_entries_post {
     $self->process_labelalpha($citekey, $dlist);
 
     # generate information for tracking extraalpha
-    $self->process_extraalpha($citekey);
+    $self->process_extraalpha($citekey, $dlist);
 
     # generate information for tracking extrayear
     $self->process_extrayear($citekey, $dlist);
@@ -1738,20 +1756,19 @@ sub process_entries_post {
     $self->process_extratitle($citekey, $dlist);
 
     # generate information for tracking extratitleyear
-    $self->process_extratitleyear($citekey);
+    $self->process_extratitleyear($citekey, $dlist);
 
     # generate information for tracking singletitle, uniquetitle, uniquebaretitle and uniquework
-    $self->process_workuniqueness($citekey);
+    $self->process_workuniqueness($citekey, $dlist);
 
     # generate information for tracking uniqueprimaryauthor
-    $self ->process_uniqueprimaryauthor($citekey);
+    $self ->process_uniqueprimaryauthor($citekey, $dlist);
 
     # generate namehash
-    $self->process_namehash($citekey);
+    $self->process_namehash($citekey, $dlist);
 
     # generate per-name hashes
-    $self->process_pername_hashes($citekey);
-
+    $self->process_pername_hashes($citekey, $dlist);
   }
 
   if ($logger->is_debug()) {# performance tune
@@ -1761,6 +1778,40 @@ sub process_entries_post {
   return;
 }
 
+
+=head2 process_entries_final
+
+    Final processing operations which depend on all previous processing
+
+=cut
+
+sub process_entries_final {
+  my ($self, $dlist) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  if ($logger->is_debug()) {# performance tune
+    $logger->debug("Final processing for entries in section $secnum");
+  }
+  foreach my $citekey ( $section->get_citekeys ) {
+
+    # Generate singletitle field if requested
+    $self->generate_singletitle($citekey, $dlist);
+
+    # Generate uniquetitle field if requested
+    $self->generate_uniquetitle($citekey, $dlist);
+
+    # Generate uniquebaretitle field if requested
+    $self->generate_uniquebaretitle($citekey, $dlist);
+
+    # Generate uniquework field if requested
+    $self->generate_uniquework($citekey, $dlist);
+
+    # Generate uniqueprimaryauthor if requested
+    $self->generate_uniquepa($citekey, $dlist);
+  }
+}
+
+
 =head2 process_uniqueprimaryauthor
 
     Track seen primary author base names for generation of uniqueprimaryauthor
@@ -1768,8 +1819,7 @@ sub process_entries_post {
 =cut
 
 sub process_uniqueprimaryauthor {
-  my $self = shift;
-  my $citekey = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1780,9 +1830,9 @@ sub process_uniqueprimaryauthor {
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Creating uniqueprimaryauthor information for '$citekey'");
       }
-      my $paf = $nl->nth_name(1)->get_basenamestring;
-      $be->set_field('seenprimaryauthor', $paf);
-      Biber::Config->incr_seenpa($paf);
+      my $paf = $dlist->get_basenamestring($nl->get_id, $nl->nth_name(1)->get_id);
+      $dlist->set_entryfield($citekey, 'seenprimaryauthor', $paf);
+      $dlist->incr_seenpa($paf);
     }
   }
 }
@@ -1795,8 +1845,7 @@ sub process_uniqueprimaryauthor {
 =cut
 
 sub process_workuniqueness {
-  my $self = shift;
-  my $citekey = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1822,12 +1871,9 @@ sub process_workuniqueness {
     # can still be true (in a mvbook for example, which is just a single "work")
     unless (($lni and first {fc($lni) eq fc($_)} $ignore->{singletitle}->@*) and
             ($lti and first {fc($lti) eq fc($_)} $ignore->{singletitle}->@*)) {
-      Biber::Config->incr_seenname($identifier);
-      if ($logger->is_trace()) {# performance tune
-        $logger->trace("Setting seenname for '$citekey' to '$identifier'");
-      }
+      $dlist->incr_seenname($identifier);
     }
-    $be->set_field('seenname', $identifier);
+    $dlist->set_entryfield($citekey, 'seenname', $identifier);
   }
 
   # uniquetitle
@@ -1837,12 +1883,9 @@ sub process_workuniqueness {
 
     # Skip due to ignore settings?
     unless (first {fc($lti) eq fc($_)} $ignore->{uniquetitle}->@*) {
-      Biber::Config->incr_seentitle($identifier);
-      if ($logger->is_trace()) {  # performance tune
-        $logger->trace("Setting seentitle for '$citekey' to '$identifier'");
-      }
+      $dlist->incr_seentitle($identifier);
     }
-    $be->set_field('seentitle', $identifier);
+    $dlist->set_entryfield($citekey, 'seentitle', $identifier);
   }
 
   # uniquebaretitle
@@ -1852,12 +1895,9 @@ sub process_workuniqueness {
 
     # Skip due to ignore settings?
     unless (first {fc($lti) eq fc($_)} $ignore->{uniquebaretitle}->@*) {
-      Biber::Config->incr_seenbaretitle($identifier);
-      if ($logger->is_trace()) {  # performance tune
-        $logger->trace("Setting seenbaretitle for '$citekey' to '$identifier'");
-      }
+      $dlist->incr_seenbaretitle($identifier);
     }
-    $be->set_field('seenbaretitle', $identifier);
+    $dlist->set_entryfield($citekey, 'seenbaretitle', $identifier);
   }
 
   # uniquework
@@ -1869,12 +1909,9 @@ sub process_workuniqueness {
     # Skip due to ignore settings?
     unless (first {fc($lni) eq fc($_)} $ignore->{uniquework}->@* and
             first {fc($lti) eq fc($_)} $ignore->{uniquework}->@*) {
-      Biber::Config->incr_seenwork($identifier);
-      if ($logger->is_trace()) {  # performance tune
-        $logger->trace("Setting seenwork for '$citekey' to '$identifier'");
-      }
+      $dlist->incr_seenwork($identifier);
     }
-    $be->set_field('seenwork', $identifier);
+    $dlist->set_entryfield($citekey, 'seenwork', $identifier);
   }
 
   return;
@@ -1887,8 +1924,7 @@ sub process_workuniqueness {
 =cut
 
 sub process_extrayear {
-  my $self = shift;
-  my ($citekey, $dlist) = @_;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1896,9 +1932,8 @@ sub process_extrayear {
 
   # Generate labelname/year combination for tracking extrayear
   # * If there is no labelname to use, use empty string
-  # * If there is no labelyear to use:
-  #   * If there is no pubstate to use, use empty string otherwise use pubstate key
-  # * Don't increment the seen_nameyear count if either name or year string is empty
+  # * If there is no labelyear to use, try year
+  # * Don't increment the seen_nameyear count if the name string is empty
   #   (see code in incr_seen_nameyear method).
   # * Don't increment if skiplab is set
 
@@ -1921,9 +1956,8 @@ sub process_extrayear {
 
     my $nameyear_string = "$namehash,$year_string";
 
-    $be->set_field('nameyear', $nameyear_string);
-
-    Biber::Config->incr_seen_nameyear($namehash, $year_string);
+    $dlist->set_entryfield($citekey, 'nameyear', $nameyear_string);
+    $dlist->incr_seen_nameyear($namehash, $year_string);
   }
 
   return;
@@ -1936,8 +1970,7 @@ sub process_extrayear {
 =cut
 
 sub process_extratitle {
-  my $self = shift;
-  my ($citekey, $dlist) = @_;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1972,11 +2005,13 @@ sub process_extratitle {
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Setting nametitle to '$nametitle_string' for entry '$citekey'");
     }
-    $be->set_field('nametitle', $nametitle_string);
+
+    $dlist->set_entryfield($citekey, 'nametitle', $nametitle_string);
+
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Incrementing nametitle for '$namehash'");
     }
-    Biber::Config->incr_seen_nametitle($namehash, $title_string);
+    $dlist->incr_seen_nametitle($namehash, $title_string);
   }
 
   return;
@@ -1989,8 +2024,7 @@ sub process_extratitle {
 =cut
 
 sub process_extratitleyear {
-  my $self = shift;
-  my $citekey = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -2022,11 +2056,13 @@ sub process_extratitleyear {
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Setting titleyear to '$titleyear_string' for entry '$citekey'");
     }
-    $be->set_field('titleyear', $titleyear_string);
+
+    $dlist->set_entryfield($citekey, 'titleyear', $titleyear_string);
+
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Incrementing titleyear for '$title_string'");
     }
-    Biber::Config->incr_seen_titleyear($title_string, $year_string);
+    $dlist->incr_seen_titleyear($title_string, $year_string);
   }
 
   return;
@@ -2332,8 +2368,7 @@ sub process_fullhash {
 =cut
 
 sub process_namehash {
-  my $self = shift;
-  my $citekey = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -2344,16 +2379,16 @@ sub process_namehash {
   # and also SHORT* fields etc.
   if (my $lni = $be->get_labelname_info) {
     if (my $ln = $be->get_field($lni)) {
-      $be->set_field('namehash', $self->_getnamehash($citekey, $ln));
-      $be->set_field('bibnamehash', $self->_getnamehash($citekey, $ln, 1));
+      $dlist->set_entryfield($citekey, 'namehash', $self->_getnamehash($citekey, $ln, $dlist));
+      $dlist->set_entryfield($citekey, 'bibnamehash', $self->_getnamehash($citekey, $ln, $dlist, 1));
     }
   }
 
   # Generate namehash for all other name fields
   foreach my $n ($dmh->{namelistsall}->@*) {
     next unless my $nv = $be->get_field($n);
-    $be->set_field("${n}namehash", $self->_getnamehash($citekey, $nv));
-    $be->set_field("${n}bibnamehash", $self->_getnamehash($citekey, $nv, 1));
+    $dlist->set_entryfield($citekey, "${n}namehash", $self->_getnamehash($citekey, $nv, $dlist));
+    $dlist->set_entryfield($citekey, "${n}bibnamehash", $self->_getnamehash($citekey, $nv, $dlist, 1));
   }
 
   return;
@@ -2366,22 +2401,20 @@ sub process_namehash {
 =cut
 
 sub process_pername_hashes {
-  my $self = shift;
-  my $citekey = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $dmh = Biber::Config->get_dm_helpers;
 
   foreach my $pn ($dmh->{namelistsall}->@*) {
-    next unless my $names = $be->get_field($pn);
-    foreach my $n ($names->names->@*) {
-      $n->set_hash($self->_genpnhash($citekey, $n));
+    next unless my $nl = $be->get_field($pn);
+    foreach my $n ($nl->names->@*) {
+      $dlist->set_namehash($nl->get_id, $n->get_id, $self->_genpnhash($citekey, $n));
     }
   }
   return;
 }
-
 
 =head2 process_visible_names
 
@@ -2391,7 +2424,7 @@ sub process_pername_hashes {
 =cut
 
 sub process_visible_names {
-  my $self = shift;
+  my ($self, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $dmh = Biber::Config->get_dm_helpers;
@@ -2411,9 +2444,9 @@ sub process_visible_names {
     my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
 
     foreach my $n ($dmh->{namelistsall}->@*) {
-      next unless my $names = $be->get_field($n);
+      next unless my $nl = $be->get_field($n);
 
-      my $count = $names->count_names;
+      my $count = $nl->count_names;
       my $visible_names_cite;
       my $visible_names_bib;
       my $visible_names_alpha;
@@ -2448,7 +2481,7 @@ sub process_visible_names {
         # names. We also know that uniquelist > mincitenames because it is a further
         # disambiguation on top of mincitenames so can't be less as you can't disambiguate
         # by losing information
-        $visible_names_cite = $names->get_uniquelist // $l_mincn;
+        $visible_names_cite = $dlist->get_uniquelist($nl->get_id) // $l_mincn;
       }
       else { # visibility is simply the full list
         $visible_names_cite = $count;
@@ -2461,25 +2494,23 @@ sub process_visible_names {
         # names. We also know that uniquelist > mincitenames because it is a further
         # disambiguation on top of mincitenames so can't be less as you can't disambiguate
         # by losing information
-        $visible_names_bib = $names->get_uniquelist // $l_minbn;
+        $visible_names_bib = $dlist->get_uniquelist($nl->get_id) // $l_minbn;
       }
       else { # visibility is simply the full list
         $visible_names_bib = $count;
       }
 
       if ($logger->is_trace()) { # performance shortcut
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
-          $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
-          $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
-        }
+        $logger->trace("Setting visible names (cite) for key '$citekey' to '$visible_names_cite'");
+        $logger->trace("Setting visible names (bib) for key '$citekey' to '$visible_names_bib'");
+        $logger->trace("Setting visible names (alpha) for key '$citekey' to '$visible_names_alpha'");
       }
 
       # Need to set these on all name forms
-      my $ns = $be->get_field($n);
-      $ns->set_visible_cite($visible_names_cite);
-      $ns->set_visible_bib($visible_names_bib);
-      $ns->set_visible_alpha($visible_names_alpha);
+      my $nlid = $be->get_field($n)->get_id;
+      $dlist->set_visible_cite($nlid, $visible_names_cite);
+      $dlist->set_visible_bib($nlid, $visible_names_bib);
+      $dlist->set_visible_alpha($nlid, $visible_names_alpha);
     }
   }
 }
@@ -2492,8 +2523,7 @@ sub process_visible_names {
 =cut
 
 sub process_labelalpha {
-  my $self = shift;
-  my ($citekey, $dlist) = @_;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -2503,11 +2533,9 @@ sub process_labelalpha {
     return;
   }
   if ( my $la = Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
-    my $label;
-    my $sortlabel;
-    ($label, $sortlabel) = $self->_genlabel($citekey, $dlist)->@*;
-    $be->set_field('labelalpha', $label);
-    $be->set_field('sortlabelalpha', $sortlabel);
+    my ($label, $sortlabel) = $self->_genlabel($citekey, $dlist)->@*;
+    $dlist->set_entryfield($citekey, 'labelalpha', $label);
+    $dlist->set_entryfield($citekey, 'sortlabelalpha', $sortlabel);
   }
 }
 
@@ -2518,14 +2546,13 @@ sub process_labelalpha {
 =cut
 
 sub process_extraalpha {
-  my $self = shift;
-  my $citekey = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
-    if (my $la = $be->get_field('labelalpha')) {
-      Biber::Config->incr_la_disambiguation($la);
+    if (my $la = $dlist->get_entryfield($citekey, 'labelalpha')) {
+      $dlist->incr_la_disambiguation($la);
     }
   }
 }
@@ -2564,9 +2591,12 @@ sub process_lists {
   my $section = $self->sections->get_section($secnum);
 
   foreach my $list ($self->datalists->get_lists_for_section($secnum)->@*) {
-    my $lrc = $list->get_refcontext;
+    my $lattrs = $list->get_attrs;
     my $ltype = $list->get_type;
     my $lname = $list->get_name;
+
+    # sanitise state - essential in tests which call Biber::prepare() multiple times
+    $list->reset_state;
 
     # Last-ditch fallback in case we still don't have a sorting spec
     $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
@@ -2574,8 +2604,8 @@ sub process_lists {
     $list->set_uniquenametemplatename('global') unless $list->get_uniquenametemplatename;
     $list->set_labelalphanametemplatename('global') unless $list->get_labelalphanametemplatename;
     $list->set_keys([ $section->get_citekeys ]);
-    if ($logger->is_debug()) {# performance tune
-      $logger->debug("Populated datalist '$lname' of type '$ltype' with refcontext '$lrc' in section $secnum with keys: " . join(', ', $list->get_keys));
+    if ($logger->is_debug()) {  # performance tune
+      $logger->debug("Populated datalist '$lname' of type '$ltype' with attributes '$lattrs' in section $secnum with keys: " . join(', ', $list->get_keys));
     }
 
     # Now we check the sorting cache to see if we already have results
@@ -2589,86 +2619,92 @@ sub process_lists {
     # * sortinit data
     # * extra* data
 
-    my $cache_flag = 0;
-    if ($logger->is_debug()) {# performance tune
-      $logger->debug("Checking refcontext cache for refcontext '$lrc'");
+    # my $cache_flag = 0;
+    # if ($logger->is_debug()) {# performance tune
+    #   $logger->debug("Checking datalist cache for datalist with attributes '$lattrs'");
+    # }
+    # foreach my $cacheitem ($section->get_datalist_cache->@*) {
+    #   # This conditional checks for identity of the data elements which constitute
+    #   # a biblatex refcontext since a datalist is conceptually part of a refcontext
+    #   if (Compare($list->get_sortscheme, $cacheitem->[0]) and
+    #       $list->get_sortnamekeyschemename eq $cacheitem->[1] and
+    #       $list->get_labelprefix eq $cacheitem->[2] and
+    #       Compare($list->get_namelistdata, $cacheitem->[10]) and
+    #       Compare($list->get_labelalphadata, $cacheitem->[11])) {
+    #     if ($logger->is_debug()) {# performance tune
+    #       $logger->debug("Found datalist cache entry for datalist with attributes '$lattrs'");
+    #     }
+    #     $list->set_sortnamekeyschemename($cacheitem->[1]);
+    #     $list->set_labelprefix($cacheitem->[2]);
+    #     $list->set_keys($cacheitem->[3]);
+    #     $list->set_sortinitdata($cacheitem->[4]);
+    #     $list->set_extrayeardata($cacheitem->[5]);
+    #     $list->set_extraalphadata($cacheitem->[6]);
+    #     $list->set_extratitledata($cacheitem->[7]);
+    #     $list->set_extratitleyeardata($cacheitem->[8]);
+    #     $list->set_sortdataschema($cacheitem->[9]);
+    #     $list->set_namelistdata($cacheitem->[10]);
+    #     $list->set_labelalphadata($cacheitem->[11]);
+    #     $cache_flag = 1;
+    #     last;
+    #   }
+    # }
+
+    # unless ($cache_flag) {
+    #   if ($logger->is_debug()) {# performance tune
+    #     $logger->debug("No datalist cache entry for datalist with '$lattrs'");
+    #   }
+
+    # A datalist represents a biblatex refcontext
+    # and many things are refcontext specific and so we need to use the right data. For
+    # example labelalphanametemplate and uniquenametemplate can be set per-list and much
+    # processing uses these
+
+    unless (Biber::Config->getoption('tool')) {
+      # Reset these per-list otherwise we increment counters more than once
+      # $list->reset_la_disambiguation;
+      # $list->reset_workuniqueness;
+      # $list->reset_seen_extra;
+      # $list->reset_entryfields;
+
+      # Set this so that uniqueness processing starts
+      $list->set_unul_changed(1);
+
+      # Main processing loop, part 1
+      $self->process_entries_pre($list);
+
+      # Generate uniqueness information
+      $self->uniqueness($list);
     }
-    foreach my $cacheitem ($section->get_refcontext_cache->@*) {
-      # This conditional checks for identity of the data elements which constitute
-      # a biblatex refcontext since a datalist is conceptually part of a refcontext
-      if (Compare($list->get_sortscheme, $cacheitem->[0]) and
-          $list->get_sortnamekeyschemename eq $cacheitem->[1] and
-          $list->get_labelprefix eq $cacheitem->[2] and
-          Compare($list->get_namelistdata, $cacheitem->[10]) and
-          Compare($list->get_labelalphadata, $cacheitem->[11])) {
-        if ($logger->is_debug()) {# performance tune
-          $logger->debug("Found refcontext cache entry for '$lrc'");
-        }
-        $list->set_sortnamekeyschemename($cacheitem->[1]);
-        $list->set_labelprefix($cacheitem->[2]);
-        $list->set_keys($cacheitem->[3]);
-        $list->set_sortinitdata($cacheitem->[4]);
-        $list->set_extrayeardata($cacheitem->[5]);
-        $list->set_extraalphadata($cacheitem->[6]);
-        $list->set_extratitledata($cacheitem->[7]);
-        $list->set_extratitleyeardata($cacheitem->[8]);
-        $list->set_sortdataschema($cacheitem->[9]);
-        $list->set_namelistdata($cacheitem->[10]);
-        $list->set_labelalphadata($cacheitem->[11]);
-        $cache_flag = 1;
-        last;
-      }
+
+    # Generate visible names information for all entries
+    $self->process_visible_names($list);
+
+    unless (Biber::Config->getoption('tool')) {
+      # Main processing loop, part 2
+      $self->process_entries_post($list);
+
+      # Final processing loop
+      $self->process_entries_final($list);
     }
 
-    unless ($cache_flag) {
-      if ($logger->is_debug()) {# performance tune
-        $logger->debug("No refcontext cache entry for '$lrc'");
-      }
+    # Sorting
+    $self->generate_sortdataschema($list); # generate the sort schema information
+    $self->generate_sortinfo($list);       # generate the sort information
+    $self->sort_list($list);               # sort the list
+    $self->generate_contextdata($list) unless Biber::Config->getoption('tool');
 
-      # A datalist represents a biblatex refcontext
-      # and many things are refcontext specific and so we need to use the right data. For
-      # example labelalphanametemplate and uniquenametemplate can be set per-list and much
-      # processing uses these
-
-      unless (Biber::Config->getoption('tool')) {
-        # Reset these per-list otherwise we increment counters more than once
-        Biber::Config->reset_la_disambiguation;
-        Biber::Config->reset_workuniqueness;
-        Biber::Config->reset_seen_extra;
-        $list->reset_listdata;
-        # reset this otherwise uniqueness won't be processed for subsequent datalists
-        Biber::Config->set_unul_changed(1);
-
-        # Main entry processing loop, part 1
-        $self->process_entries_pre($list);
-
-        # Generate uniqueness information
-        $self->uniqueness;
-
-        # Generate visible names information for all entries
-        $self->process_visible_names;
-
-        # Main entry processing loop, part 2
-        $self->process_entries_post($list);
-      }
-
-      # Sorting
-      $self->generate_sortdataschema($list); # generate the sort schema information
-      $self->generate_sortinfo($list);       # generate the sort information
-      $self->sort_list($list);               # sort the list
-      $self->generate_contextdata($list) unless Biber::Config->getoption('tool');
-
-      # Cache the results
-      if ($logger->is_debug()) {# performance tune
-        $logger->debug("Adding refcontext cache entry for '$lrc'");
-      }
-      $section->add_refcontext_cache($list->get_listdata);
-    }
+    # Cache the results
+    # if ($logger->is_debug()) {  # performance tune
+    #   $logger->debug("Adding datalist cache entry for '$lattrs'");
+    # }
+    # $section->add_datalist_cache($list->get_listdata);
+    #    }
 
     # Filtering
     if (my $filters = $list->get_filters) {
       my $flist = [];
-KEYLOOP: foreach my $k ($list->get_keys) {
+    KEYLOOP: foreach my $k ($list->get_keys) {
 
         my $be = $section->bibentry($k);
         foreach my $f ($filters->@*) {
@@ -2682,7 +2718,7 @@ KEYLOOP: foreach my $k ($list->get_keys) {
         }
         push $flist->@*, $k;
       }
-      if ($logger->is_debug()) {# performance tune
+      if ($logger->is_debug()) { # performance tune
         $logger->debug("Keys after filtering list '$lname' in section $secnum: " . join(', ', $flist->@*));
       }
       $list->set_keys($flist); # Now save the sorted list in the list object
@@ -2843,10 +2879,10 @@ sub generate_sortdataschema {
 =cut
 
 sub generate_sortinfo {
-  my ($self, $list) = @_;
+  my ($self, $dlist) = @_;
 
-  foreach my $key ($list->get_keys) {
-    $self->_generatesortinfo($key, $list);
+  foreach my $key ($dlist->get_keys) {
+    $self->_generatesortinfo($key, $dlist);
   }
   return;
 }
@@ -2858,7 +2894,7 @@ sub generate_sortinfo {
 =cut
 
 sub uniqueness {
-  my $self = shift;
+  my ($self, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   # Generate uniqueness information according to this algorithm:
@@ -2884,27 +2920,27 @@ sub uniqueness {
 
   # Generate uniquename information, if requested
   while ('true') {
-    unless (Biber::Config->get_unul_done) {
+    unless ($dlist->get_unul_done) {
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Entering uniquename processing");
       }
-      Biber::Config->set_unul_changed(0); # reset state for global unul changed flag
-      $self->create_uniquename_info;
-      $self->generate_uniquename;
+      $dlist->set_unul_changed(0); # reset state for global unul changed flag
+      $self->create_uniquename_info($dlist);
+      $self->generate_uniquename($dlist);
     }
     else {
       last; # uniquename/uniquelist disambiguation is finished as nothing changed
     }
     # Generate uniquelist information, if requested
     # Always run uniquelist at least once, if requested
-    if ($first_ul_pass or not Biber::Config->get_unul_done) {
+    if ($first_ul_pass or not $dlist->get_unul_done) {
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Entering uniquelist processing");
       }
-      Biber::Config->set_unul_changed(0); # reset state for global unul changed flag
+      $dlist->set_unul_changed(0); # reset state for global unul changed flag
       $first_ul_pass = 0; # Ignore special case when uniquelist has run once
-      $self->create_uniquelist_info;
-      $self->generate_uniquelist;
+      $self->create_uniquelist_info($dlist);
+      $self->generate_uniquelist($dlist);
     }
     else {
       last; # uniquename/uniquelist disambiguation is finished as nothing changed
@@ -2968,14 +3004,14 @@ sub uniqueness {
 =cut
 
 sub create_uniquename_info {
-  my $self = shift;
+  my ($self, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
 
   # Reset uniquename information as we have to generate it
   # again because uniquelist information might have changed
-  Biber::Config->reset_uniquenamecount;
+  $dlist->reset_uniquenamecount;
 
   foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
@@ -2988,12 +3024,14 @@ sub create_uniquename_info {
     }
 
     if (my $lni = $be->get_labelname_info) {
+      my $nl = $be->get_field($lni);
+      my $nlid = $nl->get_id;
 
       # Set the index limit beyond which we don't look for disambiguating information
       my $ul = undef;           # Not set
-      if (defined($be->get_field($lni)->get_uniquelist)) {
+      if (defined($dlist->get_uniquelist($nlid))) {
         # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
-        $ul = $be->get_field($lni)->get_uniquelist;
+        $ul = $dlist->get_uniquelist($nlid);
       }
       my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
       my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
@@ -3010,7 +3048,6 @@ sub create_uniquename_info {
       # would be uniquename = 2 unless even the full name doesn't disambiguate
       # and then it is left at uniquename = 0
 
-      my $nl = $be->get_field($lni);
       my $num_names = $nl->count_names;
       my $names = $nl->names;
 
@@ -3021,7 +3058,8 @@ sub create_uniquename_info {
       my @basenames;
       my @allnames;
 
-      foreach my $name ($names->@*) {
+      foreach my $n ($names->@*) {
+        my $nid = $n->get_id;
         # We need to track two types of uniquename disambiguation here:
         #
         # 1. Information to disambiguate visible names from visible names
@@ -3040,15 +3078,15 @@ sub create_uniquename_info {
         # Uniquelist is not set, a name list is longer than the maxcitenames truncation
         #   and the name appears before the mincitenames truncation
         if ($un == 3 or $un == 4 or
-            ($ul and $name->get_index <= $ul) or
+            ($ul and $n->get_index <= $ul) or
             $morenames or
             $num_names <= $maxcn or
-            $name->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
+            $n->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
 
-          push @truncnames, $name;
+          push @truncnames, $n;
           if ($un == 5 or $un == 6) {
-            push @basenames, $name->get_basenamestring;
-            push @allnames, $name->get_namestring;
+            push @basenames, $dlist->get_basenamestring($nlid, $nid);
+            push @allnames, $dlist->get_namestring($nlid, $nid);
           }
         }
       }
@@ -3065,28 +3103,30 @@ sub create_uniquename_info {
         }
       }
 
-      foreach my $name ($names->@*) {
-        my $basename   = $name->get_basenamestring;
-        my $namestrings = $name->get_namestrings;
+      foreach my $n ($names->@*) {
+        my $nid = $n->get_id;
+        my $basename    = $dlist->get_basenamestring($nlid, $nid);
+        my $namestring  = $dlist->get_namestring($nlid, $nid);
+        my $namestrings = $dlist->get_namestrings($nlid, $nid);
         my $namedisamiguationscope;
-        my $key;
+        my $nskey;
 
         # Disambiguation scope and key depend on the uniquename setting
         if ($un == 1 or $un == 2 or $un == 3 or $un ==4) {
           $namedisamiguationscope = 'global';
-          $key = join("\x{10FFFD}", $name->get_namestrings->@*);
+          $nskey = join("\x{10FFFD}", $namestrings->@*);
         }
         elsif ($un == 5 or $un == 6) {
           $namedisamiguationscope = $min_basename;
-          $key = $min_namestring;
-          $name->set_unmininfo($min_basename);
+          $nskey = $min_namestring;
+          $dlist->set_unmininfo($nlid, $nid, $min_basename);
         }
 
-        if (first {Compare($_, $name)} @truncnames) {
+        if (first {Compare($_, $n)} @truncnames) {
           # Record uniqueness information entry for all name contexts
           # showing that they have been seen for this name key in this name scope
           foreach my $ns ($namestrings->@*) {
-            Biber::Config->add_uniquenamecount($ns, $namedisamiguationscope, $key);
+            $dlist->add_uniquenamecount($ns, $namedisamiguationscope, $nskey);
           }
         }
 
@@ -3094,7 +3134,7 @@ sub create_uniquename_info {
         # names, regardless of visibility (needed to track uniquelist)
         if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
           foreach my $ns ($namestrings->@*) {
-            Biber::Config->add_uniquenamecount_all($ns, $namedisamiguationscope, $key);
+            $dlist->add_uniquenamecount_all($ns, $namedisamiguationscope, $nskey);
           }
         }
       }
@@ -3112,7 +3152,7 @@ sub create_uniquename_info {
 =cut
 
 sub generate_uniquename {
-  my $self = shift;
+  my ($self, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
@@ -3129,15 +3169,17 @@ sub generate_uniquename {
     }
 
     if (my $lni = $be->get_labelname_info) {
-      # Set the index limit beyond which we don't look for disambiguating information
+      my $nl = $be->get_field($lni);
+      my $nlid = $nl->get_id;
 
+      # Set the index limit beyond which we don't look for disambiguating information
       # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
-      my $ul = $be->get_field($lni)->get_uniquelist;
+      my $ul = $dlist->get_uniquelist($nlid);
 
       my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
       my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
 
-      my $nl = $be->get_field($lni);
+
       my $num_names = $nl->count_names;
       my $names = $nl->names;
       # If name list was truncated in bib with "and others", this overrides maxcitenames
@@ -3145,42 +3187,45 @@ sub generate_uniquename {
 
       my @truncnames;
 
-      foreach my $name ($names->@*) {
+      foreach my $n ($names->@*) {
+        my $nid = $n->get_id;
         if ($un == 3 or $un == 4 or
-            ($ul and $name->get_index <= $ul) or
+            ($ul and $n->get_index <= $ul) or
             $morenames or
             $num_names <= $maxcn or
-            $name->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
-          push @truncnames, $name;
+            $n->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
+          push @truncnames, $n;
         }
         else {
           # Set anything now not visible due to uniquelist back to 0
-          $name->reset_uniquename;
+          $dlist->reset_uniquename($nlid, $nid);
         }
       }
 
-      foreach my $name ($names->@*) {
-        my $basename = $name->get_basenamestring;
-        my $namestrings = $name->get_namestrings;
-        my $namedisschema = $name->get_namedisschema;
+      foreach my $n ($names->@*) {
+        my $nid = $n->get_id;
+        my $basename = $dlist->get_basenamestring($nlid, $nid);
+        my $namestrings = $dlist->get_namestrings($nlid, $nid);
+        my $namedisschema = $dlist->get_namedisschema($nlid, $nid);
         my $namescope = 'global'; # default
         if ($un == 5 or $un == 6) {
-          $namescope = $name->get_unmininfo; # $un=5 and 6
+          $namescope = $dlist->get_unmininfo($nlid, $nid); # $un=5 and 6
         }
 
-        if (first {Compare($_, $name)} @truncnames) {
+        if (first {Compare($_, $n)} @truncnames) {
           for (my $i=0; $i<=$namestrings->$#*; $i++) {
             my $ns = $namestrings->[$i];
             my $nss = $namedisschema->[$i];
-            if (Biber::Config->get_numofuniquenames($ns, $namescope) == 1) {
-              $name->set_uniquename($nss);
+            if ($dlist->get_numofuniquenames($ns, $namescope) == 1) {
+              $dlist->set_uniquename($nlid, $nid, $nss);
               # We have found the most general disambiguation schema which disambiguates,
               # skip the rest since the schema array goes from most general to least general
               last;
             }
           }
           # Nothing disambiguates, set to just base of schema
-          $name->set_uniquename($namedisschema->[0]) unless defined($name->get_uniquename);
+          $dlist->set_uniquename($nlid, $nid, $namedisschema->[0])
+            unless defined($dlist->get_uniquename($nlid, $nid));
         }
 
         # As above but not just for visible names (needed for uniquelist)
@@ -3188,15 +3233,16 @@ sub generate_uniquename {
           for (my $i=0; $i<=$namestrings->$#*; $i++) {
             my $ns = $namestrings->[$i];
             my $nss = $namedisschema->[$i];
-            if (Biber::Config->get_numofuniquenames_all($ns, $namescope) == 1) {
-              $name->set_uniquename_all($nss);
+            if ($dlist->get_numofuniquenames_all($ns, $namescope) == 1) {
+              $dlist->set_uniquename_all($nlid, $nid, $nss);
               # We have found the most general disambiguation schema which disambiguates,
               # skip the rest since the schema array goes from most general to least general
               last;
             }
           }
           # Nothing disambiguates, set to just base of schema
-          $name->set_uniquename_all($namedisschema->[0]) unless defined($name->get_uniquename_all);
+          $dlist->set_uniquename_all($nlid, $nid, $namedisschema->[0])
+            unless defined($dlist->get_uniquename_all($nlid, $nid));
         }
       }
     }
@@ -3211,16 +3257,16 @@ sub generate_uniquename {
 =cut
 
 sub create_uniquelist_info {
-  my $self = shift;
+  my ($self, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
 
   # Reset uniquelist information as we have to generate it again because uniquename
   # information might have changed
-  Biber::Config->reset_uniquelistcount;
+  $dlist->reset_uniquelistcount;
 
-  foreach my $citekey ( $section->get_citekeys ) {
+  foreach my $citekey ($section->get_citekeys) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
     my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
@@ -3238,23 +3284,24 @@ sub create_uniquelist_info {
       my $namelist = [];
       my $ulminyear_namelist = [];
 
-      foreach my $name ($nl->names->@*) {
+      foreach my $n ($nl->names->@*) {
 
-        my $basename = $name->get_basenamestring;
-        my $namestrings = $name->get_namestrings;
-        my $namedisschema = $name->get_namedisschema;
+        my $basename = $dlist->get_basenamestring($nl->get_id, $n->get_id);
+        my $namestrings = $dlist->get_namestrings($nl->get_id, $n->get_id);
+        my $namedisschema = $dlist->get_namedisschema($nl->get_id, $n->get_id);
         my $ulminyearflag = 0;
 
         # uniquelist = minyear
         if ($ul == 2) {
           # minyear uniquename, we set based on the max/mincitenames list
           if ($num_names > $maxcn and
-              $name->get_index <= $mincn) {
+              $n->get_index <= $mincn) {
             $ulminyearflag = 1;
           }
         }
 
-        my $unall = $name->get_uniquename_all;
+        my $unall = $dlist->get_uniquename_all($nl->get_id, $n->get_id);
+
         # uniquename is not set so generate uniquelist based on just base name
         if (not defined($unall) or $unall->[0] eq 'base') {
           push $namelist->@*, $basename;
@@ -3270,7 +3317,7 @@ sub create_uniquelist_info {
           }
         }
 
-        Biber::Config->add_uniquelistcount($namelist);
+        $dlist->add_uniquelistcount($namelist);
       }
       # We need to know the list uniqueness counts for the whole list seperately otherwise
       # we will falsely "disambiguate" identical name lists from each other by setting
@@ -3278,11 +3325,13 @@ sub create_uniquelist_info {
       # one count. We therefore need to distinguish counts which are of the final, complete
       # list of names. If there is more than one count for these, (meaning that there are
       # two or more identical name lists), we don't expand them at all as there is no point.
-      Biber::Config->add_uniquelistcount_final($namelist);
+      $dlist->add_uniquelistcount_final($namelist);
 
       # Add count for uniquelist=minyear
       unless (Compare($ulminyear_namelist, [])) {
-        Biber::Config->add_uniquelistcount_minyear($ulminyear_namelist, $be->get_field('labelyear'), $namelist);
+        $dlist->add_uniquelistcount_minyear($ulminyear_namelist,
+                                            $be->get_field('labelyear'),
+                                            $namelist);
       }
     }
   }
@@ -3298,7 +3347,7 @@ sub create_uniquelist_info {
 =cut
 
 sub generate_uniquelist {
-  my $self = shift;
+  my ($self, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
@@ -3320,13 +3369,13 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
       my $namelist = [];
       my $num_names = $nl->count_names;
 
-      foreach my $name ($nl->names->@*) {
+      foreach my $n ($nl->names->@*) {
+        my $basename = $dlist->get_basenamestring($nl->get_id, $n->get_id);
+        my $namestrings = $dlist->get_namestrings($nl->get_id, $n->get_id);
+        my $namedisschema = $dlist->get_namedisschema($nl->get_id, $n->get_id);
 
-        my $basename = $name->get_basenamestring;
-        my $namestrings = $name->get_namestrings;
-        my $namedisschema = $name->get_namedisschema;
+        my $unall = $dlist->get_uniquename_all($nl->get_id, $n->get_id);
 
-        my $unall = $name->get_uniquename_all;
         # uniquename is not set so generate uniquelist based on just base name
         if (not defined($unall) or $unall->[0] eq 'base') {
           push $namelist->@*, $basename;
@@ -3345,8 +3394,8 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
         # to disambiguate from
         if ($ul == 2 and
             $num_names > $maxcn and
-            $name->get_index <= $mincn and
-            Biber::Config->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
+            $n->get_index <= $mincn and
+            $dlist->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
           if ($logger->is_trace()) {# performance tune
             $logger->trace("Not setting uniquelist=minyear for '$citekey'");
           }
@@ -3356,16 +3405,15 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
         # list is unique after this many names so we set uniquelist to this point
         # Even if uniquelist=minyear, we record normal uniquelist information if
         # we didn't skip this key in the test above
-        if (Biber::Config->get_uniquelistcount($namelist) == 1) {
+        if ($dlist->get_uniquelistcount($namelist) == 1) {
           last;
         }
       }
 
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Setting uniquelist for '$citekey' using " . join(',', $namelist->@*));
-        $logger->trace("Uniquelist count for '$citekey' is '" . Biber::Config->get_uniquelistcount_final($namelist) . "'");
       }
-      $nl->set_uniquelist($namelist, $maxcn, $mincn);
+      $dlist->set_uniquelist($nl, $namelist, $maxcn, $mincn);
     }
   }
   return;
@@ -3379,15 +3427,14 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 =cut
 
 sub generate_contextdata {
-  my $self = shift;
-  my $list = shift;
+  my ($self, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $dmh = Biber::Config->get_dm_helpers;
 
   # This loop critically depends on the order of the citekeys which
   # is why we have to do sorting before this
-  foreach my $key ($list->get_keys) {
+  foreach my $key ($dlist->get_keys) {
     my $be = $section->bibentry($key);
     my $bee = $be->get_field('entrytype');
     # Only generate extra* information if skiplab is not set.
@@ -3395,83 +3442,67 @@ sub generate_contextdata {
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
       # extrayear
       if (Biber::Config->getblxoption('labeldateparts', $bee)) {
-        my $nameyear = $be->get_field('nameyear');
-        if (Biber::Config->get_seen_nameyear($nameyear) > 1) {
+        my $nameyear = $dlist->get_entryfield($key, 'nameyear');
+        if ($dlist->get_seen_nameyear($nameyear) > 1) {
           if ($logger->is_trace()) {# performance tune
-            $logger->trace("nameyear for '$nameyear': " . Biber::Config->get_seen_nameyear($nameyear));
+            $logger->trace("nameyear for '$nameyear': " . $dlist->get_seen_nameyear($nameyear));
           }
-          my $v = Biber::Config->incr_seen_extrayear($nameyear);
-          $list->set_extrayeardata_for_key($key, $v);
+          my $v = $dlist->incr_seen_extrayear($nameyear);
+          $dlist->set_extrayeardata_for_key($key, $v);
         }
       }
       # extratitle
       if (Biber::Config->getblxoption('labeltitle', $bee)) {
-        my $nametitle = $be->get_field('nametitle');
-        if (Biber::Config->get_seen_nametitle($nametitle) > 1) {
+        my $nametitle = $dlist->get_entryfield($key, 'nametitle');
+        if ($dlist->get_seen_nametitle($nametitle) > 1) {
           if ($logger->is_trace()) {# performance tune
-            $logger->trace("nametitle for '$nametitle': " . Biber::Config->get_seen_nametitle($nametitle));
+            $logger->trace("nametitle for '$nametitle': " . $dlist->get_seen_nametitle($nametitle));
           }
-          my $v = Biber::Config->incr_seen_extratitle($nametitle);
-          $list->set_extratitledata_for_key($key, $v);
+          my $v = $dlist->incr_seen_extratitle($nametitle);
+          $dlist->set_extratitledata_for_key($key, $v);
         }
       }
       # extratitleyear
       if (Biber::Config->getblxoption('labeltitleyear', $bee)) {
-        my $titleyear = $be->get_field('titleyear');
-        if (Biber::Config->get_seen_titleyear($titleyear) > 1) {
+        my $titleyear = $dlist->get_entryfield($key, 'titleyear');
+        if ($dlist->get_seen_titleyear($titleyear) > 1) {
           if ($logger->is_trace()) {# performance tune
-            $logger->trace("titleyear for '$titleyear': " . Biber::Config->get_seen_titleyear($titleyear));
+            $logger->trace("titleyear for '$titleyear': " . $dlist->get_seen_titleyear($titleyear));
           }
-          my $v = Biber::Config->incr_seen_extratitleyear($titleyear);
-          $list->set_extratitleyeardata_for_key($key, $v);
+          my $v = $dlist->incr_seen_extratitleyear($titleyear);
+          $dlist->set_extratitleyeardata_for_key($key, $v);
         }
       }
 
       # labelalpha
       # This works because labelalpha field is regenerated per-list
       if (Biber::Config->getblxoption('labelalpha', $bee)) {
-        $list->set_labelalphadata_for_key($key, $be->get_field('labelalpha'));
+        $dlist->set_labelalphadata_for_key($key, $dlist->get_entryfield($key, 'labelalpha'));
       }
       # extraalpha
       if (Biber::Config->getblxoption('labelalpha', $bee)) {
-        my $la = $be->get_field('labelalpha');
-        if (Biber::Config->get_la_disambiguation($la) > 1) {
+        my $la = $dlist->get_entryfield($key, 'labelalpha');
+        if ($dlist->get_la_disambiguation($la) > 1) {
           if ($logger->is_trace()) {# performance tune
-            $logger->trace("labelalpha disambiguation for '$la': " . Biber::Config->get_la_disambiguation($la));
+            $logger->trace("labelalpha disambiguation for '$la': " . $dlist->get_la_disambiguation($la));
           }
-          my $v = Biber::Config->incr_seen_extraalpha($la);
-          $list->set_extraalphadata_for_key($key, $v);
+          my $v = $dlist->incr_seen_extraalpha($la);
+          $dlist->set_extraalphadata_for_key($key, $v);
         }
       }
-    }
-
-    # uniquelist
-    # Using defined as 0 is a valid per-entry override of a global/per-entry setting
-    if (defined(Biber::Config->getblxoption('uniquelist', $bee, $key))) {
-      my $nldata;
-      foreach my $namefield ($dmh->{namelists}->@*) {
-        if (my $nl = $be->get_field($namefield)) {
-          $nldata->{$nl->get_id}{ul} = $nl->get_uniquelist;
-        }
-      }
-      $list->set_namelistdata_for_key($key, $nldata);
     }
 
     # uniquename
     # Using defined as 0 is a valid per-entry override of a global/per-entry setting
-    # Must come after uniquelist above as this sets the namelistdata with uniqueist information
     if (defined(Biber::Config->getblxoption('uniquename', $bee, $key))) {
-      my $nldata = $list->get_namelistdata_for_key($key);
-
       foreach my $namefield ($dmh->{namelists}->@*) {
         if (my $nl = $be->get_field($namefield)) {
+          my $nlid = $nl->get_id;
           foreach my $n ($nl->names->@*) {
-            my $uniquename = $n->get_uniquename;
-            my $namedisschema = $n->get_namedisschema;
-            if (defined($uniquename)) {
-              $nldata->{$nl->get_id}{un}{$n->get_id}{summary} = $n->get_uniquename_summary;
-              $nldata->{$nl->get_id}{un}{$n->get_id}{part} = $uniquename->[0];
-            }
+            my $nid = $n->get_id;
+            my $uniquename = $dlist->get_uniquename($nlid, $nid);
+            my $namedisschema = $dlist->get_namedisschema($nlid, $nid);
+
             # Construct per-namepart uniquename value
             my %pnun;
             for (my $i=0; $i<=$namedisschema->$#*; $i++) {
@@ -3488,12 +3519,11 @@ sub generate_contextdata {
             foreach my $np ($n->get_nameparts) {
               my $npun = $UNIQUENAME_VALUES{$pnun{$np} // 'none'};
               $npun //= 0;
-              $nldata->{$nl->get_id}{un}{$n->get_id}{parts}{$np} = $npun;
+              $dlist->set_unparts($nlid, $nid, $np, $npun);
             }
           }
         }
       }
-      $list->set_namelistdata_for_key($key, $nldata);
     }
   }
   return;
@@ -3507,26 +3537,16 @@ sub generate_contextdata {
 =cut
 
 sub generate_singletitle {
-  my $self = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
+  my $be = $bibentries->entry($citekey);
 
-  foreach my $citekey ( $section->get_citekeys ) {
-    my $be = $bibentries->entry($citekey);
-    if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))) {
-      if ($be->get_field('seenname') and
-          Biber::Config->get_seenname($be->get_field('seenname')) < 2 ) {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Setting singletitle for '$citekey'");
-        }
-        $be->set_field('singletitle', 1);
-      }
-      else {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Not setting singletitle for '$citekey'");
-        }
-      }
+  if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))) {
+    my $sn = $dlist->get_entryfield($citekey, 'seenname');
+    if (defined($sn) and $dlist->get_seenname($sn) < 2 ) {
+      $dlist->set_entryfield($citekey, 'singletitle', 1);
     }
   }
   return;
@@ -3540,26 +3560,16 @@ sub generate_singletitle {
 =cut
 
 sub generate_uniquetitle {
-  my $self = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
+  my $be = $bibentries->entry($citekey);
 
-  foreach my $citekey ( $section->get_citekeys ) {
-    my $be = $bibentries->entry($citekey);
-    if (Biber::Config->getblxoption('uniquetitle', $be->get_field('entrytype'))) {
-      if ($be->get_field('seentitle') and
-          Biber::Config->get_seentitle($be->get_field('seentitle')) < 2 ) {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Setting uniquetitle for '$citekey'");
-        }
-        $be->set_field('uniquetitle', 1);
-      }
-      else {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Not setting uniquetitle for '$citekey'");
-        }
-      }
+  if (Biber::Config->getblxoption('uniquetitle', $be->get_field('entrytype'))) {
+    my $ut = $dlist->get_entryfield($citekey, 'seentitle');
+    if (defined($ut) and $dlist->get_seentitle($ut) < 2 ) {
+      $dlist->set_entryfield($citekey, 'uniquetitle', 1);
     }
   }
   return;
@@ -3573,26 +3583,16 @@ sub generate_uniquetitle {
 =cut
 
 sub generate_uniquebaretitle {
-  my $self = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
 
-  foreach my $citekey ( $section->get_citekeys ) {
-    my $be = $bibentries->entry($citekey);
-    if (Biber::Config->getblxoption('uniquebaretitle', $be->get_field('entrytype'))) {
-      if ($be->get_field('seenbaretitle') and
-          Biber::Config->get_seenbaretitle($be->get_field('seenbaretitle')) < 2 ) {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Setting uniquebaretitle for '$citekey'");
-        }
-        $be->set_field('uniquebaretitle', 1);
-      }
-      else {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Not setting uniquebaretitle for '$citekey'");
-        }
-      }
+  my $be = $bibentries->entry($citekey);
+  if (Biber::Config->getblxoption('uniquebaretitle', $be->get_field('entrytype'))) {
+    my $ubt = $dlist->get_entryfield($citekey, 'seenbaretitle');
+    if (defined($ubt) and $dlist->get_seenbaretitle($ubt) < 2 ) {
+      $dlist->set_entryfield($citekey, 'uniquebaretitle', 1);
     }
   }
   return;
@@ -3606,25 +3606,23 @@ sub generate_uniquebaretitle {
 =cut
 
 sub generate_uniquework {
-  my $self = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
 
-  foreach my $citekey ( $section->get_citekeys ) {
-    my $be = $bibentries->entry($citekey);
-    if (Biber::Config->getblxoption('uniquework', $be->get_field('entrytype'))) {
-      if ($be->get_field('seenwork') and
-          Biber::Config->get_seenwork($be->get_field('seenwork')) < 2 ) {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Setting uniquework for '$citekey'");
-        }
-        $be->set_field('uniquework', 1);
+  my $be = $bibentries->entry($citekey);
+  if (Biber::Config->getblxoption('uniquework', $be->get_field('entrytype'))) {
+    if ($dlist->get_entryfield($citekey, 'seenwork') and
+        $dlist->get_seenwork($dlist->get_entryfield($citekey, 'seenwork')) < 2 ) {
+      if ($logger->is_trace()) { # performance tune
+        $logger->trace("Setting uniquework for '$citekey'");
       }
-      else {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Not setting uniquework for '$citekey'");
-        }
+      $dlist->set_entryfield($citekey, 'uniquework', 1);
+    }
+    else {
+      if ($logger->is_trace()) { # performance tune
+        $logger->trace("Not setting uniquework for '$citekey'");
       }
     }
   }
@@ -3639,25 +3637,23 @@ sub generate_uniquework {
 =cut
 
 sub generate_uniquepa {
-  my $self = shift;
+  my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
 
-  foreach my $citekey ( $section->get_citekeys ) {
-    my $be = $bibentries->entry($citekey);
-    if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
-      if ($be->get_field('seenprimaryauthor') and
-          Biber::Config->get_seenpa($be->get_field('seenprimaryauthor')) < 2 ) {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Setting uniqueprimaryauthor for '$citekey'");
-        }
-        $be->set_field('uniqueprimaryauthor', 1);
+  my $be = $bibentries->entry($citekey);
+  if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
+    if ($dlist->get_entryfield($citekey, 'seenprimaryauthor') and
+        $dlist->get_seenpa($dlist->get_entryfield($citekey, 'seenprimaryauthor')) < 2 ) {
+      if ($logger->is_trace()) { # performance tune
+        $logger->trace("Setting uniqueprimaryauthor for '$citekey'");
       }
-      else {
-        if ($logger->is_trace()) {# performance tune
-          $logger->trace("Not setting uniqueprimaryauthor for '$citekey'");
-        }
+      $dlist->set_entryfield($citekey, 'uniqueprimaryauthor', 1);
+    }
+    else {
+      if ($logger->is_trace()) { # performance tune
+        $logger->trace("Not setting uniqueprimaryauthor for '$citekey'");
       }
     }
   }
@@ -3672,14 +3668,13 @@ sub generate_uniquepa {
 =cut
 
 sub sort_list {
-  my $self = shift;
-  my $list = shift;
-  my $sortscheme = $list->get_sortscheme;
-  my $lsds  = $list->get_sortdataschema;
-  my @keys = $list->get_keys;
-  my $lssn = $list->get_sortschemename;
-  my $ltype = $list->get_type;
-  my $lname = $list->get_name;
+  my ($self, $dlist) = @_;
+  my $sortscheme = $dlist->get_sortscheme;
+  my $lsds  = $dlist->get_sortdataschema;
+  my @keys = $dlist->get_keys;
+  my $lssn = $dlist->get_sortschemename;
+  my $ltype = $dlist->get_type;
+  my $lname = $dlist->get_name;
   my $llocale = locale2bcp47($sortscheme->{locale} || Biber::Config->getblxoption('sortlocale'));
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
@@ -3693,7 +3688,7 @@ sub sort_list {
     }
     $logger->debug("Keys before sort:\n");
     foreach my $k (@keys) {
-      $logger->debug("$k => " . $list->get_sortdata_for_key($k)->[0]);
+      $logger->debug("$k => " . $dlist->get_sortdata_for_key($k)->[0]);
     }
   }
 
@@ -3803,8 +3798,8 @@ sub sort_list {
     my @d;
     my $key = $keys[$_];
     # Loop over all sorting fields
-    for (my $i=0; $i<=$#{$list->get_sortdata_for_key($key)->[1]}; $i++) {
-      my $sortfield = $list->get_sortdata_for_key($key)->[1][$i];
+    for (my $i=0; $i<=$#{$dlist->get_sortdata_for_key($key)->[1]}; $i++) {
+      my $sortfield = $dlist->get_sortdata_for_key($key)->[1][$i];
       # Resolve real zeros back again
       if ($lsds->[$i]{int}) {
         # There is special cases to be careful of here in that "final" elements
@@ -3837,11 +3832,11 @@ sub sort_list {
   if ($logger->is_debug()) {# performance tune for large @keys
     $logger->debug("Keys after sort:\n");
     foreach my $k (@keys) {
-      $logger->debug("$k => " . $list->get_sortdata_for_key($k)->[0]);
+      $logger->debug("$k => " . $dlist->get_sortdata_for_key($k)->[0]);
     }
   }
 
-  $list->set_keys([ @keys ]);
+  $dlist->set_keys([ @keys ]);
 
   return;
 }
@@ -3904,7 +3899,7 @@ sub prepare {
 
     $logger->info("Processing section $secnum");
 
-    $section->reset_caches;              # Reset the the section caches (sorting, label etc.)
+    $section->reset_caches;              # Reset the the section caches
     Biber::Config->_init;                # (re)initialise Config object
     $self->set_current_section($secnum); # Set the section number we are working on
     $self->preprocess_options;           # Preprocess any options
@@ -3918,12 +3913,8 @@ sub prepare {
     $self->process_interentry;           # Process crossrefs/xrefs etc.
     $self->validate_datamodel;           # Check against data model
     $self->postprocess_sets;             # Add options to set members etc.
-    $self->process_lists;                # Process the output lists (sort and filtering)
-    $self->generate_singletitle;         # Generate singletitle field if requested
-    $self->generate_uniquetitle;         # Generate uniquetitle field if requested
-    $self->generate_uniquebaretitle;     # Generate uniquebaretitle field if requested
-    $self->generate_uniquework;          # Generate uniquework field if requested
-    $self->generate_uniquepa;            # Generate uniqueprimaryauthor if requested
+    $self->process_entries_static;       # Generate static entry data not depedent on lists
+    $self->process_lists;                # Process the output lists
     $out->create_output_section;         # Generate and push the section output into the
                                          # output object ready for writing
   }
@@ -3954,8 +3945,6 @@ sub prepare_tool {
   $self->set_current_section($secnum); # Set the section number we are working on
   $self->preprocess_options;           # Preprocess any options
   $self->fetch_data;      # Fetch cited key and dependent data from sources
-
-  $self->process_visible_names;# Generate visible names information for all entries
 
   if (Biber::Config->getoption('output_resolve_xdata') or
       Biber::Config->getoption('output_resolve_crossrefs')) {

@@ -5,6 +5,7 @@ use warnings;
 
 use Biber::Utils;
 use Biber::Constants;
+use Data::Compare;
 use Digest::MD5 qw( md5_hex );
 use List::Util qw( first );
 
@@ -51,6 +52,1055 @@ sub get_section {
   return $self->{section};
 }
 
+=head2 reset_state
+
+    Resets all state data. Used mainly in tests which call Biber::prepare()
+    multiple times without re-creating datalists
+
+=cut
+
+sub reset_state {
+  shift->{state} = {};
+  return;
+}
+
+
+=head2 incr_seenpa
+
+    Increment the count of occurrences of a primary author family name
+
+=cut
+
+sub incr_seenpa {
+  my ($self, $identifier) = @_;
+  $self->{state}{seenpa}{$identifier}++;
+  return;
+}
+
+
+=head2 get_seenpa
+
+    Get the count of occurrences of a primary author family name
+
+=cut
+
+sub get_seenpa {
+  my ($self, $identifier) = @_;
+  return $self->{state}{seenpa}{$identifier};
+}
+
+=head2 reset_entryfields
+
+    Resets all entryfield data in a list
+
+=cut
+
+sub reset_entryfields {
+  my $self = shift;
+  $self->{state}{fields} = {};
+  return;
+}
+
+
+=head2 get_entryfield
+
+    Retrieves per-list datafield information for an entry
+
+=cut
+
+sub get_entryfield {
+  my ($self, $citekey, $f) = @_;
+  return $self->{state}{fields}{$citekey}{$f};
+}
+
+=head2 set_entryfield
+
+    Records per-list datafield information for an entry
+
+=cut
+
+sub set_entryfield {
+  my ($self, $citekey, $f, $v) = @_;
+  $self->{state}{fields}{$citekey}{$f} = $v;
+  return;
+}
+
+
+
+=head2 add_uniquenamecount
+
+    Add a name to the list of name contexts which have the name in it
+    (only called for visible names)
+
+=cut
+
+sub add_uniquenamecount {
+  my ($self, $name, $namecontext, $key) = @_;
+  $self->{state}{uniquenamecount}{$name}{$namecontext}{$key}++;
+  return;
+}
+
+=head2 add_uniquenamecount_all
+
+    Add a name to the list of name contexts which have the name in it
+    (called for all names)
+
+=cut
+
+sub add_uniquenamecount_all {
+  my ($self, $name, $namecontext, $key) = @_;
+  $self->{state}{uniquenamecount_all}{$name}{$namecontext}{$key}++;
+  return;
+}
+
+
+=head2 get_uniquelistcount
+
+    Get the number of uniquelist entries for a (possibly partial) list
+
+=cut
+
+sub get_uniquelistcount {
+  my ($self, $namelist) = @_;
+  return $self->{state}{uniquelistcount}{global}{join("\x{10FFFD}", $namelist->@*)};
+}
+
+=head2 add_uniquelistcount
+
+    Incremenent the count for a list part to the data for a name
+
+=cut
+
+sub add_uniquelistcount {
+  my ($self, $namelist) = @_;
+  $self->{state}{uniquelistcount}{global}{join("\x{10FFFD}", $namelist->@*)}++;
+  return;
+}
+
+
+=head2 add_uniquelistcount_final
+
+    Incremenent the count for a complete list to the data for a name
+
+=cut
+
+sub add_uniquelistcount_final {
+  my ($self, $namelist) = @_;
+  $self->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", $namelist->@*)}++;
+  return;
+}
+
+
+=head2 add_uniquelistcount_minyear
+
+    Incremenent the count for a list and year to the data for a name
+    Used to track uniquelist = minyear
+
+=cut
+
+sub add_uniquelistcount_minyear {
+  my ($self, $minyearnamelist, $year, $namelist) = @_;
+  # Allow year a default in case labelname is undef
+  $self->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", $minyearnamelist->@*)}{$year // '0'}{join("\x{10FFFD}", $namelist->@*)}++;
+  return;
+}
+
+=head2 get_uniquelistcount_minyear
+
+    Get the count for a list and year to the data for a name
+    Used to track uniquelist = minyear
+
+=cut
+
+sub get_uniquelistcount_minyear {
+  my ($self, $minyearnamelist, $year) = @_;
+  return scalar keys $self->{state}{uniquelistcount}{minyear}{join("\x{10FFFD}", $minyearnamelist->@*)}{$year}->%*;
+}
+
+=head2 get_uniquelistcount_final
+
+    Get the number of uniquelist entries for a full list
+
+=cut
+
+sub get_uniquelistcount_final {
+  my ($self, $namelist) = @_;
+  my $c = $self->{state}{uniquelistcount}{global}{final}{join("\x{10FFFD}", $namelist->@*)};
+  return $c // 0;
+}
+
+
+
+
+=head2 reset_uniquelistcount
+
+    Reset the count for list parts and complete lists
+
+=cut
+
+sub reset_uniquelistcount {
+  my $self = shift;
+  $self->{state}{uniquelistcount} = {};
+  return;
+}
+
+
+=head2 reset_uniquenamecount
+
+    Reset the list of names which have the name part in it
+
+=cut
+
+sub reset_uniquenamecount {
+  my $self = shift;
+  $self->{state}{uniquenamecount} = {};
+  $self->{state}{uniquenamecount_all} = {};
+  return;
+}
+
+=head2 get_basenamestring
+
+  Get a basenamestring for a particular name
+
+=cut
+
+sub get_basenamestring {
+  my ($self, $nlid, $nid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{$nid}{basenamestring};
+}
+
+=head2 set_basenamestring
+
+  Set a basenamestring for a particular name
+
+=cut
+
+sub set_basenamestring {
+  my ($self, $nlid, $nid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{$nid}{basenamestring} = $s;
+  return;
+}
+
+=head2 get_namestring
+
+  Get a namestring for a particular name
+
+=cut
+
+sub get_namestring {
+  my ($self, $nlid, $nid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{$nid}{namestring};
+}
+
+=head2 set_namestring
+
+  Set a namestring for a particular name
+
+=cut
+
+sub set_namestring {
+  my ($self, $nlid, $nid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{$nid}{namestring} = $s;
+  return;
+}
+
+=head2 get_namestrings
+
+  Get namestrings for a particular name
+
+=cut
+
+sub get_namestrings {
+  my ($self, $nlid, $nid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{$nid}{namestrings};
+}
+
+=head2 set_namestrings
+
+  Set namestrings for a particular name
+
+=cut
+
+sub set_namestrings {
+  my ($self, $nlid, $nid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{$nid}{namestrings} = $s;
+  return;
+}
+
+=head2 get_namehash
+
+  Get hash for a name
+
+=cut
+
+sub get_namehash {
+  my ($self, $nlid, $nid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{$nid}{hash};
+}
+
+=head2 set_namehash
+
+  Set hash for a name
+
+=cut
+
+sub set_namehash {
+  my ($self, $nlid, $nid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{$nid}{hash} = $s;
+  return;
+}
+
+
+=head2 get_unmininfo
+
+  Get uniquename minimalness info for a name
+
+=cut
+
+sub get_unmininfo {
+  my ($self, $nlid, $nid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{$nid}{unmininfo};
+}
+
+=head2 set_unmininfo
+
+  Set uniquename minimalness info for a name
+
+=cut
+
+sub set_unmininfo {
+  my ($self, $nlid, $nid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{$nid}{unmininfo} = $s;
+  return;
+}
+
+
+=head2 get_namedisschema
+
+  Get a name disambiguation schema for a name
+
+=cut
+
+sub get_namedisschema {
+  my ($self, $nlid, $nid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{$nid}{namedisschema};
+}
+
+=head2 set_namedisschema
+
+  Set a name disambiguation schema for a name
+
+=cut
+
+sub set_namedisschema {
+  my ($self, $nlid, $nid, $s) = @_;
+  my $namestrings = $self->{state}{namelistdata}{$nlid}{$nid}{namestrings};
+
+  for (my $i=0;$i<=$s->$#*;$i++) {
+    my $se = $s->[$i];
+    # make these explicit for faster lookup since they are static
+    if ($se->[0] eq 'base') {
+      $self->{state}{namelistdata}{$nlid}{$nid}{basenamestring} = $namestrings->[$i];
+      $self->{state}{namelistdata}{$nlid}{$nid}{basenamestringparts} = $se->[1];
+    }
+  }
+  $self->{state}{namelistdata}{$nlid}{$nid}{namedisschema} = $s;
+  return;
+}
+
+
+=head2 get_unsummary
+
+  Get legacy uniquename summary for a name
+
+=cut
+
+sub get_unsummary {
+  my ($self, $nlid, $nid) = @_;
+  my $un = $self->{state}{namelistdata}{$nlid}{$nid}{un};
+  return undef unless defined($un);
+  if ($un->[1] eq 'none' or $un->[0] eq 'base') {
+    return 0;
+  }
+  elsif ($un->[1] eq 'init') {
+    return 1;
+  }
+  elsif ($un->[1] eq 'full' or $un->[1] eq 'fullonly') {
+    return 2;
+  }
+  return 0;
+}
+
+=head2 get_unpart
+
+  Get uniquename summary part for a name
+
+=cut
+
+sub get_unpart {
+  my ($self, $nlid, $nid) = @_;
+  my $un = $self->{state}{namelistdata}{$nlid}{$nid}{un};
+  return undef unless defined($un);
+  return $un->[0]
+}
+
+=head2 get_unparts
+
+  Get uniquename parts for a name
+
+=cut
+
+sub get_unparts {
+  my ($self, $nlid, $nid, $np) = @_;
+  return $self->{state}{namelistdata}{$nlid}{$nid}{unparts}{$np};
+}
+
+=head2 set_unparts
+
+  Set uniquename parts for a name
+
+=cut
+
+sub set_unparts {
+  my ($self, $nlid, $nid, $np, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{$nid}{unparts}{$np} = $s;
+  return;
+}
+
+
+
+=head2 _get_uniquename
+
+    Get the list of name contexts which contain a name
+    Mainly for use in tests
+
+=cut
+
+sub _get_uniquename {
+  my ($self, $name, $namecontext) = @_;
+  my @list = sort keys $self->{state}{uniquenamecount}{$name}{$namecontext}->%*;
+  return \@list;
+}
+
+
+=head2 get_uniquename
+
+  Get uniquename for a name
+
+=cut
+
+sub get_uniquename {
+  my ($self, $nlid, $nid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{$nid}{un};
+}
+
+=head2 set_uniquename
+
+  Set uniquename for a name
+
+=cut
+
+sub set_uniquename {
+  my ($self, $nlid, $nid, $s) = @_;
+
+  my $currval = $self->{state}{namelistdata}{$nlid}{$nid}{un};
+  # Set modified flag to positive if we changed something
+  if (not defined($currval) or not Compare($currval, $s)) {
+    $self->set_unul_changed(1);
+  }
+  $self->{state}{namelistdata}{$nlid}{$nid}{un} = $s;
+  return;
+}
+
+=head2 reset_uniquename
+
+  Reset uniquename for a name
+
+=cut
+
+sub reset_uniquename {
+  my ($self, $nlid, $nid) = @_;
+  $self->{state}{namelistdata}{$nlid}{$nid}{un} = ['base', $self->{state}{namelistdata}{$nlid}{$nid}{basenamestringparts}];
+  return;
+}
+
+=head2 get_uniquename_all
+
+  Get uniquename for a name, regardless of visibility
+
+=cut
+
+sub get_uniquename_all {
+  my ($self, $nlid, $nid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{$nid}{unall};
+}
+
+=head2 set_uniquename_all
+
+  Set uniquename for a name, regardless of visibility
+
+=cut
+
+sub set_uniquename_all {
+  my ($self, $nlid, $nid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{$nid}{unall} = $s;
+  return;
+}
+
+
+
+
+=head2 count_uniquelist
+
+    Count the names in a string used to determine uniquelist.
+
+=cut
+
+sub count_uniquelist {
+  my ($self, $namelist) = @_;
+  return $namelist->$#* + 1;
+}
+
+=head2 get_uniquelist
+
+  Gets a uniquelist setting for a namelist
+
+=cut
+
+sub get_uniquelist {
+  my ($self, $nlid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{ul};
+}
+
+=head2 set_uniquelist
+
+  Sets a uniquelist setting for a namelist
+
+=cut
+
+sub set_uniquelist {
+  my ($self, $nl, $namelist, $maxcn, $mincn) = @_;
+  my $nlid = $nl->get_id;
+  my $uniquelist = $self->count_uniquelist($namelist);
+  my $num_names = $nl->count_names;
+  my $currval = $self->{state}{namelistdata}{$nlid}{ul};
+
+  # Set modified flag to positive if we changed something
+  if (not defined($currval) or $currval != $uniquelist) {
+    $self->set_unul_changed(1);
+  }
+
+  # Special case $uniquelist <=1 is meaningless
+  return if $uniquelist <= 1;
+
+  # Don't set uniquelist unless the list is longer than maxcitenames as it was therefore
+  # never truncated to mincitenames in the first place and uniquelist is a "local mincitenames"
+  return unless $num_names > $maxcn;
+
+  # No disambiguation needed if uniquelist is <= mincitenames as this makes no sense
+  # since it implies that disambiguation beyond mincitenames was needed.
+  # This doesn't apply when the list length is mincitenames as maxmanes therefore
+  # (since it can't be less than mincitenames) could also be the same as the list length
+  # and this is a special case where we need to preserve uniquelist (see comments in
+  # create_uniquelist_info())
+  # $uniquelist cannot be undef or 0 either since every list occurs at least once.
+  # This guarantees that uniquelist, when set, is >1 because mincitenames cannot
+  # be <1
+  return if $uniquelist <= $mincn and not $mincn == $num_names;
+
+  # Special case
+  # No point disambiguating with uniquelist lists which have the same count
+  # for the complete list as this means they are the same list. So, if this
+  # is the case, don't set uniquelist at all.
+  # BUT, this only applies if there is nothing else which these identical lists
+  # need disambiguating from so check if there are any other lists which differ
+  # up to any index. If there is such a list, set uniquelist using that index.
+
+  # if final count > 1 (identical lists)
+  if ($self->get_uniquelistcount_final($namelist) > 1) {
+    # index where this namelist begins to differ from any other
+    # Can't be 0 as that means it begins differently in which case $index is undef
+    my $index = $self->namelist_differs_index($namelist);
+    return unless $index;
+    # Now we know that some disambiguation is needed from other similar list(s)
+    $uniquelist = $index+1;# convert zero-based index into 1-based uniquelist value
+  }
+  # this is an elsif because for final count > 1, we are setting uniquelist and don't
+  # want to mess about with it any more
+  elsif ($num_names > $uniquelist and
+         not $self->namelist_differs_nth($namelist, $uniquelist)) {
+    # If there are more names than uniquelist, reduce it by one unless
+    # there is another list which differs at uniquelist and is at least as long
+    # so we get:
+    #
+    # AAA and BBB and CCC
+    # AAA and BBB and CCC et al
+    #
+    # instead of
+    #
+    # AAA and BBB and CCC
+    # AAA and BBB and CCC and DDD et al
+    #
+    # BUT, we also want
+    #
+    # AAA and BBB and CCC
+    # AAA and BBB and CCC and DDD et al
+    # AAA and BBB and CCC and EEE et al
+
+    $uniquelist--;
+  }
+
+  $self->{state}{namelistdata}{$nlid}{ul} = $uniquelist;
+  return;
+}
+
+=head2 get_visible_cite
+
+  Gets citation name list visibility
+
+=cut
+
+sub get_visible_cite {
+  my ($self, $nlid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{viscite};
+}
+
+=head2 set_visible_cite
+
+  Gets citation name list visibility
+
+=cut
+
+sub set_visible_cite {
+  my ($self, $nlid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{viscite} = $s;
+  return;
+}
+
+=head2 get_visible_bib
+
+  Gets bib name list visibility
+
+=cut
+
+sub get_visible_bib {
+  my ($self, $nlid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{visbib};
+}
+
+=head2 set_visible_bib
+
+  Gets bib name list visibility
+
+=cut
+
+sub set_visible_bib {
+  my ($self, $nlid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{visbib} = $s;
+  return;
+}
+
+=head2 get_visible_alpha
+
+  Gets alpha name list visibility
+
+=cut
+
+sub get_visible_alpha {
+  my ($self, $nlid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{visalpha};
+}
+
+=head2 set_visible_alpha
+
+  Gets alpha name list visibility
+
+=cut
+
+sub set_visible_alpha {
+  my ($self, $nlid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{visalpha} = $s;
+  return;
+}
+
+=head2 get_numofuniquenames
+
+    Get the number of uniquenames entries for a visible name
+
+=cut
+
+sub get_numofuniquenames {
+  my ($self, $name, $namecontext) = @_;
+  return scalar keys $self->{state}{uniquenamecount}{$name}{$namecontext}->%*;
+}
+
+=head2 get_numofuniquenames_all
+
+    Get the number of uniquenames entries for a name
+
+=cut
+
+sub get_numofuniquenames_all {
+  my ($self, $name, $namecontext) = @_;
+  return scalar keys $self->{state}{uniquenamecount_all}{$name}{$namecontext}->%*;
+}
+
+=head2 get_unul_done
+
+    Return a boolean saying whether uniquenename+uniquelist processing is finished
+
+=cut
+
+sub get_unul_done {
+  my $self = shift;
+  return $self->{unulchanged} ? 0 : 1;
+}
+
+=head2 set_unul_changed
+
+    Set a boolean saying whether uniquename+uniquelist has changed
+
+=cut
+
+sub set_unul_changed {
+  my ($self, $val) = @_;
+  $self->{unulchanged} = $val;
+  return;
+}
+
+
+
+
+=head2 reset_seen_extra
+
+    Reset the counters for extra*
+
+=cut
+
+sub reset_seen_extra {
+  my $self = shift;
+  $self->{state}{seen_extrayear} = {};
+  $self->{state}{seen_extratitle} = {};
+  $self->{state}{seen_extratitleyear} = {};
+  $self->{state}{seen_extraalpha} = {};
+  $self->{state}{seen_nameyear} = {};
+  $self->{state}{seen_nametitle} = {};
+  $self->{state}{seen_titleyear} = {};
+  return;
+}
+
+=head2 incr_seen_extrayear
+
+    Increment and return the counter for extrayear
+
+=cut
+
+sub incr_seen_extrayear {
+  my ($self, $ey) = @_;
+  return ++$self->{state}{seen_extrayear}{$ey};
+}
+
+=head2 incr_seen_extratitle
+
+    Increment and return the counter for extratitle
+
+=cut
+
+sub incr_seen_extratitle {
+  my ($self, $et) = @_;
+  return ++$self->{state}{seen_extratitle}{$et};
+}
+
+=head2 incr_seen_extratitleyear
+
+    Increment and return the counter for extratitleyear
+
+=cut
+
+sub incr_seen_extratitleyear {
+  my ($self, $ety) = @_;
+  return ++$self->{state}{seen_extratitleyear}{$ety};
+}
+
+
+=head2 incr_seen_extraalpha
+
+    Increment and return the counter for extraalpha
+
+=cut
+
+sub incr_seen_extraalpha {
+  my ($self, $ea) = @_;
+  return ++$self->{state}{seen_extraalpha}{$ea};
+}
+
+
+=head2 get_seen_nameyear
+
+    Get the count of an labelname/labelyear combination for tracking
+    extrayear. It uses labelyear plus name as we need to disambiguate
+    entries with different labelyear (like differentiating 1984--1986 from
+    just 1984)
+
+=cut
+
+sub get_seen_nameyear {
+  my ($self, $ny) = @_;
+  return $self->{state}{seen_nameyear}{$ny} // 0;
+}
+
+=head2 incr_seen_nameyear
+
+    Increment the count of an labelname/labelyear combination for extrayear
+
+    We pass in the name and year strings separately as we have to
+    be careful and only increment this counter beyond 1 if there is
+    a name component. Otherwise, extrayear gets defined for all
+    entries with no name but the same year etc.
+
+=cut
+
+sub incr_seen_nameyear {
+  my ($self, $ns, $ys) = @_;
+  my $tmp = "$ns,$ys";
+  # We can always increment this to 1
+  unless (exists($self->{state}{seen_nameyear}{$tmp})) {
+    $self->{state}{seen_nameyear}{$tmp}++;
+  }
+  # But beyond that only if we have a labelname in the entry since
+  # this counter is used to create extrayear which doesn't mean anything for
+  # entries with no name
+  # We allow empty year so that we generate extrayear for the same name with no year
+  # so we can do things like "n.d.-a", "n.d.-b" etc.
+  else {
+    if ($ns) {
+      $self->{state}{seen_nameyear}{$tmp}++;
+    }
+  }
+  return;
+}
+
+
+=head2 get_seen_nametitle
+
+    Get the count of an labelname/labeltitle combination for tracking
+    extratitle.
+
+=cut
+
+sub get_seen_nametitle {
+  my ($self, $nt) = @_;
+  return $self->{state}{seen_nametitle}{$nt} // 0;
+}
+
+=head2 incr_seen_nametitle
+
+    Increment the count of an labelname/labeltitle combination for extratitle
+
+    We pass in the name and year strings separately as we have to
+    be careful and only increment this counter beyond 1 if there is
+    a title component. Otherwise, extratitle gets defined for all
+    entries with no title.
+
+=cut
+
+sub incr_seen_nametitle {
+  my ($self, $ns, $ts) = @_;
+  my $tmp = "$ns,$ts";
+  # We can always increment this to 1
+  unless ($self->{state}{seen_nametitle}{$tmp}) {
+    $self->{state}{seen_nametitle}{$tmp}++;
+  }
+  # But beyond that only if we have a labeltitle in the entry since
+  # this counter is used to create extratitle which doesn't mean anything for
+  # entries with no title
+  else {
+    if ($ts) {
+      $self->{state}{seen_nametitle}{$tmp}++;
+    }
+  }
+  return;
+}
+
+=head2 get_seen_titleyear
+
+    Get the count of an labeltitle/labelyear combination for tracking
+    extratitleyear
+
+=cut
+
+sub get_seen_titleyear {
+  my ($self, $ty) = @_;
+  return $self->{state}{seen_titleyear}{$ty} // 0;
+}
+
+=head2 incr_seen_titleyear
+
+    Increment the count of an labeltitle/labelyear combination for extratitleyear
+
+    We pass in the title and year strings separately as we have to
+    be careful and only increment this counter beyond 1 if there is
+    a title component. Otherwise, extratitleyear gets defined for all
+    entries with no title.
+
+=cut
+
+sub incr_seen_titleyear {
+  my ($self, $ts, $ys) = @_;
+  my $tmp = "$ts,$ys";
+  # We can always increment this to 1
+  unless ($self->{state}{seen_titleyear}{$tmp}) {
+    $self->{state}{seen_titleyear}{$tmp}++;
+  }
+  # But beyond that only if we have a labeltitle in the entry since
+  # this counter is used to create extratitleyear which doesn't mean anything for
+  # entries with no title
+  else {
+    if ($ts) {
+      $self->{state}{seen_titleyear}{$tmp}++;
+    }
+  }
+  return;
+}
+
+
+=head2 reset_workuniqueness
+
+  Reset various work uniqueness counters
+
+=cut
+
+sub reset_workuniqueness {
+  my $self = shift;
+  $self->{state}{seenname} = {};
+  $self->{state}{seentitle} = {};
+  $self->{state}{seenbaretitle} = {};
+  $self->{state}{seenwork} = {};
+  return;
+}
+
+=head2 get_seenname
+
+    Get the count of occurrences of a labelname or labeltitle
+
+=cut
+
+sub get_seenname {
+  my ($self, $identifier) = @_;
+  return $self->{state}{seenname}{$identifier};
+}
+
+=head2 incr_seenname
+
+    Increment the count of occurrences of a labelname or labeltitle
+
+=cut
+
+sub incr_seenname {
+  my ($self, $identifier) = @_;
+  $self->{state}{seenname}{$identifier}++;
+  return;
+}
+
+=head2 get_seentitle
+
+    Get the count of occurrences of a labeltitle
+
+=cut
+
+sub get_seentitle {
+  my ($self, $identifier) = @_;
+  return $self->{state}{seentitle}{$identifier};
+}
+
+=head2 incr_seentitle
+
+    Increment the count of occurrences of a labeltitle
+
+=cut
+
+sub incr_seentitle {
+  my ($self, $identifier) = @_;
+  $self->{state}{seentitle}{$identifier}++;
+  return;
+}
+
+=head2 get_seenbaretitle
+
+    Get the count of occurrences of a labeltitle when there is
+    no labelname
+
+=cut
+
+sub get_seenbaretitle {
+  my ($self, $identifier) = @_;
+  return $self->{state}{seenbaretitle}{$identifier};
+}
+
+=head2 incr_seenbaretitle
+
+    Increment the count of occurrences of a labeltitle
+    when there is no labelname
+
+=cut
+
+sub incr_seenbaretitle {
+  my ($self, $identifier) = @_;
+  $self->{state}{seenbaretitle}{$identifier}++;
+  return;
+}
+
+=head2 get_seenwork
+
+    Get the count of occurrences of a labelname and labeltitle
+
+=cut
+
+sub get_seenwork {
+  my ($self, $identifier) = @_;
+  return $self->{state}{seenwork}{$identifier};
+}
+
+=head2 incr_seenwork
+
+    Increment the count of occurrences of a labelname and labeltitle
+
+=cut
+
+sub incr_seenwork {
+  my ($self, $identifier) = @_;
+  $self->{state}{seenwork}{$identifier}++;
+  return;
+}
+
+
+=head2 incr_la_disambiguation
+
+    Increment a counter to say we have seen this labelalpha
+
+=cut
+
+sub incr_la_disambiguation {
+  my ($self, $la) = @_;
+  $self->{state}{ladisambiguation}{$la}++;
+  return;
+}
+
+
+=head2 get_la_disambiguation
+
+    Get the disambiguation counter for this labelalpha.
+    Return a 0 for undefs to avoid spurious errors.
+
+=cut
+
+sub get_la_disambiguation {
+  my ($self, $la) = @_;
+  return $self->{state}{ladisambiguation}{$la} // 0;
+}
+
+
+
 
 =head2 set_sortschemename
 
@@ -65,13 +1115,13 @@ sub set_sortschemename {
   return;
 }
 
-=head2 get_refcontext
+=head2 get_attrs
 
-    Gets the refcontext information for a data list
+    Gets the attributes of a data list
 
 =cut
 
-sub get_refcontext {
+sub get_attrs {
   my $self = shift;
   return join('/', ($self->{sortschemename},
                     $self->{sortnamekeyschemename},
@@ -307,23 +1357,14 @@ sub get_listdata {
            $self->{labelprefix},
            $self->{keys},
            $self->{sortinitdata},
-           $self->{extrayeardata},
-           $self->{extraalphadata},
-           $self->{extratitledata},
-           $self->{extratitleyeardata},
-           $self->{sortdataschema},
-           $self->{namelistdata},
-           $self->{labelalphadata}];
-}
-
-=head2 get_namelistdata
-
-  Gets  name list data
-
-=cut
-
-sub get_namelistdata {
-  return shift->{namelistdata};
+           $self->{state}{extrayeardata},
+           $self->{state}{extraalphadata},
+           $self->{state}{extratitledata},
+           $self->{state}{extratitleyeardata},
+           $self->{state}{sortdataschema},
+           $self->{state}{namelistdata},
+           $self->{state}{namehashdata},
+           $self->{state}{labelalphadata}];
 }
 
 =head2 reset_listdata
@@ -334,13 +1375,23 @@ sub get_namelistdata {
 
 sub reset_listdata {
   my $self = shift;
-  $self->{extrayeardata} = {};
-  $self->{extraalphadata} = {};
-  $self->{extratitledata} = {};
-  $self->{extratitleyeardata} = {};
-  $self->{labelalphadata} = {};
-  $self->{namelistdata} = {};
-return;
+  $self->{state}{extrayeardata} = {};
+  $self->{state}{extraalphadata} = {};
+  $self->{state}{extratitledata} = {};
+  $self->{state}{extratitleyeardata} = {};
+  $self->{state}{labelalphadata} = {};
+  $self->{state}{namelistdata} = {};
+  return;
+}
+
+=head2 get_namelistdata
+
+  Gets  name list data
+
+=cut
+
+sub get_namelistdata {
+  return shift->{state}{namelistdata};
 }
 
 =head2 set_namelistdata
@@ -351,31 +1402,7 @@ return;
 
 sub set_namelistdata {
   my ($self, $nld) = @_;
-  $self->{namelistdata} = $nld;
-  return;
-}
-
-=head2 get_namelistdata_for_key
-
-  Gets  name list data for a key
-
-=cut
-
-sub get_namelistdata_for_key {
-  my ($self, $key) = @_;
-  return $self->{namelistdata}{$key};
-}
-
-=head2 set_namelistdata_for_key
-
-  Saves name list data for a key
-
-=cut
-
-sub set_namelistdata_for_key {
-  my ($self, $key, $nld) = @_;
-  return unless defined($key);
-  $self->{namelistdata}{$key} = $nld;
+  $self->{state}{namelistdata} = $nld;
   return;
 }
 
@@ -386,7 +1413,7 @@ sub set_namelistdata_for_key {
 =cut
 
 sub get_labelalphadata {
-  return shift->{labelalphadata};
+  return shift->{state}{labelalphadata};
 }
 
 =head2 set_labelalphadata
@@ -397,7 +1424,7 @@ sub get_labelalphadata {
 
 sub set_labelalphadata {
   my ($self, $lad) = @_;
-  $self->{labelalphadata} = $lad;
+  $self->{state}{labelalphadata} = $lad;
   return;
 }
 
@@ -409,7 +1436,7 @@ sub set_labelalphadata {
 
 sub get_labelalphadata_for_key {
   my ($self, $key) = @_;
-  return $self->{labelalphadata}{$key};
+  return $self->{state}{labelalphadata}{$key};
 }
 
 =head2 set_labelalphadata_for_key
@@ -421,7 +1448,7 @@ sub get_labelalphadata_for_key {
 sub set_labelalphadata_for_key {
   my ($self, $key, $la) = @_;
   return unless defined($key);
-  $self->{labelalphadata}{$key} = $la;
+  $self->{state}{labelalphadata}{$key} = $la;
   return;
 }
 
@@ -434,7 +1461,7 @@ sub set_labelalphadata_for_key {
 sub set_extrayeardata_for_key {
   my ($self, $key, $ed) = @_;
   return unless defined($key);
-  $self->{extrayeardata}{$key} = $ed;
+  $self->{state}{extrayeardata}{$key} = $ed;
   return;
 }
 
@@ -446,7 +1473,7 @@ sub set_extrayeardata_for_key {
 
 sub set_extrayeardata {
   my ($self, $ed) = @_;
-  $self->{extrayeardata} = $ed;
+  $self->{state}{extrayeardata} = $ed;
   return;
 }
 
@@ -460,7 +1487,7 @@ sub set_extrayeardata {
 sub get_extrayeardata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{extrayeardata}{$key};
+  return $self->{state}{extrayeardata}{$key};
 }
 
 =head2 set_extratitledata_for_key
@@ -472,7 +1499,7 @@ sub get_extrayeardata_for_key {
 sub set_extratitledata_for_key {
   my ($self, $key, $ed) = @_;
   return unless defined($key);
-  $self->{extratitledata}{$key} = $ed;
+  $self->{state}{extratitledata}{$key} = $ed;
   return;
 }
 
@@ -484,7 +1511,7 @@ sub set_extratitledata_for_key {
 
 sub set_extratitledata {
   my ($self, $ed) = @_;
-  $self->{extratitledata} = $ed;
+  $self->{state}{extratitledata} = $ed;
   return;
 }
 
@@ -498,7 +1525,7 @@ sub set_extratitledata {
 sub get_extratitledata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{extratitledata}{$key};
+  return $self->{state}{extratitledata}{$key};
 }
 
 
@@ -511,7 +1538,7 @@ sub get_extratitledata_for_key {
 sub set_extratitleyeardata_for_key {
   my ($self, $key, $ed) = @_;
   return unless defined($key);
-  $self->{extratitleyeardata}{$key} = $ed;
+  $self->{state}{extratitleyeardata}{$key} = $ed;
   return;
 }
 
@@ -523,7 +1550,7 @@ sub set_extratitleyeardata_for_key {
 
 sub set_extratitleyeardata {
   my ($self, $ed) = @_;
-  $self->{extratitleyeardata} = $ed;
+  $self->{state}{extratitleyeardata} = $ed;
   return;
 }
 
@@ -537,7 +1564,7 @@ sub set_extratitleyeardata {
 sub get_extratitleyeardata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{extratitleyeardata}{$key};
+  return $self->{state}{extratitleyeardata}{$key};
 }
 
 
@@ -550,7 +1577,7 @@ sub get_extratitleyeardata_for_key {
 sub set_extraalphadata_for_key {
   my ($self, $key, $ed) = @_;
   return unless defined($key);
-  $self->{extraalphadata}{$key} = $ed;
+  $self->{state}{extraalphadata}{$key} = $ed;
   return;
 }
 
@@ -562,7 +1589,7 @@ sub set_extraalphadata_for_key {
 
 sub set_extraalphadata {
   my ($self, $ed) = @_;
-  $self->{extraalphadata} = $ed;
+  $self->{state}{extraalphadata} = $ed;
   return;
 }
 
@@ -575,7 +1602,7 @@ sub set_extraalphadata {
 sub get_extraalphadata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{extraalphadata}{$key};
+  return $self->{state}{extraalphadata}{$key};
 }
 
 =head2 get_sortdataschema
@@ -719,171 +1746,452 @@ sub get_filters {
   which varies in an entry between lists. This is information which
   needs to be output to the .bbl for an entry but which is a property
   of the reference context and not the entry per se so it cannot be stored
-  statically in the entry and must be pulled from the specific list
+  statically in the entry and must be retrieved from the specific datalist
   when outputting the entry.
 
 =cut
 
 sub instantiate_entry {
-  my $self = shift;
-  my ($section, $entry, $key, $format) = @_;
-
-  return '' unless $entry;
+  my ($self, $section, $entry, $key, $format) = @_;
   my $be = $section->bibentry($key);
+
+  return '' unless $entry and $be;
+
   my $dmh = Biber::Config->get_dm_helpers;
 
   $format //= 'bbl'; # default
 
   my $entry_string = $$entry;
 
-  # sortinit
-  my $sinit = $self->get_sortinit_for_key($key);
-  if (defined($sinit)) {
-    my $str;
-    if ($format eq 'bbl') {
-      $str = "\\field{sortinit}{$sinit}";
-    }
-    elsif ($format eq 'bblxml') {
-      $str = "<bbl:field name=\"sortinit\">$sinit</bbl:field>";
-    }
-    $entry_string =~ s|<BDS>SORTINIT</BDS>|$str|gxms;
-  }
-  else {# might not be defined if sortscheme returns nothing at all
-    $entry_string =~ s|^\s*<BDS>SORTINIT</BDS>\n||gxms;
-  }
+  # .bbl output
+  if ($format eq 'bbl') {
 
-  # sortinithash
-  if (defined($sinit)) {
-    my $str;
+    # uniqueprimaryauthor
+    if ($self->get_entryfield($key, 'uniqueprimaryauthor')) {
+      my $str = "\\true{uniqueprimaryauthor}";
+      $entry_string =~ s|<BDS>UNIQUEPRIMARYAUTHOR</BDS>|$str|gxms;
+    }
 
-    # All Unicode::Collate operations are expensive so use a cache when possible
-    my $sinithash = md5_hex($self->{sortinitcollator}->viewSortKey($sinit));
+  # uniquework
+    if ($self->get_entryfield($key, 'uniquework')) {
+      my $str = "\\true{uniquework}";
+      $entry_string =~ s|<BDS>UNIQUEWORK</BDS>|$str|gxms;
+    }
 
-    if ($format eq 'bbl') {
-      $str = "\\field{sortinithash}{$sinithash}";
+    # uniquebaretitle
+    if ($self->get_entryfield($key, 'uniquebaretitle')) {
+      my $str = "\\true{uniquebaretitle}";
+      $entry_string =~ s|<BDS>UNIQUEBARETITLE</BDS>|$str|gxms;
     }
-    elsif ($format eq 'bblxml') {
-      $str = "<bbl:field name=\"sortinithash\">$sinithash</bbl:field>";
-    }
-    $entry_string =~ s|<BDS>SORTINITHASH</BDS>|$str|gxms;
-  }
-  else {# might not be defined if sortscheme returns nothing at all
-    $entry_string =~ s|^\s*<BDS>SORTINITHASH</BDS>\n||gxms;
-  }
 
-  # extrayear
-  if (my $e = $self->get_extrayeardata_for_key($key)) {
-    my $str;
-    if ($format eq 'bbl') {
-      $str = "\\field{extrayear}{$e}";
+    # uniquetitle
+    if ($self->get_entryfield($key, 'uniquetitle')) {
+      my $str = "\\true{uniquetitle}";
+      $entry_string =~ s|<BDS>UNIQUETITLE</BDS>|$str|gxms;
     }
-    elsif ($format eq 'bblxml') {
-      $str = "<bbl:field name=\"extrayear\">$e</bbl:field>";
-    }
-    $entry_string =~ s|<BDS>EXTRAYEAR</BDS>|$str|gxms;
-  }
 
-  # extratitle
-  if (my $e = $self->get_extratitledata_for_key($key)) {
-    my $str;
-    if ($format eq 'bbl') {
-      $str = "\\field{extratitle}{$e}";
+    # extraalpha
+    if (my $e = $self->get_extraalphadata_for_key($key)) {
+      my $str = "\\field{extraalpha}{$e}";
+      $entry_string =~ s|<BDS>EXTRAALPHA</BDS>|$str|gxms;
     }
-    elsif ($format eq 'bblxml') {
-      $str = "<bbl:field name=\"extratitle\">$e</bbl:field>";
-    }
-    $entry_string =~ s|<BDS>EXTRATITLE</BDS>|$str|gxms;
-  }
 
-  # extratitle
-  if (my $e = $self->get_extratitleyeardata_for_key($key)) {
-    my $str;
-    if ($format eq 'bbl') {
-      $str = "\\field{extratitleyear}{$e}";
+    # labelalpha
+    if (my $e = $self->get_labelalphadata_for_key($key)) {
+      my $str = "\\field{labelalpha}{$e}";
+      $entry_string =~ s|<BDS>LABELALPHA</BDS>|$str|gxms;
     }
-    elsif ($format eq 'bblxml') {
-      $str = "<bbl:field name=\"extratitleyear\">$e</bbl:field>";
-    }
-    $entry_string =~ s|<BDS>EXTRATITLEYEAR</BDS>|$str|gxms;
-  }
 
-  # uniquename
-  # replace pattern is different because this can occur in bblxml attributes
-  # and so can't be angles
-  if (my $nld = $self->get_namelistdata_for_key($key)) {
+    # uniquename
     foreach my $namefield ($dmh->{namelists}->@*) {
-      if (my $nl = $be->get_field($namefield)) {
-        my $nlid = $nl->get_id;
-        foreach my $n ($nl->names->@*) {
-          my $str = '';
-          my $nid = $n->get_id;
-          $str = $nld->{$nlid}{un}{$nid}{summary};
-          $entry_string =~ s|[<[]BDS[>\]]UNS-$nid[<[]/BDS[>\]]|$str|gxms;
-          $str = $nld->{$nlid}{un}{$nid}{part};
-          $entry_string =~ s|[<[]BDS[>\]]UNP-$nid[<[]/BDS[>\]]|$str|gxms;
+      next unless my $nl = $be->get_field($namefield);
+      my $nlid = $nl->get_id;
+      foreach my $n ($nl->names->@*) {
+        my $nid = $n->get_id;
+        if (defined($self->get_unsummary($nlid, $nid))) {
+          my $str = 'uniquename=' . $self->get_unsummary($nlid, $nid);
+          $entry_string =~ s|<BDS>UNS-$nid</BDS>|$str|gxms;
+          $str = 'uniquepart=' . $self->get_unpart($nlid, $nid);
+          $entry_string =~ s|<BDS>UNP-$nid</BDS>|$str|gxms;
           foreach my $np ($n->get_nameparts) {
-            $str = $nld->{$nlid}{un}{$nid}{parts}{$np};
-            $entry_string =~ s|[<[]BDS[>\]]UNP-$np-$nid[<[]/BDS[>\]]|$str|gxms;
+            $str = "${np}un=" . $self->get_unparts($nlid, $nid, $np);
+            $entry_string =~ s|<BDS>UNP-$np-$nid</BDS>|$str|gxms;
+          }
+        }
+        else {
+          $entry_string =~ s|<BDS>UN[SP]-$nid</BDS>,?||gxms;
+          foreach my $np ($n->get_nameparts) {
+            $entry_string =~ s|\s+<BDS>UNP-$np-$nid</BDS>,?||gxms;
           }
         }
       }
     }
+
+    # uniquelist
+    foreach my $namefield ($dmh->{namelists}->@*) {
+      next unless my $nl = $be->get_field($namefield);
+      my $nlid = $nl->get_id;
+      if (defined($self->get_uniquelist($nlid))) {
+        my $str = 'uniquelist=' . $self->get_uniquelist($nlid);
+        $entry_string =~ s|<BDS>UL-$nlid</BDS>|$str|gxms;
+      }
+      else {
+        $entry_string =~ s|<BDS>UL-$nlid</BDS>,?||gxms;
+      }
+    }
+
+    # extratitleyear
+    if (my $e = $self->get_extratitleyeardata_for_key($key)) {
+      my  $str = "\\field{extratitleyear}{$e}";
+      $entry_string =~ s|<BDS>EXTRATITLEYEAR</BDS>|$str|gxms;
+    }
+
+    # extratitle
+    if (my $e = $self->get_extratitledata_for_key($key)) {
+      my $str = "\\field{extratitle}{$e}";
+      $entry_string =~ s|<BDS>EXTRATITLE</BDS>|$str|gxms;
+    }
+
+    # per-namelist bibnamehash and namehash
+    foreach my $namefield ($dmh->{namelists}->@*) {
+
+      # per-namelist bibnamehash
+      if (my $e = $self->get_entryfield($key, "${namefield}bibnamehash")) {
+        my $str = "\\strng{${namefield}bibnamehash}{$e}";
+        $entry_string =~ s|<BDS>${namefield}BIBNAMEHASH</BDS>|$str|gxms;
+      }
+
+      # per-namelist namehash
+      if (my $e = $self->get_entryfield($key, "${namefield}namehash")) {
+        my $str = "\\strng{${namefield}namehash}{$e}";
+        $entry_string =~ s|<BDS>${namefield}NAMEHASH</BDS>|$str|gxms;
+
+      }
+    }
+
+    # bibnamehash
+    if (my $e = $self->get_entryfield($key, 'bibnamehash')) {
+      my $str = "\\strng{bibnamehash}{$e}";
+      $entry_string =~ s|<BDS>BIBNAMEHASH</BDS>|$str|gxms;
+    }
+
+    # namehash
+    if (my $e = $self->get_entryfield($key, 'namehash')) {
+      my $str = "\\strng{namehash}{$e}";
+      $entry_string =~ s|<BDS>NAMEHASH</BDS>|$str|gxms;
+    }
+
+    # per-namehash
+    foreach my $pn ($dmh->{namelistsall}->@*) {
+      next unless my $nl = $be->get_field($pn);
+      foreach my $n ($nl->names->@*) {
+        my $nid = $n->get_id;
+        if (my $e = $self->{state}{namelistdata}{$nl->get_id}{$nid}{hash}) {
+          my $str = "hash=$e";
+          $entry_string =~ s|<BDS>$nid-PERNAMEHASH</BDS>|$str|gxms;
+        }
+        else {
+          $entry_string =~ s|<BDS>$nid-PERNAMEHASH</BDS>,?||gxms;
+        }
+      }
+    }
+
+    # extrayear
+    if (my $e = $self->get_extrayeardata_for_key($key)) {
+      my $str = "\\field{extrayear}{$e}";
+      $entry_string =~ s|<BDS>EXTRAYEAR</BDS>|$str|gxms;
+    }
+
+    # sortinit + sortinithash
+    my $sinit = $self->get_sortinit_for_key($key);
+    if (defined($sinit)) {
+      my $str = "\\field{sortinit}{$sinit}";
+      $entry_string =~ s|<BDS>SORTINIT</BDS>|$str|gxms;
+      my $sinithash = md5_hex($self->{sortinitcollator}->viewSortKey($sinit));
+      $str = "\\field{sortinithash}{$sinithash}";
+      $entry_string =~ s|<BDS>SORTINITHASH</BDS>|$str|gxms;
+    }
+
+    # labelprefix
+    if (my $pn = $self->get_labelprefix($key)) {
+      my $str = "\\field{labelprefix}{$pn}";
+      $entry_string =~ s|<BDS>LABELPREFIX</BDS>|$str|gxms;
+    }
+
+    # singletitle
+    if ($self->get_entryfield($key, 'singletitle')) {
+      my $str = "\\true{singletitle}";
+      $entry_string =~ s|<BDS>SINGLETITLE</BDS>|$str|gxms;
+    }
   }
 
-  # uniquelist
-  # replace pattern is different because this can occur in bblxml attributes
-  # and so can't be angles
-  if (my $nld = $self->get_namelistdata_for_key($key)) {
+  # .bblxml output
+  if ($format eq 'bblxml') {
+
+    # uniqueprimaryauthor
+    if ($self->get_entryfield($key, 'uniqueprimaryauthor')) {
+      my $str = 'true';
+      $entry_string =~ s|\[BDS\]UNIQUEPRIMARYAUTHOR\[/BDS\]|$str|gxms;
+    }
+    else {
+      $entry_string =~ s|\suniqueprimaryauthor="\[BDS\]UNIQUEPRIMARYAUTHOR\[/BDS\]"||gxms;
+    }
+
+    # uniquework
+    if ($self->get_entryfield($key, 'uniquework')) {
+      my $str = 'true';
+      $entry_string =~ s|\[BDS\]UNIQUEWORK\[/BDS\]|$str|gxms;
+    }
+    else {
+      $entry_string =~ s|\suniquework="\[BDS\]UNIQUEWORK\[/BDS\]"||gxms;
+    }
+
+    # uniquebaretitle
+    if ($self->get_entryfield($key, 'uniquebaretitle')) {
+      my $str = 'true';
+      $entry_string =~ s|\[BDS\]UNIQUEBARETITLE\[/BDS\]|$str|gxms;
+    }
+    else {
+      $entry_string =~ s|\suniquebaretitle="\[BDS\]UNIQUEBARETITLE\[/BDS\]"||gxms;
+    }
+
+    # uniquetitle
+    if ($self->get_entryfield($key, 'uniquetitle')) {
+      my $str = 'true';
+      $entry_string =~ s|\[BDS\]UNIQUETITLE\[/BDS\]|$str|gxms;
+    }
+    else {
+      $entry_string =~ s|\suniquetitle="\[BDS\]UNIQUETITLE\[/BDS\]"||gxms;
+    }
+
+    # extraalpha
+    if (my $e = $self->get_extraalphadata_for_key($key)) {
+      my $str = "<bbl:field name=\"extraalpha\">$e</bbl:field>";
+      $entry_string =~ s|<BDS>EXTRAALPHA</BDS>|$str|gxms;
+    }
+
+    # labelalpha
+    if (my $e = $self->get_labelalphadata_for_key($key)) {
+      my $str = "<bbl:field name=\"labelalpha\">$e</bbl:field>";
+      $entry_string =~ s|<BDS>LABELALPHA</BDS>|$str|gxms;
+    }
+
+    # uniquename
     foreach my $namefield ($dmh->{namelists}->@*) {
-      if (my $nl = $be->get_field($namefield)) {
-        my $str = '';
-        my $nlid = $nl->get_id;
-        $str = $nld->{$nlid}{ul};
-        $entry_string =~ s|[<[]BDS[>\]]UL-$nlid[<[]/BDS[>\]]|$str|gxms;
+      next unless my $nl = $be->get_field($namefield);
+      my $nlid = $nl->get_id;
+      foreach my $n ($nl->names->@*) {
+        my $nid = $n->get_id;
+        if (defined($self->get_unsummary($nlid, $nid))) {
+          my $str = $self->get_unsummary($nlid, $nid);
+          $entry_string =~ s|\[BDS\]UNS-$nid\[/BDS\]|$str|gxms;
+          $str = $self->get_unpart($nlid, $nid);
+          $entry_string =~ s|\[BDS\]UNP-$nid\[/BDS\]|$str|gxms;
+          foreach my $np ($n->get_nameparts) {
+            $str = $self->get_unparts($nlid, $nid, $np);
+            $entry_string =~ s|\[BDS\]UNP-$np-$nid\[/BDS\]|$str|gxms;
+          }
+        }
+        else {
+          $entry_string =~ s#\s(?:uniquename|uniquepart)="\[BDS\]UN[SP]-$nid\[/BDS\]",?##gxms;
+          foreach my $np ($n->get_nameparts) {
+            $entry_string =~ s|\suniquename="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
+          }
+        }
+      }
+    }
+
+    # uniquelist
+    foreach my $namefield ($dmh->{namelists}->@*) {
+      next unless my $nl = $be->get_field($namefield);
+      my $nlid = $nl->get_id;
+      if (defined($self->get_uniquelist($nlid))) {
+        my $str = $self->get_uniquelist($nlid);
+        $entry_string =~ s|\[BDS\]UL-$nlid\[/BDS\]|$str|gxms;
+      }
+      else {
+        $entry_string =~ s|\suniquelist="\[BDS\]UL-$nlid\[/BDS\]"||gxms;
+      }
+    }
+
+    # extratitleyear
+    if (my $e = $self->get_extratitleyeardata_for_key($key)) {
+      my $str = "<bbl:field name=\"extratitleyear\">$e</bbl:field>";
+      $entry_string =~ s|<BDS>EXTRATITLEYEAR</BDS>|$str|gxms;
+    }
+
+    # extratitle
+    if (my $e = $self->get_extratitledata_for_key($key)) {
+      my $str = "<bbl:field name=\"extratitle\">$e</bbl:field>";
+      $entry_string =~ s|<BDS>EXTRATITLE</BDS>|$str|gxms;
+    }
+
+    # per-namelist bibnamehash and namehash
+    foreach my $namefield ($dmh->{namelists}->@*) {
+
+      # per-namelist bibnamehash
+      if (my $e = $self->get_entryfield($key, "${namefield}bibnamehash")) {
+        my $str = "<bbl:field name=\"${namefield}bibnamehash\">$e</bbl:field>";
+        $entry_string =~ s|<BDS>${namefield}BIBNAMEHASH</BDS>|$str|gxms;
+      }
+
+      # per-namelist namehash
+      if (my $e = $self->get_entryfield($key, "${namefield}namehash")) {
+        my $str = "<bbl:field name=\"${namefield}namehash\">$e</bbl:field>";
+        $entry_string =~ s|<BDS>${namefield}NAMEHASH</BDS>|$str|gxms;
+      }
+    }
+
+    # bibnamehash
+    if (my $e = $self->get_entryfield($key, 'bibnamehash')) {
+      my $str = "<bbl:field name=\"bibnamehash\">$e</bbl:field>";
+      $entry_string =~ s|<BDS>BIBNAMEHASH</BDS>|$str|gxms;
+    }
+
+    # namehash
+    if (my $e = $self->get_entryfield($key, 'namehash')) {
+      my $str = "<bbl:field name=\"namehash\">$e</bbl:field>";
+      $entry_string =~ s|<BDS>NAMEHASH</BDS>|$str|gxms;
+    }
+
+    # per-namehash
+    foreach my $pn ($dmh->{namelistsall}->@*) {
+      next unless my $nl = $be->get_field($pn);
+      foreach my $n ($nl->names->@*) {
+        my $nid = $n->get_id;
+        if (my $e = $self->{state}{namelistdata}{$nl->get_id}{$nid}{hash}) {
+          my $str = $e;
+          $entry_string =~ s|\[BDS\]$nid-PERNAMEHASH\[/BDS\]|$str|gxms;
+        }
+        else {
+          $entry_string =~ s|hash="\[BDS\]$nid-PERNAMEHASH\[/BDS\]"?,?||gxms;
+        }
+      }
+    }
+
+    # extrayear
+    if (my $e = $self->get_extrayeardata_for_key($key)) {
+      my $str = "<bbl:field name=\"extrayear\">$e</bbl:field>";
+      $entry_string =~ s|<BDS>EXTRAYEAR</BDS>|$str|gxms;
+    }
+
+    # sortinit + sortinithash
+    my $sinit = $self->get_sortinit_for_key($key);
+    if (defined($sinit)) {
+      my $str = "<bbl:field name=\"sortinit\">$sinit</bbl:field>";
+      $entry_string =~ s|<BDS>SORTINIT</BDS>|$str|gxms;
+      my $sinithash = md5_hex($self->{sortinitcollator}->viewSortKey($sinit));
+      $str = "<bbl:field name=\"sortinithash\">$sinithash</bbl:field>";
+      $entry_string =~ s|<BDS>SORTINITHASH</BDS>|$str|gxms;
+    }
+
+    # labelprefix
+    if (my $pn = $self->get_labelprefix($key)) {
+      my $str = "<bbl:field name=\"labelprefix\">$pn</bbl:field>";
+      $entry_string =~ s|<BDS>LABELPREFIX</BDS>|$str|gxms;
+    }
+
+    # singletitle
+    if ($self->get_entryfield($key, 'singletitle')) {
+      my $str = 'true';
+      $entry_string =~ s|\[BDS\]SINGLETITLE\[/BDS\]|$str|gxms;
+    }
+    else {
+      $entry_string =~ s|\ssingletitle="\[BDS\]SINGLETITLE\[/BDS\]"||gxms;
+    }
+  }
+
+  # Clean up dangling commas
+  $entry_string =~ s|,(?:\n\s+)?\}\}|}}|gxms;
+
+  # Clean up generic metadata which was not replaced
+  $entry_string =~ s|^\s+<BDS>[^<]+</BDS>\n||gxms;
+
+  return $entry_string;
+}
+
+=head2 namelist_differs_index
+
+    Returns the index where the name list begins to differ from any other list
+
+    Assuming these lists
+
+    [a, b]
+    [a, b, d, e, f, g, h, i, j]
+    [a, b, d, e, f]
+    [a, b, e, z, z, y]
+
+    namelist_differs_index([a, b, c, d, e]) -> 2
+    namelist_differs_index([a]) -> 1
+
+=cut
+
+sub namelist_differs_index {
+  my $self = shift;
+  my @list = shift->@*;
+  my $index;
+  foreach my $l_s (keys $self->{state}{uniquelistcount}{global}{final}->%*) {
+    my @l = split("\x{10FFFD}", $l_s);
+    next if Compare(\@list, \@l);# Ignore identical lists
+    for (my $i=0;$i<=$#list;$i++) {
+      if (defined($list[$i]) and defined($l[$i]) and ($list[$i] eq $l[$i])) {
+        if (not defined($index) or $i > $index) {
+          $index = $i;
+        }
+      }
+      else {
+        last;
       }
     }
   }
 
-  # labelalpha
-  if (my $e = $self->get_labelalphadata_for_key($key)) {
-    my $str;
-    if ($format eq 'bbl') {
-      $str = "\\field{labelalpha}{$e}";
+  if (defined($index)) { # one or more similar lists
+    if ($index == $#list) { # There is another list which is a superset, return last index
+      return $index;
     }
-    elsif ($format eq 'bblxml') {
-      $str = "<bbl:field name=\"labelalpha\">$e</bbl:field>";
+    else { # Differs with some list, return index of where difference begins
+      return $index+1;
     }
-    $entry_string =~ s|<BDS>LABELALPHA</BDS>|$str|gxms;
   }
+  else { # no similar lists
+    return undef;
+  }
+}
 
-  # extraalpha
-  if (my $e = $self->get_extraalphadata_for_key($key)) {
-    my $str;
-    if ($format eq 'bbl') {
-      $str = "\\field{extraalpha}{$e}";
-    }
-    elsif ($format eq 'bblxml') {
-      $str = "<bbl:field name=\"extraalpha\">$e</bbl:field>";
-    }
-    $entry_string =~ s|<BDS>EXTRAALPHA</BDS>|$str|gxms;
-  }
 
-  # labelprefix
-  if (my $pn = $self->get_labelprefix($key)) {
-    my $str;
-    if ($format eq 'bbl') {
-      $str = "\\field{labelprefix}{$pn}";
-    }
-    elsif ($format eq 'bblxml') {
-      $str = "<bbl:field name=\"labelprefix\">$pn</bbl:field>";
-    }
-    $entry_string =~ s|<BDS>LABELPREFIX</BDS>|$str|gxms;
-  }
-  else {
-    $entry_string =~ s|^\s*<BDS>LABELPREFIX</BDS>\n||gxms;
-  }
+=head2 namelist_differs_nth
 
-  return $entry_string;
+    Returns true if some other name list differs at passed nth place
+    and is at least as long
+
+    namelist_differs_nth([a, b, c, d, e], 3) = 1
+
+    if there is another name list like any of these:
+
+    [a, b, d, e, f]
+    [a, b, e, z, z, y]
+
+=cut
+
+sub namelist_differs_nth {
+  my $self = shift;
+  my ($list, $n) = @_;
+  my @list_one = $list->@*;
+  # Loop over all final lists, looking for ones which match:
+  # * up to n - 1
+  # * differ at $n
+  # * are at least as long
+  foreach my $l_s (keys $self->{state}{uniquelistcount}{global}{final}->%*) {
+    my @l = split("\x{10FFFD}", $l_s);
+    # If list is shorter than the list we are checking, it's irrelevant
+    next if $#l < $list->$#*;
+    # If list matches at $n, it's irrelevant
+    next if ($list_one[$n-1] eq $l[$n-1]);
+    # If list doesn't match up to $n - 1, it's irrelevant
+    next unless Compare([@list_one[0 .. $n-2]], [@l[0 .. $n-2]]);
+    return 1;
+  }
+  return 0;
 }
 
 1;

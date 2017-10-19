@@ -40,6 +40,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main1 = $biber->datalists->get_list('nty/global//global/global', 1);
 my $out = $biber->get_output_obj;
 
 my $string1 = q|    \entry{Static1}{set}{}
@@ -154,5 +155,5 @@ eq_or_diff($out->get_output_entry('Static1', $main), $string1, 'Static set test 
 eq_or_diff($out->get_output_entry('Static2', $main), $string2, 'Static set test 2');
 eq_or_diff($out->get_output_entry('Static3', $main), $string3, 'Static set test 3');
 eq_or_diff($out->get_output_entry('Static4', $main), $string4, 'Static set test 4');
-eq_or_diff($out->get_output_entry('Static2', $main, 1), $string5, 'Static set test 5');
+eq_or_diff($out->get_output_entry('Static2', $main1, 1), $string5, 'Static set test 5');
 

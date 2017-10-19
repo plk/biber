@@ -137,3 +137,4 @@
 ** DONE New output format like EDTF but options
 * DONE extrayear, (namestring, namestrings, namedisschema)->uniquelist, uniquename
 * DONE bibaltexml.pm needs uiquenametemplate processing removing
+* TODO sorting scheme names are not used. Create multiple and refer by name as with other dlist

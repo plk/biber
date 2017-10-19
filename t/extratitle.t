@@ -56,10 +56,10 @@ eq_or_diff($main->get_extratitledata_for_key('L4'), '2', 'No name, same title - 
 ok(is_undef($main->get_extratitledata_for_key('L5')), 'No name, same title as with name - 1');
 eq_or_diff($main->get_extratitledata_for_key('L6'), '1', 'No name, same shorttitle/title - 1');
 eq_or_diff($main->get_extratitledata_for_key('L7'), '2', 'No name, same shorttitle/title - 2');
-ok(is_undef($bibentries->entry('L8')->get_field('singletitle')), 'Singletitle test - 1');
-ok(is_undef($bibentries->entry('L9')->get_field('singletitle')), 'Singletitle test - 2');
-eq_or_diff($bibentries->entry('L10')->get_field('singletitle'), '1', 'Singletitle test - 3');
-ok(is_undef($bibentries->entry('L11')->get_field('singletitle')), 'Singletitle test - 4');
-ok(is_undef($bibentries->entry('L12')->get_field('singletitle')), 'Singletitle test - 5');
-ok(is_undef($bibentries->entry('L1')->get_field('singletitle')), 'Singletitle test - 6');
-ok(is_undef($bibentries->entry('L5')->get_field('singletitle')), 'Singletitle test - 7');
+ok(is_undef($main->get_entryfield('L8', 'singletitle')), 'Singletitle test - 1');
+ok(is_undef($main->get_entryfield('L9', 'singletitle')), 'Singletitle test - 2');
+eq_or_diff($main->get_entryfield('L10', 'singletitle'), '1', 'Singletitle test - 3');
+ok(is_undef($main->get_entryfield('L11', 'singletitle')), 'Singletitle test - 4');
+ok(is_undef($main->get_entryfield('L12', 'singletitle')), 'Singletitle test - 5');
+ok(is_undef($main->get_entryfield('L1', 'singletitle')), 'Singletitle test - 6');
+ok(is_undef($main->get_entryfield('L5', 'singletitle')), 'Singletitle test - 7');

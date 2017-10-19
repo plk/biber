@@ -37,10 +37,10 @@ my $logger = Log::Log4perl::get_logger('main');
 # unique to a name, not a particular representation of a name. So, always statically concatenate
 # nameparts from the data model list of valid nameparts
 sub _getnamehash {
-  my ($self, $citekey, $names, $bib) = @_;
+  my ($self, $citekey, $names, $dlist, $bib) = @_;
   my $hashkey = '';
   my $count = $names->count_names;
-  my $visible = $bib ? $names->get_visible_bib : $names->get_visible_cite;
+  my $visible = $bib ? $dlist->get_visible_bib($names->get_id) : $dlist->get_visible_cite($names->get_id);
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 
@@ -58,9 +58,6 @@ sub _getnamehash {
     $hashkey .= '+';
   }
 
-  if ($logger->is_trace()) { # performance shortcut
-    $logger->trace("Creating MD5 namehash using '$hashkey'");
-  }
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
@@ -84,9 +81,6 @@ sub _getfullhash {
     $hashkey .= '+'
   }
 
-  if ($logger->is_trace()) { # performance shortcut
-    $logger->trace("Creating MD5 fullhash using '$hashkey'");
-  }
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
   return md5_hex(encode_utf8(NFC($hashkey)));
 }
@@ -97,7 +91,8 @@ sub _getnamehash_u {
   my ($self, $citekey, $names, $dlist) = @_;
   my $hashkey = '';
   my $count = $names->count_names;
-  my $visible = $names->get_visible_cite;
+  my $nlid = $names->get_id;
+  my $visible = $dlist->get_visible_cite($nlid);
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
 
@@ -111,7 +106,7 @@ sub _getnamehash_u {
 
   # namehash obeys list truncations
   foreach my $n ($names->first_n_names($visible)->@*) {
-
+    my $nid = $n->get_id;
     # Per-name uniquenametemplate
     if (defined($n->get_uniquenametemplatename)) {
       $untname = $n->get_uniquenametemplatename;
@@ -128,8 +123,8 @@ sub _getnamehash_u {
           $hashkey .= $np;
         }
         else {
-          my $un = $n->get_uniquename;
-          if (defined($un) and not $un->[0] eq 'base') {
+          my $un = $dlist->get_uniquename($nlid, $nid);
+          if (defined($un) and ($un->[0] ne 'base')) {
             if ($un->[1] eq 'full' or $un->[1] eq 'fullonly') {
               $hashkey .= $np;
             }
@@ -146,10 +141,6 @@ sub _getnamehash_u {
   # name list was truncated
   if ($visible < $count or $names->get_morenames) {
     $hashkey .= '+';
-  }
-
-  if ($logger->is_trace()) { # performance shortcut
-    $logger->trace("Creating MD5 namehash_u using '$hashkey'");
   }
 
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
@@ -334,13 +325,13 @@ sub _dispatch_label {
 #########################
 
 sub _label_citekey {
-  my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs) = @_;
-  my $k = _process_label_attributes($self, $citekey, [[$citekey,undef]], $labelattrs, $args->[0]);
+  my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs, $dlist) = @_;
+  my $k = _process_label_attributes($self, $citekey, $dlist, [[$citekey,undef]], $labelattrs, $args->[0]);
   return [$k, unescape_label($k)];
 }
 
 sub _label_basic {
-  my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs) = @_;
+  my ($self, $citekey, $secnum, $section, $be, $args, $labelattrs, $dlist) = @_;
   my $e = $args->[0];
 
   my $f;
@@ -352,7 +343,7 @@ sub _label_basic {
     $f = normalise_string_label($be->get_field($e));
   }
   if ($f) {
-    my $b = _process_label_attributes($self, $citekey, [[$f, undef]], $labelattrs, $e);
+    my $b = _process_label_attributes($self, $citekey, $dlist, [[$f, undef]], $labelattrs, $e);
     return [$b, unescape_label($b)];
   }
   else {
@@ -426,7 +417,7 @@ sub _label_name {
     }
 
     my $numnames  = $names->count_names;
-    my $visibility = $names->get_visible_alpha;
+    my $visibility = $dlist->get_visible_alpha($names->get_id);
 
     # Use name range override, if any
     my $nr_start;
@@ -535,6 +526,7 @@ sub _label_name {
 
       $acc .= _process_label_attributes($self,
                                         $citekey,
+                                        $dlist,
                                         $parts->{main}{strings}[$i],
                                         $labelattrs,
                                         $realname,
@@ -572,7 +564,7 @@ sub _label_name {
 # Complicated due to various label disambiguation schemes and also due to dealing with
 # name fields
 sub _process_label_attributes {
-  my ($self, $citekey, $fieldstrings, $labelattrs, $field, $nameparts, $index) = @_;
+  my ($self, $citekey, $dlist, $fieldstrings, $labelattrs, $field, $nameparts, $index) = @_;
 
   return join('', map {$_->[0]} $fieldstrings->@*) unless $labelattrs;
   my $rfield_string;
@@ -605,8 +597,9 @@ sub _process_label_attributes {
           my %indices;
           foreach my $key (@citekeys) {
             if (my $f = $section->bibentry($key)->get_field($field)) {
-              if ($nameparts) {
-                foreach my $n ($f->first_n_names($f->get_visible_alpha)->@*) {
+              if ($nameparts) { # name field
+                my $nlid = $f->get_id;
+                foreach my $n ($f->first_n_names($dlist->get_visible_alpha($nlid))->@*) {
                   # Do strip/nosort here as that's what we also do to the field contents
                   # we will use to look up in this hash later
                   $indices{normalise_string_label(join('',map {$n->get_namepart($_)} $nameparts->@*), $field)} = $n->get_index;
@@ -681,7 +674,7 @@ sub _process_label_attributes {
           # This retains the structure of the entries for the "l" list disambiguation
           # Have to be careful if field "$f" is not set for all entries
           my $strings = [map {my $f = $section->bibentry($_)->get_field($field);
-                              $f ? ($nameparts ? [map {my $n = $_;join('', map {$n->get_namepart($_)} $nameparts->@*)} $f->first_n_names($f->get_visible_alpha)->@*] : [$f]) : [''] }
+                              $f ? ($nameparts ? [map {my $n = $_;join('', map {$n->get_namepart($_)} $nameparts->@*)} $f->first_n_names($dlist->get_visible_alpha($f->get_id))->@*] : [$f]) : [''] }
                          @citekeys];
           my $lcache = _label_listdisambiguation($strings);
 
@@ -1219,7 +1212,7 @@ sub _sort_entrykey {
 
 sub _sort_labelalpha {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
-  my $string = $be->get_field('sortlabelalpha') // '';
+  my $string = $dlist->get_entryfield($citekey, 'sortlabelalpha') // '';
   return _process_sort_attributes($string, $sortelementattributes);
 }
 
@@ -1402,7 +1395,8 @@ sub _namestring {
   my $names = $be->get_field($field);
   my $str = '';
   my $count = $names->count_names;
-  my $visible = $names->get_visible_bib; # get visibility for bib - can be different to cite
+  # get visibility for bib - can be different to cite
+  my $visible = $dlist->get_visible_bib($names->get_id);
   my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
 
   # Get the sorting name key scheme for this list context

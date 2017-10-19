@@ -34,7 +34,7 @@ sub new {
   $self->{everykey_lc} = {};
   $self->{bcfkeycache} = {};
   $self->{labelcache_v} = {};
-  $self->{rccache} = [];
+  $self->{dlcache} = [];
   $self->{dkeys} = {};
   $self->{keytods} = {};
   $self->{orig_order_citekeys} = [];
@@ -52,7 +52,7 @@ sub new {
 
 sub reset_caches {
   my $self = shift;
-  $self->{rccache} = [];
+  $self->{dlcache} = [];
   $self->{labelcache_l} = {};
   $self->{labelcache_v} = {};
   $self->{bcfkeycache} = {};
@@ -663,29 +663,29 @@ sub get_datasources {
 }
 
 
-=head2 add_refcontext_cache
+=head2 add_datalist_cache
 
-    Adds refcontext data to the refcontext cache
+    Adds datalist data to the datalist cache
 
 =cut
 
-sub add_refcontext_cache {
+sub add_datalist_cache {
   my $self = shift;
   my $cacheitem = shift;
-  push $self->{rccache}->@*, $cacheitem;
+  push $self->{dlcache}->@*, $cacheitem;
   return;
 }
 
 
-=head2 get_refcontext_cache
+=head2 get_datalist_cache
 
-    Retrieves the refcontext cache
+    Retrieves the datalist cache
 
 =cut
 
-sub get_refcontext_cache {
+sub get_datalist_cache {
   my $self = shift;
-  return $self->{rccache};
+  return $self->{dlcache};
 }
 
 

@@ -171,7 +171,7 @@ eq_or_diff($out->get_output_entry('DynSet', $main0), $string1, 'Dynamic set test
 eq_or_diff($out->get_output_entry('Dynamic1', $main0), $string2, 'Dynamic set test 2');
 eq_or_diff($out->get_output_entry('Dynamic2', $main0), $string3, 'Dynamic set test 3');
 eq_or_diff($out->get_output_entry('Dynamic3', $main0), $string4, 'Dynamic set test 4');
-eq_or_diff($out->get_output_entry('Dynamic3', $main0, 1), $string5, 'Dynamic set test 5');
+eq_or_diff($out->get_output_entry('Dynamic3', $main1, 1), $string5, 'Dynamic set test 5');
 
 eq_or_diff($out->get_output_entry('Dynamic1', $sh0), $string2, 'Dynamic set skipbiblist 1');
 

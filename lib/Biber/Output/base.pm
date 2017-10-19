@@ -240,10 +240,7 @@ sub get_output_comments {
 =cut
 
 sub get_output_entry {
-  my $self = shift;
-  my $key = shift;
-  my $list = shift; # might not be set for, for example, tool mode tests
-  my $secnum = shift;
+  my ($self, $key, $list, $secnum) = @_;
 
   # defaults - mainly for tests
   if (not defined($secnum)) {
