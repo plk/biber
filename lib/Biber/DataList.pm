@@ -269,18 +269,6 @@ sub get_basenamestring {
   return $self->{state}{namelistdata}{$nlid}{$nid}{basenamestring};
 }
 
-=head2 set_basenamestring
-
-  Set a basenamestring for a particular name
-
-=cut
-
-sub set_basenamestring {
-  my ($self, $nlid, $nid, $s) = @_;
-  $self->{state}{namelistdata}{$nlid}{$nid}{basenamestring} = $s;
-  return;
-}
-
 =head2 get_namestring
 
   Get a namestring for a particular name
@@ -290,18 +278,6 @@ sub set_basenamestring {
 sub get_namestring {
   my ($self, $nlid, $nid) = @_;
   return $self->{state}{namelistdata}{$nlid}{$nid}{namestring};
-}
-
-=head2 set_namestring
-
-  Set a namestring for a particular name
-
-=cut
-
-sub set_namestring {
-  my ($self, $nlid, $nid, $s) = @_;
-  $self->{state}{namelistdata}{$nlid}{$nid}{namestring} = $s;
-  return;
 }
 
 =head2 get_namestrings
@@ -315,17 +291,32 @@ sub get_namestrings {
   return $self->{state}{namelistdata}{$nlid}{$nid}{namestrings};
 }
 
-=head2 set_namestrings
 
-  Set namestrings for a particular name
+=head2 set_namedis
+
+  Set name disambiguation metadata
 
 =cut
 
-sub set_namestrings {
-  my ($self, $nlid, $nid, $s) = @_;
-  $self->{state}{namelistdata}{$nlid}{$nid}{namestrings} = $s;
+sub set_namedis {
+  my ($self, $nlid, $nid, $ns, $nss, $nds) = @_;
+  $self->{state}{namelistdata}{$nlid}{$nid}{namestring} = $ns;
+  $self->{state}{namelistdata}{$nlid}{$nid}{namestrings} = $nss;
+
+  for (my $i=0;$i<=$nds->$#*;$i++) {
+    my $se = $nds->[$i];
+    # make these explicit for faster lookup since they are static
+    if ($se->[0] eq 'base') {
+      $self->{state}{namelistdata}{$nlid}{$nid}{basenamestring} = $nss->[$i];
+      $self->{state}{namelistdata}{$nlid}{$nid}{basenamestringparts} = $se->[1];
+      last;
+    }
+  }
+
+  $self->{state}{namelistdata}{$nlid}{$nid}{namedisschema} = $nds;
   return;
 }
+
 
 =head2 get_namehash
 
@@ -384,28 +375,6 @@ sub set_unmininfo {
 sub get_namedisschema {
   my ($self, $nlid, $nid) = @_;
   return $self->{state}{namelistdata}{$nlid}{$nid}{namedisschema};
-}
-
-=head2 set_namedisschema
-
-  Set a name disambiguation schema for a name
-
-=cut
-
-sub set_namedisschema {
-  my ($self, $nlid, $nid, $s) = @_;
-  my $namestrings = $self->{state}{namelistdata}{$nlid}{$nid}{namestrings};
-
-  for (my $i=0;$i<=$s->$#*;$i++) {
-    my $se = $s->[$i];
-    # make these explicit for faster lookup since they are static
-    if ($se->[0] eq 'base') {
-      $self->{state}{namelistdata}{$nlid}{$nid}{basenamestring} = $namestrings->[$i];
-      $self->{state}{namelistdata}{$nlid}{$nid}{basenamestringparts} = $se->[1];
-    }
-  }
-  $self->{state}{namelistdata}{$nlid}{$nid}{namedisschema} = $s;
-  return;
 }
 
 

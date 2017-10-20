@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 13;
+use Test::More tests => 15;
 use Test::Differences;
 unified_diff;
 
@@ -39,15 +39,12 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Now generate the information
 $biber->prepare;
 my $out = $biber->get_output_obj;
-my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('none/global//global/global');
 my $shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
 
-my $bibentries = $section->bibentries;
-
 my $k1 = q|    \entry{key1}{article}{}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{%
+        {{uniquename=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
@@ -78,7 +75,7 @@ my $k1 = q|    \entry{key1}{article}{}
 
 my $k2 = q|    \entry{key2}{inbook}{}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{%
+        {{uniquename=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
@@ -115,7 +112,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
 
 my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{%
+        {{uniquename=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
@@ -144,7 +141,7 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
 
 my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       \name{author}{1}{}{%
-        {{hash=a517747c3d12f99244ae598910d979c5}{%
+        {{uniquename=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
@@ -305,3 +302,74 @@ eq_or_diff( $out->get_output_entry('0a3d72134fb3d6c024db4c510bc1605b', $main), $
 
 # Testing custom relatedoptions
 eq_or_diff( $out->get_output_entry('8ddf878039b70767c4a5bcf4f0c4f65e', $main), $s1, 'Custom options - 1' ) ;
+
+my $un1 = q|    \entry{kullback}{book}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
+           family={Kullback},
+           familyi={K\bibinitperiod},
+           given={Solomon},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{1}{%
+        {John Wiley \& Sons}%
+      }
+      \strng{namehash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{fullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{bibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{authorbibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{authornamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \field{sortinit}{5}
+      \field{sortinithash}{c9df3c9fb8f555dd9201cedc5e343021}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
+      \field{title}{Information Theory and Statistics}
+      \field{year}{1959}
+    \\endentry
+|;
+
+my $un2 = q|    \entry{kullback:related}{book}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
+           family={Kullback},
+           familyi={K\bibinitperiod},
+           given={Solomon},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{1}{%
+        {Dover Publications}%
+      }
+      \strng{namehash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{fullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{bibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{authorbibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{authornamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \field{sortinit}{6}
+      \field{sortinithash}{02bbed3ed82f61ae046619460488516d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{annotation}{A reprint of the \texttt{kullback} entry. Note the format of the \texttt{related} and \texttt{relatedtype} fields}
+      \field{langid}{english}
+      \field{langidopts}{variant=american}
+      \field{relatedtype}{origpubin}
+      \field{title}{Information Theory and Statistics}
+      \field{year}{1997}
+      \field{related}{7963607e635f427aafeffbf28942c3bb}
+    \endentry
+|;
+
+# uniquename in related entries
+eq_or_diff($out->get_output_entry('kullback', $main), $un1, 'Related uniquename - 1');
+eq_or_diff($out->get_output_entry('kullback:related', $main), $un2, 'Related uniquename - 2');

@@ -76,3 +76,27 @@
   RELATEDSTRING = {Related Book:},
   RELATEDOPTIONS = {dataonly,skipbib=false,usecustom=false}
 }
+
+@BOOK{kullback,
+  AUTHOR       = {Kullback, Solomon},
+  TITLE        = {Information Theory and Statistics},
+  YEAR         = 1959,
+  PUBLISHER    = {John Wiley \& Sons},
+  LOCATION     = {New York},
+  LANGID       = {english},
+  LANGIDOPTS   = {variant=american},
+}
+
+@BOOK{kullback:related,
+  AUTHOR       = {Kullback, Solomon},
+  TITLE        = {Information Theory and Statistics},
+  YEAR         = 1997,
+  PUBLISHER    = {Dover Publications},
+  LOCATION     = {New York},
+  LANGID       = {english},
+  LANGIDOPTS   = {variant=american},
+  RELATED      = {kullback},
+  RELATEDTYPE  = {origpubin},
+  ANNOTATION   = {A reprint of the \texttt{kullback} entry. Note the format of
+                  the \texttt{related} and \texttt{relatedtype} fields},
+}

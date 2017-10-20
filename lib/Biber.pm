@@ -1514,8 +1514,13 @@ sub process_namedis {
   # Can be per-entry
   $untname = Biber::Config->getblxoption('uniquenametemplatename', undef, $citekey) // $untname;
 
+  # Instead of setting this directly in here, we save the data and pass it out as we need
+  # to use this method to get data without setting it in the list object (in uniqueprimaryauthor())
+  my $namedis;
+
   foreach my $pn ($dmh->{namelistsall}->@*) {
     next unless my $nl = $be->get_field($pn);
+    my $nlid = $nl->get_id;
 
     # per-namelist uniquenametemplatename
     if (defined($nl->get_uniquenametemplatename)) {
@@ -1523,6 +1528,7 @@ sub process_namedis {
     }
 
     foreach my $n ($nl->names->@*) {
+      my $nid = $n->get_id;
 
       my $namestring = '';
       my $namestrings = [];
@@ -1619,13 +1625,12 @@ sub process_namedis {
         $logger->trace("namestrings in '$citekey': " . join (',', $namestrings->@*));
       }
 
-      $dlist->set_namestring($nl->get_id, $n->get_id, $namestring);
-      $dlist->set_namestrings($nl->get_id, $n->get_id, $namestrings);
-      # must come after settings namestrings
-      $dlist->set_namedisschema($nl->get_id, $n->get_id, $namedisschema);
+      $namedis->{$nlid}{$nid} = {namestring    => $namestring,
+                                 namestrings   => $namestrings,
+                                 namedisschema => $namedisschema};
     }
   }
-  return;
+  return $namedis;
 }
 
 =head2 postprocess_sets
@@ -1699,9 +1704,26 @@ sub process_entries_pre {
   }
   foreach my $citekey ( $section->get_citekeys ) {
 
-    # process name disambiguation schemata
-    $self->process_namedis($citekey, $dlist);
+    my $be = $section->bibentry($citekey);
 
+    # Check this outside of process_namedis() because we need to use that in cases
+    # where uniquename=false (uniqueprimaryauthor for example);
+    if (Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) or
+        Biber::Config->getblxoption('uniquelist', $be->get_field('entrytype'), $citekey)) {
+
+      # process name disambiguation schemata
+      my $namedis = $self->process_namedis($citekey, $dlist);
+
+      foreach my $nlid (keys $namedis->%*) {
+        foreach my $nid (keys $namedis->{$nlid}->%*) {
+          $dlist->set_namedis($nlid,
+                              $nid,
+                              $namedis->{$nlid}{$nid}{namestring},
+                              $namedis->{$nlid}{$nid}{namestrings},
+                              $namedis->{$nlid}{$nid}{namedisschema});
+        }
+      }
+    }
   }
 
   if ($logger->is_debug()) {# performance tune
@@ -1815,7 +1837,21 @@ sub process_uniqueprimaryauthor {
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Creating uniqueprimaryauthor information for '$citekey'");
       }
-      my $paf = $dlist->get_basenamestring($nl->get_id, $nl->nth_name(1)->get_id);
+
+      my $namedis = $self->process_namedis($citekey, $dlist);
+
+      my $nds = $namedis->{$nl->get_id}{$nl->nth_name(1)->get_id}{namedisschema};
+      my $nss = $namedis->{$nl->get_id}{$nl->nth_name(1)->get_id}{namestrings};
+      my $paf;
+
+      for (my $i=0;$i<=$nds->$#*;$i++) {
+        my $se = $nds->[$i];
+        if ($se->[0] eq 'base') {
+          $paf = $nss->[$i];
+          last;
+        }
+      }
+
       $dlist->set_entryfield($citekey, 'seenprimaryauthor', $paf);
       $dlist->incr_seenpa($paf);
     }
@@ -3218,15 +3254,16 @@ sub create_uniquelist_info {
 
     if (my $lni = $be->get_labelname_info) {
       my $nl = $be->get_field($lni);
+      my $nlid = $nl->get_id;
       my $num_names = $nl->count_names;
       my $namelist = [];
       my $ulminyear_namelist = [];
 
       foreach my $n ($nl->names->@*) {
-
-        my $basename = $dlist->get_basenamestring($nl->get_id, $n->get_id);
-        my $namestrings = $dlist->get_namestrings($nl->get_id, $n->get_id);
-        my $namedisschema = $dlist->get_namedisschema($nl->get_id, $n->get_id);
+        my $nid = $n->get_id;
+        my $basename = $dlist->get_basenamestring($nlid, $nid);
+        my $namestrings = $dlist->get_namestrings($nlid, $nid);
+        my $namedisschema = $dlist->get_namedisschema($nlid, $nid);
         my $ulminyearflag = 0;
 
         # uniquelist = minyear
@@ -3238,7 +3275,7 @@ sub create_uniquelist_info {
           }
         }
 
-        my $unall = $dlist->get_uniquename_all($nl->get_id, $n->get_id);
+        my $unall = $dlist->get_uniquename_all($nlid, $nid);
 
         # uniquename is not set so generate uniquelist based on just base name
         if (not defined($unall) or $unall->[0] eq 'base') {
@@ -3304,15 +3341,17 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
 
     if (my $lni = $be->get_labelname_info) {
       my $nl = $be->get_field($lni);
+      my $nlid = $nl->get_id;
       my $namelist = [];
       my $num_names = $nl->count_names;
 
       foreach my $n ($nl->names->@*) {
-        my $basename = $dlist->get_basenamestring($nl->get_id, $n->get_id);
-        my $namestrings = $dlist->get_namestrings($nl->get_id, $n->get_id);
-        my $namedisschema = $dlist->get_namedisschema($nl->get_id, $n->get_id);
+        my $nid = $n->get_id;
+        my $basename = $dlist->get_basenamestring($nlid, $nid);
+        my $namestrings = $dlist->get_namestrings($nlid, $nid);
+        my $namedisschema = $dlist->get_namedisschema($nlid, $nid);
 
-        my $unall = $dlist->get_uniquename_all($nl->get_id, $n->get_id);
+        my $unall = $dlist->get_uniquename_all($nlid, $nid);
 
         # uniquename is not set so generate uniquelist based on just base name
         if (not defined($unall) or $unall->[0] eq 'base') {

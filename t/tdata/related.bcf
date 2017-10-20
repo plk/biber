@@ -129,11 +129,11 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>0</bcf:value>
+      <bcf:value>2</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniqueprimaryauthor</bcf:key>
@@ -185,7 +185,6 @@
     <bcf:option datatype="string">alphaothers</bcf:option>
     <bcf:option datatype="string">sortalphaothers</bcf:option>
     <bcf:option datatype="string">presort</bcf:option>
-    <bcf:option datatype="string">backend</bcf:option>
     <bcf:option datatype="string">texencoding</bcf:option>
     <bcf:option datatype="string">bibencoding</bcf:option>
     <bcf:option datatype="string">sorting</bcf:option>
@@ -1817,6 +1816,8 @@
     <bcf:citekey order="2">key2</bcf:citekey>
     <bcf:citekey order="3">c1</bcf:citekey>
     <bcf:citekey order="4">s2</bcf:citekey>
+    <bcf:citekey order="5">kullback</bcf:citekey>
+    <bcf:citekey order="6">kullback:related</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sorting scheme="nty">
