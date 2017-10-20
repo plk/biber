@@ -34,7 +34,6 @@ sub new {
   $self->{everykey_lc} = {};
   $self->{bcfkeycache} = {};
   $self->{labelcache_v} = {};
-  $self->{dlcache} = [];
   $self->{dkeys} = {};
   $self->{keytods} = {};
   $self->{orig_order_citekeys} = [];
@@ -52,7 +51,6 @@ sub new {
 
 sub reset_caches {
   my $self = shift;
-  $self->{dlcache} = [];
   $self->{labelcache_l} = {};
   $self->{labelcache_v} = {};
   $self->{bcfkeycache} = {};
@@ -661,33 +659,6 @@ sub get_datasources {
     return undef;
   }
 }
-
-
-=head2 add_datalist_cache
-
-    Adds datalist data to the datalist cache
-
-=cut
-
-sub add_datalist_cache {
-  my $self = shift;
-  my $cacheitem = shift;
-  push $self->{dlcache}->@*, $cacheitem;
-  return;
-}
-
-
-=head2 get_datalist_cache
-
-    Retrieves the datalist cache
-
-=cut
-
-sub get_datalist_cache {
-  my $self = shift;
-  return $self->{dlcache};
-}
-
 
 
 =head2 number

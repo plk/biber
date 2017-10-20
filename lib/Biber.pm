@@ -260,14 +260,13 @@ sub tool_mode_setup {
 
   my $datalists = new Biber::DataLists;
   my $seclist = Biber::DataList->new(section => 99999,
-                                     sortschemename => Biber::Config->getblxoption('sortscheme'),
+                                     sortschemename => 'tool',
                                      sortnamekeyschemename => 'global',
                                      uniquenametemplatename => 'global',
                                      labelalphanametemplatename => 'global',
                                      labelprefix => '',
-                                     name => Biber::Config->getblxoption('sortscheme') . '/global//global/global');
+                                     name => 'tool/global//global/global');
   $seclist->set_type('entry');
-  $seclist->set_sortscheme(Biber::Config->getblxoption('sorting'));
   # Locale just needs a default here - there is no biblatex option to take it from
   Biber::Config->setblxoption('sortlocale', 'en_US');
   if ($logger->is_debug()) {# performance tune
@@ -390,6 +389,7 @@ sub parse_ctrlfile {
                                                            qr/\Akeypart\z/,
                                                            qr/\Apart\z/,
                                                            qr/\Asortingnamekey\z/,
+                                                           qr/\Asorting\z/,
                                                            qr/\Aper_datasource\z/,
                                                            qr/\Anosort\z/,
                                                            qr/\Amember\z/,
@@ -709,7 +709,7 @@ sub parse_ctrlfile {
   }
 
   # sorting excludes
-  foreach my $sex ($bcfxml->{sorting}{sortexclusion}->@*) {
+  foreach my $sex ($bcfxml->{sortexclusion}->@*) {
     my $excludes;
     foreach my $ex ($sex->{exclusion}->@*) {
       $excludes->{$ex->{content}} = 1;
@@ -721,7 +721,7 @@ sub parse_ctrlfile {
   }
 
   # sorting includes
-  foreach my $sin ($bcfxml->{sorting}{sortinclusion}->@*) {
+  foreach my $sin ($bcfxml->{sortinclusion}->@*) {
     my $includes;
     foreach my $in ($sin->{inclusion}->@*) {
       $includes->{$in->{content}} = 1;
@@ -733,7 +733,7 @@ sub parse_ctrlfile {
   }
 
   # presort defaults
-  foreach my $presort ($bcfxml->{sorting}{presort}->@*) {
+  foreach my $presort ($bcfxml->{presort}->@*) {
     # Global presort default
     unless (exists($presort->{type})) {
       Biber::Config->setblxoption('presort', $presort->{content});
@@ -747,9 +747,11 @@ sub parse_ctrlfile {
     }
   }
 
-  my $sorting = _parse_sort($bcfxml->{sorting});
-
-  Biber::Config->setblxoption('sorting', $sorting);
+  my $sortschemes;
+  foreach my $ss ($bcfxml->{sorting}->@*) {
+    $sortschemes->{$ss->{scheme}} = _parse_sort($ss);
+  }
+  Biber::Config->setblxoption('sorting', $sortschemes);
 
   # DATAMODEL schema (always global)
   Biber::Config->setblxoption('datamodel', $bcfxml->{datamodel});
@@ -899,19 +901,12 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
       $datalist->add_filter($orfilts) if $orfilts;
     }
 
-    if (my $sorting = $list->{sorting}) { # can be undef for fallback to global sorting
-      $datalist->set_sortscheme(_parse_sort($sorting));
-    }
-    else {
-      $datalist->set_sortscheme(Biber::Config->getblxoption('sorting'));
-    }
-
     # Collator for determining primary weight hash for sortinit
     # Here as it varies only with the locale and that doesn't vary between entries in a list
     # Potentially, the locale could be different for the first field in the sort spec in which
     # case that might give wrong results but this is highly unlikely as it is only used to
     # determine sortinithash in DataList.pm and that only changes \bibinitsep in biblatex.
-    $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $datalist->get_sortscheme->{locale}, level => 1));
+    $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption('sorting')->{$datalist->get_sortschemename}->{locale}, level => 1));
 
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Adding datalist of type '$ltype' with sortscheme '$lssn', sortnamekeyscheme '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn', labelalphanametemplate '$llantn' and name '$lname' for section $lsection");
@@ -935,10 +930,10 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
                                           labelalphanametemplatename => 'global',
                                           labelprefix                => '',
                                           name                       => "$globalss/global//global/global");
-      $datalist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $datalists->add_list($datalist);
       # See comment above
-      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $datalist->get_sortscheme->{locale}, level => 1));
+
+      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption('sorting')->{$datalist->get_sortschemename}->{locale}, level => 1));
     }
   }
 
@@ -983,22 +978,13 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     Biber::Config->setblxoption('sortlocale', 'english');
 
     my $datalist = Biber::DataList->new(section => 99999,
-                                        sortschemename => Biber::Config->getblxoption('sortscheme'),
+                                        sortschemename => 'none',
                                         sortnamekeyschemename => 'global',
                                         uniquenametemplatename => 'global',
                                         labelalphanametemplatename => 'global',
                                         labelprefix => '',
                                         name => Biber::Config->getblxoption('sortscheme') . '/global//global/global');
     $datalist->set_type('entry');
-    # bibtex output in non-tool mode is just citeorder
-    $datalist->set_sortscheme({locale => locale2bcp47(Biber::Config->getblxoption('sortlocale')),
-                              spec   =>
-                             [
-                              [
-                               {},
-                               {'citeorder'    => {}}
-                              ]
-                             ]});
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
     }
@@ -1030,12 +1016,11 @@ sub process_setup {
                                           labelalphanametemplatename => 'global',
                                           labelprefix => '',
                                           name => Biber::Config->getblxoption('sortscheme') . '/global//global/global');
-      $datalist->set_sortscheme(Biber::Config->getblxoption('sorting'));
       $datalist->set_type('entry');
       $datalist->set_section($secnum);
       $self->datalists->add_list($datalist);
       # See comment for same call in .bcf instantiation of datalists
-      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => $datalist->get_sortscheme->{locale}, level => 1));
+      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption('sorting')->{$datalist->get_sortschemename}->{locale}, level => 1));
     }
   }
 
@@ -2599,7 +2584,6 @@ sub process_lists {
     $list->reset_state;
 
     # Last-ditch fallback in case we still don't have a sorting spec
-    $list->set_sortscheme(Biber::Config->getblxoption('sorting')) unless $list->get_sortscheme;
     $list->set_sortnamekeyschemename('global') unless $list->get_sortnamekeyschemename;
     $list->set_uniquenametemplatename('global') unless $list->get_uniquenametemplatename;
     $list->set_labelalphanametemplatename('global') unless $list->get_labelalphanametemplatename;
@@ -2608,64 +2592,12 @@ sub process_lists {
       $logger->debug("Populated datalist '$lname' of type '$ltype' with attributes '$lattrs' in section $secnum with keys: " . join(', ', $list->get_keys));
     }
 
-    # Now we check the sorting cache to see if we already have results
-    # for this refcontext since sorting/labelling is computationally expensive.
-    # We know the keys are the same as we just set them
-    # to a copy of the section citekeys above. If the refcontext is the same
-    # as a previous context then the results have to also be the same so inherit
-    # the results which are normally set by sorting:
-    #
-    # * sorted keys
-    # * sortinit data
-    # * extra* data
-
-    # my $cache_flag = 0;
-    # if ($logger->is_debug()) {# performance tune
-    #   $logger->debug("Checking datalist cache for datalist with attributes '$lattrs'");
-    # }
-    # foreach my $cacheitem ($section->get_datalist_cache->@*) {
-    #   # This conditional checks for identity of the data elements which constitute
-    #   # a biblatex refcontext since a datalist is conceptually part of a refcontext
-    #   if (Compare($list->get_sortscheme, $cacheitem->[0]) and
-    #       $list->get_sortnamekeyschemename eq $cacheitem->[1] and
-    #       $list->get_labelprefix eq $cacheitem->[2] and
-    #       Compare($list->get_namelistdata, $cacheitem->[10]) and
-    #       Compare($list->get_labelalphadata, $cacheitem->[11])) {
-    #     if ($logger->is_debug()) {# performance tune
-    #       $logger->debug("Found datalist cache entry for datalist with attributes '$lattrs'");
-    #     }
-    #     $list->set_sortnamekeyschemename($cacheitem->[1]);
-    #     $list->set_labelprefix($cacheitem->[2]);
-    #     $list->set_keys($cacheitem->[3]);
-    #     $list->set_sortinitdata($cacheitem->[4]);
-    #     $list->set_extrayeardata($cacheitem->[5]);
-    #     $list->set_extraalphadata($cacheitem->[6]);
-    #     $list->set_extratitledata($cacheitem->[7]);
-    #     $list->set_extratitleyeardata($cacheitem->[8]);
-    #     $list->set_sortdataschema($cacheitem->[9]);
-    #     $list->set_namelistdata($cacheitem->[10]);
-    #     $list->set_labelalphadata($cacheitem->[11]);
-    #     $cache_flag = 1;
-    #     last;
-    #   }
-    # }
-
-    # unless ($cache_flag) {
-    #   if ($logger->is_debug()) {# performance tune
-    #     $logger->debug("No datalist cache entry for datalist with '$lattrs'");
-    #   }
-
     # A datalist represents a biblatex refcontext
     # and many things are refcontext specific and so we need to use the right data. For
     # example labelalphanametemplate and uniquenametemplate can be set per-list and much
     # processing uses these
 
     unless (Biber::Config->getoption('tool')) {
-      # Reset these per-list otherwise we increment counters more than once
-      # $list->reset_la_disambiguation;
-      # $list->reset_workuniqueness;
-      # $list->reset_seen_extra;
-      # $list->reset_entryfields;
 
       # Set this so that uniqueness processing starts
       $list->set_unul_changed(1);
@@ -2693,13 +2625,6 @@ sub process_lists {
     $self->generate_sortinfo($list);       # generate the sort information
     $self->sort_list($list);               # sort the list
     $self->generate_contextdata($list) unless Biber::Config->getoption('tool');
-
-    # Cache the results
-    # if ($logger->is_debug()) {  # performance tune
-    #   $logger->debug("Adding datalist cache entry for '$lattrs'");
-    # }
-    # $section->add_datalist_cache($list->get_listdata);
-    #    }
 
     # Filtering
     if (my $filters = $list->get_filters) {
@@ -2852,7 +2777,20 @@ sub generate_sortdataschema {
   my ($self, $list) = @_;
   my $dm = Biber::Config->get_dm;
   my $ds;
-  foreach my $sort ($list->get_sortscheme->{spec}->@*) {
+  my $schema;
+
+  # Check if sorting schemename for the list contains anything ...
+  if (keys Biber::Config->getblxoption('sorting')->{$list->get_sortschemename}->%*) {
+    $schema = Biber::Config->getblxoption('sorting')->{$list->get_sortschemename};
+  }
+  else {
+    # ... fall back to global default if named scheme does not exist
+    $schema = Biber::Config->getblxoption('sorting')->{Biber::Config->getblxoption('sortscheme')};
+  }
+
+  $list->set_sortscheme($schema); # link the sort schema into the list
+
+  foreach my $sort ($schema->{spec}->@*) {
     # Assume here that every item in a sorting spec section is the same datatype
     # See header for data structure
     my $direction = '';

@@ -10,7 +10,6 @@ use Biber;
 use Biber::Output::bbl;
 use Log::Log4perl;
 chdir("t/tdata");
-my $S;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
@@ -38,140 +37,25 @@ Biber::Config->setblxoption('labelalpha', 0);
 # (re)generate informtion based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('none/global//global/global');
 
 is_deeply([ $main->get_keys ], ['L2','L3','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'citeorder');
 
-# nty
-$S = { spec => [
-                                                    [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {final          => 1,
-                                                      },
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'volume'     => {}},
-                                                     {'0000'       => {}}
-                                                    ]
-                                                   ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([ $main->get_keys ], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nty');
 
-# nyt
-$S = { spec => [
-                                                    [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {final          => 1,
-                                                      },
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'volume'     => {}},
-                                                     {'0000'       => {}}
-                                                    ]
-                                                   ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('nyt');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyt');
 
-# nyvt
-$S = { spec => [
-                                                    [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {final          => 1,
-                                                      },
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'volume'     => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ]
-                                                   ]};
-
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('nyvt');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
@@ -179,85 +63,15 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt');
 
 # nyvt with volume padding
-$S = { spec => [
-                                                    [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {final          => 1,
-                                                      },
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'volume'     => {pad_side => 'right'}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ]
-                                                   ]};
 
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('nyvtvp');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt with volume padding');
 
-# ynt
-$S = { spec => [
-                               						      [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {final          => 1,
-                                                      },
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}},
-                                                     {'9999'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                   ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('ynt');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
@@ -266,41 +80,7 @@ $section = $biber->sections->get_section(0);
 # int in sort fields
 is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
 
-# ynt with year substring
-$S = { spec => [
-						      [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {final          => 1,
-                                                      },
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {'substring_side' => 'left',
-                                                                       'substring_width' => 3}},
-                                                     {'9999'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                   ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('yntys');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
@@ -309,40 +89,7 @@ $section = $biber->sections->get_section(0);
 # int in sort fields
 is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5'], 'ynt with year substring');
 
-# ydnt
-$S = { spec => [
-                                                    [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {final          => 1,
-                                                      },
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {sort_direction => 'descending'},
-                                                     {'sortyear'  => {}},
-                                                     {'year'      => {}},
-                                                     {'9999'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                   ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('ydnt');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
@@ -351,49 +98,8 @@ $section = $biber->sections->get_section(0);
 # large int in sort fields
 is_deeply([$main->get_keys], ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
 
-# anyt
-$S = { spec => [
-                                                    [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'labelalpha' => {}}
-                                                    ],
-                                                    [
-                                                     {final          => 1,
-                                                      },
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'0000'       => {}}
-                                                    ]
-                                                   ]};
+$main->set_sortschemename('anyt');
 
-$main->set_sortscheme($S);
 Biber::Config->setblxoption('labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::bbl->new());
@@ -403,49 +109,8 @@ is_deeply([$main->get_keys], ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6
 
 Biber::Config->setblxoption('labelalpha', 0);
 
-# anyvt
-$S = { spec => [
-                                                    [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'labelalpha' => {}}
-                                                    ],
-                                                    [
-                                                     {final          => 1,
-                                                      },
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'volume'     => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ]
-                                                   ]};
+$main->set_sortschemename('anyvt');
 
-$main->set_sortscheme($S);
 Biber::Config->setblxoption('labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::bbl->new());
@@ -453,32 +118,7 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyvt');
 
-
-# nty with descending n
-$S = { spec => [
-                                                    [
-                                                     {sort_direction => 'descending'},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ],
-                                                    [
-                                                     {},
-                                                     {'sortyear'   => {}},
-                                                     {'year'       => {}},
-                                                     {'0000'       => {}}
-                                                    ],
-                                                   ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('ndty');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
@@ -486,14 +126,8 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1'], 'nty with descending n');
 
 # Test nosort option
-$S = { spec => [
-                                                    [
-                                                     {},
-                                                     {'title'     => {}}
-                                                    ]
-                                                   ]};
+$main->set_sortschemename('t');
 
-$main->set_sortscheme($S);
 # Set nosort for tests, skipping "The " in titles so L7 should sort before L6
 Biber::Config->setoption('nosort', [{ name => 'settitles', value => q/\AThe\s+/ }]);
 
@@ -504,17 +138,8 @@ is_deeply([$main->get_keys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9
 
 # Testing sorting keys which have the same order as they were cited in the same \cite*{} cmd.
 # In this case, they will be tied on sorting=none and can be further sorted by other fields
-$S = { spec => [
-                                                      [
-                                                       {},
-                                                       {'citeorder'    => {}}
-                                                      ],
-                                                      [
-                                                       {},
-                                                       {'year'    => {}}
-                                                      ],
-                                                     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('ny');
+
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $biber->set_output_obj(Biber::Output::bbl->new());
@@ -524,14 +149,8 @@ is_deeply([ $main->get_keys ], ['L3','L2','L1B','L1','L4','L5','L1A','L7','L8','
 
 # Testing special case of sorting=none and allkeys because in this case "citeorder" means
 # bib order
-$S = { spec => [
-                                                      [
-                                                       {},
-                                                       {'citeorder'    => {}}
-                                                      ],
-                                                     ]};
+$main->set_sortschemename('none');
 
-$main->set_sortscheme($S);
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
 $section->del_citekeys;

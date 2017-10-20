@@ -1343,47 +1343,6 @@ sub count_keys {
   return $#{$self->{keys}} + 1;
 }
 
-
-=head2 get_listdata
-
-    Gets all of the list metadata
-
-=cut
-
-sub get_listdata {
-  my $self = shift;
-  return [ $self->{sortscheme},
-           $self->{sortnamekeyschemename},
-           $self->{labelprefix},
-           $self->{keys},
-           $self->{sortinitdata},
-           $self->{state}{extrayeardata},
-           $self->{state}{extraalphadata},
-           $self->{state}{extratitledata},
-           $self->{state}{extratitleyeardata},
-           $self->{state}{sortdataschema},
-           $self->{state}{namelistdata},
-           $self->{state}{namehashdata},
-           $self->{state}{labelalphadata}];
-}
-
-=head2 reset_listdata
-
-  Reset list data
-
-=cut
-
-sub reset_listdata {
-  my $self = shift;
-  $self->{state}{extrayeardata} = {};
-  $self->{state}{extraalphadata} = {};
-  $self->{state}{extratitledata} = {};
-  $self->{state}{extratitleyeardata} = {};
-  $self->{state}{labelalphadata} = {};
-  $self->{state}{namelistdata} = {};
-  return;
-}
-
 =head2 get_namelistdata
 
   Gets  name list data

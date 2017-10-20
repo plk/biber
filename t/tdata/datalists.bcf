@@ -643,13 +643,7 @@
       <bcf:part type="namepart" order="1">family</bcf:part>
     </bcf:keypart>
   </bcf:sortingnamekey>
-  <!-- SORTING -->
-  <bcf:sorting>
-    <bcf:presort>mm</bcf:presort>
-    <bcf:sort order="1">
-      <bcf:sortitem order="1">citeorder</bcf:sortitem>
-    </bcf:sort>
-  </bcf:sorting>
+  <bcf:presort>mm</bcf:presort>
   <!-- DATA MODEL -->
   <bcf:datamodel>
     <bcf:constants>
@@ -1868,6 +1862,83 @@
     <bcf:citekey order="4">D4</bcf:citekey>
     <bcf:citekey order="5">D5</bcf:citekey>
   </bcf:section>
+  <!-- SORTING -->
+  <bcf:sorting scheme="nty">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">presort</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2" final="1">
+      <bcf:sortitem order="1">sortkey</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="3">
+      <bcf:sortitem order="1">sortname</bcf:sortitem>
+      <bcf:sortitem order="2">author</bcf:sortitem>
+      <bcf:sortitem order="3">editor</bcf:sortitem>
+      <bcf:sortitem order="4">translator</bcf:sortitem>
+      <bcf:sortitem order="5">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="6">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="4">
+      <bcf:sortitem order="1">sorttitle</bcf:sortitem>
+      <bcf:sortitem order="2">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="5">
+      <bcf:sortitem order="1">sortyear</bcf:sortitem>
+      <bcf:sortitem order="2">year</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="6">
+      <bcf:sortitem order="1">volume</bcf:sortitem>
+      <bcf:sortitem order="2">0</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting scheme="none">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">citeorder</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting scheme="lname">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">author</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting scheme="lnameswe" locale="swedish">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">author</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting scheme="lyear">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">year</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting scheme="lyeard">
+    <bcf:sort order="1" sort_direction="descending">
+      <bcf:sortitem order="1">year</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting scheme="ltitle">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">title</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting scheme="ltitlespan" locale="es_ES_trad">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">title</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting scheme="ltitleset">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">title</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2" locale="es_ES_trad">
+      <bcf:sortitem order="1">note</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
+  <bcf:sorting scheme="publisher">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">publisher</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sorting>
   <!-- DATA LISTS -->
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
@@ -1877,11 +1948,6 @@
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">author</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
@@ -1891,79 +1957,54 @@
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
-    <bcf:sorting locale="swedish">
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">author</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
                 name="lnamef1"
-                sortscheme="lnamef1"
+                sortscheme="lname"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
     <bcf:filter type="field">publisher</bcf:filter>
     <bcf:filter type="notfield">verba</bcf:filter>
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">author</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
                 name="lnamef2"
-                sortscheme="lnamef2"
+                sortscheme="lname"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
     <bcf:filter type="keyword">key2</bcf:filter>
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">author</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
                 name="lnamef3"
-                sortscheme="lnamef3"
+                sortscheme="lname"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
     <bcf:filter type="nottype">thesis</bcf:filter>
     <bcf:filter type="notkeyword">key1</bcf:filter>
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">author</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
                 name="lnamef4"
-                sortscheme="lnamef4"
+                sortscheme="lname"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
     <bcf:filter type="notfield">verba</bcf:filter>
     <bcf:filter type="subtype">rubbish</bcf:filter>
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">author</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
                 name="lnamef5"
-                sortscheme="lnamef5"
+                sortscheme="lname"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
@@ -1973,25 +2014,15 @@
       <bcf:filter type="field">verba</bcf:filter>
       <bcf:filter type="subtype">rubbish</bcf:filter>
     </bcf:filteror>
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">author</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
                 name="lyear"
-                sortscheme="lyear"
+                sortscheme="lyeard"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
-    <bcf:sorting>
-      <bcf:sort order="1" sort_direction="descending">
-        <bcf:sortitem order="1">year</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
@@ -2001,11 +2032,6 @@
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">title</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
@@ -2015,11 +2041,6 @@
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
-    <bcf:sorting locale="es_ES_trad">
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">title</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
@@ -2029,29 +2050,16 @@
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">title</bcf:sortitem>
-      </bcf:sort>
-      <bcf:sort order="2" locale="es_ES_trad">
-        <bcf:sortitem order="1">note</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <!-- This should be ignored as it's a repeat -->
   <bcf:datalist sortnamekeyscheme="global"
                 section="0"
                 name="ltitle"
-                sortscheme="ltitle"
+                sortscheme="publisher"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">publisher</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <!-- datalist/entry/names and name scope sorting name key scheme
        scheme is overridden at entry (K6), names (K11) and name (K12) scope -->
@@ -2063,26 +2071,16 @@
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">author</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
   <!-- Testing dates -->
   <bcf:datalist sortnamekeyscheme="global"
                 section="1"
                 name="ldates"
-                sortscheme="ldates"
+                sortscheme="lyear"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global">
-    <bcf:sorting>
-      <bcf:sort order="1">
-        <bcf:sortitem order="1">year</bcf:sortitem>
-      </bcf:sort>
-    </bcf:sorting>
   </bcf:datalist>
 </bcf:controlfile>
 

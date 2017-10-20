@@ -103,6 +103,21 @@ start =
     uniquenametemplate* &
     sortingnamekey? &
     sorting? &
+    # presort default strings for different entry types
+    element presort {
+      attribute type { text }?,
+      text
+    }* &
+    # excludes of certain fields for sorting for specified types
+    element sortexclusion {
+      attribute type { text },
+      element exclusion { text }+
+    }* &
+    # forcibly includes certain fields excluded by sortexclusion for sorting for specified types
+    element sortinclusion {
+      attribute type { text },
+      element inclusion { text }+
+    }* &
     element sortlocale           { text }? &
     element sortupper            { "0" | "1" }? &
     element sourcemap            {
@@ -391,18 +406,10 @@ sortingnamekey =
 
 sorting = 
   element sorting {
+    # sorting scheme name
+    attribute scheme { xsd:string {minLength="1"}},
     # locale for entire sorting specification
     attribute locale { xsd:string {minLength="1"}}?,
-    # presort default strings for different entry types
-    element presort {
-      attribute type { text }?,
-      text
-    }+,
-    # excludes of certain fields for sorting for specified types
-    element sortexclusion {
-      attribute type { text },
-      element exclusion { text }+
-    }*,
     sort+
   }
 

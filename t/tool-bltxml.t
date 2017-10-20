@@ -18,7 +18,7 @@ no warnings 'utf8';
 use utf8;
 
 # Set up Biber object
-my $biber = Biber->new( configfile => 'tool-test.conf');
+my $biber = Biber->new( configfile => 'tool-testsort.conf');
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -58,10 +58,11 @@ $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber
 $biber->tool_mode_setup;
 $biber->prepare_tool;
 $out->output;
+
 my $main = $biber->datalists->get_lists_by_attrs(section                    => 99999,
-                                       name                       => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
+                                       name                       => 'tool/global//global/global',
                                        type                       => 'entry',
-                                       sortschemename             => Biber::Config->getblxoption('sortscheme'),
+                                       sortschemename             => 'tool',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',

@@ -1070,8 +1070,10 @@ sub _generatesortinfo {
   my $be = $section->bibentry($citekey);
   my $sortobj;
   my $szero = 0;
+
   $BIBER_SORT_NULL = 0;
   $BIBER_SORT_FINAL = '';
+
   foreach my $sortset ($sortscheme->{spec}->@*) {
     my $s = $self->_sortset($sortset, $citekey, $secnum, $section, $be, $dlist);
 

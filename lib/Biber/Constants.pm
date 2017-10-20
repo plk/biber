@@ -183,7 +183,7 @@ our %CONFIG_META_MARKERS = ();
 # * Some tool-mode defaults (as there is no .bcf and some biblatex options
 #   cannot be set in a biber config file)
 our %CONFIG_DEFAULT_BIBLATEX = (
-                                sortscheme    => 'none',
+                                sortscheme    => 'tool',
                                 useauthor     => 1,
                                 useeditor     => 1,
                                 usetranslator => 1,

@@ -10,7 +10,6 @@ use Biber;
 use Biber::Output::bbl;
 use Log::Log4perl;
 chdir("t/tdata");
-my $S;
 
 # Set up Biber object
 my $biber = Biber->new(noconf => 1);
@@ -37,7 +36,7 @@ Biber::Config->setoption('sortlocale', 'sv_SE.UTF-8');
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global');
-my $shs = $biber->datalists->get_list('shorthands/global//global/global', 0, 'list');
+my $shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
 
 # Shorthands are sorted by shorthand (as per bcf)
 is_deeply([$main->get_keys], ['LS6','LS5','LS2','LS1','LS3','LS4'], 'U::C tailoring - 1');
@@ -53,27 +52,7 @@ is_deeply([$shs->get_keys], ['LS2', 'LS1','LS3','LS4'], 'U::C tailoring - 3');
 
 
 # Descending name in Swedish collation
-$S = { spec => [
-                                                    [
-                                                     {},
-                                                     {'presort'    => {}}
-                                                    ],
-                                                    [
-                                                     {final        => 1},
-                                                     {'sortkey'    => {}}
-                                                    ],
-                                                    [
-                                                     {sort_direction => 'descending'},
-                                                     {'sortname'   => {}},
-                                                     {'author'     => {}},
-                                                     {'editor'     => {}},
-                                                     {'translator' => {}},
-                                                     {'sorttitle'  => {}},
-                                                     {'title'      => {}}
-                                                    ]
-                                                   ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('dswe');
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -81,14 +60,7 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['LS3','LS4','LS1','LS2','LS5','LS6'], 'U::C tailoring descending - 1');
 
 # Local lower before upper setting
-$S = { spec => [
-                                                    [
-                                                     {sortupper => 0},
-                                                     {'title'   => {}}
-                                                    ]
-                                                   ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('ll');
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -102,15 +74,8 @@ $biber->parse_ctrlfile('sort-uc.bcf');
 $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('nty/global//global/global');
 $biber->set_output_obj(Biber::Output::bbl->new());
-$S = { spec => [
-                                                    [
-                                                     {sortupper => 0,
-                                                      sortcase  => 0},
-                                                     {'title'   => {}}
-                                                    ]
-                                                   ]};
 
-$main->set_sortscheme($S);
+$main->set_sortschemename('ci');
 $biber->prepare;
 is_deeply([$main->get_keys], ['LS5', 'LS6','LS3', 'LS4','LS2','LS1'], 'sortcase locally false, upper_before_lower locally false');
 

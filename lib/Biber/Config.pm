@@ -350,6 +350,7 @@ sub _config_file_set {
                                                             qr/\A(?:or)?filter\z/,
                                                             qr/\Asortexclusion\z/,
                                                             qr/\Aexclusion\z/,
+                                                            qr/\Asorting\z/,
                                                             qr/\Asort\z/,
                                                             qr/\Alabelalpha(?:name)?template\z/,
                                                             qr/\Asortitem\z/,
@@ -530,9 +531,8 @@ sub _config_file_set {
     elsif (lc($k) eq 'inheritance') {# This is a biblatex option
       Biber::Config->setblxoption($k, $v);
     }
-    elsif (lc($k) eq 'sorting') {# This is a biblatex option
-      # sorting excludes
-      foreach my $sex ($v->{sortexclusion}->@*) {
+    elsif (lc($k) eq 'sortexclusion') {# This is a biblatex option
+      foreach my $sex ($v->@*) {
         my $excludes;
         foreach my $ex ($sex->{exclusion}->@*) {
           $excludes->{$ex->{content}} = 1;
@@ -542,9 +542,22 @@ sub _config_file_set {
                                     'ENTRYTYPE',
                                     $sex->{type});
       }
-
+    }
+    elsif (lc($k) eq 'sortinclusion') {# This is a biblatex option
+      foreach my $sin ($v->@*) {
+        my $includes;
+        foreach my $in ($sin->{inclusion}->@*) {
+          $includes->{$in->{content}} = 1;
+        }
+        Biber::Config->setblxoption('sortinclusion',
+                                    $includes,
+                                    'ENTRYTYPE',
+                                    $sin->{type});
+      }
+    }
+    elsif (lc($k) eq 'presort') {# This is a biblatex option
       # presort defaults
-      foreach my $presort ($v->{presort}->@*) {
+      foreach my $presort ($v->@*) {
         # Global presort default
         unless (exists($presort->{type})) {
           Biber::Config->setblxoption('presort', $presort->{content});
@@ -557,7 +570,13 @@ sub _config_file_set {
                                       $presort->{type});
         }
       }
-      Biber::Config->setblxoption('sorting', Biber::_parse_sort($v));
+    }
+    elsif (lc($k) eq 'sorting') {# This is a biblatex option
+      my $sortschemes;
+      foreach my $ss ($v->@*) {
+        $sortschemes->{$ss->{scheme}} = Biber::_parse_sort($ss);
+      }
+      Biber::Config->setblxoption('sorting', $sortschemes);
     }
     elsif (lc($k) eq 'datamodel') {# This is a biblatex option
       Biber::Config->setblxoption('datamodel', $v);

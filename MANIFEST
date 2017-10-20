@@ -87,6 +87,7 @@ t/tdata/annotations.bcf
 t/tdata/basic-misc.bcf
 t/tdata/biber-test.conf
 t/tdata/tool-test.conf
+t/tdata/tool-testsort.conf
 t/tdata/biblatexml.bcf
 t/tdata/biblatexml.bltxml
 t/tdata/bibtex-aliases.bcf

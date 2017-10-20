@@ -233,8 +233,21 @@ start =
     uniquenametemplate+,
     # Sorting name key specification
     sortingnamekey,
-    # Global sorting specification
-    sorting,
+    # presort default strings for different entry types
+    element bcf:presort {
+      attribute type { text }?,
+      text
+    }+,
+    # excludes of certain fields for sorting for specified types
+    element bcf:sortexclusion {
+      attribute type { text },
+      element bcf:exclusion { text }+
+    }*,
+    # forcibly includes certain fields excluded by sortexclusion for sorting for specified types
+    element bcf:sortinclusion {
+      attribute type { text },
+      element bcf:inclusion { text }+
+    }*,
     # Data model specification
     element bcf:datamodel {
       # Constants
@@ -339,6 +352,7 @@ start =
       }?,
       # Section specifications
       secspec+,
+      sorting+,
       listspec+
     }
 
@@ -353,12 +367,7 @@ listspec =
       attribute labelalphanametemplatename { xsd:string },      
       # name is only needed for list types
       attribute name { xsd:string {minLength="1"} },
-      (filter | filteror )*,
-      element bcf:sorting {
-        # locale for entire sorting specification
-        attribute locale { xsd:string {minLength="1" } }?,
-        sort+
-      }?
+      (filter | filteror )*
     }*
 
 translit =
@@ -400,23 +409,10 @@ sortingnamekey =
 
 sorting = 
   element bcf:sorting {
+    # sorting scheme name
+    attribute scheme { xsd:string {minLength="1"}},
     # locale for entire sorting specification
     attribute locale { xsd:string {minLength="1"}}?,
-    # presort default strings for different entry types
-    element bcf:presort {
-      attribute type { text }?,
-      text
-    }+,
-    # excludes of certain fields for sorting for specified types
-    element bcf:sortexclusion {
-      attribute type { text },
-      element bcf:exclusion { text }+
-    }*,
-    # forcibly includes certain fields excluded by sortexclusion for sorting for specified types
-    element bcf:sortinclusion {
-      attribute type { text },
-      element bcf:inclusion { text }+
-    }*,
     sort+
   }
 

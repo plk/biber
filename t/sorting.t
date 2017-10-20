@@ -133,7 +133,7 @@ Biber::Config->setblxoption('useprefix', 1);
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $bibentries = $section->bibentries;
-my $main = $biber->datalists->get_list('nty/global//global/global');
+my $main = $biber->datalists->get_list('nyt/global//global/global');
 
 eq_or_diff($main->get_sortdata_for_key('tvonb')->[0], $useprefix1, 'von with type-specific presort, exclusions and useprefix=true' );
 eq_or_diff($main->get_sortdata_for_key('avona')->[0], $useprefix2, 'von with name list scope useprefix' );
@@ -177,51 +177,9 @@ $biber->prepare;
 
 eq_or_diff($main->get_sortdata_for_key('tvonb')->[0], $useprefix4, 'von with type-specific presort, exclusions and useprefix=false' );
 
-my $S;
-
 # Testing nosort
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'editor'   => {}},
-      ],
-      [
-       {},
-       {'translator'   => {}},
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'labelyear'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('custom1');
+
 Biber::Config->setoption('nosort', [ { name => 'author', value => q/\A\p{L}{2}\p{Pd}/ },
                                      { name => 'author', value => q/[\x{2bf}\x{2018}]/ },
                                      { name => 'translator', value => q/\A\p{L}{2}\p{Pd}/ },
@@ -241,21 +199,8 @@ eq_or_diff(NFC($main->get_sortdata_for_key('luzzatto')->[0]), $prefix1, 'Title w
 eq_or_diff(NFC($main->get_sortdata_for_key('hasan')->[0]), $diacritic1, 'Name with nosort' );
 
 # Testing editor roles
-$S = {spec => [
-      [
-       {},
-       {'editoratype'     => {}},
-      ],
-      [
-       {},
-       {'editor'     => {}},
-      ],
-      [
-       {},
-       {'editora'     => {}},
-      ],
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('er');
+
 Biber::Config->setoption('sortcase', 0);
 
 # regenerate information
@@ -265,109 +210,7 @@ eq_or_diff(NFC($main->get_sortdata_for_key('jaffe')->[0]), $edtypeclass1, 'Edito
 
 
 # Testing sorting using various date fields
-$S = {spec => [
-      [
-       {},
-       {'year'       => {}},
-      ],
-      [
-       {},
-       {'month'       => {}},
-      ],
-      [
-       {},
-       {'day'       => {pad_side => 'right',
-                        pad_width => 7}},
-      ],
-      [
-       {},
-       {'endyear'       => {}},
-      ],
-      [
-       {},
-       {'endmonth'       => {}},
-      ],
-      [
-       {},
-       {'endday'       => {}},
-      ],
-      [
-       {'sort_direction'  => 'descending'},
-       {'origyear'   => {}}
-      ],
-      [
-       {},
-       {'origmonth'   => {}}
-      ],
-      [
-       {},
-       {'origday'   => {}}
-      ],
-      [
-       {},
-       {'origendyear'   => {}}
-      ],
-      [
-       {},
-       {'origendmonth'   => {}}
-      ],
-      [
-       {},
-       {'origendday'   => {}}
-      ],
-      [
-       {},
-       {'eventendyear'   => {}}
-      ],
-      [
-       {},
-       {'eventendmonth'   => {pad_side => 'left',
-                              pad_width => 4}}
-      ],
-      [
-       {},
-       {'eventendday'   => {}}
-      ],
-      [
-       {},
-       {'eventyear'   => {'substring_side' => 'left',
-                          'substring_width' => 3}}
-      ],
-      [
-       {},
-       {'eventmonth'   => {}}
-      ],
-      [
-       {},
-       {'eventday'   => {}}
-      ],
-      [
-       {sort_direction => 'descending'},
-       {'urlendyear'   => {}}
-      ],
-      [
-       {},
-       {'urlendmonth'   => {}}
-      ],
-      [
-       {},
-       {'urlendday'   => {}}
-      ],
-      [
-       {},
-       {'urlyear'   => {'substring_side' => 'right',
-                        'substring_width' => 2}}
-      ],
-      [
-       {},
-       {'urlmonth'   => {}}
-      ],
-      [
-       {},
-       {'urlday'   => {}}
-      ],
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('dates1');
 
 # regenerate information
 $biber->prepare;
@@ -379,13 +222,7 @@ eq_or_diff($main->get_sortdata_for_key('moraux')->[0], $dates1, 'Very contrived 
 
 # Testing max/minITEMS with sorting using list fields
 # publisher
-$S = {spec => [
-      [
-       {},
-       {'publisher'    => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('publisher');
 
 # regenerate information
 $biber->prepare;
@@ -393,28 +230,16 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('augustine')->[0], $lists1, 'max/minitems test 1 (publisher)' );
 
 # location
-$S = {spec => [
-      [
-       {},
-       {'location'    => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('location');
 
 # regenerate information
 $biber->prepare;
 
 eq_or_diff($main->get_sortdata_for_key('cotton')->[0], $lists2, 'max/minitems test 2 (location)' );
 
-
 # institution
-$S = {spec => [
-      [
-       {},
-       {'institution'    => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+
+$main->set_sortschemename('institution');
 
 # regenerate information
 $biber->prepare;
@@ -423,13 +248,8 @@ eq_or_diff($main->get_sortdata_for_key('chiu')->[0], $lists3, 'max/minitems test
 
 # institution with minitems=2
 Biber::Config->setblxoption('minitems', 2);
-$S = {spec => [
-      [
-       {},
-       {'institution'    => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+
+$main->set_sortschemename('institution');
 
 # regenerate information
 $biber->prepare;
@@ -439,13 +259,8 @@ eq_or_diff($main->get_sortdata_for_key('chiu')->[0], $lists4, 'max/minitems test
 # institution with maxitems=4, minitems=3
 Biber::Config->setblxoption('maxitems', 4);
 Biber::Config->setblxoption('minitems', 3);
-$S = {spec => [
-      [
-       {},
-       {'institution'    => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+
+$main->set_sortschemename('institution');
 
 # regenerate information
 $biber->prepare;
@@ -455,40 +270,7 @@ eq_or_diff($main->get_sortdata_for_key('chiu')->[0], $lists5, 'max/minitems test
 
 
 # nty with implicit default left, 4-digit year sort
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty9');
 
 # regenerate information
 $biber->prepare;
@@ -496,41 +278,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff1, 'nty with default left offset, 4 digit year' );
 
 # nty with left, 3-digit year sort, case sensitive
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'year'       => {'substring_side' => 'left',
-                         'substring_width' => 3}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty1');
 Biber::Config->setoption('sortcase', 1);
 # regenerate information
 $biber->prepare;
@@ -539,41 +287,7 @@ eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff2, 'nty with le
 
 
 # nty with left, 4-digit year sort, case sensitive
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'year'       => {'substring_side' => 'left',
-                         'substring_width' => 4}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty2');
 
 # regenerate information
 $biber->prepare;
@@ -581,41 +295,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff3, 'nty with left offset, 4 digit year, case sensitive' );
 
 # nty with right, 3-digit year sort
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'year'       => {'substring_side' => 'right',
-                         'substring_width' => 3}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty3');
 Biber::Config->setoption('sortcase', 0);
 # regenerate information
 $biber->prepare;
@@ -623,41 +303,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff4, 'nty with right offset, 3 digit year' );
 
 # nty with right, 4-digit year sort
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'year'       => {'substring_side' => 'right',
-                         'substring_width' => 4}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty4');
 
 # regenerate information
 $biber->prepare;
@@ -665,41 +311,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff5, 'nty with right offset, 4 digit year' );
 
 # ntyd with left, 4-digit year sort
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {'sort_direction'  => 'descending'},
-       {'year'       => {'substring_side'  => 'left',
-                         'substring_width' => 4}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('ntyd1');
 
 # regenerate information
 $biber->prepare;
@@ -707,41 +319,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff6, 'ntyd with left offset, 4 digit year' );
 
 # ntyd with left, 3-digit year sort
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {'sort_direction'  => 'descending'},
-       {'year'       => {'substring_side'  => 'left',
-                         'substring_width' => 3}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('ntyd2');
 
 # regenerate information
 $biber->prepare;
@@ -749,41 +327,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff7, 'ntyd with left offset, 3 digit year' );
 
 # ntyd with right, 4-digit year sort
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {'sort_direction'  => 'descending'},
-       {'year'       => {'substring_side'  => 'right',
-                         'substring_width' => 4}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('ntyd3');
 
 # regenerate information
 $biber->prepare;
@@ -791,41 +335,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff8, 'ntyd with right offset, 4 digit year' );
 
 # ntyd with right, 3-digit year sort
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {'sort_direction'  => 'descending'},
-       {'year'       => {'substring_side' => 'right',
-                         'substring_width' => 3}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('ntyd4');
 
 # regenerate information
 $biber->prepare;
@@ -833,42 +343,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('knuth:ct')->[0], $yearoff9, 'ntyd with right offset, 3 digit year' );
 
 # nty with right-padded vol
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {pad_side => 'right'}},
-       {'0'       => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty5');
 
 # regenerate information
 $biber->prepare;
@@ -876,42 +351,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $vol1, 'nty with right-padded vol' );
 
 # nty with right-padded 7-char vol
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {pad_side => 'right',
-                         pad_width => 7}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty6');
 
 # regenerate information
 $biber->prepare;
@@ -920,43 +360,7 @@ eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $vol2, 'nty with right-
 
 # nty with left-padded 5-char using Unicode "Đ" as pad_char vol
 # Unicode char will be lowercase "đ" in sortstring
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {pad_side => 'left',
-                         pad_width => 5,
-                         pad_char => 'Đ'}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty7');
 
 # regenerate information
 $biber->prepare;
@@ -965,41 +369,7 @@ eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $vol3, 'nty with left-p
 
 
 # nty
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty');
 
 # regenerate information
 $biber->prepare;
@@ -1008,42 +378,7 @@ eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $nty, 'basic nty sort' 
 eq_or_diff($main->get_sortdata_for_key('angenendtsk')->[0], $sk1, 'basic sortkey sort' );
 
 # nyt
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'labelname'  => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nyt');
 
 # regenerate information
 $biber->prepare;
@@ -1051,41 +386,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $nyt, 'basic nyt sort' );
 
 # nyvt
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nyvt');
 
 # regenerate information
 $biber->prepare;
@@ -1094,45 +395,7 @@ eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $nyvt, 'basic nyvt sort
 
 # anyt with labelalpha
 Biber::Config->setblxoption('labelalpha', 1);
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {},
-       {'labelalpha' => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('anyt');
 
 # regenerate information
 $biber->prepare;
@@ -1152,45 +415,7 @@ eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $anyt, 'anyt sort (with
 
 # anyvt with labelalpha
 Biber::Config->setblxoption('labelalpha',1);
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {},
-       {'labelalpha' => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {pad_width => 4}},
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('anyvt');
 
 # regenerate information
 $biber->prepare;
@@ -1232,38 +457,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $anyvt, 'anyvt sort (without labelalpha)' );
 
 # ynt
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'labelyear'  => {}},
-       {'9999'       => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('ynt');
 
 # regenerate information
 $biber->prepare;
@@ -1271,38 +465,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $ynt, 'basic ynt sort' );
 
 # ydnt
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {sort_direction => 'descending'},
-       {'sortyear'   => {}},
-       {'year'      => {}},
-       {'9999'       => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('ydnt');
 
 # regenerate information
 $biber->prepare;
@@ -1336,13 +499,7 @@ Biber::Config->setblxoption('sortingnamekey', $SNK);
 Biber::Config->setblxoption('labelalpha', 0);
 
 # debug
-$S = {spec => [
-      [
-       {},
-       {'entrykey'    => {}},
-      ],
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('ek');
 
 # regenerate information
 $biber->prepare;
@@ -1353,41 +510,7 @@ eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $debug, 'basic debug so
 Biber::Config->setblxoption('useauthor', 0);
 Biber::Config->setblxoption('useeditor', 0);
 Biber::Config->setblxoption('usetranslator', 0);
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty');
 
 # regenerate information
 $biber->prepare;
@@ -1396,43 +519,7 @@ eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $noname, 'nty with use*
 
 
 # nty with modified presort and short_circuit at title
-$S = {spec => [
-      [
-       {},
-       {'presort'    => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sortkey'    => {}}
-      ],
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-       {'editor'     => {}},
-       {'translator' => {}},
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {final          => 1,
-       },
-       {'sorttitle'  => {}},
-       {'title'      => {}}
-      ],
-      [
-       {},
-       {'sortyear'   => {}},
-       {'year'       => {}}
-      ],
-      [
-       {},
-       {'volume'     => {}},
-      ]
-     ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('nty8');
 
 # regenerate information
 $biber->prepare;
@@ -1441,35 +528,15 @@ eq_or_diff($main->get_sortdata_for_key('stdmodel:ps_sc')->[0], $ps_sc, 'nty with
 
 
 # citeorder sort
-$S = {spec => [
-      [
-       {},
-       {'citeorder'    => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+$main->set_sortschemename('none');
 
 # regenerate information
 $biber->prepare;
 
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $citeorder, 'citeorder' );
 
-# citeorder sort
-$S = {spec => [
-      [
-       {},
-       {'labelyear'    => {}},
-      ],
-      [
-       {},
-       {'labelmonth'    => {}},
-      ],
-      [
-       {},
-       {'labelday'    => {}}
-      ]
-     ]};
-$main->set_sortscheme($S);
+# labels sort
+$main->set_sortschemename('label1');
 
 # regenerate information
 $biber->prepare;
@@ -1477,15 +544,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('labelstest')->[0], $labels, 'date labels' );
 
 # sortname sort
-$S = {spec => [
-      [
-       {},
-       {'sortname'   => {}},
-       {'author'     => {}},
-      ]
-     ]};
-
-$main->set_sortscheme($S);
+$main->set_sortschemename('name1');
 
 Biber::Config->setblxoption('useauthor', 0);
 Biber::Config->setblxoption('useeditor', 0);

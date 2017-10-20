@@ -605,8 +605,37 @@
       </oneOrMore>
       <!-- Sorting name key specification -->
       <ref name="sortingnamekey"/>
-      <!-- Global sorting specification -->
-      <ref name="sorting"/>
+      <oneOrMore>
+        <!-- presort default strings for different entry types -->
+        <element name="bcf:presort">
+          <optional>
+            <attribute name="type"/>
+          </optional>
+          <text/>
+        </element>
+      </oneOrMore>
+      <zeroOrMore>
+        <!-- excludes of certain fields for sorting for specified types -->
+        <element name="bcf:sortexclusion">
+          <attribute name="type"/>
+          <oneOrMore>
+            <element name="bcf:exclusion">
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <!-- forcibly includes certain fields excluded by sortexclusion for sorting for specified types -->
+        <element name="bcf:sortinclusion">
+          <attribute name="type"/>
+          <oneOrMore>
+            <element name="bcf:inclusion">
+              <text/>
+            </element>
+          </oneOrMore>
+        </element>
+      </zeroOrMore>
       <optional>
         <!-- Data model specification -->
         <element name="bcf:datamodel">
@@ -852,6 +881,9 @@
         <ref name="secspec"/>
       </oneOrMore>
       <oneOrMore>
+        <ref name="sorting"/>
+      </oneOrMore>
+      <oneOrMore>
         <ref name="listspec"/>
       </oneOrMore>
     </element>
@@ -899,21 +931,6 @@
             <ref name="filteror"/>
           </choice>
         </zeroOrMore>
-        <optional>
-          <element name="bcf:sorting">
-            <optional>
-              <!-- locale for entire sorting specification -->
-              <attribute name="locale">
-                <data type="string">
-                  <param name="minLength">1</param>
-                </data>
-              </attribute>
-            </optional>
-            <oneOrMore>
-              <ref name="sort"/>
-            </oneOrMore>
-          </element>
-        </optional>
       </element>
     </zeroOrMore>
   </define>
@@ -1040,6 +1057,12 @@
   </define>
   <define name="sorting">
     <element name="bcf:sorting">
+      <!-- sorting scheme name -->
+      <attribute name="scheme">
+        <data type="string">
+          <param name="minLength">1</param>
+        </data>
+      </attribute>
       <optional>
         <!-- locale for entire sorting specification -->
         <attribute name="locale">
@@ -1048,37 +1071,6 @@
           </data>
         </attribute>
       </optional>
-      <oneOrMore>
-        <!-- presort default strings for different entry types -->
-        <element name="bcf:presort">
-          <optional>
-            <attribute name="type"/>
-          </optional>
-          <text/>
-        </element>
-      </oneOrMore>
-      <zeroOrMore>
-        <!-- excludes of certain fields for sorting for specified types -->
-        <element name="bcf:sortexclusion">
-          <attribute name="type"/>
-          <oneOrMore>
-            <element name="bcf:exclusion">
-              <text/>
-            </element>
-          </oneOrMore>
-        </element>
-      </zeroOrMore>
-      <zeroOrMore>
-        <!-- forcibly includes certain fields excluded by sortexclusion for sorting for specified types -->
-        <element name="bcf:sortinclusion">
-          <attribute name="type"/>
-          <oneOrMore>
-            <element name="bcf:inclusion">
-              <text/>
-            </element>
-          </oneOrMore>
-        </element>
-      </zeroOrMore>
       <oneOrMore>
         <ref name="sort"/>
       </oneOrMore>

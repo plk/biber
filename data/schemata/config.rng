@@ -418,6 +418,37 @@
         <optional>
           <ref name="sorting"/>
         </optional>
+        <zeroOrMore>
+          <!-- presort default strings for different entry types -->
+          <element name="presort">
+            <optional>
+              <attribute name="type"/>
+            </optional>
+            <text/>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <!-- excludes of certain fields for sorting for specified types -->
+          <element name="sortexclusion">
+            <attribute name="type"/>
+            <oneOrMore>
+              <element name="exclusion">
+                <text/>
+              </element>
+            </oneOrMore>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <!-- forcibly includes certain fields excluded by sortexclusion for sorting for specified types -->
+          <element name="sortinclusion">
+            <attribute name="type"/>
+            <oneOrMore>
+              <element name="inclusion">
+                <text/>
+              </element>
+            </oneOrMore>
+          </element>
+        </zeroOrMore>
         <optional>
           <element name="sortlocale">
             <text/>
@@ -1348,6 +1379,12 @@
   </define>
   <define name="sorting">
     <element name="sorting">
+      <!-- sorting scheme name -->
+      <attribute name="scheme">
+        <data type="string">
+          <param name="minLength">1</param>
+        </data>
+      </attribute>
       <optional>
         <!-- locale for entire sorting specification -->
         <attribute name="locale">
@@ -1356,26 +1393,6 @@
           </data>
         </attribute>
       </optional>
-      <oneOrMore>
-        <!-- presort default strings for different entry types -->
-        <element name="presort">
-          <optional>
-            <attribute name="type"/>
-          </optional>
-          <text/>
-        </element>
-      </oneOrMore>
-      <zeroOrMore>
-        <!-- excludes of certain fields for sorting for specified types -->
-        <element name="sortexclusion">
-          <attribute name="type"/>
-          <oneOrMore>
-            <element name="exclusion">
-              <text/>
-            </element>
-          </oneOrMore>
-        </element>
-      </zeroOrMore>
       <oneOrMore>
         <ref name="sort"/>
       </oneOrMore>

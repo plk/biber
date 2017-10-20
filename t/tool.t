@@ -17,7 +17,7 @@ no warnings 'utf8';
 use utf8;
 
 chdir("t/tdata");
-my $conf = 'tool-test.conf';
+my $conf = 'tool-testsort.conf';
 
 # Set up schema
 my $CFxmlschema = XML::LibXML::RelaxNG->new(location => '../../data/schemata/config.rng');
@@ -56,9 +56,9 @@ $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber
 $biber->tool_mode_setup;
 $biber->prepare_tool;
 my $main = $biber->datalists->get_lists_by_attrs(section                    => 99999,
-                                       name                       => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
+                                       name                       => 'tool/global//global/global',
                                        type                       => 'entry',
-                                       sortschemename             => Biber::Config->getblxoption('sortscheme'),
+                                       sortschemename             => 'tool',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
@@ -161,9 +161,9 @@ Biber::Config->setoption('output_xnamesep', ':');
 $biber->tool_mode_setup;
 $biber->prepare_tool;
 $main = $biber->datalists->get_list(section                    => 99999,
-                                    name                       => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
+                                    name                       => 'tool/global//global/global',
                                     type                       => 'entry',
-                                    sortschemename             => Biber::Config->getblxoption('sortscheme'),
+                                    sortschemename             => 'tool',
                                     sortnamekeyschemename      => 'global',
                                     labelprefix                => '',
                                     uniquenametemplatename     => 'global',

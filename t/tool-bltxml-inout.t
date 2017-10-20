@@ -57,12 +57,13 @@ $out->set_output_target($out->set_output_target_file(\$outvar, 1));
 # Now generate the information
 $ARGV[0] = 'biblatexml.bltxml'; # fake this as we are not running through top-level biber program
 $biber->tool_mode_setup;
+
 $biber->prepare_tool;
 $out->output;
 my $main = $biber->datalists->get_lists_by_attrs(section                    => 99999,
-                                       name                       => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
+                                       name                       => 'tool/global//global/global',
                                        type                       => 'entry',
-                                       sortschemename             => Biber::Config->getblxoption('sortscheme'),
+                                       sortschemename             => 'tool',
                                        sortnamekeyschemename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
