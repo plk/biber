@@ -55,6 +55,7 @@
   
   <xsl:template name="sorting-spec">
     <xsl:param name="spec"/>
+    <h3>Sorting Scheme: <xsl:value-of select="$spec/@scheme"/></h3>
     <table>
       <thead>
         <tr>
@@ -802,7 +803,7 @@
             <tr><td>Entrytype</td><td>Presort default</td></tr>
           </thead>
           <tbody>
-            <xsl:for-each select="/bcf:controlfile/bcf:sorting/bcf:presort">
+            <xsl:for-each select="/bcf:controlfile/bcf:presort">
               <tr>
                 <td>
                   <xsl:choose>
@@ -825,7 +826,7 @@
             <tr><td>Entrytype</td><td>Fields excluded from sorting</td></tr>
           </thead>
           <tbody>
-            <xsl:for-each select="/bcf:controlfile/bcf:sorting/bcf:sortexclusion">
+            <xsl:for-each select="/bcf:controlfile/bcf:sortexclusion">
               <tr>
                 <td>
                   <xsl:value-of select="./@type"/>
@@ -848,7 +849,7 @@
             <tr><td>Entrytype</td><td>Fields forcibly included in sorting</td></tr>
           </thead>
           <tbody>
-            <xsl:for-each select="/bcf:controlfile/bcf:sorting/bcf:sortinclusion">
+            <xsl:for-each select="/bcf:controlfile/bcf:sortinclusion">
               <tr>
                 <td>
                   <xsl:value-of select="./@type"/>
@@ -910,10 +911,12 @@
           </table>
           <br/>
         </xsl:for-each>
-        <h4>Sorting Specification</h4>
-        <xsl:call-template name="sorting-spec">
-	        <xsl:with-param name="spec" select="/bcf:controlfile/bcf:sorting"/>
-	      </xsl:call-template>
+        <h4>Sorting Schemes</h4>
+        <xsl:for-each select="/bcf:controlfile/bcf:sorting">
+          <xsl:call-template name="sorting-spec">
+	          <xsl:with-param name="spec" select="."/>
+	        </xsl:call-template>
+        </xsl:for-each>
         <xsl:if test="/bcf:controlfile/bcf:transliteration">
           <h4>Sorting Transliteration</h4>
           <xsl:for-each select="/bcf:controlfile/bcf:transliteration">
@@ -1214,35 +1217,35 @@
         <h3>Data Lists</h3>
         <xsl:for-each select="/bcf:controlfile/bcf:datalist">
           <h4><u>Data list &quot;<xsl:value-of select="./@name"/>&quot;</u></h4>
-          <div>
-            <h6>Filters</h6>
-            <table>
-              <thead>
-                <tr><td>Filter type</td><td>Filter value</td></tr>
-              </thead>
-              <tbody>
-                <xsl:for-each select="./bcf:filter">
-                  <tr><td><xsl:value-of select="./@type"/></td><td><xsl:value-of select="./text()"/></td></tr>
-                </xsl:for-each>
-              </tbody>
-            </table>
-          </div>
-          <div>
-            <h6>Sorting Specification</h6>
-            <div class="small">Using sorting name key scheme: <xsl:value-of
-            select="./@sortnamekeyscheme"/><xsl:if
-            test="./@labelprefix"> and labelprefix: <xsl:value-of select="./@labelprefix"/></xsl:if></div>
-            <xsl:choose>
-              <xsl:when test="./bcf:sorting">
-                <xsl:call-template name="sorting-spec">
-                  <xsl:with-param name="spec" select="./bcf:sorting"/>
-                </xsl:call-template>
-              </xsl:when>
-              <xsl:otherwise>
-                (global default)
-              </xsl:otherwise>
-            </xsl:choose>
-          </div>
+          <table>
+            <thead>
+              <tr><td>Type</td><td>Sorting Scheme</td><td>Labelprefix</td><td>Uniquename Template Name</td><td>Labelalphaname Template Name</td></tr>
+            </thead>
+            <tbody>
+              <tr>
+              <td><xsl:value-of select="./@type"/></td>
+              <td><xsl:value-of select="./@sortscheme"/></td>
+              <td><xsl:value-of select="./@labelprefix"/></td>
+              <td><xsl:value-of select="./@uniquenametemplatename"/></td>
+              <td><xsl:value-of select="./@labelalphanametemplatename"/></td>
+              </tr>
+            </tbody>
+          </table>
+          <xsl:if test="./bcf:filter">
+            <div>
+              <h6>Filters</h6>
+              <table>
+                <thead>
+                  <tr><td>Filter type</td><td>Filter value</td></tr>
+                </thead>
+                <tbody>
+                  <xsl:for-each select="./bcf:filter">
+                    <tr><td><xsl:value-of select="./@type"/></td><td><xsl:value-of select="./text()"/></td></tr>
+                  </xsl:for-each>
+                </tbody>
+              </table>
+            </div>
+          </xsl:if>
         </xsl:for-each>
       </body>
     </html>

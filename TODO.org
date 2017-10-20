@@ -137,10 +137,5 @@
 ** DONE New output format like EDTF but options
 * DONE extrayear, (namestring, namestrings, namedisschema)->uniquelist, uniquename
 * DONE bibaltexml.pm needs uiquenametemplate processing removing
-* TODO sorting scheme names are not used. Create multiple and refer by name as with other dlist
-* TODO presort, exclude and include should not be inside a sorting spec
-
-\blx@collectopts{xml}{blx@globalopts}{sortscheme}% for passing to the .bcf
-sort/sortscheme are wrong datatypes in .bcf
-
-XSL
+* DONE sorting scheme names are not used. Create multiple and refer by name as with other dlist
+* DONE presort, exclude and include should not be inside a sorting spec
