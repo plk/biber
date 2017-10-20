@@ -919,9 +919,15 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
   foreach my $section ($bcfxml->{section}->@*) {
     my $globalss = Biber::Config->getblxoption('sortscheme');
     my $secnum = $section->{number};
-    unless ($datalists->get_lists_by_attrs(section        => $secnum,
-                                           type           => 'entry',
-                                           sortschemename => $globalss)) {
+
+    unless ($datalists->get_lists_by_attrs(section                    => $secnum,
+                                           type                       => 'entry',
+                                           sortschemename             => $globalss,
+                                           sortnamekeyschemename      => 'global',
+                                           uniquenametemplatename     => 'global',
+                                           labelalphanametemplatename => 'global',
+                                           labelprefix                => '',
+                                           name                       => "$globalss/global//global/global")) {
       my $datalist = Biber::DataList->new(section                    => $secnum,
                                           type                       => 'entry',
                                           sortschemename             => $globalss,
