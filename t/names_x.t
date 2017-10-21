@@ -207,7 +207,7 @@ is_deeply(tparsename_x('given=E. S., family=El-Mallah', 'author'), $name15, 'par
 is_deeply(tparsename_x('given=E. S., family=Kent-Boswell', 'author'), $name16, 'parsename_x 16');
 is_deeply(tparsename_x('family=Other, given=A.~N.', 'author'), $name17, 'parsename_x 17');
 is_deeply(tparsename_x('family={British National Corpus}', 'author'), $name18, 'parsename_x 18');
-is_deeply(tparsename_x('sortingnamekeytemplate=test, family=Smith, given=Bill', 'author'), $name19, 'parsename_x 19');
-eq_or_diff(Biber::Input::file::bibtex::parsename_x('sortingnamekeytemplate=test, family=Smith, given=Bill', 'author')->{sortingnamekeytemplatename}, $name19snks, 'parsename_x 19a');
+is_deeply(tparsename_x('sortingnamekeytemplatename=test, family=Smith, given=Bill', 'author'), $name19, 'parsename_x 19');
+eq_or_diff(Biber::Input::file::bibtex::parsename_x('sortingnamekeytemplatename=test, family=Smith, given=Bill', 'author')->{sortingnamekeytemplatename}, $name19snks, 'parsename_x 19a');
 is_deeply(tparsename_x('family=Doe, family-i={Do}', 'author'), $name20, 'parsename_x 20');
 

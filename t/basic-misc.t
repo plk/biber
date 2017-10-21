@@ -808,14 +808,14 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
 |;
 
 my $ent1 = q|    \entry{ent1}{book}{}
-      \name{author}{2}{sortingnamekeytemplate=snks1}{%
+      \name{author}{2}{sortingnamekeytemplatename=snks1}{%
         {{uniquename=0,uniquepart=base,hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
            familyi={S\bibinitperiod},
            given={Simon},
            giveni={S\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,sortingnamekeytemplate=snks2,hash=878a51e6f69e95562d15cb8a3ead5c95}{%
+        {{uniquename=0,uniquepart=base,sortingnamekeytemplatename=snks2,hash=878a51e6f69e95562d15cb8a3ead5c95}{%
            family={Brown},
            familyi={B\bibinitperiod},
            given={Brian},

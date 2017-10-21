@@ -185,11 +185,9 @@ sub name_to_biblatexml {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
           $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
-        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         push @attrs, ($pnoname => Biber::Utils::map_boolean($pno, 'tostring'));
       }
       else {
-        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         push @attrs, ($pnoname => $pno);
       }
     }
@@ -315,11 +313,9 @@ sub name_to_bbl {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
           $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
-        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         push @pno, "$pnoname=" . Biber::Utils::map_boolean($pno, 'tostring');
       }
       else {
-        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         push @pno, "$pnoname=$pno";
       }
     }
@@ -378,11 +374,9 @@ sub name_to_bblxml {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
           $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
-        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         $pno{$pnoname} = Biber::Utils::map_boolean($pno, 'tostring');
       }
       else {
-        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         $pno{$pnoname} = $pno;
       }
     }

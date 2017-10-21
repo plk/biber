@@ -140,22 +140,3 @@
 * DONE sorting scheme names are not used. Create multiple and refer by name as with other dlist
 * DONE presort, exclude and include should not be inside a sorting spec
 
-In code, rnc/rng, .bcf, tests, xsl
-
-keys for refcontext and assignref*?
-biblatex needs name at end of options
-
-
-check biblatex options scope table
-scheme in biblatex doc
-
-
-
-
-
-
-for file in t/tdata/*.bcf; do perl -pi.bak -e 's|<bcf:option datatype="xml">sortingnamekey</bcf:option>|<bcf:option datatype="xml">sortingnamekeytemplate</bcf:option>|;' $file; done
-
-for file in t/*.t; do perl -pi.bak -e 's|sortnamekeyschemename|sortingnamekeytemplatename|;' $file; done
-
-for file in t/tdata/*.bak; do mv $file t/tdata/`basename $file .bak`; done

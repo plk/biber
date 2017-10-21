@@ -1603,11 +1603,6 @@ sub parsename_x {
     my ($npn, $npv) = $np =~ m/^(.+)\s*$xnamesep\s*(.+)$/x;
     $npn = lc($npn);
 
-    # Map from biblatex to biber internal option names
-    # Sometimes biblatex options are simpler as they are user-facing but internally in biber
-    # it makes the code easier to understand by having more explicit names
-    $npn = $CONFIG_BIBLATEX_NAME_OPTIONS{INPUT}->{$npn} // $npn;
-
     # name scope useprefix
     if ($npn eq 'useprefix') {
       $opts->{useprefix} = map_boolean($npv, 'tonum');
@@ -1624,11 +1619,13 @@ sub parsename_x {
     # name scope uniquenametemplatename
     if ($npn eq 'uniquenametemplatename') {
       $pernameopts{uniquenametemplatename} = $npv;
+      next;
     }
 
     # name scope labelalphanametemplatename
     if ($npn eq 'labelalphanametemplatename') {
       $pernameopts{labelalphanametemplatename} = $npv;
+      next;
     }
 
     unless ($nps{$npn =~ s/-i$//r}) {

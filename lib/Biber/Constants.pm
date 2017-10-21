@@ -35,7 +35,6 @@ our @EXPORT = qw{
                   %UNIQUENAME_CONTEXTS
                   %UNIQUENAME_VALUES
                   %UNIQUENAME_BASEPARTS
-                  %CONFIG_BIBLATEX_NAME_OPTIONS
               };
 
 # Version of biblatex control file which this release expects. Matched against version
@@ -535,23 +534,14 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
    skipbib           => {OUTPUT => 1},
    skipbiblist       => {OUTPUT => 1},
    skiplab           => {OUTPUT => 1},
-   sortingnamekeytemplatename => {OUTPUT => ['sortingnamekeytemplate']},
-   sortingnamekeytemplate     => {INPUT => ['sortingnamekeytemplatename']},
-   uniquenametemplate         => {INPUT => ['uniquenametemplatename']},
-   labelalphanametemplate     => {INPUT => ['labelalphanametemplatename']},
+   sortingnamekeytemplatename => {OUTPUT => 1},
+   uniquenametemplatename => {OUTPUT => 1},
+   labelalphanametemplatename => {OUTPUT => 1},
    uniquelist        => {OUTPUT => 0},
    useauthor         => {OUTPUT => 1},
    useeditor         => {OUTPUT => 1},
    useprefix         => {OUTPUT => 1},
    usetranslator     => {OUTPUT => 1},
-  );
-
-our %CONFIG_BIBLATEX_NAME_OPTIONS =
-  (
-   INPUT  => {sortingnamekeytemplate      => 'sortingnamekeytemplatename',
-              uniquenametemplate          => 'uniquenametemplatename',
-              labelalphanametemplate      => 'labelalphanametemplatename'},
-   OUTPUT => {sortingnamekeytemplatename  => 'sortingnamekeytemplate'}
   );
 
 1;

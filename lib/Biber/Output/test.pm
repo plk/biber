@@ -163,11 +163,9 @@ sub set_output_entry {
             my $plo = $nf->${\"get_$ploname"};
             if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
                 $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
-              $ploname = $CONFIG_BIBLATEX_NAME_OPTIONS{output}{$ploname} // $ploname;
               push @plo, "$ploname=" . map_boolean($plo, 'tostring');
                 }
             else {
-              $ploname = $CONFIG_BIBLATEX_NAME_OPTIONS{output}{$ploname} // $ploname;
               push @plo, "$ploname=$plo";
             }
           }

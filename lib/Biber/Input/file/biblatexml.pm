@@ -1082,18 +1082,18 @@ sub _name {
     }
 
     # Namelist scope sortingnamekeytemplatename attribute
-    if ($node->hasAttribute('sortingnamekeytemplate')) {
-      $names->set_sortingnamekeytemplatename($node->getAttribute('sortingnamekeytemplate'));
+    if ($node->hasAttribute('sortingnamekeytemplatename')) {
+      $names->set_sortingnamekeytemplatename($node->getAttribute('sortingnamekeytemplatename'));
     }
 
     # Namelist scope uniquenametemplatename attribute
-    if ($node->hasAttribute('uniquenametemplate')) {
-      $names->set_uniquenametemplatename($node->getAttribute('uniquenametemplate'));
+    if ($node->hasAttribute('uniquenametemplatename')) {
+      $names->set_uniquenametemplatename($node->getAttribute('uniquenametemplatename'));
     }
 
     # Namelist scope labelalphanametemplatename attribute
-    if ($node->hasAttribute('labelalphanametemplate')) {
-      $names->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplate'));
+    if ($node->hasAttribute('labelalphanametemplatename')) {
+      $names->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplatename'));
     }
 
     my $numname = 1;
@@ -1222,18 +1222,18 @@ sub parsename {
   }
 
   # Set name-scope sortingnamekeytemplatename attribute if it exists
-  if ($node->hasAttribute('sortingnamekeytemplate')) {
-    $newname->set_sortingnamekeytemplatename($node->getAttribute('sortingnamekeytemplate'));
+  if ($node->hasAttribute('sortingnamekeytemplatename')) {
+    $newname->set_sortingnamekeytemplatename($node->getAttribute('sortingnamekeytemplatename'));
   }
 
   # Set name-scope uniquenametemplatename attribute if it exists
-  if ($node->hasAttribute('uniquenametemplate')) {
-    $newname->set_uniquenametemplatename($node->getAttribute('uniquenametemplate'));
+  if ($node->hasAttribute('uniquenametemplatename')) {
+    $newname->set_uniquenametemplatename($node->getAttribute('uniquenametemplatename'));
   }
 
   # Set name-scope labelalphanametemplatename attribute if it exists
-  if ($node->hasAttribute('labelalphanametemplate')) {
-    $newname->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplate'));
+  if ($node->hasAttribute('labelalphanametemplatename')) {
+    $newname->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplatename'));
   }
 
   return $newname;
