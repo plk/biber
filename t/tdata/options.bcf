@@ -120,7 +120,7 @@
       <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>sortscheme</bcf:key>
+      <bcf:key>sortingtemplatename</bcf:key>
       <bcf:value>nty</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
@@ -183,8 +183,8 @@
     <bcf:option datatype="xml">labelalphanametemplate</bcf:option>
     <bcf:option datatype="xml">labelalphatemplate</bcf:option>
     <bcf:option datatype="xml">inheritance</bcf:option>
-    <bcf:option datatype="xml">sortingnamekey</bcf:option>
-    <bcf:option datatype="xml">sorting</bcf:option>
+    <bcf:option datatype="xml">sortingnamekeytemplate</bcf:option>
+    <bcf:option datatype="xml">sortingtemplate</bcf:option>
     <bcf:option datatype="xml">labelnamespec</bcf:option>
     <bcf:option datatype="xml">labeltitlespec</bcf:option>
     <bcf:option datatype="xml">labeldatespec</bcf:option>
@@ -194,7 +194,7 @@
     <bcf:option datatype="string">presort</bcf:option>
     <bcf:option datatype="string">texencoding</bcf:option>
     <bcf:option datatype="string">bibencoding</bcf:option>
-    <bcf:option datatype="string">sortscheme</bcf:option>
+    <bcf:option datatype="string">sortingtemplatename</bcf:option>
     <bcf:option datatype="string">sortlos</bcf:option>
     <bcf:option datatype="string">sortlocale</bcf:option>
     <bcf:option datatype="string">language</bcf:option>
@@ -385,7 +385,7 @@
     <bcf:option datatype="boolean">skipbiblist</bcf:option>
     <bcf:option datatype="boolean">skiplab</bcf:option>
     <bcf:option datatype="boolean">dataonly</bcf:option>
-    <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
+    <bcf:option datatype="string">sortingnamekeytemplatename</bcf:option>
     <bcf:option datatype="string">presort</bcf:option>
     <bcf:option datatype="string">noinherit</bcf:option>
     <bcf:option datatype="integer">maxnames</bcf:option>
@@ -403,13 +403,13 @@
   </bcf:optionscope>
   <bcf:optionscope type="NAMELIST">
     <bcf:option datatype="boolean">useprefix</bcf:option>
-    <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
+    <bcf:option datatype="string">sortingnamekeytemplatename</bcf:option>
     <bcf:option datatype="string">labelalphanametemplatename</bcf:option>
     <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="NAME">
     <bcf:option datatype="boolean">useprefix</bcf:option>
-    <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
+    <bcf:option datatype="string">sortingnamekeytemplatename</bcf:option>
     <bcf:option datatype="string">labelalphanametemplatename</bcf:option>
     <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
@@ -607,8 +607,8 @@
     <bcf:namepart order="2" base="1">family</bcf:namepart>
     <bcf:namepart order="3">given</bcf:namepart>
   </bcf:uniquenametemplate>
-  <!-- SORTING NAME KEY -->
-  <bcf:sortingnamekey keyscheme="global">
+  <!-- SORTING NAME KEY TEMPLATE -->
+  <bcf:sortingnamekeytemplate name="global">
     <bcf:keypart order="1">
       <bcf:part type="namepart" order="1" use="1">prefix</bcf:part>
     </bcf:keypart>
@@ -624,7 +624,7 @@
     <bcf:keypart order="5">
       <bcf:part type="namepart" order="1" use="0">prefix</bcf:part>
     </bcf:keypart>
-  </bcf:sortingnamekey>
+  </bcf:sortingnamekeytemplate>
   <bcf:presort>mm</bcf:presort>
   <!-- DATA MODEL -->
   <bcf:datamodel>
@@ -1821,8 +1821,8 @@
   <bcf:section number="0">
     <bcf:citekey order="0">*</bcf:citekey>
   </bcf:section>
-  <!-- SORTING SCHEMES -->
-  <bcf:sorting scheme="nty">
+  <!-- SORTING TEMPLATES -->
+  <bcf:sortingtemplate name="nty">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -1849,12 +1849,12 @@
       <bcf:sortitem order="1">volume</bcf:sortitem>
       <bcf:sortitem order="2">0</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
+  </bcf:sortingtemplate>
   <!-- DATA LISTS -->
-  <bcf:datalist sortnamekeyscheme="global"
+  <bcf:datalist sortingnamekeytemplatename="global"
                 section="0"
                 name="nty/global//global/global"
-                sortscheme="nty"
+                sortingtemplatename="nty"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"

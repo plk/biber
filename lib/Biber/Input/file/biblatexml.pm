@@ -1076,24 +1076,24 @@ sub _name {
   foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
     my $names = new Biber::Entry::Names;
 
-    # Save useprefix attribute
+    # Namelist scope useprefix
     if ($node->hasAttribute('useprefix')) {
       $names->set_useprefix(map_boolean($node->getAttribute('useprefix'), 'tonum'));
     }
 
-    # Save sortnamekeyscheme attribute
-    if ($node->hasAttribute('sortnamekeyscheme')) {
-      $names->set_sortnamekeyscheme($node->getAttribute('sortnamekeyscheme'));
+    # Namelist scope sortingnamekeytemplatename attribute
+    if ($node->hasAttribute('sortingnamekeytemplate')) {
+      $names->set_sortingnamekeytemplatename($node->getAttribute('sortingnamekeytemplate'));
     }
 
-    # Save uniquenametemplatename attribute
-    if ($node->hasAttribute('uniquenametemplatename')) {
-      $names->set_uniquenametemplatename($node->getAttribute('uniquenametemplatename'));
+    # Namelist scope uniquenametemplatename attribute
+    if ($node->hasAttribute('uniquenametemplate')) {
+      $names->set_uniquenametemplatename($node->getAttribute('uniquenametemplate'));
     }
 
-    # Save labelalphanametemplatename attribute
-    if ($node->hasAttribute('labelalphanametemplatename')) {
-      $names->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplatename'));
+    # Namelist scope labelalphanametemplatename attribute
+    if ($node->hasAttribute('labelalphanametemplate')) {
+      $names->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplate'));
     }
 
     my $numname = 1;
@@ -1144,7 +1144,7 @@ sub _name {
       nameinitstring    => 'Doe_JF',
       gender            => sm,
       useprefix         => 1,
-      sortnamekeyscheme => 'scheme' 
+      sortingnamekeytemplatename => 'templatename'
     }
 
 =cut
@@ -1216,24 +1216,24 @@ sub parsename {
                                         gender => $node->getAttribute('gender')
                                        );
 
-  # Set name-scope sortnamekeyscheme attribute if it exists
-  if ($node->hasAttribute('sortnamekeyscheme')) {
-    $newname->set_sortnamekeyscheme($node->getAttribute('sortnamekeyscheme'));
-  }
-
   # Set name-scope useprefix attribute if it exists
   if ($node->hasAttribute('useprefix')) {
     $newname->set_useprefix(map_boolean($node->getAttribute('useprefix'), 'tonum'));
   }
 
+  # Set name-scope sortingnamekeytemplatename attribute if it exists
+  if ($node->hasAttribute('sortingnamekeytemplate')) {
+    $newname->set_sortingnamekeytemplatename($node->getAttribute('sortingnamekeytemplate'));
+  }
+
   # Set name-scope uniquenametemplatename attribute if it exists
-  if ($node->hasAttribute('uniquenametemplatename')) {
-    $newname->set_uniquenametemplatename($node->getAttribute('uniquenametemplatename'));
+  if ($node->hasAttribute('uniquenametemplate')) {
+    $newname->set_uniquenametemplatename($node->getAttribute('uniquenametemplate'));
   }
 
   # Set name-scope labelalphanametemplatename attribute if it exists
-  if ($node->hasAttribute('labelalphanametemplatename')) {
-    $newname->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplatename'));
+  if ($node->hasAttribute('labelalphanametemplate')) {
+    $newname->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplate'));
   }
 
   return $newname;

@@ -58,8 +58,8 @@ $biber->prepare_tool;
 my $main = $biber->datalists->get_lists_by_attrs(section                    => 99999,
                                        name                       => 'tool/global//global/global',
                                        type                       => 'entry',
-                                       sortschemename             => 'tool',
-                                       sortnamekeyschemename      => 'global',
+                                       sortingtemplatename             => 'tool',
+                                       sortingnamekeytemplatename      => 'global',
                                        labelprefix                => '',
                                        uniquenametemplatename     => 'global',
                                        labelalphanametemplatename => 'global')->[0];
@@ -163,8 +163,8 @@ $biber->prepare_tool;
 $main = $biber->datalists->get_list(section                    => 99999,
                                     name                       => 'tool/global//global/global',
                                     type                       => 'entry',
-                                    sortschemename             => 'tool',
-                                    sortnamekeyschemename      => 'global',
+                                    sortingtemplatename             => 'tool',
+                                    sortingnamekeytemplatename      => 'global',
                                     labelprefix                => '',
                                     uniquenametemplatename     => 'global',
                                     labelalphanametemplatename => 'global');

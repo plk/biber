@@ -43,8 +43,8 @@ is_deeply([$main->get_keys], ['LS6','LS5','LS2','LS1','LS3','LS4'], 'U::C tailor
 is_deeply([$shs->get_keys], ['LS3', 'LS4','LS2','LS1'], 'U::C tailoring - 2');
 
 # Set sorting of shorthands to global sorting default
-$shs->set_sortscheme(Biber::Config->getblxoption('sorting'));
-$shs->set_sortschemename('global');
+$shs->set_sortingtemplate(Biber::Config->getblxoption('sortingtemplate'));
+$shs->set_sortingtemplatename('global');
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -52,7 +52,7 @@ is_deeply([$shs->get_keys], ['LS2', 'LS1','LS3','LS4'], 'U::C tailoring - 3');
 
 
 # Descending name in Swedish collation
-$main->set_sortschemename('dswe');
+$main->set_sortingtemplatename('dswe');
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -60,7 +60,7 @@ $section = $biber->sections->get_section(0);
 is_deeply([$main->get_keys], ['LS3','LS4','LS1','LS2','LS5','LS6'], 'U::C tailoring descending - 1');
 
 # Local lower before upper setting
-$main->set_sortschemename('ll');
+$main->set_sortingtemplatename('ll');
 
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -75,7 +75,7 @@ $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('nty/global//global/global');
 $biber->set_output_obj(Biber::Output::bbl->new());
 
-$main->set_sortschemename('ci');
+$main->set_sortingtemplatename('ci');
 $biber->prepare;
 is_deeply([$main->get_keys], ['LS5', 'LS6','LS3', 'LS4','LS2','LS1'], 'sortcase locally false, upper_before_lower locally false');
 

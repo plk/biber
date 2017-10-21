@@ -413,10 +413,10 @@
           <ref name="uniquenametemplate"/>
         </zeroOrMore>
         <optional>
-          <ref name="sortingnamekey"/>
+          <ref name="sortingnamekeytemplate"/>
         </optional>
         <optional>
-          <ref name="sorting"/>
+          <ref name="sortingtemplate"/>
         </optional>
         <zeroOrMore>
           <!-- presort default strings for different entry types -->
@@ -1335,9 +1335,9 @@
       </oneOrMore>
     </element>
   </define>
-  <define name="sortingnamekey">
-    <element name="sortingnamekey">
-      <attribute name="keyscheme"/>
+  <define name="sortingnamekeytemplate">
+    <element name="sortingnamekeytemplate">
+      <attribute name="name"/>
       <oneOrMore>
         <element name="keypart">
           <attribute name="order">
@@ -1377,10 +1377,10 @@
       </oneOrMore>
     </element>
   </define>
-  <define name="sorting">
-    <element name="sorting">
-      <!-- sorting scheme name -->
-      <attribute name="scheme">
+  <define name="sortingtemplate">
+    <element name="sortingtemplate">
+      <!-- sorting template name -->
+      <attribute name="name">
         <data type="string">
           <param name="minLength">1</param>
         </data>

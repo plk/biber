@@ -275,9 +275,14 @@ sub set_output_entry {
             my $plo = $nf->${\"get_$ploname"};
             if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
                 $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
-                  push @plo, "$ploname=" . map_boolean($plo, 'tostring');
-                }
+              # Map from biber internal to biblatex option names
+              # Sometimes biblatex options are simpler as they are user-facing but internally in biber
+              # it makes the code easier to understand by having more explicit names
+              $ploname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$ploname} // $ploname;
+              push @plo, "$ploname=" . map_boolean($plo, 'tostring');
+            }
             else {
+              $ploname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$ploname} // $ploname;
               push @plo, "$ploname=$plo";
             }
           }
@@ -618,8 +623,8 @@ sub output {
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     # but omit global sort lists so that we can add them last
-    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
-      if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
+    foreach my $list (sort {$a->get_sortingtemplatename cmp $b->get_sortingtemplatename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
+      if ($list->get_sortingtemplatename eq Biber::Config->getblxoption('sortingtemplatename') and
           $list->get_type eq 'entry') {
         next;
       }
@@ -632,7 +637,7 @@ sub output {
     # and sortcites etc. when not using defernumbers
     push @lists, $Biber::MASTER->datalists->get_lists_by_attrs(section => $secnum,
                                                                type    => 'entry',
-                                                               sortschemename => Biber::Config->getblxoption('sortscheme'))->@*;
+                                                               sortingtemplatename => Biber::Config->getblxoption('sortingtemplatename'))->@*;
 
     foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists

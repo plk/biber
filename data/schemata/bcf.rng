@@ -69,7 +69,7 @@
           <ref name="sortalphaothers"/>
         </optional>
         <ref name="sortlocale"/>
-        <ref name="sortscheme"/>
+        <ref name="sortingtemplatename"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
         <ref name="uniqueprimaryauthor"/>
@@ -603,8 +603,10 @@
         <!-- Uniquename template -->
         <ref name="uniquenametemplate"/>
       </oneOrMore>
-      <!-- Sorting name key specification -->
-      <ref name="sortingnamekey"/>
+      <oneOrMore>
+        <!-- Sorting name key specification -->
+        <ref name="sortingnamekeytemplate"/>
+      </oneOrMore>
       <oneOrMore>
         <!-- presort default strings for different entry types -->
         <element name="bcf:presort">
@@ -900,12 +902,12 @@
             <value>list</value>
           </choice>
         </attribute>
-        <attribute name="sortscheme">
+        <attribute name="sortingtemplatename">
           <data type="string">
             <param name="minLength">1</param>
           </data>
         </attribute>
-        <attribute name="sortnamekeyscheme">
+        <attribute name="sortingnamekeytemplatename">
           <data type="string">
             <param name="minLength">1</param>
           </data>
@@ -1011,10 +1013,10 @@
       </oneOrMore>
     </element>
   </define>
-  <define name="sortingnamekey">
+  <define name="sortingnamekeytemplate">
     <oneOrMore>
-      <element name="bcf:sortingnamekey">
-        <attribute name="keyscheme"/>
+      <element name="bcf:sortingnamekeytemplate">
+        <attribute name="name"/>
         <oneOrMore>
           <element name="bcf:keypart">
             <attribute name="order">
@@ -1056,9 +1058,9 @@
     </oneOrMore>
   </define>
   <define name="sorting">
-    <element name="bcf:sorting">
-      <!-- sorting scheme name -->
-      <attribute name="scheme">
+    <element name="bcf:sortingtemplate">
+      <!-- sorting template name -->
+      <attribute name="name">
         <data type="string">
           <param name="minLength">1</param>
         </data>
@@ -1752,13 +1754,13 @@
       </element>
     </element>
   </define>
-  <define name="sortscheme">
+  <define name="sortingtemplatename">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>sortscheme</value>
+        <value>sortingtemplatename</value>
       </element>
       <element name="bcf:value">
         <text/>

@@ -67,7 +67,7 @@ sub get_lists_for_section {
 
 =head2 get_lists_by_attrs
 
-    Returns an array ref of sort lists with certain
+    Returns an array ref of data lists with certain
     attributes
 
 =cut

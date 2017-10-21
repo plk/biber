@@ -960,10 +960,10 @@ sub generate_bltxml_schema {
           $writer->endTag();    # attribute
           $writer->endTag();    # optional
 
-          # sortnamekeyscheme attribute
-          $writer->comment('sortnamekeyscheme option');
+          # sortingnamekeytemplatename attribute
+          $writer->comment('sortingnamekeytemplatename option');
           $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'sortnamekeyscheme');
+          $writer->startTag('attribute', 'name' => 'sortingnamekeytemplatename');
           $writer->emptyTag('data', 'type' => 'string');
           $writer->endTag();    # attribute
           $writer->endTag();    # optional
@@ -1001,10 +1001,10 @@ sub generate_bltxml_schema {
           $writer->endTag();    # attribute
           $writer->endTag();    # optional
 
-          # sortnamekeyscheme attribute
-          $writer->comment('sortnamekeyscheme option');
+          # sortingnamekeytemplatename attribute
+          $writer->comment('sortingnamekeytemplatename option');
           $writer->startTag('optional');
-          $writer->startTag('attribute', 'name' => 'sortnamekeyscheme');
+          $writer->startTag('attribute', 'name' => 'sortingnamekeytemplatename');
           $writer->emptyTag('data', 'type' => 'string');
           $writer->endTag();    # attribute
           $writer->endTag();    # optional
@@ -1461,7 +1461,7 @@ sub generate_bblxml_schema {
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
   $writer->startTag('optional');
-  $writer->emptyTag('attribute', 'name' => 'sortnamekeyscheme');
+  $writer->emptyTag('attribute', 'name' => 'sortingnamekeytemplatename');
   $writer->endTag();    # optional
   $writer->startTag('optional');
   $writer->startTag('attribute', 'name' => 'more');
@@ -1478,7 +1478,7 @@ sub generate_bblxml_schema {
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
   $writer->startTag('optional');
-  $writer->emptyTag('attribute', 'name' => 'sortnamekeyscheme');
+  $writer->emptyTag('attribute', 'name' => 'sortingnamekeytemplatename');
   $writer->endTag();    # optional
   $writer->emptyTag('attribute', 'name' => 'hash');
   $writer->startTag('optional');

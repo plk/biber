@@ -53,9 +53,9 @@
     </table>
   </xsl:template>
   
-  <xsl:template name="sorting-spec">
+  <xsl:template name="sorting-template">
     <xsl:param name="spec"/>
-    <h3>Sorting Scheme: <xsl:value-of select="$spec/@scheme"/></h3>
+    <h3>Sorting Scheme: <xsl:value-of select="$spec/@name"/></h3>
     <table>
       <thead>
         <tr>
@@ -885,11 +885,11 @@
           </tbody>
         </table>
         <br/>
-        <h4>Sorting Name Key Specification</h4>
-        <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekey">
+        <h4>Sorting Name Key Template</h4>
+        <xsl:for-each select="/bcf:controlfile/bcf:sortingnamekeytemplate">
           <table>
             <thead>
-              <tr><td colspan="2"><b><xsl:value-of select="./@keyscheme"/></b></td></tr>
+              <tr><td colspan="2"><b><xsl:value-of select="./@name"/></b></td></tr>
               <tr><td>Order</td><td>Keypart</td></tr>
             </thead>
             <tbody>
@@ -912,8 +912,8 @@
           <br/>
         </xsl:for-each>
         <h4>Sorting Schemes</h4>
-        <xsl:for-each select="/bcf:controlfile/bcf:sorting">
-          <xsl:call-template name="sorting-spec">
+        <xsl:for-each select="/bcf:controlfile/bcf:sortingtemplate">
+          <xsl:call-template name="sorting-template">
 	          <xsl:with-param name="spec" select="."/>
 	        </xsl:call-template>
         </xsl:for-each>

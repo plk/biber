@@ -163,9 +163,11 @@ sub set_output_entry {
             my $plo = $nf->${\"get_$ploname"};
             if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
                 $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
-                  push @plo, "$ploname=" . map_boolean($plo, 'tostring');
+              $ploname = $CONFIG_BIBLATEX_NAME_OPTIONS{output}{$ploname} // $ploname;
+              push @plo, "$ploname=" . map_boolean($plo, 'tostring');
                 }
             else {
+              $ploname = $CONFIG_BIBLATEX_NAME_OPTIONS{output}{$ploname} // $ploname;
               push @plo, "$ploname=$plo";
             }
           }
@@ -388,7 +390,7 @@ sub output {
 
   foreach my $secnum (sort keys $data->{ENTRIES}->%*) {
     my $section = $self->get_output_section($secnum);
-    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
+    foreach my $list (sort {$a->get_sortingtemplatename cmp $b->get_sortingtemplatename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
       next unless $list->count_keys; # skip empty lists
       my $listtype = $list->get_type;
       foreach my $k ($list->get_keys) {

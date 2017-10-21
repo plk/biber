@@ -12,13 +12,10 @@ use Biber::Config;
 use Log::Log4perl qw( :no_extra_logdie_message );
 my $logger = Log::Log4perl::get_logger('main');
 
-# Names of simple package accessor attributes
+# Names of simple package accessor attributes for those not created automatically
+# by the option scope in the .bcf
 __PACKAGE__->mk_accessors(qw (
-                              useprefix
                               id
-                              sortnamekeyscheme
-                              uniquenametemplatename
-                              labelalphanametemplatename
                             ));
 
 =encoding utf-8

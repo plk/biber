@@ -1043,9 +1043,9 @@ sub _name {
 
   foreach my $name (@tmp) {
 
-      # namelist scope sortnamekeyscheme
-      if ($name =~ m/^sortnamekeyscheme\s*$xnamesep\s*(\S+)$/) {
-        $names->set_sortnamekeyscheme($1);
+      # namelist scope sortingnamekeytemplatename
+      if ($name =~ m/^sortingnamekeytemplatename\s*$xnamesep\s*(\S+)$/) {
+        $names->set_sortingnamekeytemplatename($1);
         next;
       }
 
@@ -1587,7 +1587,7 @@ sub parsename {
       prefix         => {string => undef, initial => undef},
       suffix         => {string => undef, initial => undef},
       id             => 32RS0Wuj0P,
-      sortnamekeyscheme => 'scheme',
+      sortingnamekeytemplatename => 'template name',
     }
 
 =cut
@@ -1603,16 +1603,21 @@ sub parsename_x {
     my ($npn, $npv) = $np =~ m/^(.+)\s*$xnamesep\s*(.+)$/x;
     $npn = lc($npn);
 
-    # name scope sortnamekeyscheme
-    if ($npn eq 'sortnamekeyscheme') {
-      $pernameopts{sortnamekeyscheme} = $npv;
-      next;
-    }
+    # Map from biblatex to biber internal option names
+    # Sometimes biblatex options are simpler as they are user-facing but internally in biber
+    # it makes the code easier to understand by having more explicit names
+    $npn = $CONFIG_BIBLATEX_NAME_OPTIONS{INPUT}->{$npn} // $npn;
 
     # name scope useprefix
     if ($npn eq 'useprefix') {
       $opts->{useprefix} = map_boolean($npv, 'tonum');
       $pernameopts{useprefix} = $npv;
+      next;
+    }
+
+    # name scope sortingnamekeytemplatename
+    if ($npn eq 'sortingnamekeytemplatename') {
+      $pernameopts{sortingnamekeytemplatename} = $npv;
       next;
     }
 

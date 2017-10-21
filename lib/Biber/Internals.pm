@@ -33,7 +33,7 @@ Biber::Internals - Internal methods for processing the bibliographic data
 
 my $logger = Log::Log4perl::get_logger('main');
 
-# Hashes should not care about use* or sorting name key scheme etc. We want to generate hashes
+# Hashes should not care about use* or sorting name key template etc. We want to generate hashes
 # unique to a name, not a particular representation of a name. So, always statically concatenate
 # nameparts from the data model list of valid nameparts
 sub _getnamehash {
@@ -1064,7 +1064,7 @@ sub _dispatch_sorting {
 # Conjunctive set of sorting sets
 sub _generatesortinfo {
   my ($self, $citekey, $dlist) = @_;
-  my $sortscheme = $dlist->get_sortscheme;
+  my $sortingtemplate = $dlist->get_sortingtemplate;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1074,7 +1074,7 @@ sub _generatesortinfo {
   $BIBER_SORT_NULL = 0;
   $BIBER_SORT_FINAL = '';
 
-  foreach my $sortset ($sortscheme->{spec}->@*) {
+  foreach my $sortset ($sortingtemplate->{spec}->@*) {
     my $s = $self->_sortset($sortset, $citekey, $secnum, $section, $be, $dlist);
 
     # Did we get a real zero? This messes up tests below unless we are careful
@@ -1401,14 +1401,14 @@ sub _namestring {
   my $visible = $dlist->get_visible_bib($names->get_id);
   my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
 
-  # Get the sorting name key scheme for this list context
-  my $snkname = $dlist->get_sortnamekeyschemename;
+  # Get the sorting name key template for this list context
+  my $snkname = $dlist->get_sortingnamekeytemplatename;
 
-  # Override with any entry-specific sorting name key scheme option
-  $snkname = Biber::Config->getblxoption('sortnamekeyscheme', undef, $citekey) // $snkname;
+  # Override with any entry-specific sorting name key template option
+  $snkname = Biber::Config->getblxoption('sortingnamekeytemplatename', undef, $citekey) // $snkname;
 
-  # Override with any namelist scope sorting name key scheme option
-  $snkname = $names->get_sortnamekeyscheme // $snkname;
+  # Override with any namelist scope sorting name key template option
+  $snkname = $names->get_sortingnamekeytemplatename // $snkname;
 
   # Name list scope useprefix option
   if (defined($names->get_useprefix)) {
@@ -1437,11 +1437,11 @@ sub _namestring {
       $useprefix = $n->get_useprefix;
     }
 
-    # Override with any name scope sorting name key scheme option
-    $snkname = $n->get_sortnamekeyscheme // $snkname;
+    # Override with any name scope sorting name key template option
+    $snkname = $n->get_sortingnamekeytemplatename // $snkname;
 
-    # Now get the actual sorting name key scheme
-    my $snk = Biber::Config->getblxoption('sortingnamekey')->{$snkname};
+    # Now get the actual sorting name key template
+    my $snk = Biber::Config->getblxoption('sortingnamekeytemplate')->{$snkname};
 
     # Get the sorting name key specification and use it to construct a sorting key for each name
     foreach my $kp ($snk->@*) {

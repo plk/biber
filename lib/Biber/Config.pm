@@ -188,7 +188,8 @@ sub _initopts {
   }
   else {
     # Set control file name. In a conditional as @ARGV might not be set in tests
-    if (my $bcf = $ARGV[0]) {         # ARGV is ok even in a module
+    if (defined($ARGV[0])) {         # ARGV is ok even in a module
+      my $bcf = $ARGV[0];
       $bcf .= '.bcf' unless $bcf =~ m/\.bcf$/;
       Biber::Config->setoption('bcf', $bcf);
     }
@@ -350,14 +351,14 @@ sub _config_file_set {
                                                             qr/\A(?:or)?filter\z/,
                                                             qr/\Asortexclusion\z/,
                                                             qr/\Aexclusion\z/,
-                                                            qr/\Asorting\z/,
+                                                            qr/\Asortingtemplate\z/,
                                                             qr/\Asort\z/,
                                                             qr/\Alabelalpha(?:name)?template\z/,
                                                             qr/\Asortitem\z/,
                                                             qr/\Auniquenametemplate\z/,
                                                             qr/\Apresort\z/,
                                                             qr/\Aoptionscope\z/,
-                                                            qr/\Asortingnamekey\z/,
+                                                            qr/\Asortingnamekeytemplate\z/,
                                                            ],
                                            'NsStrip' => 1,
                                            'KeyAttr' => []) or
@@ -455,7 +456,7 @@ sub _config_file_set {
       }
       Biber::Config->setblxoption('uniquenametemplate', $unts);
     }
-    elsif (lc($k) eq 'sortingnamekey') {
+    elsif (lc($k) eq 'sortingnamekeytemplate') {
       my $snss;
       foreach my $sns ($v->@*) {
         my $snkps;
@@ -479,9 +480,9 @@ sub _config_file_set {
           }
           push $snkps->@*, $snps;
         }
-        $snss->{$sns->{keyscheme}} = $snkps;
+        $snss->{$sns->{name}} = $snkps;
       }
-      Biber::Config->setblxoption('sortingnamekey', $snss);
+      Biber::Config->setblxoption('sortingnamekeytemplate', $snss);
     }
     elsif (lc($k) eq 'transliteration') {
       foreach my $tr ($v->@*) {
@@ -571,12 +572,12 @@ sub _config_file_set {
         }
       }
     }
-    elsif (lc($k) eq 'sorting') {# This is a biblatex option
-      my $sortschemes;
+    elsif (lc($k) eq 'sortingtemplate') {# This is a biblatex option
+      my $sorttemplates;
       foreach my $ss ($v->@*) {
-        $sortschemes->{$ss->{scheme}} = Biber::_parse_sort($ss);
+        $sorttemplates->{$ss->{name}} = Biber::_parse_sort($ss);
       }
-      Biber::Config->setblxoption('sorting', $sortschemes);
+      Biber::Config->setblxoption('sortingtemplate', $sorttemplates);
     }
     elsif (lc($k) eq 'datamodel') {# This is a biblatex option
       Biber::Config->setblxoption('datamodel', $v);

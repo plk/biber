@@ -47,7 +47,7 @@ start =
       singletitle,
       sortalphaothers?,
       sortlocale,
-      sortscheme,
+      sortingtemplatename,
       uniquelist,
       uniquename,
       uniqueprimaryauthor,
@@ -232,7 +232,7 @@ start =
     # Uniquename template
     uniquenametemplate+,
     # Sorting name key specification
-    sortingnamekey,
+    sortingnamekeytemplate+,
     # presort default strings for different entry types
     element bcf:presort {
       attribute type { text }?,
@@ -360,8 +360,8 @@ listspec =
     element bcf:datalist {
       attribute section { xsd:integer },
       attribute type { "entry" | "list" },
-      attribute sortscheme { xsd:string {minLength="1"} },
-      attribute sortnamekeyscheme { xsd:string {minLength="1"} },
+      attribute sortingtemplatename { xsd:string {minLength="1"} },
+      attribute sortingnamekeytemplatename { xsd:string {minLength="1"} },
       attribute labelprefix { xsd:string },
       attribute uniquenametemplatename { xsd:string },
       attribute labelalphanametemplatename { xsd:string },      
@@ -392,9 +392,9 @@ uniquenametemplate =
     }+
   }
 
-sortingnamekey = 
-  element bcf:sortingnamekey {
-    attribute keyscheme { text },
+sortingnamekeytemplate = 
+  element bcf:sortingnamekeytemplate {
+    attribute name { text },
     element bcf:keypart {
      attribute order { xsd:integer },
      element bcf:part {
@@ -408,9 +408,9 @@ sortingnamekey =
   }+
 
 sorting = 
-  element bcf:sorting {
-    # sorting scheme name
-    attribute scheme { xsd:string {minLength="1"}},
+  element bcf:sortingtemplate {
+    # sorting template name
+    attribute name { xsd:string {minLength="1"}},
     # locale for entire sorting specification
     attribute locale { xsd:string {minLength="1"}}?,
     sort+
@@ -680,10 +680,10 @@ sortlocale =
     element bcf:key { "sortlocale" },
     element bcf:value { text }
   }
-sortscheme =
+sortingtemplatename =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "sortscheme" },
+    element bcf:key { "sortingtemplatename" },
     element bcf:value { text }
   }
 labelnamespec =

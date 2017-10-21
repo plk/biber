@@ -124,7 +124,7 @@
       <bcf:value>english</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>sortscheme</bcf:key>
+      <bcf:key>sortingtemplatename</bcf:key>
       <bcf:value>nty</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
@@ -176,8 +176,8 @@
     <bcf:option datatype="xml">labelalphanametemplate</bcf:option>
     <bcf:option datatype="xml">labelalphatemplate</bcf:option>
     <bcf:option datatype="xml">inheritance</bcf:option>
-    <bcf:option datatype="xml">sortingnamekey</bcf:option>
-    <bcf:option datatype="xml">sorting</bcf:option>
+    <bcf:option datatype="xml">sortingnamekeytemplate</bcf:option>
+    <bcf:option datatype="xml">sortingtemplate</bcf:option>
     <bcf:option datatype="xml">labelnamespec</bcf:option>
     <bcf:option datatype="xml">labeltitlespec</bcf:option>
     <bcf:option datatype="xml">labeldatespec</bcf:option>
@@ -187,7 +187,7 @@
     <bcf:option datatype="string">presort</bcf:option>
     <bcf:option datatype="string">texencoding</bcf:option>
     <bcf:option datatype="string">bibencoding</bcf:option>
-    <bcf:option datatype="string">sortscheme</bcf:option>
+    <bcf:option datatype="string">sortingtemplatename</bcf:option>
     <bcf:option datatype="string">sortlos</bcf:option>
     <bcf:option datatype="string">sortlocale</bcf:option>
     <bcf:option datatype="string">language</bcf:option>
@@ -378,7 +378,7 @@
     <bcf:option datatype="boolean">skipbiblist</bcf:option>
     <bcf:option datatype="boolean">skiplab</bcf:option>
     <bcf:option datatype="boolean">dataonly</bcf:option>
-    <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
+    <bcf:option datatype="string">sortingnamekeytemplatename</bcf:option>
     <bcf:option datatype="string">presort</bcf:option>
     <bcf:option datatype="string">noinherit</bcf:option>
     <bcf:option datatype="integer">maxnames</bcf:option>
@@ -396,13 +396,13 @@
   </bcf:optionscope>
   <bcf:optionscope type="NAMELIST">
     <bcf:option datatype="boolean">useprefix</bcf:option>
-    <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
+    <bcf:option datatype="string">sortingnamekeytemplatename</bcf:option>
     <bcf:option datatype="string">labelalphanametemplatename</bcf:option>
     <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="NAME">
     <bcf:option datatype="boolean">useprefix</bcf:option>
-    <bcf:option datatype="string">sortnamekeyscheme</bcf:option>
+    <bcf:option datatype="string">sortingnamekeytemplatename</bcf:option>
     <bcf:option datatype="string">labelalphanametemplatename</bcf:option>
     <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
@@ -600,8 +600,8 @@
     <bcf:namepart order="2" base="1">family</bcf:namepart>
     <bcf:namepart order="3">given</bcf:namepart>
   </bcf:uniquenametemplate>
-  <!-- SORTING NAME KEY -->
-  <bcf:sortingnamekey keyscheme="global">
+  <!-- SORTING NAME KEY TEMPLATE -->
+  <bcf:sortingnamekeytemplate name="global">
     <bcf:keypart order="1">
       <bcf:part type="namepart" order="1" use="1">prefix</bcf:part>
     </bcf:keypart>
@@ -617,7 +617,7 @@
     <bcf:keypart order="5">
       <bcf:part type="namepart" order="1" use="0">prefix</bcf:part>
     </bcf:keypart>
-  </bcf:sortingnamekey>
+  </bcf:sortingnamekeytemplate>
   <bcf:presort>mm</bcf:presort>
   <!-- DATA MODEL -->
   <bcf:datamodel>
@@ -1824,8 +1824,8 @@
     <bcf:citekey order="9">L6</bcf:citekey>
     <bcf:citekey order="10">L9</bcf:citekey>
   </bcf:section>
-  <!-- SORTING SCHEMES -->
-  <bcf:sorting scheme="nty">
+  <!-- SORTING TEMPLATES -->
+  <bcf:sortingtemplate name="nty">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -1852,8 +1852,8 @@
       <bcf:sortitem order="1">volume</bcf:sortitem>
       <bcf:sortitem order="2">0</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="ndty">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="ndty">
     <bcf:sort order="1" sort_direction="descending">
       <bcf:sortitem order="1">sortname</bcf:sortitem>
       <bcf:sortitem order="2">author</bcf:sortitem>
@@ -1871,8 +1871,8 @@
       <bcf:sortitem order="2">year</bcf:sortitem>
       <bcf:sortitem order="3">0000</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="nyt">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="nyt">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -1900,8 +1900,8 @@
       <bcf:sortitem order="1">volume</bcf:sortitem>
       <bcf:sortitem order="2">0000</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="nyvt">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="nyvt">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -1929,8 +1929,8 @@
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="nyvtvp">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="nyvtvp">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -1958,8 +1958,8 @@
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="ynt">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="ynt">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -1983,8 +1983,8 @@
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="ydnt">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="ydnt">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -2008,8 +2008,8 @@
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="yntys">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="yntys">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -2033,8 +2033,8 @@
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="anyt">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="anyt">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -2061,8 +2061,8 @@
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="anyvt">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="anyvt">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
     </bcf:sort>
@@ -2093,30 +2093,30 @@
       <bcf:sortitem order="1">sorttitle</bcf:sortitem>
       <bcf:sortitem order="2">title</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="t">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="t">
     <bcf:sort order="1">
       <bcf:sortitem order="1">title</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="ny">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="ny">
     <bcf:sort order="1">
       <bcf:sortitem order="1">citeorder</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="2">
       <bcf:sortitem order="1">year</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
-  <bcf:sorting scheme="none">
+  </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="none">
     <bcf:sort order="1">
       <bcf:sortitem order="1">citeorder</bcf:sortitem>
     </bcf:sort>
-  </bcf:sorting>
+  </bcf:sortingtemplate>
   <!-- DATA LISTS -->
-  <bcf:datalist sortnamekeyscheme="global"
+  <bcf:datalist sortingnamekeytemplatename="global"
                 section="0"
                 name="none/global//global/global"
-                sortscheme="none"
+                sortingtemplatename="none"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"

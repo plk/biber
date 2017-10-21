@@ -258,7 +258,7 @@ my $l5 = q|    \entry{L5}{book}{}
 |;
 
 
-is_deeply( $main->get_sortscheme , $ss, 'sort scheme');
+is_deeply( $main->get_sortingtemplate, $ss, 'sort template');
 eq_or_diff( $out->get_output_entry('L4', $main), $l4, '\alphaothers set by "and others"');
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'bbl test 1');
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'bbl test 2');

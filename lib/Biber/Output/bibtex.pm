@@ -128,9 +128,9 @@ sub set_output_entry {
         push @namelist, 'useprefix=' . Biber::Utils::map_boolean($names->get_useprefix, 'tostring');
       }
 
-      # Namelist scope sortnamekeyscheme
-      if (my $snks = $names->get_sortnamekeyscheme) {
-        push @namelist, "sortnamekeyscheme=$snks";
+      # Namelist scope sortingnamekeytemplatename
+      if (my $snks = $names->get_sortingnamekeytemplatename) {
+        push @namelist, "sortingnamekeytemplatename=$snks";
       }
 
       # Now add all names to accumulator
@@ -356,10 +356,10 @@ sub output {
 
   # Bibtex output uses just one special section, always sorted by global sorting spec
   foreach my $key ($Biber::MASTER->datalists->get_lists_by_attrs(section => 99999,
-                                                                 name => Biber::Config->getblxoption('sortscheme') . '/global//global/global',
+                                                                 name => Biber::Config->getblxoption('sortingtemplatename') . '/global//global/global',
                                                                  type => 'entry',
-                                                                 sortschemename => Biber::Config->getblxoption('sortscheme'),
-                                                                 sortnamekeyschemename => 'global',
+                                                                 sortingtemplatename => Biber::Config->getblxoption('sortingtemplatename'),
+                                                                 sortingnamekeytemplatename => 'global',
                                                                  labelprefix => '',
                                                                  uniquenametemplatename => 'global',
                                                                  labelalphanametemplatename => 'global')->[0]->get_keys) {

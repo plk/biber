@@ -19,17 +19,14 @@ use Unicode::Normalize;
 no autovivification;
 my $logger = Log::Log4perl::get_logger('main');
 
-# Names of simple package accessor attributes
+# Names of simple package accessor attributes for those not created automatically
+# by the option scope in the .bcf
 __PACKAGE__->mk_accessors(qw (
                                gender
                                hash
                                index
                                id
-                               useprefix
                                rawstring
-                               sortnamekeyscheme
-                               uniquenametemplatename
-                               labelalphanametemplatename
                             ));
 
 =encoding utf-8
@@ -188,9 +185,11 @@ sub name_to_biblatexml {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
           $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
+        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         push @attrs, ($pnoname => Biber::Utils::map_boolean($pno, 'tostring'));
       }
       else {
+        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         push @attrs, ($pnoname => $pno);
       }
     }
@@ -316,9 +315,11 @@ sub name_to_bbl {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
           $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
+        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         push @pno, "$pnoname=" . Biber::Utils::map_boolean($pno, 'tostring');
       }
       else {
+        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         push @pno, "$pnoname=$pno";
       }
     }
@@ -377,9 +378,11 @@ sub name_to_bblxml {
       my $pno = $self->${\"get_$pnoname"};
       if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
           $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
+        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         $pno{$pnoname} = Biber::Utils::map_boolean($pno, 'tostring');
       }
       else {
+        $pnoname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$pnoname} // $pnoname;
         $pno{$pnoname} = $pno;
       }
     }
@@ -460,9 +463,9 @@ sub name_to_xname {
     push @namestring, "useprefix$xns" . Biber::Utils::map_boolean($self->get_useprefix, 'tostring');
   }
 
-  # Name scope sortnamekeyscheme
-  if (my $snks = $self->get_sortnamekeyscheme) {
-    push @namestring, "sortnamekeyscheme$xns$snks";
+  # Name scope sortingnamekeytemplatename
+  if (my $snks = $self->get_sortingnamekeytemplatename) {
+    push @namestring, "sortingnamekeytemplatename$xns$snks";
   }
 
   return join(', ', @namestring);

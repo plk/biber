@@ -43,7 +43,7 @@ $S = { spec => [
                ]};
 
 my $main = $biber->datalists->get_list('custom/global//global/global');
-$main->set_sortscheme($S);
+$main->set_sortingtemplate($S);
 
 $biber->prepare;
 is_deeply([$main->get_keys], ['CS1','CS3','CS2'], 'U::C case - 1');

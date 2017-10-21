@@ -101,8 +101,8 @@ start =
     labelalphanametemplate* &
     labelalphatemplate? &
     uniquenametemplate* &
-    sortingnamekey? &
-    sorting? &
+    sortingnamekeytemplate? &
+    sortingtemplate? &
     # presort default strings for different entry types
     element presort {
       attribute type { text }?,
@@ -389,9 +389,9 @@ uniquenametemplate =
     }+
   }
 
-sortingnamekey = 
-  element sortingnamekey {
-    attribute keyscheme { text },
+sortingnamekeytemplate = 
+  element sortingnamekeytemplate {
+    attribute name { text },
     element keypart {
       attribute order { xsd:integer },
       element part {
@@ -404,10 +404,10 @@ sortingnamekey =
     }+
   }
 
-sorting = 
-  element sorting {
-    # sorting scheme name
-    attribute scheme { xsd:string {minLength="1"}},
+sortingtemplate = 
+  element sortingtemplate {
+    # sorting template name
+    attribute name { xsd:string {minLength="1"}},
     # locale for entire sorting specification
     attribute locale { xsd:string {minLength="1"}}?,
     sort+

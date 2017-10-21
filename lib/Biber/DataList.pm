@@ -1071,16 +1071,16 @@ sub get_la_disambiguation {
 
 
 
-=head2 set_sortschemename
+=head2 set_sortingtemplatename
 
-    Sets the sortscheme name of a data list
+    Sets the sortingtemplate name of a data list
 
 =cut
 
-sub set_sortschemename {
+sub set_sortingtemplatename {
   my $self = shift;
-  my $ssn = shift;
-  $self->{sortschemename} = lc($ssn);
+  my $stn = shift;
+  $self->{sortingtemplatename} = lc($stn);
   return;
 }
 
@@ -1092,46 +1092,46 @@ sub set_sortschemename {
 
 sub get_attrs {
   my $self = shift;
-  return join('/', ($self->{sortschemename},
-                    $self->{sortnamekeyschemename},
+  return join('/', ($self->{sortingtemplatename},
+                    $self->{sortingnamekeytemplatename},
                     $self->{labelprefix},
                     $self->{uniquenametemplatename},
                     $self->{labelalphanametemplatename}));
 }
 
-=head2 get_sortschemename
+=head2 get_sortingtemplatename
 
-    Gets the sortschemename of a data list
+    Gets the sortingtemplatename of a data list
 
 =cut
 
-sub get_sortschemename {
+sub get_sortingtemplatename {
   my $self = shift;
-  return $self->{sortschemename};
+  return $self->{sortingtemplatename};
 }
 
-=head2 set_sortnamekeyschemename
+=head2 set_sortingnamekeytemplatename
 
-    Sets the sortnamekeyscheme name of a data list
+    Sets the sortingnamekeytemplate name of a data list
 
 =cut
 
-sub set_sortnamekeyschemename {
+sub set_sortingnamekeytemplatename {
   my $self = shift;
   my $snksn = shift;
-  $self->{sortnamekeyschemename} = lc($snksn);
+  $self->{sortingnamekeytemplatename} = lc($snksn);
   return;
 }
 
-=head2 get_sortnamekeyschemename
+=head2 get_sortingnamekeytemplatename
 
-    Gets the sortnamekeyschemename of a data list
+    Gets the sortingnamekeytemplatename of a data list
 
 =cut
 
-sub get_sortnamekeyschemename {
+sub get_sortingnamekeytemplatename {
   my $self = shift;
-  return $self->{sortnamekeyschemename};
+  return $self->{sortingnamekeytemplatename};
 }
 
 =head2 set_uniquenametemplatename
@@ -1619,28 +1619,28 @@ sub get_sortinit_for_key {
   return $self->{sortinitdata}{$key}{init};
 }
 
-=head2 set_sortscheme
+=head2 set_sortingtemplate
 
-    Sets the sortscheme of a list
+    Sets the sortingtemplate of a list
 
 =cut
 
-sub set_sortscheme {
+sub set_sortingtemplate {
   my $self = shift;
-  my $sortscheme = shift;
-  $self->{sortscheme} = $sortscheme;
+  my $sortingtemplate = shift;
+  $self->{sortingtemplate} = $sortingtemplate;
   return;
 }
 
-=head2 get_sortscheme
+=head2 get_sortingtemplate
 
-    Gets the sortscheme of a list
+    Gets the sortingtemplate of a list
 
 =cut
 
-sub get_sortscheme {
+sub get_sortingtemplate {
   my $self = shift;
-  return $self->{sortscheme};
+  return $self->{sortingtemplate};
 }
 
 

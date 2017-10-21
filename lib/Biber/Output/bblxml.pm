@@ -232,9 +232,14 @@ sub set_output_entry {
             my $plo = $nf->${\"get_$ploname"};
             if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
                 $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
-                 $plo{$ploname} = map_boolean($plo, 'tostring');
+              # Map from biber internal to biblatex option names
+              # Sometimes biblatex options are simpler as they are user-facing but internally in biber
+              # it makes the code easier to understand by having more explicit names
+              $ploname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$ploname} // $ploname;
+              $plo{$ploname} = map_boolean($plo, 'tostring');
                 }
             else {
+              $ploname = $CONFIG_BIBLATEX_NAME_OPTIONS{OUTPUT}->{$ploname} // $ploname;
               $plo{$ploname} = $plo;
             }
           }
@@ -610,9 +615,9 @@ sub output {
 
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     # but omit the global context list so that we can add this last
-    foreach my $list (sort {$a->get_sortschemename cmp $b->get_sortschemename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
-      if ($list->get_sortschemename eq Biber::Config->getblxoption('sortscheme') and
-          $list->get_sortnamekeyschemename eq 'global' and
+    foreach my $list (sort {$a->get_sortingtemplatename cmp $b->get_sortingtemplatename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
+      if ($list->get_sortingtemplatename eq Biber::Config->getblxoption('sortingtemplatename') and
+          $list->get_sortingnamekeytemplatename eq 'global' and
           $list->get_labelprefix eq '' and
           $list->get_type eq 'entry') {
         next;
@@ -626,18 +631,18 @@ sub output {
     # and sortcites etc. when not using defernumbers
     push @lists, $Biber::MASTER->datalists->get_lists_by_attrs(section => $secnum,
                                                                type    => 'entry',
-                                                               sortschemename => Biber::Config->getblxoption('sortscheme'))->@*;
+                                                               sortingtemplatename => Biber::Config->getblxoption('sortingtemplatename'))->@*;
 
     foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists
-      my $listssn = $list->get_sortschemename;
-      my $listsnksn = $list->get_sortnamekeyschemename;
+      my $listssn = $list->get_sortingtemplatename;
+      my $listsnksn = $list->get_sortingnamekeytemplatename;
       my $listpn = $list->get_labelprefix;
       my $listtype = $list->get_type;
       my $listname = $list->get_name;
 
       if ($logger->is_debug()) {# performance tune
-        $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortscheme '$listssn', sort name key scheme '$listsnksn' and labelprefix '$listpn'");
+        $logger->debug("Writing entries in '$listname' list of type '$listtype' with sortingtemplatename '$listssn', sort name key scheme '$listsnksn' and labelprefix '$listpn'");
       }
 
       $xml->startTag([$xml_prefix, 'datalist'], type => $listtype, id => $listname);
