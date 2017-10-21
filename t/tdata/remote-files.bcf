@@ -185,7 +185,7 @@
     <bcf:option datatype="xml">labelalphatemplate</bcf:option>
     <bcf:option datatype="xml">inheritance</bcf:option>
     <bcf:option datatype="xml">sortingnamekey</bcf:option>
-    <bcf:option datatype="xml">sortscheme</bcf:option>
+    <bcf:option datatype="xml">sorting</bcf:option>
     <bcf:option datatype="xml">labelnamespec</bcf:option>
     <bcf:option datatype="xml">labeltitlespec</bcf:option>
     <bcf:option datatype="xml">labeldatespec</bcf:option>
@@ -195,7 +195,7 @@
     <bcf:option datatype="string">presort</bcf:option>
     <bcf:option datatype="string">texencoding</bcf:option>
     <bcf:option datatype="string">bibencoding</bcf:option>
-    <bcf:option datatype="string">sorting</bcf:option>
+    <bcf:option datatype="string">sortscheme</bcf:option>
     <bcf:option datatype="string">sortlos</bcf:option>
     <bcf:option datatype="string">sortlocale</bcf:option>
     <bcf:option datatype="string">language</bcf:option>
