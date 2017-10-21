@@ -317,6 +317,23 @@ sub set_namedis {
   return;
 }
 
+=head2 is_unbasepart
+
+  Return boolean to say if a namepart is a base part according to
+  template which created the information
+
+=cut
+
+sub is_unbasepart {
+  my ($self, $nlid, $nid, $np) = @_;
+  if (first {$_ eq $np} $self->{state}{namelistdata}{$nlid}{$nid}{basenamestringparts}->@*) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 
 =head2 get_namehash
 
@@ -1742,8 +1759,13 @@ sub instantiate_entry {
           $str = 'uniquepart=' . $self->get_unpart($nlid, $nid);
           $entry_string =~ s|<BDS>UNP-$nid</BDS>|$str|gxms;
           foreach my $np ($n->get_nameparts) {
-            $str = "${np}un=" . $self->get_unparts($nlid, $nid, $np);
-            $entry_string =~ s|<BDS>UNP-$np-$nid</BDS>|$str|gxms;
+            if ($self->is_unbasepart($nlid, $nid, $np)) {
+              $entry_string =~ s|\s+<BDS>UNP-$np-$nid</BDS>,?||gxms;
+            }
+            else {
+              $str = "${np}un=" . $self->get_unparts($nlid, $nid, $np);
+              $entry_string =~ s|<BDS>UNP-$np-$nid</BDS>|$str|gxms;
+            }
           }
         }
         else {
@@ -1916,8 +1938,13 @@ sub instantiate_entry {
           $str = $self->get_unpart($nlid, $nid);
           $entry_string =~ s|\[BDS\]UNP-$nid\[/BDS\]|$str|gxms;
           foreach my $np ($n->get_nameparts) {
-            $str = $self->get_unparts($nlid, $nid, $np);
-            $entry_string =~ s|\[BDS\]UNP-$np-$nid\[/BDS\]|$str|gxms;
+            if ($self->is_unbasepart($nlid, $nid, $np)) {
+              $entry_string =~ s|\suniquename="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
+            }
+            else {
+              $str = $self->get_unparts($nlid, $nid, $np);
+              $entry_string =~ s|\[BDS\]UNP-$np-$nid\[/BDS\]|$str|gxms;
+            }
           }
         }
         else {

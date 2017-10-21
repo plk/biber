@@ -296,10 +296,8 @@ sub name_to_bbl {
     $npci //= '';
     if ($npc) {
       push @namestrings, "           $np={$npc}",
-                         "           ${np}i={$npci}";
-      if (not $UNIQUENAME_BASEPARTS{$np}) {
-        push @namestrings, "           <BDS>UNP-${np}-${nid}</BDS>";
-      }
+                         "           ${np}i={$npci}",
+                         "           <BDS>UNP-${np}-${nid}</BDS>";
     }
   }
 
@@ -358,9 +356,7 @@ sub name_to_bblxml {
     $npci //= '';
     if ($npc) {
       $names{$np} = [$npc, $npci];
-      if (not $UNIQUENAME_BASEPARTS{$np}) {
-        push $names{$np}->@*, "[BDS]UNP-${np}-${nid}[/BDS]";
-      }
+      push $names{$np}->@*, "[BDS]UNP-${np}-${nid}[/BDS]";
     }
   }
 
@@ -389,9 +385,7 @@ sub name_to_bblxml {
   foreach my $key (sort keys %names) {
     my $value = $names{$key};
     my %un;
-    if (not $UNIQUENAME_BASEPARTS{$key}) {
-      %un = (uniquename => $value->[2]);
-    }
+    %un = (uniquename => $value->[2]);
     $xml->startTag([$xml_prefix, 'namepart'],
                    type => $key,
                    %un,

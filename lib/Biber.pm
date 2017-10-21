@@ -651,9 +651,6 @@ sub parse_ctrlfile {
   foreach my $unt ($bcfxml->{uniquenametemplate}->@*) {
     my $untval = [];
     foreach my $np (sort {$a->{order} <=> $b->{order}} $unt->{namepart}->@*) {
-      if (exists($np->{base})) {
-        $UNIQUENAME_BASEPARTS{$np->{content}} = 1;
-      }
       push $untval->@*, {namepart        => $np->{content},
                          use             => $np->{use},
                          disambiguation  => $np->{disambiguation},
@@ -1636,6 +1633,7 @@ sub process_namedis {
                                  namedisschema => $namedisschema};
     }
   }
+
   return $namedis;
 }
 

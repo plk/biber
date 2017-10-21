@@ -444,9 +444,6 @@ sub _config_file_set {
       foreach my $unt ($v->@*) {
         my $untval = [];
         foreach my $np (sort {$a->{order} <=> $b->{order}} $unt->{namepart}->@*) {
-          if (exists($np->{base})) {
-            $UNIQUENAME_BASEPARTS{$np->{content}} = 1;
-          }
           push $untval->@*, {namepart        => $np->{content},
                              use             => $np->{use},
                              disambiguation  => $np->{disambiguation},
