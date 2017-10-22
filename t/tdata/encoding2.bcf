@@ -353,6 +353,7 @@
     <bcf:option datatype="integer">minalphanames</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="ENTRY">
+    <bcf:option datatype="string">nametemplates</bcf:option>
     <bcf:option datatype="boolean">useafterword</bcf:option>
     <bcf:option datatype="boolean">useannotator</bcf:option>
     <bcf:option datatype="boolean">useauthor</bcf:option>
@@ -397,12 +398,14 @@
     <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="NAMELIST">
+    <bcf:option datatype="string">nametemplates</bcf:option>
     <bcf:option datatype="boolean">useprefix</bcf:option>
     <bcf:option datatype="string">sortingnamekeytemplatename</bcf:option>
     <bcf:option datatype="string">labelalphanametemplatename</bcf:option>
     <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="NAME">
+    <bcf:option datatype="string">nametemplates</bcf:option>
     <bcf:option datatype="boolean">useprefix</bcf:option>
     <bcf:option datatype="string">sortingnamekeytemplatename</bcf:option>
     <bcf:option datatype="string">labelalphanametemplatename</bcf:option>
