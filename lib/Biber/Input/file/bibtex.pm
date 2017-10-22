@@ -1043,30 +1043,24 @@ sub _name {
 
   foreach my $name (@tmp) {
 
-      # namelist scope sortingnamekeytemplatename
-      if ($name =~ m/^sortingnamekeytemplatename\s*$xnamesep\s*(\S+)$/) {
-        $names->set_sortingnamekeytemplatename($1);
-        next;
+    # per-namelist options
+    if ($name =~ m/^(\S+)\s*$xnamesep\s*(\S+)?$/) {
+      my $nlo = lc($1);
+      my $nlov = $2 // 1; # bare options are just boolean numerals
+      if ($CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->{$nlo}) {
+        if ($CONFIG_OPTTYPE_BIBLATEX{$nlo} and
+            $CONFIG_OPTTYPE_BIBLATEX{$nlo} eq 'boolean') {
+          $nlov = map_boolean($nlov, 'tonum');
       }
+        my $oo = expand_option($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{INPUT});
 
-      # namelist scope useprefix
-      if ($name =~ m/^useprefix\s*$xnamesep\s*(\S+)$/) {
-        $useprefix = map_boolean($1, 'tonum');
-        $names->set_useprefix($useprefix);
+        foreach my $o ($oo->@*) {
+          my $method = 'set_' . $o->[0];
+          $names->$method($o->[1]);
+        }
         next;
       }
-
-      # namelist scope uniquenametemplatename
-      if ($name =~ m/^uniquenametemplatename\s*$xnamesep\s*(\S+)$/) {
-        $names->set_uniquenametemplatename($1);
-        next;
-      }
-
-      # namelist scope labelalphanametemplatename
-      if ($name =~ m/^labelalphanametemplatename\s*$xnamesep\s*(\S+)$/) {
-        $names->set_labelalphanametemplatename($1);
-        next;
-      }
+    }
 
     # Consecutive "and" causes Text::BibTeX::Name to segfault
     unless ($name) {
@@ -1603,28 +1597,17 @@ sub parsename_x {
     my ($npn, $npv) = $np =~ m/^(.+)\s*$xnamesep\s*(.+)$/x;
     $npn = lc($npn);
 
-    # name scope useprefix
-    if ($npn eq 'useprefix') {
-      $opts->{useprefix} = map_boolean($npv, 'tonum');
-      $pernameopts{useprefix} = $npv;
-      next;
-    }
+    # per-name options
+    if ($CONFIG_SCOPEOPT_BIBLATEX{NAME}->{$npn}) {
+      if ($CONFIG_OPTTYPE_BIBLATEX{$npn} and
+          $CONFIG_OPTTYPE_BIBLATEX{$npn} eq 'boolean') {
+        $npv = map_boolean($npv, 'tonum');
+      }
+      my $oo = expand_option($npn, $npv, $CONFIG_BIBLATEX_NAME_OPTIONS{$npn}->{INPUT});
 
-    # name scope sortingnamekeytemplatename
-    if ($npn eq 'sortingnamekeytemplatename') {
-      $pernameopts{sortingnamekeytemplatename} = $npv;
-      next;
-    }
-
-    # name scope uniquenametemplatename
-    if ($npn eq 'uniquenametemplatename') {
-      $pernameopts{uniquenametemplatename} = $npv;
-      next;
-    }
-
-    # name scope labelalphanametemplatename
-    if ($npn eq 'labelalphanametemplatename') {
-      $pernameopts{labelalphanametemplatename} = $npv;
+      foreach my $o ($oo->@*) {
+        $pernameopts{$o->[0]} = $o->[1];
+      }
       next;
     }
 

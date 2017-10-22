@@ -1076,24 +1076,21 @@ sub _name {
   foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
     my $names = new Biber::Entry::Names;
 
-    # Namelist scope useprefix
-    if ($node->hasAttribute('useprefix')) {
-      $names->set_useprefix(map_boolean($node->getAttribute('useprefix'), 'tonum'));
-    }
+    # per-namelist options
+    foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
+      if ($node->hasAttribute($nlo)) {
+        my $nlov = $node->getAttribute($nlo);
+        if ($CONFIG_OPTTYPE_BIBLATEX{$nlo} and
+            $CONFIG_OPTTYPE_BIBLATEX{$nlo} eq 'boolean') {
+          $nlov = map_boolean($nlov, 'tonum');
+        }
+        my $oo = expand_option($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{INPUT});
 
-    # Namelist scope sortingnamekeytemplatename attribute
-    if ($node->hasAttribute('sortingnamekeytemplatename')) {
-      $names->set_sortingnamekeytemplatename($node->getAttribute('sortingnamekeytemplatename'));
-    }
-
-    # Namelist scope uniquenametemplatename attribute
-    if ($node->hasAttribute('uniquenametemplatename')) {
-      $names->set_uniquenametemplatename($node->getAttribute('uniquenametemplatename'));
-    }
-
-    # Namelist scope labelalphanametemplatename attribute
-    if ($node->hasAttribute('labelalphanametemplatename')) {
-      $names->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplatename'));
+        foreach my $o ($oo->@*) {
+          my $method = 'set_' . $o->[0];
+          $names->$method($o->[1]);
+        }
+      }
     }
 
     my $numname = 1;
@@ -1216,24 +1213,21 @@ sub parsename {
                                         gender => $node->getAttribute('gender')
                                        );
 
-  # Set name-scope useprefix attribute if it exists
-  if ($node->hasAttribute('useprefix')) {
-    $newname->set_useprefix(map_boolean($node->getAttribute('useprefix'), 'tonum'));
-  }
+  # per-name options
+  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
+    if ($node->hasAttribute($no)) {
+      my $nov = $node->getAttribute($no);
+      if ($CONFIG_OPTTYPE_BIBLATEX{$no} and
+          $CONFIG_OPTTYPE_BIBLATEX{$no} eq 'boolean') {
+        $nov = map_boolean($nov, 'tonum');
+      }
+      my $oo = expand_option($no, $nov, $CONFIG_BIBLATEX_NAME_OPTIONS{$no}->{INPUT});
 
-  # Set name-scope sortingnamekeytemplatename attribute if it exists
-  if ($node->hasAttribute('sortingnamekeytemplatename')) {
-    $newname->set_sortingnamekeytemplatename($node->getAttribute('sortingnamekeytemplatename'));
-  }
-
-  # Set name-scope uniquenametemplatename attribute if it exists
-  if ($node->hasAttribute('uniquenametemplatename')) {
-    $newname->set_uniquenametemplatename($node->getAttribute('uniquenametemplatename'));
-  }
-
-  # Set name-scope labelalphanametemplatename attribute if it exists
-  if ($node->hasAttribute('labelalphanametemplatename')) {
-    $newname->set_labelalphanametemplatename($node->getAttribute('labelalphanametemplatename'));
+      foreach my $o ($oo->@*) {
+        my $method = 'set_' . $o->[0];
+        $newname->$method($o->[1]);
+      }
+    }
   }
 
   return $newname;

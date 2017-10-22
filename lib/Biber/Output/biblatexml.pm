@@ -164,15 +164,18 @@ sub set_output_entry {
       }
 
       # Add per-namelist options
-      foreach my $ploname (sort keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
-        if (defined($nf->${\"get_$ploname"})) {
-          my $plo = $nf->${\"get_$ploname"};
-          if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
-              $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
-            push @attrs, ($ploname =>  map_boolean($plo, 'tostring'));
+      foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
+        if (defined($nf->${\"get_$nlo"})) {
+          my $nlov = $nf->${\"get_$nlo"};
+
+          if ($CONFIG_OPTTYPE_BIBLATEX{lc($nlo)} and
+              $CONFIG_OPTTYPE_BIBLATEX{lc($nlo)} eq 'boolean') {
+            $nlov = map_boolean($nlov, 'tostring');
           }
-          else {
-            push @attrs, ($ploname => $plo);
+
+          my $oo = expand_option($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{OUTPUT});
+          foreach my $o ($oo->@*) {
+            push @attrs, ($o->[0] => $o->[1]);
           }
         }
       }

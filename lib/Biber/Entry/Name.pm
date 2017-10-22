@@ -179,16 +179,20 @@ sub name_to_biblatexml {
   my $dm = Biber::Config->get_dm;
   my @attrs;
 
+
   # Add per-name options
-  foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
-    if (defined($self->${\"get_$pnoname"})) {
-      my $pno = $self->${\"get_$pnoname"};
-      if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
-          $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
-        push @attrs, ($pnoname => Biber::Utils::map_boolean($pno, 'tostring'));
+  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
+    if (defined($self->${\"get_$no"})) {
+      my $nov = $self->${\"get_$no"};
+
+      if ($CONFIG_OPTTYPE_BIBLATEX{lc($no)} and
+          $CONFIG_OPTTYPE_BIBLATEX{lc($no)} eq 'boolean') {
+        $nov = map_boolean($nov, 'tostring');
       }
-      else {
-        push @attrs, ($pnoname => $pno);
+
+      my $oo = expand_option($no, $nov, $CONFIG_BIBLATEX_NAME_OPTIONS{$no}->{OUTPUT});
+      foreach my $o ($oo->@*) {
+        push @attrs, ($o->[0] => $o->[1]);
       }
     }
   }
@@ -305,16 +309,20 @@ sub name_to_bbl {
   push @pno, "<BDS>UNS-${nid}</BDS>";
   push @pno, "<BDS>UNP-${nid}</BDS>";
 
+
   # Add per-name options
-  foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
-    if (defined($self->${\"get_$pnoname"})) {
-      my $pno = $self->${\"get_$pnoname"};
-      if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
-          $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
-        push @pno, "$pnoname=" . Biber::Utils::map_boolean($pno, 'tostring');
+  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
+    if (defined($self->${\"get_$no"})) {
+      my $nov = $self->${\"get_$no"};
+
+      if ($CONFIG_OPTTYPE_BIBLATEX{lc($no)} and
+          $CONFIG_OPTTYPE_BIBLATEX{lc($no)} eq 'boolean') {
+        $nov = Biber::Utils::map_boolean($nov, 'tostring');
       }
-      else {
-        push @pno, "$pnoname=$pno";
+
+      my $oo = Biber::Utils::expand_option($no, $nov, $CONFIG_BIBLATEX_NAME_OPTIONS{$no}->{OUTPUT});
+      foreach my $o ($oo->@*) {
+        push @pno, $o->[0] . '=' . $o->[1];
       }
     }
   }
@@ -364,16 +372,20 @@ sub name_to_bblxml {
   $pno{uniquename} = "[BDS]UNS-${nid}[/BDS]";
   $pno{uniquepart} = "[BDS]UNP-${nid}[/BDS]";
 
+
   # Add per-name options
-  foreach my $pnoname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
-    if (defined($self->${\"get_$pnoname"})) {
-      my $pno = $self->${\"get_$pnoname"};
-      if ($CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} and
-          $CONFIG_OPTTYPE_BIBLATEX{lc($pnoname)} eq 'boolean') {
-        $pno{$pnoname} = Biber::Utils::map_boolean($pno, 'tostring');
+  foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
+    if (defined($self->${\"get_$no"})) {
+      my $nov = $self->${\"get_$no"};
+
+      if ($CONFIG_OPTTYPE_BIBLATEX{lc($no)} and
+          $CONFIG_OPTTYPE_BIBLATEX{lc($no)} eq 'boolean') {
+        $nov = Biber::Utils::map_boolean($nov, 'tostring');
       }
-      else {
-        $pno{$pnoname} = $pno;
+
+      my $oo = Biber::Utils::expand_option($no, $nov, $CONFIG_BIBLATEX_NAME_OPTIONS{$no}->{OUTPUT});
+      foreach my $o ($oo->@*) {
+        $pno{$o->[0]} = $o->[1];
       }
     }
   }

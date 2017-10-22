@@ -55,7 +55,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
-  split_xsv edtf_monthday tzformat};
+  split_xsv edtf_monthday tzformat expand_option};
 
 =head1 FUNCTIONS
 
@@ -765,7 +765,7 @@ sub join_name {
 
 =head2 filter_entry_options
 
-    Process any per_entry option transformations which are necessary
+    Process any per_entry option transformations which are necessary on output
 
 =cut
 
@@ -966,43 +966,47 @@ sub process_entry_options {
   return unless $options;       # Just in case it's null
   foreach ($options->@*) {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
-    m/^([^=]+)(=?)(.+)?$/;
-    if ($2) {
-      if ($CONFIG_OPTTYPE_BIBLATEX{lc($1)} and
-          $CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
-        _expand_option($1, map_boolean($3, 'tonum'), $citekey);
-      }
-      else {
-        _expand_option($1, $3, $citekey);
-      }
+    m/^([^=]+)=?(.+)?$/;
+    my $val = $2 // 1; # bare options are just boolean numerals
+    if ($CONFIG_OPTTYPE_BIBLATEX{lc($1)} and
+        $CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
+      $val = map_boolean($val, 'tonum');
     }
-    else {
-      _expand_option($1, 1, $citekey);
+    my $oo = expand_option($1, $val, $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}->{INPUT});
+
+    foreach my $o ($oo->@*) {
+      Biber::Config->setblxoption($o->[0], $o->[1], 'ENTRY', $citekey);
     }
   }
   return;
 }
 
-sub _expand_option {
-  my ($opt, $val, $citekey) = @_;
-  my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($opt)}{INPUT};
+=head2 expand_option
+
+    Expand option such as meta-options coming from biblatex
+
+=cut
+
+sub expand_option {
+  my ($opt, $val, $cfopt) = @_;
+  my $outopts;
   # Standard option
   if (not defined($cfopt)) {
-    Biber::Config->setblxoption($opt, $val, 'ENTRY', $citekey);
+    push $outopts->@*, [$opt, $val];
   }
-  # Set all split options to same value as parent
+  # Set all split options
   elsif (ref($cfopt) eq 'ARRAY') {
     foreach my $k ($cfopt->@*) {
-      Biber::Config->setblxoption($k, $val, 'ENTRY', $citekey);
+      push $outopts->@*, [$k, $val];
     }
   }
   # Specify values per all splits
   elsif (ref($cfopt) eq 'HASH') {
     foreach my $k (keys $cfopt->%*) {
-      Biber::Config->setblxoption($k, $cfopt->{$k}, 'ENTRY', $citekey);
+      push $outopts->@*, [$k, $cfopt->{$k}];
     }
   }
-  return;
+  return $outopts;
 }
 
 =head2 parse_date_range

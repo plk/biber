@@ -226,16 +226,20 @@ sub set_output_entry {
         # Don't use angles in attributes ...
         $plo{uniquelist} = "[BDS]UL-${nlid}[/BDS]";
 
+
         # Add per-namelist options
-        foreach my $ploname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
-          if (defined($nf->${\"get_$ploname"})) {
-            my $plo = $nf->${\"get_$ploname"};
-            if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
-                $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
-              $plo{$ploname} = map_boolean($plo, 'tostring');
-                }
-            else {
-              $plo{$ploname} = $plo;
+        foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
+          if (defined($nf->${\"get_$nlo"})) {
+            my $nlov = $nf->${\"get_$nlo"};
+
+            if ($CONFIG_OPTTYPE_BIBLATEX{lc($nlo)} and
+                $CONFIG_OPTTYPE_BIBLATEX{lc($nlo)} eq 'boolean') {
+              $nlov = map_boolean($nlov, 'tostring');
+            }
+
+            my $oo = expand_option($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{OUTPUT});
+            foreach my $o ($oo->@*) {
+              $plo{$o->[0]} = $o->[1];
             }
           }
         }

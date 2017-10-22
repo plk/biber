@@ -24,6 +24,8 @@ our @EXPORT = qw{
                   %CONFIG_SCOPEOPT_BIBLATEX
                   %CONFIG_OPTTYPE_BIBLATEX
                   %CONFIG_BIBLATEX_ENTRY_OPTIONS
+                  %CONFIG_BIBLATEX_NAMELIST_OPTIONS
+                  %CONFIG_BIBLATEX_NAME_OPTIONS
                   %CONFIG_META_MARKERS
                   %CONFIG_DATE_PARSERS
                   %DATAFIELD_SETS
@@ -525,6 +527,12 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
                          INPUT  => ['maxcitenames', 'maxbibnames']},
    minnames          => {OUTPUT => ['mincitenames', 'minbibnames'],
                          INPUT  => ['mincitenames', 'minbibnames']},
+   nametemplates     => {OUTPUT => ['sortingnamekeytemplatename',
+                                    'uniquenametemplatename',
+                                    'labelalphanametemplatename'],
+                         INPUT  => ['sortingnamekeytemplatename',
+                                    'uniquenametemplatename',
+                                    'labelalphanametemplatename']},
    noinherit         => {OUTPUT => 0},
    presort           => {OUTPUT => 0},
    skipbib           => {OUTPUT => 1},
@@ -538,6 +546,26 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
    useeditor         => {OUTPUT => 1},
    useprefix         => {OUTPUT => 1},
    usetranslator     => {OUTPUT => 1},
+  );
+
+our %CONFIG_BIBLATEX_NAMELIST_OPTIONS =
+  (
+   nametemplates     => {OUTPUT => ['sortingnamekeytemplatename',
+                                    'uniquenametemplatename',
+                                    'labelalphanametemplatename'],
+                         INPUT  => ['sortingnamekeytemplatename',
+                                    'uniquenametemplatename',
+                                    'labelalphanametemplatename']},
+  );
+
+our %CONFIG_BIBLATEX_NAME_OPTIONS =
+  (
+   nametemplates     => {OUTPUT => ['sortingnamekeytemplatename',
+                                    'uniquenametemplatename',
+                                    'labelalphanametemplatename'],
+                         INPUT  => ['sortingnamekeytemplatename',
+                                    'uniquenametemplatename',
+                                    'labelalphanametemplatename']},
   );
 
 1;

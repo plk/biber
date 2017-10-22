@@ -246,7 +246,6 @@ sub set_output_entry {
     # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $nf = $be->get_field($namefield) ) {
       my $nlid = $nf->get_id;
-      my $plo = '';
 
       # Did we have "and others" in the data?
       if ( $nf->get_morenames ) {
@@ -262,6 +261,9 @@ sub set_output_entry {
       my $total = $nf->count_names;
 
       my $lni = $be->get_labelname_info;
+
+      my $nfv = '';
+
       if (defined($lni) and
           $lni eq $namefield) {
         my @plo;
@@ -270,22 +272,26 @@ sub set_output_entry {
         push @plo, "<BDS>UL-${nlid}</BDS>";
 
         # Add per-namelist options
-        foreach my $ploname (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
-          if (defined($nf->${\"get_$ploname"})) {
-            my $plo = $nf->${\"get_$ploname"};
-            if ($CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} and
-                $CONFIG_OPTTYPE_BIBLATEX{lc($ploname)} eq 'boolean') {
-              push @plo, "$ploname=" . map_boolean($plo, 'tostring');
+        foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
+          if (defined($nf->${\"get_$nlo"})) {
+            my $nlov = $nf->${\"get_$nlo"};
+
+            if ($CONFIG_OPTTYPE_BIBLATEX{lc($nlo)} and
+                $CONFIG_OPTTYPE_BIBLATEX{lc($nlo)} eq 'boolean') {
+              $nlov = map_boolean($nlov, 'tostring');
             }
-            else {
-              push @plo, "$ploname=$plo";
+
+            my $oo = expand_option($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{OUTPUT});
+            foreach my $o ($oo->@*) {
+              push @plo, $o->[0] . '=' . $o->[1];
             }
           }
         }
 
-        $plo = join(',', @plo);
+        $nfv = join(',', @plo);
       }
-      $acc .= "      \\name{$namefield}{$total}{$plo}{%\n";
+
+      $acc .= "      \\name{$namefield}{$total}{$nfv}{%\n";
       foreach my $n ($nf->names->@*) {
         $acc .= $n->name_to_bbl;
       }

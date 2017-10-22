@@ -898,7 +898,7 @@ is_deeply(tparsename('{{{British National Corpus}}}', 'author'), $name18, 'parse
 is_deeply(Biber::Input::file::bibtex::parsename('{{{British National Corpus}}}', 'author')->{strip}, $name18strip, 'parsename 18a');
 is_deeply(tparsename('Vázques{ de }Parga, Luis', 'author'), $name19, 'parsename 19');
 is_deeply(tparsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author'), $namex1, 'parsename_x 1');
-eq_or_diff(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->{useprefix}, 'true', 'parsename_x 2');
+eq_or_diff(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->{useprefix}, '1', 'parsename_x 2');
 
 # name to bib tests
 eq_or_diff(Biber::Input::file::bibtex::parsename('John Doe', 'author')->name_to_bib, 'Doe, John', 'name_to_bib 1');
