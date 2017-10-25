@@ -160,11 +160,8 @@ sub set_output_entry {
   # Generate set information
   # Set parents are special and need very little
   if ($bee eq 'set') {# Set parents get <set> entry ...
-    $xml->startTag([$xml_prefix, 'set']);
-    foreach my $m ($be->get_field('entryset')->@*) {
-      $xml->dataElement([$xml_prefix, 'member'], _bblxml_norm($m));
-    }
-    $xml->endTag();# set
+
+    $xml->dataElement('BDS', 'ENTRYSET');
 
     # Set parents need this - it is the labelalpha from the first entry
     if (Biber::Config->getblxoption('labelalpha', $bee)) {
@@ -648,7 +645,7 @@ sub output {
       $xml->raw("\n");
 
       # The order of this array is the sorted order
-      foreach my $k ($list->get_keys) {
+      foreach my $k ($list->get_keys->@*) {
         if ($logger->is_debug()) {# performance tune
           $logger->debug("Writing entry for key '$k'");
         }

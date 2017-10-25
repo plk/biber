@@ -128,6 +128,10 @@
       <bcf:value>nty</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>sortsets</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>
@@ -263,6 +267,7 @@
     <bcf:option datatype="boolean">clearlang</bcf:option>
     <bcf:option datatype="boolean">indexing</bcf:option>
     <bcf:option datatype="boolean">sortcites</bcf:option>
+    <bcf:option datatype="boolean">sortsets</bcf:option>
     <bcf:option datatype="boolean">hyperref</bcf:option>
     <bcf:option datatype="boolean">backref</bcf:option>
     <bcf:option datatype="boolean">pagetracker</bcf:option>

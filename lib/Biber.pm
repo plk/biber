@@ -33,7 +33,7 @@ use File::Slurper;
 use File::Spec;
 use File::Temp;
 use IO::File;
-use List::AllUtils qw( first uniq max );
+use List::AllUtils qw( first uniq max first_index);
 use Log::Log4perl qw( :no_extra_logdie_message );
 use POSIX qw( locale_h ); # for lc()
 use Scalar::Util qw(looks_like_number);
@@ -2604,6 +2604,7 @@ sub process_presort {
   }
 }
 
+
 =head2 process_lists
 
     Process a bibliography list
@@ -2629,7 +2630,7 @@ sub process_lists {
     $list->set_labelalphanametemplatename('global') unless $list->get_labelalphanametemplatename;
     $list->set_keys([ $section->get_citekeys ]);
     if ($logger->is_debug()) {  # performance tune
-      $logger->debug("Populated datalist '$lname' of type '$ltype' with attributes '$lattrs' in section $secnum with keys: " . join(', ', $list->get_keys));
+      $logger->debug("Populated datalist '$lname' of type '$ltype' with attributes '$lattrs' in section $secnum with keys: " . join(', ', $list->get_keys->@*));
     }
 
     # A datalist represents a biblatex refcontext
@@ -2669,7 +2670,7 @@ sub process_lists {
     # Filtering
     if (my $filters = $list->get_filters) {
       my $flist = [];
-    KEYLOOP: foreach my $k ($list->get_keys) {
+    KEYLOOP: foreach my $k ($list->get_keys->@*) {
 
         my $be = $section->bibentry($k);
         foreach my $f ($filters->@*) {
@@ -2859,7 +2860,7 @@ sub generate_sortdataschema {
 sub generate_sortinfo {
   my ($self, $dlist) = @_;
 
-  foreach my $key ($dlist->get_keys) {
+  foreach my $key ($dlist->get_keys->@*) {
     $self->_generatesortinfo($key, $dlist);
   }
   return;
@@ -3415,9 +3416,34 @@ sub generate_contextdata {
 
   # This loop critically depends on the order of the citekeys which
   # is why we have to do sorting before this
-  foreach my $key ($dlist->get_keys) {
+  foreach my $key ($dlist->get_keys->@*) {
     my $be = $section->bibentry($key);
     my $bee = $be->get_field('entrytype');
+
+    # Sort any set members according to the list sorting order of the keys.
+    # This gets the indices of the set elements in the sorted datalist, sorts
+    # them numerically and then extracts the actual citekeys to make a new
+    # entryset field value which we store in the list metadata until output time.
+    if ($be->get_field('entrytype') eq 'set') {
+      my @es;
+      if (Biber::Config->getblxoption('sortsets')) {
+        my $setkeys = $be->get_field('entryset');
+        my $keys = $dlist->get_keys;
+        my @sorted_setkeys;
+        # Generate array of indices of set members in the main sorted datalist
+        foreach my $elem ($setkeys->@*) {
+          push @sorted_setkeys, first_index {$elem eq $_} $keys->@*;
+        }
+        # Sort the indices numerically (sorting has already been done so this is fine)
+        # then get the actual citekeys using an array slice on the main sorted list
+        @es = $keys->@[sort {$a <=> $b} @sorted_setkeys];
+      }
+      else {
+        @es = $be->get_field('entryset')->@*;
+      }
+      $dlist->set_entryfield($key, 'entryset', \@es);
+    }
+
     # Only generate extra* information if skiplab is not set.
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
@@ -3652,7 +3678,7 @@ sub sort_list {
   my ($self, $dlist) = @_;
   my $sortingtemplate = $dlist->get_sortingtemplate;
   my $lsds  = $dlist->get_sortdataschema;
-  my @keys = $dlist->get_keys;
+  my @keys = $dlist->get_keys->@*;
   my $lstn = $dlist->get_sortingtemplatename;
   my $ltype = $dlist->get_type;
   my $lname = $dlist->get_name;

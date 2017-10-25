@@ -153,7 +153,7 @@ ok(is_undef($out->get_output_entry('loh')), 'tool mode - 2');
 eq_or_diff($out->get_output_entry('xd1',), $t2, 'tool mode - 3');
 eq_or_diff($out->get_output_entry('b1',), $t3, 'tool mode - 4');
 eq_or_diff($out->get_output_entry('dt1',), $t4, 'tool mode - 5');
-is_deeply([$main->get_keys], ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'xd1'], 'tool mode sorting');
+is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'xd1'], 'tool mode sorting');
 eq_or_diff($out->get_output_comments, $tc1, 'tool mode - 6');
 
 Biber::Config->setoption('output_xname', 1);

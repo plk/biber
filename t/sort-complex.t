@@ -264,12 +264,12 @@ eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'bbl test 1');
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'bbl test 2');
 eq_or_diff( $out->get_output_entry('L3', $main), $l3, 'bbl test 3');
 eq_or_diff( $out->get_output_entry('L5', $main), $l5, 'bbl test 4');
-is_deeply([ $main->get_keys ], ['L5', 'L4', 'L1', 'L3', 'L2'], 'sortorder - 1');
+is_deeply($main->get_keys, ['L5', 'L4', 'L1', 'L3', 'L2'], 'sortorder - 1');
 
 # This would be the same as $main citeorder as both $main and $shs use same
 # global sort spec but here it's null because we've removed all shorthands using a map
 # above and the filter for the shorthand list only uses entries with SHORTHAND fields ...
-is_deeply([ $shs->get_keys ], [], 'sortorder - 2');
+is_deeply($shs->get_keys , [], 'sortorder - 2');
 
 # reset options and regenerate information
 Biber::Config->setoption('sourcemap', undef); # no longer ignore shorthand*
@@ -285,5 +285,5 @@ $section = $biber->sections->get_section(0);
 $shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'list');
 
 # Sort by shorthand
-is_deeply([ $shs->get_keys ], ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');
+is_deeply($shs->get_keys, ['L1', 'L2', 'L3', 'L4', 'L5'], 'sortorder - 3');
 

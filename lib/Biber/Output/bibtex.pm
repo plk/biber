@@ -362,7 +362,7 @@ sub output {
                                                                  sortingnamekeytemplatename => 'global',
                                                                  labelprefix => '',
                                                                  uniquenametemplatename => 'global',
-                                                                 labelalphanametemplatename => 'global')->[0]->get_keys) {
+                                                                 labelalphanametemplatename => 'global')->[0]->get_keys->@*) {
     out($target, ${$data->{ENTRIES}{99999}{index}{$key}});
   }
 

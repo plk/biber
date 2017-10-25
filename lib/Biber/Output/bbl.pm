@@ -206,7 +206,7 @@ sub set_output_entry {
   # Generate set information.
   # Set parents are special and need very little
   if ($bee eq 'set') { # Set parents get \set entry ...
-    $acc .= "      \\set{" . join(',', $be->get_field('entryset')->@*) . "}\n";
+    $acc .= "      <BDS>ENTRYSET</BDS>\n";
 
     # Set parents need this - it is the labelalpha from the first entry
     if (Biber::Config->getblxoption('labelalpha', $bee)) {
@@ -652,7 +652,7 @@ sub output {
       out($target, "  \\datalist[$listtype]{$listname}\n");
 
       # The order of this array is the sorted order
-      foreach my $k ($list->get_keys) {
+      foreach my $k ($list->get_keys->@*) {
         if ($logger->is_debug()) {# performance tune
           $logger->debug("Writing entry for key '$k'");
         }

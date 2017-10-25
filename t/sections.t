@@ -104,12 +104,12 @@ is_deeply($biber->get_preamble, $preamble, 'Preamble for all sections');
 eq_or_diff($section0->bibentry('sect1')->get_field('note'), 'value1', 'Section 0 macro test');
 # If macros were not reset between sections, this would give a macro redef error
 eq_or_diff($section1->bibentry('sect4')->get_field('note'), 'value2', 'Section 1 macro test');
-is_deeply([$main0->get_keys], ['sect1', 'sect2', 'sect3', 'sect8'], 'Section 0 citekeys');
-is_deeply([$shs0->get_keys], ['sect1', 'sect2', 'sect8'], 'Section 0 shorthands');
-is_deeply([$main1->get_keys], ['sect4', 'sect5'], 'Section 1 citekeys');
-is_deeply([$shs1->get_keys], ['sect4', 'sect5'], 'Section 1 shorthands');
-is_deeply([$main2->get_keys], ['sect1', 'sect6', 'sect7'], 'Section 2 citekeys');
-is_deeply([$shs2->get_keys], ['sect1', 'sect6', 'sect7'], 'Section 2 shorthands');
+is_deeply($main0->get_keys, ['sect1', 'sect2', 'sect3', 'sect8'], 'Section 0 citekeys');
+is_deeply($shs0->get_keys, ['sect1', 'sect2', 'sect8'], 'Section 0 shorthands');
+is_deeply($main1->get_keys, ['sect4', 'sect5'], 'Section 1 citekeys');
+is_deeply($shs1->get_keys, ['sect4', 'sect5'], 'Section 1 shorthands');
+is_deeply($main2->get_keys, ['sect1', 'sect6', 'sect7'], 'Section 2 citekeys');
+is_deeply($shs2->get_keys, ['sect1', 'sect6', 'sect7'], 'Section 2 shorthands');
 is_deeply([$section3->get_orig_order_citekeys], ['sect1', 'sect2', 'sectall1'], 'Section 3 citekeys');
 eq_or_diff($out->get_output_section(0)->number, '0', 'Checking output sections - 1');
 eq_or_diff($out->get_output_section(1)->number, '1', 'Checking output sections - 2');

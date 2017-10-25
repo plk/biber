@@ -70,6 +70,7 @@
         </optional>
         <ref name="sortlocale"/>
         <ref name="sortingtemplatename"/>
+        <ref name="sortsets"/>
         <ref name="uniquelist"/>
         <ref name="uniquename"/>
         <ref name="uniqueprimaryauthor"/>
@@ -1764,6 +1765,22 @@
       </element>
       <element name="bcf:value">
         <text/>
+      </element>
+    </element>
+  </define>
+  <define name="sortsets">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>sortsets</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
       </element>
     </element>
   </define>

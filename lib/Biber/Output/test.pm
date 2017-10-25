@@ -396,7 +396,7 @@ sub output {
     foreach my $list (sort {$a->get_sortingtemplatename cmp $b->get_sortingtemplatename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
       next unless $list->count_keys; # skip empty lists
       my $listtype = $list->get_type;
-      foreach my $k ($list->get_keys) {
+      foreach my $k ($list->get_keys->@*) {
         my $entry = $data->{ENTRIES}{$secnum}{index}{$k};
 
         # Instantiate any dynamic, list specific entry information

@@ -287,7 +287,7 @@ eq_or_diff( $out->get_output_entry('caf8e34be07426ae7127c1b4829983c1', $main), $
 # Key k4 is used only to create a related entry clone but since it isn't cited itself
 # it shouldn't be in the .bbl
 eq_or_diff( $out->get_output_entry('key4', $main), undef, 'Related entry test 8' ) ;
-is_deeply([$shs->get_keys], [
+is_deeply($shs->get_keys, [
                              "key1",
                              "key2",
                              "caf8e34be07426ae7127c1b4829983c1",

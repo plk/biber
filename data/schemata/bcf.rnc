@@ -48,6 +48,7 @@ start =
       sortalphaothers?,
       sortlocale,
       sortingtemplatename,
+      sortsets,
       uniquelist,
       uniquename,
       uniqueprimaryauthor,
@@ -685,6 +686,12 @@ sortingtemplatename =
     attribute type { "singlevalued" },
     element bcf:key { "sortingtemplatename" },
     element bcf:value { text }
+  }
+sortsets =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "sortsets" },
+    element bcf:value { "0" | "1" }
   }
 labelnamespec =
   element bcf:option {

@@ -1315,7 +1315,7 @@ sub set_keys {
 
 sub get_keys {
   my $self = shift;
-  return $self->{keys}->@*;
+  return $self->{keys};
 }
 
 =head2 count_keys
@@ -1711,6 +1711,12 @@ sub instantiate_entry {
   # .bbl output
   if ($format eq 'bbl') {
 
+    # entryset
+    if (my $es = $self->get_entryfield($key, 'entryset')) {
+      my $str = "\\set{" . join(',', $es->@*) . '}';
+      $entry_string =~ s|<BDS>ENTRYSET</BDS>|$str|gxms;
+    }
+
     # uniqueprimaryauthor
     if ($self->get_entryfield($key, 'uniqueprimaryauthor')) {
       my $str = "\\true{uniqueprimaryauthor}";
@@ -1877,6 +1883,16 @@ sub instantiate_entry {
 
   # .bblxml output
   if ($format eq 'bblxml') {
+
+    # entryset
+    if (my $es = $self->get_entryfield($key, 'entryset')) {
+      my $str = "<bbl:set>\n";
+      foreach my $m ($es->@*) {
+        $str .= "    <bbl:member>$m</bbl:member>\n";
+      }
+      $str .= "  </bbl:set>";
+      $entry_string =~ s|<BDS>ENTRYSET</BDS>|$str|gxms;
+    }
 
     # uniqueprimaryauthor
     if ($self->get_entryfield($key, 'uniqueprimaryauthor')) {

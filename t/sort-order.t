@@ -39,28 +39,28 @@ $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('none/global//global/global');
 
-is_deeply([ $main->get_keys ], ['L2','L3','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'citeorder');
+is_deeply($main->get_keys, ['L2','L3','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'citeorder');
 
 $main->set_sortingtemplatename('nty');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([ $main->get_keys ], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nty');
+is_deeply($main->get_keys, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nty');
 
 $main->set_sortingtemplatename('nyt');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyt');
+is_deeply($main->get_keys, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyt');
 
 $main->set_sortingtemplatename('nyvt');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt');
+is_deeply($main->get_keys, ['L5','L1','L1A','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt');
 
 # nyvt with volume padding
 
@@ -69,7 +69,7 @@ $main->set_sortingtemplatename('nyvtvp');
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt with volume padding');
+is_deeply($main->get_keys, ['L5','L1A','L1','L1B','L2','L3','L4','L8','L7','L6','L9'], 'nyvt with volume padding');
 
 $main->set_sortingtemplatename('ynt');
 
@@ -78,7 +78,7 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 # Note that L5 is last because it has a final sortkey which maps to a  large
 # int in sort fields
-is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
+is_deeply($main->get_keys, ['L3','L1B','L1A','L1','L4','L2','L8','L7','L6','L9','L5'], 'ynt');
 
 $main->set_sortingtemplatename('yntys');
 
@@ -87,7 +87,7 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 # Note that L5 is last because it has a final sortkey which maps to a  large
 # int in sort fields
-is_deeply([$main->get_keys], ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5'], 'ynt with year substring');
+is_deeply($main->get_keys, ['L3','L1B','L1A','L1','L2','L4','L8','L7','L6','L9','L5'], 'ynt with year substring');
 
 $main->set_sortingtemplatename('ydnt');
 
@@ -96,7 +96,7 @@ $biber->prepare;
 $section = $biber->sections->get_section(0);
 # Note that L5 is first because it has a final sortkey which maps to a
 # large int in sort fields
-is_deeply([$main->get_keys], ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
+is_deeply($main->get_keys, ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
 
 $main->set_sortingtemplatename('anyt');
 
@@ -105,7 +105,7 @@ Biber::Config->setblxoption('labelalpha', 1);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyt');
+is_deeply($main->get_keys, ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyt');
 
 Biber::Config->setblxoption('labelalpha', 0);
 
@@ -116,14 +116,14 @@ Biber::Config->setblxoption('labelalpha', 1);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyvt');
+is_deeply($main->get_keys, ['L1B','L1','L1A','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyvt');
 
 $main->set_sortingtemplatename('ndty');
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1'], 'nty with descending n');
+is_deeply($main->get_keys, ['L9','L6','L7','L8','L5','L4','L3','L2','L1B','L1A','L1'], 'nty with descending n');
 
 # Test nosort option
 $main->set_sortingtemplatename('t');
@@ -134,7 +134,7 @@ Biber::Config->setoption('nosort', [{ name => 'settitles', value => q/\AThe\s+/ 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8'], 'nosort 1');
+is_deeply($main->get_keys, ['L1A','L1','L1B','L2','L3','L4','L5','L7','L6','L9','L8'], 'nosort 1');
 
 # Testing sorting keys which have the same order as they were cited in the same \cite*{} cmd.
 # In this case, they will be tied on sorting=none and can be further sorted by other fields
@@ -145,7 +145,7 @@ $main->set_sortingtemplatename('ny');
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([ $main->get_keys ], ['L3','L2','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'sorting=none + year');
+is_deeply($main->get_keys, ['L3','L2','L1B','L1','L4','L5','L1A','L7','L8','L6','L9'], 'sorting=none + year');
 
 # Testing special case of sorting=none and allkeys because in this case "citeorder" means
 # bib order
@@ -159,5 +159,5 @@ $section->set_allkeys(1);
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
-is_deeply([$main->get_keys], ['L1','L1A','L1B','L2','L3','L4','L5','L6','L7','L8','L9'], 'sorting=none and allkeys');
+is_deeply($main->get_keys, ['L1','L1A','L1B','L2','L3','L4','L5','L6','L7','L8','L9'], 'sorting=none and allkeys');
 

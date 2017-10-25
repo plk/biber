@@ -215,7 +215,7 @@ sub get_output_entries {
   my $list = shift;
   return [ map {$self->{output_data}{ENTRIES}{$section}{index}{$_} ||
                 $self->{output_data}{MISSING_ENTRIES}{$section}{index}{$_} ||
-                $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$_}} $list->get_keys];
+                $self->{output_data}{ALIAS_ENTRIES}{$section}{index}{$_}} $list->get_keys->@*];
 }
 
 
@@ -400,7 +400,7 @@ sub output {
       my $listlabel = $list->get_label;
       my $listtype = $list->get_type;
       out($target, "  LIST: $listlabel\n\n");
-      foreach my $k ($list->get_keys) {
+      foreach my $k ($list->get_keys->@*) {
         my $entry_string = $data->{ENTRIES}{$secnum}{index}{$k};
         out($target, $entry_string);
       }
