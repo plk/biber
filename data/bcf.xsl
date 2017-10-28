@@ -616,6 +616,32 @@
           </ul>
           </div>
         </xsl:if>
+        <!-- EXTRADATE -->
+        <xsl:if test="/bcf:controlfile/bcf:extradatespec">
+          <hr/>
+          <h3>Extradate specification</h3>
+          <table>
+            <thead>
+              <tr>
+                <td>Fields</td>
+              </tr>
+            </thead>
+            <tbody>
+              <xsl:for-each select="/bcf:controlfile/bcf:extradatespec/bcf:scope">
+                <tr>
+                  <td>
+                    <xsl:for-each select="./bcf:field">
+                      <xsl:value-of select="./text()"/>
+                      <xsl:if test="not(position()=last())">
+                        <xsl:text disable-output-escaping="yes">,&amp;nbsp;</xsl:text>
+                      </xsl:if>
+                    </xsl:for-each>
+                  </td>
+                </tr>
+              </xsl:for-each>
+            </tbody>
+          </table>
+        </xsl:if>
         <!-- INHERITANCE -->
         <xsl:if test="/bcf:controlfile/bcf:inheritance">
           <hr/>
