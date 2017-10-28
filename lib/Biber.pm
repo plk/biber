@@ -2238,7 +2238,7 @@ sub process_labelname {
 
 =head2 process_labeldate
 
-    Generate labeldate information
+    Generate labeldate information, including times
 
 =cut
 
@@ -2260,15 +2260,23 @@ sub process_labeldate {
         my $ldy;
         my $ldm;
         my $ldd;
+        my $ldhour;
+        my $ldmin;
+        my $ldsec;
+        my $ldtz;
         my $datetype;
 
         # resolve dates
         $datetype = $ld =~ s/date\z//xmsr;
         if ($dm->field_is_datatype('date', $ld) and
             $be->get_field("${datetype}datesplit")) { # real EDTF dates
-          $ldy = $datetype . 'year';
-          $ldm = $datetype . 'month';
-          $ldd = $datetype . 'day';
+          $ldy    = $datetype . 'year';
+          $ldm    = $datetype . 'month';
+          $ldd    = $datetype . 'day';
+          $ldhour = $datetype . 'hour';
+          $ldmin  = $datetype . 'minute';
+          $ldsec  = $datetype . 'second';
+          $ldtz   = $datetype . 'timezone';
         }
         else { # non-EDTF split date field so make a pseudo-year
           $ldy = $ld;
@@ -2281,6 +2289,10 @@ sub process_labeldate {
           $be->set_labeldate_info({'field' => {year       => $ldy,
                                                month      => $ldm,
                                                day        => $ldd,
+                                               hour       => $ldhour,
+                                               minute     => $ldmin,
+                                               second     => $ldsec,
+                                               timezone   => $ldtz,
                                                pseudodate => $pseudodate,
                                                source     => $pseudodate ? $ldy : $datetype }});
           last;
@@ -2297,36 +2309,59 @@ sub process_labeldate {
     if (my $ldi = $be->get_labeldate_info) {
       if (my $df = $ldi->{field}) { # set labelyear to a field value
         my $pseudodate = $df->{pseudodate};
-        my $yearstring = $be->get_field($df->{year});
-        $be->set_field('labelyear', $yearstring);
-
+        $be->set_field('labelyear', $be->get_field($df->{year}));
         $be->set_field('labelmonth', $be->get_field($df->{month})) if $df->{month};
         $be->set_field('labelday', $be->get_field($df->{day})) if $df->{day};
+        $be->set_field('labelhour', $be->get_field($df->{hour})) if $df->{hour};
+        $be->set_field('labelminute', $be->get_field($df->{minute})) if $df->{minute};
+        $be->set_field('labelsecond', $be->get_field($df->{second})) if $df->{second};
+        $be->set_field('labeltimezone', $be->get_field($df->{timezone})) if $df->{timezone};
         $be->set_field('labeldatesource', $df->{source});
 
         # ignore endyear if it's the same as year
         my ($ytype) = $df->{year} =~ /\A(\X*)year\z/xms;
         $ytype = $ytype // ''; # Avoid undef warnings since no match above can make it undef
 
-        # endyear can be null which makes labelyear different to plain year
+        # construct labelyear from start/end year field
         if ($be->field_exists($ytype . 'endyear')
             and ($be->get_field($df->{year}) ne $be->get_field($ytype . 'endyear'))) {
           $be->set_field('labelyear',
                          $be->get_field('labelyear') . '\bibdatedash ' . $be->get_field($ytype . 'endyear'));
         }
-        # pseudodates (fields which are not really dates per se) are just years
+        # construct labelmonth from start/end month field
         if (not $pseudodate and
             $be->get_field($ytype . 'endmonth')
             and ($be->get_field($df->{month}) ne $be->get_field($ytype . 'endmonth'))) {
           $be->set_field('labelmonth',
                          $be->get_field('labelmonth') . '\bibdatedash ' . $be->get_field($ytype . 'endmonth'));
         }
-        # pseudodates (fields which are not really dates per se) are just years
+        # construct labelday from start/end month field
         if (not $pseudodate and
             $be->get_field($ytype . 'endday')
             and ($be->get_field($df->{day}) ne $be->get_field($ytype . 'endday'))) {
           $be->set_field('labelday',
                          $be->get_field('labelday') . '\bibdatedash ' . $be->get_field($ytype . 'endday'));
+        }
+        # construct labelhour from start/end hour field
+        if (not $pseudodate and
+            $be->get_field($ytype . 'endhour')
+            and ($be->get_field($df->{hour}) ne $be->get_field($ytype . 'endhour'))) {
+          $be->set_field('labelhour',
+                         $be->get_field('labelhour') . '\bibdatedash ' . $be->get_field($ytype . 'endhour'));
+        }
+        # construct labelminute from start/end minute field
+        if (not $pseudodate and
+            $be->get_field($ytype . 'endminute')
+            and ($be->get_field($df->{minute}) ne $be->get_field($ytype . 'endminute'))) {
+          $be->set_field('labelminute',
+                         $be->get_field('labelminute') . '\bibdatedash ' . $be->get_field($ytype . 'endminute'));
+        }
+        # construct labelsecond from start/end second field
+        if (not $pseudodate and
+            $be->get_field($ytype . 'endsecond')
+            and ($be->get_field($df->{second}) ne $be->get_field($ytype . 'endsecond'))) {
+          $be->set_field('labelsecond',
+                         $be->get_field('labelsecond') . '\bibdatedash ' . $be->get_field($ytype . 'endsecond'));
         }
       }
       elsif (my $ys = $ldi->{string}) { # set labeldatesource to a fallback string
