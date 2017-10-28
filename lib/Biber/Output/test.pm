@@ -228,7 +228,7 @@ sub set_output_entry {
   $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
   # The labeldateparts option determines whether "extradate" is output
-  # Skip generating extrayear for entries with "skiplab" set
+  # Skip generating extradate for entries with "skiplab" set
   if ( Biber::Config->getblxoption('labeldateparts', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
     if (my $ey = $be->get_field('extradate')) {
