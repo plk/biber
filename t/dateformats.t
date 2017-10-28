@@ -124,7 +124,7 @@ my $l14 = q|    \entry{L14}{book}{}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
-      \field{extrayear}{3}
+      \field{extradate}{3}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -164,7 +164,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
-      \field{extrayear}{4}
+      \field{extradate}{4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Title 2}
@@ -196,7 +196,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
-      \field{extrayear}{7}
+      \field{extradate}{7}
       \field{labeldatesource}{event}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
@@ -233,7 +233,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
-      \field{extrayear}{4}
+      \field{extradate}{4}
       \field{labeldatesource}{}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
@@ -648,7 +648,7 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extrayear}{1}
+      \field{extradate}{1}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -687,7 +687,7 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
-      \field{extrayear}{2}
+      \field{extradate}{2}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

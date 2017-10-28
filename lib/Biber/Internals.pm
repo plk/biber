@@ -964,7 +964,7 @@ sub _gen_first_disambiguating_name_map {
 
 # sortinit
 # sortinithash
-# extrayear
+# extradate
 # extratitle
 # extratitleyear
 # extraalpha

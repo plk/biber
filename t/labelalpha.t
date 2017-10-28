@@ -224,7 +224,7 @@ eq_or_diff($main->get_entryfield('L16a', 'sortlabelalpha'), 'AccBaClim', 'labela
 eq_or_diff($main->get_extraalphadata_for_key('L16'), '1', 'labelalpha disambiguation 2c');
 eq_or_diff($main->get_extraalphadata_for_key('L16a'), '2', 'labelalpha disambiguation 2d');
 eq_or_diff($main->get_entryfield('L17', 'sortlabelalpha'), 'AckBaClim', 'labelalpha disambiguation 3');
-eq_or_diff($main->get_extraalphadata_for_key('L17a'), '2', 'custom labelalpha extrayear 1');
+eq_or_diff($main->get_extraalphadata_for_key('L17a'), '2', 'custom labelalpha extradate 1');
 eq_or_diff($main->get_entryfield('L18', 'sortlabelalpha'), 'AgChLa', 'labelalpha disambiguation 4');
 eq_or_diff($main->get_entryfield('L19', 'sortlabelalpha'), 'AgConLe', 'labelalpha disambiguation 5');
 eq_or_diff($main->get_entryfield('L20', 'sortlabelalpha'), 'AgCouLa', 'labelalpha disambiguation 6');
@@ -352,15 +352,15 @@ $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('custom/global//global/global');
 $bibentries = $section->bibentries;
 
-eq_or_diff($main->get_entryfield('Schmidt2007', 'sortlabelalpha'), 'Sch+07', 'extraalpha ne extrayear 1');
-eq_or_diff($main->get_extraalphadata_for_key('Schmidt2007'), '1', 'extraalpha ne extrayear 2');
-eq_or_diff($main->get_entryfield('Schmidt2007a', 'sortlabelalpha'), 'Sch07', 'extraalpha ne extrayear 3');
-eq_or_diff($main->get_extraalphadata_for_key('Schmidt2007a'), '1', 'extraalpha ne extrayear 4');
+eq_or_diff($main->get_entryfield('Schmidt2007', 'sortlabelalpha'), 'Sch+07', 'extraalpha ne extradate 1');
+eq_or_diff($main->get_extraalphadata_for_key('Schmidt2007'), '1', 'extraalpha ne extradate 2');
+eq_or_diff($main->get_entryfield('Schmidt2007a', 'sortlabelalpha'), 'Sch07', 'extraalpha ne extradate 3');
+eq_or_diff($main->get_extraalphadata_for_key('Schmidt2007a'), '1', 'extraalpha ne extradate 4');
 
-eq_or_diff($main->get_entryfield('Schnee2007', 'sortlabelalpha'), 'Sch+07', 'extraalpha ne extrayear 5');
-eq_or_diff($main->get_extraalphadata_for_key('Schnee2007'), '2', 'extraalpha ne extrayear 6');
-eq_or_diff($main->get_entryfield('Schnee2007a', 'sortlabelalpha'), 'Sch07', 'extraalpha ne extrayear 7');
-eq_or_diff($main->get_extraalphadata_for_key('Schnee2007a'), '2', 'extraalpha ne extrayear 8');
+eq_or_diff($main->get_entryfield('Schnee2007', 'sortlabelalpha'), 'Sch+07', 'extraalpha ne extradate 5');
+eq_or_diff($main->get_extraalphadata_for_key('Schnee2007'), '2', 'extraalpha ne extradate 6');
+eq_or_diff($main->get_entryfield('Schnee2007a', 'sortlabelalpha'), 'Sch07', 'extraalpha ne extradate 7');
+eq_or_diff($main->get_extraalphadata_for_key('Schnee2007a'), '2', 'extraalpha ne extradate 8');
 
 Biber::Config->setblxoption('labelalphatemplate', {
   labelelement => [

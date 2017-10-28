@@ -1545,7 +1545,7 @@ sub generate_bblxml_schema {
               sortinit
               sortinithash
               sortinithash
-              extrayear
+              extradate
               labelyear
               labelmonth
               labelday

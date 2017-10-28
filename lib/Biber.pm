@@ -1760,8 +1760,8 @@ sub process_entries_post {
     # generate information for tracking extraalpha
     $self->process_extraalpha($citekey, $dlist);
 
-    # generate information for tracking extrayear
-    $self->process_extrayear($citekey, $dlist);
+    # generate information for tracking extradate
+    $self->process_extradate($citekey, $dlist);
 
     # generate information for tracking extratitle
     $self->process_extratitle($citekey, $dlist);
@@ -1942,20 +1942,20 @@ sub process_workuniqueness {
   return;
 }
 
-=head2 process_extrayear
+=head2 process_extradate
 
-    Track labelname/year combination for generation of extrayear
+    Track labelname/year combination for generation of extradate
 
 =cut
 
-sub process_extrayear {
+sub process_extradate {
   my ($self, $citekey, $dlist) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  # Generate labelname/year combination for tracking extrayear
+  # Generate labelname/year combination for tracking extradate
   # * If there is no labelname to use, use empty string
   # * If there is no labelyear to use, try year
   # * Don't increment the seen_nameyear count if the name string is empty
@@ -1968,7 +1968,7 @@ sub process_extrayear {
     }
 
     if ($logger->is_trace()) {# performance tune
-      $logger->trace("Creating extrayear information for '$citekey'");
+      $logger->trace("Creating extradate information for '$citekey'");
     }
 
     my $namehash = '';
@@ -1976,7 +1976,7 @@ sub process_extrayear {
       $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
     }
 
-    # extrayear takes into account the labelyear which can be a range
+    # extradate takes into account the labelyear which can be a range
     my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
 
     my $nameyear_string = "$namehash,$year_string";
@@ -2006,7 +2006,7 @@ sub process_extratitle {
   # * If there is no labeltitle to use, use empty string
   # * Don't increment if skiplab is set
 
-  # This is different from extrayear in that we do track the information
+  # This is different from extradate in that we do track the information
   # if the labelname is empty as titles are much more unique than years
 
   if (Biber::Config->getblxoption('labeltitle', $bee)) {
@@ -3447,15 +3447,15 @@ sub generate_contextdata {
     # Only generate extra* information if skiplab is not set.
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
-      # extrayear
+      # extradate
       if (Biber::Config->getblxoption('labeldateparts', $bee)) {
         my $nameyear = $dlist->get_entryfield($key, 'nameyear');
         if ($dlist->get_seen_nameyear($nameyear) > 1) {
           if ($logger->is_trace()) {# performance tune
             $logger->trace("nameyear for '$nameyear': " . $dlist->get_seen_nameyear($nameyear));
           }
-          my $v = $dlist->incr_seen_extrayear($nameyear);
-          $dlist->set_extrayeardata_for_key($key, $v);
+          my $v = $dlist->incr_seen_extradate($nameyear);
+          $dlist->set_extradatedata_for_key($key, $v);
         }
       }
       # extratitle

@@ -150,7 +150,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
-      \field{extrayear}{2}
+      \field{extradate}{2}
       \field{labeldatesource}{}
       \field{extraalpha}{2}
       \field{labelnamesource}{author}
@@ -178,7 +178,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
-      \field{extrayear}{3}
+      \field{extradate}{3}
       \field{labeldatesource}{}
       \field{extraalpha}{3}
       \field{labelnamesource}{author}
@@ -206,7 +206,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{labelalpha}{Doe10}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
-      \field{extrayear}{4}
+      \field{extradate}{4}
       \field{labeldatesource}{}
       \field{extraalpha}{4}
       \field{labelnamesource}{author}
@@ -261,7 +261,7 @@ eq_or_diff($out->get_output_entry('seta', $main), $set1, 'Set parent - with labe
 eq_or_diff($out->get_output_entry('set:membera', $main), $set2, 'Set member - no labels 1');
 eq_or_diff($out->get_output_entry('set:memberb', $main), $set3, 'Set member - no labels 2');
 eq_or_diff($out->get_output_entry('set:memberc', $main), $set4, 'Set member - no labels 3');
-eq_or_diff($out->get_output_entry('noseta', $main), $noset1, 'Not a set member - extrayear continues from set 1');
-eq_or_diff($out->get_output_entry('nosetb', $main), $noset2, 'Not a set member - extrayear continues from set 2');
-eq_or_diff($out->get_output_entry('nosetc', $main), $noset3, 'Not a set member - extrayear continues from set 3');
+eq_or_diff($out->get_output_entry('noseta', $main), $noset1, 'Not a set member - extradate continues from set 1');
+eq_or_diff($out->get_output_entry('nosetb', $main), $noset2, 'Not a set member - extradate continues from set 2');
+eq_or_diff($out->get_output_entry('nosetc', $main), $noset3, 'Not a set member - extradate continues from set 3');
 

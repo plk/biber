@@ -52,7 +52,7 @@ t/dateformats.t
 t/encoding.t
 t/extratitle.t
 t/extratitleyear.t
-t/extrayear.t
+t/extradate.t
 t/full-bbl.t
 t/full-bblxml.t
 t/full-bibtex.t
@@ -116,9 +116,8 @@ t/tdata/extratitle.bcf
 t/tdata/extratitle.bib
 t/tdata/extratitleyear.bcf
 t/tdata/extratitleyear.bib
-t/tdata/extrayear.bcf
-t/tdata/extrayear.bib
-t/tdata/extrayear.bib
+t/tdata/extradate.bcf
+t/tdata/extradate.bib
 t/tdata/full-bblxml.bblxml
 t/tdata/full-bblxml.bcf
 t/tdata/full-bibtex_biber.bib

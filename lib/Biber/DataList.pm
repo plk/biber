@@ -765,7 +765,7 @@ sub set_unul_changed {
 
 sub reset_seen_extra {
   my $self = shift;
-  $self->{state}{seen_extrayear} = {};
+  $self->{state}{seen_extradate} = {};
   $self->{state}{seen_extratitle} = {};
   $self->{state}{seen_extratitleyear} = {};
   $self->{state}{seen_extraalpha} = {};
@@ -775,15 +775,15 @@ sub reset_seen_extra {
   return;
 }
 
-=head2 incr_seen_extrayear
+=head2 incr_seen_extradate
 
-    Increment and return the counter for extrayear
+    Increment and return the counter for extradate
 
 =cut
 
-sub incr_seen_extrayear {
+sub incr_seen_extradate {
   my ($self, $ey) = @_;
-  return ++$self->{state}{seen_extrayear}{$ey};
+  return ++$self->{state}{seen_extradate}{$ey};
 }
 
 =head2 incr_seen_extratitle
@@ -824,7 +824,7 @@ sub incr_seen_extraalpha {
 =head2 get_seen_nameyear
 
     Get the count of an labelname/labelyear combination for tracking
-    extrayear. It uses labelyear plus name as we need to disambiguate
+    extradate. It uses labelyear plus name as we need to disambiguate
     entries with different labelyear (like differentiating 1984--1986 from
     just 1984)
 
@@ -837,11 +837,11 @@ sub get_seen_nameyear {
 
 =head2 incr_seen_nameyear
 
-    Increment the count of an labelname/labelyear combination for extrayear
+    Increment the count of an labelname/labelyear combination for extradate
 
     We pass in the name and year strings separately as we have to
     be careful and only increment this counter beyond 1 if there is
-    a name component. Otherwise, extrayear gets defined for all
+    a name component. Otherwise, extradate gets defined for all
     entries with no name but the same year etc.
 
 =cut
@@ -854,9 +854,9 @@ sub incr_seen_nameyear {
     $self->{state}{seen_nameyear}{$tmp}++;
   }
   # But beyond that only if we have a labelname in the entry since
-  # this counter is used to create extrayear which doesn't mean anything for
+  # this counter is used to create extradate which doesn't mean anything for
   # entries with no name
-  # We allow empty year so that we generate extrayear for the same name with no year
+  # We allow empty year so that we generate extradate for the same name with no year
   # so we can do things like "n.d.-a", "n.d.-b" etc.
   else {
     if ($ns) {
@@ -1397,42 +1397,42 @@ sub set_labelalphadata_for_key {
   return;
 }
 
-=head2 set_extrayeardata_for_key
+=head2 set_extradatedata_for_key
 
-  Saves extrayear field data for a key
+  Saves extradate field data for a key
 
 =cut
 
-sub set_extrayeardata_for_key {
+sub set_extradatedata_for_key {
   my ($self, $key, $ed) = @_;
   return unless defined($key);
-  $self->{state}{extrayeardata}{$key} = $ed;
+  $self->{state}{extradatedata}{$key} = $ed;
   return;
 }
 
-=head2 set_extrayeardata
+=head2 set_extradatedata
 
-    Saves extrayear field data for all keys
+    Saves extradate field data for all keys
 
 =cut
 
-sub set_extrayeardata {
+sub set_extradatedata {
   my ($self, $ed) = @_;
-  $self->{state}{extrayeardata} = $ed;
+  $self->{state}{extradatedata} = $ed;
   return;
 }
 
 
-=head2 get_extrayeardata
+=head2 get_extradatedata
 
-    Gets the extrayear field data for a key
+    Gets the extradate field data for a key
 
 =cut
 
-sub get_extrayeardata_for_key {
+sub get_extradatedata_for_key {
   my ($self, $key) = @_;
   return unless defined($key);
-  return $self->{state}{extrayeardata}{$key};
+  return $self->{state}{extradatedata}{$key};
 }
 
 =head2 set_extratitledata_for_key
@@ -1723,7 +1723,7 @@ sub instantiate_entry {
       $entry_string =~ s|<BDS>UNIQUEPRIMARYAUTHOR</BDS>|$str|gxms;
     }
 
-  # uniquework
+    # uniquework
     if ($self->get_entryfield($key, 'uniquework')) {
       my $str = "\\true{uniquework}";
       $entry_string =~ s|<BDS>UNIQUEWORK</BDS>|$str|gxms;
@@ -1852,10 +1852,10 @@ sub instantiate_entry {
       }
     }
 
-    # extrayear
-    if (my $e = $self->get_extrayeardata_for_key($key)) {
-      my $str = "\\field{extrayear}{$e}";
-      $entry_string =~ s|<BDS>EXTRAYEAR</BDS>|$str|gxms;
+    # extradate
+    if (my $e = $self->get_extradatedata_for_key($key)) {
+      my $str = "\\field{extradate}{$e}";
+      $entry_string =~ s|<BDS>EXTRADATE</BDS>|$str|gxms;
     }
 
     # sortinit + sortinithash
@@ -2040,10 +2040,10 @@ sub instantiate_entry {
       }
     }
 
-    # extrayear
-    if (my $e = $self->get_extrayeardata_for_key($key)) {
-      my $str = "<bbl:field name=\"extrayear\">$e</bbl:field>";
-      $entry_string =~ s|<BDS>EXTRAYEAR</BDS>|$str|gxms;
+    # extradate
+    if (my $e = $self->get_extradatedata_for_key($key)) {
+      my $str = "<bbl:field name=\"extradate\">$e</bbl:field>";
+      $entry_string =~ s|<BDS>EXTRADATE</BDS>|$str|gxms;
     }
 
     # sortinit + sortinithash

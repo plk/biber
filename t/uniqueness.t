@@ -453,12 +453,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $biber->datalists->get_list('nty/global//global/global');
 
-eq_or_diff($main->get_extrayeardata_for_key('ey1'), '1', 'Extrayear - 1');
-eq_or_diff($main->get_extrayeardata_for_key('ey2'), '2', 'Extrayear - 2');
-eq_or_diff($main->get_extrayeardata_for_key('ey3'), '1', 'Extrayear - 3');
-eq_or_diff($main->get_extrayeardata_for_key('ey4'), '2', 'Extrayear - 4');
-eq_or_diff($main->get_extrayeardata_for_key('ey5'), '1', 'Extrayear - 5');
-eq_or_diff($main->get_extrayeardata_for_key('ey6'), '2', 'Extrayear - 6');
+eq_or_diff($main->get_extradatedata_for_key('ey1'), '1', 'Extrayear - 1');
+eq_or_diff($main->get_extradatedata_for_key('ey2'), '2', 'Extrayear - 2');
+eq_or_diff($main->get_extradatedata_for_key('ey3'), '1', 'Extrayear - 3');
+eq_or_diff($main->get_extradatedata_for_key('ey4'), '2', 'Extrayear - 4');
+eq_or_diff($main->get_extradatedata_for_key('ey5'), '1', 'Extrayear - 5');
+eq_or_diff($main->get_extradatedata_for_key('ey6'), '2', 'Extrayear - 6');
 
 #############################################################################
 
@@ -481,12 +481,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $biber->datalists->get_list('nty/global//global/global');
 
-ok(is_undef($main->get_extrayeardata_for_key('ey1')), 'Extrayear - 7');
-ok(is_undef($main->get_extrayeardata_for_key('ey2')), 'Extrayear - 8');
-eq_or_diff($main->get_extrayeardata_for_key('ey3'), '1', 'Extrayear - 9');
-eq_or_diff($main->get_extrayeardata_for_key('ey4'), '2', 'Extrayear - 10');
-ok(is_undef($main->get_extrayeardata_for_key('ey5')), 'Extrayear - 11');
-ok(is_undef($main->get_extrayeardata_for_key('ey6')), 'Extrayear - 12');
+ok(is_undef($main->get_extradatedata_for_key('ey1')), 'Extrayear - 7');
+ok(is_undef($main->get_extradatedata_for_key('ey2')), 'Extrayear - 8');
+eq_or_diff($main->get_extradatedata_for_key('ey3'), '1', 'Extrayear - 9');
+eq_or_diff($main->get_extradatedata_for_key('ey4'), '2', 'Extrayear - 10');
+ok(is_undef($main->get_extradatedata_for_key('ey5')), 'Extrayear - 11');
+ok(is_undef($main->get_extradatedata_for_key('ey6')), 'Extrayear - 12');
 
 ok(is_undef($main->get_entryfield('ey1', 'singletitle')), 'singletitle - 1');
 eq_or_diff($main->get_entryfield('ey2', 'singletitle'), '1', 'singletitle - 2');
@@ -533,12 +533,12 @@ $section = $biber->sections->get_section(0);
 $bibentries = $section->bibentries;
 $main = $biber->datalists->get_list('nty/global//global/global');
 
-eq_or_diff($main->get_extrayeardata_for_key('ey1'), '1', 'Extrayear - 13');
-eq_or_diff($main->get_extrayeardata_for_key('ey2'), '2', 'Extrayear - 14');
-eq_or_diff($main->get_extrayeardata_for_key('ey3'), '1', 'Extrayear - 15');
-eq_or_diff($main->get_extrayeardata_for_key('ey4'), '2', 'Extrayear - 16');
-eq_or_diff($main->get_extrayeardata_for_key('ey5'), '1', 'Extrayear - 17');
-eq_or_diff($main->get_extrayeardata_for_key('ey6'), '2', 'Extrayear - 18');
+eq_or_diff($main->get_extradatedata_for_key('ey1'), '1', 'Extrayear - 13');
+eq_or_diff($main->get_extradatedata_for_key('ey2'), '2', 'Extrayear - 14');
+eq_or_diff($main->get_extradatedata_for_key('ey3'), '1', 'Extrayear - 15');
+eq_or_diff($main->get_extradatedata_for_key('ey4'), '2', 'Extrayear - 16');
+eq_or_diff($main->get_extradatedata_for_key('ey5'), '1', 'Extrayear - 17');
+eq_or_diff($main->get_extradatedata_for_key('ey6'), '2', 'Extrayear - 18');
 
 #############################################################################
 

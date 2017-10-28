@@ -340,9 +340,9 @@ sub set_output_entry {
   $acc .= "      <BDS>SORTINIT</BDS>\n";
   $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
-  # The labeldateparts option determines whether "extrayear" is output
+  # The labeldateparts option determines whether "extradate" is output
   if (Biber::Config->getblxoption('labeldateparts', $bee)) {
-    $acc .= "      <BDS>EXTRAYEAR</BDS>\n";
+    $acc .= "      <BDS>EXTRADATE</BDS>\n";
     if ($be->field_exists('labeldatesource')) {
       $acc .= "      \\field{labeldatesource}{" . $be->get_field('labeldatesource') .  "}\n";
     }
