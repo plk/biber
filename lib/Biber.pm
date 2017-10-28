@@ -403,6 +403,7 @@ sub parse_ctrlfile {
                                                            qr/\Afieldor\z/,
                                                            qr/\Afieldxor\z/,
                                                            qr/\Afield\z/,
+                                                           qr/\Ascope\z/,
                                                            qr/\Atransliteration\z/,
                                                            qr/\Atranslit\z/,
                                                            qr/\Aalias\z/,
@@ -598,6 +599,17 @@ sub parse_ctrlfile {
                                   $latype);
     }
   }
+
+  # EXTRADATE specification
+  my $ed;
+  foreach my $scope ($bcfxml->{extradatespec}->{scope}->@*) {
+    my $fields;
+    foreach my $field (sort {$a->{order} <=> $b->{order}} $scope->{field}->@*) {
+      push $fields->@*, $field->{content};
+    }
+    push $ed->@*, $fields;
+  }
+  Biber::Config->setblxoption('extradatespec', $ed);
 
   # INHERITANCE schemes for crossreferences (always global)
   Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
@@ -1944,7 +1956,7 @@ sub process_workuniqueness {
 
 =head2 process_extradate
 
-    Track labelname/year combination for generation of extradate
+    Track labelname/date parts combination for generation of extradate
 
 =cut
 
@@ -1957,9 +1969,9 @@ sub process_extradate {
 
   # Generate labelname/year combination for tracking extradate
   # * If there is no labelname to use, use empty string
-  # * If there is no labelyear to use, try year
-  # * Don't increment the seen_nameyear count if the name string is empty
-  #   (see code in incr_seen_nameyear method).
+  # * If there is no date information to use, try year
+  # * Don't increment the seen_namedateparts count if the name string is empty
+  #   (see code in incr_seen_namedateparts method).
   # * Don't increment if skiplab is set
 
   if (Biber::Config->getblxoption('labeldateparts', $bee)) {
@@ -1976,13 +1988,23 @@ sub process_extradate {
       $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
     }
 
-    # extradate takes into account the labelyear which can be a range
-    my $year_string = $be->get_field('labelyear') || $be->get_field('year') || '';
+    my $datestring = ''; # Need a default empty string
+    my $edspec = Biber::Config->getblxoption('extradatespec');
+    # Look in each scope
+    foreach my $scope ($edspec->@*) {
+      # Use the first field in the scope which we find and ignore the rest
+      foreach my $field ($scope->@*) {
+        if (my $val = $be->get_field($field)) {
+          $datestring .= $val;
+          last;
+        }
+      }
+    }
 
-    my $nameyear_string = "$namehash,$year_string";
+    my $tracking_string = "$namehash,$datestring";
 
-    $dlist->set_entryfield($citekey, 'nameyear', $nameyear_string);
-    $dlist->incr_seen_nameyear($namehash, $year_string);
+    $dlist->set_entryfield($citekey, 'namedateparts', $tracking_string);
+    $dlist->incr_seen_namedateparts($namehash, $datestring);
   }
 
   return;
@@ -2270,7 +2292,7 @@ sub process_labeldate {
       }
     }
 
-    # Construct labelyear, labelmonth, labelday
+    # Construct label*
     # Might not have been set due to skiplab/dataonly
     if (my $ldi = $be->get_labeldate_info) {
       if (my $df = $ldi->{field}) { # set labelyear to a field value
@@ -3449,12 +3471,12 @@ sub generate_contextdata {
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
       # extradate
       if (Biber::Config->getblxoption('labeldateparts', $bee)) {
-        my $nameyear = $dlist->get_entryfield($key, 'nameyear');
-        if ($dlist->get_seen_nameyear($nameyear) > 1) {
+        my $namedateparts = $dlist->get_entryfield($key, 'namedateparts');
+        if ($dlist->get_seen_namedateparts($namedateparts) > 1) {
           if ($logger->is_trace()) {# performance tune
-            $logger->trace("nameyear for '$nameyear': " . $dlist->get_seen_nameyear($nameyear));
+            $logger->trace("namedateparts for '$namedateparts': " . $dlist->get_seen_namedateparts($namedateparts));
           }
-          my $v = $dlist->incr_seen_extradate($nameyear);
+          my $v = $dlist->incr_seen_extradate($namedateparts);
           $dlist->set_extradatedata_for_key($key, $v);
         }
       }

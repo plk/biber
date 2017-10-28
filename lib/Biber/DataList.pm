@@ -769,7 +769,7 @@ sub reset_seen_extra {
   $self->{state}{seen_extratitle} = {};
   $self->{state}{seen_extratitleyear} = {};
   $self->{state}{seen_extraalpha} = {};
-  $self->{state}{seen_nameyear} = {};
+  $self->{state}{seen_namedateparts} = {};
   $self->{state}{seen_nametitle} = {};
   $self->{state}{seen_titleyear} = {};
   return;
@@ -821,37 +821,37 @@ sub incr_seen_extraalpha {
 }
 
 
-=head2 get_seen_nameyear
+=head2 get_seen_namedateparts
 
-    Get the count of an labelname/labelyear combination for tracking
+    Get the count of an labelname/dateparts combination for tracking
     extradate. It uses labelyear plus name as we need to disambiguate
     entries with different labelyear (like differentiating 1984--1986 from
     just 1984)
 
 =cut
 
-sub get_seen_nameyear {
+sub get_seen_namedateparts {
   my ($self, $ny) = @_;
-  return $self->{state}{seen_nameyear}{$ny} // 0;
+  return $self->{state}{seen_namedateparts}{$ny} // 0;
 }
 
-=head2 incr_seen_nameyear
+=head2 incr_seen_namedateparts
 
-    Increment the count of an labelname/labelyear combination for extradate
+    Increment the count of an labelname/dateparts combination for extradate
 
-    We pass in the name and year strings separately as we have to
+    We pass in the name and date strings separately as we have to
     be careful and only increment this counter beyond 1 if there is
     a name component. Otherwise, extradate gets defined for all
     entries with no name but the same year etc.
 
 =cut
 
-sub incr_seen_nameyear {
+sub incr_seen_namedateparts {
   my ($self, $ns, $ys) = @_;
   my $tmp = "$ns,$ys";
   # We can always increment this to 1
-  unless (exists($self->{state}{seen_nameyear}{$tmp})) {
-    $self->{state}{seen_nameyear}{$tmp}++;
+  unless (exists($self->{state}{seen_namedateparts}{$tmp})) {
+    $self->{state}{seen_namedateparts}{$tmp}++;
   }
   # But beyond that only if we have a labelname in the entry since
   # this counter is used to create extradate which doesn't mean anything for
@@ -860,7 +860,7 @@ sub incr_seen_nameyear {
   # so we can do things like "n.d.-a", "n.d.-b" etc.
   else {
     if ($ns) {
-      $self->{state}{seen_nameyear}{$tmp}++;
+      $self->{state}{seen_namedateparts}{$tmp}++;
     }
   }
   return;

@@ -255,17 +255,9 @@ sub set_output_entry {
     $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
   }
 
-
   # The labelalpha option determines whether "extraalpha" is output
-  # Skip generating extraalpha for entries with "skiplab" set
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
-    # Might not have been set due to skiplab/dataonly
-    if (my $ea = $be->get_field('extraalpha')) {
-      my $nameyear_extra = $be->get_field('nameyear_extra');
-      if ( Biber::Config->get_seen_nameyear_extra($nameyear_extra) > 1) {
-        $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
-      }
-    }
+  if ( Biber::Config->getblxoption('labelalpha', $bee)) {
+    $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
   }
 
   $acc .= "      <BDS>SINGLETITLE</BDS>\n";

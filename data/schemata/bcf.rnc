@@ -160,6 +160,18 @@ start =
       }+
     }+,
 
+    # Extradate specification
+    element bcf:extradatespec {
+      # Scope of extradate tracking - an ordered set of fields to try
+      element bcf:scope {
+        # A field used to track extradate
+        element bcf:field {
+          attribute order { xsd:integer },
+          text
+        }+
+      }+
+    },
+
     # Cross-reference inheritance specifications
     element bcf:inheritance {
       # Defaults
