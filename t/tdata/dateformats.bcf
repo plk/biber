@@ -1871,6 +1871,8 @@
     <bcf:citekey order="28">y1</bcf:citekey>
     <bcf:citekey order="29">y2</bcf:citekey>
     <bcf:citekey order="30">y3</bcf:citekey>
+    <bcf:citekey order="31">open1</bcf:citekey>
+    <bcf:citekey order="32">open2</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

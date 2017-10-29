@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 45;
+use Test::More tests => 47;
 use Test::Differences;
 unified_diff;
 
@@ -825,7 +825,6 @@ my $unspec2 = q|    \entry{unspec2}{article}{}
 |;
 
 
-
 Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'},
                                                {content => 'eventdate', type => 'field'},
                                                {content => 'origdate', type => 'field'},
@@ -852,19 +851,23 @@ eq_or_diff($out->get_output_entry('era2', $main), $era2, 'Date meta information 
 eq_or_diff($out->get_output_entry('era3', $main), $era3, 'Date meta information - 3');
 eq_or_diff($out->get_output_entry('era4', $main), $era4, 'Date meta information - 4');
 
-# Test EDTF range markers
+# Test range markers
 eq_or_diff($out->get_output_entry('range1', $main), $range1, 'Range - 1');
 eq_or_diff($out->get_output_entry('range2', $main), $range2, 'Range - 2');
 
-# Test EDTF seasons
+# Test seasons
 eq_or_diff($out->get_output_entry('season1', $main), $season1, 'Seasons - 1');
 
-# Test EDTF 5.2.2 Unspecified format
+# Test Unspecified format
 eq_or_diff($out->get_output_entry('unspec1', $main), $unspec1, 'Unspecified - 1');
 eq_or_diff($out->get_output_entry('unspec2', $main), $unspec2, 'Unspecified - 2');
 
-# Test EDTF times
+# Test times
 eq_or_diff($out->get_output_entry('time1', $main), $time1, 'Times - 1');
+
+# Test open start dates when they are the labeldate
+eq_or_diff($bibentries->entry('open1')->get_field('labeldatesource'), '', 'Open - 1');
+eq_or_diff($bibentries->entry('open2')->get_field('labeldatesource'), '', 'Open - 2');
 
 # Test long year formats
 eq_or_diff($bibentries->entry('y1')->get_field('year'), '17000002', 'Extended years - 1');

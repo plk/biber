@@ -1207,6 +1207,9 @@ sub _datetime {
     if ($sep) {
       if (defined($edate)) { # End date was successfully parsed
         if ($edate) { # End date is an object not "0"
+          # Did this entry get its datepart fields from splitting an EDTF date field?
+          $bibentry->set_field("${datetype}datesplit", 1);
+
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
             $bibentry->set_datafield($datetype . 'endyear', $edate->year);
             # Save era date information
