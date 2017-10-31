@@ -151,6 +151,7 @@ my $noset1 = q|    \entry{noseta}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extradate}{2}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{extraalpha}{2}
       \field{labelnamesource}{author}
@@ -179,6 +180,7 @@ my $noset2 = q|    \entry{nosetb}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extradate}{3}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{extraalpha}{3}
       \field{labelnamesource}{author}
@@ -207,6 +209,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extradate}{4}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{extraalpha}{4}
       \field{labelnamesource}{author}

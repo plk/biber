@@ -112,6 +112,7 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \strng{translatorfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \field{sortinit}{v}
       \field{sortinithash}{555737dafdcf1396ebfeae5822e5bde2}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

@@ -302,6 +302,9 @@ sub set_output_entry {
   # The labeldateparts option determines whether "extradate" is output
   if (Biber::Config->getblxoption('labeldateparts', $bee)) {
     $xml->dataElement('BDS', 'EXTRADATE');
+    if (my $edscope = $be->get_field('extradatescope')) {
+      $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($edscope), name => 'extradatescope');
+    }
     if ($be->field_exists('labeldatesource')) {
       $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($be->get_field('labeldatesource')), name => 'labeldatesource');
     }

@@ -188,6 +188,7 @@ my $K11 = q|    \entry{K11}{book}{}
       \strng{authorfullhash}{4edc280a0ef229f9c061e3b121b17482}
       \field{sortinit}{a}
       \field{sortinithash}{3248043b5fe8d0a34dab5ab6b8d4309b}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -219,6 +220,7 @@ my $K12 = q|    \entry{K12}{book}{}
       \strng{authorfullhash}{a846a485fc9cbb59b0ebeedd6ac637e4}
       \field{sortinit}{Z}
       \field{sortinithash}{35589aa085e881766b72503e53fd4c97}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

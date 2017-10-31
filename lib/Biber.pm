@@ -1990,12 +1990,14 @@ sub process_extradate {
 
     my $datestring = ''; # Need a default empty string
     my $edspec = Biber::Config->getblxoption('extradatespec');
+    my $edscope;
     # Look in each scope
     foreach my $scope ($edspec->@*) {
       # Use the first field in the scope which we find and ignore the rest
       foreach my $field ($scope->@*) {
         if (my $val = $be->get_field($field)) {
           $datestring .= $val;
+          $edscope = $field;
           last;
         }
       }
@@ -2003,6 +2005,7 @@ sub process_extradate {
 
     my $tracking_string = "$namehash,$datestring";
 
+    $be->set_field('extradatescope', $edscope);
     $dlist->set_entryfield($citekey, 'namedateparts', $tracking_string);
     $dlist->incr_seen_namedateparts($namehash, $datestring);
   }

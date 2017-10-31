@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 36;
+use Test::More tests => 39;
 use Test::Differences;
 unified_diff;
 
@@ -77,10 +77,10 @@ eq_or_diff($bibentries->entry('nodate2')->get_field('labeldatesource'), 'nodate'
 # because they differ at month scope
 eq_or_diff($main->get_extradatedata_for_key('ed1'), '1', 'labelyear scope - 1');
 eq_or_diff($main->get_extradatedata_for_key('ed2'), '2', 'labelyear scope - 2');
+eq_or_diff($bibentries->entry('ed1')->get_field('extradatescope'), 'labelyear', 'labelyear scope - 1a');
 # One of these has an open enddate
 ok(is_undef($main->get_extradatedata_for_key('ed7')), 'labelyear scope - 3');
 ok(is_undef($main->get_extradatedata_for_key('ed8')), 'labelyear scope - 4');
-
 
 # Switch to a month-in-year scope for extradate tracking
 Biber::Config->setblxoption('extradatespec', [['labelyear', 'year'],['labelmonth']]);
@@ -90,10 +90,11 @@ $main = $biber->datalists->get_list('custom/global//global/global');
 # Now extradate should be unset as the months differ
 ok(is_undef($main->get_extradatedata_for_key('ed1')), 'labelmonth scope - 1');
 ok(is_undef($main->get_extradatedata_for_key('ed2')), 'labelmonth scope - 2');
+eq_or_diff($bibentries->entry('ed1')->get_field('extradatescope'), 'labelmonth', 'labelmonth scope - 1a');
+
 # But these have no months and are the same at labelyear so they should be set
 eq_or_diff($main->get_extradatedata_for_key('ed3'), '1', 'labelmonth scope - 3');
 eq_or_diff($main->get_extradatedata_for_key('ed4'), '2', 'labelmonth scope - 4');
-
 
 # Switch to a minute scope for extradate tracking
 Biber::Config->setblxoption('extradatespec', [['labelyear', 'year'],
@@ -107,6 +108,7 @@ $main = $biber->datalists->get_list('custom/global//global/global');
 # extradate should be set as the minutes are the same
 eq_or_diff($main->get_extradatedata_for_key('ed5'), '1', 'labelminute scope - 1');
 eq_or_diff($main->get_extradatedata_for_key('ed6'), '2', 'labelminute scope - 2');
+eq_or_diff($bibentries->entry('ed5')->get_field('extradatescope'), 'labelhour', 'labelminute scope - 1a');
 # But these have no times
 ok(is_undef($main->get_extradatedata_for_key('ed1')), 'labelminute scope - 3');
 ok(is_undef($main->get_extradatedata_for_key('ed2')), 'labelminute scope - 4');

@@ -56,6 +56,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{1}
       \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -93,6 +94,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
       \field{sortinit}{2}
       \field{sortinithash}{0aa614ace9f3a40ef5a67e7f7a184048}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -326,6 +328,7 @@ my $un1 = q|    \entry{kullback}{book}{}
       \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \field{sortinit}{5}
       \field{sortinithash}{c9df3c9fb8f555dd9201cedc5e343021}
+      \field{extradatescope}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{langid}{english}
@@ -358,6 +361,7 @@ my $un2 = q|    \entry{kullback:related}{book}{}
       \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \field{sortinit}{6}
       \field{sortinithash}{02bbed3ed82f61ae046619460488516d}
+      \field{extradatescope}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{annotation}{A reprint of the \texttt{kullback} entry. Note the format of the \texttt{related} and \texttt{relatedtype} fields}

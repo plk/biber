@@ -88,6 +88,7 @@ my $l13c = q|    \entry{L13}{book}{}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -125,6 +126,7 @@ my $l14 = q|    \entry{L14}{book}{}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extradate}{3}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -197,6 +199,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extradate}{7}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{event}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
@@ -234,6 +237,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
       \field{extradate}{4}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
@@ -290,6 +294,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{orig}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
@@ -346,6 +351,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
       \field{sortinit}{D}
       \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{event}
       \field{labelnamesource}{editor}
       \field{labeltitlesource}{title}
@@ -466,6 +472,7 @@ my $era1 = q|    \entry{era1}{article}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -497,6 +504,7 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -529,6 +537,7 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -561,6 +570,7 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -601,6 +611,7 @@ my $time1 = q|    \entry{time1}{article}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -649,6 +660,7 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{extradate}{1}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -688,6 +700,7 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
       \field{extradate}{2}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -726,6 +739,7 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -756,6 +770,7 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -807,6 +822,7 @@ my $unspec2 = q|    \entry{unspec2}{article}{}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
       \field{sortinit}{S}
       \field{sortinithash}{3c1547c63380458f8ca90e40ed14b83e}
+      \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
