@@ -25,6 +25,8 @@ then
   ucpath="/opt/local/lib/perl5/site_perl/${perlv}/darwin-thread-multi-2level/Unicode/Collate"
 fi
 
+echo "USING Unicode::Collate at: ${ucpath}"
+
 cp /opt/local/libexec/perl${perlv}/sitebin/biber /tmp/biber-darwin
 
 PAR_VERBATIM=1 pp \

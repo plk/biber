@@ -42,6 +42,8 @@ then
   ucpath="/usr/local/perl/lib/site_perl/${perlv}/i686-linux-thread-multi/Unicode/Collate"
 fi
 
+echo "USING Unicode::Collate at: ${ucpath}"
+
 PAR_VERBATIM=1 /usr/local/perl/bin/pp \
   --unicode \
   --module=deprecate \

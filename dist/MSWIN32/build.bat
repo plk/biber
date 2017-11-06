@@ -30,6 +30,8 @@ set UCPATH=C:/strawberry/perl/lib/Unicode/Collate
 
 IF exist C:\strawberry\perl\site\lib\Unicode\Collate\ ( set UCPATH=C:/strawberry/perl/site/lib/Unicode/Collate )
 
+ECHO USING Unicode::Collate at: %UCPATH%
+
 COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN32
 
 SET PAR_VERBATIM=1
