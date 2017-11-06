@@ -33,7 +33,7 @@
 # version.
 
 declare -r perlv='5.26.0'
-declare ucpath="/usr/local/perl/lib/${$perlv}/Unicode/Collate"
+declare ucpath="/usr/local/perl/lib/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
