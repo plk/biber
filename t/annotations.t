@@ -72,7 +72,7 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \strng{authornamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authorfullhash}{90ae96c82de92e36949bc64254bbde0c}
       \field{sortinit}{L}
-      \field{sortinithash}{7bba64db83423e3c29ad597f3b682cf3}
+      \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{The Title}

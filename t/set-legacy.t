@@ -45,7 +45,7 @@ my $out = $biber->get_output_obj;
 my $string1 = q|    \entry{Elias1955}{set}{}
       \set{Elias1955a,Elias1955b}
       \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
     \endentry
 |;
 

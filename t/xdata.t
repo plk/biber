@@ -74,7 +74,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \strng{authornamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authorfullhash}{51db4bfd331cba22959ce2d224c517cd}
       \field{sortinit}{E}
-      \field{sortinithash}{07bbd5a529b5beaa311df5be05b874bc}
+      \field{sortinithash}{f615fb9c6fba11c6f962fb3fd599810e}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}
@@ -106,7 +106,7 @@ my $xd2 = q|    \entry{xd2}{book}{}
       \strng{authornamehash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \strng{authorfullhash}{68539e0ce4922cc4957c6cabf35e6fc8}
       \field{sortinit}{P}
-      \field{sortinithash}{24100cef455d7974167575052c29146e}
+      \field{sortinithash}{8d51b3d5b78d75b54308d706b9bbe285}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{}
       \field{labelnamesource}{author}

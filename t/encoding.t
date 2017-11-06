@@ -52,7 +52,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{07bbd5a529b5beaa311df5be05b874bc}
+      \field{sortinithash}{f615fb9c6fba11c6f962fb3fd599810e}
       \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -82,7 +82,7 @@ my $encode2 = q|    \entry{test1}{book}{}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{07bbd5a529b5beaa311df5be05b874bc}
+      \field{sortinithash}{f615fb9c6fba11c6f962fb3fd599810e}
       \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -112,7 +112,7 @@ my $encode3 = q|    \entry{test1}{book}{}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{07bbd5a529b5beaa311df5be05b874bc}
+      \field{sortinithash}{f615fb9c6fba11c6f962fb3fd599810e}
       \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -142,7 +142,7 @@ my $encode5 = q|    \entry{test}{book}{}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{07bbd5a529b5beaa311df5be05b874bc}
+      \field{sortinithash}{f615fb9c6fba11c6f962fb3fd599810e}
       \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -172,7 +172,7 @@ my $encode6 = q|    \entry{test}{book}{}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{07bbd5a529b5beaa311df5be05b874bc}
+      \field{sortinithash}{f615fb9c6fba11c6f962fb3fd599810e}
       \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
@@ -202,7 +202,7 @@ my $encode7 = q|    \entry{test}{book}{}
       \strng{authorfullhash}{06a47edae2e847800cfd78323a0e6be8}
       \field{labelalpha}{Enc99}
       \field{sortinit}{E}
-      \field{sortinithash}{07bbd5a529b5beaa311df5be05b874bc}
+      \field{sortinithash}{f615fb9c6fba11c6f962fb3fd599810e}
       \field{labeldatesource}{year}
       \true{singletitle}
       \field{labelnamesource}{author}
