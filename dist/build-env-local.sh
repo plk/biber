@@ -1,6 +1,6 @@
 #!/bin/bash
 # This modifies things on the build servers. Things like PAR::Packer etc. versions.
-# build-env-local.sh [[osx10.5] [osx10.6] | [osx]] [[w32] [w64] | [win]] [[l32] [l64] | [linux]]
+# build-env-local.sh [[osx10.5] [osx10.6] | [osxen]] [[w32] [w64] | [win]] [[l32] [l64] | [linux]]
 
 me=$(whoami)
 if [ "$me" = "root" ]; then
@@ -30,7 +30,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Build farm OSX 64-bit intel
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
-if [[ $@ =~ "osx10.6" || $@ =~ "osx" || $@ =~ "ALL" ]]; then
+if [[ $@ =~ "osx10.6" || $@ =~ "osxen" || $@ =~ "ALL" ]]; then
   vmon osx10.6
   sleep 5
   ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;$COMMANDS_OSX"
@@ -40,7 +40,7 @@ fi
 # Build farm OSX 32-bit intel (universal)
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
-if [[ $@ =~ "osx10.5" || $@ =~ "osx" || $@ =~ "ALL" ]]; then
+if [[ $@ =~ "osx10.5" || $@ =~ "osxen" || $@ =~ "ALL" ]]; then
   vmon osx10.5
   sleep 10
   ssh philkime@bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;$COMMANDS_OSX"
