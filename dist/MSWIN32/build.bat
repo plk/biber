@@ -19,6 +19,19 @@
 :: constructed in the code so Par::Packer can't auto-detect them.
 :: Same with some of the output modules.
 
+:: Unicode::Collate is bundled with perl but is often updated and this is a critical module
+:: for biber. There are some parts of this module which must be explicitly bundled by pp.
+:: Unfortunately, updates to the module go into site_perl and we must bundle the right version
+:: and so we check if there are any newer versions than came with the version of perl we are using
+:: by looking to see if there is a site_perl directory for the module. If there is, we use that
+:: version.
+
+set UCPATH=C:/strawberry/perl/lib/Unicode/Collate
+
+IF exist C:\strawberry\perl\site\lib\Unicode\Collate\ (set UCPATH=C:/strawberry/perl/site/lib/Unicode/Collate)
+
+ECHO USING Unicode::Collate at: %UCPATH%
+
 COPY C:\strawberry\perl\site\bin\biber %TEMP%\biber-MSWIN32
 
 SET PAR_VERBATIM=1
@@ -54,7 +67,19 @@ CALL pp ^
   --link=C:\strawberry\c\bin\libiconv-2_.dll ^
   --link=C:\strawberry\c\bin\libssl-1_1_.dll ^
   --link=C:\strawberry\c\bin\liblzma-5_.dll ^
-  --addlist=biber.files ^
+  --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" ^
+  --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" ^
+  --addfile="../../data/schemata/config.rng;lib/Biber/config.rng" ^
+  --addfile="../../data/schemata/bcf.rnc;lib/Biber/bcf.rnc" ^
+  --addfile="../../data/schemata/bcf.rng;lib/Biber/bcf.rng" ^
+  --addfile="../../lib/Biber/LaTeX/recode_data.xml;lib/Biber/LaTeX/recode_data.xml" ^
+  --addfile="../../data/bcf.xsl;lib/Biber/bcf.xsl" ^
+  --addfile="%UCPATH%/Locale;lib/Unicode/Collate/Locale" ^
+  --addfile="%UCPATH%/CJK;lib/Unicode/Collate/CJK" ^
+  --addfile="%UCPATH%/allkeys.txt;lib/Unicode/Collate/allkeys.txt" ^
+  --addfile="%UCPATH%/keys.txt;lib/Unicode/Collate/keys.txt" ^
+  --addfile="C:/strawberry/perl/vendor/lib/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" ^
+  --addfile="C:/strawberry/perl/site/lib/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" ^
   --cachedeps=scancache ^
   --output=biber-MSWIN32.exe ^
   %TEMP%\biber-MSWIN32

@@ -47,7 +47,7 @@ my $out = $biber->get_output_obj;
 my $string1 = q|    \entry{Static1}{set}{}
       \set{Static2,Static4,Static3}
       \field{sortinit}{B}
-      \field{sortinithash}{5f6fa000f686ee5b41be67ba6ff7962d}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
       \field{annotation}{Some notes}
     \endentry
 |;
@@ -68,7 +68,7 @@ my $string2 = q|    \entry{Static2}{book}{}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{B}
-      \field{sortinithash}{5f6fa000f686ee5b41be67ba6ff7962d}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -94,7 +94,7 @@ my $string3 = q|    \entry{Static3}{book}{}
       \strng{authornamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authorfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{D}
-      \field{sortinithash}{d10b5413de1f3d197b20897dd0d565bb}
+      \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -119,7 +119,7 @@ my $string4 = q|    \entry{Static4}{book}{}
       \strng{authornamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authorfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{C}
-      \field{sortinithash}{095692fd22cc3c74d7fe223d02314dbd}
+      \field{sortinithash}{963e9d84a3da2344e8833203de5aed05}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -145,7 +145,7 @@ my $string5 = q|    \entry{Static2}{book}{}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}
-      \field{sortinithash}{27a2bc5dfb9ed0a0422134d636544b5d}
+      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
