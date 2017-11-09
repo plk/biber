@@ -20,18 +20,6 @@
 
 cp /usr/local/bin/biber /tmp/biber-cygwin
 
-declare -r perlv='5.26'
-declare ucpath="/usr/share/perl5/${perlv}/Unicode/Collate"
-
-# Unicode::Collate has a vendor_perl version so has been updated since this
-# perl was released
-if [ -d "/usr/share/perl5/vendor_perl/${perlv}/Unicode/Collate" ]
-then
-  ucpath="/usr/share/perl5/vendor_perl/${perlv}/Unicode/Collate"
-fi
-
-echo "USING Unicode::Collate at: ${ucpath}"
-
 PAR_VERBATIM=1 pp \
    --unicode \
    --module=deprecate \
@@ -67,20 +55,7 @@ PAR_VERBATIM=1 pp \
    --link=/usr/bin/cygssl-1.0.0.dll \
    --link=/usr/bin/cygdatrie-1.dll \
    --link=/usr/bin/cygthai-0.dll \
-   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
-   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
-   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng" \
-   --addfile="../../data/schemata/bcf.rnc;lib/Biber/bcf.rnc" \
-   --addfile="../../data/schemata/bcf.rng;lib/Biber/bcf.rng" \
-   --addfile="../../lib/Biber/LaTeX/recode_data.xml;lib/Biber/LaTeX/recode_data.xml" \
-   --addfile="../../data/bcf.xsl;lib/Biber/bcf.xsl" \
-   --addfile="${ucpath}/Locale;lib/Unicode/Collate/Locale" \
-   --addfile="${ucpath}/CJK;lib/Unicode/Collate/CJK" \
-   --addfile="${ucpath}/allkeys.txt;lib/Unicode/Collate/allkeys.txt" \
-   --addfile="${ucpath}/keys.txt;lib/Unicode/Collate/keys.txt" \
-   --addfile="/usr/lib/perl5/${perlv}/x86_64-cygwin-threads/PerlIO;lib/PerlIO" \
-   --addfile="/usr/lib/perl5/${perlv}/x86_64-cygwin-threads/auto/PerlIO;lib/auto/PerlIO" \
-   --addfile="/usr/share/perl5/vendor_perl/${perlv}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
+   --addlist=biber.files \
    --cachedeps=scancache \
    --output=biber-cygwin64.exe \
    /tmp/biber-cygwin
