@@ -18,6 +18,7 @@
 * Associate new defaults with new binaries and change labels
 * scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Update SF main page, news, add new README in web interface at root, if needed
-* Mail to ctan@dante.de and karl@freefriends.org, mentioning versioned
-  download dir.
+* Run dist/re-package.sh and then mail the Dropbox URL to to
+  petra@ctan.org, ctan@dante.de and karl@freefriends.org
+
 
