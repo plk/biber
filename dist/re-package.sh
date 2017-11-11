@@ -13,6 +13,7 @@ mkdir -p ${ROOT}/binaries/ARM
 mkdir -p ${ROOT}/binaries/Cygwin
 mkdir -p ${ROOT}/binaries/Windows
 mkdir -p ${ROOT}/documentation
+mkdir -p ${ROOT}/source
 
 # Linux
 cd ${ROOT}/binaries/Linux
@@ -65,8 +66,11 @@ cd ${ROOT}/documentation
 [ $? -eq 0 ] || exit 1
 /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/documentation/utf8-macro-map.html
 [ $? -eq 0 ] || exit 1
-cp ~/data/code/biblatex-biber/doc/biber.tex .
 cp ~/data/code/biblatex-biber/Changes .
+
+# Source
+cd ${ROOT}/source/
+/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/biblatex-biber.tar.gz
 
 # README
 cd ${ROOT}
