@@ -48,3 +48,8 @@ More information, bugfix releases, forums and bug tracker are available at:
 If you wish to build you own binary, see the main biber PDF documentation.
 There is a section there on how to do this. The PDF documentation is in the
 `documentation` folder for the release on Sourceforge.
+
+## LICENCE
+Permission is granted to copy, distribute and/or modify this
+software under the terms of the LaTeX Project Public License
+(LPPL), version 1.3c.
