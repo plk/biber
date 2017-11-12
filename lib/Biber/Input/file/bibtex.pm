@@ -1348,9 +1348,15 @@ sub cache_data {
       my $S = qr/$Srx/;
       foreach my $id (split(/$S/, $ids)) {
 
+        # Skip aliases which are this very key (deep recursion ...)
+        if (fc($id) eq fc($key)) {
+          biber_warn("BAD RECURSION! Entry alias '$id' is identical to the entry key, skipping ...");
+          next;
+        }
+
         # Skip aliases which are also real entry keys
         if ($section->has_everykey($id)) {
-          biber_warn("Citekey alias '$id' is also a real entry key, skipping ...");
+          biber_warn("Entry alias '$id' is also a real entry key, skipping ...");
           next;
         }
 
@@ -1358,13 +1364,13 @@ sub cache_data {
         if (exists($cache->{data}{citekey_aliases}{$id})) {
           my $otherid = $cache->{data}{citekey_aliases}{$id};
           if ($otherid ne $key) {
-            biber_warn("Citekey alias '$id' already has an alias '$otherid', skipping ...");
+            biber_warn("Entry alias '$id' already has an alias '$otherid', skipping ...");
           }
         }
         else {
           $cache->{data}{citekey_aliases}{$id} = $key;
           if ($logger->is_debug()) {# performance tune
-            $logger->debug("Citekey '$id' is an alias for citekey '$key'");
+            $logger->debug("Entry alias '$id' is an alias for citekey '$key'");
           }
         }
       }
