@@ -20,8 +20,7 @@ You only need a Perl installation to use biber in one of the following
 cases:
 
 - A binary version is not available for your OS/platform
-- You wish to keep up with all of the bleeding-edge git commits before they
-- are packaged into a binary.
+- You wish to keep up with all of the bleeding-edge git commits before they are packaged into a binary.
 
 For the vast majority of users, using the latest binary for the OS/platform
 you are using will be what you want to do. For details on the requirements
