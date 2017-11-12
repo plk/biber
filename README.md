@@ -50,6 +50,12 @@ There is a section there on how to do this. The PDF documentation is in the
 `documentation` folder for the release on Sourceforge.
 
 ## LICENCE
-Permission is granted to copy, distribute and/or modify this
-software under the terms of the LaTeX Project Public License
-(LPPL), version 1.3c.
+
+Copyright 2009-2017 François Charette and Philip Kime, all rights reserved.
+
+This module is free software.  You can redistribute it and/or
+modify it under the terms of the Artistic License 2.0.
+
+This program is distributed in the hope that it will be useful,
+but without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
