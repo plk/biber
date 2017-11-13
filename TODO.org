@@ -139,4 +139,11 @@
 * DONE bibaltexml.pm needs uiquenametemplate processing removing
 * DONE sorting scheme names are not used. Create multiple and refer by name as with other dlist
 * DONE presort, exclude and include should not be inside a sorting spec
-
+* DONE ISO8601:2016
+** DONE Refer to biblatex date format in docs as ISO8601-201? Part 2, Clause 4 Extended Format
+** DONE Replace all EDTF refs in comments with ISO8601-2:2016
+** DONE Need to define the profile and conformance to the various level 1 and level 2 features (see 4.1.2)
+** DONE Uncertain+approximate ('?~') is now '%'
+** DONE Unspecified 'u' is now 'X'
+** DONE unknown, * -> missing, open -> ..
+** DONE 'circa' should become 'approximate' to align with ISO8601

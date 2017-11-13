@@ -16,10 +16,8 @@ Biber::Date::Format
 
 =head2 Description
 
-  Implements EDTF Levels 0 and 1 and also allows detection of
+  Implements ISO8601-2:2016 Extended Format and also allows detection of
   missing month/year.
-
-  https://www.loc.gov/standards/datetime/pre-submission.html
 
 =cut
 
@@ -29,7 +27,7 @@ Biber::Date::Format
 sub init {
   my $self = shift;
   delete $self->{missing};
-  delete $self->{circa};
+  delete $self->{approximate};
   delete $self->{uncertain};
   delete $self->{season};
   delete $self->{julian};
@@ -52,9 +50,9 @@ sub missing {
   return $self->{missing}{$part};
 }
 
-sub circa {
+sub approximate {
   my $self = shift;
-  return $self->{circa};
+  return $self->{approximate};
 }
 
 sub uncertain {
@@ -71,21 +69,21 @@ DateTime::Format::Builder->create_class(
     parsers => {
         parse_datetime => [
             [ preprocess => \&_pre ],
-            {# EDTF 5.1.2
+            {# ISO8601-1 4.2
                 #[-]YYYY-MM-DDThh:mm:ss 1985-04-12T10:15:30
                 length => [ qw( 19 20 ) ],
                 regex  => qr/^ (-?\d{4}) - (\d\d) - (\d\d)
                             T (\d\d) : (\d\d) : (\d\d) $/x,
                 params => [ qw( year month day hour minute second ) ],
             },
-            {# EDTF 5.1.1
+            {# ISO8601-1 4.1
                 #[-]YYYY-MM-DD 1985-04-12
                 length => [ qw( 10 11 ) ],
                 regex  => qr/^ (-?\d{4}) - (\d\d) - (\d\d) $/x,
                 params => [ qw( year month day ) ],
                 postprocess => \&_missing_time
             },
-            {# EDTF 5.1.1
+            {# ISO8601-1 4.1
                 #[-]YYYY-MM 1985-04
                 length => [ qw( 7 8 ) ],
                 regex  => qr/^ (-?\d{4}) - (\d\d) $/x,
@@ -93,7 +91,7 @@ DateTime::Format::Builder->create_class(
                 postprocess => [ \&_missing_day,
                                  \&_missing_time ]
             },
-            {# EDTF 5.1.1
+            {# ISO8601-1 4.1
                 #[-]YYYY 1985
                 length => [ qw( 4 5 ) ],
                 regex  => qr/^ (-?\d{4}) $/x,
@@ -102,9 +100,9 @@ DateTime::Format::Builder->create_class(
                                  \&_missing_day,
                                  \&_missing_time ]
             },
-            {# EDTF 5.2.4
-                #y[-]YYYYY... y17000000002
-                regex  => qr/^ y(-?\d{5,}) $/x,
+            {# ISO8601-2 4.5.1
+                #Y[-]YYYYY... Y17000000002
+                regex  => qr/^ Y(-?\d{5,}) $/x,
                 params => [ qw( year ) ],
                 postprocess => [ \&_missing_month,
                                  \&_missing_day,
@@ -119,7 +117,7 @@ DateTime::Format::Builder->create_class(
 sub _pre {
   my %p = @_;
   delete $p{self}{missing};
-  delete $p{self}{circa};
+  delete $p{self}{approximate};
   delete $p{self}{uncertain};
   delete $p{self}{season};
 
@@ -129,17 +127,23 @@ sub _pre {
                   24 => 'winter' );
 
 
-  # EDTF 5.2.1 (approximate)
-  if ($p{input} =~ s/^\s*(.+?)\s*\~\s*$/$1/i) {
-    $p{self}{circa} = 1;
-  }
-
-  # EDTF 5.2.1 (uncertain)
+  # ISO 8601-2:2016 4.2.1 (uncertain)
   if ($p{input} =~ s/^\s*(.+?)\s*\?\s*$/$1/i) {
     $p{self}{uncertain} = 1;
   }
 
-  # EDTF 5.1.2 (time zone)
+  # ISO 8601-2:2016 4.2.1 (approximate)
+  if ($p{input} =~ s/^\s*(.+?)\s*\~\s*$/$1/i) {
+    $p{self}{approximate} = 1;
+  }
+
+  # ISO 8601-2:2016 4.2.1 (uncertain+approximate)
+  if ($p{input} =~ s/^\s*(.+?)\s*\%\s*$/$1/i) {
+    $p{self}{uncertain} = 1;
+    $p{self}{approximate} = 1;
+  }
+
+  # ISO8601-1 4.2.2 (time zone)
   if ($p{input} =~ s/Z$//) {
     $p{parsed}{time_zone} = 'UTC';
   }
@@ -147,7 +151,7 @@ sub _pre {
     $p{parsed}{time_zone} = $1;
   }
 
-  # EDTF 5.1.5 (season)
+  # ISO8601-2:2016 4.7 (season)
   if ($p{input} =~ s/^(-?\d{4})-(2[1234])$/$1/) {
     $p{self}{season} = $seasons{$2};
   }
@@ -179,7 +183,6 @@ __END__
 
 =head1 AUTHORS
 
-François Charette, C<< <firmicus at ankabut.net> >>
 Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS

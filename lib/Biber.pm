@@ -251,7 +251,7 @@ sub tool_mode_setup {
   $bib_sections->add_section($bib_section);
 
   # Always resolve date meta-information in tool mode
-  Biber::Config->setblxoption('datecirca', 1);
+  Biber::Config->setblxoption('dateapproximate', 1);
   Biber::Config->setblxoption('dateera', 1);
   Biber::Config->setblxoption('dateuncertain', 1);
 

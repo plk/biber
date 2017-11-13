@@ -403,10 +403,10 @@ sub set_output_entry {
         }
 
         # Circa dates
-        if ($be->get_field("${d}datecirca")) {
+        if ($be->get_field("${d}dateapproximate")) {
           push @attrs, ('startcirca', 'true');
         }
-        if ($be->get_field("${d}enddatecirca")) {
+        if ($be->get_field("${d}enddateapproximate")) {
           push @attrs, ('endcirca', 'true');
         }
 

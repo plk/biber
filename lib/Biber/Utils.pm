@@ -55,7 +55,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
-  split_xsv edtf_monthday tzformat expand_option};
+  split_xsv date_monthday tzformat expand_option};
 
 =head1 FUNCTIONS
 
@@ -1011,7 +1011,7 @@ sub expand_option {
 
 =head2 parse_date_range
 
-  Parse of EDTF date range
+  Parse of ISO8601 date range
   Returns two-element array ref: [start DT object, end DT object]
 
 =cut
@@ -1020,49 +1020,45 @@ sub parse_date_range {
   my ($bibentry, $datetype, $datestring) = @_;
   my ($sd, $sep, $ed) = $datestring =~ m|^([^/]+)?(/)?([^/]+)?$|;
   my $unspec;
-  if ($sd =~ /u/ and $sd !~ /unknown/) {# EDTF 5.2.2 Unspecified format but not 5.2.3
-    ($sd, $sep, $ed, $unspec) = parse_date_edtf_unspecified($sd);
+  if ($sd =~ /X/) {# ISO8601-2 4.3 unspecified format
+    ($sd, $sep, $ed, $unspec) = parse_date_unspecified($sd);
   }
   # Set start date unknown flag
-  if ($sd) {
-    if (fc($sd) eq fc('unknown') or fc($sd) eq fc('*')) {
-      $bibentry->set_field($datetype . 'dateunknown',1);
-    }
+  if ($sep and not $sd) {
+    $bibentry->set_field($datetype . 'dateunknown',1);
   }
   # Set end date unknown flag
-  if ($ed) {
-    if (fc($ed) eq fc('unknown') or fc($ed) eq fc('*')) {
-      $bibentry->set_field($datetype . 'enddateunknown',1);
-    }
+  if ($sep and not $ed) {
+    $bibentry->set_field($datetype . 'enddateunknown',1);
   }
   return (parse_date_start($sd), parse_date_end($ed), $sep, $unspec);
 }
 
-=head2 parse_date_edtf_unspecified
+=head2 parse_date_unspecified
 
-  Parse of EDTF 5.2.2 Unspecified format into date range
+  Parse of ISO8601-2:2016 4.3 unspecified format into date range
   Returns range plus specification of granularity of unspecified
 
 =cut
 
-sub parse_date_edtf_unspecified {
+sub parse_date_unspecified {
   my $d = shift;
 
-  # 199u -> 1990/1999
-  if ($d =~ m/^(\d{3})u$/) {
+  # 199X -> 1990/1999
+  if ($d =~ m/^(\d{3})X$/) {
     return ("${1}0", '/', "${1}9", 'yearindecade');
   }
-  # 19uu -> 1900/1999
-  elsif ($d =~ m/^(\d{2})uu$/) {
+  # 19XX -> 1900/1999
+  elsif ($d =~ m/^(\d{2})XX$/) {
     return ("${1}00", '/', "${1}99", 'yearincentury');
   }
-  # 1999-uu -> 1999-01/1999-12
-  elsif ($d =~ m/^(\d{4})\p{Dash}uu$/) {
+  # 1999-XX -> 1999-01/1999-12
+  elsif ($d =~ m/^(\d{4})\p{Dash}XX$/) {
     return ("${1}-01", '/', "${1}-12", 'monthinyear');
   }
-  # 1999-01-uu -> 1999-01-01/1999-01-31
+  # 1999-01-XX -> 1999-01-01/1999-01-31
   # (understands different months and leap years)
-  elsif ($d =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}uu$/) {
+  elsif ($d =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}XX$/) {
 
     sub leapyear {
       my $year = shift;
@@ -1082,8 +1078,8 @@ sub parse_date_edtf_unspecified {
 
     return ("${1}-${2}-01", '/', "${1}-${2}-" . $monthdays{$2}, 'dayinmonth');
   }
-  # 1999-uu-uu -> 1999-01-01/1999-12-31
-  elsif ($d =~ m/^(\d{4})\p{Dash}uu\p{Dash}uu$/) {
+  # 1999-XX-XX -> 1999-01-01/1999-12-31
+  elsif ($d =~ m/^(\d{4})\p{Dash}XX\p{Dash}XX$/) {
     return ("${1}-01-01", '/', "${1}-12-31", 'dayinyear');
   }
 }
@@ -1120,9 +1116,7 @@ sub parse_date {
   # Must do this to make sure meta-information from sub-class Biber::Date::Format is reset
   $obj->init();
   return 0 unless $string;
-  return 0 if $string eq 'unknown'; # EDTF 5.2.3
-  return 0 if $string eq '*';       # ISO8601-2 equivalent for "unknown"
-  return 0 if $string eq 'open';    # EDTF 5.2.3
+  return 0 if $string eq '..';    # ISO8601-2 4.4 (open date)
 
   my $dt = eval {$obj->parse_datetime($string)};
 
@@ -1157,13 +1151,13 @@ sub parse_date {
   return $dt;
 }
 
-=head2 edtf_monthday
+=head2 date_monthday
 
-  Force month/day to EDTF format with leading zero
+  Force month/day to ISO8601-2:2016 format with leading zero
 
 =cut
 
-sub edtf_monthday {
+sub date_monthday {
   my $md = shift;
   return $md ? sprintf('%.2d', $md) : undef;
 }

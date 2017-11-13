@@ -113,7 +113,7 @@
   AUTHOR	    = {John Doe and Albert Abrahams},
   TITLE		    = {Title 2},
   PUBLISHER	  = {Oxford},
-  DATE   	    = {1996-01-01/},
+  DATE   	    = {1996-01-01/..},
 }
 
 % OK - ENDYEAR same as YEAR, labelyear should only have YEAR
@@ -190,20 +190,20 @@
   AUTHOR      = {Alan Smith},
   BOOKTITLE   = {Book Title},
   TITLE       = {Title},
-  DATE	      = {1034/unknown},
-  EVENTDATE   = {1565/open},
-  ORIGDATE    = {2000/},
-  URLDATE     = {unknown/1034},
+  DATE	      = {1034/},
+  EVENTDATE   = {1565/..},
+  ORIGDATE    = {2000/..},
+  URLDATE     = {/1034},
 }
 
 @INPROCEEDINGS{range2,
   AUTHOR      = {Alan Smith},
   BOOKTITLE   = {Book Title},
   TITLE       = {Title},
-  DATE	      = {1034/*},
-  EVENTDATE   = {open/1565},
-  ORIGDATE    = {/2000},
-  URLDATE     = {*/1034},
+  DATE	      = {1034/},
+  EVENTDATE   = {../1565},
+  ORIGDATE    = {../2000},
+  URLDATE     = {/1034},
 }
 
 @INPROCEEDINGS{season1,
@@ -228,17 +228,17 @@
   AUTHOR      = {Alan Smith},
   BOOKTITLE   = {Book Title},
   TITLE       = {Title},
-  DATE        = {199u},
-  EVENTDATE   = {19uu},
-  ORIGDATE    = {1999-uu},
-  URLDATE     = {1999-01-uu}
+  DATE        = {199X},
+  EVENTDATE   = {19XX},
+  ORIGDATE    = {1999-XX},
+  URLDATE     = {1999-01-XX}
 }
 
 @ARTICLE{unspec2,
   AUTHOR       = {Alan Smith},
   JOURNALTITLE = {Journal Title},
   TITLE        = {Title},
-  DATE         = {1999-uu-uu},
+  DATE         = {1999-XX-XX},
 }
 
 % EDTF 5.2.4
@@ -246,21 +246,21 @@
   AUTHOR       = {Alan Smith},
   JOURNALTITLE = {Journal Title},
   TITLE        = {Title},
-  DATE         = {y17000002},
+  DATE         = {Y17000002},
 }
 
 @ARTICLE{y2,
   AUTHOR       = {Alan Smith},
   JOURNALTITLE = {Journal Title},
   TITLE        = {Title},
-  DATE         = {y-17000002},
+  DATE         = {Y-17000002},
 }
 
 @ARTICLE{y3,
   AUTHOR       = {Alan Smith},
   JOURNALTITLE = {Journal Title},
   TITLE        = {Title},
-  DATE         = {y1700},
+  DATE         = {Y1700},
 }
 
 @BOOK{open1,
@@ -270,5 +270,5 @@
 
 @BOOK{open2,
   AUTHOR = {Bert Brown},
-  DATE = {open/2004-01-01}
+  DATE = {../2004-01-01}
 }

@@ -439,10 +439,10 @@ sub set_output_entry {
     }
 
     # Circa dates
-    if ($be->get_field("${d}datecirca")) {
+    if ($be->get_field("${d}dateapproximate")) {
       $acc .= "      \\true{${d}datecirca}\n";
     }
-    if ($be->get_field("${d}enddatecirca")) {
+    if ($be->get_field("${d}enddateapproximate")) {
       $acc .= "      \\true{${d}enddatecirca}\n";
     }
 

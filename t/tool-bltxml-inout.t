@@ -160,7 +160,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
         </bltx:item>
       </bltx:list>
     </bltx:pages>
-    <bltx:date>198u</bltx:date>
+    <bltx:date>198X</bltx:date>
     <bltx:date type="event">
       <bltx:start>1990-05-16</bltx:start>
       <bltx:end>1990-05-17</bltx:end>
