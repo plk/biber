@@ -1443,14 +1443,7 @@ sub preprocess_file {
 
   File::Slurper::write_text($ufilename, NFC($buf));# Unicode NFC boundary
 
-  my $lbuf = NFD(File::Slurper::read_text($ufilename));# Unicode NFD boundary
-
-  # Always decode LaTeX to UTF8
-  $logger->info('Decoding LaTeX character macros into UTF-8');
-  if ($logger->is_trace()) {# performance tune
-    $logger->trace("Buffer before decoding -> '$lbuf'");
-  }
-  $lbuf = Biber::LaTeX::Recode::latex_decode($lbuf);
+  my $lbuf = parse_decode($ufilename);
 
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Buffer after decoding -> '$lbuf'");
@@ -1459,6 +1452,64 @@ sub preprocess_file {
   File::Slurper::write_text($ufilename, NFC($lbuf));# Unicode NFC boundary
 
   return $ufilename;
+}
+
+=head2 parse_decode
+
+  Partially parse the .bib datasource and latex_decode the data contents.
+  We do this because latex_decoding the entire buffer is difficult since
+  such decoding is regexp based and since braces are used to protect data in
+  .bib files, it makes it hard to do some parsing.
+
+=cut
+
+sub parse_decode {
+  my $ufilename = shift;
+  my $dmh = Biber::Config->get_dm_helpers;
+  my $lbuf;
+
+  my $bib = Text::BibTeX::File->new();
+  $bib->open($ufilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $ufilename: $!");
+
+  $logger->info("LaTeX decoding ...");
+
+  while ( my $entry = Text::BibTeX::Entry->new($bib) ) {
+    if ( $entry->metatype == BTE_REGULAR ) {
+      $lbuf .= '@' . $entry->type . '{' . $entry->key . ',' . "\n";
+      foreach my $f ($entry->fieldlist) {
+        my $fv = $entry->get($f);
+
+        # Don't decode verbatim fields
+        if (not first {fc($f) eq fc($_)} $dmh->{verbs}->@*) {
+          $fv = Biber::LaTeX::Recode::latex_decode($fv);
+        }
+        $lbuf .= "  $f = {$fv},\n";
+      }
+      $lbuf .= "\n" . '}' . "\n\n";
+    }
+    elsif ($entry->metatype == BTE_PREAMBLE) {
+      $lbuf .= '@PREAMBLE{"' . Biber::LaTeX::Recode::latex_decode($entry->value) . '"}' . "\n";
+    }
+    elsif ($entry->metatype == BTE_COMMENT) {
+      $lbuf .= '@COMMENT{' . Biber::LaTeX::Recode::latex_decode($entry->value) . '}' . "\n";
+    }
+    elsif ($entry->metatype == BTE_MACRODEF) {
+      $lbuf .= '@STRING{';
+      foreach my $f ($entry->fieldlist) {
+        $lbuf .= $f . ' = {' . Biber::LaTeX::Recode::latex_decode($entry->get($f)) . '}';
+      }
+      $lbuf .= "}\n";
+    }
+    else {
+      $lbuf .= Biber::LaTeX::Recode::latex_decode($entry->print_s);
+    }
+  }
+
+  # We will read in the same .bib again later to do the real parsing
+  # and since macro defs are global, need to reset them to avoid redef warnings
+  Text::BibTeX::delete_all_macros();
+
+  return $lbuf;
 }
 
 =head2 parsename

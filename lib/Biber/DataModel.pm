@@ -228,6 +228,11 @@ sub new {
                                       not $self->field_is_skipout($_);
                                     }
                                     $self->get_fields_of_type('list', 'uri')->@*],
+                      verbs     => [sort grep
+                                    {
+                                      not $self->field_is_skipout($_);
+                                    }
+                                    $self->get_fields_of_datatype(['verbatim', 'uri'])->@*],
                       vfields   => [sort grep
                                     {
                                       not $self->field_is_skipout($_);
