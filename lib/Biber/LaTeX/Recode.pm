@@ -296,12 +296,14 @@ sub latex_decode {
     #
     # We don't want to do this if it would result in a broken macro name like with
     # \textupper{é}
+    # or
+    # \frac{a}{b}
     #
     # Workaround perl's lack of variable-width negative look-behind -
     # Reverse string (and therefore some of the Re) and use variable width negative look-ahead
     # Careful here - reversing puts any combining chars before the char so \X can't be used
     $text = reverse $text;
-    $text =~ s/\}(\pM+\pL)\{(?!\pL+\\)/$1/g;
+    $text =~ s/\}(\pM*\pL)\{(?!(?:\}[^}]+\{)*\pL+\\)/$1/g;
     $text = reverse $text;
 
     # Put brace markers back after doing the brace elimination as we only want to eliminate
@@ -314,7 +316,7 @@ sub latex_decode {
     }
 
     if ($norm) {
-      return Unicode::Normalize::normalize( $norm_form, $text );
+      return Unicode::Normalize::normalize($norm_form, $text);
     }
     else {
       return $text;
