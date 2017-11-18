@@ -122,6 +122,8 @@ sub set_output_entry {
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
   my $xml_prefix = 'https://sourceforge.net/projects/biblatex/bblxml';
+  my $un = Biber::Config->getblxoption('uniquename', $bee, $key);
+  my $ul = Biber::Config->getblxoption('uniquelist', $bee, $key);
 
   my $xml = XML::Writer->new(OUTPUT      => 'self',
                              ENCODING    => 'UTF-8',
@@ -219,10 +221,11 @@ sub set_output_entry {
       if (defined($lni) and
           $lni eq $namefield) {
 
-        # Add uniquelist
+        # Add uniquelist if requested
         # Don't use angles in attributes ...
-        $plo{uniquelist} = "[BDS]UL-${nlid}[/BDS]";
-
+        if ($ul) {
+          $plo{uniquelist} = "[BDS]UL-${nlid}[/BDS]";
+        }
 
         # Add per-namelist options
         foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
@@ -246,7 +249,7 @@ sub set_output_entry {
 
       # Now the names
       foreach my $n ($nf->names->@*) {
-        $n->name_to_bblxml($xml, $xml_prefix);
+        $n->name_to_bblxml($xml, $xml_prefix, $un);
       }
       $xml->endTag();# names
     }

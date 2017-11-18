@@ -117,9 +117,9 @@
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
         <bbl:names type="author" count="1">
-          <bbl:name hash="eb3f242602109f5bdbeb41fdd990fcc0" uniquename="0" uniquepart="base">
+          <bbl:name hash="eb3f242602109f5bdbeb41fdd990fcc0">
             <bbl:namepart type="family" initials="G">Glashow</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="S">Sheldon</bbl:namepart>
+            <bbl:namepart type="given" initials="S">Sheldon</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
@@ -473,9 +473,9 @@
           <bbl:member>stdmodel</bbl:member>
         </bbl:inset>
         <bbl:names type="author" count="1">
-          <bbl:name hash="eb3f242602109f5bdbeb41fdd990fcc0" uniquename="0" uniquepart="base">
+          <bbl:name hash="eb3f242602109f5bdbeb41fdd990fcc0">
             <bbl:namepart type="family" initials="G">Glashow</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="S">Sheldon</bbl:namepart>
+            <bbl:namepart type="given" initials="S">Sheldon</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
