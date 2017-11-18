@@ -1441,6 +1441,11 @@ sub preprocess_file {
   # strip UTF-8 BOM if it exists - this just makes T::B complain about junk characters
   $buf =~ s/\A\x{feff}//;
 
+  # A MAC (CR only) format file with a comment in the first line will confuse
+  # Text::BibTeX as it will just see one comment line and find no entries
+  # So, if we find an initial comment line with a carriage return at the end, remove it.
+  $buf =~ s/\A\s*\%[^\r]+\r//ms;
+
   File::Slurper::write_text($ufilename, NFC($buf));# Unicode NFC boundary
 
   my $lbuf = parse_decode($ufilename);

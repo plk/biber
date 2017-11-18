@@ -304,13 +304,23 @@ sub parse_ctrlfile {
   # exited prematurely while writing the .bcf. This results is problems for latexmk. So, if the
   # .bcf is broken, just stop here, remove the .bcf and exit with error so that we don't write
   # a bad .bbl
-  my $checkbuf = File::Slurper::read_text($ctrl_file_path);
+  my $checkbuf;
+  unless ($checkbuf = eval {File::Slurper::read_text($ctrl_file_path)}) {
+    # Reading ctrl-file as UTF-8 failed. Probably it was written by fontenc as latin1
+    # with some latin1 char in it (probably a sourcemap), so try that as a last resort
+    unless (eval {$checkbuf = File::Slurper::read_text($ctrl_file_path, 'latin1')}) {
+      biber_error("$ctrl_file_path is not UTF-8 or even latin1, how horrible.");
+    }
+  }
+
   $checkbuf = NFD($checkbuf);# Unicode NFD boundary
   unless (eval "XML::LibXML->load_xml(string => \$checkbuf)") {
     my $output = $self->get_output_obj->get_output_target_file;
     unlink($output) unless $output eq '-';# ignore deletion of STDOUT marker
     biber_error("$ctrl_file_path is malformed, last biblatex run probably failed. Deleted $output");
   }
+  # Write ctrl file as UTF-8
+  File::Slurper::write_text($ctrl_file_path, NFC($checkbuf));# Unicode NFC boundary
 
   # Validate if asked to
   if (Biber::Config->getoption('validate_control')) {
