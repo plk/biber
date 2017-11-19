@@ -10,7 +10,6 @@ use Biber::Annotation;
 use Biber::Config;
 use Biber::Constants;
 use Biber::Utils;
-use Data::Compare;
 use Data::Dump qw( pp );
 use Data::Uniqid qw (suniqid);
 use Log::Log4perl qw( :no_extra_logdie_message );

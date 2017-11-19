@@ -3107,7 +3107,7 @@ sub create_uniquename_info {
       # If name list was truncated in bib with "and others", this overrides maxcitenames
       my $morenames = $nl->get_morenames ? 1 : 0;
 
-      my @truncnames;
+      my %truncnames;
       my @basenames;
       my @allnames;
 
@@ -3136,7 +3136,7 @@ sub create_uniquename_info {
             $num_names <= $maxcn or
             $n->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
 
-          push @truncnames, $n;
+          $truncnames{$nid} = 1;
           if ($un == 5 or $un == 6) {
             push @basenames, $dlist->get_basenamestring($nlid, $nid);
             push @allnames, $dlist->get_namestring($nlid, $nid);
@@ -3175,7 +3175,7 @@ sub create_uniquename_info {
           $dlist->set_unmininfo($nlid, $nid, $min_basename);
         }
 
-        if (first {Compare($_, $n)} @truncnames) {
+        if ($truncnames{$nid}) {
           # Record uniqueness information entry for all name contexts
           # showing that they have been seen for this name key in this name scope
           foreach my $ns ($namestrings->@*) {
@@ -3238,7 +3238,7 @@ sub generate_uniquename {
       # If name list was truncated in bib with "and others", this overrides maxcitenames
       my $morenames = ($nl->get_morenames) ? 1 : 0;
 
-      my @truncnames;
+      my %truncnames;
 
       foreach my $n ($names->@*) {
         my $nid = $n->get_id;
@@ -3247,7 +3247,7 @@ sub generate_uniquename {
             $morenames or
             $num_names <= $maxcn or
             $n->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
-          push @truncnames, $n;
+          $truncnames{$nid} = 1;
         }
         else {
           # Set anything now not visible due to uniquelist back to 0
@@ -3265,7 +3265,7 @@ sub generate_uniquename {
           $namescope = $dlist->get_unmininfo($nlid, $nid); # $un=5 and 6
         }
 
-        if (first {Compare($_, $n)} @truncnames) {
+        if ($truncnames{$nid}) {
           for (my $i=0; $i<=$namestrings->$#*; $i++) {
             my $ns = $namestrings->[$i];
             my $nss = $namedisschema->[$i];
