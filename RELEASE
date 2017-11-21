@@ -21,5 +21,3 @@
 * Run dist/re-package.sh, copy the /tmp/biber.tgz to Dropbox and then go to
   CTAN biber dir as usual (https://ctan.org/pkg/biber) upload an empty zip
   and put the Dropbox URL in the comments.
-
-
