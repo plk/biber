@@ -10,7 +10,6 @@ use Biber::Annotation;
 use Biber::Config;
 use Biber::Constants;
 use Biber::Utils;
-use Data::Compare;
 use Data::Dump qw( pp );
 use Data::Uniqid qw (suniqid);
 use Log::Log4perl qw( :no_extra_logdie_message );
@@ -270,7 +269,7 @@ sub name_part_to_bltxml {
 =cut
 
 sub name_to_bbl {
-  my $self = shift;
+  my ($self, $un) = @_;
   my $dm = Biber::Config->get_dm;
   my @pno; # per-name options
   my $pno; # per-name options final string
@@ -298,17 +297,22 @@ sub name_to_bbl {
     # string instead of undef so that interpolation below doesn't produce warnings
     $npc //= '';
     $npci //= '';
+
     if ($npc) {
       push @namestrings, "           $np={$npc}",
-                         "           ${np}i={$npci}",
-                         "           <BDS>UNP-${np}-${nid}</BDS>";
+                         "           ${np}i={$npci}";
+      # Only if uniquename is true
+      if ($un) {
+        push @namestrings, "           <BDS>UNP-${np}-${nid}</BDS>";
+      }
     }
   }
 
   # Generate uniquename if uniquename is requested
-  push @pno, "<BDS>UNS-${nid}</BDS>";
-  push @pno, "<BDS>UNP-${nid}</BDS>";
-
+  if ($un) {
+    push @pno, "<BDS>UNS-${nid}</BDS>";
+    push @pno, "<BDS>UNP-${nid}</BDS>";
+  }
 
   # Add per-name options
   foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
@@ -345,7 +349,7 @@ sub name_to_bbl {
 =cut
 
 sub name_to_bblxml {
-  my ($self, $xml, $xml_prefix) = @_;
+  my ($self, $xml, $xml_prefix, $un) = @_;
   my $dm = Biber::Config->get_dm;
   my %pno; # per-name options
   my %names;
@@ -364,14 +368,17 @@ sub name_to_bblxml {
     $npci //= '';
     if ($npc) {
       $names{$np} = [$npc, $npci];
-      push $names{$np}->@*, "[BDS]UNP-${np}-${nid}[/BDS]";
+      if ($un) {
+        push $names{$np}->@*, "[BDS]UNP-${np}-${nid}[/BDS]";
+      }
     }
   }
 
   # Generate uniquename if uniquename is requested
-  $pno{uniquename} = "[BDS]UNS-${nid}[/BDS]";
-  $pno{uniquepart} = "[BDS]UNP-${nid}[/BDS]";
-
+  if ($un) {
+    $pno{uniquename} = "[BDS]UNS-${nid}[/BDS]";
+    $pno{uniquepart} = "[BDS]UNP-${nid}[/BDS]";
+  }
 
   # Add per-name options
   foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
@@ -397,7 +404,9 @@ sub name_to_bblxml {
   foreach my $key (sort keys %names) {
     my $value = $names{$key};
     my %un;
-    %un = (uniquename => $value->[2]);
+    if ($un) {
+      %un = (uniquename => $value->[2]);
+    }
     $xml->startTag([$xml_prefix, 'namepart'],
                    type => $key,
                    %un,

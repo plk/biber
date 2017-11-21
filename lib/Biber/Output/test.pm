@@ -78,8 +78,9 @@ sub set_output_entry {
   my $acc = '';
   my $secnum = $section->number;
   my $dmh = $dm->{helpers};
-
   my $key = $be->get_field('citekey');
+  my $un = Biber::Config->getblxoption('uniquename', $bee, $key);
+  my $ul = Biber::Config->getblxoption('uniquelist', $bee, $key);
 
   $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
@@ -156,9 +157,10 @@ sub set_output_entry {
         # Add uniquelist, if defined
         my @plo;
 
-        # Add uniquelist
-        push @plo, "<BDS>UL-${nlid}</BDS>";
-
+        # Add uniquelist if requested
+        if ($ul) {
+          push @plo, "<BDS>UL-${nlid}</BDS>";
+        }
 
         # Add per-namelist options
         foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
@@ -180,7 +182,7 @@ sub set_output_entry {
       }
       $acc .= "      \\name{$namefield}{$total}{$nfv}{%\n";
       foreach my $n ($nf->names->@*) {
-        $acc .= $n->name_to_bbl;
+        $acc .= $n->name_to_bbl($un);
       }
       $acc .= "      }\n";
     }

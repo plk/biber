@@ -114,7 +114,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
 
 my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
@@ -143,7 +143,7 @@ my $kck1 = q|    \entry{c2add694bf942dc77b376592d9c862cd}{article}{dataonly}
 
 my $kck2 = q|    \entry{78f825aaa0103319aaa1a30bf4fe3ada}{inbook}{dataonly}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
+        {{hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }

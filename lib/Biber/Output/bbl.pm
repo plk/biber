@@ -198,6 +198,8 @@ sub set_output_entry {
   my $key = $be->get_field('citekey');
   my $acc = '';
   my $dmh = $dm->{helpers};
+  my $un = Biber::Config->getblxoption('uniquename', $bee, $key);
+  my $ul = Biber::Config->getblxoption('uniquelist', $bee, $key);
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
@@ -268,8 +270,10 @@ sub set_output_entry {
           $lni eq $namefield) {
         my @plo;
 
-        # Add uniquelist
-        push @plo, "<BDS>UL-${nlid}</BDS>";
+        # Add uniquelist if requested
+        if ($ul) {
+          push @plo, "<BDS>UL-${nlid}</BDS>";
+        }
 
         # Add per-namelist options
         foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
@@ -293,7 +297,7 @@ sub set_output_entry {
 
       $acc .= "      \\name{$namefield}{$total}{$nfv}{%\n";
       foreach my $n ($nf->names->@*) {
-        $acc .= $n->name_to_bbl;
+        $acc .= $n->name_to_bbl($un);
       }
       $acc .= "      }\n";
     }

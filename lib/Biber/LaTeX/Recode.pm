@@ -185,15 +185,6 @@ sub init_sets {
   }
 }
 
-# Supporting code to keep track of verbatim fields during decoding
-my $saveverb;
-sub verbmark {
-  my ($field,$open,$re,$close) = @_;
-  my $mre = md5_hex(encode_utf8(NFC($re)));
-  $saveverb->{$mre} = $re;
-  return "$field$open$mre$close";
-}
-
 =head2 latex_decode($text, @options)
 
 Converts LaTeX macros in the $text to Unicode characters.
@@ -209,21 +200,6 @@ The function accepts a number of options:
 =cut
 sub latex_decode {
     my $text = shift;
-
-    # In tests like utils.t, there is no data model
-    if (my $dmh = Biber::Config->get_dm_helpers) {
-      my $vs = join('|', ($dmh->{vfields}->@*, $dmh->{vlists}->@*));
-
-      # Optimisation - if there are no macros, no point doing anything
-      return $text unless $text =~ m/(?:$vs|\\)/i;
-
-      # Optimisation - if virtual null set was specified, do nothing
-      return $text if $set_d eq 'null';
-
-      # first replace all verbatim fields with markers as we mustn't touch these
-      $text =~ s/((?:$vs)\s*=\s*)(")\s*([^"]+)\s*(")/verbmark($1,$2,$3,$4)/gie;
-      $text =~ s/((?:$vs)\s*=\s*)(\{)\s*([^\}]+)\s*(\})/verbmark($1,$2,$3,$4)/gie;
-    }
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("String before latex_decode() -> '$text'");
@@ -303,9 +279,6 @@ sub latex_decode {
       }
     }
 
-    # Replace verbatim field markers
-    $text =~ s/([a-f0-9]{32})/$saveverb->{$1}/gie;
-
     if ($logger->is_trace()) {# performance tune
       $logger->trace("String in latex_decode() before brace elimination now -> '$text'");
     }
@@ -313,7 +286,7 @@ sub latex_decode {
     # Now remove braces around single letters with diacritics (which the replace above
     # can result in). Things like '{á}'. Such things can break kerning. We can't do this in
     # the RE above as we can't determine if the braces are wrapping a phrase because this
-    # match is on an entire file string. So we can't in one step tell the difference between:
+    # match is on an entire field string. So we can't in one step tell the difference between:
     #
     # author = {Andr\'e}
     # and
@@ -323,12 +296,14 @@ sub latex_decode {
     #
     # We don't want to do this if it would result in a broken macro name like with
     # \textupper{é}
+    # or
+    # \frac{a}{b}
     #
     # Workaround perl's lack of variable-width negative look-behind -
     # Reverse string (and therefore some of the Re) and use variable width negative look-ahead
     # Careful here - reversing puts any combining chars before the char so \X can't be used
     $text = reverse $text;
-    $text =~ s/\}(\pM+\pL)\{(?!\pL+\\)/$1/g;
+    $text =~ s/\}(\pM*\pL)\{(?!(?:\}[^}]+\{)*\pL+\\)/$1/g;
     $text = reverse $text;
 
     # Put brace markers back after doing the brace elimination as we only want to eliminate
@@ -341,7 +316,7 @@ sub latex_decode {
     }
 
     if ($norm) {
-      return Unicode::Normalize::normalize( $norm_form, $text );
+      return Unicode::Normalize::normalize($norm_form, $text);
     }
     else {
       return $text;
