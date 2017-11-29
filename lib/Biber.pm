@@ -997,13 +997,8 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
 
     $self->sections->add_section($bib_section);
 
-    # Global sorting in non tool mode bibtex output is citeorder so override the .bcf here
-    Biber::Config->setblxoption('sortingtemplatename', 'none');
-    # Global locale in non tool mode bibtex output is default
-    Biber::Config->setblxoption('sortlocale', 'english');
-
     my $datalist = Biber::DataList->new(section => 99999,
-                                        sortingtemplatename => 'none',
+                                        sortingtemplatename => Biber::Config->getblxoption('sortingtemplatename'),
                                         sortingnamekeytemplatename => 'global',
                                         uniquenametemplatename => 'global',
                                         labelalphanametemplatename => 'global',
@@ -4092,22 +4087,10 @@ sub fetch_data {
 
   # (Re-)define the old BibTeX month macros to what biblatex wants unless user stops this
   unless (Biber::Config->getoption('nostdmacros')) {
-    my %months = ('jan' => '1',
-                  'feb' => '2',
-                  'mar' => '3',
-                  'apr' => '4',
-                  'may' => '5',
-                  'jun' => '6',
-                  'jul' => '7',
-                  'aug' => '8',
-                  'sep' => '9',
-                  'oct' => '10',
-                  'nov' => '11',
-                  'dec' => '12');
 
-    foreach my $mon (keys %months) {
+    foreach my $mon (keys %MONTHS) {
       Text::BibTeX::delete_macro($mon);
-      Text::BibTeX::add_macro_text($mon, $months{$mon});
+      Text::BibTeX::add_macro_text($mon, $MONTHS{$mon});
     }
   }
 

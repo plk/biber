@@ -36,6 +36,7 @@ our @EXPORT = qw{
                   %DS_EXTENSIONS
                   %UNIQUENAME_CONTEXTS
                   %UNIQUENAME_VALUES
+                  %MONTHS
               };
 
 # Version of biblatex control file which this release expects. Matched against version
@@ -65,6 +66,18 @@ unless ($locale) {
   }
 }
 
+our %MONTHS = ('jan' => '1',
+              'feb' => '2',
+              'mar' => '3',
+              'apr' => '4',
+              'may' => '5',
+              'jun' => '6',
+              'jul' => '7',
+              'aug' => '8',
+              'sep' => '9',
+              'oct' => '10',
+              'nov' => '11',
+              'dec' => '12');
 
 # datafieldsets
 our %DATAFIELD_SETS = ();

@@ -1520,6 +1520,14 @@ sub parse_decode {
   # and since macro defs are global, need to reset them to avoid redef warnings
   Text::BibTeX::delete_all_macros();
 
+  # (Re-)define the old BibTeX month macros to what biblatex wants unless user stops this
+  unless (Biber::Config->getoption('nostdmacros')) {
+
+    foreach my $mon (keys %MONTHS) {
+      Text::BibTeX::add_macro_text($mon, $MONTHS{$mon});
+    }
+  }
+
   return $lbuf;
 }
 
