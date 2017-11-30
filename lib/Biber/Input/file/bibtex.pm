@@ -1439,6 +1439,10 @@ sub preprocess_file {
   # just in case there was a BOM so we can delete it as it makes T::B complain
   # Might fail due to encountering characters invalid in the encoding so trap and die gracefully
   my $benc = Biber::Config->getoption('input_encoding');
+  if ($benc eq 'ascii') {
+    $logger->info("Reading ascii input as UTF-8");
+    $benc = 'UTF-8';
+  }
   my $buf;
   unless (eval{$buf = NFD(File::Slurper::read_text($filename, $benc))}) {# Unicode NFD boundary
     biber_error("Data file '$filename' cannot be read in encoding '$benc': $@");
