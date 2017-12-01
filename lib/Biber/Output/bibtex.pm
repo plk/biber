@@ -222,12 +222,7 @@ sub set_output_entry {
   # Verbatim fields
   foreach my $vfield ($dmh->{vfields}->@*) {
     if ( my $vf = $be->get_field($vfield) ) {
-      if ($vfield eq 'url') {
-        $acc{$casing->('urlraw')} = $vf;
-      }
-      else {
-        $acc{$casing->($vfield)} = $vf;
-      }
+      $acc{$casing->($vfield)} = $vf;
     }
   }
 
