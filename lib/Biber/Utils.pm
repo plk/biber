@@ -76,6 +76,7 @@ sub locate_biber_file {
   my $filename = shift;
   my $filenamepath = $filename; # default if nothing else below applies
   my $foundfile;
+
   # If input_directory is set, perhaps the file can be found there so
   # construct a path to test later
   if (my $indir = Biber::Config->getoption('input_directory')) {
@@ -88,23 +89,17 @@ sub locate_biber_file {
   }
 
   # Filename is absolute
-  if (File::Spec->file_name_is_absolute($filename) and -e $filename) {
-    return $filename;
+  if (File::Spec->file_name_is_absolute($filename) and my $f = file_exist_check($filename)) {
+    return $f;
   }
 
   # File is input_directory or output_directory
-  if (defined($foundfile) and -e $foundfile) {
-    return $foundfile;
+  if (defined($foundfile) and my $f = file_exist_check($foundfile)) {
+    return $f;
   }
 
-  # NFD filesystem: File is relative to cwd
-  if (-e NFD($filename)) {
-    return NFD($filename);
-  }
-
-  # NFC filesystem: File is relative to cwd
-  if (-e NFC($filename)) {
-    return NFC($filename);
+  if (my $f = file_exist_check($filename)) {
+    return $f;
   }
 
   # File is where control file lives
@@ -119,7 +114,9 @@ sub locate_biber_file {
 
     my $path = "$ctlvolume$ctldir$filename";
 
-    return $path if -e $path;
+    if (my $f = file_exist_check($path)) {
+      return $f;
+    }
   }
 
   # File is in kpse path
@@ -145,7 +142,8 @@ sub locate_biber_file {
       chomp $found;
       $found =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
       # filename can be UTF-8 and run3() isn't clever with UTF-8
-      return decode_utf8($found);
+      my $f = file_exist_check(decode_utf8($found));
+      return $f;
     }
     else {
       if ($logger->is_debug()) {# performance tune
@@ -154,6 +152,24 @@ sub locate_biber_file {
     }
   }
   return undef;
+}
+
+=head2 
+
+  Check existence of NFC/NFD file variants and return correct one
+
+=cut
+
+sub file_exist_check {
+  my $filename = shift;
+
+  if (-e NFD($filename)) {
+    return NFD($filename);
+  }
+
+  if (-e NFC($filename)) {
+    return NFC($filename);
+  }
 }
 
 =head2 biber_warn
