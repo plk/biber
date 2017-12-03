@@ -182,14 +182,14 @@ sub _initopts {
   # Record the $ARGV[0] name for future use
   if (Biber::Config->getoption('tool')) {
     # Set datasource file name. In a conditional as @ARGV might not be set in tests
-    if (my $dsn = $ARGV[0]) {         # ARGV is ok even in a module
+    if (my $dsn = decode_utf8($ARGV[0])) {         # ARGV is ok even in a module
       Biber::Config->setoption('dsn', $dsn);
     }
   }
   else {
     # Set control file name. In a conditional as @ARGV might not be set in tests
     if (defined($ARGV[0])) {         # ARGV is ok even in a module
-      my $bcf = $ARGV[0];
+      my $bcf = decode_utf8($ARGV[0]);
       $bcf .= '.bcf' unless $bcf =~ m/\.bcf$/;
       Biber::Config->setoption('bcf', $bcf);
     }
