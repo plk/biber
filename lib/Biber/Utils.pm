@@ -156,7 +156,8 @@ sub locate_biber_file {
 
 =head2 
 
-  Check existence of NFC/NFD file variants and return correct one
+  Check existence of NFC/NFD file variants and return correct one.
+  Account for windows file encodings
 
 =cut
 
@@ -165,7 +166,7 @@ sub file_exist_check {
   if ($^O =~ /Win/) {
     require Win32;
     my $f = Win32::GetANSIPathName($filename);
-    return $f -e $f;
+    return $f if -e $f;
   }
   else {
     if (-e NFC($filename)) {
