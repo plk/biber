@@ -162,14 +162,21 @@ sub locate_biber_file {
 
 sub file_exist_check {
   my $filename = shift;
-
-  if (-e NFD($filename)) {
-    return NFD($filename);
+  if ($^O =~ /Win/) {
+    require Win32;
+    my $f = Win32::GetANSIPathName($filename);
+    return $f -e $f;
+  }
+  else {
+    if (-e NFC($filename)) {
+      return NFC($filename);
+    }
+    if (-e NFD($filename)) {
+      return NFD($filename);
+    }
   }
 
-  if (-e NFC($filename)) {
-    return NFC($filename);
-  }
+  return undef;
 }
 
 =head2 biber_warn
