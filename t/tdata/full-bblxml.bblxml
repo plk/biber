@@ -10,7 +10,7 @@
           <bbl:member>set</bbl:member>
         </bbl:inset>
         <bbl:names type="author" count="7">
-          <bbl:name hash="1be9612012fe4041fec665ca8adf4b62" uniquename="0" uniquepart="base">
+          <bbl:name hash="9f6d9349b825c14b731c9dad57e732fe" uniquename="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Aksın</bbl:namepart>
             <bbl:namepart type="given" uniquename="0" initials="Ö">Özge</bbl:namepart>
           </bbl:name>
@@ -39,12 +39,12 @@
             <bbl:namepart type="given" uniquename="0" initials="E">Erhan</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:field name="namehash">7aaa9902dc73909efd3430ad4f500984</bbl:field>
-        <bbl:field name="fullhash">f200c5838c3cfd950ab910e52e35e335</bbl:field>
-        <bbl:field name="bibnamehash">7aaa9902dc73909efd3430ad4f500984</bbl:field>
-        <bbl:field name="authornamehash">7aaa9902dc73909efd3430ad4f500984</bbl:field>
-        <bbl:field name="authorfullhash">f200c5838c3cfd950ab910e52e35e335</bbl:field>
-        <bbl:field name="authorbibnamehash">7aaa9902dc73909efd3430ad4f500984</bbl:field>
+        <bbl:field name="namehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
+        <bbl:field name="fullhash">0a33d8193e8c0f08f4b806878362f41f</bbl:field>
+        <bbl:field name="bibnamehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
+        <bbl:field name="authornamehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
+        <bbl:field name="authorfullhash">0a33d8193e8c0f08f4b806878362f41f</bbl:field>
+        <bbl:field name="authorbibnamehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
         <bbl:field name="labelalpha">Aks\textbf{+}06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">d77c7cdd82ff690d4c3ef13216f92f0b</bbl:field>
@@ -366,7 +366,7 @@
           <bbl:member>set</bbl:member>
         </bbl:inset>
         <bbl:names type="author" count="7">
-          <bbl:name hash="1be9612012fe4041fec665ca8adf4b62" uniquename="0" uniquepart="base">
+          <bbl:name hash="9f6d9349b825c14b731c9dad57e732fe" uniquename="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Aksın</bbl:namepart>
             <bbl:namepart type="given" uniquename="0" initials="Ö">Özge</bbl:namepart>
           </bbl:name>
@@ -395,12 +395,12 @@
             <bbl:namepart type="given" uniquename="0" initials="E">Erhan</bbl:namepart>
           </bbl:name>
         </bbl:names>
-        <bbl:field name="namehash">7aaa9902dc73909efd3430ad4f500984</bbl:field>
-        <bbl:field name="fullhash">f200c5838c3cfd950ab910e52e35e335</bbl:field>
-        <bbl:field name="bibnamehash">7aaa9902dc73909efd3430ad4f500984</bbl:field>
-        <bbl:field name="authornamehash">7aaa9902dc73909efd3430ad4f500984</bbl:field>
-        <bbl:field name="authorfullhash">f200c5838c3cfd950ab910e52e35e335</bbl:field>
-        <bbl:field name="authorbibnamehash">7aaa9902dc73909efd3430ad4f500984</bbl:field>
+        <bbl:field name="namehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
+        <bbl:field name="fullhash">0a33d8193e8c0f08f4b806878362f41f</bbl:field>
+        <bbl:field name="bibnamehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
+        <bbl:field name="authornamehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
+        <bbl:field name="authorfullhash">0a33d8193e8c0f08f4b806878362f41f</bbl:field>
+        <bbl:field name="authorbibnamehash">9a254e1e6cb15572fecd2039b635b9c0</bbl:field>
         <bbl:field name="labelalpha">Aks\textbf{+}06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
         <bbl:field name="sortinithash">d77c7cdd82ff690d4c3ef13216f92f0b</bbl:field>

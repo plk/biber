@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 78;
+use Test::More tests => 79;
 use Test::Differences;
 unified_diff;
 
@@ -102,6 +102,7 @@ eq_or_diff(latex_decode('\j'), 'ȷ', 'latex decode 10'); # checking dotless j
 eq_or_diff(latex_decode('\textdiv'), '÷', 'latex decode 11'); # checking multiple set for types
 eq_or_diff(latex_decode('--'), '--', 'latex decode 13'); # Testing raw
 eq_or_diff(latex_decode('\textdegree C'), '°C', 'latex decode 14');
+eq_or_diff(latex_decode('{C}apital'), '{C}apital', 'latex decode 15');
 
 eq_or_diff(latex_encode(NFD('α')), '{$\alpha$}', 'latex encode 3'); # greek encoding with "full"
 eq_or_diff(latex_encode(NFD('µ')), '{$\mu$}', 'latex encode 4'); # Testing symbols
