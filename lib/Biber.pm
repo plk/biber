@@ -4087,7 +4087,6 @@ sub fetch_data {
 
   # (Re-)define the old BibTeX month macros to what biblatex wants unless user stops this
   unless (Biber::Config->getoption('nostdmacros')) {
-
     foreach my $mon (keys %MONTHS) {
       Text::BibTeX::delete_macro($mon);
       Text::BibTeX::add_macro_text($mon, $MONTHS{$mon});
