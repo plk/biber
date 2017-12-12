@@ -12,7 +12,7 @@ using the default download button if you want 32-bit.
 Biber is written in Perl with the aim of providing a customised and
 sophisticated data preparation backend for biblatex.
 
-You do not need to install Perl use biber--binaries are provided for many
+You do not need to install Perl to use biber--binaries are provided for many
 operating systems via the main TeX distributions (TeXLive, MacTeX, MiKTeX)
 and also via download from SourceForge.
 
