@@ -18,6 +18,6 @@
 * Associate new defaults with new binaries and change labels
 * scp htdocs/*.html philkime,biblatex-biber@web.sourceforge.net:htdocs/
 * Update SF main page, news, add new README in web interface at root, if needed
-* Run dist/re-package.sh, copy the /tmp/biber.tgz to Dropbox and then go to
-  CTAN biber dir as usual (https://ctan.org/pkg/biber) upload an empty zip
+* Run dist/re-package.sh, and then go to Dropbox, get the URL and 
+  CTAN biber dir as usual (https://ctan.org/pkg/biber) upload the empty zip (~/Desktop/biber.tgz)
   and put the Dropbox URL in the comments.

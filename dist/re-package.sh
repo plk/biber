@@ -83,3 +83,10 @@ tar czf biber.tgz biber
 cp /tmp/biber-repack/biber.tgz ~/Dropbox/
 cd /tmp
 \rm -rf /tmp/biber-repack
+
+# Make empty archive
+cd ~/Desktop
+echo "Please retrieve file from location in comments" > ~/Desktop/biber.txt
+tar zcf biber.tgz biber.txt
+\rm -f biber.txt
+echo "Empty archive is: ~/Desktop/biber.tgz"
