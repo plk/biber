@@ -2115,6 +2115,11 @@
       <bcf:sortitem order="1">title</bcf:sortitem>
     </bcf:sort>
   </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="et">
+    <bcf:sort order="1">
+      <bcf:sortitem order="1">entrytype</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sortingtemplate>
   <bcf:sortingtemplate name="ny">
     <bcf:sort order="1">
       <bcf:sortitem order="1">citeorder</bcf:sortitem>

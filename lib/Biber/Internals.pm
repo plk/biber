@@ -985,6 +985,7 @@ my %internal_dispatch_sorting = (
                                  'labelday'        =>  [\&_sort_labeldate,     ['day']],
                                  'presort'         =>  [\&_sort_presort,       []],
                                  'sortname'        =>  [\&_sort_sortname,      []],
+                                 'entrytype'       =>  [\&_sort_entrytype,     []],
                                  'entrykey'        =>  [\&_sort_entrykey,      []]);
 
 # The value is an array pointer, first element is a code pointer, second is
@@ -1210,6 +1211,11 @@ sub _sort_editort {
 sub _sort_entrykey {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes) = @_;
   return _process_sort_attributes($citekey, $sortelementattributes);
+}
+
+sub _sort_entrytype {
+  my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes) = @_;
+  return _process_sort_attributes($be->get_field('entrytype'), $sortelementattributes);
 }
 
 sub _sort_labelalpha {

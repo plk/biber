@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 use Biber;
 use Biber::Output::bbl;
@@ -97,6 +97,13 @@ $section = $biber->sections->get_section(0);
 # Note that L5 is first because it has a final sortkey which maps to a
 # large int in sort fields
 is_deeply($main->get_keys, ['L5','L9','L6','L7','L8','L2','L4','L1A','L1','L1B','L3'], 'ydnt');
+
+$main->set_sortingtemplatename('et');
+
+$biber->set_output_obj(Biber::Output::bbl->new());
+$biber->prepare;
+$section = $biber->sections->get_section(0);
+is_deeply($main->get_keys, ['L2','L3','L1B', 'L1','L1A','L4','L5','L7','L8','L6', 'L9'], 'entrytype');
 
 $main->set_sortingtemplatename('anyt');
 
