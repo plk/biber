@@ -118,9 +118,9 @@ sub extract_entries {
   my $smaps = [];
   # Maps are applied in order USER->STYLE->DRIVER
   if (defined(Biber::Config->getoption('sourcemap'))) {
-    # User maps
-    if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'user' } Biber::Config->getoption('sourcemap')->@* ) {
-      push $smaps->@*, $m;
+    # User maps, allow multiple \DeclareSourcemap
+    if (my @m = grep {$_->{datatype} eq 'bibtex' and $_->{level} eq 'user' } Biber::Config->getoption('sourcemap')->@* ) {
+      push $smaps->@*, @m;
     }
     # Style maps
     # Allow multiple style maps from multiple \DeclareStyleSourcemap
