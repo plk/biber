@@ -2296,7 +2296,7 @@ sub process_labeldate {
 
         # Did we find a labeldate - this is equivalent to checking for a year/endyear
         # as that is always present if there is a labeldate
-        if ($be->get_field($ldy) or $be->get_field($ldey)) {
+        if (defined($be->get_field($ldy)) or defined($be->get_field($ldey))) {
           # set source to field or date field prefix for a real date field
           $be->set_labeldate_info({'field' => {year       => $ldy,
                                                month      => $ldm,
