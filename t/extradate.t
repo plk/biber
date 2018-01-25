@@ -108,7 +108,7 @@ $main = $biber->datalists->get_list('custom/global//global/global');
 # extradate should be set as the minutes are the same
 eq_or_diff($main->get_extradatedata_for_key('ed5'), '1', 'labelminute scope - 1');
 eq_or_diff($main->get_extradatedata_for_key('ed6'), '2', 'labelminute scope - 2');
-eq_or_diff($bibentries->entry('ed5')->get_field('extradatescope'), 'labelhour', 'labelminute scope - 1a');
+eq_or_diff($bibentries->entry('ed5')->get_field('extradatescope'), 'labelminute', 'labelminute scope - 1a');
 # But these have no times
 ok(is_undef($main->get_extradatedata_for_key('ed1')), 'labelminute scope - 3');
 ok(is_undef($main->get_extradatedata_for_key('ed2')), 'labelminute scope - 4');

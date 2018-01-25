@@ -499,7 +499,7 @@ UTF-8). Set to "full" to try harder with a much larger set or "base" to
 use a smaller basic set. Default is "base". You may want to try "full"
 if you have less common UTF-8 characters in your data source. The recode
 sets are defined in the reencoding data file which can be customised.
-See the --recodedata option and the PDF manual. The virtual set name "null"
+See the B<--recodedata> option and the PDF manual. The virtual set name "null"
 may be specified which effectively turns off macro decoding.
 
 =item B<--debug|-D>
@@ -579,7 +579,7 @@ Set threshold for crossrefs.
 
 =item B<--namesep=[sep]>
 
-Use C<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
+Use F<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
 'and'.
 
 =item B<--no-bblxml-schema>
@@ -739,12 +739,12 @@ The legacy option B<--bblsafechars> is supported as an alias.
 =item B<--output-safecharsset=[recode set name]>
 
 The set of characters included in the conversion routine for
---output_safechars. Set to "full" to try harder with a much
+B<--output_safechars>. Set to "full" to try harder with a much
 larger set or "base" to use a basic set. Default is "base" which is
 fine for most use cases. You may need to load more macro packages to
 deal with the results of "full" (Dings, Greek characters, special
 symbols etc.). The recode sets are defined in the reencoding data file which
-can be customised. See the --recodedata option and the PDF manual.
+can be customised. See the B<--recodedata> option and the PDF manual.
 The legacy option B<--bblsafecharsset> is supported as an alias. The
 virtual set name "null" may be specified which effectively turns off macro encoding.
 
@@ -763,7 +763,7 @@ Log only errors. If this option is used more than once, don't even log errors.
 =item B<--recodedata=[file]>
 
 The data file to use for the reencoding between UTF-8 and LaTeX macros. It defines
-the sets specified with the --output_safecharsset and --decodecharsset options.
+the sets specified with the B<--output_safecharsset> and B<--decodecharsset> options.
 It defaults to F<recode_data.xml> in the same directory as Biber's F<Recode.pm> module.
 See the PDF documentation for the format of this file. If this option is
 used, then F<file> should be somewhere C<kpsewhich> can find it.

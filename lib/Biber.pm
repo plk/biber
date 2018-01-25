@@ -2000,8 +2000,8 @@ sub process_extradate {
     foreach my $scope ($edspec->@*) {
       # Use the first field in the scope which we find and ignore the rest
       foreach my $field ($scope->@*) {
-        if (my $val = $be->get_field($field)) {
-          $datestring .= $val;
+        if (defined($be->get_field($field))) {
+          $datestring .= $be->get_field($field);
           $edscope = $field;
           last;
         }
