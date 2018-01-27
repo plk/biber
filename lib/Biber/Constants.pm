@@ -17,6 +17,7 @@ our @EXPORT = qw{
                   $BCF_VERSION
                   $BBL_VERSION
                   $BIBER_SORT_FINAL
+                  $BIBER_SUPPRESS_FINAL
                   $BIBER_SORT_NULL
                   $LABEL_FINAL
                   %CONFIG_DEFAULT_BIBLATEX

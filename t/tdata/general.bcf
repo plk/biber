@@ -1877,6 +1877,7 @@
     <bcf:citekey order="25">rvonr</bcf:citekey>
     <bcf:citekey order="26">others1</bcf:citekey>
     <bcf:citekey order="26">others2</bcf:citekey>
+    <bcf:citekey order="27">final</bcf:citekey>
   </bcf:section>
   <!-- SORTING SCHEME -->
   <bcf:sortingtemplate name="nty">
