@@ -505,7 +505,12 @@ sub create_entry {
               }
               $rkeys->@* = grep {$newkey ne $_} $rkeys->@*;
 
-              # Need to add the clone key to the section if allkeys is set since all keys
+              # Add to the section if explicitly nocited in the map
+              if ($step->{map_entry_nocite}) {
+                $section->add_citekeys($newkey);
+              }
+
+              # Need to add the new key to the section if allkeys is set since all keys
               # are cleared for allkeys sections initially
               if ($section->is_allkeys) {
                 $section->add_citekeys($newkey);
@@ -529,6 +534,11 @@ sub create_entry {
                 $logger->debug("Source mapping (type=$level, key=$key): created '$clonekey', removing from dependent list");
               }
               $rkeys->@* = grep {$clonekey ne $_} $rkeys->@*;
+
+              # Add to the section if explicitly nocited in the map
+              if ($step->{map_entry_nocite}) {
+                $section->add_citekeys($clonekey);
+              }
 
               # Need to add the clone key to the section if allkeys is set since all keys
               # are cleared for allkeys sections initially
