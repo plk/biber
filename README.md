@@ -1,7 +1,9 @@
 # OVERVIEW
 
-Biber is a BibTeX replacement for users of biblatex, with full Unicode
-support.
+Biber is a sophisticated bibliography processing backend for the LaTeX
+biblatex package. It supports a unsurpassed feature set for automated
+conformance to complex bibliography style requirements such as labelling,
+sorting and name handling. It has comprehensive Unicode support.
 
 **Please note**--the default download for all platforms is 64-bit. Please
 look in the files section for the correct 32-bit platform instead of
@@ -50,7 +52,7 @@ There is a section there on how to do this. The PDF documentation is in the
 
 ## LICENCE
 
-Copyright 2009-2017 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2018 François Charette and Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.
