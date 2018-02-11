@@ -766,6 +766,7 @@ sub normalise_utf8 {
 
 sub inits {
   my $istring = shift;
+  $istring =~ s/[{}]//; # Remove any spurious braces left by btparse inits routines
   return [ split(/(?<!\\)~/, $istring) ];
 }
 
