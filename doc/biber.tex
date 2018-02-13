@@ -111,7 +111,9 @@ were possible. This change has some normalisation consequences:
 \item Fields which are not defined in the data model described in the
   default \file{biber-tool.conf} are ignored and are neither read nor
   output. If custom fields are required, they should be defined in the data
-  model by using a custom tool mode config file (see below).
+  model by using a custom tool mode config file (see below). If you would
+  like to have ignored fields reported on, use the
+  \opt{--validate-datamodel} option.
 \end{itemize}
 
 \minisec{1.9}
@@ -660,7 +662,7 @@ an example config file which displays the \biber\ defaults:
   <validate_bltxml>0</validate_bltxml>
   <validate_config>0</validate_config>
   <validate_control>0</validate_control>
-  <validate_structure>0</validate_structure>
+  <validate_datamodel>0</validate_datamodel>
   <wraplines>0</wraplines>
   <xsvsep>\s*,\s*</xsvsep>
 </config>
