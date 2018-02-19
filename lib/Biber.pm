@@ -298,7 +298,7 @@ sub parse_ctrlfile {
   my $ctrl_file_path = locate_biber_file($ctrl_file);
   Biber::Config->set_ctrlfile_path($ctrl_file_path);
 
-  biber_error("Cannot find control file '$ctrl_file'! - did you pass the \"backend=biber\" option to BibLaTeX?") unless ($ctrl_file_path and -e $ctrl_file_path);
+  biber_error("Cannot find control file '$ctrl_file'!") unless ($ctrl_file_path and -e $ctrl_file_path);
 
   # Early check to make sure .bcf is well-formed. If not, this means that the last biblatex run
   # exited prematurely while writing the .bcf. This results is problems for latexmk. So, if the
