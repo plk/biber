@@ -386,6 +386,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \strng{authorbibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authornamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authorfullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \field{extraname}{1}
       \field{labelalpha}{Bro92}
       \field{sortinit}{B}
       \field{sortinithash}{276475738cc058478c1677046f857703}
@@ -415,6 +416,7 @@ my $t2 = q|    \entry{t2}{misc}{}
       \strng{authorbibnamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authornamehash}{858fcf9483ec29b7707a7dda2dde7a6f}
       \strng{authorfullhash}{858fcf9483ec29b7707a7dda2dde7a6f}
+      \field{extraname}{2}
       \field{labelalpha}{Bro94}
       \field{sortinit}{B}
       \field{sortinithash}{276475738cc058478c1677046f857703}
@@ -521,6 +523,7 @@ my $url1 = q|    \entry{url1}{misc}{}
       \strng{authorbibnamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{authornamehash}{b2106a3dda6c5a4879a0cab37e9cca55}
       \strng{authorfullhash}{b2106a3dda6c5a4879a0cab37e9cca55}
+      \field{extraname}{4}
       \field{labelalpha}{Ali05}
       \field{sortinit}{A}
       \field{sortinithash}{d77c7cdd82ff690d4c3ef13216f92f0b}
@@ -704,6 +707,7 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
       \strng{authorbibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authornamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authorfullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \field{extraname}{1}
       \field{labelalpha}{Flu}
       \field{sortinit}{F}
       \field{sortinithash}{669c706c6f1fbf3b5a83d26f1d9e9e72}
@@ -728,6 +732,7 @@ my $isbn2 = q|    \entry{isbn2}{misc}{}
       \strng{authorbibnamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authornamehash}{f6595ccb9db5f634e7bb242a3f78e5f9}
       \strng{authorfullhash}{f6595ccb9db5f634e7bb242a3f78e5f9}
+      \field{extraname}{2}
       \field{labelalpha}{Flu}
       \field{sortinit}{F}
       \field{sortinithash}{669c706c6f1fbf3b5a83d26f1d9e9e72}
@@ -770,6 +775,7 @@ my $clone1 = q|    \entry{snk1}{book}{}
       \strng{authorbibnamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authornamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authorfullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \field{extraname}{2}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
       \field{sortinithash}{75dd7385c90b2252c3ae853a80ca853b}
@@ -798,6 +804,7 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
       \strng{authorbibnamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authornamehash}{83330b0520b5d4ea57529a23b404d43d}
       \strng{authorfullhash}{83330b0520b5d4ea57529a23b404d43d}
+      \field{extraname}{1}
       \field{labelalpha}{vDoe}
       \field{sortinit}{v}
       \field{sortinithash}{75dd7385c90b2252c3ae853a80ca853b}

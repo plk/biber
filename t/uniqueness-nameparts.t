@@ -282,6 +282,7 @@ my $un1b = q|    \entry{un1}{article}{}
       \strng{authorbibnamehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{authornamehash}{329d8f9192ea3349d700160c9ddb505d}
       \strng{authorfullhash}{329d8f9192ea3349d700160c9ddb505d}
+      \field{extraname}{5}
       \field{labelalpha}{SmiJohSim}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
@@ -360,6 +361,7 @@ my $un4b = q|    \entry{un4}{article}{}
       \strng{authorbibnamehash}{f6038a264619efefd49c7daac56424ca}
       \strng{authornamehash}{f6038a264619efefd49c7daac56424ca}
       \strng{authorfullhash}{f6038a264619efefd49c7daac56424ca}
+      \field{extraname}{1}
       \field{labelalpha}{SmiAlaSim}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
@@ -388,6 +390,7 @@ my $un5 = q|    \entry{un5}{article}{uniquenametemplatename=test3}
       \strng{authorbibnamehash}{74fba0d07ca65976bbff1034f9bb22e6}
       \strng{authornamehash}{74fba0d07ca65976bbff1034f9bb22e6}
       \strng{authorfullhash}{74fba0d07ca65976bbff1034f9bb22e6}
+      \field{extraname}{2}
       \field{labelalpha}{SmiArtSim}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
@@ -416,6 +419,7 @@ my $un6 = q|    \entry{un6}{article}{}
       \strng{authorbibnamehash}{8100e7d06d05938e91bf8863f5c20e33}
       \strng{authornamehash}{8100e7d06d05938e91bf8863f5c20e33}
       \strng{authorfullhash}{8100e7d06d05938e91bf8863f5c20e33}
+      \field{extraname}{3}
       \field{labelalpha}{SmiArtSmy}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
@@ -444,6 +448,7 @@ my $un7 = q|    \entry{un7}{article}{}
       \strng{authorbibnamehash}{c21736158273b6f2f368818459734e04}
       \strng{authornamehash}{c21736158273b6f2f368818459734e04}
       \strng{authorfullhash}{c21736158273b6f2f368818459734e04}
+      \field{extraname}{4}
       \field{labelalpha}{SmiArtSme}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}

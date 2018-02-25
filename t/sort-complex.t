@@ -120,6 +120,7 @@ my $l4 = q|    \entry{L4}{book}{}
       \strng{authorbibnamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authornamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authorfullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \field{extraname}{2}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
@@ -151,6 +152,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \field{extraname}{1}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
@@ -182,6 +184,7 @@ my $l2 = q|    \entry{L2}{book}{}
       \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \field{extraname}{3}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
@@ -213,6 +216,7 @@ my $l3 = q|    \entry{L3}{book}{}
       \strng{authorbibnamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authornamehash}{bd051a2f7a5f377e3a62581b0e0f8577}
       \strng{authorfullhash}{bd051a2f7a5f377e3a62581b0e0f8577}
+      \field{extraname}{2}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
@@ -246,6 +250,7 @@ my $l5 = q|    \entry{L5}{book}{}
       \strng{authorbibnamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authornamehash}{6eb389989020e8246fee90ac93fcecbe}
       \strng{authorfullhash}{6eb389989020e8246fee90ac93fcecbe}
+      \field{extraname}{1}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}

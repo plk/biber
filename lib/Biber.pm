@@ -1780,6 +1780,9 @@ sub process_entries_post {
     # generate information for tracking extradate
     $self->process_extradate($citekey, $dlist);
 
+    # generate information for tracking extraname
+    $self->process_extraname($citekey, $dlist);
+
     # generate information for tracking extratitle
     $self->process_extratitle($citekey, $dlist);
 
@@ -2013,6 +2016,41 @@ sub process_extradate {
     $be->set_field('extradatescope', $edscope);
     $dlist->set_entryfield($citekey, 'namedateparts', $tracking_string);
     $dlist->incr_seen_namedateparts($namehash, $datestring);
+  }
+
+  return;
+}
+
+=head2 process_extraname
+
+    Track labelname only for generation of extraname
+
+=cut
+
+sub process_extraname {
+  my ($self, $citekey, $dlist) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+
+  if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+    return;
+  }
+
+  if ($logger->is_trace()) {# performance tune
+    $logger->trace("Creating extraname information for '$citekey'");
+  }
+
+  my $namehash;
+  if (my $lni = $be->get_labelname_info) {
+    $namehash = $self->_getnamehash_u($citekey, $be->get_field($lni), $dlist);
+  }
+
+  # Don't bother with extraname when there is no labelname
+  if (defined($namehash)) {
+    $dlist->set_entryfield($citekey, 'labelnamehash', $namehash);
+    $dlist->incr_seen_labelname($namehash);
   }
 
   return;
@@ -3516,6 +3554,13 @@ sub generate_contextdata {
     # Only generate extra* information if skiplab is not set.
     # Don't forget that skiplab is implied for set members
     unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
+      # extraname
+      if (my $labelnamehash = $dlist->get_entryfield($key, 'labelnamehash')) {
+        if ($dlist->get_seen_labelname($labelnamehash) > 1) {
+          my $v = $dlist->incr_seen_extraname($labelnamehash);
+          $dlist->set_extranamedata_for_key($key, $v);
+        }
+      }
       # extradate
       if (Biber::Config->getblxoption('labeldateparts', $bee)) {
         my $namedateparts = $dlist->get_entryfield($key, 'namedateparts');

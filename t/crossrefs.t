@@ -313,6 +313,7 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \strng{editorbibnamehash}{344a7f427fb765610ef96eb7bce95257}
       \strng{editornamehash}{344a7f427fb765610ef96eb7bce95257}
       \strng{editorfullhash}{344a7f427fb765610ef96eb7bce95257}
+      \field{extraname}{2}
       \field{sortinit}{A}
       \field{sortinithash}{d77c7cdd82ff690d4c3ef13216f92f0b}
       \true{uniquetitle}
@@ -363,6 +364,7 @@ my $cr7 = q|    \entry{cr7}{inbook}{}
       \strng{bookauthorbibnamehash}{91a1dd4aeed3c4ec29ca74c4e778be5f}
       \strng{bookauthornamehash}{91a1dd4aeed3c4ec29ca74c4e778be5f}
       \strng{bookauthorfullhash}{91a1dd4aeed3c4ec29ca74c4e778be5f}
+      \field{extraname}{1}
       \field{sortinit}{A}
       \field{sortinithash}{d77c7cdd82ff690d4c3ef13216f92f0b}
       \true{uniquetitle}
@@ -397,6 +399,7 @@ my $cr8 = q|    \entry{cr8}{incollection}{}
       \strng{authorbibnamehash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{authornamehash}{3d449e56eb3ca1ae80dc99a18d689795}
       \strng{authorfullhash}{3d449e56eb3ca1ae80dc99a18d689795}
+      \field{extraname}{4}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \true{singletitle}
@@ -567,6 +570,7 @@ my $xr4 = q|    \entry{xr4}{inbook}{}
       \strng{authorbibnamehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{authornamehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
+      \field{extraname}{1}
       \field{sortinit}{M}
       \field{sortinithash}{cfd219b90152c06204fab207bc6c7cab}
       \field{labelnamesource}{author}
@@ -594,6 +598,7 @@ my $mxr = q|    \entry{mxr}{inbook}{}
       \strng{authorbibnamehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{authornamehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
+      \field{extraname}{2}
       \field{sortinit}{M}
       \field{sortinithash}{cfd219b90152c06204fab207bc6c7cab}
       \field{labelnamesource}{author}
@@ -618,6 +623,7 @@ my $mcr = q|    \entry{mcr}{inbook}{}
       \strng{authorbibnamehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{authornamehash}{7804ffef086c0c4686c235807f5cb502}
       \strng{authorfullhash}{7804ffef086c0c4686c235807f5cb502}
+      \field{extraname}{3}
       \field{sortinit}{M}
       \field{sortinithash}{cfd219b90152c06204fab207bc6c7cab}
       \field{labelnamesource}{author}
@@ -652,6 +658,7 @@ my $ccr1 = q|    \entry{ccr2}{book}{}
       \strng{editorbibnamehash}{cfee758a1c82df2e26af1985e061bb0a}
       \strng{editornamehash}{cfee758a1c82df2e26af1985e061bb0a}
       \strng{editorfullhash}{cfee758a1c82df2e26af1985e061bb0a}
+      \field{extraname}{1}
       \field{sortinit}{V}
       \field{sortinithash}{75dd7385c90b2252c3ae853a80ca853b}
       \true{uniquetitle}
@@ -751,6 +758,7 @@ my $xc2 = q|    \entry{xc2}{inbook}{}
       \strng{bookauthorbibnamehash}{1a0f7d518cccdad859a74412ef956474}
       \strng{bookauthornamehash}{1a0f7d518cccdad859a74412ef956474}
       \strng{bookauthorfullhash}{1a0f7d518cccdad859a74412ef956474}
+      \field{extraname}{2}
       \field{sortinit}{C}
       \field{sortinithash}{963e9d84a3da2344e8833203de5aed05}
       \true{xrefsource}
@@ -793,6 +801,7 @@ my $sup1 = q|    \entry{sup1}{mvbook}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{3}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \true{crossrefsource}
@@ -817,6 +826,7 @@ my $sup2 = q|    \entry{sup2}{book}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{1}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \true{singletitle}

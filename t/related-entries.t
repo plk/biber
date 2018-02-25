@@ -54,6 +54,7 @@ my $k1 = q|    \entry{key1}{article}{}
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{extraname}{1}
       \field{sortinit}{1}
       \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
       \field{extradatescope}{labelyear}
@@ -92,6 +93,7 @@ my $k2 = q|    \entry{key2}{inbook}{}
       \strng{authorbibnamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authornamehash}{a517747c3d12f99244ae598910d979c5}
       \strng{authorfullhash}{a517747c3d12f99244ae598910d979c5}
+      \field{extraname}{2}
       \field{sortinit}{2}
       \field{sortinithash}{cbff857e587bcb4635511624d773949e}
       \field{extradatescope}{labelyear}
@@ -326,6 +328,7 @@ my $un1 = q|    \entry{kullback}{book}{}
       \strng{authorbibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authornamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \field{extraname}{1}
       \field{sortinit}{5}
       \field{sortinithash}{3c19c3776b658b3558e9e2e4840c01e2}
       \field{extradatescope}{year}
@@ -359,6 +362,7 @@ my $un2 = q|    \entry{kullback:related}{book}{}
       \strng{authorbibnamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authornamehash}{34c5bbf9876c37127c3abe4e7d7a7198}
       \strng{authorfullhash}{34c5bbf9876c37127c3abe4e7d7a7198}
+      \field{extraname}{2}
       \field{sortinit}{6}
       \field{sortinithash}{57e57fb8451e7fcfa45d1e069f6d3136}
       \field{extradatescope}{year}

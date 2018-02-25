@@ -337,6 +337,11 @@ sub set_output_entry {
     }
   }
 
+  # Output extraname if there is a labelname
+  if ($be->get_labelname_info) {
+    $acc .= "      <BDS>EXTRANAME</BDS>\n";
+  }
+
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
     $acc .= "      <BDS>LABELALPHA</BDS>\n";
   }

@@ -86,6 +86,7 @@ my $l13c = q|    \entry{L13}{book}{}
       \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \field{extraname}{3}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
       \field{extradatescope}{labelyear}
@@ -123,6 +124,7 @@ my $l14 = q|    \entry{L14}{book}{}
       \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \field{extraname}{4}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
       \field{extradate}{3}
@@ -164,6 +166,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \strng{authorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{authorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \field{extraname}{12}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
       \field{extradate}{4}
@@ -196,6 +199,7 @@ my $l16 = q|    \entry{L16}{proceedings}{}
       \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \field{extraname}{13}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
       \field{extradate}{7}
@@ -234,6 +238,7 @@ my $l17 = q|    \entry{L17}{proceedings}{}
       \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \field{extraname}{5}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
       \field{extradate}{4}
@@ -292,6 +297,7 @@ my $l17c = q|    \entry{L17}{proceedings}{}
       \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \field{extraname}{5}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
       \field{extradatescope}{labelyear}
@@ -349,6 +355,7 @@ my $l17e = q|    \entry{L17}{proceedings}{}
       \strng{editorbibnamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editornamehash}{8c77336299b25bdada7bf8038f46722f}
       \strng{editorfullhash}{8c77336299b25bdada7bf8038f46722f}
+      \field{extraname}{5}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
       \field{extradatescope}{labelyear}
@@ -470,6 +477,7 @@ my $era1 = q|    \entry{era1}{article}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{9}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradatescope}{labelyear}
@@ -502,6 +510,7 @@ my $era2 = q|    \entry{era2}{inproceedings}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{10}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradatescope}{labelyear}
@@ -535,6 +544,7 @@ my $era3 = q|    \entry{era3}{inproceedings}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{11}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradatescope}{labelyear}
@@ -568,6 +578,7 @@ my $era4 = q|    \entry{era4}{inproceedings}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{6}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradatescope}{labelyear}
@@ -609,6 +620,7 @@ my $time1 = q|    \entry{time1}{article}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{2}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradatescope}{labelyear}
@@ -657,6 +669,7 @@ my $range1 = q|    \entry{range1}{inproceedings}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{7}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradate}{1}
@@ -697,6 +710,7 @@ my $range2 = q|    \entry{range2}{inproceedings}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{8}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradate}{2}
@@ -737,6 +751,7 @@ my $season1 = q|    \entry{season1}{inproceedings}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{1}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradatescope}{labelyear}
@@ -768,6 +783,7 @@ my $unspec1 = q|    \entry{unspec1}{inproceedings}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{4}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradatescope}{labelyear}
@@ -820,6 +836,7 @@ my $unspec2 = q|    \entry{unspec2}{article}{}
       \strng{authorbibnamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authornamehash}{556c8dba145b472e6a8598d506f7cbe2}
       \strng{authorfullhash}{556c8dba145b472e6a8598d506f7cbe2}
+      \field{extraname}{3}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{extradatescope}{labelyear}

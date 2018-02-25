@@ -73,6 +73,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \strng{authorbibnamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authornamehash}{51db4bfd331cba22959ce2d224c517cd}
       \strng{authorfullhash}{51db4bfd331cba22959ce2d224c517cd}
+      \field{extraname}{2}
       \field{sortinit}{E}
       \field{sortinithash}{f615fb9c6fba11c6f962fb3fd599810e}
       \field{extradatescope}{labelyear}

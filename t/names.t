@@ -511,6 +511,7 @@ my $l15 = q|    \entry{L15}{book}{}
       \strng{authorbibnamehash}{b30b0fc69681fd11ad5d75a880124091}
       \strng{authornamehash}{b30b0fc69681fd11ad5d75a880124091}
       \strng{authorfullhash}{b30b0fc69681fd11ad5d75a880124091}
+      \field{extraname}{1}
       \field{sortinit}{v}
       \field{sortinithash}{75dd7385c90b2252c3ae853a80ca853b}
       \field{labelnamesource}{author}
@@ -533,6 +534,7 @@ my $l16 = q|    \entry{L16}{book}{}
       \strng{authorbibnamehash}{2b17c50dc666b9cc73d132da9ef08c7b}
       \strng{authornamehash}{2b17c50dc666b9cc73d132da9ef08c7b}
       \strng{authorfullhash}{2b17c50dc666b9cc73d132da9ef08c7b}
+      \field{extraname}{2}
       \field{sortinit}{v}
       \field{sortinithash}{75dd7385c90b2252c3ae853a80ca853b}
       \field{labelnamesource}{author}
@@ -553,6 +555,7 @@ my $l17 = q|    \entry{L17}{book}{}
       \strng{authorbibnamehash}{766d5329cf995fcc7c1cef19de2a2ae8}
       \strng{authornamehash}{766d5329cf995fcc7c1cef19de2a2ae8}
       \strng{authorfullhash}{766d5329cf995fcc7c1cef19de2a2ae8}
+      \field{extraname}{1}
       \field{sortinit}{L}
       \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
       \field{labelnamesource}{author}
@@ -573,6 +576,7 @@ my $l18 = q|    \entry{L18}{book}{}
       \strng{authorbibnamehash}{58620d2c7d6839bac23306c732c563fb}
       \strng{authornamehash}{58620d2c7d6839bac23306c732c563fb}
       \strng{authorfullhash}{58620d2c7d6839bac23306c732c563fb}
+      \field{extraname}{2}
       \field{sortinit}{L}
       \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
       \field{labelnamesource}{author}
@@ -654,6 +658,7 @@ my $l21 = q|    \entry{L21}{book}{}
       \strng{authorbibnamehash}{b3df6330af0651b93bce079a36dea339}
       \strng{authornamehash}{b3df6330af0651b93bce079a36dea339}
       \strng{authorfullhash}{b3df6330af0651b93bce079a36dea339}
+      \field{extraname}{1}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{labelnamesource}{author}
@@ -717,6 +722,7 @@ my $l23 = q|    \entry{L23}{book}{}
       \strng{authorbibnamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authornamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authorfullhash}{4389a3c0dc7da74487b50808ba9436ad}
+      \field{extraname}{3}
       \field{sortinit}{S}
       \field{sortinithash}{322b1d5276f2f6c1bccdcd15920dbee6}
       \field{labelnamesource}{author}
