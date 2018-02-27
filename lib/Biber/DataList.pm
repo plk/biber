@@ -2116,6 +2116,12 @@ sub instantiate_entry {
       }
     }
 
+    # extraname
+    if (my $e = $self->get_extranamedata_for_key($key)) {
+      my $str = "<bbl:field name=\"extraname\">$e</bbl:field>";
+      $entry_string =~ s|<BDS>EXTRANAME</BDS>|$str|gxms;
+    }
+
     # extradate
     if (my $e = $self->get_extradatedata_for_key($key)) {
       my $str = "<bbl:field name=\"extradate\">$e</bbl:field>";

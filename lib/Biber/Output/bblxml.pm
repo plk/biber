@@ -159,6 +159,7 @@ sub set_output_entry {
     }
     $xml->endTag();# options
   }
+
   # Generate set information
   # Set parents are special and need very little
   if ($bee eq 'set') {# Set parents get <set> entry ...
@@ -295,8 +296,13 @@ sub set_output_entry {
     $xml->dataElement('BDS', "${namefield}BIBNAMEHASH");
   }
 
+  # Output extraname if there is a labelname
+  if ($be->get_labelname_info) {
+    $xml->dataElement('BDS', 'EXTRANAME');
+  }
+
   if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
-      $xml->dataElement('BDS', 'LABELALPHA');
+    $xml->dataElement('BDS', 'LABELALPHA');
   }
 
   $xml->dataElement('BDS', 'SORTINIT');

@@ -162,6 +162,7 @@
         <bbl:field name="authornamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="authorfullhash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="authorbibnamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
+        <bbl:field name="extraname">1</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">9fd838a31ba64d981e8f44562bd33f89</bbl:field>
@@ -197,6 +198,7 @@
         <bbl:field name="authornamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="authorfullhash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="authorbibnamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
+        <bbl:field name="extraname">2</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">9fd838a31ba64d981e8f44562bd33f89</bbl:field>
@@ -518,6 +520,7 @@
         <bbl:field name="authornamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="authorfullhash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="authorbibnamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
+        <bbl:field name="extraname">1</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">9fd838a31ba64d981e8f44562bd33f89</bbl:field>
@@ -553,6 +556,7 @@
         <bbl:field name="authornamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="authorfullhash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
         <bbl:field name="authorbibnamehash">fcbea740aeb72b8e941e0d4aa9f6a9c6</bbl:field>
+        <bbl:field name="extraname">2</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
         <bbl:field name="sortinithash">9fd838a31ba64d981e8f44562bd33f89</bbl:field>

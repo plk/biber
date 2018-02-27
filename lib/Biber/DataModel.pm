@@ -1550,6 +1550,7 @@ sub generate_bblxml_schema {
               sortinit
               sortinithash
               sortinithash
+              extraname
               extradate
               labelyear
               labelmonth
