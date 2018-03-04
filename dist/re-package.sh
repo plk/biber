@@ -17,48 +17,75 @@ mkdir -p ${ROOT}/source
 
 # Linux
 cd ${ROOT}/binaries/Linux
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Linux/biber-linux_x86_64.tar.gz
-[ $? -eq 0 ] || exit 1
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Linux/biber-linux_x86_32.tar.gz
-[ $? -eq 0 ] || exit 1
-
+if [ ! -e $ROOT/binaries/Linux/biber-linux_x86_64.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Linux/biber-linux_x86_64.tar.gz
+  [ $? -eq 0 ] || exit 1
+fi
+if [ ! -e $ROOT/binaries/Linux/biber-linux_x86_32.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Linux/biber-linux_x86_32.tar.gz
+  [ $? -eq 0 ] || exit 1
+fi
 # FreeBSD
 cd ${ROOT}/binaries/FreeBSD
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/FreeBSD/biber-amd64-freebsd.tar.xz
-[ $? -eq 0 ] || exit 1
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/FreeBSD/biber-i386-freebsd.tar.xz
-[ $? -eq 0 ] || exit 1
+if [ ! -e $ROOT/binaries/FreeBSD/biber-amd64-freebsd.tar.xz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/FreeBSD/biber-amd64-freebsd.tar.xz
+  [ $? -eq 0 ] || exit 1
+fi
+if [ ! -e $ROOT/binaries/FreeBSD/biber-i386-freebsd.tar.xz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/FreeBSD/biber-i386-freebsd.tar.xz
+  [ $? -eq 0 ] || exit 1
+fi
 
 # Windows
 cd ${ROOT}/binaries/Windows
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Windows/biber-MSWIN64.zip
-[ $? -eq 0 ] || exit 1
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Windows/biber-MSWIN32.zip
-[ $? -eq 0 ] || exit 1
+if [ ! -e $ROOT/binaries/Windows/biber-MSWIN64.zip ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Windows/biber-MSWIN64.zip
+  [ $? -eq 0 ] || exit 1
+fi
+if [ ! -e $ROOT/binaries/Windows/biber-MSWIN32.zip ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Windows/biber-MSWIN32.zip
+  [ $? -eq 0 ] || exit 1
+fi
 
 # OSX_Intel
 cd ${ROOT}/binaries/OSX_Intel
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwin_x86_i386.tar.gz
-[ $? -eq 0 ] || exit 1
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
-[ $? -eq 0 ] || exit 1
+if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwin_x86_i386.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwin_x86_i386.tar.gz
+  [ $? -eq 0 ] || exit 1
+fi
+if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
+  [ $? -eq 0 ] || exit 1
+fi
 
 # Solaris_Intel
 cd ${ROOT}/binaries/Solaris_Intel
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Solaris_Intel/biber-x86_64-pc-solaris2.11.tar.xz
-[ $? -eq 0 ] || exit 1
+if [ ! -e $ROOT/binaries/Solaris_Intel/biber-x86_64-pc-solaris2.11.tar.xz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Solaris_Intel/biber-x86_64-pc-solaris2.11.tar.xz
+  [ $? -eq 0 ] || exit 1
+fi
+if [ ! -e $ROOT/binaries/Solaris_Intel/biber-i386-pc-solaris2.11.tar.xz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Solaris_Intel/biber-i386-pc-solaris2.11.tar.xz
+  [ $? -eq 0 ] || exit 1
+fi
 
 # Cygwin
 cd ${ROOT}/binaries/Cygwin
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Cygwin/biber-cygwin64.tar.gz
-[ $? -eq 0 ] || exit 1
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Cygwin/biber-cygwin32.tar.gz
-[ $? -eq 0 ] || exit 1
+if [ ! -e $ROOT/binaries/Cygwin/biber-cygwin64.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Cygwin/biber-cygwin64.tar.gz
+  [ $? -eq 0 ] || exit 1
+fi
+if [ ! -e $ROOT/binaries/Cygwin/Cygwin/biber-cygwin32.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Cygwin/biber-cygwin32.tar.gz
+ [ $? -eq 0 ] || exit 1
+fi
 
 # ARM
 cd ${ROOT}/binaries/ARM
-/opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/ARM/biber-linux_armel.tar.gz
-#[ $? -eq 0 ] || exit 1
+if [ ! -e $ROOT/binaries/ARM/biber-linux_armel.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/ARM/biber-linux_armel.tar.gz
+  #[ $? -eq 0 ] || exit 1
+fi
 
 # Documentation
 cd ${ROOT}/documentation
