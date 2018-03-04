@@ -330,6 +330,7 @@ sub _config_file_set {
                                                             qr/\Amap\z/,
                                                             qr/\Amap_step\z/,
                                                             qr/\Aper_type\z/,
+                                                            qr/\Aper_nottype\z/,
                                                             qr/\Aper_datasource\z/,
                                                             qr/\Atype_pair\z/,
                                                             qr/\Ainherit\z/,

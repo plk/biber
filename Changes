@@ -1,5 +1,8 @@
 Revision history for Biber
 
+2.11   (2018-02-14)
+       * New entrynocite option for maps which create/clone entries 
+       * Misc bug fixes
 2.10   (2017-12-19)
        * Misc bug fixes
 2.9    (2017-11-04)
