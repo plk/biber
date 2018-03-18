@@ -216,12 +216,26 @@ my $encode7 = q|    \entry{test}{book}{}
 my $outvar;
 my $output;
 
+sub change_ds_encoding {
+  my ($name, $encoding) = @_;
+  my $section = $biber->sections->get_section(0);
+  my $dss = $section->get_datasources;
+  foreach my $ds ($section->get_datasources->@*) {
+    if ($ds->{name} eq $name) {
+      $ds->{encoding} = $encoding;
+    }
+  }
+}
+
+
 # Latin9 .bib -> UTF-8 .bbl
 $biber->parse_ctrlfile('encoding1.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
+
 # Biber options
-Biber::Config->setoption('input_encoding', 'latin9');
+change_ds_encoding('encoding1.bib', 'latin9');
 Biber::Config->setoption('output_encoding', 'UTF-8');
+
 # Now generate the information
 $biber->prepare;
 # Get reference to output object
@@ -235,7 +249,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1
 $biber->parse_ctrlfile('encoding2.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
-Biber::Config->setoption('input_encoding', 'UTF-8');
+change_ds_encoding('encoding2.bib', 'UTF-8');
 Biber::Config->setoption('output_encoding', 'UTF-8');
 # Now generate the information
 $biber->prepare;
@@ -250,7 +264,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1
 $biber->parse_ctrlfile('encoding5.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
-Biber::Config->setoption('input_encoding', 'UTF-8');
+change_ds_encoding('encoding2.bib', 'UTF-8');
 Biber::Config->setoption('output_encoding', 'latin1');
 # Now generate the information
 $biber->prepare;
@@ -265,7 +279,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode5
 $biber->parse_ctrlfile('encoding6.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
-Biber::Config->setoption('input_encoding', 'UTF-8');
+change_ds_encoding('encoding6.bib', 'UTF-8');
 Biber::Config->setoption('output_encoding', 'UTF-8');
 Biber::Config->setoption('output_safechars', 1);
 # Now generate the information
@@ -281,7 +295,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode6
 $biber->parse_ctrlfile('encoding6.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
-Biber::Config->setoption('input_encoding', 'UTF-8');
+change_ds_encoding('encoding6.bib', 'UTF-8');
 Biber::Config->setoption('output_encoding', 'UTF-8');
 Biber::Config->setoption('output_safechars', 1);
 Biber::LaTeX::Recode->init_sets('full', 'full'); # Need to do this to reset
@@ -299,7 +313,7 @@ $biber->parse_ctrlfile('encoding2.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
 Biber::Config->setoption('output_safechars', 0);
-Biber::Config->setoption('input_encoding', 'UTF-8');
+change_ds_encoding('encoding2.bib', 'UTF-8');
 Biber::Config->setoption('output_encoding', 'latin9');
 # Now generate the information
 $biber->prepare;
@@ -314,7 +328,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode1
 $biber->parse_ctrlfile('encoding3.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
-Biber::Config->setoption('input_encoding', 'latin1');
+change_ds_encoding('encoding3.bib', 'latin1');
 Biber::Config->setoption('output_encoding', 'cp1252');
 # Now generate the information
 $biber->prepare;
@@ -329,7 +343,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode2
 $biber->parse_ctrlfile('encoding4.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
-Biber::Config->setoption('input_encoding', 'latin2');
+change_ds_encoding('encoding4.bib', 'latin2');
 Biber::Config->setoption('output_encoding', 'latin3');
 # Now generate the information
 $biber->prepare;
@@ -344,7 +358,7 @@ eq_or_diff($outvar, encode(Biber::Config->getoption('output_encoding'), $encode3
 $biber->parse_ctrlfile('encoding4.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
-Biber::Config->setoption('input_encoding', 'latin2');
+change_ds_encoding('encoding4.bib', 'latin2');
 Biber::Config->setoption('output_encoding', 'latin1');
 # Now generate the information
 $biber->prepare;
@@ -364,7 +378,7 @@ isnt($outvar, encode(Biber::Config->getoption('output_encoding'), $encode3), 'la
 $biber->parse_ctrlfile('encoding3.bcf');
 $biber->set_output_obj(Biber::Output::test->new());
 # Biber options
-Biber::Config->setoption('input_encoding', 'latin1');
+change_ds_encoding('encoding3.bib', 'latin1');
 Biber::Config->setoption('output_encoding', 'applemacce');
 # Now generate the information
 $biber->prepare;

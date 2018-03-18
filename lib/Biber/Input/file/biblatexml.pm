@@ -78,7 +78,8 @@ my $handlers = {
 =cut
 
 sub extract_entries {
-  my ($source, $keys) = @_;
+  # $encoding is ignored as it is always assumed to be UTF-8 for XML
+  my ($source, $encoding, $keys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $bibentries = $section->bibentries;
