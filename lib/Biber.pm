@@ -787,7 +787,8 @@ sub parse_ctrlfile {
                $_->{name} eq $datasource->{content}} $bibdatasources{$data->{section}[0]}->@*) {
         push $bibdatasources{$data->{section}[0]}->@*, { type     => $datasource->{type},
                                                          name     => $datasource->{content},
-                                                         datatype => $datasource->{datatype} };
+                                                         datatype => $datasource->{datatype},
+                                                         encoding => $datasource->{encoding} // Biber::Config->getoption('input_encoding')};
       }
     }
   }
@@ -4149,6 +4150,7 @@ sub fetch_data {
     last unless (@remaining_keys or $section->is_allkeys);
     my $type = $datasource->{type};
     my $name = $datasource->{name};
+    my $encoding = $datasource->{encoding};
     my $datatype = $datasource->{datatype};
     if ($datatype eq 'biblatexml') {
       my $outfile;
@@ -4181,7 +4183,7 @@ sub fetch_data {
       $logger->info("Looking for $datatype format $type '$name' for section $secnum");
     }
 
-    @remaining_keys = "${package}::extract_entries"->($name, \@remaining_keys);
+    @remaining_keys = "${package}::extract_entries"->($name, $encoding, \@remaining_keys);
   }
 
   # error reporting
@@ -4349,11 +4351,12 @@ sub get_dependents {
         last unless $missing->@*;
         my $type = $datasource->{type};
         my $name = $datasource->{name};
+        my $encoding = $datasource->{encoding};
         my $datatype = $datasource->{datatype};
         my $package = 'Biber::Input::' . $type . '::' . $datatype;
         eval "require $package" or
           biber_error("Error loading data source package '$package': $@");
-        $missing->@* = "${package}::extract_entries"->($name, $missing);
+        $missing->@* = "${package}::extract_entries"->($name, $encoding, $missing);
       }
     }
 

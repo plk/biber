@@ -104,7 +104,7 @@ sub TBSIG {
 =cut
 
 sub extract_entries {
-  my ($source, $keys) = @_;
+  my ($source, $encoding, $keys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $filename;
@@ -239,7 +239,7 @@ sub extract_entries {
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Caching data for BibTeX format file '$filename' for section $secnum");
     }
-    cache_data($filename);
+    cache_data($filename, $encoding);
   }
   else {
     if ($logger->is_debug()) {# performance tune
@@ -1299,7 +1299,7 @@ sub _urilist {
 =cut
 
 sub cache_data {
-  my $filename = shift;
+  my ($filename, $encoding) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
 
@@ -1307,7 +1307,7 @@ sub cache_data {
   $cache->{preamble}{$filename} = [];
 
   # Convert/decode file
-  my $pfilename = preprocess_file($filename);
+  my $pfilename = preprocess_file($filename, $encoding);
 
   my $bib = Text::BibTeX::File->new();
   $bib->open($pfilename, {binmode => 'utf-8', normalization => 'NFD'}) or biber_error("Cannot create Text::BibTeX::File object from $pfilename: $!");
@@ -1437,7 +1437,7 @@ sub cache_data {
 =cut
 
 sub preprocess_file {
-  my $filename = shift;
+  my ($filename, $benc) = @_;
 
   # Put the utf8 encoded file into the global biber tempdir
   # We have to do this in case we can't write to the location of the
@@ -1449,7 +1449,6 @@ sub preprocess_file {
   # We read the file in the bib encoding and then output to UTF-8, even if it was already UTF-8,
   # just in case there was a BOM so we can delete it as it makes T::B complain
   # Might fail due to encountering characters invalid in the encoding so trap and die gracefully
-  my $benc = Biber::Config->getoption('input_encoding');
   if ($benc eq 'ascii') {
     $logger->info("Reading ascii input as UTF-8");
     $benc = 'UTF-8';
