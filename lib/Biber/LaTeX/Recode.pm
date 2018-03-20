@@ -386,7 +386,7 @@ sub latex_encode {
 
   sub _wrap {
     my ($s, $map, $remap_e_raw) = @_;
-    if ($map->{$s} =~ m/^(?:text|guillemot)/) {
+    if ($map->{$s} =~ m/^(?:text|guil)/) {
       "\\"  . $map->{$s} . '{}';
     }
     elsif ($remap_e_raw->{$s}) {
