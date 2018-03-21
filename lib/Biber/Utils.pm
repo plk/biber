@@ -272,6 +272,8 @@ sub strip_noinit {
     my $re = $opt->{value};
     $string =~ s/$re//gxms;
   }
+  # remove latex macros (assuming they have only ASCII letters)
+  $string =~ s/\\[A-Za-z]+\s*\{?([^\}]+)\}?/$1/g;
   return $string;
 }
 

@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 79;
+use Test::More tests => 81;
 use Test::Differences;
 unified_diff;
 
@@ -167,3 +167,6 @@ eq_or_diff(parse_range('3--+'), [3,'+'], 'Range parsing - 5');
 # split_xsv
 eq_or_diff([split_xsv('family=a, given=a b, given-i=a b c')], ['family=a', 'given=a b', 'given-i=a b c'], 'split_xsv - 1');
 eq_or_diff([split_xsv('"family={Something, here}", given=b')], ['family={Something, here}', 'given=b'], 'split_xsv - 2');
+
+eq_or_diff(strip_noinit('\texttt{freedesktop.org}'), 'freedesktop.org', 'Name strip - 1');
+eq_or_diff(strip_noinit('\texttt freedesktop.org'), 'freedesktop.org', 'Name strip - 2');
