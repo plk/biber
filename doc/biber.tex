@@ -1392,7 +1392,7 @@ which are explained in the accompanying text. Items in
 See also the \texttt{nosort} option in section \ref{nosort}.
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<sorting scheme="+\textcolor{red}{schemename}+">
+<sortingtemplate name="+\textcolor{red}{schemename}+">
   <presort +\textcolor{blue}{type=\textcolor{red}{type}}+>+\textcolor{red}{string}+</presort>
   +\textcolor{blue}{<sortexclusion type=\textcolor{red}{type}>}+
       +\textcolor{blue}{<exclusion>\textcolor{red}{field}</exclusion>}+
@@ -1412,7 +1412,7 @@ See also the \texttt{nosort} option in section \ref{nosort}.
               $\vdots$
   </sort>
      $\vdots$
-</sorting>
+</sortingtemplate>
 \end{lstlisting}
 
 Sorting in \biber is a sophisticated procedure of building up a sorting
@@ -1483,12 +1483,12 @@ disambiguate entries with the same semantic order. For example, this is the
 definition of the \biblatex \opt{none} sorting scheme: 
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<sorting>
+<sortingtemplate>
   <presort>mm</presort>
   <sort order="1">
     <sortitem order="1">citeorder</sortitem>
   </sort>
-</sorting>
+</sortingtemplate>
 \end{lstlisting}
 %
 This sorts the bibliography purely lexically by the order of the keys in
@@ -1499,7 +1499,7 @@ sort these by year. Suppose «two» has an earlier \bibfield{YEAR} than
 «one»:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<sorting>
+<sortingtemplate>
   <presort>mm</presort>
   <sort order="1">
     <sortitem order="1">citeorder</sortitem>
@@ -1507,7 +1507,7 @@ sort these by year. Suppose «two» has an earlier \bibfield{YEAR} than
   <sort order="2">
     <sortitem order="1">year</sortitem>
   </sort>
-</sorting>
+</sortingtemplate>
 \end{lstlisting}
 %
 This sorts «two» before «one», even though lexically, «one» would sort
@@ -1557,12 +1557,12 @@ mechanism, you can sort, for example, all \bibfield{ARTICLE} entries before
 all \bibfield{BOOK} entries and then all other types of entry:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<sorting>
+<sortingtemplate>
   <presort type="article">aa</presort>
   <presort type="book">bb</presort>
   <presort>mm</presort>
      $\vdots$
-</sorting>
+</sortingtemplate>
 \end{lstlisting}
 %
 This makes it easy to divide a bibliography by type of entry.
@@ -1574,11 +1574,11 @@ For example, if you wanted to ignore the \bibfield{YEAR} field of any
 data representing a year, you could do:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<sorting>
+<sortingtemplate>
      $\vdots$
   <sortexclusion type="report">year</sortexclusion>
      $\vdots$
-</sorting>
+</sortingtemplate>
 \end{lstlisting}
 %
 It is much easier to see how intuitive this all is if you look at a
@@ -1589,7 +1589,7 @@ scheme which appears in the \file{.bcf} when you run \biblatex with no
 the \file{.bcf}:
 
 \begin{lstlisting}[language=xml,escapechar=+,mathescape=true]
-<sorting>
+<sortingtemplate>
   <presort>mm</presort>
   <sort order="1">
     <sortitem order="1">presort</sortitem>
@@ -1617,7 +1617,7 @@ the \file{.bcf}:
     <sortitem order="1" pad_side="left" pad_width="4" pad_char="0">volume</sortitem>
     <sortitem order="2">0000</sortitem>
   </sort>
-</sorting>
+</sortingtemplate>
 \end{lstlisting}
 \bigskip
 \subsubsection{The \texttt{nosort} option}\label{nosort}
