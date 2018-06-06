@@ -42,7 +42,7 @@ our @EXPORT = qw{
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '3.4';
+our $BCF_VERSION = '3.5';
 # Format version of the .bbl. Used when writing the .bbl
 our $BBL_VERSION = '3.0';
 
@@ -204,8 +204,10 @@ our %CONFIG_DEFAULT_BIBLATEX = (
                                 minbibnames   => 100,
                                 maxalphanames => 100,
                                 maxcitenames  => 100,
+                                maxsortnames  => 100,
                                 minalphanames => 100,
                                 mincitenames  => 100,
+                                minsortnames  => 100,
                                 minitems      => 100,
                                 useprefix     => 0
                                );
@@ -535,12 +537,14 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
    minbibnames       => {OUTPUT => 1},
    maxcitenames      => {OUTPUT => 1},
    mincitenames      => {OUTPUT => 1},
+   maxsortnames      => {OUTPUT => 1},
+   minsortnames      => {OUTPUT => 1},
    maxalphanames     => {OUTPUT => 0},
    minalphanames     => {OUTPUT => 0},
-   maxnames          => {OUTPUT => ['maxcitenames', 'maxbibnames'],
-                         INPUT  => ['maxcitenames', 'maxbibnames']},
-   minnames          => {OUTPUT => ['mincitenames', 'minbibnames'],
-                         INPUT  => ['mincitenames', 'minbibnames']},
+   maxnames          => {OUTPUT => ['maxcitenames', 'maxbibnames', 'maxsortnames'],
+                         INPUT  => ['maxcitenames', 'maxbibnames', 'maxsortnames']},
+   minnames          => {OUTPUT => ['mincitenames', 'minbibnames', 'minsortnames'],
+                         INPUT  => ['mincitenames', 'minbibnames', 'minsortnames']},
    nametemplates     => {OUTPUT => ['sortingnamekeytemplatename',
                                     'uniquenametemplatename',
                                     'labelalphanametemplatename'],

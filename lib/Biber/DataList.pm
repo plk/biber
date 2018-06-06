@@ -686,6 +686,29 @@ sub set_visible_bib {
   return;
 }
 
+=head2 get_visible_sort
+
+  Gets sort name list visibility
+
+=cut
+
+sub get_visible_sort {
+  my ($self, $nlid) = @_;
+  return $self->{state}{namelistdata}{$nlid}{vissort};
+}
+
+=head2 set_visible_sort
+
+  Gets sort name list visibility
+
+=cut
+
+sub set_visible_sort {
+  my ($self, $nlid, $s) = @_;
+  $self->{state}{namelistdata}{$nlid}{vissort} = $s;
+  return;
+}
+
 =head2 get_visible_alpha
 
   Gets alpha name list visibility

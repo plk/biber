@@ -39,10 +39,12 @@ start =
       maxalphanames,
       maxbibnames,
       maxcitenames,
+      maxsortnames,
       maxitems,
       minalphanames,
       minbibnames,
       mincitenames,
+      minsortnames,
       minitems,
       singletitle,
       sortalphaothers?,
@@ -74,10 +76,12 @@ start =
       maxalphanames?,
       maxbibnames?,
       maxcitenames?,
+      maxsortnames?,
       maxitems?,
       minalphanames?,
       minbibnames?,
       mincitenames?,
+      minsortnames?,
       minitems?,
       singletitle?,
       skipbib?,
@@ -663,6 +667,12 @@ maxcitenames =
     element bcf:key { "maxcitenames" },
     element bcf:value { xsd:integer }
   }
+maxsortnames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "maxsortnames" },
+    element bcf:value { xsd:integer }
+  }
 minitems =
   element bcf:option {
     attribute type { "singlevalued" },
@@ -685,6 +695,12 @@ mincitenames =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "mincitenames" },
+    element bcf:value { xsd:integer }
+  }
+minsortnames =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "minsortnames" },
     element bcf:value { xsd:integer }
   }
 sortlocale =

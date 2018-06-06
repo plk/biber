@@ -118,7 +118,7 @@ my $l1 = q|    \entry{L1}{book}{}
     \endentry
 |;
 
-my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxitems=2}
+my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxsortnames=3,maxitems=2}
       \name{author}{1}{}{%
         {{uniquename=0,uniquepart=base,hash=19eec87c959944d6d9c72434a42856ba}{%
            family={Edwards},

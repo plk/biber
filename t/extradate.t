@@ -40,6 +40,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption('maxcitenames', 1);
 Biber::Config->setblxoption('maxbibnames', 1);
+Biber::Config->setblxoption('maxsortnames', 1);
 
 # Now generate the information
 $biber->prepare;

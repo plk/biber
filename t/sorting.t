@@ -92,6 +92,9 @@ my $useprefix4  = 'ww,,Bobble!Terrence!von,,,0';
 my $useprefix2  = 'mm,,Animal!Alan!von,1998,Things,0';
 my $useprefix3  = 'mm,,von!Rabble!Richard,1998,Things,0';
 
+# min/maxsortnames
+my $msn1        = 'mm,,1961,Glashow!Sheldon,Partial Symmetries of Weak Interactions';
+
 # Sorting data schemata
 my $ssd1 = [
   { spec => "str", str => 1 },
@@ -429,8 +432,8 @@ eq_or_diff($main->get_sortdata_for_key('murray')->[0], $anyvt_la2, 'anyvt sort (
 
 Biber::Config->setblxoption('maxalphanames', 2);
 Biber::Config->setblxoption('minalphanames', 2);
-Biber::Config->setblxoption('maxbibnames', 2);
-Biber::Config->setblxoption('minbibnames', 2);
+Biber::Config->setblxoption('maxsortnames', 2);
+Biber::Config->setblxoption('minsortnames', 2);
 
 # regenerate information
 $biber->prepare;

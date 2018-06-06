@@ -1410,8 +1410,8 @@ sub _namestring {
   my $names = $be->get_field($field);
   my $str = '';
   my $count = $names->count_names;
-  # get visibility for bib - can be different to cite
-  my $visible = $dlist->get_visible_bib($names->get_id);
+  # get visibility for sorting
+  my $visible = $dlist->get_visible_sort($names->get_id);
   my $useprefix = Biber::Config->getblxoption('useprefix', $bee, $citekey);
 
   # Get the sorting name key template for this list context

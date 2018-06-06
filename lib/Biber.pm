@@ -2573,6 +2573,8 @@ sub process_visible_names {
     my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
     my $maxbn = Biber::Config->getblxoption('maxbibnames', $bee, $citekey);
     my $minbn = Biber::Config->getblxoption('minbibnames', $bee, $citekey);
+    my $maxsn = Biber::Config->getblxoption('maxsortnames', $bee, $citekey);
+    my $minsn = Biber::Config->getblxoption('minsortnames', $bee, $citekey);
     my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
     my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
 
@@ -2582,6 +2584,7 @@ sub process_visible_names {
       my $count = $nl->count_names;
       my $visible_names_cite;
       my $visible_names_bib;
+      my $visible_names_sort;
       my $visible_names_alpha;
 
       # Cap min*names for this entry at $count. Why? Because imagine we have this:
@@ -2593,6 +2596,7 @@ sub process_visible_names {
       # to operate on undef at index 3 and die
       my $l_mincn = $count < $mincn ? $count : $mincn;
       my $l_minbn = $count < $minbn ? $count : $minbn;
+      my $l_minsn = $count < $minsn ? $count : $minsn;
       my $l_minan = $count < $minan ? $count : $minan;
 
       # If name list was truncated in bib with "and others", this means that the
@@ -2624,13 +2628,26 @@ sub process_visible_names {
       if ($count > $maxbn) {
         # Visibility to the uniquelist point if uniquelist is requested
         # We know at this stage that if uniquelist is set, there are more than maxbibnames
-        # names. We also know that uniquelist > mincitenames because it is a further
-        # disambiguation on top of mincitenames so can't be less as you can't disambiguate
+        # names. We also know that uniquelist > minbibnames because it is a further
+        # disambiguation on top of minbibnames so can't be less as you can't disambiguate
         # by losing information
         $visible_names_bib = $dlist->get_uniquelist($nl->get_id) // $l_minbn;
       }
       else { # visibility is simply the full list
         $visible_names_bib = $count;
+      }
+
+      # max/minsortnames
+      if ($count > $maxsn) {
+        # Visibility to the uniquelist point if uniquelist is requested
+        # We know at this stage that if uniquelist is set, there are more than maxsortnames
+        # names. We also know that uniquelist > minsortnames because it is a further
+        # disambiguation on top of minsortnames so can't be less as you can't disambiguate
+        # by losing information
+        $visible_names_sort = $dlist->get_uniquelist($nl->get_id) // $l_minsn;
+      }
+      else { # visibility is simply the full list
+        $visible_names_sort = $count;
       }
 
       if ($logger->is_trace()) { # performance shortcut
@@ -2643,6 +2660,7 @@ sub process_visible_names {
       my $nlid = $be->get_field($n)->get_id;
       $dlist->set_visible_cite($nlid, $visible_names_cite);
       $dlist->set_visible_bib($nlid, $visible_names_bib);
+      $dlist->set_visible_sort($nlid, $visible_names_sort);
       $dlist->set_visible_alpha($nlid, $visible_names_alpha);
     }
   }
