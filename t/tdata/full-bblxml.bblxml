@@ -169,7 +169,7 @@
         <bbl:field name="extraalpha">1</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">The second volume of a five-volume book. Note the sorttitle and sortyear fields. Also note the indexsorttitle field</bbl:field>
+        <bbl:field name="annotation">The second volume of a five-volume book. Note the sorttitle field. Also note the indexsorttitle field</bbl:field>
         <bbl:field name="indexsorttitle">TeX: The Program</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
@@ -205,7 +205,7 @@
         <bbl:field name="extraalpha">2</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">The third volume of a five-volume book. Note the sorttitle and sortyear fields as well as the indextitle field</bbl:field>
+        <bbl:field name="annotation">The third volume of a five-volume book. Note the sorttitle and indextitle field</bbl:field>
         <bbl:field name="indextitle">METAFONTbook, The</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
@@ -527,7 +527,7 @@
         <bbl:field name="extraalpha">1</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">The second volume of a five-volume book. Note the sorttitle and sortyear fields. Also note the indexsorttitle field</bbl:field>
+        <bbl:field name="annotation">The second volume of a five-volume book. Note the sorttitle field. Also note the indexsorttitle field</bbl:field>
         <bbl:field name="indexsorttitle">TeX: The Program</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
@@ -563,7 +563,7 @@
         <bbl:field name="extraalpha">2</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
-        <bbl:field name="annotation">The third volume of a five-volume book. Note the sorttitle and sortyear fields as well as the indextitle field</bbl:field>
+        <bbl:field name="annotation">The third volume of a five-volume book. Note the sorttitle and indextitle field</bbl:field>
         <bbl:field name="indextitle">METAFONTbook, The</bbl:field>
         <bbl:field name="langid">english</bbl:field>
         <bbl:field name="langidopts">variant=american</bbl:field>
