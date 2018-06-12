@@ -420,6 +420,7 @@ sub parse_ctrlfile {
                                                            qr/\Aalsoset\z/,
                                                            qr/\Aconstraints\z/,
                                                            qr/\Aconstraint\z/,
+                                                           qr/\Aentryfields\z/,
                                                            qr/\Aentrytype\z/,
                                                            qr/\Adatetype\z/,
                                                            qr/\Adatalist\z/,
