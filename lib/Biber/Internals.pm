@@ -1182,9 +1182,9 @@ sub _sort_integer {
   my $dmtype = $args->[0]; # get int field type
   my $bee = $be->get_field('entrytype');
   if (my $field = $be->get_field($dmtype)) {
-    # Make and attempt to map
-    if (not looks_like_number($field)) {
-      # Make an attempt to map roman numerals to integers for sorting
+    # Make an attempt to map roman numerals to integers for sorting unless suppressed
+    if (not looks_like_number($field) and
+        not Biber::Config->getblxoption('noroman', $be->get_field('entrytype'), $citekey)) {
       $field = NFKD($field);
       if (isroman($field)) {
         $field = roman2int($field);

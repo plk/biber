@@ -1440,6 +1440,17 @@ sub generate_bblxml_schema {
   $writer->endTag();    # inset
   $writer->endTag();    # zeroOrMore
 
+  # Per-entry options
+  $writer->startTag('zeroOrMore');
+  $writer->startTag('element', 'name' => "$bbl:options");
+  $writer->startTag('oneOrMore');
+  $writer->startTag('element', 'name' => "$bbl:option");
+  $writer->emptyTag('text');# text
+  $writer->endTag();    # option
+  $writer->endTag();    # oneOrMore
+  $writer->endTag();    # options
+  $writer->endTag();    # zeroOrMore
+
   # names
   my @names = grep {not $dm->field_is_skipout($_)} $dm->get_fields_of_type('list', 'name')->@*;
 

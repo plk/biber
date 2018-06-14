@@ -144,6 +144,9 @@
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:glashow'</bbl:warning>
       </bbl:entry>
       <bbl:entry key="knuth:ct:b" type="book">
+        <bbl:options>
+          <bbl:option>noroman=true</bbl:option>
+        </bbl:options>
         <bbl:names type="author" count="1">
           <bbl:name hash="fcbea740aeb72b8e941e0d4aa9f6a9c6" uniquename="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
@@ -180,6 +183,9 @@
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="knuth:ct:c" type="book">
+        <bbl:options>
+          <bbl:option>noroman=true</bbl:option>
+        </bbl:options>
         <bbl:names type="author" count="1">
           <bbl:name hash="fcbea740aeb72b8e941e0d4aa9f6a9c6" uniquename="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
@@ -502,6 +508,9 @@
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:glashow'</bbl:warning>
       </bbl:entry>
       <bbl:entry key="knuth:ct:b" type="book">
+        <bbl:options>
+          <bbl:option>noroman=true</bbl:option>
+        </bbl:options>
         <bbl:names type="author" count="1">
           <bbl:name hash="fcbea740aeb72b8e941e0d4aa9f6a9c6" uniquename="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
@@ -538,6 +547,9 @@
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="knuth:ct:c" type="book">
+        <bbl:options>
+          <bbl:option>noroman=true</bbl:option>
+        </bbl:options>
         <bbl:names type="author" count="1">
           <bbl:name hash="fcbea740aeb72b8e941e0d4aa9f6a9c6" uniquename="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
