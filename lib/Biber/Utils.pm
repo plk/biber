@@ -1452,8 +1452,8 @@ sub get_transliterator {
 sub call_transliterator {
   my ($target, $from, $to, $text) = @_;
   if (my $tr = get_transliterator($target, $from, $to)) {
-    # using Lingua::Translit
-    return $tr->translit($text);
+    # using Lingua::Translit, NFC boundary as we are talking to external module
+    return $tr->translit(NFC($text));
   }
   else {
     return $text;
