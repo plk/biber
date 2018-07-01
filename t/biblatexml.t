@@ -55,28 +55,28 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{3}{useprefix=true}{%
-        {{hash=633a0b6ab963c5f044b56f06c6091c27}{%
+        {{hash=bdef740dab20c2b52a3b6e0563c42bdb}{%
            family={Булгаков},
            familyi={Б\\bibinitperiod},
            given={Павел\\bibnamedelima Георгиевич},
            giveni={П\\bibinitperiod\\bibinitdelim Г\\bibinitperiod},
            prefix={von},
            prefixi={v\\bibinitperiod}}}%
-        {{useprefix=false,hash=0ffcce4df8f0d0eedf2c614091ba2355}{%
+        {{useprefix=false,hash=485f1e5d5e81a43fe067b440706c4979}{%
            family={РРозенфельд},
            familyi={Р\\bibinitperiod},
            given={Борис-ZZ\\bibnamedelima Aбрамович},
            giveni={Б\\bibinithyphendelim Z\\bibinitperiod\\bibinitdelim A\\bibinitperiod},
            prefix={von},
            prefixi={v\\bibinitperiod}}}%
-        {{hash=e708d5a31534e937578abf161c867a25}{%
+        {{hash=39dcc744aabf73006cb446d70a1beea2}{%
            family={Aхмедов},
            familyi={A\\bibinitperiod},
            given={Ашраф\\bibnamedelima Ахмедович},
            giveni={A\\bibinitperiod\\bibinitdelim А\\bibinitperiod}}}%
       }
       \name{foreword}{1}{}{%
-        {{hash=0ee59e598dae22fac8e6d9d2df7e79ec}{%
+        {{hash=a7a73749ea467229221b7e9cbf870988}{%
            family={Brown},
            familyi={B\\bibinitperiod},
            given={John\\bibnamedelimb },
@@ -98,15 +98,15 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \list{publisher}{1}{%
         {Наука}%
       }
-      \strng{namehash}{835d3352054f77020fc38705080e4596}
-      \strng{fullhash}{835d3352054f77020fc38705080e4596}
-      \strng{bibnamehash}{835d3352054f77020fc38705080e4596}
-      \strng{authorbibnamehash}{835d3352054f77020fc38705080e4596}
-      \strng{authornamehash}{835d3352054f77020fc38705080e4596}
-      \strng{authorfullhash}{835d3352054f77020fc38705080e4596}
-      \strng{forewordbibnamehash}{0ee59e598dae22fac8e6d9d2df7e79ec}
-      \strng{forewordnamehash}{0ee59e598dae22fac8e6d9d2df7e79ec}
-      \strng{forewordfullhash}{0ee59e598dae22fac8e6d9d2df7e79ec}
+      \strng{namehash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{fullhash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{bibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{authorbibnamehash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{authornamehash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{authorfullhash}{3400c73d7bf3e361d36350deb4832ad7}
+      \strng{forewordbibnamehash}{a7a73749ea467229221b7e9cbf870988}
+      \strng{forewordnamehash}{a7a73749ea467229221b7e9cbf870988}
+      \strng{forewordfullhash}{a7a73749ea467229221b7e9cbf870988}
       \strng{translatorbibnamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \strng{translatornamehash}{b44eba830fe9817fbe8e53c82f1cbe04}
       \strng{translatorfullhash}{b44eba830fe9817fbe8e53c82f1cbe04}

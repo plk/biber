@@ -52,18 +52,18 @@ my $string1 = q|    \entry{Elias1955}{set}{}
 my $string2 = q|    \entry{Elias1955a}{article}{}
       \inset{Elias1955}
       \name{author}{1}{}{%
-        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{%
+        {{hash=68f587f427e068e26043d54745351d58}{%
            family={Elias},
            familyi={E\bibinitperiod},
            given={P.},
            giveni={P\bibinitperiod}}}%
       }
-      \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{bibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{authorbibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{authornamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{authorfullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{namehash}{68f587f427e068e26043d54745351d58}
+      \strng{fullhash}{68f587f427e068e26043d54745351d58}
+      \strng{bibnamehash}{68f587f427e068e26043d54745351d58}
+      \strng{authorbibnamehash}{68f587f427e068e26043d54745351d58}
+      \strng{authornamehash}{68f587f427e068e26043d54745351d58}
+      \strng{authorfullhash}{68f587f427e068e26043d54745351d58}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -86,18 +86,18 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
 my $string3 = q|    \entry{Elias1955b}{article}{}
       \inset{Elias1955}
       \name{author}{1}{}{%
-        {{hash=bdd4981ffb5a62685c993d6f9dec4c23}{%
+        {{hash=68f587f427e068e26043d54745351d58}{%
            family={Elias},
            familyi={E\bibinitperiod},
            given={P.},
            giveni={P\bibinitperiod}}}%
       }
-      \strng{namehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{fullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{bibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{authorbibnamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{authornamehash}{bdd4981ffb5a62685c993d6f9dec4c23}
-      \strng{authorfullhash}{bdd4981ffb5a62685c993d6f9dec4c23}
+      \strng{namehash}{68f587f427e068e26043d54745351d58}
+      \strng{fullhash}{68f587f427e068e26043d54745351d58}
+      \strng{bibnamehash}{68f587f427e068e26043d54745351d58}
+      \strng{authorbibnamehash}{68f587f427e068e26043d54745351d58}
+      \strng{authornamehash}{68f587f427e068e26043d54745351d58}
+      \strng{authorfullhash}{68f587f427e068e26043d54745351d58}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

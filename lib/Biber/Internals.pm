@@ -59,7 +59,7 @@ sub _getnamehash {
   }
 
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
-  return md5_hex(encode_utf8(NFC($hashkey)));
+  return md5_hex(encode_utf8(NFC(normalise_string_hash($hashkey))));
 }
 
 sub _getfullhash {
@@ -82,7 +82,7 @@ sub _getfullhash {
   }
 
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
-  return md5_hex(encode_utf8(NFC($hashkey)));
+  return md5_hex(encode_utf8(NFC(normalise_string_hash($hashkey))));
 }
 
 # Same as _getnamehash but takes account of uniquename setting for firstname
@@ -144,7 +144,7 @@ sub _getnamehash_u {
   }
 
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
-  return md5_hex(encode_utf8(NFC($hashkey)));
+  return md5_hex(encode_utf8(NFC(normalise_string_hash($hashkey))));
 }
 
 # Special hash to track per-name information
@@ -164,7 +164,7 @@ sub _genpnhash {
     $logger->trace("Creating MD5 pnhash using '$hashkey'");
   }
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
-  return md5_hex(encode_utf8(NFC($hashkey)));
+  return md5_hex(encode_utf8(NFC(normalise_string_hash($hashkey))));
 }
 
 

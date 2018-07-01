@@ -54,37 +54,37 @@ my $bibentries = $section->bibentries;
 
 my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \name{author}{4}{}{%
-        {{uniquename=0,uniquepart=base,hash=aba7750b7045425a3cf8573f7710ec18}{%
+        {{uniquename=0,uniquepart=base,hash=45569c08e4409a489ea0089b05700737}{%
            family={Marazziti},
            familyi={M\bibinitperiod},
            given={D.},
            giveni={D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=1f2c257ff6c86cffeb33019b6d8598c5}{%
+        {{uniquename=0,uniquepart=base,hash=64c5a832511e0dd6aecf02f2d598b4e4}{%
            family={Akiskal},
            familyi={A\\bibinitperiod},
            given={H.\bibnamedelimi S.},
            giveni={H\bibinitperiod\bibinitdelim S\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=e1b1769dbb6e7d04008811b49cd745a9}{%
+        {{uniquename=0,uniquepart=base,hash=161a28db2496421f437aa4390748e14d}{%
            family={Rossi},
            familyi={R\bibinitperiod},
            given={A.},
            giveni={A\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=b1d8ec8b73d39a27898e50cfa3e3c676}{%
+        {{uniquename=0,uniquepart=base,hash=a586782bf328ff75bf4f3120e1f5787d}{%
            family={Cassano},
            familyi={C\bibinitperiod},
            given={G.\bibnamedelimi B.},
            giveni={G\bibinitperiod\bibinitdelim B\bibinitperiod},
            givenun=0}}%
       }
-      \strng{namehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
-      \strng{fullhash}{ee363ce5e21ebe022f83aae896dd47f9}
-      \strng{bibnamehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
-      \strng{authorbibnamehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
-      \strng{authornamehash}{7f19319e09aa3239f02eb31ec7a4aa8b}
-      \strng{authorfullhash}{ee363ce5e21ebe022f83aae896dd47f9}
+      \strng{namehash}{a700cc0bdce78f5a1f50ff6314ff6f2a}
+      \strng{fullhash}{094b095bbb7ac93fdd3e2eafdcec0cac}
+      \strng{bibnamehash}{a700cc0bdce78f5a1f50ff6314ff6f2a}
+      \strng{authorbibnamehash}{a700cc0bdce78f5a1f50ff6314ff6f2a}
+      \strng{authornamehash}{a700cc0bdce78f5a1f50ff6314ff6f2a}
+      \strng{authorfullhash}{094b095bbb7ac93fdd3e2eafdcec0cac}
       \field{sortinit}{M}
       \field{sortinithash}{cfd219b90152c06204fab207bc6c7cab}
       \field{extradatescope}{labelyear}
@@ -113,25 +113,25 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
 
 my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \name{author}{2}{}{%
-        {{uniquename=0,uniquepart=base,hash=14c582ce40292affd427311ca8e3bc9c}{%
+        {{uniquename=0,uniquepart=base,hash=03fb065ad674e2c6269f3542112e30df}{%
            family={Abdelbar},
            familyi={A\bibinitperiod},
            given={A.M.},
            giveni={A\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=558ac9729b484b6f378e45a86582ea1d}{%
+        {{uniquename=0,uniquepart=base,hash=6ad6790ec94c4b5195bcac153b20da0e}{%
            family={Hedetniemi},
            familyi={H\bibinitperiod},
            given={S.M.},
            giveni={S\bibinitperiod},
            givenun=0}}%
       }
-      \strng{namehash}{01599a4cb58316d64208b12a07741765}
-      \strng{fullhash}{01599a4cb58316d64208b12a07741765}
-      \strng{bibnamehash}{01599a4cb58316d64208b12a07741765}
-      \strng{authorbibnamehash}{01599a4cb58316d64208b12a07741765}
-      \strng{authornamehash}{01599a4cb58316d64208b12a07741765}
-      \strng{authorfullhash}{01599a4cb58316d64208b12a07741765}
+      \strng{namehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{fullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{bibnamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{authorbibnamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{authornamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
+      \strng{authorfullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \field{sortinit}{A}
       \field{sortinithash}{d77c7cdd82ff690d4c3ef13216f92f0b}
       \field{extradatescope}{labelyear}
