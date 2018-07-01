@@ -1204,11 +1204,10 @@ sub _sort_integer {
 sub _sort_editort {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $edtypeclass = $args->[0]; # get editor type/class field
-  my $bee = $be->get_field('entrytype');
   if (Biber::Config->getblxoption('useeditor', $be->get_field('entrytype'), $citekey) and
     $be->get_field($edtypeclass)) {
     my $string = $be->get_field($edtypeclass);
-    return _translit($edtypeclass, $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit($edtypeclass, $be, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1279,10 +1278,9 @@ sub _sort_labeldate {
 sub _sort_list {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $list = $args->[0]; # get list field
-  my $bee = $be->get_field('entrytype');
   if ($be->get_field($list)) {
     my $string = $self->_liststring($citekey, $list);
-    return _translit($list, $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit($list, $be, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1295,10 +1293,9 @@ sub _sort_list {
 sub _sort_literal {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $literal = $args->[0]; # get actual field
-  my $bee = $be->get_field('entrytype');
   if (my $field = $be->get_field($literal)) {
     my $string = normalise_string_sort($field, $literal);
-    return _translit($literal, $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit($literal, $be, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1311,7 +1308,6 @@ sub _sort_literal {
 sub _sort_name {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
   my $name = $args->[0]; # get name field name
-  my $bee = $be->get_field('entrytype');
   # If there is a biblatex option which controls the use of this name, check it
   if ($CONFIG_OPTSCOPE_BIBLATEX{"use$name"} and
       not Biber::Config->getblxoption("use$name", $be->get_field('entrytype'), $citekey)) {
@@ -1319,7 +1315,7 @@ sub _sort_name {
     }
   if ($be->get_field($name)) {
     my $string = $self->_namestring($citekey, $name, $dlist);
-    return _translit($name, $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit($name, $be, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1334,14 +1330,13 @@ sub _sort_presort {
 
 sub _sort_sortname {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes) = @_;
-  my $bee = $be->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
 
   # sortname is ignored if no use<name> option is defined - see biblatex manual
   if ($be->get_field('sortname') and
       grep {Biber::Config->getblxoption("use$_", $be->get_field('entrytype'), $citekey)} $dm->get_fields_of_type('list', 'name')->@*) {
     my $string = $self->_namestring($citekey, 'sortname', $dlist);
-    return _translit('sortname', $bee, _process_sort_attributes($string, $sortelementattributes));
+    return _translit('sortname', $be, _process_sort_attributes($string, $sortelementattributes));
   }
   else {
     return '';
@@ -1546,9 +1541,17 @@ sub _liststring {
 
 # transliterate if requested
 sub _translit {
-  my ($target, $entrytype, $string) = @_;
+  my ($target, $entry, $string) = @_;
+  my $entrytype = $entry->get_field('entrytype');
   if (my $translits = Biber::Config->getblxoption('translit', $entrytype)) {
     foreach my $tr ($translits->@*) {
+      # Translit is specific to particular langids
+      if (defined($tr->{langids})) {
+        next unless my $langid = $entry->get_field('langid');
+        unless (first {fc($langid) eq fc($_)} split(/\s*,\s*/, $tr->{langids})) {
+          next;
+        }
+      }
       if (lc($tr->{target}) eq '*' or
           $tr->{target} eq $target or
           first {$target eq $_} $DATAFIELD_SETS{$tr->{target}}->@*) {
@@ -1556,9 +1559,7 @@ sub _translit {
       }
     }
   }
-  else {
-    return $string;
-  }
+  return $string;
 }
 
 1;

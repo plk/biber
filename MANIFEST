@@ -82,6 +82,7 @@ t/sort-uc.t
 t/tool.t
 t/tool-bltxml.t
 t/tool-bltxml-inout.t
+t/translit.t
 t/tdata/annotations.bib
 t/tdata/annotations.bcf
 t/tdata/basic-misc.bcf
@@ -160,6 +161,8 @@ t/tdata/sort.bib
 t/tdata/sort-case.bcf
 t/tdata/sort-case.bib
 t/tdata/sort-complex.bcf
+t/tdata/translit.bib
+t/tdata/translit.bcf
 t/tdata/datalists.bcf
 t/tdata/datalists.bib
 t/tdata/datalists.bltxml

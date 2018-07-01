@@ -34,7 +34,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setblxoption('labeldateparts', undef);
 Biber::Config->setblxoption('labelalpha', 0);
 
-# (re)generate informtion based on option settings
+# (re)generate information based on option settings
 $biber->prepare;
 my $section = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('none/global//global/global');
