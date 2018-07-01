@@ -974,6 +974,13 @@
       </attribute>
       <oneOrMore>
         <element name="bcf:translit">
+          <optional>
+            <attribute name="langids">
+              <data type="string">
+                <param name="minLength">1</param>
+              </data>
+            </attribute>
+          </optional>
           <attribute name="target">
             <choice>
               <value>*</value>

@@ -391,6 +391,7 @@ translit =
   element bcf:transliteration {
     attribute entrytype { "*" | xsd:string {minLength="1"} },
     element bcf:translit {
+      attribute langids { xsd:string {minLength="1"} }?,
       attribute target { "*" | xsd:string {minLength="1"} },
       attribute from { xsd:string {minLength="1"} },
       attribute to { xsd:string {minLength="1"} }
