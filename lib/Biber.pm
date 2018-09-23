@@ -819,8 +819,30 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     $bib_section->set_datasources($bibdatasources{$secnum}) unless
       $bib_section->get_datasources;
 
+    my @prekeys = ();
     my @keys = ();
+    # Pre-process to deal with situation where key is both \nocite'd and \cited
+    # \cite'd takes priority
     foreach my $keyc ($section->{citekey}->@*) {
+      if ($keyc->{nocite}) {# \nocite'd
+        # Don't add if there is an identical key without nocite since \cite takes precedence
+        unless (first {NFD($keyc->{content}) eq NFD($_->{content})} @prekeys) {
+          push @prekeys, $keyc;
+        }
+      }
+      else {# \cite'd
+        # If there is already a nocite of this key, remove the nocite attribute and don't add
+        if (first {(NFD($keyc->{content}) eq NFD($_->{content})) and $_->{nocite}} @prekeys) {
+          @prekeys = map {delete($_->{nocite}) if NFD($keyc->{content}) eq NFD($_->{content});$_} @prekeys;
+        }
+        else {
+          push @prekeys, $keyc;
+        }
+      }
+    }
+
+    # Loop over all section keys
+    foreach my $keyc (@prekeys) {
       my $key = NFD($keyc->{content});# Key is already UTF-8 - it comes from UTF-8 XML
       # Stop reading citekeys if we encounter "*" as a citation as this means
       # "all keys"
