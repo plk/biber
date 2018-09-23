@@ -997,6 +997,7 @@ sub _verbatim {
 # m-  -> [m, '']
 # -n  -> ['', n]
 # -   -> ['', undef]
+
 sub _range {
   my ($bibentry, $entry, $field, $key) = @_;
   my $values_ref;
@@ -1010,8 +1011,9 @@ sub _range {
     $value =~ s/~/ /g; # Some normalisation for malformed fields
     $value =~ m/\A\s*(\P{Pd}+)\s*\z/xms ||# Simple value without range
       $value =~ m/\A\s*(\{[^\}]+\}|[^\p{Pd} ]+)\s*(\p{Pd}+)\s*(\{[^\}]+\}|\P{Pd}*)\s*\z/xms ||
-        $value =~ m/\A\s*(.+)(\p{Pd}{2,})(.+)\s*\z/xms;# M-1--M-4
-    my $start = $1;
+        $value =~ m/\A\s*(.+)(\p{Pd}{2,})(.+)\s*\z/xms || # M-1--M-4
+          $value =~ m/\A\s*(.+)(\p{Pd}+)(.+)\s*\z/xms;# blah M-1
+        my $start = $1;
     my $end;
     if ($2) {
       $end = $3;
