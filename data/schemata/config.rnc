@@ -326,7 +326,9 @@ map =
           attribute map_append { "1" }?,
           attribute map_final { "1" }?,
           attribute map_match { xsd:string {minLength="1"} }?,
+          attribute map_matchi { xsd:string {minLength="1"} }?,
           attribute map_notmatch { xsd:string {minLength="1"} }?,
+          attribute map_notmatchi { xsd:string {minLength="1"} }?,
           attribute map_replace { xsd:string }?,
           ( attribute map_null { "1" } |
             attribute map_origfield { "1" } |

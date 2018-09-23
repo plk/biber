@@ -1107,7 +1107,21 @@
                 </attribute>
               </optional>
               <optional>
+                <attribute name="map_matchi">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
                 <attribute name="map_notmatch">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                  </data>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_notmatchi">
                   <data type="string">
                     <param name="minLength">1</param>
                   </data>

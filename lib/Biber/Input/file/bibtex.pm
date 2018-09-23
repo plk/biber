@@ -648,15 +648,24 @@ sub create_entry {
               $fieldcontinue = 1;
             }
 
-              if ($fieldcontinue) {
-                $last_field = $fieldsource;
-                $last_fieldval = $fieldsource eq 'entrykey' ? $etarget->key : $etarget->get($fieldsource);
+            if ($fieldcontinue) {
+              $last_field = $fieldsource;
+              $last_fieldval = $fieldsource eq 'entrykey' ? $etarget->key : $etarget->get($fieldsource);
 
               my $negmatch = 0;
+              my $nm;
               # Negated matches are a normal match with a special flag
-              if (my $nm = $step->{map_notmatch}) {
+              if ($nm = $step->{map_notmatch} or $nm = $step->{map_notmachi}) {
                 $step->{map_match} = $nm;
                 $negmatch = 1;
+              }
+
+              my $caseinsensitive = 0;
+              my $mi;
+              # Case insensitive matches are a normal match with a special flag
+              if ($mi = $step->{map_matchi} or $mi = $step->{map_notmachi}) {
+                $step->{map_match} = $mi;
+                $caseinsensitive = 1;
               }
 
               # map fields to targets
@@ -676,7 +685,7 @@ sub create_entry {
                     $logger->debug("Source mapping (type=$level, key=$etargetkey): Doing match/replace '$m' -> '$r' on field '$fieldsource'");
                   }
                   $etarget->set($fieldsource,
-                                encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r))));
+                                encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r, $caseinsensitive))));
                 }
                 else {
                   # Now re-instate any unescaped $1 .. $9 to get round these being
@@ -685,7 +694,7 @@ sub create_entry {
                   # Be aware that imatch() uses m//g so @imatches can have multiple paren group
                   # captures which might be useful
                   $m =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
-                  unless (@imatches = imatch($last_fieldval, $m, $negmatch)) {
+                  unless (@imatches = imatch($last_fieldval, $m, $negmatch, $caseinsensitive)) {
                     # Skip the rest of the map if this step doesn't match and match is final
                     if ($step->{map_final}) {
                       if ($logger->is_debug()) { # performance tune

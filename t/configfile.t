@@ -135,7 +135,7 @@ my $sourcemap = [
             map_match        => "\\A(\\S{2})",
             map_replace      => "REP\$1CED",
           },
-          { map_field_source => "LISTB", map_match => "CED", map_replace => "ced" },
+          { map_field_source => "LISTB", map_matchi => "cED", map_replace => "ced" },
         ],
         per_datasource => [{ content => "examples.bib" }],
       },

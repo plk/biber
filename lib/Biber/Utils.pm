@@ -839,9 +839,14 @@ sub filter_entry_options {
 =cut
 
 sub imatch {
-  my ($value, $val_match, $negmatch) = @_;
+  my ($value, $val_match, $negmatch, $ci) = @_;
   return 0 unless $val_match;
-  $val_match = qr/$val_match/;
+  if ($ci) {
+    $val_match = qr/$val_match/i;
+  }
+  else {
+    $val_match = qr/$val_match/;
+  }
   if ($negmatch) {# "!~" doesn't work here as we need an array returned
     return $value =~ m/$val_match/xmsg ? () : (1);
   }
@@ -859,9 +864,14 @@ sub imatch {
 =cut
 
 sub ireplace {
-  my ($value, $val_match, $val_replace) = @_;
+  my ($value, $val_match, $val_replace, $ci) = @_;
   return $value unless $val_match;
-  $val_match = qr/$val_match/;
+  if ($ci) {
+    $val_match = qr/$val_match/i;
+  }
+  else {
+    $val_match = qr/$val_match/;
+  }
   # Tricky quoting because of later evals
   $val_replace = '"' . $val_replace . '"';
   $value =~ s/$val_match/$val_replace/eegxms;
