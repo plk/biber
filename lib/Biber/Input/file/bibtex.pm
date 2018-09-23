@@ -655,7 +655,7 @@ sub create_entry {
               my $negmatch = 0;
               my $nm;
               # Negated matches are a normal match with a special flag
-              if ($nm = $step->{map_notmatch} or $nm = $step->{map_notmachi}) {
+              if ($nm = $step->{map_notmatch} or $nm = $step->{map_notmatchi}) {
                 $step->{map_match} = $nm;
                 $negmatch = 1;
               }
@@ -663,7 +663,7 @@ sub create_entry {
               my $caseinsensitive = 0;
               my $mi;
               # Case insensitive matches are a normal match with a special flag
-              if ($mi = $step->{map_matchi} or $mi = $step->{map_notmachi}) {
+              if ($mi = $step->{map_matchi} or $mi = $step->{map_notmatchi}) {
                 $step->{map_match} = $mi;
                 $caseinsensitive = 1;
               }
