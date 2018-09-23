@@ -378,7 +378,7 @@ sub parse_ctrlfile {
   my $bcfxml = XML::LibXML::Simple::XMLin($buf,
                                           'ForceContent' => 1,
                                           'ForceArray' => [
-                                                           qr/\Acitekey\z/,
+                                                           qr/\A(?:no)*citekey\z/,
                                                            qr/\Aoption\z/,
                                                            qr/\Aoptions\z/,
                                                            qr/\Avalue\z/,
@@ -826,6 +826,9 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
       # "all keys"
       if ($key eq '*') {
         $bib_section->set_allkeys(1);
+        if ($keyc->{nocite}) {
+          $bib_section->set_allkeys_nocite(1);
+        }
         $key_flag = 1; # There is at least one key, used for error reporting below
       }
       elsif (not Biber::Config->get_seenkey($key, $secnum)) {
@@ -839,6 +842,10 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
         }
         else {
           next if $bib_section->is_allkeys; # Skip if we have already encountered '*'
+          # Track nocite information
+          if ($keyc->{nocite}) {
+            $bib_section->add_nocite($key);
+          }
           # Set order information - there is no order on dynamic key defs above
           # as they are a definition, not a cite
           Biber::Config->set_keyorder($secnum, $key, $keyc->{order});
@@ -1691,6 +1698,9 @@ sub process_entries_static {
   }
   foreach my $citekey ( $section->get_citekeys ) {
 
+    # generate nocite information
+    $self->process_nocite($citekey);
+
     # generate labelname name
     $self->process_labelname($citekey);
 
@@ -2206,6 +2216,22 @@ sub process_sets {
       my $me = $section->bibentry($citekey);
       process_entry_options($citekey, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
     }
+  }
+}
+
+=head2 process_nocite
+
+    Generate nocite information
+
+=cut
+
+sub process_nocite {
+  my ($self, $citekey) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  if ($section->get_nocite($citekey) || $section->is_allkeys_nocite) {
+    $be->set_field('nocite', '1');
   }
 }
 

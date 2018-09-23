@@ -495,6 +495,11 @@ sub set_output_entry {
     }
   }
 
+  # Output nocite boolean
+  if ($be->get_field('nocite')) {
+    $acc .= "      \\true{nocite}\n";
+  }
+
   foreach my $rfield ($dmh->{ranges}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if ( my $rf = $be->get_field($rfield) ) {

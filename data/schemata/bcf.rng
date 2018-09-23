@@ -1261,6 +1261,11 @@
               <attribute name="order">
                 <data type="integer"/>
               </attribute>
+              <optional>
+                <attribute name="nocite">
+                  <data type="boolean"/>
+                </attribute>
+              </optional>
               <data type="string">
                 <param name="minLength">1</param>
               </data>

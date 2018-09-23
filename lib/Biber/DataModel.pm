@@ -1753,6 +1753,13 @@ sub generate_bblxml_schema {
     $writer->endTag();          # optional
   }
 
+  # nocite
+  $writer->startTag('optional');
+  $writer->startTag('element', 'name' => "$bbl:nocite");
+  $writer->emptyTag('empty');
+  $writer->endTag();# nocite
+  $writer->endTag();# optional
+
   # keywords
   $writer->startTag('optional');
   $writer->startTag('element', 'name' => "$bbl:keywords");

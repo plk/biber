@@ -525,6 +525,11 @@ sub set_output_entry {
   }
 
 
+  # Output nocite boolean
+  if ($be->get_field('nocite')) {
+    $xml->emptyTag([$xml_prefix, 'nocite']);
+  }
+
   # Output annotations
   foreach my $f (Biber::Annotation->get_annotated_fields('field', $key)) {
     my $v = Biber::Annotation->get_annotation('field', $key, $f);

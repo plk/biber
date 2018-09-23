@@ -27,6 +27,7 @@ sub new {
   $self->{relclonetokey} = {};
   $self->{relkeys} = {};
   $self->{allkeys} = 0;
+  $self->{allkeysnocite} = 0;
   $self->{citekeys} = [];
   $self->{citekeys_h} = {}; # For faster hash-based lookup of individual keys
   $self->{labelcache_l} = {};
@@ -38,6 +39,7 @@ sub new {
   $self->{keytods} = {};
   $self->{orig_order_citekeys} = [];
   $self->{undef_citekeys} = [];
+  $self->{nocite_citekeys} = {};
   $self->{citekey_alias} = {};
   $self->{static_keys} = {};
   return $self;
@@ -179,6 +181,29 @@ sub has_relclonetokey {
   return defined($self->{relclonetokey}{$key}) ? 1 : 0;
 }
 
+=head2 add_nocite
+
+    Adds a key to the list of those that came via \nocite
+
+=cut
+
+sub add_nocite {
+  my ($self, $key) = @_;
+  $self->{nocite_citekeys}{$key} = 1;
+  return;
+}
+
+=head2 get_nocite
+
+    Returns a boolean to say if a key came via \nocite
+
+=cut
+
+sub get_nocite {
+  my ($self, $key) = @_;
+  return (defined($self->{nocite_citekeys}{$key}) ? 1 : 0);
+}
+
 =head2 add_everykey
 
     Adds a datasource key to the section list of all datasource keys
@@ -218,6 +243,18 @@ sub has_everykey {
   return $self->{everykey}{$key} ? 1 : 0;
 }
 
+=head2 set_allkeys_nocite
+
+    Sets flag to say citekey '*' occurred through \nocite
+    We allow setting it to false too because it's useful in tests
+
+=cut
+
+sub set_allkeys_nocite {
+  my ($self, $val) = @_;
+  $self->{allkeysnocite} = $val;
+  return;
+}
 
 =head2 set_allkeys
 
@@ -230,6 +267,17 @@ sub set_allkeys {
   my ($self, $val) = @_;
   $self->{allkeys} = $val;
   return;
+}
+
+=head2 is_allkeys_nocite
+
+    Checks flag which says citekey '*' occurred in via \nocite
+
+=cut
+
+sub is_allkeys_nocite {
+  my $self = shift;
+  return $self->{allkeysnocite};
 }
 
 =head2 is_allkeys
