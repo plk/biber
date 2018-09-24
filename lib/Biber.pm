@@ -824,16 +824,17 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     # Pre-process to deal with situation where key is both \nocite'd and \cited
     # \cite'd takes priority
     foreach my $keyc ($section->{citekey}->@*) {
+      my $key = NFD($keyc->{content}); # Key is already UTF-8 - it comes from UTF-8 XML
       if ($keyc->{nocite}) {# \nocite'd
         # Don't add if there is an identical key without nocite since \cite takes precedence
-        unless (first {NFD($keyc->{content}) eq NFD($_->{content})} @prekeys) {
+        unless (first {$key eq NFD($_->{content})} @prekeys) {
           push @prekeys, $keyc;
         }
       }
       else {# \cite'd
         # If there is already a nocite of this key, remove the nocite attribute and don't add
-        if (first {(NFD($keyc->{content}) eq NFD($_->{content})) and $_->{nocite}} @prekeys) {
-          @prekeys = map {delete($_->{nocite}) if NFD($keyc->{content}) eq NFD($_->{content});$_} @prekeys;
+        if (first {($key eq NFD($_->{content})) and $_->{nocite}} @prekeys) {
+          @prekeys = map {delete($_->{nocite}) if $key eq NFD($_->{content});$_} @prekeys;
         }
         else {
           push @prekeys, $keyc;
@@ -843,7 +844,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
 
     # Loop over all section keys
     foreach my $keyc (@prekeys) {
-      my $key = NFD($keyc->{content});# Key is already UTF-8 - it comes from UTF-8 XML
+      my $key = NFD($keyc->{content}); # Key is already UTF-8 - it comes from UTF-8 XML
       # Stop reading citekeys if we encounter "*" as a citation as this means
       # "all keys"
       if ($key eq '*') {
