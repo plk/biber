@@ -1592,7 +1592,7 @@ sub process_namedis {
       }
 
       # First construct base part ...
-      my $base;
+      my $base = ''; # Might no be any base parts at all so make sure it's not undefined
       my $baseparts;
 
       foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{$untname}->@*) {
@@ -1622,7 +1622,7 @@ sub process_namedis {
 
       $namestring .= $base;
       push $namestrings->@*, $base;
-      push $namedisschema->@*, ['base' => $baseparts];
+      push $namedisschema->@*, ['base' => $baseparts] if defined($baseparts);
 
       # ... then add non-base parts by incrementally adding to the last disambiguation level
       foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{$untname}->@*) {
