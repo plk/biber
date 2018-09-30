@@ -29,15 +29,18 @@ Biber::Entry::Annotation
 
 sub set_annotation {
   shift; # class method so don't care about class name
-  my ($scope, $key, $field, $value, $count, $part) = @_;
+  my ($scope, $key, $field, $value, $literal, $count, $part, ) = @_;
   if ($scope eq 'field') {
-    $ANN->{field}{$key}{$field} = $value;
+    $ANN->{field}{$key}{$field}{value} = $value;
+    $ANN->{field}{$key}{$field}{literal} = $literal; # Record if this annotation is a literal
   }
   elsif ($scope eq 'item') {
-    $ANN->{item}{$key}{$field}{$count} = $value;
+    $ANN->{item}{$key}{$field}{$count}{value} = $value;
+    $ANN->{item}{$key}{$field}{$count}{literal} = $literal; # Record if this annotation is a literal
   }
   elsif ($scope eq 'part') {
-    $ANN->{part}{$key}{$field}{$count}{$part} = $value;
+    $ANN->{part}{$key}{$field}{$count}{$part}{value} = $value;
+    $ANN->{part}{$key}{$field}{$count}{$part}{literal} = $literal; # Record if this annotation is a literal
   }
   # For easy checking later whether or not a field is annotated
   $ANN->{fields}{$key}{$field} = 1;
@@ -54,13 +57,34 @@ sub get_annotation {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $count, $part) = @_;
   if ($scope eq 'field') {
-    return $ANN->{field}{$key}{$field};
+    return $ANN->{field}{$key}{$field}{value};
   }
   elsif ($scope eq 'item') {
-    return $ANN->{item}{$key}{$field}{$count};
+    return $ANN->{item}{$key}{$field}{$count}{value};
   }
   elsif ($scope eq 'part') {
-    return $ANN->{part}{$key}{$field}{$count}{$part};
+    return $ANN->{part}{$key}{$field}{$count}{$part}{value};
+  }
+  return undef;
+}
+
+=head2 is_literal_annotation
+
+  Check if an annotation is a literal annotation
+
+=cut
+
+sub is_literal_annotation {
+  shift; # class method so don't care about class name
+  my ($scope, $key, $field, $count, $part) = @_;
+  if ($scope eq 'field') {
+    return $ANN->{field}{$key}{$field}{literal};
+  }
+  elsif ($scope eq 'item') {
+    return $ANN->{item}{$key}{$field}{$count}{literal};
+  }
+  elsif ($scope eq 'part') {
+    return $ANN->{part}{$key}{$field}{$count}{$part}{literal};
   }
   return undef;
 }
@@ -86,7 +110,7 @@ sub is_annotated_field {
 sub get_field_annotation {
   shift; # class method so don't care about class name
   my ($key, $field) = @_;
-  return $ANN->{field}{$key}{$field};
+  return $ANN->{field}{$key}{$field}{value};
 }
 
 =head2 get_annotated_fields

@@ -893,16 +893,23 @@ sub _annotation {
   my $value = $entry->get($field);
   my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
   $field =~ s/$ann$//;
+
   foreach my $a (split(/\s*;\s*/, $value)) {
     my ($count, $part, $annotations) = $a =~ /^\s*(\d+)?:?([^=]+)?=(.+)/;
+    # Is the annotations a literal annotation?
+    my $literal = 0;
+    if ($annotations =~ m/^\s*"(.+)"\s*$/) {
+      $literal = 1;
+      $annotations = $1;
+    }
     if ($part) {
-      Biber::Annotation->set_annotation('part', $key, $field, $annotations, $count, $part);
+      Biber::Annotation->set_annotation('part', $key, $field, $annotations, $literal, $count, $part);
     }
     elsif ($count) {
-      Biber::Annotation->set_annotation('item', $key, $field, $annotations, $count);
+      Biber::Annotation->set_annotation('item', $key, $field, $annotations, $literal, $count);
     }
     else {
-      Biber::Annotation->set_annotation('field', $key, $field, $annotations);
+      Biber::Annotation->set_annotation('field', $key, $field, $annotations, $literal);
     }
   }
   return;

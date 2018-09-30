@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Test::Differences;
 unified_diff;
 
@@ -71,19 +71,64 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \strng{authorbibnamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authornamehash}{90ae96c82de92e36949bc64254bbde0c}
       \strng{authorfullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \field{extraname}{1}
       \field{sortinit}{L}
       \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{The Title}
-      \annotation{field}{language}{}{}{ann4}
-      \annotation{field}{title}{}{}{one, two}
-      \annotation{item}{author}{2}{}{corresponding}
-      \annotation{item}{language}{1}{}{ann1}
-      \annotation{item}{language}{2}{}{ann2, ann3}
-      \annotation{part}{author}{1}{family}{student}
+      \annotation{field}{language}{}{}{ann4}{0}
+      \annotation{field}{title}{}{}{one, two}{0}
+      \annotation{item}{author}{2}{}{corresponding}{0}
+      \annotation{item}{language}{1}{}{ann1}{0}
+      \annotation{item}{language}{2}{}{ann2, ann3}{0}
+      \annotation{part}{author}{1}{family}{student}{0}
+    \endentry
+|;
+
+my $ann2 = q|    \entry{ann2}{misc}{}
+      \name{author}{3}{}{%
+        {{hash=89a9e5097e11e595700540379c9b3a6b}{%
+           family={Last1},
+           familyi={L\bibinitperiod},
+           given={First1},
+           giveni={F\bibinitperiod}}}%
+        {{hash=7475b6b7b3c24a2ac6bd4d146cdc74dc}{%
+           family={Last2},
+           familyi={L\bibinitperiod},
+           given={First2},
+           giveni={F\bibinitperiod}}}%
+        {{hash=fd3dffa06a5d1f89c512841df1ccf4d0}{%
+           family={Last3},
+           familyi={L\bibinitperiod},
+           given={First3},
+           giveni={F\bibinitperiod}}}%
+      }
+      \list{language}{2}{%
+        {english}%
+        {french}%
+      }
+      \strng{namehash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{fullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{bibnamehash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authorbibnamehash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authornamehash}{90ae96c82de92e36949bc64254bbde0c}
+      \strng{authorfullhash}{90ae96c82de92e36949bc64254bbde0c}
+      \field{extraname}{2}
+      \field{sortinit}{L}
+      \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The Title}
+      \annotation{field}{language}{}{}{ann4}{0}
+      \annotation{field}{title}{}{}{one}{1}
+      \annotation{item}{author}{2}{}{corresponding}{0}
+      \annotation{item}{language}{1}{}{ann1}{0}
+      \annotation{item}{language}{2}{}{ann2}{1}
+      \annotation{part}{author}{1}{family}{student}{1}
     \endentry
 |;
 
 eq_or_diff( $out->get_output_entry('ann1', $main), $ann1, 'Annotations - 1' );
+eq_or_diff( $out->get_output_entry('ann2', $main), $ann2, 'Annotations - 2' );
 

@@ -144,14 +144,14 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{urldateera}{ce}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}
-      \annotation{field}{author}{}{}{names-ann}
-      \annotation{field}{language}{}{}{list-ann1}
-      \annotation{field}{title}{}{}{field-ann1}
-      \annotation{item}{author}{1}{}{name-ann1}
-      \annotation{item}{author}{3}{}{name-ann2}
-      \annotation{item}{language}{1}{}{item-ann1}
-      \annotation{part}{author}{1}{given}{namepart-ann1}
-      \annotation{part}{author}{2}{family}{namepart-ann2}
+      \annotation{field}{author}{}{}{names-ann}{0}
+      \annotation{field}{language}{}{}{list-ann1}{0}
+      \annotation{field}{title}{}{}{field-ann1}{0}
+      \annotation{item}{author}{1}{}{name-ann1}{0}
+      \annotation{item}{author}{3}{}{name-ann2}{0}
+      \annotation{item}{language}{1}{}{item-ann1}{0}
+      \annotation{part}{author}{1}{given}{namepart-ann1}{1}
+      \annotation{part}{author}{2}{family}{namepart-ann2}{0}
     \endentry
 |;
 

@@ -563,13 +563,15 @@ sub set_output_entry {
   # Output annotations
   foreach my $f (Biber::Annotation->get_annotated_fields('field', $key)) {
     my $v = Biber::Annotation->get_annotation('field', $key, $f);
-    $acc .= "      \\annotation{field}{$f}{}{}{$v}\n";
+    my $l = Biber::Annotation->is_literal_annotation('field', $key, $f);
+    $acc .= "      \\annotation{field}{$f}{}{}{$v}{$l}\n";
   }
 
   foreach my $f (Biber::Annotation->get_annotated_fields('item', $key)) {
     foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f)) {
       my $v = Biber::Annotation->get_annotation('item', $key, $f, $c);
-      $acc .= "      \\annotation{item}{$f}{$c}{}{$v}\n";
+      my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $c);
+      $acc .= "      \\annotation{item}{$f}{$c}{}{$v}{$l}\n";
     }
   }
 
@@ -577,7 +579,8 @@ sub set_output_entry {
     foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f)) {
       foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $c)) {
         my $v = Biber::Annotation->get_annotation('part', $key, $f, $c, $p);
-        $acc .= "      \\annotation{part}{$f}{$c}{$p}{$v}\n";
+        my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $c, $p);
+        $acc .= "      \\annotation{part}{$f}{$c}{$p}{$v}{$l}\n";
       }
     }
   }

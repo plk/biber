@@ -993,6 +993,9 @@ sub generate_bltxml_schema {
           # generic annotation attribute
           $writer->emptyTag('ref', 'name' => "annotation");
 
+          # literal annotation attribute
+          $writer->emptyTag('ref', 'name' => "literalannotation");
+
           $writer->startTag('oneOrMore');
 
           # Individual name element
@@ -1020,6 +1023,9 @@ sub generate_bltxml_schema {
           # generic annotation attribute
           $writer->emptyTag('ref', 'name' => "annotation");
 
+          # literal annotation attribute
+          $writer->emptyTag('ref', 'name' => "literalannotation");
+
           # namepart element
           $writer->startTag('oneOrMore');
           $writer->startTag('element', 'name' => "$bltx:namepart");
@@ -1033,6 +1039,9 @@ sub generate_bltxml_schema {
           $writer->startTag('optional');
           $writer->emptyTag('attribute', 'name' => 'initial');
           $writer->endTag();    # optional
+
+          # generic annotation attribute
+          $writer->emptyTag('ref', 'name' => "annotation");
 
           # generic annotation attribute
           $writer->emptyTag('ref', 'name' => "annotation");
@@ -1067,6 +1076,9 @@ sub generate_bltxml_schema {
             # generic annotation attribute
             $writer->emptyTag('ref', 'name' => "annotation");
 
+            # literal annotation attribute
+            $writer->emptyTag('ref', 'name' => "literalannotation");
+
             $writer->startTag('choice');
             $writer->emptyTag('text');# text
             $writer->startTag('element', 'name' => "$bltx:list");
@@ -1075,6 +1087,9 @@ sub generate_bltxml_schema {
 
             # generic annotation attribute
             $writer->emptyTag('ref', 'name' => "annotation");
+
+            # literal annotation attribute
+            $writer->emptyTag('ref', 'name' => "literalannotation");
 
             $writer->emptyTag('text');# text
             $writer->endTag(); # item element
@@ -1098,6 +1113,9 @@ sub generate_bltxml_schema {
             # generic annotation attribute
             $writer->emptyTag('ref', 'name' => "annotation");
 
+            # literal annotation attribute
+            $writer->emptyTag('ref', 'name' => "literalannotation");
+
             $writer->emptyTag('data', 'type' => 'anyURI');
             $writer->endTag();   # $field element
             $writer->endTag();# optional
@@ -1115,6 +1133,9 @@ sub generate_bltxml_schema {
 
             # generic annotation attribute
             $writer->emptyTag('ref', 'name' => "annotation");
+
+            # literal annotation attribute
+            $writer->emptyTag('ref', 'name' => "literalannotation");
 
             $writer->startTag('element', 'name' => "$bltx:list");
             $writer->startTag('oneOrMore');
@@ -1168,6 +1189,9 @@ sub generate_bltxml_schema {
               # generic annotation attribute
               $writer->emptyTag('ref', 'name' => "annotation");
 
+              # literal annotation attribute
+              $writer->emptyTag('ref', 'name' => "literalannotation");
+
               $writer->startTag('choice');
               $writer->startTag('list');
               $writer->startTag('oneOrMore');
@@ -1206,6 +1230,9 @@ sub generate_bltxml_schema {
           # generic annotation attribute
           $writer->emptyTag('ref', 'name' => "annotation");
 
+          # literal annotation attribute
+          $writer->emptyTag('ref', 'name' => "literalannotation");
+
           $writer->startTag('choice');
           $writer->emptyTag('data', 'type' => 'date');
           $writer->emptyTag('data', 'type' => 'gYear');
@@ -1239,6 +1266,9 @@ sub generate_bltxml_schema {
 
             # generic annotation attribute
             $writer->emptyTag('ref', 'name' => "annotation");
+
+            # literal annotation attribute
+            $writer->emptyTag('ref', 'name' => "literalannotation");
 
             $writer->emptyTag('text');# text
             $writer->endTag(); # $field element
@@ -1274,6 +1304,16 @@ sub generate_bltxml_schema {
   $writer->startTag('define', 'name' => 'annotation');
   $writer->startTag('optional');
   $writer->emptyTag('attribute', 'name' => 'annotation');
+  $writer->endTag(); # optional
+  $writer->endTag();# define
+  # ===========================
+
+  # literal annotation attribute definition
+  # =====================================
+  $writer->comment('literal annotation attribute definition');
+  $writer->startTag('define', 'name' => 'literalannotation');
+  $writer->startTag('optional');
+  $writer->emptyTag('attribute', 'name' => 'literalannotation');
   $writer->endTag(); # optional
   $writer->endTag();# define
   # ===========================
