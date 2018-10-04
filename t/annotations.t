@@ -77,12 +77,12 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{The Title}
-      \annotation{field}{language}{}{}{ann4}{0}
-      \annotation{field}{title}{}{}{one, two}{0}
-      \annotation{item}{author}{2}{}{corresponding}{0}
-      \annotation{item}{language}{1}{}{ann1}{0}
-      \annotation{item}{language}{2}{}{ann2, ann3}{0}
-      \annotation{part}{author}{1}{family}{student}{0}
+      \annotation{field}{language}{default}{}{}{0}{ann4}
+      \annotation{field}{title}{default}{}{}{0}{one, two}
+      \annotation{item}{author}{default}{2}{}{0}{corresponding}
+      \annotation{item}{language}{default}{1}{}{0}{ann1}
+      \annotation{item}{language}{default}{2}{}{0}{ann2, ann3}
+      \annotation{part}{author}{default}{1}{family}{0}{student}
     \endentry
 |;
 
@@ -120,12 +120,16 @@ my $ann2 = q|    \entry{ann2}{misc}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{The Title}
-      \annotation{field}{language}{}{}{ann4}{0}
-      \annotation{field}{title}{}{}{one}{1}
-      \annotation{item}{author}{2}{}{corresponding}{0}
-      \annotation{item}{language}{1}{}{ann1}{0}
-      \annotation{item}{language}{2}{}{ann2}{1}
-      \annotation{part}{author}{1}{family}{student}{1}
+      \annotation{field}{language}{alt}{}{}{0}{annz}
+      \annotation{field}{language}{default}{}{}{0}{ann4}
+      \annotation{field}{title}{default}{}{}{1}{one}
+      \annotation{field}{title}{french}{}{}{1}{un}
+      \annotation{item}{author}{default}{2}{}{0}{corresponding}
+      \annotation{item}{language}{alt}{1}{}{0}{annx}
+      \annotation{item}{language}{alt}{2}{}{1}{anny}
+      \annotation{item}{language}{default}{1}{}{0}{ann1}
+      \annotation{item}{language}{default}{2}{}{1}{ann2}
+      \annotation{part}{author}{default}{1}{family}{1}{student}
     \endentry
 |;
 

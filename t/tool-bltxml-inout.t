@@ -86,24 +86,24 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
         <bltx:namepart type="given" initial="J">John</bltx:namepart>
       </bltx:name>
     </bltx:names>
-    <bltx:names type="author" morenames="1" useprefix="true" annotation="names-ann">
-      <bltx:name gender="sm" annotation="name-ann1">
+    <bltx:names type="author" morenames="1" useprefix="true">
+      <bltx:name gender="sm">
         <bltx:namepart type="family" initial="Б">Булгаков</bltx:namepart>
-        <bltx:namepart type="given" annotation="namepart-ann1">
+        <bltx:namepart type="given">
           <bltx:namepart initial="П">Павел</bltx:namepart>
           <bltx:namepart initial="Г">Георгиевич</bltx:namepart>
         </bltx:namepart>
         <bltx:namepart type="prefix" initial="v">von</bltx:namepart>
       </bltx:name>
       <bltx:name>
-        <bltx:namepart type="family" initial="Р" annotation="namepart-ann2">Розенфельд</bltx:namepart>
+        <bltx:namepart type="family" initial="Р">Розенфельд</bltx:namepart>
         <bltx:namepart type="given">
           <bltx:namepart initial="Б-Z">Борис-ZZ</bltx:namepart>
           <bltx:namepart initial="A">Aбрамович</bltx:namepart>
         </bltx:namepart>
         <bltx:namepart type="prefix" initial="v">von</bltx:namepart>
       </bltx:name>
-      <bltx:name annotation="name-ann2">
+      <bltx:name>
         <bltx:namepart type="family" initial="A">Aхмедов</bltx:namepart>
         <bltx:namepart type="given">
           <bltx:namepart initial="A">Ашраф</bltx:namepart>
@@ -123,9 +123,9 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
         <bltx:namepart type="given" initial="J">John</bltx:namepart>
       </bltx:name>
     </bltx:names>
-    <bltx:language annotation="list-ann1">
+    <bltx:language>
       <bltx:list>
-        <bltx:item annotation="item-ann1">russian</bltx:item>
+        <bltx:item>russian</bltx:item>
       </bltx:list>
     </bltx:language>
     <bltx:location>
@@ -142,7 +142,7 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
     <bltx:relatedstring>Somestring</bltx:relatedstring>
     <bltx:relatedtype>reprint</bltx:relatedtype>
     <bltx:series>Научно-биографическая литература</bltx:series>
-    <bltx:title annotation="field-ann1">Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
+    <bltx:title>Мухаммад ибн муса ал-Хорезми. Около 783 – около 850</bltx:title>
     <bltx:usera>usera</bltx:usera>
     <bltx:userb>userb</bltx:userb>
     <bltx:userc>userc</bltx:userc>
@@ -170,6 +170,15 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
       <bltx:start>1991~</bltx:start>
       <bltx:end></bltx:end>
     </bltx:date>
+    <bltx:annotation field="author" name="alt" literal="0">names-ann3</bltx:annotation>
+    <bltx:annotation field="author" name="default" literal="0">names-ann</bltx:annotation>
+    <bltx:annotation field="language" name="default" literal="0">list-ann1</bltx:annotation>
+    <bltx:annotation field="title" name="default" literal="0">field-ann1</bltx:annotation>
+    <bltx:annotation field="author" name="default" item="1" literal="0">name-ann1</bltx:annotation>
+    <bltx:annotation field="author" name="default" item="3" literal="0">name-ann2</bltx:annotation>
+    <bltx:annotation field="language" name="default" item="1" literal="0">item-ann1</bltx:annotation>
+    <bltx:annotation field="author" name="default" item="1" part="given" literal="1">namepart-ann1</bltx:annotation>
+    <bltx:annotation field="author" name="default" item="2" part="family" literal="0">namepart-ann2</bltx:annotation>
   </bltx:entry>
 </bltx:entries>
 |;

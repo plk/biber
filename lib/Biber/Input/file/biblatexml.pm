@@ -38,7 +38,8 @@ my $NS = 'bltx';
 # Determine handlers from data model
 my $dm = Biber::Config->get_dm;
 my $handlers = {
-                'CUSTOM' => {'related' => \&_related},
+                'CUSTOM' => {'related' => \&_related,
+                             'annotation' => \&_annotation},
                 'field' => {
                             'default' => {
                                           'code'     => \&_literal,
@@ -786,6 +787,34 @@ sub create_entry {
   return;
 }
 
+# Annotations are special - there is a literal field and also more complex annotations
+sub _annotation {
+  my ($bibentry, $entry, $f, $key) = @_;
+  foreach my $node ($entry->findnodes("./$f")) {
+    my $field = $node->getAttribute('field');
+    my $name = $node->getAttribute('name') || 'default';
+    my $literal = $node->getAttribute('literal') || '0';
+    my $ann = $node->textContent();
+    my $item = $node->getAttribute('item');
+    my $part = $node->getAttribute('part');
+    if ($field) {# Complex metadata annotation for another field
+      if ($part) {
+        Biber::Annotation->set_annotation('part', $key, $field, $name, $ann, $literal, $item, $part);
+      }
+      elsif ($item) {
+        Biber::Annotation->set_annotation('item', $key, $field, $name, $ann, $literal, $item);
+      }
+      else {
+        Biber::Annotation->set_annotation('field', $key, $field, $name, $ann, $literal);
+      }
+    }
+    else {# Generic entry annotation
+      $bibentry->set_datafield(_norm($f), $node->textContent());
+    }
+  }
+  return;
+}
+
 # Related entries
 sub _related {
   my ($bibentry, $entry, $f, $key) = @_;
@@ -820,14 +849,6 @@ sub _literal {
     else {
       $bibentry->set_datafield(_norm($f), $node->textContent());
     }
-    # generic annotation attribute
-    if (my $string = $node->getAttribute('annotation')) {
-      Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 0);
-    }
-    # literal annotation attribute
-    if (my $string = $node->getAttribute('literalannotation')) {
-      Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 1);
-    }
   }
   return;
 }
@@ -837,14 +858,6 @@ sub _xsv {
   my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
     $bibentry->set_datafield(_norm($f), _split_list($node, $key, $f));
-    # generic annotation attribute
-    if (my $string = $node->getAttribute('annotation')) {
-      Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 0);
-    }
-    # literal annotation attribute
-    if (my $string = $node->getAttribute('literalannotation')) {
-      Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 1);
-    }
   }
   return;
 }
@@ -863,14 +876,7 @@ sub _uri {
    $value = URI->new($value)->as_string;
   }
   $bibentry->set_datafield(_norm($f), $value);
-  # generic annotation attribute
-  if (my $string = $node->getAttribute('annotation')) {
-    Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 0);
-  }
-  # literal annotation attribute
-  if (my $string = $node->getAttribute('literalannotation')) {
-    Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 1);
-  }
+
   return;
 }
 
@@ -880,15 +886,6 @@ sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
     $bibentry->set_datafield(_norm($f), _split_list($node, $key, $f));
-
-    # generic annotation attribute
-    if (my $string = $node->getAttribute('annotation')) {
-      Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 0);
-    }
-    # literal annotation attribute
-    if (my $string = $node->getAttribute('literalannotation')) {
-      Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 1);
-    }
   }
   return;
 }
@@ -1134,14 +1131,6 @@ sub _name {
 
     $bibentry->set_datafield(_norm($f), $names);
 
-    # generic annotation attribute
-    if (my $string = $node->getAttribute('annotation')) {
-      Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 0);
-    }
-    # literal annotation attribute
-    if (my $string = $node->getAttribute('literalannotation')) {
-      Biber::Annotation->set_annotation('field', $key, _norm($f), $string, 1);
-    }
   }
   return;
 }
@@ -1173,29 +1162,11 @@ sub parsename {
     $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
   }
 
-  # generic annotation attribute - individual name scope
-  if (my $string = $node->getAttribute('annotation')) {
-    Biber::Annotation->set_annotation('item', $key, _norm($fieldname), $string, 0, $count);
-  }
-  # literal annotation attribute - individual name scope
-  if (my $string = $node->getAttribute('literalannotation')) {
-    Biber::Annotation->set_annotation('item', $key, _norm($fieldname), $string, 1, $count);
-  }
-
   my %namec;
 
   foreach my $n ($dm->get_constant_value('nameparts')) { # list type so returns list
     # If there is a namepart node for this component ...
     if (my $npnode = $node->findnodes("./$NS:namepart[\@type='$n']")->get_node(1)) {
-
-      # generic annotation attribute - namepart scope
-      if (my $string = $npnode->getAttribute('annotation')) {
-        Biber::Annotation->set_annotation('part', $key, _norm($fieldname), $string, 0, $count, $n);
-      }
-      # literal annotation attribute - namepart scope
-      if (my $string = $npnode->getAttribute('literalannotation')) {
-        Biber::Annotation->set_annotation('part', $key, _norm($fieldname), $string, 1, $count, $n);
-      }
 
       # name component with parts
       if (my @npnodes =  $npnode->findnodes("./$NS:namepart")) {
@@ -1282,18 +1253,6 @@ sub _parse_range_list {
 sub _split_list {
   my ($node, $key, $f) = @_;
   if (my @list = $node->findnodes("./$NS:list/$NS:item")) {
-
-    for (my $i = 0; $i <= $#list; $i++) {
-      # generic annotation attribute
-      if (my $string = $list[$i]->getAttribute('annotation')) {
-        Biber::Annotation->set_annotation('item', $key, _norm($f), $string, 0, $i+1);
-      }
-      # literal annotation attribute
-      if (my $string = $list[$i]->getAttribute('literalannotation')) {
-        Biber::Annotation->set_annotation('item', $key, _norm($f), $string, 1, $i+1);
-      }
-    }
-
     return [ map {$_->textContent()} @list ];
   }
   else {

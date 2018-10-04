@@ -234,7 +234,10 @@ sub set_output_entry {
   # Annotations
   foreach my $f (keys %acc) {
     if (Biber::Annotation->is_annotated_field($key, lc($f))) {
-      $acc{$casing->($f) . Biber::Config->getoption('output_annotation_marker')} = construct_annotation($key, lc($f));
+      foreach my $n (Biber::Annotation->get_annotation_names($key, lc($f))) {
+        $acc{$casing->($f) . Biber::Config->getoption('output_annotation_marker') .
+            Biber::Config->getoption('output_named_annotation_marker') . $n} = construct_annotation($key, lc($f), $n);
+      }
     }
   }
 
@@ -255,26 +258,15 @@ sub set_output_entry {
         $field eq 'dates') {
       my @donefields;
       foreach my $key (sort keys %acc) {
-        if (first {fc($_) eq fc($key)} $dmh->{$classmap{$field}}->@*) {
+        if (first {fc($_) eq fc(strip_annotation($key))} $dmh->{$classmap{$field}}->@*) {
           $acc .= bibfield($key, $acc{$key}, $max_field_len);
           push @donefields, $key;
-          # Keep annotations with their fields
-          my $ann = $key . Biber::Config->getoption('output_annotation_marker');
-          if (my $value = $acc{$ann}) {
-            $acc .= bibfield($ann, $value, $max_field_len);
-            push @donefields, $ann;
-          }
         }
       }
       delete @acc{@donefields};
     }
     elsif (my $value = delete $acc{$casing->($field)}) {
       $acc .= bibfield($casing->($field), $value, $max_field_len);
-      # Keep annotations with their fields
-      my $ann = $casing->($field) . Biber::Config->getoption('output_annotation_marker');
-      if (my $value = delete $acc{$ann}) {
-        $acc .= bibfield($ann, $value, $max_field_len);
-      }
     }
   }
 
@@ -438,20 +430,20 @@ sub bibfield {
 =cut
 
 sub construct_annotation {
-  my ($key, $field) = @_;
+  my ($key, $field, $name) = @_;
   my @annotations;
 
-  if (my $fa = Biber::Annotation->get_field_annotation($key, $field)) {
+  if (my $fa = Biber::Annotation->get_field_annotation($key, $field, $name)) {
     push @annotations, "=$fa";
   }
 
-  foreach my $item (Biber::Annotation->get_annotated_items('item', $key, $field)) {
-    push @annotations, "$item=" . Biber::Annotation->get_annotation('item', $key, $field, $item);
+  foreach my $item (Biber::Annotation->get_annotated_items('item', $key, $field, $name)) {
+    push @annotations, "$item=" . Biber::Annotation->get_annotation('item', $key, $field, $name, $item);
   }
 
-  foreach my $item (Biber::Annotation->get_annotated_items('part', $key, $field)) {
-    foreach my $part (Biber::Annotation->get_annotated_parts('part', $key, $field, $item)) {
-      push @annotations, "$item:$part=" . Biber::Annotation->get_annotation('part', $key, $field, $item, $part);
+  foreach my $item (Biber::Annotation->get_annotated_items('part', $key, $field, $name)) {
+    foreach my $part (Biber::Annotation->get_annotated_parts('part', $key, $field, $name, $item)) {
+      push @annotations, "$item:$part=" . Biber::Annotation->get_annotation('part', $key, $field, $name, $item, $part);
     }
   }
 

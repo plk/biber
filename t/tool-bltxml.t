@@ -185,15 +185,18 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
   <bltx:entry id="b1" entrytype="book">
     <bltx:location>
       <bltx:list>
-        <bltx:item annotation="ann1">London</bltx:item>
-        <bltx:item annotation="ann2">Edinburgh</bltx:item>
+        <bltx:item>London</bltx:item>
+        <bltx:item>Edinburgh</bltx:item>
       </bltx:list>
     </bltx:location>
     <bltx:mainsubtitle>Mainsubtitle</bltx:mainsubtitle>
     <bltx:maintitle>Maintitle</bltx:maintitle>
     <bltx:maintitleaddon>Maintitleaddon</bltx:maintitleaddon>
-    <bltx:title annotation="ann1, ann2">Booktitle</bltx:title>
+    <bltx:title>Booktitle</bltx:title>
     <bltx:date>1999</bltx:date>
+    <bltx:annotation field="title" name="default" literal="0">ann1, ann2</bltx:annotation>
+    <bltx:annotation field="location" name="default" item="1" literal="0">ann1</bltx:annotation>
+    <bltx:annotation field="location" name="default" item="2" literal="0">ann2</bltx:annotation>
   </bltx:entry>
   <bltx:entry id="mv1" entrytype="mvbook">
     <bltx:ids>

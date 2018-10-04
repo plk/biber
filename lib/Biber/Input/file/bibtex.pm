@@ -892,6 +892,12 @@ sub _annotation {
   my ($bibentry, $entry, $field, $key) = @_;
   my $value = $entry->get($field);
   my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
+  my $nam = quotemeta(Biber::Config->getoption('named_annotation_marker'));
+  # Get annotation name, "default" if none
+  my $name = 'default';
+  if ($field =~ s/^(.+$ann)$nam(.+)$/$1/) {
+    $name = $2;
+  }
   $field =~ s/$ann$//;
 
   foreach my $a (split(/\s*;\s*/, $value)) {
@@ -903,13 +909,13 @@ sub _annotation {
       $annotations = $1;
     }
     if ($part) {
-      Biber::Annotation->set_annotation('part', $key, $field, $annotations, $literal, $count, $part);
+      Biber::Annotation->set_annotation('part', $key, $field, $name, $annotations, $literal, $count, $part);
     }
     elsif ($count) {
-      Biber::Annotation->set_annotation('item', $key, $field, $annotations, $literal, $count);
+      Biber::Annotation->set_annotation('item', $key, $field, $name, $annotations, $literal, $count);
     }
     else {
-      Biber::Annotation->set_annotation('field', $key, $field, $annotations, $literal);
+      Biber::Annotation->set_annotation('field', $key, $field, $name, $annotations, $literal);
     }
   }
   return;
@@ -1795,7 +1801,9 @@ sub _hack_month {
 
 sub _get_handler {
   my $field = shift;
-  if ($field =~ m/$CONFIG_META_MARKERS{annotation}$/) {
+  my $ann = $CONFIG_META_MARKERS{annotation};
+  my $nam = $CONFIG_META_MARKERS{namedannotation};
+  if ($field =~ m/$ann(?:$nam.+)?$/) {
     return $handlers->{custom}{annotation};
   }
   else {

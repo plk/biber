@@ -50,6 +50,7 @@ GetOptions(
            'listsep=s',
            'logfile=s',
            'mincrossrefs|m=s',
+           'named_annotation_marker|named-annotation-marker=s',
            'namesep=s',
            'no_bblxml_schema|no-bblxml-schema',
            'no_bltxml_schema|no-bltxml-schema',
@@ -72,6 +73,7 @@ GetOptions(
            'output_indent|output-indent=s',
            'output_listsep|output-listsep=s',
            'output_macro_fields|output-macro-fields=s',
+           'output_named_annotation_marker|output-named-annotation-marker=s',
            'output_namesep|output-namesep=s',
            'output_resolve|output-resolve',
            'output_resolve_xdata|output-resolve-xdata',
@@ -577,6 +579,11 @@ Use F<sep> as the separator for BibTeX data source list fields. Defaults to BibT
 
 Set threshold for crossrefs.
 
+=item B<--named-annotation-marker=[marker]>
+
+Sets the separator between the C<--annotation-marker> and the name of a
+named annotation. The default is C<:>.
+
 =item B<--namesep=[sep]>
 
 Use F<sep> as the separator for BibTeX data source name fields. Defaults to BibTeX's usual
@@ -634,6 +641,10 @@ The legacy option B<--tool_align> is supported as an alias.
 =item B<--output-annotation-marker=[marker]>
 
 As B<--annotation-marker> but for tool mode bibtex output. The default is C<+an>.
+
+=item B<--output-named-annotation-marker=[marker]>
+
+As B<--named-annotation-marker> but for tool mode bibtex output. The default is C<:>.
 
 =item B<--output-directory [directory]>
 

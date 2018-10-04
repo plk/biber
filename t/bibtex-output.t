@@ -67,14 +67,14 @@ my $b1 = q|@ARTICLE{murray,
 |;
 
 my $b2 = q|@BOOK{b1,
-  LOCATION       = {London and Edinburgh},
-  LOCATION+an    = {1=ann1;2=ann2},
-  DATE           = {1999},
-  MAINSUBTITLE   = {Mainsubtitle},
-  MAINTITLE      = {Maintitle},
-  MAINTITLEADDON = {Maintitleaddon},
-  TITLE          = {Booktitle},
-  TITLE+an       = {=ann1, ann2},
+  LOCATION            = {London and Edinburgh},
+  LOCATION+an:default = {1=ann1;2=ann2},
+  DATE                = {1999},
+  MAINSUBTITLE        = {Mainsubtitle},
+  MAINTITLE           = {Maintitle},
+  MAINTITLEADDON      = {Maintitleaddon},
+  TITLE               = {Booktitle},
+  TITLE+an:default    = {=ann1, ann2},
 }
 
 |;

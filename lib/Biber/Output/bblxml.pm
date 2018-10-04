@@ -532,37 +532,52 @@ sub set_output_entry {
 
   # Output annotations
   foreach my $f (Biber::Annotation->get_annotated_fields('field', $key)) {
-    my $v = Biber::Annotation->get_annotation('field', $key, $f);
-    $xml->dataElement([$xml_prefix, 'annotation'],
-                      scope => 'field',
-                      field => _bblxml_norm($f),
-                      value => _bblxml_norm($v)
-                     );
-  }
-
-  foreach my $f (Biber::Annotation->get_annotated_fields('item', $key)) {
-    foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f)) {
-      my $v = Biber::Annotation->get_annotation('item', $key, $f, $c);
+    foreach my $n (Biber::Annotation->get_annotations('field', $key, $f)) {
+      my $v = Biber::Annotation->get_annotation('field', $key, $f, $n);
+      my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $n);
       $xml->dataElement([$xml_prefix, 'annotation'],
-                        scope => 'item',
+                        scope => 'field',
                         field => _bblxml_norm($f),
-                        item  => _bblxml_norm($c),
+                        name  => bblxml_norm($n),
+                        literal => $l,
                         value => _bblxml_norm($v)
                        );
     }
   }
 
-  foreach my $f (Biber::Annotation->get_annotated_fields('part', $key)) {
-    foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f)) {
-      foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $c)) {
-        my $v = Biber::Annotation->get_annotation('part', $key, $f, $c, $p);
+  foreach my $f (Biber::Annotation->get_annotated_fields('item', $key)) {
+    foreach my $n (Biber::Annotation->get_annotations('item', $key, $f)) {
+      foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f)) {
+        my $v = Biber::Annotation->get_annotation('item', $key, $f, $c);
+        my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $n, $c);
         $xml->dataElement([$xml_prefix, 'annotation'],
-                          scope => 'part',
+                          scope => 'item',
                           field => _bblxml_norm($f),
+                          name  => bblxml_norm($n),
+                          literal => $l,
                           item  => _bblxml_norm($c),
-                          part  => _bblxml_norm($p),
                           value => _bblxml_norm($v)
                          );
+      }
+    }
+  }
+
+  foreach my $f (Biber::Annotation->get_annotated_fields('part', $key)) {
+    foreach my $n (Biber::Annotation->get_annotations('part', $key, $f)) {
+      foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f)) {
+        foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $c)) {
+          my $v = Biber::Annotation->get_annotation('part', $key, $f, $c, $p);
+          my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $n, $c, $p);
+          $xml->dataElement([$xml_prefix, 'annotation'],
+                            scope => 'part',
+                            field => _bblxml_norm($f),
+                            name  => bblxml_norm($n),
+                            literal => $l,
+                            item  => _bblxml_norm($c),
+                            part  => _bblxml_norm($p),
+                            value => _bblxml_norm($v)
+                           );
+        }
       }
     }
   }

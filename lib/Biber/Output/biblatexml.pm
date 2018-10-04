@@ -180,11 +180,6 @@ sub set_output_entry {
         }
       }
 
-      # names scope annotation
-      if (my $ann = Biber::Annotation->get_annotation('field', $key, $namefield)) {
-        push @attrs, ('annotation' => $ann);
-      }
-
       $xml->startTag([$xml_prefix, 'names'], @attrs);
 
       foreach my $n ($nf->names->@*) {
@@ -208,11 +203,6 @@ sub set_output_entry {
         pop $lf->@*;               # remove the last element in the array
       }
 
-      # list scope annotation
-      if (my $ann = Biber::Annotation->get_annotation('field', $key, $listfield)) {
-        push @attrs, ('annotation' => $ann);
-      }
-
       $xml->startTag([$xml_prefix, $listfield], @attrs);
       $xml->startTag([$xml_prefix, 'list']);
 
@@ -220,10 +210,6 @@ sub set_output_entry {
       my $itemcount = 1;
       foreach my $f ($lf->@*) {
         my @lattrs;
-        # item scope annotation
-        if (my $ann = Biber::Annotation->get_annotation('item', $key, $listfield, $itemcount++)) {
-          push @lattrs, ('annotation' => $ann);
-        }
 
         $xml->dataElement([$xml_prefix, 'item'], NFC($f), @lattrs);
       }
@@ -249,11 +235,6 @@ sub set_output_entry {
       next if $field eq 'crossref'; # this is handled above
       my @attrs;
 
-      # field scope annotation
-      if (my $ann = Biber::Annotation->get_annotation('field', $key, $field)) {
-        push @attrs, ('annotation' => $ann);
-      }
-
       $xml->dataElement([$xml_prefix, $field], NFC($val), @attrs);
     }
   }
@@ -265,10 +246,6 @@ sub set_output_entry {
       next if $xsvf eq 'xdata'; # XDATA is special
 
       my @attrs;
-      # field scope annotation
-      if (my $ann = Biber::Annotation->get_annotation('field', $key, $xsvf)) {
-        push @attrs, ('annotation' => $ann);
-      }
 
       $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',$f->@*)));
     }
@@ -453,6 +430,52 @@ sub set_output_entry {
         }
       }
       $xml->endTag();           # date
+    }
+  }
+
+  # Annotations
+  foreach my $f (Biber::Annotation->get_annotated_fields('field', $key)) {
+    foreach my $n (Biber::Annotation->get_annotations('field', $key, $f)) {
+      my $v = Biber::Annotation->get_annotation('field', $key, $f, $n);
+      my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $n);
+      $xml->dataElement([$xml_prefix, 'annotation'],
+                        $v,
+                        field => $f,
+                        name  => $n,
+                        literal => $l);
+    }
+  }
+
+  foreach my $f (Biber::Annotation->get_annotated_fields('item', $key)) {
+    foreach my $n (Biber::Annotation->get_annotations('item', $key, $f)) {
+      foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f, $n)) {
+        my $v = Biber::Annotation->get_annotation('item', $key, $f, $n, $c);
+        my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $n, $c);
+        $xml->dataElement([$xml_prefix, 'annotation'],
+                          $v,
+                          field => $f,
+                          name  => $n,
+                          item => $c,
+                          literal => $l);
+      }
+    }
+  }
+
+  foreach my $f (Biber::Annotation->get_annotated_fields('part', $key)) {
+    foreach my $n (Biber::Annotation->get_annotations('part', $key, $f)) {
+      foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f, $n)) {
+        foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $n, $c)) {
+          my $v = Biber::Annotation->get_annotation('part', $key, $f, $n, $c, $p);
+          my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $n, $c, $p);
+          $xml->dataElement([$xml_prefix, 'annotation'],
+                            $v,
+                            field => $f,
+                            name  => $n,
+                            item => $c,
+                            part => $p,
+                            literal => $l);
+        }
+      }
     }
   }
 

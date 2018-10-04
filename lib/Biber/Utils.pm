@@ -55,7 +55,7 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
   bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
-  split_xsv date_monthday tzformat expand_option};
+  split_xsv date_monthday tzformat expand_option strip_annotation};
 
 =head1 FUNCTIONS
 
@@ -1375,6 +1375,19 @@ sub parse_range {
   else {
     return [1, $1];
   }
+}
+
+=head2 strip_annotation
+
+  Removes annotation marker from a field name
+
+=cut
+
+sub strip_annotation {
+  my $string = shift;
+  my $ann = $CONFIG_META_MARKERS{annotation};
+  my $nam = $CONFIG_META_MARKERS{namedannotation};
+  return $string =~ s/$ann$nam?.*$//r;
 }
 
 =head2 parse_range_alt
