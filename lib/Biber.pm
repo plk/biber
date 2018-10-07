@@ -2220,7 +2220,10 @@ sub process_sets {
       my $me = $section->bibentry($member);
       process_entry_options($member, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
 
-      if ($me->get_field('entryset')) {
+      # Use get_datafield() instead of get_field() because we add 'entryset' below
+      # and if the same entry is used in more than one set, it will pass this test
+      # and generate an error if we use get_field()
+      if ($me->get_datafield('entryset')) {
         biber_warn("Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry '$member'", $me);
         $me->del_field('entryset');
       }
