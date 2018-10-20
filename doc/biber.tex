@@ -26,8 +26,8 @@
 \newcommand*{\biblatex}{Biblatex\xspace}
 \MakeAutoQuote{«}{»}
 
-\gdef\biberversion{2.11}    % BIBER VERSION
-\gdef\biblatexversion{3.11}   % BIBLATEX VERSION
+\gdef\biberversion{2.12}    % BIBER VERSION
+\gdef\biblatexversion{3.12}   % BIBLATEX VERSION
 
 % colour for tables
 \definecolor{Gray}{gray}{0.85}
@@ -253,6 +253,7 @@ compatibility matrix for the recent versions.
 \toprule
 \biber\ version & \biblatex\ version\\
 \midrule
+2.12 & 3.12\\
 2.11 & 3.11\\
 2.10 & 3.10\\
 2.9 & 3.9\\
@@ -2609,9 +2610,10 @@ their default values are the same as their input option counterparts
 \opt{--listsep}, \opt{--namesep} and \opt{--xnamesep}. The option
 \opt{--output-xname} can be used to specify that the extended name format
 (see section \ref{biber::xname}) is to be used to output names.
-\opt{--output-annotation-marker} can be used to specify the annotation
-marker to write for annotated fields on output. See the Data Annotation feature
-documentation in the \biblatex manual.
+\opt{--output-annotation-marker} and \opt{--output-named-annotation-marker} can
+be used to specify the annotation markers to write for annotated fields on
+output. See the Data Annotation feature documentation in the \biblatex
+manual.
 
 \begin{table}
 \begin{center}
@@ -2623,6 +2625,7 @@ documentation in the \biblatex manual.
 \midrule
 output-align & \checkmark & - & - & -\\
 output-annotation-marker & \checkmark & - & - & -\\
+output-named-annotation-marker & \checkmark & - & - & -\\
 output-indent & \checkmark & \checkmark & - & -\\
 output-field-order & \checkmark & - & - & -\\
 output-fieldcase & \checkmark & - & - & -\\
@@ -2929,7 +2932,7 @@ of \biber\ version and locale of course but there should be no errors
 or warnings).
 
 \begin{verbatim}
-INFO - This is Biber 2.9
+INFO - This is Biber 2.12
 INFO - Logfile is 'test.blg'
 INFO - BibLaTeX control file 'test.bcf' validates
 INFO - Converted BibLaTeX control file 'test.bcf' to 'test.bcf.html'

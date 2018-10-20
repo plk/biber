@@ -1,5 +1,13 @@
 Revision history for Biber
 
+2.12   (2018-10-30)
+       * Added support for biblatex literal and named annotation features
+       * Added support for biblatex \ifnocite test
+       * Case insensitive matching operators in sourcemaps (matchi/notmatchi)
+       * Support for biblatex min/maxsortnames options
+       * Added support for biblatex 'noroman' option to supporess roman
+         numeral interpretation in ranges.
+       * Misc bug fixes
 2.11   (2018-02-14)
        * New entrynocite option for maps which create/clone entries 
        * Misc bug fixes
