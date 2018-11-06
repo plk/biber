@@ -22,8 +22,8 @@ use Unicode::Normalize;
 use parent qw(Class::Accessor);
 __PACKAGE__->follow_best_practice;
 
-our $VERSION = '2.12';
-our $BETA_VERSION = 0; # Is this a beta version?
+our $VERSION = '2.13';
+our $BETA_VERSION = 1; # Is this a beta version?
 
 our $logger  = Log::Log4perl::get_logger('main');
 our $screen  = Log::Log4perl::get_logger('screen');
