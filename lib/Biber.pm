@@ -1309,6 +1309,10 @@ sub cite_setmembers {
         $be->get_field('entryset')) {
       my $inset_keys = $be->get_field('entryset');
 
+      # Ignore empty sets (likely this means that they contained only
+      # non-existent keys that were removed)
+      next unless $inset_keys->@*;
+
       my $realmems;
       foreach my $mem ($inset_keys->@*) {
         push $realmems->@*, $section->get_citekey_alias($mem) // $mem;
