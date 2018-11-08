@@ -311,6 +311,8 @@ sub parse_ctrlfile {
     unless (eval {$checkbuf = File::Slurper::read_text($ctrl_file_path, 'latin1')}) {
       biber_error("$ctrl_file_path is not UTF-8 or even latin1, how horrible.");
     }
+    # Write ctrl file as UTF-8
+    File::Slurper::write_text($ctrl_file_path, NFC($checkbuf));# Unicode NFC boundary
   }
 
   $checkbuf = NFD($checkbuf);# Unicode NFD boundary
@@ -319,8 +321,6 @@ sub parse_ctrlfile {
     unlink($output) unless $output eq '-';# ignore deletion of STDOUT marker
     biber_error("$ctrl_file_path is malformed, last biblatex run probably failed. Deleted $output");
   }
-  # Write ctrl file as UTF-8
-  File::Slurper::write_text($ctrl_file_path, NFC($checkbuf));# Unicode NFC boundary
 
   # Validate if asked to
   if (Biber::Config->getoption('validate_control')) {
