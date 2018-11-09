@@ -629,12 +629,12 @@ sub check_mandatory_constraints {
   my $et = $be->get_field('entrytype');
   my $key = $be->get_field('citekey');
   my $ds = $section->get_keytods($key);
-
+# ["title", ["OR", "url", "doi", "eprint"]]
   foreach my $c ($self->{entrytypesbyname}{$et}{constraints}{mandatory}->@*) {
     if (ref($c) eq 'ARRAY') {
       # Exactly one of a set is mandatory
       if ($c->[0] eq 'XOR') {
-        my @fs = $c->@[1,-1]; # Lose the first element which is the 'XOR'
+        my @fs = $c->@[1..$#$c]; # Lose the first element which is the 'XOR'
         my $flag = 0;
         my $xorflag = 0;
         foreach my $of (@fs) {
@@ -655,7 +655,7 @@ sub check_mandatory_constraints {
       }
       # One or more of a set is mandatory
       elsif ($c->[0] eq 'OR') {
-        my @fs = $c->@[1,-1]; # Lose the first element which is the 'OR'
+        my @fs = $c->@[1..$#$c]; # Lose the first element which is the 'OR'
         my $flag = 0;
         foreach my $of (@fs) {
           if ($be->field_exists($of)) {
