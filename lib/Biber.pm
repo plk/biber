@@ -825,6 +825,12 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     # \cite'd takes priority
     foreach my $keyc ($section->{citekey}->@*) {
       my $key = NFD($keyc->{content}); # Key is already UTF-8 - it comes from UTF-8 XML
+
+      # Add explicit cite info
+      unless ($key eq '*') {
+        $bib_section->add_explicitcitekey($key);
+      }
+
       if ($keyc->{nocite}) {# \nocite'd
         # Don't add if there is an identical key without nocite since \cite takes precedence
         unless (first {$key eq NFD($_->{content})} @prekeys) {
@@ -2260,7 +2266,9 @@ sub process_nocite {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if ($section->get_nocite($citekey) || $section->is_allkeys_nocite) {
+  # Either explicitly nocited or \nocite{*} and not explicitly cited without nocite
+  if ($section->get_nocite($citekey) or
+      ($section->is_allkeys_nocite and not $section->is_explicitcitekey($citekey))) {
     $be->set_field('nocite', '1');
   }
 }

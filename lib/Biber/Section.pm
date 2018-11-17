@@ -24,6 +24,7 @@ sub new {
   my $self = bless {%params}, $class;
   $self->{bibentries} = new Biber::Entries;
   $self->{keytorelclone} = {};
+  $self->{explicitcitekeys} = {};
   $self->{relclonetokey} = {};
   $self->{relkeys} = {};
   $self->{allkeys} = 0;
@@ -97,6 +98,31 @@ sub has_badcasekey {
   return $ckey ne $key ? $ckey : undef;
 }
 
+
+=head2 add_explicitcitekey
+
+    Record that a key is explicitly cited (as opposed to being
+    included by e.g \nocite{*})
+
+=cut
+
+sub add_explicitcitekey {
+  my ($self, $key) = @_;
+  $self->{explicitcitekeys}{$key} = 1;
+  return;
+}
+
+=head2 is_explicitcitekey
+
+    Check if a key is explicitly cited (as opposed to being
+    included by e.g \nocite{*})
+
+=cut
+
+sub is_explicitcitekey {
+  my ($self, $key) = @_;
+  return $self->{explicitcitekeys}{$key};
+}
 
 =head2 add_related
 
