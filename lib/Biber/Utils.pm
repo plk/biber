@@ -273,7 +273,7 @@ sub strip_noinit {
     $string =~ s/$re//gxms;
   }
   # remove latex macros (assuming they have only ASCII letters)
-  $string =~ s/\\[A-Za-z]+\s*\{?([^\}]+)\}?/$1/g;
+  $string =~ s{\\[A-Za-z]+\s*(\{([^\}]*)?\})?}{defined($2)?$2:q{}}eg;
   return $string;
 }
 

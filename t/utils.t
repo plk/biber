@@ -5,7 +5,7 @@ use utf8;
 no warnings 'utf8' ;
 use open qw/:std :utf8/;
 
-use Test::More tests => 81;
+use Test::More tests => 83;
 use Test::Differences;
 unified_diff;
 
@@ -170,3 +170,5 @@ eq_or_diff([split_xsv('"family={Something, here}", given=b')], ['family={Somethi
 
 eq_or_diff(strip_noinit('\texttt{freedesktop.org}'), 'freedesktop.org', 'Name strip - 1');
 eq_or_diff(strip_noinit('\texttt freedesktop.org'), 'freedesktop.org', 'Name strip - 2');
+eq_or_diff(strip_noinit('{\texttt freedesktop.org}'), '{freedesktop.org}', 'Name strip - 3');
+eq_or_diff(strip_noinit('{C.\bibtexspatium A.}'), '{C.A.}', 'Name strip - 4');
