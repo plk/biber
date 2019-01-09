@@ -187,6 +187,7 @@ my $ssl = q|    \entry{merleau-ponty_philosophe_2010}{incollection}{}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
+      \field{booktitle}{Œuvres}
       \field{title}{Le philosophe et son ombre}
       \field{year}{2010}
       \field{pages}{1267\bibrangedash 1289}
