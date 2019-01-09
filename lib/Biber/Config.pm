@@ -74,6 +74,7 @@ $CONFIG->{state}{xdata} = [];
 $CONFIG->{state}{graph} = {};
 
 $CONFIG->{state}{seenkeys} = {};
+$CONFIG->{globalstate}{seenkeys} = {};
 
 # Track the order of keys as cited. Keys cited in the same \cite*{} get the same order
 # Used for sorting schemes which use \citeorder
@@ -1011,89 +1012,6 @@ sub get_graph {
   return $CONFIG->{state}{graph}{$type};
 }
 
-=head2 set_set_pc
-
-  Record a parent->child set relationship
-
-=cut
-
-sub set_set_pc {
-  shift; # class method so don't care about class name
-  my ($parent, $child) = @_;
-  $CONFIG->{state}{set}{pc}{$parent}{$child} = 1;
-  return;
-}
-
-=head2 set_set_cp
-
-  Record a child->parent set relationship
-
-=cut
-
-sub set_set_cp {
-  shift; # class method so don't care about class name
-  my ($child, $parent) = @_;
-  $CONFIG->{state}{set}{cp}{$child}{$parent} = 1;
-  return;
-}
-
-=head2 get_set_pc
-
-  Return a boolean saying if there is a parent->child set relationship
-
-=cut
-
-sub get_set_pc {
-  shift; # class method so don't care about class name
-  my ($parent, $child) = @_;
-  return exists($CONFIG->{state}{set}{pc}{$parent}{$child}) ? 1 : 0;
-}
-
-=head2 get_set_cp
-
-  Return a boolean saying if there is a child->parent set relationship
-
-=cut
-
-sub get_set_cp {
-  shift; # class method so don't care about class name
-  my ($child, $parent) = @_;
-  return exists($CONFIG->{state}{set}{cp}{$child}{$parent}) ? 1 : 0;
-}
-
-=head2 get_set_children
-
-  Return a list of children for a parent set
-
-=cut
-
-sub get_set_children {
-  shift; # class method so don't care about class name
-  my $parent = shift;
-  if (exists($CONFIG->{state}{set}{pc}{$parent})) {
-    return (keys $CONFIG->{state}{set}{pc}{$parent}->%*);
-  }
-  else {
-    return ();
-  }
-}
-
-=head2 get_set_parents
-
-  Return a list of parents for a child of a set
-
-=cut
-
-sub get_set_parents {
-  shift; # class method so don't care about class name
-  my $child = shift;
-  if (exists($CONFIG->{state}{set}{cp}{$child})) {
-    return (keys $CONFIG->{state}{set}{cp}{$child}->%*);
-  }
-  else {
-    return ();
-  }
-}
 
 
 =head2 set_inheritance
@@ -1222,11 +1140,7 @@ sub get_seenkey {
     return $CONFIG->{state}{seenkeys}{$section}{$key};
   }
   else {
-    my $count;
-    foreach my $section (keys $CONFIG->{state}{seenkeys}->%*) {
-      $count += $CONFIG->{state}{seenkeys}{$section}{$key};
-    }
-    return $count;
+    return $CONFIG->{globalstate}{seenkeys}{$key};
   }
 }
 
@@ -1242,6 +1156,7 @@ sub incr_seenkey {
   my $key = shift;
   my $section = shift;
   $CONFIG->{state}{seenkeys}{$section}{$key}++;
+  $CONFIG->{globalstate}{seenkeys}{$key}++;
   return;
 }
 
