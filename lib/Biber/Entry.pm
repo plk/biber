@@ -121,11 +121,11 @@ sub relclone {
             $relopts = remove_entry_options($relopts, {skipbib => 1, skipbiblist => 1});
             push @$relopts, ('skipbib=true', 'skipbiblist=true');
           }
-          process_entry_options($clonekey, $relopts);
+          process_entry_options($clonekey, $relopts, $secnum);
           $relclone->set_datafield('options', $relopts);
         }
         else {
-          process_entry_options($clonekey, ['skiplab','skipbiblist','uniquename=0','uniquelist=0']);
+          process_entry_options($clonekey, ['skiplab','skipbiblist','uniquename=0','uniquelist=0'], $secnum);
           # Preserve options already in the clone but add 'dataonly'
           $relclone->set_datafield('options', [ 'dataonly', @{$relclone->get_datafield('options') || []} ]);
         }
@@ -645,7 +645,7 @@ sub inherit_from {
 
   my $type        = $self->get_field('entrytype');
   my $parenttype  = $parent->get_field('entrytype');
-  my $inheritance = Biber::Config->getblxoption('inheritance');
+  my $inheritance = Biber::Config->getblxoption(undef, 'inheritance');
   my %processed;
   # get defaults
   my $defaults = $inheritance->{defaults};
@@ -672,7 +672,7 @@ sub inherit_from {
           ($type_pair->{target} eq '*' or $type_pair->{target} eq $type)) {
         foreach my $field ($inherit->{field}->@*) {
           # Skip for fields in the per-entry noinerit datafield set
-          if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key) and
+          if (my $niset = Biber::Config->getblxoption($secnum, 'noinherit', undef, $target_key) and
              exists($field->{target})) {
             if (first {$field->{target} eq $_} $DATAFIELD_SETS{$niset}->@*) {
               next;
@@ -732,7 +732,7 @@ sub inherit_from {
 
     foreach my $field (@fields) {
       # Skip for fields in the per-entry noinherit datafield set
-      if (my $niset = Biber::Config->getblxoption('noinherit', undef, $target_key)) {
+      if (my $niset = Biber::Config->getblxoption($secnum, 'noinherit', undef, $target_key)) {
         if (first {$field eq $_} $DATAFIELD_SETS{$niset}->@*) {
           next;
         }

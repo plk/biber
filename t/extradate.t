@@ -38,9 +38,9 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 # Biblatex options
-Biber::Config->setblxoption('maxcitenames', 1);
-Biber::Config->setblxoption('maxbibnames', 1);
-Biber::Config->setblxoption('maxsortnames', 1);
+Biber::Config->setblxoption(undef,'maxcitenames', 1);
+Biber::Config->setblxoption(undef,'maxbibnames', 1);
+Biber::Config->setblxoption(undef,'maxsortnames', 1);
 
 # Now generate the information
 $biber->prepare;
@@ -84,7 +84,7 @@ ok(is_undef($main->get_extradatedata_for_key('ed7')), 'labelyear scope - 3');
 ok(is_undef($main->get_extradatedata_for_key('ed8')), 'labelyear scope - 4');
 
 # Switch to a month-in-year scope for extradate tracking
-Biber::Config->setblxoption('extradatespec', [['labelyear', 'year'],['labelmonth']]);
+Biber::Config->setblxoption(undef,'extradatespec', [['labelyear', 'year'],['labelmonth']]);
 $biber->prepare;
 $main = $biber->datalists->get_list('custom/global//global/global');
 
@@ -98,7 +98,7 @@ eq_or_diff($main->get_extradatedata_for_key('ed3'), '1', 'labelmonth scope - 3')
 eq_or_diff($main->get_extradatedata_for_key('ed4'), '2', 'labelmonth scope - 4');
 
 # Switch to a minute scope for extradate tracking
-Biber::Config->setblxoption('extradatespec', [['labelyear', 'year'],
+Biber::Config->setblxoption(undef,'extradatespec', [['labelyear', 'year'],
                                               ['labelmonth'],
                                               ['labelday'],
                                               ['labelhour'],
@@ -116,7 +116,7 @@ ok(is_undef($main->get_extradatedata_for_key('ed2')), 'labelminute scope - 4');
 
 # Test not using label* which means that open enddates would not be
 # considered
-Biber::Config->setblxoption('extradatespec', [['year']]);
+Biber::Config->setblxoption(undef,'extradatespec', [['year']]);
 $biber->prepare;
 $main = $biber->datalists->get_list('custom/global//global/global');
 eq_or_diff($main->get_extradatedata_for_key('ed7'), '1', 'year scope - 1');

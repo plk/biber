@@ -1782,8 +1782,8 @@ sub instantiate_entry {
   my ($self, $section, $entry, $key, $format) = @_;
   my $be = $section->bibentry($key);
   my $bee = $be->get_field('entrytype');
-  my $un = Biber::Config->getblxoption('uniquename', $bee, $key);
-  my $ul = Biber::Config->getblxoption('uniquelist', $bee, $key);
+  my $un = Biber::Config->getblxoption($section->number, 'uniquename', $bee, $key);
+  my $ul = Biber::Config->getblxoption($section->number, 'uniquelist', $bee, $key);
 
   return '' unless $entry and $be;
 
@@ -1839,7 +1839,7 @@ sub instantiate_entry {
     }
 
     # uniquename
-    if ($un) { # uniquename is expensive so skip if not requested
+    if ($un) {
       foreach my $namefield ($dmh->{namelists}->@*) {
         next unless my $nl = $be->get_field($namefield);
         my $nlid = $nl->get_id;

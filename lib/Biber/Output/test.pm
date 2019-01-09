@@ -79,11 +79,11 @@ sub set_output_entry {
   my $secnum = $section->number;
   my $dmh = $dm->{helpers};
   my $key = $be->get_field('citekey');
-  my $un = Biber::Config->getblxoption('uniquename', $bee, $key);
-  my $ul = Biber::Config->getblxoption('uniquelist', $bee, $key);
+  my $un = Biber::Config->getblxoption($secnum,'uniquename', $bee, $key);
+  my $ul = Biber::Config->getblxoption($secnum,'uniquelist', $bee, $key);
 
   $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
-    if (Biber::Config->getoption('debug') || Biber::Config->getblxoption('debug'));
+    if (Biber::Config->getoption('debug') || Biber::Config->getblxoption(undef,'debug'));
 
   $acc .= "    \\entry{$key}{$bee}{" . join(',', filter_entry_options($be->get_field('options'))->@*) . "}\n";
 
@@ -92,7 +92,7 @@ sub set_output_entry {
     $acc .= "      \\set{" . join(',', $be->get_field('entryset')->@*) . "}\n";
 
     # Set parents need this - it is the labelalpha from the first entry
-    if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
+    if ( Biber::Config->getblxoption(undef,'labelalpha', $bee) ) {
       $acc .= "      <BDS>LABELALPHA</BDS>\n";
       $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
     }
@@ -220,7 +220,7 @@ sub set_output_entry {
     }
   }
 
-  if ( Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
+  if ( Biber::Config->getblxoption(undef,'labelalpha', $be->get_field('entrytype')) ) {
     $acc .= "      <BDS>LABELALPHA</BDS>\n";
   }
 
@@ -231,7 +231,7 @@ sub set_output_entry {
 
   # The labeldateparts option determines whether "extradate" is output
   # Skip generating extradate for entries with "skiplab" set
-  if ( Biber::Config->getblxoption('labeldateparts', $be->get_field('entrytype'))) {
+  if ( Biber::Config->getblxoption(undef,'labeldateparts', $be->get_field('entrytype'))) {
     # Might not have been set due to skiplab/dataonly
     if (my $ey = $be->get_field('extradate')) {
       $acc .= "      <BDS>EXTRADATE</BDS>\n";
@@ -248,17 +248,17 @@ sub set_output_entry {
   }
 
   # The labeltitle option determines whether "extratitle" is output
-  if ( Biber::Config->getblxoption('labeltitle', $bee)) {
+  if ( Biber::Config->getblxoption(undef,'labeltitle', $bee)) {
     $acc .= "      <BDS>EXTRATITLE</BDS>\n";
   }
 
   # The labeltitleyear option determines whether "extratitleyear" is output
-  if ( Biber::Config->getblxoption('labeltitleyear', $bee)) {
+  if ( Biber::Config->getblxoption(undef,'labeltitleyear', $bee)) {
     $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  if ( Biber::Config->getblxoption('labelalpha', $bee)) {
+  if ( Biber::Config->getblxoption(undef,'labelalpha', $bee)) {
     $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
   }
 

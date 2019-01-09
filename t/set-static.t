@@ -67,11 +67,8 @@ my $string2 = q|    \entry{Static2}{book}{}
       \strng{authorbibnamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
-      \field{extraname}{1}
       \field{sortinit}{B}
       \field{sortinithash}{276475738cc058478c1677046f857703}
-      \field{extradate}{1}
-      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -98,7 +95,6 @@ my $string3 = q|    \entry{Static3}{book}{}
       \strng{authorfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{D}
       \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
-      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -124,7 +120,6 @@ my $string4 = q|    \entry{Static4}{book}{}
       \strng{authorfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{C}
       \field{sortinithash}{963e9d84a3da2344e8833203de5aed05}
-      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

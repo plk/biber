@@ -47,7 +47,7 @@ Biber::Config->setoption('sourcemap', [
       }]}]);
 
 # Biblatex options
-Biber::Config->setblxoption('labeldateparts', undef);
+Biber::Config->setblxoption(undef,'labeldateparts', undef);
 
 # Now generate the information
 $biber->prepare;

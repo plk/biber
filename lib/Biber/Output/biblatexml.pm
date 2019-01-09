@@ -145,8 +145,8 @@ sub set_output_entry {
 
   # Per-entry options
   my @entryoptions;
-  foreach my $opt (Biber::Config->getblxentryoptions($key)) {
-    push @entryoptions, $opt . '=' . Biber::Config->getblxoption($opt, undef, $key);
+  foreach my $opt (Biber::Config->getblxentryoptions($secnum, $key)) {
+    push @entryoptions, $opt . '=' . Biber::Config->getblxoption($secnum, $opt, undef, $key);
   }
   $xml->dataElement([$xml_prefix, 'options'], NFC(join(',', @entryoptions))) if @entryoptions;
 

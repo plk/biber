@@ -251,9 +251,9 @@ sub tool_mode_setup {
   $bib_sections->add_section($bib_section);
 
   # Always resolve date meta-information in tool mode
-  Biber::Config->setblxoption('dateapproximate', 1);
-  Biber::Config->setblxoption('dateera', 1);
-  Biber::Config->setblxoption('dateuncertain', 1);
+  Biber::Config->setblxoption(undef, 'dateapproximate', 1);
+  Biber::Config->setblxoption(undef, 'dateera', 1);
+  Biber::Config->setblxoption(undef, 'dateuncertain', 1);
 
   # Add the Biber::Sections object to the Biber object
   $self->add_sections($bib_sections);
@@ -268,7 +268,7 @@ sub tool_mode_setup {
                                      name => 'tool/global//global/global');
   $seclist->set_type('entry');
   # Locale just needs a default here - there is no biblatex option to take it from
-  Biber::Config->setblxoption('sortlocale', 'en_US');
+  Biber::Config->setblxoption(undef, 'sortlocale', 'en_US');
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Adding 'entry' list 'tool' for pseudo-section 99999");
   }
@@ -435,7 +435,7 @@ sub parse_ctrlfile {
 #  use Data::Dump;dd($bcfxml);exit 0;
   my $controlversion = $bcfxml->{version};
   my $bltxversion = $bcfxml->{bltxversion};
-  Biber::Config->setblxoption('controlversion', $controlversion);
+  Biber::Config->setblxoption(undef, 'controlversion', $controlversion);
   unless ($controlversion eq $BCF_VERSION) {
     biber_error("Error: Found biblatex control file version $controlversion, expected version $BCF_VERSION.\nThis means that your biber ($Biber::Config::VERSION) and biblatex ($bltxversion) versions are incompatible.\nSee compat matrix in biblatex or biber PDF documentation.");
   }
@@ -497,11 +497,11 @@ sub parse_ctrlfile {
       if ($bcfopts->{type} eq 'global') {
         foreach my $bcfopt ($bcfopts->{option}->@*) {
           if ($bcfopt->{type} eq 'singlevalued') {
-            Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
+            Biber::Config->setblxoption(undef, $bcfopt->{key}{content}, $bcfopt->{value}[0]{content});
           }
           elsif ($bcfopt->{type} eq 'multivalued') {
             # sort on order attribute and then remove it
-            Biber::Config->setblxoption($bcfopt->{key}{content},
+            Biber::Config->setblxoption(undef, $bcfopt->{key}{content},
               [ map {delete($_->{order}); $_} sort {$a->{order} <=> $b->{order}} $bcfopt->{value}->@* ]);
           }
         }
@@ -512,11 +512,11 @@ sub parse_ctrlfile {
         my $entrytype = $bcfopts->{type};
         foreach my $bcfopt ($bcfopts->{option}->@*) {
           if ($bcfopt->{type} eq 'singlevalued') {
-            Biber::Config->setblxoption($bcfopt->{key}{content}, $bcfopt->{value}[0]{content}, 'ENTRYTYPE', $entrytype);
+            Biber::Config->setblxoption(undef, $bcfopt->{key}{content}, $bcfopt->{value}[0]{content}, 'ENTRYTYPE', $entrytype);
           }
           elsif ($bcfopt->{type} eq 'multivalued') {
             # sort on order attribute and then remove it
-            Biber::Config->setblxoption($bcfopt->{key}{content},
+            Biber::Config->setblxoption(undef, $bcfopt->{key}{content},
               [ map {delete($_->{order}); $_} sort {$a->{order} <=> $b->{order}} $bcfopt->{value}->@* ],
               'ENTRYTYPE',
               $entrytype);
@@ -595,16 +595,16 @@ sub parse_ctrlfile {
     }
     $lants->{$t->{name}} = $lant;
   }
-  Biber::Config->setblxoption('labelalphanametemplate', $lants);
+  Biber::Config->setblxoption(undef, 'labelalphanametemplate', $lants);
 
   # LABELALPHA TEMPLATE
   foreach my $t ($bcfxml->{labelalphatemplate}->@*) {
     my $latype = $t->{type};
     if ($latype eq 'global') {
-      Biber::Config->setblxoption('labelalphatemplate', $t);
+      Biber::Config->setblxoption(undef, 'labelalphatemplate', $t);
     }
     else {
-      Biber::Config->setblxoption('labelalphatemplate',
+      Biber::Config->setblxoption(undef, 'labelalphatemplate',
                                   $t,
                                   'ENTRYTYPE',
                                   $latype);
@@ -620,10 +620,10 @@ sub parse_ctrlfile {
     }
     push $ed->@*, $fields;
   }
-  Biber::Config->setblxoption('extradatespec', $ed);
+  Biber::Config->setblxoption(undef, 'extradatespec', $ed);
 
   # INHERITANCE schemes for crossreferences (always global)
-  Biber::Config->setblxoption('inheritance', $bcfxml->{inheritance});
+  Biber::Config->setblxoption(undef, 'inheritance', $bcfxml->{inheritance});
 
   # NOINIT
   # Make the data structure look like the biber config file structure
@@ -681,7 +681,7 @@ sub parse_ctrlfile {
     }
     $unts->{$unt->{name}} = $untval;
   }
-  Biber::Config->setblxoption('uniquenametemplate', $unts);
+  Biber::Config->setblxoption(undef, 'uniquenametemplate', $unts);
 
   # SORTING NAME KEY
   # Use the order attributes to make sure things are in right order and create a data structure
@@ -711,17 +711,17 @@ sub parse_ctrlfile {
     }
     $snss->{$sns->{name}} = $snkps;
   }
-  Biber::Config->setblxoption('sortingnamekeytemplate', $snss);
+  Biber::Config->setblxoption(undef, 'sortingnamekeytemplate', $snss);
 
   # SORTING
 
   # transliterations
   foreach my $tr ($bcfxml->{transliteration}->@*) {
     if ($tr->{entrytype}[0] eq '*') { # already array forced for another option
-      Biber::Config->setblxoption('translit', $tr->{translit});
+      Biber::Config->setblxoption(undef, 'translit', $tr->{translit});
     }
     else { # per_entrytype
-      Biber::Config->setblxoption('translit',
+      Biber::Config->setblxoption(undef, 'translit',
                                   $tr->{translit},
                                   'ENTRYTYPE',
                                   $tr->{entrytype}[0]);
@@ -734,7 +734,7 @@ sub parse_ctrlfile {
     foreach my $ex ($sex->{exclusion}->@*) {
       $excludes->{$ex->{content}} = 1;
     }
-    Biber::Config->setblxoption('sortexclusion',
+    Biber::Config->setblxoption(undef, 'sortexclusion',
                                 $excludes,
                                 'ENTRYTYPE',
                                 $sex->{type});
@@ -746,7 +746,7 @@ sub parse_ctrlfile {
     foreach my $in ($sin->{inclusion}->@*) {
       $includes->{$in->{content}} = 1;
     }
-    Biber::Config->setblxoption('sortinclusion',
+    Biber::Config->setblxoption(undef, 'sortinclusion',
                                 $includes,
                                 'ENTRYTYPE',
                                 $sin->{type});
@@ -756,11 +756,11 @@ sub parse_ctrlfile {
   foreach my $presort ($bcfxml->{presort}->@*) {
     # Global presort default
     unless (exists($presort->{type})) {
-      Biber::Config->setblxoption('presort', $presort->{content});
+      Biber::Config->setblxoption(undef, 'presort', $presort->{content});
     }
     # Per-type default
     else {
-      Biber::Config->setblxoption('presort',
+      Biber::Config->setblxoption(undef, 'presort',
                                   $presort->{content},
                                   'ENTRYTYPE',
                                   $presort->{type});
@@ -771,10 +771,10 @@ sub parse_ctrlfile {
   foreach my $ss ($bcfxml->{sortingtemplate}->@*) {
     $sortingtemplates->{$ss->{name}} = _parse_sort($ss);
   }
-  Biber::Config->setblxoption('sortingtemplate', $sortingtemplates);
+  Biber::Config->setblxoption(undef, 'sortingtemplate', $sortingtemplates);
 
   # DATAMODEL schema (always global)
-  Biber::Config->setblxoption('datamodel', $bcfxml->{datamodel});
+  Biber::Config->setblxoption(undef, 'datamodel', $bcfxml->{datamodel});
 
   # SECTIONS
   # This is also where we set data files as these are associated with a bib section
@@ -963,7 +963,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     # Potentially, the locale could be different for the first field in the sort spec in which
     # case that might give wrong results but this is highly unlikely as it is only used to
     # determine sortinithash in DataList.pm and that only changes \bibinitsep in biblatex.
-    $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption('sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
+    $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption(undef, 'sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
 
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Adding datalist of type '$ltype' with sortingtemplate '$lstn', sortingnamekeytemplatename '$lsnksn', labelprefix '$lpn', uniquenametemplate '$luntn', labelalphanametemplate '$llantn' and name '$lname' for section $lsection");
@@ -974,7 +974,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
   # Check to make sure that each section has an entry datalist for global sorting
   # We have to make sure in case sortcites is used which uses the global order.
   foreach my $section ($bcfxml->{section}->@*) {
-    my $globalss = Biber::Config->getblxoption('sortingtemplatename');
+    my $globalss = Biber::Config->getblxoption(undef, 'sortingtemplatename');
     my $secnum = $section->{number};
 
     unless ($datalists->get_lists_by_attrs(section                    => $secnum,
@@ -996,7 +996,7 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
       $datalists->add_list($datalist);
       # See comment above
 
-      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption('sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
+      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption(undef, 'sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
     }
   }
 
@@ -1036,12 +1036,12 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     $self->sections->add_section($bib_section);
 
     my $datalist = Biber::DataList->new(section => 99999,
-                                        sortingtemplatename => Biber::Config->getblxoption('sortingtemplatename'),
+                                        sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'),
                                         sortingnamekeytemplatename => 'global',
                                         uniquenametemplatename => 'global',
                                         labelalphanametemplatename => 'global',
                                         labelprefix => '',
-                                        name => Biber::Config->getblxoption('sortingtemplatename') . '/global//global/global');
+                                        name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global');
     $datalist->set_type('entry');
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Adding 'entry' list 'none' for pseudo-section 99999");
@@ -1068,17 +1068,17 @@ sub process_setup {
   foreach my $section ($self->sections->get_sections->@*) {
     my $secnum = $section->number;
     unless ($self->datalists->has_lists_of_type_for_section($secnum, 'entry')) {
-      my $datalist = Biber::DataList->new(sortingtemplatename => Biber::Config->getblxoption('sortingtemplatename'),
+      my $datalist = Biber::DataList->new(sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'),
                                           sortingnamekeytemplatename => 'global',
                                           uniquenametemplatename => 'global',
                                           labelalphanametemplatename => 'global',
                                           labelprefix => '',
-                                          name => Biber::Config->getblxoption('sortingtemplatename') . '/global//global/global');
+                                          name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global');
       $datalist->set_type('entry');
       $datalist->set_section($secnum);
       $self->datalists->add_list($datalist);
       # See comment for same call in .bcf instantiation of datalists
-      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption('sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
+      $datalist->set_sortinit_collator(Unicode::Collate::Locale->new(locale => Biber::Config->getblxoption(undef, 'sortingtemplate')->{$datalist->get_sortingtemplatename}->{locale}, level => 1));
     }
   }
 
@@ -1086,7 +1086,7 @@ sub process_setup {
   # for use in verification checks later
   # This has to be here as opposed to in parse_ctrlfile() so that it can pick
   # up user config dm settings
-  Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
+  Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption(undef, 'datamodel')));
 
   # Now resolve any datafield sets from the .bcf
   _resolve_datafieldsets();
@@ -1107,7 +1107,7 @@ sub process_setup {
 sub process_setup_tool {
   my $self = shift;
 
-  Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption('datamodel')));
+  Biber::Config->set_dm(Biber::DataModel->new(Biber::Config->getblxoption(undef, 'datamodel')));
 
   # Now resolve any datafield sets from the .bcf
   _resolve_datafieldsets();
@@ -1571,10 +1571,10 @@ sub process_namedis {
 
   my $be = $section->bibentry($citekey);
 
-  my $un = Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey);
+  my $un = Biber::Config->getblxoption($secnum, 'uniquename', $be->get_field('entrytype'), $citekey);
 
   # Can be per-entry
-  $untname = Biber::Config->getblxoption('uniquenametemplatename', undef, $citekey) // $untname;
+  $untname = Biber::Config->getblxoption($secnum, 'uniquenametemplatename', undef, $citekey) // $untname;
 
   # Instead of setting this directly in here, we save the data and pass it out as we need
   # to use this method to get data without setting it in the list object (in uniqueprimaryauthor())
@@ -1605,14 +1605,14 @@ sub process_namedis {
       my $base = ''; # Might no be any base parts at all so make sure it's not undefined
       my $baseparts;
 
-      foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{$untname}->@*) {
+      foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}->@*) {
         next unless $np->{base};
         my $npn = $np->{namepart};
 
         if (my $p = $n->get_namepart($npn)) {
           if ($np->{use}) {     # only ever defined as 1
             my $method = "get_use$npn";
-            my $useok = Biber::Config->getblxoption("use$npn",
+            my $useok = Biber::Config->getblxoption($secnum, "use$npn",
                                                     $be->get_field('entrytype'),
                                                     $citekey);
             # Override with per-namelist setting - only for extended name format
@@ -1635,7 +1635,7 @@ sub process_namedis {
       push $namedisschema->@*, ['base' => $baseparts] if defined($baseparts);
 
       # ... then add non-base parts by incrementally adding to the last disambiguation level
-      foreach my $np (Biber::Config->getblxoption('uniquenametemplate')->{$untname}->@*) {
+      foreach my $np (Biber::Config->getblxoption(undef, 'uniquenametemplate')->{$untname}->@*) {
         next if $np->{base};
         next if defined($np->{disambiguation}) and ($np->{disambiguation} eq 'none');
 
@@ -1647,7 +1647,7 @@ sub process_namedis {
           my $pi = $n->get_namepart_initial($npn);
           if ($np->{use}) {     # only ever defined as 1
             my $method = "get_use$npn";
-            my $useok = Biber::Config->getblxoption("use$npn",
+            my $useok = Biber::Config->getblxoption($secnum, "use$npn",
                                                     $be->get_field('entrytype'),
                                                     $citekey);
             # Override with per-namelist setting - only for extended name format
@@ -1774,8 +1774,8 @@ sub process_entries_pre {
 
     # Check this outside of process_namedis() because we need to use that in cases
     # where uniquename=false (uniqueprimaryauthor for example);
-    if (Biber::Config->getblxoption('uniquename', $be->get_field('entrytype'), $citekey) or
-        Biber::Config->getblxoption('uniquelist', $be->get_field('entrytype'), $citekey)) {
+    if (Biber::Config->getblxoption($secnum, 'uniquename', $be->get_field('entrytype'), $citekey) or
+        Biber::Config->getblxoption($secnum, 'uniquelist', $be->get_field('entrytype'), $citekey)) {
 
       # process name disambiguation schemata
       my $namedis = $self->process_namedis($citekey, $dlist);
@@ -1901,7 +1901,7 @@ sub process_uniqueprimaryauthor {
   my $be = $section->bibentry($citekey);
 
   if (my $lni = $be->get_labelname_info) {
-    if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
+    if (Biber::Config->getblxoption(undef, 'uniqueprimaryauthor')) {
       my $nl = $be->get_field($lni);
       if ($logger->is_trace()) {# performance tune
         $logger->trace("Creating uniqueprimaryauthor information for '$citekey'");
@@ -1951,7 +1951,7 @@ sub process_workuniqueness {
   # singletitle
   # Don't generate information for entries with no labelname or labeltitle
   # Use fullhash as this is not a test of uniqueness of only visible information
-  if ($lni and Biber::Config->getblxoption('singletitle', $bee)) {
+  if ($lni and Biber::Config->getblxoption(undef, 'singletitle', $bee)) {
     $identifier = $self->_getfullhash($citekey, $be->get_field($lni));
 
     # Skip due to ignore settings?
@@ -1968,7 +1968,7 @@ sub process_workuniqueness {
 
   # uniquetitle
   # Don't generate information for entries with no labeltitle
-  if ($lti and Biber::Config->getblxoption('uniquetitle', $bee)) {
+  if ($lti and Biber::Config->getblxoption(undef, 'uniquetitle', $bee)) {
     $identifier = $be->get_field($lti);
 
     # Skip due to ignore settings?
@@ -1980,7 +1980,7 @@ sub process_workuniqueness {
 
   # uniquebaretitle
   # Don't generate information for entries with no labeltitle and with labelname
-  if ($lti and not $lni and Biber::Config->getblxoption('uniquebaretitle', $bee)) {
+  if ($lti and not $lni and Biber::Config->getblxoption(undef, 'uniquebaretitle', $bee)) {
     $identifier = $be->get_field($lti);
 
     # Skip due to ignore settings?
@@ -1993,7 +1993,7 @@ sub process_workuniqueness {
   # uniquework
   # Don't generate information for entries with no labelname and labeltitle
   # Should use fullhash this is not a test of uniqueness of only visible information
-  if ($lni and $lti and Biber::Config->getblxoption('uniquework', $bee)) {
+  if ($lni and $lti and Biber::Config->getblxoption(undef, 'uniquework', $bee)) {
     $identifier = $self->_getfullhash($citekey, $be->get_field($lni)) . $be->get_field($lti);
 
     # Skip due to ignore settings?
@@ -2027,8 +2027,8 @@ sub process_extradate {
   #   (see code in incr_seen_namedateparts method).
   # * Don't increment if skiplab is set
 
-  if (Biber::Config->getblxoption('labeldateparts', $bee)) {
-    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+  if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee)) {
+    if (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $citekey)) {
       return;
     }
 
@@ -2042,7 +2042,7 @@ sub process_extradate {
     }
 
     my $datestring = ''; # Need a default empty string
-    my $edspec = Biber::Config->getblxoption('extradatespec');
+    my $edspec = Biber::Config->getblxoption(undef, 'extradatespec');
     my $edscope;
     # Look in each scope
     foreach my $scope ($edspec->@*) {
@@ -2079,7 +2079,7 @@ sub process_extraname {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+  if (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $citekey)) {
     return;
   }
 
@@ -2122,8 +2122,8 @@ sub process_extratitle {
   # This is different from extradate in that we do track the information
   # if the labelname is empty as titles are much more unique than years
 
-  if (Biber::Config->getblxoption('labeltitle', $bee)) {
-    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+  if (Biber::Config->getblxoption(undef, 'labeltitle', $bee)) {
+    if (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $citekey)) {
       return;
     }
 
@@ -2175,8 +2175,8 @@ sub process_extratitleyear {
   #   (see code in incr_seen_titleyear method).
   # * Don't increment if skiplab is set
 
-  if (Biber::Config->getblxoption('labeltitleyear', $bee)) {
-    if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+  if (Biber::Config->getblxoption(undef, 'labeltitleyear', $bee)) {
+    if (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $citekey)) {
       return;
     }
 
@@ -2228,10 +2228,7 @@ sub process_sets {
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
       my $me = $section->bibentry($member);
-      # don't treat this member as a "dataonly" entry since it is also cited normally
-      unless (Biber::Config->get_seenkey($member)) {
-        process_entry_options($member, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
-      }
+      process_entry_options($member, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ], $secnum);
 
       # Use get_datafield() instead of get_field() because we add 'entryset' below
       # and if the same entry is used in more than one set, it will pass this test
@@ -2251,9 +2248,8 @@ sub process_sets {
   # Also set this here for any non-set keys which are in a set and which haven't
   # had skips set by being seen as a member of that set yet
   else {
-    # don't treat this entry as a "dataonly" entry since it is also cited normally
-    if ($section->get_set_parents($citekey) and not Biber::Config->get_seenkey($citekey)) {
-      process_entry_options($citekey, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ]);
+    if ($section->get_set_parents($citekey)) {
+      process_entry_options($citekey, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ], $secnum);
     }
   }
 }
@@ -2288,7 +2284,7 @@ sub process_labelname {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
-  my $lnamespec = Biber::Config->getblxoption('labelnamespec', $bee);
+  my $lnamespec = Biber::Config->getblxoption(undef, 'labelnamespec', $bee);
   my $dm = Biber::Config->get_dm;
   my $dmh = Biber::Config->get_dm_helpers;
 
@@ -2310,7 +2306,7 @@ sub process_labelname {
 
     # If there is a biblatex option which controls the use of this labelname info, check it
     if ($CONFIG_OPTSCOPE_BIBLATEX{"use$lnameopt"} and
-       not Biber::Config->getblxoption("use$lnameopt", $bee, $citekey)) {
+       not Biber::Config->getblxoption($secnum, "use$lnameopt", $bee, $citekey)) {
       next;
     }
 
@@ -2334,7 +2330,7 @@ sub process_labelname {
 
     # If there is a biblatex option which controls the use of this labelname info, check it
     if ($CONFIG_OPTSCOPE_BIBLATEX{"use$ln"} and
-       not Biber::Config->getblxoption("use$ln", $bee, $citekey)) {
+       not Biber::Config->getblxoption($secnum, "use$ln", $bee, $citekey)) {
       next;
     }
 
@@ -2366,8 +2362,8 @@ sub process_labeldate {
   my $bee = $be->get_field('entrytype');
   my $dm = Biber::Config->get_dm;
 
-  if (Biber::Config->getblxoption('labeldateparts', $bee)) {
-    my $ldatespec = Biber::Config->getblxoption('labeldatespec', $bee);
+  if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee)) {
+    my $ldatespec = Biber::Config->getblxoption(undef, 'labeldatespec', $bee);
     foreach my $lds ($ldatespec->@*) {
       my $pseudodate;
       my $ld = $lds->{content};
@@ -2514,7 +2510,7 @@ sub process_labeltitle {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
 
-  my $ltitlespec = Biber::Config->getblxoption('labeltitlespec', $bee);
+  my $ltitlespec = Biber::Config->getblxoption(undef, 'labeltitlespec', $bee);
 
   foreach my $h_ltn ($ltitlespec->@*) {
     my $ltn = $h_ltn->{content};
@@ -2637,14 +2633,14 @@ sub process_visible_names {
     my $be = $section->bibentry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
-    my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
-    my $maxbn = Biber::Config->getblxoption('maxbibnames', $bee, $citekey);
-    my $minbn = Biber::Config->getblxoption('minbibnames', $bee, $citekey);
-    my $maxsn = Biber::Config->getblxoption('maxsortnames', $bee, $citekey);
-    my $minsn = Biber::Config->getblxoption('minsortnames', $bee, $citekey);
-    my $maxan = Biber::Config->getblxoption('maxalphanames', $bee, $citekey);
-    my $minan = Biber::Config->getblxoption('minalphanames', $bee, $citekey);
+    my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
+    my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
+    my $maxbn = Biber::Config->getblxoption($secnum, 'maxbibnames', $bee, $citekey);
+    my $minbn = Biber::Config->getblxoption($secnum, 'minbibnames', $bee, $citekey);
+    my $maxsn = Biber::Config->getblxoption($secnum, 'maxsortnames', $bee, $citekey);
+    my $minsn = Biber::Config->getblxoption($secnum, 'minsortnames', $bee, $citekey);
+    my $maxan = Biber::Config->getblxoption($secnum, 'maxalphanames', $bee, $citekey);
+    my $minan = Biber::Config->getblxoption($secnum, 'minalphanames', $bee, $citekey);
 
     foreach my $n ($dmh->{namelistsall}->@*) {
       next unless my $nl = $be->get_field($n);
@@ -2748,10 +2744,10 @@ sub process_labelalpha {
   my $be = $section->bibentry($citekey);
   my $bee = $be->get_field('entrytype');
   # Don't add a label if skiplab is set for entry
-  if (Biber::Config->getblxoption('skiplab', $bee, $citekey)) {
+  if (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $citekey)) {
     return;
   }
-  if ( my $la = Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype')) ) {
+  if ( my $la = Biber::Config->getblxoption(undef, 'labelalpha', $be->get_field('entrytype')) ) {
     my ($label, $sortlabel) = $self->_genlabel($citekey, $dlist)->@*;
     $dlist->set_entryfield($citekey, 'labelalpha', $label);
     $dlist->set_entryfield($citekey, 'sortlabelalpha', $sortlabel);
@@ -2769,7 +2765,7 @@ sub process_extraalpha {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  if (Biber::Config->getblxoption('labelalpha', $be->get_field('entrytype'))) {
+  if (Biber::Config->getblxoption(undef, 'labelalpha', $be->get_field('entrytype'))) {
     if (my $la = $dlist->get_entryfield($citekey, 'labelalpha')) {
       $dlist->incr_la_disambiguation($la);
     }
@@ -2794,7 +2790,7 @@ sub process_presort {
   my $be = $section->bibentry($citekey);
   # We are treating presort as an option as it can be set per-type and globally too
   if (my $ps = $be->get_field('presort')) {
-    Biber::Config->setblxoption('presort', $ps, 'ENTRY', $citekey);
+    Biber::Config->setblxoption($secnum, 'presort', $ps, 'ENTRY', $citekey);
   }
 }
 
@@ -3015,12 +3011,12 @@ sub generate_sortdataschema {
   my $schema;
 
   # Check if sorting templatename for the list contains anything ...
-  if (keys Biber::Config->getblxoption('sortingtemplate')->{$list->get_sortingtemplatename}->%*) {
-    $schema = Biber::Config->getblxoption('sortingtemplate')->{$list->get_sortingtemplatename};
+  if (keys Biber::Config->getblxoption(undef, 'sortingtemplate')->{$list->get_sortingtemplatename}->%*) {
+    $schema = Biber::Config->getblxoption(undef, 'sortingtemplate')->{$list->get_sortingtemplatename};
   }
   else {
     # ... fall back to global default if named template does not exist
-    $schema = Biber::Config->getblxoption('sortingtemplate')->{Biber::Config->getblxoption('sortingtemplatename')};
+    $schema = Biber::Config->getblxoption(undef, 'sortingtemplate')->{Biber::Config->getblxoption(undef, 'sortingtemplatename')};
   }
 
   $list->set_sortingtemplate($schema); # link the sort schema into the list
@@ -3190,7 +3186,7 @@ sub create_uniquename_info {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    next unless my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey);
+    next unless my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Generating uniquename information for '$citekey'");
@@ -3206,8 +3202,8 @@ sub create_uniquename_info {
         # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
         $ul = $dlist->get_uniquelist($nlid);
       }
-      my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
-      my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
+      my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
+      my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
 
       # Note that we don't determine if a name is unique here -
       # we can't, were still processing entries at this point.
@@ -3305,7 +3301,7 @@ sub create_uniquename_info {
 
         # As above but here we are collecting (separate) information for all
         # names, regardless of visibility (needed to track uniquelist)
-        if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
+        if (Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey)) {
           foreach my $ns ($namestrings->@*) {
             $dlist->add_uniquenamecount_all($ns, $namedisamiguationscope, $nskey);
           }
@@ -3335,7 +3331,7 @@ sub generate_uniquename {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    next unless my $un = Biber::Config->getblxoption('uniquename', $bee, $citekey);
+    next unless my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Setting uniquename for '$citekey'");
@@ -3349,8 +3345,8 @@ sub generate_uniquename {
       # If defined, $ul will always be >1, see comment in set_uniquelist() in Names.pm
       my $ul = $dlist->get_uniquelist($nlid);
 
-      my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
-      my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
+      my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
+      my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
 
 
       my $num_names = $nl->count_names;
@@ -3402,7 +3398,7 @@ sub generate_uniquename {
         }
 
         # As above but not just for visible names (needed for uniquelist)
-        if (Biber::Config->getblxoption('uniquelist', $bee, $citekey)) {
+        if (Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey)) {
           for (my $i=0; $i<=$namestrings->$#*; $i++) {
             my $ns = $namestrings->[$i];
             my $nss = $namedisschema->[$i];
@@ -3442,10 +3438,10 @@ sub create_uniquelist_info {
   foreach my $citekey ($section->get_citekeys) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
-    my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
+    my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
+    my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
 
-    next unless my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey);
+    next unless my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Generating uniquelist information for '$citekey'");
@@ -3529,10 +3525,10 @@ sub generate_uniquelist {
 LOOP: foreach my $citekey ( $section->get_citekeys ) {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
-    my $maxcn = Biber::Config->getblxoption('maxcitenames', $bee, $citekey);
-    my $mincn = Biber::Config->getblxoption('mincitenames', $bee, $citekey);
+    my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
+    my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
 
-    next unless my $ul = Biber::Config->getblxoption('uniquelist', $bee, $citekey);
+    next unless my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Creating uniquelist for '$citekey'");
@@ -3620,7 +3616,7 @@ sub generate_contextdata {
     # entryset field value which we store in the list metadata until output time.
     if ($be->get_field('entrytype') eq 'set') {
       my @es;
-      if (Biber::Config->getblxoption('sortsets')) {
+      if (Biber::Config->getblxoption(undef, 'sortsets')) {
         my $setkeys = $be->get_field('entryset');
         my $keys = $dlist->get_keys;
         my @sorted_setkeys;
@@ -3640,7 +3636,7 @@ sub generate_contextdata {
 
     # Only generate extra* information if skiplab is not set.
     # Don't forget that skiplab is implied for set members
-    unless (Biber::Config->getblxoption('skiplab', $bee, $key)) {
+    unless (Biber::Config->getblxoption($secnum, 'skiplab', $bee, $key)) {
       # extraname
       if (my $labelnamehash = $dlist->get_entryfield($key, 'labelnamehash')) {
         if ($dlist->get_seen_labelname($labelnamehash) > 1) {
@@ -3649,7 +3645,7 @@ sub generate_contextdata {
         }
       }
       # extradate
-      if (Biber::Config->getblxoption('labeldateparts', $bee)) {
+      if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee)) {
         my $namedateparts = $dlist->get_entryfield($key, 'namedateparts');
         if ($dlist->get_seen_namedateparts($namedateparts) > 1) {
           if ($logger->is_trace()) {# performance tune
@@ -3660,7 +3656,7 @@ sub generate_contextdata {
         }
       }
       # extratitle
-      if (Biber::Config->getblxoption('labeltitle', $bee)) {
+      if (Biber::Config->getblxoption(undef, 'labeltitle', $bee)) {
         my $nametitle = $dlist->get_entryfield($key, 'nametitle');
         if ($dlist->get_seen_nametitle($nametitle) > 1) {
           if ($logger->is_trace()) {# performance tune
@@ -3671,7 +3667,7 @@ sub generate_contextdata {
         }
       }
       # extratitleyear
-      if (Biber::Config->getblxoption('labeltitleyear', $bee)) {
+      if (Biber::Config->getblxoption(undef, 'labeltitleyear', $bee)) {
         my $titleyear = $dlist->get_entryfield($key, 'titleyear');
         if ($dlist->get_seen_titleyear($titleyear) > 1) {
           if ($logger->is_trace()) {# performance tune
@@ -3684,11 +3680,11 @@ sub generate_contextdata {
 
       # labelalpha
       # This works because labelalpha field is regenerated per-list
-      if (Biber::Config->getblxoption('labelalpha', $bee)) {
+      if (Biber::Config->getblxoption(undef, 'labelalpha', $bee)) {
         $dlist->set_labelalphadata_for_key($key, $dlist->get_entryfield($key, 'labelalpha'));
       }
       # extraalpha
-      if (Biber::Config->getblxoption('labelalpha', $bee)) {
+      if (Biber::Config->getblxoption(undef, 'labelalpha', $bee)) {
         my $la = $dlist->get_entryfield($key, 'labelalpha');
         if ($dlist->get_la_disambiguation($la) > 1) {
           if ($logger->is_trace()) {# performance tune
@@ -3702,7 +3698,7 @@ sub generate_contextdata {
 
     # uniquename
     # Using defined as 0 is a valid per-entry override of a global/per-entry setting
-    if (defined(Biber::Config->getblxoption('uniquename', $bee, $key))) {
+    if (defined(Biber::Config->getblxoption($secnum, 'uniquename', $bee, $key))) {
       foreach my $namefield ($dmh->{namelists}->@*) {
         if (my $nl = $be->get_field($namefield)) {
           my $nlid = $nl->get_id;
@@ -3751,7 +3747,7 @@ sub generate_singletitle {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
 
-  if (Biber::Config->getblxoption('singletitle', $be->get_field('entrytype'))) {
+  if (Biber::Config->getblxoption(undef, 'singletitle', $be->get_field('entrytype'))) {
     my $sn = $dlist->get_entryfield($citekey, 'seenname');
     if (defined($sn) and $dlist->get_seenname($sn) < 2 ) {
       $dlist->set_entryfield($citekey, 'singletitle', 1);
@@ -3774,7 +3770,7 @@ sub generate_uniquetitle {
   my $bibentries = $section->bibentries;
   my $be = $bibentries->entry($citekey);
 
-  if (Biber::Config->getblxoption('uniquetitle', $be->get_field('entrytype'))) {
+  if (Biber::Config->getblxoption(undef, 'uniquetitle', $be->get_field('entrytype'))) {
     my $ut = $dlist->get_entryfield($citekey, 'seentitle');
     if (defined($ut) and $dlist->get_seentitle($ut) < 2 ) {
       $dlist->set_entryfield($citekey, 'uniquetitle', 1);
@@ -3797,7 +3793,7 @@ sub generate_uniquebaretitle {
   my $bibentries = $section->bibentries;
 
   my $be = $bibentries->entry($citekey);
-  if (Biber::Config->getblxoption('uniquebaretitle', $be->get_field('entrytype'))) {
+  if (Biber::Config->getblxoption(undef, 'uniquebaretitle', $be->get_field('entrytype'))) {
     my $ubt = $dlist->get_entryfield($citekey, 'seenbaretitle');
     if (defined($ubt) and $dlist->get_seenbaretitle($ubt) < 2 ) {
       $dlist->set_entryfield($citekey, 'uniquebaretitle', 1);
@@ -3820,7 +3816,7 @@ sub generate_uniquework {
   my $bibentries = $section->bibentries;
 
   my $be = $bibentries->entry($citekey);
-  if (Biber::Config->getblxoption('uniquework', $be->get_field('entrytype'))) {
+  if (Biber::Config->getblxoption(undef, 'uniquework', $be->get_field('entrytype'))) {
     if ($dlist->get_entryfield($citekey, 'seenwork') and
         $dlist->get_seenwork($dlist->get_entryfield($citekey, 'seenwork')) < 2 ) {
       if ($logger->is_trace()) { # performance tune
@@ -3851,7 +3847,7 @@ sub generate_uniquepa {
   my $bibentries = $section->bibentries;
 
   my $be = $bibentries->entry($citekey);
-  if (Biber::Config->getblxoption('uniqueprimaryauthor')) {
+  if (Biber::Config->getblxoption(undef, 'uniqueprimaryauthor')) {
     if ($dlist->get_entryfield($citekey, 'seenprimaryauthor') and
         $dlist->get_seenpa($dlist->get_entryfield($citekey, 'seenprimaryauthor')) < 2 ) {
       if ($logger->is_trace()) { # performance tune
@@ -3883,7 +3879,7 @@ sub sort_list {
   my $lstn = $dlist->get_sortingtemplatename;
   my $ltype = $dlist->get_type;
   my $lname = $dlist->get_name;
-  my $llocale = locale2bcp47($sortingtemplate->{locale} || Biber::Config->getblxoption('sortlocale'));
+  my $llocale = locale2bcp47($sortingtemplate->{locale} || Biber::Config->getblxoption(undef, 'sortlocale'));
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
 
@@ -4610,7 +4606,7 @@ sub _parse_sort {
     }
   }
 
-  return {locale => locale2bcp47($root_obj->{locale} || Biber::Config->getblxoption('sortlocale')),
+  return {locale => locale2bcp47($root_obj->{locale} || Biber::Config->getblxoption(undef, 'sortlocale')),
           spec   => $sorting};
 }
 

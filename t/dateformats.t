@@ -39,9 +39,9 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('validate_datamodel', 1);
 
 # Biblatex options
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
-Biber::Config->setblxoption('julian', 1);
-Biber::Config->setblxoption('julianstart', '0001-01-01');
+Biber::Config->setblxoption(undef, 'labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption(undef, 'julian', 1);
+Biber::Config->setblxoption(undef, 'julianstart', '0001-01-01');
 
 # Now generate the information
 $biber->prepare;
@@ -416,7 +416,7 @@ eq_or_diff( $out->get_output_entry('L14', $main), $l14, 'Date values test 14 - l
 eq_or_diff( $out->get_output_entry('L15', $main), $l15, 'Date values test 15 - labelyear should be undef, no DATE or YEAR') ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'},
+Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'},
                                                {content => 'eventdate', type => 'field'},
                                                {content => 'origdate', type => 'field'} ]);
 $bibentries->del_entry('L17');
@@ -430,7 +430,7 @@ eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{year}, 'year',
 eq_or_diff($out->get_output_entry('L17', $main), $l17, 'Date values test 17a - labelyear = YEAR value when ENDYEAR is the same and ORIGYEAR is also present' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labeldatespec', [ {content => 'origdate', type => 'field'},
+Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'origdate', type => 'field'},
                                                {content => 'date', type => 'field'},
                                                {content => 'eventdate', type => 'field'} ]);
 $bibentries->del_entry('L17');
@@ -441,7 +441,7 @@ eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{year}, 'origye
 eq_or_diff($out->get_output_entry('L17', $main), $l17c, 'Date values test 17c - labelyear = ORIGYEAR value when ENDORIGYEAR is the same and YEAR is also present' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labeldatespec', [ {content => 'eventdate', type => 'field'},
+Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'eventdate', type => 'field'},
                                                {content => 'date', type => 'field'},
                                                {content => 'origdate', type => 'field'} ], 'ENTRYTYPE', 'proceedings');
 $bibentries->del_entry('L17');
@@ -453,7 +453,7 @@ eq_or_diff($bibentries->entry('L17')->get_labeldate_info->{field}{source}, 'even
 eq_or_diff($out->get_output_entry('L17', $main), $l17e, 'Date values test 17e - labelyear = ORIGYEAR-ORIGENDYEAR' ) ;
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labeldatespec', [ {content => 'pubstate', type => 'field'} ], 'ENTRYTYPE', 'proceedings');
+Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'pubstate', type => 'field'} ], 'ENTRYTYPE', 'proceedings');
 
 $bibentries->del_entry('L17');
 $biber->prepare;
@@ -858,7 +858,7 @@ my $unspec2 = q|    \entry{unspec2}{article}{}
 |;
 
 
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'},
+Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'},
                                                {content => 'eventdate', type => 'field'},
                                                {content => 'origdate', type => 'field'},
                                                {content => 'urldate', type => 'field'}

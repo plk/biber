@@ -38,16 +38,16 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setblxoption('uniquelist', 1);
-Biber::Config->setblxoption('maxcitenames', 3);
-Biber::Config->setblxoption('mincitenames', 1);
-Biber::Config->setblxoption('maxalphanames', 3);
-Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxbibnames', 10);
-Biber::Config->setblxoption('minbibnames', 7);
+Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'maxcitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 1);
+Biber::Config->setblxoption(undef,'maxalphanames', 3);
+Biber::Config->setblxoption(undef,'minalphanames', 1);
+Biber::Config->setblxoption(undef,'maxbibnames', 10);
+Biber::Config->setblxoption(undef,'minbibnames', 7);
 Biber::Config->setoption('isbn_normalise', 1);
 Biber::Config->setoption('isbn13', 1);
-Biber::Config->setblxoption('uniquework', 1);
+Biber::Config->setblxoption(undef,'uniquework', 1);
 
 # THERE IS A CONFIG FILE BEING READ TO TEST USER MAPS TOO!
 
@@ -577,8 +577,8 @@ eq_or_diff( $out->get_output_entry('murray', $main), $murray1, 'bbl with > maxci
 eq_or_diff( $out->get_output_entry('missing1'), "  \\missing{missing1}\n", 'missing citekey 1');
 eq_or_diff( $out->get_output_entry('missing2'), "  \\missing{missing2}\n", 'missing citekey 2');
 
-Biber::Config->setblxoption('alphaothers', '');
-Biber::Config->setblxoption('sortalphaothers', '');
+Biber::Config->setblxoption(undef,'alphaothers', '');
+Biber::Config->setblxoption(undef,'sortalphaothers', '');
 
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()
@@ -619,22 +619,22 @@ ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 10' );
 eq_or_diff($main->get_visible_bib($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info)->get_id), '3', 'bib visibility - 1');
 
 # Testing per_type and per_entry max/min* so reset globals to defaults
-Biber::Config->setblxoption('uniquelist', 0);
-Biber::Config->setblxoption('maxcitenames', 3);
-Biber::Config->setblxoption('mincitenames', 1);
-Biber::Config->setblxoption('maxitems', 3);
-Biber::Config->setblxoption('minitems', 1);
-Biber::Config->setblxoption('maxbibnames', 3);
-Biber::Config->setblxoption('minbibnames', 1);
-Biber::Config->setblxoption('maxalphanames', 3);
-Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxcitenames', 1, 'ENTRYTYPE', 'misc');
-Biber::Config->setblxoption('maxbibnames', 2, 'ENTRYTYPE', 'unpublished');
-Biber::Config->setblxoption('minbibnames', 2, 'ENTRYTYPE', 'unpublished');
+Biber::Config->setblxoption(undef,'uniquelist', 0);
+Biber::Config->setblxoption(undef,'maxcitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 1);
+Biber::Config->setblxoption(undef,'maxitems', 3);
+Biber::Config->setblxoption(undef,'minitems', 1);
+Biber::Config->setblxoption(undef,'maxbibnames', 3);
+Biber::Config->setblxoption(undef,'minbibnames', 1);
+Biber::Config->setblxoption(undef,'maxalphanames', 3);
+Biber::Config->setblxoption(undef,'minalphanames', 1);
+Biber::Config->setblxoption(undef,'maxcitenames', 1, 'ENTRYTYPE', 'misc');
+Biber::Config->setblxoption(undef,'maxbibnames', 2, 'ENTRYTYPE', 'unpublished');
+Biber::Config->setblxoption(undef,'minbibnames', 2, 'ENTRYTYPE', 'unpublished');
 # maxalphanames is set on tmn2 entry
-Biber::Config->setblxoption('minalphanames', 2, 'ENTRYTYPE', 'book');
+Biber::Config->setblxoption(undef,'minalphanames', 2, 'ENTRYTYPE', 'book');
 # minitems is set on tmn3 entry
-Biber::Config->setblxoption('maxitems', 2, 'ENTRYTYPE', 'unpublished');
+Biber::Config->setblxoption(undef,'maxitems', 2, 'ENTRYTYPE', 'unpublished');
 
 # Have to do a citekey deletion as we are not re-reading the .bcf which would do it for us
 # Otherwise, we have citekeys and allkeys which confuses fetch_data()

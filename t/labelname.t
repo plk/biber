@@ -35,14 +35,14 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # relying on here for tests
 
 # Biblatex options
-Biber::Config->setblxoption('labelnamespec', [ {content => 'shortauthor'},
+Biber::Config->setblxoption(undef,'labelnamespec', [ {content => 'shortauthor'},
                                                {content => 'author'},
                                                {content => 'shorteditor'},
                                                {content => 'editor'},
                                                {content => 'translator'}]);
-Biber::Config->setblxoption('labelnamespec', [ {content => 'editor'},
+Biber::Config->setblxoption(undef,'labelnamespec', [ {content => 'editor'},
                                                {content => 'translator'}], 'ENTRYTYPE', 'book');
-Biber::Config->setblxoption('labelnamespec', [ {content => 'namea'},
+Biber::Config->setblxoption(undef,'labelnamespec', [ {content => 'namea'},
                                                {content => 'author' }], 'ENTRYTYPE', 'misc');
 
 # Now generate the information

@@ -43,7 +43,7 @@ is_deeply($main->get_keys, ['LS6','LS5','LS2','LS1','LS3','LS4'], 'U::C tailorin
 is_deeply($shs->get_keys, ['LS3', 'LS4','LS2','LS1'], 'U::C tailoring - 2');
 
 # Set sorting of shorthands to global sorting default
-$shs->set_sortingtemplate(Biber::Config->getblxoption('sortingtemplate'));
+$shs->set_sortingtemplate(Biber::Config->getblxoption(undef,'sortingtemplate'));
 $shs->set_sortingtemplatename('global');
 
 $biber->prepare;

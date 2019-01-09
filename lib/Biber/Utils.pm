@@ -998,8 +998,7 @@ sub remove_entry_options {
 =cut
 
 sub process_entry_options {
-  my $citekey = shift;
-  my $options = shift;
+  my ($citekey, $options, $secnum) = @_;
   return unless $options;       # Just in case it's null
   foreach ($options->@*) {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
@@ -1012,7 +1011,7 @@ sub process_entry_options {
     my $oo = expand_option($1, $val, $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}->{INPUT});
 
     foreach my $o ($oo->@*) {
-      Biber::Config->setblxoption($o->[0], $o->[1], 'ENTRY', $citekey);
+      Biber::Config->setblxoption($secnum, $o->[0], $o->[1], 'ENTRY', $citekey);
     }
   }
   return;
@@ -1166,12 +1165,12 @@ sub parse_date {
   # "1565" could be "1564" or "1565" in Julian, depending on the month/day of the Gregorian date
   # For example, "1565-01-01" (which is what DateTime will default to for bare years), is
   # "1564-12-22" Julian but 1564-01-11" and later is "1565" Julian year.
-  if (Biber::Config->getblxoption('julian') and
+  if (Biber::Config->getblxoption(undef,'julian') and
       not $obj->missing('month') and
       not $obj->missing('day')) {
 
     # There is guaranteed to be an end point since biblatex has a default
-    my $gs = Biber::Config->getblxoption('gregorianstart');
+    my $gs = Biber::Config->getblxoption(undef,'gregorianstart');
     my ($gsyear, $gsmonth, $gsday) = $gs =~ m/^(\d{4})\p{Dash}(\d{2})\p{Dash}(\d{2})$/;
     my $dtgs = DateTime->new( year  => $gsyear,
                               month => $gsmonth,

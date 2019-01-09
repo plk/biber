@@ -31,8 +31,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Options - we could set these in the control file but it's nice to see what we're
 # relying on here for tests
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setblxoption('labeldateparts', undef);
-Biber::Config->setblxoption('labelalpha', 0);
+Biber::Config->setblxoption(undef,'labeldateparts', undef);
+Biber::Config->setblxoption(undef,'labelalpha', 0);
 
 # (re)generate information based on option settings
 $biber->prepare;
@@ -107,18 +107,18 @@ is_deeply($main->get_keys, ['L2','L3','L1B', 'L1','L1A','L4','L5','L7','L8','L6'
 
 $main->set_sortingtemplatename('anyt');
 
-Biber::Config->setblxoption('labelalpha', 1);
+Biber::Config->setblxoption(undef,'labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 is_deeply($main->get_keys, ['L1B','L1A','L1','L2','L3','L4','L5','L8','L7','L6','L9'], 'anyt');
 
-Biber::Config->setblxoption('labelalpha', 0);
+Biber::Config->setblxoption(undef,'labelalpha', 0);
 
 $main->set_sortingtemplatename('anyvt');
 
-Biber::Config->setblxoption('labelalpha', 1);
+Biber::Config->setblxoption(undef,'labelalpha', 1);
 
 $biber->set_output_obj(Biber::Output::bbl->new());
 $biber->prepare;

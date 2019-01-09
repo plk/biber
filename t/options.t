@@ -40,7 +40,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('xsvsep', '\s*\|\s*');
 
 # Biblatex options
-Biber::Config->setblxoption('labeldatespec', [ {content => 'date', type => 'field'} ]);
+Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'} ]);
 
 # Now generate the information
 $biber->prepare;
@@ -182,11 +182,11 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
     \endentry
 |;
 
-ok(Biber::Config->getblxoption('uniquename') == 1, "Single-valued option") ;
-is_deeply(Biber::Config->getblxoption('labelnamespec'), [ {content => 'author'} ], "Multi-valued options");
+ok(Biber::Config->getblxoption(undef,'uniquename') == 1, "Single-valued option") ;
+is_deeply(Biber::Config->getblxoption(undef,'labelnamespec'), [ {content => 'author'} ], "Multi-valued options");
 ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
-ok(Biber::Config->getblxoption('useprefix', 'book') == 1 , "Per-type single-valued options");
-is_deeply(Biber::Config->getblxoption('labelnamespec', 'book'), $bln, "Per-type multi-valued options");
+ok(Biber::Config->getblxoption(undef,'useprefix', 'book') == 1 , "Per-type single-valued options");
+is_deeply(Biber::Config->getblxoption(undef,'labelnamespec', 'book'), $bln, "Per-type multi-valued options");
 eq_or_diff($bibentries->entry('L1')->get_labeldate_info->{field}{year}, 'year', 'Global labelyear setting' ) ;
 eq_or_diff( $out->get_output_entry('L1', $main), $l1, 'Global labelyear setting - labelyear should be YEAR') ;
 eq_or_diff( $out->get_output_entry('L2', $main), $l2, 'Entry-local biblatex option mappings - 1') ;

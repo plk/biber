@@ -160,8 +160,8 @@ sub set_output_entry {
 
   # Per-entry options
   my @entryoptions;
-  foreach my $opt (Biber::Config->getblxentryoptions($key)) {
-    push @entryoptions, $opt . '=' . Biber::Config->getblxoption($opt, undef, $key);
+  foreach my $opt (Biber::Config->getblxentryoptions($secnum, $key)) {
+    push @entryoptions, $opt . '=' . Biber::Config->getblxoption($secnum, $opt, undef, $key);
   }
   $acc{$casing->('options')} = join(',', @entryoptions) if @entryoptions;
 
@@ -343,9 +343,9 @@ sub output {
 
   # Bibtex output uses just one special section, always sorted by global sorting spec
   foreach my $key ($Biber::MASTER->datalists->get_lists_by_attrs(section => 99999,
-                                                                 name => Biber::Config->getblxoption('sortingtemplatename') . '/global//global/global',
+                                                                 name => Biber::Config->getblxoption(undef, 'sortingtemplatename') . '/global//global/global',
                                                                  type => 'entry',
-                                                                 sortingtemplatename => Biber::Config->getblxoption('sortingtemplatename'),
+                                                                 sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'),
                                                                  sortingnamekeytemplatename => 'global',
                                                                  labelprefix => '',
                                                                  uniquenametemplatename => 'global',

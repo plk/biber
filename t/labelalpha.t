@@ -40,9 +40,9 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 # Biblatex options
-Biber::Config->setblxoption('maxalphanames', 1);
-Biber::Config->setblxoption('maxcitenames', 1);
-Biber::Config->setblxoption('labeldateparts', undef);
+Biber::Config->setblxoption(undef,'maxalphanames', 1);
+Biber::Config->setblxoption(undef,'maxcitenames', 1);
+Biber::Config->setblxoption(undef,'labeldateparts', undef);
 
 # Now generate the information, saving per-entry options or they are deleted
 $biber->prepare;
@@ -55,7 +55,7 @@ my $bibentries = $section->bibentries;
 eq_or_diff($main->get_entryfield('prefix1', 'sortlabelalpha'), 'Vaa99', 'useprefix=0 so not in label');
 
 # useprefix=true
-Biber::Config->setblxoption('useprefix', 1);
+Biber::Config->setblxoption(undef,'useprefix', 1);
 $biber->prepare;
 
 eq_or_diff($main->get_entryfield('prefix1', 'sortlabelalpha'), 'vdVaa99', 'Default prefix settings entry prefix1 labelalpha');
@@ -85,10 +85,10 @@ eq_or_diff($main->get_entryfield('ignore1', 'sortlabelalpha'), 'OTo07', 'Default
 eq_or_diff($main->get_entryfield('ignore2', 'sortlabelalpha'), 'De 07', 'Default no ignore spaces');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('maxalphanames', 2);
-Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxcitenames', 2);
-Biber::Config->setblxoption('mincitenames', 1);
+Biber::Config->setblxoption(undef,'maxalphanames', 2);
+Biber::Config->setblxoption(undef,'minalphanames', 1);
+Biber::Config->setblxoption(undef,'maxcitenames', 2);
+Biber::Config->setblxoption(undef,'mincitenames', 1);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -120,10 +120,10 @@ eq_or_diff($main->get_entryfield('L8', 'sortlabelalpha'), 'Sha85', 'maxalphaname
 ok(is_undef($main->get_extraalphadata_for_key('L8')), 'maxalphanames=2 minalphanames=1 entry L8 extraalpha');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('maxalphanames', 2);
-Biber::Config->setblxoption('minalphanames', 2);
-Biber::Config->setblxoption('maxcitenames', 2);
-Biber::Config->setblxoption('mincitenames', 2);
+Biber::Config->setblxoption(undef,'maxalphanames', 2);
+Biber::Config->setblxoption(undef,'minalphanames', 2);
+Biber::Config->setblxoption(undef,'maxcitenames', 2);
+Biber::Config->setblxoption(undef,'mincitenames', 2);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -155,10 +155,10 @@ eq_or_diff($main->get_entryfield('L8', 'sortlabelalpha'), 'Sha85', 'maxalphaname
 ok(is_undef($main->get_extraalphadata_for_key('L8')), 'maxalphanames=2 minalphanames=2 entry L8 extraalpha');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('maxalphanames', 3);
-Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxcitenames', 3);
-Biber::Config->setblxoption('mincitenames', 1);
+Biber::Config->setblxoption(undef,'maxalphanames', 3);
+Biber::Config->setblxoption(undef,'minalphanames', 1);
+Biber::Config->setblxoption(undef,'maxcitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 1);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -193,12 +193,12 @@ eq_or_diff($main->get_entryfield('LDN2', 'sortlabelalpha'), 'VU45', 'Testing com
 eq_or_diff($main->get_entryfield('LDN3', 'sortlabelalpha'), 'VisvSJRu45', 'Testing with multiple pre and main and width/side override');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('maxalphanames', 4);
-Biber::Config->setblxoption('minalphanames', 4);
-Biber::Config->setblxoption('maxcitenames', 4);
-Biber::Config->setblxoption('mincitenames', 4);
-Biber::Config->setblxoption('labelalpha', 1);
-Biber::Config->setblxoption('labeldateparts', 1);
+Biber::Config->setblxoption(undef,'maxalphanames', 4);
+Biber::Config->setblxoption(undef,'minalphanames', 4);
+Biber::Config->setblxoption(undef,'maxcitenames', 4);
+Biber::Config->setblxoption(undef,'mincitenames', 4);
+Biber::Config->setblxoption(undef,'labelalpha', 1);
+Biber::Config->setblxoption(undef,'labeldateparts', 1);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -233,7 +233,7 @@ eq_or_diff($main->get_entryfield('L22', 'sortlabelalpha'), 'BoConEm', 'labelalph
 eq_or_diff($main->get_entryfield('L23', 'sortlabelalpha'), 'Sa', 'labelalpha disambiguation 9');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelalphatemplate', {
+Biber::Config->setblxoption(undef,'labelalphatemplate', {
   labelelement => [
              {
                labelpart => [
@@ -270,7 +270,7 @@ eq_or_diff($main->get_entryfield('L19', 'sortlabelalpha'), 'Agas/Con/Lendl', 'la
 eq_or_diff($main->get_entryfield('L20', 'sortlabelalpha'), 'Agas/Cou/Laver', 'labelalpha disambiguation 12');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('labelalphatemplate', {
+Biber::Config->setblxoption(undef,'labelalphatemplate', {
   labelelement => [
              {
                labelpart => [
@@ -309,12 +309,12 @@ eq_or_diff($main->get_entryfield('L26', 'sortlabelalpha'), 'ZX', 'labelalpha lis
 eq_or_diff(NFC($main->get_entryfield('title1', 'sortlabelalpha')), 'Tït', 'Title in braces with UTF-8 char - 1');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('maxalphanames', 3);
-Biber::Config->setblxoption('minalphanames', 1);
-Biber::Config->setblxoption('maxcitenames', 3);
-Biber::Config->setblxoption('mincitenames', 1);
+Biber::Config->setblxoption(undef,'maxalphanames', 3);
+Biber::Config->setblxoption(undef,'minalphanames', 1);
+Biber::Config->setblxoption(undef,'maxcitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 1);
 
-Biber::Config->setblxoption('labelalphatemplate', {
+Biber::Config->setblxoption(undef,'labelalphatemplate', {
   labelelement => [
              {
                labelpart => [
@@ -362,7 +362,7 @@ eq_or_diff($main->get_extraalphadata_for_key('Schnee2007'), '2', 'extraalpha ne 
 eq_or_diff($main->get_entryfield('Schnee2007a', 'sortlabelalpha'), 'Sch07', 'extraalpha ne extradate 7');
 eq_or_diff($main->get_extraalphadata_for_key('Schnee2007a'), '2', 'extraalpha ne extradate 8');
 
-Biber::Config->setblxoption('labelalphatemplate', {
+Biber::Config->setblxoption(undef,'labelalphatemplate', {
   labelelement => [
              {
                labelpart => [
@@ -393,7 +393,7 @@ $bibentries = $section->bibentries;
 
 eq_or_diff($main->get_entryfield('Schmidt2007', 'sortlabelalpha'), 'SCH', 'entrykey label 1');
 
-Biber::Config->setblxoption('labelalphatemplate', {
+Biber::Config->setblxoption(undef,'labelalphatemplate', {
   labelelement => [
              {
                labelpart => [
@@ -439,7 +439,7 @@ eq_or_diff($main->get_entryfield('labelstest', 'sortlabelalpha'), '200532', 'lab
 eq_or_diff($main->get_entryfield('padtest', 'labelalpha'), '\&Al\_\_{\textasciitilde}{\textasciitilde}T07', 'pad test - 1');
 eq_or_diff($main->get_entryfield('padtest', 'sortlabelalpha'), '&Al__~~T07', 'pad test - 2');
 
-my $lant = Biber::Config->getblxoption('labelalphanametemplate');
+my $lant = Biber::Config->getblxoption(undef,'labelalphanametemplate');
 $lant->{global} = [
  {
     namepart => "prefix",
@@ -455,9 +455,9 @@ $lant->{global} = [
     substring_width => undef,
     use => undef,
   }];
-Biber::Config->setblxoption('labelalphanametemplate', $lant);
+Biber::Config->setblxoption(undef,'labelalphanametemplate', $lant);
 
-Biber::Config->setblxoption('labelalphatemplate', {
+Biber::Config->setblxoption(undef,'labelalphatemplate', {
   labelelement => [
                    {
                     labelpart => [
@@ -500,7 +500,7 @@ $bibentries = $section->bibentries;
 eq_or_diff($main->get_entryfield('skipwidthtest1', 'sortlabelalpha'), 'OToolOToole', 'Skip width test - 1');
 eq_or_diff($main->get_entryfield('prefix1', 'sortlabelalpha'), 'vadeVaaThin', 'compound and string length entry prefix1 labelalpha');
 
-Biber::Config->setblxoption('labelalphatemplate', {
+Biber::Config->setblxoption(undef,'labelalphatemplate', {
   labelelement => [
                    {
                     labelpart => [
@@ -583,7 +583,7 @@ Biber::Config->setblxoption('labelalphatemplate', {
                   ],
   type  => "global",
 });
-Biber::Config->setblxoption('minalphanames', 2);
+Biber::Config->setblxoption(undef,'minalphanames', 2);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');
@@ -599,7 +599,7 @@ $bibentries = $section->bibentries;
 eq_or_diff($main->get_entryfield('rangetest1', 'sortlabelalpha'), 'WAXAYAZA.VEWEXE+.VTWT.XFYFZF.WH+', 'Name range test - 1');
 
 
-Biber::Config->setblxoption('labelalphatemplate', {
+Biber::Config->setblxoption(undef,'labelalphatemplate', {
   labelelement => [
                    {
                     labelpart => [
@@ -656,8 +656,8 @@ Biber::Config->setblxoption('labelalphatemplate', {
   type  => "global",
 });
 
-Biber::Config->setblxoption('maxalphanames', 10);
-Biber::Config->setblxoption('minalphanames', 10);
+Biber::Config->setblxoption(undef,'maxalphanames', 10);
+Biber::Config->setblxoption(undef,'minalphanames', 10);
 
 foreach my $k ($section->get_citekeys) {
   $bibentries->entry($k)->del_field('sortlabelalpha');

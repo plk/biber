@@ -857,7 +857,7 @@ sub _create_entry {
       my $value = $e->get($f);
       my $Srx = Biber::Config->getoption('xsvsep');
       my $S = qr/$Srx/;
-      process_entry_options($k, [ split(/$S/, $value) ]);
+      process_entry_options($k, [ split(/$S/, $value) ], $secnum);
     }
 
     # Now run any defined handler
@@ -1071,8 +1071,8 @@ sub _name {
                                      undef,
                                      {binmode => 'utf-8', normalization => 'NFD'});
 
-  my $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
-  my $un = Biber::Config->getblxoption('uniquename', $bibentry->get_field('entrytype'), $key);
+  my $useprefix = Biber::Config->getblxoption($secnum, 'useprefix', $bibentry->get_field('entrytype'), $key);
+  my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bibentry->get_field('entrytype'), $key);
 
   my $names = Biber::Entry::Names->new();
 

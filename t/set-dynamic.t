@@ -125,7 +125,6 @@ my $string4 = q|    \entry{Dynamic3}{book}{}
       \strng{authorfullhash}{fc3cc97631ceaecdde2aee6cc60ab42b}
       \field{sortinit}{1}
       \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
-      \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

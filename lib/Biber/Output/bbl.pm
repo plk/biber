@@ -198,8 +198,8 @@ sub set_output_entry {
   my $key = $be->get_field('citekey');
   my $acc = '';
   my $dmh = $dm->{helpers};
-  my $un = Biber::Config->getblxoption('uniquename', $bee, $key);
-  my $ul = Biber::Config->getblxoption('uniquelist', $bee, $key);
+  my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $key);
+  my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $key);
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
@@ -211,7 +211,7 @@ sub set_output_entry {
     $acc .= "      <BDS>ENTRYSET</BDS>\n";
 
     # Set parents need this - it is the labelalpha from the first entry
-    if (Biber::Config->getblxoption('labelalpha', $bee)) {
+    if (Biber::Config->getblxoption(undef, 'labelalpha', $bee)) {
       $acc .= "      <BDS>LABELALPHA</BDS>\n";
       $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
     }
@@ -342,7 +342,7 @@ sub set_output_entry {
     $acc .= "      <BDS>EXTRANAME</BDS>\n";
   }
 
-  if ( Biber::Config->getblxoption('labelalpha', $bee) ) {
+  if ( Biber::Config->getblxoption(undef, 'labelalpha', $bee) ) {
     $acc .= "      <BDS>LABELALPHA</BDS>\n";
   }
 
@@ -350,7 +350,7 @@ sub set_output_entry {
   $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
   # The labeldateparts option determines whether "extradate" is output
-  if (Biber::Config->getblxoption('labeldateparts', $bee)) {
+  if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee)) {
     $acc .= "      <BDS>EXTRADATE</BDS>\n";
     if (my $edscope = $be->get_field('extradatescope')) {
       $acc .= "      \\field{extradatescope}{$edscope}\n";
@@ -367,17 +367,17 @@ sub set_output_entry {
   }
 
   # The labeltitle option determines whether "extratitle" is output
-  if ( Biber::Config->getblxoption('labeltitle', $bee)) {
+  if ( Biber::Config->getblxoption(undef, 'labeltitle', $bee)) {
     $acc .= "      <BDS>EXTRATITLE</BDS>\n";
   }
 
   # The labeltitleyear option determines whether "extratitleyear" is output
-  if ( Biber::Config->getblxoption('labeltitleyear', $bee)) {
+  if ( Biber::Config->getblxoption(undef, 'labeltitleyear', $bee)) {
     $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  if ( Biber::Config->getblxoption('labelalpha', $bee)) {
+  if ( Biber::Config->getblxoption(undef, 'labelalpha', $bee)) {
     $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
   }
 
@@ -651,7 +651,7 @@ sub output {
     # This sort is cosmetic, just to order the lists in a predictable way in the .bbl
     # but omit global sort lists so that we can add them last
     foreach my $list (sort {$a->get_sortingtemplatename cmp $b->get_sortingtemplatename} $Biber::MASTER->datalists->get_lists_for_section($secnum)->@*) {
-      if ($list->get_sortingtemplatename eq Biber::Config->getblxoption('sortingtemplatename') and
+      if ($list->get_sortingtemplatename eq Biber::Config->getblxoption(undef, 'sortingtemplatename') and
           $list->get_type eq 'entry') {
         next;
       }
@@ -664,7 +664,7 @@ sub output {
     # and sortcites etc. when not using defernumbers
     push @lists, $Biber::MASTER->datalists->get_lists_by_attrs(section => $secnum,
                                                                type    => 'entry',
-                                                               sortingtemplatename => Biber::Config->getblxoption('sortingtemplatename'))->@*;
+                                                               sortingtemplatename => Biber::Config->getblxoption(undef, 'sortingtemplatename'))->@*;
 
     foreach my $list (@lists) {
       next unless $list->count_keys; # skip empty lists

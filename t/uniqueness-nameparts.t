@@ -38,7 +38,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 # Biblatex options
-Biber::Config->setblxoption('uniquename', 2);
+Biber::Config->setblxoption(undef,'uniquename', 2);
 
 # Now generate the information
 $biber->prepare;

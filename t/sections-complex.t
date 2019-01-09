@@ -38,9 +38,9 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 # Biblatex options
-Biber::Config->setblxoption('maxcitenames', 1);
-Biber::Config->setblxoption('maxalphanames', 1);
-Biber::Config->setblxoption('labeldateparts', undef);
+Biber::Config->setblxoption(undef,'maxcitenames', 1);
+Biber::Config->setblxoption(undef,'maxalphanames', 1);
+Biber::Config->setblxoption(undef,'labeldateparts', undef);
 
 # Now generate the information
 $biber->prepare;
@@ -70,10 +70,10 @@ eq_or_diff($main1->get_entryfield('L8', 'sortlabelalpha'), 'Sha85', 'maxalphanam
 ok(is_undef($main1->get_extraalphadata_for_key('L8')), 'maxalphanames=1 minalphanames=1 entry L8 extraalpha');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('maxcitenames', 2);
-Biber::Config->setblxoption('mincitenames', 1);
-Biber::Config->setblxoption('maxalphanames', 2);
-Biber::Config->setblxoption('minalphanames', 1);
+Biber::Config->setblxoption(undef,'maxcitenames', 2);
+Biber::Config->setblxoption(undef,'mincitenames', 1);
+Biber::Config->setblxoption(undef,'maxalphanames', 2);
+Biber::Config->setblxoption(undef,'minalphanames', 1);
 
 for (my $i=1; $i<5; $i++) {
   $bibentries0->entry("L$i")->del_field('sortlabelalpha');
@@ -112,10 +112,10 @@ eq_or_diff($main1->get_entryfield('L8', 'sortlabelalpha'), 'Sha85', 'maxalphanam
 ok(is_undef($main1->get_extraalphadata_for_key('L8')), 'maxalphanames=2 minalphanames=1 entry L8 extraalpha');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('maxcitenames', 2);
-Biber::Config->setblxoption('mincitenames', 2);
-Biber::Config->setblxoption('maxalphanames', 2);
-Biber::Config->setblxoption('minalphanames', 2);
+Biber::Config->setblxoption(undef,'maxcitenames', 2);
+Biber::Config->setblxoption(undef,'mincitenames', 2);
+Biber::Config->setblxoption(undef,'maxalphanames', 2);
+Biber::Config->setblxoption(undef,'minalphanames', 2);
 
 for (my $i=1; $i<5; $i++) {
   $bibentries0->entry("L$i")->del_field('sortlabelalpha');
@@ -153,10 +153,10 @@ eq_or_diff($main1->get_entryfield('L8', 'sortlabelalpha'), 'Sha85', 'maxalphanam
 ok(is_undef($main1->get_extraalphadata_for_key('L8')), 'maxalphanames=2 minalphanames=2 entry L8 extraalpha');
 
 # reset options and regenerate information
-Biber::Config->setblxoption('maxcitenames', 3);
-Biber::Config->setblxoption('mincitenames', 1);
-Biber::Config->setblxoption('maxalphanames', 3);
-Biber::Config->setblxoption('minalphanames', 1);
+Biber::Config->setblxoption(undef,'maxcitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 1);
+Biber::Config->setblxoption(undef,'maxalphanames', 3);
+Biber::Config->setblxoption(undef,'minalphanames', 1);
 
 for (my $i=1; $i<5; $i++) {
   $bibentries0->entry("L$i")->del_field('sortlabelalpha');

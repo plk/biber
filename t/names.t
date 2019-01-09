@@ -40,7 +40,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('namesep', 'und'); # Testing custom name splitting string
 Biber::Config->setoption('others_string', 'andere'); # Testing custom implied "et al"
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setblxoption('mincitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 3);
 
 # Now generate the information
 $biber->prepare;
@@ -970,7 +970,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('output_encoding', 'latin1');
 # If you change the encoding options, you have to re-read the T::B data from the datasource
 # This won't happen unless you invalidate the T::B cache.
-Biber::Config->setblxoption('uniqueprimaryauthor', 1);
+Biber::Config->setblxoption(undef,'uniqueprimaryauthor', 1);
 Biber::Config->setoption('namesep', 'and'); # revert custom name sep
 Biber::Input::file::bibtex->init_cache;
 

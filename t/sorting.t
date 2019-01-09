@@ -131,7 +131,7 @@ my $ssd2 = [
   { int => 1, spec => "int" },
 ];
 
-Biber::Config->setblxoption('useprefix', 1);
+Biber::Config->setblxoption(undef,'useprefix', 1);
 
 # regenerate information
 $biber->prepare;
@@ -154,7 +154,7 @@ eq_or_diff($main->get_sortdata_for_key('others2')->[0], $others2, 'Explicit "and
 eq_or_diff($main->get_sortdata_for_key('final')->[0], $final, 'Final entries with no other data' );
 
 # Testing custom name sorting key
-my $SNK = Biber::Config->getblxoption('sortingnamekeytemplate');
+my $SNK = Biber::Config->getblxoption(undef,'sortingnamekeytemplate');
 $SNK->{global} = [
         [{ type => 'namepart', value => 'given' },
          { type => 'literal', value => ' ' },
@@ -164,13 +164,13 @@ $SNK->{global} = [
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
        ];
-Biber::Config->setblxoption('sortingnamekeytemplate', $SNK);
+Biber::Config->setblxoption(undef,'sortingnamekeytemplate', $SNK);
 $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('snk1')->[0], $snk1, 'Sorting name key - 1' );
 eq_or_diff($main->get_sortdata_for_key('ent1')->[0], $ent1, 'Sorting name key - 2' );
 
 # regenerate information
-Biber::Config->setblxoption('useprefix', 0);
+Biber::Config->setblxoption(undef,'useprefix', 0);
 # Default name sorting key back again
 $SNK->{global} = [
         [{ type => 'namepart', value => 'prefix', use => 1}],
@@ -179,7 +179,7 @@ $SNK->{global} = [
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
        ];
-Biber::Config->setblxoption('sortingnamekeytemplate', $SNK);
+Biber::Config->setblxoption(undef,'sortingnamekeytemplate', $SNK);
 $biber->prepare;
 
 eq_or_diff($main->get_sortdata_for_key('tvonb')->[0], $useprefix4, 'von with type-specific presort, exclusions and useprefix=false' );
@@ -254,7 +254,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('chiu')->[0], $lists3, 'max/minitems test 3 (institution)' );
 
 # institution with minitems=2
-Biber::Config->setblxoption('minitems', 2);
+Biber::Config->setblxoption(undef,'minitems', 2);
 
 $main->set_sortingtemplatename('institution');
 
@@ -264,8 +264,8 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('chiu')->[0], $lists4, 'max/minitems test 4 (institution - minitems=2)' );
 
 # institution with maxitems=4, minitems=3
-Biber::Config->setblxoption('maxitems', 4);
-Biber::Config->setblxoption('minitems', 3);
+Biber::Config->setblxoption(undef,'maxitems', 4);
+Biber::Config->setblxoption(undef,'minitems', 3);
 
 $main->set_sortingtemplatename('institution');
 
@@ -401,14 +401,14 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $nyvt, 'basic nyvt sort' );
 
 # anyt with labelalpha
-Biber::Config->setblxoption('labelalpha', 1);
+Biber::Config->setblxoption(undef,'labelalpha', 1);
 $main->set_sortingtemplatename('anyt');
 
 # regenerate information
 $biber->prepare;
 
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $anyt_la, 'anyt sort (with labelalpha)' );
-Biber::Config->setblxoption('labelalpha', 0);
+Biber::Config->setblxoption(undef,'labelalpha', 0);
 $bibentries->entry('stdmodel')->del_field('labelalpha');
 $bibentries->entry('stdmodel')->del_field('sortlabelalpha');
 $bibentries->entry('stdmodel:glashow')->del_field('labelalpha'); # it's a crossref so have to clear it here too
@@ -421,7 +421,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $anyt, 'anyt sort (without labelalpha)' );
 
 # anyvt with labelalpha
-Biber::Config->setblxoption('labelalpha',1);
+Biber::Config->setblxoption(undef,'labelalpha',1);
 $main->set_sortingtemplatename('anyvt');
 
 # regenerate information
@@ -430,25 +430,25 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $anyvt_la, 'anyvt sort (with labelalpha)' );
 eq_or_diff($main->get_sortdata_for_key('murray')->[0], $anyvt_la2, 'anyvt sort (> maxbibnames=3 minbibnames=1, with labelalpha and alphaothers)' );
 
-Biber::Config->setblxoption('maxalphanames', 2);
-Biber::Config->setblxoption('minalphanames', 2);
-Biber::Config->setblxoption('maxsortnames', 2);
-Biber::Config->setblxoption('minsortnames', 2);
+Biber::Config->setblxoption(undef,'maxalphanames', 2);
+Biber::Config->setblxoption(undef,'minalphanames', 2);
+Biber::Config->setblxoption(undef,'maxsortnames', 2);
+Biber::Config->setblxoption(undef,'minsortnames', 2);
 
 # regenerate information
 $biber->prepare;
 
 eq_or_diff($main->get_sortdata_for_key('murray')->[0], $anyvt_la4, 'anyvt sort (> maxbibnames=2 minbibnames=2, with labelalpha and alphaothers)' );
 
-Biber::Config->setblxoption('alphaothers', '');
-Biber::Config->setblxoption('sortalphaothers', '');
+Biber::Config->setblxoption(undef,'alphaothers', '');
+Biber::Config->setblxoption(undef,'sortalphaothers', '');
 
 # regenerate information
 $biber->prepare;
 
 eq_or_diff($main->get_sortdata_for_key('murray')->[0], $anyvt_la3, 'anyvt sort (> maxbibnames=2 minbibnames=2,with labelalpha and without alphaothers)' );
 
-Biber::Config->setblxoption('labelalpha', 0);
+Biber::Config->setblxoption(undef,'labelalpha', 0);
 $bibentries->entry('stdmodel')->del_field('labelalpha');
 $bibentries->entry('stdmodel')->del_field('sortlabelalpha');
 $bibentries->entry('stdmodel:glashow')->del_field('labelalpha'); # it's a crossref so have to clear it here too
@@ -479,7 +479,7 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $ydnt, 'basic ydnt sort' );
 
 
-$SNK = Biber::Config->getblxoption('sortingnamekey');
+$SNK = Biber::Config->getblxoption(undef,'sortingnamekey');
 $SNK->{global} = [
         [{ type => 'namepart', value => 'prefix', use => 1}],
         [{ type => 'namepart', value => 'family'}],
@@ -487,12 +487,12 @@ $SNK->{global} = [
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
        ];
-Biber::Config->setblxoption('sortingnamekeytemplate', $SNK);
+Biber::Config->setblxoption(undef,'sortingnamekeytemplate', $SNK);
 
 $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $sortinits, 'sort first name inits only' );
 
-$SNK = Biber::Config->getblxoption('sortingnamekey');
+$SNK = Biber::Config->getblxoption(undef,'sortingnamekey');
 # Default back again
 $SNK->{global} = [
         [{ type => 'namepart', value => 'prefix', use => 1}],
@@ -501,9 +501,9 @@ $SNK->{global} = [
         [{ type => 'namepart', value => 'suffix'}],
         [{ type => 'namepart', value => 'prefix', use => 0}]
        ];
-Biber::Config->setblxoption('sortingnamekeytemplate', $SNK);
+Biber::Config->setblxoption(undef,'sortingnamekeytemplate', $SNK);
 
-Biber::Config->setblxoption('labelalpha', 0);
+Biber::Config->setblxoption(undef,'labelalpha', 0);
 
 # debug
 $main->set_sortingtemplatename('ek');
@@ -514,9 +514,9 @@ $biber->prepare;
 eq_or_diff($main->get_sortdata_for_key('stdmodel')->[0], $debug, 'basic debug sort' );
 
 # nty with use* all off
-Biber::Config->setblxoption('useauthor', 0);
-Biber::Config->setblxoption('useeditor', 0);
-Biber::Config->setblxoption('usetranslator', 0);
+Biber::Config->setblxoption(undef,'useauthor', 0);
+Biber::Config->setblxoption(undef,'useeditor', 0);
+Biber::Config->setblxoption(undef,'usetranslator', 0);
 $main->set_sortingtemplatename('nty');
 
 # regenerate information
@@ -553,11 +553,11 @@ eq_or_diff($main->get_sortdata_for_key('labelstest')->[0], $labels, 'date labels
 # sortname sort
 $main->set_sortingtemplatename('name1');
 
-Biber::Config->setblxoption('useauthor', 0);
-Biber::Config->setblxoption('useeditor', 0);
-Biber::Config->setblxoption('usetranslator', 0);
-Biber::Config->setblxoption('usenamea', 0);
-Biber::Config->setblxoption('useeditora', 0);
+Biber::Config->setblxoption(undef,'useauthor', 0);
+Biber::Config->setblxoption(undef,'useeditor', 0);
+Biber::Config->setblxoption(undef,'usetranslator', 0);
+Biber::Config->setblxoption(undef,'usenamea', 0);
+Biber::Config->setblxoption(undef,'useeditora', 0);
 $biber->prepare;
 # Testing that when no use<name> settings are true, sortname is ignored
 eq_or_diff($main->get_sortdata_for_key('sn1')->[0], $sn1, 'Sortname - 1' );

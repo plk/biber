@@ -40,7 +40,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('namesep', 'und'); # Testing custom name splitting string
 Biber::Config->setoption('others_string', 'andere'); # Testing custom implied "et al"
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setblxoption('mincitenames', 3);
+Biber::Config->setblxoption(undef,'mincitenames', 3);
 
 # Now generate the information
 $biber->prepare;

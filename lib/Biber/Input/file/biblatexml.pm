@@ -769,7 +769,7 @@ sub create_entry {
       # to make them available for things that need them like name parsing
       if (_norm($f) eq 'options') {
         if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
-          process_entry_options($k, [ split(/\s*,\s*/, $node->textContent()) ]);
+          process_entry_options($k, [ split(/\s*,\s*/, $node->textContent()) ], $secnum);
         }
       }
 
@@ -1084,8 +1084,8 @@ sub _datetime {
 # Name fields
 sub _name {
   my ($bibentry, $entry, $f, $key) = @_;
-
-  my $un = Biber::Config->getblxoption('uniquename', $bibentry->get_field('entrytype'), $key);
+  my $secnum = $Biber::MASTER->get_current_section;
+  my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bibentry->get_field('entrytype'), $key);
 
   foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
     my $names = new Biber::Entry::Names;
@@ -1117,7 +1117,7 @@ sub _name {
         $useprefix = $names->get_useprefix;
       }
       else {
-        $useprefix = Biber::Config->getblxoption('useprefix', $bibentry->get_field('entrytype'), $key);
+        $useprefix = Biber::Config->getblxoption($secnum, 'useprefix', $bibentry->get_field('entrytype'), $key);
       }
 
       $names->add_name(parsename($namenode, $f, $key, $numname++, {useprefix => $useprefix,

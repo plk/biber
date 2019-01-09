@@ -58,10 +58,6 @@ $CONFIG->{state}{uniqignore} = {};
 $CONFIG->{state}{crossrefkeys} = {};
 $CONFIG->{state}{xrefkeys} = {};
 
-# Set tracking, parent->child and child->parent
-$CONFIG->{state}{set}{pc} = {};
-$CONFIG->{state}{set}{cp} = {};
-
 # Citekeys which refer to the same entry
 $CONFIG->{state}{citkey_aliases} = {};
 
@@ -101,8 +97,6 @@ sub _init {
   $CONFIG->{state}{datafiles} = [];
   $CONFIG->{state}{crossref} = [];
   $CONFIG->{state}{xdata} = [];
-  $CONFIG->{state}{set}{pc} = {};
-  $CONFIG->{state}{set}{cp} = {};
 
   return;
 }
@@ -159,7 +153,7 @@ sub _initopts {
   # This has to go after _config_file_set() as this is what defines option scope
   # in tool mode (from the .conf file)
   foreach (keys %CONFIG_DEFAULT_BIBLATEX) {
-    Biber::Config->setblxoption($_, $CONFIG_DEFAULT_BIBLATEX{$_});
+    Biber::Config->setblxoption(0, $_, $CONFIG_DEFAULT_BIBLATEX{$_});
   }
 
   # Command-line overrides everything else
@@ -416,10 +410,10 @@ sub _config_file_set {
       foreach my $t ($v->@*) {
         my $latype = $t->{type};
         if ($latype eq 'global') {
-          Biber::Config->setblxoption('labelalphatemplate', $t);
+          Biber::Config->setblxoption(0, 'labelalphatemplate', $t);
         }
         else {
-          Biber::Config->setblxoption('labelalphatemplate',
+          Biber::Config->setblxoption(0, 'labelalphatemplate',
                                       $t,
                                       'ENTRYTYPE',
                                       $latype);
@@ -440,7 +434,7 @@ sub _config_file_set {
 
         }
         $lants->{$t->{name}} = $lant;
-        Biber::Config->setblxoption('labelalphanametemplate', $lants);
+        Biber::Config->setblxoption(0, 'labelalphanametemplate', $lants);
       }
     }
     elsif (lc($k) eq 'uniquenametemplate') {
@@ -455,7 +449,7 @@ sub _config_file_set {
         }
         $unts->{$unt->{name}} = $untval;
       }
-      Biber::Config->setblxoption('uniquenametemplate', $unts);
+      Biber::Config->setblxoption(0, 'uniquenametemplate', $unts);
     }
     elsif (lc($k) eq 'sortingnamekeytemplate') {
       my $snss;
@@ -483,15 +477,15 @@ sub _config_file_set {
         }
         $snss->{$sns->{name}} = $snkps;
       }
-      Biber::Config->setblxoption('sortingnamekeytemplate', $snss);
+      Biber::Config->setblxoption(0, 'sortingnamekeytemplate', $snss);
     }
     elsif (lc($k) eq 'transliteration') {
       foreach my $tr ($v->@*) {
         if ($tr->{entrytype}[0] eq '*') { # already array forced for another option
-          Biber::Config->setblxoption('translit', $tr->{translit});
+          Biber::Config->setblxoption(0, 'translit', $tr->{translit});
         }
         else {                  # per_entrytype
-          Biber::Config->setblxoption('translit',
+          Biber::Config->setblxoption(0, 'translit',
                                       $tr->{translit},
                                       'ENTRYTYPE',
                                       $tr->{entrytype}[0]);
@@ -531,7 +525,7 @@ sub _config_file_set {
       Biber::Config->setconfigfileoption($k, $sms);
     }
     elsif (lc($k) eq 'inheritance') {# This is a biblatex option
-      Biber::Config->setblxoption($k, $v);
+      Biber::Config->setblxoption(0, $k, $v);
     }
     elsif (lc($k) eq 'sortexclusion') {# This is a biblatex option
       foreach my $sex ($v->@*) {
@@ -539,7 +533,7 @@ sub _config_file_set {
         foreach my $ex ($sex->{exclusion}->@*) {
           $excludes->{$ex->{content}} = 1;
         }
-        Biber::Config->setblxoption('sortexclusion',
+        Biber::Config->setblxoption(0, 'sortexclusion',
                                     $excludes,
                                     'ENTRYTYPE',
                                     $sex->{type});
@@ -551,7 +545,7 @@ sub _config_file_set {
         foreach my $in ($sin->{inclusion}->@*) {
           $includes->{$in->{content}} = 1;
         }
-        Biber::Config->setblxoption('sortinclusion',
+        Biber::Config->setblxoption(0, 'sortinclusion',
                                     $includes,
                                     'ENTRYTYPE',
                                     $sin->{type});
@@ -562,11 +556,11 @@ sub _config_file_set {
       foreach my $presort ($v->@*) {
         # Global presort default
         unless (exists($presort->{type})) {
-          Biber::Config->setblxoption('presort', $presort->{content});
+          Biber::Config->setblxoption(0, 'presort', $presort->{content});
         }
         # Per-type default
         else {
-          Biber::Config->setblxoption('presort',
+          Biber::Config->setblxoption(0, 'presort',
                                       $presort->{content},
                                       'ENTRYTYPE',
                                       $presort->{type});
@@ -578,10 +572,10 @@ sub _config_file_set {
       foreach my $ss ($v->@*) {
         $sorttemplates->{$ss->{name}} = Biber::_parse_sort($ss);
       }
-      Biber::Config->setblxoption('sortingtemplate', $sorttemplates);
+      Biber::Config->setblxoption(0, 'sortingtemplate', $sorttemplates);
     }
     elsif (lc($k) eq 'datamodel') {# This is a biblatex option
-      Biber::Config->setblxoption('datamodel', $v);
+      Biber::Config->setblxoption(0, 'datamodel', $v);
     }
     elsif (exists($v->{content})) { # simple option
       Biber::Config->setconfigfileoption($k, $v->{content});
@@ -893,10 +887,15 @@ sub isexplicitoption {
 
 sub setblxoption {
   shift; # class method so don't care about class name
-  my ($opt, $val, $scope, $scopeval) = @_;
+  my ($secnum, $opt, $val, $scope, $scopeval) = @_;
   if (not defined($scope)) { # global is the default
     if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{GLOBAL}) {
       $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;
+    }
+  }
+  elsif ($scope eq 'ENTRY') {
+    if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{$scope}) {
+      $CONFIG->{options}{biblatex}{$scope}{$scopeval}{$secnum}{$opt} = $val;
     }
   }
   else { # Per-type/entry options need to specify type/entry too
@@ -911,23 +910,26 @@ sub setblxoption {
 
     Get a biblatex option from the global, per-type or per entry scope
 
-    getblxoption('option', ['entrytype'], ['citekey'])
+    getblxoption('secnum', 'option', ['entrytype'], ['citekey'])
 
     Returns the value of option. In order of decreasing preference, returns:
     1. Biblatex option defined for entry
     2. Biblatex option defined for entry type
     3. Biblatex option defined globally
 
+    section number needs to be present only for per-entry options as these might
+    differ between sections
+
 =cut
 
 sub getblxoption {
   no autovivification;
   shift; # class method so don't care about class name
-  my ($opt, $entrytype, $citekey) = @_;
+  my ($secnum, $opt, $entrytype, $citekey) = @_;
   if ( defined($citekey) and
        $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{ENTRY} and
-       defined $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$opt}) {
-    return $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$opt};
+       defined $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$secnum}{$opt}) {
+    return $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$secnum}{$opt};
   }
   elsif (defined($entrytype) and
          $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{ENTRYTYPE} and
@@ -949,8 +951,8 @@ sub getblxoption {
 sub getblxentryoptions {
   no autovivification;
   shift; # class method so don't care about class name
-  my $key = shift;
-  return keys $CONFIG->{options}{biblatex}{ENTRY}{$key}->%*;
+  my ($secnum, $key) = @_;
+  return keys $CONFIG->{options}{biblatex}{ENTRY}{$key}{$secnum}->%*;
 }
 
 ##############################
