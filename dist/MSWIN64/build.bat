@@ -55,6 +55,7 @@ CALL pp ^
   --module=HTTP::Date ^
   --module=Encode:: ^
   --module=IO::Socket::SSL ^
+  --module=IO::String ^
   --module=PerlIO::utf8_strict ^
   --module=File::Find::Rule ^
   --module=Text::CSV_XS ^

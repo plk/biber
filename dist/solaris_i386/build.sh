@@ -24,6 +24,7 @@ PAR_VERBATIM=1 /opt/gnu/perl5/5.24/bin/pp \
   --module=Encode:: \
   --module=File::Find::Rule \
   --module=IO::Socket::SSL \
+  --module=IO::String \
   --module=PerlIO::utf8_strict \
   --module=Text::CSV_XS \
   --module=DateTime \

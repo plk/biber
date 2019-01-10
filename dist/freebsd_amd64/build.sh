@@ -34,6 +34,7 @@ export PAR_VERBATIM
   --module=List::MoreUtils::PP \
   --module=Readonly::XS \
   --module=IO::Socket::SSL \
+  --module=IO::String \
   --module=PerlIO::utf8_strict \
   --module=File::Find::Rule \
   --module=Text::CSV_XS \
