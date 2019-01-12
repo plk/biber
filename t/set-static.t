@@ -47,7 +47,7 @@ my $out = $biber->get_output_obj;
 my $string1 = q|    \entry{Static1}{set}{}
       \set{Static2,Static4,Static3}
       \field{sortinit}{B}
-      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
       \field{annotation}{Some notes}
     \endentry
 |;
@@ -68,7 +68,7 @@ my $string2 = q|    \entry{Static2}{book}{}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{B}
-      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{sortinithash}{8de16967003c7207dae369d874f1456e}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -94,7 +94,7 @@ my $string3 = q|    \entry{Static3}{book}{}
       \strng{authornamehash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \strng{authorfullhash}{22dafa5cd57bb5dd7f3e3bab98fd539c}
       \field{sortinit}{D}
-      \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
+      \field{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -119,7 +119,7 @@ my $string4 = q|    \entry{Static4}{book}{}
       \strng{authornamehash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \strng{authorfullhash}{da80091c8cd89e5269bd55af1bd5d2fa}
       \field{sortinit}{C}
-      \field{sortinithash}{963e9d84a3da2344e8833203de5aed05}
+      \field{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -145,7 +145,7 @@ my $string5 = q|    \entry{Static2}{book}{}
       \strng{authornamehash}{43874d80d7ce68027102819f16c47df1}
       \strng{authorfullhash}{43874d80d7ce68027102819f16c47df1}
       \field{sortinit}{1}
-      \field{sortinithash}{2174f786c6195e7fe2ee1c229b416e29}
+      \field{sortinithash}{50c6687d7fc80f50136d75228e3c59ba}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}

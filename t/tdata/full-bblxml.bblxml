@@ -47,7 +47,7 @@
         <bbl:field name="authorbibnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
         <bbl:field name="labelalpha">Aks\textbf{+}06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
-        <bbl:field name="sortinithash">d77c7cdd82ff690d4c3ef13216f92f0b</bbl:field>
+        <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
@@ -79,7 +79,7 @@
         <bbl:field name="authorbibnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="labelalpha">Ang02</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
-        <bbl:field name="sortinithash">d77c7cdd82ff690d4c3ef13216f92f0b</bbl:field>
+        <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
         <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical article entry. Note the indextitle field</bbl:field>
@@ -109,7 +109,7 @@
         </bbl:set>
         <bbl:field name="labelalpha">Gla61</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
-        <bbl:field name="sortinithash">5e8d2bf9d38de41b1528bd307546008f</bbl:field>
+        <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
         <bbl:field name="annotation">A set entry with three members discussing the standard model of particle physics.</bbl:field>
       </bbl:entry>
       <bbl:entry key="stdmodel:glashow" type="article">
@@ -129,7 +129,7 @@
         <bbl:field name="authorfullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="authorbibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
-        <bbl:field name="sortinithash">5e8d2bf9d38de41b1528bd307546008f</bbl:field>
+        <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="journaltitle">Nucl. Phys.</bbl:field>
@@ -168,7 +168,7 @@
         <bbl:field name="extraname">1</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
-        <bbl:field name="sortinithash">9fd838a31ba64d981e8f44562bd33f89</bbl:field>
+        <bbl:field name="sortinithash">d3edc18d54b9438a72c24c925bfb38f4</bbl:field>
         <bbl:field name="extraalpha">1</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
@@ -207,7 +207,7 @@
         <bbl:field name="extraname">2</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
-        <bbl:field name="sortinithash">9fd838a31ba64d981e8f44562bd33f89</bbl:field>
+        <bbl:field name="sortinithash">d3edc18d54b9438a72c24c925bfb38f4</bbl:field>
         <bbl:field name="extraalpha">2</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
@@ -236,7 +236,7 @@
         <bbl:field name="authorbibnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
         <bbl:field name="labelalpha">Ree58</bbl:field>
         <bbl:field name="sortinit">R</bbl:field>
-        <bbl:field name="sortinithash">da6b42bd3ab22fee61abed031ee405f7</bbl:field>
+        <bbl:field name="sortinithash">b9c68a358aea118dfa887b6e902414a7</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with a series and a volume field. Note the format of the series. If the value of the series field is an integer, this number is printed as an ordinal and the string *series is appended automatically</bbl:field>
@@ -286,7 +286,7 @@
         <bbl:field name="editorfullhash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
         <bbl:field name="editorbibnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
-        <bbl:field name="sortinithash">322b1d5276f2f6c1bccdcd15920dbee6</bbl:field>
+        <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="booksubtitle">Relativistic groups and analyticity</bbl:field>
@@ -317,7 +317,7 @@
         <bbl:field name="authorbibnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="labelalpha">Sho91</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
-        <bbl:field name="sortinithash">322b1d5276f2f6c1bccdcd15920dbee6</bbl:field>
+        <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
@@ -353,7 +353,7 @@
         <bbl:field name="authorfullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="authorbibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="sortinit">W</bbl:field>
-        <bbl:field name="sortinithash">ecb89ff85896a47dc313960773ac311d</bbl:field>
+        <bbl:field name="sortinithash">1af34bd8c148ffb32de1494636b49713</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="journaltitle">Phys. Rev. Lett.</bbl:field>
@@ -411,7 +411,7 @@
         <bbl:field name="authorbibnamehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
         <bbl:field name="labelalpha">Aks\textbf{+}06</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
-        <bbl:field name="sortinithash">d77c7cdd82ff690d4c3ef13216f92f0b</bbl:field>
+        <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="indextitle">Effect of immobilization on catalytic characteristics</bbl:field>
@@ -443,7 +443,7 @@
         <bbl:field name="authorbibnamehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
         <bbl:field name="labelalpha">Ang02</bbl:field>
         <bbl:field name="sortinit">A</bbl:field>
-        <bbl:field name="sortinithash">d77c7cdd82ff690d4c3ef13216f92f0b</bbl:field>
+        <bbl:field name="sortinithash">a3dcedd53b04d1adfd5ac303ecd5e6fa</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
         <bbl:field name="annotation">A German article in a French journal. Apart from that, a typical article entry. Note the indextitle field</bbl:field>
@@ -473,7 +473,7 @@
         </bbl:set>
         <bbl:field name="labelalpha">Gla61</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
-        <bbl:field name="sortinithash">5e8d2bf9d38de41b1528bd307546008f</bbl:field>
+        <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
         <bbl:field name="annotation">A set entry with three members discussing the standard model of particle physics.</bbl:field>
       </bbl:entry>
       <bbl:entry key="stdmodel:glashow" type="article">
@@ -493,7 +493,7 @@
         <bbl:field name="authorfullhash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="authorbibnamehash">eb3f242602109f5bdbeb41fdd990fcc0</bbl:field>
         <bbl:field name="sortinit">G</bbl:field>
-        <bbl:field name="sortinithash">5e8d2bf9d38de41b1528bd307546008f</bbl:field>
+        <bbl:field name="sortinithash">62eb2aa29549e4fdbd3cb154ec5711cb</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="journaltitle">Nucl. Phys.</bbl:field>
@@ -532,7 +532,7 @@
         <bbl:field name="extraname">1</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
-        <bbl:field name="sortinithash">9fd838a31ba64d981e8f44562bd33f89</bbl:field>
+        <bbl:field name="sortinithash">d3edc18d54b9438a72c24c925bfb38f4</bbl:field>
         <bbl:field name="extraalpha">1</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
@@ -571,7 +571,7 @@
         <bbl:field name="extraname">2</bbl:field>
         <bbl:field name="labelalpha">Knu86</bbl:field>
         <bbl:field name="sortinit">K</bbl:field>
-        <bbl:field name="sortinithash">9fd838a31ba64d981e8f44562bd33f89</bbl:field>
+        <bbl:field name="sortinithash">d3edc18d54b9438a72c24c925bfb38f4</bbl:field>
         <bbl:field name="extraalpha">2</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">shorttitle</bbl:field>
@@ -600,7 +600,7 @@
         <bbl:field name="authorbibnamehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
         <bbl:field name="labelalpha">Ree58</bbl:field>
         <bbl:field name="sortinit">R</bbl:field>
-        <bbl:field name="sortinithash">da6b42bd3ab22fee61abed031ee405f7</bbl:field>
+        <bbl:field name="sortinithash">b9c68a358aea118dfa887b6e902414a7</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with a series and a volume field. Note the format of the series. If the value of the series field is an integer, this number is printed as an ordinal and the string *series is appended automatically</bbl:field>
@@ -650,7 +650,7 @@
         <bbl:field name="editorfullhash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
         <bbl:field name="editorbibnamehash">d0ec890e59163c24c111a08d2a4be982</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
-        <bbl:field name="sortinithash">322b1d5276f2f6c1bccdcd15920dbee6</bbl:field>
+        <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="booksubtitle">Relativistic groups and analyticity</bbl:field>
@@ -681,7 +681,7 @@
         <bbl:field name="authorbibnamehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
         <bbl:field name="labelalpha">Sho91</bbl:field>
         <bbl:field name="sortinit">S</bbl:field>
-        <bbl:field name="sortinithash">322b1d5276f2f6c1bccdcd15920dbee6</bbl:field>
+        <bbl:field name="sortinithash">c319cff79d99c853d775f88277d4e45f</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="annotation">An article entry with series, volume, and number fields. Note the format of the series which is a localization key</bbl:field>
@@ -717,7 +717,7 @@
         <bbl:field name="authorfullhash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="authorbibnamehash">15e144c72b0b9d10db00ddc6d37a19e6</bbl:field>
         <bbl:field name="sortinit">W</bbl:field>
-        <bbl:field name="sortinithash">ecb89ff85896a47dc313960773ac311d</bbl:field>
+        <bbl:field name="sortinithash">1af34bd8c148ffb32de1494636b49713</bbl:field>
         <bbl:field name="labelnamesource">author</bbl:field>
         <bbl:field name="labeltitlesource">title</bbl:field>
         <bbl:field name="journaltitle">Phys. Rev. Lett.</bbl:field>

@@ -123,7 +123,7 @@ my $l4 = q|    \entry{L4}{book}{}
       \field{extraname}{2}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
-      \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
+      \field{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{2}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -155,7 +155,7 @@ my $l1 = q|    \entry{L1}{book}{}
       \field{extraname}{1}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
-      \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
+      \field{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{1}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -187,7 +187,7 @@ my $l2 = q|    \entry{L2}{book}{}
       \field{extraname}{3}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
-      \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
+      \field{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -219,7 +219,7 @@ my $l3 = q|    \entry{L3}{book}{}
       \field{extraname}{2}
       \field{labelalpha}{Doe95}
       \field{sortinit}{D}
-      \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
+      \field{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{2}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
@@ -253,7 +253,7 @@ my $l5 = q|    \entry{L5}{book}{}
       \field{extraname}{1}
       \field{labelalpha}{Doe\textbf{+}95}
       \field{sortinit}{D}
-      \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
+      \field{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
       \field{extraalpha}{1}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}

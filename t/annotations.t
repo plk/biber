@@ -73,7 +73,7 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \strng{authorfullhash}{90ae96c82de92e36949bc64254bbde0c}
       \field{extraname}{1}
       \field{sortinit}{L}
-      \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
+      \field{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{The Title}
@@ -116,7 +116,7 @@ my $ann2 = q|    \entry{ann2}{misc}{}
       \strng{authorfullhash}{90ae96c82de92e36949bc64254bbde0c}
       \field{extraname}{2}
       \field{sortinit}{L}
-      \field{sortinithash}{2c7981aaabc885868aba60f0c09ee20f}
+      \field{sortinithash}{dad3efd0836470093a7b4a7bb756eb8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{The Title}
