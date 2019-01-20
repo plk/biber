@@ -43,7 +43,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ locate_data_file makenamesid makenameid stringify_hash
+our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore
   normalise_string_sort normalise_string_label reduce_array remove_outer
   has_outer add_outer ucinit strip_nosort strip_noinit is_def is_undef
@@ -58,6 +58,38 @@ our @EXPORT = qw{ locate_data_file makenamesid makenameid stringify_hash
   split_xsv date_monthday tzformat expand_option strip_annotation};
 
 =head1 FUNCTIONS
+
+
+
+=head2 glob_data_file
+
+  Expands a data file glob to a list of filenames
+
+=cut
+
+sub glob_data_file {
+  my $source = shift;
+  my @sources;
+
+  $logger->info("Globbing data source '$source'");
+
+  if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
+    $logger->info("Data source '$source' is remote, no globbing to do");
+    push @sources, $source;
+  }
+
+  # Use Windows style globbing on Windows
+  if ($^O =~ /Win/) {
+    $logger->debug("Enabling Windows-style globbing");
+    require File::DosGlob;
+    File::DosGlob->import('glob');
+  }
+
+  push @sources, glob($source);
+
+  $logger->info("Globbed data source '$source' to " . join(',', @sources));
+  return @sources;
+}
 
 =head2 locate_data_file
 

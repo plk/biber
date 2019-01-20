@@ -4227,6 +4227,22 @@ sub fetch_data {
     $logger->debug('Looking for directly cited keys: ' . join(', ', @remaining_keys));
   }
 
+  # Process datasource globs
+  my $ds;
+  foreach my $datasource ($section->get_datasources->@*) {
+    unless ($datasource->{type} eq 'file') {
+      push $ds->@*, $datasource;
+    }
+    foreach my $gds (glob_data_file($datasource->{name})) {
+      push $ds->@*, { type     => $datasource->{type},
+                  name     => $gds,
+                  datatype => $datasource->{datatype},
+                  encoding => $datasource->{encoding}};
+    }
+  }
+  $section->set_datasources($ds);
+
+  # Now actually fetch data with expanded list of data sources
   foreach my $datasource ($section->get_datasources->@*) {
     # shortcut if we have found all the keys now
     last unless (@remaining_keys or $section->is_allkeys);
