@@ -295,7 +295,7 @@ sub tool_mode_setup {
 sub parse_ctrlfile {
   my ($self, $ctrl_file) = @_;
 
-  my $ctrl_file_path = locate_biber_file($ctrl_file);
+  my $ctrl_file_path = locate_data_file($ctrl_file);
   Biber::Config->set_ctrlfile_path($ctrl_file_path);
 
   biber_error("Cannot find control file '$ctrl_file'! - Did latex run successfully on your .tex file before you ran biber?") unless ($ctrl_file_path and -e $ctrl_file_path);
@@ -4265,7 +4265,7 @@ sub fetch_data {
       $logger->info("Looking for $datatype format $type '$name' for section $secnum");
     }
 
-    @remaining_keys = "${package}::extract_entries"->($name, $encoding, \@remaining_keys);
+    @remaining_keys = "${package}::extract_entries"->(locate_data_file($name), $encoding, \@remaining_keys);
   }
 
   # error reporting
@@ -4438,7 +4438,7 @@ sub get_dependents {
         my $package = 'Biber::Input::' . $type . '::' . $datatype;
         eval "require $package" or
           biber_error("Error loading data source package '$package': $@");
-        $missing->@* = "${package}::extract_entries"->($name, $encoding, $missing);
+        $missing->@* = "${package}::extract_entries"->(locate_data_file($name), $encoding, $missing);
       }
     }
 

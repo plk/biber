@@ -43,7 +43,7 @@ All functions are exported by default.
 
 =cut
 
-our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
+our @EXPORT = qw{ locate_data_file makenamesid makenameid stringify_hash
   normalise_string normalise_string_hash normalise_string_underscore
   normalise_string_sort normalise_string_label reduce_array remove_outer
   has_outer add_outer ucinit strip_nosort strip_noinit is_def is_undef
@@ -59,9 +59,9 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
 
 =head1 FUNCTIONS
 
-=head2 locate_biber_file
+=head2 locate_data_file
 
-  Searches for a file by
+  Searches for a data file by
 
   The exact path if the filename is absolute
   In the input_directory, if defined
@@ -72,24 +72,96 @@ our @EXPORT = qw{ locate_biber_file makenamesid makenameid stringify_hash
 
 =cut
 
-sub locate_biber_file {
-  my $filename = shift;
-  my $filenamepath = $filename; # default if nothing else below applies
+sub locate_data_file {
+  my $source = shift;
+  my $sourcepath = $source; # default if nothing else below applies
   my $foundfile;
+
+  if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
+    $logger->info("Data source '$source' is a remote BibTeX data source - fetching ...");
+    if (my $cf = $REMOTE_MAP{$source}) {
+      $logger->info("Found '$source' in remote source cache");
+      $sourcepath = $cf;
+    }
+    else {
+      if ($1) { # HTTPS/FTPS
+        # use IO::Socket::SSL qw(debug99); # useful for debugging SSL issues
+        # We have to explicitly set the cert path because otherwise the https module
+        # can't find the .pem when PAR::Packer'ed
+        # Have to explicitly try to require Mozilla::CA here to get it into %INC below
+        # It may, however, have been removed by some biber unpacked dists
+        if (not exists($ENV{PERL_LWP_SSL_CA_FILE}) and
+            not exists($ENV{PERL_LWP_SSL_CA_PATH}) and
+            not defined(Biber::Config->getoption('ssl-nointernalca')) and
+            eval {require Mozilla::CA}) {
+          # we assume that the default CA file is in .../Mozilla/CA/cacert.pem
+          (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );
+          $dir =~ s/\/$//;      # splitpath sometimes leaves a trailing '/'
+          $ENV{PERL_LWP_SSL_CA_FILE} = File::Spec->catpath($vol, "$dir/CA", 'cacert.pem');
+        }
+
+        # fallbacks for, e.g., linux
+        unless (exists($ENV{PERL_LWP_SSL_CA_FILE})) {
+          foreach my $ca_bundle (qw{
+                                     /etc/ssl/certs/ca-certificates.crt
+                                     /etc/pki/tls/certs/ca-bundle.crt
+                                     /etc/ssl/ca-bundle.pem
+                                 }) {
+            next if ! -e $ca_bundle;
+            $ENV{PERL_LWP_SSL_CA_FILE} = $ca_bundle;
+            last;
+          }
+          foreach my $ca_path (qw{
+                                   /etc/ssl/certs/
+                                   /etc/pki/tls/
+                               }) {
+            next if ! -d $ca_path;
+            $ENV{PERL_LWP_SSL_CA_PATH} = $ca_path;
+            last;
+          }
+        }
+
+        if (defined(Biber::Config->getoption('ssl-noverify-host'))) {
+          $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;
+        }
+
+        require LWP::Protocol::https;
+      }
+      require LWP::Simple;
+      # no need to unlink file as tempdir will be unlinked. Also, the tempfile
+      # will be needed after this sub has finished and so it must not be unlinked
+      # by going out of scope
+      my $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
+                               DIR => $Biber::MASTER->biber_tempdir,
+                               SUFFIX => '.bib',
+                               UNLINK => 0);
+
+      # Pretend to be a browser otherwise some sites refuse the default LWP UA string
+      $LWP::Simple::ua->agent('Mozilla/5.0');
+
+      my $retcode = LWP::Simple::getstore($source, $tf->filename);
+      unless (LWP::Simple::is_success($retcode)) {
+        biber_error("Could not fetch '$source' (HTTP code: $retcode)");
+      }
+      $sourcepath = $tf->filename;
+      # cache any remote so it persists and so we don't fetch it again
+      $REMOTE_MAP{$source} = $sourcepath;
+    }
+  }
 
   # If input_directory is set, perhaps the file can be found there so
   # construct a path to test later
   if (my $indir = Biber::Config->getoption('input_directory')) {
-    $foundfile = File::Spec->catfile($indir, $filename);
+    $foundfile = File::Spec->catfile($indir, $sourcepath);
   }
   # If output_directory is set, perhaps the file can be found there so
   # construct a path to test later
   elsif (my $outdir = Biber::Config->getoption('output_directory')) {
-    $foundfile = File::Spec->catfile($outdir, $filename);
+    $foundfile = File::Spec->catfile($outdir, $sourcepath);
   }
 
   # Filename is absolute
-  if (File::Spec->file_name_is_absolute($filename) and my $f = file_exist_check($filename)) {
+  if (File::Spec->file_name_is_absolute($sourcepath) and my $f = file_exist_check($sourcepath)) {
     return $f;
   }
 
@@ -98,7 +170,7 @@ sub locate_biber_file {
     return $f;
   }
 
-  if (my $f = file_exist_check($filename)) {
+  if (my $f = file_exist_check($sourcepath)) {
     return $f;
   }
 
@@ -112,7 +184,7 @@ sub locate_biber_file {
       $ctldir .= '/' unless $ctldir =~ /\/\z/;
     }
 
-    my $path = "$ctlvolume$ctldir$filename";
+    my $path = "$ctlvolume$ctldir$sourcepath";
 
     if (my $f = file_exist_check($path)) {
       return $f;
@@ -122,11 +194,11 @@ sub locate_biber_file {
   # File is in kpse path
   if (can_run('kpsewhich')) {
     if ($logger->is_debug()) {# performance tune
-      $logger->debug("Looking for file '$filename' via kpsewhich");
+      $logger->debug("Looking for file '$sourcepath' via kpsewhich");
     }
     my $found;
     my $err;
-    run3  [ 'kpsewhich', $filename ], \undef, \$found, \$err, { return_if_system_error => 1};
+    run3  [ 'kpsewhich', $sourcepath ], \undef, \$found, \$err, { return_if_system_error => 1};
     if ($?) {
       if ($logger->is_debug()) {# performance tune
         $logger->debug("kpsewhich returned error: $err ($!)");
@@ -137,7 +209,7 @@ sub locate_biber_file {
     }
     if ($found) {
       if ($logger->is_debug()) {# performance tune
-        $logger->debug("Found '$filename' via kpsewhich");
+        $logger->debug("Found '$sourcepath' via kpsewhich");
       }
       chomp $found;
       $found =~ s/\cM\z//xms; # kpsewhich in cygwin sometimes returns ^M at the end
@@ -147,11 +219,13 @@ sub locate_biber_file {
     }
     else {
       if ($logger->is_debug()) {# performance tune
-        $logger->debug("Could not find '$filename' via kpsewhich");
+        $logger->debug("Could not find '$sourcepath' via kpsewhich");
       }
     }
   }
-  return undef;
+
+  # Not found
+  biber_error("Cannot find '$source'!")
 }
 
 =head2 

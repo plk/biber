@@ -42,12 +42,12 @@ Log::Log4perl->init(\$l4pconf);
 # Using File::Spec->canonpath() to normalise path separators so these tests work
 # on Windows/non-Windows
 # Absolute path
-eq_or_diff(File::Spec->canonpath(locate_biber_file("$cwd/t/tdata/general.bcf")), File::Spec->canonpath("$cwd/t/tdata/general.bcf"), 'File location - 1');
+eq_or_diff(File::Spec->canonpath(locate_data_file("$cwd/t/tdata/general.bcf")), File::Spec->canonpath("$cwd/t/tdata/general.bcf"), 'File location - 1');
 # Relative path
-eq_or_diff(File::Spec->canonpath(locate_biber_file('t/tdata/general.bcf')), File::Spec->canonpath('t/tdata/general.bcf'), 'File location - 2');
+eq_or_diff(File::Spec->canonpath(locate_data_file('t/tdata/general.bcf')), File::Spec->canonpath('t/tdata/general.bcf'), 'File location - 2');
 # Same place as control file
 Biber::Config->set_ctrlfile_path('t/tdata/general.bcf');
-eq_or_diff(File::Spec->canonpath(locate_biber_file('t/tdata/examples.bib')), File::Spec->canonpath('t/tdata/examples.bib'), 'File location - 3');
+eq_or_diff(File::Spec->canonpath(locate_data_file('t/tdata/examples.bib')), File::Spec->canonpath('t/tdata/examples.bib'), 'File location - 3');
 
 # The \cM* is there because if cygwin picks up miktex kpsewhich, it will return a path
 # with a Ctrl-M on the end
@@ -55,12 +55,12 @@ eq_or_diff(File::Spec->canonpath(locate_biber_file('t/tdata/examples.bib')), Fil
 SKIP: {
   skip "No LaTeX installation", 1 unless can_run('kpsewhich');
   # using kpsewhich
-  like(File::Spec->canonpath(locate_biber_file('plain.tex')), qr|plain.tex\cM*\z|, 'File location - 4');
+  like(File::Spec->canonpath(locate_data_file('plain.tex')), qr|plain.tex\cM*\z|, 'File location - 4');
     }
 
 # In output_directory
 Biber::Config->setoption('output_directory', 't/tdata');
-eq_or_diff(File::Spec->canonpath(locate_biber_file('general.bcf')), File::Spec->canonpath("t/tdata/general.bcf"), 'File location - 5');
+eq_or_diff(File::Spec->canonpath(locate_data_file('general.bcf')), File::Spec->canonpath("t/tdata/general.bcf"), 'File location - 5');
 
 # String normalising
 eq_or_diff(normalise_string('"a, b–c: d" ', 1),  'a bc d', 'normalise_string' );

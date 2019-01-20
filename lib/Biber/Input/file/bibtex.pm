@@ -104,12 +104,11 @@ sub TBSIG {
 =cut
 
 sub extract_entries {
-  my ($source, $encoding, $keys) = @_;
+  my ($filename, $encoding, $keys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $filename;
   my @rkeys = $keys->@*;
-  my $tf; # Up here so that the temp file has enough scope to survive until we've used it
+
   if ($logger->is_trace()) {# performance tune
     $logger->trace("Entering extract_entries() in driver 'bibtex'");
   }
@@ -130,82 +129,6 @@ sub extract_entries {
     # Driver default maps
     if (my $m = first {$_->{datatype} eq 'bibtex' and $_->{level} eq 'driver'} Biber::Config->getoption('sourcemap')->@* ) {
       push $smaps->@*, $m;
-    }
-  }
-
-  # If it's a remote data file, fetch it first
-  if ($source =~ m/\A(?:http|ftp)(s?):\/\//xms) {
-    $logger->info("Data source '$source' is a remote BibTeX data source - fetching ...");
-    if (my $cf = $REMOTE_MAP{$source}) {
-      $logger->info("Found '$source' in remote source cache");
-      $filename = $cf;
-    }
-    else {
-      if ($1) { # HTTPS/FTPS
-        # use IO::Socket::SSL qw(debug99); # useful for debugging SSL issues
-        # We have to explicitly set the cert path because otherwise the https module
-        # can't find the .pem when PAR::Packer'ed
-        # Have to explicitly try to require Mozilla::CA here to get it into %INC below
-        # It may, however, have been removed by some biber unpacked dists
-        if (not exists($ENV{PERL_LWP_SSL_CA_FILE}) and
-            not exists($ENV{PERL_LWP_SSL_CA_PATH}) and
-            not defined(Biber::Config->getoption('ssl-nointernalca')) and
-            eval {require Mozilla::CA}) {
-          # we assume that the default CA file is in .../Mozilla/CA/cacert.pem
-          (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Mozilla/CA.pm"} );
-          $dir =~ s/\/$//;      # splitpath sometimes leaves a trailing '/'
-          $ENV{PERL_LWP_SSL_CA_FILE} = File::Spec->catpath($vol, "$dir/CA", 'cacert.pem');
-        }
-
-        # fallbacks for, e.g., linux
-        unless (exists($ENV{PERL_LWP_SSL_CA_FILE})) {
-          foreach my $ca_bundle (qw{
-                                     /etc/ssl/certs/ca-certificates.crt
-                                     /etc/pki/tls/certs/ca-bundle.crt
-                                     /etc/ssl/ca-bundle.pem
-                                 }) {
-            next if ! -e $ca_bundle;
-            $ENV{PERL_LWP_SSL_CA_FILE} = $ca_bundle;
-            last;
-          }
-          foreach my $ca_path (qw{
-                                   /etc/ssl/certs/
-                                   /etc/pki/tls/
-                               }) {
-            next if ! -d $ca_path;
-            $ENV{PERL_LWP_SSL_CA_PATH} = $ca_path;
-            last;
-          }
-        }
-
-        if (defined(Biber::Config->getoption('ssl-noverify-host'))) {
-          $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;
-        }
-
-        require LWP::Protocol::https;
-      }
-      require LWP::Simple;
-      $tf = File::Temp->new(TEMPLATE => 'biber_remote_data_source_XXXXX',
-                            DIR => $Biber::MASTER->biber_tempdir,
-                            SUFFIX => '.bib');
-
-      # Pretend to be a browser otherwise some sites refuse the default LWP UA string
-      $LWP::Simple::ua->agent('Mozilla/5.0');
-
-      my $retcode = LWP::Simple::getstore($source, $tf->filename);
-      unless (LWP::Simple::is_success($retcode)) {
-        biber_error("Could not fetch '$source' (HTTP code: $retcode)");
-      }
-      $filename = $tf->filename;
-      # cache any remote so it persists and so we don't fetch it again
-      $REMOTE_MAP{$source} = $filename;
-    }
-  }
-  else {
-    # Need to get the filename even if using cache so we increment
-    # the filename count for preambles at the bottom of this sub
-    unless ($filename = locate_biber_file($source)) {
-      biber_error("Cannot find '$source'!")
     }
   }
 
@@ -257,7 +180,7 @@ sub extract_entries {
       # Record a key->datasource name mapping for error reporting
       $section->set_keytods($key, $filename);
 
-      unless (create_entry($key, $entry, $source, $smaps, \@rkeys)) {
+      unless (create_entry($key, $entry, $filename, $smaps, \@rkeys)) {
         # if create entry returns false, remove the key from the cache
         $cache->{orig_key_order}{$filename}->@* = grep {$key ne $_} $cache->{orig_key_order}{$filename}->@*;
       }
@@ -310,7 +233,7 @@ sub extract_entries {
 
         # Skip creation if it's already been done, for example, via a citekey alias
         unless ($section->bibentries->entry_exists($wanted_key)) {
-          create_entry($wanted_key, $entry, $source, $smaps, \@rkeys);
+          create_entry($wanted_key, $entry, $filename, $smaps, \@rkeys);
         }
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
@@ -326,7 +249,7 @@ sub extract_entries {
         # the bibliography (minXrefs will take care of adding it there if necessary).
         unless ($section->bibentries->entry_exists($rk)) {
           if (my $entry = $cache->{data}{GLOBALDS}{$rk}) {# Look in cache of all datasource keys
-            create_entry($rk, $entry, $source, $smaps, \@rkeys);
+            create_entry($rk, $entry, $filename, $smaps, \@rkeys);
             if ($section->has_cited_citekey($wanted_key)) {
               $section->add_citekeys($rk);
             }
