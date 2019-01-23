@@ -113,6 +113,19 @@ sub extract_entries {
     $logger->trace("Entering extract_entries() in driver 'bibtex'");
   }
 
+  # Check for empty files because they confuse btparse
+  unless (-s $filename) { # File is empty
+    biber_warn("Data source '$filename' is empty, ignoring");
+    return @rkeys;
+  }
+
+  # Check for files with no macros other than perhaps comments; they also confuse btparse
+  my $tbuf = File::Slurper::read_text($filename, $encoding);
+  unless ($tbuf =~ m/\@(?!Comment)/i) {
+    biber_warn("Data source '$filename' contains no BibTeX entries/macros, ignoring");
+    return @rkeys;
+  }
+
   # Get a reference to the correct sourcemap sections, if they exist
   my $smaps = [];
   # Maps are applied in order USER->STYLE->DRIVER

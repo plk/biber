@@ -89,6 +89,12 @@ sub extract_entries {
 
   $logger->trace("Entering extract_entries() in driver 'biblatexml'");
 
+  # Check for empty files because they confuse btparse
+  unless (-s $filename) { # File is empty
+    biber_warn("Data source '$filename' is empty, ignoring");
+    return @rkeys;
+  }
+
   # Get a reference to the correct sourcemap sections, if they exist
   my $smaps = [];
   # Maps are applied in order USER->STYLE->DRIVER
