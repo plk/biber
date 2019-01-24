@@ -74,6 +74,7 @@
         <ref name="sortingtemplatename"/>
         <ref name="sortsets"/>
         <ref name="uniquelist"/>
+        <ref name="uniqueliststrength"/>
         <ref name="uniquename"/>
         <ref name="uniqueprimaryauthor"/>
         <ref name="uniquetitle"/>
@@ -1548,6 +1549,26 @@
           <value>0</value>
           <value>1</value>
           <value>2</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <!--
+    0 = process uniquelist strong - takes account of list truncations when generating extra*
+    1 = process uniquelist weak - ignores list truncations when generating extra*
+  -->
+  <define name="uniqueliststrength">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>uniqueliststrength</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
         </choice>
       </element>
     </element>

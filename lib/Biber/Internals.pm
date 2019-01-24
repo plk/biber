@@ -54,8 +54,10 @@ sub _getnamehash {
   }
 
   # name list was truncated
-  if ($visible < $count or $names->get_morenames) {
-    $hashkey .= '+';
+  unless (Biber::Config->getblxoption(undef, 'uniqueliststrength')) {# default 'strong' is 0
+    if ($visible < $count or $names->get_morenames) {
+      $hashkey .= '+';
+    }
   }
 
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
@@ -140,8 +142,10 @@ sub _getnamehash_u {
   }
 
   # name list was truncated
-  if ($visible < $count or $names->get_morenames) {
-    $hashkey .= '+';
+  unless (Biber::Config->getblxoption(undef, 'uniqueliststrength')) {# default 'strong' is 0
+    if ($visible < $count or $names->get_morenames) {
+      $hashkey .= '+';
+    }
   }
 
   # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")

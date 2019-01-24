@@ -42,7 +42,7 @@ our @EXPORT = qw{
 
 # Version of biblatex control file which this release expects. Matched against version
 # passed in control file. Used when checking the .bcf
-our $BCF_VERSION = '3.5';
+our $BCF_VERSION = '3.6';
 # Format version of the .bbl. Used when writing the .bbl
 our $BBL_VERSION = '3.0';
 
