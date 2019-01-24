@@ -119,9 +119,9 @@ sub extract_entries {
     return @rkeys;
   }
 
-  # Check for files with no macros other than perhaps comments; they also confuse btparse
+  # Check for files with no macros - they also confuse btparse
   my $tbuf = File::Slurper::read_text($filename, $encoding);
-  unless ($tbuf =~ m/\@(?!Comment)/i) {
+  unless ($tbuf =~ m/\@/) {
     biber_warn("Data source '$filename' contains no BibTeX entries/macros, ignoring");
     return @rkeys;
   }
