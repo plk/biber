@@ -172,6 +172,8 @@ t/tdata/sort-order.bib
 t/tdata/sort-uc.bcf
 t/tdata/sort-uc.bib
 t/tdata/tool.bib
+t/tdata/truncation.bcf
+t/tdata/truncation.bib
 t/tdata/uniqueness1.bcf
 t/tdata/uniqueness1.bib
 t/tdata/uniqueness2.bcf
@@ -186,14 +188,12 @@ t/tdata/uniqueness6.bcf
 t/tdata/uniqueness6.bib
 t/tdata/uniqueness-nameparts.bcf
 t/tdata/uniqueness-nameparts.bib
-t/tdata/uniqueness-strength.bcf
-t/tdata/uniqueness-strength.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
+t/truncation.t
 t/uniqueness.t
 t/uniqueness-nameparts.t
-t/uniqueness-strength.t
 t/utils.t
 t/xdata.t
 visual.pl

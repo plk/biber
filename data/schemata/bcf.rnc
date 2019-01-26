@@ -45,6 +45,7 @@ start =
       minbibnames,
       mincitenames,
       minsortnames,
+      minsortnamesstrict,
       minitems,
       singletitle,
       sortalphaothers?,
@@ -713,6 +714,12 @@ minsortnames =
     attribute type { "singlevalued" },
     element bcf:key { "minsortnames" },
     element bcf:value { xsd:integer }
+  }
+minsortnamesstrict =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "minsortnamesstrict" },
+    element bcf:value { "0" | "1" }
   }
 sortlocale =
   element bcf:option {

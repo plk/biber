@@ -1498,14 +1498,18 @@ sub _namestring {
   }
 
   # If we had an explicit "and others"
-  if ($names->get_morenames) {
-    $str .= "+$nse";
+  unless (Biber::Config->getblxoption(undef, 'minsortnamesstrict')) {# default is false
+    if ($names->get_morenames) {
+      $str .= "+$nse";
+    }
   }
 
   $str =~ s/\s+\Q$nse\E/$nse/gxms;   # Remove any whitespace before external separator
   $str =~ s/\Q$nse\E\z//xms;         # strip final external separator as we have finished
 
-  $str .= $trunc if $visible < $count; # name list was truncated
+  unless (Biber::Config->getblxoption(undef, 'minsortnamesstrict')) {# default is false
+    $str .= $trunc if $visible < $count; # name list was truncated
+  }
   return $str;
 }
 

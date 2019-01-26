@@ -65,6 +65,7 @@
         <ref name="minbibnames"/>
         <ref name="mincitenames"/>
         <ref name="minsortnames"/>
+        <ref name="minsortnamesstrict"/>
         <ref name="minitems"/>
         <ref name="singletitle"/>
         <optional>
@@ -1823,6 +1824,22 @@
       </element>
       <element name="bcf:value">
         <data type="integer"/>
+      </element>
+    </element>
+  </define>
+  <define name="minsortnamesstrict">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>minsortnamesstrict</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
       </element>
     </element>
   </define>

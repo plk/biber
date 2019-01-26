@@ -112,6 +112,10 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>minsortnamesstrict</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>minitems</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
@@ -315,6 +319,7 @@
     <bcf:option datatype="integer">mincitenames</bcf:option>
     <bcf:option datatype="integer">maxsortnames</bcf:option>
     <bcf:option datatype="integer">minsortnames</bcf:option>
+    <bcf:option datatype="boolean">minsortnamesstrict</bcf:option>
     <bcf:option datatype="integer">maxitems</bcf:option>
     <bcf:option datatype="integer">minitems</bcf:option>
     <bcf:option datatype="integer">maxalphanames</bcf:option>
