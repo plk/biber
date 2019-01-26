@@ -186,11 +186,14 @@ t/tdata/uniqueness6.bcf
 t/tdata/uniqueness6.bib
 t/tdata/uniqueness-nameparts.bcf
 t/tdata/uniqueness-nameparts.bib
+t/tdata/uniqueness-strength.bcf
+t/tdata/uniqueness-strength.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
 t/uniqueness.t
 t/uniqueness-nameparts.t
+t/uniqueness-strength.t
 t/utils.t
 t/xdata.t
 visual.pl

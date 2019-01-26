@@ -280,6 +280,7 @@
     <bcf:option datatype="boolean">labeldateparts</bcf:option>
     <bcf:option datatype="boolean">labelyear</bcf:option>
     <bcf:option datatype="boolean">uniquelist</bcf:option>
+    <bcf:option datatype="string">uniqueliststrength</bcf:option>
     <bcf:option datatype="boolean">uniquename</bcf:option>
     <bcf:option datatype="boolean">singletitle</bcf:option>
     <bcf:option datatype="boolean">uniqueprimaryauthor</bcf:option>
