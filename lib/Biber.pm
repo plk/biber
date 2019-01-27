@@ -255,6 +255,9 @@ sub tool_mode_setup {
   Biber::Config->setblxoption(undef, 'dateera', 1);
   Biber::Config->setblxoption(undef, 'dateuncertain', 1);
 
+  # No need to worry about this in tool mode but it needs to be set
+  Biber::Config->setblxoption(undef, 'namestrunchandling', 0);
+
   # Add the Biber::Sections object to the Biber object
   $self->add_sections($bib_sections);
 
@@ -681,6 +684,7 @@ sub parse_ctrlfile {
     }
     $unts->{$unt->{name}} = $untval;
   }
+
   Biber::Config->setblxoption(undef, 'uniquenametemplate', $unts);
 
   # SORTING NAME KEY
@@ -1640,7 +1644,8 @@ sub process_namedis {
         next if defined($np->{disambiguation}) and ($np->{disambiguation} eq 'none');
 
         my $npn = $np->{namepart};
-        my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$un // 0};
+
+        my $level = $np->{disambiguation} // $UNIQUENAME_CONTEXTS{$un // 'false'};
         my $lastns = $namestrings->[$namestrings->$#*];
 
         if (my $p = $n->get_namepart($npn)) {
@@ -1774,8 +1779,8 @@ sub process_entries_pre {
 
     # Check this outside of process_namedis() because we need to use that in cases
     # where uniquename=false (uniqueprimaryauthor for example);
-    if (Biber::Config->getblxoption($secnum, 'uniquename', $be->get_field('entrytype'), $citekey) or
-        Biber::Config->getblxoption($secnum, 'uniquelist', $be->get_field('entrytype'), $citekey)) {
+    if (Biber::Config->getblxoption($secnum, 'uniquename', $be->get_field('entrytype'), $citekey) ne 'false' or
+        Biber::Config->getblxoption($secnum, 'uniquelist', $be->get_field('entrytype'), $citekey) ne 'false') {
 
       # process name disambiguation schemata
       my $namedis = $self->process_namedis($citekey, $dlist);
@@ -2228,7 +2233,7 @@ sub process_sets {
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
       my $me = $section->bibentry($member);
-      process_entry_options($member, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ], $secnum);
+      process_entry_options($member, [ 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ], $secnum);
 
       # Use get_datafield() instead of get_field() because we add 'entryset' below
       # and if the same entry is used in more than one set, it will pass this test
@@ -2249,7 +2254,7 @@ sub process_sets {
   # had skips set by being seen as a member of that set yet
   else {
     if ($section->get_set_parents($citekey)) {
-      process_entry_options($citekey, [ 'skiplab', 'skipbiblist', 'uniquename=0', 'uniquelist=0' ], $secnum);
+      process_entry_options($citekey, [ 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ], $secnum);
     }
   }
 }
@@ -3123,14 +3128,16 @@ sub uniqueness {
 
     Gather the uniquename information as we look through the names
 
-    What is happening in here is the following:
-    We are registering the number of occurrences of each name, name+init and fullname
-    within a specific context. For example, the context is "global" with uniquename < 5
-    and "name list" for uniquename=5 or 6. The keys we store to count this are the most specific
-    information for the context, so, for uniquename < 5, this is the full name and for
-    uniquename=5 or 6, this is the complete list of full names. These keys have values in a hash
-    which are ignored. They serve only to accumulate repeated occurrences with the context
-    and we don't care about this and so the values are a useful sinkhole for such repetition.
+    What is happening in here is the following: We are registering the
+    number of occurrences of each name, name+init and fullname within a
+    specific context. For example, the context is "global" with uniquename
+    < mininit and "name list" for uniquename=mininit or minfull. The keys
+    we store to count this are the most specific information for the
+    context, so, for uniquename < mininit, this is the full name and for
+    uniquename=mininit or minfull, this is the complete list of full names.
+    These keys have values in a hash which are ignored. They serve only to
+    accumulate repeated occurrences with the context and we don't care
+    about this and so the values are a useful sinkhole for such repetition.
 
     For example, if we find in the global context a base name "Smith" in two different entries
     under the same form "Alan Smith", the data structure will look like:
@@ -3140,24 +3147,25 @@ sub uniqueness {
     We don't care about the value as this means that there are 2 "Alan Smith"s in the global
     context which need disambiguating identically anyway. So, we just count the keys for the
     base name "Smith" in the global context to see how ambiguous the base name itself is. This
-    would be "1" and so "Alan Smith" would get uniquename=0 because it's unambiguous as just
+    would be "1" and so "Alan Smith" would get uniquename=false because it's unambiguous as just
     "Smith".
 
-    The same goes for "minimal" list context disambiguation for uniquename=5 or 6.
+    The same goes for "minimal" list context disambiguation for uniquename=mininit or minfull.
     For example, if we had the base name "Smith" to disambiguate in two entries with labelname
     "John Smith and Alan Jones", the data structure would look like:
 
     {Smith}->{Smith+Jones}->{John Smith+Alan Jones} = 2
 
     Again, counting the keys of the context for the base name gives us "1" which means we
-    have uniquename=0 for "John Smith" in both entries because it's the same list. This also
+    have uniquename=false for "John Smith" in both entries because it's the same list. This also
     works for repeated names in the same list "John Smith and Bert Smith". Disambiguating
     "Smith" in this:
 
     {Smith}->{Smith+Smith}->{John Smith+Bert Smith} = 2
 
-    So both "John Smith" and "Bert Smith" in this entry get uniquename=0 (of course, as long as
-    there are no other "X Smith and Y Smith" entries where X != "John" or Y != "Bert").
+    So both "John Smith" and "Bert Smith" in this entry get
+    uniquename=false (of course, as long as there are no other "X Smith and
+    Y Smith" entries where X != "John" or Y != "Bert").
 
     The values from biblatex.sty:
 
@@ -3186,7 +3194,8 @@ sub create_uniquename_info {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    next unless my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
+    my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
+    next if $un eq 'false';
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Generating uniquename information for '$citekey'");
@@ -3239,31 +3248,32 @@ sub create_uniquename_info {
         #    hypothetical ambiguity information for every list position.
 
         # We want to record disambiguation information for visible names when:
-        # uniquename = 3 (allinit) or 4 (allfull)
+        # uniquename = allinit or allfull
         # Uniquelist is set and a name appears before the uniquelist truncation
         # Uniquelist is not set and the entry has an explicit "and others" at the end
         #   since this means that every name is less than maxcitenames by definition
         # Uniquelist is not set and a name list is shorter than the maxcitenames truncation
         # Uniquelist is not set, a name list is longer than the maxcitenames truncation
         #   and the name appears before the mincitenames truncation
-        if ($un == 3 or $un == 4 or
+
+        if ($un eq 'allinit' or $un eq 'allfull' or
             ($ul and $n->get_index <= $ul) or
             $morenames or
             $num_names <= $maxcn or
             $n->get_index <= $mincn) { # implicitly, $num_names > $maxcn here
 
           $truncnames{$nid} = 1;
-          if ($un == 5 or $un == 6) {
+          if ($un eq 'mininit' or $un eq 'minfull') {
             push @basenames, $dlist->get_basenamestring($nlid, $nid);
             push @allnames, $dlist->get_namestring($nlid, $nid);
           }
         }
       }
-      # Information for mininit ($un=5) or minfull ($un=6), here the basename
+      # Information for mininit or minfull, here the basename
       # and non-basename is all names in the namelist, not just the current name
       my $min_basename;
       my $min_namestring;
-      if ($un == 5 or $un == 6) {
+      if ($un eq 'mininit' or $un eq 'minfull') {
         $min_basename = join("\x{10FFFD}", @basenames);
         $min_namestring = join("\x{10FFFD}", @allnames);
         if ($#basenames + 1 < $num_names or $morenames) {
@@ -3281,11 +3291,11 @@ sub create_uniquename_info {
         my $nskey;
 
         # Disambiguation scope and key depend on the uniquename setting
-        if ($un == 1 or $un == 2 or $un == 3 or $un ==4) {
+        if ($un eq 'init' or $un eq 'full' or $un eq 'allinit' or $un eq 'allfull') {
           $namedisamiguationscope = 'global';
           $nskey = join("\x{10FFFD}", $namestrings->@*);
         }
-        elsif ($un == 5 or $un == 6) {
+        elsif ($un eq 'mininit' or $un eq 'minfull') {
           $namedisamiguationscope = $min_basename;
           $nskey = $min_namestring;
           $dlist->set_unmininfo($nlid, $nid, $min_basename);
@@ -3301,7 +3311,7 @@ sub create_uniquename_info {
 
         # As above but here we are collecting (separate) information for all
         # names, regardless of visibility (needed to track uniquelist)
-        if (Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey)) {
+        if (Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey) ne 'false') {
           foreach my $ns ($namestrings->@*) {
             $dlist->add_uniquenamecount_all($ns, $namedisamiguationscope, $nskey);
           }
@@ -3331,7 +3341,8 @@ sub generate_uniquename {
     my $be = $bibentries->entry($citekey);
     my $bee = $be->get_field('entrytype');
 
-    next unless my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
+    my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
+    next if $un eq 'false';
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Setting uniquename for '$citekey'");
@@ -3358,7 +3369,8 @@ sub generate_uniquename {
 
       foreach my $n ($names->@*) {
         my $nid = $n->get_id;
-        if ($un == 3 or $un == 4 or
+
+        if ($un eq 'allinit' or $un eq 'allfull' or
             ($ul and $n->get_index <= $ul) or
             $morenames or
             $num_names <= $maxcn or
@@ -3377,8 +3389,9 @@ sub generate_uniquename {
         my $namestrings = $dlist->get_namestrings($nlid, $nid);
         my $namedisschema = $dlist->get_namedisschema($nlid, $nid);
         my $namescope = 'global'; # default
-        if ($un == 5 or $un == 6) {
-          $namescope = $dlist->get_unmininfo($nlid, $nid); # $un=5 and 6
+
+        if ($un eq 'mininit' or $un eq 'minfull') {
+          $namescope = $dlist->get_unmininfo($nlid, $nid);
         }
 
         if ($truncnames{$nid}) {
@@ -3398,7 +3411,7 @@ sub generate_uniquename {
         }
 
         # As above but not just for visible names (needed for uniquelist)
-        if (Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey)) {
+        if (Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey) ne 'false') {
           for (my $i=0; $i<=$namestrings->$#*; $i++) {
             my $ns = $namestrings->[$i];
             my $nss = $namedisschema->[$i];
@@ -3441,7 +3454,8 @@ sub create_uniquelist_info {
     my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
 
-    next unless my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
+    my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
+    next if $ul eq 'false';
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Generating uniquelist information for '$citekey'");
@@ -3462,7 +3476,7 @@ sub create_uniquelist_info {
         my $ulminyearflag = 0;
 
         # uniquelist = minyear
-        if ($ul == 2) {
+        if ($ul eq 'minyear') {
           # minyear uniquename, we set based on the max/mincitenames list
           if ($num_names > $maxcn and
               $n->get_index <= $mincn) {
@@ -3528,7 +3542,8 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
     my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
 
-    next unless my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
+    my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
+    next if $ul eq 'false';
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("Creating uniquelist for '$citekey'");
@@ -3564,7 +3579,7 @@ LOOP: foreach my $citekey ( $section->get_citekeys ) {
         # With uniquelist=minyear, uniquelist should not be set at all if there are
         # no other entries with the same max/mincitenames visible list and different years
         # to disambiguate from
-        if ($ul == 2 and
+        if ($ul eq 'minyear' and
             $num_names > $maxcn and
             $n->get_index <= $mincn and
             $dlist->get_uniquelistcount_minyear($namelist, $be->get_field('labelyear')) == 1) {
@@ -3697,7 +3712,6 @@ sub generate_contextdata {
     }
 
     # uniquename
-    # Using defined as 0 is a valid per-entry override of a global/per-entry setting
     if (defined(Biber::Config->getblxoption($secnum, 'uniquename', $bee, $key))) {
       foreach my $namefield ($dmh->{namelists}->@*) {
         if (my $nl = $be->get_field($namefield)) {

@@ -65,8 +65,8 @@
         <ref name="minbibnames"/>
         <ref name="mincitenames"/>
         <ref name="minsortnames"/>
-        <ref name="minsortnamesstrict"/>
         <ref name="minitems"/>
+        <ref name="namestrunchandling"/>
         <ref name="singletitle"/>
         <optional>
           <ref name="sortalphaothers"/>
@@ -75,7 +75,6 @@
         <ref name="sortingtemplatename"/>
         <ref name="sortsets"/>
         <ref name="uniquelist"/>
-        <ref name="uniqueliststrength"/>
         <ref name="uniquename"/>
         <ref name="uniqueprimaryauthor"/>
         <ref name="uniquetitle"/>
@@ -1533,9 +1532,9 @@
     </element>
   </define>
   <!--
-    0 = do not provide uniquelist information
-    1 = disambiguate lists regardless of year
-    2 = disambiguate lists only when year is the same
+    false = do not provide uniquelist information
+    true = disambiguate lists regardless of year
+    minyear = disambiguate lists only when year is the same
   -->
   <define name="uniquelist">
     <element name="bcf:option">
@@ -1547,41 +1546,45 @@
       </element>
       <element name="bcf:value">
         <choice>
-          <value>0</value>
-          <value>1</value>
-          <value>2</value>
+          <value>false</value>
+          <value>true</value>
+          <value>minyear</value>
         </choice>
       </element>
     </element>
   </define>
   <!--
-    0 = process uniquelist strong - takes account of list truncations when generating extra*
-    1 = process uniquelist weak - ignores list truncations when generating extra*
+    default = truncations are respected
+    nohash = has generation for name lists ignores "et al"
+    nosort = sorting for name lists ignores "et al"
+    nohashnosrt = combines nohash and nosort
   -->
-  <define name="uniqueliststrength">
+  <define name="namestrunchandling">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>uniqueliststrength</value>
+        <value>namestrunchandling</value>
       </element>
       <element name="bcf:value">
         <choice>
-          <value>0</value>
-          <value>1</value>
+          <value>default</value>
+          <value>nohash</value>
+          <value>nosort</value>
+          <value>nohashnosort</value>
         </choice>
       </element>
     </element>
   </define>
   <!--
-    0 = do not provide uniquename information
-    1 = disambiguate with initials, only up to maxcitenames/uniquelist
-    2 = disambiguate with full name or initials, only up to maxcitenames/uniquelist
-    3 = disambiguate with initials, ignore maxcitenames/uniquelist
-    4 = disambiguate with full name or initials, ignore maxcitenames/uniquelist
-    5 = disambiguate with initials, only between identical lists in different entries
-    6 = disambiguate with full name or initials, only between identical lists in different entries
+    false = do not provide uniquename information
+    init = disambiguate with initials, only up to maxcitenames/uniquelist
+    full (true) = disambiguate with full name or initials, only up to maxcitenames/uniquelist
+    allinit = disambiguate with initials, ignore maxcitenames/uniquelist
+    allfull = disambiguate with full name or initials, ignore maxcitenames/uniquelist
+    mininit = disambiguate with initials, only between identical lists in different entries
+    minfull = disambiguate with full name or initials, only between identical lists in different entries
   -->
   <define name="uniquename">
     <element name="bcf:option">
@@ -1593,13 +1596,13 @@
       </element>
       <element name="bcf:value">
         <choice>
-          <value>0</value>
-          <value>1</value>
-          <value>2</value>
-          <value>3</value>
-          <value>4</value>
-          <value>5</value>
-          <value>6</value>
+          <value>false</value>
+          <value>init</value>
+          <value>full</value>
+          <value>allinit</value>
+          <value>allfull</value>
+          <value>mininit</value>
+          <value>minfull</value>
         </choice>
       </element>
     </element>
@@ -1824,22 +1827,6 @@
       </element>
       <element name="bcf:value">
         <data type="integer"/>
-      </element>
-    </element>
-  </define>
-  <define name="minsortnamesstrict">
-    <element name="bcf:option">
-      <attribute name="type">
-        <value>singlevalued</value>
-      </attribute>
-      <element name="bcf:key">
-        <value>minsortnamesstrict</value>
-      </element>
-      <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
       </element>
     </element>
   </define>

@@ -125,7 +125,7 @@ sub relclone {
           $relclone->set_datafield('options', $relopts);
         }
         else {
-          process_entry_options($clonekey, ['skiplab','skipbiblist','uniquename=0','uniquelist=0'], $secnum);
+          process_entry_options($clonekey, ['skiplab','skipbiblist','uniquename=false','uniquelist=false'], $secnum);
           # Preserve options already in the clone but add 'dataonly'
           $relclone->set_datafield('options', [ 'dataonly', @{$relclone->get_datafield('options') || []} ]);
         }

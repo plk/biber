@@ -1050,7 +1050,7 @@ sub _name {
       }
 
       $names->add_name(parsename($namenode, $f, $key, $numname++, {useprefix => $useprefix,
-                                                                   uniquename => ($un // 0)}));
+                                                                   uniquename => ($un // 'false')}));
     }
 
     # Deal with explicit "moreenames" in data source

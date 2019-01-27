@@ -158,7 +158,7 @@ sub set_output_entry {
         my @plo;
 
         # Add uniquelist if requested
-        if ($ul) {
+        if ($ul ne 'false') {
           push @plo, "<BDS>UL-${nlid}</BDS>";
         }
 

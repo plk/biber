@@ -204,39 +204,39 @@ my $us4w = q|    \entry{us4}{book}{}
 |;
 
 
-# Should be different to us1 and us3 respectively with default (uniqueliststrength=strong)
-eq_or_diff( $out->get_output_entry('us2', $main), $us2s, 'Uniqueliststrength - 1') ;
-eq_or_diff( $out->get_output_entry('us4', $main), $us4s, 'Uniqueliststrength - 2') ;
+# Should be different to us1 and us3 respectively with default (namestrunchandling=default)
+eq_or_diff( $out->get_output_entry('us2', $main), $us2s, 'Truncation - 1') ;
+eq_or_diff( $out->get_output_entry('us4', $main), $us4s, 'Truncation - 2') ;
 
-Biber::Config->setblxoption(undef,'uniqueliststrength', 1);
+Biber::Config->setblxoption(undef,'namestrunchandling', 'nohash');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('nty/global//global/global');
 $out = $biber->get_output_obj;
 
-# namehash now the same as us1 and us3 respectively with (uniqueliststrength=weak)
-eq_or_diff( $out->get_output_entry('us2', $main), $us2w, 'Uniqueliststrength - 3') ;
-eq_or_diff( $out->get_output_entry('us4', $main), $us4w, 'Uniqueliststrength - 4') ;
+# namehash now the same as us1 and us3 respectively with (namestrunchandling=nohash)
+eq_or_diff( $out->get_output_entry('us2', $main), $us2w, 'Truncation - 3') ;
+eq_or_diff( $out->get_output_entry('us4', $main), $us4w, 'Truncation - 4') ;
 
 
 
 
-# Testing minsortnamesstrict
-Biber::Config->setblxoption(undef,'uniquelist', 0);
+# Testing namestrunchandling=nosort
+Biber::Config->setblxoption(undef,'uniquelist', 'false');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('nty/global//global/global');
 $out = $biber->get_output_obj;
 
-# Sorting with minsortnamesstrict=false
-is_deeply($main->get_keys, ['us1', 'us2','us3', 'us4', 'us5'], 'Default minsortnamesstrict=false');
+# Sorting with namestrunchandling=default
+is_deeply($main->get_keys, ['us1', 'us2','us3', 'us4', 'us5'], 'Truncation - 5');
 
-Biber::Config->setblxoption(undef,'minsortnamesstrict', 1);
+Biber::Config->setblxoption(undef,'namestrunchandling', 'nohashnosort');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('nty/global//global/global');
 $out = $biber->get_output_obj;
 
-# Sorting with minsortnamesstrict=true
-is_deeply($main->get_keys, ['us1', 'us2','us4', 'us3', 'us5'], 'Default minsortnamesstrict=true');
+# Sorting with namestrunchandling=nohashnosort
+is_deeply($main->get_keys, ['us1', 'us2','us4', 'us3', 'us5'], 'Truncation - 6');
 

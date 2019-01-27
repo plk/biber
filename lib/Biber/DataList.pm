@@ -1839,7 +1839,7 @@ sub instantiate_entry {
     }
 
     # uniquename
-    if ($un) {
+    if ($un ne 'false') {
       foreach my $namefield ($dmh->{namelists}->@*) {
         next unless my $nl = $be->get_field($namefield);
         my $nlid = $nl->get_id;
@@ -1871,7 +1871,7 @@ sub instantiate_entry {
     }
 
     # uniquelist
-    if ($ul) { # uniquelist is expensive so skip if not requested
+    if ($ul ne 'false') { # uniquelist is expensive so skip if not requested
       foreach my $namefield ($dmh->{namelists}->@*) {
         next unless my $nl = $be->get_field($namefield);
         my $nlid = $nl->get_id;
@@ -2038,7 +2038,7 @@ sub instantiate_entry {
     }
 
     # uniquename
-    if ($un) { # uniquename is expensive so skip if not requested
+    if ($un ne 'false') { # uniquename is expensive so skip if not requested
       foreach my $namefield ($dmh->{namelists}->@*) {
         next unless my $nl = $be->get_field($namefield);
         my $nlid = $nl->get_id;
@@ -2070,7 +2070,7 @@ sub instantiate_entry {
     }
 
     # uniquelist
-    if ($ul) { # uniquelist is expensive so skip if not requested
+    if ($ul ne 'false') { # uniquelist is expensive so skip if not requested
       foreach my $namefield ($dmh->{namelists}->@*) {
         next unless my $nl = $be->get_field($namefield);
         my $nlid = $nl->get_id;

@@ -224,7 +224,7 @@ sub set_output_entry {
 
         # Add uniquelist if requested
         # Don't use angles in attributes ...
-        if ($ul) {
+        if ($ul ne 'false') {
           $plo{uniquelist} = "[BDS]UL-${nlid}[/BDS]";
         }
 

@@ -182,7 +182,7 @@ my $l3 = q|    \entry{L3}{book}{blah=10}
     \endentry
 |;
 
-ok(Biber::Config->getblxoption(undef,'uniquename') == 1, "Single-valued option") ;
+ok(Biber::Config->getblxoption(undef,'uniquename') eq 'init', "Single-valued option") ;
 is_deeply(Biber::Config->getblxoption(undef,'labelnamespec'), [ {content => 'author'} ], "Multi-valued options");
 ok(Biber::Config->getoption('mincrossrefs') == 88, "Setting Biber options via control file");
 ok(Biber::Config->getblxoption(undef,'useprefix', 'book') == 1 , "Per-type single-valued options");

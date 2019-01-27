@@ -1053,7 +1053,7 @@ sub _name {
       next unless $no = parsename_x($name,
                                     $field,
                                     {useprefix => $useprefix,
-                                     uniquename => ($un // 0)},
+                                     uniquename => ($un // 'false')},
                                     $key);
     }
     else { # Normal bibtex name format

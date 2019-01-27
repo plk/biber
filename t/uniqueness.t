@@ -40,8 +40,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 1);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
-Biber::Config->setblxoption(undef,'uniquename', 2);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'full');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 
 # Now generate the information
 $biber->prepare;
@@ -87,8 +87,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 1);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
-Biber::Config->setblxoption(undef,'uniquename', 1);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'init');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 
 # Now generate the information
 $biber->prepare;
@@ -113,8 +113,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 5);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
-Biber::Config->setblxoption(undef,'uniquename', 2);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'full');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 
 # Now generate the information
 $biber->prepare;
@@ -138,8 +138,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 2);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
-Biber::Config->setblxoption(undef,'uniquename', 1);
-Biber::Config->setblxoption(undef,'uniquelist', 0);
+Biber::Config->setblxoption(undef,'uniquename', 'init');
+Biber::Config->setblxoption(undef,'uniquelist', 'false');
 # Now generate the information
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
@@ -155,8 +155,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
-Biber::Config->setblxoption(undef,'uniquename', 1);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'init');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 Biber::Config->setblxoption(undef,'maxcitenames', 1);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
 # Now generate the information
@@ -218,8 +218,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 1);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
-Biber::Config->setblxoption(undef,'uniquename', 2);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'full');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 # Now generate the information
 $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
@@ -247,8 +247,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 3);
 Biber::Config->setblxoption(undef,'mincitenames', 3);
-Biber::Config->setblxoption(undef,'uniquename', 6);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'minfull');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 Biber::Config->setblxoption(undef,'singletitle', 0);
 Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
@@ -316,8 +316,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 3);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
-Biber::Config->setblxoption(undef,'uniquename', 6);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'minfull');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 Biber::Config->setblxoption(undef,'singletitle', 0);
 Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
@@ -354,8 +354,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 2);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
-Biber::Config->setblxoption(undef,'uniquename', 6);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'minfull');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 Biber::Config->setblxoption(undef,'singletitle', 0);
 Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
@@ -389,8 +389,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 1);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
-Biber::Config->setblxoption(undef,'uniquename', 2);
-Biber::Config->setblxoption(undef,'uniquelist', 2);
+Biber::Config->setblxoption(undef,'uniquename', 'full');
+Biber::Config->setblxoption(undef,'uniquelist', 'minyear');
 Biber::Config->setblxoption(undef,'singletitle', 0);
 Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
@@ -417,8 +417,8 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
 Biber::Config->setblxoption(undef,'maxcitenames', 3);
 Biber::Config->setblxoption(undef,'mincitenames', 2);
-Biber::Config->setblxoption(undef,'uniquename', 2);
-Biber::Config->setblxoption(undef,'uniquelist', 2);
+Biber::Config->setblxoption(undef,'uniquename', 'full');
+Biber::Config->setblxoption(undef,'uniquelist', 'minyear');
 Biber::Config->setblxoption(undef,'singletitle', 0);
 Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
@@ -443,8 +443,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
-Biber::Config->setblxoption(undef,'uniquename', 1);
-Biber::Config->setblxoption(undef,'uniquelist', 0);
+Biber::Config->setblxoption(undef,'uniquename', 'init');
+Biber::Config->setblxoption(undef,'uniquelist', 'false');
 Biber::Config->setblxoption(undef,'singletitle', 1);
 Biber::Config->setblxoption(undef,'labeldatespec', [ {content => 'date', type => 'field'}, {content => 'year', type => 'field'} ]);
 # Now generate the information
@@ -468,8 +468,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
-Biber::Config->setblxoption(undef,'uniquename', 2);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'full');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 Biber::Config->setblxoption(undef,'singletitle', 1);
 Biber::Config->setblxoption(undef,'uniquetitle', 1);
 Biber::Config->setblxoption(undef,'uniquebaretitle', 1);
@@ -521,8 +521,8 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
-Biber::Config->setblxoption(undef,'uniquename', 0);
-Biber::Config->setblxoption(undef,'uniquelist', 0);
+Biber::Config->setblxoption(undef,'uniquename', 'false');
+Biber::Config->setblxoption(undef,'uniquelist', 'false');
 Biber::Config->setblxoption(undef,'singletitle', 1);
 Biber::Config->setblxoption(undef,'uniquetitle', 0);
 Biber::Config->setblxoption(undef,'uniquework', 0);
@@ -542,15 +542,15 @@ eq_or_diff($main->get_extradatedata_for_key('ey6'), '2', 'Extrayear - 18');
 
 #############################################################################
 
-# Testing uniquename = 3
+# Testing uniquename = allinit
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness2.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
-Biber::Config->setblxoption(undef,'uniquename', 3);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'allinit');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -568,15 +568,15 @@ eq_or_diff($main->get_unsummary($bibentries->entry('un10')->get_field($bibentrie
 
 #############################################################################
 
-# Testing uniquename = 4
+# Testing uniquename = allfull
 $biber = Biber->new(noconf => 1);
 $biber->parse_ctrlfile('uniqueness2.bcf');
 $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
-Biber::Config->setblxoption(undef,'uniquename', 4);
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquename', 'allfull');
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);
@@ -600,7 +600,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 # Biblatex options
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 # Now generate the information
 $biber->prepare;
 $section = $biber->sections->get_section(0);

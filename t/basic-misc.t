@@ -38,7 +38,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 
 # Biber options
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
-Biber::Config->setblxoption(undef,'uniquelist', 1);
+Biber::Config->setblxoption(undef,'uniquelist', 'true');
 Biber::Config->setblxoption(undef,'maxcitenames', 3);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
 Biber::Config->setblxoption(undef,'maxalphanames', 3);
@@ -619,7 +619,7 @@ ok(is_undef($bibentries->entry('i2')->get_field('userc')), 'map 10' );
 eq_or_diff($main->get_visible_bib($bibentries->entry('i2')->get_field($bibentries->entry('i2')->get_labelname_info)->get_id), '3', 'bib visibility - 1');
 
 # Testing per_type and per_entry max/min* so reset globals to defaults
-Biber::Config->setblxoption(undef,'uniquelist', 0);
+Biber::Config->setblxoption(undef,'uniquelist', 'false');
 Biber::Config->setblxoption(undef,'maxcitenames', 3);
 Biber::Config->setblxoption(undef,'mincitenames', 1);
 Biber::Config->setblxoption(undef,'maxitems', 3);

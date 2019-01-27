@@ -98,16 +98,16 @@ our %DS_EXTENSIONS = (
                       );
 
 # Mapping of biblatex uniquename option to disambiguation level
-our %UNIQUENAME_CONTEXTS = (0 => 'none',        # false
-                            1 => 'init',        # init
-                            2 => 'initorfull',  # full/true
-                            3 => 'init',        # allinit
-                            4 => 'initorfull',  # allfull
-                            5 => 'init',        # mininit
-                            6 => 'initorfull'); # minfull
+our %UNIQUENAME_CONTEXTS = ('false' => 'none',
+                            'init' => 'init',
+                            'full' => 'initorfull',
+                            'allinit' => 'init',
+                            'allfull' => 'initorfull',
+                            'mininit' => 'init',
+                            'minfull' => 'initorfull');
 
 # Mapping of strings to numeric uniquename values for easier biblatex processing
-our %UNIQUENAME_VALUES = ('none' => 0, 'init' => 1, full => '2');
+our %UNIQUENAME_VALUES = ('none' => 0, 'init' => 1, full => 2);
 
 # Biber option defaults. Mostly not needed outside of tool mode since they are passed by .bcf
 our $CONFIG_DEFAULT_BIBER = {
@@ -530,8 +530,8 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
    dataonly          => {OUTPUT => 1,
                          INPUT => {skiplab     => 1,
                                    skipbiblist => 1,
-                                   uniquename  => 0,
-                                   uniquelist  => 0}
+                                   uniquename  => 'false',
+                                   uniquelist  => 'false'}
                         },
    maxitems          => {OUTPUT => 1},
    minitems          => {OUTPUT => 1},

@@ -45,15 +45,14 @@ start =
       minbibnames,
       mincitenames,
       minsortnames,
-      minsortnamesstrict,
       minitems,
+      namestrunchandling,
       singletitle,
       sortalphaothers?,
       sortlocale,
       sortingtemplatename,
       sortsets,
       uniquelist,
-      uniqueliststrength,
       uniquename,
       uniqueprimaryauthor,
       uniquetitle,
@@ -589,35 +588,37 @@ skipbiblist =
     element bcf:key { "skipbiblist" },
     element bcf:value { "0" | "1" }
   }
-# 0 = do not provide uniquelist information
-# 1 = disambiguate lists regardless of year
-# 2 = disambiguate lists only when year is the same
+# false = do not provide uniquelist information
+# true = disambiguate lists regardless of year
+# minyear = disambiguate lists only when year is the same
 uniquelist =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "uniquelist" },
-    element bcf:value { "0" | "1" | "2" }
+    element bcf:value { "false" | "true" | "minyear" }
   }
-# 0 = process uniquelist strong - takes account of list truncations when generating extra*
-# 1 = process uniquelist weak - ignores list truncations when generating extra*
-uniqueliststrength =
+# default = truncations are respected
+# nohash = has generation for name lists ignores "et al"
+# nosort = sorting for name lists ignores "et al"
+# nohashnosrt = combines nohash and nosort
+namestrunchandling =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "uniqueliststrength" },
-    element bcf:value { "0" | "1" }
+    element bcf:key { "namestrunchandling" },
+    element bcf:value { "default" | "nohash" | "nosort" | "nohashnosort"}
   }
-# 0 = do not provide uniquename information
-# 1 = disambiguate with initials, only up to maxcitenames/uniquelist
-# 2 = disambiguate with full name or initials, only up to maxcitenames/uniquelist
-# 3 = disambiguate with initials, ignore maxcitenames/uniquelist
-# 4 = disambiguate with full name or initials, ignore maxcitenames/uniquelist
-# 5 = disambiguate with initials, only between identical lists in different entries
-# 6 = disambiguate with full name or initials, only between identical lists in different entries
+# false = do not provide uniquename information
+# init = disambiguate with initials, only up to maxcitenames/uniquelist
+# full (true) = disambiguate with full name or initials, only up to maxcitenames/uniquelist
+# allinit = disambiguate with initials, ignore maxcitenames/uniquelist
+# allfull = disambiguate with full name or initials, ignore maxcitenames/uniquelist
+# mininit = disambiguate with initials, only between identical lists in different entries
+# minfull = disambiguate with full name or initials, only between identical lists in different entries
 uniquename =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "uniquename" },
-    element bcf:value { "0" | "1" | "2" | "3" | "4" | "5" | "6" }
+    element bcf:value { "false" | "init" | "full" | "allinit" | "allfull" | "mininit" | "minfull" }
   }
 uniqueprimaryauthor =
   element bcf:option {
@@ -714,12 +715,6 @@ minsortnames =
     attribute type { "singlevalued" },
     element bcf:key { "minsortnames" },
     element bcf:value { xsd:integer }
-  }
-minsortnamesstrict =
-  element bcf:option {
-    attribute type { "singlevalued" },
-    element bcf:key { "minsortnamesstrict" },
-    element bcf:value { "0" | "1" }
   }
 sortlocale =
   element bcf:option {

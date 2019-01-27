@@ -54,7 +54,8 @@ sub _getnamehash {
   }
 
   # name list was truncated
-  unless (Biber::Config->getblxoption(undef, 'uniqueliststrength')) {# default 'strong' is 0
+  my $nth = Biber::Config->getblxoption(undef, 'namestrunchandling');
+  if ($nth !~ /nohash/) {
     if ($visible < $count or $names->get_morenames) {
       $hashkey .= '+';
     }
@@ -142,7 +143,8 @@ sub _getnamehash_u {
   }
 
   # name list was truncated
-  unless (Biber::Config->getblxoption(undef, 'uniqueliststrength')) {# default 'strong' is 0
+  my $nth = Biber::Config->getblxoption(undef, 'namestrunchandling');
+  if ($nth !~ /nohash/) {
     if ($visible < $count or $names->get_morenames) {
       $hashkey .= '+';
     }
@@ -1498,7 +1500,8 @@ sub _namestring {
   }
 
   # If we had an explicit "and others"
-  unless (Biber::Config->getblxoption(undef, 'minsortnamesstrict')) {# default is false
+  my $nth = Biber::Config->getblxoption(undef, 'namestrunchandling');
+  if ($nth !~ /nosort/) {
     if ($names->get_morenames) {
       $str .= "+$nse";
     }
@@ -1507,7 +1510,7 @@ sub _namestring {
   $str =~ s/\s+\Q$nse\E/$nse/gxms;   # Remove any whitespace before external separator
   $str =~ s/\Q$nse\E\z//xms;         # strip final external separator as we have finished
 
-  unless (Biber::Config->getblxoption(undef, 'minsortnamesstrict')) {# default is false
+  if ($nth !~ /nosort/) {
     $str .= $trunc if $visible < $count; # name list was truncated
   }
   return $str;
