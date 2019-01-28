@@ -38,6 +38,11 @@ my $logger = Log::Log4perl::get_logger('main');
 # nameparts from the data model list of valid nameparts
 sub _getnamehash {
   my ($self, $citekey, $names, $dlist, $bib) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+
   my $hashkey = '';
   my $count = $names->count_names;
   my $visible = $bib ? $dlist->get_visible_bib($names->get_id) : $dlist->get_visible_cite($names->get_id);
@@ -53,8 +58,15 @@ sub _getnamehash {
     }
   }
 
+  my $nho = Biber::Config->getblxoption($secnum, 'nohashothers', $bee, $citekey);
+
+  # Per-namelist nohashothers
+  if (defined($names->get_nohashothers)) {
+    $nho = $names->get_nohashothers;
+  }
+
   # name list was truncated
-  unless (Biber::Config->getblxoption(undef, 'nohashothers')) {
+  unless ($nho) {
     if ($visible < $count or $names->get_morenames) {
       $hashkey .= '+';
     }
@@ -91,13 +103,17 @@ sub _getfullhash {
 # It's used for extra* tracking only
 sub _getnamehash_u {
   my ($self, $citekey, $names, $dlist) = @_;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $be = $section->bibentry($citekey);
+  my $bee = $be->get_field('entrytype');
+
   my $hashkey = '';
   my $count = $names->count_names;
   my $nlid = $names->get_id;
   my $visible = $dlist->get_visible_cite($nlid);
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
-  my $secnum = $Biber::MASTER->get_current_section;
 
   # refcontext or per-entry uniquenametemplate
   my $untname = Biber::Config->getblxoption($secnum, 'uniquenametemplatename', undef, $citekey) // $dlist->get_uniquenametemplatename;
@@ -141,8 +157,15 @@ sub _getnamehash_u {
     }
   }
 
+  my $nho = Biber::Config->getblxoption($secnum, 'nohashothers', $bee, $citekey);
+
+  # Per-namelist nohashothers
+  if (defined($names->get_nohashothers)) {
+    $nho = $names->get_nohashothers;
+  }
+
   # name list was truncated
-  unless (Biber::Config->getblxoption(undef, 'nohashothers')) {
+  unless ($nho) {
     if ($visible < $count or $names->get_morenames) {
       $hashkey .= '+';
     }
@@ -1497,8 +1520,15 @@ sub _namestring {
     $str .= $nse;                    # Add separator in between names
   }
 
+  my $nso = Biber::Config->getblxoption($secnum, 'nosortothers', $bee, $citekey);
+
+  # Per-namelist nosortothers
+  if (defined($names->get_nosortothers)) {
+    $nso = $names->get_nosortothers;
+  }
+
   # If we had an explicit "and others"
-  unless (Biber::Config->getblxoption(undef, 'nosortothers')) {
+  unless ($nso) {
     if ($names->get_morenames) {
       $str .= "+$nse";
     }
@@ -1507,7 +1537,7 @@ sub _namestring {
   $str =~ s/\s+\Q$nse\E/$nse/gxms;   # Remove any whitespace before external separator
   $str =~ s/\Q$nse\E\z//xms;         # strip final external separator as we have finished
 
-  unless (Biber::Config->getblxoption(undef, 'nosortothers')) {
+  unless ($nso) {
     $str .= $trunc if $visible < $count; # name list was truncated
   }
   return $str;

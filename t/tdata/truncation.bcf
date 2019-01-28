@@ -349,6 +349,8 @@
     <bcf:option datatype="boolean">labeltitleyear</bcf:option>
     <bcf:option datatype="boolean">labeldateparts</bcf:option>
     <bcf:option datatype="boolean">labelyear</bcf:option>
+    <bcf:option datatype="boolean">nohashothers</bcf:option>
+    <bcf:option datatype="boolean">nosortothers</bcf:option>
     <bcf:option datatype="string">uniquelist</bcf:option>
     <bcf:option datatype="string">uniquename</bcf:option>
     <bcf:option datatype="boolean">singletitle</bcf:option>
@@ -402,6 +404,8 @@
     <bcf:option datatype="boolean">useshortauthor</bcf:option>
     <bcf:option datatype="boolean">useshorteditor</bcf:option>
     <bcf:option datatype="boolean">indexing</bcf:option>
+    <bcf:option datatype="boolean">nohashothers</bcf:option>
+    <bcf:option datatype="boolean">nosortothers</bcf:option>
     <bcf:option datatype="string">uniquelist</bcf:option>
     <bcf:option datatype="string">uniquename</bcf:option>
     <bcf:option datatype="boolean">useprefix</bcf:option>
@@ -430,6 +434,8 @@
     <bcf:option datatype="string">uniquenametemplatename</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="NAMELIST">
+    <bcf:option datatype="boolean">nohashothers</bcf:option>
+    <bcf:option datatype="boolean">nosortothers</bcf:option>
     <bcf:option datatype="string">nametemplates</bcf:option>
     <bcf:option datatype="boolean">useprefix</bcf:option>
     <bcf:option datatype="string">sortingnamekeytemplatename</bcf:option>
@@ -1861,6 +1867,11 @@
     <bcf:citekey order="3">us3</bcf:citekey>
     <bcf:citekey order="4">us4</bcf:citekey>
     <bcf:citekey order="5">us5</bcf:citekey>
+    <bcf:citekey order="6">us6</bcf:citekey>
+    <bcf:citekey order="7">us7</bcf:citekey>
+    <bcf:citekey order="8">us8</bcf:citekey>
+    <bcf:citekey order="9">us9</bcf:citekey>
+    <bcf:citekey order="10">us10</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

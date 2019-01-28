@@ -561,6 +561,8 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
    sortingnamekeytemplatename => {OUTPUT => 1},
    uniquenametemplatename => {OUTPUT => 1},
    labelalphanametemplatename => {OUTPUT => 1},
+   nohashothers      => {OUTPUT => 0},
+   nosortothers      => {OUTPUT => 0},
    uniquelist        => {OUTPUT => 0},
    useauthor         => {OUTPUT => 1},
    useeditor         => {OUTPUT => 1},
@@ -570,6 +572,8 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
 
 our %CONFIG_BIBLATEX_NAMELIST_OPTIONS =
   (
+   nohashothers      => {OUTPUT => 0},
+   nosortothers      => {OUTPUT => 0},
    nametemplates     => {OUTPUT => ['sortingnamekeytemplatename',
                                     'uniquenametemplatename',
                                     'labelalphanametemplatename'],
