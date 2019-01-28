@@ -124,6 +124,10 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
+      <bcf:key>noroman</bcf:key>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
       <bcf:key>nosortothers</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>
@@ -291,6 +295,7 @@
     <bcf:option datatype="boolean">labeldateparts</bcf:option>
     <bcf:option datatype="boolean">labelyear</bcf:option>
     <bcf:option datatype="boolean">nohashothers</bcf:option>
+    <bcf:option datatype="boolean">noroman</bcf:option>
     <bcf:option datatype="boolean">nosortothers</bcf:option>
     <bcf:option datatype="string">uniquelist</bcf:option>
     <bcf:option datatype="string">uniquename</bcf:option>
@@ -356,6 +361,7 @@
     <bcf:option datatype="boolean">labeldateparts</bcf:option>
     <bcf:option datatype="boolean">labelyear</bcf:option>
     <bcf:option datatype="boolean">nohashothers</bcf:option>
+    <bcf:option datatype="boolean">noroman</bcf:option>
     <bcf:option datatype="boolean">nosortothers</bcf:option>
     <bcf:option datatype="string">uniquelist</bcf:option>
     <bcf:option datatype="string">uniquename</bcf:option>
@@ -411,6 +417,7 @@
     <bcf:option datatype="boolean">useshorteditor</bcf:option>
     <bcf:option datatype="boolean">indexing</bcf:option>
     <bcf:option datatype="boolean">nohashothers</bcf:option>
+    <bcf:option datatype="boolean">noroman</bcf:option>
     <bcf:option datatype="boolean">nosortothers</bcf:option>
     <bcf:option datatype="string">uniquelist</bcf:option>
     <bcf:option datatype="string">uniquename</bcf:option>
