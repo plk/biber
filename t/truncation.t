@@ -204,39 +204,39 @@ my $us4w = q|    \entry{us4}{book}{}
 |;
 
 
-# Should be different to us1 and us3 respectively with default (namestrunchandling=default)
+# Should be different to us1 and us3 respectively with default (nohashothers=false)
 eq_or_diff( $out->get_output_entry('us2', $main), $us2s, 'Truncation - 1') ;
 eq_or_diff( $out->get_output_entry('us4', $main), $us4s, 'Truncation - 2') ;
 
-Biber::Config->setblxoption(undef,'namestrunchandling', 'nohash');
+Biber::Config->setblxoption(undef,'nohashothers', 1);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('nty/global//global/global');
 $out = $biber->get_output_obj;
 
-# namehash now the same as us1 and us3 respectively with (namestrunchandling=nohash)
+# namehash now the same as us1 and us3 respectively with (nohashothers=true)
 eq_or_diff( $out->get_output_entry('us2', $main), $us2w, 'Truncation - 3') ;
 eq_or_diff( $out->get_output_entry('us4', $main), $us4w, 'Truncation - 4') ;
 
 
 
 
-# Testing namestrunchandling=nosort
+# Testing nosortothers
 Biber::Config->setblxoption(undef,'uniquelist', 'false');
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('nty/global//global/global');
 $out = $biber->get_output_obj;
 
-# Sorting with namestrunchandling=default
+# Sorting with nosortothers=false
 is_deeply($main->get_keys, ['us1', 'us2','us3', 'us4', 'us5'], 'Truncation - 5');
 
-Biber::Config->setblxoption(undef,'namestrunchandling', 'nohashnosort');
+Biber::Config->setblxoption(undef,'nosortothers', 1);
 $biber->prepare;
 $section = $biber->sections->get_section(0);
 $main = $biber->datalists->get_list('nty/global//global/global');
 $out = $biber->get_output_obj;
 
-# Sorting with namestrunchandling=nohashnosort
+# Sorting with nosortothers=true
 is_deeply($main->get_keys, ['us1', 'us2','us4', 'us3', 'us5'], 'Truncation - 6');
 

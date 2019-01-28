@@ -46,7 +46,8 @@ start =
       mincitenames,
       minsortnames,
       minitems,
-      namestrunchandling,
+      nohashothers,
+      nosortothers,
       singletitle,
       sortalphaothers?,
       sortlocale,
@@ -84,6 +85,8 @@ start =
       mincitenames?,
       minsortnames?,
       minitems?,
+      nohashothers?,
+      nosortothers?,
       singletitle?,
       skipbib?,
       skiplab?,
@@ -597,15 +600,17 @@ uniquelist =
     element bcf:key { "uniquelist" },
     element bcf:value { "false" | "true" | "minyear" }
   }
-# default = truncations are respected
-# nohash = has generation for name lists ignores "et al"
-# nosort = sorting for name lists ignores "et al"
-# nohashnosrt = combines nohash and nosort
-namestrunchandling =
+nohashothers =
   element bcf:option {
     attribute type { "singlevalued" },
-    element bcf:key { "namestrunchandling" },
-    element bcf:value { "default" | "nohash" | "nosort" | "nohashnosort"}
+    element bcf:key { "nohashothers" },
+    element bcf:value { "0" | "1" }
+  }
+nosortothers =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "nosortothers" },
+    element bcf:value { "0" | "1" }
   }
 # false = do not provide uniquename information
 # init = disambiguate with initials, only up to maxcitenames/uniquelist

@@ -66,7 +66,8 @@
         <ref name="mincitenames"/>
         <ref name="minsortnames"/>
         <ref name="minitems"/>
-        <ref name="namestrunchandling"/>
+        <ref name="nohashothers"/>
+        <ref name="nosortothers"/>
         <ref name="singletitle"/>
         <optional>
           <ref name="sortalphaothers"/>
@@ -143,6 +144,12 @@
           </optional>
           <optional>
             <ref name="minitems"/>
+          </optional>
+          <optional>
+            <ref name="nohashothers"/>
+          </optional>
+          <optional>
+            <ref name="nosortothers"/>
           </optional>
           <optional>
             <ref name="singletitle"/>
@@ -1553,26 +1560,34 @@
       </element>
     </element>
   </define>
-  <!--
-    default = truncations are respected
-    nohash = has generation for name lists ignores "et al"
-    nosort = sorting for name lists ignores "et al"
-    nohashnosrt = combines nohash and nosort
-  -->
-  <define name="namestrunchandling">
+  <define name="nohashothers">
     <element name="bcf:option">
       <attribute name="type">
         <value>singlevalued</value>
       </attribute>
       <element name="bcf:key">
-        <value>namestrunchandling</value>
+        <value>nohashothers</value>
       </element>
       <element name="bcf:value">
         <choice>
-          <value>default</value>
-          <value>nohash</value>
-          <value>nosort</value>
-          <value>nohashnosort</value>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="nosortothers">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>nosortothers</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
         </choice>
       </element>
     </element>
