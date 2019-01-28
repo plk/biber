@@ -67,6 +67,7 @@
         <ref name="minsortnames"/>
         <ref name="minitems"/>
         <ref name="nohashothers"/>
+        <ref name="noroman"/>
         <ref name="nosortothers"/>
         <ref name="singletitle"/>
         <optional>
@@ -147,6 +148,9 @@
           </optional>
           <optional>
             <ref name="nohashothers"/>
+          </optional>
+          <optional>
+            <ref name="noroman"/>
           </optional>
           <optional>
             <ref name="nosortothers"/>
@@ -1567,6 +1571,22 @@
       </attribute>
       <element name="bcf:key">
         <value>nohashothers</value>
+      </element>
+      <element name="bcf:value">
+        <choice>
+          <value>0</value>
+          <value>1</value>
+        </choice>
+      </element>
+    </element>
+  </define>
+  <define name="noroman">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>noroman</value>
       </element>
       <element name="bcf:value">
         <choice>

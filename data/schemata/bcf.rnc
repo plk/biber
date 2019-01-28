@@ -47,6 +47,7 @@ start =
       minsortnames,
       minitems,
       nohashothers,
+      noroman,
       nosortothers,
       singletitle,
       sortalphaothers?,
@@ -86,6 +87,7 @@ start =
       minsortnames?,
       minitems?,
       nohashothers?,
+      noroman?,
       nosortothers?,
       singletitle?,
       skipbib?,
@@ -604,6 +606,12 @@ nohashothers =
   element bcf:option {
     attribute type { "singlevalued" },
     element bcf:key { "nohashothers" },
+    element bcf:value { "0" | "1" }
+  }
+noroman =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "noroman" },
     element bcf:value { "0" | "1" }
   }
 nosortothers =
