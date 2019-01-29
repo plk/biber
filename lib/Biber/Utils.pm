@@ -55,7 +55,7 @@ our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid stringi
   bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
-  split_xsv date_monthday tzformat expand_option strip_annotation};
+  split_xsv date_monthday tzformat expand_option strip_annotation appendstrict_check};
 
 =head1 FUNCTIONS
 
@@ -1654,6 +1654,24 @@ sub tzformat {
   }
   else {
     return $tz;
+  }
+}
+
+# Wrapper to enforce map_appendstrict
+sub appendstrict_check {
+  my ($step, $orig, $val) = @_;
+  # Strict append?
+  if ($step->{map_appendstrict}) {
+    if ($orig) {
+      return $orig . $val;
+    }
+    else { # orig is empty, don't append
+      return '';
+    }
+  }
+  # Normal append, don't care if orig is empty
+  else {
+    return $orig . $val;
   }
 }
 

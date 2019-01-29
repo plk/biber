@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 24;
+use Test::More tests => 25;
 use Test::Differences;
 unified_diff;
 
@@ -92,3 +92,6 @@ is_deeply($bibentries->entry('alias7')->get_field('lista'), ['listaval'], 'Alias
 # Testing append overwrites
 eq_or_diff($bibentries->entry('alias7')->get_field('verbb'), 'val2val1', 'Alias - 23' );
 eq_or_diff($bibentries->entry('alias7')->get_field('verbc'), 'val3val2val1', 'Alias - 24' );
+
+# Testing appendstrict
+ok(is_undef($bibentries->entry('alias8')->get_field('verbc')), 'Alias - 25' );

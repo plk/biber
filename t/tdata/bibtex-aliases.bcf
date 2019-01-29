@@ -551,7 +551,7 @@
         <bcf:map_step map_field_set="VERBB" map_origfieldval="1"
                       map_append="1"/>
         <bcf:map_step map_field_source="VERBB" map_final="1"/>
-        <bcf:map_step map_field_set="VERBC" map_origfieldval="1" map_append="1"/>
+        <bcf:map_step map_field_set="VERBC" map_origfieldval="1" map_appendstrict="1"/>
       </bcf:map>
       <bcf:map>
         <bcf:map_step map_field_source="LISTB" map_match="\A(\S{2})" map_replace="REP$1CED"/>
@@ -1936,6 +1936,7 @@
     <bcf:citekey order="5">alias5</bcf:citekey>
     <bcf:citekey order="6">alias6</bcf:citekey>
     <bcf:citekey order="7">alias7</bcf:citekey>
+    <bcf:citekey order="8">alias8</bcf:citekey>
   </bcf:section>
   <!-- SORTING SCHEME -->
   <bcf:sortingtemplate name="nty">

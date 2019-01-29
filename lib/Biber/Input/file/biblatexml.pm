@@ -627,8 +627,12 @@ sub create_entry {
                 }
               }
 
-              # If append is set, keep the original value and append the new
-              my $orig = $step->{map_append} ? $etarget->findvalue($xp_node) : '';
+              my $orig = '';
+              # If append or appendstrict is set, keep the original value
+              # and append the new.
+              if ($step->{map_append} or $step->{map_appendstrict}) {
+                $orig = $etarget->findvalue($xp_node) || '';
+              }
 
               if ($step->{map_origentrytype}) {
                 next unless $last_type;
@@ -636,7 +640,7 @@ sub create_entry {
                   $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting xpath '$xp_node_s' to '${orig}${last_type}'");
                 }
 
-                unless (_changenode($etarget, $xp_node_s, $orig . $last_type, \$cnerror)) {
+                unless (_changenode($etarget, $xp_node_s, appendstrict_check($step, $orig, $last_type), \$cnerror)) {
                   biber_warn("Source mapping (type=$level, key=$key): $cnerror");
                 }
               }
@@ -645,7 +649,7 @@ sub create_entry {
                 if ($logger->is_debug()) {# performance tune
                   $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_fieldval}'");
                 }
-                unless (_changenode($etarget, $xp_node_s, $orig . $last_fieldval, \$cnerror)) {
+                unless (_changenode($etarget, $xp_node_s, appendstrict_check($step, $orig, $last_fieldval), \$cnerror)) {
                   biber_warn("Source mapping (type=$level, key=$etargetkey): $cnerror");
                 }
               }
@@ -654,7 +658,7 @@ sub create_entry {
                 if ($logger->is_debug()) {# performance tune
                   $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${last_field}'");
                 }
-                unless (_changenode($etarget, $xp_node_s, $orig . $last_field, \$cnerror)) {
+                unless (_changenode($etarget, $xp_node_s, appendstrict_check($step, $orig, $last_field), \$cnerror)) {
                   biber_warn("Source mapping (type=$level, key=$etargetkey): $cnerror");
                 }
               }
@@ -667,7 +671,7 @@ sub create_entry {
                 if ($logger->is_debug()) {# performance tune
                   $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field xpath '$xp_node_s' to '${orig}${fv}'");
                 }
-                unless (_changenode($etarget, $xp_node_s, $orig . $fv, \$cnerror)) {
+                unless (_changenode($etarget, $xp_node_s, appendstrict_check($step, $orig, $fv), \$cnerror)) {
                   biber_warn("Source mapping (type=$level, key=$key): $cnerror");
                 }
               }

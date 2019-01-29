@@ -708,29 +708,33 @@ sub create_entry {
                   }
                 }
 
-                  # If append is set, keep the original value and append the new
-                  my $orig = $step->{map_append} ? $etarget->get($field) : '';
+                my $orig = '';
+                # If append or appendstrict is set, keep the original value
+                # and append the new.
+                if ($step->{map_append} or $step->{map_appendstrict}) {
+                  $orig = $etarget->get($field) || '';
+                }
 
                 if ($step->{map_origentrytype}) {
                   next unless $last_type;
                   if ($logger->is_debug()) { # performance tune
                     $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_type}'");
                   }
-                  $etarget->set($field, encode('UTF-8', NFC($orig . $last_type)));
+                  $etarget->set($field, encode('UTF-8', NFC(appendstrict_check($step, $orig,$last_type))));
                 }
                 elsif ($step->{map_origfieldval}) {
                   next unless $last_fieldval;
                   if ($logger->is_debug()) { # performance tune
                     $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_fieldval}'");
                   }
-                  $etarget->set($field, encode('UTF-8', NFC($orig . $last_fieldval)));
+                  $etarget->set($field, encode('UTF-8', NFC(appendstrict_check($step, $orig, $last_fieldval))));
                 }
                 elsif ($step->{map_origfield}) {
                   next unless $last_field;
                   if ($logger->is_debug()) { # performance tune
                     $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${last_field}'");
                   }
-                  $etarget->set($field, encode('UTF-8', NFC($orig . $last_field)));
+                  $etarget->set($field, encode('UTF-8', NFC(appendstrict_check($step, $orig, $last_field))));
                 }
                 else {
                   my $fv = maploopreplace($step->{map_field_value}, $maploop);
@@ -741,7 +745,7 @@ sub create_entry {
                   if ($logger->is_debug()) { # performance tune
                     $logger->debug("Source mapping (type=$level, key=$etargetkey): Setting field '$field' to '${orig}${fv}'");
                   }
-                  $etarget->set($field, encode('UTF-8', NFC($orig . $fv)));
+                  $etarget->set($field, encode('UTF-8', NFC(appendstrict_check($step, $orig, $fv))));
                 }
               }
             }

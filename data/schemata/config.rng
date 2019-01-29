@@ -1095,6 +1095,11 @@
                 </attribute>
               </optional>
               <optional>
+                <attribute name="map_appendstrict">
+                  <value>1</value>
+                </attribute>
+              </optional>
+              <optional>
                 <attribute name="map_final">
                   <value>1</value>
                 </attribute>
