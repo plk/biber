@@ -458,10 +458,13 @@ sub set_output_entry {
     }
   }
 
+  # XSV fields
   foreach my $field ($dmh->{xsv}->@*) {
     if (my $f = $be->get_field($field)) {
       next if $dm->field_is_skipout($field);
-      next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
+      # keywords is by default field/xsv/keyword but it is in fact
+      # output with its own special macro below
+      next if $field eq 'keywords';
       $xml->startTag([$xml_prefix, 'field'], name => $field, format => 'xsv');
       foreach my $f ($f->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
@@ -516,6 +519,7 @@ sub set_output_entry {
     }
   }
 
+  # Keywords
   if ( my $kws = $be->get_field('keywords') ) {
     $xml->startTag([$xml_prefix, 'keywords']);
     foreach my $k ($kws->@*) {

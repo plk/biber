@@ -207,6 +207,9 @@ sub set_output_entry {
 
   # XSV fields
   foreach my $field ($dmh->{xsv}->@*) {
+    # keywords is by default field/xsv/keyword but it is in fact
+    # output with its own special macro below
+    next if $field eq 'keywords';
     if (my $f = $be->get_field($field)) {
       $acc{$casing->($field)} .= join(',', $f->@*);
     }

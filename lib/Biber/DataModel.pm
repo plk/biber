@@ -209,8 +209,7 @@ sub new {
                       dateparts    => [sort $self->get_fields_of_type('field', 'datepart')->@*],
                       xsv       => [sort grep
                                     {
-                                      not $self->field_is_skipout($_) and
-                                        not $self->get_datatype($_) eq 'keyword'
+                                      not $self->field_is_skipout($_)
                                     }
                                     $self->get_fields_of_fieldformat('xsv')->@*],
                       ranges    => [sort grep

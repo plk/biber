@@ -66,6 +66,7 @@ my $handlers = {
                                           },
                             'xsv'      => {
                                            'entrykey' => \&_xsv,
+                                           'literal'  => \&_xsv,
                                            'keyword'  => \&_xsv,
                                            'option'   => \&_xsv,
                                           }

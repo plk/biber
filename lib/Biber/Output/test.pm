@@ -304,9 +304,12 @@ sub set_output_entry {
     }
   }
 
+  # XSV fields
   foreach my $field (sort $dm->get_fields_of_fieldformat('xsv')->@*) {
     next if $dm->field_is_skipout($field);
-    next if $dm->get_datatype($field) eq 'keyword';# This is special in .bbl
+    # keywords is by default field/xsv/keyword but it is in fact
+    # output with its own special macro below
+    next if $field eq 'keywords';
     if (my $f = $be->get_field($field)) {
       $acc .= _printfield($be, $field, join(',', $f->@*) );
     }
