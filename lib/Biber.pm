@@ -1188,6 +1188,7 @@ sub resolve_alias_refs {
   }
 }
 
+
 =head2 process_citekey_aliases
 
  Remove citekey aliases from citekeys as they don't point to real
@@ -2272,6 +2273,7 @@ sub process_sets {
     }
   }
 }
+
 
 =head2 process_nocite
 
@@ -4199,7 +4201,7 @@ sub prepare {
     $self->process_interentry;           # Process crossrefs/xrefs etc.
     $self->validate_datamodel;           # Check against data model
     $self->postprocess_sets;             # Add options to set members etc.
-    $self->process_entries_static;       # Generate static entry data not depedent on lists
+    $self->process_entries_static;       # Generate static entry data not dependent on lists
     $self->process_lists;                # Process the output lists
     $out->create_output_section;         # Generate and push the section output into the
                                          # output object ready for writing

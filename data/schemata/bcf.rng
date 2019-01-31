@@ -70,6 +70,9 @@
         <ref name="noroman"/>
         <ref name="nosortothers"/>
         <ref name="singletitle"/>
+        <ref name="skipbib"/>
+        <ref name="skipbiblist"/>
+        <ref name="skiplab"/>
         <optional>
           <ref name="sortalphaothers"/>
         </optional>
@@ -162,10 +165,10 @@
             <ref name="skipbib"/>
           </optional>
           <optional>
-            <ref name="skiplab"/>
+            <ref name="skipbiblist"/>
           </optional>
           <optional>
-            <ref name="skipbiblist"/>
+            <ref name="skiplab"/>
           </optional>
           <optional>
             <ref name="skiplos"/>

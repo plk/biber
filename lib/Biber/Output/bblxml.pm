@@ -164,10 +164,14 @@ sub set_output_entry {
   push @entryopts, ('uniqueprimaryauthor' => '[BDS]UNIQUEPRIMARYAUTHOR[/BDS]');
 
   $xml->startTag([$xml_prefix, 'entry'], key => _bblxml_norm($key), type => _bblxml_norm($bee), @entryopts);
-  if (my $opts = $be->get_field('options')) {
+  my @opts;
+  foreach my $opt (filter_entry_options($secnum, $be)->@*) {
+    push @opts, $opt;
+  }
+  if (@opts) {
     $xml->startTag([$xml_prefix, 'options']);
-    foreach my $opt (filter_entry_options($opts)->@*) {
-      $xml->dataElement([$xml_prefix, 'option'], _bblxml_norm($opt));
+    foreach (@opts) {
+      $xml->dataElement([$xml_prefix, 'option'], _bblxml_norm($_));
     }
     $xml->endTag();# options
   }

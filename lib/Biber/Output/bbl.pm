@@ -215,7 +215,7 @@ sub set_output_entry {
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
-  $acc .= "    \\entry{$key}{$bee}{" . join(',', filter_entry_options($be->get_field('options'))->@*) . "}\n";
+  $acc .= "    \\entry{$key}{$bee}{" . join(',', filter_entry_options($secnum, $be)->@*) . "}\n";
 
   # Generate set information.
   # Set parents are special and need very little

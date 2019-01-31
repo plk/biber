@@ -903,9 +903,24 @@ sub join_name {
 =cut
 
 sub filter_entry_options {
-  my $options = shift;
-  return [] unless $options;
+  my ($secnum, $be) = @_;
+  my $bee = $be->get_field('entrytype');
+  my $citekey = $be->get_field('citekey');
+  my $options = $be->get_field('options');
   my $roptions = [];
+
+  # Put any global/per-type skips into the local options if not there already per-entry
+  # as biblatex needs these in the entries.
+  if (Biber::Config->getblxoption($secnum, 'skipbib', $bee)) {
+    push $options->@*, 'skipbib=1' unless grep {m/^\s*skipbib(?:=.+)\s*$/} $options->@*;
+  }
+  if (Biber::Config->getblxoption($secnum, 'skipbiblist', $bee)) {
+    push $options->@*, 'skipbiblist=1' unless grep {m/^\s*skipbiblist(?:=.+)\s*$/} $options->@*;
+  }
+  if (Biber::Config->getblxoption($secnum, 'skiplab', $bee)) {
+    push $options->@*, 'skiplab=1' unless grep {m/^\s*skiplab(?:=.+)\s*$/} $options->@*;
+  }
+
   foreach ($options->@*) {
     m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
     my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}{OUTPUT};
@@ -1125,7 +1140,7 @@ sub process_entry_options {
 
 =head2 expand_option
 
-    Expand option such as meta-options coming from biblatex
+    Expand options such as meta-options coming from biblatex
 
 =cut
 

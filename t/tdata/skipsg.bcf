@@ -90,7 +90,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxcitenames</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>3</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxsortnames</bcf:key>
@@ -166,11 +166,11 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquelist</bcf:key>
-      <bcf:value>true</bcf:value>
+      <bcf:value>false</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniquename</bcf:key>
-      <bcf:value>full</bcf:value>
+      <bcf:value>false</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>uniqueprimaryauthor</bcf:key>
@@ -190,7 +190,7 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useprefix</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useauthor</bcf:key>
@@ -198,11 +198,23 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>useeditor</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options component="biblatex" type="collection">
+    <bcf:option type="multivalued">
+      <bcf:key>labelnamespec</bcf:key>
+      <bcf:value order="1">shorteditor</bcf:value>
+      <bcf:value order="2">editor</bcf:value>
+      <bcf:value order="3">translator</bcf:value>
+    </bcf:option>
+    <bcf:option type="singlevalued">
+      <bcf:key>useeditor</bcf:key>
+      <bcf:value>0</bcf:value>
     </bcf:option>
   </bcf:options>
   <!-- BIBLATEX OPTION SCOPE -->
@@ -1894,19 +1906,10 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">uniqueness3.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">skipsg.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">ey1</bcf:citekey>
-    <bcf:citekey order="2">ey1a</bcf:citekey>
-    <bcf:citekey order="3">ey2</bcf:citekey>
-    <bcf:citekey order="4">ey3</bcf:citekey>
-    <bcf:citekey order="5">ey4</bcf:citekey>
-    <bcf:citekey order="6">ey5</bcf:citekey>
-    <bcf:citekey order="7">ey6</bcf:citekey>
-    <bcf:citekey order="8">ey7</bcf:citekey>
-    <bcf:citekey order="9">ey8</bcf:citekey>
-    <bcf:citekey order="10">ey9</bcf:citekey>
+    <bcf:citekey order="1">skip1</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
@@ -1941,9 +1944,19 @@
   <bcf:datalist sortingnamekeytemplatename="global"
                 section="0"
                 name="nty/global//global/global"
-                sortingtemplatename="nty"
+                sortingtemplatename="custom"
                 type="entry"
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global"/>
+  <bcf:datalist sortingnamekeytemplatename="global"
+                section="0"
+                name="shorthands/global//global/global"
+                sortingtemplatename="shorthands"
+                type="list"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:datalist>
 </bcf:controlfile>

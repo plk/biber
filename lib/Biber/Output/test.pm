@@ -97,7 +97,7 @@ sub set_output_entry {
   $acc .= "% sortstring = " . $be->get_field('sortstring') . "\n"
     if (Biber::Config->getoption('debug') || Biber::Config->getblxoption(undef,'debug'));
 
-  $acc .= "    \\entry{$key}{$bee}{" . join(',', filter_entry_options($be->get_field('options'))->@*) . "}\n";
+  $acc .= "    \\entry{$key}{$bee}{" . join(',', filter_entry_options($secnum, $be)->@*) . "}\n";
 
   # Generate set information
   if ($bee eq 'set') {   # Set parents get \set entry ...

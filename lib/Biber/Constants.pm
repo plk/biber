@@ -521,10 +521,13 @@ our %CONFIG_SCOPEOPT_BIBLATEX;
 our %CONFIG_OPTTYPE_BIBLATEX;
 
 # For per-entry options, what should be set when we find them and
-# what should be output to the .bbl for biblatex.
+# should they be output to the .bbl for biblatex.
+# Default is not to output (see Biber.pm which sets defaults in this hash)
 # Basically, here we have to emulate relevant parts of biblatex's options processing
 # for local entry-specific options, note therefore the presence here of some
 # options like max/mincitenames which are not passed in the .bcf
+# "DEFAULT" tells us to skip output if the value is default and biblatex therefore
+# won't care about the option
 our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
   (
    dataonly          => {OUTPUT => 1,
@@ -533,6 +536,7 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
                                    uniquename  => 'false',
                                    uniquelist  => 'false'}
                         },
+   labelalphanametemplatename => {OUTPUT => 1},
    maxitems          => {OUTPUT => 1},
    minitems          => {OUTPUT => 1},
    maxbibnames       => {OUTPUT => 1},
@@ -553,17 +557,17 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
                          INPUT  => ['sortingnamekeytemplatename',
                                     'uniquenametemplatename',
                                     'labelalphanametemplatename']},
+
+   nohashothers      => {OUTPUT => 0},
    noinherit         => {OUTPUT => 0},
+   nosortothers      => {OUTPUT => 0},
    presort           => {OUTPUT => 0},
    skipbib           => {OUTPUT => 1},
    skipbiblist       => {OUTPUT => 1},
    skiplab           => {OUTPUT => 1},
    sortingnamekeytemplatename => {OUTPUT => 1},
-   uniquenametemplatename => {OUTPUT => 1},
-   labelalphanametemplatename => {OUTPUT => 1},
-   nohashothers      => {OUTPUT => 0},
-   nosortothers      => {OUTPUT => 0},
    uniquelist        => {OUTPUT => 0},
+   uniquenametemplatename => {OUTPUT => 1},
    useauthor         => {OUTPUT => 1},
    useeditor         => {OUTPUT => 1},
    useprefix         => {OUTPUT => 1},
