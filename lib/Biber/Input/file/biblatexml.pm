@@ -1016,9 +1016,9 @@ sub _datetime {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $key) = @_;
+  my ($be, $entry, $f, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
-  my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bibentry->get_field('entrytype'), $key);
+  my $bee = $be->get_field('entrytype');
 
   foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
     my $names = new Biber::Entry::Names;
@@ -1042,19 +1042,7 @@ sub _name {
 
     my $numname = 1;
     foreach my $namenode ($node->findnodes("./$NS:name")) {
-
-      my $useprefix;
-      # Name list and higher scope useprefix option. We have to pass this into parsename
-      # as the actual current scope value is needed to generate name objects
-      if (defined($names->get_useprefix)) {
-        $useprefix = $names->get_useprefix;
-      }
-      else {
-        $useprefix = Biber::Config->getblxoption($secnum, 'useprefix', $bibentry->get_field('entrytype'), $key);
-      }
-
-      $names->add_name(parsename($namenode, $f, $key, $numname++, {useprefix => $useprefix,
-                                                                   uniquename => ($un // 'false')}));
+      $names->add_name(parsename($namenode, $f, $key, $numname++));
     }
 
     # Deal with explicit "moreenames" in data source
@@ -1062,7 +1050,7 @@ sub _name {
       $names->set_morenames;
     }
 
-    $bibentry->set_datafield(_norm($f), $names);
+    $be->set_datafield(_norm($f), $names);
 
   }
   return;
@@ -1090,7 +1078,7 @@ sub _name {
 =cut
 
 sub parsename {
-  my ($node, $fieldname, $key, $count, $opts) = @_;
+  my ($node, $fieldname, $key, $count) = @_;
   if ($logger->is_debug()) {# performance tune
     $logger->debug('Parsing BibLaTeXML name object ' . $node->nodePath);
   }

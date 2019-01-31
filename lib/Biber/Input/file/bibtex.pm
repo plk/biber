@@ -999,11 +999,12 @@ sub _range {
 
 # Names
 sub _name {
-  my ($bibentry, $entry, $field, $key) = @_;
+  my ($be, $entry, $field, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $value = $entry->get($field);
   my $xnamesep = Biber::Config->getoption('xnamesep');
+  my $bee = $be->get_field('entrytype');
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('namesep'),
@@ -1011,9 +1012,6 @@ sub _name {
                                      undef,
                                      undef,
                                      {binmode => 'utf-8', normalization => 'NFD'});
-
-  my $useprefix = Biber::Config->getblxoption($secnum, 'useprefix', $bibentry->get_field('entrytype'), $key);
-  my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bibentry->get_field('entrytype'), $key);
 
   my $names = Biber::Entry::Names->new();
 
@@ -1040,7 +1038,7 @@ sub _name {
 
     # Consecutive "and" causes Text::BibTeX::Name to segfault
     unless ($name) {
-      biber_warn("Name in key '$key' is empty (probably consecutive 'and'): skipping name", $bibentry);
+      biber_warn("Name in key '$key' is empty (probably consecutive 'and'): skipping name", $be);
       $section->del_citekey($key);
       next;
     }
@@ -1052,14 +1050,10 @@ sub _name {
     my $xnamesep = Biber::Config->getoption('xnamesep');
     if ($name =~ m/(?:$nps)\s*$xnamesep/ and not Biber::Config->getoption('noxname')) {
       # Skip names that don't parse for some reason
-      # uniquename defaults to 0 just in case we are in tool mode otherwise there are spurious
-      # uninitialised warnings
+      # uniquename defaults to 'false' just in case we are in tool mode otherwise
+      # there are spurious uninitialised warnings
 
-      next unless $no = parsename_x($name,
-                                    $field,
-                                    {useprefix => $useprefix,
-                                     uniquename => ($un // 'false')},
-                                    $key);
+      next unless $no = parsename_x($name, $field, $key);
     }
     else { # Normal bibtex name format
       # Check for malformed names in names which aren't completely escaped
@@ -1067,14 +1061,14 @@ sub _name {
       unless ($name =~ m/\A\{\X+\}\z/xms) { # Ignore these tests for escaped names
         my @commas = $name =~ m/,/g;
         if ($#commas > 1) {
-          biber_warn("Name \"$name\" has too many commas: skipping name", $bibentry);
+          biber_warn("Name \"$name\" has too many commas: skipping name", $be);
           $section->del_citekey($key);
           next;
         }
 
         # Consecutive commas cause Text::BibTeX::Name to segfault
         if ($name =~ /,,/) {
-          biber_warn("Name \"$name\" is malformed (consecutive commas): skipping name", $bibentry);
+          biber_warn("Name \"$name\" is malformed (consecutive commas): skipping name", $be);
           $section->del_citekey($key);
           next;
         }
@@ -1634,7 +1628,7 @@ sub parsename {
 =cut
 
 sub parsename_x {
-  my ($namestr, $fieldname, $opts, $key) = @_;
+  my ($namestr, $fieldname, $key) = @_;
   my $xnamesep = Biber::Config->getoption('xnamesep');
   my %nps = map {$_ => 1} $dm->get_constant_value('nameparts');
 

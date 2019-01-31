@@ -200,6 +200,18 @@ sub set_output_entry {
   my $dmh = $dm->{helpers};
   my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $key);
   my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $key);
+  my $lni = $be->get_labelname_info;
+  my $nl = $be->get_field($lni);
+
+  # Per-namelist uniquelist
+  if (defined($lni) and $nl->get_uniquelist) {
+    $ul = $nl->get_uniquelist;
+  }
+
+  # Per-namelist uniquename
+  if (defined($lni) and $nl->get_uniquename) {
+    $un = $nl->get_uniquename;
+  }
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
@@ -211,7 +223,7 @@ sub set_output_entry {
     $acc .= "      <BDS>ENTRYSET</BDS>\n";
 
     # Set parents need this - it is the labelalpha from the first entry
-    if (Biber::Config->getblxoption(undef, 'labelalpha', $bee)) {
+    if (Biber::Config->getblxoption(undef, 'labelalpha', $bee, $key)) {
       $acc .= "      <BDS>LABELALPHA</BDS>\n";
       $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
     }
@@ -252,22 +264,25 @@ sub set_output_entry {
       # Did we have "and others" in the data?
       if ( $nf->get_morenames ) {
         $acc .= "      \\true{more$namefield}\n";
+
         # Is this name labelname? If so, provide \morelabelname
-        if (my $lni = $be->get_labelname_info) {
-          if ( $lni eq $namefield ) {
-            $acc .= "      \\true{morelabelname}\n";
-          }
+        if (defined($lni) and $lni eq $namefield) {
+          $acc .= "      \\true{morelabelname}\n";
+        }
+      }
+
+      # Per-name uniquename if this is labelname
+      if (defined($lni) and $lni eq $namefield) {
+        if (defined($nf->get_uniquename)) {
+            $un = $nf->get_uniquename;
         }
       }
 
       my $total = $nf->count_names;
 
-      my $lni = $be->get_labelname_info;
-
       my $nfv = '';
 
-      if (defined($lni) and
-          $lni eq $namefield) {
+      if (defined($lni) and $lni eq $namefield) {
         my @plo;
 
         # Add uniquelist if requested
@@ -338,11 +353,11 @@ sub set_output_entry {
   }
 
   # Output extraname if there is a labelname
-  if ($be->get_labelname_info) {
+  if ($lni) {
     $acc .= "      <BDS>EXTRANAME</BDS>\n";
   }
 
-  if ( Biber::Config->getblxoption(undef, 'labelalpha', $bee) ) {
+  if ( Biber::Config->getblxoption(undef, 'labelalpha', $bee, $key) ) {
     $acc .= "      <BDS>LABELALPHA</BDS>\n";
   }
 
@@ -350,7 +365,7 @@ sub set_output_entry {
   $acc .= "      <BDS>SORTINITHASH</BDS>\n";
 
   # The labeldateparts option determines whether "extradate" is output
-  if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee)) {
+  if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee, $key)) {
     $acc .= "      <BDS>EXTRADATE</BDS>\n";
     if (my $edscope = $be->get_field('extradatescope')) {
       $acc .= "      \\field{extradatescope}{$edscope}\n";
@@ -367,17 +382,17 @@ sub set_output_entry {
   }
 
   # The labeltitle option determines whether "extratitle" is output
-  if ( Biber::Config->getblxoption(undef, 'labeltitle', $bee)) {
+  if ( Biber::Config->getblxoption(undef, 'labeltitle', $bee, $key)) {
     $acc .= "      <BDS>EXTRATITLE</BDS>\n";
   }
 
   # The labeltitleyear option determines whether "extratitleyear" is output
-  if ( Biber::Config->getblxoption(undef, 'labeltitleyear', $bee)) {
+  if ( Biber::Config->getblxoption(undef, 'labeltitleyear', $bee, $key)) {
     $acc .= "      <BDS>EXTRATITLEYEAR</BDS>\n";
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  if ( Biber::Config->getblxoption(undef, 'labelalpha', $bee)) {
+  if ( Biber::Config->getblxoption(undef, 'labelalpha', $bee, $key)) {
     $acc .= "      <BDS>EXTRAALPHA</BDS>\n";
   }
 
@@ -396,7 +411,7 @@ sub set_output_entry {
   $acc .= "      <BDS>UNIQUEPRIMARYAUTHOR</BDS>\n";
 
   # The source field for labelname
-  if (my $lni = $be->get_labelname_info) {
+  if ($lni) {
     $acc .= "      \\field{labelnamesource}{$lni}\n";
   }
 

@@ -124,6 +124,18 @@ sub set_output_entry {
   my $xml_prefix = 'https://sourceforge.net/projects/biblatex/bblxml';
   my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $key);
   my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $key);
+  my $nl = $be->get_field($be->get_labelname_info);
+  my $lni = $be->get_labelname_info;
+
+  # Per-namelist uniquelist
+  if (defined($lni) and $nl->get_uniquelist) {
+    $ul = $nl->get_uniquelist;
+  }
+
+  # Per-namelist uniquename
+  if (defined($lni) and $nl->get_uniquename) {
+    $un = $nl->get_uniquename;
+  }
 
   my $xml = XML::Writer->new(OUTPUT      => 'self',
                              ENCODING    => 'UTF-8',
@@ -167,7 +179,7 @@ sub set_output_entry {
     $xml->dataElement('BDS', 'ENTRYSET');
 
     # Set parents need this - it is the labelalpha from the first entry
-    if (Biber::Config->getblxoption(undef, 'labelalpha', $bee)) {
+    if (Biber::Config->getblxoption(undef, 'labelalpha', $bee, $key)) {
       $xml->dataElement('BDS', 'LABELALPHA');
       $xml->dataElement('BDS', 'EXTRAALPHA');
     }
@@ -218,9 +230,7 @@ sub set_output_entry {
 
       my $total = $nf->count_names;
 
-      my $lni = $be->get_labelname_info;
-      if (defined($lni) and
-          $lni eq $namefield) {
+      if (defined($lni) and $lni eq $namefield) {
 
         # Add uniquelist if requested
         # Don't use angles in attributes ...
@@ -250,6 +260,14 @@ sub set_output_entry {
 
       # Now the names
       foreach my $n ($nf->names->@*) {
+
+        # Per-name uniquename if this is labelname
+        if ($lni eq $namefield) {
+          if (defined($n->get_uniquename)) {
+            $un = $n->get_uniquename;
+          }
+        }
+
         $n->name_to_bblxml($xml, $xml_prefix, $un);
       }
       $xml->endTag();# names
@@ -301,7 +319,7 @@ sub set_output_entry {
     $xml->dataElement('BDS', 'EXTRANAME');
   }
 
-  if ( Biber::Config->getblxoption(undef, 'labelalpha', $bee) ) {
+  if ( Biber::Config->getblxoption(undef, 'labelalpha', $bee, $key) ) {
     $xml->dataElement('BDS', 'LABELALPHA');
   }
 
@@ -309,7 +327,7 @@ sub set_output_entry {
   $xml->dataElement('BDS', 'SORTINITHASH');
 
   # The labeldateparts option determines whether "extradate" is output
-  if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee)) {
+  if (Biber::Config->getblxoption(undef, 'labeldateparts', $bee, $key)) {
     $xml->dataElement('BDS', 'EXTRADATE');
     if (my $edscope = $be->get_field('extradatescope')) {
       $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($edscope), name => 'extradatescope');
@@ -326,22 +344,22 @@ sub set_output_entry {
   }
 
   # The labeltitle option determines whether "extratitle" is output
-  if (Biber::Config->getblxoption(undef, 'labeltitle', $bee)) {
+  if (Biber::Config->getblxoption(undef, 'labeltitle', $bee, $key)) {
     $xml->dataElement('BDS', 'EXTRATITLE');
   }
 
   # The labeltitleyear option determines whether "extratitleyear" is output
-  if (Biber::Config->getblxoption(undef, 'labeltitleyear', $bee)) {
+  if (Biber::Config->getblxoption(undef, 'labeltitleyear', $bee, $key)) {
     $xml->dataElement('BDS', 'EXTRATITLEYEAR');
   }
 
   # The labelalpha option determines whether "extraalpha" is output
-  if (Biber::Config->getblxoption(undef, 'labelalpha', $bee)) {
+  if (Biber::Config->getblxoption(undef, 'labelalpha', $bee, $key)) {
     $xml->dataElement('BDS', 'EXTRAALPHA');
   }
 
   # The source field for labelname
-  if (my $lni = $be->get_labelname_info) {
+  if ($lni) {
     $xml->dataElement([$xml_prefix, 'field'], _bblxml_norm($lni), name => 'labelnamesource');
   }
 
