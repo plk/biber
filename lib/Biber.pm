@@ -1793,37 +1793,19 @@ sub process_entries_pre {
     next unless defined($lni); # only care about labelname
     my $nl = $be->get_field($lni);
 
-    # my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
-    # my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
+    # process name disambiguation schemata
+    my $namedis = $self->process_namedis($citekey, $dlist);
 
-    # # Per-namelist uniquelist
-    # if (defined($nl->get_uniquelist)) {
-    #   $ul = $nl->get_uniquelist;
-    # }
-
-    # # Per-namelist uniquename
-    # if (defined($nl->get_uniquename)) {
-    #   $un = $nl->get_uniquename;
-    # }
-
-    # Check this outside of process_namedis() because we need to use that in cases
-    # where uniquename=false (uniqueprimaryauthor for example)
-#    if ($un ne 'false' or $ul ne 'false') {
-
-      # process name disambiguation schemata
-      my $namedis = $self->process_namedis($citekey, $dlist);
-
-      foreach my $nlid (keys $namedis->%*) {
-        foreach my $nid (keys $namedis->{$nlid}->%*) {
-          next if $namedis->{$nlid}{$nid}{nameun} eq 'false';
-          $dlist->set_namedis($nlid,
-                              $nid,
-                              $namedis->{$nlid}{$nid}{namestring},
-                              $namedis->{$nlid}{$nid}{namestrings},
-                              $namedis->{$nlid}{$nid}{namedisschema});
-        }
+    foreach my $nlid (keys $namedis->%*) {
+      foreach my $nid (keys $namedis->{$nlid}->%*) {
+        next if $namedis->{$nlid}{$nid}{nameun} eq 'false';
+        $dlist->set_namedis($nlid,
+                            $nid,
+                            $namedis->{$nlid}{$nid}{namestring},
+                            $namedis->{$nlid}{$nid}{namestrings},
+                            $namedis->{$nlid}{$nid}{namedisschema});
       }
-#    }
+    }
   }
 
   if ($logger->is_debug()) {# performance tune
