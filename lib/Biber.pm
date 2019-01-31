@@ -1798,6 +1798,8 @@ sub process_entries_pre {
 
     foreach my $nlid (keys $namedis->%*) {
       foreach my $nid (keys $namedis->{$nlid}->%*) {
+        # process_namedis() has to record uniquename as it has access to name-scope
+        # uniquename and makes this visible here so it can be checked
         next if $namedis->{$nlid}{$nid}{nameun} eq 'false';
         $dlist->set_namedis($nlid,
                             $nid,

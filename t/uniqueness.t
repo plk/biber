@@ -53,7 +53,7 @@ my $main = $biber->datalists->get_list('nty/global//global/global');
 eq_or_diff($main->get_unsummary($bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info)->get_id,$bibentries->entry('un1')->get_field($bibentries->entry('un1')->get_labelname_info)->nth_name(1)->get_id), '2', 'Uniquename requiring full name expansion - 1');
 eq_or_diff($main->get_unsummary($bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_labelname_info)->get_id,$bibentries->entry('un2')->get_field($bibentries->entry('un2')->get_labelname_info)->nth_name(1)->get_id), '2', 'Uniquename requiring full name expansion - 2');
 eq_or_diff($main->get_unsummary($bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_labelname_info)->get_id,$bibentries->entry('un5')->get_field($bibentries->entry('un5')->get_labelname_info)->nth_name(1)->get_id), '2', 'Uniquename requiring full name expansion - 3');
-eq_or_diff($main->get_unsummary($bibentries->entry('un3')->get_field($bibentries->entry('un2')->get_labelname_info)->get_id,$bibentries->entry('un3')->get_field($bibentries->entry('un2')->get_labelname_info)->nth_name(1)->get_id), '1', 'Uniquename requiring initials name expansion - 1');
+ok(is_undef($main->get_unsummary($bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_labelname_info)->get_id,$bibentries->entry('un3')->get_field($bibentries->entry('un3')->get_labelname_info)->nth_name(1)->get_id)), 'Uniquename requiring initials name expansion (per-namelist uniquename) - 1');
 eq_or_diff($main->get_unsummary($bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info)->get_id,$bibentries->entry('un4')->get_field($bibentries->entry('un4')->get_labelname_info)->nth_name(1)->get_id), '1', 'Uniquename requiring initials name expansion - 2');
 ok(is_undef($main->get_unsummary($bibentries->entry('un4a')->get_field($bibentries->entry('un4a')->get_labelname_info)->get_id,$bibentries->entry('un4a')->get_field($bibentries->entry('un4a')->get_labelname_info)->nth_name(1)->get_id)), 'per-entry uniquename');
 eq_or_diff($main->get_entryfield('un6', 'namehash'), 'f8169a157f8d9209961157b8d23902db', 'Namehash and fullhash - 1');
@@ -145,7 +145,7 @@ $biber->prepare;
 $bibentries = $biber->sections->get_section('0')->bibentries;
 $main = $biber->datalists->get_list('nty/global//global/global');
 
-eq_or_diff($main->get_unsummary($bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_labelname_info)->get_id,$bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_labelname_info)->nth_name(1)->get_id), '0', 'Uniquename 0 due to mincitenames truncation');
+ok(is_undef($main->get_unsummary($bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_labelname_info)->get_id,$bibentries->entry('test2')->get_field($bibentries->entry('test2')->get_labelname_info)->nth_name(1)->get_id)), 'Uniquename 0 due to mincitenames truncation');
 
 #############################################################################
 
@@ -194,7 +194,7 @@ eq_or_diff($main->get_uniquelist($bibentries->entry('unall7')->get_field($bibent
 # unall9a  is ul=undef due to per-entry settings (would otherwise be ul=5)
 eq_or_diff($main->get_uniquelist($bibentries->entry('unall8')->get_field($bibentries->entry('unall8')->get_labelname_info)->get_id), '5', 'Uniquelist - 12');
 eq_or_diff($main->get_uniquelist($bibentries->entry('unall9')->get_field($bibentries->entry('unall9')->get_labelname_info)->get_id), '5', 'Uniquelist - 13');
-ok(is_undef($main->get_uniquelist($bibentries->entry('unall9a')->get_field($bibentries->entry('unall9a')->get_labelname_info)->get_id)), 'Per-entry Uniquelist - 1');
+ok(is_undef($main->get_uniquelist($bibentries->entry('unall9a')->get_field($bibentries->entry('unall9a')->get_labelname_info)->get_id)), 'Per-namelist Uniquelist - 1');
 eq_or_diff($main->get_uniquelist($bibentries->entry('unall10')->get_field($bibentries->entry('unall10')->get_labelname_info)->get_id), '6', 'Uniquelist - 14');
 
 # These next two should have uniquelist 5/6 as they need disambiguating in place 5
