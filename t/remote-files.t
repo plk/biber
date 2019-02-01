@@ -54,25 +54,25 @@ my $bibentries = $section->bibentries;
 
 my $cu1 = q|    \entry{citeulike:8283461}{article}{}
       \name{author}{4}{}{%
-        {{uniquename=0,uniquepart=base,hash=45569c08e4409a489ea0089b05700737}{%
+        {{un=0,uniquepart=base,hash=45569c08e4409a489ea0089b05700737}{%
            family={Marazziti},
            familyi={M\bibinitperiod},
            given={D.},
            giveni={D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=64c5a832511e0dd6aecf02f2d598b4e4}{%
+        {{un=0,uniquepart=base,hash=64c5a832511e0dd6aecf02f2d598b4e4}{%
            family={Akiskal},
            familyi={A\\bibinitperiod},
            given={H.\bibnamedelimi S.},
            giveni={H\bibinitperiod\bibinitdelim S\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=161a28db2496421f437aa4390748e14d}{%
+        {{un=0,uniquepart=base,hash=161a28db2496421f437aa4390748e14d}{%
            family={Rossi},
            familyi={R\bibinitperiod},
            given={A.},
            giveni={A\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=a586782bf328ff75bf4f3120e1f5787d}{%
+        {{un=0,uniquepart=base,hash=a586782bf328ff75bf4f3120e1f5787d}{%
            family={Cassano},
            familyi={C\bibinitperiod},
            given={G.\bibnamedelimi B.},
@@ -113,13 +113,13 @@ my $cu1 = q|    \entry{citeulike:8283461}{article}{}
 
 my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \name{author}{2}{}{%
-        {{uniquename=0,uniquepart=base,hash=03fb065ad674e2c6269f3542112e30df}{%
+        {{un=0,uniquepart=base,hash=03fb065ad674e2c6269f3542112e30df}{%
            family={Abdelbar},
            familyi={A\bibinitperiod},
            given={A.M.},
            giveni={A\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=6ad6790ec94c4b5195bcac153b20da0e}{%
+        {{un=0,uniquepart=base,hash=6ad6790ec94c4b5195bcac153b20da0e}{%
            family={Hedetniemi},
            familyi={H\bibinitperiod},
            given={S.M.},
@@ -149,7 +149,7 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
 
 my $ssl = q|    \entry{crossley_politics_1994}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=92a23f84d2ee0a6817cf6e31edda9ac2}{%
+        {{un=0,uniquepart=base,hash=92a23f84d2ee0a6817cf6e31edda9ac2}{%
            family={Crossley},
            familyi={C\bibinitperiod},
            given={Nick},

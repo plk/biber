@@ -1836,6 +1836,19 @@ sub instantiate_entry {
       $entry_string =~ s|<BDS>LABELALPHA</BDS>|$str|gxms;
     }
 
+    # uniquelist
+    foreach my $namefield ($dmh->{namelists}->@*) {
+      next unless my $nl = $be->get_field($namefield);
+      my $nlid = $nl->get_id;
+      if (defined($self->get_uniquelist($nlid))) {
+        my $str = 'ul=' . $self->get_uniquelist($nlid);
+        $entry_string =~ s|<BDS>UL-$nlid</BDS>|$str|gxms;
+      }
+      else {
+        $entry_string =~ s|<BDS>UL-$nlid</BDS>,?||gxms;
+      }
+    }
+
     # uniquename
     foreach my $namefield ($dmh->{namelists}->@*) {
       next unless my $nl = $be->get_field($namefield);
@@ -1843,7 +1856,7 @@ sub instantiate_entry {
       foreach my $n ($nl->names->@*) {
         my $nid = $n->get_id;
         if (defined($self->get_unsummary($nlid, $nid))) {
-          my $str = 'uniquename=' . $self->get_unsummary($nlid, $nid);
+          my $str = 'un=' . $self->get_unsummary($nlid, $nid);
           $entry_string =~ s|<BDS>UNS-$nid</BDS>|$str|gxms;
           $str = 'uniquepart=' . $self->get_unpart($nlid, $nid);
           $entry_string =~ s|<BDS>UNP-$nid</BDS>|$str|gxms;
@@ -1863,19 +1876,6 @@ sub instantiate_entry {
             $entry_string =~ s|\s+<BDS>UNP-$np-$nid</BDS>,?||gxms;
           }
         }
-      }
-    }
-
-    # uniquelist
-    foreach my $namefield ($dmh->{namelists}->@*) {
-      next unless my $nl = $be->get_field($namefield);
-      my $nlid = $nl->get_id;
-      if (defined($self->get_uniquelist($nlid))) {
-        my $str = 'uniquelist=' . $self->get_uniquelist($nlid);
-        $entry_string =~ s|<BDS>UL-$nlid</BDS>|$str|gxms;
-      }
-      else {
-        $entry_string =~ s|<BDS>UL-$nlid</BDS>,?||gxms;
       }
     }
 
@@ -2031,6 +2031,19 @@ sub instantiate_entry {
       $entry_string =~ s|<BDS>LABELALPHA</BDS>|$str|gxms;
     }
 
+    # uniquelist
+    foreach my $namefield ($dmh->{namelists}->@*) {
+      next unless my $nl = $be->get_field($namefield);
+      my $nlid = $nl->get_id;
+      if (defined($self->get_uniquelist($nlid))) {
+        my $str = $self->get_uniquelist($nlid);
+        $entry_string =~ s|\[BDS\]UL-$nlid\[/BDS\]|$str|gxms;
+      }
+      else {
+        $entry_string =~ s|\sul="\[BDS\]UL-$nlid\[/BDS\]"||gxms;
+      }
+    }
+
     # uniquename
     foreach my $namefield ($dmh->{namelists}->@*) {
       next unless my $nl = $be->get_field($namefield);
@@ -2044,7 +2057,7 @@ sub instantiate_entry {
           $entry_string =~ s|\[BDS\]UNP-$nid\[/BDS\]|$str|gxms;
           foreach my $np ($n->get_nameparts) {
             if ($self->is_unbasepart($nlid, $nid, $np)) {
-              $entry_string =~ s|\suniquename="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
+              $entry_string =~ s|\sun="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
             }
             else {
               $str = $self->get_unparts($nlid, $nid, $np);
@@ -2053,24 +2066,11 @@ sub instantiate_entry {
           }
         }
         else {
-          $entry_string =~ s#\s(?:uniquename|uniquepart)="\[BDS\]UN[SP]-$nid\[/BDS\]",?##gxms;
+          $entry_string =~ s#\s(?:un|uniquepart)="\[BDS\]UN[SP]-$nid\[/BDS\]",?##gxms;
           foreach my $np ($n->get_nameparts) {
-            $entry_string =~ s|\suniquename="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
+            $entry_string =~ s|\sun="\[BDS\]UNP-$np-$nid\[/BDS\]",?||gxms;
           }
         }
-      }
-    }
-
-    # uniquelist
-    foreach my $namefield ($dmh->{namelists}->@*) {
-      next unless my $nl = $be->get_field($namefield);
-      my $nlid = $nl->get_id;
-      if (defined($self->get_uniquelist($nlid))) {
-        my $str = $self->get_uniquelist($nlid);
-        $entry_string =~ s|\[BDS\]UL-$nlid\[/BDS\]|$str|gxms;
-      }
-      else {
-        $entry_string =~ s|\suniquelist="\[BDS\]UL-$nlid\[/BDS\]"||gxms;
       }
     }
 

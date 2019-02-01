@@ -44,7 +44,7 @@ my $shs = $biber->datalists->get_list('shorthand/global//global/global', 0, 'lis
 
 my $k1 = q|    \entry{key1}{article}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
+        {{un=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
@@ -77,7 +77,7 @@ my $k1 = q|    \entry{key1}{article}{}
 
 my $k2 = q|    \entry{key2}{inbook}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
+        {{un=0,uniquepart=base,hash=a517747c3d12f99244ae598910d979c5}{%
            family={Author},
            familyi={A\bibinitperiod}}}%
       }
@@ -309,7 +309,7 @@ eq_or_diff( $out->get_output_entry('8ddf878039b70767c4a5bcf4f0c4f65e', $main), $
 
 my $un1 = q|    \entry{kullback}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
+        {{un=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
            family={Kullback},
            familyi={K\bibinitperiod},
            given={Solomon},
@@ -343,7 +343,7 @@ my $un1 = q|    \entry{kullback}{book}{}
 
 my $un2 = q|    \entry{kullback:related}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
+        {{un=0,uniquepart=base,hash=34c5bbf9876c37127c3abe4e7d7a7198}{%
            family={Kullback},
            familyi={K\bibinitperiod},
            given={Solomon},

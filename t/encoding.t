@@ -34,7 +34,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 my $encode1 = q|    \entry{testŠ}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
+        {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
            given={Edward},
@@ -64,7 +64,7 @@ my $encode1 = q|    \entry{testŠ}{book}{}
 
 my $encode2 = q|    \entry{test1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
+        {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
            given={Edward},
@@ -94,7 +94,7 @@ my $encode2 = q|    \entry{test1}{book}{}
 
 my $encode3 = q|    \entry{test1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
+        {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
            given={Edward},
@@ -124,7 +124,7 @@ my $encode3 = q|    \entry{test1}{book}{}
 
 my $encode5 = q|    \entry{test}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
+        {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
            given={Edward},
@@ -154,7 +154,7 @@ my $encode5 = q|    \entry{test}{book}{}
 
 my $encode6 = q|    \entry{test}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
+        {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
            given={Edward},
@@ -184,7 +184,7 @@ my $encode6 = q|    \entry{test}{book}{}
 
 my $encode7 = q|    \entry{test}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
+        {{un=0,uniquepart=base,hash=06a47edae2e847800cfd78323a0e6be8}{%
            family={Encalcer},
            familyi={E\bibinitperiod},
            given={Edward},

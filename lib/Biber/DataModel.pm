@@ -1447,7 +1447,7 @@ sub generate_bblxml_schema {
   $writer->emptyTag('data', 'type' => 'integer');
   $writer->endTag();    # attribute
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'uniquelist');
+  $writer->startTag('attribute', 'name' => 'ul');
   $writer->emptyTag('data', 'type' => 'integer');
   $writer->endTag();    # attribute
   $writer->endTag();    # optional
@@ -1478,7 +1478,7 @@ sub generate_bblxml_schema {
   $writer->endTag();    # optional
   $writer->emptyTag('attribute', 'name' => 'hash');
   $writer->startTag('optional');
-  $writer->startTag('attribute', 'name' => 'uniquename');
+  $writer->startTag('attribute', 'name' => 'un');
   $writer->emptyTag('data', 'type' => 'integer');
   $writer->endTag();    # attribute
   $writer->startTag('attribute', 'name' => 'uniquepart');
@@ -1490,7 +1490,7 @@ sub generate_bblxml_schema {
   $writer->emptyTag('attribute', 'name' => 'type');
   $writer->emptyTag('attribute', 'name' => 'initials');
   $writer->startTag('optional');
-  $writer->emptyTag('attribute', 'name' => 'uniquename');
+  $writer->emptyTag('attribute', 'name' => 'un');
   $writer->endTag();    # optional
   $writer->emptyTag('text');# text
   $writer->endTag();# namepart

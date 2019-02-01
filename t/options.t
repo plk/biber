@@ -83,7 +83,7 @@ my $bln = [ {content => 'author'}, {content => 'editor'} ];
 
 my $l1 = q|    \entry{L1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
+        {{un=0,uniquepart=base,hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
@@ -118,9 +118,9 @@ my $l1 = q|    \entry{L1}{book}{}
     \endentry
 |;
 
-my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxsortnames=3,maxitems=2}
+my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxsortnames=3,maxitems=2,maxalphanames=10}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=19eec87c959944d6d9c72434a42856ba}{%
+        {{un=0,uniquepart=base,hash=19eec87c959944d6d9c72434a42856ba}{%
            family={Edwards},
            familyi={E\bibinitperiod},
            given={Ellison},
@@ -152,7 +152,7 @@ my $l2 = q|    \entry{L2}{book}{maxcitenames=3,maxbibnames=3,maxsortnames=3,maxi
 
 my $l3 = q|    \entry{L3}{book}{blah=10}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=490250da1f3b92580d97563dc96c6c84}{%
+        {{un=0,uniquepart=base,hash=490250da1f3b92580d97563dc96c6c84}{%
            family={Bluntford},
            familyi={B\bibinitperiod},
            given={Bunty},

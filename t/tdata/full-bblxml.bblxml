@@ -10,33 +10,33 @@
           <bbl:member>set</bbl:member>
         </bbl:inset>
         <bbl:names type="author" count="7">
-          <bbl:name hash="e410078ecf298d6b83792df6633b2b08" uniquename="0" uniquepart="base">
+          <bbl:name hash="e410078ecf298d6b83792df6633b2b08" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Aksın</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="Ö">Özge</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="Ö">Özge</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="e881ffc293766c81018c24d97971f9c3" uniquename="0" uniquepart="base">
+          <bbl:name hash="e881ffc293766c81018c24d97971f9c3" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="T">Türkmen</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="H">Hayati</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="H">Hayati</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="f9be8f5362c3f1a8c57254f421602a77" uniquename="0" uniquepart="base">
+          <bbl:name hash="f9be8f5362c3f1a8c57254f421602a77" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Artok</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="L">Levent</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="L">Levent</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="ec020af214a005621e2bee07a4c233b2" uniquename="0" uniquepart="base">
+          <bbl:name hash="ec020af214a005621e2bee07a4c233b2" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="Ç">Çetinkaya</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="B">Bekir</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="B">Bekir</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="3aaac037c43bc853e732168da667cd40" uniquename="0" uniquepart="base">
+          <bbl:name hash="3aaac037c43bc853e732168da667cd40" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="N">Ni</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="C">Chaoying</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="C">Chaoying</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="7936aa08c0b52f024d7a3402b03bf380" uniquename="0" uniquepart="base">
+          <bbl:name hash="7936aa08c0b52f024d7a3402b03bf380" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="B">Büyükgüngör</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="O">Orhan</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="O">Orhan</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="f37529ce7811acc4b7ecb0d352a007ec" uniquename="0" uniquepart="base">
+          <bbl:name hash="f37529ce7811acc4b7ecb0d352a007ec" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="Ö">Özkal</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="E">Erhan</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="E">Erhan</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
@@ -66,9 +66,9 @@
       </bbl:entry>
       <bbl:entry key="angenendt" type="article" singletitle="true">
         <bbl:names type="author" count="1">
-          <bbl:name hash="9717d2d959a4b18727868ca7928c34b4" uniquename="0" uniquepart="base">
+          <bbl:name hash="9717d2d959a4b18727868ca7928c34b4" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Angenendt</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="A">Arnold</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="A">Arnold</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
@@ -144,13 +144,10 @@
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:glashow'</bbl:warning>
       </bbl:entry>
       <bbl:entry key="knuth:ct:b" type="book">
-        <bbl:options>
-          <bbl:option>noroman=true</bbl:option>
-        </bbl:options>
         <bbl:names type="author" count="1">
-          <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" uniquename="0" uniquepart="base">
+          <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="D. E">Donald E.</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="D. E">Donald E.</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:list name="location" count="1">
@@ -183,13 +180,10 @@
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="knuth:ct:c" type="book">
-        <bbl:options>
-          <bbl:option>noroman=true</bbl:option>
-        </bbl:options>
         <bbl:names type="author" count="1">
-          <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" uniquename="0" uniquepart="base">
+          <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="D. E">Donald E.</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="D. E">Donald E.</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:list name="location" count="1">
@@ -223,9 +217,9 @@
       </bbl:entry>
       <bbl:entry key="reese" type="article" singletitle="true">
         <bbl:names type="author" count="1">
-          <bbl:name hash="d52f05e0199eae563725b4165f4b2520" uniquename="0" uniquepart="base">
+          <bbl:name hash="d52f05e0199eae563725b4165f4b2520" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="R">Reese</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="T. R">Trevor R.</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="T. R">Trevor R.</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
@@ -304,9 +298,9 @@
       </bbl:entry>
       <bbl:entry key="shore" type="article" singletitle="true">
         <bbl:names type="author" count="1">
-          <bbl:name hash="93f17724cbd884231ef39a73755ef5bb" uniquename="0" uniquepart="base">
+          <bbl:name hash="93f17724cbd884231ef39a73755ef5bb" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="S">Shore</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="B">Bradd</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="B">Bradd</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>
@@ -374,33 +368,33 @@
           <bbl:member>set</bbl:member>
         </bbl:inset>
         <bbl:names type="author" count="7">
-          <bbl:name hash="e410078ecf298d6b83792df6633b2b08" uniquename="0" uniquepart="base">
+          <bbl:name hash="e410078ecf298d6b83792df6633b2b08" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Aksın</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="Ö">Özge</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="Ö">Özge</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="e881ffc293766c81018c24d97971f9c3" uniquename="0" uniquepart="base">
+          <bbl:name hash="e881ffc293766c81018c24d97971f9c3" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="T">Türkmen</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="H">Hayati</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="H">Hayati</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="f9be8f5362c3f1a8c57254f421602a77" uniquename="0" uniquepart="base">
+          <bbl:name hash="f9be8f5362c3f1a8c57254f421602a77" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Artok</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="L">Levent</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="L">Levent</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="ec020af214a005621e2bee07a4c233b2" uniquename="0" uniquepart="base">
+          <bbl:name hash="ec020af214a005621e2bee07a4c233b2" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="Ç">Çetinkaya</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="B">Bekir</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="B">Bekir</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="3aaac037c43bc853e732168da667cd40" uniquename="0" uniquepart="base">
+          <bbl:name hash="3aaac037c43bc853e732168da667cd40" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="N">Ni</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="C">Chaoying</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="C">Chaoying</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="7936aa08c0b52f024d7a3402b03bf380" uniquename="0" uniquepart="base">
+          <bbl:name hash="7936aa08c0b52f024d7a3402b03bf380" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="B">Büyükgüngör</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="O">Orhan</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="O">Orhan</bbl:namepart>
           </bbl:name>
-          <bbl:name hash="f37529ce7811acc4b7ecb0d352a007ec" uniquename="0" uniquepart="base">
+          <bbl:name hash="f37529ce7811acc4b7ecb0d352a007ec" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="Ö">Özkal</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="E">Erhan</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="E">Erhan</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">860705eb8ffac6e40507746c7ede79ca</bbl:field>
@@ -430,9 +424,9 @@
       </bbl:entry>
       <bbl:entry key="angenendt" type="article" singletitle="true">
         <bbl:names type="author" count="1">
-          <bbl:name hash="9717d2d959a4b18727868ca7928c34b4" uniquename="0" uniquepart="base">
+          <bbl:name hash="9717d2d959a4b18727868ca7928c34b4" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="A">Angenendt</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="A">Arnold</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="A">Arnold</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">9717d2d959a4b18727868ca7928c34b4</bbl:field>
@@ -508,13 +502,10 @@
         <bbl:warning>Field 'entryset' is no longer needed in set member entries in Biber - ignoring in entry 'stdmodel:glashow'</bbl:warning>
       </bbl:entry>
       <bbl:entry key="knuth:ct:b" type="book">
-        <bbl:options>
-          <bbl:option>noroman=true</bbl:option>
-        </bbl:options>
         <bbl:names type="author" count="1">
-          <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" uniquename="0" uniquepart="base">
+          <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="D. E">Donald E.</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="D. E">Donald E.</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:list name="location" count="1">
@@ -547,13 +538,10 @@
         <bbl:field name="year">1986</bbl:field>
       </bbl:entry>
       <bbl:entry key="knuth:ct:c" type="book">
-        <bbl:options>
-          <bbl:option>noroman=true</bbl:option>
-        </bbl:options>
         <bbl:names type="author" count="1">
-          <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" uniquename="0" uniquepart="base">
+          <bbl:name hash="ec08e6f01da5f3814f28a70c89c64656" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="K">Knuth</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="D. E">Donald E.</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="D. E">Donald E.</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:list name="location" count="1">
@@ -587,9 +575,9 @@
       </bbl:entry>
       <bbl:entry key="reese" type="article" singletitle="true">
         <bbl:names type="author" count="1">
-          <bbl:name hash="d52f05e0199eae563725b4165f4b2520" uniquename="0" uniquepart="base">
+          <bbl:name hash="d52f05e0199eae563725b4165f4b2520" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="R">Reese</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="T. R">Trevor R.</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="T. R">Trevor R.</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">d52f05e0199eae563725b4165f4b2520</bbl:field>
@@ -668,9 +656,9 @@
       </bbl:entry>
       <bbl:entry key="shore" type="article" singletitle="true">
         <bbl:names type="author" count="1">
-          <bbl:name hash="93f17724cbd884231ef39a73755ef5bb" uniquename="0" uniquepart="base">
+          <bbl:name hash="93f17724cbd884231ef39a73755ef5bb" un="0" uniquepart="base">
             <bbl:namepart type="family" initials="S">Shore</bbl:namepart>
-            <bbl:namepart type="given" uniquename="0" initials="B">Bradd</bbl:namepart>
+            <bbl:namepart type="given" un="0" initials="B">Bradd</bbl:namepart>
           </bbl:name>
         </bbl:names>
         <bbl:field name="namehash">93f17724cbd884231ef39a73755ef5bb</bbl:field>

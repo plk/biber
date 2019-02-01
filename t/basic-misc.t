@@ -75,17 +75,17 @@ vangennep knuth:ct angenendtsa spiegelberg bertram brandt set:aksin chiu nietzsc
 set:yoon maron coleridge tvonb t2 u1 u2 i1 i2 tmn1 tmn2 tmn3 tmn4 lne1 alias1 alias2 alias5 url1 ol1 pages1 pages2 pages3 pages4 pages5 pages6 pages7 pages8 us1 labelstest list1 sn1 pages9 isbn1 isbn2 snk1 clone-snk1 newtestkey ent1 avona rvonr verb1 over1 others1 others2 recurse1 final};
 
 my $u1 = q|    \entry{u1}{misc}{}
-      \name{author}{4}{uniquelist=4}{%
-        {{uniquename=0,uniquepart=base,hash=e1faffb3e614e6c2fba74296962386b7}{%
+      \name{author}{4}{ul=4}{%
+        {{un=0,uniquepart=base,hash=e1faffb3e614e6c2fba74296962386b7}{%
            family={AAA},
            familyi={A\bibinitperiod}}}%
-        {{uniquename=0,uniquepart=base,hash=2bb225f0ba9a58930757a868ed57d9a3}{%
+        {{un=0,uniquepart=base,hash=2bb225f0ba9a58930757a868ed57d9a3}{%
            family={BBB},
            familyi={B\bibinitperiod}}}%
-        {{uniquename=0,uniquepart=base,hash=defb99e69a9f1f6e06f15006b1f166ae}{%
+        {{un=0,uniquepart=base,hash=defb99e69a9f1f6e06f15006b1f166ae}{%
            family={CCC},
            familyi={C\bibinitperiod}}}%
-        {{uniquename=0,uniquepart=base,hash=45054f47ac3305a2a33e9bcceadff712}{%
+        {{un=0,uniquepart=base,hash=45054f47ac3305a2a33e9bcceadff712}{%
            family={DDD},
            familyi={D\bibinitperiod}}}%
       }
@@ -138,85 +138,85 @@ is_deeply( \@keys, \@allkeys, 'citekeys 2') ;
 
 my $murray1 = q|    \entry{murray}{article}{}
       \name{author}{14}{}{%
-        {{uniquename=0,uniquepart=base,hash=1c180cd8a2042c60a0f1dda22e34794a}{%
+        {{un=0,uniquepart=base,hash=1c180cd8a2042c60a0f1dda22e34794a}{%
            family={Hostetler},
            familyi={H\bibinitperiod},
            given={Michael\bibnamedelima J.},
            giveni={M\bibinitperiod\bibinitdelim J\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=2030d395cebb15e0da06bd52f115049e}{%
+        {{un=0,uniquepart=base,hash=2030d395cebb15e0da06bd52f115049e}{%
            family={Wingate},
            familyi={W\bibinitperiod},
            given={Julia\bibnamedelima E.},
            giveni={J\bibinitperiod\bibinitdelim E\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=76100791c221471771c6bf1dbbc0975d}{%
+        {{un=0,uniquepart=base,hash=76100791c221471771c6bf1dbbc0975d}{%
            family={Zhong},
            familyi={Z\bibinitperiod},
            given={Chuan-Jian},
            giveni={C\bibinithyphendelim J\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=06d5aa45c5c29069024ba0cdd1d32ead}{%
+        {{un=0,uniquepart=base,hash=06d5aa45c5c29069024ba0cdd1d32ead}{%
            family={Harris},
            familyi={H\bibinitperiod},
            given={Jay\bibnamedelima E.},
            giveni={J\bibinitperiod\bibinitdelim E\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=e9020055de8cefbc4a22aa3232d3fbab}{%
+        {{un=0,uniquepart=base,hash=e9020055de8cefbc4a22aa3232d3fbab}{%
            family={Vachet},
            familyi={V\bibinitperiod},
            given={Richard\bibnamedelima W.},
            giveni={R\bibinitperiod\bibinitdelim W\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=7e4f8edb775a146bcbbeeafed50a0360}{%
+        {{un=0,uniquepart=base,hash=7e4f8edb775a146bcbbeeafed50a0360}{%
            family={Clark},
            familyi={C\bibinitperiod},
            given={Michael\bibnamedelima R.},
            giveni={M\bibinitperiod\bibinitdelim R\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=835e54469f856c3fcb684033251ee209}{%
+        {{un=0,uniquepart=base,hash=835e54469f856c3fcb684033251ee209}{%
            family={Londono},
            familyi={L\bibinitperiod},
            given={J.\bibnamedelimi David},
            giveni={J\bibinitperiod\bibinitdelim D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=c36de3411f9881a05ab58a3db9a5b945}{%
+        {{un=0,uniquepart=base,hash=c36de3411f9881a05ab58a3db9a5b945}{%
            family={Green},
            familyi={G\bibinitperiod},
            given={Stephen\bibnamedelima J.},
            giveni={S\bibinitperiod\bibinitdelim J\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=aed4e73d98e6c7b39ce8dd8daeec0702}{%
+        {{un=0,uniquepart=base,hash=aed4e73d98e6c7b39ce8dd8daeec0702}{%
            family={Stokes},
            familyi={S\bibinitperiod},
            given={Jennifer\bibnamedelima J.},
            giveni={J\bibinitperiod\bibinitdelim J\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=13e766e053b44242f97acf0b776df72b}{%
+        {{un=0,uniquepart=base,hash=13e766e053b44242f97acf0b776df72b}{%
            family={Wignall},
            familyi={W\bibinitperiod},
            given={George\bibnamedelima D.},
            giveni={G\bibinitperiod\bibinitdelim D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=9a1aea8c8c5706554440d568ccbc0850}{%
+        {{un=0,uniquepart=base,hash=9a1aea8c8c5706554440d568ccbc0850}{%
            family={Glish},
            familyi={G\bibinitperiod},
            given={Gary\bibnamedelima L.},
            giveni={G\bibinitperiod\bibinitdelim L\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=ab2f6cef185e0b8cc0360f2fd84bcb3f}{%
+        {{un=0,uniquepart=base,hash=ab2f6cef185e0b8cc0360f2fd84bcb3f}{%
            family={Porter},
            familyi={P\bibinitperiod},
            given={Marc\bibnamedelima D.},
            giveni={M\bibinitperiod\bibinitdelim D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=84f346653233f1532a42873769dd6553}{%
+        {{un=0,uniquepart=base,hash=84f346653233f1532a42873769dd6553}{%
            family={Evans},
            familyi={E\bibinitperiod},
            given={Neal\bibnamedelima D.},
            giveni={N\bibinitperiod\bibinitdelim D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=ea266d9882f073db41b2567f03c3da5c}{%
+        {{un=0,uniquepart=base,hash=ea266d9882f073db41b2567f03c3da5c}{%
            family={Murray},
            familyi={M\bibinitperiod},
            given={Royce\bibnamedelima W.},
@@ -255,85 +255,85 @@ my $murray1 = q|    \entry{murray}{article}{}
 
 my $murray2 = q|    \entry{murray}{article}{}
       \name{author}{14}{}{%
-        {{uniquename=0,uniquepart=base,hash=1c180cd8a2042c60a0f1dda22e34794a}{%
+        {{un=0,uniquepart=base,hash=1c180cd8a2042c60a0f1dda22e34794a}{%
            family={Hostetler},
            familyi={H\bibinitperiod},
            given={Michael\bibnamedelima J.},
            giveni={M\bibinitperiod\bibinitdelim J\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=2030d395cebb15e0da06bd52f115049e}{%
+        {{un=0,uniquepart=base,hash=2030d395cebb15e0da06bd52f115049e}{%
            family={Wingate},
            familyi={W\bibinitperiod},
            given={Julia\bibnamedelima E.},
            giveni={J\bibinitperiod\bibinitdelim E\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=76100791c221471771c6bf1dbbc0975d}{%
+        {{un=0,uniquepart=base,hash=76100791c221471771c6bf1dbbc0975d}{%
            family={Zhong},
            familyi={Z\bibinitperiod},
            given={Chuan-Jian},
            giveni={C\bibinithyphendelim J\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=06d5aa45c5c29069024ba0cdd1d32ead}{%
+        {{un=0,uniquepart=base,hash=06d5aa45c5c29069024ba0cdd1d32ead}{%
            family={Harris},
            familyi={H\bibinitperiod},
            given={Jay\bibnamedelima E.},
            giveni={J\bibinitperiod\bibinitdelim E\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=e9020055de8cefbc4a22aa3232d3fbab}{%
+        {{un=0,uniquepart=base,hash=e9020055de8cefbc4a22aa3232d3fbab}{%
            family={Vachet},
            familyi={V\bibinitperiod},
            given={Richard\bibnamedelima W.},
            giveni={R\bibinitperiod\bibinitdelim W\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=7e4f8edb775a146bcbbeeafed50a0360}{%
+        {{un=0,uniquepart=base,hash=7e4f8edb775a146bcbbeeafed50a0360}{%
            family={Clark},
            familyi={C\bibinitperiod},
            given={Michael\bibnamedelima R.},
            giveni={M\bibinitperiod\bibinitdelim R\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=835e54469f856c3fcb684033251ee209}{%
+        {{un=0,uniquepart=base,hash=835e54469f856c3fcb684033251ee209}{%
            family={Londono},
            familyi={L\bibinitperiod},
            given={J.\bibnamedelimi David},
            giveni={J\bibinitperiod\bibinitdelim D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=c36de3411f9881a05ab58a3db9a5b945}{%
+        {{un=0,uniquepart=base,hash=c36de3411f9881a05ab58a3db9a5b945}{%
            family={Green},
            familyi={G\bibinitperiod},
            given={Stephen\bibnamedelima J.},
            giveni={S\bibinitperiod\bibinitdelim J\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=aed4e73d98e6c7b39ce8dd8daeec0702}{%
+        {{un=0,uniquepart=base,hash=aed4e73d98e6c7b39ce8dd8daeec0702}{%
            family={Stokes},
            familyi={S\bibinitperiod},
            given={Jennifer\bibnamedelima J.},
            giveni={J\bibinitperiod\bibinitdelim J\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=13e766e053b44242f97acf0b776df72b}{%
+        {{un=0,uniquepart=base,hash=13e766e053b44242f97acf0b776df72b}{%
            family={Wignall},
            familyi={W\bibinitperiod},
            given={George\bibnamedelima D.},
            giveni={G\bibinitperiod\bibinitdelim D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=9a1aea8c8c5706554440d568ccbc0850}{%
+        {{un=0,uniquepart=base,hash=9a1aea8c8c5706554440d568ccbc0850}{%
            family={Glish},
            familyi={G\bibinitperiod},
            given={Gary\bibnamedelima L.},
            giveni={G\bibinitperiod\bibinitdelim L\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=ab2f6cef185e0b8cc0360f2fd84bcb3f}{%
+        {{un=0,uniquepart=base,hash=ab2f6cef185e0b8cc0360f2fd84bcb3f}{%
            family={Porter},
            familyi={P\bibinitperiod},
            given={Marc\bibnamedelima D.},
            giveni={M\bibinitperiod\bibinitdelim D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=84f346653233f1532a42873769dd6553}{%
+        {{un=0,uniquepart=base,hash=84f346653233f1532a42873769dd6553}{%
            family={Evans},
            familyi={E\bibinitperiod},
            given={Neal\bibnamedelima D.},
            giveni={N\bibinitperiod\bibinitdelim D\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=ea266d9882f073db41b2567f03c3da5c}{%
+        {{un=0,uniquepart=base,hash=ea266d9882f073db41b2567f03c3da5c}{%
            family={Murray},
            familyi={M\bibinitperiod},
            given={Royce\bibnamedelima W.},
@@ -373,7 +373,7 @@ my $murray2 = q|    \entry{murray}{article}{}
 # This example wouldn't compile - it's just to test escaping
 my $t1 = q+    \entry{t1}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
+        {{un=0,uniquepart=base,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
            family={Brown},
            familyi={B\bibinitperiod},
            given={Bill},
@@ -403,7 +403,7 @@ my $t1 = q+    \entry{t1}{misc}{}
 
 my $t2 = q|    \entry{t2}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
+        {{un=0,uniquepart=base,hash=858fcf9483ec29b7707a7dda2dde7a6f}{%
            family={Brown},
            familyi={B\bibinitperiod},
            given={Bill},
@@ -437,7 +437,7 @@ my $anon1 = q|    \entry{anon1}{unpublished}{}
            familyi={A\bibinitperiod}}}%
       }
       \name{shortauthor}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=9873a6cc65c553faa2b21aaad626fe4b}{%
+        {{un=0,uniquepart=base,hash=9873a6cc65c553faa2b21aaad626fe4b}{%
            family={XAnony},
            familyi={X\bibinitperiod}}}%
       }
@@ -476,7 +476,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
            familyi={A\bibinitperiod}}}%
       }
       \name{shortauthor}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=f64c29e89ea49402b997956610b58ef6}{%
+        {{un=0,uniquepart=base,hash=f64c29e89ea49402b997956610b58ef6}{%
            family={YAnony},
            familyi={Y\bibinitperiod}}}%
       }
@@ -510,7 +510,7 @@ my $anon2 = q|    \entry{anon2}{unpublished}{}
 
 my $url1 = q|    \entry{url1}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=b2106a3dda6c5a4879a0cab37e9cca55}{%
+        {{un=0,uniquepart=base,hash=b2106a3dda6c5a4879a0cab37e9cca55}{%
            family={Alias},
            familyi={A\bibinitperiod},
            given={Alan},
@@ -694,7 +694,7 @@ eq_or_diff($out->get_output_entry('over1', $main), $over1, 'Overwrite test - 1')
 
 my $isbn1 = q|    \entry{isbn1}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
+        {{un=0,uniquepart=base,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
            family={Flummox},
            familyi={F\bibinitperiod},
            given={Fred},
@@ -719,7 +719,7 @@ my $isbn1 = q|    \entry{isbn1}{misc}{}
 
 my $isbn2 = q|    \entry{isbn2}{misc}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
+        {{un=0,uniquepart=base,hash=f6595ccb9db5f634e7bb242a3f78e5f9}{%
            family={Flummox},
            familyi={F\bibinitperiod},
            given={Fred},
@@ -757,7 +757,7 @@ my $new1 = q|    \entry{newtestkey}{book}{}
 
 my $clone1 = q|    \entry{snk1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=83330b0520b5d4ea57529a23b404d43d}{%
+        {{un=0,uniquepart=base,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
@@ -786,7 +786,7 @@ my $clone1 = q|    \entry{snk1}{book}{}
 
 my $clone2 = q|    \entry{clone-snk1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=83330b0520b5d4ea57529a23b404d43d}{%
+        {{un=0,uniquepart=base,hash=83330b0520b5d4ea57529a23b404d43d}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={John},
@@ -816,13 +816,13 @@ my $clone2 = q|    \entry{clone-snk1}{book}{}
 
 my $ent1 = q|    \entry{ent1}{book}{}
       \name{author}{2}{sortingnamekeytemplatename=snks1}{%
-        {{uniquename=0,uniquepart=base,hash=6b3653417f9aa97391c37cff5dfda7fa}{%
+        {{un=0,uniquepart=base,hash=6b3653417f9aa97391c37cff5dfda7fa}{%
            family={Smith},
            familyi={S\bibinitperiod},
            given={Simon},
            giveni={S\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,sortingnamekeytemplatename=snks2,hash=878a51e6f69e95562d15cb8a3ead5c95}{%
+        {{un=0,uniquepart=base,sortingnamekeytemplatename=snks2,hash=878a51e6f69e95562d15cb8a3ead5c95}{%
            family={Brown},
            familyi={B\bibinitperiod},
            given={Brian},
@@ -847,7 +847,7 @@ my $ent1 = q|    \entry{ent1}{book}{}
 
 my $verb1 = q|    \entry{verb1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=cac5a25f503e71f5ef28f474e14007b6}{%
+        {{un=0,uniquepart=base,hash=cac5a25f503e71f5ef28f474e14007b6}{%
            family={Allright},
            familyi={A\\bibinitperiod},
            given={Arthur},

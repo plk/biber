@@ -48,7 +48,7 @@ my $out = $biber->get_output_obj;
 
 my $us1 = q|    \entry{us1}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
+        {{un=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
            family={Elk},
            familyi={E\bibinitperiod},
            given={Anne},
@@ -78,7 +78,7 @@ my $us2a = q|    \entry{us2}{book}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
+        {{un=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
            family={Elk},
            familyi={E\bibinitperiod},
            given={Anne},
@@ -106,7 +106,7 @@ my $us2a = q|    \entry{us2}{book}{}
 
 my $us3 = q|    \entry{us3}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
+        {{un=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
            family={Uthor},
            familyi={U\bibinitperiod},
            given={Anne},
@@ -135,25 +135,25 @@ my $us3 = q|    \entry{us3}{book}{}
 
 my $us4a = q|    \entry{us4}{book}{}
       \name{author}{4}{}{%
-        {{uniquename=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
+        {{un=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
            family={Uthor},
            familyi={U\bibinitperiod},
            given={Anne},
            giveni={A\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=0868588743cd096fcda1144f2d3dd258}{%
+        {{un=0,uniquepart=base,hash=0868588743cd096fcda1144f2d3dd258}{%
            family={Ditor},
            familyi={D\bibinitperiod},
            given={Editha},
            giveni={E\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=7b10345a9314a9ba279e795d29f0a304}{%
+        {{un=0,uniquepart=base,hash=7b10345a9314a9ba279e795d29f0a304}{%
            family={Writer},
            familyi={W\bibinitperiod},
            given={William},
            giveni={W\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=d6cfb2b8c4b3f9440ec4642438129367}{%
+        {{un=0,uniquepart=base,hash=d6cfb2b8c4b3f9440ec4642438129367}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={Jane},
@@ -186,7 +186,7 @@ my $us2b = q|    \entry{us2}{book}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
+        {{un=0,uniquepart=base,hash=6a9b0705c275273262103333472cc656}{%
            family={Elk},
            familyi={E\bibinitperiod},
            given={Anne},
@@ -217,25 +217,25 @@ my $us2b = q|    \entry{us2}{book}{}
 
 my $us4b = q|    \entry{us4}{book}{}
       \name{author}{4}{}{%
-        {{uniquename=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
+        {{un=0,uniquepart=base,hash=e06f6e5a8c1d5204dea326aa5f4f8d17}{%
            family={Uthor},
            familyi={U\bibinitperiod},
            given={Anne},
            giveni={A\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=0868588743cd096fcda1144f2d3dd258}{%
+        {{un=0,uniquepart=base,hash=0868588743cd096fcda1144f2d3dd258}{%
            family={Ditor},
            familyi={D\bibinitperiod},
            given={Editha},
            giveni={E\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=7b10345a9314a9ba279e795d29f0a304}{%
+        {{un=0,uniquepart=base,hash=7b10345a9314a9ba279e795d29f0a304}{%
            family={Writer},
            familyi={W\bibinitperiod},
            given={William},
            giveni={W\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=d6cfb2b8c4b3f9440ec4642438129367}{%
+        {{un=0,uniquepart=base,hash=d6cfb2b8c4b3f9440ec4642438129367}{%
            family={Doe},
            familyi={D\bibinitperiod},
            given={Jane},
@@ -266,7 +266,7 @@ my $us4b = q|    \entry{us4}{book}{}
 
 my $us6 = q|    \entry{us6}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=cbe9a5912d961199801c3fcd32356ecf}{%
+        {{un=0,uniquepart=base,hash=cbe9a5912d961199801c3fcd32356ecf}{%
            family={Red},
            familyi={R\bibinitperiod},
            given={Roger},
@@ -296,7 +296,7 @@ my $us7 = q|    \entry{us7}{misc}{}
       \true{moreauthor}
       \true{morelabelname}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=cbe9a5912d961199801c3fcd32356ecf}{%
+        {{un=0,uniquepart=base,hash=cbe9a5912d961199801c3fcd32356ecf}{%
            family={Red},
            familyi={R\bibinitperiod},
            given={Roger},
@@ -324,7 +324,7 @@ my $us7 = q|    \entry{us7}{misc}{}
 
 my $us8 = q|    \entry{us8}{book}{}
       \name{author}{1}{}{%
-        {{uniquename=0,uniquepart=base,hash=a280925c093d27fe81e88f11d8f0e537}{%
+        {{un=0,uniquepart=base,hash=a280925c093d27fe81e88f11d8f0e537}{%
            family={Sly},
            familyi={S\bibinitperiod},
            given={Simon},
@@ -354,25 +354,25 @@ my $us8 = q|    \entry{us8}{book}{}
 
 my $us9 = q|    \entry{us9}{book}{}
       \name{author}{4}{}{%
-        {{uniquename=0,uniquepart=base,hash=a280925c093d27fe81e88f11d8f0e537}{%
+        {{un=0,uniquepart=base,hash=a280925c093d27fe81e88f11d8f0e537}{%
            family={Sly},
            familyi={S\bibinitperiod},
            given={Simon},
            giveni={S\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=8c554215938d0dd957e9d4d6d397117e}{%
+        {{un=0,uniquepart=base,hash=8c554215938d0dd957e9d4d6d397117e}{%
            family={Tremble},
            familyi={T\bibinitperiod},
            given={Terrence},
            giveni={T\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=4298e3d6e385e61d7901144a7d5a1458}{%
+        {{un=0,uniquepart=base,hash=4298e3d6e385e61d7901144a7d5a1458}{%
            family={Miserable},
            familyi={M\bibinitperiod},
            given={Mark},
            giveni={M\bibinitperiod},
            givenun=0}}%
-        {{uniquename=0,uniquepart=base,hash=af60b6c4ffd6f2311900410a5210e169}{%
+        {{un=0,uniquepart=base,hash=af60b6c4ffd6f2311900410a5210e169}{%
            family={Jolly},
            familyi={J\bibinitperiod},
            given={Jake},

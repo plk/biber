@@ -239,7 +239,7 @@ sub set_output_entry {
         # Add uniquelist if requested
         # Don't use angles in attributes ...
         if ($ul ne 'false') {
-          $plo{uniquelist} = "[BDS]UL-${nlid}[/BDS]";
+          $plo{ul} = "[BDS]UL-${nlid}[/BDS]";
         }
 
         # Add per-namelist options
@@ -252,7 +252,7 @@ sub set_output_entry {
               $nlov = map_boolean($nlov, 'tostring');
             }
 
-            my $oo = expand_option($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{OUTPUT});
+            my $oo = expand_option_output($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{OUTPUT});
             foreach my $o ($oo->@*) {
               $plo{$o->[0]} = $o->[1];
             }

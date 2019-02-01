@@ -187,7 +187,7 @@ sub set_output_entry {
               $nlov = map_boolean($nlov, 'tostring');
             }
 
-            my $oo = expand_option($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{INPUT});
+            my $oo = expand_option_output($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{INPUT});
             foreach my $o ($oo->@*) {
               push @plo, $o->[0] . '=' . $o->[1];
             }

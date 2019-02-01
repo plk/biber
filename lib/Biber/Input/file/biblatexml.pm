@@ -1031,7 +1031,7 @@ sub _name {
             $CONFIG_OPTTYPE_BIBLATEX{$nlo} eq 'boolean') {
           $nlov = map_boolean($nlov, 'tonum');
         }
-        my $oo = expand_option($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{INPUT});
+        my $oo = expand_option_input($nlo, $nlov, $CONFIG_BIBLATEX_NAMELIST_OPTIONS{$nlo}->{INPUT});
 
         foreach my $o ($oo->@*) {
           my $method = 'set_' . $o->[0];
@@ -1142,7 +1142,7 @@ sub parsename {
           $CONFIG_OPTTYPE_BIBLATEX{$no} eq 'boolean') {
         $nov = map_boolean($nov, 'tonum');
       }
-      my $oo = expand_option($no, $nov, $CONFIG_BIBLATEX_NAME_OPTIONS{$no}->{INPUT});
+      my $oo = expand_option_input($no, $nov, $CONFIG_BIBLATEX_NAME_OPTIONS{$no}->{INPUT});
 
       foreach my $o ($oo->@*) {
         my $method = 'set_' . $o->[0];

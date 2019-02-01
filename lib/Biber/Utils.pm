@@ -55,7 +55,8 @@ our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid stringi
   bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
-  split_xsv date_monthday tzformat expand_option strip_annotation appendstrict_check};
+  split_xsv date_monthday tzformat expand_option_input expand_option_output strip_annotation
+  appendstrict_check};
 
 =head1 FUNCTIONS
 
@@ -1129,7 +1130,7 @@ sub process_entry_options {
         $CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
       $val = map_boolean($val, 'tonum');
     }
-    my $oo = expand_option($1, $val, $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}->{INPUT});
+    my $oo = expand_option_input($1, $val, $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}->{INPUT});
 
     foreach my $o ($oo->@*) {
       Biber::Config->setblxoption($secnum, $o->[0], $o->[1], 'ENTRY', $citekey);
@@ -1138,17 +1139,47 @@ sub process_entry_options {
   return;
 }
 
-=head2 expand_option
+=head2 expand_option_input
 
     Expand options such as meta-options coming from biblatex
 
 =cut
 
-sub expand_option {
+sub expand_option_input {
   my ($opt, $val, $cfopt) = @_;
   my $outopts;
+
   # Standard option
   if (not defined($cfopt)) {
+    push $outopts->@*, [$opt, $val];
+  }
+  # Set all split options
+  elsif (ref($cfopt) eq 'ARRAY') {
+    foreach my $k ($cfopt->@*) {
+      push $outopts->@*, [$k, $val];
+    }
+  }
+  # Specify values per all splits
+  elsif (ref($cfopt) eq 'HASH') {
+    foreach my $k (keys $cfopt->%*) {
+      push $outopts->@*, [$k, $cfopt->{$k}];
+    }
+  }
+  return $outopts;
+}
+
+=head2 expand_option_output
+
+    Expand options such as meta-options going to the .bbl
+
+=cut
+
+sub expand_option_output {
+  my ($opt, $val, $cfopt) = @_;
+  my $outopts;
+
+  # Standard option
+  if ($cfopt) {
     push $outopts->@*, [$opt, $val];
   }
   # Set all split options
