@@ -832,6 +832,7 @@ map =
     attribute refsection { xsd:integer }?,
     element bcf:per_datasource { xsd:string {minLength="1"} }*,
     element bcf:per_type { xsd:string {minLength="1"} }*,
+    element bcf:per_nottype { xsd:string {minLength="1"} }*,
     element bcf:map_step {
       (
         ( attribute map_entry_clone { xsd:string {minLength="1"} }

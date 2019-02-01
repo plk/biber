@@ -2110,6 +2110,13 @@
           </data>
         </element>
       </zeroOrMore>
+      <zeroOrMore>
+        <element name="bcf:per_nottype">
+          <data type="string">
+            <param name="minLength">1</param>
+          </data>
+        </element>
+      </zeroOrMore>
       <oneOrMore>
         <element name="bcf:map_step">
           <choice>
