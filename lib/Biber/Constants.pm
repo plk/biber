@@ -621,9 +621,7 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
 our %CONFIG_BIBLATEX_NAMELIST_OPTIONS =
   (
    labelalphanametemplatename  => {OUTPUT => 1},
-   nametemplates               => {OUTPUT => ['sortingnamekeytemplatename',
-                                              'uniquenametemplatename',
-                                              'labelalphanametemplatename'],
+   nametemplates               => {OUTPUT => 0,
                                    INPUT => ['sortingnamekeytemplatename',
                                              'uniquenametemplatename',
                                              'labelalphanametemplatename']
@@ -645,9 +643,7 @@ our %CONFIG_BIBLATEX_NAMELIST_OPTIONS =
 our %CONFIG_BIBLATEX_NAME_OPTIONS =
   (
    labelalphanametemplatename  => {OUTPUT => 1},
-   nametemplates               => {OUTPUT => ['sortingnamekeytemplatename',
-                                              'uniquenametemplatename',
-                                              'labelalphanametemplatename'],
+   nametemplates               => {OUTPUT => 0,
                                    INPUT => ['sortingnamekeytemplatename',
                                              'uniquenametemplatename',
                                              'labelalphanametemplatename']

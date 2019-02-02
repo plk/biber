@@ -221,6 +221,26 @@
                   <value>xml</value>
                 </choice>
               </attribute>
+              <optional>
+                <!--
+                  Applies to ENTRY, NAMELIST and NAME scope
+                  Only set for meta-options and if defined, what biber should split
+                  the option into on reading it
+                -->
+                <attribute name="backendin">
+                  <data type="string"/>
+                </attribute>
+              </optional>
+              <optional>
+                <!--
+                    Applies to ENTRY, NAMELIST and NAME scope
+                    Determines whether biber will write the option to its ouput (e.g.
+                    .bbl) because biblatex needs to know the value.
+                -->
+                <attribute name="backendout">
+                  <data type="boolean"/>
+                </attribute>
+              </optional>
               <data type="string"/>
             </element>
           </oneOrMore>
@@ -267,10 +287,7 @@
               </attribute>
               <optional>
                 <attribute name="map_overwrite">
-                  <choice>
-                    <value>0</value>
-                    <value>1</value>
-                  </choice>
+                  <data type="boolean"/>
                 </attribute>
               </optional>
               <optional>
@@ -304,18 +321,12 @@
               </attribute>
               <optional>
                 <attribute name="use">
-                  <choice>
-                    <value>0</value>
-                    <value>1</value>
-                  </choice>
+                  <data type="boolean"/>
                 </attribute>
               </optional>
               <optional>
                 <attribute name="pre">
-                  <choice>
-                    <value>0</value>
-                    <value>1</value>
-                  </choice>
+                  <data type="boolean"/>
                 </attribute>
               </optional>
               <optional>
@@ -325,10 +336,7 @@
               </optional>
               <optional>
                 <attribute name="substring_compound">
-                  <choice>
-                    <value>0</value>
-                    <value>1</value>
-                  </choice>
+                  <data type="boolean"/>
                 </attribute>
               </optional>
               <optional>
@@ -362,10 +370,7 @@
                 <element name="bcf:labelpart">
                   <optional>
                     <attribute name="final">
-                      <choice>
-                        <value>0</value>
-                        <value>1</value>
-                      </choice>
+                      <data type="boolean"/>
                     </attribute>
                   </optional>
                   <optional>
@@ -424,10 +429,7 @@
                   </optional>
                   <optional>
                     <attribute name="noalphaothers">
-                      <choice>
-                        <value>0</value>
-                        <value>1</value>
-                      </choice>
+                      <data type="boolean"/>
                     </attribute>
                   </optional>
                   <data type="string"/>
@@ -1032,18 +1034,12 @@
           </attribute>
           <optional>
             <attribute name="use">
-              <choice>
-                <value>0</value>
-                <value>1</value>
-              </choice>
+              <data type="boolean"/>
             </attribute>
           </optional>
           <optional>
             <attribute name="base">
-              <choice>
-                <value>0</value>
-                <value>1</value>
-              </choice>
+              <data type="boolean"/>
             </attribute>
           </optional>
           <optional>
@@ -1083,18 +1079,12 @@
                 </attribute>
                 <optional>
                   <attribute name="use">
-                    <choice>
-                      <value>0</value>
-                      <value>1</value>
-                    </choice>
+                    <data type="boolean"/>
                   </attribute>
                 </optional>
                 <optional>
                   <attribute name="inits">
-                    <choice>
-                      <value>0</value>
-                      <value>1</value>
-                    </choice>
+                    <data type="boolean"/>
                   </attribute>
                 </optional>
                 <text/>
@@ -1152,19 +1142,13 @@
         <optional>
           <!-- Sort case sensitive or not? -->
           <attribute name="sortcase">
-            <choice>
-              <value>0</value>
-              <value>1</value>
-            </choice>
+            <data type="boolean"/>
           </attribute>
         </optional>
         <optional>
           <!-- Sort upper before lower? -->
           <attribute name="sortupper">
-            <choice>
-              <value>0</value>
-              <value>1</value>
-            </choice>
+            <data type="boolean"/>
           </attribute>
         </optional>
         <optional>
@@ -1332,10 +1316,7 @@
           </data>
         </element>
         <element name="bcf:value">
-          <choice>
-            <value>0</value>
-            <value>1</value>
-          </choice>
+          <data type="boolean"/>
         </element>
       </element>
     </oneOrMore>
@@ -1349,10 +1330,7 @@
         <value>useprefix</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1365,10 +1343,7 @@
         <value>labelalpha</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1381,10 +1356,7 @@
         <value>labeltitle</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1418,10 +1390,7 @@
         <value>labeltitleyear</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1434,10 +1403,7 @@
         <value>labeldateparts</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1474,10 +1440,7 @@
         <value>singletitle</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1490,10 +1453,7 @@
         <value>skipbib</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1506,10 +1466,7 @@
         <value>skiplab</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1522,10 +1479,7 @@
         <value>skiplos</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1538,10 +1492,7 @@
         <value>skipbiblist</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1576,10 +1527,7 @@
         <value>nohashothers</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1592,10 +1540,7 @@
         <value>noroman</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1608,10 +1553,7 @@
         <value>nosortothers</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1654,10 +1596,7 @@
         <value>uniqueprimaryauthor</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1670,10 +1609,7 @@
         <value>uniquetitle</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1686,10 +1622,7 @@
         <value>uniquebaretitle</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1702,10 +1635,7 @@
         <value>uniquework</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1718,10 +1648,7 @@
         <value>julian</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1903,10 +1830,7 @@
         <value>sortsets</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -1966,10 +1890,7 @@
         <value>debug</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -2021,10 +1942,7 @@
         <value>sortcase</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -2052,10 +1970,7 @@
         <value>sortupper</value>
       </element>
       <element name="bcf:value">
-        <choice>
-          <value>0</value>
-          <value>1</value>
-        </choice>
+        <data type="boolean"/>
       </element>
     </element>
   </define>
@@ -2078,10 +1993,7 @@
     <element name="bcf:map">
       <optional>
         <attribute name="map_overwrite">
-          <choice>
-            <value>0</value>
-            <value>1</value>
-          </choice>
+          <data type="boolean"/>
         </attribute>
       </optional>
       <optional>
