@@ -448,6 +448,10 @@ sub parse_ctrlfile {
     my $scope = $bcfscopeopts->{type};
     foreach my $bcfscopeopt ($bcfscopeopts->{option}->@*) {
       my $opt = $bcfscopeopt->{content};
+      $CONFIG_BIBLATEX_OPTIONS{$scope}{$opt}{OUTPUT} = $bcfscopeopt->{backendout} || 0;
+      if (my $bin = process_backendin($bcfscopeopt->{backendin})) {
+        $CONFIG_BIBLATEX_OPTIONS{$scope}{$opt}{INPUT} = $bin;
+      }
       $CONFIG_OPTSCOPE_BIBLATEX{$opt}{$scope} = 1;
       $CONFIG_SCOPEOPT_BIBLATEX{$scope}{$opt} = 1;
       if (defined($CONFIG_OPTTYPE_BIBLATEX{$opt}) and

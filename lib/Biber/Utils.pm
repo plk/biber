@@ -56,7 +56,7 @@ our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid stringi
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
   split_xsv date_monthday tzformat expand_option_input expand_option_output strip_annotation
-  appendstrict_check merge_entry_options};
+  appendstrict_check merge_entry_options process_backendin};
 
 =head1 FUNCTIONS
 
@@ -912,7 +912,7 @@ sub filter_entry_options {
   foreach my $opt (sort Biber::Config->getblxentryoptions($secnum, $citekey)) {
 
     my $val = Biber::Config->getblxoption($secnum, $opt, undef, $citekey);
-    my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{$opt}{OUTPUT};
+    my $cfopt = $CONFIG_BIBLATEX_OPTIONS{ENTRY}{$opt}{OUTPUT};
 
     # convert booleans
     if (defined($val) and
@@ -1100,7 +1100,7 @@ sub process_entry_options {
       $val = map_boolean($val, 'tonum');
     }
 
-    my $oo = expand_option_input($1, $val, $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}->{INPUT});
+    my $oo = expand_option_input($1, $val, $CONFIG_BIBLATEX_OPTIONS{ENTRY}{lc($1)}{INPUT});
 
     foreach my $o ($oo->@*) {
       Biber::Config->setblxoption($secnum, $o->[0], $o->[1], 'ENTRY', $citekey);
@@ -1732,6 +1732,25 @@ sub appendstrict_check {
   else {
     return $orig . $val;
   }
+}
+
+# Process backendin attribute from .bcf
+sub process_backendin {
+  my $bin = shift;
+  return undef unless $bin;
+  my $opts = [split(/\s*,\s*/, $bin)];
+  if (grep {/=/} $opts->@*) {
+    my $hopts;
+    foreach my $o ($opts->@*) {
+      my ($k, $v) = $o =~ m/\s*([^=]+)=(.+)\s*/;
+      $hopts->{$k} = $v;
+    }
+    return $hopts;
+  }
+  else {
+    return $opts;
+  }
+  return undef;
 }
 
 1;

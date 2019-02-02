@@ -189,7 +189,7 @@ sub name_to_biblatexml {
         $nov = map_boolean($nov, 'tostring');
       }
 
-      my $oo = expand_option_output($no, $nov, $CONFIG_BIBLATEX_NAME_OPTIONS{$no}->{OUTPUT});
+      my $oo = expand_option_output($no, $nov, $CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT});
       foreach my $o ($oo->@*) {
         push @attrs, ($o->[0] => $o->[1]);
       }
@@ -324,7 +324,7 @@ sub name_to_bbl {
         $nov = Biber::Utils::map_boolean($nov, 'tostring');
       }
 
-      my $oo = Biber::Utils::expand_option_output($no, $nov, $CONFIG_BIBLATEX_NAME_OPTIONS{$no}->{OUTPUT});
+      my $oo = Biber::Utils::expand_option_output($no, $nov, $CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT});
       foreach my $o ($oo->@*) {
         push @pno, $o->[0] . '=' . $o->[1];
       }
@@ -390,7 +390,7 @@ sub name_to_bblxml {
         $nov = Biber::Utils::map_boolean($nov, 'tostring');
       }
 
-      my $oo = Biber::Utils::expand_option_output($no, $nov, $CONFIG_BIBLATEX_NAME_OPTIONS{$no}->{OUTPUT});
+      my $oo = Biber::Utils::expand_option_output($no, $nov, $CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT});
       foreach my $o ($oo->@*) {
         $pno{$o->[0]} = $o->[1];
       }

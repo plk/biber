@@ -24,9 +24,7 @@ our @EXPORT = qw{
                   %CONFIG_OPTSCOPE_BIBLATEX
                   %CONFIG_SCOPEOPT_BIBLATEX
                   %CONFIG_OPTTYPE_BIBLATEX
-                  %CONFIG_BIBLATEX_ENTRY_OPTIONS
-                  %CONFIG_BIBLATEX_NAMELIST_OPTIONS
-                  %CONFIG_BIBLATEX_NAME_OPTIONS
+                  %CONFIG_BIBLATEX_OPTIONS
                   %CONFIG_META_MARKERS
                   %CONFIG_DATE_PARSERS
                   %DATAFIELD_SETS
@@ -519,140 +517,9 @@ our %CONFIG_OPTSCOPE_BIBLATEX;
 our %CONFIG_SCOPEOPT_BIBLATEX;
 # Holds the datatype of an option at a particular scope
 our %CONFIG_OPTTYPE_BIBLATEX;
-
-# For per-entry options, what should be set when we find them and
+# For per-entry, per-namelist and per-name options, what should be set when we find them and
 # should they be output to the .bbl for biblatex.
-# Default is not to output (see Biber.pm which sets defaults in this hash)
-# Basically, here we have to emulate relevant parts of biblatex's options processing
-# for local entry-specific options, note therefore the presence here of some
-# options like max/mincitenames which are not passed in the .bcf
-# "DEFAULT" tells us to skip output if the value is default and biblatex therefore
-# won't care about the option
-
-# Only ENTRY scope options (as defined in .bcf) declared in biblatex.sty with
-# \DeclareEntryOption need passing back (OUTPUT => 1) as they usually change
-# something in biblatex in the post-biber pass.
-# NOTE - these are biblatex option names and should not be confused with things
-#        which biber writes to the .bbl.
-our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
-  (
-   dataonly                                    => {OUTPUT => 0,
-                                                   INPUT  => {skipbib     => 1,
-                                                              skiplab     => 1,
-                                                              skipbiblist => 1,
-                                                              uniquename  => 'false',
-                                                              uniquelist  => 'false'}
-                                                  },
-   indexing                                    => {OUTPUT => 1},
-   labelalpha                                  => {OUTPUT => 1},
-   labelalphanametemplatename                  => {OUTPUT => 1},
-   labeldateparts                              => {OUTPUT => 1},
-   labelnumber                                 => {OUTPUT => 1},
-   labeltitle                                  => {OUTPUT => 1},
-   labeltitleyear                              => {OUTPUT => 1},
-   maxalphanames                               => {OUTPUT => 1},
-   maxbibnames                                 => {OUTPUT => 1},
-   maxcitenames                                => {OUTPUT => 1},
-   maxitems                                    => {OUTPUT => 1},
-   maxnames                                    => {OUTPUT => 0,
-                                                   INPUT  => ['maxcitenames',
-                                                              'maxbibnames',
-                                                              'maxsortnames']
-                                                  },
-   maxsortnames                                => {OUTPUT => 0},
-   minalphanames                               => {OUTPUT => 1},
-   minbibnames                                 => {OUTPUT => 1},
-   mincitenames                                => {OUTPUT => 1},
-   minitems                                    => {OUTPUT => 1},
-   minnames                                    => {OUTPUT => 0,
-                                                   INPUT  => ['mincitenames',
-                                                              'minbibnames',
-                                                              'minsortnames']
-                                                  },
-   minsortnames                                => {OUTPUT => 0},
-   nametemplates                               => {OUTPUT => 0,
-                                                   INPUT  => ['sortingnamekeytemplatename',
-                                                              'uniquenametemplatename',
-                                                              'labelalphanametemplatename']
-                                                  },
-   nohashothers                                => {OUTPUT => 0},
-   noinherit                                   => {OUTPUT => 0},
-   noroman                                     => {OUTPUT => 0},
-   nosortothers                                => {OUTPUT => 0},
-   presort                                     => {OUTPUT => 0},
-   singletitle                                 => {OUTPUT => 0},
-   skipbib                                     => {OUTPUT => 1},
-   skipbiblist                                 => {OUTPUT => 1},
-   skiplab                                     => {OUTPUT => 1},
-   sortingnamekeytemplatename                  => {OUTPUT => 1},
-   uniquebaretitle                             => {OUTPUT => 0},
-   uniquelist                                  => {OUTPUT => 1},
-   uniquename                                  => {OUTPUT => 1},
-   uniquenametemplatename                      => {OUTPUT => 1},
-   uniqueprimaryauthor                         => {OUTPUT => 0},
-   uniquetitle                                 => {OUTPUT => 0},
-   uniquework                                  => {OUTPUT => 0},
-   useafterword                                => {OUTPUT => 1},
-   useannotator                                => {OUTPUT => 1},
-   useauthor                                   => {OUTPUT => 1},
-   usebookauthor                               => {OUTPUT => 1},
-   usecommentator                              => {OUTPUT => 1},
-   useeditor                                   => {OUTPUT => 1},
-   useeditora                                  => {OUTPUT => 1},
-   useeditorb                                  => {OUTPUT => 1},
-   useeditorc                                  => {OUTPUT => 1},
-   useforeword                                 => {OUTPUT => 1},
-   useholder                                   => {OUTPUT => 1},
-   useintroduction                             => {OUTPUT => 1},
-   usenamea                                    => {OUTPUT => 1},
-   usenameb                                    => {OUTPUT => 1},
-   usenamec                                    => {OUTPUT => 1},
-   useprefix                                   => {OUTPUT => 1},
-   useshortauthor                              => {OUTPUT => 1},
-   useshorteditor                              => {OUTPUT => 1},
-   usetranslator                               => {OUTPUT => 1},
-  );
-
-# Only NAMELIST scope options (as defined in .bcf) declared in biblatex.sty with
-# \define@key{blx@opt@namelist} need passing back as they usually change something
-# in biblatex in the post-biber pass.
-# NOTE - these are biblatex option names and should not be confused with things
-#        which biber writes to the .bbl.
-our %CONFIG_BIBLATEX_NAMELIST_OPTIONS =
-  (
-   labelalphanametemplatename  => {OUTPUT => 1},
-   nametemplates               => {OUTPUT => 0,
-                                   INPUT => ['sortingnamekeytemplatename',
-                                             'uniquenametemplatename',
-                                             'labelalphanametemplatename']
-                                  },
-   nohashothers                => {OUTPUT => 0},
-   nosortothers                => {OUTPUT => 0},
-   sortingnamekeytemplatename  => {OUTPUT => 1},
-   uniquename                  => {OUTPUT => 0},
-   uniquenametemplatename      => {OUTPUT => 1},
-   uniquelist                  => {OUTPUT => 0},
-   useprefix                   => {OUTPUT => 1}
-  );
-
-# Only NAME scope options (as defined in .bcf) declared in biblatex.sty with
-# \define@key{blx@opt@name} need passing back as they usually change something
-# in biblatex in the post-biber pass.
-# NOTE - these are biblatex option names and should not be confused with things
-#        which biber writes to the .bbl.
-our %CONFIG_BIBLATEX_NAME_OPTIONS =
-  (
-   labelalphanametemplatename  => {OUTPUT => 1},
-   nametemplates               => {OUTPUT => 0,
-                                   INPUT => ['sortingnamekeytemplatename',
-                                             'uniquenametemplatename',
-                                             'labelalphanametemplatename']
-                                  },
-   sortingnamekeytemplatename  => {OUTPUT => 1},
-   uniquename                  => {OUTPUT => 0},
-   uniquenametemplatename      => {OUTPUT => 1},
-   useprefix                   => {OUTPUT => 1}
-  );
+our %CONFIG_BIBLATEX_OPTIONS;
 
 1;
 

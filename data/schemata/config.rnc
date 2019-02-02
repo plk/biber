@@ -5,6 +5,14 @@ start =
       attribute type { "GLOBAL" | "ENTRYTYPE" | "ENTRY" | "NAMELIST" | "NAME" },
       element option {
         attribute datatype { "boolean" | "integer" | "string" | "xml" },
+        # Applies to ENTRY, NAMELIST and NAME scope
+        # Only set for meta-options and if defined, what biber should split
+        # the option into on reading it
+        attribute backendin {xsd:string}?,
+        # Applies to ENTRY, NAMELIST and NAME scope
+        # Determines whether biber will write the option to its ouput (e.g.
+        # .bbl) because biblatex needs to know the value.
+        attribute backendout {xsd:boolean}?,
         xsd:string
       }+
     }* &

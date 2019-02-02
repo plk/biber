@@ -367,6 +367,10 @@ sub _config_file_set {
     my $scope = $bcfscopeopts->{type};
     foreach my $bcfscopeopt ($bcfscopeopts->{option}->@*) {
       my $opt = $bcfscopeopt->{content};
+      $CONFIG_BIBLATEX_OPTIONS{$scope}{$opt}{OUTPUT} = $bcfscopeopt->{backendout} || 0;
+      if (my $bin = Biber::Utils::process_backendin($bcfscopeopt->{backendin})) {
+        $CONFIG_BIBLATEX_OPTIONS{$scope}{$opt}{INPUT} = $bin;
+      }
       $CONFIG_OPTSCOPE_BIBLATEX{$opt}{$scope} = 1;
       $CONFIG_SCOPEOPT_BIBLATEX{$scope}{$opt} = 1;
     }
