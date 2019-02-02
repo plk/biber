@@ -54,7 +54,7 @@ my $set1 = q|    \entry{seta}{set}{}
     \endentry
 |;
 
-my $set2 = q|    \entry{set:membera}{book}{}
+my $set2 = q|    \entry{set:membera}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{seta}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
@@ -81,7 +81,7 @@ my $set2 = q|    \entry{set:membera}{book}{}
     \endentry
 |;
 
-my $set3 = q|    \entry{set:memberb}{book}{}
+my $set3 = q|    \entry{set:memberb}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{seta}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
@@ -107,7 +107,7 @@ my $set3 = q|    \entry{set:memberb}{book}{}
     \endentry
 |;
 
-my $set4 = q|    \entry{set:memberc}{book}{}
+my $set4 = q|    \entry{set:memberc}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{seta}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
@@ -223,7 +223,7 @@ my $noset3 = q|    \entry{nosetc}{book}{}
     \endentry
 |;
 
-my $sk4 = q|    \entry{skip4}{article}{dataonly}
+my $sk4 = q|    \entry{skip4}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \name{author}{1}{}{%
         {{hash=bd051a2f7a5f377e3a62581b0e0f8577}{%
            family={Doe},

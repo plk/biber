@@ -118,16 +118,21 @@ sub relclone {
           # if they are unset as otherwise this entry would appear twice in bibliographies
           # but with different keys.
           if ($section->has_citekey($relkey)) {
-            $relopts = remove_entry_options($relopts, {skipbib => 1, skipbiblist => 1});
-            push @$relopts, ('skipbib=true', 'skipbiblist=true');
+            $relopts = merge_entry_options($relopts, ['skipbib', 'skipbiblist']);
           }
+
           process_entry_options($clonekey, $relopts, $secnum);
           $relclone->set_datafield('options', $relopts);
         }
         else {
-          process_entry_options($clonekey, ['skiplab','skipbiblist','uniquename=false','uniquelist=false'], $secnum);
-          # Preserve options already in the clone but add 'dataonly'
-          $relclone->set_datafield('options', [ 'dataonly', @{$relclone->get_datafield('options') || []} ]);
+          # related clone needs its own options plus all the dataonly opts, any conflicts and
+          # explicit options win
+
+          my $relopts = merge_entry_options(['skipbib', 'skiplab','skipbiblist','uniquename=false','uniquelist=false'], $relentry->get_field('options'));
+
+          # Preserve options already in the clone but add 'dataonly' options
+          process_entry_options($clonekey, $relopts, $secnum);
+          $relclone->set_datafield('options', $relopts);
         }
 
         $section->bibentries->add_entry($clonekey, $relclone);

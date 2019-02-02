@@ -50,13 +50,13 @@ our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid stringi
   is_def_and_notnull is_def_and_null is_undef_or_null is_notnull is_null
   normalise_utf8 inits join_name latex_recode_output filter_entry_options
   biber_error biber_warn ireplace imatch validate_biber_xml
-  process_entry_options remove_entry_options escape_label unescape_label
+  process_entry_options escape_label unescape_label
   biber_decode_utf8 out parse_date_start parse_date_end parse_date_range locale2bcp47
   bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
   split_xsv date_monthday tzformat expand_option_input expand_option_output strip_annotation
-  appendstrict_check};
+  appendstrict_check merge_entry_options};
 
 =head1 FUNCTIONS
 
@@ -907,24 +907,23 @@ sub filter_entry_options {
   my ($secnum, $be) = @_;
   my $bee = $be->get_field('entrytype');
   my $citekey = $be->get_field('citekey');
-  my $options = $be->get_field('options');
   my $roptions = [];
 
-  foreach ($options->@*) {
-    m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
-    my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}{OUTPUT};
+  foreach my $opt (sort Biber::Config->getblxentryoptions($secnum, $citekey)) {
+
+    my $val = Biber::Config->getblxoption($secnum, $opt, undef, $citekey);
+    my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{$opt}{OUTPUT};
 
     # convert booleans
-    my $val = $2;
-    if ($val and
-        $CONFIG_OPTTYPE_BIBLATEX{lc($1)} and
-        $CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
+    if (defined($val) and
+        $CONFIG_OPTTYPE_BIBLATEX{$opt} and
+        $CONFIG_OPTTYPE_BIBLATEX{$opt} eq 'boolean') {
       $val = map_boolean($val, 'tostring');
     }
 
     # Standard option
     if (not defined($cfopt) or $cfopt == 1) { # suppress only explicitly ignored output options
-      push $roptions->@*, $1 . ($val ? "=$val" : '') ;
+      push $roptions->@*, $opt . ($val ? "=$val" : '') ;
     }
     # Set all split options to same value as parent
     elsif (ref($cfopt) eq 'ARRAY') {
@@ -1083,26 +1082,6 @@ sub map_boolean {
   }
 }
 
-=head2 remove_entry_options
-
-    Remove per-entry options
-
-=cut
-
-sub remove_entry_options {
-  my $options = shift;
-  my $mods = shift;
-  my $changed_opts;
-  foreach ($options->@*) {
-    s/\s+=\s+/=/g; # get rid of spaces around any "="
-    m/^([^=]+)(=?)(.+)?$/;
-    unless ($mods->{$1}) {
-      push $changed_opts->@*, ($1 . ($2 // '') . ($3 // ''));
-    }
-  }
-  return $changed_opts;
-}
-
 =head2 process_entry_options
 
     Set per-entry options
@@ -1120,6 +1099,7 @@ sub process_entry_options {
         $CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
       $val = map_boolean($val, 'tonum');
     }
+
     my $oo = expand_option_input($1, $val, $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}->{INPUT});
 
     foreach my $o ($oo->@*) {
@@ -1127,6 +1107,47 @@ sub process_entry_options {
     }
   }
   return;
+}
+
+=head2 merge_entry_options
+
+    Merge entry options, dealing with conflicts
+
+=cut
+
+sub merge_entry_options {
+  my ($opts, $overrideopts) = @_;
+  return $opts unless defined($overrideopts);
+  return $overrideopts unless defined($opts);
+  my $merged = [];
+  my $used_overrides = [];
+
+  foreach my $ov ($opts->@*) {
+    my $or = 0;
+    my ($o, $e, $v) = $ov =~ m/^([^=]+)(=?)(.*)$/;
+    foreach my $oov ($overrideopts->@*) {
+      my ($oo, $eo, $vo) = $oov =~ m/^([^=]+)(=?)(.*)$/;
+      if ($o eq $oo) {
+        $or = 1;
+        my $oropt = "$oo" . ($eo // '') . ($vo // '');
+        push $merged->@*, $oropt;
+        push $used_overrides->@*, $oropt;
+        last;
+      }
+    }
+    unless ($or) {
+      push $merged->@*, ("$o" . ($e // '') .($v // ''));
+    }
+  }
+
+  # Now push anything in the overrides array which had no conflicts
+  foreach my $oov ($overrideopts->@*) {
+    unless(first {$_ eq $oov} $used_overrides->@*) {
+      push $merged->@*, $oov;
+    }
+  }
+
+  return $merged;
 }
 
 =head2 expand_option_input
@@ -1155,6 +1176,7 @@ sub expand_option_input {
       push $outopts->@*, [$k, $cfopt->{$k}];
     }
   }
+
   return $outopts;
 }
 

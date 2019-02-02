@@ -889,17 +889,17 @@ sub setblxoption {
   shift; # class method so don't care about class name
   my ($secnum, $opt, $val, $scope, $scopeval) = @_;
   if (not defined($scope)) { # global is the default
-    if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{GLOBAL}) {
+    if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}{GLOBAL}) {
       $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;
     }
   }
   elsif ($scope eq 'ENTRY') {
-    if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{$scope}) {
+    if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}{$scope}) {
       $CONFIG->{options}{biblatex}{$scope}{$scopeval}{$secnum}{$opt} = $val;
     }
   }
-  else { # Per-type/entry options need to specify type/entry too
-    if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{$scope}) {
+  else {
+    if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}{$scope}) {
       $CONFIG->{options}{biblatex}{$scope}{$scopeval}{$opt} = $val;
     }
   }
@@ -927,16 +927,16 @@ sub getblxoption {
   shift; # class method so don't care about class name
   my ($secnum, $opt, $entrytype, $citekey) = @_;
   if ( defined($citekey) and
-       $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{ENTRY} and
+       $CONFIG_OPTSCOPE_BIBLATEX{$opt}{ENTRY} and
        defined $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$secnum}{$opt}) {
     return $CONFIG->{options}{biblatex}{ENTRY}{$citekey}{$secnum}{$opt};
   }
   elsif (defined($entrytype) and
-         $CONFIG_OPTSCOPE_BIBLATEX{$opt}->{ENTRYTYPE} and
+         $CONFIG_OPTSCOPE_BIBLATEX{$opt}{ENTRYTYPE} and
          defined $CONFIG->{options}{biblatex}{ENTRYTYPE}{lc($entrytype)}{$opt}) {
     return $CONFIG->{options}{biblatex}{ENTRYTYPE}{lc($entrytype)}{$opt};
   }
-  elsif ($CONFIG_OPTSCOPE_BIBLATEX{$opt}->{GLOBAL}) {
+  elsif ($CONFIG_OPTSCOPE_BIBLATEX{$opt}{GLOBAL}) {
     return $CONFIG->{options}{biblatex}{GLOBAL}{$opt};
   }
 }

@@ -536,8 +536,9 @@ our %CONFIG_OPTTYPE_BIBLATEX;
 #        which biber writes to the .bbl.
 our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
   (
-   dataonly                                    => {OUTPUT => 1,
-                                                   INPUT  => {skiplab     => 1,
+   dataonly                                    => {OUTPUT => 0,
+                                                   INPUT  => {skipbib     => 1,
+                                                              skiplab     => 1,
                                                               skipbiblist => 1,
                                                               uniquename  => 'false',
                                                               uniquelist  => 'false'}
@@ -553,9 +554,7 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
    maxbibnames                                 => {OUTPUT => 1},
    maxcitenames                                => {OUTPUT => 1},
    maxitems                                    => {OUTPUT => 1},
-   maxnames                                    => {OUTPUT => ['maxcitenames',
-                                                              'maxbibnames',
-                                                              'maxsortnames'],
+   maxnames                                    => {OUTPUT => 0,
                                                    INPUT  => ['maxcitenames',
                                                               'maxbibnames',
                                                               'maxsortnames']
@@ -565,17 +564,13 @@ our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
    minbibnames                                 => {OUTPUT => 1},
    mincitenames                                => {OUTPUT => 1},
    minitems                                    => {OUTPUT => 1},
-   minnames                                    => {OUTPUT => ['mincitenames',
-                                                              'minbibnames',
-                                                              'minsortnames'],
+   minnames                                    => {OUTPUT => 0,
                                                    INPUT  => ['mincitenames',
                                                               'minbibnames',
                                                               'minsortnames']
                                                   },
    minsortnames                                => {OUTPUT => 0},
-   nametemplates                               => {OUTPUT => ['sortingnamekeytemplatename',
-                                                              'uniquenametemplatename',
-                                                              'labelalphanametemplatename'],
+   nametemplates                               => {OUTPUT => 0,
                                                    INPUT  => ['sortingnamekeytemplatename',
                                                               'uniquenametemplatename',
                                                               'labelalphanametemplatename']

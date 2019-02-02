@@ -247,7 +247,7 @@ sub set_output_entry {
   # The labeldateparts option determines whether "extradate" is output
   # Skip generating extradate for entries with "skiplab" set
   if ( Biber::Config->getblxoption(undef,'labeldateparts', $bee, $key)) {
-    # Might not have been set due to skiplab/dataonly
+    # Might not have been set due to skiplab
     if (my $ey = $be->get_field('extradate')) {
       $acc .= "      <BDS>EXTRADATE</BDS>\n";
     }

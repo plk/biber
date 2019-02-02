@@ -147,7 +147,7 @@ sub output {
       # colour depends on whether cited, uncited, dataonly or key alias
       my $c = $section->has_citekey($citekey) ? '#a0d0ff' : '#deefff';
       if (my $options = $be->get_field('options')) {
-        $c = '#fdffd9' if $options =~ m/dataonly/o;
+        $c = '#fdffd9' if $options =~ m/skip(?:bib|biblist|lab)/o;
       }
       $c = '#a1edec' if $section->get_citekey_alias($citekey);
 

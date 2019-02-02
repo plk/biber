@@ -49,7 +49,7 @@ my $string1 = q|    \entry{Elias1955}{set}{}
     \endentry
 |;
 
-my $string2 = q|    \entry{Elias1955a}{article}{}
+my $string2 = q|    \entry{Elias1955a}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{Elias1955}
       \name{author}{1}{}{%
         {{hash=68f587f427e068e26043d54745351d58}{%
@@ -83,7 +83,7 @@ my $string2 = q|    \entry{Elias1955a}{article}{}
     \endentry
 |;
 
-my $string3 = q|    \entry{Elias1955b}{article}{}
+my $string3 = q|    \entry{Elias1955b}{article}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{Elias1955}
       \name{author}{1}{}{%
         {{hash=68f587f427e068e26043d54745351d58}{%

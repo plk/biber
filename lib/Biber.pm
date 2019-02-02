@@ -1259,7 +1259,7 @@ sub instantiate_dynamic {
       # Instantiate any related entry clones we need from dynamic set members
       $section->bibentry($m)->relclone;
     }
-    # Setting dataonly for members is handled by process_sets()
+    # Setting dataonly options for members is handled by process_sets()
   }
 
   # Instantiate any related entry clones we need from regular entries
@@ -2231,7 +2231,7 @@ sub process_extratitleyear {
 
     Postprocess set entries
 
-    Checks for common set errors and enforces 'dataonly' for set members.
+    Checks for common set errors and enforces "dataonly" options for set members.
     It's not necessary to set skipbib, skipbiblist in the OPTIONS field for
     the set members as these are automatically set by biblatex due to the \inset
 
@@ -2244,11 +2244,11 @@ sub process_sets {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   if (my @entrysetkeys = $section->get_set_children($citekey)) {
-    # Enforce Biber parts of virtual "dataonly" for set members
+    # Enforce Biber parts of virtual "dataonly" options for set members
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
       my $me = $section->bibentry($member);
-      process_entry_options($member, [ 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ], $secnum);
+      process_entry_options($member, [ 'skipbib', 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ], $secnum);
 
       # Use get_datafield() instead of get_field() because we add 'entryset' below
       # and if the same entry is used in more than one set, it will pass this test
@@ -2269,7 +2269,7 @@ sub process_sets {
   # had skips set by being seen as a member of that set yet
   else {
     if ($section->get_set_parents($citekey)) {
-      process_entry_options($citekey, [ 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ], $secnum);
+      process_entry_options($citekey, [ 'skipbib', 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ], $secnum);
     }
   }
 }
@@ -2441,7 +2441,7 @@ sub process_labeldate {
     }
 
     # Construct label*
-    # Might not have been set due to skiplab/dataonly
+    # Might not have been set due to skiplab
     if (my $ldi = $be->get_labeldate_info) {
       if (my $df = $ldi->{field}) { # set labelyear to a field value
         my $pseudodate = $df->{pseudodate};

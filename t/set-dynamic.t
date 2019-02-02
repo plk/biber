@@ -55,7 +55,7 @@ my $string1 = q|    \entry{DynSet}{set}{}
     \endentry
 |;
 
-my $string2 = q|    \entry{Dynamic1}{book}{}
+my $string2 = q|    \entry{Dynamic1}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{DynSet}
       \name{author}{1}{}{%
         {{hash=252caa7921a061ca92087a1a52f15b78}{%
@@ -82,7 +82,7 @@ my $string2 = q|    \entry{Dynamic1}{book}{}
     \endentry
 |;
 
-my $string3 = q|    \entry{Dynamic2}{book}{}
+my $string3 = q|    \entry{Dynamic2}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{DynSet}
       \name{author}{1}{}{%
         {{hash=894a5fe6de820f5dcce84a65581667f4}{%
@@ -108,7 +108,7 @@ my $string3 = q|    \entry{Dynamic2}{book}{}
     \endentry
 |;
 
-my $string4 = q|    \entry{Dynamic3}{book}{}
+my $string4 = q|    \entry{Dynamic3}{book}{skipbib=true,skipbiblist=true,skiplab=true,uniquelist=false,uniquename=false}
       \inset{DynSet}
       \name{author}{1}{}{%
         {{hash=fc3cc97631ceaecdde2aee6cc60ab42b}{%
