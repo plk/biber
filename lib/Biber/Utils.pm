@@ -910,21 +910,10 @@ sub filter_entry_options {
   my $options = $be->get_field('options');
   my $roptions = [];
 
-  # Put any global/per-type skips into the local options if not there already per-entry
-  # as biblatex needs these in the entries.
-  if (Biber::Config->getblxoption($secnum, 'skipbib', $bee)) {
-    push $options->@*, 'skipbib=1' unless grep {m/^\s*skipbib(?:=.+)\s*$/} $options->@*;
-  }
-  if (Biber::Config->getblxoption($secnum, 'skipbiblist', $bee)) {
-    push $options->@*, 'skipbiblist=1' unless grep {m/^\s*skipbiblist(?:=.+)\s*$/} $options->@*;
-  }
-  if (Biber::Config->getblxoption($secnum, 'skiplab', $bee)) {
-    push $options->@*, 'skiplab=1' unless grep {m/^\s*skiplab(?:=.+)\s*$/} $options->@*;
-  }
-
   foreach ($options->@*) {
     m/^([^=\s]+)\s*=?\s*([^\s]+)?$/;
     my $cfopt = $CONFIG_BIBLATEX_ENTRY_OPTIONS{lc($1)}{OUTPUT};
+
     # convert booleans
     my $val = $2;
     if ($val and
@@ -932,8 +921,9 @@ sub filter_entry_options {
         $CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
       $val = map_boolean($val, 'tostring');
     }
+
     # Standard option
-    if (not defined($cfopt) or $cfopt == 1) {
+    if (not defined($cfopt) or $cfopt == 1) { # suppress only explicitly ignored output options
       push $roptions->@*, $1 . ($val ? "=$val" : '') ;
     }
     # Set all split options to same value as parent
@@ -1178,12 +1168,8 @@ sub expand_option_output {
   my ($opt, $val, $cfopt) = @_;
   my $outopts;
 
-  # Standard option
-  if ($cfopt) {
-    push $outopts->@*, [$opt, $val];
-  }
   # Set all split options
-  elsif (ref($cfopt) eq 'ARRAY') {
+  if (ref($cfopt) eq 'ARRAY') {
     foreach my $k ($cfopt->@*) {
       push $outopts->@*, [$k, $val];
     }
@@ -1194,6 +1180,11 @@ sub expand_option_output {
       push $outopts->@*, [$k, $cfopt->{$k}];
     }
   }
+  # Standard option
+  elsif ($cfopt) {
+    push $outopts->@*, [$opt, $val];
+  }
+
   return $outopts;
 }
 

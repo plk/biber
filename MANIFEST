@@ -73,7 +73,6 @@ t/set-dynamic.t
 t/set-legacy.t
 t/set-static.t
 t/skips.t
-t/skipsg.t
 t/sort-case.t
 t/sort-complex.t
 t/sorting.t
@@ -156,8 +155,6 @@ t/tdata/set-legacy.bcf
 t/tdata/sets.bib
 t/tdata/set-static.bcf
 t/tdata/skips.bcf
-t/tdata/skipsg.bcf
-t/tdata/skipsg.bib
 t/tdata/sort.bib
 t/tdata/sort-case.bcf
 t/tdata/sort-case.bib

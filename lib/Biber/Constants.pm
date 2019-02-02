@@ -530,8 +530,8 @@ our %CONFIG_OPTTYPE_BIBLATEX;
 # won't care about the option
 
 # Only ENTRY scope options (as defined in .bcf) declared in biblatex.sty with
-# \DeclareEntryOption need passing back as they usually change something in biblatex
-# in the post-biber pass.
+# \DeclareEntryOption need passing back (OUTPUT => 1) as they usually change
+# something in biblatex in the post-biber pass.
 # NOTE - these are biblatex option names and should not be confused with things
 #        which biber writes to the .bbl.
 our %CONFIG_BIBLATEX_ENTRY_OPTIONS =
