@@ -1154,18 +1154,31 @@ sub expand_option_input {
       push $outopts->@*, [$k, $val];
     }
   }
-  # Specify values per all splits - should only apply to booleans
+  # ASSUMPTION - only biblatex booleans resolve to hashes (currently, only dataonly)
+  # Specify values per all splits
   elsif (ref($cfopt) eq 'HASH') {
     foreach my $k (keys $cfopt->%*) {
-      # The defaults for the sub-options are for when $val=true
-      # invert when $val=false
       my $subval = map_boolean($k, $cfopt->{$k}, 'tonum');
 
-      unless ($val) {# meta-opt $val is 0/false
-        $subval = $subval ? 0 : 1;
-      }
+      # meta-opt $val is 0/false - invert any boolean sub-options and ignore others
+      # for example, if datonly=false in a per-entry option:
+      # skipbib => false
+      # skiplab => false
+      # skipbiblist => false
+      # uniquename => DON'T SET ANYTHING (picked up from higher scopes)
+      # uniquelist => DON'T SET ANYTHING (picked up from higher scopes)
+      unless ($val) {
+        if (exists($CONFIG_OPTTYPE_BIBLATEX{$k}) and
+            $CONFIG_OPTTYPE_BIBLATEX{$k} eq 'boolean') {
 
-      push $outopts->@*, [$k, map_boolean($k, $subval, 'tostring')];
+          # The defaults for the sub-options are for when $val=true
+          # invert booleans when $val=false
+          push $outopts->@*, [$k, $subval ? 0 : 1];
+        }
+      }
+      else {
+        push $outopts->@*, [$k, $subval];
+      }
     }
   }
 

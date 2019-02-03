@@ -38,7 +38,7 @@ $biber->set_output_obj(Biber::Output::bbl->new());
 Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 
 # Turn this off so minbibnames is always 1 (from .bcf)
-Biber::Config->setblxoption(undef,'uniquelist', 'false');
+Biber::Config->setblxoption(undef, 'uniquelist', 'false');
 
 # Now generate the information
 $biber->prepare;
