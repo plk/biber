@@ -55,7 +55,7 @@ our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid stringi
   bcp472locale rangelen match_indices process_comment map_boolean
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
-  split_xsv date_monthday tzformat expand_option_input expand_option_output strip_annotation
+  split_xsv date_monthday tzformat expand_option_input strip_annotation
   appendstrict_check merge_entry_options process_backendin};
 
 =head1 FUNCTIONS
@@ -913,29 +913,11 @@ sub filter_entry_options {
 
     my $val = Biber::Config->getblxoption($secnum, $opt, undef, $citekey);
     my $cfopt = $CONFIG_BIBLATEX_OPTIONS{ENTRY}{$opt}{OUTPUT};
+    $val = map_boolean($opt, $val, 'tostring');
 
-    # convert booleans
-    if (defined($val) and
-        $CONFIG_OPTTYPE_BIBLATEX{$opt} and
-        $CONFIG_OPTTYPE_BIBLATEX{$opt} eq 'boolean') {
-      $val = map_boolean($val, 'tostring');
-    }
-
-    # Standard option
-    if (not defined($cfopt) or $cfopt == 1) { # suppress only explicitly ignored output options
+    # By this point, all entry meta-options have been expanded by expand_option_input
+    if ($cfopt) { # suppress only explicitly ignored output options
       push $roptions->@*, $opt . ($val ? "=$val" : '') ;
-    }
-    # Set all split options to same value as parent
-    elsif (ref($cfopt) eq 'ARRAY') {
-      foreach my $map ($cfopt->@*) {
-        push $roptions->@*, "$map=$val";
-      }
-    }
-    # Set all splits to specific values
-    elsif (ref($cfopt) eq 'HASH') {
-      foreach my $map (keys $cfopt->%*) {
-        push $roptions->@*, "$map=" . $_->{$map};
-      }
     }
   }
   return $roptions;
@@ -1066,8 +1048,12 @@ sub validate_biber_xml {
 =cut
 
 sub map_boolean {
-  my $b = lc(shift);
-  my $dir = shift;
+  my ($bn, $bv, $dir) = @_;
+  my $b = lc($bv);
+  # Ignore non-booleans
+  return $bv unless exists($CONFIG_OPTTYPE_BIBLATEX{$bn});
+  return $bv unless $CONFIG_OPTTYPE_BIBLATEX{$bn} eq 'boolean';
+
   my %map = (true  => 1,
              false => 0,
             );
@@ -1095,11 +1081,6 @@ sub process_entry_options {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)=?(.+)?$/;
     my $val = $2 // 1; # bare options are just boolean numerals
-    if ($CONFIG_OPTTYPE_BIBLATEX{lc($1)} and
-        $CONFIG_OPTTYPE_BIBLATEX{lc($1)} eq 'boolean') {
-      $val = map_boolean($val, 'tonum');
-    }
-
     my $oo = expand_option_input($1, $val, $CONFIG_BIBLATEX_OPTIONS{ENTRY}{lc($1)}{INPUT});
 
     foreach my $o ($oo->@*) {
@@ -1160,8 +1141,11 @@ sub expand_option_input {
   my ($opt, $val, $cfopt) = @_;
   my $outopts;
 
+  # Coerce $val to integer so we know what to test with later
+  $val = map_boolean($opt, $val, 'tonum');
+
   # Standard option
-  if (not defined($cfopt)) {
+  if (not defined($cfopt)) { # no special input meta-option handling
     push $outopts->@*, [$opt, $val];
   }
   # Set all split options
@@ -1170,41 +1154,19 @@ sub expand_option_input {
       push $outopts->@*, [$k, $val];
     }
   }
-  # Specify values per all splits
+  # Specify values per all splits - should only apply to booleans
   elsif (ref($cfopt) eq 'HASH') {
     foreach my $k (keys $cfopt->%*) {
-      push $outopts->@*, [$k, $cfopt->{$k}];
+      # The defaults for the sub-options are for when $val=true
+      # invert when $val=false
+      my $subval = map_boolean($k, $cfopt->{$k}, 'tonum');
+
+      unless ($val) {# meta-opt $val is 0/false
+        $subval = $subval ? 0 : 1;
+      }
+
+      push $outopts->@*, [$k, map_boolean($k, $subval, 'tostring')];
     }
-  }
-
-  return $outopts;
-}
-
-=head2 expand_option_output
-
-    Expand options such as meta-options going to the .bbl
-
-=cut
-
-sub expand_option_output {
-  my ($opt, $val, $cfopt) = @_;
-  my $outopts;
-
-  # Set all split options
-  if (ref($cfopt) eq 'ARRAY') {
-    foreach my $k ($cfopt->@*) {
-      push $outopts->@*, [$k, $val];
-    }
-  }
-  # Specify values per all splits
-  elsif (ref($cfopt) eq 'HASH') {
-    foreach my $k (keys $cfopt->%*) {
-      push $outopts->@*, [$k, $cfopt->{$k}];
-    }
-  }
-  # Standard option
-  elsif ($cfopt) {
-    push $outopts->@*, [$opt, $val];
   }
 
   return $outopts;

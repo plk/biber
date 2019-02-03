@@ -1490,11 +1490,12 @@ sub _namestring {
 
           # useprefix can be name list or name local
           if ($useopt and $useopt eq 'useprefix') {
-            $useoptval = map_boolean($useprefix, 'tonum');
+            $useoptval = map_boolean('useprefix', $useprefix, 'tonum');
           }
 
           if (my $npstring = $n->get_namepart($namepart)) {
             # No use attribute conditionals or the attribute is specified and matches the option
+
             if (not $useopt or
                 ($useopt and $useoptval == $np->{use})) {
               # Do we only want initials for sorting?

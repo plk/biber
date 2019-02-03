@@ -125,7 +125,7 @@ sub set_output_entry {
 
       # Namelist scope useprefix
       if (defined($names->get_useprefix)) {# could be 0
-        push @namelist, 'useprefix=' . Biber::Utils::map_boolean($names->get_useprefix, 'tostring');
+        push @namelist, 'useprefix=' . map_boolean('useprefix', $names->get_useprefix, 'tostring');
       }
 
       # Namelist scope sortingnamekeytemplatename

@@ -168,14 +168,8 @@ sub set_output_entry {
         if (defined($nf->${\"get_$nlo"})) {
           my $nlov = $nf->${\"get_$nlo"};
 
-          if ($CONFIG_OPTTYPE_BIBLATEX{lc($nlo)} and
-              $CONFIG_OPTTYPE_BIBLATEX{lc($nlo)} eq 'boolean') {
-            $nlov = map_boolean($nlov, 'tostring');
-          }
-
-          my $oo = expand_option_output($nlo, $nlov, $CONFIG_BIBLATEX_OPTIONS{NAMELIST}{$nlo}{OUTPUT});
-          foreach my $o ($oo->@*) {
-            push @attrs, ($o->[0] => $o->[1]);
+          if ($CONFIG_BIBLATEX_OPTIONS{NAMELIST}{$nlo}{OUTPUT}) {
+            push @attrs, ($nlo => map_boolean($nlo, $nlov, 'tostring'));
           }
         }
       }

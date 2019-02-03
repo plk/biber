@@ -1027,10 +1027,6 @@ sub _name {
     foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
       if ($node->hasAttribute($nlo)) {
         my $nlov = $node->getAttribute($nlo);
-        if ($CONFIG_OPTTYPE_BIBLATEX{$nlo} and
-            $CONFIG_OPTTYPE_BIBLATEX{$nlo} eq 'boolean') {
-          $nlov = map_boolean($nlov, 'tonum');
-        }
         my $oo = expand_option_input($nlo, $nlov, $CONFIG_BIBLATEX_OPTIONS{NAMELIST}{$nlo}{INPUT});
 
         foreach my $o ($oo->@*) {
@@ -1138,10 +1134,6 @@ sub parsename {
   foreach my $no (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*) {
     if ($node->hasAttribute($no)) {
       my $nov = $node->getAttribute($no);
-      if ($CONFIG_OPTTYPE_BIBLATEX{$no} and
-          $CONFIG_OPTTYPE_BIBLATEX{$no} eq 'boolean') {
-        $nov = map_boolean($nov, 'tonum');
-      }
       my $oo = expand_option_input($no, $nov, $CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{INPUT});
 
       foreach my $o ($oo->@*) {

@@ -184,14 +184,8 @@ sub name_to_biblatexml {
     if (defined($self->${\"get_$no"})) {
       my $nov = $self->${\"get_$no"};
 
-      if ($CONFIG_OPTTYPE_BIBLATEX{lc($no)} and
-          $CONFIG_OPTTYPE_BIBLATEX{lc($no)} eq 'boolean') {
-        $nov = map_boolean($nov, 'tostring');
-      }
-
-      my $oo = expand_option_output($no, $nov, $CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT});
-      foreach my $o ($oo->@*) {
-        push @attrs, ($o->[0] => $o->[1]);
+      if ($CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT}) {
+        push @attrs, ($no => Biber::Utils::map_boolean($no, $nov, 'tostring'));
       }
     }
   }
@@ -319,14 +313,8 @@ sub name_to_bbl {
     if (defined($self->${\"get_$no"})) {
       my $nov = $self->${\"get_$no"};
 
-      if ($CONFIG_OPTTYPE_BIBLATEX{lc($no)} and
-          $CONFIG_OPTTYPE_BIBLATEX{lc($no)} eq 'boolean') {
-        $nov = Biber::Utils::map_boolean($nov, 'tostring');
-      }
-
-      my $oo = Biber::Utils::expand_option_output($no, $nov, $CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT});
-      foreach my $o ($oo->@*) {
-        push @pno, $o->[0] . '=' . $o->[1];
+      if ($CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT}) {
+        push @pno, $no . '=' . Biber::Utils::map_boolean($no, $nov, 'tostring');
       }
     }
   }
@@ -385,14 +373,8 @@ sub name_to_bblxml {
     if (defined($self->${\"get_$no"})) {
       my $nov = $self->${\"get_$no"};
 
-      if ($CONFIG_OPTTYPE_BIBLATEX{lc($no)} and
-          $CONFIG_OPTTYPE_BIBLATEX{lc($no)} eq 'boolean') {
-        $nov = Biber::Utils::map_boolean($nov, 'tostring');
-      }
-
-      my $oo = Biber::Utils::expand_option_output($no, $nov, $CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT});
-      foreach my $o ($oo->@*) {
-        $pno{$o->[0]} = $o->[1];
+      if ($CONFIG_BIBLATEX_OPTIONS{NAME}{$no}{OUTPUT}) {
+        $pno{$no} = Biber::Utils::map_boolean($no, $nov, 'tostring');
       }
     }
   }
@@ -469,7 +451,7 @@ sub name_to_xname {
 
   # Name scope useprefix
   if (defined($self->get_useprefix)) {# could be 0
-    push @namestring, "useprefix$xns" . Biber::Utils::map_boolean($self->get_useprefix, 'tostring');
+    push @namestring, "useprefix$xns" . Biber::Utils::map_boolean('useprefix', $self->get_useprefix, 'tostring');
   }
 
   # Name scope sortingnamekeytemplatename

@@ -151,11 +151,12 @@ eq_or_diff(rangelen([['I-II', 'III-IV']]), -1, 'Rangelen test 9');
 eq_or_diff(rangelen([[22,4],[123,7],[113,15]]), 11, 'Rangelen test 10');
 
 # Test boolean mappings
-eq_or_diff(map_boolean('true', 'tonum'), 1, 'Boolean conversion - 1');
-eq_or_diff(map_boolean('False', 'tonum'), 0, 'Boolean conversion - 2');
-eq_or_diff(map_boolean(1, 'tostring'), 'true', 'Boolean conversion - 3');
-eq_or_diff(map_boolean(0, 'tostring'), 'false', 'Boolean conversion - 4');
-eq_or_diff(map_boolean(0, 'tonum'), 0, 'Boolean conversion - 5');
+$Biber::Utils::CONFIG_OPTTYPE_BIBLATEX{test} = 'boolean'; # mock this for tests
+eq_or_diff(map_boolean('test', 'true', 'tonum'), 1, 'Boolean conversion - 1');
+eq_or_diff(map_boolean('test', 'False', 'tonum'), 0, 'Boolean conversion - 2');
+eq_or_diff(map_boolean('test', 1, 'tostring'), 'true', 'Boolean conversion - 3');
+eq_or_diff(map_boolean('test', 0, 'tostring'), 'false', 'Boolean conversion - 4');
+eq_or_diff(map_boolean('test', 0, 'tonum'), 0, 'Boolean conversion - 5');
 
 # Range parsing
 eq_or_diff(parse_range('1--2'), [1,2], 'Range parsing - 1');

@@ -1021,11 +1021,7 @@ sub _name {
     if ($name =~ m/^(\S+)\s*$xnamesep\s*(\S+)?$/) {
       my $nlo = lc($1);
       my $nlov = $2 // 1; # bare options are just boolean numerals
-      if ($CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->{$nlo}) {
-        if ($CONFIG_OPTTYPE_BIBLATEX{$nlo} and
-            $CONFIG_OPTTYPE_BIBLATEX{$nlo} eq 'boolean') {
-          $nlov = map_boolean($nlov, 'tonum');
-      }
+      if (exists($CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}{$nlo})) {
         my $oo = expand_option_input($nlo, $nlov, $CONFIG_BIBLATEX_OPTIONS{NAMELIST}{$nlo}{INPUT});
 
         foreach my $o ($oo->@*) {
@@ -1639,11 +1635,7 @@ sub parsename_x {
     $npn = lc($npn);
 
     # per-name options
-    if ($CONFIG_SCOPEOPT_BIBLATEX{NAME}->{$npn}) {
-      if ($CONFIG_OPTTYPE_BIBLATEX{$npn} and
-          $CONFIG_OPTTYPE_BIBLATEX{$npn} eq 'boolean') {
-        $npv = map_boolean($npv, 'tonum');
-      }
+    if (exists($CONFIG_SCOPEOPT_BIBLATEX{NAME}{$npn})) {
       my $oo = expand_option_input($npn, $npv, $CONFIG_BIBLATEX_OPTIONS{NAME}{$npn}{INPUT});
 
       foreach my $o ($oo->@*) {
