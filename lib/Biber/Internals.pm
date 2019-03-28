@@ -208,6 +208,7 @@ my %internal_dispatch_label = (
                 'shorthand'         =>  [\&_label_basic,            ['shorthand', 'nostrip']],
                 'sortkey'           =>  [\&_label_basic,            ['sortkey', 'nostrip']],
                 'citekey'           =>  [\&_label_citekey,          []],
+                'entrykey'          =>  [\&_label_citekey,          []],
                 'labelname'         =>  [\&_label_name,             ['labelname']],
                 'labeltitle'        =>  [\&_label_basic,            ['labeltitle']],
                 'labelmonth'        =>  [\&_label_basic,            ['labelmonth']],
