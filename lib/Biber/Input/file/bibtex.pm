@@ -378,7 +378,7 @@ sub create_entry {
         # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
         # messier to write than Q
         unless (not exists($map->{per_datasource}) or
-                first {$_->{content} eq $datasource} $map->{per_datasource}->@*) {
+                first {$_->{content} eq (File::Spec->splitpath($datasource))[2]} $map->{per_datasource}->@*) {
           next;
         }
 
