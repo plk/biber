@@ -79,26 +79,6 @@ if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   cd $BASE
 fi
 
-# Build farm OSX 32-bit intel (universal)
-# ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
-# time difference is too great between boots
-if [ ! -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
-  vmon osx10.5
-  sleep 5
-  ssh philkime@bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_i386;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
-  scp philkime@bbf-osx10.5:biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386 $DIR/
-  ssh philkime@bbf-osx10.5 "\\rm -f biblatex-biber/dist/darwin_x86_i386/biber-darwin_x86_i386"
-  vmoff osx10.5
-  cd $DIR
-  mv biber-darwin_x86_i386 biber
-  chmod +x biber
-  tar cf biber-darwin_x86_i386.tar biber
-  gzip biber-darwin_x86_i386.tar
-  \rm biber
-  cd $BASE
-fi
-
-
 # Build farm WMSWIN32
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
@@ -135,23 +115,6 @@ if [ ! -e $DIR/biber-MSWIN64.zip ]; then
   cd $BASE
 fi
 
-# Build farm Linux 32
-if [ ! -e $DIR/biber-linux_x86_32.tar.gz ]; then
-  vmon l32
-  sleep 10
-  ssh philkime@bbf-l32 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;/usr/local/perl/bin/perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/linux_x86_32;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
-  scp philkime@bbf-l32:biblatex-biber/dist/linux_x86_32/biber-linux_x86_32 $DIR/
-  ssh philkime@bbf-l32 "\\rm -f biblatex-biber/dist/linux_x86_32/biber-linux_x86_32"
-  vmoff l32
-  cd $DIR
-  mv biber-linux_x86_32 biber
-  chmod +x biber
-  tar cf biber-linux_x86_32.tar biber
-  gzip biber-linux_x86_32.tar
-  \rm biber
-  cd $BASE
-fi
-
 # Build farm Linux 64
 if [ ! -e $DIR/biber-linux_x86_64.tar.gz ]; then
   vmon l64
@@ -181,11 +144,6 @@ if [ -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   scp biber-darwin_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
 fi
 
-# OSX 32-bit universal
-if [ -e $DIR/biber-darwin_x86_i386.tar.gz ]; then
-  scp biber-darwin_x86_i386.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_i386.tar.gz
-fi
-
 # Windows 32-bit
 if [ -e $DIR/biber-MSWIN32.zip ]; then
   scp biber-MSWIN32.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN32.zip
@@ -194,11 +152,6 @@ fi
 # Windows 64-bit
 if [ -e $DIR/biber-MSWIN64.zip ]; then
   scp biber-MSWIN64.zip philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Windows/biber-MSWIN64.zip
-fi
-
-# Linux 32-bit
-if [ -e $DIR/biber-linux_x86_32.tar.gz ]; then
-  scp biber-linux_x86_32.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/Linux/biber-linux_x86_32.tar.gz
 fi
 
 # Linux 64-bit

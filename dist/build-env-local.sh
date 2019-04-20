@@ -37,17 +37,6 @@ if [[ $@ =~ "osx10.6" || $@ =~ "osxen" || $@ =~ "ALL" ]]; then
   vmoff osx10.6
 fi
 
-# Build farm OSX 32-bit intel (universal)
-# ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
-# time difference is too great between boots
-if [[ $@ =~ "osx10.5" || $@ =~ "osxen" || $@ =~ "ALL" ]]; then
-  vmon osx10.5
-  sleep 10
-  ssh philkime@bbf-osx10.5 "sudo ntpdate ch.pool.ntp.org;$COMMANDS_OSX"
-  vmoff osx10.5
-fi
-
-
 # Build farm WMSWIN32
 # DON'T FORGET THAT installdeps WON'T WORK FOR STRAWBERRY INSIDE CYGWIN
 # SO YOU HAVE TO INSTALL MODULE UPDATES MANUALLY
@@ -66,14 +55,6 @@ if [[ $@ =~ "w64" || $@ =~ "win" || $@ =~ "ALL" ]]; then
   sleep 20
   ssh phili@bbf-w1064 "$COMMANDS_WINDOWS"
   vmoff w1064
-fi
-
-# Build farm Linux 32
-if [[ $@ =~ "l32" || $@ =~ "linux" || $@ =~ "ALL" ]]; then
-  vmon l32
-  sleep 20
-  ssh philkime@bbf-l32 "sudo ntpdate ch.pool.ntp.org;$COMMANDS_LINUX"
-  vmoff l32
 fi
 
 # Build farm Linux 64

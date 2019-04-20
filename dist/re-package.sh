@@ -21,10 +21,6 @@ if [ ! -e $ROOT/binaries/Linux/biber-linux_x86_64.tar.gz ]; then
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Linux/biber-linux_x86_64.tar.gz
   [ $? -eq 0 ] || exit 1
 fi
-if [ ! -e $ROOT/binaries/Linux/biber-linux_x86_32.tar.gz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Linux/biber-linux_x86_32.tar.gz
-  [ $? -eq 0 ] || exit 1
-fi
 # FreeBSD
 cd ${ROOT}/binaries/FreeBSD
 if [ ! -e $ROOT/binaries/FreeBSD/biber-amd64-freebsd.tar.xz ]; then
@@ -48,11 +44,6 @@ if [ ! -e $ROOT/binaries/Windows/biber-MSWIN32.zip ]; then
 fi
 
 # OSX_Intel
-cd ${ROOT}/binaries/OSX_Intel
-if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwin_x86_i386.tar.gz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwin_x86_i386.tar.gz
-  [ $? -eq 0 ] || exit 1
-fi
 if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz ]; then
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwin_x86_64.tar.gz
   [ $? -eq 0 ] || exit 1
