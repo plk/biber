@@ -27,7 +27,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Things to do on each server. In an external file ignored by git
 . $DIR/build-env-cmds
 
-# Build farm OSX 64-bit intel
+# Build farm OSX 64-bit intel LECAGY (10.5<version<10.13)
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
 if [[ $@ =~ "osx10.6" || $@ =~ "osxen" || $@ =~ "ALL" ]]; then
@@ -35,6 +35,16 @@ if [[ $@ =~ "osx10.6" || $@ =~ "osxen" || $@ =~ "ALL" ]]; then
   sleep 5
   ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;$COMMANDS_OSX"
   vmoff osx10.6
+fi
+
+# Build farm OSX 64-bit intel
+# ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
+# time difference is too great between boots
+if [[ $@ =~ "osx10.12" || $@ =~ "osxen" || $@ =~ "ALL" ]]; then
+  vmon osx10.12
+  sleep 5
+  ssh philkime@bbf-osx10.12 "sudo ntpdate ch.pool.ntp.org;$COMMANDS_OSX"
+  vmoff osx10.12
 fi
 
 # Build farm WMSWIN32
