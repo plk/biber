@@ -17,6 +17,7 @@
 
 declare -r perlv='5.28'
 declare ucpath="/opt/local/lib/perl5/${perlv}/Unicode/Collate"
+export PATH=/opt/local/libexec/perl${perlv}/sitebin:$PATH
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
@@ -30,6 +31,7 @@ echo "USING Unicode::Collate at: ${ucpath}"
 cp /opt/local/libexec/perl${perlv}/sitebin/biber /tmp/biber-darwin
 
 PAR_VERBATIM=1 pp \
+  --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
   --module=Biber::Input::file::biblatexml \
