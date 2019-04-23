@@ -15,7 +15,7 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.28'
+declare -r perlv='5.26'
 declare ucpath="/opt/local/lib/perl5/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
@@ -58,7 +58,7 @@ PAR_VERBATIM=1 pp \
   --link=/opt/local/libexec/perl${perlv}/sitebin/libbtparse.dylib \
   --link=/opt/local/lib/libxml2.2.dylib \
   --link=/opt/local/lib/libxslt.1.dylib \
-  --link=/opt/local/lib/libgdbm.6.dylib \
+  --link=/opt/local/lib/libgdbm.4.dylib \
   --link=/opt/local/lib/libexslt.0.dylib \
   --link=/opt/local/lib/libssl.1.0.0.dylib \
   --link=/opt/local/lib/libcrypto.1.0.0.dylib \
