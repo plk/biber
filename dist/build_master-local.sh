@@ -66,7 +66,7 @@ fi
 if [ ! -e $DIR/biber-darwin_x86_64_legacy.tar.gz ]; then
   vmon osx10.6
   sleep 5
-  ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64_legacy;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64_legacy;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwin_x86_64_legacy;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-osx10.6:biblatex-biber/dist/darwin_x86_64_legacy/biber-darwin_x86_64_legacy $DIR/
   ssh philkime@bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwin_x86_64_legacy/biber-darwin_x86_64_legacy"
   vmoff osx10.6
@@ -85,7 +85,7 @@ fi
 if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   vmon osx10.12
   sleep 5
-  ssh philkime@bbf-osx10.12 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE./build.sh;cd ~/biblatex-biber;sudo ./Build realclean"
+  ssh philkime@bbf-osx10.12 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwin_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-osx10.12:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh philkime@bbf-osx10.12 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
   vmoff osx10.12
