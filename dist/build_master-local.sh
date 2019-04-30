@@ -63,29 +63,27 @@ fi
 # Build farm OSX 64-bit intel LECAGY (10.5<version<10.13)
 # ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
 # time difference is too great between boots
-if [ ! -e $DIR/biber-darwin_x86_64_legacy.tar.gz ]; then
+if [ ! -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
   vmon osx10.6
   sleep 5
-  ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64_legacy;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwin_x86_64_legacy;cd ~/biblatex-biber;sudo ./Build realclean"
-  scp philkime@bbf-osx10.6:biblatex-biber/dist/darwin_x86_64_legacy/biber-darwin_x86_64_legacy $DIR/
-  ssh philkime@bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwin_x86_64_legacy/biber-darwin_x86_64_legacy"
+  ssh philkime@bbf-osx10.6 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwinlegacy_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwinlegacy_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
+  scp philkime@bbf-osx10.6:biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64 $DIR/
+  ssh philkime@bbf-osx10.6 "\\rm -f biblatex-biber/dist/darwinlegacy_x86_64/biber-darwinlegacy_x86_64"
   vmoff osx10.6
   cd $DIR
-  mv biber-darwin_x86_64_legacy biber
+  mv biber-darwinlegacy_x86_64 biber
   chmod +x biber
-  tar cf biber-darwin_x86_64_legacy.tar biber
-  gzip biber-darwin_x86_64_legacy.tar
+  tar cf biber-darwinlegacy_x86_64.tar biber
+  gzip biber-darwinlegacy_x86_64.tar
   \rm biber
   cd $BASE
 fi
 
 # Build farm OSX 64-bit intel
-# ntpdate is because Vbox doesn't timesync OSX and ntp never works because the
-# time difference is too great between boots
 if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   vmon osx10.12
   sleep 5
-  ssh philkime@bbf-osx10.12 "sudo ntpdate ch.pool.ntp.org;cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwin_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
+  ssh philkime@bbf-osx10.12 "cd biblatex-biber;git checkout $BRANCH;git pull;perl ./Build.PL;sudo ./Build installdeps;sudo ./Build install;cd dist/darwin_x86_64;$SCANCACHE./build.sh;~/pp_osx_codesign_fix biber-darwin_x86_64;cd ~/biblatex-biber;sudo ./Build realclean"
   scp philkime@bbf-osx10.12:biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64 $DIR/
   ssh philkime@bbf-osx10.12 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
   vmoff osx10.12
@@ -159,8 +157,8 @@ fi
 
 cd $DIR
 # OSX 64-bit legacy
-if [ -e $DIR/biber-darwin_x86_64_legacy.tar.gz ]; then
-  scp biber-darwin_x86_64_legacy.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwin_x86_64_legacy.tar.gz
+if [ -e $DIR/biber-darwinlegacy_x86_64.tar.gz ]; then
+  scp biber-darwinlegacy_x86_64.tar.gz philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$RELEASE/binaries/OSX_Intel/biber-darwinlegacy_x86_64.tar.gz
 fi
 
 # OSX 64-bit
