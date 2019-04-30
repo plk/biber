@@ -6,10 +6,10 @@ declare -r ROOT='/tmp/biber-repack/biber'
 
 mkdir -p ${ROOT}/binaries
 mkdir -p ${ROOT}/binaries/Linux
+mkdir -p ${ROOT}/binaries/Linux-musl
 mkdir -p ${ROOT}/binaries/FreeBSD
 mkdir -p ${ROOT}/binaries/OSX_Intel
 mkdir -p ${ROOT}/binaries/Solaris_Intel
-mkdir -p ${ROOT}/binaries/ARM
 mkdir -p ${ROOT}/binaries/Cygwin
 mkdir -p ${ROOT}/binaries/Windows
 mkdir -p ${ROOT}/documentation
@@ -21,6 +21,14 @@ if [ ! -e $ROOT/binaries/Linux/biber-linux_x86_64.tar.gz ]; then
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Linux/biber-linux_x86_64.tar.gz
   [ $? -eq 0 ] || exit 1
 fi
+
+# Linux-musl
+cd ${ROOT}/binaries/Linux-musl
+if [ ! -e $ROOT/binaries/Linux-musl/biber-linux_x86_64-musl.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Linux-musl/biber-linux_x86_64-musl.tar.gz
+  [ $? -eq 0 ] || exit 1
+fi
+
 # FreeBSD
 cd ${ROOT}/binaries/FreeBSD
 if [ ! -e $ROOT/binaries/FreeBSD/biber-amd64-freebsd.tar.xz ]; then
@@ -40,6 +48,12 @@ if [ ! -e $ROOT/binaries/Windows/biber-MSWIN64.zip ]; then
 fi
 if [ ! -e $ROOT/binaries/Windows/biber-MSWIN32.zip ]; then
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Windows/biber-MSWIN32.zip
+  [ $? -eq 0 ] || exit 1
+fi
+
+# OSX_Intel legacy (10.5<version<10.13)
+if [ ! -e $ROOT/binaries/OSX_Intel/biber-darwin_x86_64_legacy.tar.gz ]; then
+  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/OSX_Intel/biber-darwin_x86_64_legacy.tar.gz
   [ $? -eq 0 ] || exit 1
 fi
 
@@ -69,13 +83,6 @@ fi
 if [ ! -e $ROOT/binaries/Cygwin/Cygwin/biber-cygwin32.tar.gz ]; then
   /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/Cygwin/biber-cygwin32.tar.gz
  [ $? -eq 0 ] || exit 1
-fi
-
-# ARM
-cd ${ROOT}/binaries/ARM
-if [ ! -e $ROOT/binaries/ARM/biber-linux_armel.tar.gz ]; then
-  /opt/local/bin/wget --content-disposition --level=0 -c https://sourceforge.net/projects/biblatex-biber/files/biblatex-biber/current/binaries/ARM/biber-linux_armel.tar.gz
-  #[ $? -eq 0 ] || exit 1
 fi
 
 # Documentation
