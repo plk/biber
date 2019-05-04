@@ -32,19 +32,19 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.26.0'
-declare ucpath="/usr/local/perl/lib/${perlv}/Unicode/Collate"
+declare -r perlv='5.30.0'
+declare ucpath="/usr/local/perl530/lib/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
-if [ -d "/usr/local/perl/lib/site_perl/${perlv}/i686-linux-thread-multi/Unicode/Collate" ]
+if [ -d "/usr/local/perl530/lib/site_perl/${perlv}/i686-linux-thread-multi/Unicode/Collate" ]
 then
-  ucpath="/usr/local/perl/lib/site_perl/${perlv}/i686-linux-thread-multi/Unicode/Collate"
+  ucpath="/usr/local/perl530/lib/site_perl/${perlv}/i686-linux-thread-multi/Unicode/Collate"
 fi
 
 echo "USING Unicode::Collate at: ${ucpath}"
 
-PAR_VERBATIM=1 /usr/local/perl/bin/pp \
+PAR_VERBATIM=1 /usr/local/perl530/bin/pp \
   --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
@@ -69,12 +69,12 @@ PAR_VERBATIM=1 /usr/local/perl/bin/pp \
   --module=Text::CSV_XS \
   --module=DateTime \
   --link=/usr/local/perl/lib/libbtparse.so \
-  --link=/usr/local/lib/libxml2.so.2 \
-  --link=/usr/local/lib/libz.so.1 \
-  --link=/usr/local/lib/libxslt.so.1 \
-  --link=/usr/local/lib/libexslt.so.0 \
-  --link=/usr/lib/libssl.so.0.9.8 \
-  --link=/usr/lib/libcrypto.so.0.9.8 \
+  --link=/usr/lib/libxml2.so \
+  --link=/usr/lib/libz.so \
+  --link=/usr/lib/libxslt.so \
+  --link=/usr/lib/libexslt.so \
+  --link=/usr/lib/libssl.so \
+  --link=/usr/lib/libcrypto.so \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
   --addfile="../../data/schemata/config.rnc;lib/Biber/config.rnc" \
   --addfile="../../data/schemata/config.rng;lib/Biber/config.rng" \
@@ -86,10 +86,10 @@ PAR_VERBATIM=1 /usr/local/perl/bin/pp \
   --addfile="${ucpath}/CJK;lib/Unicode/Collate/CJK" \
   --addfile="${ucpath}/allkeys.txt;lib/Unicode/Collate/allkeys.txt" \
   --addfile="${ucpath}/keys.txt;lib/Unicode/Collate/keys.txt" \
-  --addfile="/usr/local/perl/lib/site_perl/${perlv}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
-  --addfile="/usr/local/perl/lib/${perlv}/i686-linux-thread-multi/PerlIO;lib/PerlIO" \
-  --addfile="/usr/local/perl/lib/${perlv}/i686-linux-thread-multi/auto/PerlIO;lib/auto/PerlIO" \
-  --addfile="/usr/local/perl/lib/site_perl/${perlv}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
+  --addfile="/usr/local/perl530/lib/site_perl/${perlv}/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
+  --addfile="/usr/local/perl530/lib/${perlv}/i686-linux-thread-multi/PerlIO;lib/PerlIO" \
+  --addfile="/usr/local/perl530/lib/${perlv}/i686-linux-thread-multi/auto/PerlIO;lib/auto/PerlIO" \
+  --addfile="/usr/local/perl530/lib/site_perl/${perlv}/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
   --cachedeps=scancache \
   --output=biber-linux_x86_32 \
-  /usr/local/perl/bin/biber
+  /usr/local/perl530/bin/biber
