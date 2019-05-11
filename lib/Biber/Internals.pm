@@ -1035,7 +1035,10 @@ sub _dispatch_table_sorting {
   if ($dmf->{fieldtype} eq 'list' and $dmf->{datatype} eq 'name') {
     return [\&_sort_name, [$field]];
   }
-  elsif ($dmf->{fieldtype} eq 'field' and $dmf->{datatype} eq 'literal') {
+  elsif ($dmf->{datatype} eq 'verbatim' or $dmf->{datatype} eq 'uri') {
+    return [\&_sort_verbatim, [$field]];
+  }
+  elsif ($dmf->{fieldtype} eq 'field' and $dmf->{datatype} eq 'literal' ) {
     return [\&_sort_literal, [$field]];
   }
   elsif ($dmf->{fieldtype} eq 'field' and
@@ -1045,6 +1048,10 @@ sub _dispatch_table_sorting {
   elsif ($dmf->{fieldtype} eq 'list' and
          ($dmf->{datatype} eq 'literal' or $dmf->{datatype} eq 'key')) {
     return [\&_sort_list, [$field]];
+  }
+  elsif ($dmf->{fieldtype} eq 'list' and
+         ($dmf->{datatype} eq 'verbatim' or $dmf->{datatype} eq 'uri')) {
+    return [\&_sort_list_verbatim, [$field]];
   }
   elsif ($dmf->{fieldtype} eq 'field' and $dmf->{datatype} eq 'key') {
     return [\&_sort_literal, [$field]];
@@ -1324,6 +1331,20 @@ sub _sort_list {
 
 # This is a meta-sub which uses the optional arguments to the dispatch code
 # It's done to avoid having many repetitions of almost identical sorting code
+sub _sort_list_verbatim {
+  my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
+  my $list = $args->[0]; # get list field
+  if ($be->get_field($list)) {
+    my $string = $self->_liststring($citekey, $list, 1);
+    return _process_sort_attributes($string, $sortelementattributes);
+  }
+  else {
+    return '';
+  }
+}
+
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
 # for literal strings which need normalising
 sub _sort_literal {
   my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
@@ -1331,6 +1352,21 @@ sub _sort_literal {
   if (my $field = $be->get_field($literal)) {
     my $string = normalise_string_sort($field, $literal);
     return _translit($literal, $be, _process_sort_attributes($string, $sortelementattributes));
+  }
+  else {
+    return '';
+  }
+}
+
+# This is a meta-sub which uses the optional arguments to the dispatch code
+# It's done to avoid having many repetitions of almost identical sorting code
+# for literal strings which need no normalising/translit. Nosort is still honoured.
+sub _sort_verbatim {
+  my ($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $args) = @_;
+  my $literal = $args->[0]; # get actual field
+  if (my $field = $be->get_field($literal)) {
+    my $string = strip_nosort($field, $literal);
+    return _process_sort_attributes($field, $sortelementattributes);
   }
   else {
     return '';
@@ -1552,7 +1588,7 @@ sub _namestring {
 }
 
 sub _liststring {
-  my ($self, $citekey, $field) = @_;
+  my ($self, $citekey, $field, $verbatim) = @_;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
@@ -1564,7 +1600,7 @@ sub _liststring {
   my $truncated = 0;
 
   # These should be symbols which can't appear in lists and which sort before all alphanum
-  # so that "Alan Smith" sorts after "Al Smth". This means, symbols which normalise_string_sort()
+  # so that "Alan Smith" sorts after "Al Smith". This means, symbols which normalise_string_sort()
   # strips out. Unfortuately, this means using punctuation and these are by default variable
   # weight and ignorable in DUCET so we have to redefine these these symbols after loading DUCET
   # when sorting so that they are non-ignorable (see Biber.pm)
@@ -1579,7 +1615,12 @@ sub _liststring {
   }
 
   # separate the items by a string to give some structure
-  $str = join($lsi, map { normalise_string_sort($_, $field)} @items);
+  if ($verbatim) { # no normalisation for verbatim/uri fields
+    $str = join($lsi, map { strip_nosort($_, $field)} @items);
+  }
+  else {
+    $str = join($lsi, map { normalise_string_sort($_, $field)} @items);
+  }
 
   $str =~ s/\s+\z//xms;
   $str .= $trunc if $truncated;
