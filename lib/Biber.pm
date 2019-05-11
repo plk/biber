@@ -1533,7 +1533,7 @@ sub validate_datamodel {
       # * Valid because it's allowed for "ALL" entrytypes OR
       # * Valid field for the specific entrytype OR
       # * Valid because entrytype allows "ALL" fields
-      unless ($et eq 'xdata') { # XDATA are generic containers for any field
+      unless ($et eq 'xdata' or $et eq 'set') { # XDATA/SET are generic containers for any field
         foreach my $ef ($be->datafields) {
           unless ($dm->is_field_for_entrytype($et, $ef)) {
             $dmwe->("Datamodel: Entry '$citekey' ($ds): Invalid field '$ef' for entrytype '$et'", $be);
