@@ -1057,16 +1057,12 @@ sub _name {
       unless ($name =~ m/\A\{\X+\}\z/xms) { # Ignore these tests for escaped names
         my @commas = $name =~ m/,/g;
         if ($#commas > 1) {
-          biber_warn("Name \"$name\" has too many commas: skipping name", $be);
-          $section->del_citekey($key);
-          next;
+          biber_error("Name \"$name\" has too many commas");
         }
 
         # Consecutive commas cause Text::BibTeX::Name to segfault
         if ($name =~ /,,/) {
-          biber_warn("Name \"$name\" is malformed (consecutive commas): skipping name", $be);
-          $section->del_citekey($key);
-          next;
+          biber_error("Name \"$name\" is malformed (consecutive commas): skipping name");
         }
       }
 

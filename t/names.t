@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 74;
+use Test::More tests => 72;
 use Test::Differences;
 unified_diff;
 
@@ -724,7 +724,7 @@ my $l23 = q|    \entry{L23}{book}{}
       \strng{authorbibnamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authornamehash}{4389a3c0dc7da74487b50808ba9436ad}
       \strng{authorfullhash}{4389a3c0dc7da74487b50808ba9436ad}
-      \field{extraname}{3}
+      \field{extraname}{2}
       \field{sortinit}{S}
       \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
       \field{labelnamesource}{author}
@@ -787,15 +787,6 @@ my $l26 = q|    \entry{L26}{book}{}
       \field{labelnamesource}{author}
     \endentry
 |;
-
-# Malformed anyway but a decent test
-my $l28 = q|    \entry{L28}{book}{}
-      \field{sortinit}{0}
-      \field{sortinithash}{bcf7a1f4afb88b7299f988caccb80d1c}
-      \warn{\item Name "Deux et al.,, O." is malformed (consecutive commas): skipping name}
-    \endentry
-|;
-
 
 my $l29 = q|    \entry{L29}{book}{}
       \name{author}{1}{}{%
@@ -951,8 +942,6 @@ eq_or_diff( NFC($out->get_output_entry('L23', $main)), $l23, 'Unicode given name
 eq_or_diff( NFC($out->get_output_entry('L24', $main)), $l24, 'Unicode family name');
 eq_or_diff( $out->get_output_entry('L25', $main), $l25, 'Single string name');
 eq_or_diff( $out->get_output_entry('L26', $main), $l26, 'Hyphen at brace level <> 0');
-eq_or_diff($section->bibentry('L27')->get_field('author')->count_names, 1, 'Bad name with 3 commas');
-eq_or_diff( $out->get_output_entry('L28', $main), $l28, 'Bad name with consecutive commas');
 eq_or_diff( $out->get_output_entry('L29', $main), $l29, 'Escaped name with 3 commas');
 
 # Checking visibility
