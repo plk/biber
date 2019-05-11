@@ -1999,7 +1999,7 @@
     </bcf:sort>
     <bcf:sort order="6">
       <bcf:sortitem order="1">volume</bcf:sortitem>
-      <bcf:sortitem order="2">0</bcf:sortitem>
+      <bcf:sortitem literal="1" order="2">0</bcf:sortitem>
     </bcf:sort>
   </bcf:sortingtemplate>
   <bcf:sortingtemplate name="nty1">
@@ -2131,7 +2131,7 @@
     </bcf:sort>
     <bcf:sort order="6">
       <bcf:sortitem order="1" pad_side="right">volume</bcf:sortitem>
-      <bcf:sortitem order="2">0</bcf:sortitem>
+      <bcf:sortitem literal="1" order="2">0</bcf:sortitem>
     </bcf:sort>
   </bcf:sortingtemplate>
   <bcf:sortingtemplate name="nty6">
@@ -2159,7 +2159,7 @@
     </bcf:sort>
     <bcf:sort order="6">
       <bcf:sortitem order="1" pad_side="right" pad_width="7">volume</bcf:sortitem>
-      <bcf:sortitem order="2">0</bcf:sortitem>
+      <bcf:sortitem literal="1" order="2">0</bcf:sortitem>
     </bcf:sort>
   </bcf:sortingtemplate>
   <bcf:sortingtemplate name="nty7">
@@ -2371,7 +2371,7 @@
     </bcf:sort>
     <bcf:sort order="6">
       <bcf:sortitem order="1">volume</bcf:sortitem>
-      <bcf:sortitem order="2">0</bcf:sortitem>
+      <bcf:sortitem literal="1" order="2">0</bcf:sortitem>
     </bcf:sort>
   </bcf:sortingtemplate>
   <bcf:sortingtemplate name="anyt"> 
@@ -2603,7 +2603,7 @@
     <bcf:sort order="3">
       <bcf:sortitem order="1">sortyear</bcf:sortitem>
       <bcf:sortitem order="2">labelyear</bcf:sortitem>
-      <bcf:sortitem order="3">9999</bcf:sortitem>
+      <bcf:sortitem literal="1" order="3">9999</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="4">
       <bcf:sortitem order="1">sortname</bcf:sortitem>
@@ -2628,7 +2628,7 @@
     <bcf:sort order="3" sort_direction="descending">
       <bcf:sortitem order="1">sortyear</bcf:sortitem>
       <bcf:sortitem order="2">labelyear</bcf:sortitem>
-      <bcf:sortitem order="3">9999</bcf:sortitem>
+      <bcf:sortitem literal="1" order="3">9999</bcf:sortitem>
     </bcf:sort>
     <bcf:sort order="4">
       <bcf:sortitem order="1">sortname</bcf:sortitem>

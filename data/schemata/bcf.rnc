@@ -468,6 +468,8 @@ sort =
     attribute locale { xsd:string {minLength="1"}}?,
     # A sort item specification - a field or pseudo-field to get sort information from
     element bcf:sortitem {
+      # Is this sortitem a literal string?
+      attribute literal { xsd:boolean }?,
       # order of this item in the set of all other item specifications
       attribute order { xsd:integer },
       # Just use a part of the item information for sorting?

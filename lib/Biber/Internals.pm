@@ -1084,10 +1084,16 @@ sub _dispatch_sorting {
     $code_ref = $d->[0];
     $code_args_ref  = $d->[1];
   }
-  else { # if the field is not found in the dispatch table, assume it's a literal string
+  # if the field is a literal string, use it
+  elsif ($sortelementattributes->{literal}) {
     $code_ref = \&_sort_string;
     $code_args_ref = [$sortfield];
   }
+  else { # Unknown field
+    biber_warn("Unknown field '$sortfield' found in sorting template");
+    return undef;
+  }
+
   return &{$code_ref}($self, $citekey, $secnum, $section, $be, $dlist, $sortelementattributes, $code_args_ref);
 }
 

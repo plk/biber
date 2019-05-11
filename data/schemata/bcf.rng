@@ -233,9 +233,9 @@
               </optional>
               <optional>
                 <!--
-                    Applies to ENTRY, NAMELIST and NAME scope
-                    Determines whether biber will write the option to its ouput (e.g.
-                    .bbl) because biblatex needs to know the value.
+                  Applies to ENTRY, NAMELIST and NAME scope
+                  Determines whether biber will write the option to its ouput (e.g.
+                  .bbl) because biblatex needs to know the value.
                 -->
                 <attribute name="backendout">
                   <data type="boolean"/>
@@ -1162,6 +1162,12 @@
         <oneOrMore>
           <!-- A sort item specification - a field or pseudo-field to get sort information from -->
           <element name="bcf:sortitem">
+            <optional>
+              <!-- Is this sortitem a literal string? -->
+              <attribute name="literal">
+                <data type="boolean"/>
+              </attribute>
+            </optional>
             <!-- order of this item in the set of all other item specifications -->
             <attribute name="order">
               <data type="integer"/>
