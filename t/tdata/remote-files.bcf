@@ -1925,7 +1925,6 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">http://www.citeulike.org/bibtex/group/8082</bcf:datasource>
     <bcf:datasource type="file" datatype="bibtex">http://people.cs.uu.nl/hansb/graphs-bib/definitions.bib</bcf:datasource>
     <bcf:datasource type="file" datatype="bibtex">http://people.cs.uu.nl/hansb/graphs-bib/papers.bib</bcf:datasource>
     <bcf:datasource type="file" datatype="bibtex">https://api.zotero.org/groups/9097/items/8VITAT46?format=bibtex&amp;limit=1</bcf:datasource>
