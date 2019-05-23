@@ -469,7 +469,7 @@ sources, please make sure your entries are legal \TeX\ code.
 
 Running \opt{biber --help} will display all options and description of
 each and is the primary source of usage information. \biber\
-returns an exit code of 0 on success or 1 if there was an error.
+returns an exit code of 0 on success or 2 if there was an error.
 
 Most \biber\ options can be specified in long or short format. When
 mentioning options below, they are referred to as
@@ -2737,28 +2737,12 @@ directory/folder and then run the current binary again. You can see the active c
 
 \subsection{Binary Architectures}
 
-Binaries are available for many architectures, directly on SourceForge and
-also via \TeX Live:
-
-\begin{itemize}
-\item \verb+darwin_x86_64+
-\item \verb+darwin_x86_i386+
-\item \verb+linux_x86_32+
-\item \verb+linux_x86_64+
-\item \verb+MSWin32+
-\item \verb+MSWin64+
-\item \verb+cygwin32+\tpb
-\item \verb+freebsd_x86+\tpb
-\item \verb+freebsd_amd64+\tpb
-\item \verb+solaris_i386+\tpb
-\item \verb+solaris_x86_64+\tpb
-\end{itemize}
-
-\noindent If you want to run development versions, they are usually only
-regularly updated for the core architectures which are not flagged as
-third-party built above. If you want to regularly run the latest
-development version, you should probably git clone the relevant branch and
-run \biber\ as a pure Perl program directly.
+Binaries are available for many architectures, directly on SourceForge. If
+you want to run development versions, they are usually only regularly
+updated for the core architectures which are not flagged as third-party
+built above. If you want to regularly run the latest development version,
+you should probably git clone the relevant branch and run \biber\ as a pure
+Perl program directly.
 
 \subsection{Installing}
 
