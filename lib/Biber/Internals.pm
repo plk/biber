@@ -1086,15 +1086,15 @@ sub _dispatch_sorting {
     }
   }
 
-  # real sorting field
-  if (my $d = _dispatch_table_sorting($sortfield, $dm)) {
-    $code_ref = $d->[0];
-    $code_args_ref  = $d->[1];
-  }
   # if the field is a literal string, use it
-  elsif ($sortelementattributes->{literal}) {
+  if ($sortelementattributes->{literal}) {
     $code_ref = \&_sort_string;
     $code_args_ref = [$sortfield];
+  }
+  # real sorting field
+  elsif (my $d = _dispatch_table_sorting($sortfield, $dm)) {
+    $code_ref = $d->[0];
+    $code_args_ref  = $d->[1];
   }
   else { # Unknown field
     biber_warn("Unknown field '$sortfield' found in sorting template");
