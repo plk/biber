@@ -103,15 +103,6 @@ sub relclone {
           $logger->debug("Created new related clone for '$relkey' with clone key '$clonekey'");
         }
 
-        # # *datesplit is a special non datafield and needs to be copied for things like era
-        # # output
-        # foreach my $df ($dmh->{datefields}->@*) {
-        #   $df =~ s/date$//;
-        #   if (my $ds = $self->get_field("${df}datesplit")) {
-        #     $relclone->set_field("${df}datesplit", $ds);
-        #   }
-        # }
-
         # Set related clone options
         if (my $relopts = $self->get_field('relatedoptions')) {
           # Check if this clone was also directly cited. If so, set skipbib/skipbiblist
