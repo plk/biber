@@ -103,14 +103,14 @@ sub relclone {
           $logger->debug("Created new related clone for '$relkey' with clone key '$clonekey'");
         }
 
-        # *datesplit is a special non datafield and needs to be copied for things like era
-        # output
-        foreach my $df ($dmh->{datefields}->@*) {
-          $df =~ s/date$//;
-          if (my $ds = $self->get_field("${df}datesplit")) {
-            $relclone->set_field("${df}datesplit", $ds);
-          }
-        }
+        # # *datesplit is a special non datafield and needs to be copied for things like era
+        # # output
+        # foreach my $df ($dmh->{datefields}->@*) {
+        #   $df =~ s/date$//;
+        #   if (my $ds = $self->get_field("${df}datesplit")) {
+        #     $relclone->set_field("${df}datesplit", $ds);
+        #   }
+        # }
 
         # Set related clone options
         if (my $relopts = $self->get_field('relatedoptions')) {
@@ -168,15 +168,32 @@ sub relclone {
 sub clone {
   my ($self, $newkey) = @_;
   my $new = new Biber::Entry;
+  my $dmh = Biber::Config->get_dm_helpers;
+
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = $v;
   }
   while (my ($k, $v) = each(%{$self->{origfields}})) {
     $new->{origfields}{$k} = $v;
   }
+
+  # clone derived date fields
+  foreach my $df ($dmh->{datefields}->@*) {
+    $df =~ s/date$//;
+    foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
+                     'enddatejulian', 'dateapproximate', 'enddateapproximate',
+                     'dateuncertain', 'enddateuncertain', 'season', 'endseason',
+                     'era', 'endera') {
+      if (my $ds = $self->{derivedfields}{"$df$dsf"}) {
+        $new->{derivedfields}{"$df$dsf"} = $ds;
+      }
+    }
+  }
+
   # Need to add entrytype and datatype
   $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
   $new->{derivedfields}{datatype} = $self->{derivedfields}{datatype};
+
   # put in key if specified
   if ($newkey) {
     $new->{derivedfields}{citekey} = $newkey;
