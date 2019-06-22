@@ -352,7 +352,7 @@ sub create_entry {
       $smap->{map_overwrite} = $smap->{map_overwrite} // 0; # default
       my $level = $smap->{level};
 
-    MAP: foreach my $map ($smap->{map}->@*) {
+      foreach my $map ($smap->{map}->@*) {
 
         # Skip if this map element specifies a particular refsection and it is not this one
         if (exists($map->{refsection})) {
@@ -402,7 +402,7 @@ sub create_entry {
           }
         }
 
-        foreach my $maploop (@maploop) {
+      MAP: foreach my $maploop (@maploop) {
           my $MAPUNIQVAL;
           # loop over mapping steps
           foreach my $step ($map->{map_step}->@*) {
