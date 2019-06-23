@@ -39,9 +39,9 @@ my $collopts = { level => 3,
                  normalization => 'prenormalized',
                  table => '/home/user/data/otherkeys.txt' };
 
-my $noinit = [ {value => q/\b\p{Ll}{2}\p{Pd}/}, {value => q/[\x{2bf}\x{2018}]/} ];
+my $noinit = [ {value => q/\b\p{Ll}{2}\p{Pd}(?=\S)/}, {value => q/[\x{2bf}\x{2018}]/} ];
 
-my $nosort = [ { name => 'author', value => q/\A\p{L}{2}\p{Pd}/ },
+my $nosort = [ { name => 'author', value => q/\A\p{L}{2}\p{Pd}(?=\S)/ },
                { name => 'author', value => q/[\x{2bf}\x{2018}]/ },
                { name => 'translator', value => q/[\x{2bf}\x{2018}]/ } ];
 

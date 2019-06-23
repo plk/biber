@@ -628,7 +628,7 @@ an example config file which displays the \biber\ defaults:
   <nodieonerror>0</nodieonerror>
   <noinit>
     <!-- strip lowercase prefices like 'al-' when generating initials -->
-    <option value="\b\p{Ll}{2}\p{Pd}"/>
+    <option value="\b\p{Ll}{2}\p{Pd}(?=\S)"/>
     <!-- strip diacritics when generating initials -->
     <option value="[\x{2bf}\x{2018}]"/>
   </noinit>
@@ -640,7 +640,7 @@ an example config file which displays the \biber\ defaults:
   <nostdmacros>0</nostdmacros>
   <nosort>
     <!-- strip prefices like 'El-' when sorting name fields -->
-    <option name="setnames" value="\A\p{L}{2}\p{Pd}"/>
+    <option name="setnames" value="\A\p{L}{2}\p{Pd}(?=\S)"/>
     <!-- strip some diacritics when sorting name fields -->
     <option name="setnames" value="[\x{2bf}\x{2018}]"/>
   </nosort>
@@ -1284,7 +1284,7 @@ in names which should not be considered when sorting. Given (the default):
 \begin{lstlisting}[language=xml]
   <noinit>
     <!-- strip lowercase prefices like 'al-' when generating initials -->
-    <option value="\b\p{Ll}{2}\p{Pd}"/>
+    <option value="\b\p{Ll}{2}\p{Pd}(?=\S)"/>
     <!-- strip diacritics when generating initials -->
     <option value="[\x{2bf}\x{2018}]"/>
   </noinit>
@@ -1686,7 +1686,7 @@ in names which should not be considered when sorting. Given (the default):
 \begin{lstlisting}[language=xml]
 <nosort>
   <!-- strip prefices like 'al-' when sorting names -->
-  <option name="setnames" value="\A\p{L}{2}\p{Pd}"/>
+  <option name="setnames" value="\A\p{L}{2}\p{Pd}(?=\S)"/>
   <!-- strip diacritics when sorting names -->
   <option name="setnames" value="[\x{2bf}\x{2018}]"/>
 </nosort>

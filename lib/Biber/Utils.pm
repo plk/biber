@@ -876,9 +876,13 @@ sub normalise_utf8 {
 sub inits {
   my $istring = shift;
   $istring =~ s/[{}]//; # Remove any spurious braces left by btparse inits routines
-  return [ split(/(?<!\\)~/, $istring) ];
+  # The map {} is there to remove broken hyphenated initials returned from btparse
+  # For example, in the, admittedly strange 'al- Hassan, John', we want the 'al-'
+  # interpreted as a prefix (because of the following space) but because of the
+  # hypen, this is intialised as "a-" by btparse. So we correct such edge cases here by
+  # removing any trailing dashes in initials
+  return [ map {s/\p{Pd}$//r} split(/(?<!\\)~/, $istring) ];
 }
-
 
 =head2 join_name
 

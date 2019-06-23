@@ -1521,9 +1521,6 @@ sub parsename {
   $namestr =~ s/\s+|\\\s/ /g;
   $namestr =~ s/\A\{\{+([^\{\}]+)\}+\}\z/{$1}/xms; # Allow only one enveloping set of braces
 
-  # dashes with a following space cause Text::BibTeX to SEGFAULT
-  $namestr =~ s/(\p{Pd})\s+/$1/g;
-
   # If requested, try to correct broken initials with no space between them.
   # This can slightly mess up some other names like {{U.K. Government}} etc.
   # btparse can't do this so we do it before name parsing

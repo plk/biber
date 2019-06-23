@@ -133,10 +133,10 @@ my $name14 =
       prefix              => {string => 'de~la', initial => ['d', 'l']},
       suffix              => {string => undef, initial => undef}};
 
-my $namebad1 =
+my $namepre1 =
    {  given               => {string => 'Tawfik', initial => ['T']},
-      family              => {string => 'al-Hakim', initial => ['H']},
-      prefix              => {string => undef, initial => undef},
+      family              => {string => 'Hakim', initial => ['H']},
+      prefix              => {string => 'al-', initial => ['a']},
       suffix              => {string => undef, initial => undef}};
 
 # Note that the family initials are wrong because the prefix "El-" was not stripped
@@ -889,7 +889,7 @@ is_deeply(tparsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author')
 is_deeply(tparsename('von Berlichingen zu Hornberg, Johann Gottfried', 'author'), $name4, 'parsename 4') ;
 is_deeply(tparsename('{Robert and Sons, Inc.}', 'author'), $name5, 'parsename 5') ;
 is_deeply(tparsename('al-Ṣāliḥ, ʿAbdallāh', 'author'), $name6, 'parsename 6') ;
-is_deeply(tparsename('al- Hakim, Tawfik', 'author'), $namebad1, 'parsename 6a') ;
+is_deeply(tparsename('al- Hakim, Tawfik', 'author'), $namepre1, 'parsename 6a') ;
 is_deeply(tparsename('Jean Charles Gabriel de la Vallée Poussin', 'author'), $name7, 'parsename 7');
 is_deeply(tparsename('{Jean Charles Gabriel} de la Vallée Poussin', 'author'), $name8, 'parsename 8');
 is_deeply(tparsename('Jean Charles Gabriel {de la} Vallée Poussin', 'author'), $name9, 'parsename 9');
