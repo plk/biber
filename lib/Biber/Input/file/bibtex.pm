@@ -1550,6 +1550,13 @@ sub parsename {
   # hack robust initials code into btparse ...
   my $nd_namestr = strip_noinit($namestr);
 
+  # Now re-santise after the arbitrary regexps of the noinit removals
+  # leading and trailing whitespace
+  $nd_namestr =~ s/\A\s*|\s*\z//xms;
+
+  # Collapse internal whitespace
+  $nd_namestr =~ s/\s+|\\\s/ /g;
+
   # Make initials with ties in between work. btparse doesn't understand this so replace with
   # spaces - this is fine as we are just generating initials
   $nd_namestr =~ s/\.~\s*/. /g;
