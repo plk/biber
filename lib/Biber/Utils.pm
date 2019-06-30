@@ -312,11 +312,11 @@ sub biber_warn {
 =cut
 
 sub biber_error {
-  my $error = shift;
+  my ($error, $nodie) = @_;
   $logger->error($error);
   $Biber::MASTER->{errors}++;
   # exit unless user requested not to for errors
-  unless (Biber::Config->getoption('nodieonerror')) {
+  unless ($nodie or Biber::Config->getoption('nodieonerror')) {
     $Biber::MASTER->display_problems;
     exit EXIT_ERROR;
   }

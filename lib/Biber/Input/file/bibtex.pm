@@ -297,7 +297,7 @@ sub extract_entries {
       if (/error:/) {
         chomp;
         if (/skipping\sto\snext\s"\@"/) {
-          biber_warn("BibTeX subsystem: $_");
+          biber_error("BibTeX subsystem: $_", 1);
         }
         else {
           biber_error("BibTeX subsystem: $_");
@@ -1067,14 +1067,14 @@ sub _name {
       unless ($name =~ m/\A\{\X+\}\z/xms) { # Ignore these tests for escaped names
         my @commas = $name =~ m/,/g;
         if ($#commas > 1) {
-          biber_warn("Name \"$name\" has too many commas, skipping entry '$key'", $be);
+          biber_error("Name \"$name\" has too many commas, skipping entry '$key'", 1);
           $section->del_citekey($key);
           return 'BIBER_SKIP_ENTRY';
         }
 
         # Consecutive commas cause Text::BibTeX::Name to segfault
         if ($name =~ /,,/) {
-          biber_warn("Name \"$name\" is malformed (consecutive commas): skipping entry '$key'", $be);
+          biber_error("Name \"$name\" is malformed (consecutive commas): skipping entry '$key'", 1);
           $section->del_citekey($key);
           return 'BIBER_SKIP_ENTRY';
         }
