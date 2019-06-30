@@ -296,7 +296,12 @@ sub extract_entries {
       next if /overriding\sexisting\sdefinition\sof\smacro/; # ignore macro redefs
       if (/error:/) {
         chomp;
-        biber_error("BibTeX subsystem: $_");
+        if (/skipping\sto\snext\s"\@"/) {
+          biber_warn("BibTeX subsystem: $_");
+        }
+        else {
+          biber_error("BibTeX subsystem: $_");
+        }
       }
       elsif (/warning:/) {
         chomp;
