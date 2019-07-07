@@ -297,7 +297,7 @@ sub extract_entries {
       if (/error:/) {
         chomp;
         if (/skipping\sto\snext\s"\@"/) {
-          biber_error("BibTeX subsystem: $_", 1);
+          biber_error("BibTeX subsystem: $_");
         }
         else {
           biber_error("BibTeX subsystem: $_");
