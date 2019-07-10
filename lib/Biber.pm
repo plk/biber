@@ -4383,21 +4383,15 @@ sub fetch_data {
     $section->add_undef_citekey($citekey);
   }
 
-  # Don't need to do dependent detection if running in (real) tool mode since this is always
-  # allkeys=1 and we don't care about missing dependents which get_dependents() might prune.
-  # pseudo_tool mode is bibtex output when not in tool mode. Internally, it's essentially
-  # the same but without allkeys.
-  if (Biber::Config->getoption('tool') and not
-      Biber::Config->getoption('pseudo_tool')) {
-    return;
-  }
-
   if ($logger->is_debug()) {# performance tune
     $logger->debug('Building dependents for keys: ' . join(',', $section->get_citekeys));
   }
 
   # dependent key list generation - has to be a sub as it's recursive to catch
   # nested crossrefs, xdata etc.
+  # We still do this even in tool mode which is implicitly allkeys=1 because it
+  # prunes things like missing crossrefs etc. which otherwise would cause problems
+  # later on
   get_dependents($self, [$section->get_citekeys]);
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Citekeys for section '$secnum' after fetching data: " . join(', ', $section->get_citekeys));

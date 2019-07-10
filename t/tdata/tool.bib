@@ -76,3 +76,22 @@
   DATE         = {2017},
 	JOURNALTITLE = {A Journal},
 }
+
+% mincrossrefs is 2 by default and so "baz" would be added automatically
+% but it doesn't exist. This shouldn't cause an error as "baz" should be
+% weeded out before it is references and this test is to make sure it is
+% and that these two entries are processed as normal
+@BOOK{badcr1,
+  AUTHOR       = {Foo},
+  TITLE        = {Foo},
+  DATE         = {2019},
+  CROSSREF     = {baz}
+}
+
+@BOOK{badcr2,
+  AUTHOR       = {Bar},
+  TITLE        = {Bar},
+  DATE         = {2019},
+  CROSSREF     = {baz}
+}
+
