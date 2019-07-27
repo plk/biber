@@ -12,6 +12,7 @@ use Biber::Output::bibtex;
 use Log::Log4perl;
 use Unicode::Normalize;
 use XML::LibXML;
+use Cwd 'abs_path';
 
 no warnings 'utf8';
 use utf8;
@@ -23,7 +24,9 @@ my $conf = 'tool-testsort.conf';
 my $CFxmlschema = XML::LibXML::RelaxNG->new(location => '../../data/schemata/config.rng');
 
 # Set up Biber object
-my $biber = Biber->new(configfile => $conf);
+my $biber = Biber->new(tool => 1,
+                       configtool => abs_path('../../data/biber-tool.conf'),
+                       configfile => $conf);
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -42,7 +45,6 @@ $biber->set_output_obj(Biber::Output::bibtex->new());
 # relying on here for tests
 
 # Biber options
-Biber::Config->setoption('tool', 1);
 Biber::Config->setoption('output_align', '1');
 Biber::Config->setoption('output_resolve_xdata', 1);
 Biber::Config->setoption('output_resolve_crossrefs', 1);

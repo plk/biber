@@ -781,8 +781,9 @@ sub parse_ctrlfile {
   }
   Biber::Config->setblxoption(undef, 'sortingtemplate', $sortingtemplates);
 
-  # DATAMODEL schema (always global)
-  Biber::Config->setblxoption(undef, 'datamodel', $bcfxml->{datamodel});
+  # DATAMODEL schema (always global and is an array to accomodate multiple
+  # datamodels in tool mode)
+  Biber::Config->addtoblxoption(undef, 'datamodel', $bcfxml->{datamodel});
 
   # SECTIONS
   # This is also where we set data files as these are associated with a bib section

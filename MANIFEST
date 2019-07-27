@@ -83,12 +83,14 @@ t/sort-uc.t
 t/tool.t
 t/tool-bltxml.t
 t/tool-bltxml-inout.t
+t/tool-config.t
 t/translit.t
 t/tdata/annotations.bib
 t/tdata/annotations.bcf
 t/tdata/basic-misc.bcf
 t/tdata/biber-test.conf
 t/tdata/tool-test.conf
+t/tdata/tool-testconfig.conf
 t/tdata/tool-testsort.conf
 t/tdata/biblatexml.bcf
 t/tdata/biblatexml.bltxml

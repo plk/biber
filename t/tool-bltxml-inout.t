@@ -13,12 +13,16 @@ use Biber::Utils;
 use Biber::Output::biblatexml;
 use Log::Log4perl;
 use Unicode::Normalize;
+use Cwd 'abs_path';
+
 chdir("t/tdata");
 no warnings 'utf8';
 use utf8;
 
 # Set up Biber object
-my $biber = Biber->new( configfile => 'tool-test.conf');
+my $biber = Biber->new(tool => 1,
+                       configtool => abs_path('../../data/biber-tool.conf'),
+                       configfile => 'tool-test.conf');
 my $LEVEL = 'ERROR';
 my $l4pconf = qq|
     log4perl.category.main                             = $LEVEL, Screen
@@ -41,7 +45,6 @@ my $out = $biber->get_output_obj;
 # relying on here for tests
 
 # Biber options
-Biber::Config->setoption('tool', 1);
 Biber::Config->setoption('output_resolve_xdata', 1);
 Biber::Config->setoption('output_resolve_crossrefs', 1);
 Biber::Config->setoption('output_format', 'biblatexml');

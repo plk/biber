@@ -141,9 +141,14 @@ sub _initopts {
   # There is a special default config file for tool mode
   # Referring to as yet unprocessed cmd-line tool option as it isn't processed until below
   if ($opts->{tool}) {
-    (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
-    $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
-    _config_file_set(File::Spec->catpath($vol, "$dir", 'biber-tool.conf'));
+    if (my $bc = $opts->{configtool}) { # Only used in tests to use source-tree biber-tool.conf
+      _config_file_set($bc);
+    }
+    else {
+      (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
+      $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
+      _config_file_set(File::Spec->catpath($vol, "$dir", 'biber-tool.conf'));
+    }
   }
 
   # Normal user config file - overrides tool mode defaults
@@ -579,7 +584,7 @@ sub _config_file_set {
       Biber::Config->setblxoption(0, 'sortingtemplate', $sorttemplates);
     }
     elsif (lc($k) eq 'datamodel') {# This is a biblatex option
-      Biber::Config->setblxoption(0, 'datamodel', $v);
+      Biber::Config->addtoblxoption(0, 'datamodel', $v);
     }
     elsif (exists($v->{content})) { # simple option
       Biber::Config->setconfigfileoption($k, $v->{content});
@@ -882,6 +887,21 @@ sub isexplicitoption {
 # BibLaTeX options static methods
 #################################
 
+
+=head2 addtoblxoption
+
+    Add to an array global biblatex option
+
+=cut
+
+sub addtoblxoption {
+  shift; # class method so don't care about class name
+  my ($secnum, $opt, $val) = @_;
+  if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}{GLOBAL}) {
+    push $CONFIG->{options}{biblatex}{GLOBAL}{$opt}->@*, $val;
+  }
+  return;
+}
 
 =head2 setblxoption
 
