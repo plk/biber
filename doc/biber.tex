@@ -97,6 +97,13 @@ Please see the \verb+Changes+ file which accompanies \biber\ for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
 
+\minisec{2.13}
+In tool mode (\opt{--tool}), \biber now allows datamodel configuration in
+a user configuration file to add to or override the default datamodel
+contained in the main \file{biber-tool.conf} file. Previously it was
+necessary to copy the entire default data model into a user configuration
+file and then alter it.
+
 \minisec{2.6}
 When outputting \bibtex\ data in tool mode (\opt{--tool}), \biber now
 follows a full internal processing chain involving the data model. In
