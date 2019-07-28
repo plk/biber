@@ -2653,6 +2653,17 @@ output-xnamesep & \checkmark & - & - & -\\
 \label{tab:outopts}
 \end{table}
 \bigskip
+\subsubsection{Customising the Tool Mode Data Model}
+The default \file{biber-tool.conf} contains the default data model
+specification. You may add to or override the default data model by using
+your own config file via the \opt{--configfile|-g} option. The data model
+in the default \file{biber-tool.conf} will be read and then any datamodel
+section in your config file will be read, taking precedence over the
+default settings. There is no need to include a complete data model in your
+own config file--the \file{biber-tool.conf} provides a base. Naturally, for
+complex changes to the the default data model, then you may wish to include
+a complete data model in your config file.
+
 \subsubsection{Customising Tool Mode Inheritance Resolution}
 The default \file{biber-tool.conf} contains, as mentioned above, the
 default \biblatex \bibfield{CROSSREF} inheritance setup and \bibtex source
