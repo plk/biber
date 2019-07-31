@@ -95,28 +95,35 @@ sub new {
       $self->{constants}{$constant->{name}}{value} = $constant->{content};
     }
 
-    my $leg_ents;
-    foreach my $et ($dm->{entrytypes}{entrytype}->@*) {
-      my $es = $et->{content};
+    # Get entrytpes from existing model (meaning, already processed XML model)
+    # or XML model. We need to do this in case we have two datamodel sources like
+    # a default tool mode config and a user config
+    foreach my $et (($dm->{entrytypes}{entrytype}->@*, keys $self->{entrytypesbyname}->%*)) {
+      my $es;
+      if (ref($et) eq 'HASH') { # from new config
+        $es = $et->{content};
 
-      # Skip output flag for certain entrytypes
-      if ($et->{skip_output}) {
-        $leg_ents->{$es}{skipout} = 1;
+        # Skip output flag for certain entrytypes
+        if ($et->{skip_output}) {
+          $self->{entrytypesbyname}{$es}{skipout} = 1;
+        }
       }
+      else {
+        $es = $et; # from existing config
+      }
+
       # fields for entrytypes
-      my $lfs;
       foreach my $ef ($dm->{entryfields}->@*) {
         # Found a section describing legal fields for entrytype
         if (not exists($ef->{entrytype}) or
             grep {$_->{content} eq $es} $ef->{entrytype}->@*) {
           foreach my $f ($ef->{field}->@*) {
-            $lfs->{$f->{content}} = 1;
+            $self->{entrytypesbyname}{$es}{legal_fields}{$f->{content}} = 1;
           }
         }
       }
 
       # constraints
-      my $constraints;
       foreach my $cd ($dm->{constraints}->@*) {
         # Found a section describing constraints for entrytype
         if (not exists($cd->{entrytype}) or
@@ -125,7 +132,7 @@ sub new {
             if ($c->{type} eq 'mandatory') {
               # field
               foreach my $f ($c->{field}->@*) {
-                push $constraints->{mandatory}->@*, $f->{content};
+                push $self->{entrytypesbyname}{$es}{constraints}{mandatory}->@*, $f->{content};
               }
               # xor set of fields
               # [ XOR, field1, field2, ... , fieldn ]
@@ -135,7 +142,7 @@ sub new {
                   push $xorset->@*, $f->{content};
                 }
                 unshift $xorset->@*, 'XOR';
-                push $constraints->{mandatory}->@*, $xorset;
+                push $self->{entrytypesbyname}{$es}{constraints}{mandatory}->@*, $xorset;
               }
               # or set of fields
               # [ OR, field1, field2, ... , fieldn ]
@@ -145,7 +152,7 @@ sub new {
                   push $orset->@*, $f->{content};
                 }
                 unshift $orset->@*, 'OR';
-                push $constraints->{mandatory}->@*, $orset;
+                push $self->{entrytypesbyname}{$es}{constraints}{mandatory}->@*, $orset;
               }
             }
             # Conditional constraints
@@ -160,7 +167,7 @@ sub new {
               $cond->[1] = [ map { $_->{content} } $c->{antecedent}{field}->@* ];
               $cond->[2] = $c->{consequent}{quant};
               $cond->[3] = [ map { $_->{content} } $c->{consequent}{field}->@* ];
-              push $constraints->{conditional}->@*, $cond;
+              push $self->{entrytypesbyname}{$es}{constraints}{conditional}->@*, $cond;
             }
             # data constraints
             elsif ($c->{type} eq 'data') {
@@ -170,15 +177,12 @@ sub new {
               $data->{rangemin} = $c->{rangemin};
               $data->{rangemax} = $c->{rangemax};
               $data->{pattern} = $c->{pattern};
-              push $constraints->{data}->@*, $data;
+              push $self->{entrytypesbyname}{$es}{constraints}{data}->@*, $data;
             }
           }
         }
       }
-      $leg_ents->{$es}{legal_fields} = $lfs;
-      $leg_ents->{$es}{constraints} = $constraints;
     }
-    $self->{entrytypesbyname} = $leg_ents;
   }
   # Calculate and store some convenient lists of DM fields. This is to save the expense
   # of constructing these in dense loops like entry processing/output.

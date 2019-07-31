@@ -349,6 +349,7 @@ sub _config_file_set {
                                                             qr/\Aconstraints\z/,
                                                             qr/\Aconstraint\z/,
                                                             qr/\Aentrytype\z/,
+                                                            qr/\Aentryfields\z/,
                                                             qr/\Adatetype\z/,
                                                             qr/\Acondition\z/,
                                                             qr/\A(?:or)?filter\z/,

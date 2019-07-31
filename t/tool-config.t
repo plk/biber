@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Test::Differences;
 unified_diff;
 
@@ -55,3 +55,4 @@ eq_or_diff(Biber::Config->getoption('listsep'), 'and', 'Options 2');
 is_deeply (Biber::Config->getblxoption(0, 'sortingtemplate'), {tool => { locale => undef, spec => [[{}, { citeorderX => {} }]] }}, 'Options 3');
 # This is only in the user conf datamodel
 ok((first {$_ eq 'newliteralfield'} $dm->get_fields_of_type('field', 'literal')->@*), 'Options 4');
+ok($dm->is_field_for_entrytype('article', 'newliteralfield'), 'Options 5');
