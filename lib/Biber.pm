@@ -246,7 +246,8 @@ sub tool_mode_setup {
   my $bib_section = new Biber::Section('number' => 99999);
   $bib_section->set_datasources([{type => 'file',
                                   name => $ARGV[0],
-                                  datatype => Biber::Config->getoption('input_format')}]);
+                                  datatype => Biber::Config->getoption('input_format'),
+                                  encoding => Biber::Config->getoption('input_encoding')}]);
   $bib_section->set_allkeys(1);
   $bib_sections->add_section($bib_section);
 
@@ -1515,6 +1516,7 @@ sub validate_datamodel {
   my $dm = Biber::Config->get_dm;
 
   if (Biber::Config->getoption('validate_datamodel')) {
+    $logger->info("Datamodel validation starting");
     my $dmwe = Biber::Config->getoption('dieondatamodel') ? \&biber_error : \&biber_warn;
     foreach my $citekey ($section->get_citekeys) {
       my $be = $section->bibentry($citekey);
@@ -1557,6 +1559,7 @@ sub validate_datamodel {
         $dmwe->($warning, $be);
       }
     }
+    $logger->info("Datamodel validation complete");
   }
 }
 
