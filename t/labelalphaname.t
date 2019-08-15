@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 5;
+use Test::More tests => 7;
 use Test::Differences;
 unified_diff;
 
@@ -43,9 +43,12 @@ $biber->prepare;
 
 my $main = $biber->datalists->get_list('custom/global//global/global');
 my $main1 = $biber->datalists->get_list('custom/global//global/test1');
+my $main2 = $biber->datalists->get_list('custom/global//global/test5');
 
 eq_or_diff($main->get_labelalphadata_for_key('lant1'), 'Smi', 'labelalphaname global template');
 eq_or_diff($main1->get_labelalphadata_for_key('lant1'), 'AS', 'labelalphaname dlist template');
 eq_or_diff($main->get_labelalphadata_for_key('lant2'), 'ArSm', 'labelalphaname entry template');
 eq_or_diff($main->get_labelalphadata_for_key('lant3'), 'ArtSmi', 'labelalphaname namelist template');
 eq_or_diff($main->get_labelalphadata_for_key('lant4'), 'ArthSmit', 'labelalphaname name template');
+eq_or_diff($main2->get_labelalphadata_for_key('lant5'), 'GRW', 'labelalphaname name template compound');
+eq_or_diff($main2->get_labelalphadata_for_key('lant6'), 'GRW', 'labelalphaname name template hyphen');

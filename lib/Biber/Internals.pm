@@ -698,6 +698,7 @@ sub _process_label_attributes {
             $logger->debug("Using label disambiguation cache (list) for '$field' in section $secnum");
           }
           $field_string = $lcache->{data}[$nindex][$index];
+
         }
         else {
           # This retains the structure of the entries for the "l" list disambiguation
@@ -708,6 +709,7 @@ sub _process_label_attributes {
           my $lcache = _label_listdisambiguation($strings);
 
           $field_string = $lcache->{data}[$nindex][$index];
+
           if ($logger->is_trace()) { # performance tune
             $logger->trace("Label disambiguation (list) cache for '$field' " .
                            ($nameparts ? '(' . join(',', $nameparts->@*) . ') ' : '') .

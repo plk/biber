@@ -422,7 +422,8 @@ sub strip_nosort {
 
 =head2 normalise_string_label
 
-Remove some things from a string for label generation.
+Remove some things from a string for label generation. Don't strip \p{Dash}
+as this is needed to process compound names or label generation.
 
 =cut
 

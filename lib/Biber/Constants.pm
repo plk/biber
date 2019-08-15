@@ -133,7 +133,7 @@ our $CONFIG_DEFAULT_BIBER = {
   nodieonerror                                => { content => 0 },
   noinit                                      => { option => [ {value => q/\b\p{Ll}{2}\p{Pd}(?=\S)/},
                                                                {value => q/[\x{2bf}\x{2018}]/} ] },
-  nolabel                                     => { option => [ {value => q/[\p{P}\p{S}\p{C}]+/} ] },
+  nolabel                                     => { option => [ {value => q/[\p{Pc}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Po}\p{S}\p{C}]+/} ] },
 #  nolabelwidthcount                          => { option =>  }, # default is nothing
   nolog                                       => { content => 0 },
   nostdmacros                                 => { content => 0 },

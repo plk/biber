@@ -596,6 +596,10 @@
     <bcf:namepart order="1" substring_width="4">given</bcf:namepart>
     <bcf:namepart order="2" substring_width="4">family</bcf:namepart>
   </bcf:labelalphanametemplate>
+  <bcf:labelalphanametemplate name="test5">
+    <bcf:namepart order="1" use="1" pre="1" substring_width="1" substring_compound="1">prefix</bcf:namepart>
+    <bcf:namepart order="2" substring_width="1" substring_compound="1">family</bcf:namepart>
+  </bcf:labelalphanametemplate>
   <!-- LABELALPHA TEMPLATE -->
   <bcf:labelalphatemplate type="global">
     <bcf:labelelement order="1">
@@ -2025,6 +2029,8 @@
     <bcf:citekey order="2">lant2</bcf:citekey>
     <bcf:citekey order="3">lant3</bcf:citekey>
     <bcf:citekey order="4">lant4</bcf:citekey>
+    <bcf:citekey order="5">lant5</bcf:citekey>
+    <bcf:citekey order="6">lant6</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">
@@ -2103,5 +2109,13 @@
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="test1"/>
+  <bcf:datalist sortingnamekeytemplatename="global"
+                section="0"
+                name="custom/global//global/test5"
+                sortingtemplatename="custom"
+                type="entry"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="test5"/>
 </bcf:controlfile>
 
