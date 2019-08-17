@@ -1,8 +1,9 @@
 Revision history for Biber
 
-2.13   (2019-)
+2.13   (2019-08-13)
        * biber now exits with error on some very malformed names instead of
          skipping them as this can lead to data loss in bibliographies.
+       * Support for named annotations
 2.12   (2018-10-30)
        * Added support for biblatex literal and named annotation features
        * Added support for biblatex \ifnocite test
