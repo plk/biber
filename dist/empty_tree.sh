@@ -17,6 +17,6 @@ mkdir -p /tmp/sftree/binaries/ARM
 
 chmod -R 777 /tmp/sftree
 
-scp -r /tmp/sftree/* philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/b/bi/biblatex-biber/biblatex-biber/$1
+scp -r /tmp/sftree/* philkime,biblatex-biber@frs.sourceforge.net:/home/frs/project/biblatex-biber/biblatex-biber/$1
 
 \rm -rf /tmp/sftree
