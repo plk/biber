@@ -8,6 +8,7 @@ fi
 mkdir -p /tmp/sftree/documentation
 mkdir -p /tmp/sftree/binaries/Cygwin
 mkdir -p /tmp/sftree/binaries/Linux
+mkdir -p /tmp/sftree/binaries/Linux-musl
 mkdir -p /tmp/sftree/binaries/Solaris_Intel
 mkdir -p /tmp/sftree/binaries/FreeBSD
 mkdir -p /tmp/sftree/binaries/OSX_Intel
