@@ -425,6 +425,22 @@ sub date_fields_exist {
   return 0;
 }
 
+=head2 delete_date_fields
+
+    Delete all parts of a date field when passed any datepart field name
+
+=cut
+
+sub delete_date_fields {
+  my ($self, $field) = @_;
+  my $t = $field =~ s/(?:end)?(?:year|month|day|hour|minute|second|season|timezone)$//r;
+  foreach my $dp ('year', 'month', 'day', 'hour', 'minute', 'second', 'season', 'timezone') {
+    delete($self->{datafields}{"$t$dp"});
+    delete($self->{datafields}{"${t}end$dp"});
+  }
+  return 1;
+}
+
 =head2 datafields
 
     Returns a sorted array of the fields which came from the data source
@@ -730,18 +746,49 @@ sub inherit_from {
   if ($inherit_all eq 'true') {
     my @fields = $parent->datafields;
 
-    # Special case - if the child has any Xdate datepart, don't inherit any Xdateparts
+    # Special case:
+    # WITH NO override: If the child has any Xdate datepart, don't inherit any Xdateparts
     # from parent otherwise you can end up with rather broken dates in the child.
     # Remove such fields before we start since it can't be done in the loop because
     # as soon as one Xdatepart field has been inherited, no more will be.
+    # Save removed fields as this is needed when copying derived special date fields below
+    # as these also need skipping if have skipped the *date field from which they were derived
+    # WITH override: Remove all related dateparts so that there is no conflict with inherited
     my @filtered_fields;
+    my @removed_fields;
     foreach my $field (@fields) {
       if (first {$_ eq $field} $dmh->{dateparts}->@*) {
-        next if $self->date_fields_exist($field);
+        if ($self->date_fields_exist($field)) {
+          if ($override_target eq 'true') {
+            $self->delete_date_fields($field); # clear out all date field parts in target
+          }
+          else {
+            push @removed_fields, $field;
+            next;
+          }
+        }
       }
       push @filtered_fields, $field;
     }
     @fields = @filtered_fields;
+
+    # copy derived date fields as these are technically data
+    foreach my $datefield ($dmh->{datefields}->@*) {
+      my $df = $datefield =~ s/date$//r;
+      # Ignore derived date special fields from date fields which we have skipped
+      # because they already exist in the child.
+      next if first {$_ eq $datefield} @removed_fields;
+      foreach my $dsf ('dateunspecified', 'datesplit', 'datejulian',
+                       'enddatejulian', 'dateapproximate', 'enddateapproximate',
+                       'dateuncertain', 'enddateuncertain', 'season', 'endseason',
+                       'era', 'endera') {
+        if (my $ds = $parent->{derivedfields}{"$df$dsf"}) {
+          # Set unless the child has the *date datepart, otherwise you can
+          # end up with rather broken dates in the child.
+          $self->{derivedfields}{"$df$dsf"} = $ds;
+        }
+      }
+    }
 
     foreach my $field (@fields) {
       # Skip for fields in the per-entry noinherit datafield set

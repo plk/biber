@@ -47,11 +47,12 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 Biber::Config->setoption('nodieonerror', 1); # because there is a failing cyclic crossref check
 
 # Now generate the information
-my (undef, $stderr) = capture { $biber->prepare };
+my ($stdout, $stderr) = capture { $biber->prepare };
 my $section0 = $biber->sections->get_section(0);
 my $main = $biber->datalists->get_list('nty/global//global/global');
 my $section1 = $biber->sections->get_section(1);
 my $out = $biber->get_output_obj;
+print "$stdout"; # needed for usual say(), dd() debugging due to capture() above
 
 # crossref field is included as the parent is included by being crossrefed >= mincrossrefs times
 my $cr1 = q|    \entry{cr1}{inbook}{}
@@ -331,6 +332,8 @@ my $cr6 = q|    \entry{cr6}{inproceedings}{}
       \field{title}{Title of inproceeding}
       \field{venue}{Location of event}
       \field{year}{2009}
+      \field{eventenddateera}{ce}
+      \field{eventdateera}{ce}
       \field{pages}{123\bibrangedash}
       \range{pages}{-1}
     \endentry
