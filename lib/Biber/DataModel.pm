@@ -38,11 +38,22 @@ sub new {
   my $dms = shift;
   my $self;
   $self = bless {}, $class;
-#  use Data::Dump;dd($dm);exit 0;
+  # use Data::Dump;dd($dms);exit 0;
 
-  # Early check for fatal datamodel errors
+  foreach my $dm ($dms->@*) { # Could potentially be more than one data models in future
 
-  foreach my $dm ($dms->@*) {
+    # First, we normalise all entrytypes and fields to case-folded form for internal
+    # comparisons but we save a map of case-folded variants to actual names
+    # so that we can recover the information later for output
+    foreach my $et ($dm->{entrytypes}{entrytype}->@*) {
+      $self->{casemap}{foldtoorig}{fc($et->{content})} = $et->{content};
+      $et->{content} = fc($et->{content});
+    }
+    foreach my $f ($dm->{fields}{field}->@*) {
+      $self->{casemap}{foldtoorig}{fc($f->{content})} = $f->{content};
+      $f->{content} = fc($f->{content});
+    }
+    # Early check for fatal datamodel errors
     # Make sure dates are named *date. A lot of code relies on this.
     foreach my $date (grep {$_->{datatype} eq 'date'} $dm->{fields}{field}->@*) {
       unless ($date->{content} =~ m/date$/) {
@@ -265,6 +276,17 @@ sub new {
 
 #  use Data::Dump;dd($self);exit 0;
   return $self;
+}
+
+=head2 get_outcase
+
+    Returns the original datamodel field/entrytype case for output
+
+=cut
+
+sub get_outcase {
+  my ($self, $string) = @_;
+  return $self->{casemap}{foldtoorig}{$string};
 }
 
 =head2 constants

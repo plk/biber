@@ -35,7 +35,7 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.26.0'
+declare -r perlv='5.30.0'
 declare ucpath="/usr/local/perl/lib/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this

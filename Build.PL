@@ -75,14 +75,14 @@ my $builder = $class->new(
                  'Text::Roman' => 0,
                  'IO::String' => 0,
                  'URI' => 0,
-                 'Text::BibTeX' => '0.85',
+                 'Text::BibTeX' => '0.88',
                  'LWP::Simple' => 0,
                  'LWP::Protocol::https' => 0,
                  'Business::ISBN' => 0,
                  'Business::ISSN' => 0,
                  'Business::ISMN' => 0,
                  'Lingua::Translit' => '0.28',
-                 'perl' => '5.26.0'
+                 'perl' => '5.30.0'
                 },
     script_files => [ glob( "bin/*" ) ],
     data_files => {'data/schemata/config.rnc' => 'lib/Biber/config.rnc',

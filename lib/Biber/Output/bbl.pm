@@ -106,6 +106,7 @@ sub _printfield {
   my ($be, $field, $str) = @_;
   my $field_type = 'field';
   my $dm = Biber::Config->get_dm;
+  my $outfield = $dm->get_outcase($field);
 
   return '' if is_null($str) and not $dm->field_is_nullok($field);
 
@@ -132,18 +133,18 @@ sub _printfield {
 
   if (Biber::Config->getoption('wraplines')) {
     ## 16 is the length of '      \field{}{}' or '      \strng{}{}'
-    if ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
-      return "      \\${field_type}{$field}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
+    if ( 16 + Unicode::GCString->new($outfield)->length + Unicode::GCString->new($str)->length > 2*$Text::Wrap::columns ) {
+      return "      \\${field_type}{$outfield}{%\n" . wrap('      ', '      ', $str) . "%\n      }\n";
     }
-    elsif ( 16 + Unicode::GCString->new($field)->length + Unicode::GCString->new($str)->length > $Text::Wrap::columns ) {
-      return wrap('      ', '      ', "\\${field_type}{$field}{$str}" ) . "\n";
+    elsif ( 16 + Unicode::GCString->new($outfield)->length + Unicode::GCString->new($str)->length > $Text::Wrap::columns ) {
+      return wrap('      ', '      ', "\\${field_type}{$outfield}{$str}" ) . "\n";
     }
     else {
-      return "      \\${field_type}{$field}{$str}\n";
+      return "      \\${field_type}{$outfield}{$str}\n";
     }
   }
   else {
-    return "      \\${field_type}{$field}{$str}\n";
+    return "      \\${field_type}{$outfield}{$str}\n";
   }
   return;
 }
@@ -194,6 +195,7 @@ sub set_output_undefkey {
 sub set_output_entry {
   my ($self, $be, $section, $dm) = @_;
   my $bee = $be->get_field('entrytype');
+  my $outtype = $dm->get_outcase($bee);
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
   my $acc = '';
@@ -215,7 +217,7 @@ sub set_output_entry {
 
   # Skip entrytypes we don't want to output according to datamodel
   return if $dm->entrytype_is_skipout($bee);
-  $acc .= "    \\entry{$key}{$bee}{" . join(',', filter_entry_options($secnum, $be)->@*) . "}\n";
+  $acc .= "    \\entry{$key}{$outtype}{" . join(',', filter_entry_options($secnum, $be)->@*) . "}\n";
 
   # Generate set information.
   # Set parents are special and need very little

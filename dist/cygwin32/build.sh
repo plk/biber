@@ -20,7 +20,7 @@
 
 cp /usr/local/bin/biber /tmp/biber-cygwin
 
-declare -r perlv='5.26'
+declare -r perlv='5.30'
 declare ucpath="/usr/share/perl5/${perlv}/Unicode/Collate"
 
 # Unicode::Collate has a vendor_perl version so has been updated since this
