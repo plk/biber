@@ -106,6 +106,7 @@ sub _printfield {
   my ($be, $field, $str) = @_;
   my $field_type = 'field';
   my $dm = Biber::Config->get_dm;
+
   my $outfield = $dm->get_outcase($field);
 
   return '' if is_null($str) and not $dm->field_is_nullok($field);
@@ -423,6 +424,7 @@ sub set_output_entry {
   foreach my $field ($dmh->{fields}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     my $val = $be->get_field($field);
+
     if ( length($val) or # length() catches '0' values, which we want
          ($dm->field_is_nullok($field) and
           $be->field_exists($field)) ) {

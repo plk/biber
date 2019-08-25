@@ -53,6 +53,7 @@ sub new {
       $self->{casemap}{foldtoorig}{fc($f->{content})} = $f->{content};
       $f->{content} = fc($f->{content});
     }
+
     # Early check for fatal datamodel errors
     # Make sure dates are named *date. A lot of code relies on this.
     foreach my $date (grep {$_->{datatype} eq 'date'} $dm->{fields}{field}->@*) {

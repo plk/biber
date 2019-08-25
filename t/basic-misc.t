@@ -879,7 +879,7 @@ eq_or_diff($out->get_output_entry('clone-snk1', $main), $clone2, 'Clone - 2');
 eq_or_diff($out->get_output_entry('newtestkey', $main), $new1, 'New key mapping - 1');
 
 # Should be three new ids in here with random keys
-is(3, scalar(grep {$_ =~ m/^loopkey:/} $section->get_citekeys), 'New key loop mapping - 1');
+is(scalar(grep {$_ =~ m/^loopkey:/} $section->get_citekeys), 3, 'New key loop mapping - 1');
 eq_or_diff($bibentries->entry([grep {$_ =~ m/^loopkey:/} $section->get_citekeys]->[0])->get_field('note'), 'NOTEreplaced', 'New key loop mapping - 2');
 
 # notfield test
