@@ -35,9 +35,8 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.26.0'
-#declare ucpath="/usr/local/perl/lib/${perlv}/Unicode/Collate"
-declare ucpath="/usr/local/lib/perl5/site_perl/Unicode/Collate"
+declare -r perlv='5.30.0'
+declare ucpath="/usr/local/lib/perl5/5.30.0/Unicode/Collate"
 
 # Unicode::Collate has a site_perl version so has been updated since this
 # perl was released
@@ -48,7 +47,7 @@ fi
 
 echo "USING Unicode::Collate at: ${ucpath}"
 
-PAR_VERBATIM=1 /usr/bin/pp \
+PAR_VERBATIM=1 /usr/local/bin/pp \
   --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
@@ -77,8 +76,8 @@ PAR_VERBATIM=1 /usr/bin/pp \
   --link=/lib/libz.so.1 \
   --link=/usr/lib/libxslt.so.1 \
   --link=/usr/lib/libexslt.so.0 \
-  --link=/usr/lib/libssl.so.1.0.0 \
-  --link=/usr/lib/libcrypto.so.1.0.0 \
+  --link=/usr/lib/libssl.so.1.1 \
+  --link=/usr/lib/libcrypto.so.1.1 \
   --link=/usr/lib/libgcrypt.so.20 \
   --link=/usr/lib/libgpg-error.so.0 \
   --addfile="../../data/biber-tool.conf;lib/Biber/biber-tool.conf" \
@@ -92,10 +91,9 @@ PAR_VERBATIM=1 /usr/bin/pp \
   --addfile="${ucpath}/CJK;lib/Unicode/Collate/CJK" \
   --addfile="${ucpath}/allkeys.txt;lib/Unicode/Collate/allkeys.txt" \
   --addfile="${ucpath}/keys.txt;lib/Unicode/Collate/keys.txt" \
-  --addfile="/usr/local/share/perl5/site_perl/Mozilla/CA/cacert.pem;lib/Mozilla/CA/cacert.pem" \
-  --addfile="/usr/local/lib/perl5/site_perl/PerlIO;lib/PerlIO" \
-  --addfile="/usr/local/lib/perl5/site_perl/auto/PerlIO;lib/auto/PerlIO" \
-  --addfile="/usr/local/share/perl5/site_perl/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
+  --addfile="/usr/local/lib/perl5/site_perl/5.30.0/Mozilla/CA/cacert.pem" \
+  --addfile="/usr/local/lib/perl5/5.30.0/PerlIO" \
+  --addfile="/usr/local/lib/perl5/site_perl/5.30.0/Business/ISBN/RangeMessage.xml" \
   --cachedeps=scancache \
-  --output=biber-linux_x86_64-musl \
+  --output=/opt/biber \
   /usr/local/bin/biber
