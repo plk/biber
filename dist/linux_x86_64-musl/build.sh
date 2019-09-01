@@ -35,7 +35,7 @@
 # by looking to see if there is a site_perl directory for the module. If there is, we use that
 # version.
 
-declare -r perlv='5.26.0'
+declare -r perlv='5.30.0'
 #declare ucpath="/usr/local/perl/lib/${perlv}/Unicode/Collate"
 declare ucpath="/usr/local/lib/perl5/site_perl/Unicode/Collate"
 
@@ -48,7 +48,7 @@ fi
 
 echo "USING Unicode::Collate at: ${ucpath}"
 
-PAR_VERBATIM=1 /usr/bin/pp \
+PAR_VERBATIM=1 /usr/local/bin/pp \
   --unicode \
   --module=deprecate \
   --module=Biber::Input::file::bibtex \
@@ -97,5 +97,5 @@ PAR_VERBATIM=1 /usr/bin/pp \
   --addfile="/usr/local/lib/perl5/site_perl/auto/PerlIO;lib/auto/PerlIO" \
   --addfile="/usr/local/share/perl5/site_perl/Business/ISBN/RangeMessage.xml;lib/Business/ISBN/RangeMessage.xml" \
   --cachedeps=scancache \
-  --output=biber-linux_x86_64-musl \
+  --output=biber \
   /usr/local/bin/biber
