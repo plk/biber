@@ -95,5 +95,5 @@ PAR_VERBATIM=1 /usr/local/bin/pp \
   --addfile="/usr/local/lib/perl5/5.30.0/PerlIO" \
   --addfile="/usr/local/lib/perl5/site_perl/5.30.0/Business/ISBN/RangeMessage.xml" \
   --cachedeps=scancache \
-  --output=biber \
-  /opt/biber
+  --output=/opt/biber \
+  /usr/local/bin/biber
