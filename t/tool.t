@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::Differences;
 unified_diff;
 
@@ -57,7 +57,7 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber program
 $biber->tool_mode_setup;
 $biber->prepare_tool;
-my $main = $biber->datalists->get_lists_by_attrs(section                    => 99999,
+my $main = $biber->datalists->get_lists_by_attrs(section          => 99999,
                                        name                       => 'tool/global//global/global',
                                        type                       => 'entry',
                                        sortingtemplatename             => 'tool',
@@ -183,8 +183,8 @@ $biber->prepare_tool;
 $main = $biber->datalists->get_list(section                    => 99999,
                                     name                       => 'tool/global//global/global',
                                     type                       => 'entry',
-                                    sortingtemplatename             => 'tool',
-                                    sortingnamekeytemplatename      => 'global',
+                                    sortingtemplatename        => 'tool',
+                                    sortingnamekeytemplatename => 'global',
                                     labelprefix                => '',
                                     uniquenametemplatename     => 'global',
                                     labelalphanametemplatename => 'global');
@@ -201,3 +201,5 @@ my $CFxpc = XML::LibXML::XPathContext->new($CFxp);
 # Validate against schema. Dies if it fails.
 $CFxmlschema->validate($CFxp);
 is($@, '', "Validation of $conf");
+# Bad name test
+ok(is_undef($out->get_output_entry('badname')), 'Bad name - 1');

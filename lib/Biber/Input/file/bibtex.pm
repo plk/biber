@@ -188,6 +188,7 @@ sub extract_entries {
     if ($logger->is_debug()) {# performance tune
       $logger->debug("All citekeys will be used for section '$secnum'");
     }
+
     # Loop over all entries, creating objects
     while (my ($key, $entry) = each $cache->{data}{$filename}->%*) {
 
@@ -214,6 +215,7 @@ sub extract_entries {
     # the .bib as in this case the sorting sub "citeorder" means "bib order" as there are
     # no explicitly cited keys
     $section->add_citekeys($cache->{orig_key_order}{$filename}->@*);
+
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Added all citekeys to section '$secnum': " . join(', ', $section->get_citekeys));
     }
@@ -343,6 +345,7 @@ sub create_entry {
   my ($key, $entry, $datasource, $smaps, $rkeys) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
+  my $crret = 1; # Return value from create_entry() is used to signal some things
 
   if ( $entry->metatype == BTE_REGULAR ) {
     my %newentries; # In case we create a new entry in a map
@@ -773,7 +776,7 @@ sub create_entry {
       }
     }
 
-    _create_entry($key, $entry);
+    $crret = _create_entry($key, $entry);
 
     # reinstate original entry before modifications so that further refsections
     # have a clean slate
@@ -784,12 +787,12 @@ sub create_entry {
       _create_entry($k, $e);
     }
   }
-  return 1;
+  return $crret;
 }
 
 sub _create_entry {
   my ($k, $e) = @_;
-  return unless $e; # newentry might be undef
+  return 1 unless $e; # newentry might be undef
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($k);
@@ -828,7 +831,7 @@ sub _create_entry {
         my $v = $handler->($bibentry, $e, $f, $k);
         if (defined($v)) {
           if ($v eq 'BIBER_SKIP_ENTRY') {# field data is bad enough to cause entry to be skipped
-            return;
+            return 0;
           }
           else {
             $bibentry->set_datafield($fc, $v);
@@ -847,7 +850,7 @@ sub _create_entry {
     $logger->debug("Adding entry with key '$k' to entry list");
   }
   $section->bibentries->add_entry($k, $bibentry);
-  return;
+  return 1;
 }
 
 # HANDLERS
