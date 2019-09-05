@@ -1561,7 +1561,7 @@ sub parsename {
   $namestr =~ s/(\w)\.(\w)/$1. $2/g if Biber::Config->getoption('fixinits');
 
   my %namec;
-  my $name = Text::BibTeX::Name->new({binmode => 'utf-8', normalization => 'NFD'}, $namestr);
+  my $name = Text::BibTeX::Name->new({binmode => 'utf-8', normalization => 'NFD'}, NFC($namestr));
 
   # Formats so we can get BibTeX compatible nbsp inserted
   my $l_f = Text::BibTeX::NameFormat->new('l', 0);
@@ -1595,7 +1595,7 @@ sub parsename {
   # spaces - this is fine as we are just generating initials
   $nd_namestr =~ s/\.~\s*/. /g;
 
-  my $nd_name = Text::BibTeX::Name->new({binmode => 'utf-8', normalization => 'NFD'}, $nd_namestr, $fieldname);
+  my $nd_name = Text::BibTeX::Name->new({binmode => 'utf-8', normalization => 'NFD'}, NFC($nd_namestr), $fieldname);
 
   # Initials formats
   my $li_f = Text::BibTeX::NameFormat->new('l', 1);
