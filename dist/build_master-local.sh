@@ -88,6 +88,15 @@ if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   ssh philkime@bbf-osx10.12 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
   vmoff osx10.12
   cd $DIR
+  # Special - copy biber back to local OSX to codesign and then back again
+  # codesign in Xcode for osx10.12 does not have the runtime hardening options
+  # --------------------------------------------------------------------------
+  scp $DIR/biber-darwin_x86_64 philkime@grass:/tmp/
+  ssh philkime@grass "cd /tmp;codesign --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_x86_64"
+  \rm $DIR/biber-darwin_x86_64
+  scp philkime@grass:/tmp/biber-darwin_x86_64 $DIR/
+  ssh philkime@grass "\\rm -f /tmp/biber-darwin_x86_64"
+  # --------------------------------------------------------------------------
   mv biber-darwin_x86_64 biber
   chmod +x biber
   tar cf biber-darwin_x86_64.tar biber
