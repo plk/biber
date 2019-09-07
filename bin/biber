@@ -85,8 +85,10 @@ GetOptions(
            'output_xnamesep|output-xnamesep=s',
            'quiet|q+',
            'recodedata=s',
+           'noremove_tmp_dir|noremove-tmp-dir',
            'noskipduplicates',
            'noxname',
+           'show_tmp_dir|show-tmp-dir',
            'sortdebug',
            'sortcase=s',
            'sortlocale|l=s',
@@ -417,7 +419,7 @@ if (Biber::Config->getoption('trace')) {
 # Write the output to the target
 $biberoutput->output;
 
-$biber->display_problems;
+$biber->display_end;
 
 exit EXIT_OK;
 
@@ -612,11 +614,23 @@ BibTeX parsing C library which can complain about parsing errors which can be ig
 
 Do not write any logfile.
 
+=item B<--noskipduplicates>
+
+Don't skip duplicate bibliography keys if found. The detection of duplicate keys is done across
+all data sources. Sometimes you might need duplicates when using several data sources
+across several refsections in which case you might need to use this option.
+
 =item B<--nostdmacros>
 
 Don't automatically define any standard macros like month abbreviations.
 If you also define these yourself, this option can be used to suppress
 macro redefinition warnings.
+
+=item B<--noremove-tmp-dir>
+
+Do not remove the temporary directory used for various intermediate files
+and data before exit (default is false). Name of the directory can
+be obtained with the B<--show-tmp-dir> option.
 
 =item B<--noxname>
 
@@ -761,7 +775,8 @@ virtual set name "null" may be specified which effectively turns off macro encod
 
 =item B<--output-xname>
 
-When output is a .bib BibTeX file in tool mode, whether to output names the eXtended BibTeX name field format.
+When output is a .bib BibTeX file in tool mode, whether to output names the
+eXtended BibTeX name field format.
 
 =item B<--output-xnamesep=[sep]>
 
@@ -779,11 +794,10 @@ It defaults to F<recode_data.xml> in the same directory as Biber's F<Recode.pm> 
 See the PDF documentation for the format of this file. If this option is
 used, then F<file> should be somewhere C<kpsewhich> can find it.
 
-=item B<--noskipduplicates>
+=item B<--show-tmp-dir>
 
-Don't skip duplicate bibliography keys if found. The detection of duplicate keys is done across
-all data sources. Sometimes you might need duplicates when using several data sources
-across several refsections in which case you might need to use this option.
+Prints the location of the temporary directory used for various intermediate
+files and data. Only useful if B<--remove-tmp-dir> is set to true.
 
 =item B<--sortdebug>
 

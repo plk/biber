@@ -136,6 +136,7 @@ our $CONFIG_DEFAULT_BIBER = {
   nolabel                                     => { option => [ {value => q/[\p{Pc}\p{Ps}\p{Pe}\p{Pi}\p{Pf}\p{Po}\p{S}\p{C}]+/} ] },
 #  nolabelwidthcount                          => { option =>  }, # default is nothing
   nolog                                       => { content => 0 },
+  noskipduplicates                            => { content => 0 },
   nostdmacros                                 => { content => 0 },
   nosort                                      => { option => [ { name => 'setnames', value => q/\A\p{L}{2}\p{Pd}(?=\S)/ },
                                                                { name => 'setnames', value => q/[\x{2bf}\x{2018}]/ } ] },
@@ -158,7 +159,7 @@ our $CONFIG_DEFAULT_BIBER = {
   output_safecharsset                         => { content => 'base' },
   output_xnamesep                             => { content => '=' },
   quiet                                       => { content => 0 },
-  noskipduplicates                            => { content => 0 },
+  remove_tmp_dir                              => { content => 1 },
   sortdebug                                   => { content => 0 },
   sortcase                                    => { content => 1 },
   sortupper                                   => { content => 1 },

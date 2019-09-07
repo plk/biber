@@ -77,8 +77,11 @@ sub new {
 
   Biber::Config->_initopts(\%opts);
 
-  # Add a reference to a global temp dir we might use for various things
-  $self->{TEMPDIR} = File::Temp->newdir();
+  # Add a reference to a global temp dir used for various things
+  $self->{TEMPDIR} = File::Temp->newdir("biber_tmp_XXXX",
+                                        TMPDIR => 1,
+                                        CLEANUP => (Biber::Config->getoption('noremove_tmp_dir') ? 0 : 1));
+  $self->{TEMPDIRNAME} = $self->{TEMPDIR}->dirname;
 
   # Initialise recoding schemes
   Biber::LaTeX::Recode->init_sets(Biber::Config->getoption('decodecharsset'),
@@ -99,14 +102,25 @@ sub new {
 }
 
 
-=head2 display_problems
+=head2 display_end
 
-   Output summary of warnings/errors before exit
+   Output summary of warnings/errors/misc before exit
 
 =cut
 
-sub display_problems {
+sub display_end {
   my $self = shift;
+
+  # Show location of temporary directory
+  if (Biber::Config->getoption('show_tmp_dir')) {
+    if (Biber::Config->getoption('noremove_tmp_dir')) {
+      $logger->info("TEMP DIR: " . $self->biber_tempdir_name);
+    }
+    else {
+      biber_warn("--noremove-tmp-dir was not set, no temporary directory to show");
+    }
+  }
+
   if ($self->{warnings}) {
     $logger->info('WARNINGS: ' . $self->{warnings});
   }
@@ -118,8 +132,6 @@ sub display_problems {
 
 =head2 biber_tempdir
 
-    my $sections= $biber->biber_tempdir
-
     Returns a File::Temp directory object for use in various things
 
 =cut
@@ -129,6 +141,16 @@ sub biber_tempdir {
   return $self->{TEMPDIR};
 }
 
+=head2 biber_tempdir_name
+
+    Returns the directory name of the File::Temp directory object
+
+=cut
+
+sub biber_tempdir_name {
+  my $self = shift;
+  return $self->{TEMPDIRNAME};
+}
 
 =head2 sections
 
