@@ -3,13 +3,14 @@
 # This version of the build script can be run on the server hosting the VMs instead of a remote
 # client
 
-# build_master.sh <dir> <release> <branch> <justbuild> <deletescancache>
+# build_master.sh <dir> <release> <branch> <justbuild> <deletescancache> <codesign>
 
 # <dir> is where the binaries are
 # <release> is a SF subdir of /home/frs/project/biblatex-biber/biblatex-biber/
 # <branch> is a git branch to checkout on the build farm servers
 # <justbuild> is a boolean which says to just build and stop without uploading
 # <deletescancache> is a boolean which says to delete the scancache
+# <codesign> is a boolean which says to not codesign OSX binary
 
 me=$(whoami)
 if [ "$me" = "root" ]; then
@@ -42,6 +43,7 @@ RELEASE=${2:-"development"}
 BRANCH=${3:-"dev"}
 JUSTBUILD=${4:-"0"}
 DSCANCACHE=${5:-"0"}
+CODESIGN=${6:-"1"}
 
 echo "** Checking out branch '$BRANCH' on farm servers **"
 echo "** If this is not correct, Ctrl-C now **"
@@ -52,7 +54,7 @@ if [ ! -e $DIR ]; then
   mkdir $DIR
 fi
 
-# Stop here if JUSTBUILD is set
+# Set scancache deletion if requested
 if [ "$DSCANCACHE" = "1" ]; then
   echo "Deleting scan caches before builds";
   SCANCACHE="rm -f scancache;"
@@ -88,15 +90,17 @@ if [ ! -e $DIR/biber-darwin_x86_64.tar.gz ]; then
   ssh philkime@bbf-osx10.12 "\\rm -f biblatex-biber/dist/darwin_x86_64/biber-darwin_x86_64"
   vmoff osx10.12
   cd $DIR
-  # Special - copy biber back to local OSX to codesign and then back again
-  # codesign in Xcode for osx10.12 does not have the runtime hardening options
-  # --------------------------------------------------------------------------
-  scp $DIR/biber-darwin_x86_64 philkime@grass:/tmp/
-  ssh philkime@grass "cd /tmp;security unlock-keychain -p \$(</Users/philkime/.pw) login.keychain;codesign --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_x86_64"
-  \rm $DIR/biber-darwin_x86_64
-  scp philkime@grass:/tmp/biber-darwin_x86_64 $DIR/
-  ssh philkime@grass "\\rm -f /tmp/biber-darwin_x86_64"
-  # --------------------------------------------------------------------------
+  if [ "$CODESIGN" = "1" ]; then
+    # Special - copy biber back to local OSX to codesign and then back again
+    # codesign in Xcode for osx10.12 does not have the runtime hardening options
+    # --------------------------------------------------------------------------
+    scp $DIR/biber-darwin_x86_64 philkime@grass:/tmp/
+    ssh philkime@grass "cd /tmp;security unlock-keychain -p \$(</Users/philkime/.pw) login.keychain;codesign --sign 45MA3H23TG --force --timestamp --options runtime biber-darwin_x86_64"
+    \rm $DIR/biber-darwin_x86_64
+    scp philkime@grass:/tmp/biber-darwin_x86_64 $DIR/
+    ssh philkime@grass "\\rm -f /tmp/biber-darwin_x86_64"
+    # --------------------------------------------------------------------------
+  fi
   mv biber-darwin_x86_64 biber
   chmod +x biber
   tar cf biber-darwin_x86_64.tar biber
