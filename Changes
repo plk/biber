@@ -1,5 +1,15 @@
 Revision history for Biber
 
+2.14   (2019)
+       * New options --noremove-tmp-dir and --show-tmp-dir to disable of
+         removal on exit and showing location of temporary directory used for
+         intermediate data. Useful for debugging.
+       * Tool mode now accepts multiple data files on the command-line so
+         that data can be spread over several files (e.g. main bib and
+         crossrefs can be kept in separate files)
+       * Biber no longer uses Text::BibTeX/btparse to generation initials
+         from names in normal name parsing mode because it can't handle
+         some Unicode situations.
 2.13   (2019-08-13)
        * biber now exits with error on some very malformed names instead of
          skipping them as this can lead to data loss in bibliographies.

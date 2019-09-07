@@ -266,10 +266,15 @@ sub tool_mode_setup {
   my $bib_sections = new Biber::Sections;
   # There are no sections in tool mode so create a pseudo-section
   my $bib_section = new Biber::Section('number' => 99999);
-  $bib_section->set_datasources([{type => 'file',
-                                  name => $ARGV[0],
-                                  datatype => Biber::Config->getoption('input_format'),
-                                  encoding => Biber::Config->getoption('input_encoding')}]);
+  my $ifs = [];
+  foreach my $if (@ARGV) {
+    push $ifs->@*, {type => 'file',
+                    name => $if,
+                    datatype => Biber::Config->getoption('input_format'),
+                    encoding => Biber::Config->getoption('input_encoding')};
+  }
+  $bib_section->set_datasources($ifs);
+
   $bib_section->set_allkeys(1);
   $bib_sections->add_section($bib_section);
 
