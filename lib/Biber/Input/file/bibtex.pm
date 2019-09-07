@@ -1579,49 +1579,25 @@ sub parsename {
   $namec{prefix} = $name->format($p_f);
   $namec{suffix} = $name->format($s_f);
 
-  # Use a copy of $name so that when we generate the
-  # initials, we do so without certain things. This is easier than trying
-  # hack robust initials code into btparse ...
-  my $nd_namestr = strip_noinit($namestr);
-
-  # Now re-santise after the arbitrary regexps of the noinit removals
-  # leading and trailing whitespace
-  $nd_namestr =~ s/\A\s*|\s*\z//xms;
-
-  # Collapse internal whitespace
-  $nd_namestr =~ s/\s+|\\\s/ /g;
-
-  # Make initials with ties in between work. btparse doesn't understand this so replace with
-  # spaces - this is fine as we are just generating initials
-  $nd_namestr =~ s/\.~\s*/. /g;
-
-  my $nd_name = Text::BibTeX::Name->new({binmode => 'utf-8', normalization => 'NFD'}, NFC($nd_namestr), $fieldname);
-
-  # Initials formats
-  my $li_f = Text::BibTeX::NameFormat->new('l', 1);
-  my $fi_f = Text::BibTeX::NameFormat->new('f', 1);
-  my $pi_f = Text::BibTeX::NameFormat->new('v', 1);
-  my $si_f = Text::BibTeX::NameFormat->new('j', 1);
-
-  # Initials generated with forced tie so we can make an array
-  $li_f->set_text(BTN_LAST,  undef, undef, undef, '');
-  $fi_f->set_text(BTN_FIRST, undef, undef, undef, '');
-  $pi_f->set_text(BTN_VON,   undef, undef, undef, '');
-  $si_f->set_text(BTN_JR,    undef, undef, undef, '');
-  $li_f->set_options(BTN_LAST,  1, BTJ_FORCETIE, BTJ_NOTHING);
-  $fi_f->set_options(BTN_FIRST, 1, BTJ_FORCETIE, BTJ_NOTHING);
-  $pi_f->set_options(BTN_VON,   1, BTJ_FORCETIE, BTJ_NOTHING);
-  $si_f->set_options(BTN_JR,    1, BTJ_FORCETIE, BTJ_NOTHING);
-
-  $namec{'family-i'} = inits($nd_name->format($li_f));
-  $namec{'given-i'}  = inits($nd_name->format($fi_f));
-  $namec{'prefix-i'} = inits($nd_name->format($pi_f));
-  $namec{'suffix-i'} = inits($nd_name->format($si_f));
+  # Not using Text::BibTeX for initials generation as it can't handle combining
+  # chars and diacritics in general
 
   # basic bibtex names have a fixed data model
   foreach my $np ('prefix', 'family', 'given', 'suffix') {
     if ($namec{$np}) {
       ($namec{"${np}-strippedflag"}, $namec{"${np}-stripped"}) = remove_outer($namec{$np});
+
+      # Protect spaces inside {} when splitting to produce initials
+      my $part = $namec{$np};
+      if ($namec{"${np}-strippedflag"}) {
+        $part = $namec{$np} =~ s/\s+/_/gr;
+      }
+
+      # strip noinit
+      $part = strip_noinit($part);
+
+      # split on spaces/tilde outside of brace block
+      $namec{"${np}-i"} = [gen_initials(split(/[\h~]+(?![^{]*\})/, $part))];
     }
   }
 
