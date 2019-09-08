@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 47;
+use Test::More tests => 53;
 use Test::Differences;
 unified_diff;
 
@@ -906,3 +906,11 @@ eq_or_diff($bibentries->entry('open2')->get_field('labeldatesource'), '', 'Open 
 eq_or_diff($bibentries->entry('y1')->get_field('year'), '17000002', 'Extended years - 1');
 eq_or_diff($bibentries->entry('y2')->get_field('year'), '-17000002', 'Extended years - 2');
 eq_or_diff($bibentries->entry('y3')->get_field('year'), undef, 'Extended years - 3');
+
+# Scripts
+eq_or_diff($bibentries->entry('script1')->get_field('year'), '१९८७', 'Scripts - 1');
+eq_or_diff($bibentries->entry('script1')->get_field('month'), '०१', 'Scripts - 2');
+eq_or_diff($bibentries->entry('script1')->get_field('day'), '१५', 'Scripts - 3');
+eq_or_diff($bibentries->entry('script1')->get_field('endyear'), '१९८८', 'Scripts - 4');
+eq_or_diff($bibentries->entry('script1')->get_field('endmonth'), '०५', 'Scripts - 5');
+eq_or_diff($bibentries->entry('script1')->get_field('endday'), '११', 'Scripts - 6');

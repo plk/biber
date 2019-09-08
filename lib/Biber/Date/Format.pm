@@ -7,6 +7,7 @@ use DateTime;
 use DateTime::TimeZone;
 use DateTime::Format::Builder;
 use DateTime::Calendar::Julian;
+use Unicode::UCD qw(num);
 
 =encoding utf-8
 
@@ -31,6 +32,8 @@ sub init {
   delete $self->{uncertain};
   delete $self->{season};
   delete $self->{julian};
+  # map of Unicode numeric script dateparts to arabic as DateTime needs arabic
+  delete $self->{scriptmap};
   return $self;
 }
 
@@ -63,6 +66,11 @@ sub uncertain {
 sub season {
   my $self = shift;
   return $self->{season};
+}
+
+sub resolvescript {
+  my ($self, $dp) = @_;
+  return $self->{scriptmap}{atos}{$dp} // $dp;
 }
 
 DateTime::Format::Builder->create_class(
@@ -126,6 +134,20 @@ sub _pre {
                   23 => 'autumn',
                   24 => 'winter' );
 
+  # Convert and save information on non-arabic numerics
+  foreach my $num ($p{input} =~ m/\d+/g) {
+    my $lnum = length($num);
+    my $rnum = num($num);
+    my $anum = sprintf("%0${lnum}d", $rnum); # num() strips leading zeros - pad them back
+    unless ($num eq $anum) {
+      $p{self}{scriptmap}{atos}{$anum} = $num; # Save padded ...
+      $p{self}{scriptmap}{atos}{$rnum} = $num; # ... and non-padded versions
+      $p{self}{scriptmap}{stoa}{$num} = $anum;
+    }
+  }
+  if (defined($p{self}{scriptmap})) {
+    $p{input} =~ s/(\d+)/$p{self}{scriptmap}{stoa}{$1}/xge;
+  }
 
   # ISO 8601-2:2016 4.2.1 (uncertain)
   if ($p{input} =~ s/^\s*(.+?)\s*\?\s*$/$1/i) {

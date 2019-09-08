@@ -1176,22 +1176,28 @@ sub _datetime {
       }
 
       unless ($CONFIG_DATE_PARSERS{start}->missing('year')) {
-        $bibentry->set_datafield($datetype . 'year', $sdate->year);
+        $bibentry->set_datafield($datetype . 'year',
+                                 $CONFIG_DATE_PARSERS{start}->resolvescript($sdate->year));
         # Save era date information
         $bibentry->set_field($datetype . 'era', lc($sdate->secular_era));
       }
 
-      $bibentry->set_datafield($datetype . 'month', $sdate->month)
+      $bibentry->set_datafield($datetype . 'month',
+                               $CONFIG_DATE_PARSERS{start}->resolvescript($sdate->month))
         unless $CONFIG_DATE_PARSERS{start}->missing('month');
 
-      $bibentry->set_datafield($datetype . 'day', $sdate->day)
+      $bibentry->set_datafield($datetype . 'day',
+                               $CONFIG_DATE_PARSERS{start}->resolvescript($sdate->day))
         unless $CONFIG_DATE_PARSERS{start}->missing('day');
 
       # time
       unless ($CONFIG_DATE_PARSERS{start}->missing('time')) {
-        $bibentry->set_datafield($datetype . 'hour', $sdate->hour);
-        $bibentry->set_datafield($datetype . 'minute', $sdate->minute);
-        $bibentry->set_datafield($datetype . 'second', $sdate->second);
+        $bibentry->set_datafield($datetype . 'hour',
+                                 $CONFIG_DATE_PARSERS{start}->resolvescript($sdate->hour));
+        $bibentry->set_datafield($datetype . 'minute',
+                                 $CONFIG_DATE_PARSERS{start}->resolvescript($sdate->minute));
+        $bibentry->set_datafield($datetype . 'second',
+                                 $CONFIG_DATE_PARSERS{start}->resolvescript($sdate->second));
         unless ($sdate->time_zone->is_floating) { # ignore floating timezones
           $bibentry->set_datafield($datetype . 'timezone', tzformat($sdate->time_zone->name));
         }
@@ -1209,15 +1215,18 @@ sub _datetime {
           $bibentry->set_field("${datetype}datesplit", 1);
 
           unless ($CONFIG_DATE_PARSERS{end}->missing('year')) {
-            $bibentry->set_datafield($datetype . 'endyear', $edate->year);
+            $bibentry->set_datafield($datetype . 'endyear',
+                                     $CONFIG_DATE_PARSERS{end}->resolvescript($edate->year));
             # Save era date information
             $bibentry->set_field($datetype . 'endera', lc($edate->secular_era));
           }
 
-          $bibentry->set_datafield($datetype . 'endmonth', $edate->month)
+          $bibentry->set_datafield($datetype . 'endmonth',
+                                   $CONFIG_DATE_PARSERS{end}->resolvescript($edate->month))
             unless $CONFIG_DATE_PARSERS{end}->missing('month');
 
-          $bibentry->set_datafield($datetype . 'endday', $edate->day)
+          $bibentry->set_datafield($datetype . 'endday',
+                                   $CONFIG_DATE_PARSERS{end}->resolvescript($edate->day))
             unless $CONFIG_DATE_PARSERS{end}->missing('day');
 
           # Save end season date information
@@ -1227,9 +1236,12 @@ sub _datetime {
 
           # must be an hour if there is a time but could be 00 so use defined()
           unless ($CONFIG_DATE_PARSERS{end}->missing('time')) {
-            $bibentry->set_datafield($datetype . 'endhour', $edate->hour);
-            $bibentry->set_datafield($datetype . 'endminute', $edate->minute);
-            $bibentry->set_datafield($datetype . 'endsecond', $edate->second);
+            $bibentry->set_datafield($datetype . 'endhour',
+                                     $CONFIG_DATE_PARSERS{end}->resolvescript($edate->hour));
+            $bibentry->set_datafield($datetype . 'endminute',
+                                    $CONFIG_DATE_PARSERS{end}->resolvescript($edate->minute));
+            $bibentry->set_datafield($datetype . 'endsecond',
+                                     $CONFIG_DATE_PARSERS{end}->resolvescript($edate->second));
             unless ($edate->time_zone->is_floating) { # ignore floating timezones
               $bibentry->set_datafield($datetype . 'endtimezone', tzformat($edate->time_zone->name));
             }
