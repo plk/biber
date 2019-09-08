@@ -241,14 +241,8 @@ sub latex_decode {
         $text =~ s/\\($re)(?: \{\}|\s+|\b)/$map->{$1}/ge;
       }
       elsif ($type eq 'diacritics') {
-        # Using Unicode INFORMATION SEPARATOR ONE/TWO
-        my $bracemap = {'' => '',
-                        '{' => "\x{1f}",
-                        '}' => "\x{1e}"};
 
-        # Rename protecting braces so that they are not broken by RE manipulations
-        $text =~ s/(\{?)\\($re)\s*\{(\pL\pM*)\}(\}?)/$bracemap->{$1} . $3 . $map->{$2} . $bracemap->{$4}/ge;
-        $text =~ s/(\{?)(\pL\pM*)(\}?)/$bracemap->{$1} . $2 . $bracemap->{$3}/ge;
+        $text =~ s/\\($re)\s*\{(\pL\pM*)\}/$2 . $map->{$1}/ge;
 
         # Conditional regexp with code-block condition
         # non letter macros for diacritics (e.g. \=) can be followed by any letter
@@ -261,14 +255,14 @@ sub latex_decode {
         #     Any letter is allowed after the space (\c S)
         #   Else
         #     Only a non basic LaTeX letter is allowed (\c-)
-        $text =~ s/(\{?)\\# slash
+        $text =~ s/\\# slash
                    ($re)# the diacritic
                    (\s*)# optional space
                    (# capture paren
-                     (?(?{$2 !~ m:[A-Za-z]$:})# code block condition (is not a letter?)
+                     (?(?{$1 !~ m:[A-Za-z]$:})# code block condition (is not a letter?)
                        \pL # yes pattern
                      | # no pattern
-                       (?(?{$3}) # code block condition (space matched earlier after diacritic?)
+                       (?(?{$2}) # code block condition (space matched earlier after diacritic?)
                          \pL # yes pattern
                        | # no pattern
                          [^A-Za-z]
@@ -276,7 +270,7 @@ sub latex_decode {
                      ) # close conditional
                      \pM* # optional marks
                    ) # capture paren
-                   (\}?)/$bracemap->{$1} . $4 . $map->{$2} . $bracemap->{$5}/gxe;
+                   /$3 . $map->{$1}/gxe;
       }
     }
 
@@ -284,11 +278,8 @@ sub latex_decode {
       $logger->trace("String in latex_decode() before brace elimination now -> '$text'");
     }
 
-    $text =~ s/\x{1f}/{/g;
-    $text =~ s/\x{1e}/}/g;
-
-    # Now remove braces around single letters with diacritics (which the replace above
-    # can result in). Things like '{á}'. Such things can break kerning. We can't do this in
+    # Now remove braces around single letters (which the replace above
+    # can result in). Things like '{á}' can break kerning. We can't do this in
     # the RE above as we can't determine if the braces are wrapping a phrase because this
     # match is on an entire field string. So we can't in one step tell the difference between:
     #
@@ -303,9 +294,6 @@ sub latex_decode {
     # or
     # \frac{a}{b}
     #
-    # Put brace markers back after doing the brace elimination as we only want to eliminate
-    # braces introduced as part of decoding, not explicit braces in the data
-
     # This horrible RE is the very clever variable-look-behind implementation from:
     # http://www.drregex.com/2019/02/variable-length-lookbehinds-actually.html
     # Perl 5.30 has limited (<255 chars) VLB but it doesn't work here as it can't be determined
