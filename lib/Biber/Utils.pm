@@ -317,7 +317,7 @@ sub biber_error {
   $Biber::MASTER->{errors}++;
   # exit unless user requested not to for errors
   unless ($nodie or Biber::Config->getoption('nodieonerror')) {
-    $Biber::MASTER->display_problems;
+    $Biber::MASTER->display_end;
     exit EXIT_ERROR;
   }
 }
@@ -1639,7 +1639,7 @@ sub gen_initials {
       push @strings_out, join('-', gen_initials(split(/\p{Dash}/, $str)));
     }
     else {
-      # remove any leading braces from latex decoding
+      # remove any leading braces from latex decoding or protection
       $str =~ s/^\{//;
       my $chr = Unicode::GCString->new($str)->substr(0, 1)->as_string;
       # Keep diacritics with their following characters

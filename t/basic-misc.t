@@ -393,7 +393,7 @@ my $t1 = q+    \entry{t1}{misc}{}
       \true{uniquework}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^{3}$}}
+      \field{title}{10\% of [100] and 90% of $Normal_2$ | \& # things {$^3$}}
       \field{year}{1992}
       \field{pages}{100\bibrangedash}
       \range{pages}{-1}

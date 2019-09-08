@@ -284,6 +284,9 @@ sub latex_decode {
       $logger->trace("String in latex_decode() before brace elimination now -> '$text'");
     }
 
+    $text =~ s/\x{1f}/{/g;
+    $text =~ s/\x{1e}/}/g;
+
     # Now remove braces around single letters with diacritics (which the replace above
     # can result in). Things like '{á}'. Such things can break kerning. We can't do this in
     # the RE above as we can't determine if the braces are wrapping a phrase because this
@@ -300,16 +303,14 @@ sub latex_decode {
     # or
     # \frac{a}{b}
     #
-    # Workaround perl's lack of variable-width negative look-behind -
-    # Reverse string (and therefore some of the Re) and use variable width negative look-ahead
-    # Careful here - reversing puts any combining chars before the char so \X can't be used
-    $text = reverse $text;
-    $text =~ s/\}(\pM*\pL)\{(?!(?:\}[^}]+\{)*\pL+\\)/$1/g;
-    $text = reverse $text;
     # Put brace markers back after doing the brace elimination as we only want to eliminate
     # braces introduced as part of decoding, not explicit braces in the data
-    $text =~ s/\x{1f}/{/g;
-    $text =~ s/\x{1e}/}/g;
+
+    # This horrible RE is the very clever variable-look-behind implementation from:
+    # http://www.drregex.com/2019/02/variable-length-lookbehinds-actually.html
+    # Perl 5.30 has limited (<255 chars) VLB but it doesn't work here as it can't be determined
+    # that it's <255 chars by the parser
+    $text =~ s/(?!(?=(?'a'[\s\S]*))(?'b'\\\pL+(?:\{[^{]+\})*(?=\k'a'\z)|(?<=(?=x^|(?&b))[\s\S])))\{(\X)\}/$3/g;
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("String in latex_decode() now -> '$text'");
