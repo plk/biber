@@ -1968,6 +1968,8 @@
     <bcf:citekey order="3">D3</bcf:citekey>
     <bcf:citekey order="4">D4</bcf:citekey>
     <bcf:citekey order="5">D5</bcf:citekey>
+    <bcf:citekey order="6">D6</bcf:citekey>
+    <bcf:citekey order="7">D7</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

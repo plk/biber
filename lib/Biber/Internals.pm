@@ -8,16 +8,17 @@ use Biber::Constants;
 use Biber::Utils;
 use Biber::DataModel;
 use Data::Compare;
+use Digest::MD5 qw( md5_hex );
+use Encode;
 use List::AllUtils qw( :all );
 use Log::Log4perl qw(:no_extra_logdie_message);
-use Digest::MD5 qw( md5_hex );
 use POSIX qw( locale_h ); # for lc()
 use Scalar::Util qw(looks_like_number);
 use Text::Roman qw(isroman roman2int);
 use Unicode::GCString;
 use Unicode::Collate::Locale;
 use Unicode::Normalize;
-use Encode;
+use Unicode::UCD qw(num);
 
 =encoding utf-8
 
@@ -1226,18 +1227,16 @@ sub _sort_integer {
   my $dmtype = $args->[0]; # get int field type
   my $bee = $be->get_field('entrytype');
   if (my $field = $be->get_field($dmtype)) {
+
     # Make an attempt to map roman numerals to integers for sorting unless suppressed
-    if (not looks_like_number($field) and
+    if (isroman(NFKD($field)) and
         not Biber::Config->getblxoption($secnum, 'noroman', $be->get_field('entrytype'), $citekey)) {
-      $field = NFKD($field);
-      if (isroman($field)) {
-        $field = roman2int($field);
-      }
+      $field = roman2int(NFKD($field));
     }
-    # Make an attempt to map alpha fields to integers for sorting
-    if (not looks_like_number($field)) {
-      $field = sum(map {ord} split('', $field));
-    }
+
+    # Use Unicode::UCD::num() to map Unicode numbers to integers if possible
+    $field = num($field) //$field;
+
     return _process_sort_attributes($field, $sortelementattributes);
   }
   else {

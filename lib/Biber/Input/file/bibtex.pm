@@ -29,6 +29,7 @@ use Scalar::Util qw(looks_like_number);
 use URI;
 use Unicode::Normalize;
 use Unicode::GCString;
+use Unicode::UCD qw(num);
 use XML::LibXML::Simple;
 
 my $logger = Log::Log4perl::get_logger('main');
@@ -902,13 +903,13 @@ sub _literal {
   # year/month
   if ($fc eq 'year') {
     return if $bibentry->get_datafield('year');
-    if ($value and not looks_like_number($value)and not $entry->get('sortyear')) {
+    if ($value and not looks_like_number(num($value))and not $entry->get('sortyear')) {
       biber_warn("year field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
   }
   if ($fc eq 'month') {
     return if $bibentry->get_datafield('month');
-    if ($value and not looks_like_number($value)) {
+    if ($value and not looks_like_number(num($value))) {
       biber_warn("month field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
   }
