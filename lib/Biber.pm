@@ -1054,7 +1054,6 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
   # and then add a special section which contains all cited keys from all sections
   if (Biber::Config->getoption('output_format') eq 'bibtex') {
     Biber::Config->setoption('tool' ,1);
-    Biber::Config->setoption('pseudo_tool' ,1);
 
     my $bib_section = new Biber::Section('number' => 99999);
 
