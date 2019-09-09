@@ -165,6 +165,7 @@ our $CONFIG_DEFAULT_BIBER = {
   sortupper                                   => { content => 1 },
   strip_comments                              => { content => 0 },
   tool                                        => { content => 0 },
+  tool_noremove_missing_dependants            => { content => 0 },
   trace                                       => { content => 0 },
   nouri_encode                                => { content => 0 },
   validate_bblxml                             => { content => 0 },

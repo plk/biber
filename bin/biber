@@ -100,6 +100,7 @@ GetOptions(
            'tool_align|tool-align',                 # legacy alias for output_align
            'tool_config|tool-config',
            'tool_fieldcase|tool-fieldcase=s',       # legacy alias for output_fieldcase
+           'tool_noremove_missing_dependants|tool-noremove-missing-dependants',
            'tool_indent|tool-indent=s',             # legacy alias for output_indent
            'tool_macro_fields|tool-macro-fields=s', # legacy alias for output_macro_fields
            'tool_resolve|tool-resolve',             # legacy alias for output_resolve
@@ -843,6 +844,13 @@ source mapping, sorting etc.)
 
 Show the location of the default tool mode config file and exit. Useful when you need to
 copy this file and customise it.
+
+=item B<--tool-noremove-missing-dependants>
+
+Use this option in tool mode if you don't want to remove C<XREF>,
+C<CROSSREF> and C<XDATA> fields from the output which point to a missing
+entry. Useful if you have split datafiles where the e.g. C<CROSSREF>s are
+in another file that you are not including in the tool mode run.
 
 =item B<--trace|T>
 

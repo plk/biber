@@ -4628,26 +4628,30 @@ sub remove_undef_dependent {
   }
   else {
     my $be = $section->bibentry($citekey);
+
     # remove any xrefs
-    if ($be->get_field('xref') and ($be->get_field('xref') eq $missing_key)) {
+    if (not Biber::Config->getoption('tool_noremove_missing_dependants') and
+        $be->get_field('xref') and ($be->get_field('xref') eq $missing_key)) {
       $be->del_field('xref');
       biber_warn("I didn't find a database entry for xref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
 
     # remove any crossrefs
-    if ($be->get_field('crossref') and ($be->get_field('crossref') eq $missing_key)) {
+    if (not Biber::Config->getoption('tool_noremove_missing_dependants') and
+        $be->get_field('crossref') and ($be->get_field('crossref') eq $missing_key)) {
       $be->del_field('crossref');
-      if ($logger->is_trace()) {# performance tune
+      if ($logger->is_trace()) { # performance tune
         $logger->trace("Removed crossref dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
       }
       biber_warn("I didn't find a database entry for crossref '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
     }
 
     # remove xdata
-    if (my $xdata = $be->get_field('xdata')) {
+    if (not Biber::Config->getoption('tool_noremove_missing_dependants') and
+        my $xdata = $be->get_field('xdata')) {
       if (first {$missing_key eq $_} $xdata->@*) {
         $be->set_datafield('xdata', [ grep {$_ ne $missing_key} $xdata->@* ]) ;
-        if ($logger->is_trace()) {# performance tune
+        if ($logger->is_trace()) { # performance tune
           $logger->trace("Removed xdata dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
         }
         biber_warn("I didn't find a database entry for xdata entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
