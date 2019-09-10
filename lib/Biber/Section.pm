@@ -40,6 +40,7 @@ sub new {
   $self->{keytods} = {};
   $self->{orig_order_citekeys} = [];
   $self->{undef_citekeys} = [];
+  $self->{cite_citekeys} = {};
   $self->{nocite_citekeys} = {};
   $self->{citekey_alias} = {};
   $self->{static_keys} = {};
@@ -294,6 +295,30 @@ sub has_relclonetokey {
   return defined($self->{relclonetokey}{$key}) ? 1 : 0;
 }
 
+=head2 add_cite
+
+    Adds a key to the list of those that came via \cite
+
+=cut
+
+sub add_cite {
+  my ($self, $key) = @_;
+  $self->{cite_citekeys}{$key} = 1;
+  return;
+}
+
+=head2 is_cite
+
+    Returns a boolean to say if a key came via \cite
+
+=cut
+
+sub is_cite {
+  my ($self, $key) = @_;
+  return defined($self->{cite_citekeys}{$key}) ? 1 : 0;
+}
+
+
 =head2 add_nocite
 
     Adds a key to the list of those that came via \nocite
@@ -306,15 +331,15 @@ sub add_nocite {
   return;
 }
 
-=head2 get_nocite
+=head2 is_nocite
 
     Returns a boolean to say if a key came via \nocite
 
 =cut
 
-sub get_nocite {
+sub is_nocite {
   my ($self, $key) = @_;
-  return (defined($self->{nocite_citekeys}{$key}) ? 1 : 0);
+  return defined($self->{nocite_citekeys}{$key}) ? 1 : 0;
 }
 
 =head2 add_everykey

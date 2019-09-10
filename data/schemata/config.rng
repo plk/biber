@@ -1056,6 +1056,21 @@
             </group>
             <group>
               <optional>
+                <attribute name="map_entrykey_cited">
+                  <value>1</value>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_entrykey_nocited">
+                  <value>1</value>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="map_entrykey_allnocited">
+                  <value>1</value>
+                </attribute>
+              </optional>
+              <optional>
                 <attribute name="map_type_source">
                   <data type="string">
                     <param name="minLength">1</param>

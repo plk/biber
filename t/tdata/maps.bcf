@@ -65,12 +65,11 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>labeldateparts</bcf:key>
-      <bcf:value>1</bcf:value>
+      <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
       <bcf:key>labeldatespec</bcf:key>
       <bcf:value order="1" type="field">date</bcf:value>
-      <bcf:value order="2" type="field">year</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>julian</bcf:key>
@@ -202,6 +201,12 @@
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>usetranslator</bcf:key>
+      <bcf:value>1</bcf:value>
+    </bcf:option>
+  </bcf:options>
+  <bcf:options component="biblatex" type="movie">
+    <bcf:option type="singlevalued">
+      <bcf:key>uniquetitle</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
   </bcf:options>
@@ -525,34 +530,20 @@
   </bcf:datafieldset>
   <!-- SOURCEMAP -->
   <bcf:sourcemap>
-    <bcf:maps datatype="bibtex" level="driver">
+    <bcf:maps datatype="bibtex" level="user">
       <bcf:map>
-        <bcf:map_step map_type_source="conference" map_type_target="inproceedings" map_final="1"/>
-        <bcf:map_step map_type_source="electronic" map_type_target="online" map_final="1"/>
-        <bcf:map_step map_type_source="www" map_type_target="online" map_final="1"/>
+        <bcf:per_type>ARTICLE</bcf:per_type>
+        <bcf:map_step map_entrykey_nocited="1" map_final="1"/>
+        <bcf:map_step map_entry_null="1"/>
       </bcf:map>
       <bcf:map>
-        <bcf:map_step map_type_source="mastersthesis" map_type_target="thesis" map_final="1"/>
-        <bcf:map_step map_field_set="type" map_field_value="mathesis"/>
+        <bcf:per_type>BOOK</bcf:per_type>
+        <bcf:map_step map_entrykey_allnocited="1" map_final="1"/>
+        <bcf:map_step map_entry_null="1"/>
       </bcf:map>
       <bcf:map>
-        <bcf:map_step map_type_source="phdthesis" map_type_target="thesis" map_final="1"/>
-        <bcf:map_step map_field_set="type" map_field_value="phdthesis"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:map_step map_type_source="techreport" map_type_target="report" map_final="1"/>
-        <bcf:map_step map_field_set="type" map_field_value="techreport"/>
-      </bcf:map>
-      <bcf:map>
-        <bcf:map_step map_field_source="hyphenation" map_field_target="langid"/>
-        <bcf:map_step map_field_source="address" map_field_target="location"/>
-        <bcf:map_step map_field_source="school" map_field_target="institution"/>
-        <bcf:map_step map_field_source="annote" map_field_target="annotation"/>
-        <bcf:map_step map_field_source="archiveprefix" map_field_target="eprinttype"/>
-        <bcf:map_step map_field_source="journal" map_field_target="journaltitle"/>
-        <bcf:map_step map_field_source="primaryclass" map_field_target="eprintclass"/>
-        <bcf:map_step map_field_source="key" map_field_target="sortkey"/>
-        <bcf:map_step map_field_source="pdf" map_field_target="file"/>
+        <bcf:map_step map_entrykey_cited="1" map_final="1"/>
+        <bcf:map_step map_field_set="VERBA" map_field_value="somevalue"/>
       </bcf:map>
     </bcf:maps>
   </bcf:sourcemap>
@@ -727,6 +718,18 @@
     </bcf:keypart>
     <bcf:keypart order="5">
       <bcf:part type="namepart" order="1" use="0">prefix</bcf:part>
+    </bcf:keypart>
+  </bcf:sortingnamekeytemplate>
+  <!-- SORTING NAME KEY TEMPLATE -->
+  <bcf:sortingnamekeytemplate name="snks1">
+    <bcf:keypart order="1">
+      <bcf:part type="namepart" order="1">family</bcf:part>
+    </bcf:keypart>
+  </bcf:sortingnamekeytemplate>
+  <!-- SORTING NAME KEY TEMPLATE -->
+  <bcf:sortingnamekeytemplate name="snks2">
+    <bcf:keypart order="1">
+      <bcf:part type="namepart" order="1">given</bcf:part>
     </bcf:keypart>
   </bcf:sortingnamekeytemplate>
   <bcf:presort>mm</bcf:presort>
@@ -989,6 +992,7 @@
       <bcf:field fieldtype="field" format="xsv" datatype="option" skip_output="true">relatedoptions</bcf:field>
       <bcf:field fieldtype="field" datatype="range">pages</bcf:field>
       <bcf:field fieldtype="field" datatype="code">execute</bcf:field>
+      <bcf:field fieldtype="list" datatype="uri">urls</bcf:field>
     </bcf:fields>
     <bcf:entryfields>
       <bcf:field>abstract</bcf:field>
@@ -1918,12 +1922,13 @@
   </bcf:datamodel>
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
-    <bcf:datasource type="file" datatype="bibtex">encoding1.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="bibtex">maps.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="0">testŠ</bcf:citekey>
+    <bcf:citekey order="1">maps1</bcf:citekey>
+    <bcf:citekey order="2" nocite="1">*</bcf:citekey>
   </bcf:section>
-  <!-- SORTING TEMPLATES -->
+  <!-- SORTING SCHEME -->
   <bcf:sortingtemplate name="nty">
     <bcf:sort order="1">
       <bcf:sortitem order="1">presort</bcf:sortitem>
@@ -1952,6 +1957,14 @@
       <bcf:sortitem literal="1" order="2">0</bcf:sortitem>
     </bcf:sort>
   </bcf:sortingtemplate>
+  <bcf:sortingtemplate name="shorthand">
+    <bcf:sort order="1" final="1">
+      <bcf:sortitem order="1">sortshorthand</bcf:sortitem>
+    </bcf:sort>
+    <bcf:sort order="2">
+      <bcf:sortitem order="1">shorthand</bcf:sortitem>
+    </bcf:sort>
+  </bcf:sortingtemplate>
   <!-- DATA LISTS -->
   <bcf:datalist sortingnamekeytemplatename="global"
                 section="0"
@@ -1961,4 +1974,14 @@
                 labelprefix=""
                 uniquenametemplatename="global"
                 labelalphanametemplatename="global"/>
+  <bcf:datalist sortingnamekeytemplatename="global"
+                section="0"
+                name="shorthand/global//global/global"
+                sortingtemplatename="shorthand"
+                type="list"
+                labelprefix=""
+                uniquenametemplatename="global"
+                labelalphanametemplatename="global">
+    <bcf:filter type="field">shorthand</bcf:filter>
+  </bcf:datalist>
 </bcf:controlfile>

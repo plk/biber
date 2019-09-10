@@ -442,12 +442,11 @@
                 </thead>
                 <tbody>
                   <xsl:for-each select="./bcf:map_step">
-                    <tr><td>
-                      <xsl:if test="./@map_type_source">
-                        <span><xsl:if test="./@map_final='1'">
+                    <tr><td><xsl:if test="./@map_final='1'">
                           <xsl:attribute name="class">map_final</xsl:attribute>
                         </xsl:if>
-                        @<xsl:value-of select="./@map_type_source"/></span>
+                      <xsl:if test="./@map_type_source">
+                        <span>@<xsl:value-of select="./@map_type_source"/></span>
                         <xsl:if test="./@map_type_target">
                           <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>@<xsl:value-of select="./@map_type_target"/>
                         </xsl:if>
@@ -457,10 +456,7 @@
                         select="./@map_entry_newtype"/> created with key &quot;<xsl:value-of select="./@map_entry_new"/>&quot;</span>
                       </xsl:if>
                       <xsl:if test="./@map_field_source">
-                        <span><xsl:if test="./@map_final='1'">
-                          <xsl:attribute name="class">map_final</xsl:attribute>
-                        </xsl:if>
-                        <xsl:value-of select="./@map_field_source"/></span>
+                        <span><xsl:value-of select="./@map_field_source"/></span>
                         <xsl:if test="./@map_field_target">
                           <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text><xsl:value-of select="./@map_field_target"/>
                         </xsl:if>
@@ -468,6 +464,18 @@
                         <xsl:if test="./@map_replace"> <xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text> <span class="map_regexp"><xsl:value-of select="./@map_replace"/></span></xsl:if>
                       </xsl:if>
 
+                      <xsl:if test="./@map_entrykey_cited">
+                        <span>Entry must be CITED via \cite{key}</span>
+                      </xsl:if>
+                      <xsl:if test="./@map_entrykey_nocited">
+                        <span>Entry must be NOCITED via \nocite{key} or \nocite{*}</span>
+                      </xsl:if>
+                      <xsl:if test="./@map_entrykey_allnocited">
+                        <span>Entry must be NOCITED via \nocite{*}</span>
+                      </xsl:if>
+                      <xsl:if test="./@map_entry_null">
+                        <span><xsl:attribute name="class">map_null</xsl:attribute>entry</span>
+                      </xsl:if>
                       <xsl:if test="./@map_field_set">
                         <span><xsl:if test="./@map_null='1'">
                           <xsl:attribute name="class">map_null</xsl:attribute>
@@ -492,11 +500,11 @@
           </xsl:for-each>
           <div class="key"><u>Key</u>
           <ul>
-            <li><b><span class="map_final">@entrytype</span></b>: Entrytype for entry must match or mapping terminates</li>
-            <li><b><span class="map_final">field</span></b>: Entry must have field or mapping terminates</li>
+            <li><b><span class="map_final">condition</span></b>: condition must obtain or mapping terminates</li>
             <li><b>@source<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>@target</b>: Change source entrytype to target entrytype</li>
             <li><b>source<xsl:text disable-output-escaping="yes">&amp;rarr;</xsl:text>target</b>: Change source field to target field</li>
             <li><b><span class="map_null">field</span></b>: Delete field</li>
+            <li><b><span class="map_null">entry</span></b>: Delete entry</li>
             <li><b>field=&quot;string&quot;</b>: Set field to &quot;string&quot;</li>
             <li><b><span class="map_origentrytype">TYPE</span></b>: Most recently mentioned source entrytype</li>
             <li><b><span class="map_origfield">FIELD</span></b>: Most recently source field</li>

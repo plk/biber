@@ -570,6 +570,64 @@ sub create_entry {
               $fieldcontinue = 1;
             }
 
+            # \cite{key}   -> is_cite(key)=true, is_explicitcitekey(key)=true
+            # \nocite{key} -> is_nocite(key)=true, is_explicitcitekey(key)=true
+            # \nocite{*}   -> is_allkeys_nocite=true
+            # Check entry cited/nocited verb
+            if ($step->{map_entrykey_cited}) {
+              if (not $section->is_cite($key)) { # check if NOT cited
+                if ($step->{map_final}) {
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is not explicitly \\cited and step has 'final' set, skipping rest of map ...");
+                  }
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is not explicitly \\cited, skipping step ...");
+                  }
+                  next;
+                }
+              }
+            }
+            if ($step->{map_entrykey_nocited}) {
+              # If cited, don't want to do the allkeys_nocite check as this overrides
+              if ($section->is_cite($key) or
+                  (not $section->is_nocite($key) and not $section->is_allkeys_nocite)) {  # check if NOT nocited
+                if ($step->{map_final}) {
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is not \\nocited and step has 'final' set, skipping rest of map ...");
+                  }
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is not \\nocited, skipping step ...");
+                  }
+                  next;
+                }
+              }
+            }
+            if ($step->{map_entrykey_allnocited}) {
+              if (not $section->is_allkeys_nocite) {  # check if NOT allnoncited
+                if ($step->{map_final}) {
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is not \\nocite{*}'ed and step has 'final' set, skipping rest of map ...");
+                  }
+                  next MAP;
+                }
+                else {
+                  # just ignore this step
+                  if ($logger->is_debug()) { # performance tune
+                    $logger->debug("Source mapping (type=$level, key=$key): Key is not \\nocite{*}'ed, skipping step ...");
+                  }
+                  next;
+                }
+              }
+            }
+
             # Field map
             if ($fieldsource = maploopreplace($step->{map_field_source}, $maploop)) {
               $fieldsource = fc($fieldsource);
@@ -625,7 +683,7 @@ sub create_entry {
                   # Can't modify entrykey
                   if ($fieldsource eq 'entrykey') {
                     if ($logger->is_debug()) { # performance tune
-                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey'- cannot remap the value of this field, skipping ...");
+                      $logger->debug("Source mapping (type=$level, key=$etargetkey): Field '$fieldsource' is 'entrykey' - cannot remap the value of this field, skipping ...");
                     }
                     next;
                   }
@@ -638,12 +696,12 @@ sub create_entry {
                                 encode('UTF-8', NFC(ireplace($last_fieldval, $m, $r, $caseinsensitive))));
                 }
                 else {
-                  # Now re-instate any unescaped $1 .. $9 to get round these being
+                  # Now re-instate any unescaped $1 .. $n to get round these being
                   # dynamically scoped and being null when we get here from any
                   # previous map_match
                   # Be aware that imatch() uses m//g so @imatches can have multiple paren group
                   # captures which might be useful
-                  $m =~ s/(?<!\\)\$(\d)/$imatches[$1-1]/ge;
+                  $m =~ s/(?<!\\)\$(\d+)/$imatches[$1-1]/ge;
                   unless (@imatches = imatch($last_fieldval, $m, $negmatch, $caseinsensitive)) {
                     # Skip the rest of the map if this step doesn't match and match is final
                     if ($step->{map_final}) {

@@ -323,7 +323,10 @@ map =
         ( attribute map_entry_new { xsd:string {minLength="1"} },
           attribute map_entry_newtype { xsd:string {minLength="1"} }
         ) |
-        ( attribute map_type_source { xsd:string {minLength="1"} }?,
+        ( attribute map_entrykey_cited { "1" }?,
+          attribute map_entrykey_nocited { "1" }?,
+          attribute map_entrykey_allnocited { "1" }?,
+          attribute map_type_source { xsd:string {minLength="1"} }?,
           attribute map_type_target { xsd:string {minLength="1"} }?,
           attribute map_field_source { xsd:string {minLength="1"} }?,
           attribute map_notfield { xsd:string {minLength="1"} }?,

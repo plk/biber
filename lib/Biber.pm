@@ -908,9 +908,12 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
         }
         else {
           next if $bib_section->is_allkeys; # Skip if we have already encountered '*'
-          # Track nocite information
+          # Track cite/nocite - needed for sourcemapping logic
           if ($keyc->{nocite}) {
             $bib_section->add_nocite($key);
+          }
+          else {
+            $bib_section->add_cite($key);
           }
           # Set order information - there is no order on dynamic key defs above
           # as they are a definition, not a cite
@@ -2321,7 +2324,7 @@ sub process_nocite {
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
   # Either explicitly nocited or \nocite{*} and not explicitly cited without nocite
-  if ($section->get_nocite($citekey) or
+  if ($section->is_nocite($citekey) or
       ($section->is_allkeys_nocite and not $section->is_explicitcitekey($citekey))) {
     $be->set_field('nocite', '1');
   }

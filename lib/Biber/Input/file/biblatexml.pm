@@ -481,6 +481,64 @@ sub create_entry {
             $fieldcontinue = 1;
           }
 
+          # \cite{key}   -> is_cite(key)=true, is_explicitcitekey(key)=true
+          # \nocite{key} -> is_nocite(key)=true, is_explicitcitekey(key)=true
+          # \nocite{*}   -> is_allkeys_nocite=true
+          # Check entry cited/nocited verb
+          if ($step->{map_entrykey_cited}) {
+            if (not $section->is_cite($key)) { # check if NOT cited
+              if ($step->{map_final}) {
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Key is not explicitly \\cited and step has 'final' set, skipping rest of map ...");
+                }
+                next MAP;
+              }
+              else {
+                # just ignore this step
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Key is not explicitly \\cited, skipping step ...");
+                }
+                next;
+              }
+            }
+          }
+          if ($step->{map_entrykey_nocited}) {
+            # If cited, don't want to do the allkeys_nocite check as this overrides
+            if ($section->is_cite($key) or
+                (not $section->is_nocite($key) and not $section->is_allkeys_nocite)) { # check if NOT nocited
+              if ($step->{map_final}) {
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Key is not \\nocited and step has 'final' set, skipping rest of map ...");
+                }
+                next MAP;
+              }
+              else {
+                # just ignore this step
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Key is not \\nocited, skipping step ...");
+                }
+                next;
+              }
+            }
+          }
+          if ($step->{map_entrykey_allnocited}) {
+            if (not $section->is_allkeys_nocite) { # check if NOT allnoncited
+              if ($step->{map_final}) {
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Key is not \\nocite{*}'ed and step has 'final' set, skipping rest of map ...");
+                }
+                next MAP;
+              }
+              else {
+                # just ignore this step
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Key is not \\nocite{*}'ed, skipping step ...");
+                }
+                next;
+              }
+            }
+          }
+
           # Field map
           if ($xp_fieldsource_s = _getpath(maploopreplace($step->{map_field_source}, $maploop))) {
             $xp_fieldsource = XML::LibXML::XPathExpression->new($xp_fieldsource_s);
