@@ -1,6 +1,7 @@
 Revision history for Biber
 
 2.14   (2019)
+       * New map_entrykey_* mapping verbs
        * New options --noremove-tmp-dir and --show-tmp-dir to disable of
          removal on exit and showing location of temporary directory used for
          intermediate data. Useful for debugging.
