@@ -8,7 +8,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{fixfoot}
-\usepackage{color}
+\usepackage{xcolor}
 \usepackage{listings}
 \usepackage{metalogo}
 \usepackage{colortbl}
@@ -27,7 +27,7 @@
 \MakeAutoQuote{«}{»}
 
 \gdef\biberversion{2.14}    % BIBER VERSION
-\gdef\biblatexversion{3.13}   % BIBLATEX VERSION
+\gdef\biblatexversion{3.14}   % BIBLATEX VERSION
 
 % colour for tables
 \definecolor{Gray}{gray}{0.85}
@@ -926,11 +926,11 @@ datasource entry being processed. A \opt{map\_step} works like this:
 \item If \textcolor{blue}{\texttt{map\_entrykey\_cite}} is used then only apply
   the step if the entry key was specifically \cmd{cite}ed.
 \item If \textcolor{blue}{\texttt{map\_entrykey\_nocite}} is used then only apply
-  the step if the entry key was specifically \cmd{nocite}ed.
+  the step if the entry key was specifically \cmd{nocite}ed or included by \cmd{nocite\{*\}}.
 \item If \textcolor{blue}{\texttt{map\_entrykey\_citedornocited}} is used then only apply
   the step if the entry key was specifically \cmd{cite}ed or \cmd{nocite}ed.
 \item If \textcolor{blue}{\texttt{map\_entrykey\_allnocited}} is used then only apply
-  the step if the entry key was included by \cmd{nocite}{*}.
+  the step if the entry key was included by \cmd{nocite\{*\}}
 \item If \textcolor{blue}{\texttt{map\_notfield}} is used then only apply
   the step if the \textcolor{red}{\texttt{source-field}} does not exist.
 \item If \textcolor{blue}{\texttt{map\_match}} is defined but
@@ -2192,7 +2192,7 @@ AUTHOR = {namelistopt=true and Hans Harman and
 Visit \url{http://tex.stackexchange.com/questions/154751/} for a
 comprehensive overview on \biber integration in most editors.
 
-\subsection{\BibTeX\ macros and the \texttt{MONTH} field}
+\subsection{BibTeX macros and the \texttt{MONTH} field}
 
 \BibTeX\ defines macros for month abbreviations
 like «\verb+jan+», «\verb+feb+» etc. \biber\ also does this,
