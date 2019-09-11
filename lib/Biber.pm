@@ -863,11 +863,6 @@ SECTION: foreach my $section ($bcfxml->{section}->@*) {
     foreach my $keyc ($section->{citekey}->@*) {
       my $key = NFD($keyc->{content}); # Key is already UTF-8 - it comes from UTF-8 XML
 
-      # Add explicit cite info
-      unless ($key eq '*') {
-        $bib_section->add_explicitcitekey($key);
-      }
-
       if ($keyc->{nocite}) {# \nocite'd
         # Don't add if there is an identical key without nocite since \cite takes precedence
         unless (first {$key eq NFD($_->{content})} @prekeys) {
