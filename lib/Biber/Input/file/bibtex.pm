@@ -386,8 +386,12 @@ sub create_entry {
         # Don't compare case insensitively - this might not be correct
         # Logic is "-(-P v Q)" which is equivalent to "P & -Q" but -Q is an array check so
         # messier to write than Q
+        my $test_path = $datasource;
+        if (File::Spec->file_name_is_absolute($test_path)) { # kpsewhich returns abs paths
+          $test_path = (File::Spec->splitpath($datasource))[2];
+        }
         unless (not exists($map->{per_datasource}) or
-                first {$_->{content} eq (File::Spec->splitpath($datasource))[2]} $map->{per_datasource}->@*) {
+                first {$_->{content} eq $test_path} $map->{per_datasource}->@*) {
           next;
         }
 
