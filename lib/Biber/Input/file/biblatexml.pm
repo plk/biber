@@ -484,7 +484,28 @@ sub create_entry {
           # \cite{key}   -> is_cite(key)=true, is_explicitcitekey(key)=true
           # \nocite{key} -> is_nocite(key)=true, is_explicitcitekey(key)=true
           # \nocite{*}   -> is_allkeys_nocite=true
-          # Check entry cited/nocited verb
+          # Check entry cited/nocited verbs
+
+          # \cite{key} or \nocite{key}
+          if ($step->{map_entrykey_citedornocited}) {
+            if (not $section->is_specificcitekey($key)) { # check if NOT \cited{} and NOT \nocited{}
+              if ($step->{map_final}) {
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Key is neither \\cited nor \\nocited and step has 'final' set, skipping rest of map ...");
+                }
+                next MAP;
+              }
+              else {
+                # just ignore this step
+                if ($logger->is_debug()) { # performance tune
+                  $logger->debug("Source mapping (type=$level, key=$key): Key is neither \\cited nor \\nocited, skipping step ...");
+                }
+                next;
+              }
+            }
+          }
+
+          # \cite{key}
           if ($step->{map_entrykey_cited}) {
             if (not $section->is_cite($key)) { # check if NOT cited
               if ($step->{map_final}) {
@@ -502,6 +523,8 @@ sub create_entry {
               }
             }
           }
+
+          # \nocite{key}
           if ($step->{map_entrykey_nocited}) {
             # If cited, don't want to do the allkeys_nocite check as this overrides
             if ($section->is_cite($key) or
@@ -521,6 +544,8 @@ sub create_entry {
               }
             }
           }
+
+          # \nocite{*}
           if ($step->{map_entrykey_allnocited}) {
             if (not $section->is_allkeys_nocite) { # check if NOT allnoncited
               if ($step->{map_final}) {

@@ -185,13 +185,13 @@ sub has_badcasekey {
   return $ckey ne $key ? $ckey : undef;
 }
 
-=head2 is_explicitcitekey
+=head2 is_specificcitekey
 
-    Check if a key is explicitly cited by \cite{key} or \nocite{key}
+    Check if a key is specifically cited by \cite{key} or \nocite{key}
 
 =cut
 
-sub is_explicitcitekey {
+sub is_specificcitekey {
   my ($self, $key) = @_;
   return (defined($self->{cite_citekeys}{$key}) or
           defined($self->{nocite_citekeys}{$key})) ? 1 : 0;

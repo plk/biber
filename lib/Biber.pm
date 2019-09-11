@@ -2318,9 +2318,9 @@ sub process_nocite {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   my $be = $section->bibentry($citekey);
-  # Either explicitly nocited or \nocite{*} and not explicitly cited without nocite
+  # Either specifically nocited or \nocite{*} and not specifically cited without nocite
   if ($section->is_nocite($citekey) or
-      ($section->is_allkeys_nocite and not $section->is_explicitcitekey($citekey))) {
+      ($section->is_allkeys_nocite and not $section->is_specificcitekey($citekey))) {
     $be->set_field('nocite', '1');
   }
 }

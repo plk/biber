@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 use Test::Differences;
 unified_diff;
 
@@ -46,6 +46,8 @@ ok(is_undef($bibentries->entry('maps2')), 'Maps test - 2' );
 ok(defined($bibentries->entry('maps3')), 'Maps test - 3' );
 # \nocited{*} BOOK, deleted by map
 ok(is_undef($bibentries->entry('maps4')), 'Maps test - 4' );
-# Explictly cited ARTICLE, field set
+# Specifically cited ARTICLE, field set
 eq_or_diff($bibentries->entry('maps1')->get_field('verba'), 'somevalue', 'Maps test - 5' );
 ok(is_undef($bibentries->entry('maps3')->get_field('verba')), 'Maps test - 6' );
+eq_or_diff($bibentries->entry('maps1')->get_field('verbb'), 'somevalue1', 'Maps test - 7' );
+ok(is_undef($bibentries->entry('maps3')->get_field('verbb')), 'Maps test - 8' );

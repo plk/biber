@@ -545,6 +545,10 @@
         <bcf:map_step map_entrykey_cited="1" map_final="1"/>
         <bcf:map_step map_field_set="VERBA" map_field_value="somevalue"/>
       </bcf:map>
+      <bcf:map>
+        <bcf:map_step map_entrykey_citedornocited="1" map_final="1"/>
+        <bcf:map_step map_field_set="VERBB" map_field_value="somevalue1"/>
+      </bcf:map>
     </bcf:maps>
   </bcf:sourcemap>
   <!-- LABELALPHA NAME TEMPLATE -->

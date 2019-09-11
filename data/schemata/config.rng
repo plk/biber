@@ -1066,6 +1066,11 @@
                 </attribute>
               </optional>
               <optional>
+                <attribute name="map_entrykey_citedornocited">
+                  <value>1</value>
+                </attribute>
+              </optional>
+              <optional>
                 <attribute name="map_entrykey_allnocited">
                   <value>1</value>
                 </attribute>
