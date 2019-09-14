@@ -148,4 +148,4 @@
 ** DONE unknown, * -> missing, open -> ..
 ** DONE 'circa' should become 'approximate' to align with ISO8601
 * DONE Look into variable length look/behinds in decode: http://www.drregex.com/2019/02/variable-length-lookbehinds-actually.html
-* TODO New sourcemap verb fieldsource=cited/nocited?
+* DONE New sourcemap verb fieldsource=cited/nocited?
