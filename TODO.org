@@ -149,3 +149,9 @@
 ** DONE 'circa' should become 'approximate' to align with ISO8601
 * DONE Look into variable length look/behinds in decode: http://www.drregex.com/2019/02/variable-length-lookbehinds-actually.html
 * DONE New sourcemap verb fieldsource=cited/nocited?
+* TODO XDATA generalisation
+** TODO document xdatasep in biber
+** TODO Granular xdata doesn't work for dates
+** TODO bibtex output for unresolved xdata
+** TODO DOT output?
+** TODO bltx schema, input/output

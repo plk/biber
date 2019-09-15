@@ -1191,6 +1191,7 @@ sub resolve_alias_refs {
   my $self = shift;
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
+  my $dm = Biber::Config->get_dm;
   foreach my $citekey ($section->get_citekeys) {
     my $be = $section->bibentry($citekey);
 
@@ -1207,13 +1208,22 @@ sub resolve_alias_refs {
       }
     }
     # XDATA
-    if (my $xdata = $be->get_field('xdata')) {
+    if (my $xdata = $be->get_xdata_refs) {
       my $resolved_keys;
-      foreach my $refkey ($xdata->@*) {
-        $refkey = $section->get_citekey_alias($refkey) // $refkey;
-        push $resolved_keys->@*, $refkey;
+      foreach my $xdataref ($xdata->@*) {
+        if (not defined($xdataref->{xdatafield})) { # XDATA ref to whole entry
+          foreach my $refkey ($xdataref->{xdataentries}->@*) { # whole entry XDATA can be xsv
+            $refkey = $section->get_citekey_alias($refkey) // $refkey;
+            push $resolved_keys->@*, $refkey;
+          }
+          $xdataref->{xdataentries} = $resolved_keys;
+        }
+        else { # granular XDATA ref - only one entry key
+          my $refkey = $xdataref->{xdataentries}->[0];
+          $refkey = $section->get_citekey_alias($refkey) // $refkey;
+          $xdataref->{xdataentries} = [$refkey];
+        }
       }
-      $be->set_datafield('xdata', $resolved_keys);
     }
   }
 }
@@ -1302,7 +1312,7 @@ sub instantiate_dynamic {
 
 =head2 resolve_xdata
 
-    Resolve xdata entries
+    Resolve xdata
 
 =cut
 
@@ -1311,7 +1321,7 @@ sub resolve_xdata {
   my $secnum = $self->get_current_section;
   my $section = $self->sections->get_section($secnum);
   if ($logger->is_debug()) {# performance tune
-    $logger->debug("Resolving XDATA entries for section $secnum");
+    $logger->debug("Resolving XDATA for section $secnum");
   }
 
   # We are not looping over citekeys here as XDATA entries are not cited.
@@ -1321,7 +1331,7 @@ sub resolve_xdata {
     # Otherwise, we will die on loops etc. for XDATA entries which are never referenced from
     # any cited entry
     next if $be->get_field('entrytype') eq 'xdata';
-    next unless my $xdata = $be->get_field('xdata');
+    next unless my $xdata = $be->get_xdata_refs;
     $be->resolve_xdata($xdata);
   }
 }
@@ -4472,14 +4482,16 @@ sub get_dependents {
       my $be = $section->bibentry($citekey);
 
       # xdata
-      if (my $xdata = $be->get_field('xdata')) {
+      if (my $xdata = $be->get_xdata_refs) {
         foreach my $xdatum ($xdata->@*) {
-          # skip looking for dependent if it's already there (loop suppression)
-          push $new_deps->@*, $xdatum unless $section->bibentry($xdatum);
-          if ($logger->is_debug()) {# performance tune
-            $logger->debug("Entry '$citekey' has xdata '$xdatum'");
+          foreach my $xdref ($xdatum->{xdataentries}->@*) {
+            # skip looking for dependent if it's already there (loop suppression)
+            push $new_deps->@*, $xdref unless $section->bibentry($xdref);
+            if ($logger->is_debug()) { # performance tune
+              $logger->debug("Entry '$citekey' has xdata '$xdref'");
+            }
+            push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
           }
-          push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
         }
       }
 

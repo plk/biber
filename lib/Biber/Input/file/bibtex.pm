@@ -988,6 +988,11 @@ sub _literal {
   my $fc = fc($field); # Casefolded field which is what we need internally
   my $value = $entry->get(encode('UTF-8', NFC($field)));
 
+  # Record any XDATA and skip if we did
+  if ($bibentry->add_xdata_ref($field, $value)) {
+    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+  }
+
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
@@ -1057,6 +1062,12 @@ sub _literal {
 sub _uri {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get(encode('UTF-8', NFC($field)));
+
+  # Record any XDATA and skip if we did
+  if ($bibentry->add_xdata_ref($field, $value)) {
+    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+  }
+
   return $value;
 }
 
@@ -1065,13 +1076,27 @@ sub _xsv {
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
   my ($bibentry, $entry, $field) = @_;
-  return [ split(/$S/, $entry->get(encode('UTF-8', NFC($field)))) ];
+  my $value = [ split(/$S/, $entry->get(encode('UTF-8', NFC($field)))) ];
+
+  # XDATA is special
+  if (fc($field) eq 'xdata') {
+    $bibentry->add_xdata_ref('xdata', $value);
+    return; # return undef, no field set
+  }
+
+  return $value;
 }
 
 # Verbatim fields
 sub _verbatim {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get(encode('UTF-8', NFC($field)));
+
+  # Record any XDATA and skip if we did
+  if ($bibentry->add_xdata_ref($field, $value)) {
+    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+  }
+
   return $value;
 }
 
@@ -1086,6 +1111,11 @@ sub _range {
   my ($bibentry, $entry, $field, $key) = @_;
   my $values_ref;
   my $value = $entry->get(encode('UTF-8', NFC($field)));
+
+  # Record any XDATA and skip if we did
+  if ($bibentry->add_xdata_ref($field, $value)) {
+    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+  }
 
   my @values = split(/\s*[;,]\s*/, $value);
   # If there is a range sep, then we set the end of the range even if it's null
@@ -1120,13 +1150,18 @@ sub _range {
 
 # Names
 sub _name {
-  my ($be, $entry, $field, $key) = @_;
+  my ($bibentry, $entry, $field, $key) = @_;
   my $fc = fc($field); # Casefolded field which is what we need internally
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $value = $entry->get(encode('UTF-8', NFC($field)));
   my $xnamesep = Biber::Config->getoption('xnamesep');
-  my $bee = $be->get_field('entrytype');
+  my $bee = $bibentry->get_field('entrytype');
+
+  # Record any XDATA and skip if we did
+  if ($bibentry->add_xdata_ref($field, $value)) {
+    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+  }
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('namesep'),
@@ -1137,7 +1172,14 @@ sub _name {
 
   my $names = Biber::Entry::Names->new();
 
-  foreach my $name (@tmp) {
+  for (my $i = 0; $i <= $#tmp; $i++) {
+    my $name = $tmp[$i];
+
+    # Record any XDATA and skip if we did
+    if ($bibentry->add_xdata_ref($field, $name, $i)) {
+      $names->add_name(Biber::Entry::Name->new()); # Add empty name as placeholder
+      next;
+    }
 
     # per-namelist options
     if ($name =~ m/^(\S+)\s*$xnamesep\s*(\S+)?$/) {
@@ -1156,7 +1198,7 @@ sub _name {
 
     # Consecutive "and" causes Text::BibTeX::Name to segfault
     unless ($name) {
-      biber_warn("Name in key '$key' is empty (probably consecutive 'and'): skipping entry '$key'", $be);
+      biber_warn("Name in key '$key' is empty (probably consecutive 'and'): skipping entry '$key'", $bibentry);
       $section->del_citekey($key);
       return 'BIBER_SKIP_ENTRY';
     }
@@ -1222,7 +1264,7 @@ sub _datetime {
 
   my ($sdate, $edate, $sep, $unspec) = parse_date_range($bibentry, $datetype, $date);
 
-  # Date had EDTF 5.2.2 unspecified format
+  # Date had unspecified format
   # This does not differ for *enddate components as these are split into ranges
   # from non-ranges only
   if ($unspec) {
@@ -1356,6 +1398,12 @@ sub _datetime {
 sub _list {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get(encode('UTF-8', NFC($field)));
+
+  # Record any XDATA and skip if we did
+  if ($bibentry->add_xdata_ref($field, $value)) {
+    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+  }
+
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('listsep'),
                                      undef,
@@ -1363,7 +1411,21 @@ sub _list {
                                      undef,
                                      {binmode => 'utf-8', normalization => 'NFD'});
   @tmp = map { (remove_outer($_))[1] } @tmp;
-  return [ @tmp ];
+  my @result;
+
+  for (my $i = 0; $i <= $#tmp; $i++) {
+    my $e = $tmp[$i];
+
+    # Record any XDATA and skip if we did
+    if ($bibentry->add_xdata_ref($field, $e, $i)) {
+      push @result, '<BDS>XDATA</BDS>';
+    }
+    else {
+      push @result, $e;
+    }
+  }
+
+  return [ @result ];
 }
 
 # Bibtex uri lists
@@ -1377,7 +1439,22 @@ sub _urilist {
                                      undef,
                                      undef,
                                      {binmode => 'utf-8', normalization => 'NFD'});
-  return [ @tmp ];
+  my @result;
+
+  for (my $i = 0; $i <= $#tmp; $i++) {
+    my $e = $tmp[$i];
+
+    # Record any XDATA and skip if we did
+    if ($bibentry->add_xdata_ref($field, $e, $i)) {
+      push @result, '<BDS>XDATA</BDS>';
+    }
+    else {
+      push @result, $e;
+    }
+  }
+
+  return [ @result ];
+
 }
 
 =head2 cache_data

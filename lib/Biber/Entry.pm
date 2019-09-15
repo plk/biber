@@ -207,6 +207,61 @@ sub notnull {
   return $#arr > -1 ? 1 : 0;
 }
 
+=head2 add_xdata_ref
+
+  Add an XDATA reference to the entry
+  Reference can be simply to an entire XDATA entry or a particular field+position in field
+  Record reference and target positions so that the XDATA marker can be removed as otherwise
+  it would break further parsing
+
+=cut
+
+sub add_xdata_ref {
+  my ($self, $reffield, $value, $reffieldposition) = @_;
+  if ($reffield eq 'xdata') { # XDATA fields are a simple case
+    push $self->{xdatarefs}->@*, {# field pointing to XDATA
+                                  reffield => 'xdata',
+                                  refposition => 0,
+                                  xdataentries => $value,
+                                  xdatafield => undef,
+                                  xdataposition => 0};
+    return 1;
+  }
+  else { # Granular XDATA reference
+    my $xnamesep = Biber::Config->getoption('xnamesep');
+    if (my ($xdataref) = $value =~ m/^(?:(?i)xdata)\s*$xnamesep\s*(.+)$/x) {
+      my $xdatasep = Biber::Config->getoption('xdatasep');
+      my $xdre = qr{\s*$xdatasep\s*([^$xdatasep]+)};
+      my ($xe, $xf, $xfp) = $xdataref =~ m/^([^$xdatasep]+)$xdre$xdre$/x;
+      push $self->{xdatarefs}->@*, { # field pointing to XDATA
+                                    reffield => $reffield,
+                                    # field position pointing to XDATA, 0-based
+                                    refposition => $reffieldposition//0,
+                                    # XDATA entry
+                                    xdataentries => [$xe],
+                                    # XDATA field
+                                    xdatafield => $xf,
+                                    # XDATA field position, 0-based
+                                    xdataposition => $xfp//0};
+      return 1;
+    }
+    else {
+      return 0;
+    }
+  }
+}
+
+=head2 get_xdata_refs
+
+  Get the XDATA references
+
+=cut
+
+sub get_xdata_refs {
+  my $self = shift;
+  return $self->{xdatarefs};
+}
+
 =head2 set_labelname_info
 
   Record the labelname information. This is special
@@ -585,9 +640,9 @@ sub set_inherit_from {
 
 =head2 resolve_xdata
 
-    Recursively resolve XDATA fields in an entry
+    Recursively resolve XDATA in an entry
 
-    $entry->resolve_xdata($xdata_entry);
+    $entry->resolve_xdata($xdata);
 
 =cut
 
@@ -596,42 +651,63 @@ sub resolve_xdata {
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $entry_key = $self->get_field('citekey');
+  my $dm = Biber::Config->get_dm;
 
-  foreach my $xdatum (@$xdata) {
-    unless (my $xdatum_entry = $section->bibentry($xdatum)) {
-      biber_warn("Entry '$entry_key' references XDATA entry '$xdatum' which does not exist in section $secnum");
-      next;
-    }
-    else {
-      # Skip xdata inheritance if we've already done it
-      # This will only ever be between two XDATA entrytypes since we
-      # always start at a non-XDATA entrytype, which we'll not look at again
-      # and recursion is always between XDATA entrytypes.
-      next if Biber::Config->get_inheritance('xdata', $xdatum, $entry_key);
+  foreach my $xdatum ($xdata->@*) {
 
-      # record the XDATA resolve between these entries to prevent loops
-      Biber::Config->set_inheritance('xdata', $xdatum, $entry_key);
+    foreach my $xdref ($xdatum->{xdataentries}->@*) {
 
-      # Detect XDATA loops
-      unless (Biber::Config->is_inheritance_path('xdata', $entry_key, $xdatum)) {
-        if (my $recurse_xdata = $xdatum_entry->get_field('xdata')) { # recurse
-          $xdatum_entry->resolve_xdata($recurse_xdata);
-        }
-        foreach my $field ($xdatum_entry->datafields()) { # set fields
-          next if $field eq 'ids'; # Never inherit aliases
-          $self->set_datafield($field, $xdatum_entry->get_field($field));
-
-          # Record graphing information if required
-          if (Biber::Config->getoption('output_format') eq 'dot') {
-            Biber::Config->set_graph('xdata', $xdatum_entry->get_field('citekey'), $entry_key, $field, $field);
-          }
-          if ($logger->is_debug()) { # performance tune
-            $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
-          }
-        }
+      unless (my $xdataentry = $section->bibentry($xdref)) {
+        biber_warn("Entry '$entry_key' references XDATA entry '$xdref' which does not exist in section $secnum");
+        next;
       }
       else {
-        biber_error("Circular XDATA inheritance between '$xdatum'<->'$entry_key'");
+        # Skip xdata inheritance if we've already done it
+        # This will only ever be between two XDATA entrytypes since we
+        # always start at a non-XDATA entrytype, which we'll not look at again
+        # and recursion is always between XDATA entrytypes.
+        next if Biber::Config->get_inheritance('xdata', $xdref, $entry_key);
+
+        # record the XDATA resolve between these entries to prevent loops
+        Biber::Config->set_inheritance('xdata', $xdref, $entry_key);
+
+        # Detect XDATA loops
+        unless (Biber::Config->is_inheritance_path('xdata', $entry_key, $xdref)) {
+          if (my $recurse_xdata = $xdataentry->get_xdata_refs) { # recurse
+            $xdataentry->resolve_xdata($recurse_xdata);
+          }
+
+          # Whole entry XDATA reference so inherit all fields
+          if (not defined($xdatum->{xdatafield})) {
+            foreach my $field ($xdataentry->datafields()) { # set fields
+              next if $field eq 'ids'; # Never inherit aliases
+              $self->set_datafield($field, $xdataentry->get_field($field));
+
+              # Record graphing information if required
+              if (Biber::Config->getoption('output_format') eq 'dot') {
+                Biber::Config->set_graph('xdata', $xdataentry->get_field('citekey'), $entry_key, $field, $field);
+              }
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
+              }
+            }
+          }
+          else { # Granular XDATA inheritance
+            if ($dm->field_is_type('list', 'name', $xdatum->{reffield})){ # name list
+              $self->get_field($xdatum->{reffield})->replace_name($xdataentry->get_field($xdatum->{xdatafield})->nth_name($xdatum->{xdataposition}), $xdatum->{refposition});
+            }
+            elsif ($dm->field_is_fieldtype('list', $xdatum->{reffield})) { # non-name list
+              $self->get_field($xdatum->{reffield})->[$xdatum->{refposition}-1] =
+                $xdataentry->get_field($xdatum->{xdatafield})->[$xdatum->{refposition}-1];
+            }
+            else { # non-list
+              $self->set_datafield($xdatum->{reffield}, $xdataentry->get_field($xdatum->{xdatafield}));
+            }
+          }
+        }
+        else {
+          biber_error("Circular XDATA inheritance between '$xdref'<->'$entry_key'");
+        }
       }
     }
   }

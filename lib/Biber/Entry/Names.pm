@@ -90,6 +90,20 @@ sub add_name {
   return;
 }
 
+=head2 replace_name
+
+    Replace a Biber::Entry::Name at a position (1-based)
+    with another one
+
+=cut
+
+sub replace_name {
+  my ($self, $name_obj, $position) = @_;
+  $name_obj->set_index($position-1);
+  $self->{namelist}->[$position-1] = $name_obj;
+  return;
+}
+
 =head2 set_morenames
 
     Sets a flag to say that we had a "and others" in the data
