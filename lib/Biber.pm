@@ -1610,6 +1610,7 @@ sub process_namedis {
   my $bee = $be->get_field('entrytype');
 
   my $un = Biber::Config->getblxoption($secnum, 'uniquename', $bee, $citekey);
+  my $ul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
 
   # Can be per-entry
   $untname = Biber::Config->getblxoption($secnum, 'uniquenametemplatename', undef, $citekey) // $untname;
@@ -1625,6 +1626,11 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
     # per-namelist uniquenametemplatename
     if (defined($nl->get_uniquenametemplatename)) {
       $untname = $nl->get_uniquenametemplatename;
+    }
+
+    # per-namelist uniquelist
+    if (defined($nl->get_uniquelist)) {
+      $ul = $nl->get_uniquelist;
     }
 
     # per-namelist uniquename
@@ -1738,7 +1744,11 @@ MAIN:  foreach my $pn ($dmh->{namelistsall}->@*) {
         $logger->trace("namestrings in '$citekey': " . join (',', $namestrings->@*));
       }
 
+      # namelistul is the option value of the effective uniquelist option at the level
+      # of the list in which the name occurs. It's useful to know this where the results
+      # of the sub are used
       $namedis->{$nlid}{$nid} = {nameun        => $nameun,
+                                 namelistul    => $ul,
                                  namestring    => $namestring,
                                  namestrings   => $namestrings,
                                  namedisschema => $namedisschema};
@@ -1821,19 +1831,21 @@ sub process_entries_pre {
   foreach my $citekey ( $section->get_citekeys ) {
 
     my $be = $section->bibentry($citekey);
-    my $bee = $be->get_field('entrytype');
-    my $lni = $be->get_labelname_info;
-    next unless defined($lni); # only care about labelname
-    my $nl = $be->get_field($lni);
 
     # process name disambiguation schemata
     my $namedis = $self->process_namedis($citekey, $dlist);
 
     foreach my $nlid (keys $namedis->%*) {
       foreach my $nid (keys $namedis->{$nlid}->%*) {
-        # process_namedis() has to record uniquename as it has access to name-scope
-        # uniquename and makes this visible here so it can be checked
-        next if $namedis->{$nlid}{$nid}{nameun} eq 'false';
+        # process_namedis() has to record uniquelist/uniquename as it has access to
+        # namelist-scope and name-scope uniquelist/uniquename and makes this visible
+        # here so that they can be checked
+        # We only don't set name disambiguation data if both uniquelist/uniquename
+        # effective options are 'false'. If either are not false, we need the information
+        if ($namedis->{$nlid}{$nid}{nameun} eq 'false' and
+            $namedis->{$nlid}{$nid}{namelistul} eq 'false') {
+          next;
+        }
         $dlist->set_namedis($nlid,
                             $nid,
                             $namedis->{$nlid}{$nid}{namestring},
@@ -3375,6 +3387,7 @@ sub create_uniquename_info {
       # As above but here we are collecting (separate) information for all
       # names, regardless of visibility (needed to track uniquelist)
       my $eul = Biber::Config->getblxoption($secnum, 'uniquelist', $bee, $citekey);
+
       # Per-namelist uniquelist
       my $nl = $be->get_field($lni);
       if (defined($lni) and $nl->get_uniquelist) {
