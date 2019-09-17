@@ -1981,7 +1981,6 @@ and instantiate Biber::Entry objects for what it finds
 
 =head1 AUTHOR
 
-François Charette, C<< <firmicus at ankabut.net> >>
 Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS
@@ -1991,7 +1990,8 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2019 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
+Copyright 2012-2019 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.
