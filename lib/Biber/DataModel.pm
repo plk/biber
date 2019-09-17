@@ -992,6 +992,11 @@ sub generate_bltxml_schema {
           $writer->startTag('zeroOrMore');# for example, XDATA doesn't need a name
           $writer->startTag('element', 'name' => "$bltx:names");
 
+          $writer->startTag('choice');
+          # xdata attribute ref
+          $writer->emptyTag('ref', 'name' => 'xdata');
+
+          $writer->startTag('group');
           # useprefix attribute
           $writer->comment('useprefix option');
           $writer->startTag('optional');
@@ -1029,6 +1034,11 @@ sub generate_bltxml_schema {
           # Individual name element
           $writer->startTag('element', 'name' => "$bltx:name");
 
+          $writer->startTag('choice');
+          # xdata attribute ref
+          $writer->emptyTag('ref', 'name' => 'xdata');
+
+          $writer->startTag('group');
           # useprefix attribute
           $writer->comment('useprefix option');
           $writer->startTag('optional');
@@ -1074,8 +1084,12 @@ sub generate_bltxml_schema {
           $writer->endTag();    # choice
           $writer->endTag();    # namepart element
           $writer->endTag();    # oneOrMore
+          $writer->endTag();    # group
+          $writer->endTag();    # choice
           $writer->endTag();    # name element
           $writer->endTag();    # oneOrMore
+          $writer->endTag();    # group
+          $writer->endTag();    # choice
           $writer->endTag();    # names element
           $writer->endTag();    # zeroOrMore
           # ========================
@@ -1087,16 +1101,21 @@ sub generate_bltxml_schema {
           foreach my $list ($dm->get_fields_of_type($ft, $dt)->@*) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$list");
-
+            $writer->startTag('choice');
+            $writer->emptyTag('ref', 'name' => 'xdata');
             $writer->startTag('choice');
             $writer->emptyTag('text');# text
             $writer->startTag('element', 'name' => "$bltx:list");
             $writer->startTag('oneOrMore');
             $writer->startTag('element', 'name' => "$bltx:item");
+            $writer->startTag('choice');
+            $writer->emptyTag('ref', 'name' => 'xdata');
             $writer->emptyTag('text');# text
+            $writer->endTag(); # choice
             $writer->endTag(); # item element
             $writer->endTag(); # oneOrMore element
             $writer->endTag(); # list element
+            $writer->endTag(); # choice
             $writer->endTag(); # choice
             $writer->endTag(); # $list element
             $writer->endTag(); # optional
@@ -1111,7 +1130,10 @@ sub generate_bltxml_schema {
           foreach my $field ($dm->get_fields_of_type($ft, $dt)->@*) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
+            $writer->startTag('choice');
+            $writer->emptyTag('ref', 'name' => 'xdata');
             $writer->emptyTag('data', 'type' => 'anyURI');
+            $writer->endTag();   # choice
             $writer->endTag();   # $field element
             $writer->endTag();# optional
           }
@@ -1126,9 +1148,18 @@ sub generate_bltxml_schema {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
 
+            $writer->startTag('choice');
+            # xdata attribute ref
+            $writer->emptyTag('ref', 'name' => 'xdata');
+
             $writer->startTag('element', 'name' => "$bltx:list");
             $writer->startTag('oneOrMore');
             $writer->startTag('element', 'name' => "$bltx:item");
+
+            $writer->startTag('choice');
+            # xdata attribute ref
+            $writer->emptyTag('ref', 'name' => 'xdata');
+            $writer->startTag('group');
             $writer->startTag('element', 'name' => "$bltx:start");
             $writer->emptyTag('text');
             $writer->endTag();  # start element
@@ -1138,11 +1169,14 @@ sub generate_bltxml_schema {
             $writer->emptyTag('empty');
             $writer->endTag();  # choice
             $writer->endTag();  # end element
-            $writer->endTag(); # item element
-            $writer->endTag();   # oneOrMore element
+            $writer->endTag();  # group
+            $writer->endTag();  # choice
+            $writer->endTag();  # item element
+            $writer->endTag();  # oneOrMore element
             $writer->endTag();  # list element
-            $writer->endTag();   # $field element
-            $writer->endTag();# optional
+            $writer->endTag();  # choice
+            $writer->endTag();  # $field element
+            $writer->endTag();  # optional
           }
           $writer->endTag();# interleave
           # ==============================
@@ -1175,16 +1209,20 @@ sub generate_bltxml_schema {
             else {
               $writer->startTag('element', 'name' => "$bltx:$field");
               $writer->startTag('choice');
+              $writer->emptyTag('ref', 'name' => 'xdata');
+
+              $writer->startTag('choice');
               $writer->startTag('list');
               $writer->startTag('oneOrMore');
               $writer->emptyTag('data', 'type' => 'string');
               $writer->endTag(); # oneOrMore
-              $writer->endTag();    # list
+              $writer->endTag(); # list
               $writer->startTag('oneOrMore');
               $writer->startTag('element', 'name' => "$bltx:key");
               $writer->emptyTag('text');# text
               $writer->endTag(); # key element
               $writer->endTag(); # oneOrMore
+              $writer->endTag(); # choice
               $writer->endTag(); # choice
               $writer->endTag(); # $field element
             }
@@ -1236,7 +1274,10 @@ sub generate_bltxml_schema {
           foreach my $field ($dm->get_fields_of_type($ft, $dt)->@*) {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
+            $writer->startTag('choice');
+            $writer->emptyTag('ref', 'name' => 'xdata');
             $writer->emptyTag('text');# text
+            $writer->endTag(); # choice
             $writer->endTag(); # $field element
             $writer->endTag();# optional
           }
@@ -1247,6 +1288,18 @@ sub generate_bltxml_schema {
       }
     }
   }
+
+  # xdata attribute definition
+  # ===========================
+  $writer->comment('xdata attribute definition');
+  $writer->startTag('define', 'name' => 'xdata');
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'xdata');
+  $writer->emptyTag('text');# text
+  $writer->endTag();# attribute
+  $writer->endTag();# optional
+  $writer->endTag();# define
+  # ===========================
 
   # gender attribute definition
   # ===========================
