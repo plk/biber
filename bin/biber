@@ -81,6 +81,7 @@ GetOptions(
            'output_resolve_sets|output-resolve-sets',
            'output_safechars|output-safechars',
            'output_safecharsset|output-safecharsset=s',
+           'output_xdatasep|output-xdatasep=s',
            'output_xname|output-xname',
            'output_xnamesep|output-xnamesep=s',
            'quiet|q+',
@@ -114,6 +115,7 @@ GetOptions(
            'validate_datamodel|validate-datamodel|V',
            'version|v',
            'wraplines|w',
+           'xdatasep=s',
            'xnamesep=s',
            'xsvsep=s',
           ) or pod2usage(-verbose => 0,
@@ -774,6 +776,10 @@ can be customised. See the B<--recodedata> option and the PDF manual.
 The legacy option B<--bblsafecharsset> is supported as an alias. The
 virtual set name "null" may be specified which effectively turns off macro encoding.
 
+=item B<--output-xdatasep=[sep]>
+
+As B<--xdatasep> but for tool mode bibtex output. Default is ':'.
+
 =item B<--output-xname>
 
 When output is a .bib BibTeX file in tool mode, whether to output names the
@@ -901,6 +907,11 @@ Display version number.
 
 Wrap lines in the F<.bbl> file.
 
+=item B<--xdatasep=[sep]>
+
+Use F<sep> as the separator between XDATA sub-entry parts
+in the eXtended name format. See biber docs. Default is ':'.
+
 =item B<--xnamesep=[sep]>
 
 Use F<sep> as the separator between namepart names and the namepart values
@@ -914,7 +925,6 @@ Use F<sep> as the separator for fields of format type "xsv" in the data model. A
 
 =head1 AUTHOR
 
-François Charette, C<firmicus at ankabut.net>E<10>
 Philip Kime, C<Philip at kime.org.uk>
 
 =head1 BUGS & DOCUMENTATION
@@ -927,7 +937,8 @@ L<https://github.com/plk/biber/issues>.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2009-2019 François Charette and Philip Kime, all rights reserved.
+Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
+Copyright 2012-2019 Philip Kime, all rights reserved.
 
 This module is free software.  You can redistribute it and/or
 modify it under the terms of the Artistic License 2.0.

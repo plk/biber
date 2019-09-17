@@ -549,7 +549,6 @@ __END__
 
 =head1 AUTHORS
 
-François Charette, C<< <firmicus at ankabut.net> >>
 Philip Kime C<< <philip at kime.org.uk> >>
 
 =head1 BUGS
