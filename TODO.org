@@ -154,5 +154,5 @@
 ** TODO DOT output?
 ** TODO tool output
 *** TODO output_xdatasep in tool mode
-*** TODO bltx schema, input/output
+*** TODO input/output
 
