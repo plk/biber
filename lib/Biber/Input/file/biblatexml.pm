@@ -858,10 +858,7 @@ sub _literal {
 
   # XDATA is special, if found, set it and return marker
   if (my $xdatav = $node->getAttribute('xdata')) {
-    if ($bibentry->add_xdata_ref(_norm($f), $xdatav)) {
-      $bibentry->set_datafield(_norm($f), '<BDS>XDATA</BDS>');
-      return;
-    }
+    $bibentry->add_xdata_ref(_norm($f), $xdatav);
   }
 
   # eprint is special case
@@ -887,7 +884,6 @@ sub _xsv {
   # XDATA is special
   if (fc(_norm($f)) eq 'xdata') {
     $bibentry->add_xdata_ref('xdata', $value);
-    return; # return undef, no field set
   }
 
   $bibentry->set_datafield(_norm($f), $value);
@@ -903,10 +899,7 @@ sub _uri {
 
   # XDATA is special, if found, set it and return marker
   if (my $xdatav = $node->getAttribute('xdata')) {
-    if ($bibentry->add_xdata_ref(_norm($f), $xdatav)) {
-      $bibentry->set_datafield(_norm($f), '<BDS>XDATA</BDS>');
-      return;
-    }
+    $bibentry->add_xdata_ref(_norm($f), $xdatav);
   }
 
   # URL escape if it doesn't look like it already is
@@ -928,10 +921,7 @@ sub _list {
 
   # XDATA is special, if found, set it and return marker
   if (my $xdatav = $node->getAttribute('xdata')) {
-    if ($bibentry->add_xdata_ref(_norm($f), $xdatav)) {
-      $bibentry->set_datafield(_norm($f), '<BDS>XDATA</BDS>');
-      return;
-    }
+    $bibentry->add_xdata_ref(_norm($f), $xdatav);
   }
 
   $bibentry->set_datafield(_norm($f), _split_list($bibentry, $node, $key, $f));
@@ -946,10 +936,7 @@ sub _range {
 
   # XDATA is special, if found, set it and return marker
   if (my $xdatav = $node->getAttribute('xdata')) {
-    if ($bibentry->add_xdata_ref(_norm($f), $xdatav)) {
-      $bibentry->set_datafield(_norm($f), '<BDS>XDATA</BDS>');
-      return;
-    }
+    $bibentry->add_xdata_ref(_norm($f), $xdatav);
   }
 
   # List of ranges/values
@@ -1148,10 +1135,7 @@ sub _name {
 
   # XDATA is special, if found, set it and return marker
   if (my $xdatav = $node->getAttribute('xdata')) {
-    if ($bibentry->add_xdata_ref(_norm($f), $xdatav)) {
-      $bibentry->set_datafield(_norm($f), '<BDS>XDATA</BDS>');
-      return;
-    }
+    $bibentry->add_xdata_ref(_norm($f), $xdatav);
   }
 
   my $names = new Biber::Entry::Names;
@@ -1176,7 +1160,8 @@ sub _name {
     # XDATA is special, if found, set it and return marker
     if (my $xdatav = $namenode->getAttribute('xdata')) {
       if ($bibentry->add_xdata_ref(_norm($f), $xdatav, $i)) {
-        $names->add_name(Biber::Entry::Name->new()); # Add empty name as placeholder
+        # Add special xdata ref empty name as placeholder
+        $names->add_name(Biber::Entry::Name->new(xdata => $xdatav));
         return;
       }
     }
@@ -1315,12 +1300,9 @@ sub _split_list {
       my $e = $list[$i]->textContent();
 
       # Record any XDATA and skip if we did
-      if ($bibentry->add_xdata_ref(_norm($f), $e, $i)) {
-        push @result, '<BDS>XDATA</BDS>';
-      }
-      else {
-        push @result, $e;
-      }
+      $bibentry->add_xdata_ref(_norm($f), $e, $i);
+
+      push @result, $e;
     }
 
     return [ @result ];

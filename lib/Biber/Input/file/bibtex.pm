@@ -1000,7 +1000,7 @@ sub _literal {
 
   # Record any XDATA and skip if we did
   if ($bibentry->add_xdata_ref($field, $value)) {
-    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+    return $value; # Return raw xdata
   }
 
   # If we have already split some date fields into literal fields
@@ -1073,10 +1073,8 @@ sub _uri {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get(encode('UTF-8', NFC($field)));
 
-  # Record any XDATA and skip if we did
-  if ($bibentry->add_xdata_ref($field, $value)) {
-    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
-  }
+  # Record any XDATA
+  $bibentry->add_xdata_ref($field, $value);
 
   return $value;
 }
@@ -1086,15 +1084,15 @@ sub _xsv {
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
   my ($bibentry, $entry, $field) = @_;
-  my $value = [ split(/$S/, $entry->get(encode('UTF-8', NFC($field)))) ];
+  my $value = $entry->get(encode('UTF-8', NFC($field)));
 
   # XDATA is special
   if (fc($field) eq 'xdata') {
     $bibentry->add_xdata_ref('xdata', $value);
-    return; # return undef, no field set
+    return $value; # Return raw xdata
   }
 
-  return $value;
+  return [ split(/$S/, $value) ];
 }
 
 # Verbatim fields
@@ -1102,10 +1100,8 @@ sub _verbatim {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get(encode('UTF-8', NFC($field)));
 
-  # Record any XDATA and skip if we did
-  if ($bibentry->add_xdata_ref($field, $value)) {
-    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
-  }
+  # Record any XDATA
+  $bibentry->add_xdata_ref($field, $value);
 
   return $value;
 }
@@ -1124,7 +1120,7 @@ sub _range {
 
   # Record any XDATA and skip if we did
   if ($bibentry->add_xdata_ref($field, $value)) {
-    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+    return $value; # Return raw value
   }
 
   my @values = split(/\s*[;,]\s*/, $value);
@@ -1170,7 +1166,7 @@ sub _name {
 
   # Record any XDATA and skip if we did
   if ($bibentry->add_xdata_ref($field, $value)) {
-    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+    return $value; # Return raw value
   }
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
@@ -1187,7 +1183,8 @@ sub _name {
 
     # Record any XDATA and skip if we did
     if ($bibentry->add_xdata_ref($field, $name, $i)) {
-      $names->add_name(Biber::Entry::Name->new()); # Add empty name as placeholder
+      # Add special xdata ref empty name as placeholder
+      $names->add_name(Biber::Entry::Name->new(xdata => $name));
       next;
     }
 
@@ -1411,7 +1408,7 @@ sub _list {
 
   # Record any XDATA and skip if we did
   if ($bibentry->add_xdata_ref($field, $value)) {
-    return '<BDS>XDATA</BDS>'; # Return marker as placeholder
+    return $value; # Return raw value
   }
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
@@ -1427,12 +1424,9 @@ sub _list {
     my $e = $tmp[$i];
 
     # Record any XDATA and skip if we did
-    if ($bibentry->add_xdata_ref($field, $e, $i)) {
-      push @result, '<BDS>XDATA</BDS>';
-    }
-    else {
-      push @result, $e;
-    }
+    $bibentry->add_xdata_ref($field, $e, $i);
+
+    push @result, $e;
   }
 
   return [ @result ];
@@ -1455,12 +1449,9 @@ sub _urilist {
     my $e = $tmp[$i];
 
     # Record any XDATA and skip if we did
-    if ($bibentry->add_xdata_ref($field, $e, $i)) {
-      push @result, '<BDS>XDATA</BDS>';
-    }
-    else {
-      push @result, $e;
-    }
+    $bibentry->add_xdata_ref($field, $e, $i);
+
+    push @result, $e;
   }
 
   return [ @result ];

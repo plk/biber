@@ -45,6 +45,13 @@ sub new {
   my $dm = Biber::Config->get_dm;
   if (%params) {
     my $name = {};
+
+    # Name is an XDATA reference
+    if (my $xdata = $params{xdata}) {
+      $name->{xdata} = $xdata;
+      return bless $name, $class;
+    }
+
     foreach my $attr (keys $CONFIG_SCOPEOPT_BIBLATEX{NAME}->%*,
                       'gender',
                       'useprefix',
@@ -117,6 +124,17 @@ sub was_stripped {
 sub get_nameparts {
   my $self = shift;
   return keys $self->{nameparts}->%*;
+}
+
+=head2 get_xdata
+
+    Get any xdata reference information for a name
+
+=cut
+
+sub get_xdata {
+  my $self = shift;
+  return $self->{xdata} || '';
 }
 
 =head2 get_namepart

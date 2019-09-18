@@ -128,6 +128,8 @@ sub set_output_entry {
   # latter is not really a "processed" output, it is supposed to be something
   # which could be again used as input and so we don't want to resolve/skip
   # fields like DATE etc.
+  # This only applies to the XDATA field as more granular XDATA will already
+  # have/have not been resolved on the basis of this variable
   unless (Biber::Config->getoption('output_resolve_xdata')) {
     if (my $xdata = $be->get_field('xdata')) {
       $xml->startTag([$xml_prefix, 'xdata']);
@@ -177,9 +179,19 @@ sub set_output_entry {
       $xml->startTag([$xml_prefix, 'names'], @attrs);
 
       foreach my $n ($nf->names->@*) {
+
+        # XDATA is special
+        unless (Biber::Config->getoption('output_resolve_xdata')) {
+          if (my $xdata = $n->get_xdata) {
+            $xml->emptyTag([$xml_prefix, 'name'], 'xdata' => $xdata);
+          }
+          next;
+        }
+
         $n->name_to_biblatexml($self, $xml, $key, $namefield, $n->get_index);
       }
-      $xml->endTag();           # Names
+
+      $xml->endTag(); # Names
     }
   }
 
