@@ -250,7 +250,12 @@ sub extract_entries {
 
         # Skip creation if it's already been done, for example, via a citekey alias
         unless ($section->bibentries->entry_exists($wanted_key)) {
-          create_entry($wanted_key, $entry, $filename, $smaps, \@rkeys);
+          unless (create_entry($wanted_key, $entry, $filename, $smaps, \@rkeys)) {
+            # if create entry returns false, remove the key from the cache and section
+            $section->del_citekey($wanted_key);
+            $cache->{orig_key_order}{$filename}->@* = grep {$wanted_key ne $_} $cache->{orig_key_order}{$filename}->@*;
+            biber_warn("Entry with key '$wanted_key' in section '$secnum' is cited and found but not created (likely due to sourcemap)");
+          }
         }
         # found a key, remove it from the list of keys we want
         @rkeys = grep {$wanted_key ne $_} @rkeys;
@@ -266,7 +271,12 @@ sub extract_entries {
         # the bibliography (minXrefs will take care of adding it there if necessary).
         unless ($section->bibentries->entry_exists($rk)) {
           if (my $entry = $cache->{data}{GLOBALDS}{$rk}) {# Look in cache of all datasource keys
-            create_entry($rk, $entry, $filename, $smaps, \@rkeys);
+            unless (create_entry($rk, $entry, $filename, $smaps, \@rkeys)) {
+              # if create entry returns false, remove the key from the cache
+              $section->del_citekey($wanted_key);
+              $cache->{orig_key_order}{$filename}->@* = grep {$rk ne $_} $cache->{orig_key_order}{$filename}->@*;
+            biber_warn("Entry with key '$rk' in section '$secnum' is cited and found but not created (likely due to sourcemap)");
+            }
             if ($section->has_cited_citekey($wanted_key)) {
               $section->add_citekeys($rk);
             }
