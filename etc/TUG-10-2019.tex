@@ -1,0 +1,163 @@
+\documentclass[xcolor=dvipsnames]{beamer}
+\definecolor{Asparagus}{rgb}{0.53, 0.66, 0.42}
+
+% Very useful style variable reference: http://www.cpt.univ-mrs.fr/~masson/latex/Beamer-appearance-cheat-sheet.pdf
+
+\mode<presentation>
+{
+  \usetheme{Goettingen}
+  \usecolortheme[named=Asparagus]{structure}
+  \setbeamercolor{section in sidebar}{fg=Asparagus}
+  \setbeamercolor{section in sidebar shaded}{fg=Asparagus}
+
+  % \setbeamercovered{transparent}
+}
+
+
+\usepackage[english]{babel}
+\usepackage{fontspec}
+\setmainfont{Linux Libertine O}
+\setsansfont{Arial}
+\setmonofont{Courier New}
+
+\title[\BibLaTeX and Biber]
+{\BibLaTeX and Biber, some history and plans for the future}
+
+\author{Philip Kime}
+
+\date
+{19.10.2019 / DANTE Herbsttagung}
+
+\beamerdefaultoverlayspecification{<+->}
+
+\def\BibLaTeX{\textsc{Bib}\LaTeX}
+\def\BibTeX{\textsc{Bib}\kern-.08em \TeX}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section*{Introduction}
+
+\subsection*{\BibLaTeX}
+
+\begin{frame}{What is \BibLaTeX?}{}
+  \begin{itemize}
+  \item \BibLaTeX\ is a comprehensive bibliography and references
+    typesetting system for \LaTeX
+  \item Styles are completely separate from the backend (\BibTeX, Biber)
+  \item It uses the \texttt{.bbl} file like a database
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Origins of \BibLaTeX}{}
+  \begin{itemize}
+  \item Started in 2006 by Philipp Lehman ...
+  \item ... who disappeared in 2011
+  \item Sophisticated styles for humanities and data/style separation
+  \item Started to run into limitations imposed by \BibTeX\ as backend in 2008
+  \end{itemize}
+\end{frame}
+
+\subsection*{Biber}
+
+\begin{frame}{What is Biber?}
+  \begin{itemize}
+  \item Biber is the default backend for \BibLaTeX, written for \BibLaTeX\ 
+    and designed to overcome \BibTeX\ limitations
+  \item Its main job is sorting (full multi-field, UCA with CLDR tailoring)
+  \item It also does a \textbf{lot} of other things ...
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Origins of Biber}{}
+  \begin{itemize}
+  \item Started around 2008 by François Charette as dedicated \BibLaTeX\ backend
+  \item PL put me in touch with FC when I found limitations in \BibTeX
+    preventing implementation of APA style
+  \item My first commit April 14th 2009
+  \item Became sole developer early 2011
+  \end{itemize}
+\end{frame}
+
+\section*{Statistics and Features}
+
+\subsection*{Some Statistics}
+
+\begin{frame}{Since 2009}
+  \begin{itemize}
+  \item \textasciitilde 4000 total commits
+  \item \textasciitilde 250k total \textbf{manual} downloads
+  \item \textasciitilde 50k lines of code
+  \item \textasciitilde 1k issues/bugs, 95\% resolved
+  \item Germany is largest user (\textasciitilde 33\%) by Sourceforge downloads (twice US)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Features}
+  \begin{itemize}
+  \item Full Unicode (UTF-8) support including auto-reencoding and
+    \LaTeX\leftrightarrow UTF-8 conversion
+  \item Best-in-class sorting
+  \item Completely customisable datamodel
+  \item Dynamic data mapping
+  \item Automatic name and name list disambiguation
+  \item Biber Tool mode
+  \item Generalised name support
+  \item Sophisticated label auto-disambiguation and generation
+  \item Customisable data inheritance
+  \item Full support for all types of ``related'' entries
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[shrink=10]{Technical History}
+  \begin{description}
+  \item[29.04.2009] Started on \texttt{.bcf} format (\texttt{XML}) which is
+    \textasciitilde 2000 lines as opposed to the \textbf{one} line original
+    control file format
+  \item[18.05.2009] Moved from Subversion to Git
+  \item[05.2010] Started hacking \texttt{btparse}
+  \item[09.2010] ``binary'' distribution and real CLDR support
+  \item[10.2010] TLContrib
+  \item[11.2010] Dynamic entry sets, related entries
+  \item[12.2010] Real multi-field sorting, \texttt{.bcf} to \texttt{HTML} via \texttt{XSLT}
+  \item[2011] Became sole maintainer
+  \item[04.2011] \texttt{uniquelist} option  implemented, APA style now fully possible\ldots
+  \item[06.2011] customisable labelalpha and auto-disambiguation methods
+  \item[06.2011] Datasource mapping functionality
+  \item[04.2012] Generalised sorting lists to make multiple, differently
+    sorted bibliographies and other bib lists possible
+  \item[2012] Generalised, explicit datamodel implemented and passed in \texttt{.bcf}
+  \item[12.2012] Biber Tool mode
+  \item[2016--2017] Data annotations, extended name format, full generalisation
+    of all aspects of name handling (sorting key, name parts etc.), ISO8601 date handling
+  \end{description}
+\end{frame}
+
+\section*{Present and Future}
+
+\subsection*{Present}
+
+\begin{frame}{Personnel}
+  \begin{itemize}
+  \item \BibLaTeX - Philip Kime and Moritz Wemheuer
+  \item Biber - Philip Kime (plus release builders)
+  \end{itemize}
+\end{frame}
+
+\subsection*{Future}
+
+\begin{frame}{Planned Developments}
+  \begin{itemize}
+  \item Multiscript support
+  \item Granular regression test setup for \BibLaTeX
+  \item ``Stand-alone'' \texttt{.bbl}
+  \item Finding someone to help support Biber
+  \end{itemize}
+\end{frame}
+
+\end{document}
+
+
