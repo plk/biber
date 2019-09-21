@@ -214,7 +214,7 @@ sub set_output_entry {
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         if ($lf =~ m/xdata\s*$xnamesep/i) {
-          $xml->emptyTag([$xml_prefix, $listfield], 'xdata' => NFC($xdata));
+          $xml->emptyTag([$xml_prefix, $listfield], 'xdata' => NFC($lf));
           next;
         }
       }
@@ -255,7 +255,7 @@ sub set_output_entry {
     # XDATA is special
     unless (Biber::Config->getoption('output_resolve_xdata')) {
       if ($val =~ m/xdata\s*$xnamesep/i) {
-        $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($xdata));
+        $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($val));
         next;
       }
     }
@@ -280,7 +280,7 @@ sub set_output_entry {
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         if ($f =~ m/xdata\s*$xnamesep/i) {
-          $xml->emptyTag([$xml_prefix, $xsvf], 'xdata' => NFC($xdata));
+          $xml->emptyTag([$xml_prefix, $xsvf], 'xdata' => NFC($f));
           next;
         }
       }
@@ -296,7 +296,7 @@ sub set_output_entry {
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         if ($rf =~ m/xdata\s*$xnamesep/i) {
-          $xml->emptyTag([$xml_prefix, $rfield], 'xdata' => NFC($xdata));
+          $xml->emptyTag([$xml_prefix, $rfield], 'xdata' => NFC($rf));
           next;
         }
       }
