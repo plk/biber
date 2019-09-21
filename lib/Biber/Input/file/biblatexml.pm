@@ -856,7 +856,7 @@ sub _literal {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
 
-  # XDATA is special, if found, set it and return marker
+  # XDATA is special, if found, set it
   if (my $xdatav = $node->getAttribute('xdata')) {
     $bibentry->add_xdata_ref(_norm($f), $xdatav);
   }
@@ -879,14 +879,18 @@ sub _literal {
 sub _xsv {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
-  my $value = _split_list($bibentry, $node, $key, $f);
 
   # XDATA is special
   if (fc(_norm($f)) eq 'xdata') {
+    # Just split with no XDATA setting on list items
+    my $value = _split_list($bibentry, $node, $key, $f, 1);
     $bibentry->add_xdata_ref('xdata', $value);
+    $bibentry->set_datafield(_norm($f), $value);
+  }
+  else {
+    $bibentry->set_datafield(_norm($f), _split_list($bibentry, $node, $key, $f));
   }
 
-  $bibentry->set_datafield(_norm($f), $value);
   return;
 }
 
@@ -897,7 +901,7 @@ sub _uri {
   my $node = $entry->findnodes("./$f")->get_node(1);
   my $value = $node->textContent();
 
-  # XDATA is special, if found, set it and return marker
+  # XDATA is special, if found, set it
   if (my $xdatav = $node->getAttribute('xdata')) {
     $bibentry->add_xdata_ref(_norm($f), $xdatav);
   }
@@ -919,7 +923,7 @@ sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
 
-  # XDATA is special, if found, set it and return marker
+  # XDATA is special, if found, set it
   if (my $xdatav = $node->getAttribute('xdata')) {
     $bibentry->add_xdata_ref(_norm($f), $xdatav);
   }
@@ -934,7 +938,7 @@ sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
 
-  # XDATA is special, if found, set it and return marker
+  # XDATA is special, if found, set it
   if (my $xdatav = $node->getAttribute('xdata')) {
     $bibentry->add_xdata_ref(_norm($f), $xdatav);
   }
@@ -1133,12 +1137,13 @@ sub _name {
   my $bee = $bibentry->get_field('entrytype');
   my $node = $entry->findnodes("./$NS:names[\@type='$f']")->get_node(1);
 
-  # XDATA is special, if found, set it and return marker
+  my $names = new Biber::Entry::Names;
+
+  # XDATA is special, if found, set it
   if (my $xdatav = $node->getAttribute('xdata')) {
     $bibentry->add_xdata_ref(_norm($f), $xdatav);
+    $names = new Biber::Entry::Names(xdata => $xdatav);
   }
-
-  my $names = new Biber::Entry::Names;
 
   # per-namelist options
   foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
@@ -1157,12 +1162,12 @@ sub _name {
   for (my $i = 0; $i <= $#names; $i++) {
     my $namenode = $names[$i];
 
-    # XDATA is special, if found, set it and return marker
+    # XDATA is special, if found, set it
     if (my $xdatav = $namenode->getAttribute('xdata')) {
       if ($bibentry->add_xdata_ref(_norm($f), $xdatav, $i)) {
         # Add special xdata ref empty name as placeholder
         $names->add_name(Biber::Entry::Name->new(xdata => $xdatav));
-        return;
+        next;
       }
     }
 
@@ -1291,7 +1296,8 @@ sub _parse_range_list {
 
 # Splits a list field into an array ref
 sub _split_list {
-  my ($bibentry, $node, $key, $f) = @_;
+  my ($bibentry, $node, $key, $f, $noxdata) = @_;
+
   if (my @list = $node->findnodes("./$NS:list/$NS:item")) {
 
     my @result;
@@ -1300,7 +1306,8 @@ sub _split_list {
       my $e = $list[$i]->textContent();
 
       # Record any XDATA and skip if we did
-      $bibentry->add_xdata_ref(_norm($f), $e, $i);
+      # If this field itself is XDATA, don't analyse XDATA further, just split and return
+      $bibentry->add_xdata_ref(_norm($f), $e, $i) unless $noxdata;
 
       push @result, $e;
     }

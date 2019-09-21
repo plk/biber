@@ -1088,8 +1088,7 @@ sub _xsv {
 
   # XDATA is special
   if (fc($field) eq 'xdata') {
-    $bibentry->add_xdata_ref('xdata', $value);
-    return $value; # Return raw xdata
+    $bibentry->add_xdata_ref('xdata', [ split(/$S/, $value) ]);
   }
 
   return [ split(/$S/, $value) ];

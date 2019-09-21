@@ -120,6 +120,15 @@ sub set_output_entry {
 
   foreach my $namefield ($dmh->{namelists}->@*) {
     if (my $names = $be->get_field($namefield)) {
+
+      # XDATA is special
+      unless (Biber::Config->getoption('output_resolve_xdata')) {
+        if (my $xdata = $names->get_xdata) {
+          $acc{$casing->($namefield)} = $xdata;
+          next;
+        }
+      }
+
       my $namesep = Biber::Config->getoption('output_namesep');
       my @namelist;
 
@@ -135,8 +144,18 @@ sub set_output_entry {
 
       # Now add all names to accumulator
       foreach my $name ($names->names->@*) {
+
+        # XDATA is special
+        unless (Biber::Config->getoption('output_resolve_xdata')) {
+          if (my $xdata = $name->get_xdata) {
+            push @namelist, $xdata;
+            next;
+          }
+        }
+
         push @namelist, $name->$tonamesub;
       }
+
       $acc{$casing->($namefield)} = join(" $namesep ", @namelist);
 
       # Deal with morenames

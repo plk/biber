@@ -31,9 +31,11 @@ Biber::Entry::Names
 =cut
 
 sub new {
-  my $class = shift;
+  my ($class, %params) = @_;
+
   return bless {namelist => [],
-                id       => suniqid}, $class;
+                id       => suniqid,
+                %params}, $class;
 }
 
 
@@ -187,6 +189,17 @@ sub del_last_name {
 sub last_name {
   my $self = shift;
   return $self->{namelist}[-1];
+}
+
+=head2 get_xdata
+
+    Get any xdata reference information for a namelist
+
+=cut
+
+sub get_xdata {
+  my $self = shift;
+  return $self->{xdata} || '';
 }
 
 =head2 dump

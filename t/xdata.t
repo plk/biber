@@ -128,7 +128,7 @@ eq_or_diff($out->get_output_entry('macmillan', $main), undef, 'xdata test - 3');
 eq_or_diff($out->get_output_entry('macmillan:pub', $main), undef, 'xdata test - 4');
 chomp $stderr;
 eq_or_diff($stderr, "ERROR - Circular XDATA inheritance between 'loop'<->'loop:3'", 'Cyclic xdata error check');
-#print $stdout;
-#print $stderr;
+# print $stdout;
+# print $stderr;
 
 

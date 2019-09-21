@@ -49,6 +49,7 @@ sub new {
     # Name is an XDATA reference
     if (my $xdata = $params{xdata}) {
       $name->{xdata} = $xdata;
+      $name->{id} = suniqid;
       return bless $name, $class;
     }
 

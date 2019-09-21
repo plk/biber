@@ -110,6 +110,7 @@ sub set_output_entry {
   my $key = $be->get_field('citekey');
   my $xml = $self->{output_target};
   my $xml_prefix = $self->{xml_prefix};
+  my $xnamesep = Biber::Config->getoption('xnamesep');
 
   $xml->startTag([$xml_prefix, 'entry'], id => NFC($key), entrytype => NFC($bee));
 
@@ -158,6 +159,14 @@ sub set_output_entry {
     # Name loop
     if (my $nf = $be->get_field($namefield)) {
 
+      # XDATA is special
+      unless (Biber::Config->getoption('output_resolve_xdata')) {
+        if (my $xdata = $nf->get_xdata) {
+          $xml->emptyTag([$xml_prefix, 'names'], 'xdata' => NFC($xdata));
+          next;
+        }
+      }
+
       my @attrs = ('type' => $namefield);
 
       # Did we have "and others" in the data?
@@ -183,9 +192,9 @@ sub set_output_entry {
         # XDATA is special
         unless (Biber::Config->getoption('output_resolve_xdata')) {
           if (my $xdata = $n->get_xdata) {
-            $xml->emptyTag([$xml_prefix, 'name'], 'xdata' => $xdata);
+            $xml->emptyTag([$xml_prefix, 'name'], 'xdata' => NFC($xdata));
+            next;
           }
-          next;
         }
 
         $n->name_to_biblatexml($self, $xml, $key, $namefield, $n->get_index);
@@ -201,6 +210,14 @@ sub set_output_entry {
 
     # List loop
     if (my $lf = $be->get_field($listfield)) {
+
+      # XDATA is special
+      unless (Biber::Config->getoption('output_resolve_xdata')) {
+        if ($lf =~ m/xdata\s*$xnamesep/i) {
+          $xml->emptyTag([$xml_prefix, $listfield], 'xdata' => NFC($xdata));
+          next;
+        }
+      }
 
       my @attrs;
       # Did we have a "more" list?
@@ -234,6 +251,15 @@ sub set_output_entry {
                                                    'verbatim',
                                                    'uri'])->@*) {
     my $val = $be->get_field($field);
+
+    # XDATA is special
+    unless (Biber::Config->getoption('output_resolve_xdata')) {
+      if ($val =~ m/xdata\s*$xnamesep/i) {
+        $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($xdata));
+        next;
+      }
+    }
+
     if (length($val) or # length() catches '0' values, which we want
       ($dm->field_is_nullok($field) and
        $be->field_exists($field))) {
@@ -251,7 +277,13 @@ sub set_output_entry {
       next if $xsvf eq 'ids'; # IDS is special
       next if $xsvf eq 'xdata'; # XDATA is special
 
-      my @attrs;
+      # XDATA is special
+      unless (Biber::Config->getoption('output_resolve_xdata')) {
+        if ($f =~ m/xdata\s*$xnamesep/i) {
+          $xml->emptyTag([$xml_prefix, $xsvf], 'xdata' => NFC($xdata));
+          next;
+        }
+      }
 
       $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',$f->@*)));
     }
@@ -260,6 +292,15 @@ sub set_output_entry {
   # Range fields
   foreach my $rfield (sort $dm->get_fields_of_datatype('range')->@*) {
     if ( my $rf = $be->get_field($rfield) ) {
+
+      # XDATA is special
+      unless (Biber::Config->getoption('output_resolve_xdata')) {
+        if ($rf =~ m/xdata\s*$xnamesep/i) {
+          $xml->emptyTag([$xml_prefix, $rfield], 'xdata' => NFC($xdata));
+          next;
+        }
+      }
+
       # range fields are an array ref of two-element array refs [range_start, range_end]
       # range_end can be be empty for open-ended range or undef
       $xml->startTag([$xml_prefix, $rfield]);

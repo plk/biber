@@ -218,7 +218,7 @@ sub notnull {
 
 sub add_xdata_ref {
   my ($self, $reffield, $value, $reffieldposition) = @_;
-  if ($reffield eq 'xdata') { # XDATA fields are a simple case
+  if ($reffield eq 'xdata') { # whole XDATA fields are a simple case
     push $self->{xdatarefs}->@*, {# field pointing to XDATA
                                   reffield => 'xdata',
                                   refposition => 0,
@@ -652,6 +652,30 @@ sub resolve_xdata {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $entry_key = $self->get_field('citekey');
   my $dm = Biber::Config->get_dm;
+
+  # $xdata =
+  # [
+  #  { # xdata info for an actual XDATA field (XDATA = {key, key})
+  #    reffield      => 'xdata',
+  #    refposition   => 0,
+  #    xdataentries  => # array ref of XDATA entry keys
+  #    xdatafield    => undef,
+  #    xdataposition => 0
+  #  },
+  #  { # xdata info for an granular XDATA ref in another field
+  #    reffield      => # field pointing to XDATA
+  #    refposition   => # field position pointing to XDATA (or 0), 0-based
+  #    xdataentries  => # array ref of XDATA entry keys
+  #    xdatafield    => # field within XDATA entry
+  #    xdataposition => # position in list field within XDATA entry (or 0), 0-based
+  #  }
+  #  {
+  #    .
+  #    .
+
+  #    .
+  #  }
+  # ]
 
   foreach my $xdatum ($xdata->@*) {
 
