@@ -56,7 +56,7 @@ our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid stringi
   parse_range parse_range_alt maploopreplace get_transliterator
   call_transliterator normalise_string_bblxml gen_initials join_name_parts
   split_xsv date_monthday tzformat expand_option_input strip_annotation
-  appendstrict_check merge_entry_options process_backendin};
+  appendstrict_check merge_entry_options process_backendin xdatarefout xdatarefcheck};
 
 =head1 FUNCTIONS
 
@@ -1732,6 +1732,32 @@ sub process_backendin {
   }
   else {
     return $opts;
+  }
+  return undef;
+}
+
+# Replace xnamesep/xdatasep with output variants
+sub xdatarefout {
+  my $xdataref = shift;
+  my $xdmi = Biber::Config->getoption('xdatamarker');
+  my $xdmo = Biber::Config->getoption('output_xdatamarker');
+  my $xnsi = Biber::Config->getoption('xnamesep');
+  my $xnso = Biber::Config->getoption('output_xnamesep');
+  my $xdsi = Biber::Config->getoption('xdatasep');
+  my $xdso = Biber::Config->getoption('output_xdatasep');
+  $xdataref =~ s/^\s*$xdmi(?=$xnsi)/$xdmo/x; # Should be only one
+  $xdataref =~ s/$xnsi/$xnso/xg;
+  $xdataref =~ s/$xdsi/$xdso/xg;
+  return $xdataref;
+}
+
+# Check an output value for an xdata ref and replace output markers if necessary.
+sub xdatarefcheck {
+  my $val = shift;
+  my $xdmi = Biber::Config->getoption('xdatamarker');
+  my $xnsi = Biber::Config->getoption('xnamesep');
+  if ($val =~ m/^\s*$xdmi(?=$xnsi)/) {
+    return xdatarefout($val);
   }
   return undef;
 }

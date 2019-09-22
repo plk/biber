@@ -1084,14 +1084,12 @@ sub _xsv {
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
   my ($bibentry, $entry, $field) = @_;
-  my $value = $entry->get(encode('UTF-8', NFC($field)));
+  my $value = [ split(/$S/, $entry->get(encode('UTF-8', NFC($field)))) ];
 
-  # XDATA is special
-  if (fc($field) eq 'xdata') {
-    $bibentry->add_xdata_ref('xdata', [ split(/$S/, $value) ]);
-  }
+  # Record any XDATA
+  $bibentry->add_xdata_ref($field, $value);
 
-  return [ split(/$S/, $value) ];
+  return $value ;
 }
 
 # Verbatim fields

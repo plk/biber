@@ -229,7 +229,8 @@ sub add_xdata_ref {
   }
   else { # Granular XDATA reference
     my $xnamesep = Biber::Config->getoption('xnamesep');
-    if (my ($xdataref) = $value =~ m/^(?:(?i)xdata)\s*$xnamesep\s*(.+)$/x) {
+    my $xdatamarker = Biber::Config->getoption('xdatamarker');
+    if (my ($xdataref) = $value =~ m/^(?:(?i)$xdatamarker)\s*$xnamesep\s*(.+)$/x) {
       my $xdatasep = Biber::Config->getoption('xdatasep');
       my $xdre = qr{\s*$xdatasep\s*([^$xdatasep]+)};
       my ($xe, $xf, $xfp) = $xdataref =~ m/^([^$xdatasep]+)$xdre$xdre$/x;

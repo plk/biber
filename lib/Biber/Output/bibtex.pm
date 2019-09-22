@@ -124,7 +124,7 @@ sub set_output_entry {
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) { # already resolved
         if (my $xdata = $names->get_xdata) {
-          $acc{$casing->($namefield)} = $xdata;
+          $acc{$casing->($namefield)} = xdatarefout($xdata);
           next;
         }
       }
@@ -148,7 +148,7 @@ sub set_output_entry {
         # XDATA is special
         unless (Biber::Config->getoption('output_resolve_xdata')) {
           if (my $xdata = $name->get_xdata) {
-            push @namelist, $xdata;
+            push @namelist, xdatarefout($xdata);
             next;
           }
         }
@@ -171,6 +171,10 @@ sub set_output_entry {
       my $listsep = Biber::Config->getoption('output_listsep');
       my @plainlist;
       foreach my $item ($list->@*) {
+        unless (Biber::Config->getoption('output_resolve_xdata')) {
+          my $xd = xdatarefcheck($item);
+          $item = $xd // $item;
+        }
         push @plainlist, $item;
       }
       $acc{$casing->($listfield)} = join(" $listsep ", @plainlist);
@@ -220,6 +224,10 @@ sub set_output_entry {
   # Standard fields
   foreach my $field ($dmh->{fields}->@*) {
     if (my $val = $be->get_field($field)) {
+      unless (Biber::Config->getoption('output_resolve_xdata')) {
+        my $xd = xdatarefcheck($val);
+        $val = $xd // $val;
+      }
       $acc{$casing->($field)} = $val;
     }
   }
@@ -230,27 +238,46 @@ sub set_output_entry {
     # output with its own special macro below
     next if $field eq 'keywords';
     if (my $f = $be->get_field($field)) {
-      $acc{$casing->($field)} .= join(',', $f->@*);
+      my $fl = join(',', $f->@*);
+      unless (Biber::Config->getoption('output_resolve_xdata')) {
+        my $xd = xdatarefcheck($fl);
+        $fl = $xd // $fl;
+      }
+      $acc{$casing->($field)} .= $fl;
     }
   }
 
   # Ranges
   foreach my $rfield ($dmh->{ranges}->@*) {
     if ( my $rf = $be->get_field($rfield) ) {
-      $acc{$casing->($rfield)} .= construct_range($rf);
+      my $rfl = construct_range($rf);
+      unless (Biber::Config->getoption('output_resolve_xdata')) {
+        my $xd = xdatarefcheck($rfl);
+        $rfl = $xd // $rfl;
+      }
+      $acc{$casing->($rfield)} .= $rfl;
     }
   }
 
   # Verbatim fields
   foreach my $vfield ($dmh->{vfields}->@*) {
     if ( my $vf = $be->get_field($vfield) ) {
+      unless (Biber::Config->getoption('output_resolve_xdata')) {
+        my $xd = xdatarefcheck($vf);
+        $vf = $xd // $vf;
+      }
       $acc{$casing->($vfield)} = $vf;
     }
   }
 
   # Keywords
   if ( my $k = $be->get_field('keywords') ) {
-    $acc{$casing->('keywords')} = join(',', $k->@*);
+    my $kl = join(',', $k->@*);
+    unless (Biber::Config->getoption('output_resolve_xdata')) {
+      my $xd = xdatarefcheck($kl);
+      $kl = $xd // $kl;
+    }
+    $acc{$casing->('keywords')} = $kl;
   }
 
   # Annotations

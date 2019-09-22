@@ -387,6 +387,16 @@
           </element>
         </optional>
         <optional>
+          <element name="output_xdatamarker">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_xdatasep">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="output_xname">
             <choice>
               <value>0</value>
@@ -578,6 +588,29 @@
               <value>0</value>
               <value>1</value>
             </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="xdatamarker">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="xdatasep">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="xname">
+            <choice>
+              <value>0</value>
+              <value>1</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <element name="xnamesep">
+            <text/>
           </element>
         </optional>
       </interleave>

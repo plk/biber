@@ -162,7 +162,7 @@ sub set_output_entry {
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         if (my $xdata = $nf->get_xdata) {
-          $xml->emptyTag([$xml_prefix, 'names'], 'xdata' => NFC($xdata));
+          $xml->emptyTag([$xml_prefix, 'names'], 'xdata' => NFC(xdatarefout($xdata)));
           next;
         }
       }
@@ -192,7 +192,7 @@ sub set_output_entry {
         # XDATA is special
         unless (Biber::Config->getoption('output_resolve_xdata')) {
           if (my $xdata = $n->get_xdata) {
-            $xml->emptyTag([$xml_prefix, 'name'], 'xdata' => NFC($xdata));
+            $xml->emptyTag([$xml_prefix, 'name'], 'xdata' => NFC(xdatarefout($xdata)));
             next;
           }
         }
@@ -213,8 +213,8 @@ sub set_output_entry {
 
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) {
-        if ($lf =~ m/xdata\s*$xnamesep/i) {
-          $xml->emptyTag([$xml_prefix, $listfield], 'xdata' => NFC($lf));
+        if (my $val = xdatarefcheck($lf)) {
+          $xml->emptyTag([$xml_prefix, $listfield], 'xdata' => NFC($val));
           next;
         }
       }
@@ -254,8 +254,8 @@ sub set_output_entry {
 
     # XDATA is special
     unless (Biber::Config->getoption('output_resolve_xdata')) {
-      if ($val =~ m/xdata\s*$xnamesep/i) {
-        $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($val));
+      if (my $xval = xdatarefcheck($val)) {
+        $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($xval));
         next;
       }
     }
@@ -279,8 +279,8 @@ sub set_output_entry {
 
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) {
-        if ($f =~ m/xdata\s*$xnamesep/i) {
-          $xml->emptyTag([$xml_prefix, $xsvf], 'xdata' => NFC($f));
+        if (my $val = xdatarefcheck($f)) {
+          $xml->emptyTag([$xml_prefix, $xsvf], 'xdata' => NFC($val));
           next;
         }
       }
@@ -295,8 +295,8 @@ sub set_output_entry {
 
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) {
-        if ($rf =~ m/xdata\s*$xnamesep/i) {
-          $xml->emptyTag([$xml_prefix, $rfield], 'xdata' => NFC($rf));
+        if (my $val = xdatarefcheck($rf)) {
+          $xml->emptyTag([$xml_prefix, $rfield], 'xdata' => NFC($val));
           next;
         }
       }
