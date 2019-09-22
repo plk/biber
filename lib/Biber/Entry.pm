@@ -672,7 +672,6 @@ sub resolve_xdata {
   #  {
   #    .
   #    .
-
   #    .
   #  }
   # ]
@@ -712,15 +711,44 @@ sub resolve_xdata {
             }
           }
           else { # Granular XDATA inheritance
+            my $xdatafield = $xdatum->{xdatafield};
+            my $xdataposition = $xdatum->{xdataposition};
+
+            unless ($xdataentry->get_field($xdatafield)) {
+              biber_warn("Entry '$entry_key' references XDATA field '$xdatafield' in entry '$xdref' and this field does not exist (section $secnum)");
+              next;
+            }
+
             if ($dm->field_is_type('list', 'name', $xdatum->{reffield})){ # name list
-              $self->get_field($xdatum->{reffield})->replace_name($xdataentry->get_field($xdatum->{xdatafield})->nth_name($xdatum->{xdataposition}), $xdatum->{refposition});
+
+              unless ($xdataentry->get_field($xdatafield)->nth_name($xdataposition)) {
+                biber_warn("Entry '$entry_key' references position $xdataposition in XDATA name field '$xdatafield' in entry '$xdref' and this position does not exist (section $secnum)");
+                next;
+              }
+
+              $self->get_field($xdatum->{reffield})->replace_name($xdataentry->get_field($xdatafield)->nth_name($xdataposition), $xdatum->{refposition});
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Setting position " . $xdatum->{refposition}. " in name field '" . $xdatum->{reffield} . "' in entry '$entry_key' via XDATA");
+              }
             }
             elsif ($dm->field_is_fieldtype('list', $xdatum->{reffield})) { # non-name list
+
+              unless ($xdataentry->get_field($xdatafield)->[$xdataposition-1]) {
+                biber_warn("Entry '$entry_key' references position $xdataposition in XDATA list field '$xdatafield' in entry '$xdref' and this position does not exist (section $secnum)");
+                next;
+              }
+
               $self->get_field($xdatum->{reffield})->[$xdatum->{refposition}-1] =
-                $xdataentry->get_field($xdatum->{xdatafield})->[$xdatum->{refposition}-1];
+                $xdataentry->get_field($xdatafield)->[$xdatum->{refposition}-1];
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Setting position " . $xdatum->{refposition}. " in list field '" . $xdatum->{reffield} . "' in entry '$entry_key' via XDATA");
+              }
             }
             else { # non-list
-              $self->set_datafield($xdatum->{reffield}, $xdataentry->get_field($xdatum->{xdatafield}));
+              $self->set_datafield($xdatum->{reffield}, $xdataentry->get_field($xdatafield));
+              if ($logger->is_debug()) { # performance tune
+                $logger->debug("Setting field '" . $xdatum->{reffield} . "' in entry '$entry_key' via XDATA");
+              }
             }
           }
         }

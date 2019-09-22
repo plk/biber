@@ -122,7 +122,7 @@ sub set_output_entry {
     if (my $names = $be->get_field($namefield)) {
 
       # XDATA is special
-      unless (Biber::Config->getoption('output_resolve_xdata')) {
+      unless (Biber::Config->getoption('output_resolve_xdata')) { # already resolved
         if (my $xdata = $names->get_xdata) {
           $acc{$casing->($namefield)} = $xdata;
           next;
