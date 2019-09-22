@@ -95,7 +95,7 @@ sub add_name {
 =head2 replace_name
 
     Replace a Biber::Entry::Name at a position (1-based)
-    with another one
+    with a provided one
 
 =cut
 
@@ -140,6 +140,18 @@ sub count_names {
   return scalar $self->{namelist}->@*;
 }
 
+=head2 is_nth_name
+
+    Returns boolean to say of there is an nth name
+
+=cut
+
+sub is_nth_name {
+  my ($self, $n) = @_;
+  # name n is 1-based, don't go into negative indices
+  return $self->{namelist}[($n == 0) ? 0 : $n-1];
+}
+
 =head2 nth_name
 
     Returns the nth Biber::Entry::Name object in the object or the last one
@@ -148,8 +160,7 @@ sub count_names {
 =cut
 
 sub nth_name {
-  my $self = shift;
-  my $n = shift;
+  my ($self, $n) = @_;
   my $size = $self->{namelist}->@*;
   return $self->{namelist}[$n > $size ? $size-1 : $n-1];
 }

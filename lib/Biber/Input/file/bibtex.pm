@@ -1163,13 +1163,6 @@ sub _name {
 
   my $names = Biber::Entry::Names->new();
 
-  # Record any XDATA and skip if we did
-  if ($bibentry->add_xdata_ref($field, $value)) {
-    # Add special xdata ref empty name as placeholder
-    $names->add_name(Biber::Entry::Name->new(xdata => $value));
-    return $names;
-  }
-
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('namesep'),
                                      undef,
@@ -1407,11 +1400,6 @@ sub _list {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get(encode('UTF-8', NFC($field)));
 
-  # Record any XDATA and skip if we did
-  if ($bibentry->add_xdata_ref($field, $value)) {
-    return $value; # Return raw value
-  }
-
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('listsep'),
                                      undef,
@@ -1437,6 +1425,7 @@ sub _list {
 sub _urilist {
   my ($bibentry, $entry, $field) = @_;
   my $value = $entry->get(encode('UTF-8', NFC($field)));
+
   # Unicode NFC boundary (passing to external library)
   my @tmp = Text::BibTeX::split_list(NFC($value),
                                      Biber::Config->getoption('listsep'),

@@ -923,11 +923,6 @@ sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
 
-  # XDATA is special, if found, set it
-  if (my $xdatav = $node->getAttribute('xdata')) {
-    $bibentry->add_xdata_ref(_norm($f), $xdatav);
-  }
-
   $bibentry->set_datafield(_norm($f), _split_list($bibentry, $node, $key, $f));
 
   return;
@@ -1138,12 +1133,6 @@ sub _name {
   my $node = $entry->findnodes("./$NS:names[\@type='$f']")->get_node(1);
 
   my $names = new Biber::Entry::Names;
-
-  # XDATA is special, if found, set it
-  if (my $xdatav = $node->getAttribute('xdata')) {
-    $bibentry->add_xdata_ref(_norm($f), $xdatav);
-    $names = new Biber::Entry::Names(xdata => $xdatav);
-  }
 
   # per-namelist options
   foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {

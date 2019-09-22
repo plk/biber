@@ -4,8 +4,9 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 5;
+use Test::More tests => 9;
 use Test::Differences;
+use List::AllUtils qw( first );
 unified_diff;
 
 use Biber;
@@ -49,6 +50,7 @@ Biber::Config->setoption('nodieonerror', 1); # because there is a cyclic xdata c
 # Now generate the information
 my ($stdout, $stderr) = capture { $biber->prepare };
 my $section = $biber->sections->get_section(0);
+my $bibentries = $section->bibentries;
 my $main = $biber->datalists->get_list('nty/global//global/global');
 my $out = $biber->get_output_obj;
 
@@ -120,15 +122,90 @@ my $xd2 = q|    \entry{xd2}{book}{}
     \endentry
 |;
 
+my $gxd1 = q|    \entry{gxd1}{book}{}
+      \name{author}{2}{}{%
+        {{hash=6b3653417f9aa97391c37cff5dfda7fa}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Simon},
+           giveni={S\bibinitperiod}}}%
+        {{hash=350a836ae63897de6d88baf1d62dc9f2}{%
+           family={Bloom},
+           familyi={B\bibinitperiod},
+           given={Brian},
+           giveni={B\bibinitperiod}}}%
+      }
+      \name{editor}{1}{}{%
+        {{hash=6238b302317c6baeba56035f2c4998c9}{%
+           family={Frill},
+           familyi={F\bibinitperiod},
+           given={Frank},
+           giveni={F\bibinitperiod}}}%
+      }
+      \name{translator}{1}{}{%
+        {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
+}}%
+      }
+      \list{lista}{1}{%
+        {xdata=gxd3-location-5}%
+      }
+      \list{location}{2}{%
+        {A}%
+        {B}%
+      }
+      \list{organization}{1}{%
+        {xdata=gxd2-author-3}%
+      }
+      \list{publisher}{1}{%
+        {xdata=gxd2}%
+      }
+      \strng{namehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{fullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{bibnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{authorbibnamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{authornamehash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{authorfullhash}{167d3a67f6ee19fe4d131fc34dcd9ede}
+      \strng{editorbibnamehash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editornamehash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{editorfullhash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{translatorbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatornamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{translatorfullhash}{d41d8cd98f00b204e9800998ecf8427e}
+      \field{sortinit}{S}
+      \field{sortinithash}{c319cff79d99c853d775f88277d4e45f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{addendum}{xdata=missing}
+      \field{note}{xdata=gxd2-note}
+      \field{title}{Some title}
+      \warn{\item Entry 'gxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)}
+      \warn{\\item Entry 'gxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)}
+      \warn{\item Field 'note' in entry 'gxd1' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)}
+      \warn{\item Field 'translator' in entry 'gxd1' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'lista' in entry 'gxd1' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
+      \warn{\item Field 'organization' in entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)}
+    \endentry
+|;
+
 # Test::Differences doesn't like utf8 unless it's encoded here
 eq_or_diff($out->get_output_entry('xd1', $main), $xd1, 'xdata test - 1');
 eq_or_diff(encode_utf8($out->get_output_entry('xd2', $main)), encode_utf8($xd2), 'xdata test - 2');
 # XDATA entries should not be output at all
 eq_or_diff($out->get_output_entry('macmillan', $main), undef, 'xdata test - 3');
 eq_or_diff($out->get_output_entry('macmillan:pub', $main), undef, 'xdata test - 4');
+eq_or_diff($out->get_output_entry('gxd1', $main), $gxd1, 'xdata granular test - 1');
 chomp $stderr;
-eq_or_diff($stderr, "ERROR - Circular XDATA inheritance between 'loop'<->'loop:3'", 'Cyclic xdata error check');
+ok((first {$_ eq "ERROR - Circular XDATA inheritance between 'lxd1:loop'<->'lxd2:loop'"} split("\n",$stderr)), 'Cyclic xdata error check - 1');
+ok((first {$_ eq "ERROR - Circular XDATA inheritance between 'lxd4:loop'<->'lxd4:loop'"} split("\n",$stderr)), 'Cyclic xdata error check - 2');
+ok((first {$_ eq "ERROR - Circular XDATA inheritance between 'loop'<->'loop:3'"} split("\n",$stderr)), 'Cyclic xdata error check - 3');
+
+# granular warnings
+my $w = [ "Entry 'gxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)",
+          "Entry 'gxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)",
+          "Field 'note' in entry 'gxd1' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)",
+          "Field 'translator' in entry 'gxd1' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)",
+          "Field 'lista' in entry 'gxd1' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)",
+        "Field 'organization' in entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)"];
+is_deeply($bibentries->entry('gxd1')->get_field('warnings'), $w, 'Granular XDATA resolution warnings' );
 # print $stdout;
 # print $stderr;
-
-
