@@ -230,14 +230,13 @@ sub add_xdata_ref {
   else { # Granular XDATA reference
     my $xnamesep = Biber::Config->getoption('xnamesep');
     my $xdatamarker = Biber::Config->getoption('xdatamarker');
-    if (my ($xdataref) = $value =~ m/^(?:(?i)$xdatamarker)\s*$xnamesep\s*(.+)$/x) {
+    if (my ($xdataref) = $value =~ m/^(?:(?i)$xdatamarker)$xnamesep(\S+)$/x) {
       my $xdatasep = Biber::Config->getoption('xdatasep');
-      my $xdre = qr{\s*$xdatasep\s*([^$xdatasep]+)};
-      my ($xe, $xf, $xfp) = $xdataref =~ m/^([^$xdatasep]+)$xdre$xdre$/x;
-      push $self->{xdatarefs}->@*, { # field pointing to XDATA
+      my ($xe, $xf, $xfp) = $xdataref =~ m/^([^$xdatasep]+)(?:$xdatasep([^$xdatasep]+))?(?:$xdatasep(\d+))?$/x;
+      push $self->{xdatarefs}->@*, {# field pointing to XDATA
                                     reffield => $reffield,
-                                    # field position pointing to XDATA, 0-based
-                                    refposition => $reffieldposition//0,
+                                    # field position pointing to XDATA, 1-based
+                                    refposition => defined($reffieldposition) ? $reffieldposition+1 : 0,
                                     # XDATA entry
                                     xdataentries => [$xe],
                                     # XDATA field
@@ -720,7 +719,8 @@ sub resolve_xdata {
               next;
             }
 
-            if ($dm->field_is_type('list', 'name', $xdatum->{reffield})){ # name list
+            # Name lists
+            if ($dm->field_is_type('list', 'name', $xdatum->{reffield})){
 
               unless ($xdataentry->get_field($xdatafield)->nth_name($xdataposition)) {
                 biber_warn("Entry '$entry_key' references position $xdataposition in XDATA name field '$xdatafield' in entry '$xdref' and this position does not exist (section $secnum)");
@@ -732,7 +732,8 @@ sub resolve_xdata {
                 $logger->debug("Setting position " . $xdatum->{refposition}. " in name field '" . $xdatum->{reffield} . "' in entry '$entry_key' via XDATA");
               }
             }
-            elsif ($dm->field_is_fieldtype('list', $xdatum->{reffield})) { # non-name list
+            # Non-name lists
+            elsif ($dm->field_is_fieldtype('list', $xdatum->{reffield})) {
 
               unless ($xdataentry->get_field($xdatafield)->[$xdataposition-1]) {
                 biber_warn("Entry '$entry_key' references position $xdataposition in XDATA list field '$xdatafield' in entry '$xdref' and this position does not exist (section $secnum)");
@@ -745,7 +746,8 @@ sub resolve_xdata {
                 $logger->debug("Setting position " . $xdatum->{refposition}. " in list field '" . $xdatum->{reffield} . "' in entry '$entry_key' via XDATA");
               }
             }
-            else { # non-list
+            # Non-list
+            else {
               $self->set_datafield($xdatum->{reffield}, $xdataentry->get_field($xdatafield));
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Setting field '" . $xdatum->{reffield} . "' in entry '$entry_key' via XDATA");

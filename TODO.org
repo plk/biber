@@ -153,6 +153,6 @@
 ** TODO Granular xdata doesn't work for dates
 ** TODO DOT output?
 ** TODO tool output
-*** TODO output_xdatasep in tool mode
+*** DONE output_xdatasep in tool mode
 
 

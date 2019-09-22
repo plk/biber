@@ -1161,9 +1161,13 @@ sub _name {
   my $xnamesep = Biber::Config->getoption('xnamesep');
   my $bee = $bibentry->get_field('entrytype');
 
+  my $names = Biber::Entry::Names->new();
+
   # Record any XDATA and skip if we did
   if ($bibentry->add_xdata_ref($field, $value)) {
-    return $value; # Return raw value
+    # Add special xdata ref empty name as placeholder
+    $names->add_name(Biber::Entry::Name->new(xdata => $value));
+    return $names;
   }
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
@@ -1173,7 +1177,7 @@ sub _name {
                                      undef,
                                      {binmode => 'utf-8', normalization => 'NFD'});
 
-  my $names = Biber::Entry::Names->new();
+
 
   for (my $i = 0; $i <= $#tmp; $i++) {
     my $name = $tmp[$i];
