@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?oxygen RNGSchema="../../data/schemata/biblatexml.rnc" type="compact"?>
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
   <bltx:entry id="bltxxd1" entrytype="xdata">
     <bltx:addendum>Москва</bltx:addendum>
@@ -15,5 +14,112 @@
   </bltx:entry>
   <bltx:entry id="bltxxd3" entrytype="xdata">
     <bltx:venue>venue</bltx:venue>
+  </bltx:entry>
+  <bltx:entry id="bltxgxd1" entrytype="book">
+    <bltx:names type="author">
+      <bltx:name>
+        <bltx:namepart type="family" initial="B">Brian</bltx:namepart>
+        <bltx:namepart type="given" initial="B">Bell</bltx:namepart>
+      </bltx:name>
+      <bltx:name xdata="xdata=bltxgxd2-author" />
+    </bltx:names>
+    <bltx:names type="editor">
+      <bltx:name xdata="xdata=bltxgxd2-editor-2" />
+    </bltx:names>
+    <bltx:names type="translator">
+      <bltx:name xdata="xdata=bltxgxd2-author-3" />
+    </bltx:names>
+    <bltx:lista>
+      <bltx:list>
+        <bltx:item xdata="xdata=bltxgxd3-location-5" />
+      </bltx:list>
+    </bltx:lista>
+    <bltx:location>
+      <bltx:list>
+        <bltx:item xdata="xdata=bltxgxd3-location" />
+        <bltx:item>B</bltx:item>
+      </bltx:list>
+    </bltx:location>
+    <bltx:organization>
+      <bltx:list>
+        <bltx:item xdata="xdata=bltxgxd2-author-3" />
+      </bltx:list>
+    </bltx:organization>
+    <bltx:publisher>
+      <bltx:list>
+        <bltx:item xdata="xdata=bltxgxd2" />
+      </bltx:list>
+    </bltx:publisher>
+    <bltx:addendum xdata="xdata=missing" />
+    <bltx:note xdata="xdata=bltxgxd2-note" />
+    <bltx:title xdata="xdata=bltxgxd4-title" />
+  </bltx:entry>
+  <bltx:entry id="bltxgxd2" entrytype="xdata">
+    <bltx:names type="author">
+      <bltx:name>
+        <bltx:namepart type="family" initial="C">Clive</bltx:namepart>
+        <bltx:namepart type="given" initial="C">Clue</bltx:namepart>
+      </bltx:name>
+      <bltx:name>
+        <bltx:namepart type="family" initial="P">Paul</bltx:namepart>
+        <bltx:namepart type="given" initial="P">Prune</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+    <bltx:names type="editor">
+      <bltx:name>
+        <bltx:namepart type="family" initial="R">Russel</bltx:namepart>
+        <bltx:namepart type="given" initial="R">Run</bltx:namepart>
+      </bltx:name>
+      <bltx:name xdata="xdata=bltxgxd4-editor" />
+    </bltx:names>
+  </bltx:entry>
+  <bltx:entry id="bltxgxd3" entrytype="xdata">
+    <bltx:location>
+      <bltx:list>
+        <bltx:item>A</bltx:item>
+        <bltx:item>C</bltx:item>
+      </bltx:list>
+    </bltx:location>
+  </bltx:entry>
+  <bltx:entry id="bltxgxd4" entrytype="xdata">
+    <bltx:names type="editor">
+      <bltx:name>
+        <bltx:namepart type="family" initial="L">Lee</bltx:namepart>
+        <bltx:namepart type="given" initial="L">Lay</bltx:namepart>
+      </bltx:name>
+    </bltx:names>
+    <bltx:title>Some title</bltx:title>
+  </bltx:entry>
+  <bltx:entry id="bltxlxd1" entrytype="book">
+    <bltx:names type="author">
+      <bltx:name>
+        <bltx:namepart type="family" initial="A">Amor</bltx:namepart>
+        <bltx:namepart type="given" initial="A">Alan</bltx:namepart>
+      </bltx:name>
+      <bltx:name xdata="xdata=bltxlxd1:loop-author" />
+    </bltx:names>
+    <bltx:names type="editor">
+      <bltx:name xdata="xdata=bltxlxd3:loop-editor" />
+    </bltx:names>
+  </bltx:entry>
+  <bltx:entry id="bltxlxd1:loop" entrytype="xdata">
+    <bltx:names type="author">
+      <bltx:name xdata="xdata=bltxlxd2:loop-author" />
+    </bltx:names>
+  </bltx:entry>
+  <bltx:entry id="bltxlxd2:loop" entrytype="xdata">
+    <bltx:names type="author">
+      <bltx:name xdata="xdata=bltxlxd1:loop-author" />
+    </bltx:names>
+  </bltx:entry>
+  <bltx:entry id="bltxlxd3:loop" entrytype="xdata">
+    <bltx:names type="editor">
+      <bltx:name xdata="xdata=bltxlxd4:loop-editor-1" />
+    </bltx:names>
+  </bltx:entry>
+  <bltx:entry id="bltxlxd4:loop" entrytype="xdata">
+    <bltx:names type="editor">
+      <bltx:name xdata="xdata=bltxlxd4:loop-editor-1" />
+    </bltx:names>
   </bltx:entry>
 </bltx:entries>

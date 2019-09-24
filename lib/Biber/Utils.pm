@@ -1754,6 +1754,7 @@ sub xdatarefout {
 # Check an output value for an xdata ref and replace output markers if necessary.
 sub xdatarefcheck {
   my $val = shift;
+  return undef unless $val;
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
   if ($val =~ m/^\s*$xdmi(?=$xnsi)/) {

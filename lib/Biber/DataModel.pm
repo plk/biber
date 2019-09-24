@@ -1210,18 +1210,19 @@ sub generate_bltxml_schema {
               $writer->startTag('element', 'name' => "$bltx:$field");
               $writer->startTag('choice');
               $writer->emptyTag('ref', 'name' => 'xdata');
-
               $writer->startTag('choice');
               $writer->startTag('list');
               $writer->startTag('oneOrMore');
               $writer->emptyTag('data', 'type' => 'string');
               $writer->endTag(); # oneOrMore
               $writer->endTag(); # list
+              $writer->startTag('element', 'name' => "$bltx:list");
               $writer->startTag('oneOrMore');
-              $writer->startTag('element', 'name' => "$bltx:key");
+              $writer->startTag('element', 'name' => "$bltx:item");
               $writer->emptyTag('text');# text
-              $writer->endTag(); # key element
+              $writer->endTag(); # item element
               $writer->endTag(); # oneOrMore
+              $writer->endTag(); # list element
               $writer->endTag(); # choice
               $writer->endTag(); # choice
               $writer->endTag(); # $field element

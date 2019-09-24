@@ -234,6 +234,14 @@ sub set_output_entry {
       foreach my $f ($lf->@*) {
         my @lattrs;
 
+        # XDATA is special
+        unless (Biber::Config->getoption('output_resolve_xdata')) {
+          if (my $val = xdatarefcheck($f)) {
+            $xml->emptyTag([$xml_prefix, 'item'], 'xdata' => NFC($val));
+            next;
+          }
+        }
+
         $xml->dataElement([$xml_prefix, 'item'], NFC($f), @lattrs);
       }
       $xml->endTag();           # list

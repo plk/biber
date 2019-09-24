@@ -221,6 +221,7 @@ sub extract_entries {
       $logger->debug('Wanted keys: ' . join(', ', $keys->@*));
     }
     foreach my $wanted_key ($keys->@*) {
+
       if ($logger->is_debug()) {# performance tune
         $logger->debug("Looking for key '$wanted_key' in BibLaTeXML file '$filename'");
       }
@@ -1292,13 +1293,16 @@ sub _split_list {
     my @result;
 
     for (my $i = 0; $i <= $#list; $i++) {
-      my $e = $list[$i]->textContent();
 
       # Record any XDATA and skip if we did
       # If this field itself is XDATA, don't analyse XDATA further, just split and return
-      $bibentry->add_xdata_ref(_norm($f), $e, $i) unless $noxdata;
-
-      push @result, $e;
+      if (my $xdatav = $list[$i]->getAttribute('xdata')) {
+        $bibentry->add_xdata_ref(_norm($f), $xdatav, $i) unless $noxdata;
+        push @result, $xdatav;
+      }
+      else {
+        push @result, $list[$i]->textContent();
+      }
     }
 
     return [ @result ];

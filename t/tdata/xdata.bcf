@@ -1926,6 +1926,7 @@
     <bcf:citekey order="3">xd3</bcf:citekey>
     <bcf:citekey order="4">gxd1</bcf:citekey>
     <bcf:citekey order="5">lxd1</bcf:citekey>
+    <bcf:citekey order="6">bltxgxd1</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">
