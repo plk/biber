@@ -907,15 +907,15 @@ is_deeply(tparsename_x('family=Smithers Jones, prefix=van der, given=James, usep
 eq_or_diff(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->{useprefix}, '1', 'parsename_x 2');
 
 # name to bib tests
-eq_or_diff(Biber::Input::file::bibtex::parsename('John Doe', 'author')->name_to_bib, 'Doe, John', 'name_to_bib 1');
-eq_or_diff(Biber::Input::file::bibtex::parsename('John van der Doe', 'author')->name_to_bib, 'van der Doe, John', 'name_to_bib 2');
-eq_or_diff(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author')->name_to_bib, 'Doe, Jr, John', 'name_to_bib 3');
-eq_or_diff(Biber::Input::file::bibtex::parsename('von Doe, Jr, John', 'author')->name_to_bib, 'von Doe, Jr, John', 'name_to_bib 4');
-eq_or_diff(Biber::Input::file::bibtex::parsename('John Alan Doe', 'author')->name_to_bib, 'Doe, John Alan', 'name_to_bib 5');
-eq_or_diff(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author')->name_to_bib, '{Robert and Sons, Inc.}', 'name_to_bib 6');
-eq_or_diff(NFC(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author')->name_to_bib), 'de la {Vallée Poussin}, Jean Charles Gabriel', 'name_to_bib 7');
-eq_or_diff(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author')->name_to_bib, '{K}ent-{B}oswell, E. S.', 'name_to_bib 8');
-is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->name_to_bib, 'van der Smithers Jones, James', 'name_to_bib - 9');
+eq_or_diff(Biber::Input::file::bibtex::parsename('John Doe', 'author')->name_to_bibtex, 'Doe, John', 'name_to_bibtex 1');
+eq_or_diff(Biber::Input::file::bibtex::parsename('John van der Doe', 'author')->name_to_bibtex, 'van der Doe, John', 'name_to_bibtex 2');
+eq_or_diff(Biber::Input::file::bibtex::parsename('Doe, Jr, John', 'author')->name_to_bibtex, 'Doe, Jr, John', 'name_to_bibtex 3');
+eq_or_diff(Biber::Input::file::bibtex::parsename('von Doe, Jr, John', 'author')->name_to_bibtex, 'von Doe, Jr, John', 'name_to_bibtex 4');
+eq_or_diff(Biber::Input::file::bibtex::parsename('John Alan Doe', 'author')->name_to_bibtex, 'Doe, John Alan', 'name_to_bibtex 5');
+eq_or_diff(Biber::Input::file::bibtex::parsename('{Robert and Sons, Inc.}', 'author')->name_to_bibtex, '{Robert and Sons, Inc.}', 'name_to_bibtex 6');
+eq_or_diff(NFC(Biber::Input::file::bibtex::parsename('Jean Charles Gabriel de la {Vallée Poussin}', 'author')->name_to_bibtex), 'de la {Vallée Poussin}, Jean Charles Gabriel', 'name_to_bibtex 7');
+eq_or_diff(Biber::Input::file::bibtex::parsename('E. S. {K}ent-{B}oswell', 'author')->name_to_bibtex, '{K}ent-{B}oswell, E. S.', 'name_to_bibtex 8');
+is_deeply(Biber::Input::file::bibtex::parsename_x('family=Smithers Jones, prefix=van der, given=James, useprefix=true', 'author')->name_to_bibtex, 'van der Smithers Jones, James', 'name_to_bibtex - 9');
 
 # name to xname tests
 is_deeply(Biber::Input::file::bibtex::parsename('van der Smithers Jones, James', 'author')->name_to_xname, 'family=Smithers Jones, given=James, prefix=van der', 'name_to_xname - 1');

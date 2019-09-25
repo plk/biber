@@ -86,6 +86,7 @@ my $xd1 = q|    \entry{xd1}{book}{}
       \field{note}{A Note}
       \field{year}{2007}
       \field{dateera}{ce}
+      \warn{\item Entry 'xd1' references XDATA entry 'missingxd' which does not exist, not resolving (section 0)}
     \endentry
 |;
 
@@ -144,6 +145,10 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
            given={Frank},
            giveni={F\bibinitperiod}}}%
       }
+      \name{namea}{1}{}{%
+        {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
+}}%
+      }
       \name{translator}{1}{}{%
         {{hash=d41d8cd98f00b204e9800998ecf8427e}{%
 }}%
@@ -170,6 +175,9 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
       \strng{editorbibnamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editornamehash}{6238b302317c6baeba56035f2c4998c9}
       \strng{editorfullhash}{6238b302317c6baeba56035f2c4998c9}
+      \strng{nameabibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameanamehash}{d41d8cd98f00b204e9800998ecf8427e}
+      \strng{nameafullhash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatorbibnamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatornamehash}{d41d8cd98f00b204e9800998ecf8427e}
       \strng{translatorfullhash}{d41d8cd98f00b204e9800998ecf8427e}
@@ -186,6 +194,7 @@ my $gxd1 = q|    \entry{gxd1}{book}{}
       \warn{\item Field 'translator' in entry 'gxd1' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)}
       \warn{\item Field 'lista' in entry 'gxd1' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)}
       \warn{\item Field 'organization' in entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)}
+      \warn{\item Entry 'gxd1' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)}
     \endentry
 |;
 
@@ -242,6 +251,8 @@ my $bltxgxd1 = q|    \entry{bltxgxd1}{book}{}
       \field{sortinithash}{8de16967003c7207dae369d874f1456e}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
+      \field{addendum}{xdata=missing}
+      \field{note}{xdata=bltxgxd2-note}
       \field{title}{Some title}
       \warn{\item Entry 'bltxgxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)}
       \warn{\item Entry 'bltxgxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)}
@@ -271,7 +282,8 @@ my $w1 = [ "Entry 'gxd1' has XDATA reference from field 'publisher' that contain
           "Field 'note' in entry 'gxd1' references XDATA field 'note' in entry 'gxd2' and this field does not exist, not resolving (section 0)",
           "Field 'translator' in entry 'gxd1' references field 'author' position 3 in entry 'gxd2' and this position does not exist, not resolving (section 0)",
           "Field 'lista' in entry 'gxd1' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)",
-        "Field 'organization' in entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)"];
+           "Field 'organization' in entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)",
+           "Entry 'gxd1' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)"];
 is_deeply($bibentries->entry('gxd1')->get_field('warnings'), $w1, 'Granular XDATA resolution warnings - bibtex' );
 
 my $w2 = [ "Entry 'bltxgxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)",

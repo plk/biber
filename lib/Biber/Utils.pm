@@ -1737,28 +1737,34 @@ sub process_backendin {
 }
 
 # Replace xnamesep/xdatasep with output variants
+# Some datasource formats don't need the marker (biblatexml)
 sub xdatarefout {
-  my $xdataref = shift;
+  my ($xdataref, $implicitmarker) = @_;
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xdmo = Biber::Config->getoption('output_xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
   my $xnso = Biber::Config->getoption('output_xnamesep');
   my $xdsi = Biber::Config->getoption('xdatasep');
   my $xdso = Biber::Config->getoption('output_xdatasep');
-  $xdataref =~ s/^\s*$xdmi(?=$xnsi)/$xdmo/x; # Should be only one
-  $xdataref =~ s/$xnsi/$xnso/xg;
+  if ($implicitmarker) { # Don't want output marker at all
+    $xdataref =~ s/^$xdmi$xnsi//x;
+  }
+  else {
+    $xdataref =~ s/^$xdmi(?=$xnsi)/$xdmo/x; # Should be only one
+    $xdataref =~ s/$xnsi/$xnso/xg;
+  }
   $xdataref =~ s/$xdsi/$xdso/xg;
   return $xdataref;
 }
 
 # Check an output value for an xdata ref and replace output markers if necessary.
 sub xdatarefcheck {
-  my $val = shift;
+  my ($val, $implicitmarker) = @_;
   return undef unless $val;
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
   if ($val =~ m/^\s*$xdmi(?=$xnsi)/) {
-    return xdatarefout($val);
+    return xdatarefout($val, $implicitmarker);
   }
   return undef;
 }

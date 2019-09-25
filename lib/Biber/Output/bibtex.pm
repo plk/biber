@@ -113,7 +113,7 @@ sub set_output_entry {
   my %acc;
 
   # Name fields
-  my $tonamesub = 'name_to_bib';
+  my $tonamesub = 'name_to_bibtex';
   if (Biber::Config->getoption('output_xname')) {
     $tonamesub = 'name_to_xname';
   }

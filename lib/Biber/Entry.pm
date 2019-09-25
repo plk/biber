@@ -230,7 +230,7 @@ sub add_xdata_ref {
   else { # Granular XDATA reference
     my $xnamesep = Biber::Config->getoption('xnamesep');
     my $xdatamarker = Biber::Config->getoption('xdatamarker');
-    if (my ($xdataref) = $value =~ m/^(?:(?i)$xdatamarker)$xnamesep(\S+)$/x) {
+    if (my ($xdataref) = $value =~ m/^$xdatamarker$xnamesep(\S+)$/xi) {
       my $xdatasep = Biber::Config->getoption('xdatasep');
       my ($xe, $xf, $xfp) = $xdataref =~ m/^([^$xdatasep]+)$xdatasep([^$xdatasep]+)(?:$xdatasep(\d+))?$/x;
       unless ($xf) { # There must be a field in a granular XDATA ref
@@ -267,6 +267,54 @@ sub get_xdata_refs {
   my $self = shift;
   return $self->{xdatarefs};
 }
+
+=head2 get_xdata_ref
+
+  Get a specific XDATA reference
+
+=cut
+
+sub get_xdata_ref {
+  my ($self, $field, $pos) = @_;
+  foreach my $xdatum ($self->{xdatarefs}->@*) {
+    if ($xdatum->{reffield} eq $field) {
+      if ($pos) {
+        if ($xdatum->{refposition} == $pos) {
+          return $xdatum;
+        }
+      }
+      else {
+        return $xdatum;
+      }
+    }
+  }
+  return undef;
+}
+
+=head2 is_xdata_resolved
+
+  Checks if an XDATA reference was resolved. Returns false also for
+  "no such reference".
+
+=cut
+
+sub is_xdata_resolved {
+  my ($self, $field, $pos) = @_;
+  foreach my $xdatum ($self->{xdatarefs}->@*) {
+    if ($xdatum->{reffield} eq $field) {
+      if ($pos) {
+        if ($xdatum->{refposition} == $pos) {
+          return $xdatum->{resolved};
+        }
+      }
+      else {
+        return $xdatum->{resolved};
+      }
+    }
+  }
+  return 0;
+}
+
 
 =head2 set_labelname_info
 
@@ -646,7 +694,8 @@ sub set_inherit_from {
 
 =head2 resolve_xdata
 
-    Recursively resolve XDATA in an entry
+    Recursively resolve XDATA in an entry. Sets a flag in the XDATA metadata to
+    say if the reference was successfully resolved.
 
     $entry->resolve_xdata($xdata);
 
@@ -666,14 +715,16 @@ sub resolve_xdata {
   #    refposition   => 0,
   #    xdataentries  => # array ref of XDATA entry keys
   #    xdatafield    => undef,
-  #    xdataposition => 0
+  #    xdataposition => 0,
+  #    resolved      => 1 or 0
   #  },
   #  { # xdata info for an granular XDATA ref in another field
   #    reffield      => # field pointing to XDATA
   #    refposition   => # field position pointing to XDATA (or 1), 1-based
-  #    xdataentries  => # array ref of XDATA entry keys
+  #    xdataentries  => # array ref containing single XDATA entry key
   #    xdatafield    => # field within XDATA entry
   #    xdataposition => # position in list field within XDATA entry (or 1), 1-based
+  #    resolved      => 1 or 0
   #  }
   #  {
   #    .
@@ -687,10 +738,16 @@ sub resolve_xdata {
     foreach my $xdref ($xdatum->{xdataentries}->@*) {
 
       unless (my $xdataentry = $section->bibentry($xdref)) {
-        biber_warn("Entry '$entry_key' references XDATA entry '$xdref' which does not exist, not resolving (section $secnum)");
+        biber_warn("Entry '$entry_key' references XDATA entry '$xdref' which does not exist, not resolving (section $secnum)", $self);
+        $xdatum->{resolved} = 0;
         next;
       }
       else {
+        unless ($xdataentry->get_field('entrytype') eq 'xdata') {
+          biber_warn("Entry '$entry_key' references XDATA entry '$xdref' which is not an XDATA entry, not resolving (section $secnum)", $self);
+          $xdatum->{resolved} = 0;
+          next;
+        }
 
         # record the XDATA resolve between these entries to prevent loops
         Biber::Config->set_inheritance('xdata', $xdref, $entry_key);
@@ -726,11 +783,13 @@ sub resolve_xdata {
             unless ($reffielddm->{fieldtype} eq $xdatafielddm->{fieldtype} and
                     $reffielddm->{datatype} eq $xdatafielddm->{datatype}) {
               biber_warn("Field '$reffield' in entry '$entry_key' which xdata references field '$xdatafield' in entry '$xdref' are not the same types, not resolving (section $secnum)", $self);
+              $xdatum->{resolved} = 0;
               next;
             }
 
             unless ($xdataentry->get_field($xdatafield)) {
               biber_warn("Field '$reffield' in entry '$entry_key' references XDATA field '$xdatafield' in entry '$xdref' and this field does not exist, not resolving (section $secnum)", $self);
+              $xdatum->{resolved} = 0;
               next;
             }
 
@@ -739,6 +798,7 @@ sub resolve_xdata {
 
               unless ($xdataentry->get_field($xdatafield)->is_nth_name($xdataposition)) {
                 biber_warn("Field '$reffield' in entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
+                $xdatum->{resolved} = 0;
                 next;
               }
 
@@ -752,6 +812,7 @@ sub resolve_xdata {
 
               unless ($xdataentry->get_field($xdatafield)->[$xdataposition-1]) {
                 biber_warn("Field '$reffield' in entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
+                $xdatum->{resolved} = 0;
                 next;
               }
 
@@ -770,6 +831,7 @@ sub resolve_xdata {
               }
             }
           }
+          $xdatum->{resolved} = 1;
         }
         else {
           biber_error("Circular XDATA inheritance between '$xdref'<->'$entry_key'");

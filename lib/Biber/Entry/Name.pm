@@ -420,16 +420,20 @@ sub name_to_bblxml {
   return;
 }
 
-=head2 name_to_bib
+=head2 name_to_bibtex
 
     Return standard bibtex data format for name
 
 =cut
 
-sub name_to_bib {
+sub name_to_bibtex {
   my $self = shift;
   my $parts;
   my $namestring = '';
+
+  if (my $xdata = $self->get_xdata) {
+    return $xdata;
+  }
 
   foreach my $np ('prefix', 'family', 'suffix', 'given') {
     if ($parts->{$np} = $self->get_namepart($np)) {

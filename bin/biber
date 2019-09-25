@@ -915,8 +915,10 @@ Wrap lines in the F<.bbl> file.
 
 =item B<--xdatamarker=[marker]>
 
-Use F<marker> as the string before C<--xdatasep> which introduces an
-XDATA reference. Default is 'xdata'.
+Use F<marker> as the string before C<--xdatasep> which introduces an XDATA
+reference in BibTeX format data sources. Not used in BibLaTeXML data
+sources as it has a dedicated XML attribute C<xdata>' for this. Default is
+'xdata'.
 
 =item B<--xdatasep=[sep]>
 

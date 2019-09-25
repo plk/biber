@@ -1,7 +1,7 @@
 # -*- cperl -*-
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 15;
 use Test::Differences;
 unified_diff;
 
@@ -57,14 +57,14 @@ Biber::Config->setoption('sortlocale', 'en_GB.UTF-8');
 $ARGV[0] = 'tool.bib'; # fake this as we are not running through top-level biber program
 $biber->tool_mode_setup;
 $biber->prepare_tool;
-my $main = $biber->datalists->get_lists_by_attrs(section          => 99999,
-                                       name                       => 'tool/global//global/global',
-                                       type                       => 'entry',
-                                       sortingtemplatename             => 'tool',
-                                       sortingnamekeytemplatename      => 'global',
-                                       labelprefix                => '',
-                                       uniquenametemplatename     => 'global',
-                                       labelalphanametemplatename => 'global')->[0];
+my $main = $biber->datalists->get_lists_by_attrs(section         => 99999,
+                                      name                       => 'tool/global//global/global',
+                                      type                       => 'entry',
+                                      sortingtemplatename        => 'tool',
+                                      sortingnamekeytemplatename => 'global',
+                                      labelprefix                => '',
+                                      uniquenametemplatename     => 'global',
+                                      labelalphanametemplatename => 'global')->[0];
 
 my $out = $biber->get_output_obj;
 
@@ -165,19 +165,52 @@ my $badcr2 = q|@BOOK{badcr2,
 
 |;
 
+my $gxd1 = q|@BOOK{gxd1,
+  AUTHOR       = {Smith, Simon and Bloom, Brian},
+  EDITOR       = {Frill, Frank},
+  TRANSLATOR   = {xdata=gxd2-author-3},
+  LISTA        = {xdata=gxd3-location-5},
+  LOCATION     = {A and B},
+  ORGANIZATION = {xdata=gxd2-author-3},
+  PUBLISHER    = {xdata=gxd2},
+  ADDENDUM     = {xdata=missing},
+  NOTE         = {xdata=gxd2-note},
+  TITLE        = {Some title},
+}
+
+|;
+
+my $gxd2 = q|@BOOK{gxd1,
+  AUTHOR       = {family:Smith, given:Simon and xdata:gxd2+author},
+  EDITOR       = {xdata:gxd2+editor+2},
+  TRANSLATOR   = {xdata:gxd2+author+3},
+  LISTA        = {xdata:gxd3+location+5},
+  LOCATION     = {xdata:gxd3+location and B},
+  ORGANIZATION = {xdata:gxd2+author+3},
+  PUBLISHER    = {xdata:gxd2},
+  ADDENDUM     = {xdata:missing},
+  NOTE         = {xdata:gxd2+note},
+  TITLE        = {xdata:gxd4+title},
+}
+
+|;
+
 # NFD here because we are testing internals here and all internals expect NFD
 eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($t1), 'tool mode - 1');
 ok(is_undef($out->get_output_entry('loh')), 'tool mode - 2');
 eq_or_diff($out->get_output_entry('xd1',), $t2, 'tool mode - 3');
 eq_or_diff($out->get_output_entry('b1',), $t3, 'tool mode - 4');
 eq_or_diff($out->get_output_entry('dt1',), $t4, 'tool mode - 5');
-is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', NFD('i3Š'), 'badcr2', 'xd1', 'badcr1'], 'tool mode sorting');
+is_deeply($main->get_keys, ['b1', 'macmillan', 'dt1', 'm1', 'macmillan:pub', 'macmillan:loc', 'mv1', 'gxd3', 'gxd4', NFD('i3Š'), 'badcr2', 'gxd2', 'xd1', 'badcr1', 'gxd1'], 'tool mode sorting');
 eq_or_diff($out->get_output_comments, $tc1, 'tool mode - 6');
 eq_or_diff($out->get_output_entry('badcr1',), $badcr1, 'tool mode - 7');
 eq_or_diff($out->get_output_entry('badcr2',), $badcr2, 'tool mode - 8');
+eq_or_diff($out->get_output_entry('gxd1',), $gxd1, 'tool mode - 9');
 
 Biber::Config->setoption('output_xname', 1);
 Biber::Config->setoption('output_xnamesep', ':');
+Biber::Config->setoption('output_resolve_xdata', 0);
+Biber::Config->setoption('output_xdatasep', '+');
 $biber->tool_mode_setup;
 $biber->prepare_tool;
 $main = $biber->datalists->get_list(section                    => 99999,
@@ -190,8 +223,9 @@ $main = $biber->datalists->get_list(section                    => 99999,
                                     labelalphanametemplatename => 'global');
 
 $out = $biber->get_output_obj;
-eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($tx1), 'tool mode - 7');
-eq_or_diff($out->get_output_entry('m1',), $m1, 'tool mode - 8');
+eq_or_diff(encode_utf8($out->get_output_entry(NFD('i3Š'))), encode_utf8($tx1), 'tool mode - 10');
+eq_or_diff($out->get_output_entry('m1',), $m1, 'tool mode - 11');
+eq_or_diff($out->get_output_entry('gxd1',), $gxd2, 'tool mode - 12');
 
 my $CFxmlparser = XML::LibXML->new();
  # basic parse and XInclude processing

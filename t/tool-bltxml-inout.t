@@ -79,8 +79,10 @@ my $bltxml1 = q|<?xml version="1.0" encoding="UTF-8"?>
 <bltx:entries xmlns:bltx="http://biblatex-biber.sourceforge.net/biblatexml">
   <bltx:entry id="bltx1" entrytype="book">
     <bltx:ids>
-      <bltx:key>bltx1a1</bltx:key>
-      <bltx:key>bltx1a2</bltx:key>
+      <bltx:list>
+        <bltx:item>bltx1a1</bltx:item>
+        <bltx:item>bltx1a2</bltx:item>
+      </bltx:list>
     </bltx:ids>
     <bltx:options>useprefix=false</bltx:options>
     <bltx:names type="afterword">

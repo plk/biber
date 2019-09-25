@@ -100,11 +100,8 @@ sub set_output_target_file {
 =cut
 
 sub set_output_entry {
-  my $self = shift;
-  my $be = shift; # Biber::Entry object
+  my ($self, $be, $section, $dm) = @_;
   my $bee = $be->get_field('entrytype');
-  my $section = shift; # Section object the entry occurs in
-  my $dm = shift; # Data Model object
   my $dmh = Biber::Config->get_dm_helpers;
   my $secnum = $section->number;
   my $key = $be->get_field('citekey');
@@ -117,10 +114,12 @@ sub set_output_entry {
   # Filter aliases which point to this key an insert them
   if (my @ids = sort grep {$section->get_citekey_alias($_) eq $key} $section->get_citekey_aliases) {
     $xml->startTag([$xml_prefix, 'ids']);
+    $xml->startTag([$xml_prefix, 'list']);
     foreach my $id (@ids) {
-      $xml->dataElement([$xml_prefix, 'key'], NFC($id));
+      $xml->dataElement([$xml_prefix, 'item'], NFC($id));
     }
-  $xml->endTag();# ids
+    $xml->endTag();# list
+    $xml->endTag();# ids
   }
 
   # If CROSSREF and XDATA have been resolved, don't output them
@@ -134,10 +133,12 @@ sub set_output_entry {
   unless (Biber::Config->getoption('output_resolve_xdata')) {
     if (my $xdata = $be->get_field('xdata')) {
       $xml->startTag([$xml_prefix, 'xdata']);
+      $xml->startTag([$xml_prefix, 'list']);
       foreach my $xd ($xdata->@*) {
-        $xml->dataElement([$xml_prefix, 'key'], NFC($xd));
+        $xml->dataElement([$xml_prefix, 'item'], NFC($xd));
       }
-      $xml->endTag();
+      $xml->endTag(); # list
+      $xml->endTag(); # xdata
     }
   }
   unless (Biber::Config->getoption('output_resolve_crossrefs')) {
@@ -160,9 +161,10 @@ sub set_output_entry {
     if (my $nf = $be->get_field($namefield)) {
 
       # XDATA is special
-      unless (Biber::Config->getoption('output_resolve_xdata')) {
+      if (not Biber::Config->getoption('output_resolve_xdata') or
+         not $be->is_xdata_resolved($namefield)) {
         if (my $xdata = $nf->get_xdata) {
-          $xml->emptyTag([$xml_prefix, 'names'], 'xdata' => NFC(xdatarefout($xdata)));
+          $xml->emptyTag([$xml_prefix, 'names'], 'xdata' => NFC(xdatarefout($xdata, 1)));
           next;
         }
       }
@@ -187,12 +189,14 @@ sub set_output_entry {
 
       $xml->startTag([$xml_prefix, 'names'], @attrs);
 
-      foreach my $n ($nf->names->@*) {
+      for (my $i = 0; $i <= $nf->names->$#*; $i++) {
+        my $n = $nf->names->[$i];
 
         # XDATA is special
-        unless (Biber::Config->getoption('output_resolve_xdata')) {
+        if (not Biber::Config->getoption('output_resolve_xdata') or
+           not $be->is_xdata_resolved($namefield, $i+1)) {
           if (my $xdata = $n->get_xdata) {
-            $xml->emptyTag([$xml_prefix, 'name'], 'xdata' => NFC(xdatarefout($xdata)));
+            $xml->emptyTag([$xml_prefix, 'name'], 'xdata' => NFC(xdatarefout($xdata, 1)));
             next;
           }
         }
@@ -212,8 +216,9 @@ sub set_output_entry {
     if (my $lf = $be->get_field($listfield)) {
 
       # XDATA is special
-      unless (Biber::Config->getoption('output_resolve_xdata')) {
-        if (my $val = xdatarefcheck($lf)) {
+      if (not Biber::Config->getoption('output_resolve_xdata') or
+          not $be->is_xdata_resolved($listfield)) {
+        if (my $val = xdatarefcheck($lf, 1)) {
           $xml->emptyTag([$xml_prefix, $listfield], 'xdata' => NFC($val));
           next;
         }
@@ -231,12 +236,15 @@ sub set_output_entry {
 
       # List loop
       my $itemcount = 1;
-      foreach my $f ($lf->@*) {
+
+      for (my $i = 0; $i <= $lf->$#*; $i++) {
+        my $f = $lf->[$i];
         my @lattrs;
 
         # XDATA is special
-        unless (Biber::Config->getoption('output_resolve_xdata')) {
-          if (my $val = xdatarefcheck($f)) {
+        if (not Biber::Config->getoption('output_resolve_xdata') or
+            not $be->is_xdata_resolved($listfield, $i+1)) {
+          if (my $val = xdatarefcheck($f, 1)) {
             $xml->emptyTag([$xml_prefix, 'item'], 'xdata' => NFC($val));
             next;
           }
@@ -261,8 +269,10 @@ sub set_output_entry {
     my $val = $be->get_field($field);
 
     # XDATA is special
-    unless (Biber::Config->getoption('output_resolve_xdata')) {
-      if (my $xval = xdatarefcheck($val)) {
+    if (not Biber::Config->getoption('output_resolve_xdata') or
+        not $be->is_xdata_resolved($field)) {
+
+      if (my $xval = xdatarefcheck($val, 1)) {
         $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($xval));
         next;
       }
@@ -286,8 +296,9 @@ sub set_output_entry {
       next if $xsvf eq 'xdata'; # XDATA is special
 
       # XDATA is special
-      unless (Biber::Config->getoption('output_resolve_xdata')) {
-        if (my $val = xdatarefcheck($f)) {
+      if (not Biber::Config->getoption('output_resolve_xdata') or
+          not $be->is_xdata_resolved($xsvf)) {
+        if (my $val = xdatarefcheck($f, 1)) {
           $xml->emptyTag([$xml_prefix, $xsvf], 'xdata' => NFC($val));
           next;
         }
@@ -302,8 +313,9 @@ sub set_output_entry {
     if ( my $rf = $be->get_field($rfield) ) {
 
       # XDATA is special
-      unless (Biber::Config->getoption('output_resolve_xdata')) {
-        if (my $val = xdatarefcheck($rf)) {
+      if (not Biber::Config->getoption('output_resolve_xdata') or
+          not $be->is_xdata_resolved($rfield)) {
+        if (my $val = xdatarefcheck($rf, 1)) {
           $xml->emptyTag([$xml_prefix, $rfield], 'xdata' => NFC($val));
           next;
         }

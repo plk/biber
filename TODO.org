@@ -152,11 +152,10 @@
 * TODO XDATA generalisation
 ** TODO DOT output?
 ** DONE tool output
-*** TODO tests with resolve/non resolve and output seps change
+*** DONE tests with resolve/non resolve and output seps change
 *** DONE output_xdatasep in tool mode
 ** TODO Document
-*** Default position when omitted for list sources is 1
-*** granular xdata doesn't work for dates
-*** granular xdata at field level and below must be between same field and datatypes
-
+*** TODO Default position when omitted for list sources is 1
+*** TODO granular xdata doesn't work for dates
+*** TODO granular xdata at field level and below must be between same field and datatypes
 
