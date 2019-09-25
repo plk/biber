@@ -154,8 +154,8 @@
 ** DONE tool output
 *** DONE tests with resolve/non resolve and output seps change
 *** DONE output_xdatasep in tool mode
-** TODO Document
-*** TODO Default position when omitted for list sources is 1
-*** TODO granular xdata doesn't work for dates
-*** TODO granular xdata at field level and below must be between same field and datatypes
+** DONE Document
+*** DONE Default position when omitted for list sources is 1
+*** DONE granular xdata doesn't work for dates
+*** DONE granular xdata at field level and below must be between same field and datatypes
 
