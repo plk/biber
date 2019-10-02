@@ -781,6 +781,14 @@
               </oneOrMore>
             </element>
           </oneOrMore>
+          <!-- Allowable multiscript fields which can have alternate form/languages -->
+          <element name="bcf:multiscriptfields">
+            <oneOrMore>
+              <element name="bcf:field">
+                <text/>
+              </element>
+            </oneOrMore>
+          </element>
           <oneOrMore>
             <!-- Constraints on field (co-)existence and format -->
             <element name="bcf:constraints">
@@ -2230,7 +2238,7 @@
     </choice>
   </define>
 </grammar>
-<!-- 
+<!--
   Copyright 2009-2012 François Charette and Philip Kime, all rights reserved.
   Copyright 2012-2019 Philip Kime, all rights reserved.
 -->

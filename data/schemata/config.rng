@@ -715,6 +715,14 @@
           </oneOrMore>
         </element>
       </oneOrMore>
+      <!-- Allowable multiscript fields which can have alternate form/languages -->
+      <element name="multiscriptfields">
+        <oneOrMore>
+          <element name="field">
+            <text/>
+          </element>
+        </oneOrMore>
+      </element>
       <oneOrMore>
         <!-- Constraints on field (co-)existence and format -->
         <element name="constraints">

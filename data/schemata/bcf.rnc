@@ -328,6 +328,10 @@ start =
          element bcf:entrytype { text }*,
          element bcf:field { text }+
       }+,
+      # Allowable multiscript fields which can have alternate form/languages
+      element bcf:multiscriptfields {
+         element bcf:field { text }+
+      },
       # Constraints on field (co-)existence and format
       element bcf:constraints {
         # Set of entrytypes that this constraint applies to

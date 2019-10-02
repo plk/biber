@@ -159,6 +159,7 @@
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
+** Document \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 ** TODO Add new datamodel constant list of default forms (transliteration, transcription, original, translation)
 ** DONE Parsing BCP-47 function
 *** https://tools.ietf.org/html/bcp47

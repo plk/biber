@@ -200,6 +200,10 @@ datamodel =
       element entrytype { text }*,
       element field { text }+
     }+,
+    # Allowable multiscript fields which can have alternate form/languages
+    element multiscriptfields {
+      element field { text }+
+    },
     # Constraints on field (co-)existence and format
     element constraints {
       # Set of entrytypes that this constraint applies to
