@@ -164,10 +164,10 @@
 *** TODO multiscriptforms constant
 ** Datamodel
 *** DONE Add valid multiscript fields to datamodel
-*** TODO Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
+*** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
 ** Biber
 *** DONE Parsing BCP47 function
 https://tools.ietf.org/html/bcp47
 
-*** TODO Parsing variant function
+*** TODO Parsing field alternates function
 *** TODO annotation BCP47 tag parts override field tag parts
