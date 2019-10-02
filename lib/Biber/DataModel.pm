@@ -40,7 +40,7 @@ sub new {
   $self = bless {}, $class;
   # use Data::Dump;dd($dms);exit 0;
 
-  foreach my $dm ($dms->@*) { # Could potentially be more than one data models in future
+  foreach my $dm ($dms->@*) { # Could potentially be more than one data model in future
 
     # First, we normalise all entrytypes and fields to case-folded form for internal
     # comparisons but we save a map of case-folded variants to actual names
@@ -60,6 +60,11 @@ sub new {
       unless ($date->{content} =~ m/date$/) {
         biber_error("Fatal datamodel error: date field '" . $date->{content} . "' must end with string 'date'");
       }
+    }
+
+    # Multiscript enabled fields
+    foreach my $f ($dm->{multiscriptfields}{field}->@*) {
+      $self->{multiscriptfields}{$f} = 1;
     }
 
     # Pull out legal entrytypes, fields and constraints and make lookup hash
@@ -328,6 +333,16 @@ sub get_constant_value {
   }
 }
 
+=head2 is_multiscript
+
+    Returns boolean to say if a field is a multiscript field
+
+=cut
+
+sub is_multiscript {
+  my ($self, $field) = shift;
+  return $self->{multiscriptfields}{$field} ? 1 : 0;
+}
 
 =head2 fieldtypes
 
