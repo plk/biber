@@ -159,10 +159,15 @@
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
-** Document \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
-** TODO Add new datamodel constant list of default forms (transliteration, transcription, original, translation)
-** DONE Parsing BCP-47 function
-*** https://tools.ietf.org/html/bcp47
-*** https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
-** Parsing variant function
-** annotation BCP47 tag parts override field tag parts
+** Documentation
+*** TODO Document \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
+*** TODO multiscriptforms constant
+** Datamodel
+*** DONE Add valid multiscript fields to datamodel
+*** TODO Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
+** Biber
+*** DONE Parsing BCP47 function
+https://tools.ietf.org/html/bcp47
+
+*** TODO Parsing variant function
+*** TODO annotation BCP47 tag parts override field tag parts

@@ -757,6 +757,7 @@
       <bcf:constant type="list" name="gender">sf,sm,sn,pf,pm,pn,pp</bcf:constant>
       <bcf:constant type="list" name="nameparts">family,given,prefix,suffix</bcf:constant>
       <bcf:constant type="list" name="optiondatatypes">boolean,integer,string,xml</bcf:constant>
+      <bcf:constant type="list" name="multiscriptforms">original,transliteration,transcription,translation</bcf:constant>
     </bcf:constants>
     <bcf:entrytypes>
       <bcf:entrytype>article</bcf:entrytype>
