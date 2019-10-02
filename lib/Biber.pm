@@ -19,6 +19,7 @@ use Biber::Entries;
 use Biber::Entry;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
+use Biber::LangTags;
 use Biber::Sections;
 use Biber::Section;
 use Biber::LaTeX::Recode;
@@ -97,6 +98,9 @@ sub new {
   if (Biber::Config->getoption('validate_config') and $opts{configfile}) {
     validate_biber_xml($opts{configfile}, 'config', '');
   }
+
+  # Set up LangTag parser
+  $self->{langtags} = Biber::LangTags->new();
 
   return $self;
 }
@@ -179,7 +183,7 @@ sub add_sections {
 
 =head2 datalists
 
-    my $datalists= $biber->datalists
+    my $datalists = $biber->datalists
 
     Returns a Biber::DataLists object describing the bibliography sorting lists
 
@@ -190,7 +194,16 @@ sub datalists {
   return $self->{datalists};
 }
 
+=head2 langtags
 
+    Returns a Biber::LangTags object containing a parser for BCP47 tags
+
+=cut
+
+sub langtags {
+  my $self = shift;
+  return $self->{langtags};
+}
 
 =head2 set_output_obj
 

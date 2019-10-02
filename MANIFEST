@@ -22,6 +22,8 @@ lib/Biber/Entry.pm
 lib/Biber/Input/file/biblatexml.pm
 lib/Biber/Input/file/bibtex.pm
 lib/Biber/Internals.pm
+lib/Biber/LangTags.pm
+lib/Biber/LangTag.pm
 lib/Biber/LaTeX/recode_data.xml
 lib/Biber/LaTeX/Recode.pm
 lib/Biber/Output/base.pm
@@ -86,6 +88,12 @@ t/tool-bltxml.t
 t/tool-bltxml-inout.t
 t/tool-config.t
 t/translit.t
+t/truncation.t
+t/uniqueness.t
+t/uniqueness-nameparts.t
+t/utils.t
+t/variants.t
+t/xdata.t
 t/tdata/annotations.bib
 t/tdata/annotations.bcf
 t/tdata/basic-misc.bcf
@@ -198,11 +206,6 @@ t/tdata/uniqueness-nameparts.bib
 t/tdata/xdata.bcf
 t/tdata/xdata.bib
 t/tdata/xdata.bltxml
-t/truncation.t
-t/uniqueness.t
-t/uniqueness-nameparts.t
-t/utils.t
-t/xdata.t
 visual.pl
 META.yml
 META.json

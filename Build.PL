@@ -64,6 +64,7 @@ my $builder = $class->new(
                  'Encode::EUCJPASCII' => 0,
                  'Encode::JIS2K' => 0,
                  'Encode::HanExtra' => 0,
+                 'Parse::RecDescent' => 0,
                  'PerlIO::utf8_strict' => 0,
                  'XML::LibXML' => 1.70,
                  'XML::LibXML::Simple' => 0,
