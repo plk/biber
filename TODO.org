@@ -160,10 +160,8 @@
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
 ** TODO Add new datamodel constant list of default forms (transliteration, transcription, original, translation)
-** Parsing BCP-47 function
-*** LangTags.pm provides parse, returns LangTag object
+** DONE Parsing BCP-47 function
 *** https://tools.ietf.org/html/bcp47
 *** https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
 ** Parsing variant function
-** Inheritance of incomplete variants from higher level (inherit from field variants to annotations)
-** Special annotation syntax for variant information markers so that they can inherit
+** annotation BCP47 tag parts override field tag parts

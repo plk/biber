@@ -41,6 +41,8 @@ lib/Biber/UCollate.pm
 lib/Biber/Utils.pm
 MANIFEST
 README.md
+THANKS
+TODO.org
 t/annotations.t
 t/basic-misc.t
 t/bcfvalidation.t
@@ -59,14 +61,13 @@ t/full-bbl.t
 t/full-bblxml.t
 t/full-bibtex.t
 t/full-dot.t
-THANKS
 t/labelalpha.t
 t/labelalphaname.t
 t/labelname.t
+t/langtags.t
 t/maps.t
 t/names.t
 t/names_x.t
-TODO.org
 t/options.t
 t/related-entries.t
 t/remote-files.t
@@ -92,7 +93,6 @@ t/truncation.t
 t/uniqueness.t
 t/uniqueness-nameparts.t
 t/utils.t
-t/variants.t
 t/xdata.t
 t/tdata/annotations.bib
 t/tdata/annotations.bcf
