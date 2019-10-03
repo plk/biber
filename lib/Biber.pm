@@ -4422,8 +4422,30 @@ sub fetch_data {
       }
     }
     my $package = 'Biber::Input::' . $type . '::' . $datatype;
-    eval "require $package" or
-      biber_error("Error loading data source package '$package': $@");
+    unless(eval "require $package") {
+
+      my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Biber.pm"} );
+      $dir =~ s/\/$//;          # splitpath sometimes leaves a trailing '/'
+
+      # Use Windows style globbing on Windows
+      if ($^O =~ /Win/) {
+        $logger->debug("Enabling Windows-style globbing");
+        require File::DosGlob;
+        File::DosGlob->import('glob');
+      }
+
+      my @vts;
+      foreach my $t (glob("$vol$dir/Biber/Input/*")) {
+        my (undef, undef, $tleaf) = File::Spec->splitpath($t);
+        foreach my $dt (map {s/\.pm$//r} glob("$vol$dir/Biber/Input/$tleaf/*.pm")) {
+          my (undef, undef, $dtleaf) = File::Spec->splitpath($dt);
+          push @vts, "$tleaf/$dtleaf";
+        }
+      }
+
+      biber_error("Error loading data source package '$package' for '$datatype' '$type' datasource. Valid type/datatypes are: " . join(',', @vts));
+
+    }
 
     # Slightly different message for tool mode
     if (Biber::Config->getoption('tool')) {
