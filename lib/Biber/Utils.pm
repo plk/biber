@@ -172,7 +172,8 @@ sub locate_data_file {
       # Pretend to be a browser otherwise some sites refuse the default LWP UA string
       $LWP::Simple::ua->agent('Mozilla/5.0');
 
-      my $retcode = LWP::Simple::getstore($source, $tf->filename);
+      my $retcode = LWP::Simple::getstore($source, $tf->filename,
+        "Zotero-Allowed-Request" => "1");
       unless (LWP::Simple::is_success($retcode)) {
         biber_error("Could not fetch '$source' (HTTP code: $retcode)");
       }
