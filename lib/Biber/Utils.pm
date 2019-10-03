@@ -160,7 +160,8 @@ sub locate_data_file {
 
         require LWP::Protocol::https;
       }
-      require LWP::Simple;
+
+      require LWP::UserAgent;
       # no need to unlink file as tempdir will be unlinked. Also, the tempfile
       # will be needed after this sub has finished and so it must not be unlinked
       # by going out of scope
@@ -170,11 +171,14 @@ sub locate_data_file {
                                UNLINK => 0);
 
       # Pretend to be a browser otherwise some sites refuse the default LWP UA string
-      $LWP::Simple::ua->agent('Mozilla/5.0');
+      my $ua = LWP::UserAgent->new;  # we create a global UserAgent object
+      $ua->agent('Mozilla/5.0');
+      $ua->env_proxy;
+      my $request = HTTP::Request->new('GET', $source, ['Zotero-Allowed-Request' => '1']);
+      my $response = $ua->request($request, $tf->filename);
 
-      my $retcode = LWP::Simple::getstore($source, $tf->filename);
-      unless (LWP::Simple::is_success($retcode)) {
-        biber_error("Could not fetch '$source' (HTTP code: $retcode)");
+      unless ($response->is_success) {
+        biber_error("Could not fetch '$source' (HTTP code: " . $response->code. ")");
       }
       $sourcepath = $tf->filename;
       # cache any remote so it persists and so we don't fetch it again
