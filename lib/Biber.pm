@@ -353,7 +353,7 @@ sub parse_ctrlfile {
     # Reading ctrl-file as UTF-8 failed. Probably it was written by fontenc as latin1
     # with some latin1 char in it (probably a sourcemap), so try that as a last resort
     unless (eval {$checkbuf = File::Slurper::read_text($ctrl_file_path, 'latin1')}) {
-      biber_error("$ctrl_file_path is not UTF-8 or even latin1, please delete it and run biblatex again or check that biblatex is writing a valid .bcf file.");
+      biber_error("$ctrl_file_path is not UTF-8 or even latin1, please delete it and run latex again or check that biblatex is writing a valid .bcf file.");
     }
     # Write ctrl file as UTF-8
     File::Slurper::write_text($ctrl_file_path, NFC($checkbuf));# Unicode NFC boundary
