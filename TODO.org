@@ -159,17 +159,18 @@
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
-** Documentation
+** DONE Decomm DOT output
+** TODO Documentation
 *** TODO Document \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** TODO multiscriptforms constant
-** Datamodel
+** DONE Datamodel
 *** DONE Add valid multiscript fields to datamodel
 *** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
-** Biber
+** TODO Biber
 *** DONE Parsing BCP47 function
 https://tools.ietf.org/html/bcp47
 
-*** msform/mslang are currently in test .bcfs as GLOBAL/ENTRYTYPE/ENTRY scope option - is this right?
+*** TODO msform/mslang are currently in test .bcfs as GLOBAL/ENTRYTYPE/ENTRY scope option - is this right?
 *** TODO Names and lists
 **** TODO Namelists need msform and mslang accessor for items
 **** TODO Lists need object and then msform and mslang properties for items

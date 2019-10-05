@@ -391,21 +391,21 @@ my $l17e = q|    \entry{L17}{proceedings}{}
     \endentry
 |;
 
-is_deeply($bibentries->entry('L1')->get_field('warnings'), $l1, 'Date values test 1' ) ;
+is_deeply($bibentries->entry('L1')->get_warnings, $l1, 'Date values test 1' ) ;
 ok(is_undef($bibentries->entry('L1')->get_field('origyear')), 'Date values test 1a - ORIGYEAR undef since ORIGDATE is bad' ) ;
 ok(is_undef($bibentries->entry('L1')->get_field('urlyear')), 'Date values test 1b - URLYEAR undef since URLDATE is bad' ) ;
-is_deeply($bibentries->entry('L2')->get_field('warnings'), $l2, 'Date values test 2' ) ;
-is_deeply($bibentries->entry('L3')->get_field('warnings'), $l3, 'Date values test 3' ) ;
-is_deeply($bibentries->entry('L4')->get_field('warnings'), $l4, 'Date values test 4' ) ;
-is_deeply($bibentries->entry('L5')->get_field('warnings'), $l5, 'Date values test 5' ) ;
-is_deeply($bibentries->entry('L6')->get_field('warnings'), $l6, 'Date values test 6' ) ;
-is_deeply($bibentries->entry('L7')->get_field('warnings'), $l7, 'Date values test 7' ) ;
+is_deeply($bibentries->entry('L2')->get_warnings, $l2, 'Date values test 2' ) ;
+is_deeply($bibentries->entry('L3')->get_warnings, $l3, 'Date values test 3' ) ;
+is_deeply($bibentries->entry('L4')->get_warnings, $l4, 'Date values test 4' ) ;
+is_deeply($bibentries->entry('L5')->get_warnings, $l5, 'Date values test 5' ) ;
+is_deeply($bibentries->entry('L6')->get_warnings, $l6, 'Date values test 6' ) ;
+is_deeply($bibentries->entry('L7')->get_warnings, $l7, 'Date values test 7' ) ;
 eq_or_diff($bibentries->entry('L8')->get_field('month'), '1', 'Date values test 8b - MONTH hacked to integer' ) ;
-ok(is_undef($bibentries->entry('L9')->get_field('warnings')), 'Date values test 9' ) ;
-ok(is_undef($bibentries->entry('L10')->get_field('warnings')), 'Date values test 10' ) ;
-is_deeply($bibentries->entry('L11')->get_field('warnings'), $l11, 'Date values test 11' );
+ok(is_undef($bibentries->entry('L9')->get_warnings), 'Date values test 9' ) ;
+ok(is_undef($bibentries->entry('L10')->get_warnings), 'Date values test 10' ) ;
+is_deeply($bibentries->entry('L11')->get_warnings, $l11, 'Date values test 11' );
 eq_or_diff($bibentries->entry('L11')->get_field('year'), '1996', 'Date values test 11a - DATE overrides YEAR' ) ;
-is_deeply($bibentries->entry('L12')->get_field('warnings'), $l12, 'Date values test 12' );
+is_deeply($bibentries->entry('L12')->get_warnings, $l12, 'Date values test 12' );
 eq_or_diff($bibentries->entry('L12')->get_field('month'), '1', 'Date values test 12a - DATE overrides MONTH' ) ;
 # it means something if endyear is defined but null ("1935-")
 ok(is_def_and_null($bibentries->entry('L13')->get_field('endyear')), 'Date values test 13 - range with no end' ) ;

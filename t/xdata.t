@@ -284,7 +284,7 @@ my $w1 = [ "Entry 'gxd1' has XDATA reference from field 'publisher' that contain
           "Field 'lista' in entry 'gxd1' references field 'location' position 5 in entry 'gxd3' and this position does not exist, not resolving (section 0)",
            "Field 'organization' in entry 'gxd1' which xdata references field 'author' in entry 'gxd2' are not the same types, not resolving (section 0)",
            "Entry 'gxd1' references XDATA entry 'lxd1' which is not an XDATA entry, not resolving (section 0)"];
-is_deeply($bibentries->entry('gxd1')->get_field('warnings'), $w1, 'Granular XDATA resolution warnings - bibtex' );
+is_deeply($bibentries->entry('gxd1')->get_warnings, $w1, 'Granular XDATA resolution warnings - bibtex' );
 
 my $w2 = [ "Entry 'bltxgxd1' has XDATA reference from field 'publisher' that contains no source field (section 0)",
            "Entry 'bltxgxd1' has XDATA reference from field 'addendum' that contains no source field (section 0)",
@@ -292,6 +292,6 @@ my $w2 = [ "Entry 'bltxgxd1' has XDATA reference from field 'publisher' that con
            "Field 'lista' in entry 'bltxgxd1' references field 'location' position 5 in entry 'bltxgxd3' and this position does not exist, not resolving (section 0)",
            "Field 'organization' in entry 'bltxgxd1' which xdata references field 'author' in entry 'bltxgxd2' are not the same types, not resolving (section 0)",
            "Field 'note' in entry 'bltxgxd1' references XDATA field 'note' in entry 'bltxgxd2' and this field does not exist, not resolving (section 0)"];
-is_deeply($bibentries->entry('bltxgxd1')->get_field('warnings'), $w2, 'Granular XDATA resolution warnings - biblatexml' );
+is_deeply($bibentries->entry('bltxgxd1')->get_warnings, $w2, 'Granular XDATA resolution warnings - biblatexml' );
 # print $stdout;
 # print $stderr;

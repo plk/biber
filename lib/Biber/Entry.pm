@@ -8,6 +8,7 @@ __PACKAGE__->follow_best_practice;
 use Biber::Utils;
 use Biber::Internals;
 use Biber::Constants;
+use Biber::Entry::FieldValue;
 use Data::Dump qw( pp );
 use Digest::MD5 qw( md5_hex );
 use Encode;
@@ -188,11 +189,11 @@ sub clone {
 
   # put in key if specified
   if ($newkey) {
-    $new->{derivedfields}{citekey} = $newkey;
+    $new->{derivedfields}{citekey} = Biber::Entry::FieldValue->new($newkey);
   }
   # Record the key of the source of the clone in the clone. Useful for loop detection etc.
   # in biblatex
-  $new->{derivedfields}{clonesourcekey} = $self->get_field('citekey');
+  $new->{derivedfields}{clonesourcekey} = Biber::Entry::FieldValue->new($self->get_field('citekey'));
   return $new;
 }
 
@@ -435,25 +436,10 @@ sub get_labeldate_info {
 =cut
 
 sub set_field {
-  my ($self, $key, $val) = @_;
+  my ($self, $key, $val, $form, $lang) = @_;
   # All derived fields can be null
-  $self->{derivedfields}{$key} = $val;
+  $self->{derivedfields}{$key} = Biber::Entry::FieldValue->new($val, $form, $lang);
   return;
-}
-
-
-=head2 get_field
-
-    Get a field for a Biber::Entry object
-    Uses // as fields can be null (end dates etc).
-
-=cut
-
-sub get_field {
-  my ($self, $key) = @_;
-  return undef unless $key;
-  return $self->{datafields}{$key} //
-         $self->{derivedfields}{$key};
 }
 
 =head2 set_datafield
@@ -463,9 +449,23 @@ sub get_field {
 =cut
 
 sub set_datafield {
-  my ($self, $key, $val) = @_;
-  $self->{datafields}{$key} = $val;
+  my ($self, $key, $val, $form, $lang) = @_;
+  $self->{datafields}{$key} = Biber::Entry::FieldValue->new($val, $form, $lang);
   return;
+}
+
+=head2 get_field
+
+    Get a field for a Biber::Entry object
+    Uses // as fields can be null (end dates etc).
+
+=cut
+
+sub get_field {
+  my ($self, $key, $form, $lang) = @_;
+  return undef unless $key;
+  my $f = $self->{datafields}{$key} // $self->{derivedfields}{$key};
+  return defined($f) ? $f->get_value($form, $lang) : undef;
 }
 
 =head2 get_datafield
@@ -475,8 +475,9 @@ sub set_datafield {
 =cut
 
 sub get_datafield {
-  my ($self, $key) = @_;
-  return $self->{datafields}{$key};
+  my ($self, $key, $form, $lang) = @_;
+  my $f = $self->{datafields}{$key};
+  return defined($f) ? $f->get_value($form, $lang) : undef;
 }
 
 
@@ -623,10 +624,10 @@ sub count_fields {
 
 sub has_keyword {
   no autovivification;
-  my $self = shift;
-  my $keyword = shift;
-  if (my $keywords = $self->{datafields}{keywords}) {
-    return (first {$_ eq $keyword} $keywords->get_items->@*) ? 1 : 0;
+  my ($self, $keyword) = @_;
+  my $keywords = $self->{datafields}{keywords};
+  if (defined($keywords) and my $kws = $keywords->get_value) {
+    return (first {$_ eq $keyword} $kws->get_items->@*) ? 1 : 0;
   }
   else {
     return 0;
@@ -644,8 +645,19 @@ sub has_keyword {
 
 sub add_warning {
   my ($self, $warning) = @_;
-  push $self->{derivedfields}{warnings}->@*, $warning;
+  push $self->{warnings}->@*, $warning;
   return;
+}
+
+=head2 get_warnings
+
+    Retrieve warnings for an entry
+
+=cut
+
+sub get_warnings {
+  my $self = shift;
+  return $self->{warnings};
 }
 
 

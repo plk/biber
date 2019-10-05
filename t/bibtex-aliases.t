@@ -65,7 +65,7 @@ eq_or_diff($bibentries->entry('alias1')->get_field('type'), 'phdthesis', 'Alias 
 is_deeply($bibentries->entry('alias1')->get_field('location')->get_items, ['Ivory Towers'], 'Alias - 3' );
 eq_or_diff($bibentries->entry('alias1')->get_field('address'), undef, 'Alias - 4' );
 eq_or_diff($bibentries->entry('alias2')->get_field('entrytype'), 'misc', 'Alias - 5' );
-is_deeply($bibentries->entry('alias2')->get_field('warnings'), $w1, 'Alias - 6' ) ;
+is_deeply($bibentries->entry('alias2')->get_warnings, $w1, 'Alias - 6' ) ;
 eq_or_diff($bibentries->entry('alias2')->get_field('school'), undef, 'Alias - 7' );
 eq_or_diff($bibentries->entry('alias3')->get_field('entrytype'), 'customb', 'Alias - 8' );
 eq_or_diff($bibentries->entry('alias4')->get_field('entrytype'), 'customa', 'Alias - 9' );
@@ -76,7 +76,7 @@ eq_or_diff($bibentries->entry('alias4')->get_field('eprinttype'), 'pubmedid', 'A
 eq_or_diff($bibentries->entry('alias4')->get_field('userd'), 'Some string of things', 'Alias - 14' );
 eq_or_diff($bibentries->entry('alias4')->get_field('pubmedid'), undef, 'Alias - 15' );
 eq_or_diff($bibentries->entry('alias4')->get_field('namea')->nth_name(1)->get_namepart('given'), 'Sam', 'Alias - 16' );
-is_deeply($bibentries->entry('alias4')->get_field('warnings'), $w2, 'Alias - 17' ) ;
+is_deeply($bibentries->entry('alias4')->get_warnings, $w2, 'Alias - 17' ) ;
 
 # Testing of .bcf field map match/replace
 ok(is_undef($bibentries->entry('alias5')->get_field('abstract')), 'Alias - 18' );

@@ -347,7 +347,7 @@ sub set_output_entry {
   }
 
   # Append any warnings to the entry, if any
-  if (my $w = $be->get_field('warnings')) {
+  if (my $w = $be->get_warnings) {
     foreach my $warning ($w->@*) {
       $acc .= "      \\warn{\\item $warning}\n";
     }

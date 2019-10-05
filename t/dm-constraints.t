@@ -83,19 +83,19 @@ my $c8 = [ "Datamodel: Entry 'c8' (dm-constraints.bib): Constraint violation - n
 my $c10 = [ "Datamodel: Entry 'c10' (dm-constraints.bib): Invalid ISBN in value of field 'isbn'",
             "Datamodel: Entry 'c10' (dm-constraints.bib): Invalid ISSN in value of field 'issn'" ];
 
-is_deeply($bibentries->entry('c1')->get_field('warnings'), $c1, 'Constraints test 1' );
-is_deeply($bibentries->entry('c2')->get_field('warnings'), $c2, 'Constraints test 2' );
-is_deeply($bibentries->entry('c3')->get_field('warnings'), $c3, 'Constraints test 3a' );
+is_deeply($bibentries->entry('c1')->get_warnings, $c1, 'Constraints test 1' );
+is_deeply($bibentries->entry('c2')->get_warnings, $c2, 'Constraints test 2' );
+is_deeply($bibentries->entry('c3')->get_warnings, $c3, 'Constraints test 3a' );
 ok(is_undef($bibentries->entry('c3')->get_field('month')), 'Constraints test 3b' );
-is_deeply($bibentries->entry('c4')->get_field('warnings'), $c4, 'Constraints test 4a' );
+is_deeply($bibentries->entry('c4')->get_warnings, $c4, 'Constraints test 4a' );
 ok(is_undef($bibentries->entry('c4')->get_field('month')), 'Constraints test 4b' );
-is_deeply($bibentries->entry('c5')->get_field('warnings'), $c5, 'Constraints test 5a' );
+is_deeply($bibentries->entry('c5')->get_warnings, $c5, 'Constraints test 5a' );
 ok(is_undef($bibentries->entry('c5')->get_field('field5')), 'Constraints test 5b' );
 ok(is_undef($bibentries->entry('c5')->get_field('field6')), 'Constraints test 5c' );
-is_deeply($bibentries->entry('c6')->get_field('warnings'), $c6, 'Constraints test 6' );
-is_deeply($bibentries->entry('c7')->get_field('warnings'), $c7, 'Constraints test 7a' );
+is_deeply($bibentries->entry('c6')->get_warnings, $c6, 'Constraints test 6' );
+is_deeply($bibentries->entry('c7')->get_warnings, $c7, 'Constraints test 7a' );
 ok(is_undef($bibentries->entry('c7')->get_field('field7')), 'Constraints test 7b' );
-is_deeply($bibentries->entry('c8')->get_field('warnings'), $c8, 'Constraints test 8a' );
+is_deeply($bibentries->entry('c8')->get_warnings, $c8, 'Constraints test 8a' );
 ok(is_undef($bibentries->entry('c8')->get_field('field4')), 'Constraints test 8b' );
-ok(is_undef($bibentries->entry('c9')->get_field('warnings')), 'Constraints test 9' );
-is_deeply($bibentries->entry('c10')->get_field('warnings'), $c10, 'Constraints test 10' );
+ok(is_undef($bibentries->entry('c9')->get_warnings), 'Constraints test 9' );
+is_deeply($bibentries->entry('c10')->get_warnings, $c10, 'Constraints test 10' );
