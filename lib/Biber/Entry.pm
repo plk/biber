@@ -97,10 +97,6 @@ sub relclone {
         }
         push @clonekeys, $ck;
 
-        # Save graph information if requested
-        if (Biber::Config->getoption('output_format') eq 'dot') {
-          Biber::Config->set_graph('related', $ck, $relkey, $citekey);
-        }
       }
       else {
         my $relentry = $section->bibentry($relkey);
@@ -138,11 +134,6 @@ sub relclone {
 
         $section->bibentries->add_entry($clonekey, $relclone);
         $section->keytorelclone($relkey, $clonekey);
-
-        # Save graph information if requested
-        if (Biber::Config->getoption('output_format') eq 'dot') {
-          Biber::Config->set_graph('related', $clonekey, $relkey, $citekey);
-        }
 
         # recurse so we can do cascading related entries
         if ($logger->is_debug()) {# performance tune
@@ -773,10 +764,6 @@ sub resolve_xdata {
               next if $field eq 'ids'; # Never inherit aliases
               $self->set_datafield($field, $xdataentry->get_field($field));
 
-              # Record graphing information if required
-              if (Biber::Config->getoption('output_format') eq 'dot') {
-                Biber::Config->set_graph('xdata', $xdataentry->get_field('citekey'), $entry_key, $field, $field);
-              }
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Setting field '$field' in entry '$entry_key' via XDATA");
               }
@@ -944,10 +931,6 @@ sub inherit_from {
             my $ignore = $inherit->{ignore} || $dignore;
             Biber::Config->add_uniq_ignore($target_key, $field->{target}, $ignore);
 
-            # Record graphing information if required
-            if (Biber::Config->getoption('output_format') eq 'dot') {
-              Biber::Config->set_graph('crossref', $source_key, $target_key, $field->{source}, $field->{target});
-            }
           }
         }
       }
@@ -1022,10 +1005,6 @@ sub inherit_from {
         # Ignore uniqueness information tracking for this inheritance?
         Biber::Config->add_uniq_ignore($target_key, $field, $dignore);
 
-        # Record graphing information if required
-        if (Biber::Config->getoption('output_format') eq 'dot') {
-          Biber::Config->set_graph('crossref', $source_key, $target_key, $field, $field);
-        }
       }
     }
   }

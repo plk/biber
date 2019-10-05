@@ -125,11 +125,6 @@
           </element>
         </optional>
         <optional>
-          <element name="dot_include">
-            <text/>
-          </element>
-        </optional>
-        <optional>
           <!-- Data model specification (mainly for tool mode) -->
           <ref name="datamodel"/>
         </optional>
@@ -322,7 +317,7 @@
               <value>bibtex</value>
               <value>bbl</value>
               <value>biblatexml</value>
-              <value>dot</value>
+              <value>bblxml</value>
             </choice>
           </element>
         </optional>

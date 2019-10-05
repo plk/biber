@@ -32,7 +32,6 @@ lib/Biber/Output/base.pm
 lib/Biber/Output/biblatexml.pm
 lib/Biber/Output/bibtex.pm
 lib/Biber/Output/bbl.pm
-lib/Biber/Output/dot.pm
 lib/Biber/Output/test.pm
 lib/Biber.pm
 lib/Biber/Section.pm
@@ -61,7 +60,6 @@ t/extradate.t
 t/full-bbl.t
 t/full-bblxml.t
 t/full-bibtex.t
-t/full-dot.t
 t/labelalpha.t
 t/labelalphaname.t
 t/labelname.t
@@ -136,9 +134,6 @@ t/tdata/full-bblxml.bblxml
 t/tdata/full-bblxml.bcf
 t/tdata/full-bibtex_biber.bib
 t/tdata/full-bibtex.bcf
-t/tdata/full-dot.bcf
-t/tdata/full-dot.bib
-t/tdata/full-dot.dot
 t/tdata/full-bbl.bbl
 t/tdata/full-bbl.bcf
 t/tdata/full-bbl.bib

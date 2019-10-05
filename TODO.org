@@ -173,7 +173,7 @@ https://tools.ietf.org/html/bcp47
 *** TODO Names and lists
 **** TODO Namelists need msform and mslang accessor for items
 **** TODO Lists need object and then msform and mslang properties for items
-**** TODO Both need these populating on data read with inherit/overrid of FieldValue default by annotations
+**** TODO Both need these populating on data read with inherit/override of FieldValue default by annotations
 *** TODO FieldValues object
 **** TODO Switch to FieldValues
 *** TODO msform and mslang as bibaltex options with scope down to ENTRY

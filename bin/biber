@@ -37,7 +37,6 @@ GetOptions(
            'debug|D',
            'decodecharsset=s',
            'dieondatamodel',
-           'dot_include|dot-include:s@',
            'fastsort|f', # does nothing now
            'fixinits',
            'help|h|?',
@@ -226,8 +225,8 @@ if (exists($opts->{output_resolve})) {
 
 # Check the output_format option
 if (my $of = $opts->{output_format}) {
-  unless ($opts->{output_format} =~ /\A(?:bbl|dot|bibtex|biblatexml|bblxml)\z/xms) {
-    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'dot', 'bibtex', 'biblatexml', 'bblxml'";
+  unless ($opts->{output_format} =~ /\A(?:bbl|bibtex|biblatexml|bblxml)\z/xms) {
+    say STDERR "Biber: Unknown output format '$of', must be one of 'bbl', 'bibtex', 'biblatexml', 'bblxml'";
     exit EXIT_ERROR;
   }
 }
@@ -276,26 +275,6 @@ if (exists($opts->{output_fieldcase}) and $opts->{output_fieldcase} !~ /^(?:uppe
   exit EXIT_ERROR;
 }
 
-# Check the dot_include option
-if (exists($opts->{dot_include}) and (not exists($opts->{output_format})
-                                      or (exists($opts->{output_format}) and
-                                          $opts->{output_format} ne 'dot'))) {
-  say STDERR "Biber: DOT output format specified but output format is not DOT!";
-  exit EXIT_ERROR;
-}
-
-
-if (exists($opts->{dot_include})) {
-  $opts->{dot_include} = {map {lc($_) => 1} split(/,/,join(',',@{$opts->{dot_include}}))};
-  my @suboptions = ( 'section', 'field', 'crossref', 'xref', 'xdata', 'related' );
-  foreach my $g (keys $opts->{dot_include}->%*) {
-    unless (first {$_ eq lc($g)} @suboptions) {
-      say STDERR "Biber: '$g' is an invalid output type for DOT output";
-      exit EXIT_ERROR;
-    }
-  }
-}
-
 # Check input_format option
 if (exists($opts->{input_format}) and not exists($opts->{tool}) ) {
   say STDERR "Biber: 'input_format' option is only valid in tool mode";
@@ -336,10 +315,7 @@ else {
     }
   }
   else {
-    if (Biber::Config->getoption('output_format') eq 'dot') { # .dot output
-      $outfile = $bcf =~ s/bcf$/dot/r;
-    }
-    elsif (Biber::Config->getoption('output_format') eq 'bibtex') { # bibtex output
+    if (Biber::Config->getoption('output_format') eq 'bibtex') { # bibtex output
       $outfile = $bcf =~ s/\..+$/_biber.bib/r;
     }
     elsif (Biber::Config->getoption('output_format') eq 'bbl') { # bbl output
@@ -519,12 +495,6 @@ Turn on debugging for C<biber>.
 
 Exit immediately with error if using C<--validate-datamodel> and a datamodel validation
 error is found. Default is to warn and continue.
-
-=item B<--dot-include=section,field,xdata,crossref,xref,related>
-
-Specifies the element to include in GraphViz DOT output format if the output format is 'dot'.
-You can also choose to display crossref, xref, xdata and/or related entry connections.
-The default if not specified is C<--dot_include=section,xdata,crossref,xref>.
 
 =item B<--fixinits>
 
@@ -710,19 +680,16 @@ filename only). F<file> can be absolute if B<--output_directory> is not
 set. F<file> can be '-' to output directly to STDOUT. The legacy option
 B<--outfile> is supported as an alias.
 
-=item B<--output-format=dot|bibtex|biblatexml|bbl|bblxml>
+=item B<--output-format=bibtex|biblatexml|bbl|bblxml>
 
-Biber output format. Default if not specified is of course, F<bbl>. Use F<dot>
-to output a GraphViz DOT file instead of F<.bbl>. This is a directed graph of
-the bibliography data showing entries and, as requested, sections and fields.
-You must process this file with C<dot>, e.g. C<dot -Tsvg test.dot -o test.svg> to
-render the graph. See the B<--dot_include> option to select what is included in
-the DOT output. F<bblxml> is an XML version of the F<bbl> format which you could
-transform using XSLT. By default, when outputting F<bblxml>, a RelaxNG XML schema
-is generated from the active data modeal and saved with a F<rng> extension along
-with the output file name (unless the B<--no-bblxml-schema> option is specified). You
-may validate the F<bblxml> using the schema with the B<--validate-bblxml> option.
-The legacy option B<--outformat> is supported as an alias.
+Biber output format. Default if not specified is of course, F<bbl>.
+F<bblxml> is an XML version of the F<bbl> format which you could transform
+using XSLT. By default, when outputting F<bblxml>, a RelaxNG XML schema is
+generated from the active data modeal and saved with a F<rng> extension
+along with the output file name (unless the B<--no-bblxml-schema> option is
+specified). You may validate the F<bblxml> using the schema with the
+B<--validate-bblxml> option. The legacy option B<--outformat> is supported
+as an alias.
 
 =item B<--output-listsep=[sep]>
 

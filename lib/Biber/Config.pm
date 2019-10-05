@@ -65,10 +65,6 @@ $CONFIG->{state}{citkey_aliases} = {};
 $CONFIG->{state}{crossref} = [];
 $CONFIG->{state}{xdata} = [];
 
-# Record of which entries have inherited what from whom, with the fields inherited.
-# Used for generating inheritance trees
-$CONFIG->{state}{graph} = {};
-
 $CONFIG->{state}{seenkeys} = {};
 $CONFIG->{globalstate}{seenkeys} = {};
 
@@ -128,8 +124,7 @@ sub _initopts {
       Biber::Config->setoption($k, $v->{content});
     }
     # mildly complex options
-    elsif (lc($k) eq 'dot_include' or
-           lc($k) eq 'collate_options' or
+    elsif (lc($k) eq 'collate_options' or
            lc($k) eq 'nosort' or
            lc($k) eq 'nolabel' or
            lc($k) eq 'nolabelwidthcount' or
@@ -983,62 +978,6 @@ sub getblxentryoptions {
 ##############################
 # Inheritance state methods
 ##############################
-
-=head2 set_graph
-
-   Record node and arc connection types for .dot output
-
-=cut
-
-sub set_graph {
-  shift; # class method so don't care about class name
-  my $type = shift;
-  if ($type eq 'set') {
-    my ($source_key, $target_key) = @_;
-    if ($logger->is_debug()) {# performance tune
-      $logger->debug("Saving DOT graph information type 'set' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
-    }
-    $CONFIG->{state}{graph}{$type}{settomem}{$source_key}{$target_key} = 1;
-    $CONFIG->{state}{graph}{$type}{memtoset}{$target_key} = $source_key;
-  }
-  elsif ($type eq 'xref') {
-    my ($source_key, $target_key) = @_;
-    if ($logger->is_debug()) {# performance tune
-      $logger->debug("Saving DOT graph information type 'xref' with SOURCEKEY=$source_key, TARGETKEY=$target_key");
-    }
-    $CONFIG->{state}{graph}{$type}{$source_key} = $target_key;
-  }
-  elsif ($type eq 'related') {
-    my ($clone_key, $related_key, $target_key) = @_;
-    if ($logger->is_debug()) {# performance tune
-      $logger->debug("Saving DOT graph information type 'related' with CLONEKEY=$clone_key, RELATEDKEY=$related_key, TARGETKEY=$target_key");
-    }
-    $CONFIG->{state}{graph}{$type}{reltoclone}{$related_key}{$clone_key} = 1;
-    $CONFIG->{state}{graph}{$type}{clonetotarget}{$clone_key}{$target_key} = 1;
-  }
-  else {
-    my ($source_key, $target_key, $source_field, $target_field) = @_;
-    if ($logger->is_debug()) {# performance tune
-      $logger->debug("Saving DOT graph information type '$type' with SOURCEKEY=$source_key, TARGETKEY=$target_key, SOURCEFIELD=$source_field, TARGETFIELD=$target_field");
-    }
-    # source can go to more than one target (and does in default rules) so need array here
-    push $CONFIG->{state}{graph}{$type}{$source_key}{$source_field}{$target_key}->@*, $target_field;
-  }
-  return;
-}
-
-=head2 get_graph
-
-    Return an inheritance graph data structure for an inheritance type
-
-=cut
-
-sub get_graph {
-  shift; # class method so don't care about class name
-  my $type = shift;
-  return $CONFIG->{state}{graph}{$type};
-}
-
 
 
 =head2 set_inheritance

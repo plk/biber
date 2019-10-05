@@ -1305,10 +1305,6 @@ sub instantiate_dynamic {
     }
 
     foreach my $m (@members) {
-    # Save graph information if requested
-      if (Biber::Config->getoption('output_format') eq 'dot') {
-        Biber::Config->set_graph('set', $dset, $m);
-      }
       # Instantiate any related entry clones we need from dynamic set members
       $section->bibentry($m)->relclone;
     }
@@ -1388,11 +1384,6 @@ sub cite_setmembers {
           $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
         }
         $section->add_citekeys($inset_key);
-
-        # Save graph information if requested
-        if (Biber::Config->getoption('output_format') eq 'dot') {
-          Biber::Config->set_graph('set', $citekey, $inset_key);
-        }
       }
 
       # Set parents inherit first child member data so that they get sensible
@@ -1483,12 +1474,6 @@ sub process_interentry {
         $logger->debug("Incrementing xrefkey count for entry '$refkey' via entry '$citekey'");
       }
       Biber::Config->incr_xrefkey($refkey);
-    }
-
-    # Record xref inheritance for graphing if required
-    if (Biber::Config->getoption('output_format') eq 'dot' and
-        my $xref = $be->get_field('xref')) {
-      Biber::Config->set_graph('xref', $citekey, $xref);
     }
   }
 

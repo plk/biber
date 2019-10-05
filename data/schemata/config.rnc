@@ -40,7 +40,6 @@ start =
     # Can't specify the config file location in the config file ...
     # element configfile          { text }? & 
     element convert_control     { "0" | "1" }? &
-    element dot_include         { text }? &
     # Data model specification (mainly for tool mode)
     datamodel? &
     element decodecharsset      { text }? &
@@ -90,7 +89,7 @@ start =
     element output_encoding      { text }? &
     element output_fieldcase     { "upper" | "lower" | "title" }? &
     element output_file          { text }? &
-    element output_format        { "bibtex" | "bbl" | "biblatexml" | "dot" }? &
+    element output_format        { "bibtex" | "bbl" | "biblatexml" | "bblxml" }? &
     element output_indent        { xsd:unsignedByte }? &
     element output_listsep       { text }? &
     element output_macro_fields  { text }? &

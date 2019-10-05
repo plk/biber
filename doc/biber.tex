@@ -45,18 +45,6 @@
                      shape border rotate=-90, draw=green, fill=green!20,
                      minimum size=3em, align=center]
 
-% colours for the .dot examples
-\xdefinecolor{centry}{HTML}{A0D0FF}
-\xdefinecolor{ncentry}{HTML}{DEEFFF}
-\xdefinecolor{doentry}{HTML}{FDFFD9}
-\xdefinecolor{section}{HTML}{FCE3FA}
-\xdefinecolor{set}{HTML}{E3DADC}
-\xdefinecolor{related}{HTML}{AD1741}
-\xdefinecolor{clone}{HTML}{AD1741}
-\xdefinecolor{crossref}{HTML}{7D7879}
-\xdefinecolor{xref}{HTML}{7D7879}
-\xdefinecolor{xdata}{HTML}{2CA314}
-
 \DeclareFixedFootnote{\tpb}{Binary maintained by third party. See README in
   binary download directory for this platform for support/contact
   details. Usually, the binary maintainer is also the binary build
@@ -96,6 +84,12 @@
 Please see the \verb+Changes+ file which accompanies \biber\ for the
 details on changes in each version. This section is just for important
 things like incompatible changes which users should be aware of.
+
+\minisec{2.14}
+The \file{DOT} output format is no longer available. It was not much used
+and of questionable use anyway. Future enhancements make supporting this
+difficult and the more complex \biber becomes, the more unreadable this
+sort of output is.
 
 \minisec{2.13}
 In tool mode (\opt{--tool}), \biber now allows datamodel configuration in
@@ -139,23 +133,6 @@ compatibility. See the output of the \opt{--help} option.
 
 \minisec{1.0}
 The \opt{--validate-structure} option is now called \opt{--validate-datamodel}
-
-\minisec{0.9.9}
-The output format option \opt{--graph} has been moved to a
-new option \opt{--output-format}. The option \opt{--graph} should now be
-specified as \opt{--output-format=dot} and the \linebreak\opt{--dot-include} option
-should be used to specify the elements to include in the DOT output. For
-example:
-
-\begin{verbatim}
-  biber --graph=section,field <file>
-\end{verbatim}
-
-\noindent is now:
-
-\begin{verbatim}
-  biber --output-format=dot --dot-include=section,field <file>
-\end{verbatim}
 
 \minisec{1.8}
 \textcolor{red}{Several option names have changed}. Several options have
@@ -337,8 +314,6 @@ tasks to do with \verb+.bbl+ preparation. Its main features are:
   format\footnote{«Supported» here means encodings supported by the
     Perl \texttt{Encode} module}
 \item Processes all bibliography sections in one pass of the tool
-\item Output to GraphViz instead of \verb+.bbl+ in order to help visualise
-  complex bibliographies with many crossrefs etc. (see section \ref{ref:vis})
 \item Handles UTF-8 citekeys and filenames (given a suitable fully
   UTF-8 compliant \TeX\ engine)
 \item Creates entry sets dynamically and allows easily defined static entry sets,
@@ -697,8 +672,7 @@ which is described in section \ref{ref:map}.
 \subsubsection{The \texttt{output-format} option}\label{ref:of}
 
 \biber\ is able to output formats other than \file{.bbl} files for \biblatex\
-to consume. It is also able to output other formats such as \file{DOT} for
-visualisation of entry dependencies (see section \ref{ref:vis}), the
+to consume. It is also able to output other formats such as the
 experimental \verb+biblatexml+ XML format, \bibtex\ \file{.bib} files and
 an XML version of the \file{.bbl} format with extension \file{.bblxml}.
 \file{.bib} output is possible in tool mode, when you are converting an
@@ -2240,102 +2214,6 @@ drivers are:
 \item \BibTeX\ --- \BibTeX\ data files
 \item \verb+biblatexml+ --- Experimental \biblatex\ XML format
 \end{itemize}
-
-\subsection{Visualising the Output}\label{ref:vis}
-
-The option \opt{--output-format=dot} will cause \biber\ to write a
-GraphViz\footnote{\url{http://www.graphviz.org}} \verb+.dot+ file instead
-of a \verb+.bbl+. This file graphs the bibliographic data as it exists
-after all processing. You can transform this file using the \verb+dot+
-program from GraphViz to generate a high quality graphical representation
-of the data in a format of your choice. A good output format choice with
-\verb+dot+ is SVG\footnote{Scalable Vector Graphics} which can be viewed in
-any modern web browser. This format has the advantage of tooltips and \biber\
-uses these to give you more information on connections between entries:
-hover the cursor on an arrow in the output and it will tell you what it
-means. To output in SVG, use this command after installing GraphViz:
-
-\begin{verbatim}
-dot -Tsvg <file>.dot -o <file>.svg
-\end{verbatim}
-
-\noindent The \opt{--dot-include} option takes a comma delimited string as
-argument. The elements of this string define the information to include in
-the \verb+.dot+ output graph. The valid sub-options are shown in Table
-\ref{tab:graphopts}. If the \opt{--dot-include} option is not given
-then the default setting is implicitly used, which is:
-
-\begin{verbatim}
---dot-include=crossref,section,xdata,xref
-\end{verbatim}
-
-\begin{table}
-\begin{center}
-\small
-\begin{tabular}{ll}
-\toprule
-Sub-option & Description\\
-\midrule
-crossref & Show crossreference relationships\\
-field    & Show fields within entries\\
-related  & Show related entries and clones\\
-section  & Show sections\\
-xdata    & Show XDATA relationships\\
-xref     & Show XREF relationships\\
-\bottomrule
-\end{tabular}
-\end{center}
-\caption{Valid sub-options for the \texttt{dot-include} option}
-\label{tab:graphopts}
-\end{table}
-
-\begin{figure}[!htpb]
-  \centering\small
-  \begin{tikzpicture}
-    \node[rectangle, black, draw=black, fill=centry, align=center] (centry)
-    {<key> (<entrytype>)\\\\Cited entry};
-    \node[rectangle, black, draw=black, fill=ncentry, align=center]
-    (ncentry) [right of=centry, node distance=11em] {<key>
-      (<entrytype>)\\\\Uncited entry};
-    \node[rectangle, black, draw=black, fill=doentry, align=center]
-    (doentry) [right of=ncentry, node distance=11em] {<key>
-      (<entrytype>)\\\\dataonly entry};
-    \node[rectangle, black, draw=black, fill=section, align=center]
-    (section) [below of=centry, node distance=5em] {Section
-      <number>\\\\Section};
-    \node[rectangle, black, draw=black, fill=set, align=center]
-    (set) [right of=section, node distance=11em] {<key> (SET)\\\\Entry set};
-
-    % CROSSREF
-    \node[black] (cr1) [below of=section, node distance=6em] {A};
-    \node[black] (cr2) [right of=cr1, node distance=20em] {B};
-    \path (cr1) edge [->, color=crossref, very thick] node[auto, black] {B inherits by CROSSREF from A} (cr2);
-
-    % XREF
-    \node[black] (xr1) [below of=cr1, node distance=5em] {A};
-    \node[black] (xr2) [right of=xr1, node distance=20em] {B};
-    \path (xr1) edge [->, color=xref, style=dashed, very thick] node[auto, black] {B inherits by XREF from A} (xr2);
-
-    % XDATA
-    \node[black] (xd1) [below of=xr1, node distance=5em] {A};
-    \node[black] (xd2) [right of=xd1, node distance=20em] {B};
-    \path (xd1) edge [->, color=xdata, very thick] node[auto, black] {B inherits by XDATA from A} (xd2);
-
-    % RELATED
-    \node[black] (re1) [below of=xd1, node distance=5em] {A};
-    \node[black] (re2) [right of=re1, node distance=20em] {B};
-    \path (re1) edge [->, color=related, very thick] node[auto, black]
-    {A is a related entry of B} (re2);
-
-    % CLONE
-    \node[black] (c1) [below of=re1, node distance=5em] {A};
-    \node[black] (c2) [right of=c1, node distance=20em] {B};
-    \path (c1) edge [->, color=clone, style=dashed, very thick] node[auto, black]
-    {B is a clone of A} (c2);
-  \end{tikzpicture}
-  \caption{Key to \texttt{.dot} output format}
-  \label{fig:graphkey}
-\end{figure}
 \bigskip
 \subsection{Tool Mode}\label{ref:tool}
 \biber\ can run in «tool» mode which is enabled with the \opt{--tool}
@@ -2645,7 +2523,7 @@ manual.
 \begin{tabular}{lllll}
 \toprule
 & \multicolumn{4}{c}{\emph{Output format}}\\
-\emph{Option} & bibtex & biblatexml & bbl & dot\\
+\emph{Option} & bibtex & biblatexml & bbl & bblxml\\
 \midrule
 output-align & \checkmark & - & - & -\\
 output-annotation-marker & \checkmark & - & - & -\\
