@@ -1086,7 +1086,7 @@ sub map_boolean {
 sub process_entry_options {
   my ($citekey, $options, $secnum) = @_;
   return unless $options;       # Just in case it's null
-  foreach ($options->@*) {
+  foreach ($options->get_items->@*) {
     s/\s+=\s+/=/g; # get rid of spaces around any "="
     m/^([^=]+)=?(.+)?$/;
     my $val = $2 // 1; # bare options are just boolean numerals

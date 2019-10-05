@@ -61,8 +61,7 @@ sub new {
 
 sub notnull {
   my $self = shift;
-  my @arr = $self->{namelist}->@*;
-  return $#arr > -1 ? 1 : 0;
+  return $self->{namelist}->$#* > -1 ? 1 : 0;
 }
 
 =head2 names
@@ -85,8 +84,7 @@ sub names {
 =cut
 
 sub add_name {
-  my $self = shift;
-  my $name_obj = shift;
+  my ($self, $name_obj) = @_;
   push $self->{namelist}->@*, $name_obj;
   $name_obj->set_index($#{$self->{namelist}} + 1);
   return;
@@ -102,7 +100,7 @@ sub add_name {
 sub replace_name {
   my ($self, $name_obj, $position) = @_;
   $name_obj->set_index($position-1);
-  $self->{namelist}->[$position-1] = $name_obj;
+  $self->{namelist}[$position-1] = $name_obj;
   return;
 }
 
@@ -173,8 +171,7 @@ sub nth_name {
 =cut
 
 sub first_n_names {
-  my $self = shift;
-  my $n = shift;
+  my ($self, $n) = @_;
   my $size = $self->{namelist}->@*;
   return [ $self->{namelist}->@[0 .. ($n > $size ? $size-1 : $n-1)] ];
 }
@@ -212,6 +209,52 @@ sub get_xdata {
   my $self = shift;
   return $self->{xdata} || '';
 }
+
+=head2 nth_msform
+
+  Get the msform of the nth element of the list
+
+=cut
+
+sub nth_msform {
+  my ($self, $n) = @_;
+  return $self->{msform}[$n-1];
+}
+
+=head2 nth_mslang
+
+  Get the mslang of the nth element of the list
+
+=cut
+
+sub nth_mslang {
+  my ($self, $n) = @_;
+  return $self->{mslang}[$n-1];
+}
+
+=head2 nth_msform
+
+  Set the msform of the nth element of the list
+
+=cut
+
+sub set_nth_msform {
+  my ($self, $n, $msform) = @_;
+  $self->{msform}[$n-1] = $msform;
+  return;
+}
+
+=head2 set_nth_mslang
+
+  Set the mslang of the nth element of the list
+
+=cut
+
+sub set_nth_mslang {
+  my ($self, $n, $mslang) = @_;
+  $self->{mslang}[$n-1] = $mslang;
+}
+
 
 =head2 dump
 

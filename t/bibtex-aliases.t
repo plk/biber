@@ -62,7 +62,7 @@ my $w2 = ["Datamodel: Entry 'alias4' (bibtex-aliases.bib): Invalid field 'author
 
 eq_or_diff($bibentries->entry('alias1')->get_field('entrytype'), 'thesis', 'Alias - 1' );
 eq_or_diff($bibentries->entry('alias1')->get_field('type'), 'phdthesis', 'Alias - 2' );
-is_deeply($bibentries->entry('alias1')->get_field('location'), ['Ivory Towers'], 'Alias - 3' );
+is_deeply($bibentries->entry('alias1')->get_field('location')->get_items, ['Ivory Towers'], 'Alias - 3' );
 eq_or_diff($bibentries->entry('alias1')->get_field('address'), undef, 'Alias - 4' );
 eq_or_diff($bibentries->entry('alias2')->get_field('entrytype'), 'misc', 'Alias - 5' );
 is_deeply($bibentries->entry('alias2')->get_field('warnings'), $w1, 'Alias - 6' ) ;
@@ -84,10 +84,10 @@ eq_or_diff($biber->_liststring('alias5', 'listb'), 'REPlaCEDte!early', 'Alias - 
 eq_or_diff($biber->_liststring('alias5', 'institution'), 'REPlaCEDte!early', 'Alias - 20');
 
 # Testing of no target but just field additions
-is_deeply($bibentries->entry('alias6')->get_field('keywords'), ['keyw1', 'keyw2'], 'Alias - 21' );
+is_deeply($bibentries->entry('alias6')->get_field('keywords')->get_items, ['keyw1', 'keyw2'], 'Alias - 21' );
 
 # Testing of no regexp match for field value
-is_deeply($bibentries->entry('alias7')->get_field('lista'), ['listaval'], 'Alias - 22' );
+is_deeply($bibentries->entry('alias7')->get_field('lista')->get_items, ['listaval'], 'Alias - 22' );
 
 # Testing append overwrites
 eq_or_diff($bibentries->entry('alias7')->get_field('verbb'), 'val2val1', 'Alias - 23' );

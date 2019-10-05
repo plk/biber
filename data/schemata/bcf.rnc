@@ -46,6 +46,8 @@ start =
       mincitenames,
       minsortnames,
       minitems,
+      msform,
+      mslang,
       nohashothers,
       noroman,
       nosortothers,
@@ -89,6 +91,8 @@ start =
       mincitenames?,
       minsortnames?,
       minitems?,
+      msform?,
+      mslang?,
       nohashothers?,
       noroman?,
       nosortothers?,
@@ -618,6 +622,18 @@ uniquelist =
     attribute type { "singlevalued" },
     element bcf:key { "uniquelist" },
     element bcf:value { "false" | "true" | "minyear" }
+  }
+msform =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "msform" },
+    element bcf:value { text }
+  }
+mslang =
+  element bcf:option {
+    attribute type { "singlevalued" },
+    element bcf:key { "mslang" },
+    element bcf:value { text }
   }
 nohashothers =
   element bcf:option {

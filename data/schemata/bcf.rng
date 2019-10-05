@@ -66,6 +66,8 @@
         <ref name="mincitenames"/>
         <ref name="minsortnames"/>
         <ref name="minitems"/>
+        <ref name="msform"/>
+        <ref name="mslang"/>
         <ref name="nohashothers"/>
         <ref name="noroman"/>
         <ref name="nosortothers"/>
@@ -148,6 +150,12 @@
           </optional>
           <optional>
             <ref name="minitems"/>
+          </optional>
+          <optional>
+            <ref name="msform"/>
+          </optional>
+          <optional>
+            <ref name="mslang"/>
           </optional>
           <optional>
             <ref name="nohashothers"/>
@@ -1529,6 +1537,32 @@
           <value>true</value>
           <value>minyear</value>
         </choice>
+      </element>
+    </element>
+  </define>
+  <define name="msform">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>msform</value>
+      </element>
+      <element name="bcf:value">
+        <text/>
+      </element>
+    </element>
+  </define>
+  <define name="mslang">
+    <element name="bcf:option">
+      <attribute name="type">
+        <value>singlevalued</value>
+      </attribute>
+      <element name="bcf:key">
+        <value>mslang</value>
+      </element>
+      <element name="bcf:value">
+        <text/>
       </element>
     </element>
   </define>

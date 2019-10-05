@@ -254,7 +254,7 @@ sub set_output_entry {
   }
   else { # Everything else that isn't a set parent ...
     if (my $es = $be->get_field('entryset')) { # ... gets a \inset if it's a set member
-      $acc .= "      \\inset{" . join(',', $es->@*) . "}\n";
+      $acc .= "      \\inset{" . join(',', $es->get_items->@*) . "}\n";
     }
   }
 
@@ -319,13 +319,13 @@ sub set_output_entry {
   foreach my $listfield ($dmh->{lists}->@*) {
     # Performance - as little as possible here - loop over DM fields for every entry
     if (my $lf = $be->get_field($listfield)) {
-      if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
+      if ( lc($lf->last_item) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$listfield}\n";
-        pop $lf->@*; # remove the last element in the array
+        $lf->del_last_item;
       }
-      my $total = $lf->$#* + 1;
+      my $total = $lf->count_items;
       $acc .= "      \\list{$listfield}{$total}{%\n";
-      foreach my $f ($lf->@*) {
+      foreach my $f ($lf->get_items->@*) {
         $acc .= "        {$f}%\n";
       }
       $acc .= "      }\n";
@@ -507,7 +507,7 @@ sub set_output_entry {
     # output with its own special macro below
     next if $field eq 'keywords';
     if (my $f = $be->get_field($field)) {
-      $acc .= _printfield($be, $field, join(',', $f->@*) );
+      $acc .= _printfield($be, $field, join(',', $f->get_items->@*) );
     }
   }
 
@@ -554,13 +554,13 @@ sub set_output_entry {
   # verbatim lists
   foreach my $vlist ($dmh->{vlists}->@*) {
     if ( my $vlf = $be->get_field($vlist) ) {
-      if ( lc($vlf->[-1]) eq Biber::Config->getoption('others_string') ) {
+      if ( lc($vlf->last_item) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$vlist}\n";
-        pop $vlf->@*; # remove the last element in the array
+        $vlf->del_last_item;
       }
-      my $total = $vlf->$#* + 1;
+      my $total = $vlf->count_items;
       $acc .= "      \\lverb{$vlist}{$total}\n";
-      foreach my $f ($vlf->@*) {
+      foreach my $f ($vlf->get_items->@*) {
         if ($vlist eq 'urls') {
           # Unicode NFC boundary (before hex encoding)
           $f = URI->new(NFC($f))->as_string;
@@ -571,8 +571,9 @@ sub set_output_entry {
     }
   }
 
+  # Keywords
   if ( my $k = $be->get_field('keywords') ) {
-    $k = join(',', $k->@*);
+    $k = join(',', $k->get_items->@*);
     $acc .= "      \\keyw{$k}\n";
   }
 

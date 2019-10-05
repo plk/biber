@@ -1796,7 +1796,7 @@ sub instantiate_entry {
 
     # entryset
     if (my $es = $self->get_entryfield($key, 'entryset')) {
-      my $str = "\\set{" . join(',', $es->@*) . '}';
+      my $str = "\\set{" . join(',', $es->get_items->@*) . '}';
       $entry_string =~ s|<BDS>ENTRYSET</BDS>|$str|gxms;
     }
 
@@ -1976,7 +1976,7 @@ sub instantiate_entry {
     # entryset
     if (my $es = $self->get_entryfield($key, 'entryset')) {
       my $str = "<bbl:set>\n";
-      foreach my $m ($es->@*) {
+      foreach my $m ($es->get_items->@*) {
         $str .= "    <bbl:member>$m</bbl:member>\n";
       }
       $str .= "  </bbl:set>";

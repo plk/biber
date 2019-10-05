@@ -13,6 +13,7 @@ use Biber::Constants;
 use Biber::DataModel;
 use Biber::Entries;
 use Biber::Entry;
+use Biber::Entry::List;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
 use Biber::Sections;
@@ -921,7 +922,7 @@ sub _create_entry {
       my $value = $e->get(encode('UTF-8', NFC($f)));
       my $Srx = Biber::Config->getoption('xsvsep');
       my $S = qr/$Srx/;
-      process_entry_options($k, [ split(/$S/, $value) ], $secnum);
+      process_entry_options($k, Biber::Entry::List->new([ split(/$S/, $value) ]), $secnum);
     }
 
     # Now run any defined handler
@@ -1081,15 +1082,15 @@ sub _uri {
 
 # xSV field form
 sub _xsv {
+  my ($bibentry, $entry, $field) = @_;
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
-  my ($bibentry, $entry, $field) = @_;
   my $value = [ split(/$S/, $entry->get(encode('UTF-8', NFC($field)))) ];
 
   # Record any XDATA
   $bibentry->add_xdata_ref($field, $value);
 
-  return $value ;
+  return Biber::Entry::List->new($value);
 }
 
 # Verbatim fields
@@ -1407,7 +1408,7 @@ sub _list {
                                      undef,
                                      {binmode => 'utf-8', normalization => 'NFD'});
   @tmp = map { (remove_outer($_))[1] } @tmp;
-  my @result;
+  my $result;
 
   for (my $i = 0; $i <= $#tmp; $i++) {
     my $e = $tmp[$i];
@@ -1415,10 +1416,10 @@ sub _list {
     # Record any XDATA and skip if we did
     $bibentry->add_xdata_ref($field, $e, $i);
 
-    push @result, $e;
+    push $result->@*, $e;
   }
 
-  return [ @result ];
+  return Biber::Entry::List->new($result);
 }
 
 # Bibtex uri lists
@@ -1433,7 +1434,7 @@ sub _urilist {
                                      undef,
                                      undef,
                                      {binmode => 'utf-8', normalization => 'NFD'});
-  my @result;
+  my $result;
 
   for (my $i = 0; $i <= $#tmp; $i++) {
     my $e = $tmp[$i];
@@ -1441,10 +1442,10 @@ sub _urilist {
     # Record any XDATA and skip if we did
     $bibentry->add_xdata_ref($field, $e, $i);
 
-    push @result, $e;
+    push $result->@*, $e;
   }
 
-  return [ @result ];
+  return Biber::Entry::List->new($result);
 
 }
 

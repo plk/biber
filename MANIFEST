@@ -16,6 +16,8 @@ lib/Biber/Constants.pm
 lib/Biber/Date/Format.pm
 lib/Biber/DataModel.pm
 lib/Biber/Entries.pm
+lib/Biber/Entry/FieldValue.pm
+lib/Biber/Entry/List.pm
 lib/Biber/Entry/Name.pm
 lib/Biber/Entry/Names.pm
 lib/Biber/Entry.pm

@@ -1296,7 +1296,7 @@ sub instantiate_dynamic {
 
     my $be = new Biber::Entry;
     $be->set_field('entrytype', 'set');
-    $be->set_field('entryset', [ @members ]);
+    $be->set_field('entryset', Biber::Entry::List->new([ @members ]));
     $be->set_field('citekey', $dset);
     $be->set_field('datatype', 'dynamic');
     $section->bibentries->add_entry($dset, $be);
@@ -1375,16 +1375,15 @@ sub cite_setmembers {
 
       # Ignore empty sets (likely this means that they contained only
       # non-existent keys that were removed)
-      next unless $inset_keys->@*;
+      next unless $inset_keys->get_items->@*;
 
       my $realmems;
-      foreach my $mem ($inset_keys->@*) {
+      foreach my $mem ($inset_keys->get_items->@*) {
         push $realmems->@*, $section->get_citekey_alias($mem) // $mem;
       }
-      $inset_keys = $realmems;
-      $be->set_datafield('entryset', $inset_keys);
+      $inset_keys->set_items($realmems);
 
-      foreach my $inset_key ($inset_keys->@*) {
+      foreach my $inset_key ($inset_keys->get_items->@*) {
         if ($logger->is_debug()) {# performance tune
           $logger->debug("Adding set member '$inset_key' to the citekeys (section $secnum)");
         }
@@ -1399,7 +1398,7 @@ sub cite_setmembers {
       # Set parents inherit first child member data so that they get sensible
       # sorting/labelling defaults. Most of these inherited fields will not be output
       # in the .bbl
-      $be->set_inherit_from($section->bibentry($inset_keys->[0]), $section);
+      $be->set_inherit_from($section->bibentry($inset_keys->nth_item(1)), $section);
 
       # warning for the old pre-Biber way of doing things
       if ($be->get_field('crossref')) {
@@ -1435,7 +1434,7 @@ sub preprocess_sets {
     # from all other entries in process_sets()
     if ($be->get_field('entrytype') eq 'set') {
       my $entrysetkeys = $be->get_field('entryset');
-      foreach my $member ($entrysetkeys->@*) {
+      foreach my $member ($entrysetkeys->get_items->@*) {
         $section->set_set_pc($citekey, $member);
         $section->set_set_cp($member, $citekey);
 
@@ -2315,7 +2314,7 @@ sub process_sets {
     # Also automatically create an "entryset" field for the members
     foreach my $member (@entrysetkeys) {
       my $me = $section->bibentry($member);
-      process_entry_options($member, [ 'skipbib', 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ], $secnum);
+      process_entry_options($member, Biber::Entry::List->new([ 'skipbib', 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ]), $secnum);
 
       # Use get_datafield() instead of get_field() because we add 'entryset' below
       # and if the same entry is used in more than one set, it will pass this test
@@ -2325,7 +2324,7 @@ sub process_sets {
         $me->del_field('entryset');
       }
       # This ends up setting \inset{} in the bbl
-      $me->set_field('entryset', [ $citekey ]);
+      $me->set_field('entryset', Biber::Entry::List->new([ $citekey ]));
     }
 
     unless (@entrysetkeys) {
@@ -2336,7 +2335,7 @@ sub process_sets {
   # had skips set by being seen as a member of that set yet
   else {
     if ($section->get_set_parents($citekey)) {
-      process_entry_options($citekey, [ 'skipbib', 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ], $secnum);
+      process_entry_options($citekey, Biber::Entry::List->new([ 'skipbib', 'skiplab', 'skipbiblist', 'uniquename=false', 'uniquelist=false' ]), $secnum);
     }
   }
 }
@@ -3770,7 +3769,7 @@ sub generate_contextdata {
         my $keys = $dlist->get_keys;
         my @sorted_setkeys;
         # Generate array of indices of set members in the main sorted datalist
-        foreach my $elem ($setkeys->@*) {
+        foreach my $elem ($setkeys->get_items->@*) {
           push @sorted_setkeys, first_index {$elem eq $_} $keys->@*;
         }
         # Sort the indices numerically (sorting has already been done so this is fine)
@@ -3778,9 +3777,9 @@ sub generate_contextdata {
         @es = $keys->@[sort {$a <=> $b} @sorted_setkeys];
       }
       else {
-        @es = $be->get_field('entryset')->@*;
+        @es = $be->get_field('entryset')->get_items->@*;
       }
-      $dlist->set_entryfield($key, 'entryset', \@es);
+      $dlist->set_entryfield($key, 'entryset', Biber::Entry::List->new([@es]));
     }
 
     # Only generate extra* information if skiplab is not set.
@@ -4567,7 +4566,7 @@ sub get_dependents {
       if ($be->get_field('entrytype') eq 'set') {
         my $smems = $be->get_field('entryset');
         # skip looking for dependent if it's already there (loop suppression)
-        foreach my $sm ($smems->@*) {
+        foreach my $sm ($smems->get_items->@*) {
           unless ($section->has_citekey($sm)) {
             push $new_deps->@*, $sm;
             push $keyswithdeps->@*, $citekey unless first {$citekey eq $_} $keyswithdeps->@*;
@@ -4581,7 +4580,7 @@ sub get_dependents {
       # Related entries
       if (my $relkeys = $be->get_field('related')) {
         # skip looking for dependent if it's already there (loop suppression)
-        foreach my $rm ($relkeys->@*) {
+        foreach my $rm ($relkeys->get_items->@*) {
           unless ($section->has_citekey($rm) or $section->is_related($rm)) {
             # record that $rm is used as a related entry key
             $section->add_related($rm);
@@ -4590,7 +4589,7 @@ sub get_dependents {
           }
         }
         if ($logger->is_debug()) {# performance tune
-          $logger->debug("Entry '$citekey' has related entries: " . join(', ', $relkeys->@*));
+          $logger->debug("Entry '$citekey' has related entries: " . join(', ', $relkeys->get_items->@*));
         }
       }
     }
@@ -4714,7 +4713,7 @@ sub remove_undef_dependent {
 
     # remove xdata
     if (my $xdata = $be->get_field('xdata')) {
-      if (first {$missing_key eq $_} $xdata->@*) {
+      if (first {$missing_key eq $_} $xdata->get_items->@*) {
         biber_warn("I didn't find a database entry for xdata entry '$missing_key' in entry '$citekey' - ignoring (section $secnum)");
       }
 
@@ -4723,15 +4722,15 @@ sub remove_undef_dependent {
       }
 
       if (not Biber::Config->getoption('tool_noremove_missing_dependants')) {
-        $be->set_datafield('xdata', [ grep {$_ ne $missing_key} $xdata->@* ]);
+        $be->get_field('xdata')->remove_item($missing_key);
       }
     }
 
     # remove static sets
     if ($be->get_field('entrytype') eq 'set') {
       my $smems = $be->get_field('entryset');
-      if (first {$missing_key eq $_} $smems->@*) {
-        $be->set_datafield('entryset', [ grep {$_ ne $missing_key} $smems->@* ]);
+      if (first {$missing_key eq $_} $smems->get_items->@*) {
+        $be->get_field('entryset')->remove_item($missing_key);
         if ($logger->is_trace()) {# performance tune
           $logger->trace("Removed static set dependency for missing key '$missing_key' from '$citekey' in section '$secnum'");
         }
@@ -4741,8 +4740,8 @@ sub remove_undef_dependent {
 
     # remove related entries
     if (my $relkeys = $be->get_field('related')) {
-      if (first {$missing_key eq $_} $relkeys->@*) {
-        $be->set_datafield('related', [ grep {$_ ne $missing_key} $relkeys->@* ]);
+      if (first {$missing_key eq $_} $relkeys->get_items->@*) {
+        $be->get_field('related')->remove_item($missing_key);
         # If no more related entries, remove the other related fields
         unless ($be->get_field('related')) {
           $be->del_field('relatedtype');

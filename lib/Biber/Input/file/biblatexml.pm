@@ -9,6 +9,7 @@ use Biber::Constants;
 use Biber::DataModel;
 use Biber::Entries;
 use Biber::Entry;
+use Biber::Entry::List;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
 use Biber::Sections;
@@ -786,7 +787,7 @@ sub create_entry {
       # to make them available for things that need them like name parsing
       if (_norm($f) eq 'options') {
         if (my $node = $entry->findnodes("./$NS:options")->get_node(1)) {
-          process_entry_options($k, [ split(/\s*,\s*/, $node->textContent()) ], $secnum);
+          process_entry_options($k, Biber::Entry::List->new([ split(/\s*,\s*/, $node->textContent()) ]), $secnum);
         }
       }
 
@@ -839,14 +840,14 @@ sub _related {
   my $S = qr/$Srx/;
   my $node = $entry->findnodes("./$f")->get_node(1);
   foreach my $item ($node->findnodes("./$NS:list/$NS:item")) {
-    $bibentry->set_datafield('related', [ split(/$S/, $item->getAttribute('ids')) ]);
+    $bibentry->set_datafield('related', Biber::Entry::List->new([ split(/$S/, $item->getAttribute('ids')) ]));
     $bibentry->set_datafield('relatedtype', $item->getAttribute('type'));
     if (my $string = $item->getAttribute('string')) {
       $bibentry->set_datafield('relatedstring', $string);
     }
     if (my $string = $item->getAttribute('options')) {
       $bibentry->set_datafield('relatedoptions',
-                               [ split(/$S/, $item->getAttribute('relatedoptions')) ]);
+                               Biber::Entry::List->new([ split(/$S/, $item->getAttribute('relatedoptions')) ]));
     }
   }
   return;
@@ -891,10 +892,11 @@ sub _xsv {
     # Just split with no XDATA setting on list items
     my $value = _split_list($bibentry, $node, $key, $f, 1);
     $bibentry->add_xdata_ref('xdata', $value);
-    $bibentry->set_datafield(_norm($f), $value);
+    $bibentry->set_datafield(_norm($f), Biber::Entry::List->new($value));
   }
   else {
-    $bibentry->set_datafield(_norm($f), _split_list($bibentry, $node, $key, $f));
+    $bibentry->set_datafield(_norm($f),
+                             Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f)));
   }
 
   return;
@@ -935,7 +937,8 @@ sub _list {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
 
-  $bibentry->set_datafield(_norm($f), _split_list($bibentry, $node, $key, $f));
+  $bibentry->set_datafield(_norm($f),
+                           Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f)));
 
   return;
 }
@@ -1311,7 +1314,7 @@ sub _split_list {
 
   if (my @list = $node->findnodes("./$NS:list/$NS:item")) {
 
-    my @result;
+    my $result;
 
     for (my $i = 0; $i <= $#list; $i++) {
 
@@ -1320,14 +1323,14 @@ sub _split_list {
       if (my $xdatav = $list[$i]->getAttribute('xdata')) {
         $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
         $bibentry->add_xdata_ref(_norm($f), $xdatav, $i) unless $noxdata;
-        push @result, $xdatav;
+        push $result->@*, $xdatav;
       }
       else {
-        push @result, $list[$i]->textContent();
+        push $result->@*, $list[$i]->textContent();
       }
     }
 
-    return [ @result ];
+    return $result;
   }
   else {
     return [ $node->textContent() ];

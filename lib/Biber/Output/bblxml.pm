@@ -213,7 +213,7 @@ sub set_output_entry {
   else { # Everything else that isn't a set parent ...
     if (my $es = $be->get_field('entryset')) { # ... gets a <inset> if it's a set member
       $xml->startTag([$xml_prefix, 'inset']);
-      foreach my $m ($es->@*) {
+      foreach my $m ($es->get_items->@*) {
         $xml->dataElement([$xml_prefix, 'member'], _bblxml_norm($m));
       }
       $xml->endTag();# inset
@@ -281,15 +281,15 @@ sub set_output_entry {
 
       my %plo;
 
-      if ( lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
+      if ( lc($lf->last_item) eq Biber::Config->getoption('others_string') ) {
         # Did we have "and others" in the data?
         $plo{more} = 'true';
-        pop $lf->@*; # remove the last element in the array
+        $lf->del_last_item;
       }
 
-      my $total = $lf->$#* + 1;
+      my $total = $lf->count_items;
       $xml->startTag([$xml_prefix, 'list'], name => $listfield, count => $total, map {$_ => $plo{$_}} sort keys %plo);
-      foreach my $f ($lf->@*) {
+      foreach my $f ($lf->get_items->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
       $xml->endTag();# list
@@ -482,7 +482,7 @@ sub set_output_entry {
       # output with its own special macro below
       next if $field eq 'keywords';
       $xml->startTag([$xml_prefix, 'field'], name => $field, format => 'xsv');
-      foreach my $f ($f->@*) {
+      foreach my $f ($f->get_items->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
       $xml->endTag();# field
@@ -521,14 +521,14 @@ sub set_output_entry {
     if ( my $urilf = $be->get_field($uril) ) {
       next if $dm->field_is_skipout($uril);
       my %plo;
-      if ( lc($urilf->[-1]) eq Biber::Config->getoption('others_string') ) {
+      if ( lc($urilf->last_item) eq Biber::Config->getoption('others_string') ) {
         $plo{$uril} = 'true';
-        pop $urilf->@*; # remove the last element in the array
+        $urilf->del_last_item; # remove the last element in the array
       }
-      my $total = $urilf->$#* + 1;
+      my $total = $urilf->count_items;
       $xml->startTag([$xml_prefix, 'list'], name => $uril, count => $total, map {$_ => $plo{$_}} sort keys %plo);
 
-      foreach my $f ($urilf->@*) {
+      foreach my $f ($urilf->get_items->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
       }
       $xml->endTag();# list
@@ -538,7 +538,7 @@ sub set_output_entry {
   # Keywords
   if ( my $kws = $be->get_field('keywords') ) {
     $xml->startTag([$xml_prefix, 'keywords']);
-    foreach my $k ($kws->@*) {
+    foreach my $k ($kws->get_items->@*) {
       $xml->dataElement([$xml_prefix, 'keyword'], _bblxml_norm($k));
     }
     $xml->endTag();# keywords

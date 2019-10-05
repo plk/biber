@@ -195,5 +195,5 @@ eq_or_diff($main1->get_entryfield('L8', 'sortlabelalpha'), 'Sha85', 'maxalphanam
 ok(is_undef($main1->get_extraalphadata_for_key('L8')), 'maxalphanames=3 minalphanames=1 entry L8 extraalpha');
 ok(is_undef($bibentries0->entry('m1')->get_field('keywords')), 'map refsection - 1');
 eq_or_diff($bibentries0->entry('m1')->get_field('title'), 'Film title 1', 'map refsection - 2');
-eq_or_diff($bibentries1->entry('m1')->get_field('keywords'), ['thing'], 'map refsection- 3');
+eq_or_diff($bibentries1->entry('m1')->get_field('keywords')->get_items, ['thing'], 'map refsection- 3');
 eq_or_diff($bibentries1->entry('m1')->get_field('title'), 'Film title 11', 'map refsection - 4');

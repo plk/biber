@@ -2,6 +2,8 @@ package Biber::Entry;
 use v5.24;
 use strict;
 use warnings;
+use parent qw(Class::Accessor);
+__PACKAGE__->follow_best_practice;
 
 use Biber::Utils;
 use Biber::Internals;
@@ -13,6 +15,13 @@ use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
 
 my $logger = Log::Log4perl::get_logger('main');
+
+# Names of simple package accessor attributes for those not created automatically
+# by the option scope in the .bcf
+__PACKAGE__->mk_accessors(qw (
+                               msform
+                               mslang
+                            ));
 
 =encoding utf-8
 
@@ -68,10 +77,10 @@ sub relclone {
   my $dmh = Biber::Config->get_dm_helpers;
   if (my $relkeys = $self->get_field('related')) {
     if ($logger->is_debug()) {# performance tune
-      $logger->debug("Found RELATED field in '$citekey' with contents " . join(',', @$relkeys));
+      $logger->debug("Found RELATED field in '$citekey' with contents " . join(',', $relkeys->get_items->@*));
     }
     my @clonekeys;
-    foreach my $relkey (@$relkeys) {
+    foreach my $relkey ($relkeys->get_items->@*) {
       # Resolve any alias
       my $nrelkey = $section->get_citekey_alias($relkey) // $relkey;
       if ($logger->is_debug()) {# performance tune
@@ -109,7 +118,7 @@ sub relclone {
           # if they are unset as otherwise this entry would appear twice in bibliographies
           # but with different keys.
           if ($section->has_citekey($relkey)) {
-            $relopts = merge_entry_options($relopts, ['skipbib', 'skipbiblist']);
+            $relopts->set_items(merge_entry_options($relopts->get_items, ['skipbib', 'skipbiblist']));
           }
 
           process_entry_options($clonekey, $relopts, $secnum);
@@ -119,10 +128,11 @@ sub relclone {
           # related clone needs its own options plus all the dataonly opts, any conflicts and
           # explicit options win
 
-          my $relopts = merge_entry_options(['skipbib', 'skiplab','skipbiblist','uniquename=false','uniquelist=false'], $relentry->get_field('options'));
+          my $relopts = ['skipbib', 'skiplab','skipbiblist','uniquename=false','uniquelist=false'];
+          $relopts = defined($relentry->get_field('options')) ? merge_entry_options($relopts, $relentry->get_field('options')->get_items) : $relopts;
 
           # Preserve options already in the clone but add 'dataonly' options
-          process_entry_options($clonekey, $relopts, $secnum);
+          process_entry_options($clonekey, Biber::Entry::List->new($relopts), $secnum);
           $relclone->set_datafield('options', $relopts);
         }
 
@@ -145,7 +155,7 @@ sub relclone {
     # We have to add the citekeys as we need these clones in the .bbl
     # but the dataonly will cause biblatex not to print them in the bib
     $section->add_citekeys(@clonekeys);
-    $self->set_datafield('related', [ @clonekeys ]);
+    $self->set_datafield('related', Biber::Entry::List->new([ @clonekeys ]));
   }
 }
 
@@ -625,7 +635,7 @@ sub has_keyword {
   my $self = shift;
   my $keyword = shift;
   if (my $keywords = $self->{datafields}{keywords}) {
-    return (first {$_ eq $keyword} @$keywords) ? 1 : 0;
+    return (first {$_ eq $keyword} $keywords->get_items->@*) ? 1 : 0;
   }
   else {
     return 0;
@@ -809,15 +819,13 @@ sub resolve_xdata {
             }
             # Non-name lists
             elsif ($dm->field_is_fieldtype('list', $reffield)) {
-
-              unless ($xdataentry->get_field($xdatafield)->[$xdataposition-1]) {
+              unless ($xdataentry->get_field($xdatafield)->nth_item($xdataposition)) {
                 biber_warn("Field '$reffield' in entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
                 $xdatum->{resolved} = 0;
                 next;
               }
 
-              $self->get_field($reffield)->[$refposition-1] =
-                $xdataentry->get_field($xdatafield)->[$refposition-1];
+              $self->get_field($reffield)->replace_item($xdataentry->get_field($xdatafield)->nth_item($refposition), $refposition);
               if ($logger->is_debug()) { # performance tune
                 $logger->debug("Setting position $refposition in list field '$reffield' in entry '$entry_key' via XDATA");
               }

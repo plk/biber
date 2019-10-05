@@ -134,7 +134,7 @@ sub set_output_entry {
     if (my $xdata = $be->get_field('xdata')) {
       $xml->startTag([$xml_prefix, 'xdata']);
       $xml->startTag([$xml_prefix, 'list']);
-      foreach my $xd ($xdata->@*) {
+      foreach my $xd ($xdata->get_items->@*) {
         $xml->dataElement([$xml_prefix, 'item'], NFC($xd));
       }
       $xml->endTag(); # list
@@ -226,19 +226,17 @@ sub set_output_entry {
 
       my @attrs;
       # Did we have a "more" list?
-      if (lc($lf->[-1]) eq Biber::Config->getoption('others_string') ) {
+      if (lc($lf->last_item) eq Biber::Config->getoption('others_string') ) {
         push @attrs, (morelist => 1);
-        pop $lf->@*;               # remove the last element in the array
+        $lf->del_last_item;
       }
 
       $xml->startTag([$xml_prefix, $listfield], @attrs);
       $xml->startTag([$xml_prefix, 'list']);
 
       # List loop
-      my $itemcount = 1;
-
-      for (my $i = 0; $i <= $lf->$#*; $i++) {
-        my $f = $lf->[$i];
+      for (my $i = 0; $i <= $lf->count_items-1; $i++) {
+        my $f = $lf->get_items->[$i];
         my @lattrs;
 
         # XDATA is special
@@ -304,7 +302,7 @@ sub set_output_entry {
         }
       }
 
-      $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',$f->@*)));
+      $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',$f->get_items->@*)));
     }
   }
 

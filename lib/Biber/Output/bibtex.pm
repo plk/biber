@@ -170,7 +170,7 @@ sub set_output_entry {
     if (my $list = $be->get_field($listfield)) {
       my $listsep = Biber::Config->getoption('output_listsep');
       my @plainlist;
-      foreach my $item ($list->@*) {
+      foreach my $item ($list->get_items->@*) {
         unless (Biber::Config->getoption('output_resolve_xdata')) {
           my $xd = xdatarefcheck($item);
           $item = $xd // $item;
@@ -238,7 +238,7 @@ sub set_output_entry {
     # output with its own special macro below
     next if $field eq 'keywords';
     if (my $f = $be->get_field($field)) {
-      my $fl = join(',', $f->@*);
+      my $fl = join(',', $f->get_items->@*);
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         my $xd = xdatarefcheck($fl);
         $fl = $xd // $fl;
@@ -272,7 +272,7 @@ sub set_output_entry {
 
   # Keywords
   if ( my $k = $be->get_field('keywords') ) {
-    my $kl = join(',', $k->@*);
+    my $kl = join(',', $k->get_items->@*);
     unless (Biber::Config->getoption('output_resolve_xdata')) {
       my $xd = xdatarefcheck($kl);
       $kl = $xd // $kl;

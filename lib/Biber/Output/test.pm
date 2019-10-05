@@ -197,16 +197,17 @@ sub set_output_entry {
     }
   }
 
+  # List fields
   foreach my $listfield ($dm->get_fields_of_fieldtype('list')->@*) {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
     if ( my $lf = $be->get_field($listfield) ) {
-      if ( lc($be->get_field($listfield)->[-1]) eq Biber::Config->getoption('others_string') ) {
+      if ( lc($be->get_field($listfield)->last_item) eq Biber::Config->getoption('others_string') ) {
         $acc .= "      \\true{more$listfield}\n";
-        pop $lf->@*; # remove the last element in the array
+        $lf->del_last_item; # remove the last element in the array
       };
-      my $total = $lf->$#* + 1;
+      my $total = $lf->count_items;
       $acc .= "      \\list{$listfield}{$total}{%\n";
-      foreach my $f ($lf->@*) {
+      foreach my $f ($lf->get_items->@*) {
         $acc .= "        {$f}%\n";
       }
       $acc .= "      }\n";
@@ -320,10 +321,11 @@ sub set_output_entry {
     # output with its own special macro below
     next if $field eq 'keywords';
     if (my $f = $be->get_field($field)) {
-      $acc .= _printfield($be, $field, join(',', $f->@*) );
+      $acc .= _printfield($be, $field, join(',', $f->get_items->@*) );
     }
   }
 
+  # Range fields
   foreach my $rfield ($dm->get_fields_of_datatype('range')->@*) {
     if ( my $rf = $be->get_field($rfield)) {
       $rf =~ s/[-–]+/\\bibrangedash /g;
@@ -332,6 +334,7 @@ sub set_output_entry {
     }
   }
 
+  # Verbatim fields
   foreach my $vfield (($dm->get_fields_of_datatype('verbatim')->@*,
                        $dm->get_fields_of_datatype('uri')->@*)) {
     if ( my $rf = $be->get_field($vfield) ) {
