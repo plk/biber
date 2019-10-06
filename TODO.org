@@ -136,7 +136,7 @@
 ** DONE Document that the *usetime options do nothing with compact date range formats as this would be confusing.
 ** DONE New output format like EDTF but options
 * DONE extrayear, (namestring, namestrings, namedisschema)->uniquelist, uniquename
-* DONE bibaltexml.pm needs uiquenametemplate processing removing
+* DONE biblatexml.pm needs uniquenametemplate processing removing
 * DONE sorting scheme names are not used. Create multiple and refer by name as with other dlist
 * DONE presort, exclude and include should not be inside a sorting spec
 * DONE ISO8601:2016
@@ -172,9 +172,10 @@ https://tools.ietf.org/html/bcp47
 
 *** TODO msform/mslang are currently in test .bcfs as GLOBAL/ENTRYTYPE/ENTRY scope option - is this right?
 *** TODO Names and lists
+**** DONE Need new List object
 **** TODO Namelists need msform and mslang accessor for items
-**** TODO Lists need object and then msform and mslang properties for items
+**** TODO Lists need msform and mslang accessor for items
 **** TODO Both need these populating on data read with inherit/override of FieldValue default by annotations
-*** TODO FieldValues object
-**** TODO Switch to FieldValues
+*** DONE FieldValue object
+**** DONE Switch to FieldValue
 *** TODO msform and mslang as bibaltex options with scope down to ENTRY

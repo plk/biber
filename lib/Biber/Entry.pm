@@ -96,6 +96,7 @@ sub relclone {
         if ($logger->is_debug()) {# performance tune
           $logger->debug("Found RELATED key '$relkey' already has clone '$ck'");
         }
+
         push @clonekeys, $ck;
 
       }
@@ -103,6 +104,7 @@ sub relclone {
         my $relentry = $section->bibentry($relkey);
         # Digest::MD5 can't deal with straight UTF8 so encode it first (via NFC as this is "output")
         my $clonekey = md5_hex(encode_utf8($relkey));
+
         push @clonekeys, $clonekey;
         my $relclone = $relentry->clone($clonekey);
         if ($logger->is_debug()) {# performance tune
@@ -125,11 +127,17 @@ sub relclone {
           # related clone needs its own options plus all the dataonly opts, any conflicts and
           # explicit options win
 
-          my $relopts = ['skipbib', 'skiplab','skipbiblist','uniquename=false','uniquelist=false'];
-          $relopts = defined($relentry->get_field('options')) ? merge_entry_options($relopts, $relentry->get_field('options')->get_items) : $relopts;
+          my $relopts = merge_entry_options(['skipbib',
+                                             'skiplab',
+                                             'skipbiblist',
+                                             'uniquename=false',
+                                             'uniquelist=false'],
+                                            defined($relentry->get_field('options')) ? $relentry->get_field('options')->get_items : undef);
+
+          $relopts = Biber::Entry::List->new($relopts);
 
           # Preserve options already in the clone but add 'dataonly' options
-          process_entry_options($clonekey, Biber::Entry::List->new($relopts), $secnum);
+          process_entry_options($clonekey, $relopts, $secnum);
           $relclone->set_datafield('options', $relopts);
         }
 
@@ -147,7 +155,7 @@ sub relclone {
     # We have to add the citekeys as we need these clones in the .bbl
     # but the dataonly will cause biblatex not to print them in the bib
     $section->add_citekeys(@clonekeys);
-    $self->set_datafield('related', Biber::Entry::List->new([ @clonekeys ]));
+    $self->{datafields}{related} = Biber::Entry::FieldValue->new(Biber::Entry::List->new([ @clonekeys ]));
   }
 }
 
@@ -165,9 +173,6 @@ sub clone {
 
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = $v;
-  }
-  while (my ($k, $v) = each(%{$self->{origfields}})) {
-    $new->{origfields}{$k} = $v;
   }
 
   # clone derived date fields
@@ -437,20 +442,33 @@ sub get_labeldate_info {
 
 sub set_field {
   my ($self, $key, $val, $form, $lang) = @_;
-  # All derived fields can be null
-  $self->{derivedfields}{$key} = Biber::Entry::FieldValue->new($val, $form, $lang);
+  no autovivification;
+
+  if (defined($self->{derivedfields}{$key})) {
+    $self->{derivedfields}{$key}->set_value($val, $form, $lang);
+  }
+  else {
+    $self->{derivedfields}{$key} = Biber::Entry::FieldValue->new($val, $form, $lang);
+  }
   return;
 }
 
 =head2 set_datafield
 
-    Set a field which is in the .bib data file
+    Set a field which is in the datasource
 
 =cut
 
 sub set_datafield {
   my ($self, $key, $val, $form, $lang) = @_;
-  $self->{datafields}{$key} = Biber::Entry::FieldValue->new($val, $form, $lang);
+  no autovivification;
+
+  if (defined($self->{datafields}{$key})) {
+    $self->{datafields}{$key}->set_value($val, $form, $lang);
+  }
+  else {
+    $self->{datafields}{$key} = Biber::Entry::FieldValue->new($val, $form, $lang);
+  }
   return;
 }
 
@@ -464,8 +482,17 @@ sub set_datafield {
 sub get_field {
   my ($self, $key, $form, $lang) = @_;
   return undef unless $key;
-  my $f = $self->{datafields}{$key} // $self->{derivedfields}{$key};
-  return defined($f) ? $f->get_value($form, $lang) : undef;
+  no autovivification;
+
+  my $v;
+  if (defined($self->{datafields}{$key})) {
+    $v = $self->{datafields}{$key}->get_value($form, $lang);
+  }
+  elsif (defined($self->{derivedfields}{$key})) {
+    $v = $self->{derivedfields}{$key}->get_value($form, $lang);
+  }
+
+  return $v;
 }
 
 =head2 get_datafield
@@ -476,8 +503,26 @@ sub get_field {
 
 sub get_datafield {
   my ($self, $key, $form, $lang) = @_;
-  my $f = $self->{datafields}{$key};
-  return defined($f) ? $f->get_value($form, $lang) : undef;
+  return undef unless $key;
+  no autovivification;
+
+  my $v;
+  if (defined($self->{datafields}{$key})) {
+    $v = $self->{datafields}{$key}->get_value($form, $lang);
+  }
+  return $v;
+}
+
+=head2 get_fieldraw
+
+    Get a raw FieldValue - mostly used for debugging
+
+=cut
+
+sub get_fieldraw {
+  my ($self, $key) = @_;
+  return undef unless $key;
+  return $self->{datafields}{$key} // $self->{derivedfields}{$key};
 }
 
 
