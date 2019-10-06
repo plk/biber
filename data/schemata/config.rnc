@@ -53,7 +53,7 @@ start =
     element listsep             { text }? &
     element logfile             { text }? &
     element mincrossrefs        { xsd:unsignedByte }? &
-    element mssplit             { text }? &
+    element mssep               { text }? &
     element namesep             { text }? &
     # Can't specify not to use a config file in the config file ...
     #  element noconf              { "0" | "1" }? &
@@ -93,6 +93,7 @@ start =
     element output_indent        { xsd:unsignedByte }? &
     element output_listsep       { text }? &
     element output_macro_fields  { text }? &
+    element output_mssep         { text }? &
     element output_namesep       { text }? &
     element output_resolve_xdata { "0" | "1" }? &
     element output_resolve_crossrefs { "0" | "1" }? &

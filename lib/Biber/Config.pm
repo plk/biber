@@ -218,6 +218,8 @@ sub _initopts {
   $CONFIG_META_MARKERS{namedannotation} = quotemeta(Biber::Config->getoption('named_annotation_marker'));
   $CONFIG_META_MARKERS{xname} = quotemeta(Biber::Config->getoption('xname_marker'));
 
+  $CONFIG_META_MARKERS{mssep} = quotemeta(Biber::Config->getoption('mssep'));
+
   # Setting up Log::Log4perl
   my $LOGLEVEL;
   if (Biber::Config->getoption('trace')) {

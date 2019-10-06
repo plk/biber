@@ -49,6 +49,7 @@ GetOptions(
            'listsep=s',
            'logfile=s',
            'mincrossrefs|m=s',
+           'mssep=s',
            'named_annotation_marker|named-annotation-marker=s',
            'namesep=s',
            'no_bblxml_schema|no-bblxml-schema',
@@ -72,6 +73,7 @@ GetOptions(
            'output_indent|output-indent=s',
            'output_listsep|output-listsep=s',
            'output_macro_fields|output-macro-fields=s',
+           'output_mssep|output-mssep=s',
            'output_named_annotation_marker|output-named-annotation-marker=s',
            'output_namesep|output-namesep=s',
            'output_resolve|output-resolve',
@@ -556,6 +558,11 @@ Use F<sep> as the separator for BibTeX data source list fields. Defaults to BibT
 
 Set threshold for crossrefs.
 
+=item B<--mssep=[sep]>
+
+Use F<sep> as the separator between parts of a multiscript bibtex
+datasource field. Default is '_'.
+
 =item B<--named-annotation-marker=[marker]>
 
 Sets the separator between the C<--annotation-marker> and the name of a
@@ -701,6 +708,10 @@ As B<--listsep> but for tool mode bibtex output. Defaults to BibTeX's usual
 A comma-separated list of field names whose values are, on output, treated as BibTeX macros.
 Effectively this means that they are not wrapped in braces. Effect depends on the output format.
 The legacy option B<--tool_macro_fields> is supported as an alias.
+
+=item B<--output-mssep=[sep]>
+
+As B<--mssep> but for tool mode bibtex output. Defaults to '_'.
 
 =item B<--output-namesep=[sep]>
 

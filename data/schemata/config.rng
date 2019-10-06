@@ -185,7 +185,7 @@
           </element>
         </optional>
         <optional>
-          <element name="mssplit">
+          <element name="mssep">
             <text/>
           </element>
         </optional>
@@ -333,6 +333,11 @@
         </optional>
         <optional>
           <element name="output_macro_fields">
+            <text/>
+          </element>
+        </optional>
+        <optional>
+          <element name="output_mssep">
             <text/>
           </element>
         </optional>

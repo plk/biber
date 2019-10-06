@@ -65,6 +65,7 @@ t/labelalphaname.t
 t/labelname.t
 t/langtags.t
 t/maps.t
+t/multiscript.t
 t/names.t
 t/names_x.t
 t/options.t
@@ -144,6 +145,8 @@ t/tdata/labelalphaname.bcf
 t/tdata/labelalphaname.bib
 t/tdata/maps.bcf
 t/tdata/maps.bib
+t/tdata/multiscript.bcf
+t/tdata/multiscript.bib
 t/tdata/names.bcf
 t/tdata/names_x.bcf
 t/tdata/names.bib

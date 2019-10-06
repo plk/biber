@@ -913,36 +913,38 @@ sub _create_entry {
 
   # We put all the fields we find modulo field aliases into the object
   # validation happens later and is not datasource dependent
-  foreach my $f ($e->fieldlist) {
-    my $fc = fc($f);
+  foreach my $tbfield ($e->fieldlist) {
+
+    # Split any multiscript fields
+    my ($field, $form, $lang) = mssplit($tbfield);
 
     # We have to process local options as early as possible in order
     # to make them available for things that need them like parsename()
-    if ($fc eq 'options') {
-      my $value = $e->get(encode('UTF-8', NFC($f)));
+    if ($field eq 'options') {
+      my $value = $e->get(encode('UTF-8', NFC($tbfield)));
       my $Srx = Biber::Config->getoption('xsvsep');
       my $S = qr/$Srx/;
       process_entry_options($k, Biber::Entry::List->new([ split(/$S/, $value) ]), $secnum);
     }
 
     # Now run any defined handler
-    if ($dm->is_field($fc)) {
+    if ($dm->is_field($field)) {
       # Check the Text::BibTeX field in case we have e.g. date = {}
-      if ($e->get(encode('UTF-8', NFC($f))) ne '') {
-        my $handler = _get_handler($fc);
-        my $v = $handler->($bibentry, $e, $f, $k);
+      if ($e->get(encode('UTF-8', NFC($tbfield))) ne '') {
+        my $handler = _get_handler($field);
+        my $v = $handler->($bibentry, $e, fc($tbfield), $k);
         if (defined($v)) {
           if ($v eq 'BIBER_SKIP_ENTRY') {# field data is bad enough to cause entry to be skipped
             return 0;
           }
           else {
-            $bibentry->set_datafield($fc, $v);
+            $bibentry->set_datafield($field, $v, $form, $lang);
           }
         }
       }
     }
     elsif (Biber::Config->getoption('validate_datamodel')) {
-      biber_warn("Datamodel: Entry '$k' ($ds): Field '$f' invalid in data model - ignoring", $bibentry);
+      biber_warn("Datamodel: Entry '$k' ($ds): Field '$field' invalid in data model - ignoring", $bibentry);
     }
   }
 
@@ -961,16 +963,15 @@ sub _create_entry {
 # Data annotation fields
 sub _annotation {
   my ($bibentry, $entry, $field, $key) = @_;
-  my $fc = fc($field); # Casefolded field which is what we need internally
   my $value = $entry->get(encode('UTF-8', NFC($field)));
-  my $ann = quotemeta(Biber::Config->getoption('annotation_marker'));
-  my $nam = quotemeta(Biber::Config->getoption('named_annotation_marker'));
+  my $ann = $CONFIG_META_MARKERS{annotation};
+  my $nam = $CONFIG_META_MARKERS{namedannotation};
   # Get annotation name, "default" if none
   my $name = 'default';
-  if ($fc =~ s/^(.+$ann)$nam(.+)$/$1/) {
+  if ($field =~ s/^(.+$ann)$nam(.+)$/$1/) {
     $name = $2;
   }
-  $fc =~ s/$ann$//;
+  $field =~ s/$ann$//;
 
   foreach my $a (split(/\s*;\s*/, $value)) {
     my ($count, $part, $annotations) = $a =~ /^\s*(\d+)?:?([^=]+)?=(.+)/;
@@ -981,13 +982,13 @@ sub _annotation {
       $annotations = $1;
     }
     if ($part) {
-      Biber::Annotation->set_annotation('part', $key, $fc, $name, $annotations, $literal, $count, $part);
+      Biber::Annotation->set_annotation('part', $key, $field, $name, $annotations, $literal, $count, $part);
     }
     elsif ($count) {
-      Biber::Annotation->set_annotation('item', $key, $fc, $name, $annotations, $literal, $count);
+      Biber::Annotation->set_annotation('item', $key, $field, $name, $annotations, $literal, $count);
     }
     else {
-      Biber::Annotation->set_annotation('field', $key, $fc, $name, $annotations, $literal);
+      Biber::Annotation->set_annotation('field', $key, $field, $name, $annotations, $literal);
     }
   }
   return;
@@ -996,7 +997,6 @@ sub _annotation {
 # Literal fields
 sub _literal {
   my ($bibentry, $entry, $field, $key) = @_;
-  my $fc = fc($field); # Casefolded field which is what we need internally
   my $value = $entry->get(encode('UTF-8', NFC($field)));
 
   # Record any XDATA and skip if we did
@@ -1007,13 +1007,13 @@ sub _literal {
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
-  if ($fc eq 'year') {
+  if ($field eq 'year') {
     return if $bibentry->get_datafield('year');
     if ($value and not looks_like_number(num($value))and not $entry->get('sortyear')) {
       biber_warn("year field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
   }
-  if ($fc eq 'month') {
+  if ($field eq 'month') {
     return if $bibentry->get_datafield('month');
     if ($value and not looks_like_number(num($value))) {
       biber_warn("month field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
@@ -1021,7 +1021,7 @@ sub _literal {
   }
 
   # Deal with ISBN options
-  if ($fc eq 'isbn') {
+  if ($field eq 'isbn') {
     require Business::ISBN;
     my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
     $dir =~ s/\/$//;            # splitpath sometimes leaves a trailing '/'
@@ -1055,13 +1055,13 @@ sub _literal {
   }
 
   # Try to sanitise months to biblatex requirements
-  if ($fc eq 'month') {
+  if ($field eq 'month') {
     return _hack_month($value);
   }
   # Rationalise any bcp47 style langids into babel/polyglossia names
   # biblatex will convert these back again when loading .lbx files
   # We need this until babel/polyglossia support proper bcp47 language/locales
-  elsif ($fc eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
+  elsif ($field eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
     return $map;
   }
   else {
@@ -1155,7 +1155,6 @@ sub _range {
 # Names
 sub _name {
   my ($bibentry, $entry, $field, $key) = @_;
-  my $fc = fc($field); # Casefolded field which is what we need internally
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $value = $entry->get(encode('UTF-8', NFC($field)));
@@ -1215,7 +1214,7 @@ sub _name {
       # uniquename defaults to 'false' just in case we are in tool mode otherwise
       # there are spurious uninitialised warnings
 
-      next unless $no = parsename_x($name, $fc, $key);
+      next unless $no = parsename_x($name, $field, $key);
     }
     else { # Normal bibtex name format
       # Check for malformed names in names which aren't completely escaped
@@ -1239,7 +1238,7 @@ sub _name {
       # Skip names that don't parse for some reason
       # unique name defaults to 0 just in case we are in tool mode otherwise there are spurious
       # uninitialised warnings
-      next unless $no = parsename($name, $fc);
+      next unless $no = parsename($name, $field);
     }
 
     # Deal with implied "et al" in data source
