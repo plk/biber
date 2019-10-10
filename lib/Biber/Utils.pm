@@ -57,7 +57,7 @@ our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid
   get_transliterator call_transliterator normalise_string_bblxml
   gen_initials join_name_parts split_xsv date_monthday tzformat
   expand_option_input strip_annotation appendstrict_check
-  merge_entry_options process_backendin xdatarefout xdatarefcheck mssplit};
+  merge_entry_options process_backendin xdatarefout xdatarefcheck mssplit msfield};
 
 =head1 FUNCTIONS
 
@@ -1774,26 +1774,25 @@ sub xdatarefcheck {
   return undef;
 }
 
-# Split a multiscript field name and preserve annotation markers
+# Return only the field name of a ms field identifier
+sub msfield {
+  my $field = shift;
+  return (undef, undef, undef) unless $field;
+  my $mssep = $CONFIG_META_MARKERS{mssep};
+  return $field =~ s/^([^$mssep]+)$mssep.+$/$1/r;
+}
+
+# Split a multiscript field name
 sub mssplit {
   my $field = shift;
   return (undef, undef, undef) unless $field;
-
-  my $ann = $CONFIG_META_MARKERS{annotation};
-  my $nam = $CONFIG_META_MARKERS{namedannotation};
   my $mssep = $CONFIG_META_MARKERS{mssep};
-
-  my $annmarkers;
-  if ($field =~ m/($ann(?:$nam.+)?)$/) {
-    $field = strip_annotation($field);
-    $annmarkers = $1;
-  }
-
-  if ($field =~ m/^(.+)$mssep(.+)$mssep(.+)$/) {
-    return (fc($1).$annmarkers, $2, $3);
+  $field = strip_annotation($field);
+  if ($field =~ m/^([^$mssep]+)$mssep([^$mssep]+)(?:$mssep([^$mssep]+))?$/) {
+    return (fc($1), $2, ($3 // Biber::Config->getoption('mslang')));
   }
   else {
-    return (fc($field).$annmarkers, undef, undef);
+    return (fc($field), 'default', Biber::Config->getoption('mslang'));
   }
 }
 

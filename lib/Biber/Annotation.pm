@@ -42,13 +42,20 @@ sub set_annotation {
     $ANN->{part}{$key}{$field}{$name}{$count}{$part}{value} = $value;
     $ANN->{part}{$key}{$field}{$name}{$count}{$part}{literal} = $literal; # Record if this annotation is a literal
   }
+
   # For easy checking later whether or not a field is annotated
   $ANN->{fields}{$key}{$field} = 1;
 
-  # Record all annotation names or a field
+  # Record all annotation names for a field
   unless (first {fc($_) eq fc($name)} $ANN->{names}{$key}{$field}->@*) {
     push $ANN->{names}{$key}{$field}->@*, $name;
   }
+
+  # Record all fields annotated with a name
+  unless (first {fc($_) eq fc($field)} $ANN->{fieldswithname}{$key}{$name}->@*) {
+    push $ANN->{fieldswithname}{$key}{$name}->@*, $field;
+  }
+
   return;
 }
 
@@ -120,6 +127,18 @@ sub is_literal_annotation {
   return undef;
 }
 
+=head2 fields_with_named_annotation
+
+  Returns array ref of fields with a given named annotation in an entry
+
+=cut
+
+sub fields_with_named_annotation {
+  shift; # class method so don't care about class name
+  my ($key, $name) = @_;
+  return $ANN->{fieldswithname}{$key}{$name} // [];
+}
+
 =head2 is_annotated_field
 
   Returns boolean to say if a field is annotated
@@ -182,6 +201,21 @@ sub get_annotated_parts {
   $name = $name || 'default';
   return sort keys $ANN->{$scope}{$key}{$field}{$name}{$count}->%*;
 }
+
+=head2 del_named_annotattion
+
+  Deletes a named annotation
+
+=cut
+
+sub del_named_annotation {
+  my ($key, $field, $name) = @_;
+  delete $ANN->{field}{$key}{$field}{$name};
+  delete $ANN->{item}{$key}{$field}{$name};
+  delete $ANN->{part}{$key}{$field}{$name};
+  return;
+}
+
 
 =head2 dump
 

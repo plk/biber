@@ -568,7 +568,7 @@ sub set_uniquelist {
   my ($self, $nl, $namelist, $maxcn, $mincn) = @_;
   my $nlid = $nl->get_id;
   my $uniquelist = $self->count_uniquelist($namelist);
-  my $num_names = $nl->count_names;
+  my $num_names = $nl->count;
   my $currval = $self->{state}{namelistdata}{$nlid}{ul};
 
   # Set modified flag to positive if we changed something

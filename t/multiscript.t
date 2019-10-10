@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 2;
+use Test::More tests => 6;
 use Test::Differences;
 unified_diff;
 
@@ -46,5 +46,7 @@ my $out = $biber->get_output_obj;
 
 eq_or_diff($bibentries->entry('ms1')->get_field('title'), 'Title', 'multiscript - 1');
 eq_or_diff($bibentries->entry('ms1')->get_field('title', 'translation', 'fr'), 'Titre', 'multiscript - 2');
-
-
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(1), 'ru-latn', 'multiscript - 3');
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(2), 'zh-latn', 'multiscript - 4');
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(1), 'ru-grek', 'multiscript - 5');
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(2), 'zh-grek', 'multiscript - 6');

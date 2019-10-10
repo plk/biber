@@ -12,7 +12,7 @@ my %bcp47parts = ('language'      => 'single',
                   'script'        => 'single',
                   'region'        => 'single',
                   'variant'       => 'multiple',
-                  'extension'     => 'multiple',
+                  'extension'     => 'indexed',
                   'privateuse'    => 'multiple',
                   'grandfathered' => 'single');
 
@@ -34,11 +34,71 @@ Biber::LangTag
 =cut
 
 sub new {
-  my ($class, $parts) = @_;
-  my $self = bless $parts, $class;
+  my ($class, %parts) = @_;
+  return bless {%parts}, $class;
+}
 
+=head2 inherit
+
+    Inherit from another source Biber::LangTag object
+
+=cut
+
+sub inherit {
+  my ($self, $source) = @_;
+  foreach my $part (keys %bcp47parts) {
+    if (not exists($self->{$part}) and exists($source->{$part})) {
+      $self->{$part} = $source->{$part};
+    }
+  }
   return $self;
 }
+
+=head2 as_string
+
+    Return the tag as a string
+
+=cut
+
+sub as_string {
+  my $self = shift;
+  my $acc = '';
+  if (my $s = $self->{grandfathered}) {
+    return $s;
+  }
+  if (my $s = $self->{language}) {
+    $acc .= $s;
+  }
+  if (my $s = $self->{extlang}) {
+    foreach my $e ($s->@*) {
+      $acc .= "-$e";
+    }
+  }
+  if (my $s = $self->{script}) {
+    $acc .= "-$s";
+  }
+  if (my $s = $self->{region}) {
+    $acc .= "-$s";
+  }
+  if (my $s = $self->{variant}) {
+    foreach my $e ($s->@*) {
+      $acc .= "-$e";
+    }
+  }
+  if (my $s = $self->{extension}) {
+    foreach my $k (sort keys $s->%*) {
+      $acc .= "-$k-" . $s->{$k};
+    }
+  }
+  if (my $s = $self->{privateuse}) {
+    $acc .= "-x";
+    foreach my $e ($s->@*) {
+      $acc .= "-$e";
+    }
+  }
+  return $acc;
+}
+
 
 =head2 dump
 

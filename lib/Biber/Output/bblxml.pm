@@ -232,7 +232,7 @@ sub set_output_entry {
         $plo{more} = 'true';
       }
 
-      my $total = $nf->count_names;
+      my $total = $nf->count;
 
       if (defined($lni) and $lni eq $namefield) {
 
@@ -287,7 +287,7 @@ sub set_output_entry {
         $lf->del_last_item;
       }
 
-      my $total = $lf->count_items;
+      my $total = $lf->count;
       $xml->startTag([$xml_prefix, 'list'], name => $listfield, count => $total, map {$_ => $plo{$_}} sort keys %plo);
       foreach my $f ($lf->get_items->@*) {
         $xml->dataElement([$xml_prefix, 'item'], _bblxml_norm($f));
@@ -525,7 +525,7 @@ sub set_output_entry {
         $plo{$uril} = 'true';
         $urilf->del_last_item; # remove the last element in the array
       }
-      my $total = $urilf->count_items;
+      my $total = $urilf->count;
       $xml->startTag([$xml_prefix, 'list'], name => $uril, count => $total, map {$_ => $plo{$_}} sort keys %plo);
 
       foreach my $f ($urilf->get_items->@*) {

@@ -127,13 +127,13 @@ sub get_morenames {
   return $self->{morenames} ? 1 : 0;
 }
 
-=head2 count_names
+=head2 count
 
     Returns the number of Biber::Entry::Name objects in the object
 
 =cut
 
-sub count_names {
+sub count {
   my $self = shift;
   return scalar $self->{namelist}->@*;
 }
@@ -210,17 +210,6 @@ sub get_xdata {
   return $self->{xdata} || '';
 }
 
-=head2 nth_msform
-
-  Get the msform of the nth element of the list
-
-=cut
-
-sub nth_msform {
-  my ($self, $n) = @_;
-  return $self->{msform}[$n-1];
-}
-
 =head2 nth_mslang
 
   Get the mslang of the nth element of the list
@@ -230,18 +219,6 @@ sub nth_msform {
 sub nth_mslang {
   my ($self, $n) = @_;
   return $self->{mslang}[$n-1];
-}
-
-=head2 nth_msform
-
-  Set the msform of the nth element of the list
-
-=cut
-
-sub set_nth_msform {
-  my ($self, $n, $msform) = @_;
-  $self->{msform}[$n-1] = $msform;
-  return;
 }
 
 =head2 set_nth_mslang

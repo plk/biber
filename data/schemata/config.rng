@@ -185,6 +185,11 @@
           </element>
         </optional>
         <optional>
+          <element name="mslang">
+            <text/>
+          </element>
+        </optional>
+        <optional>
           <element name="mssep">
             <text/>
           </element>

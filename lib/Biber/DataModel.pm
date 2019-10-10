@@ -64,7 +64,7 @@ sub new {
 
     # Multiscript enabled fields
     foreach my $f ($dm->{multiscriptfields}{field}->@*) {
-      $self->{multiscriptfields}{$f} = 1;
+      $self->{multiscriptfields}{$f->{content}} = 1;
     }
 
     # Pull out legal entrytypes, fields and constraints and make lookup hash
@@ -340,8 +340,8 @@ sub get_constant_value {
 =cut
 
 sub is_multiscript {
-  my ($self, $field) = shift;
-  return $self->{multiscriptfields}{$field} ? 1 : 0;
+  my ($self, $field) = @_;
+  return $self->{multiscriptfields}{$field};
 }
 
 =head2 fieldtypes

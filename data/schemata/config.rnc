@@ -53,6 +53,7 @@ start =
     element listsep             { text }? &
     element logfile             { text }? &
     element mincrossrefs        { xsd:unsignedByte }? &
+    element mslang              { text }? &
     element mssep               { text }? &
     element namesep             { text }? &
     # Can't specify not to use a config file in the config file ...

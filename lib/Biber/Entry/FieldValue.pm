@@ -41,7 +41,7 @@ sub new {
 sub get_value {
   my ($self, $form, $lang) = @_;
   $form = $form // 'default';
-  $lang = $lang // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
   return $self->{$form}{$lang};
 }
 
@@ -54,7 +54,7 @@ sub get_value {
 sub set_value {
   my ($self, $value, $form, $lang) = @_;
   $form = $form // 'default';
-  $lang = $lang // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
   $self->{$form}{$lang} = $value;
   return;
 }

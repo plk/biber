@@ -235,7 +235,7 @@ sub set_output_entry {
       $xml->startTag([$xml_prefix, 'list']);
 
       # List loop
-      for (my $i = 0; $i <= $lf->count_items-1; $i++) {
+      for (my $i = 0; $i <= $lf->count-1; $i++) {
         my $f = $lf->get_items->[$i];
         my @lattrs;
 

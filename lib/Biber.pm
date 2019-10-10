@@ -1263,6 +1263,42 @@ sub process_citekey_aliases {
   }
 }
 
+=head2 resolve_multiscript
+
+ Resolve any list multiscript overrides and set in the list object properties
+
+=cut
+
+sub resolve_multiscript {
+  my $self = shift;
+  my $secnum = $self->get_current_section;
+  my $section = $self->sections->get_section($secnum);
+  my $bibentries = $section->bibentries;
+  my $dm = Biber::Config->get_dm;
+  foreach my $citekey ($section->get_citekeys) {
+    if ($logger->is_debug()) {# performance tune
+      $logger->debug("Resolving multiscript list overrides in '$citekey'");
+    }
+    my $be = $bibentries->entry($citekey);
+    foreach my $f (Biber::Annotation->fields_with_named_annotation($citekey, 'langtags')->@*) {
+      my ($field, $form, $lang) = mssplit($f);
+      if ($dm->is_multiscript($field) and $dm->field_is_fieldtype('list', $field)) {
+        my $val = $be->get_field($field, $form, $lang);
+        my $langtag = $self->langtags->parse($lang);
+        for (my $i=1;$i<=$val->count;$i++) {
+          if (my $a = Biber::Annotation->get_annotation('item', $citekey, $f, 'langtags', $i)) {
+            $val->set_nth_mslang($i, $self->langtags->parse($a)->inherit($langtag)->as_string);
+            Biber::Annotation->del_named_annotation($citekey, $f, 'langtags');
+          }
+          else {
+            $val->set_nth_mslang($i, $langtag->as_string);
+          }
+        }
+      }
+    }
+  }
+}
+
 =head2 instantiate_dynamic
 
     This instantiates any dynamic entries so that they are available
@@ -2717,7 +2753,7 @@ sub process_visible_names {
     foreach my $n ($dmh->{namelistsall}->@*) {
       next unless my $nl = $be->get_field($n);
 
-      my $count = $nl->count_names;
+      my $count = $nl->count;
       my $visible_names_cite;
       my $visible_names_bib;
       my $visible_names_sort;
@@ -3300,7 +3336,7 @@ sub create_uniquename_info {
     # would be uniquename = 2 unless even the full name doesn't disambiguate
     # and then it is left at uniquename = 0
 
-    my $num_names = $nl->count_names;
+    my $num_names = $nl->count;
     my $names = $nl->names;
 
     # If name list was truncated in bib with "and others", this overrides maxcitenames
@@ -3453,7 +3489,7 @@ MAIN:  foreach my $citekey ( $section->get_citekeys ) {
     my $maxcn = Biber::Config->getblxoption($secnum, 'maxcitenames', $bee, $citekey);
     my $mincn = Biber::Config->getblxoption($secnum, 'mincitenames', $bee, $citekey);
 
-    my $num_names = $nl->count_names;
+    my $num_names = $nl->count;
     my $names = $nl->names;
     # If name list was truncated in bib with "and others", this overrides maxcitenames
     my $morenames = ($nl->get_morenames) ? 1 : 0;
@@ -3577,7 +3613,7 @@ sub create_uniquelist_info {
       $logger->trace("Generating uniquelist information for '$citekey'");
     }
 
-    my $num_names = $nl->count_names;
+    my $num_names = $nl->count;
     my $namelist = [];
     my $ulminyear_namelist = [];
 
@@ -3671,7 +3707,7 @@ sub generate_uniquelist {
     }
 
     my $namelist = [];
-    my $num_names = $nl->count_names;
+    my $num_names = $nl->count;
 
     foreach my $n ($nl->names->@*) {
       my $nid = $n->get_id;
@@ -4245,6 +4281,7 @@ sub prepare {
     $self->preprocess_options;           # Preprocess any options
     $self->fetch_data;                   # Fetch cited key and dependent data from sources
     $self->process_citekey_aliases;      # Remove citekey aliases from citekeys
+    $self->resolve_multiscript;          # Resolve granular multiscript overrides
     $self->instantiate_dynamic;          # Instantiate any dynamic entries (sets, related)
     $self->resolve_alias_refs;           # Resolve xref/crossref/xdata aliases to real keys
     $self->resolve_xdata;                # Resolve xdata entries

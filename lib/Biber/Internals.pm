@@ -45,7 +45,7 @@ sub _getnamehash {
   my $bee = $be->get_field('entrytype');
 
   my $hashkey = '';
-  my $count = $names->count_names;
+  my $count = $names->count;
   my $visible = $bib ? $dlist->get_visible_bib($names->get_id) : $dlist->get_visible_cite($names->get_id);
   my $dm = Biber::Config->get_dm;
   my @nps = $dm->get_constant_value('nameparts');
@@ -110,7 +110,7 @@ sub _getnamehash_u {
   my $bee = $be->get_field('entrytype');
 
   my $hashkey = '';
-  my $count = $names->count_names;
+  my $count = $names->count;
   my $nlid = $names->get_id;
   my $visible = $dlist->get_visible_cite($nlid);
   my $dm = Biber::Config->get_dm;
@@ -283,8 +283,8 @@ sub _labelpart {
         $f = ($be->get_labelname_info || '');
       }
       if ( first {$f eq $_} $dm->get_fields_of_type('list', 'name')->@*) {
-        my $name = $be->get_field($f) || next; # just in case there is no labelname etc.
-        my $total_names = $name->count_names;
+        my $names = $be->get_field($f) || next; # just in case there is no labelname etc.
+        my $total_names = $names->count;
         my $visible_names;
         if ($total_names > $maxan) {
           $visible_names = $minan;
@@ -446,7 +446,7 @@ sub _label_name {
       $useprefix = $names->get_useprefix;
     }
 
-    my $numnames  = $names->count_names;
+    my $numnames  = $names->count;
     my $visibility = $dlist->get_visible_alpha($names->get_id);
 
     # Use name range override, if any
@@ -1476,7 +1476,7 @@ sub _namestring {
   my $bee = $be->get_field('entrytype');
   my $names = $be->get_field($field);
   my $str = '';
-  my $count = $names->count_names;
+  my $count = $names->count;
   # get visibility for sorting
   my $visible = $dlist->get_visible_sort($names->get_id);
   my $useprefix = Biber::Config->getblxoption($secnum, 'useprefix', $bee, $citekey);

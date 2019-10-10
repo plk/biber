@@ -281,7 +281,7 @@ sub set_output_entry {
         }
       }
 
-      my $total = $nf->count_names;
+      my $total = $nf->count;
 
       my $nfv = '';
 
@@ -323,7 +323,7 @@ sub set_output_entry {
         $acc .= "      \\true{more$listfield}\n";
         $lf->del_last_item;
       }
-      my $total = $lf->count_items;
+      my $total = $lf->count;
       $acc .= "      \\list{$listfield}{$total}{%\n";
       foreach my $f ($lf->get_items->@*) {
         $acc .= "        {$f}%\n";
@@ -558,7 +558,7 @@ sub set_output_entry {
         $acc .= "      \\true{more$vlist}\n";
         $vlf->del_last_item;
       }
-      my $total = $vlf->count_items;
+      my $total = $vlf->count;
       $acc .= "      \\lverb{$vlist}{$total}\n";
       foreach my $f ($vlf->get_items->@*) {
         if ($vlist eq 'urls') {

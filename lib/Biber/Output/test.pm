@@ -162,7 +162,7 @@ sub set_output_entry {
         }
       }
 
-      my $total = $nf->count_names;
+      my $total = $nf->count;
 
       # Add per-list options, if any
 
@@ -205,7 +205,7 @@ sub set_output_entry {
         $acc .= "      \\true{more$listfield}\n";
         $lf->del_last_item; # remove the last element in the array
       };
-      my $total = $lf->count_items;
+      my $total = $lf->count;
       $acc .= "      \\list{$listfield}{$total}{%\n";
       foreach my $f ($lf->get_items->@*) {
         $acc .= "        {$f}%\n";

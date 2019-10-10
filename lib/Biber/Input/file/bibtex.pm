@@ -931,7 +931,7 @@ sub _create_entry {
     if ($dm->is_field($field)) {
       # Check the Text::BibTeX field in case we have e.g. date = {}
       if ($e->get(encode('UTF-8', NFC($tbfield))) ne '') {
-        my $handler = _get_handler($field);
+        my $handler = _get_handler($tbfield);
         my $v = $handler->($bibentry, $e, fc($tbfield), $k);
         if (defined($v)) {
           if ($v eq 'BIBER_SKIP_ENTRY') {# field data is bad enough to cause entry to be skipped
@@ -1251,7 +1251,7 @@ sub _name {
   }
 
   # Don't set if there were no valid names due to special errors above
-  return $names->count_names ? $names : undef;
+  return $names->count ? $names : undef;
 }
 
 # Dates
@@ -1918,6 +1918,7 @@ sub _get_handler {
     return $handlers->{custom}{annotation};
   }
   else {
+    $field = msfield($field);
     return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field) || 'default'}{$dm->get_datatype($field)};
   }
 }

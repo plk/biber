@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 19;
+use Test::More tests => 36;
 use Test::Differences;
 unified_diff;
 
@@ -28,7 +28,7 @@ my $l4pconf = qq|
 |;
 Log::Log4perl->init(\$l4pconf);
 
-is_deeply($biber->langtags->parse('de')->dump, {language => 'de'}, 'BCP47 - 1');
+is_deeply($biber->langtags->parse('de')->get_language, 'de', 'BCP47 - 1');
 is_deeply($biber->langtags->parse('i-enochian')->dump, { grandfathered => "i-enochian" }, 'BCP47 - 2');
 is_deeply($biber->langtags->parse('zh-Hant')->dump, { language => 'zh', script => 'Hant' }, 'BCP47 - 3');
 is_deeply($biber->langtags->parse('zh-cmn-Hans-CN')->dump, { language => 'zh', extlang => ['cmn'], script => 'Hans', region => 'CN' }, 'BCP47 - 4');
@@ -42,8 +42,28 @@ is_deeply($biber->langtags->parse('de-DE')->dump, { language => 'de', region => 
 is_deeply($biber->langtags->parse('es-419')->dump, { language => 'es', region => '419' }, 'BCP47 - 12');
 is_deeply($biber->langtags->parse('de-CH-x-phonebk')->dump, { language => 'de', region => 'CH', privateuse => ['phonebk'] }, 'BCP47 - 13');
 is_deeply($biber->langtags->parse('az-Arab-x-AZE-derbend')->dump, { language => 'az', script => 'Arab', privateuse => ['AZE', 'derbend'] }, 'BCP47 - 14');
-is_deeply($biber->langtags->parse('en-US-u-islamcal')->dump, { language => 'en', region => 'US', extension => ['islamcal'] }, 'BCP47 - 15');
-is_deeply($biber->langtags->parse('en-a-myext-b-another')->dump, { language => 'en', extension => ['myext', 'another'] }, 'BCP47 - 16');
-is_deeply($biber->langtags->parse('zh-CN-a-myext-x-private')->dump, { language => 'zh', region => 'CN', extension => ['myext'], privateuse => ['private'] }, 'BCP47 - 17');
+is_deeply($biber->langtags->parse('en-US-u-islamcal')->dump, { language => 'en', region => 'US', extension => {'u' => 'islamcal'} }, 'BCP47 - 15');
+is_deeply($biber->langtags->parse('en-a-myext-b-another')->dump, { language => 'en', extension => {a => 'myext', b => 'another'} }, 'BCP47 - 16');
+is_deeply($biber->langtags->parse('zh-CN-a-myext-x-private')->dump, { language => 'zh', region => 'CN', extension => {a => 'myext'}, privateuse => ['private'] }, 'BCP47 - 17');
 is_deeply($biber->langtags->parse('de-419-DE'), undef, 'BCP47 - 18');
 is_deeply($biber->langtags->parse('a-DE'), undef, 'BCP47 - 19');
+
+# Testing reversability
+eq_or_diff($biber->langtags->parse('de')->as_string, 'de', 'BCP47 - 20');
+eq_or_diff($biber->langtags->parse('i-enochian')->as_string, 'i-enochian', 'BCP47 - 21');
+eq_or_diff($biber->langtags->parse('zh-Hant')->as_string, 'zh-Hant', 'BCP47 - 22');
+eq_or_diff($biber->langtags->parse('zh-cmn-Hans-CN')->as_string, 'zh-cmn-Hans-CN', 'BCP47 - 23');
+eq_or_diff($biber->langtags->parse('cmn-Hans-CN')->as_string, 'cmn-Hans-CN', 'BCP47 - 24');
+eq_or_diff($biber->langtags->parse('yue-HK')->as_string, 'yue-HK', 'BCP47 - 25');
+eq_or_diff($biber->langtags->parse('sl-rozaj')->as_string, 'sl-rozaj', 'BCP47 - 26');
+eq_or_diff($biber->langtags->parse('sl-rozaj-biske')->as_string, 'sl-rozaj-biske', 'BCP47 - 27');
+eq_or_diff($biber->langtags->parse('de-CH-1901')->as_string, 'de-CH-1901', 'BCP47 - 28');
+eq_or_diff($biber->langtags->parse('hy-Latn-IT-arevela')->as_string, 'hy-Latn-IT-arevela', 'BCP47 - 29');
+eq_or_diff($biber->langtags->parse('de-DE')->as_string, 'de-DE', 'BCP47 - 30');
+eq_or_diff($biber->langtags->parse('es-419')->as_string, 'es-419', 'BCP47 - 31');
+eq_or_diff($biber->langtags->parse('de-CH-x-phonebk')->as_string, 'de-CH-x-phonebk', 'BCP47 - 32');
+eq_or_diff($biber->langtags->parse('az-Arab-x-AZE-derbend')->as_string, 'az-Arab-x-AZE-derbend', 'BCP47 - 33');
+eq_or_diff($biber->langtags->parse('en-US-u-islamcal')->as_string, 'en-US-u-islamcal', 'BCP47 - 34');
+eq_or_diff($biber->langtags->parse('en-a-myext-b-another')->as_string, 'en-a-myext-b-another', 'BCP47 - 35');
+eq_or_diff($biber->langtags->parse('zh-CN-a-myext-x-private')->as_string, 'zh-CN-a-myext-x-private', 'BCP47 - 36');
+

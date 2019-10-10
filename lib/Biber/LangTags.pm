@@ -38,7 +38,7 @@ regular: 'art-lojban'|'cel-gaulish'|'no-bok'|'no-nyn'|'zh-guoyu'|'zh-hakka'|'zh-
 
 alphanum: ALPHA|DIGIT
 
-ALPHA: /[a-zA-z]/
+ALPHA: /[a-zA-Z]/
 
 DIGIT: /[0-9]/
 
@@ -52,10 +52,9 @@ my %bcp47parts = ('language'      => 'single',
                   'script'        => 'single',
                   'region'        => 'single',
                   'variant'       => 'multiple',
-                  'extension'     => 'multiple',
+                  'extension'     => 'indexed',
                   'privateuse'    => 'multiple',
                   'grandfathered' => 'single');
-
 
 
 =encoding utf-8
@@ -80,7 +79,7 @@ sub new {
 
 =head2 parse
 
-    Parse a BCP47 tag into its components
+    Parse a BCP47 tag into its components and return a Biber::LangTag object
 
 =cut
 
@@ -89,8 +88,84 @@ sub parse {
   my $tree = $self->{parser}->languagetag($tag);
   return undef unless defined($tree);
 
-  return Biber::LangTag->new(_bcp47extract($tree));
+  return Biber::LangTag->new(tag => $tag, _bcp47extract($tree)->%*);
 }
+
+# [
+#   "_alternation_1_of_production_1_of_rule_languagetag",
+#   [
+#     "langtag",
+#     [
+#       "language",
+#       [
+#         "_alternation_1_of_production_1_of_rule_language",
+#         [
+#           [
+#             "_alternation_1_of_production_1_of_rule__alternation_1_of_production_1_of_rule_language",
+#             ["ALPHA", "e"],
+#           ],
+#           [
+#             "_alternation_1_of_production_1_of_rule__alternation_1_of_production_1_of_rule_language",
+#             ["ALPHA", "n"],
+#           ],
+#         ],
+#         ["extlang", []],
+#       ],
+#     ],
+#     ["seporend", "-"],
+#     [],
+#     [],
+#     [],
+#     [
+#       [
+#         "_alternation_4_of_production_1_of_rule_langtag",
+#         [
+#           "extension",
+#           ["singleton", "a"],
+#           [
+#             [
+#               "_alternation_1_of_production_1_of_rule_extension",
+#               "-",
+#               [
+#                 ["alphanum", ["ALPHA", "m"]],
+#                 ["alphanum", ["ALPHA", "y"]],
+#                 ["alphanum", ["ALPHA", "e"]],
+#                 ["alphanum", ["ALPHA", "x"]],
+#                 ["alphanum", ["ALPHA", "t"]],
+#               ],
+#             ],
+#           ],
+#         ],
+#         ["seporend", "-"],
+#       ],
+#       [
+#         "_alternation_4_of_production_1_of_rule_langtag",
+#         [
+#           "extension",
+#           ["singleton", "b"],
+#           [
+#             [
+#               "_alternation_1_of_production_1_of_rule_extension",
+#               "-",
+#               [
+#                 ["alphanum", ["ALPHA", "a"]],
+#                 ["alphanum", ["ALPHA", "n"]],
+#                 ["alphanum", ["ALPHA", "o"]],
+#                 ["alphanum", ["ALPHA", "t"]],
+#                 ["alphanum", ["ALPHA", "h"]],
+#                 ["alphanum", ["ALPHA", "e"]],
+#                 ["alphanum", ["ALPHA", "r"]],
+#               ],
+#             ],
+#           ],
+#         ],
+#         ["seporend", ["eostring", ""]],
+#       ],
+#     ],
+#     [],
+#   ],
+# ]
+
 
 sub _bcp47extract {
   my ($tree, $part, $tag) = @_;
@@ -109,9 +184,12 @@ sub _bcp47extract {
     if ($part and $bcp47parts{$part} eq 'multiple') {
       push $tag->{$part}->@*, $tag->{acc} if $tag->{acc};
     }
+    elsif ($part and $bcp47parts{$part} eq 'indexed') {
+      $tag->{$part}{$tag->{index}} = $tag->{acc} if $tag->{acc};
+    }
   }
   elsif ($tree->[0] eq 'alphanum') { # shortcut
-    if ($part and $bcp47parts{$part} eq 'multiple') {
+    if ($part and ($bcp47parts{$part} eq 'multiple'or $bcp47parts{$part} eq 'indexed')) {
       $tag->{acc} .= $tree->[1][1];
     }
     else {
@@ -122,9 +200,13 @@ sub _bcp47extract {
   elsif ($tree->[0] eq 'ALPHA' or
          $tree->[0] eq 'DIGIT' or
          $tree->[0] eq 'irregular' or
+         $tree->[0] eq 'singleton' or
          $tree->[0] eq 'regular') { # terminal tokens - bottom of recursion
     if ($part and $bcp47parts{$part} eq 'multiple') {
       $tag->{acc} .= $tree->[1];
+    }
+    elsif ($part and $bcp47parts{$part} eq 'indexed') {
+      $tag->{index} = $tree->[1];
     }
     else {
       $tag->{$part} .= $tree->[1];
@@ -134,6 +216,7 @@ sub _bcp47extract {
   # Found a valid part, recurse with part name as context
   elsif (first {$tree->[0] eq $_} keys %bcp47parts) {
     $tag->{acc} = '';
+    $tag->{index} = '';
     foreach my $t ($tree->@[1..$tree->$#*]) {
       _bcp47extract($t, $tree->[0], $tag);
     }
@@ -145,6 +228,7 @@ sub _bcp47extract {
     }
   }
   delete($tag->{acc});
+  delete($tag->{index});
   return $tag;
 }
 
