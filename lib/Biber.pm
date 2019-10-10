@@ -1287,7 +1287,7 @@ sub resolve_multiscript {
         my $langtag = $self->langtags->parse($lang);
         for (my $i=1;$i<=$val->count;$i++) {
           if (my $a = Biber::Annotation->get_annotation('item', $citekey, $f, 'langtags', $i)) {
-            $val->set_nth_mslang($i, $self->langtags->parse($a)->inherit($langtag)->as_string);
+            $val->set_nth_mslang($i, $self->langtags->parse($a)->as_string);
             Biber::Annotation->del_named_annotation($citekey, $f, 'langtags');
           }
           else {

@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 no warnings 'utf8';
 
-use Test::More tests => 6;
+use Test::More tests => 15;
 use Test::Differences;
 unified_diff;
 
@@ -46,7 +46,16 @@ my $out = $biber->get_output_obj;
 
 eq_or_diff($bibentries->entry('ms1')->get_field('title'), 'Title', 'multiscript - 1');
 eq_or_diff($bibentries->entry('ms1')->get_field('title', 'translation', 'fr'), 'Titre', 'multiscript - 2');
-eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(1), 'ru-latn', 'multiscript - 3');
-eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(2), 'zh-latn', 'multiscript - 4');
-eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(1), 'ru-grek', 'multiscript - 5');
-eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(2), 'zh-grek', 'multiscript - 6');
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(2), 'ru-latn', 'multiscript - 3');
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(3), 'zh-latn', 'multiscript - 4');
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(2), 'ru-grek', 'multiscript - 5');
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(3), 'zh-grek', 'multiscript - 6');
+eq_or_diff($bibentries->entry('ms1')->get_field('author')->nth_mslang(2), 'ru-cyrl', 'multiscript - 7');
+eq_or_diff($bibentries->entry('ms1')->get_field('author')->nth_mslang(3), 'zh-hant', 'multiscript - 8');
+eq_or_diff($bibentries->entry('ms1')->get_field('author')->nth_mslang(1), 'en-us', 'multiscript - 9');
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-latn')->nth_mslang(1), 'en-us', 'multiscript - 10');
+eq_or_diff($bibentries->entry('ms1')->get_field('author', 'transliteration', 'ru-grek')->nth_mslang(1), 'en-us', 'multiscript - 11');
+eq_or_diff($bibentries->entry('ms1')->get_field('location')->nth_mslang(1), 'en-us', 'multiscript - 12');
+eq_or_diff($bibentries->entry('ms1')->get_field('location')->nth_mslang(2), 'de', 'multiscript - 13');
+eq_or_diff($bibentries->entry('ms1')->get_field('location', 'translation', 'fr')->nth_mslang(1), 'fr', 'multiscript - 14');
+eq_or_diff($bibentries->entry('ms1')->get_field('location', 'translation', 'fr')->nth_mslang(2), 'de', 'multiscript - 15');

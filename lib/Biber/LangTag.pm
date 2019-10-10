@@ -38,22 +38,6 @@ sub new {
   return bless {%parts}, $class;
 }
 
-=head2 inherit
-
-    Inherit from another source Biber::LangTag object
-
-=cut
-
-sub inherit {
-  my ($self, $source) = @_;
-  foreach my $part (keys %bcp47parts) {
-    if (not exists($self->{$part}) and exists($source->{$part})) {
-      $self->{$part} = $source->{$part};
-    }
-  }
-  return $self;
-}
-
 =head2 as_string
 
     Return the tag as a string

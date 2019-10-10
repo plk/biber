@@ -85,87 +85,12 @@ sub new {
 
 sub parse {
   my ($self, $tag) = @_;
+  $tag = fc($tag); # normalise case
   my $tree = $self->{parser}->languagetag($tag);
   return undef unless defined($tree);
 
   return Biber::LangTag->new(tag => $tag, _bcp47extract($tree)->%*);
 }
-
-# [
-#   "_alternation_1_of_production_1_of_rule_languagetag",
-#   [
-#     "langtag",
-#     [
-#       "language",
-#       [
-#         "_alternation_1_of_production_1_of_rule_language",
-#         [
-#           [
-#             "_alternation_1_of_production_1_of_rule__alternation_1_of_production_1_of_rule_language",
-#             ["ALPHA", "e"],
-#           ],
-#           [
-#             "_alternation_1_of_production_1_of_rule__alternation_1_of_production_1_of_rule_language",
-#             ["ALPHA", "n"],
-#           ],
-#         ],
-#         ["extlang", []],
-#       ],
-#     ],
-#     ["seporend", "-"],
-#     [],
-#     [],
-#     [],
-#     [
-#       [
-#         "_alternation_4_of_production_1_of_rule_langtag",
-#         [
-#           "extension",
-#           ["singleton", "a"],
-#           [
-#             [
-#               "_alternation_1_of_production_1_of_rule_extension",
-#               "-",
-#               [
-#                 ["alphanum", ["ALPHA", "m"]],
-#                 ["alphanum", ["ALPHA", "y"]],
-#                 ["alphanum", ["ALPHA", "e"]],
-#                 ["alphanum", ["ALPHA", "x"]],
-#                 ["alphanum", ["ALPHA", "t"]],
-#               ],
-#             ],
-#           ],
-#         ],
-#         ["seporend", "-"],
-#       ],
-#       [
-#         "_alternation_4_of_production_1_of_rule_langtag",
-#         [
-#           "extension",
-#           ["singleton", "b"],
-#           [
-#             [
-#               "_alternation_1_of_production_1_of_rule_extension",
-#               "-",
-#               [
-#                 ["alphanum", ["ALPHA", "a"]],
-#                 ["alphanum", ["ALPHA", "n"]],
-#                 ["alphanum", ["ALPHA", "o"]],
-#                 ["alphanum", ["ALPHA", "t"]],
-#                 ["alphanum", ["ALPHA", "h"]],
-#                 ["alphanum", ["ALPHA", "e"]],
-#                 ["alphanum", ["ALPHA", "r"]],
-#               ],
-#             ],
-#           ],
-#         ],
-#         ["seporend", ["eostring", ""]],
-#       ],
-#     ],
-#     [],
-#   ],
-# ]
-
 
 sub _bcp47extract {
   my ($tree, $part, $tag) = @_;
