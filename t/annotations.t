@@ -77,12 +77,12 @@ my $ann1 = q|    \entry{ann1}{misc}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{The Title}
-      \annotation{field}{language}{default}{}{}{0}{ann4}
-      \annotation{field}{title}{default}{}{}{0}{one, two}
-      \annotation{item}{author}{default}{2}{}{0}{corresponding}
-      \annotation{item}{language}{default}{1}{}{0}{ann1}
-      \annotation{item}{language}{default}{2}{}{0}{ann2, ann3}
-      \annotation{part}{author}{default}{1}{family}{0}{student}
+      \annotation{field}{language}{default}{en-us}{default}{}{}{0}{ann4}
+      \annotation{field}{title}{default}{en-us}{default}{}{}{0}{one, two}
+      \annotation{item}{author}{default}{en-us}{default}{2}{}{0}{corresponding}
+      \annotation{item}{language}{default}{en-us}{default}{1}{}{0}{ann1}
+      \annotation{item}{language}{default}{en-us}{default}{2}{}{0}{ann2, ann3}
+      \annotation{part}{author}{default}{en-us}{default}{1}{family}{0}{student}
     \endentry
 |;
 
@@ -120,16 +120,16 @@ my $ann2 = q|    \entry{ann2}{misc}{}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{The Title}
-      \annotation{field}{language}{alt}{}{}{0}{annz}
-      \annotation{field}{language}{default}{}{}{0}{ann4}
-      \annotation{field}{title}{default}{}{}{1}{one}
-      \annotation{field}{title}{french}{}{}{1}{un}
-      \annotation{item}{author}{default}{2}{}{0}{corresponding}
-      \annotation{item}{language}{alt}{1}{}{0}{annx}
-      \annotation{item}{language}{alt}{2}{}{1}{anny}
-      \annotation{item}{language}{default}{1}{}{0}{ann1}
-      \annotation{item}{language}{default}{2}{}{1}{ann2}
-      \annotation{part}{author}{default}{1}{family}{1}{student}
+      \annotation{field}{language}{default}{en-us}{alt}{}{}{0}{annz}
+      \annotation{field}{language}{default}{en-us}{default}{}{}{0}{ann4}
+      \annotation{field}{title}{default}{en-us}{default}{}{}{1}{one}
+      \annotation{field}{title}{default}{en-us}{french}{}{}{1}{un}
+      \annotation{item}{author}{default}{en-us}{default}{2}{}{0}{corresponding}
+      \annotation{item}{language}{default}{en-us}{alt}{1}{}{0}{annx}
+      \annotation{item}{language}{default}{en-us}{alt}{2}{}{1}{anny}
+      \annotation{item}{language}{default}{en-us}{default}{1}{}{0}{ann1}
+      \annotation{item}{language}{default}{en-us}{default}{2}{}{1}{ann2}
+      \annotation{part}{author}{default}{en-us}{default}{1}{family}{1}{student}
     \endentry
 |;
 

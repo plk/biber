@@ -1999,9 +1999,11 @@
   <!-- SECTION 0 -->
   <bcf:bibdata section="0">
     <bcf:datasource type="file" datatype="bibtex">multiscript.bib</bcf:datasource>
+    <bcf:datasource type="file" datatype="biblatexml">multiscript.bltxml</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1">ms1</bcf:citekey>
+    <bcf:citekey order="2">bltx1</bcf:citekey>
   </bcf:section>
   <!-- SORTING -->
   <bcf:sortingtemplate name="nty">

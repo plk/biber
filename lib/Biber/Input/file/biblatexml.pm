@@ -809,7 +809,17 @@ sub create_entry {
 sub _annotation {
   my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
+
+    my $form = $node->getAttribute('msform') // 'default';
+    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+
     my $field = $node->getAttribute('field');
+    if ($form) {                # if there is a form, there must be a lang
+      my $mssep = $CONFIG_META_MARKERS{mssep};
+      # normalise to the same format as bibtex input
+      $field .= "$mssep$form$mssep$lang";
+    }
+
     my $name = $node->getAttribute('name') || 'default';
     my $literal = $node->getAttribute('literal') || '0';
     my $ann = $node->textContent();
@@ -827,7 +837,7 @@ sub _annotation {
       }
     }
     else {# Generic entry annotation
-      $bibentry->set_datafield(_norm($f), $node->textContent());
+      $bibentry->set_datafield(_norm($f), $node->textContent(), $form, $lang);
     }
   }
   return;
@@ -856,27 +866,31 @@ sub _related {
 # literal fields
 sub _literal {
   my ($bibentry, $entry, $f, $key) = @_;
-  my $node = $entry->findnodes("./$f")->get_node(1);
-  my $setval = $node->textContent();
-  my $xdmi = Biber::Config->getoption('xdatamarker');
-  my $xnsi = Biber::Config->getoption('xnamesep');
+  foreach my $node ($entry->findnodes("./$f")) {
+    my $setval = $node->textContent();
+    my $xdmi = Biber::Config->getoption('xdatamarker');
+    my $xnsi = Biber::Config->getoption('xnamesep');
 
-  # XDATA is special, if found, set it
-  if (my $xdatav = $node->getAttribute('xdata')) {
-    $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
-    $bibentry->add_xdata_ref(_norm($f), $xdatav);
-    $setval = $xdatav;
-  }
+    my $form = $node->getAttribute('msform') // 'default';
+    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
 
-  # eprint is special case
-  if ($f eq "$NS:eprint") {
-    $bibentry->set_datafield('eprinttype', $node->getAttribute('type'));
-    if (my $ec = $node->getAttribute('class')) {
-      $bibentry->set_datafield('eprintclass', $ec);
+    # XDATA is special, if found, set it
+    if (my $xdatav = $node->getAttribute('xdata')) {
+      $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
+      $bibentry->add_xdata_ref(_norm($f), $xdatav);
+      $setval = $xdatav;
     }
-  }
-  else {
-    $bibentry->set_datafield(_norm($f), $setval);
+
+    # eprint is special case
+    if ($f eq "$NS:eprint") {
+      $bibentry->set_datafield('eprinttype', $node->getAttribute('type'));
+      if (my $ec = $node->getAttribute('class')) {
+        $bibentry->set_datafield('eprintclass', $ec, $form, $lang);
+      }
+    }
+    else {
+      $bibentry->set_datafield(_norm($f), $setval, $form, $lang);
+    }
   }
 
   return;
@@ -884,19 +898,24 @@ sub _literal {
 
 # xSV field
 sub _xsv {
-  my ($bibentry, $entry, $f, $key) = @_;
-  my $node = $entry->findnodes("./$f")->get_node(1);
+  my ($bibentry, $entry, $f, $key, $form, $lang) = @_;
+  foreach my $node ($entry->findnodes("./$f")) {
 
-  # XDATA is special
-  if (fc(_norm($f)) eq 'xdata') {
-    # Just split with no XDATA setting on list items
-    my $value = _split_list($bibentry, $node, $key, $f, 1);
-    $bibentry->add_xdata_ref('xdata', $value);
-    $bibentry->set_datafield(_norm($f), Biber::Entry::List->new($value));
-  }
-  else {
-    $bibentry->set_datafield(_norm($f),
-                             Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f)));
+    my $form = $node->getAttribute('msform') // 'default';
+    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+
+    # XDATA is special
+    if (fc(_norm($f)) eq 'xdata') {
+      # Just split with no XDATA setting on list items
+      my $value = _split_list($bibentry, $node, $key, $f, 1);
+      $bibentry->add_xdata_ref('xdata', $value);
+      $bibentry->set_datafield(_norm($f), Biber::Entry::List->new($value), $form, $lang);
+    }
+    else {
+      $bibentry->set_datafield(_norm($f),
+                               Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f)),
+                               $form, $lang);
+    }
   }
 
   return;
@@ -934,11 +953,16 @@ sub _uri {
 
 # List fields
 sub _list {
-  my ($bibentry, $entry, $f, $key) = @_;
-  my $node = $entry->findnodes("./$f")->get_node(1);
+  my ($bibentry, $entry, $f, $key, $form, $lang) = @_;
+  foreach my $node ($entry->findnodes("./$f")) {
 
-  $bibentry->set_datafield(_norm($f),
-                           Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f)));
+    my $form = $node->getAttribute('msform') // 'default';
+    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+
+    $bibentry->set_datafield(_norm($f),
+                             Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f)),
+                             $form, $lang);
+  }
 
   return;
 }
@@ -1147,51 +1171,56 @@ sub _datetime {
 
 # Name fields
 sub _name {
-  my ($bibentry, $entry, $f, $key) = @_;
+  my ($bibentry, $entry, $f, $key, $form, $lang) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $bee = $bibentry->get_field('entrytype');
-  my $node = $entry->findnodes("./$NS:names[\@type='$f']")->get_node(1);
-  my $xdmi = Biber::Config->getoption('xdatamarker');
-  my $xnsi = Biber::Config->getoption('xnamesep');
 
-  my $names = new Biber::Entry::Names;
+  foreach my $node ($entry->findnodes("./$NS:names[\@type='$f']")) {
+    my $xdmi = Biber::Config->getoption('xdatamarker');
+    my $xnsi = Biber::Config->getoption('xnamesep');
 
-  # per-namelist options
-  foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
-    if ($node->hasAttribute($nlo)) {
-      my $nlov = $node->getAttribute($nlo);
-      my $oo = expand_option_input($nlo, $nlov, $CONFIG_BIBLATEX_OPTIONS{NAMELIST}{$nlo}{INPUT});
+    my $form = $node->getAttribute('msform') // 'default';
+    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
 
-      foreach my $o ($oo->@*) {
-        my $method = 'set_' . $o->[0];
-        $names->$method($o->[1]);
-      }
-    }
-  }
+    my $names = new Biber::Entry::Names;
 
-  my @names = $node->findnodes("./$NS:name");
-  for (my $i = 0; $i <= $#names; $i++) {
-    my $namenode = $names[$i];
+    # per-namelist options
+    foreach my $nlo (keys $CONFIG_SCOPEOPT_BIBLATEX{NAMELIST}->%*) {
+      if ($node->hasAttribute($nlo)) {
+        my $nlov = $node->getAttribute($nlo);
+        my $oo = expand_option_input($nlo, $nlov, $CONFIG_BIBLATEX_OPTIONS{NAMELIST}{$nlo}{INPUT});
 
-    # XDATA is special, if found, set it
-    if (my $xdatav = $namenode->getAttribute('xdata')) {
-      $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
-      if ($bibentry->add_xdata_ref(_norm($f), $xdatav, $i)) {
-        # Add special xdata ref empty name as placeholder
-        $names->add_name(Biber::Entry::Name->new(xdata => $xdatav));
-        next;
+        foreach my $o ($oo->@*) {
+          my $method = 'set_' . $o->[0];
+          $names->$method($o->[1]);
+        }
       }
     }
 
-    $names->add_name(parsename($namenode, $f, $key, $i+1));
-  }
+    my @names = $node->findnodes("./$NS:name");
+    for (my $i = 0; $i <= $#names; $i++) {
+      my $namenode = $names[$i];
 
-  # Deal with explicit "moreenames" in data source
-  if ($node->getAttribute('morenames')) {
-    $names->set_morenames;
-  }
+      # XDATA is special, if found, set it
+      if (my $xdatav = $namenode->getAttribute('xdata')) {
+        $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
+        if ($bibentry->add_xdata_ref(_norm($f), $xdatav, $i)) {
+          # Add special xdata ref empty name as placeholder
+          $names->add_name(Biber::Entry::Name->new(xdata => $xdatav));
+          next;
+        }
+      }
 
-  $bibentry->set_datafield(_norm($f), $names);
+      $names->add_name(parsename($namenode, $f, $key, $i+1));
+    }
+
+    # Deal with explicit "moreenames" in data source
+    if ($node->getAttribute('morenames')) {
+      $names->set_morenames;
+    }
+
+    $bibentry->set_datafield(_norm($f), $names, $form, $lang);
+  }
 
   return;
 }

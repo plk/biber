@@ -975,7 +975,7 @@ sub _annotation {
 
   foreach my $a (split(/\s*;\s*/, $value)) {
     my ($count, $part, $annotations) = $a =~ /^\s*(\d+)?:?([^=]+)?=(.+)/;
-    # Is the annotations a literal annotation?
+    # Is the annotation a literal annotation?
     my $literal = 0;
     if ($annotations =~ m/^\s*"(.+)"\s*$/) {
       $literal = 1;

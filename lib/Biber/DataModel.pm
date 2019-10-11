@@ -1008,6 +1008,11 @@ sub generate_bltxml_schema {
           $writer->startTag('element', 'name' => "$bltx:names");
 
           $writer->startTag('choice');
+
+          # multiscript attributes
+          $writer->emptyTag('ref', 'name' => "msform");
+          $writer->emptyTag('ref', 'name' => "mslang");
+
           # xdata attribute ref
           $writer->emptyTag('ref', 'name' => 'xdata');
 
@@ -1117,6 +1122,8 @@ sub generate_bltxml_schema {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$list");
             $writer->startTag('choice');
+            $writer->emptyTag('ref', 'name' => "msform");
+            $writer->emptyTag('ref', 'name' => "mslang");
             $writer->emptyTag('ref', 'name' => 'xdata');
             $writer->startTag('choice');
             $writer->emptyTag('text');# text
@@ -1146,6 +1153,8 @@ sub generate_bltxml_schema {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
             $writer->startTag('choice');
+            $writer->emptyTag('ref', 'name' => "msform");
+            $writer->emptyTag('ref', 'name' => "mslang");
             $writer->emptyTag('ref', 'name' => 'xdata');
             $writer->emptyTag('data', 'type' => 'anyURI');
             $writer->endTag();   # choice
@@ -1164,6 +1173,11 @@ sub generate_bltxml_schema {
             $writer->startTag('element', 'name' => "$bltx:$field");
 
             $writer->startTag('choice');
+
+            # multiscript attributes
+            $writer->emptyTag('ref', 'name' => "msform");
+            $writer->emptyTag('ref', 'name' => "mslang");
+
             # xdata attribute ref
             $writer->emptyTag('ref', 'name' => 'xdata');
 
@@ -1224,6 +1238,8 @@ sub generate_bltxml_schema {
             else {
               $writer->startTag('element', 'name' => "$bltx:$field");
               $writer->startTag('choice');
+              $writer->emptyTag('ref', 'name' => "msform");
+              $writer->emptyTag('ref', 'name' => "mslang");
               $writer->emptyTag('ref', 'name' => 'xdata');
               $writer->startTag('choice');
               $writer->startTag('list');
@@ -1291,6 +1307,8 @@ sub generate_bltxml_schema {
             $writer->startTag('optional');
             $writer->startTag('element', 'name' => "$bltx:$field");
             $writer->startTag('choice');
+            $writer->emptyTag('ref', 'name' => "msform");
+            $writer->emptyTag('ref', 'name' => "mslang");
             $writer->emptyTag('ref', 'name' => 'xdata');
             $writer->emptyTag('text');# text
             $writer->endTag(); # choice
@@ -1304,6 +1322,34 @@ sub generate_bltxml_schema {
       }
     }
   }
+
+  # msform attribute definition
+  # ===========================
+  $writer->comment('msform attribute definition');
+  $writer->startTag('define', 'name' => 'msform');
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'msform');
+  $writer->startTag('choice');
+  foreach my $form ($dm->get_constant_value('multiscriptforms')) {# list type so returns list
+    $writer->dataElement('value', $form);
+  }
+  $writer->endTag();# choice
+  $writer->endTag();# attribute
+  $writer->endTag();# optional
+  $writer->endTag();# define
+  # ===========================
+
+  # msform attribute definition
+  # ===========================
+  $writer->comment('mslang attribute definition');
+  $writer->startTag('define', 'name' => 'mslang');
+  $writer->startTag('optional');
+  $writer->startTag('attribute', 'name' => 'mslang');
+  $writer->emptyTag('text');# text
+  $writer->endTag();# attribute
+  $writer->endTag();# optional
+  $writer->endTag();# define
+  # ===========================
 
   # xdata attribute definition
   # ===========================
@@ -1338,7 +1384,7 @@ sub generate_bltxml_schema {
   $writer->comment('generic annotation element definition');
   $writer->startTag('define', 'name' => 'mannotation');
   $writer->startTag('zeroOrMore');
-  $writer->startTag('element', 'name' => "$bltx:mannotation");
+  $writer->startTag('element', 'name' => "$bltx:annotation");
   $writer->emptyTag('attribute', 'name' => 'field');
   $writer->startTag('optional');
   $writer->emptyTag('attribute', 'name' => 'name');
@@ -1352,6 +1398,8 @@ sub generate_bltxml_schema {
   $writer->startTag('optional');
   $writer->emptyTag('attribute', 'name' => 'literal');
   $writer->endTag(); # optional
+  $writer->emptyTag('ref', 'name' => "msform");
+  $writer->emptyTag('ref', 'name' => "mslang");
   $writer->emptyTag('text');# text
   $writer->endTag(); # mannotation element
   $writer->endTag(); # zeroOrMore

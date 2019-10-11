@@ -443,6 +443,7 @@ sub get_labeldate_info {
 sub set_field {
   my ($self, $key, $val, $form, $lang) = @_;
   no autovivification;
+  $lang = fc($lang) if $lang;
 
   if (defined($self->{derivedfields}{$key})) {
     $self->{derivedfields}{$key}->set_value($val, $form, $lang);
@@ -460,14 +461,15 @@ sub set_field {
 =cut
 
 sub set_datafield {
-  my ($self, $key, $val, $form, $lang) = @_;
+  my ($self, $field, $val, $form, $lang) = @_;
   no autovivification;
+  $lang = fc($lang) if $lang;
 
-  if (defined($self->{datafields}{$key})) {
-    $self->{datafields}{$key}->set_value($val, $form, $lang);
+  if (defined($self->{datafields}{$field})) {
+    $self->{datafields}{$field}->set_value($val, $form, $lang);
   }
   else {
-    $self->{datafields}{$key} = Biber::Entry::FieldValue->new($val, $form, $lang);
+    $self->{datafields}{$field} = Biber::Entry::FieldValue->new($val, $form, $lang);
   }
   return;
 }
@@ -480,16 +482,17 @@ sub set_datafield {
 =cut
 
 sub get_field {
-  my ($self, $key, $form, $lang) = @_;
-  return undef unless $key;
+  my ($self, $field, $form, $lang) = @_;
+  return undef unless $field;
   no autovivification;
+  $lang = fc($lang) if $lang;
 
   my $v;
-  if (defined($self->{datafields}{$key})) {
-    $v = $self->{datafields}{$key}->get_value($form, $lang);
+  if (defined($self->{datafields}{$field})) {
+    $v = $self->{datafields}{$field}->get_value($form, $lang);
   }
-  elsif (defined($self->{derivedfields}{$key})) {
-    $v = $self->{derivedfields}{$key}->get_value($form, $lang);
+  elsif (defined($self->{derivedfields}{$field})) {
+    $v = $self->{derivedfields}{$field}->get_value($form, $lang);
   }
 
   return $v;
@@ -502,13 +505,14 @@ sub get_field {
 =cut
 
 sub get_datafield {
-  my ($self, $key, $form, $lang) = @_;
-  return undef unless $key;
+  my ($self, $field, $form, $lang) = @_;
+  return undef unless $field;
   no autovivification;
+  $lang = fc($lang) if $lang;
 
   my $v;
-  if (defined($self->{datafields}{$key})) {
-    $v = $self->{datafields}{$key}->get_value($form, $lang);
+  if (defined($self->{datafields}{$field})) {
+    $v = $self->{datafields}{$field}->get_value($form, $lang);
   }
   return $v;
 }
@@ -520,9 +524,9 @@ sub get_datafield {
 =cut
 
 sub get_fieldraw {
-  my ($self, $key) = @_;
-  return undef unless $key;
-  return $self->{datafields}{$key} // $self->{derivedfields}{$key};
+  my ($self, $field) = @_;
+  return undef unless $field;
+  return $self->{datafields}{$field} // $self->{derivedfields}{$field};
 }
 
 

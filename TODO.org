@@ -158,23 +158,30 @@
 *** DONE granular xdata doesn't work for dates
 *** DONE granular xdata at field level and below must be between same field and datatypes
 * TODO Multiscript
-** DONE Decomm DOT output
 ** TODO Documentation
 *** TODO Document \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** TODO multiscriptforms constant
-** DONE Datamodel
+*** TODO 'langtags' special annotation name
+** TODO biblatex
+*** DONE Datamodel
 *** DONE Add valid multiscript fields to datamodel
 *** DONE Add new datamodel constant list of default forms (original, transliteration, transcription, translation)
+*** TODO msform and mslang as biblatex options with scope down to ENTRY
 ** TODO Biber
+*** DONE Decomm DOT output
 *** DONE Parsing BCP47 function
 https://tools.ietf.org/html/bcp47
 
-*** TODO msform/mslang are currently in test .bcfs as GLOBAL/ENTRYTYPE/ENTRY scope option - is this right?
-*** TODO Names and lists
+*** DONE Names and lists
 **** DONE Need new List object
-**** TODO Namelists need msform and mslang accessor for items
-**** TODO Lists need msform and mslang accessor for items
-**** TODO Both need these populating on data read with inherit/override of FieldValue default by annotations
+**** DONE Namelists need msform and mslang accessor for items
+**** DONE Lists need msform and mslang accessor for items
+**** DONE Both need these populating on data read with inherit/override of FieldValue default by annotations
 *** DONE FieldValue object
 **** DONE Switch to FieldValue
-*** TODO msform and mslang as bibaltex options with scope down to ENTRY
+*** TODO Check for valid forms on first parsing
+*** TODO What to do for invalid langtags?
+*** TODO biblatex input
+*** TODO biblatex output
+*** TODO bibtex output
+*** TODO msform/mslang are currently in test .bcfs as GLOBAL/ENTRYTYPE/ENTRY scope option - is this right?

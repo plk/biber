@@ -29,58 +29,41 @@ Biber::Entry::Annotation
 
 sub set_annotation {
   shift; # class method so don't care about class name
-  my ($scope, $key, $field, $name, $value, $literal, $count, $part, ) = @_;
+  my ($scope, $key, $field, $name, $value, $literal, $count, $part, $form, $lang) = @_;
+  $name = $name // 'default';
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+
   if ($scope eq 'field') {
-    $ANN->{field}{$key}{$field}{$name}{value} = $value;
-    $ANN->{field}{$key}{$field}{$name}{literal} = $literal; # Record if this annotation is a literal
+    $ANN->{field}{$key}{$field}{$form}{$lang}{$name}{value} = $value;
+    $ANN->{field}{$key}{$field}{$form}{$lang}{$name}{literal} = $literal; # Record if this annotation is a literal
   }
   elsif ($scope eq 'item') {
-    $ANN->{item}{$key}{$field}{$name}{$count}{value} = $value;
-    $ANN->{item}{$key}{$field}{$name}{$count}{literal} = $literal; # Record if this annotation is a literal
+    $ANN->{item}{$key}{$field}{$form}{$lang}{$name}{$count}{value} = $value;
+    $ANN->{item}{$key}{$field}{$form}{$lang}{$name}{$count}{literal} = $literal; # Record if this annotation is a literal
   }
   elsif ($scope eq 'part') {
-    $ANN->{part}{$key}{$field}{$name}{$count}{$part}{value} = $value;
-    $ANN->{part}{$key}{$field}{$name}{$count}{$part}{literal} = $literal; # Record if this annotation is a literal
+    $ANN->{part}{$key}{$field}{$form}{$lang}{$name}{$count}{$part}{value} = $value;
+    $ANN->{part}{$key}{$field}{$form}{$lang}{$name}{$count}{$part}{literal} = $literal; # Record if this annotation is a literal
   }
 
   # For easy checking later whether or not a field is annotated
-  $ANN->{fields}{$key}{$field} = 1;
+  $ANN->{fields}{$key}{$field}{$form}{$lang} = 1;
 
   # Record all annotation names for a field
-  unless (first {fc($_) eq fc($name)} $ANN->{names}{$key}{$field}->@*) {
-    push $ANN->{names}{$key}{$field}->@*, $name;
+  unless (first {fc($_) eq fc($name)} $ANN->{names}{$key}{$field}{$form}{$lang}->@*) {
+    push $ANN->{names}{$key}{$field}{$form}{$lang}->@*, $name;
   }
 
   # Record all fields annotated with a name
-  unless (first {fc($_) eq fc($field)} $ANN->{fieldswithname}{$key}{$name}->@*) {
-    push $ANN->{fieldswithname}{$key}{$name}->@*, $field;
+  unless (first {fc($_) eq fc($field)} $ANN->{fieldswithname}{$key}{$name}{$form}{$lang}->@*) {
+    push $ANN->{fieldswithname}{$key}{$name}{$form}{$lang}->@*, $field;
   }
 
+  # Record all forms/langs for an annotation
+  $ANN->{ms}{$key}{$field}{$name}{$form}{$lang} = 1;
+
   return;
-}
-
-=head2 get_annotation_names
-
-  Retrieve all annotation names for a citekey and field
-
-=cut
-
-sub get_annotation_names {
-  shift; # class method so don't care about class name
-  my ($key, $field) = @_;
-  return $ANN->{names}{$key}{$field}->@*;
-}
-
-=head2 get_annotations
-
-  Retrieve all annotations for a scope and citekey
-
-=cut
-
-sub get_annotations {
-  shift; # class method so don't care about class name
-  my ($scope, $key, $field) = @_;
-  return sort keys $ANN->{$scope}{$key}{$field}->%*;
 }
 
 =head2 get_annotation
@@ -91,18 +74,75 @@ sub get_annotations {
 
 sub get_annotation {
   shift; # class method so don't care about class name
-  my ($scope, $key, $field, $name, $count, $part) = @_;
-  $name = $name || 'default';
+  my ($scope, $key, $field, $name, $count, $part, $form, $lang) = @_;
+  $name = $name // 'default';
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
   if ($scope eq 'field') {
-    return $ANN->{field}{$key}{$field}{$name}{value};
+    return $ANN->{field}{$key}{$field}{$form}{$lang}{$name}{value};
   }
   elsif ($scope eq 'item') {
-    return $ANN->{item}{$key}{$field}{$name}{$count}{value};
+    return $ANN->{item}{$key}{$field}{$form}{$lang}{$name}{$count}{value};
   }
   elsif ($scope eq 'part') {
-    return $ANN->{part}{$key}{$field}{$name}{$count}{$part}{value};
+    return $ANN->{part}{$key}{$field}{$form}{$lang}{$name}{$count}{$part}{value};
   }
   return undef;
+}
+
+=head2 get_annotation_forms
+
+  Retrieve all multiscript forms for an annotation
+
+=cut
+
+sub get_annotation_forms {
+  shift; # class method so don't care about class name
+  my ($key, $field, $name) = @_;
+  $name = $name // 'default';
+  return sort keys $ANN->{ms}{$key}{$field}{$name}->%*;
+}
+
+=head2 get_annotation_langs
+
+  Retrieve all multiscript langs for an annotation form
+
+=cut
+
+sub get_annotation_langs {
+  shift; # class method so don't care about class name
+  my ($key, $field, $name, $form) = @_;
+  $name = $name // 'default';
+  $form = $form // 'default';
+  return sort keys $ANN->{ms}{$key}{$field}{$name}{$form}->%*;
+}
+
+=head2 get_annotation_names
+
+  Retrieve all annotation names for a citekey and field
+
+=cut
+
+sub get_annotation_names {
+  shift; # class method so don't care about class name
+  my ($key, $field, $form, $lang) = @_;
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+  return $ANN->{names}{$key}{$field}{$form}{$lang}->@*;
+}
+
+=head2 get_annotations
+
+  Retrieve all annotations for a scope and citekey
+
+=cut
+
+sub get_annotations {
+  shift; # class method so don't care about class name
+  my ($scope, $key, $field, $form, $lang) = @_;
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+  return sort keys $ANN->{$scope}{$key}{$field}{$form}{$lang}->%*;
 }
 
 =head2 is_literal_annotation
@@ -113,16 +153,18 @@ sub get_annotation {
 
 sub is_literal_annotation {
   shift; # class method so don't care about class name
-  my ($scope, $key, $field, $name, $count, $part) = @_;
-  $name = $name || 'default';
+  my ($scope, $key, $field, $name, $count, $part, $form, $lang) = @_;
+  $name = $name // 'default';
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
   if ($scope eq 'field') {
-    return $ANN->{field}{$key}{$field}{$name}{literal};
+    return $ANN->{field}{$key}{$field}{$form}{$lang}{$name}{literal};
   }
   elsif ($scope eq 'item') {
-    return $ANN->{item}{$key}{$field}{$name}{$count}{literal};
+    return $ANN->{item}{$key}{$field}{$form}{$lang}{$name}{$count}{literal};
   }
   elsif ($scope eq 'part') {
-    return $ANN->{part}{$key}{$field}{$name}{$count}{$part}{literal};
+    return $ANN->{part}{$key}{$field}{$form}{$lang}{$name}{$count}{$part}{literal};
   }
   return undef;
 }
@@ -135,8 +177,10 @@ sub is_literal_annotation {
 
 sub fields_with_named_annotation {
   shift; # class method so don't care about class name
-  my ($key, $name) = @_;
-  return $ANN->{fieldswithname}{$key}{$name} // [];
+  my ($key, $name, $form, $lang) = @_;
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+  return $ANN->{fieldswithname}{$key}{$name}{$form}{$lang} // [];
 }
 
 =head2 is_annotated_field
@@ -147,8 +191,10 @@ sub fields_with_named_annotation {
 
 sub is_annotated_field {
   shift; # class method so don't care about class name
-  my ($key, $field) = @_;
-  return $ANN->{fields}{$key}{$field};
+  my ($key, $field, $form, $lang) = @_;
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+  return $ANN->{fields}{$key}{$field}{$form}{$lang};
 }
 
 =head2 get_field_annotation
@@ -159,9 +205,11 @@ sub is_annotated_field {
 
 sub get_field_annotation {
   shift; # class method so don't care about class name
-  my ($key, $field, $name) = @_;
-  $name = $name || 'default';
-  return $ANN->{field}{$key}{$field}{$name}{value};
+  my ($key, $field, $name, $form, $lang) = @_;
+  $name = $name // 'default';
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+  return $ANN->{field}{$key}{$field}{$form}{$lang}{$name}{value};
 }
 
 =head2 get_annotated_fields
@@ -178,15 +226,17 @@ sub get_annotated_fields {
 
 =head2 get_annotated_items
 
-  Retrieve the itemcounts for a particular scope, key, field and nam3
+  Retrieve the itemcounts for a particular scope, key, field and name
 
 =cut
 
 sub get_annotated_items {
   shift; # class method so don't care about class name
-  my ($scope, $key, $field, $name) = @_;
-  $name = $name || 'default';
-  return sort keys $ANN->{$scope}{$key}{$field}{$name}->%*;
+  my ($scope, $key, $field, $name, $form, $lang) = @_;
+  $name = $name // 'default';
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+  return sort keys $ANN->{$scope}{$key}{$field}{$form}{$lang}{$name}->%*;
 }
 
 =head2 get_annotated_parts
@@ -197,22 +247,32 @@ sub get_annotated_items {
 
 sub get_annotated_parts {
   shift; # class method so don't care about class name
-  my ($scope, $key, $field, $name, $count) = @_;
-  $name = $name || 'default';
-  return sort keys $ANN->{$scope}{$key}{$field}{$name}{$count}->%*;
+  my ($scope, $key, $field, $name, $count, $form, $lang) = @_;
+  $name = $name // 'default';
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+  return sort keys $ANN->{$scope}{$key}{$field}{$form}{$lang}{$name}{$count}->%*;
 }
 
-=head2 del_named_annotattion
+=head2 del_annotation
 
-  Deletes a named annotation
+  Deletes an annotation
 
 =cut
 
-sub del_named_annotation {
-  my ($key, $field, $name) = @_;
-  delete $ANN->{field}{$key}{$field}{$name};
-  delete $ANN->{item}{$key}{$field}{$name};
-  delete $ANN->{part}{$key}{$field}{$name};
+sub del_annotation {
+  my ($key, $field, $name, $form, $lang) = @_;
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+  delete $ANN->{field}{$key}{$field}{$form}{$lang}{$name};
+  delete $ANN->{item}{$key}{$field}{$form}{$lang}{$name};
+  delete $ANN->{part}{$key}{$field}{$form}{$lang}{$name};
+
+  $ANN->{names}{$key}{$field}{$form}{$lang} = [grep {$_ ne $name} $ANN->{names}{$key}{$field}{$form}{$lang}->@*];
+
+  delete $ANN->{fieldswithname}{$key}{$name};
+  delete $ANN->{ms}{$key}{$name};
+
   return;
 }
 

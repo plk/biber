@@ -131,7 +131,7 @@ if (exists $opts->{'help'}) {
   pod2usage(-verbose => 2, -noperldoc => 1, -exitval => EXIT_OK);
 }
 
-if (exists $opts->{'version'}) {
+if (exists $opts->{version}) {
   my $v = "biber version: $Biber::Config::VERSION";
   $v .= ' (beta)' if $Biber::Config::BETA_VERSION;
   say "$v";
@@ -139,7 +139,7 @@ if (exists $opts->{'version'}) {
 }
 
 # Show location of PAR::Packer cache
-if (exists $opts->{'cache'}) {
+if (exists $opts->{cache}) {
   if (my $cache = $ENV{PAR_TEMP}) {
     $cache =~ s|//|/|og; # Sanitise path in case it worries people
     say $cache;
@@ -151,7 +151,7 @@ if (exists $opts->{'cache'}) {
 }
 
 # Show location of default tool mode config file and exit
-if (exists $opts->{'tool_config'}) {
+if (exists $opts->{tool_config}) {
   (my $vol, my $dir, undef) = File::Spec->splitpath( $INC{"Biber/Config.pm"} );
   $dir =~ s/\/$//; # splitpath sometimes leaves a trailing '/'
   say File::Spec->catpath($vol, "$dir", 'biber-tool.conf');
@@ -162,6 +162,11 @@ if (exists $opts->{'tool_config'}) {
 unless (@ARGV) {
   pod2usage(-verbose => 0,
             -exitval => EXIT_ERROR);
+}
+
+# normalise bcp47 tag case
+if (exists $opts->{mslang}) {
+  $opts->{mslang} = fc($opts->{mslang});
 }
 
 # Resolve some option shortcuts and legacy aliases
