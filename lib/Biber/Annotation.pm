@@ -29,7 +29,7 @@ Biber::Entry::Annotation
 
 sub set_annotation {
   shift; # class method so don't care about class name
-  my ($scope, $key, $field, $name, $value, $literal, $count, $part, $form, $lang) = @_;
+  my ($scope, $key, $field, $form, $lang, $name, $value, $literal, $count, $part) = @_;
   $name = $name // 'default';
   $form = $form // 'default';
   $lang = $lang // Biber::Config->getoption('mslang');
@@ -56,8 +56,10 @@ sub set_annotation {
   }
 
   # Record all fields annotated with a name
-  unless (first {fc($_) eq fc($field)} $ANN->{fieldswithname}{$key}{$name}{$form}{$lang}->@*) {
-    push $ANN->{fieldswithname}{$key}{$name}{$form}{$lang}->@*, $field;
+  unless (first {fc($_->[0]) eq fc($field) and
+                   fc($_->[1]) eq fc($form) and
+                     fc($_->[2]) eq fc($lang)} $ANN->{fieldswithname}{$key}{$name}->@*) {
+    push $ANN->{fieldswithname}{$key}{$name}->@*, [$field, $form, $lang];
   }
 
   # Record all forms/langs for an annotation
@@ -74,7 +76,7 @@ sub set_annotation {
 
 sub get_annotation {
   shift; # class method so don't care about class name
-  my ($scope, $key, $field, $name, $count, $part, $form, $lang) = @_;
+  my ($scope, $key, $field, $form, $lang, $name, $count, $part) = @_;
   $name = $name // 'default';
   $form = $form // 'default';
   $lang = $lang // Biber::Config->getoption('mslang');
@@ -153,7 +155,7 @@ sub get_annotations {
 
 sub is_literal_annotation {
   shift; # class method so don't care about class name
-  my ($scope, $key, $field, $name, $count, $part, $form, $lang) = @_;
+  my ($scope, $key, $field, $form, $lang, $name, $count, $part) = @_;
   $name = $name // 'default';
   $form = $form // 'default';
   $lang = $lang // Biber::Config->getoption('mslang');
@@ -177,10 +179,8 @@ sub is_literal_annotation {
 
 sub fields_with_named_annotation {
   shift; # class method so don't care about class name
-  my ($key, $name, $form, $lang) = @_;
-  $form = $form // 'default';
-  $lang = $lang // Biber::Config->getoption('mslang');
-  return $ANN->{fieldswithname}{$key}{$name}{$form}{$lang} // [];
+  my ($key, $name) = @_;
+  return $ANN->{fieldswithname}{$key}{$name} // [];
 }
 
 =head2 is_annotated_field

@@ -1281,17 +1281,16 @@ sub resolve_multiscript {
     }
     my $be = $bibentries->entry($citekey);
     foreach my $f (Biber::Annotation->fields_with_named_annotation($citekey, 'langtags')->@*) {
-      my ($field, $form, $lang) = mssplit($f);
+      my ($field, $form, $lang) = ($f->[0], $f->[1], $f->[2]);
       if ($dm->is_multiscript($field) and $dm->field_is_fieldtype('list', $field)) {
         my $val = $be->get_field($field, $form, $lang);
-        my $langtag = $self->langtags->parse($lang);
         for (my $i=1;$i<=$val->count;$i++) {
-          if (my $a = Biber::Annotation->get_annotation('item', $citekey, $f, 'langtags', $i)) {
+          if (my $a = Biber::Annotation->get_annotation('item', $citekey, $field, $form, $lang, 'langtags', $i)) {
             $val->set_nth_mslang($i, $self->langtags->parse($a)->as_string);
-            Biber::Annotation->del_annotation($citekey, $f, 'langtags');
+            Biber::Annotation->del_annotation($citekey, $field, 'langtags');
           }
           else {
-            $val->set_nth_mslang($i, $langtag->as_string);
+            $val->set_nth_mslang($i, $self->langtags->parse($lang)->as_string);
           }
         }
       }

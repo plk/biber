@@ -809,31 +809,24 @@ sub create_entry {
 sub _annotation {
   my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
-
     my $form = $node->getAttribute('msform') // 'default';
     my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
-
     my $field = $node->getAttribute('field');
-    if ($form) {                # if there is a form, there must be a lang
-      my $mssep = $CONFIG_META_MARKERS{mssep};
-      # normalise to the same format as bibtex input
-      $field .= "$mssep$form$mssep$lang";
-    }
-
     my $name = $node->getAttribute('name') || 'default';
     my $literal = $node->getAttribute('literal') || '0';
     my $ann = $node->textContent();
     my $item = $node->getAttribute('item');
     my $part = $node->getAttribute('part');
+
     if ($field) {# Complex metadata annotation for another field
       if ($part) {
-        Biber::Annotation->set_annotation('part', $key, $field, $name, $ann, $literal, $item, $part);
+        Biber::Annotation->set_annotation('part', $key, $field, $form, $lang, $name, $ann, $literal, $item, $part);
       }
       elsif ($item) {
-        Biber::Annotation->set_annotation('item', $key, $field, $name, $ann, $literal, $item);
+        Biber::Annotation->set_annotation('item', $key, $field, $form, $lang, $name, $ann, $literal, $item);
       }
       else {
-        Biber::Annotation->set_annotation('field', $key, $field, $name, $ann, $literal);
+        Biber::Annotation->set_annotation('field', $key, $field, $form, $lang, $name, $ann, $literal);
       }
     }
     else {# Generic entry annotation

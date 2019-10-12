@@ -179,6 +179,7 @@ https://tools.ietf.org/html/bcp47
 **** DONE Both need these populating on data read with inherit/override of FieldValue default by annotations
 *** DONE FieldValue object
 **** DONE Switch to FieldValue
+*** TODO xdata needs forms and langs
 *** TODO Check for valid forms on first parsing
 *** TODO What to do for invalid langtags?
 *** TODO biblatex input

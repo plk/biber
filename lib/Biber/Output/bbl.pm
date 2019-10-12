@@ -582,8 +582,8 @@ sub set_output_entry {
     foreach my $n (Biber::Annotation->get_annotations('field', $key, $f)) {
       foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
         foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
-          my $v = Biber::Annotation->get_annotation('field', $key, $f, $n, $form, $lang);
-          my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $n, $form, $lang);
+          my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
+          my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
           $acc .= "      \\annotation{field}{$f}{$form}{$lang}{$n}{}{}{$l}{$v}\n";
         }
       }
@@ -595,8 +595,8 @@ sub set_output_entry {
       foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
         foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
           foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f, $n)) {
-            my $v = Biber::Annotation->get_annotation('item', $key, $f, $n, $c);
-            my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $n, $c);
+            my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
+            my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
             $acc .= "      \\annotation{item}{$f}{$form}{$lang}{$n}{$c}{}{$l}{$v}\n";
           }
         }
@@ -610,8 +610,8 @@ sub set_output_entry {
         foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
           foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f, $n)) {
             foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $n, $c)) {
-              my $v = Biber::Annotation->get_annotation('part', $key, $f, $n, $c, $p);
-              my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $n, $c, $p);
+              my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
+              my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               $acc .= "      \\annotation{part}{$f}{$form}{$lang}{$n}{$c}{$p}{$l}{$v}\n";
             }
           }

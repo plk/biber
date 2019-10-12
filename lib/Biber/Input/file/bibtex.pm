@@ -930,9 +930,9 @@ sub _create_entry {
     # Now run any defined handler
     if ($dm->is_field($field)) {
       # Check the Text::BibTeX field in case we have e.g. date = {}
-      if ($e->get(encode('UTF-8', NFC($tbfield))) ne '') {
-        my $handler = _get_handler($tbfield);
-        my $v = $handler->($bibentry, $e, fc($tbfield), $k);
+      my $tbval = $e->get(encode('UTF-8', NFC($tbfield)));
+      if ($tbval) {
+        my $v = _get_handler($tbfield)->($bibentry, $e, $tbval, $tbfield, $field, $form, $lang, $k);
         if (defined($v)) {
           if ($v eq 'BIBER_SKIP_ENTRY') {# field data is bad enough to cause entry to be skipped
             return 0;
@@ -962,19 +962,17 @@ sub _create_entry {
 
 # Data annotation fields
 sub _annotation {
-  my ($bibentry, $entry, $field, $key) = @_;
-  my $value = $entry->get(encode('UTF-8', NFC($field)));
+  my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang, $key) = @_;
   my $ann = $CONFIG_META_MARKERS{annotation};
   my $nam = $CONFIG_META_MARKERS{namedannotation};
   # Get annotation name, "default" if none
   my $name = 'default';
-  if ($field =~ s/^(.+$ann)$nam(.+)$/$1/) {
+  if ($tbfield =~ s/^(.+$ann)$nam(.+)$/$1/) {
     $name = $2;
   }
-  $field =~ s/$ann$//;
 
   foreach my $a (split(/\s*;\s*/, $value)) {
-    my ($count, $part, $annotations) = $a =~ /^\s*(\d+)?:?([^=]+)?=(.+)/;
+    my ($item, $part, $annotations) = $a =~ /^\s*(\d+)?:?([^=]+)?=(.+)/;
     # Is the annotation a literal annotation?
     my $literal = 0;
     if ($annotations =~ m/^\s*"(.+)"\s*$/) {
@@ -982,13 +980,13 @@ sub _annotation {
       $annotations = $1;
     }
     if ($part) {
-      Biber::Annotation->set_annotation('part', $key, $field, $name, $annotations, $literal, $count, $part);
+      Biber::Annotation->set_annotation('part', $key, $field, $form, $lang, $name, $annotations, $literal, $item, $part);
     }
-    elsif ($count) {
-      Biber::Annotation->set_annotation('item', $key, $field, $name, $annotations, $literal, $count);
+    elsif ($item) {
+      Biber::Annotation->set_annotation('item', $key, $field, $form, $lang, $name, $annotations, $literal, $item);
     }
     else {
-      Biber::Annotation->set_annotation('field', $key, $field, $name, $annotations, $literal);
+      Biber::Annotation->set_annotation('field', $key, $field, $form, $lang, $name, $annotations, $literal);
     }
   }
   return;
@@ -996,8 +994,7 @@ sub _annotation {
 
 # Literal fields
 sub _literal {
-  my ($bibentry, $entry, $field, $key) = @_;
-  my $value = $entry->get(encode('UTF-8', NFC($field)));
+  my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang, $key) = @_;
 
   # Record any XDATA and skip if we did
   if ($bibentry->add_xdata_ref($field, $value)) {
@@ -1071,8 +1068,7 @@ sub _literal {
 
 # URI fields
 sub _uri {
-  my ($bibentry, $entry, $field) = @_;
-  my $value = $entry->get(encode('UTF-8', NFC($field)));
+  my ($bibentry, $entry, $value, $tbfield, $field) = @_;
 
   # Record any XDATA
   $bibentry->add_xdata_ref($field, $value);
@@ -1082,21 +1078,19 @@ sub _uri {
 
 # xSV field form
 sub _xsv {
-  my ($bibentry, $entry, $field) = @_;
+  my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang) = @_;
   my $Srx = Biber::Config->getoption('xsvsep');
   my $S = qr/$Srx/;
-  my $value = [ split(/$S/, $entry->get(encode('UTF-8', NFC($field)))) ];
 
   # Record any XDATA
-  $bibentry->add_xdata_ref($field, $value);
+  $bibentry->add_xdata_ref($field, [ split(/$S/, $value) ]);
 
-  return Biber::Entry::List->new($value);
+  return Biber::Entry::List->new([ split(/$S/, $value) ]);
 }
 
 # Verbatim fields
 sub _verbatim {
-  my ($bibentry, $entry, $field) = @_;
-  my $value = $entry->get(encode('UTF-8', NFC($field)));
+  my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang) = @_;
 
   # Record any XDATA
   $bibentry->add_xdata_ref($field, $value);
@@ -1112,9 +1106,8 @@ sub _verbatim {
 # -   -> ['', undef]
 
 sub _range {
-  my ($bibentry, $entry, $field, $key) = @_;
+  my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang, $key) = @_;
   my $values_ref;
-  my $value = $entry->get(encode('UTF-8', NFC($field)));
 
   # Record any XDATA and skip if we did
   if ($bibentry->add_xdata_ref($field, $value)) {
@@ -1145,7 +1138,7 @@ sub _range {
       push $values_ref->@*, [$start || '', $end];
     }
     else {
-      biber_warn("Range field '$field' in entry '$key' is malformed, falling back to literal", $bibentry);
+      biber_warn("Range field '$tbfield' in entry '$key' is malformed, falling back to literal", $bibentry);
       push $values_ref->@*, [$ovalue, undef];
     }
   }
@@ -1154,10 +1147,9 @@ sub _range {
 
 # Names
 sub _name {
-  my ($bibentry, $entry, $field, $key) = @_;
+  my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang, $key) = @_;
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
-  my $value = $entry->get(encode('UTF-8', NFC($field)));
   my $xnamesep = Biber::Config->getoption('xnamesep');
   my $bee = $bibentry->get_field('entrytype');
 
@@ -1214,7 +1206,7 @@ sub _name {
       # uniquename defaults to 'false' just in case we are in tool mode otherwise
       # there are spurious uninitialised warnings
 
-      next unless $no = parsename_x($name, $field, $key);
+      next unless $no = parsename_x($name, $tbfield, $key);
     }
     else { # Normal bibtex name format
       # Check for malformed names in names which aren't completely escaped
@@ -1238,7 +1230,7 @@ sub _name {
       # Skip names that don't parse for some reason
       # unique name defaults to 0 just in case we are in tool mode otherwise there are spurious
       # uninitialised warnings
-      next unless $no = parsename($name, $field);
+      next unless $no = parsename($name);
     }
 
     # Deal with implied "et al" in data source
@@ -1256,14 +1248,13 @@ sub _name {
 
 # Dates
 sub _datetime {
-  my ($bibentry, $entry, $field, $key) = @_;
+  my ($bibentry, $entry, $value, $tbfield, $field, $key) = @_;
   my $datetype = $field =~ s/date\z//xmsr;
-  my $date = $entry->get(encode('UTF-8', NFC($field)));
   my $secnum = $Biber::MASTER->get_current_section;
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($key);
 
-  my ($sdate, $edate, $sep, $unspec) = parse_date_range($bibentry, $datetype, $date);
+  my ($sdate, $edate, $sep, $unspec) = parse_date_range($bibentry, $datetype, $value);
 
   # Date had unspecified format
   # This does not differ for *enddate components as these are split into ranges
@@ -1385,20 +1376,19 @@ sub _datetime {
         }
       }
       else {
-        biber_warn("Entry '$key' ($ds): Invalid format '$date' of end date field '$field' - ignoring", $bibentry);
+        biber_warn("Entry '$key' ($ds): Invalid format '$value' of end date field '$tbfield' - ignoring", $bibentry);
       }
     }
   }
   else {
-    biber_warn("Entry '$key' ($ds): Invalid format '$date' of date field '$field' - ignoring", $bibentry);
+    biber_warn("Entry '$key' ($ds): Invalid format '$value' of date field '$tbfield' - ignoring", $bibentry);
   }
   return;
 }
 
 # Bibtex list fields with listsep separator
 sub _list {
-  my ($bibentry, $entry, $field) = @_;
-  my $value = $entry->get(encode('UTF-8', NFC($field)));
+  my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang) = @_;
 
   my @tmp = Text::BibTeX::split_list(NFC($value),# Unicode NFC boundary
                                      Biber::Config->getoption('listsep'),
@@ -1423,8 +1413,7 @@ sub _list {
 
 # Bibtex uri lists
 sub _urilist {
-  my ($bibentry, $entry, $field) = @_;
-  my $value = $entry->get(encode('UTF-8', NFC($field)));
+  my ($bibentry, $entry, $value, $tbfield, $field) = @_;
 
   # Unicode NFC boundary (passing to external library)
   my @tmp = Text::BibTeX::split_list(NFC($value),
@@ -1718,7 +1707,7 @@ sub parse_decode {
 =cut
 
 sub parsename {
-  my ($namestr, $fieldname) = @_;
+  my $namestr = shift;
 
   # First sanitise the namestring due to Text::BibTeX::Name limitations on whitespace
   $namestr =~ s/\A\s*|\s*\z//xms; # leading and trailing whitespace
@@ -1911,14 +1900,14 @@ sub _hack_month {
 }
 
 sub _get_handler {
-  my $field = shift;
+  my $tbfield = shift;
   my $ann = $CONFIG_META_MARKERS{annotation};
   my $nam = $CONFIG_META_MARKERS{namedannotation};
-  if ($field =~ m/$ann(?:$nam.+)?$/) {
+  if ($tbfield =~ m/$ann(?:$nam.+)?$/) {
     return $handlers->{custom}{annotation};
   }
   else {
-    $field = msfield($field);
+    my $field = msfield($tbfield);
     return $handlers->{$dm->get_fieldtype($field)}{$dm->get_fieldformat($field) || 'default'}{$dm->get_datatype($field)};
   }
 }
