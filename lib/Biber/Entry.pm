@@ -224,7 +224,10 @@ sub notnull {
 =cut
 
 sub add_xdata_ref {
-  my ($self, $reffield, $value, $reffieldposition) = @_;
+  my ($self, $reffield, $refform, $reflang, $value, $reffieldposition) = @_;
+  $refform = $refform // 'default';
+  $reflang = $reflang // Biber::Config->getoption('mslang');
+
   if ($reffield eq 'xdata') { # whole XDATA fields are a simple case
     push $self->{xdatarefs}->@*, {# field pointing to XDATA
                                   reffield => 'xdata',
@@ -243,17 +246,26 @@ sub add_xdata_ref {
       unless ($xf) { # There must be a field in a granular XDATA ref
         my $entry_key = $self->get_field('citekey');
         my $secnum = $Biber::MASTER->get_current_section;
-        biber_warn("Entry '$entry_key' has XDATA reference from field '$reffield' that contains no source field (section $secnum)", $self);
+        biber_warn("Entry '$entry_key' has XDATA reference from field '$reffield/$refform/$reflang' that contains no source field (section $secnum)", $self);
         return 0;
       }
+      my ($xdf, $xdfo, $xdl) = mssplit($xf);
       push $self->{xdatarefs}->@*, {# field pointing to XDATA
                                     reffield => $reffield,
+                                    # form for field pointing to XDATA
+                                    refform => $refform,
+                                    # lang for field pointing to XDATA
+                                    reflang => $reflang,
                                     # field position pointing to XDATA, 1-based
                                     refposition => defined($reffieldposition) ? $reffieldposition+1 : 1,
                                     # XDATA entry
                                     xdataentries => [$xe],
                                     # XDATA field
-                                    xdatafield => $xf,
+                                    xdatafield => $xdf,
+                                    # XDATA field form
+                                    xdataform => $xdfo,
+                                    # XDATA field lang
+                                    xdatalang => $xdl,
                                     # XDATA field position, 1-based
                                     xdataposition => $xfp//1};
       return 1;
@@ -282,9 +294,14 @@ sub get_xdata_refs {
 =cut
 
 sub get_xdata_ref {
-  my ($self, $field, $pos) = @_;
+  my ($self, $field, $form, $lang, $pos) = @_;
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+
   foreach my $xdatum ($self->{xdatarefs}->@*) {
-    if ($xdatum->{reffield} eq $field) {
+    if ($xdatum->{reffield} eq $field and
+        $xdatum->{refform} eq $form and
+        $xdatum->{reflang} eq $lang) {
       if ($pos) {
         if ($xdatum->{refposition} == $pos) {
           return $xdatum;
@@ -306,10 +323,15 @@ sub get_xdata_ref {
 =cut
 
 sub is_xdata_resolved {
-  my ($self, $field, $pos) = @_;
+  my ($self, $field, $form, $lang, $pos) = @_;
+  $form = $form // 'default';
+  $lang = $lang // Biber::Config->getoption('mslang');
+
   foreach my $xdatum ($self->{xdatarefs}->@*) {
-    if ($xdatum->{reffield} eq $field) {
-      if ($pos) {
+    if ($xdatum->{reffield} eq $field and
+        $xdatum->{refform} eq $form and
+        $xdatum->{reflang} eq $lang) {
+        if ($pos) {
         if ($xdatum->{refposition} == $pos) {
           return $xdatum->{resolved};
         }
@@ -782,9 +804,13 @@ sub resolve_xdata {
   #  },
   #  { # xdata info for an granular XDATA ref in another field
   #    reffield      => # field pointing to XDATA
+  #    refform       => 'default',
+  #    reflang       => 'en-us',
   #    refposition   => # field position pointing to XDATA (or 1), 1-based
   #    xdataentries  => # array ref containing single XDATA entry key
   #    xdatafield    => # field within XDATA entry
+  #    xdataform     => 'default',
+  #    xdatalang     => 'en-us',
   #    xdataposition => # position in list field within XDATA entry (or 1), 1-based
   #    resolved      => 1 or 0
   #  }
@@ -832,58 +858,59 @@ sub resolve_xdata {
           }
           else { # Granular XDATA inheritance
             my $xdatafield = $xdatum->{xdatafield};
+            my $xdataform = $xdatum->{xdataform};
+            my $xdatalang = $xdatum->{xdatalang};
             my $xdataposition = $xdatum->{xdataposition};
             my $reffield = $xdatum->{reffield};
+            my $refform = $xdatum->{refform};
+            my $reflang = $xdatum->{reflang};
             my $refposition = $xdatum->{refposition};
             my $reffielddm = $dm->get_dm_for_field($reffield);
             my $xdatafielddm = $dm->get_dm_for_field($xdatafield);
 
             unless ($reffielddm->{fieldtype} eq $xdatafielddm->{fieldtype} and
                     $reffielddm->{datatype} eq $xdatafielddm->{datatype}) {
-              biber_warn("Field '$reffield' in entry '$entry_key' which xdata references field '$xdatafield' in entry '$xdref' are not the same types, not resolving (section $secnum)", $self);
+              biber_warn("Field '$reffield/$refform/$reflang' in entry '$entry_key' which xdata references field '$xdatafield/$xdataform/$xdatalang' in entry '$xdref' are not the same types, not resolving (section $secnum)", $self);
               $xdatum->{resolved} = 0;
               next;
             }
 
-            unless ($xdataentry->get_field($xdatafield)) {
-              biber_warn("Field '$reffield' in entry '$entry_key' references XDATA field '$xdatafield' in entry '$xdref' and this field does not exist, not resolving (section $secnum)", $self);
+            unless ($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)) {
+              biber_warn("Field '$reffield/$refform/$reflang' in entry '$entry_key' references XDATA field '$xdatafield/$xdataform/$xdatalang' in entry '$xdref' and this field does not exist, not resolving (section $secnum)", $self);
               $xdatum->{resolved} = 0;
               next;
             }
 
             # Name lists
             if ($dm->field_is_type('list', 'name', $reffield)){
-
-              unless ($xdataentry->get_field($xdatafield)->is_nth_name($xdataposition)) {
-                biber_warn("Field '$reffield' in entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
+              unless ($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->is_nth_name($xdataposition)) {
+                biber_warn("Field '$reffield/$refform/$reflang' in entry '$entry_key' references field '$xdatafield/$xdataform/$xdatalang' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
                 $xdatum->{resolved} = 0;
                 next;
               }
-
-              $self->get_field($reffield)->replace_name($xdataentry->get_field($xdatafield)->nth_name($xdataposition), $refposition);
+              $self->get_field($reffield, $refform, $reflang)->replace_name($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_name($xdataposition), $refposition);
               if ($logger->is_debug()) { # performance tune
-                $logger->debug("Setting position $refposition in name field '$reffield' in entry '$entry_key' via XDATA");
+                $logger->debug("Setting position $refposition in name field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
               }
             }
             # Non-name lists
             elsif ($dm->field_is_fieldtype('list', $reffield)) {
-              unless ($xdataentry->get_field($xdatafield)->nth_item($xdataposition)) {
-                biber_warn("Field '$reffield' in entry '$entry_key' references field '$xdatafield' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
+              unless ($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_item($xdataposition)) {
+                biber_warn("Field '$reffield/$refform/$reflang' in entry '$entry_key' references field '$xdatafield/$xdataform/$xdatalang' position $xdataposition in entry '$xdref' and this position does not exist, not resolving (section $secnum)", $self);
                 $xdatum->{resolved} = 0;
                 next;
               }
 
-              $self->get_field($reffield)->replace_item($xdataentry->get_field($xdatafield)->nth_item($refposition), $refposition);
+              $self->get_field($reffield, $refform, $reflang)->replace_item($xdataentry->get_field($xdatafield, $xdataform, $xdatalang)->nth_item($refposition), $refposition);
               if ($logger->is_debug()) { # performance tune
-                $logger->debug("Setting position $refposition in list field '$reffield' in entry '$entry_key' via XDATA");
+                $logger->debug("Setting position $refposition in list field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
               }
             }
             # Non-list
             else {
-
-              $self->set_datafield($reffield, $xdataentry->get_field($xdatafield));
+              $self->set_datafield($reffield, $xdataentry->get_field($xdatafield), $refform, $reflang);
               if ($logger->is_debug()) { # performance tune
-                $logger->debug("Setting field '$reffield' in entry '$entry_key' via XDATA");
+                $logger->debug("Setting field '$reffield/$refform/$reflang' in entry '$entry_key' via XDATA");
               }
             }
           }

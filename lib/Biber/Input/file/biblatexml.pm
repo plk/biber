@@ -870,7 +870,7 @@ sub _literal {
     # XDATA is special, if found, set it
     if (my $xdatav = $node->getAttribute('xdata')) {
       $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
-      $bibentry->add_xdata_ref(_norm($f), $xdatav);
+      $bibentry->add_xdata_ref(_norm($f), $form, $lang, $xdatav);
       $setval = $xdatav;
     }
 
@@ -891,7 +891,7 @@ sub _literal {
 
 # xSV field
 sub _xsv {
-  my ($bibentry, $entry, $f, $key, $form, $lang) = @_;
+  my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
 
     my $form = $node->getAttribute('msform') // 'default';
@@ -900,13 +900,13 @@ sub _xsv {
     # XDATA is special
     if (fc(_norm($f)) eq 'xdata') {
       # Just split with no XDATA setting on list items
-      my $value = _split_list($bibentry, $node, $key, $f, 1);
-      $bibentry->add_xdata_ref('xdata', $value);
+      my $value = _split_list($bibentry, $node, $key, $f, $form, $lang, 1);
+      $bibentry->add_xdata_ref('xdata', $form, $lang, $value);
       $bibentry->set_datafield(_norm($f), Biber::Entry::List->new($value), $form, $lang);
     }
     else {
       $bibentry->set_datafield(_norm($f),
-                               Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f)),
+                               Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f, $form, $lang)),
                                $form, $lang);
     }
   }
@@ -919,6 +919,8 @@ sub _xsv {
 sub _uri {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
+  my $form = $node->getAttribute('msform') // 'default';
+  my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
   my $setval = $node->textContent();
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
@@ -926,7 +928,7 @@ sub _uri {
   # XDATA is special, if found, set it
   if (my $xdatav = $node->getAttribute('xdata')) {
     $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
-    $bibentry->add_xdata_ref(_norm($f), $xdatav);
+    $bibentry->add_xdata_ref(_norm($f), $form, $lang, $xdatav);
     $setval = $xdatav;
   }
   else {
@@ -953,7 +955,7 @@ sub _list {
     my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
 
     $bibentry->set_datafield(_norm($f),
-                             Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f)),
+                             Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f, $form, $lang)),
                              $form, $lang);
   }
 
@@ -964,13 +966,15 @@ sub _list {
 sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
+  my $form = $node->getAttribute('msform') // 'default';
+  my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
 
   # XDATA is special, if found, set it
   if (my $xdatav = $node->getAttribute('xdata')) {
     $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
-    $bibentry->add_xdata_ref(_norm($f), $xdatav);
+    $bibentry->add_xdata_ref(_norm($f), $form, $lang, $xdatav);
     $bibentry->set_datafield(_norm($f), [$xdatav]);
     return;
   }
@@ -1197,7 +1201,7 @@ sub _name {
       # XDATA is special, if found, set it
       if (my $xdatav = $namenode->getAttribute('xdata')) {
         $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
-        if ($bibentry->add_xdata_ref(_norm($f), $xdatav, $i)) {
+        if ($bibentry->add_xdata_ref(_norm($f), $form, $lang, $xdatav, $i)) {
           # Add special xdata ref empty name as placeholder
           $names->add_name(Biber::Entry::Name->new(xdata => $xdatav));
           next;
@@ -1330,7 +1334,7 @@ sub _parse_range_list {
 
 # Splits a list field into an array ref
 sub _split_list {
-  my ($bibentry, $node, $key, $f, $noxdata) = @_;
+  my ($bibentry, $node, $key, $f, $form, $lang, $noxdata) = @_;
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
 
@@ -1344,7 +1348,7 @@ sub _split_list {
       # If this field itself is XDATA, don't analyse XDATA further, just split and return
       if (my $xdatav = $list[$i]->getAttribute('xdata')) {
         $xdatav = "$xdmi$xnsi$xdatav"; # normalise to same as bibtex input
-        $bibentry->add_xdata_ref(_norm($f), $xdatav, $i) unless $noxdata;
+        $bibentry->add_xdata_ref(_norm($f), $form, $lang, $xdatav, $i) unless $noxdata;
         push $result->@*, $xdatav;
       }
       else {

@@ -997,7 +997,7 @@ sub _literal {
   my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang, $key) = @_;
 
   # Record any XDATA and skip if we did
-  if ($bibentry->add_xdata_ref($field, $value)) {
+  if ($bibentry->add_xdata_ref($field, $form, $lang, $value)) {
     return $value; # Return raw xdata
   }
 
@@ -1068,10 +1068,10 @@ sub _literal {
 
 # URI fields
 sub _uri {
-  my ($bibentry, $entry, $value, $tbfield, $field) = @_;
+  my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang) = @_;
 
   # Record any XDATA
-  $bibentry->add_xdata_ref($field, $value);
+  $bibentry->add_xdata_ref($field, $form, $lang, $value);
 
   return $value;
 }
@@ -1083,7 +1083,7 @@ sub _xsv {
   my $S = qr/$Srx/;
 
   # Record any XDATA
-  $bibentry->add_xdata_ref($field, [ split(/$S/, $value) ]);
+  $bibentry->add_xdata_ref($field, $form, $lang, [ split(/$S/, $value) ]);
 
   return Biber::Entry::List->new([ split(/$S/, $value) ]);
 }
@@ -1093,7 +1093,7 @@ sub _verbatim {
   my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang) = @_;
 
   # Record any XDATA
-  $bibentry->add_xdata_ref($field, $value);
+  $bibentry->add_xdata_ref($field, $form, $lang, $value);
 
   return $value;
 }
@@ -1110,7 +1110,7 @@ sub _range {
   my $values_ref;
 
   # Record any XDATA and skip if we did
-  if ($bibentry->add_xdata_ref($field, $value)) {
+  if ($bibentry->add_xdata_ref($field, $form, $lang, $value)) {
     return $value; # Return raw value
   }
 
@@ -1168,7 +1168,7 @@ sub _name {
     my $name = $tmp[$i];
 
     # Record any XDATA and skip if we did
-    if ($bibentry->add_xdata_ref($field, $name, $i)) {
+    if ($bibentry->add_xdata_ref($field, $form, $lang, $name, $i)) {
       # Add special xdata ref empty name as placeholder
       $names->add_name(Biber::Entry::Name->new(xdata => $name));
       next;
@@ -1403,7 +1403,7 @@ sub _list {
     my $e = $tmp[$i];
 
     # Record any XDATA and skip if we did
-    $bibentry->add_xdata_ref($field, $e, $i);
+    $bibentry->add_xdata_ref($field, $form, $lang, $e, $i);
 
     push $result->@*, $e;
   }
@@ -1413,7 +1413,7 @@ sub _list {
 
 # Bibtex uri lists
 sub _urilist {
-  my ($bibentry, $entry, $value, $tbfield, $field) = @_;
+  my ($bibentry, $entry, $value, $tbfield, $field, $form, $lang) = @_;
 
   # Unicode NFC boundary (passing to external library)
   my @tmp = Text::BibTeX::split_list(NFC($value),
@@ -1428,7 +1428,7 @@ sub _urilist {
     my $e = $tmp[$i];
 
     # Record any XDATA and skip if we did
-    $bibentry->add_xdata_ref($field, $e, $i);
+    $bibentry->add_xdata_ref($field, $form, $lang, $e, $i);
 
     push $result->@*, $e;
   }
