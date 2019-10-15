@@ -144,15 +144,15 @@ my $l1 = q|    \entry{bltx1}{misc}{useprefix=false}
       \field{urldateera}{ce}
       \field{pages}{1\\bibrangedash 10\\bibrangessep 30\\bibrangedash 34}
       \range{pages}{15}
-      \annotation{field}{author}{alt}{}{}{0}{names-ann3}
-      \annotation{field}{author}{default}{}{}{0}{names-ann}
-      \annotation{field}{language}{default}{}{}{0}{list-ann1}
-      \annotation{field}{title}{default}{}{}{0}{field-ann1}
-      \annotation{item}{author}{default}{1}{}{0}{name-ann1}
-      \annotation{item}{author}{default}{3}{}{0}{name-ann2}
-      \annotation{item}{language}{default}{1}{}{0}{item-ann1}
-      \annotation{part}{author}{default}{1}{given}{1}{namepart-ann1}
-      \annotation{part}{author}{default}{2}{family}{0}{namepart-ann2}
+      \annotation{field}{author}{default}{en-us}{alt}{}{}{0}{names-ann3}
+      \annotation{field}{author}{default}{en-us}{default}{}{}{0}{names-ann}
+      \annotation{field}{language}{default}{en-us}{default}{}{}{0}{list-ann1}
+      \annotation{field}{title}{default}{en-us}{default}{}{}{0}{field-ann1}
+      \annotation{item}{author}{default}{en-us}{default}{1}{}{0}{name-ann1}
+      \annotation{item}{author}{default}{en-us}{default}{3}{}{0}{name-ann2}
+      \annotation{item}{language}{default}{en-us}{default}{1}{}{0}{item-ann1}
+      \annotation{part}{author}{default}{en-us}{default}{1}{given}{1}{namepart-ann1}
+      \annotation{part}{author}{default}{en-us}{default}{2}{family}{0}{namepart-ann2}
     \endentry
 |;
 

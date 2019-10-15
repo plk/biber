@@ -119,7 +119,15 @@ sub set_output_entry {
   }
 
   foreach my $namefield ($dmh->{namelists}->@*) {
-    if (my $names = $be->get_field($namefield)) {
+    foreach my $as ($be->get_alternates_for_field($namefield)->@*) {
+
+      my $form  = $as->{form};
+      my $lang  = $as->{lang};
+      my $names = $as->{val};
+
+      $form = ($form eq 'default') ? '' : "_$form";
+      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : "_$lang";
+      $namefield = "$namefield$form$lang";
 
       # XDATA is special
       unless (Biber::Config->getoption('output_resolve_xdata')) { # already resolved
@@ -167,7 +175,16 @@ sub set_output_entry {
 
   # List fields and verbatim list fields
   foreach my $listfield ($dmh->{lists}->@*, $dmh->{vlists}->@*) {
-    if (my $list = $be->get_field($listfield)) {
+    foreach my $as ($be->get_alternates_for_field($listfield)->@*) {
+
+      my $form  = $as->{form};
+      my $lang  = $as->{lang};
+      my $list = $as->{val};
+
+      $form = ($form eq 'default') ? '' : "_$form";
+      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : "_$lang";
+      $listfield = "$listfield$form$lang";
+
       my $listsep = Biber::Config->getoption('output_listsep');
       my @plainlist;
       foreach my $item ($list->get_items->@*) {
@@ -223,7 +240,15 @@ sub set_output_entry {
 
   # Standard fields
   foreach my $field ($dmh->{fields}->@*) {
-    if (my $val = $be->get_field($field)) {
+    foreach my $as ($be->get_alternates_for_field($field)->@*) {
+      my $form  = $as->{form};
+      my $lang  = $as->{lang};
+      my $val   = $as->{val};
+
+      $form = ($form eq 'default') ? '' : "_$form";
+      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : "_$lang";
+      $field = "$field$form$lang";
+
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         my $xd = xdatarefcheck($val);
         $val = $xd // $val;
@@ -237,7 +262,16 @@ sub set_output_entry {
     # keywords is by default field/xsv/keyword but it is in fact
     # output with its own special macro below
     next if $field eq 'keywords';
-    if (my $f = $be->get_field($field)) {
+    foreach my $as ($be->get_alternates_for_field($field)->@*) {
+
+      my $form  = $as->{form};
+      my $lang  = $as->{lang};
+      my $f   = $as->{val};
+
+      $form = ($form eq 'default') ? '' : "_$form";
+      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : "_$lang";
+      $field = "$field$form$lang";
+
       my $fl = join(',', $f->get_items->@*);
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         my $xd = xdatarefcheck($fl);
@@ -261,7 +295,16 @@ sub set_output_entry {
 
   # Verbatim fields
   foreach my $vfield ($dmh->{vfields}->@*) {
-    if ( my $vf = $be->get_field($vfield) ) {
+    foreach my $as ($be->get_alternates_for_field($vfield)->@*) {
+
+      my $form  = $as->{form};
+      my $lang  = $as->{lang};
+      my $vf   = $as->{val};
+
+      $form = ($form eq 'default') ? '' : "_$form";
+      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : "_$lang";
+      $vfield = "$vfield$form$lang";
+
       unless (Biber::Config->getoption('output_resolve_xdata')) {
         my $xd = xdatarefcheck($vf);
         $vf = $xd // $vf;
@@ -282,10 +325,11 @@ sub set_output_entry {
 
   # Annotations
   foreach my $f (keys %acc) {
-    if (Biber::Annotation->is_annotated_field($key, lc($f))) {
-      foreach my $n (Biber::Annotation->get_annotation_names($key, lc($f))) {
+    my ($field, $form, $lang) = mssplit($f);
+    if (Biber::Annotation->is_annotated_field($key, lc($f), $form, $lang)) {
+      foreach my $n (Biber::Annotation->get_annotation_names($key, lc($f), $form, $lang)) {
         $acc{$casing->($f) . Biber::Config->getoption('output_annotation_marker') .
-            Biber::Config->getoption('output_named_annotation_marker') . $n} = construct_annotation($key, lc($f), $n);
+            Biber::Config->getoption('output_named_annotation_marker') . $n} = construct_annotation($key, lc($f), $n, $form, $lang);
       }
     }
   }
@@ -479,20 +523,20 @@ sub bibfield {
 =cut
 
 sub construct_annotation {
-  my ($key, $field, $name) = @_;
+  my ($key, $field, $name, $form, $lang) = @_;
   my @annotations;
 
-  if (my $fa = Biber::Annotation->get_field_annotation($key, $field, $name)) {
+  if (my $fa = Biber::Annotation->get_field_annotation($key, $field, $name, $form, $lang)) {
     push @annotations, "=$fa";
   }
 
-  foreach my $item (Biber::Annotation->get_annotated_items('item', $key, $field, $name)) {
-    push @annotations, "$item=" . Biber::Annotation->get_annotation('item', $key, $field, $name, $item);
+  foreach my $item (Biber::Annotation->get_annotated_items('item', $key, $field, $name, $form, $lang)) {
+    push @annotations, "$item=" . Biber::Annotation->get_annotation('item', $key, $field, $form, $lang, $name, $item);
   }
 
-  foreach my $item (Biber::Annotation->get_annotated_items('part', $key, $field, $name)) {
-    foreach my $part (Biber::Annotation->get_annotated_parts('part', $key, $field, $name, $item)) {
-      push @annotations, "$item:$part=" . Biber::Annotation->get_annotation('part', $key, $field, $name, $item, $part);
+  foreach my $item (Biber::Annotation->get_annotated_items('part', $key, $field, $name, $form, $lang)) {
+    foreach my $part (Biber::Annotation->get_annotated_parts('part', $key, $field, $name, $item, $form, $lang)) {
+      push @annotations, "$item:$part=" . Biber::Annotation->get_annotation('part', $key, $field, $form, $lang, $name, $item, $part);
     }
   }
 

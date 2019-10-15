@@ -45,6 +45,24 @@ sub get_value {
   return $self->{$form}{$lang};
 }
 
+=head2 get_alternates
+
+  Retrieve alternates for a particular field
+
+=cut
+
+sub get_alternates {
+  my $self = shift;
+  my $alternates = [];
+  foreach my $form (keys $self->%*) {
+    foreach my $lang (keys $self->{$form}->%*) {
+      push $alternates->@*, {form => $form, lang => $lang, val => $self->{$form}{$lang}};
+    }
+  }
+  return $alternates;
+}
+
+
 =head2 set_value
 
   Set a field value for a particular form/lang

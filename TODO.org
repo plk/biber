@@ -179,10 +179,14 @@ https://tools.ietf.org/html/bcp47
 **** DONE Both need these populating on data read with inherit/override of FieldValue default by annotations
 *** DONE FieldValue object
 **** DONE Switch to FieldValue
-*** TODO xdata needs forms and langs
-*** TODO Check for valid forms on first parsing
-*** TODO What to do for invalid langtags?
-*** TODO biblatex input
-*** TODO biblatex output
-*** TODO bibtex output
+*** DONE xdata needs forms and langs
+*** DONE Check for valid forms on first parsing
+*** DONE What to do for invalid langtags?
+*** DONE biblatexml input
+*** DONE bibtex output
+*** TODO biblatexml output
+*** TODO bbl output
+*** TODO bblxml output
+*** TODO inheritance templates
+*** TODO sorting templates
 *** TODO msform/mslang are currently in test .bcfs as GLOBAL/ENTRYTYPE/ENTRY scope option - is this right?

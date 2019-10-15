@@ -1786,9 +1786,13 @@ sub msfield {
 sub mssplit {
   my $field = shift;
   return (undef, undef, undef) unless $field;
+  my $dm = Biber::Config->get_dm;
   my $mssep = $CONFIG_META_MARKERS{mssep};
   $field = strip_annotation($field);
   if ($field =~ m/^([^$mssep]+)$mssep([^$mssep]+)(?:$mssep([^$mssep]+))?$/) {
+    unless (first {fc($_) eq fc($2)} $dm->get_constant_value('multiscriptforms')) {
+      biber_warn("Invalid multiscript form '$2'");
+    }
     return (fc($1), $2, ($3 // Biber::Config->getoption('mslang')));
   }
   else {

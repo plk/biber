@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Biber::LangTag;
+use Biber::Utils;
 use Parse::RecDescent;
 $::RD_AUTOACTION = q { [@item] } ;
 use List::AllUtils qw( first );
@@ -87,7 +88,10 @@ sub parse {
   my ($self, $tag) = @_;
   $tag = fc($tag); # normalise case
   my $tree = $self->{parser}->languagetag($tag);
-  return undef unless defined($tree);
+  unless (defined($tree)) {
+    biber_warn("Invalid BCP47 language tag '$tag'");
+    return undef;
+  }
 
   return Biber::LangTag->new(tag => $tag, _bcp47extract($tree)->%*);
 }

@@ -496,6 +496,23 @@ sub set_datafield {
   return;
 }
 
+=head2 get_alternates_for_field
+
+    Get an array of valid {form, lang, value} triplets for a field
+
+=cut
+
+sub get_alternates_for_field {
+  my ($self, $field) = @_;
+  if (defined($self->{datafields}{$field})) {
+    return $self->{datafields}{$field}->get_alternates;
+  }
+  elsif (defined($self->{derivedfields}{$field})) {
+    return $self->{derivedfields}{$field}->get_alternates;
+  }
+  return [];
+}
+
 =head2 get_field
 
     Get a field for a Biber::Entry object
