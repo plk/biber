@@ -184,7 +184,7 @@ https://tools.ietf.org/html/bcp47
 *** DONE What to do for invalid langtags?
 *** DONE biblatexml input
 *** DONE bibtex output
-*** TODO biblatexml output
+*** DONE biblatexml output
 *** TODO bbl output
 *** TODO bblxml output
 *** TODO inheritance templates

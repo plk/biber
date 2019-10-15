@@ -158,7 +158,14 @@ sub set_output_entry {
   foreach my $namefield ($dm->get_fields_of_type('list', 'name')->@*) {
 
     # Name loop
-    if (my $nf = $be->get_field($namefield)) {
+    foreach my $as ($be->get_alternates_for_field($namefield)->@*) {
+
+      my $form  = $as->{form};
+      my $lang  = $as->{lang};
+      my $nf = $as->{val};
+
+      $form = ($form eq 'default') ? '' : $form;
+      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
@@ -170,6 +177,10 @@ sub set_output_entry {
       }
 
       my @attrs = ('type' => $namefield);
+
+      # form/lang
+      push @attrs, (msform => $form) if $form;
+      push @attrs, (mslang => $form) if $lang;
 
       # Did we have "and others" in the data?
       if ( $nf->get_morenames ) {
@@ -213,7 +224,14 @@ sub set_output_entry {
     next if $dm->field_is_datatype('name', $listfield); # name is a special list
 
     # List loop
-    if (my $lf = $be->get_field($listfield)) {
+    foreach my $as ($be->get_alternates_for_field($listfield)->@*) {
+
+      my $form  = $as->{form};
+      my $lang  = $as->{lang};
+      my $lf = $as->{val};
+
+      $form = ($form eq 'default') ? '' : $form;
+      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
@@ -225,6 +243,11 @@ sub set_output_entry {
       }
 
       my @attrs;
+
+      # form/lang
+      push @attrs, (msform => $form) if $form;
+      push @attrs, (mslang => $form) if $lang;
+
       # Did we have a "more" list?
       if (lc($lf->last_item) eq Biber::Config->getoption('others_string') ) {
         push @attrs, (morelist => 1);
@@ -264,32 +287,52 @@ sub set_output_entry {
                                                    'integer',
                                                    'verbatim',
                                                    'uri'])->@*) {
-    my $val = $be->get_field($field);
+    foreach my $as ($be->get_alternates_for_field($field)->@*) {
 
-    # XDATA is special
-    if (not Biber::Config->getoption('output_resolve_xdata') or
-        not $be->is_xdata_resolved($field)) {
+      my $form  = $as->{form};
+      my $lang  = $as->{lang};
+      my $val = $as->{val};
 
-      if (my $xval = xdatarefcheck($val, 1)) {
-        $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($xval));
-        next;
+      $form = ($form eq 'default') ? '' : $form;
+      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : $lang;
+
+      # XDATA is special
+      if (not Biber::Config->getoption('output_resolve_xdata') or
+          not $be->is_xdata_resolved($field)) {
+
+        if (my $xval = xdatarefcheck($val, 1)) {
+          $xml->emptyTag([$xml_prefix, $field], 'xdata' => NFC($xval));
+          next;
+        }
       }
-    }
 
-    if (length($val) or # length() catches '0' values, which we want
-      ($dm->field_is_nullok($field) and
-       $be->field_exists($field))) {
-      next if $dm->get_fieldformat($field) eq 'xsv';
-      next if $field eq 'crossref'; # this is handled above
-      my @attrs;
+      if (length($val) or      # length() catches '0' values, which we want
+          ($dm->field_is_nullok($field) and
+           $be->field_exists($field))) {
+        next if $dm->get_fieldformat($field) eq 'xsv';
+        next if $field eq 'crossref'; # this is handled above
+        my @attrs;
 
-      $xml->dataElement([$xml_prefix, $field], NFC($val), @attrs);
+        # form/lang
+        push @attrs, (msform => $form) if $form;
+        push @attrs, (mslang => $form) if $lang;
+
+        $xml->dataElement([$xml_prefix, $field], NFC($val), @attrs);
+      }
     }
   }
 
   # xsv fields
   foreach my $xsvf ($dm->get_fields_of_type('field', 'xsv')->@*) {
-    if (my $f = $be->get_field($xsvf)) {
+    foreach my $as ($be->get_alternates_for_field($xsvf)->@*) {
+
+      my $form  = $as->{form};
+      my $lang  = $as->{lang};
+      my $f = $as->{val};
+
+      $form = ($form eq 'default') ? '' : $form;
+      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : $lang;
+
       next if $xsvf eq 'ids'; # IDS is special
       next if $xsvf eq 'xdata'; # XDATA is special
 
@@ -302,7 +345,13 @@ sub set_output_entry {
         }
       }
 
-      $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',$f->get_items->@*)));
+      my @attrs;
+
+      # form/lang
+      push @attrs, (msform => $form) if $form;
+      push @attrs, (mslang => $form) if $lang;
+
+      $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',$f->get_items->@*)), @attrs);
     }
   }
 
@@ -501,44 +550,68 @@ sub set_output_entry {
   # Annotations
   foreach my $f (Biber::Annotation->get_annotated_fields('field', $key)) {
     foreach my $n (Biber::Annotation->get_annotations('field', $key, $f)) {
-      my $v = Biber::Annotation->get_annotation('field', $key, $f, $n);
-      my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $n);
-      $xml->dataElement([$xml_prefix, 'annotation'],
-                        $v,
-                        field => $f,
-                        name  => $n,
-                        literal => $l);
+      foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
+        foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
+          my $v = Biber::Annotation->get_annotation('field', $key, $f, $form, $lang, $n);
+          my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
+          my @ms;
+          push @ms, (msform => $form) unless $form eq 'default';
+          push @ms, (mslang => $lang) unless $lang eq Biber::Config->getoption('mslang');
+          $xml->dataElement([$xml_prefix, 'annotation'],
+                            $v,
+                            field => $f,
+                            @ms,
+                            name  => $n,
+                            literal => $l);
+        }
+      }
     }
   }
 
   foreach my $f (Biber::Annotation->get_annotated_fields('item', $key)) {
     foreach my $n (Biber::Annotation->get_annotations('item', $key, $f)) {
-      foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f, $n)) {
-        my $v = Biber::Annotation->get_annotation('item', $key, $f, $n, $c);
-        my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $n, $c);
-        $xml->dataElement([$xml_prefix, 'annotation'],
-                          $v,
-                          field => $f,
-                          name  => $n,
-                          item => $c,
-                          literal => $l);
+      foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
+        foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
+          foreach my $c (Biber::Annotation->get_annotated_items('item', $key, $f, $n, $form, $lang)) {
+            my $v = Biber::Annotation->get_annotation('item', $key, $f, $form, $lang, $n, $c);
+            my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
+            my @ms;
+            push @ms, (msform => $form) unless $form eq 'default';
+            push @ms, (mslang => $lang) unless $lang eq Biber::Config->getoption('mslang');
+            $xml->dataElement([$xml_prefix, 'annotation'],
+                              $v,
+                              field => $f,
+                              @ms,
+                              name  => $n,
+                              item => $c,
+                              literal => $l);
+          }
+        }
       }
     }
   }
 
   foreach my $f (Biber::Annotation->get_annotated_fields('part', $key)) {
     foreach my $n (Biber::Annotation->get_annotations('part', $key, $f)) {
-      foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f, $n)) {
-        foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $n, $c)) {
-          my $v = Biber::Annotation->get_annotation('part', $key, $f, $n, $c, $p);
-          my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $n, $c, $p);
-          $xml->dataElement([$xml_prefix, 'annotation'],
-                            $v,
-                            field => $f,
-                            name  => $n,
-                            item => $c,
-                            part => $p,
-                            literal => $l);
+      foreach my $form (Biber::Annotation->get_annotation_forms($key, $f, $n)) {
+        foreach my $lang (Biber::Annotation->get_annotation_langs($key, $f, $n, $form)) {
+          foreach my $c (Biber::Annotation->get_annotated_items('part', $key, $f, $n, $form, $lang)) {
+            foreach my $p (Biber::Annotation->get_annotated_parts('part', $key, $f, $n, $c, $form, $lang)) {
+              my $v = Biber::Annotation->get_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
+              my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
+              my @ms;
+              push @ms, (msform => $form) unless $form eq 'default';
+              push @ms, (mslang => $lang) unless $lang eq Biber::Config->getoption('mslang');
+              $xml->dataElement([$xml_prefix, 'annotation'],
+                                $v,
+                                field => $f,
+                                @ms,
+                                name  => $n,
+                                item => $c,
+                                part => $p,
+                                literal => $l);
+            }
+          }
         }
       }
     }
