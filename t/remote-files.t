@@ -74,7 +74,7 @@ my $dl1 = q|    \entry{AbdelbarH98}{article}{}
       \strng{authornamehash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \strng{authorfullhash}{bb887c5d0458bfb1f3f7e6afc8d1def4}
       \field{sortinit}{A}
-      \field{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
+      \strng{sortinithash}{a3dcedd53b04d1adfd5ac303ecd5e6fa}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}
@@ -110,7 +110,7 @@ my $ssl = q|    \entry{crossley_politics_1994}{book}{}
       \strng{authornamehash}{92a23f84d2ee0a6817cf6e31edda9ac2}
       \strng{authorfullhash}{92a23f84d2ee0a6817cf6e31edda9ac2}
       \field{sortinit}{C}
-      \field{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
+      \strng{sortinithash}{4c244ceae61406cdc0cc2ce1cb1ff703}
       \field{extradatescope}{labelyear}
       \field{labeldatesource}{year}
       \field{labelnamesource}{author}

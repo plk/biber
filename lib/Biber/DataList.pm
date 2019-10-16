@@ -1953,7 +1953,7 @@ sub instantiate_entry {
       my $str = "\\field{sortinit}{$sinit}";
       $entry_string =~ s|<BDS>SORTINIT</BDS>|$str|gxms;
       my $sinithash = md5_hex($self->{sortinitcollator}->viewSortKey($sinit));
-      $str = "\\field{sortinithash}{$sinithash}";
+      $str = "\\strng{sortinithash}{$sinithash}";
       $entry_string =~ s|<BDS>SORTINITHASH</BDS>|$str|gxms;
     }
 
