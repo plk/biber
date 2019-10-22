@@ -937,7 +937,7 @@ sub _create_entry {
     if ($dm->is_field($field)) {
       # Check the Text::BibTeX field in case we have e.g. date = {}
       my $tbval = $e->get(encode('UTF-8', NFC($tbfield)));
-      if ($tbval) {
+      if ($tbval ne '') {
         my $v = _get_handler($tbfield)->($bibentry, $e, $tbval, $tbfield, $field, $form, $lang, $k);
         if (defined($v)) {
           if ($v eq 'BIBER_SKIP_ENTRY') {# field data is bad enough to cause entry to be skipped
@@ -1010,17 +1010,21 @@ sub _literal {
   # If we have already split some date fields into literal fields
   # like date -> year/month/day, don't overwrite them with explicit
   # year/month
-  if ($field eq 'year') {
+  elsif ($field eq 'year') {
     return if $bibentry->get_datafield('year');
     if ($value and not looks_like_number(num($value))and not $entry->get('sortyear')) {
       biber_warn("year field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
+    return $value;
   }
   elsif ($field eq 'month') {
     return if $bibentry->get_datafield('month');
     if ($value and not looks_like_number(num($value))) {
       biber_warn("month field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
+
+    # Try to sanitise months to biblatex requirements
+    return _hack_month($value);
   }
   # Deal with ISBN options
   elsif ($field eq 'isbn') {
@@ -1054,20 +1058,18 @@ sub _literal {
     if (Biber::Config->getoption('isbn_normalise')) {
       $value = $isbn->as_string;
     }
+
+    return $value;
   }
-  # Try to sanitise months to biblatex requirements
-  elsif ($field eq 'month') {
-    return _hack_month($value);
-  }
+
   # Rationalise any bcp47 style langids into babel/polyglossia names
   # biblatex will convert these back again when loading .lbx files
   # We need this until babel/polyglossia support proper bcp47 language/locales
   elsif ($field eq 'langid' and my $map = $LOCALE_MAP_R{$value}) {
-    return $map;
+    return fc($map);
   }
-  else {
-    return $value;
-  }
+
+  return $value;
 }
 
 # URI fields

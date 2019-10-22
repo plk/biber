@@ -772,6 +772,14 @@ sub create_entry {
   foreach my $e ($entry, values %newentries) {
     next unless $e;             # newentry might be undef
 
+    # langid is important as it is a local override for mslang which is used in every field
+    # get/set and so we need to use it to set an entry scope option first, if it exists
+    if (my $lid = $e->findnodes("./$NS:langid")->get_node(1)) {
+      $lid = $lid->textContent();
+      Biber::Config->setblxoption($Biber::MASTER->get_current_section,
+                                  'mslang', fc($LOCALE_MAP{$lid}//$lid), 'ENTRY', $key);
+    }
+
     my $k = $e->getAttribute('id');
     my $bibentry = Biber::Entry->new($k);
 
@@ -922,10 +930,8 @@ sub _literal {
     # Rationalise any bcp47 style langids into babel/polyglossia names
     # biblatex will convert these back again when loading .lbx files
     # We need this until babel/polyglossia support proper bcp47 language/locales
-    elsif ($f eq "$NS:langid" and my $map = $LOCALE_MAP_R{$setval}) {
-      Biber::Config->setblxoption($Biber::MASTER->get_current_section,
-                                  'mslang', fc($LOCALE_MAP{$setval}//$setval), 'ENTRY', $key);
-      $bibentry->set_datafield(_norm($f), $map, $form, $lang);
+    elsif ($f eq "$NS:langid" and my $map = $LOCALE_MAP{$setval}) {
+      $bibentry->set_datafield(_norm($f), fc($map), $form, $lang);
     }
     else {
       $bibentry->set_datafield(_norm($f), $setval, $form, $lang);

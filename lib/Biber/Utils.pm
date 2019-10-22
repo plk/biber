@@ -1785,7 +1785,7 @@ sub msfield {
 
 # Split a multiscript field name
 sub mssplit {
-  my ($field, $key) = shift;
+  my ($field, $key) = @_;
   return (undef, undef, undef) unless $field;
   my $dm = Biber::Config->get_dm;
   my $mssep = $CONFIG_META_MARKERS{mssep};

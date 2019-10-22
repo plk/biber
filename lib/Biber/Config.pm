@@ -910,6 +910,12 @@ sub addtoblxoption {
 sub setblxoption {
   shift; # class method so don't care about class name
   my ($secnum, $opt, $val, $scope, $scopeval) = @_;
+
+  # mslang is sensitive and we must normalise it
+  if ($opt eq 'mslang') {
+    $val = fc($val)
+  }
+
   if (not defined($scope)) { # global is the default
     if ($CONFIG_OPTSCOPE_BIBLATEX{$opt}{GLOBAL}) {
       $CONFIG->{options}{biblatex}{GLOBAL}{$opt} = $val;

@@ -104,6 +104,7 @@ sub create_output_misc {
 
 sub _printfield {
   my ($be, $field, $str) = @_;
+
   my $field_type = 'field';
   my $dm = Biber::Config->get_dm;
 

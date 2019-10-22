@@ -223,8 +223,8 @@ sub notnull {
 
 sub add_xdata_ref {
   my ($self, $reffield, $refform, $reflang, $value, $reffieldposition) = @_;
-  $refform = $refform // 'default';
-  $reflang = $reflang // resolve_mslang($self->{derivedfields}{citekey}->get_value);
+
+  # form/lang have already been defaulted at this point
 
   if ($reffield eq 'xdata') { # whole XDATA fields are a simple case
     push $self->{xdatarefs}->@*, {# field pointing to XDATA
@@ -461,15 +461,15 @@ sub get_labeldate_info {
 =cut
 
 sub set_field {
-  my ($self, $key, $val, $form, $lang) = @_;
+  my ($self, $field, $val, $form, $lang) = @_;
   no autovivification;
   $lang = fc($lang) if $lang;
 
-  if (defined($self->{derivedfields}{$key})) {
-    $self->{derivedfields}{$key}->set_value($val, $form, $lang);
+  if (defined($self->{derivedfields}{$field})) {
+    $self->{derivedfields}{$field}->set_value($val, $form, $lang);
   }
   else {
-    $self->{derivedfields}{$key} = Biber::Entry::FieldValue->new($self->{derivedfields}{citekey}->get_value, $val, $form, $lang);
+    $self->{derivedfields}{$field} = Biber::Entry::FieldValue->new($self->{derivedfields}{citekey}->get_value, $val, $form, $lang);
   }
   return;
 }
