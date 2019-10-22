@@ -1,4 +1,4 @@
-<# -*- cperl -*-
+# -*- cperl -*-
 use strict;
 use warnings;
 use utf8;

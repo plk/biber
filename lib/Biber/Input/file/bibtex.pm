@@ -13,6 +13,7 @@ use Biber::Constants;
 use Biber::DataModel;
 use Biber::Entries;
 use Biber::Entry;
+use Biber::Entry::FieldValue;
 use Biber::Entry::List;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
@@ -899,9 +900,14 @@ sub _create_entry {
   my $section = $Biber::MASTER->sections->get_section($secnum);
   my $ds = $section->get_keytods($k);
 
-  my $bibentry = Biber::Entry->new();
+  # langid is important as it is a local override for mslang which is used in every field
+  # get/set and so we need to use it to set an entry scope option first, if it exists
+  if (my $lid = $e->get(encode('UTF-8', NFC('langid')))) {
+    Biber::Config->setblxoption($secnum, 'mslang', fc($LOCALE_MAP{$lid}//$lid), 'ENTRY', $k);
+  }
 
-  $bibentry->set_field('citekey', $k);
+  my $bibentry = Biber::Entry->new($k);
+
   if ($logger->is_debug()) {# performance tune
     $logger->debug("Creating biber Entry object with key '$k'");
   }
@@ -916,7 +922,7 @@ sub _create_entry {
   foreach my $tbfield ($e->fieldlist) {
 
     # Split any multiscript fields
-    my ($field, $form, $lang) = mssplit($tbfield);
+    my ($field, $form, $lang) = mssplit($tbfield, $k);
 
     # We have to process local options as early as possible in order
     # to make them available for things that need them like parsename()
@@ -1010,15 +1016,14 @@ sub _literal {
       biber_warn("year field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
   }
-  if ($field eq 'month') {
+  elsif ($field eq 'month') {
     return if $bibentry->get_datafield('month');
     if ($value and not looks_like_number(num($value))) {
       biber_warn("month field '$value' in entry '$key' is not an integer - this will probably not sort properly.");
     }
   }
-
   # Deal with ISBN options
-  if ($field eq 'isbn') {
+  elsif ($field eq 'isbn') {
     require Business::ISBN;
     my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
     $dir =~ s/\/$//;            # splitpath sometimes leaves a trailing '/'
@@ -1050,9 +1055,8 @@ sub _literal {
       $value = $isbn->as_string;
     }
   }
-
   # Try to sanitise months to biblatex requirements
-  if ($field eq 'month') {
+  elsif ($field eq 'month') {
     return _hack_month($value);
   }
   # Rationalise any bcp47 style langids into babel/polyglossia names

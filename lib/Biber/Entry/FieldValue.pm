@@ -5,6 +5,7 @@ use warnings;
 
 use Biber::Annotation;
 use Biber::Config;
+use Biber::Utils;
 use Log::Log4perl qw( :no_extra_logdie_message );
 use List::Util qw( first );
 no autovivification;
@@ -24,8 +25,8 @@ Biber::Entry::FieldValue
 =cut
 
 sub new {
-  my ($class, $value, $form, $lang) = @_;
-  my $this = bless {}, $class;
+  my ($class, $key, $value, $form, $lang) = @_;
+  my $this = bless {key => $key}, $class;
   if (defined($value)) {
     $this->set_value($value, $form, $lang);
   }
@@ -41,7 +42,7 @@ sub new {
 sub get_value {
   my ($self, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config->getoption('mslang'));
+  $lang = fc($lang // resolve_mslang($self->{key}));
   return $self->{$form}{$lang};
 }
 
@@ -72,7 +73,7 @@ sub get_alternates {
 sub set_value {
   my ($self, $value, $form, $lang) = @_;
   $form = fc($form // 'default');
-  $lang = fc($lang // Biber::Config->getoption('mslang'));
+  $lang = fc($lang // resolve_mslang($self->{key}));
   $self->{$form}{$lang} = $value;
   return;
 }

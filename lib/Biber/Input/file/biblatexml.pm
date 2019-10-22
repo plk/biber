@@ -9,6 +9,7 @@ use Biber::Constants;
 use Biber::DataModel;
 use Biber::Entries;
 use Biber::Entry;
+use Biber::Entry::FieldValue;
 use Biber::Entry::List;
 use Biber::Entry::Names;
 use Biber::Entry::Name;
@@ -771,9 +772,9 @@ sub create_entry {
   foreach my $e ($entry, values %newentries) {
     next unless $e;             # newentry might be undef
 
-    my $bibentry = new Biber::Entry;
     my $k = $e->getAttribute('id');
-    $bibentry->set_field('citekey', $k);
+    my $bibentry = Biber::Entry->new($k);
+
     if ($logger->is_debug()) {# performance tune
       $logger->debug("Creating entry with key '$k'");
     }
@@ -810,7 +811,7 @@ sub _annotation {
   my ($bibentry, $entry, $f, $key) = @_;
   foreach my $node ($entry->findnodes("./$f")) {
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+    my $lang = $node->getAttribute('mslang') // resolve_mslang($key);
     my $field = $node->getAttribute('field');
     my $name = $node->getAttribute('name') || 'default';
     my $literal = $node->getAttribute('literal') || '0';
@@ -865,7 +866,7 @@ sub _literal {
     my $xnsi = Biber::Config->getoption('xnamesep');
 
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+    my $lang = $node->getAttribute('mslang') // resolve_mslang($key);
 
     # XDATA is special, if found, set it
     if (my $xdatav = $node->getAttribute('xdata')) {
@@ -881,6 +882,51 @@ sub _literal {
         $bibentry->set_datafield('eprintclass', $ec, $form, $lang);
       }
     }
+    # Deal with ISBN options
+    elsif ($f eq "$NS:isbn") {
+      require Business::ISBN;
+      my ($vol, $dir, undef) = File::Spec->splitpath( $INC{"Business/ISBN.pm"} );
+      $dir =~ s/\/$//;          # splitpath sometimes leaves a trailing '/'
+      # Just in case it is already set. We also need to fake this in tests or it will
+      # look for it in the blib dir
+      unless (exists($ENV{ISBN_RANGE_MESSAGE})) {
+        $ENV{ISBN_RANGE_MESSAGE} = File::Spec->catpath($vol, "$dir/ISBN/", 'RangeMessage.xml');
+      }
+      my $isbn = Business::ISBN->new($setval);
+
+      # Ignore invalid ISBNs
+      if (not $isbn or not $isbn->is_valid) {
+        biber_warn("ISBN '$setval' in entry '$key' is invalid - run biber with '--validate_datamodel' for details.");
+      }
+
+      # Force to a specified format
+      if (Biber::Config->getoption('isbn13')) {
+        $isbn = $isbn->as_isbn13;
+        $setval = $isbn->isbn;
+      }
+      elsif (Biber::Config->getoption('isbn10')) {
+        $isbn = $isbn->as_isbn10;
+        $setval = $isbn->isbn;
+      }
+
+      # Normalise if requested
+      if (Biber::Config->getoption('isbn_normalise')) {
+        $setval = $isbn->as_string;
+      }
+      $bibentry->set_datafield(_norm($f), $setval, $form, $lang);
+    }
+    # Try to sanitise months to biblatex requirements
+    elsif ($f eq "$NS:month") {
+      return _hack_month($setval);
+    }
+    # Rationalise any bcp47 style langids into babel/polyglossia names
+    # biblatex will convert these back again when loading .lbx files
+    # We need this until babel/polyglossia support proper bcp47 language/locales
+    elsif ($f eq "$NS:langid" and my $map = $LOCALE_MAP_R{$setval}) {
+      Biber::Config->setblxoption($Biber::MASTER->get_current_section,
+                                  'mslang', fc($LOCALE_MAP{$setval}//$setval), 'ENTRY', $key);
+      $bibentry->set_datafield(_norm($f), $map, $form, $lang);
+    }
     else {
       $bibentry->set_datafield(_norm($f), $setval, $form, $lang);
     }
@@ -895,7 +941,7 @@ sub _xsv {
   foreach my $node ($entry->findnodes("./$f")) {
 
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+    my $lang = $node->getAttribute('mslang') // resolve_mslang($key);
 
     # XDATA is special
     if (fc(_norm($f)) eq 'xdata') {
@@ -920,7 +966,7 @@ sub _uri {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
   my $form = $node->getAttribute('msform') // 'default';
-  my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+  my $lang = $node->getAttribute('mslang') // resolve_mslang($key);
   my $setval = $node->textContent();
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
@@ -952,7 +998,7 @@ sub _list {
   foreach my $node ($entry->findnodes("./$f")) {
 
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+    my $lang = $node->getAttribute('mslang') // resolve_mslang($key);
 
     $bibentry->set_datafield(_norm($f),
                              Biber::Entry::List->new(_split_list($bibentry, $node, $key, $f, $form, $lang)),
@@ -967,7 +1013,7 @@ sub _range {
   my ($bibentry, $entry, $f, $key) = @_;
   my $node = $entry->findnodes("./$f")->get_node(1);
   my $form = $node->getAttribute('msform') // 'default';
-  my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+  my $lang = $node->getAttribute('mslang') // resolve_mslang($key);
   my $xdmi = Biber::Config->getoption('xdatamarker');
   my $xnsi = Biber::Config->getoption('xnamesep');
 
@@ -1177,7 +1223,7 @@ sub _name {
     my $xnsi = Biber::Config->getoption('xnamesep');
 
     my $form = $node->getAttribute('msform') // 'default';
-    my $lang = $node->getAttribute('mslang') // Biber::Config->getoption('mslang');
+    my $lang = $node->getAttribute('mslang') // resolve_mslang($key);
 
     my $names = new Biber::Entry::Names;
 

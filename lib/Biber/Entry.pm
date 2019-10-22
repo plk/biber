@@ -52,11 +52,11 @@ Biber::Entry
 =cut
 
 sub new {
-  my $class = shift;
-  my $obj = shift;
+  my ($class, $key) = @_;
   my $self;
-  if (defined($obj) and ref($obj) eq 'HASH') {
-    $self = bless $obj, $class;
+  if ($key) {
+    $self->{derivedfields}{citekey} = Biber::Entry::FieldValue->new($key, $key);
+    $self = bless $self, $class;
   }
   else {
     $self = bless {}, $class;
@@ -155,7 +155,7 @@ sub relclone {
     # We have to add the citekeys as we need these clones in the .bbl
     # but the dataonly will cause biblatex not to print them in the bib
     $section->add_citekeys(@clonekeys);
-    $self->{datafields}{related} = Biber::Entry::FieldValue->new(Biber::Entry::List->new([ @clonekeys ]));
+    $self->{datafields}{related} = Biber::Entry::FieldValue->new($citekey, Biber::Entry::List->new([ @clonekeys ]));
   }
 }
 
@@ -168,8 +168,9 @@ sub relclone {
 
 sub clone {
   my ($self, $newkey) = @_;
-  my $new = new Biber::Entry;
   my $dmh = Biber::Config->get_dm_helpers;
+
+  my $new = Biber::Entry->new($newkey);
 
   while (my ($k, $v) = each(%{$self->{datafields}})) {
     $new->{datafields}{$k} = $v;
@@ -192,13 +193,10 @@ sub clone {
   $new->{derivedfields}{entrytype} = $self->{derivedfields}{entrytype};
   $new->{derivedfields}{datatype} = $self->{derivedfields}{datatype};
 
-  # put in key if specified
-  if ($newkey) {
-    $new->{derivedfields}{citekey} = Biber::Entry::FieldValue->new($newkey);
-  }
   # Record the key of the source of the clone in the clone. Useful for loop detection etc.
   # in biblatex
-  $new->{derivedfields}{clonesourcekey} = Biber::Entry::FieldValue->new($self->get_field('citekey'));
+  $new->{derivedfields}{clonesourcekey} = Biber::Entry::FieldValue->new($newkey, $self->get_field('citekey'));
+
   return $new;
 }
 
@@ -226,7 +224,7 @@ sub notnull {
 sub add_xdata_ref {
   my ($self, $reffield, $refform, $reflang, $value, $reffieldposition) = @_;
   $refform = $refform // 'default';
-  $reflang = $reflang // Biber::Config->getoption('mslang');
+  $reflang = $reflang // resolve_mslang($self->{derivedfields}{citekey}->get_value);
 
   if ($reffield eq 'xdata') { # whole XDATA fields are a simple case
     push $self->{xdatarefs}->@*, {# field pointing to XDATA
@@ -249,7 +247,7 @@ sub add_xdata_ref {
         biber_warn("Entry '$entry_key' has XDATA reference from field '$reffield/$refform/$reflang' that contains no source field (section $secnum)", $self);
         return 0;
       }
-      my ($xdf, $xdfo, $xdl) = mssplit($xf);
+      my ($xdf, $xdfo, $xdl) = mssplit($xf, $self->{derivedfields}{citekey}->get_value);
       push $self->{xdatarefs}->@*, {# field pointing to XDATA
                                     reffield => $reffield,
                                     # form for field pointing to XDATA
@@ -296,7 +294,7 @@ sub get_xdata_refs {
 sub get_xdata_ref {
   my ($self, $field, $form, $lang, $pos) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Config->getoption('mslang');
+  $lang = $lang // resolve_mslang($self->{derivedfields}{citekey}->get_value);
 
   foreach my $xdatum ($self->{xdatarefs}->@*) {
     if ($xdatum->{reffield} eq $field and
@@ -325,7 +323,7 @@ sub get_xdata_ref {
 sub is_xdata_resolved {
   my ($self, $field, $form, $lang, $pos) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Config->getoption('mslang');
+  $lang = $lang // resolve_mslang($self->{derivedfields}{citekey}->get_value);
 
   foreach my $xdatum ($self->{xdatarefs}->@*) {
     if ($xdatum->{reffield} eq $field and
@@ -471,7 +469,7 @@ sub set_field {
     $self->{derivedfields}{$key}->set_value($val, $form, $lang);
   }
   else {
-    $self->{derivedfields}{$key} = Biber::Entry::FieldValue->new($val, $form, $lang);
+    $self->{derivedfields}{$key} = Biber::Entry::FieldValue->new($self->{derivedfields}{citekey}->get_value, $val, $form, $lang);
   }
   return;
 }
@@ -491,7 +489,7 @@ sub set_datafield {
     $self->{datafields}{$field}->set_value($val, $form, $lang);
   }
   else {
-    $self->{datafields}{$field} = Biber::Entry::FieldValue->new($val, $form, $lang);
+    $self->{datafields}{$field} = Biber::Entry::FieldValue->new($self->{derivedfields}{citekey}->get_value, $val, $form, $lang);
   }
   return;
 }

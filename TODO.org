@@ -162,6 +162,8 @@
 *** TODO Document \DeclareDatamodelMultiscriptEntryfields and \ResetDatamodelMultiscriptEntryfields
 *** TODO multiscriptforms constant
 *** TODO 'langtags' special annotation name
+*** TODO msform/mslang biblatex options and scopes (global/entry only)
+*** TODO biber mslang option and that this is checked after biblatex global/entry (for tool mode use)
 ** TODO biblatex
 *** DONE Datamodel
 *** DONE Add valid multiscript fields to datamodel
@@ -186,7 +188,8 @@ https://tools.ietf.org/html/bcp47
 *** DONE bibtex output
 *** DONE biblatexml output
 *** TODO bbl output
+*** TODO Duplicate regions (de-DE, fr-FR) in LOCALE_MAP?
+**** TODO Remove annotation form/lang?
 *** TODO bblxml output
 *** TODO inheritance templates
 *** TODO sorting templates
-*** TODO msform/mslang are currently in test .bcfs as GLOBAL/ENTRYTYPE/ENTRY scope option - is this right?

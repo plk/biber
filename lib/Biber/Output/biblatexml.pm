@@ -165,7 +165,7 @@ sub set_output_entry {
       my $nf = $as->{val};
 
       $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : $lang;
+      $lang = ($lang eq resolve_mslang($key)) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
@@ -180,7 +180,7 @@ sub set_output_entry {
 
       # form/lang
       push @attrs, (msform => $form) if $form;
-      push @attrs, (mslang => $form) if $lang;
+      push @attrs, (mslang => $lang) if $lang;
 
       # Did we have "and others" in the data?
       if ( $nf->get_morenames ) {
@@ -231,7 +231,7 @@ sub set_output_entry {
       my $lf = $as->{val};
 
       $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : $lang;
+      $lang = ($lang eq resolve_mslang($key)) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
@@ -246,7 +246,7 @@ sub set_output_entry {
 
       # form/lang
       push @attrs, (msform => $form) if $form;
-      push @attrs, (mslang => $form) if $lang;
+      push @attrs, (mslang => $lang) if $lang;
 
       # Did we have a "more" list?
       if (lc($lf->last_item) eq Biber::Config->getoption('others_string') ) {
@@ -294,7 +294,7 @@ sub set_output_entry {
       my $val = $as->{val};
 
       $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : $lang;
+      $lang = ($lang eq resolve_mslang($key)) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
@@ -315,7 +315,7 @@ sub set_output_entry {
 
         # form/lang
         push @attrs, (msform => $form) if $form;
-        push @attrs, (mslang => $form) if $lang;
+        push @attrs, (mslang => $lang) if $lang;
 
         $xml->dataElement([$xml_prefix, $field], NFC($val), @attrs);
       }
@@ -331,7 +331,7 @@ sub set_output_entry {
       my $f = $as->{val};
 
       $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq Biber::Config->getoption('mslang')) ? '' : $lang;
+      $lang = ($lang eq resolve_mslang($key)) ? '' : $lang;
 
       next if $xsvf eq 'ids'; # IDS is special
       next if $xsvf eq 'xdata'; # XDATA is special
@@ -349,7 +349,7 @@ sub set_output_entry {
 
       # form/lang
       push @attrs, (msform => $form) if $form;
-      push @attrs, (mslang => $form) if $lang;
+      push @attrs, (mslang => $lang) if $lang;
 
       $xml->dataElement([$xml_prefix, $xsvf], NFC(join(',',$f->get_items->@*)), @attrs);
     }
@@ -556,7 +556,7 @@ sub set_output_entry {
           my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
           my @ms;
           push @ms, (msform => $form) unless $form eq 'default';
-          push @ms, (mslang => $lang) unless $lang eq Biber::Config->getoption('mslang');
+          push @ms, (mslang => $lang) unless $lang eq resolve_mslang($key);
           $xml->dataElement([$xml_prefix, 'annotation'],
                             $v,
                             field => $f,
@@ -577,7 +577,7 @@ sub set_output_entry {
             my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
             my @ms;
             push @ms, (msform => $form) unless $form eq 'default';
-            push @ms, (mslang => $lang) unless $lang eq Biber::Config->getoption('mslang');
+            push @ms, (mslang => $lang) unless $lang eq resolve_mslang($key);
             $xml->dataElement([$xml_prefix, 'annotation'],
                               $v,
                               field => $f,
@@ -601,7 +601,7 @@ sub set_output_entry {
               my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               my @ms;
               push @ms, (msform => $form) unless $form eq 'default';
-              push @ms, (mslang => $lang) unless $lang eq Biber::Config->getoption('mslang');
+              push @ms, (mslang => $lang) unless $lang eq resolve_mslang($key);
               $xml->dataElement([$xml_prefix, 'annotation'],
                                 $v,
                                 field => $f,
