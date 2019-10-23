@@ -43,7 +43,7 @@ sub get_value {
   my ($self, $form, $lang) = @_;
   $form = fc($form // 'default');
   $lang = fc($lang // Biber::Config::get_mslang($self->{key}));
-  return $self->{$form}{$lang};
+  return $self->{alternates}{$form}{$lang};
 }
 
 =head2 get_alternates
@@ -55,9 +55,9 @@ sub get_value {
 sub get_alternates {
   my $self = shift;
   my $alternates = [];
-  foreach my $form (keys $self->%*) {
-    foreach my $lang (keys $self->{$form}->%*) {
-      push $alternates->@*, {form => $form, lang => $lang, val => $self->{$form}{$lang}};
+  foreach my $form (keys $self->{alternates}->%*) {
+    foreach my $lang (keys $self->{alternates}{$form}->%*) {
+      push $alternates->@*, {form => $form, lang => $lang, val => $self->{alternates}{$form}{$lang}};
     }
   }
   return $alternates;
@@ -74,7 +74,7 @@ sub set_value {
   my ($self, $value, $form, $lang) = @_;
   $form = fc($form // 'default');
   $lang = fc($lang // Biber::Config::get_mslang($self->{key}));
-  $self->{$form}{$lang} = $value;
+  $self->{alternates}{$form}{$lang} = $value;
   return;
 }
 
