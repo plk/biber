@@ -121,14 +121,6 @@
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>msform</bcf:key>
-      <bcf:value>original</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
-      <bcf:key>mslang</bcf:key>
-      <bcf:value>en-US</bcf:value>
-    </bcf:option>
-    <bcf:option type="singlevalued">
       <bcf:key>nohashothers</bcf:key>
       <bcf:value>0</bcf:value>
     </bcf:option>
@@ -227,8 +219,6 @@
   </bcf:options>
   <!-- BIBLATEX OPTION SCOPE -->
   <bcf:optionscope type="GLOBAL">
-    <bcf:option datatype="string">msform</bcf:option>
-    <bcf:option datatype="string">mslang</bcf:option>
     <bcf:option datatype="xml">datamodel</bcf:option>
     <bcf:option datatype="xml">labelalphanametemplate</bcf:option>
     <bcf:option datatype="xml">labelalphatemplate</bcf:option>
@@ -389,8 +379,6 @@
     <bcf:option datatype="integer">dateeraauto</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="ENTRYTYPE">
-    <bcf:option datatype="string">msform</bcf:option>
-    <bcf:option datatype="string">mslang</bcf:option>
     <bcf:option datatype="string">alphaothers</bcf:option>
     <bcf:option datatype="string">sortalphaothers</bcf:option>
     <bcf:option datatype="string">presort</bcf:option>
@@ -456,8 +444,6 @@
     <bcf:option datatype="integer">minalphanames</bcf:option>
   </bcf:optionscope>
   <bcf:optionscope type="ENTRY">
-    <bcf:option datatype="string">msform</bcf:option>
-    <bcf:option datatype="string">mslang</bcf:option>
     <bcf:option datatype="string">noinherit</bcf:option>
     <bcf:option datatype="string" backendin="sortingnamekeytemplatename,uniquenametemplatename,labelalphanametemplatename">nametemplates</bcf:option>
     <bcf:option datatype="string" backendout="1">labelalphanametemplatename</bcf:option>

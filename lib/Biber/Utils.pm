@@ -57,8 +57,7 @@ our @EXPORT = qw{ glob_data_file locate_data_file makenamesid makenameid
   get_transliterator call_transliterator normalise_string_bblxml
   gen_initials join_name_parts split_xsv date_monthday tzformat
   expand_option_input strip_annotation appendstrict_check
-  merge_entry_options process_backendin xdatarefout xdatarefcheck mssplit msfield
-  resolve_mslang};
+  merge_entry_options process_backendin xdatarefout xdatarefcheck mssplit msfield };
 
 =head1 FUNCTIONS
 
@@ -1794,22 +1793,10 @@ sub mssplit {
     unless (first {fc($_) eq fc($2)} $dm->get_constant_value('multiscriptforms')) {
       biber_warn("Invalid multiscript form '$2'");
     }
-    return (fc($1), $2, ($3 // resolve_mslang($key)));
+    return (fc($1), $2, ($3 // Biber::Config::get_mslang($key)));
   }
   else {
-    return (fc($field), 'default', resolve_mslang($key));
-  }
-}
-
-# return default mslang for an entry
-sub resolve_mslang {
-  my $citekey = shift;
-  my $secnum = $Biber::MASTER->get_current_section;
-  if (my $langid = Biber::Config->getblxoption($secnum, 'mslang', undef, $citekey)) {
-    return $langid;
-  }
-  else {
-    return Biber::Config->getoption('mslang');
+    return (fc($field), 'default', Biber::Config::get_mslang($key));
   }
 }
 

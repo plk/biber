@@ -32,7 +32,7 @@ sub set_annotation {
   my ($scope, $key, $field, $form, $lang, $name, $value, $literal, $count, $part) = @_;
   $name = $name // 'default';
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
 
   if ($scope eq 'field') {
     $ANN->{field}{$key}{$field}{$form}{$lang}{$name}{value} = $value;
@@ -79,7 +79,7 @@ sub get_annotation {
   my ($scope, $key, $field, $form, $lang, $name, $count, $part) = @_;
   $name = $name // 'default';
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
   if ($scope eq 'field') {
     return $ANN->{field}{$key}{$field}{$form}{$lang}{$name}{value};
   }
@@ -129,7 +129,7 @@ sub get_annotation_names {
   shift; # class method so don't care about class name
   my ($key, $field, $form, $lang) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
   return $ANN->{names}{$key}{$field}{$form}{$lang}->@*;
 }
 
@@ -143,7 +143,7 @@ sub get_annotations {
   shift; # class method so don't care about class name
   my ($scope, $key, $field, $form, $lang) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
   return sort keys $ANN->{$scope}{$key}{$field}{$form}{$lang}->%*;
 }
 
@@ -158,7 +158,7 @@ sub is_literal_annotation {
   my ($scope, $key, $field, $form, $lang, $name, $count, $part) = @_;
   $name = $name // 'default';
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
   if ($scope eq 'field') {
     return $ANN->{field}{$key}{$field}{$form}{$lang}{$name}{literal};
   }
@@ -193,7 +193,7 @@ sub is_annotated_field {
   shift; # class method so don't care about class name
   my ($key, $field, $form, $lang) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
   return $ANN->{fields}{$key}{$field}{$form}{$lang};
 }
 
@@ -208,7 +208,7 @@ sub get_field_annotation {
   my ($key, $field, $name, $form, $lang) = @_;
   $name = $name // 'default';
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
   return $ANN->{field}{$key}{$field}{$form}{$lang}{$name}{value};
 }
 
@@ -235,7 +235,7 @@ sub get_annotated_items {
   my ($scope, $key, $field, $name, $form, $lang) = @_;
   $name = $name // 'default';
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
   return sort keys $ANN->{$scope}{$key}{$field}{$form}{$lang}{$name}->%*;
 }
 
@@ -250,7 +250,7 @@ sub get_annotated_parts {
   my ($scope, $key, $field, $name, $count, $form, $lang) = @_;
   $name = $name // 'default';
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
   return sort keys $ANN->{$scope}{$key}{$field}{$form}{$lang}{$name}{$count}->%*;
 }
 
@@ -263,7 +263,7 @@ sub get_annotated_parts {
 sub del_annotation {
   my ($key, $field, $name, $form, $lang) = @_;
   $form = $form // 'default';
-  $lang = $lang // Biber::Utils::resolve_mslang($key);
+  $lang = $lang // Biber::Config::get_mslang($key);
   delete $ANN->{field}{$key}{$field}{$form}{$lang}{$name};
   delete $ANN->{item}{$key}{$field}{$form}{$lang}{$name};
   delete $ANN->{part}{$key}{$field}{$form}{$lang}{$name};

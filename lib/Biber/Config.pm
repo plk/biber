@@ -52,6 +52,9 @@ Biber::Config - Configuration items which need to be saved across the
 # Static (class) data
 our $CONFIG;
 
+# mslang override for entries via LANGID
+$CONFIG->{state}{mslang} = {};
+
 # Uniqueness ignore information from inheritance data
 $CONFIG->{state}{uniqignore} = {};
 
@@ -93,6 +96,7 @@ sub _init {
   $CONFIG->{state}{datafiles} = [];
   $CONFIG->{state}{crossref} = [];
   $CONFIG->{state}{xdata} = [];
+  $CONFIG->{state}{mslang} = {};
 
   return;
 }
@@ -981,6 +985,31 @@ sub getblxentryoptions {
   shift; # class method so don't care about class name
   my ($secnum, $key) = @_;
   return keys $CONFIG->{options}{biblatex}{ENTRY}{$key}{$secnum}->%*;
+}
+
+##############################
+# mslang state methods
+##############################
+
+
+=head2 set_mslang
+
+  Record an mslang setting for an entry. Used to record overrides of mslang via
+  LANGID fields.
+
+=cut
+
+sub set_mslang {
+  shift; # class method so don't care about class name
+  my ($key, $oride) = @_;
+  $CONFIG->{state}{mslang}{$key} = $oride;
+  return;
+}
+
+sub get_mslang {
+  shift; # class method so don't care about class name
+  my $key = shift;
+  return $CONFIG->{state}{mslang}{$key} // $CONFIG->{options}{biber}{mslang};
 }
 
 ##############################

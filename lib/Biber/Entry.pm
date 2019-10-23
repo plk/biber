@@ -294,7 +294,7 @@ sub get_xdata_refs {
 sub get_xdata_ref {
   my ($self, $field, $form, $lang, $pos) = @_;
   $form = $form // 'default';
-  $lang = $lang // resolve_mslang($self->{derivedfields}{citekey}->get_value);
+  $lang = $lang // Biber::Config::get_mslang($self->{derivedfields}{citekey}->get_value);
 
   foreach my $xdatum ($self->{xdatarefs}->@*) {
     if ($xdatum->{reffield} eq $field and
@@ -323,7 +323,7 @@ sub get_xdata_ref {
 sub is_xdata_resolved {
   my ($self, $field, $form, $lang, $pos) = @_;
   $form = $form // 'default';
-  $lang = $lang // resolve_mslang($self->{derivedfields}{citekey}->get_value);
+  $lang = $lang // Biber::Config::get_mslang($self->{derivedfields}{citekey}->get_value);
 
   foreach my $xdatum ($self->{xdatarefs}->@*) {
     if ($xdatum->{reffield} eq $field and

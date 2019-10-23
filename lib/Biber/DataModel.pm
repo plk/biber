@@ -1339,7 +1339,7 @@ sub generate_bltxml_schema {
   $writer->endTag();# define
   # ===========================
 
-  # msform attribute definition
+  # mslang attribute definition
   # ===========================
   $writer->comment('mslang attribute definition');
   $writer->startTag('define', 'name' => 'mslang');

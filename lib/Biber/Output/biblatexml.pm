@@ -165,7 +165,7 @@ sub set_output_entry {
       my $nf = $as->{val};
 
       $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq resolve_mslang($key)) ? '' : $lang;
+      $lang = ($lang eq Biber::Config::get_mslang($key)) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
@@ -231,7 +231,7 @@ sub set_output_entry {
       my $lf = $as->{val};
 
       $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq resolve_mslang($key)) ? '' : $lang;
+      $lang = ($lang eq Biber::Config::get_mslang($key)) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
@@ -294,7 +294,7 @@ sub set_output_entry {
       my $val = $as->{val};
 
       $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq resolve_mslang($key)) ? '' : $lang;
+      $lang = ($lang eq Biber::Config::get_mslang($key)) ? '' : $lang;
 
       # XDATA is special
       if (not Biber::Config->getoption('output_resolve_xdata') or
@@ -331,7 +331,7 @@ sub set_output_entry {
       my $f = $as->{val};
 
       $form = ($form eq 'default') ? '' : $form;
-      $lang = ($lang eq resolve_mslang($key)) ? '' : $lang;
+      $lang = ($lang eq Biber::Config::get_mslang($key)) ? '' : $lang;
 
       next if $xsvf eq 'ids'; # IDS is special
       next if $xsvf eq 'xdata'; # XDATA is special
@@ -556,7 +556,7 @@ sub set_output_entry {
           my $l = Biber::Annotation->is_literal_annotation('field', $key, $f, $form, $lang, $n);
           my @ms;
           push @ms, (msform => $form) unless $form eq 'default';
-          push @ms, (mslang => $lang) unless $lang eq resolve_mslang($key);
+          push @ms, (mslang => $lang) unless $lang eq Biber::Config::get_mslang($key);
           $xml->dataElement([$xml_prefix, 'annotation'],
                             $v,
                             field => $f,
@@ -577,7 +577,7 @@ sub set_output_entry {
             my $l = Biber::Annotation->is_literal_annotation('item', $key, $f, $form, $lang, $n, $c);
             my @ms;
             push @ms, (msform => $form) unless $form eq 'default';
-            push @ms, (mslang => $lang) unless $lang eq resolve_mslang($key);
+            push @ms, (mslang => $lang) unless $lang eq Biber::Config::get_mslang($key);
             $xml->dataElement([$xml_prefix, 'annotation'],
                               $v,
                               field => $f,
@@ -601,7 +601,7 @@ sub set_output_entry {
               my $l = Biber::Annotation->is_literal_annotation('part', $key, $f, $form, $lang, $n, $c, $p);
               my @ms;
               push @ms, (msform => $form) unless $form eq 'default';
-              push @ms, (mslang => $lang) unless $lang eq resolve_mslang($key);
+              push @ms, (mslang => $lang) unless $lang eq Biber::Config::get_mslang($key);
               $xml->dataElement([$xml_prefix, 'annotation'],
                                 $v,
                                 field => $f,

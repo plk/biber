@@ -171,16 +171,13 @@
 *** TODO msform and mslang as biblatex options with scope down to ENTRY
 ** TODO Biber
 *** DONE Decomm DOT output
-*** DONE Parsing BCP47 function
-https://tools.ietf.org/html/bcp47
-
+*** DONE Parsing BCP47 function https://tools.ietf.org/html/bcp47
 *** DONE Names and lists
 **** DONE Need new List object
 **** DONE Namelists need msform and mslang accessor for items
 **** DONE Lists need msform and mslang accessor for items
 **** DONE Both need these populating on data read with inherit/override of FieldValue default by annotations
 *** DONE FieldValue object
-**** DONE Switch to FieldValue
 *** DONE xdata needs forms and langs
 *** DONE Check for valid forms on first parsing
 *** DONE What to do for invalid langtags?
@@ -188,8 +185,7 @@ https://tools.ietf.org/html/bcp47
 *** DONE bibtex output
 *** DONE biblatexml output
 *** TODO bbl output
-*** TODO Duplicate regions (de-DE, fr-FR) in LOCALE_MAP?
-**** TODO Remove annotation form/lang?
+*** TODO Duplicate regions (de-DE, fr-FR) in LOCALE_MAP? - wait for package as per github.com/reutenauer/polyglossia/issues/226
 *** TODO bblxml output
 *** TODO inheritance templates
 *** TODO sorting templates
