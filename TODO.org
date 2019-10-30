@@ -184,6 +184,7 @@
 *** DONE biblatexml input
 *** DONE bibtex output
 *** DONE biblatexml output
+*** TODO Add msform/mslang options to biblatex as globals/per-refcontext, inherit mslang from doc lang
 *** TODO bbl output
 *** TODO Duplicate regions (de-DE, fr-FR) in LOCALE_MAP? - wait for package as per github.com/reutenauer/polyglossia/issues/226
 *** TODO bblxml output
