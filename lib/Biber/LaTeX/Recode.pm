@@ -215,7 +215,7 @@ sub latex_decode {
     $text =~ s/\\char(\d+)/"chr($1)"/gee;    # decimal chars
 
     $text =~ s/(\\[a-zA-Z]+)\\(\s+)/$1\{\}$2/g;    # \foo\ bar -> \foo{} bar
-    $text =~ s/([^\{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
+    $text =~ s/([^{]\\\w)([;,.:%])/$1\{\}$2/g;     #} Aaaa\o,  -> Aaaa\o{},
 
     foreach my $type ('greek', 'dings', 'punctuation', 'symbols', 'negatedsymbols', 'superscripts', 'cmdsuperscripts', 'letters', 'diacritics') {
       my $map = $remap_d->{$type}{map};
@@ -242,7 +242,17 @@ sub latex_decode {
       }
       elsif ($type eq 'diacritics') {
 
-        $text =~ s/\\($re)\s*\{(\pL\pM*)\}/$2 . $map->{$1}/ge;
+        # Using Unicode INFORMATION SEPARATOR ONE/TWO
+        my $bracemap = {'' => '',
+                        '{' => "\x{1f}",
+                        '}' => "\x{1e}"};
+
+        # Rename protecting braces so that they are not broken by RE manipulations
+        $text =~ s/(\{?)\\($re)\s*\{(\pL\pM*)\}(\}?)/$bracemap->{$1} . $3 . $map->{$2} . $bracemap->{$4}/ge;
+        $text =~ s/(\{?)(\pL\pM*)(\}?)/$bracemap->{$1} . $2 . $bracemap->{$3}/ge;
+
+
+#        $text =~ s/\\($re)\s*\{(\pL\pM*)\}/$2 . $map->{$1}/ge;
 
         # Conditional regexp with code-block condition
         # non letter macros for diacritics (e.g. \=) can be followed by any letter
@@ -299,6 +309,11 @@ sub latex_decode {
     # Perl 5.30 has limited (<255 chars) VLB but it doesn't work here as it can't be determined
     # that it's <255 chars by the parser
     $text =~ s/(?!(?=(?'a'[\s\S]*))(?'b'\\\pL+(?:\{[^{]+\})*(?=\k'a'\z)|(?<=(?=x^|(?&b))[\s\S])))\{(\X)\}/$3/g;
+
+    # Put brace markers back after doing the brace elimination as we only want to eliminate
+    # braces introduced as part of decoding, not explicit braces in the data
+    $text =~ s/\x{1f}/{/g;
+    $text =~ s/\x{1e}/}/g;
 
     if ($logger->is_trace()) {# performance tune
       $logger->trace("String in latex_decode() now -> '$text'");
