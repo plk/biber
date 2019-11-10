@@ -82,6 +82,7 @@ t/sort-complex.t
 t/sorting.t
 t/datalists.t
 t/sort-order.t
+t/sort-names.t
 t/sort-uc.t
 t/tool.t
 t/tool-bltxml.t
@@ -182,7 +183,8 @@ t/tdata/datalists.bib
 t/tdata/datalists.bltxml
 t/tdata/sort-order.bcf
 t/tdata/sort-order.bib
-t/tdata/sort-order.bib
+t/tdata/sort-names.bcf
+t/tdata/sort-names.bib
 t/tdata/sort-uc.bcf
 t/tdata/sort-uc.bib
 t/tdata/tool.bib
