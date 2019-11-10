@@ -84,6 +84,9 @@ my $others1     = 'mm,,Gauck!Joachim,,Title A,0';
 my $others2     = 'mm,,Gauck!Joachim#+,,Title B,0';
 my $final       = 'mm,,zzzz,zzzz,zzzz,zzzz';
 
+my $short1    = 'mm,,Lopez';
+my $short2    = 'mm,,Lopeza';
+
 # These have custom presort and also an exclusion on year and title set
 my $useprefix1  = 'ww,,von!Bobble!Terrence,,,0';
 my $useprefix4  = 'ww,,Bobble!Terrence!von,,,0';
@@ -91,9 +94,6 @@ my $useprefix4  = 'ww,,Bobble!Terrence!von,,,0';
 # These have namelist and name scope useprefix respectively
 my $useprefix2  = 'mm,,Animal!Alan!von,1998,Things,0';
 my $useprefix3  = 'mm,,von!Rabble!Richard,1998,Things,0';
-
-# min/maxsortnames
-my $msn1        = 'mm,,1961,Glashow!Sheldon,Partial Symmetries of Weak Interactions';
 
 # Sorting data schemata
 my $ssd1 = [
