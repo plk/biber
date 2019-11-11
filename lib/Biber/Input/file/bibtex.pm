@@ -1139,7 +1139,7 @@ sub _range {
       $end = undef;
     }
     $start =~ s/\A\{([^\}]+)\}\z/$1/;
-    $end =~ s/\A\{([^\}]+)\}\z/$1/;
+    $end =~ s/\A\{([^\}]+)\}\z/$1/ if $end;
     if ($start) {
       push $values_ref->@*, [$start || '', $end];
     }
